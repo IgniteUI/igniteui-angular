@@ -3,10 +3,36 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 8.1.0
-- `IgxChid`
+
+### New Features
+- `IgxBottomNav` now supports an `igx-tab` declaration mode. When in this mode, panels declarations are not accepted and tab items' content is not rendered.
+    - You can use this mode to apply directives on the tab items - for example to achieve routing navigation.
+    - You are allowed to customize tab items with labels, icons and even templates.
+- `IgxTabs` now supports an `igx-tab-item` declaration mode. When in this mode, groups declarations are not accepted and tab items' content is not rendered.
+    - You can use this mode to apply directives on the tab items - for example to achieve routing navigation.
+    - You are allowed to customize tab items with labels, icons and even templates.
+- `IgxGrid`
     - **Behavioral Change** - paging now includes the group rows in the page size. You may find more information about the change in the [GroupBy Specification](https://github.com/IgniteUI/igniteui-angular/wiki/Group-By-Specification)
+    - `IgxColumnGroup`
+        - Re-templating the column group header is now possible using the `headerTemplate` input property or the `igxHeader` directive.
 
 ## 8.0.2
+- `igx-list-theme` now have some new parameters for styling.
+    - $item-background-hover - Change The list item hover background 
+    - $item-text-color-hover - Change The list item hover text color.
+    
+    - $item-subtitle-color - Change The list item subtitle color.
+    - $item-subtitle-color-hover - Change The list item hover subtitle color.
+    - $item-subtitle-color-active - Change The active list item subtitle color.
+    
+    - $item-action-color - Change The list item actions color.
+    - $item-action-color-hover - Change The list item hover actions color.
+    - $item-action-color-active - Change The active list item actions color.
+    
+    - $item-thumbnail-color - Change The list item thumbnail color.
+    - $item-thumbnail-color-hover - Change The list item hover thumbnail color.
+    - $item-thumbnail-color-active - Change The active list item thumbnail color.
+    
 - **Behavioral Change** default min column width is changed according the grid display density property:
     - for `DisplayDensity.comfortable` defaultMinWidth is `80px`;
     - for `DisplayDensity.cosy` defaultMinWidth is `64px`;
