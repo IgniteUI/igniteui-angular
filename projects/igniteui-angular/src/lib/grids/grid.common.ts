@@ -533,6 +533,10 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     }
 
     public onDragOver(event) {
+        const drag = event.detail.owner;
+        if (!(drag instanceof IgxColumnMovingDragDirective)) {
+            return;
+        }
         if (this.isDropTarget &&
             this.cms.column !== this.column &&
             this.cms.column.level === this.column.level &&
