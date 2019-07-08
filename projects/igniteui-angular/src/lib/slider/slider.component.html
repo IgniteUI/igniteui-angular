@@ -12,10 +12,10 @@
         [onPan]="onPan"
         [stepDistance]="stepDistance"
         [step]="step"
-        [fromHandler]="true"
         [templateRef]="thumbFromTemplateRef"
         [context]="context"
         (onChange)="onThumbChange()"
+        (onHoverChange)="onHoverChange($event)"
         [thumbLabelVisibilityDuration]="thumbLabelVisibilityDuration"></igx-thumb>
     <igx-thumb
         #thumbTo
@@ -29,5 +29,6 @@
         [templateRef]="thumbToTemplateRef"
         [context]="context"
         (onChange)="onThumbChange()"
+        (onHoverChange)="onHoverChange($event)"
         [thumbLabelVisibilityDuration]="thumbLabelVisibilityDuration"></igx-thumb>
 </div>
