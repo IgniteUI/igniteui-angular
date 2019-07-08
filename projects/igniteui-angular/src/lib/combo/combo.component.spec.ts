@@ -188,18 +188,18 @@ describe('igxCombo', () => {
             expect(combo.displayKey === combo.valueKey).toBeFalsy();
         });
         it('Should properly get/set overlaySettings', () => {
-            const fixutre = TestBed.createComponent(IgxComboTestComponent);
-            fixutre.detectChanges();
-            const combo = fixutre.componentInstance.combo;
+            const fixture = TestBed.createComponent(IgxComboTestComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.combo;
             const defaultSettings = combo.overlaySettings;
             defaultSettings.positionStrategy.settings.target = combo.element;
-            expect(defaultSettings).toBeDefined(defaultSettings);
+            expect(defaultSettings).toBeDefined();
             const newSettings = {
-                positionStrategy: new ConnectedPositioningStrategy({ target: fixutre.elementRef.nativeElement}),
-                scrollStrategy: new AbsoluteScrollStrategy(fixutre.elementRef.nativeElement)
+                positionStrategy: new ConnectedPositioningStrategy({ target: fixture.elementRef.nativeElement}),
+                scrollStrategy: new AbsoluteScrollStrategy(fixture.elementRef.nativeElement)
             };
             combo.overlaySettings = newSettings;
-            const expectedSettings = mergeObjects(Object.assign({}, defaultSettings), newSettings);
+            const expectedSettings = Object.assign(Object.assign({}, defaultSettings), newSettings);
             expect(combo.overlaySettings).toEqual(expectedSettings);
             spyOn(combo.dropdown, 'toggle');
             combo.toggle();

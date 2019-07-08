@@ -174,9 +174,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             const newSettings = val;
             if (val.positionStrategy) {
                 newSettings.positionStrategy = val.positionStrategy.clone();
-                mergeObjects(newSettings.positionStrategy.settings, this._overlaySettings.positionStrategy.settings);
             }
-            Object.assign(this._overlaySettings, val);
+            Object.assign(this._overlaySettings, newSettings);
         } else {
             console.warn('Please provide valid overlay settings');
         }
