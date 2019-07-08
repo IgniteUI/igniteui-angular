@@ -93,5 +93,37 @@ $_light-chip: extend((
     focus-selected-border-color: transparent
 ), $_default-shape-chip);
 
-$_fluent-chip: extend((), $_light-chip);
+$_fluent-chip: extend-many($_light-chip, (
+    background: transparent,
+    hover-background: transparent,
+    selected-background: transparent,
+    hover-selected-background: transparent,
+    focus-background: transparent,
+    focus-selected-background: transparent,
+
+    border-color: (
+        igx-color: ('grays', 300)
+    ),
+
+    hover-border-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    focus-border-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    selected-border-color: (
+        igx-color: ('primary', 500)
+    ),
+
+    hover-selected-border-color: (
+        igx-color: ('primary', 500)
+    ),
+
+    focus-selected-border-color: (
+        igx-color: ('primary', 500)
+    )
+
+), $_fluent-shape-chip);
 

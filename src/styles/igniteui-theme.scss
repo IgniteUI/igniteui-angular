@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700');
 @import '../../projects/igniteui-angular/src/lib/core/styles/themes/index';
-
 @import 'mixins';
 @import 'app-palettes';
 @import 'app-layout';
@@ -26,17 +25,33 @@
 
 .fluent-excel-theme {
     $igx-background-color: #fff;
-    $igx-foreground-color: text-contrast($igx-background-color);
-
-    background: $igx-background-color;
-    color: $igx-foreground-color;
+    background: #fff;
 
     @include scrollbar-love();
+
     @include igx-fluent-theme($fluent-excel-palette);
 
     .nav-header {
         @include nav-logo('../assets/images/rsrcs/igniteui-logo-light-bg', $igx-background-color);
     }
+
+    //$fluent-button: igx-type-style(
+    //    $font-size: rem(14px),
+    //    $font-weight: 600,
+    //    $letter-spacing: 0,
+    //    $line-height: rem(16px),
+    //    $text-transform: capitalize
+    //);
+    //
+    //$fluent-type-scale: igx-type-scale(
+    //    $button: $fluent-button
+    //);
+    //
+    //@include igx-typography(
+    //    $font-family: "'Segoe UI',SegoeUI,Helvetica Neue,Helvetica,Arial,sans-serif",
+    //    $type-scale: $fluent-type-scale,
+    //    $base-color: #323130
+    //);
 }
 
 .fluent-word-theme {
@@ -94,7 +109,6 @@
         @include nav-logo('../assets/images/rsrcs/igniteui-logo-dark-bg', $igx-background-color);
     }
 }
-
 
 
 @media print {

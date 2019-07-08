@@ -100,4 +100,24 @@ $_light-drop-down: extend((
     elevation: 8
 ), $_default-shape-drop-down);
 
-$_fluent-drop-down: extend((), $_light-drop-down);
+$_fluent-drop-down: extend-many($_light-drop-down, (
+    hover-item-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    focused-item-background: (
+        igx-color: ('grays', 200)
+    ),
+
+    selected-item-background: (
+        igx-color: ('grays', 300)
+    ),
+
+    selected-hover-item-background: (
+        igx-color: ('grays', 300)
+    ),
+
+    selected-focus-item-background: (
+        igx-color: ('grays', 300)
+    ),
+), $_fluent-shape-drop-down);

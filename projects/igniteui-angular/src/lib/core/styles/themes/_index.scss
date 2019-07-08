@@ -304,17 +304,11 @@
     $primary: igx-color($palette, 'primary');
     $secondary: igx-color($palette, 'secondary');
     $surface: igx-color($palette, 'surface');
-    $error: igx-color($palette, 'error');
-    $warn: igx-color($palette, 'warn');
-    $success: igx-color($palette, 'success');
 
     @include igx-theme(
         $palette: igx-palette(
             $primary,
             $secondary,
-            $warn,
-            $error,
-            $success,
             $surface: if($surface != #fff, $surface, #fff),
             $grays: #000
         ),
