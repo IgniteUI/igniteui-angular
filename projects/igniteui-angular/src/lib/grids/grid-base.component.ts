@@ -602,10 +602,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     * @memberof IgxGridBaseComponent
     */
     set rowEditable(val: boolean) {
-        this._rowEditable = val;
         if (this.gridAPI.grid) {
             this.refreshGridState();
         }
+        this._rowEditable = val;
+        this.cdr.markForCheck();
     }
 
     /**
