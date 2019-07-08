@@ -4838,7 +4838,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             const visibleLayoutColumns = this.visibleColumns
             .filter(col => col.columnLayout)
             .sort((a, b) => a.visibleIndex - b.visibleIndex);
-            return visibleLayoutColumns[index].children.toArray();
+            const colLayout = visibleLayoutColumns[index];
+            return colLayout ? colLayout.children.toArray() : [];
         } else {
             const visibleColumns = this.visibleColumns
             .filter(col => !col.columnGroup)
