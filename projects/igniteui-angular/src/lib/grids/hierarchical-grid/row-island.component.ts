@@ -231,15 +231,22 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
      * @hidden
      */
     ngOnInit() {
+        this.rootGrid = this.hgridAPI.grid;
     }
 
     /**
      * @hidden
      */
     ngAfterContentInit() {
-        this.children.reset(this.children.toArray().slice(1));
-        this.children.forEach(child => {
-            child.parentIsland = this;
+        this.updateChildren();
+        this.children.notifyOnChanges();
+        this.children.changes.pipe(takeUntil(this.destroy$))
+        .subscribe((change) => {
+            this.updateChildren();
+            // update existing grids since their child ri have been changed.
+            this.getGridsForIsland(this.key).forEach(grid => {
+                (grid as any).onRowIslandChange(this.children);
+            });
         });
         const nestedColumns = this.children.map((layout) => layout.columnList.toArray());
         const colsArray = [].concat.apply([], nestedColumns);
@@ -248,6 +255,13 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
         });
         this.childColumns.reset(topCols);
         this.columnList.changes.pipe(takeUntil(this.destroy$)).subscribe(() => { this.updateColumnList(); });
+    }
+
+    protected updateChildren() {
+        this.children.reset(this.children.toArray().slice(1));
+        this.children.forEach(child => {
+            child.parentIsland = this;
+        });
     }
 
     /**
@@ -279,10 +293,26 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
         // Override the base destroy because we don't have rendered anything to use removeEventListener on
         this.destroy$.next(true);
         this.destroy$.complete();
+        this._destroyed = true;
         this.rowIslandAPI.unset(this.id);
         if (this.parentIsland) {
+            this.getGridsForIsland(this.key).forEach(grid => {
+                this.cleanGridState(grid);
+                grid.hgridAPI.unsetChildRowIsland(this);
+            });
             this.parentIsland.rowIslandAPI.unsetChildRowIsland(this);
+        } else {
+            this.rootGrid.hgridAPI.unsetChildRowIsland(this);
+            this.cleanGridState(this.rootGrid);
         }
+    }
+
+    private cleanGridState(grid) {
+        grid.childGridTemplates.forEach((tmpl) => {
+            tmpl.owner.cleanView(tmpl.context.templateID);
+        });
+        grid.childGridTemplates.clear();
+        grid.onRowIslandChange();
     }
 
     /**
