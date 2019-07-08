@@ -38,18 +38,32 @@ export class IgxFilteringOperand {
         return this._instance || (this._instance = new this());
     }
 
+    /**
+     * @hidden
+     */
     protected findValueInSet(target: any, searchVal: Set<any>) {
         return searchVal.has(target);
     }
 
+    /**
+     * Returns an array of names of the conditions which are visible in the UI
+     */
     public conditionList(): string[] {
         return this.operations.filter(f => !f.hidden).map((element) => element.name);
     }
 
+    /**
+     * Returns an instance of the condition with the specified name.
+     * @param name The name of the condition.
+     */
     public condition(name: string): IFilteringOperation {
         return this.operations.find((element) => element.name === name);
     }
 
+    /**
+     * Adds a new condition to the filtering operations.
+     * @param operation The filtering operation.
+     */
     public append(operation: IFilteringOperation) {
         this.operations.push(operation);
     }
