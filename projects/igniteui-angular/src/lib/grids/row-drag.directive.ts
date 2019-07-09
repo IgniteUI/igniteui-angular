@@ -70,22 +70,31 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     }
 
     public onPointerUp(event) {
+
         if (!this._clicked) {
             return;
         }
-        super.onPointerUp(event);
-        this.row.dragging = false;
-        this.row.grid.rowDragging = false;
-        this.row.grid.markForCheck();
 
         const args: IRowDragEndEventArgs = {
             owner: this,
-            dragData: this.row
+            dragData: this.row,
+            animation: false
         };
         this.zone.run(() => {
             this.row.grid.onRowDragEnd.emit(args);
         });
-        this._unsubscribe();
+
+        if (args.animation) {
+            this.animateOnRelease = true;
+        }
+
+        const dropArea = this._lastDropArea;
+        super.onPointerUp(event);
+        if (!dropArea && this.animateOnRelease) {
+            this.dragGhost.addEventListener('transitionend',  this.transitionEndEvent, false);
+        }   else {
+            this.endDragging();
+        }
     }
 
     protected createDragGhost(event) {
@@ -115,6 +124,21 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         if (this.subscription$ && !this.subscription$.closed) {
             this.subscription$.unsubscribe();
         }
+    }
+
+    private endDragging() {
+        this.onTransitionEnd(null);
+        this.row.dragging = false;
+        this.row.grid.rowDragging = false;
+        this.row.grid.markForCheck();
+        this._unsubscribe();
+    }
+
+    private transitionEndEvent = (evt?) => {
+        if (this.dragGhost) {
+            this.dragGhost.removeEventListener('transitionend', this.transitionEndEvent, false);
+        }
+        this.endDragging();
     }
 }
 

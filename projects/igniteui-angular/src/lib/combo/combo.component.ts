@@ -32,7 +32,7 @@ import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboFilterConditionPipe, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboSortingPipe } from './combo.pipes';
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
@@ -67,6 +67,22 @@ enum DataTypes {
     COMPLEX = 'complex',
     PRIMARYKEY = 'valueKey'
 }
+
+/**
+ * @hidden
+ */
+const ItemHeights = {
+    'comfortable': 40,
+    'cosy': 32,
+    'compact': 28,
+};
+
+/**
+ * @hidden
+ * The default number of items that should be in the combo's
+ * drop-down list if no `[itemsMaxHeight]` is specified
+ */
+const itemsInContainer = 10;
 
 export enum IgxComboState {
     /**
@@ -130,6 +146,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     private destroy$ = new Subject<any>();
     private _data = [];
     private _filteredData = [];
+    private _itemHeight = null;
+    private _itemsMaxHeight = null;
     private _positionCallback: () => void;
     private _onChangeCallback: (_: any) => void = noop;
     private overlaySettings: OverlaySettings = {
@@ -568,7 +586,16 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
     */
     @Input()
-    public itemsMaxHeight = 480;
+    public get itemsMaxHeight(): number {
+        if (this._itemsMaxHeight === null || this._itemsMaxHeight === undefined) {
+            return this.itemHeight * itemsInContainer;
+        }
+        return this._itemsMaxHeight;
+    }
+
+    public set itemsMaxHeight(val: number) {
+        this._itemsMaxHeight = val;
+    }
 
     /**
      * Configures the drop down list width
@@ -600,7 +627,16 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Input()
-    public itemHeight = 48;
+    public get itemHeight(): number {
+        if (this._itemHeight === null || this._itemHeight === undefined) {
+            return ItemHeights[this.displayDensity];
+        }
+        return this._itemHeight;
+    }
+
+    public set itemHeight(val: number) {
+        this._itemHeight = val;
+    }
 
     /**
      * @hidden @internal
@@ -1504,13 +1540,13 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             return;
         }
         this.searchValue = '';
+        this.comboInput.nativeElement.focus();
     }
 
     /**
      * @hidden @internal
      */
     public handleClosed() {
-        this.comboInput.nativeElement.focus();
         this.onClosed.emit();
     }
 }

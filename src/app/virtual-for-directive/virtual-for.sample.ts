@@ -13,6 +13,7 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
     remoteData: any;
     options = {};
     prevRequest: any;
+    itemSize = '100px';
     @ViewChild('virtDirVertical', { read: IgxForOfDirective, static: true })
     virtDirVertical: IgxForOfDirective<any>;
 
@@ -197,6 +198,15 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
 
     trackByKey(index, item) {
         return item.key;
+    }
+
+    changeItemSize() {
+        if (this.itemSize === '50px') {
+            this.itemSize = '100px';
+        } else {
+            this.itemSize = "50px";
+        }
+        
     }
 
 }

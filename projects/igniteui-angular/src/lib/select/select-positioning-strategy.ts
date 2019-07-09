@@ -1,4 +1,4 @@
-import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Point, getViewportRect } from '../services/overlay/utilities';
+import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Point, Util } from '../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../services/overlay/position/connected-positioning-strategy';
 import { IPositionStrategy } from '../services/overlay/position';
 import { fadeOut, fadeIn } from '../animations/main';
@@ -32,7 +32,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
     }
 
     private defaultWindowToListOffset = 5;
-    private viewPort = getViewportRect(document);
+    private viewPort = Util.getViewportRect(document);
     private deltaY: number;
     private deltaX: number;
     private itemTextPadding: number;
@@ -86,7 +86,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
             TOP: elementContainer.top,
             BOTTOM: elementContainer.bottom,
         };
-        const viewPort = getViewportRect(document);
+        const viewPort = Util.getViewportRect(document);
         const documentElement = {
             TOP: viewPort.top,
             BOTTOM: viewPort.bottom
@@ -163,6 +163,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                 CURRENT_POSITION_Y += START.Y;
             }
         }
+        const selectItemPaddingHorizontal = 24;
         const itemLeftPadding = window.getComputedStyle(itemElement).paddingLeft;
         const itemTextIndent = window.getComputedStyle(itemElement).textIndent;
         const numericLeftPadding = parseInt(itemLeftPadding.slice(0, itemLeftPadding.indexOf('p')), 10) || 0;
@@ -170,7 +171,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         this.itemTextPadding = numericLeftPadding;
         this.itemTextIndent = numericTextIndent;
         contentElement.style.left += `${START.X - numericLeftPadding - numericTextIndent}px`;
-        contentElement.style.width = inputRect.width + 24 + 32 + 'px';
+        contentElement.style.width = inputRect.width + 24 + selectItemPaddingHorizontal * 2 + 'px';
         this.deltaX = START.X - numericLeftPadding - numericTextIndent;
         const currentScroll = this.getItemsOutOfView(contentElement, itemHeight)['currentScroll'];
         const remainingScroll = this.getItemsOutOfView(contentElement, itemHeight)['remainingScroll'];
