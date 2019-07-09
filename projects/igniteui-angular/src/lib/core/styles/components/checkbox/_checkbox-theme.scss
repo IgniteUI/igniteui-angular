@@ -308,6 +308,30 @@
             transition: none;
         }
     }
+
+    // Checkbox in Combo
+    //.igx-drop-down__item {
+    //    %cbx-label--disabled {
+    //        color: --var($theme, 'label-color');
+    //    }
+    //
+    //    %cbx-ripple {
+    //        display: none;
+    //    }
+    //
+    //    %cbx-composite--disabled {
+    //        border-color: --var($theme, 'fill-color');
+    //        background: transparent;
+    //    }
+    //
+    //    %cbx-composite--x--disabled {
+    //        background: --var($theme, 'fill-color');
+    //
+    //        &::after {
+    //            background: --var($theme, 'fill-color');
+    //        }
+    //    }
+    //}
 }
 
 /// Adds typography styles for the igx-checkbox component.

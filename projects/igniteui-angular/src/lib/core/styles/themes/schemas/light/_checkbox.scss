@@ -36,8 +36,8 @@ $_light-checkbox: extend((
     )
 ), $_default-shape-checkbox);
 
-$_fluent-checkbox: extend((
+$_fluent-checkbox: extend-many($_light-checkbox, (
     fill-color: (
         igx-color: ('primary', 500)
     ),
-), $_light-checkbox);
+), $_fluent-shape-checkbox);

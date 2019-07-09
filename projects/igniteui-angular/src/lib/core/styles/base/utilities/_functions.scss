@@ -240,13 +240,31 @@
     @return $result;
 }
 
+/// Removes all null key-value pairs from the map
+/// @access private
+/// @param {Map} $map - The target map to be cleaned.
+/// @returns {Map} - Returns a clean map.
+@function map-clean($map) {
+    $result: ();
+
+    @each $key, $value in $map {
+        @if($value) != null {
+            $result: map-merge($result, (
+                #{$key}: $value
+            ));
+        }
+    }
+
+    @return $result;
+}
+
 /// Extends a Map object with the properties of other Maps objects.
 /// @access private
 /// @param {Map} $source-map - The source map to get extended.
 /// @param {Map} $maps - The maps extending the source map.
 /// @returns {Map} - Returns the $source-map map extended with the properties of the other maps.
 @function extend-many($source-map, $maps...) {
-    $result: $source-map;
+    $result: map-clean($source-map);
     $collection: ();
 
     @each $map in $maps {

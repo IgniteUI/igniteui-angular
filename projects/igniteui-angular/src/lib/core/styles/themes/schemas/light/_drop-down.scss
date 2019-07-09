@@ -66,27 +66,27 @@ $_light-drop-down: extend((
     ),
 
     selected-item-background: (
-        igx-color: ('secondary', 500)
+        igx-color: ('secondary', 100)
     ),
 
     selected-item-text-color: (
-        igx-contrast-color: ('secondary', 500)
+        igx-contrast-color: ('secondary', 100)
     ),
 
     selected-hover-item-background: (
-        igx-color: ('secondary', 300)
+        igx-color: ('secondary', 200)
     ),
 
     selected-hover-item-text-color: (
-        igx-contrast-color: ('secondary', 300)
+        igx-contrast-color: ('secondary', 200)
     ),
 
     selected-focus-item-background: (
-        igx-color: ('secondary', 300)
+        igx-color: ('secondary', 200)
     ),
 
     selected-focus-item-text-color: (
-        igx-contrast-color: ('secondary', 300)
+        igx-contrast-color: ('secondary', 200)
     ),
 
     disabled-item-background: transparent,
@@ -101,23 +101,38 @@ $_light-drop-down: extend((
 ), $_default-shape-drop-down);
 
 $_fluent-drop-down: extend-many($_light-drop-down, (
-    hover-item-background: (
-        igx-color: ('grays', 100)
-    ),
-
-    focused-item-background: (
+    selected-item-background: (
         igx-color: ('grays', 200)
     ),
 
-    selected-item-background: (
-        igx-color: ('grays', 300)
+    selected-item-text-color: (
+        igx-contrast-color: ('grays', 200)
     ),
 
     selected-hover-item-background: (
         igx-color: ('grays', 300)
     ),
 
+    selected-hover-item-text-color: (
+        igx-contrast-color: ('grays', 300)
+    ),
+
     selected-focus-item-background: (
         igx-color: ('grays', 300)
     ),
+
+    selected-focus-item-text-color: (
+        igx-contrast-color: ('grays', 300)
+    ),
+
+    disabled-item-background: (
+        igx-color: ('grays', 300)
+    ),
+
+    disabled-item-text-color: (
+        igx-color: ('grays', 500)
+    ),
+
+    elevation: 0
+
 ), $_fluent-shape-drop-down);
