@@ -23,8 +23,7 @@ import {
     ViewChildren,
     ViewContainerRef,
     InjectionToken,
-    Optional,
-    HostListener
+    Optional
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil, first, filter } from 'rxjs/operators';
@@ -4922,6 +4921,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.verticalScrollContainer.getVerticalScroll().scrollTop += event.target.scrollTop;
         event.target.scrollLeft = 0;
         event.target.scrollTop = 0;
+    }
+
+    copyHandlerIE() {
+        if (isIE()) {
+            this.copyHandler(null, true);
+        }
     }
 
     /**
