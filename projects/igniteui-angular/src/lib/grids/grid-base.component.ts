@@ -246,7 +246,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _isLoading = false;
     private _locale = null;
     private _observer: MutationObserver;
-    private _destroyed = false;
+    protected _destroyed = false;
     private overlayIDs = [];
     /**
      * An accessor that sets the resource strings.
@@ -602,10 +602,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     * @memberof IgxGridBaseComponent
     */
     set rowEditable(val: boolean) {
-        this._rowEditable = val;
         if (this.gridAPI.grid) {
             this.refreshGridState();
         }
+        this._rowEditable = val;
+        this.cdr.markForCheck();
     }
 
     /**
@@ -2530,6 +2531,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected _autoSize = false;
     private _rowHeight;
     protected _ngAfterViewInitPassed = false;
+    protected _baseFontSize: number;
     private _horizontalForOfs;
     private _multiRowLayoutRowSize = 1;
 
@@ -2806,6 +2808,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
             requestAnimationFrame(() => {
                 this.summaryService.summaryHeight = 0;
+                this.endEdit(true);
                 this.reflow();
                 this.verticalScrollContainer.recalcUpdateSizes();
             });
@@ -2823,6 +2826,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                     return mutation.type === 'childList';
                 }).length > 0;
                 if (childListHasChanged && this.isAttachedToDom) {
+                    this._autoSize = false;
                     this.reflow();
                     this._observer.disconnect();
                     this._observer = null;
@@ -4037,10 +4041,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Sets TBODY height i.e. this.calcHeight
      */
     protected calculateGridHeight() {
-        // TODO: Calculate based on grid density
         if (this.maxLevelHeaderDepth) {
-            this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
-                (this.allowFiltering && this.filterMode === FilterMode.quickFilter ? FILTER_ROW_HEIGHT : 0) + 1}px`;
+            this._baseFontSize = parseFloat(getComputedStyle(this.document.documentElement).getPropertyValue('font-size'));
+            let minSize = (this.maxLevelHeaderDepth + 1) * this.defaultRowHeight / this._baseFontSize;
+            if (this._allowFiltering && this._filterMode === FilterMode.quickFilter) {
+                minSize += (FILTER_ROW_HEIGHT + 1) / this._baseFontSize;
+            }
+            this.theadRow.nativeElement.style.minHeight = `${minSize}rem`;
         }
         this.summariesHeight = 0;
         if (this.hasSummarizedColumns && this.rootSummariesEnabled) {
