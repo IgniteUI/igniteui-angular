@@ -11,10 +11,13 @@
     OnInit,
     Output,
     Renderer2,
-    ChangeDetectorRef
+    ChangeDetectorRef,
+    ContentChild,
+    ViewContainerRef
 } from '@angular/core';
 import { animationFrameScheduler, fromEvent, interval, Subject } from 'rxjs';
 import { takeUntil, throttle } from 'rxjs/operators';
+import { IgxDragGhostDirective } from './drag-ghost.directive';
 
 export enum RestrictDrag {
     VERTICALLY,
@@ -294,6 +297,9 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     @Output()
     public dragClicked = new EventEmitter<IDragBaseEventArgs>();
 
+    @ContentChild(IgxDragGhostDirective, { static: false })
+    public ghostTemplate: IgxDragGhostDirective;
+
     /**
      * @hidden
      */
@@ -439,10 +445,13 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     protected _destroy = new Subject<boolean>();
     protected _removeOnDestroy = true;
 
-    constructor(public cdr: ChangeDetectorRef,
-                public element: ElementRef,
-                public zone: NgZone,
-                public renderer: Renderer2) {
+    constructor(
+        public cdr: ChangeDetectorRef,
+        public element: ElementRef,
+        public viewContainer: ViewContainerRef,
+        public zone: NgZone,
+        public renderer: Renderer2
+    ) {
     }
 
     /**
@@ -461,6 +470,11 @@ export class IgxDragDirective implements OnInit, OnDestroy {
 
                 fromEvent(this.element.nativeElement, 'pointerup').pipe(takeUntil(this._destroy))
                     .subscribe((res) => this.onPointerUp(res));
+
+                if (!this.renderGhost) {
+                    fromEvent(this.element.nativeElement, 'lostpointercapture').pipe(takeUntil(this._destroy))
+                    .subscribe((res) => this.onPointerLost(res));
+                }
             } else if (this.touchEventsEnabled) {
                 fromEvent(this.element.nativeElement, 'touchstart').pipe(takeUntil(this._destroy))
                 .subscribe((res) => this.onPointerDown(res));
@@ -579,6 +593,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
         this._dragStartX = this._startX - this._dragOffsetX;
         this._dragStartY = this._startY - this._dragOffsetY;
 
+        // Set pointer capture so we detect pointermove even if mouse is out of bounds until dragGhost is created.
         if (this.pointerEventsEnabled) {
             this.element.nativeElement.setPointerCapture(this._pointerDownId);
         } else {
@@ -697,6 +712,34 @@ export class IgxDragDirective implements OnInit, OnDestroy {
         }
     }
 
+    public onPointerLost(event) {
+        if (!this._clicked) {
+            return;
+        }
+
+        const eventArgs = {
+            originalEvent: event,
+            owner: this
+        };
+        this._clicked = false;
+        if (this._dragStarted) {
+            if (this.animateOnRelease &&
+                    (this.ghostLeft !== Math.floor(this._dragStartX) || this.ghostTop !== Math.floor(this._dragStartY))) {
+                // If the start positions are the same as the current the transition will not execute.
+                // return the ghost to start position before removing it. See onTransitionEnd.
+                this.dragGhost.style.transitionDuration = this.defaultReturnDuration;
+                this.ghostLeft = this._dragStartX;
+                this.ghostTop = this._dragStartY;
+            } else {
+                this.onTransitionEnd(null);
+            }
+
+            this.zone.run(() => {
+                this.dragEnd.emit(eventArgs);
+            });
+        }
+    }
+
     /**
      * @hidden
      * Create dragGhost element - if a Node object is provided it creates a clone of that node,
@@ -706,7 +749,13 @@ export class IgxDragDirective implements OnInit, OnDestroy {
      * @param node The Node object to be cloned.
      */
     protected createDragGhost(event, node: any = null) {
-        this.dragGhost = node ? node.cloneNode(true) : this.element.nativeElement.cloneNode(true);
+        if (this.ghostTemplate) {
+            const dynamicGhostRef = this.viewContainer.createEmbeddedView(this.ghostTemplate.template);
+            this.dragGhost = dynamicGhostRef.rootNodes[0];
+        } else {
+            this.dragGhost = node ? node.cloneNode(true) : this.element.nativeElement.cloneNode(true);
+        }
+
         this.dragGhost.style.transitionDuration = '0.0s';
         this.dragGhost.style.position = 'absolute';
         const hostLeft = this.dragGhostHost ? this.dragGhostHost.getBoundingClientRect().left : 0;
@@ -733,6 +782,9 @@ export class IgxDragDirective implements OnInit, OnDestroy {
             this.dragGhost.addEventListener('pointerup', (args) => {
                 this.onPointerUp(args);
             });
+            this.dragGhost.addEventListener('lostpointercapture', (args) => {
+                this.onPointerLost(args);
+            });
         }
 
         if (this.animateOnRelease) {
@@ -746,6 +798,8 @@ export class IgxDragDirective implements OnInit, OnDestroy {
         if (this.hideBaseOnDrag) {
             this.visible = false;
         }
+
+        this.cdr.detectChanges();
     }
 
     /**
@@ -1123,7 +1177,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
  * @hidden
  */
 @NgModule({
-    declarations: [IgxDragDirective, IgxDropDirective],
-    exports: [IgxDragDirective, IgxDropDirective]
+    declarations: [IgxDragDirective, IgxDropDirective, IgxDragGhostDirective],
+    exports: [IgxDragDirective, IgxDropDirective, IgxDragGhostDirective]
 })
 export class IgxDragDropModule { }

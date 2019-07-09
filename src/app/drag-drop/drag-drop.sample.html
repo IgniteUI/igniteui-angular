@@ -1,33 +1,46 @@
 <div class="sample-wrapper">
-    <app-page-header title="Drag and Drop directives" description="description for drag and drop directives"></app-page-header>
-    <section class="sample-content">
-        <article class="sample-column">
-            <h4 class="sample-title">No ghost dragging:</h4>
-            <div [igxDrag]="{ dragged: false }" [renderGhost]="false" class="dialog" (dragStart)="draggedElem = true" (dragEnd)="draggedElem = false">
-                <span *ngIf="!draggedElem">Drag me</span>
-                <span *ngIf="draggedElem">Weeeee</span>
-            </div>
-        </article>
-    </section>
-    <section class="sample-content">
-        <article class="sample-column">
-            <div [style.width]="'70%'" >
-                <h4>Drag a suspect inside or outside the cage:</h4>
-                <div igxDrop class="initialArea" (onEnter)="onEnterCustomOutside($event)" (onLeave)="onLeaveCustom($event)">
-                    <div igxDrag *ngFor="let elem of draggableElems" class="draggableElem" [hideBaseOnDrag]="true" [animateOnRelease]="true"
-                        (dragStart)="onDragStart()" (dragEnd)="onDragEnd()">
-                        <span [style.margin]="'auto'">{{elem}}</span>
+        <app-page-header title="Drag and Drop directives" description="description for drag and drop directives"></app-page-header>
+        <section class="sample-content">
+            <article class="sample-column">
+                <h4 class="sample-title">No ghost dragging:</h4>
+                <div [igxDrag]="{ dragged: false }" [renderGhost]="false" class="dialog" (dragStart)="draggedElem = true" (dragEnd)="draggedElem = false">
+                    <span *ngIf="!draggedElem">Drag me</span>
+                    <span *ngIf="draggedElem">Weeeee</span>
+                </div>
+    
+                <br>
+                <h4 class="sample-title">Ghost and base templating:</h4>
+                <div [igxDrag]="{ id: 'customGhost'}" [ngClass]="customDragged ? 'dragWithGhostPlaceholder' : 'dragWithGhostDefault'"
+                    (dragStart)="customDragged = true" (dragEnd)="customDragged = false">
+                    <span *ngIf="!customDragged">Drag me</span>
+                    <div *igxDragGhost class="customGhost">
+                        <span *ngIf="!ghostInDropArea">Weeeee</span>
+                        <span *ngIf="ghostInDropArea && friendlyArea">It's ok here</span>
+                        <span *ngIf="ghostInDropArea && !friendlyArea">Pls no</span>
                     </div>
                 </div>
-
-                <div class="cageArea" igxDrop
-                    [style.backgroundImage]="'url(assets/images/drag-drop/jailBars.png)'"
-                    (igxDragEnter)="onDragCageEnter()"
-                    (igxDragLeave)="onDragCageLeave()"
-                    (onEnter)="onEnterCustomCage($event)"
-                    (onLeave)="onLeaveCustom($event)">
+            </article>
+        </section>
+        <section class="sample-content">
+            <article class="sample-column">
+                <div [style.width]="'70%'" >
+                    <h4>Drag a suspect inside or outside the cage:</h4>
+                    <div igxDrop class="initialArea" (onEnter)="onEnterCustomOutside($event)" (onLeave)="onLeaveCustom($event)">
+                        <div igxDrag *ngFor="let elem of draggableElems" class="draggableElem" [hideBaseOnDrag]="true" [animateOnRelease]="true"
+                            (dragStart)="onDragStart()" (dragEnd)="onDragEnd()">
+                            <span [style.margin]="'auto'">{{elem}}</span>
+                        </div>
+                    </div>
+    
+                    <div class="cageArea" igxDrop
+                        [style.backgroundImage]="'url(assets/images/drag-drop/jailBars.png)'"
+                        (igxDragEnter)="onDragCageEnter()"
+                        (igxDragLeave)="onDragCageLeave()"
+                        (onEnter)="onEnterCustomCage($event)"
+                        (onLeave)="onLeaveCustom($event)">
+                    </div>
                 </div>
-            </div>
-        </article>
-    </section>
-</div>
+            </article>
+        </section>
+    </div>
+    

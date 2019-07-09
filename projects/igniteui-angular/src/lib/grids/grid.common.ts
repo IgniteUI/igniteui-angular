@@ -16,7 +16,8 @@ import {
     TemplateRef,
     LOCALE_ID,
     AfterViewInit,
-    HostListener
+    HostListener,
+    ViewContainerRef
 } from '@angular/core';
 import { animationFrameScheduler, fromEvent, interval, Subject, Subscription } from 'rxjs';
 import { map, switchMap, takeUntil, throttle, debounceTime } from 'rxjs/operators';
@@ -349,12 +350,13 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
 
     constructor(
         _element: ElementRef,
+        _viewContainer: ViewContainerRef,
         _zone: NgZone,
         _renderer: Renderer2,
         _cdr: ChangeDetectorRef,
         private cms: IgxColumnMovingService,
     ) {
-        super(_cdr, _element, _zone, _renderer);
+        super(_cdr, _element, _viewContainer, _zone, _renderer);
     }
 
     public ngOnDestroy() {
