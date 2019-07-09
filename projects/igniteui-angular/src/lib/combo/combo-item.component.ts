@@ -99,6 +99,15 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
         this.comboAPI.set_selected_item(this.itemID, event);
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
+    handleFocus(event: MouseEvent) {
+        event.preventDefault();
+        this.dropDown.element.focus();
+    }
+
     ngDoCheck() {
     }
 }
