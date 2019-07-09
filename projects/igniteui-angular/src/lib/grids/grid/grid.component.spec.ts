@@ -2,7 +2,7 @@ import {
     AfterViewInit, ChangeDetectorRef, Component, DebugElement, Injectable,
     OnInit, ViewChild, ViewChildren, QueryList, TemplateRef
 } from '@angular/core';
-import { async, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick, flush, ComponentFixture } from '@angular/core/testing';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -1910,8 +1910,8 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Navigation - Keyboard', () => {
-            let fixture;
-            let grid;
+            let fixture: ComponentFixture<IgxGridWithEditingAndFeaturesComponent>;
+            let grid: IgxGridComponent;
 
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
                 fixture = TestBed.createComponent(IgxGridWithEditingAndFeaturesComponent);
@@ -1921,6 +1921,7 @@ describe('IgxGrid Component Tests', () => {
                 grid = fixture.componentInstance.grid;
                 setupGridScrollDetection(fixture, grid);
             }));
+
             it(`Should jump from first editable columns to overlay buttons`, (async () => {
                 const targetCell = fixture.componentInstance.getCell(0, 'Downloads');
                 targetCell.nativeElement.focus();
@@ -2240,7 +2241,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(editedCell.inEditMode).toEqual(true);
             }));
 
-            it(`Should skip non-editable columns when column when all column features are enabled`, fakeAsync(() => {
+            it(`Should skip non-editable columns when all column features are enabled`, fakeAsync(() => {
                 let targetCell: IgxGridCellComponent;
                 let editedCell: IgxGridCellComponent;
                 fixture.componentInstance.hiddenFlag = true;
@@ -2338,6 +2339,34 @@ describe('IgxGrid Component Tests', () => {
 
                 overlayText = document.getElementsByClassName(BANNER_TEXT)[0] as HTMLElement;
                 expect(overlayText.textContent.trim()).toBe('You have 2 changes in this row');
+            }));
+
+            it(`Should focus last edited cell after click on editable buttons`, (async () => {
+                const targetCell = fixture.componentInstance.getCell(0, 'Downloads');
+                targetCell.nativeElement.focus();
+                fixture.detectChanges();
+                targetCell.onKeydownEnterEditMode();
+                fixture.detectChanges();
+                await wait(DEBOUNCETIME);
+
+                // Scroll the grid
+                grid.parentVirtDir.getHorizontalScroll().scrollLeft = grid.parentVirtDir.getHorizontalScroll().clientWidth;
+                fixture.detectChanges();
+                await wait(DEBOUNCETIME);
+
+                // Focus done button
+                const rowEditingBannerElement = fixture.debugElement.query(By.css('.igx-banner__row')).nativeElement;
+                const doneButtonElement = rowEditingBannerElement.lastElementChild;
+                doneButtonElement.focus();
+                fixture.detectChanges();
+                await wait(DEBOUNCETIME);
+
+                expect(document.activeElement).toEqual(doneButtonElement);
+                doneButtonElement.click();
+                fixture.detectChanges();
+                await wait(DEBOUNCETIME);
+
+                expect(document.activeElement).toEqual(targetCell.nativeElement);
             }));
         });
 
@@ -2518,6 +2547,34 @@ describe('IgxGrid Component Tests', () => {
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
                 expect(gridAPI.escape_editMode).toHaveBeenCalledWith();
                 expect(cell.inEditMode).toBeFalsy();
+            }));
+
+            it(`Should exit row editing AND COMMIT on displayDensity change`, fakeAsync(() => {
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                fix.detectChanges();
+                tick(DEBOUNCETIME);
+
+                const grid = fix.componentInstance.grid;
+                grid.displayDensity = DisplayDensity.comfortable;
+                fix.detectChanges();
+                tick(DEBOUNCETIME);
+
+                const cell = grid.getCellByColumn(0, 'ProductName');
+                cell.setEditMode(true);
+                fix.detectChanges();
+                tick(DEBOUNCETIME);
+
+                let overlayContent: HTMLElement = document.getElementsByClassName(EDIT_OVERLAY_CONTENT)[0] as HTMLElement;
+                expect(overlayContent).toBeTruthy();
+                expect(cell.editMode).toBeTruthy();
+
+                grid.displayDensity = DisplayDensity.cosy;
+                fix.detectChanges();
+                tick(DEBOUNCETIME);
+
+                overlayContent = document.getElementsByClassName(EDIT_OVERLAY_CONTENT)[0] as HTMLElement;
+                expect(overlayContent).toBeFalsy();
+                expect(cell.editMode).toBeFalsy();
             }));
 
             it(`Should NOT exit row editing on click on non-editable cell in same row`, fakeAsync(() => {
@@ -4184,6 +4241,25 @@ describe('IgxGrid Component Tests', () => {
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(204);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);
         });
+
+        it('IgxTabs: should initialize a grid with correct height height = 100% when parent has height', async () => {
+            const fix = TestBed.createComponent(IgxGridInsideIgxTabsComponent);
+            fix.detectChanges();
+            await wait(16);
+
+            const grid = fix.componentInstance.grid6;
+            const tab = fix.componentInstance.tabs;
+            expect(grid.calcHeight).toBe(510);
+            tab.tabs.toArray()[5].select();
+            await wait(100);
+            fix.detectChanges();
+            await wait(100);
+            grid.cdr.detectChanges();
+            const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
+            expect(grid.calcHeight).toBe(230);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(230);
+            expect(parseInt(window.getComputedStyle(grid.nativeElement).height, 10)).toBe(300);
+        });
     });
 });
 
@@ -4837,6 +4913,19 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
         </igx-column>
         </igx-grid>
       </igx-tabs-group>
+      <igx-tabs-group label="Tab 6">
+      <div style='height:300px;'>
+      <igx-grid #grid6 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'100%'"
+       >
+      <igx-column
+          *ngFor="let column of columns"
+          [field]="column.field"
+          [header]="column.field"
+      >
+      </igx-column>
+      </igx-grid>
+      </div>
+    </igx-tabs-group>
     </igx-tabs>
   </div>
     `
@@ -4850,6 +4939,8 @@ export class IgxGridInsideIgxTabsComponent {
     public grid4: IgxGridComponent;
     @ViewChild('grid5', { read: IgxGridComponent, static: true })
     public grid5: IgxGridComponent;
+    @ViewChild('grid6', { read: IgxGridComponent, static: true })
+    public grid6: IgxGridComponent;
     @ViewChild(IgxTabsComponent, { read: IgxTabsComponent, static: true })
     public tabs: IgxTabsComponent;
 

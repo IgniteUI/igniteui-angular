@@ -364,7 +364,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Commits the value of the input.
      */
     public commitInput() {
-        this.chipsArea.chipsList.filter(chip => chip.selected = false);
+        this.expressionsList.forEach(ex => ex.isSelected = false);
+        this.chipsArea.chipsList.forEach(chip => chip.selected = false);
+
         let indexToDeselect = -1;
         for (let index = 0; index < this.expressionsList.length; index++) {
             const expression = this.expressionsList[index].expression;
@@ -726,6 +728,17 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             this.chipAreaScrollOffset -= lastChipRectRight - containerRectRight;
             this.transform(this.chipAreaScrollOffset);
         }
+    }
+
+    /**
+     * @hidden
+     * Resets the chips area
+     * @memberof IgxGridFilteringRowComponent
+     */
+    public resetChipsArea() {
+        this.chipAreaScrollOffset = 0;
+        this.transform(this.chipAreaScrollOffset);
+        this.showHideArrowButtons();
     }
 
     private transform(offset: number) {
