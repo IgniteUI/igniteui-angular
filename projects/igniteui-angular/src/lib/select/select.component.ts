@@ -1,9 +1,11 @@
-import { IgxInputDirective } from './../directives/input/input.directive';
+import { IgxInputDirective, IgxInputState } from './../directives/input/input.directive';
 import {
     Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild,
-    AfterContentInit, HostBinding, Directive, TemplateRef, ElementRef, ChangeDetectorRef
+    AfterContentInit, HostBinding, Directive, TemplateRef, ElementRef, ChangeDetectorRef, Optional, Inject,
+    Injector, OnInit, AfterViewInit, OnDestroy
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 import { IgxDropDownItemBase } from '../drop-down/index';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
@@ -19,6 +21,7 @@ import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxSelectBase } from './select.common';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxSelectionAPIService } from '../core/selection';
+import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 
 /** @hidden @internal */
 @Directive({
@@ -57,8 +60,13 @@ const noop = () => { };
         }
     `]
 })
-export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor, AfterContentInit,
-    EditorProvider {
+export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelectBase, ControlValueAccessor,
+    AfterContentInit, OnInit, AfterViewInit, OnDestroy, EditorProvider {
+
+    private ngControl: NgControl = null;
+    private _statusChanges$: Subscription;
+    private _overlayDefaults: OverlaySettings;
+    private _value: any;
 
     /** @hidden @internal do not use the drop-down container class */
     public cssClass = false;
@@ -81,10 +89,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /** @hidden @internal */
     public height: string;
-
-    private _overlayDefaults: OverlaySettings;
-
-    private _value: any;
 
     /**
      * An @Input property that gets/sets the component value.
@@ -119,6 +123,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      *
      */
     @Input() public placeholder;
+
+
     /**
      * An @Input property that disables the `IgxSelectComponent`.
      * ```html
@@ -198,8 +204,11 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
-        protected selection: IgxSelectionAPIService) {
-        super(elementRef, cdr, selection);
+        protected selection: IgxSelectionAPIService,
+
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        private _injector: Injector) {
+        super(elementRef, cdr, selection, _displayDensityOptions);
     }
 
     /** @hidden @internal */
@@ -302,6 +311,14 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         super.navigate(direction, currentIndex);
     }
 
+    protected manageRequiredAsterisk(): void {
+        if (this.ngControl && this.ngControl.control.validator) {
+            // Run the validation with empty object to check if required is enabled.
+            const error = this.ngControl.control.validator({} as AbstractControl);
+            this.inputGroup.isRequired = error && error.required;
+            this.cdr.markForCheck();
+        }
+    }
     private setSelection(item: IgxDropDownItemBase) {
         if (item && item.value !== undefined && item.value !== null) {
             this.selection.set(this.id, new Set([item]));
@@ -312,8 +329,52 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     /** @hidden @internal */
     public onBlur(): void {
+        if (this.ngControl && !this.ngControl.valid) {
+             this.input.valid = IgxInputState.INVALID;
+        } else {
+            this.input.valid = IgxInputState.INITIAL;
+        }
         if (!this.collapsed) {
             this.toggleDirective.close();
+        }
+    }
+
+    protected onStatusChanged() {
+        if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
+            (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
+            if (this.inputGroup.isFocused) {
+                this.input.valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+            } else {
+                this.input.valid = this.ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
+            }
+        }
+        this.manageRequiredAsterisk();
+    }
+    /**
+     * @hidden @internal
+     */
+    public ngOnInit() {
+        this.ngControl = this._injector.get(NgControl, null);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public ngAfterViewInit() {
+        if (this.ngControl) {
+            this._statusChanges$ = this.ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
+            this.manageRequiredAsterisk();
+        }
+        this.cdr.detectChanges();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public ngOnDestroy() {
+        this.selection.clear(this.id);
+        if (this._statusChanges$) {
+            this._statusChanges$.unsubscribe();
         }
     }
 }

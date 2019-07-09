@@ -1,77 +1,50 @@
-<igx-drop-down
-    #dropdownConditions
-    [maxHeight]="'200px'"
-    [width]="getInputWidth()"
+<igx-drop-down #dropdownConditions [maxHeight]="'200px'" [width]="getInputWidth()"
     (onSelection)="onConditionsChanged($event)">
-    <igx-drop-down-item *ngFor="let condition of conditions" [value]="condition" [selected]="isConditionSelected(condition)">
+    <igx-drop-down-item *ngFor="let condition of conditions" [value]="condition"
+        [selected]="isConditionSelected(condition)">
         <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
         <span>{{ translateCondition(condition) }}</span>
     </igx-drop-down-item>
 </igx-drop-down>
 
-<igx-input-group
-    #inputGroupConditions
-    (click)="toggleCustomDialogDropDown()"
-    type="box"
-    [displayDensity]="displayDensity"
-    [supressInputAutofocus]="true">
+<igx-input-group #inputGroupConditions (click)="toggleCustomDialogDropDown()" type="box"
+    [displayDensity]="displayDensity" [supressInputAutofocus]="true">
 
     <igx-prefix>
         <igx-icon *ngIf="expressionUI.expression.condition" fontSet="filtering-icons" [name]="getIconName()"></igx-icon>
         <igx-icon *ngIf="!expressionUI.expression.condition">filter_list</igx-icon>
     </igx-prefix>
 
-    <input
-        igxInput
-        (keydown)="onInputConditionsKeyDown($event)"
-        tabindex="0"
-        [igxDropDownItemNavigation]="dropdownConditions"
-        [placeholder]="inputConditionsPlaceholder"
-        autocomplete="off"
-        [value]="getConditionName(expressionUI.expression.condition)"
-        [readonly]="true"
-    />
+    <input igxInput (keydown)="onInputConditionsKeyDown($event)" tabindex="0"
+        [igxDropDownItemNavigation]="dropdownConditions" [placeholder]="inputConditionsPlaceholder" autocomplete="off"
+        [value]="getConditionName(expressionUI.expression.condition)" [readonly]="true" />
 </igx-input-group>
 
-<igx-date-picker #datePicker mode="dropdown" [(ngModel)]="expressionUI.expression.searchVal" [locale]="grid.locale">
+<igx-date-picker #datePicker mode="dropdown" [(ngModel)]="expressionUI.expression.searchVal" [locale]="grid.locale"
+    [outlet]="grid.outletDirective">
     <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value">
         <igx-input-group #dropDownTarget type="box" [displayDensity]="displayDensity" [supressInputAutofocus]="true">
-            <input #input
-                    igxInput
-                    tabindex="0"
-                    (click)="openDatePicker(openDialog)"
-                    [placeholder]="inputDatePlaceholder"
-                    autocomplete="off"
-                    [value]="value | igxdate: grid.locale"
-                    [readonly]="true"
-                    [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"/>
+            <input #input igxInput tabindex="0" (click)="openDatePicker(openDialog)"
+                [placeholder]="inputDatePlaceholder" autocomplete="off" [value]="value | igxdate: grid.locale"
+                [readonly]="true"
+                [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary" />
         </igx-input-group>
     </ng-template>
 </igx-date-picker>
 
-<button (click)="onRemoveButtonClick()" igxButton="icon" [displayDensity]="displayDensity" *ngIf="!isSingle" >
+<button (click)="onRemoveButtonClick()" igxButton="icon" [displayDensity]="displayDensity" *ngIf="!isSingle">
     <igx-icon>cancel</igx-icon>
 </button>
 
-<igx-buttongroup #logicOperatorButtonGroup
-    *ngIf="!isLast"
-    [multiSelection]="false">
-    <span igxButton [displayDensity]="displayDensity"
-        #andButton
-        (keydown)="onLogicOperatorKeyDown($event, 0)"
-        tabindex="0"
-        [selected]="expressionUI.afterOperator === 0"
-        type="button"
+<igx-buttongroup #logicOperatorButtonGroup *ngIf="!isLast" [multiSelection]="false">
+    <span igxButton [displayDensity]="displayDensity" #andButton (keydown)="onLogicOperatorKeyDown($event, 0)"
+        tabindex="0" [selected]="expressionUI.afterOperator === 0" type="button"
         (click)="onLogicOperatorButtonClicked($event, 0)">
         {{ grid.resourceStrings.igx_grid_filter_operator_and }}
     </span>
 
-    <span igxButton [displayDensity]="displayDensity"
-        #orButton
-        tabindex="0"
-        (keydown)="onLogicOperatorKeyDown($event, 1)"
-        [selected]="expressionUI.afterOperator === 1"
-        type="button"
+    <span igxButton [displayDensity]="displayDensity" #orButton tabindex="0"
+        (keydown)="onLogicOperatorKeyDown($event, 1)" [selected]="expressionUI.afterOperator === 1" type="button"
         (click)="onLogicOperatorButtonClicked($event, 1)">
         {{ grid.resourceStrings.igx_grid_filter_operator_or }}
     </span>

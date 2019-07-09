@@ -75,7 +75,6 @@ import { IGridResourceStrings } from '../core/i18n/grid-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
-import { DeprecateMethod, DeprecateProperty } from '../core/deprecateDecorators';
 import { IgxGridSelectionService, GridSelectionRange, IgxGridCRUDService, IgxRow, IgxCell } from '../core/grid-selection';
 import { DragScrollDirection } from './drag-select.directive';
 import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
@@ -89,6 +88,7 @@ import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 import { IgxDragIndicatorIconDirective } from './row-drag.directive';
 import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -246,7 +246,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _isLoading = false;
     private _locale = null;
     private _observer: MutationObserver;
-    private _destroyed = false;
+    protected _destroyed = false;
     private overlayIDs = [];
     /**
      * An accessor that sets the resource strings.
@@ -602,10 +602,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     * @memberof IgxGridBaseComponent
     */
     set rowEditable(val: boolean) {
-        this._rowEditable = val;
         if (this.gridAPI.grid) {
             this.refreshGridState();
         }
+        this._rowEditable = val;
+        this.cdr.markForCheck();
     }
 
     /**
@@ -1496,7 +1497,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @Output()
     @DeprecateProperty('onFocusChange event is deprecated. Use onGridKeydown event instead.')
-    public onFocusChange = new EventEmitter<IFocusChangeEventArgs>();
+    public get onFocusChange(): EventEmitter<IFocusChangeEventArgs> {
+        return this._onFocusChange;
+    }
+
+    public set onFocusChange(val: EventEmitter<IFocusChangeEventArgs>) {
+        this._onFocusChange = val;
+    }
 
     /**
      * Emitted when keydown is triggered over element inside grid's body.
@@ -2481,6 +2488,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected _autoSize = false;
     private _rowHeight;
     protected _ngAfterViewInitPassed = false;
+    protected _baseFontSize: number;
     private _horizontalForOfs;
     private _multiRowLayoutRowSize = 1;
 
@@ -2496,6 +2504,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _columnWidth: string;
 
     protected _defaultTargetRecordNumber = 10;
+    protected _onFocusChange = new EventEmitter<IFocusChangeEventArgs>();
 
     private _summaryPosition = GridSummaryPosition.bottom;
     private _summaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
@@ -2756,6 +2765,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
             requestAnimationFrame(() => {
                 this.summaryService.summaryHeight = 0;
+                this.endEdit(true);
                 this.reflow();
                 this.verticalScrollContainer.recalcUpdateSizes();
             });
@@ -2773,6 +2783,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                     return mutation.type === 'childList';
                 }).length > 0;
                 if (childListHasChanged && this.isAttachedToDom) {
+                    this._autoSize = false;
                     this.reflow();
                     this._observer.disconnect();
                     this._observer = null;
@@ -3443,6 +3454,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @memberof IgxGridBaseComponent
      */
     public addRow(data: any): void {
+        // commit pending states prior to adding a row
+        this.endEdit(true);
         this.gridAPI.addRowToData(data);
 
         this.onRowAdded.emit({ data });
@@ -3985,10 +3998,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Sets TBODY height i.e. this.calcHeight
      */
     protected calculateGridHeight() {
-        // TODO: Calculate based on grid density
         if (this.maxLevelHeaderDepth) {
-            this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
-                (this.allowFiltering && this.filterMode === FilterMode.quickFilter ? FILTER_ROW_HEIGHT : 0) + 1}px`;
+            this._baseFontSize = parseFloat(getComputedStyle(this.document.documentElement).getPropertyValue('font-size'));
+            let minSize = (this.maxLevelHeaderDepth + 1) * this.defaultRowHeight / this._baseFontSize;
+            if (this._allowFiltering && this._filterMode === FilterMode.quickFilter) {
+                minSize += (FILTER_ROW_HEIGHT + 1) / this._baseFontSize;
+            }
+            this.theadRow.nativeElement.style.minHeight = `${minSize}rem`;
         }
         this.summariesHeight = 0;
         if (this.hasSummarizedColumns && this.rootSummariesEnabled) {
@@ -4438,6 +4454,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             const columnLayoutColumns = this.columnList.filter((col) => col.columnLayout || col.columnLayoutChild);
             this.columnList.reset(columnLayoutColumns);
         }
+        this._maxLevelHeaderDepth = null;
         this._columns = this.columnList.toArray();
         collection.forEach((column: IgxColumnComponent) => {
             column.grid = this;
@@ -4470,9 +4487,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected reinitPinStates() {
-        if (this.hasColumnGroups) {
-            this._pinnedColumns = this.columnList.filter((c) => c.pinned);
-        }
+        this._pinnedColumns = (this.hasColumnGroups) ? this.columnList.filter((c) => c.pinned) :
+        this.columnList.filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
         this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
     }
 
@@ -5262,7 +5278,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     protected changeRowEditingOverlayStateOnScroll(row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>) {
-        if (!this.rowEditable || this.rowEditingOverlay.collapsed) {
+        if (!this.rowEditable || !this.rowEditingOverlay || this.rowEditingOverlay.collapsed) {
             return;
         }
         if (!row) {
@@ -5378,8 +5394,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public endEdit(commit = true, event?: Event) {
         const row = this.crudService.row;
         const cell = this.crudService.cell;
-        const columnindex = cell ? cell.column.index : -1;
-        const ri = row ? row.index : -1;
 
         // TODO: Merge the crudService with wht BaseAPI service
         if (!row && !cell) { return; }
@@ -5392,9 +5406,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.endRowTransaction(commit, row);
 
-        const currentCell = this.gridAPI.get_cell_by_index(ri, columnindex);
-        if (currentCell && event) {
-            currentCell.nativeElement.focus();
+        const activeCell = this.selectionService.activeElement;
+        if (event && activeCell) {
+            const rowIndex = activeCell.row;
+            const visibleColIndex = activeCell.layout ? activeCell.layout.columnVisibleIndex : activeCell.column;
+            this.navigateTo(rowIndex, visibleColIndex, (c) => {
+                if (c.targetType === GridKeydownTargetType.dataCell && c.target) {
+                    c.target.nativeElement.focus();
+                }
+            });
         }
     }
     /**

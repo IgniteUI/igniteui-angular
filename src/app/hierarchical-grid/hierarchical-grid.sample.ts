@@ -13,6 +13,7 @@ export class HierarchicalGridSampleComponent {
     rootExpanded = false;
     density = 'comfortable';
     displayDensities;
+    riToggle = true;
 
     @ViewChild('layout1')
     layout1: IgxRowIslandComponent;

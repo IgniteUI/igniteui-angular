@@ -2,6 +2,14 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 7.3.7
+ - **Behavioral Change** default min column width is changed according the grid display density property:
+    - for `DisplayDensity.comfortable` defaultMinWidth is `80px`;
+    - for `DisplayDensity.cosy` defaultMinWidth is `64px`;
+    - for `DisplayDensity.compact` defaultMinWidth is `56px`;
+Now you can set `minWindth` for a column to a value smaller than `defaultMinWidth` value.
+
+
 ## 7.3.5
 - `IgxList` - The list component has been refactored. It now includes several new supporting directives:
     - `igxListThumbnail` - Use it to mark the target as list thumbnail which will be automatically positioned as a first item in the list item;
@@ -20,7 +28,7 @@ All notable changes for each version of this project will be documented in this 
               <igx-icon igxListAction>info</igx-icon>
             </igx-list-item>
         </igx-list>
-        
+
         <igx-list>
           <igx-list-item [isHeader]="true">List items</igx-list-item>
           <igx-list-item>
@@ -30,6 +38,23 @@ All notable changes for each version of this project will be documented in this 
           </igx-list-item>
         </igx-list>
     ```
+
+### New Features
+- `IgxDropDown` now supports `DisplayDensity`.
+    - `[displayDensity]` - `@Input()` added to the `igx-drop-down`. Takes prevelance over any other `DisplayDensity` provider (e.g. parent component or `DisplayDensityToken` provided in module)
+    - The component can also get it's display density from Angular's DI engine (if the `DisplayDensityToken` is provided on a lower level)
+    - Setting `[displayDensity]` affects the control's items' and inputs' css properties, most notably heights, padding, font-size
+    - Available display densities are `compact`, `cosy` and `comfortable` (default)
+    - **Behavioral Change** - default `igx-drop-down-item` height is now `40px` (down from `48px`)
+- `IgxCombo` - Setting `[displayDensity]` now also affects the combo's items
+    - **Behavioral Changes**
+    - `[itemHeight]` defaults to `40` (`[displayDensity]` default is `comfortable`)
+    - `[itemsMaxHeight]` defaults to `10 * itemHeight`.
+    - Changing `[displayDensity]` or `[itemHeight]` affect the drop-down container height if `[itemsMaxHeight]` is not provided
+    - Setting `[itemHeight]` overrides the height provided by the `[displayDensity]` input
+- `IgxSelect`
+    - Setting `[displayDensity]` now also affects the select's items
+    - **Behavioral Change** - default `igx-select-item` height is now `40px` (down from `48px`)
 
 ## 7.3.4
 - `IgxGrid` - summaries
@@ -118,6 +143,7 @@ In order to turn them off, you need to pass an argument and set it to `false`
     - `navigateTo` method allows you to navigate to a position in the grid based on provided `rowindex` and `visibleColumnIndex`, also to execute a custom logic over the target element through a callback function that accepts `{ targetType: GridKeydownTargetType, target: Object }`
     - `getNextCell` returns `ICellPosition` which defines the next cell, according to the current position, that match specific criteria. You can pass callback function as a third parameter of `getPreviousCell` method
     - `getPreviousCell` returns `ICellPosition` which defines the previous cell, according to the current position, that match specific criteria. You can pass callback function as a third parameter of `getPreviousCell` method.
+- `IgxTransactionService` commit and delete transaction by id - `commit` and `clear` methods of `IgxTransactionService` accept now optional `id` parameter. If `id` is provided to `commit` method only transactions for provided `id`. When `id` is provided to `clear` method all transactions for provided `id` will be removed from transactions log. Additionally both `commit` and `clear` when `id` is provided will remove all the actions in undo stack related to the provided `id`.
 
 ### Bug fixes
 - The ESF animations for opening and closing do not work #4834
@@ -202,6 +228,15 @@ In order to turn them off, you need to pass an argument and set it to `false`
 ### New features
 - **igxSlider** - exposing new `labels` property accepting a collection of literal values that become equally spread over the slider, by placing each element as a thumb label.
 - **igxSlider** - deprecate **isContiunous** property.
+- `IgxDropDown` now supports `DisplayDensity`.
+    - `[displayDensity]` - `@Input()` added to the `igx-drop-down`. Takes prevelance over any other `DisplayDensity` provider (e.g. parent component or `DisplayDensityToken` provided in module)
+    - The component can also get it's display density from Angular's DI engine (if the `DisplayDensityToken` is provided on a lower level)
+    - Setting `[displayDensity]` affects the control's items' and inputs' css properties, most notably heights, padding, font-size
+    - Available display densities are `compact`, `cosy` and `comfortable` (default)
+    - **Behavioral Change** - default item `igx-drop-down-item` height is now `40px` (down from `48px`)
+- `IgxCombo` - Setting `[displayDensity]` now also affects the combo's items
+    - Setting `[itemHeight]` overrides the height provided by the `[displayDensity]` input
+- `IgxSelect`- Setting `[displayDensity]` now also affects the select's items
 
 ### Bug Fixes
 - In slider with type Range when change the lower value to be equal or greater than the upper the range is not correct #4562

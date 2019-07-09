@@ -345,7 +345,15 @@ export class IgxTimePickerComponent implements
     public mode = InteractionMode.Dialog;
 
     /**
-     *@hidden
+     * Determines the container the popup element should be attached to.
+     *
+     * ```html
+     * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
+     * //..
+     * <igx-time-picker [outlet]="outlet"></igx-time-picker>
+     * //..
+     * ```
+     * Where `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
      */
     @Input()
     public outlet: IgxOverlayOutletDirective | ElementRef;
@@ -423,7 +431,13 @@ export class IgxTimePickerComponent implements
      */
     @DeprecateProperty(`'onOpen' @Output property is deprecated. Use 'onOpened' instead.`)
     @Output()
-    public onOpen = new EventEmitter<IgxTimePickerComponent>();
+    public get onOpen(): EventEmitter<IgxTimePickerComponent> {
+        return this._onOpen;
+    }
+
+    public set onOpen(val: EventEmitter<IgxTimePickerComponent>) {
+        this._onOpen = val;
+    }
 
     /**
      * Emitted when a timePicker is opened.
@@ -437,7 +451,13 @@ export class IgxTimePickerComponent implements
      */
     @DeprecateProperty(`'onClose' @Output property is deprecated. Use 'onClosed' instead.`)
     @Output()
-    public onClose = new EventEmitter<IgxTimePickerComponent>();
+    public get onClose(): EventEmitter<IgxTimePickerComponent> {
+        return this._onClose;
+    }
+
+    public set onClose(val: EventEmitter<IgxTimePickerComponent>) {
+        this._onClose = val;
+    }
 
     /**
      * Emitted when a timePicker is closed.
@@ -595,6 +615,9 @@ export class IgxTimePickerComponent implements
     private _prevSelectedHour: string;
     private _prevSelectedMinute: string;
     private _prevSelectedAmPm: string;
+
+    private _onOpen = new EventEmitter<IgxTimePickerComponent>();
+    private _onClose = new EventEmitter<IgxTimePickerComponent>();
 
     private _onTouchedCallback: () => void = () => { };
     private _onChangeCallback: (_: Date) => void = () => { };
@@ -794,14 +817,14 @@ export class IgxTimePickerComponent implements
                 this.onClosed.emit(this);
 
                 // TODO: remove this line after deprecating 'onClose'
-                this.onClose.emit(this);
+                this._onClose.emit(this);
             });
 
             this.toggleRef.onOpened.pipe(takeUntil(this._destroy$)).subscribe(() => {
                 this.onOpened.emit(this);
 
                 // TODO: remove this line after deprecating 'onOpen'
-                this.onOpen.emit(this);
+                this._onOpen.emit(this);
             });
 
             this.toggleRef.onClosing.pipe(takeUntil(this._destroy$)).subscribe((event) => {
@@ -1073,7 +1096,7 @@ export class IgxTimePickerComponent implements
         }
         date.setSeconds(0);
         if (((this.showHoursList && this.selectedHour !== '12') || (!this.showHoursList && this.selectedHour <= '11')) &&
-                this.selectedAmPm === 'PM') {
+            this.selectedAmPm === 'PM') {
             date.setHours(date.getHours() + 12);
         }
         if (!this.showHoursList && this.selectedAmPm === 'AM' && this.selectedHour > '11') {
@@ -1106,8 +1129,8 @@ export class IgxTimePickerComponent implements
             amPM = sections[sections.length - 1];
 
             if (((this.showHoursList && date.getHours().toString() !== '12') ||
-                    (!this.showHoursList && date.getHours().toString() <= '11')) && amPM === 'PM') {
-                        date.setHours(date.getHours() + 12);
+                (!this.showHoursList && date.getHours().toString() <= '11')) && amPM === 'PM') {
+                date.setHours(date.getHours() + 12);
             }
 
             if (!this.showHoursList && amPM === 'AM' && date.getHours().toString() > '11') {
@@ -1747,18 +1770,18 @@ export class IgxTimePickerComponent implements
 
             if (this.showMinutesList &&
                 ((this.showHoursList && MINUTES_POS.indexOf(cursor) !== -1) || (!this.showHoursList && HOURS_POS.indexOf(cursor) !== -1))) {
-                    this.value = this._spinMinutes(currentVal, mDelta, sign);
+                this.value = this._spinMinutes(currentVal, mDelta, sign);
             }
 
             if (this.showAmPmList) {
                 if (((!this.showHoursList || !this.showMinutesList) && MINUTES_POS.indexOf(cursor) !== -1) ||
-                    (this.showHoursList && this.showMinutesList &&  AMPM_POS.indexOf(cursor) !== -1)) {
+                    (this.showHoursList && this.showMinutesList && AMPM_POS.indexOf(cursor) !== -1)) {
 
-                        const sections = this.displayValue.split(/[\s:]+/);
-                        sign = sections[sections.length - 1] === 'AM' ? 1 : -1;
-                        currentVal.setHours(currentVal.getHours() + (sign * 12));
+                    const sections = this.displayValue.split(/[\s:]+/);
+                    sign = sections[sections.length - 1] === 'AM' ? 1 : -1;
+                    currentVal.setHours(currentVal.getHours() + (sign * 12));
 
-                        this.value = currentVal;
+                    this.value = currentVal;
                 }
             }
 
