@@ -252,6 +252,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     }
 
     public performTab(currentRowEl, selectedNode: ISelectionNode) {
+        if (this.grid.rowInEditMode) {
+            super.performTab(currentRowEl, selectedNode);
+            return;
+        }
         const rowIndex = selectedNode.row;
         const visibleColumnIndex = selectedNode.column;
         const isSummaryRow = selectedNode.isSummaryRow;
@@ -358,6 +362,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     }
 
     public performShiftTabKey(currentRowEl, selectedNode: ISelectionNode) {
+        if (this.grid.rowInEditMode) {
+            super.performShiftTabKey(currentRowEl, selectedNode);
+            return;
+        }
         const rowIndex = selectedNode.row;
         const visibleColumnIndex = selectedNode.column;
         const isSummary = selectedNode.isSummaryRow;
