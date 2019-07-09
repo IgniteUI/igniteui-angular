@@ -1107,9 +1107,45 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             fixture.detectChanges();
 
             // Small misalignment in the third column occurs when cols are being intersected.
-            expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 640px 80px 100px 200px');
+            expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 650px 50px 100px 200px');
         });
     });
+
+    describe('Selection ', () => {
+        beforeEach(async(() => {
+            fixture = TestBed.createComponent(ColumnLayoutGroupingTestComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+            colGroups = fixture.componentInstance.colGroups;
+        }));
+
+        it('should return correct selected data via getSelectedData API.', () => {
+            const selectedData1 = [{
+                ID: 'ALFKI',
+                CompanyName: 'Alfreds Futterkiste',
+                ContactName: 'Maria Anders',
+                ContactTitle: 'Sales Representative'
+            }];
+            const selectedData2 = [{
+                PostalCode: '05021',
+                City: 'México D.F.',
+                Country: 'Mexico',
+                Address: 'Avda. de la Constitución 2222'
+            }];
+            let cell = grid.getCellByColumn(0, 'CompanyName');
+            UIInteractions.clickElement(cell);
+            fixture.detectChanges();
+
+            expect(grid.getSelectedData()).toEqual(selectedData1);
+
+            cell = grid.getCellByColumn(1, 'City');
+            UIInteractions.clickElement(cell);
+            fixture.detectChanges();
+
+            expect(grid.getSelectedData()).toEqual(selectedData2);
+        });
+    });
+
 });
 
 @Component({
