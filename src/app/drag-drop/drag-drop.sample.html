@@ -19,6 +19,43 @@
                         <span *ngIf="ghostInDropArea && !friendlyArea">Pls no</span>
                     </div>
                 </div>
+    
+                <br>
+                <h4 class="sample-title">Drag Handle:</h4>
+                <button igxButton="raised" igxRipple (click)="openDialog()" [style.width.px]="150">Open dialog</button>
+    
+                <!-- <igx-dialog #form leftButtonLabel="Cancel" 
+                            (onLeftButtonSelect)="form.close()" rightButtonLabel="Sign In" backgroundClick="true"
+                            [closeOnOutsideSelect]="true" attr.customClass='myClass'> -->
+                <div igxToggle #toggleForm="toggle" class="igx-dialog" [style.width.px]="280" 
+                     igxDrag [renderGhost]="false" [dragTolerance]="0">
+                    <div class="igx-dialog__window">
+                        <div class="login-form">
+                            <div class="dialogHeader">
+                                <span [style.margin.px]="10">Sign In</span>
+                                <igx-icon igxDragHandle fontSet="material" class="dialogHandle">control_camera</igx-icon>
+                            </div>
+                            <igx-input-group>
+                                <igx-prefix>
+                                    <igx-icon>person</igx-icon>
+                                </igx-prefix>
+                                <input type="text" igxInput />
+                                <label igxLabel>Username</label>
+                            </igx-input-group>
+                            <igx-input-group>
+                                <igx-prefix>
+                                    <igx-icon>lock</igx-icon>
+                                </igx-prefix>
+                                <label igxLabel>Password</label>
+                                <input type="password" igxInput />
+                            </igx-input-group>
+                        </div>
+                        <div class="igx-dialog__window-actions">
+                            <button igxButton="flat" type="button" igxRipple (click)="toggleForm.close()"> Cancel </button>
+                            <button igxButton="flat" type="button" igxRipple (click)="signIn($event)"> Sign In </button>
+                        </div>
+                    </div>
+                </div>
             </article>
         </section>
         <section class="sample-content">

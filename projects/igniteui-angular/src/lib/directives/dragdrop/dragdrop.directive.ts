@@ -13,11 +13,13 @@
     Renderer2,
     ChangeDetectorRef,
     ContentChild,
-    ViewContainerRef
+    ViewContainerRef,
+    AfterContentInit
 } from '@angular/core';
 import { animationFrameScheduler, fromEvent, interval, Subject } from 'rxjs';
 import { takeUntil, throttle } from 'rxjs/operators';
 import { IgxDragGhostDirective } from './drag-ghost.directive';
+import { IgxDragHandleDirective } from './drag-handle.directive';
 
 export enum RestrictDrag {
     VERTICALLY,
@@ -158,7 +160,7 @@ export interface IDragStartEventArgs extends IDragBaseEventArgs {
     exportAs: 'drag',
     selector: '[igxDrag]'
 })
-export class IgxDragDirective implements OnInit, OnDestroy {
+export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     /**
      * - Save data inside the `igxDrag` directive. This can be set when instancing `igxDrag` on an element.
@@ -299,6 +301,9 @@ export class IgxDragDirective implements OnInit, OnDestroy {
 
     @ContentChild(IgxDragGhostDirective, { static: false })
     public ghostTemplate: IgxDragGhostDirective;
+
+    @ContentChild(IgxDragHandleDirective, { static: false })
+    public dragHandle: IgxDragHandleDirective;
 
     /**
      * @hidden
@@ -457,26 +462,27 @@ export class IgxDragDirective implements OnInit, OnDestroy {
     /**
      * @hidden
      */
-    ngOnInit() {
+    ngAfterContentInit() {
+        const targetElement = this.dragHandle ? this.dragHandle.element.nativeElement : this.element.nativeElement;
         this.zone.runOutsideAngular(() => {
             if (this.pointerEventsEnabled) {
-                fromEvent(this.element.nativeElement, 'pointerdown').pipe(takeUntil(this._destroy))
+                fromEvent(targetElement, 'pointerdown').pipe(takeUntil(this._destroy))
                 .subscribe((res) => this.onPointerDown(res));
 
-                fromEvent(this.element.nativeElement, 'pointermove').pipe(
+                fromEvent(targetElement, 'pointermove').pipe(
                     throttle(() => interval(0, animationFrameScheduler)),
                     takeUntil(this._destroy)
                 ).subscribe((res) => this.onPointerMove(res));
 
-                fromEvent(this.element.nativeElement, 'pointerup').pipe(takeUntil(this._destroy))
+                fromEvent(targetElement, 'pointerup').pipe(takeUntil(this._destroy))
                     .subscribe((res) => this.onPointerUp(res));
 
                 if (!this.renderGhost) {
-                    fromEvent(this.element.nativeElement, 'lostpointercapture').pipe(takeUntil(this._destroy))
+                    fromEvent(targetElement, 'lostpointercapture').pipe(takeUntil(this._destroy))
                     .subscribe((res) => this.onPointerLost(res));
                 }
             } else if (this.touchEventsEnabled) {
-                fromEvent(this.element.nativeElement, 'touchstart').pipe(takeUntil(this._destroy))
+                fromEvent(targetElement, 'touchstart').pipe(takeUntil(this._destroy))
                 .subscribe((res) => this.onPointerDown(res));
 
                 fromEvent(document.defaultView, 'touchmove').pipe(
@@ -488,7 +494,7 @@ export class IgxDragDirective implements OnInit, OnDestroy {
                     .subscribe((res) => this.onPointerUp(res));
             } else {
                 // We don't have pointer events and touch events. Use then mouse events.
-                fromEvent(this.element.nativeElement, 'mousedown').pipe(takeUntil(this._destroy))
+                fromEvent(targetElement, 'mousedown').pipe(takeUntil(this._destroy))
                 .subscribe((res) => this.onPointerDown(res));
 
                 fromEvent(document.defaultView, 'mousemove').pipe(
@@ -594,10 +600,11 @@ export class IgxDragDirective implements OnInit, OnDestroy {
         this._dragStartY = this._startY - this._dragOffsetY;
 
         // Set pointer capture so we detect pointermove even if mouse is out of bounds until dragGhost is created.
+        const targetElement = this.dragHandle ? this.dragHandle.element.nativeElement : this.element.nativeElement;
         if (this.pointerEventsEnabled) {
-            this.element.nativeElement.setPointerCapture(this._pointerDownId);
+            targetElement.setPointerCapture(this._pointerDownId);
         } else {
-            this.element.nativeElement.focus();
+            targetElement.focus();
             event.preventDefault();
         }
     }
@@ -1177,7 +1184,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
  * @hidden
  */
 @NgModule({
-    declarations: [IgxDragDirective, IgxDropDirective, IgxDragGhostDirective],
-    exports: [IgxDragDirective, IgxDropDirective, IgxDragGhostDirective]
+    declarations: [IgxDragDirective, IgxDropDirective, IgxDragGhostDirective, IgxDragHandleDirective],
+    exports: [IgxDragDirective, IgxDropDirective, IgxDragGhostDirective, IgxDragHandleDirective]
 })
 export class IgxDragDropModule { }

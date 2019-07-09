@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { OverlaySettings, GlobalPositionStrategy, NoOpScrollStrategy, IgxToggleDirective, IgxDragDirective } from 'igniteui-angular';
 
 @Component({
     selector: 'app-drag-drop-sample',
@@ -14,6 +15,21 @@ export class DragDropSampleComponent {
     public draggingElem = false;
     public dragEnteredArea = false;
     public draggableElems = ['Suspect 1', 'Suspect 2', 'Suspect 3', 'Suspect 4'];
+
+    public toggleStartPageX;
+    public toggleStartPageY;
+    private overlaySettings: OverlaySettings = {
+        positionStrategy: new GlobalPositionStrategy(),
+        scrollStrategy: new NoOpScrollStrategy(),
+        modal: false,
+        closeOnOutsideClick: true
+    };
+
+    @ViewChild('toggleForm', { static: true })
+    public toggleForm: IgxToggleDirective;
+
+    @ViewChild('toggleForm', { read: IgxDragDirective, static: true })
+    public toggleFormDrag: IgxDragDirective;
 
     constructor(private cdr: ChangeDetectorRef) {
     }
@@ -54,5 +70,15 @@ export class DragDropSampleComponent {
         if (event.drag.data.id === 'customGhost') {
             this.ghostInDropArea = false;
         }
+    }
+
+    public openDialog() {
+        this.toggleForm.open(this.overlaySettings);
+
+        if (!this.toggleStartPageX && !this.toggleStartPageY) {
+            this.toggleStartPageX = this.toggleFormDrag.pageX;
+            this.toggleStartPageY = this.toggleFormDrag.pageY;
+        }
+        this.toggleFormDrag.setPageXY(this.toggleStartPageX, this.toggleStartPageY);
     }
 }
