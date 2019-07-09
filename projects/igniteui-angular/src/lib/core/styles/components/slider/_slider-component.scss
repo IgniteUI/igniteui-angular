@@ -56,6 +56,18 @@
         }
     }
 
+    @include e(thumb, $m: hovered) {
+        .dot {
+            @extend %igx-thumb-dot--active !optional;
+        }
+    }
+
+    @include e(thumb, $m: pressed) {
+        .dot {
+            @extend %igx-thumb-dot--pressed !optional;
+        }
+    }
+
     @include m(disabled) {
         @extend %igx-slider-display !optional;
 
@@ -77,6 +89,7 @@
         @each $t in $thumbs {
             @include e(thumb-#{$t}) {
                 @extend %igx-thumb-display !optional;
+                @extend %igx-thumb--disabled !optional;
 
                 .label {
                     @extend %igx-thumb-label !optional;
