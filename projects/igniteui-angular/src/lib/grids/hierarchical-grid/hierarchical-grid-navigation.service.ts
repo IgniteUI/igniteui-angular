@@ -265,6 +265,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const virt = this.grid.verticalScrollContainer;
         const isNextChild = nextIndex <= virt.igxForOf.length - 1 &&
             this.grid.isChildGridRecord(virt.igxForOf[nextIndex]);
+        if (this.grid.rowInEditMode) {
+            super.performTab(currentRowEl, selectedNode);
+            return;
+        }
         if (!nextIsDataRow && !(isLastDataRow && hasSummaries) && isLastColumn && !isSummaryRow) {
             // navigating in child, next is not summary
             const childContainer = this.getChildGridRowContainer();
@@ -361,6 +365,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const rowIndex = selectedNode.row;
         const visibleColumnIndex = selectedNode.column;
         const isSummary = selectedNode.isSummaryRow;
+        if (this.grid.rowInEditMode) {
+            super.performShiftTabKey(currentRowEl, selectedNode);
+            return;
+        }
         if (visibleColumnIndex === 0 && rowIndex === 0 && this.grid.parent && !isSummary) {
             if (this.grid.allowFiltering && this.grid.filterMode === FilterMode.quickFilter) {
                 this.moveFocusToFilterCell();
@@ -447,14 +455,17 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const cell = cells[0];
         const childContainer = this.grid.nativeElement.parentNode.parentNode;
         const scrTop = this.grid.parent.verticalScrollContainer.getVerticalScroll().scrollTop;
+        const maxScroll = this.grid.parent.verticalScrollContainer.getVerticalScroll().scrollHeight - this.grid.parent.calcHeight;
         const dc = childContainer.parentNode.parentNode;
         const scrWith = parseInt(dc.style.top, 10);
-        if (scrTop === 0 || scrWith === 0) {
+        const parentRowOffset = childContainer.parentNode.offsetTop + this.grid.nativeElement.offsetTop +
+            scrWith;
+        if ((scrTop === 0 && parentRowOffset < 0 ) || parentRowOffset === 0 || (scrTop === maxScroll && parentRowOffset > 0)) {
             // cell is in view
             cell.focus({preventScroll: true});
         } else {
             // scroll parent so that cell is in view
-            this.scrollGrid(this.grid.parent, scrWith , () => cell.focus({preventScroll: true}));
+            this.scrollGrid(this.grid.parent, parentRowOffset, () => cell.focus({ preventScroll: true }));
         }
     }
 
