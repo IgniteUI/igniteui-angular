@@ -431,7 +431,13 @@ export class IgxTimePickerComponent implements
      */
     @DeprecateProperty(`'onOpen' @Output property is deprecated. Use 'onOpened' instead.`)
     @Output()
-    public onOpen = new EventEmitter<IgxTimePickerComponent>();
+    public get onOpen(): EventEmitter<IgxTimePickerComponent> {
+        return this._onOpen;
+    }
+
+    public set onOpen(val: EventEmitter<IgxTimePickerComponent>) {
+        this._onOpen = val;
+    }
 
     /**
      * Emitted when a timePicker is opened.
@@ -445,7 +451,13 @@ export class IgxTimePickerComponent implements
      */
     @DeprecateProperty(`'onClose' @Output property is deprecated. Use 'onClosed' instead.`)
     @Output()
-    public onClose = new EventEmitter<IgxTimePickerComponent>();
+    public get onClose(): EventEmitter<IgxTimePickerComponent> {
+        return this._onClose;
+    }
+
+    public set onClose(val: EventEmitter<IgxTimePickerComponent>) {
+        this._onClose = val;
+    }
 
     /**
      * Emitted when a timePicker is closed.
@@ -603,6 +615,9 @@ export class IgxTimePickerComponent implements
     private _prevSelectedHour: string;
     private _prevSelectedMinute: string;
     private _prevSelectedAmPm: string;
+
+    private _onOpen = new EventEmitter<IgxTimePickerComponent>();
+    private _onClose = new EventEmitter<IgxTimePickerComponent>();
 
     private _onTouchedCallback: () => void = () => { };
     private _onChangeCallback: (_: Date) => void = () => { };
@@ -802,14 +817,14 @@ export class IgxTimePickerComponent implements
                 this.onClosed.emit(this);
 
                 // TODO: remove this line after deprecating 'onClose'
-                this.onClose.emit(this);
+                this._onClose.emit(this);
             });
 
             this.toggleRef.onOpened.pipe(takeUntil(this._destroy$)).subscribe(() => {
                 this.onOpened.emit(this);
 
                 // TODO: remove this line after deprecating 'onOpen'
-                this.onOpen.emit(this);
+                this._onOpen.emit(this);
             });
 
             this.toggleRef.onClosing.pipe(takeUntil(this._destroy$)).subscribe((event) => {
