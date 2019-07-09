@@ -130,7 +130,7 @@ export class IgxSorting {
         return data;
     }
     protected groupDataRecursive<T>(data: T[], expressions: ISortingExpression[], level: number,
-        parent: IGroupByRecord, metadata: IGroupByRecord[], groupsRecords: any[] = []): T[] {
+        parent: IGroupByRecord, metadata: IGroupByRecord[], grid: any = null, groupsRecords: any[] = []): T[] {
         let i = 0;
         let result = [];
         while (i < data.length) {
@@ -141,7 +141,8 @@ export class IgxSorting {
                 records: cloneArray(group),
                 value: group[0][expressions[level].fieldName],
                 groupParent: parent,
-                groups: []
+                groups: [],
+                height: grid ? grid.rowHeight : null
             };
             if (parent) {
                 parent.groups.push(groupRow);
@@ -149,7 +150,7 @@ export class IgxSorting {
                 groupsRecords.push(groupRow);
             }
             if (level < expressions.length - 1) {
-                result = result.concat(this.groupDataRecursive(group, expressions, level + 1, groupRow, metadata, groupsRecords));
+                result = result.concat(this.groupDataRecursive(group, expressions, level + 1, groupRow, metadata, grid, groupsRecords));
             } else {
                 for (const groupItem of group) {
                     metadata.push(groupRow);
