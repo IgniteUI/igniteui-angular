@@ -170,6 +170,18 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                     if (cells.length > 0) { cells[cells.length - 1].focus(); }
                 });
             }
+        } else  if (this.grid.parent !== null) {
+            const childContainer = this.grid.nativeElement.parentNode.parentNode;
+            const diff =
+            childContainer.getBoundingClientRect().bottom - this.grid.rootGrid.nativeElement.getBoundingClientRect().bottom;
+            const endIsVisible = diff < 0;
+            const scrollable = this.getNextScrollableDown(this.grid);
+            if (!endIsVisible) {
+                this.scrollGrid(scrollable.grid, diff,
+                    () => super.navigateBottom(visibleColumnIndex));
+            } else {
+                super.navigateBottom(visibleColumnIndex);
+            }
         } else {
             super.navigateBottom(visibleColumnIndex);
         }
