@@ -32,7 +32,8 @@ $_light-slider: extend(
 
 
         label-background-color: (
-            igx-color: ('secondary', 500)
+            igx-color: ('secondary', 500),
+            hexrgba: ()
         ),
 
         label-text-color: (
@@ -45,7 +46,8 @@ $_light-slider: extend(
         ),
 
         base-track-color: (
-            igx-color: ('grays', 500)
+            igx-color: ('secondary', 500),
+            rgba: .24
         ),
 
         disabled-base-track-color: (
