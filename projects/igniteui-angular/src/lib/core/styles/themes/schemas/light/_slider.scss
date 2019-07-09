@@ -19,34 +19,37 @@
 ///
 /// @see $default-palette
 
-$_light-slider: extend((
-    track-color: (
-        igx-color: ('secondary', 500)
-    ),
+$_light-slider: extend(
+    $_default-shape-slider,
+    (
+        track-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    thumb-color: (
-        igx-color: ('secondary', 500)
-    ),
+        thumb-color: (
+            igx-color: ('secondary', 500)
+        ),
 
 
-    label-background-color: (
-        igx-color: ('secondary', 500)
-    ),
+        label-background-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    label-text-color: (
-        igx-contrast-color: ('secondary', 500)
-    ),
+        label-text-color: (
+            igx-contrast-color: ('secondary', 500)
+        ),
 
-    disabled-thumb-color: (
-        igx-color: ('grays', 400),
-        hexrgba: ()
-    ),
+        disabled-thumb-color: (
+            igx-color: ('grays', 400),
+            hexrgba: ()
+        ),
 
-    base-track-color: (
-        igx-color: ('grays', 500)
-    ),
+        base-track-color: (
+            igx-color: ('grays', 500)
+        ),
 
-    disabled-base-track-color: (
-        igx-color: ('grays', 400)
+        disabled-base-track-color: (
+            igx-color: ('grays', 400)
+        )
     )
-), $_default-shape-slider);
+);
