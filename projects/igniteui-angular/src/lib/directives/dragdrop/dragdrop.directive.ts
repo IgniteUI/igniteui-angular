@@ -186,6 +186,9 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     @Input()
     public renderGhost = true;
 
+    @Input('dragLinkTo')
+    public linkTo: number | string | number[] | string[];
+
     /**
      * Sets a custom class that will be added to the `dragGhost` element.
      * ```html
@@ -1001,6 +1004,9 @@ export class IgxDropDirective implements OnInit, OnDestroy {
     @Input('igxDrop')
     public data: any;
 
+    @Input('dropLinkTo')
+    public linkTo: number | string | number[] | string[];
+
     /** Event triggered when dragged element enters the area of the element.
      * ```html
      * <div class="cageArea" igxDrop (onEnter)="dragEnter()" (igxDragEnter)="onDragCageEnter()" (igxDragLeave)="onDragCageLeave()">
@@ -1080,6 +1086,41 @@ export class IgxDropDirective implements OnInit, OnDestroy {
         this._destroy.complete();
     }
 
+    public isDragLinked(drag: IgxDragDirective): boolean {
+        const dragLinkArray = drag.linkTo instanceof Array;
+        const dropLinkArray = this.linkTo instanceof Array;
+
+        if (!dragLinkArray && !dropLinkArray) {
+            return this.linkTo === drag.linkTo;
+        } else if (!dragLinkArray && dropLinkArray) {
+            const dropLinks = <Array<any>>this.linkTo;
+            for (let i = 0; i < dropLinks.length; i ++) {
+                if (dropLinks[i] === drag.linkTo) {
+                    return true;
+                }
+            }
+        } else if (dragLinkArray && !dropLinkArray) {
+            const dragLinks = <Array<any>>drag.linkTo;
+            for (let i = 0; i < dragLinks.length; i ++) {
+                if (dragLinks[i] === this.linkTo) {
+                    return true;
+                }
+            }
+        } else {
+            const dragLinks = <Array<any>>drag.linkTo;
+            const dropLinks = <Array<any>>this.linkTo;
+            for (let i = 0; i < dragLinks.length; i ++) {
+                for (let j = 0; j < dropLinks.length; j ++) {
+                    if (dragLinks[i] === dropLinks[j]) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
     /**
      * @hidden
      */
@@ -1089,6 +1130,10 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      * @hidden
      */
     public onDragEnter(event: CustomEvent<IgxDragCustomEventDetails>) {
+        if (!this.isDragLinked(event.detail.owner)) {
+            return;
+        }
+
         this.dragover = true;
         const elementPosX = this.element.nativeElement.getBoundingClientRect().left + this.getWindowScrollLeft();
         const elementPosY = this.element.nativeElement.getBoundingClientRect().top + this.getWindowScrollTop();
@@ -1115,6 +1160,10 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      * @hidden
      */
     public onDragLeave(event) {
+        if (!this.isDragLinked(event.detail.owner)) {
+            return;
+        }
+
         this.dragover = false;
         const elementPosX = this.element.nativeElement.getBoundingClientRect().left + this.getWindowScrollLeft();
         const elementPosY = this.element.nativeElement.getBoundingClientRect().top + this.getWindowScrollTop();
@@ -1142,6 +1191,10 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      */
     @HostListener('igxDrop', ['$event'])
     public onDragDrop(event) {
+        if (!this.isDragLinked(event.detail.owner)) {
+            return;
+        }
+
         const elementPosX = this.element.nativeElement.getBoundingClientRect().left + this.getWindowScrollLeft();
         const elementPosY = this.element.nativeElement.getBoundingClientRect().top + this.getWindowScrollTop();
         const offsetX = event.detail.pageX - elementPosX;

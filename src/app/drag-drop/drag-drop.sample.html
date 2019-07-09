@@ -10,7 +10,7 @@
     
                 <br>
                 <h4 class="sample-title">Ghost and base templating:</h4>
-                <div [igxDrag]="{ id: 'customGhost'}" [ngClass]="customDragged ? 'dragWithGhostPlaceholder' : 'dragWithGhostDefault'"
+                <div [igxDrag]="{ id: 'customGhost'}" [dragLinkTo]="'Suspect'" [ngClass]="customDragged ? 'dragWithGhostPlaceholder' : 'dragWithGhostDefault'"
                     (dragStart)="customDragged = true" (dragEnd)="customDragged = false">
                     <span *ngIf="!customDragged">Drag me</span>
                     <div *igxDragGhost class="customGhost">
@@ -28,7 +28,7 @@
                             (onLeftButtonSelect)="form.close()" rightButtonLabel="Sign In" backgroundClick="true"
                             [closeOnOutsideSelect]="true" attr.customClass='myClass'> -->
                 <div igxToggle #toggleForm="toggle" class="igx-dialog" [style.width.px]="280" 
-                     igxDrag [renderGhost]="false" [dragTolerance]="0">
+                     igxDrag [renderGhost]="false" [dragTolerance]="0" [dragLinkTo]="'dialog'">
                     <div class="igx-dialog__window">
                         <div class="login-form">
                             <div class="dialogHeader">
@@ -62,14 +62,15 @@
             <article class="sample-column">
                 <div [style.width]="'70%'" >
                     <h4>Drag a suspect inside or outside the cage:</h4>
-                    <div igxDrop class="initialArea" (onEnter)="onEnterCustomOutside($event)" (onLeave)="onLeaveCustom($event)">
+                    <div igxDrop class="initialArea" [dropLinkTo]="['Pedestrian', 'Suspect']" (onEnter)="onEnterCustomOutside($event)" (onLeave)="onLeaveCustom($event)">
                         <div igxDrag *ngFor="let elem of draggableElems" class="draggableElem" [hideBaseOnDrag]="true" [animateOnRelease]="true"
+                            [dragLinkTo]="['Joe', 'Suspect']"
                             (dragStart)="onDragStart()" (dragEnd)="onDragEnd()">
                             <span [style.margin]="'auto'">{{elem}}</span>
                         </div>
                     </div>
     
-                    <div class="cageArea" igxDrop
+                    <div class="cageArea" igxDrop [dropLinkTo]="['Suspect']"
                         [style.backgroundImage]="'url(assets/images/drag-drop/jailBars.png)'"
                         (igxDragEnter)="onDragCageEnter()"
                         (igxDragLeave)="onDragCageLeave()"
