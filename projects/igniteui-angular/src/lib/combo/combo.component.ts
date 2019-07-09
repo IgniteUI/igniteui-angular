@@ -156,14 +156,13 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     protected virtDir: IgxForOfDirective<any>;
 
     /**
-     * @Input property that sets custom OverlaySettings.
+     * Set the combo's overlaySettings that control how the list of items is displayed.
+     *
      * ```html
      * <igx-combo [overlaySettings] = "customOverlaySettings"></igx-combo>
      * ```
+     *
      * ```typescript
-     *  // get
-     *  const settings: OverlaySettings = combo.overlaySettings;
-     *  // set
      *  const customSettings = { positionStrategy: { settings: { target: myTarget } } };
      *  combo.overlaySettings = customSettings;
      * ```
@@ -181,6 +180,13 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         }
     }
 
+    /**
+     * Get the combo's overlaySettings.
+     *
+     * ```typescript
+     *  const comboOverlaySettings: OverlaySettings = myCombo.overlaySettings;
+     * ```
+     */
     public get overlaySettings(): OverlaySettings {
         return this._overlaySettings;
     }
