@@ -438,14 +438,17 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const cell = cells[0];
         const childContainer = this.grid.nativeElement.parentNode.parentNode;
         const scrTop = this.grid.parent.verticalScrollContainer.getVerticalScroll().scrollTop;
+        const maxScroll = this.grid.parent.verticalScrollContainer.getVerticalScroll().scrollHeight - this.grid.parent.calcHeight;
         const dc = childContainer.parentNode.parentNode;
         const scrWith = parseInt(dc.style.top, 10);
-        if (scrTop === 0 || scrWith === 0) {
+        const parentRowOffset = childContainer.parentNode.offsetTop + this.grid.nativeElement.offsetTop +
+            scrWith;
+        if ((scrTop === 0 && parentRowOffset < 0 ) || parentRowOffset === 0 || (scrTop === maxScroll && parentRowOffset > 0)) {
             // cell is in view
             cell.focus({preventScroll: true});
         } else {
             // scroll parent so that cell is in view
-            this.scrollGrid(this.grid.parent, scrWith , () => cell.focus({preventScroll: true}));
+            this.scrollGrid(this.grid.parent, parentRowOffset, () => cell.focus({ preventScroll: true }));
         }
     }
 
