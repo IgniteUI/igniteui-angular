@@ -83,7 +83,7 @@
         id="right" class="igx-grid__scroll-on-drag-right"></span>
 </div>
 
-<div igxGridBody (copy)="copyHandler($event)" class="igx-grid__tbody">
+<div igxGridBody (keydown.control.c)="copyHandlerIE()" (copy)="copyHandler($event)" class="igx-grid__tbody">
     <div class="igx-grid__tbody-content" role="rowgroup" (onDragStop)="selectionService.dragMode = $event"
         (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
         [style.height.px]='calcHeight' [style.width.px]='calcWidth' #tbody (scroll)='scrollHandler($event)'
