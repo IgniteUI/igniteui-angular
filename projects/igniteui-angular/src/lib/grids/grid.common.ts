@@ -462,16 +462,16 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
 
             this.dragGhost.insertBefore(icon, this.dragGhost.firstElementChild);
 
-            this.left = this._dragStartX = pageX - ((this.dragGhost.getBoundingClientRect().width / 3) * 2) - hostElemLeft;
-            this.top = this._dragStartY = pageY - ((this.dragGhost.getBoundingClientRect().height / 3) * 2) - hostElemTop;
+            this.ghostLeft = this._dragStartX = pageX - ((this.dragGhost.getBoundingClientRect().width / 3) * 2) - hostElemLeft;
+            this.ghostTop = this._dragStartY = pageY - ((this.dragGhost.getBoundingClientRect().height / 3) * 2) - hostElemTop;
         } else {
             this.dragGhost.insertBefore(icon, this.dragGhost.childNodes[0]);
 
             this.renderer.addClass(icon, this.dragGhostImgIconGroupClass);
             this.dragGhost.children[0].style.paddingLeft = '0px';
 
-            this.left = this._dragStartX = pageX - ((this.dragGhost.getBoundingClientRect().width / 3) * 2) - hostElemLeft;
-            this.top = this._dragStartY = pageY - ((this.dragGhost.getBoundingClientRect().height / 3) * 2) - hostElemTop;
+            this.ghostLeft = this._dragStartX = pageX - ((this.dragGhost.getBoundingClientRect().width / 3) * 2) - hostElemLeft;
+            this.ghostTop = this._dragStartY = pageY - ((this.dragGhost.getBoundingClientRect().height / 3) * 2) - hostElemTop;
         }
     }
 
