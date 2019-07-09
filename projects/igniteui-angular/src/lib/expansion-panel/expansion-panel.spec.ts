@@ -16,8 +16,12 @@ import { By } from '@angular/platform-browser';
 
 const CSS_CLASS_EXPANSION_PANEL = 'igx-expansion-panel';
 const CSS_CLASS_PANEL_HEADER = 'igx-expansion-panel__header';
+const CSS_CLASS_PANEL_TITLE_WRAPPER = 'igx-expansion-panel__title-wrapper';
 const CSS_CLASS_PANEL_BODY = 'igx-expansion-panel-body';
 const CSS_CLASS_HEADER_EXPANDED = 'igx-expansion-panel__header--expanded';
+const CSS_CLASS_HEADER_ICON_START = 'igx-expansion-panel__header-icon--start';
+const CSS_CLASS_HEADER_ICON_END = 'igx-expansion-panel__header-icon--end';
+const CSS_CLASS_HEADER_ICON_NONE = 'igx-expansion-panel__header-icon--none';
 const CSS_CLASS_PANEL_ICON = 'igx-icon';
 const CSS_CLASS_LIST = 'igx-list';
 const CSS_CLASS_GRID = 'igx-grid';
@@ -668,7 +672,7 @@ describe('igxExpansionPanel', () => {
             tick();
             expect(headerButton.getAttribute('aria-disabled')).toMatch('false');
         }));
-        xit('Should display expand/collapse button according to its position', () => {
+        it('Should display expand/collapse button according to its position', () => {
             const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
             const header = fixture.componentInstance.header;
@@ -676,38 +680,36 @@ describe('igxExpansionPanel', () => {
             const headerButton = panelHeader.querySelector('div [role = \'button\']');
 
             expect(header.iconPosition).toEqual('left');
-            expect(headerButton.children[0].nodeName).toEqual('IGX-ICON');
-            expect(headerButton.children[1].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
-            expect(headerButton.children[0].getBoundingClientRect().left).
-                toBeLessThan(headerButton.children[1].getBoundingClientRect().left);
+            expect(headerButton.children[0].className).toEqual(CSS_CLASS_PANEL_TITLE_WRAPPER);
+            expect(headerButton.children[1].className).toEqual(CSS_CLASS_HEADER_ICON_START);
+            expect(headerButton.children[1].getBoundingClientRect().left).
+                toBeLessThan(headerButton.children[0].getBoundingClientRect().left);
 
             header.iconPosition = ICON_POSITION.NONE;
             fixture.detectChanges();
             expect(header.iconPosition).toEqual('none');
-            expect(headerButton.children.length).toEqual(1);
-            expect(headerButton.children[0].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
+            expect(headerButton.children[1].className).toEqual(CSS_CLASS_HEADER_ICON_NONE);
 
             header.iconPosition = ICON_POSITION.RIGHT;
             fixture.detectChanges();
             expect(header.iconPosition).toEqual('right');
-            expect(headerButton.children[0].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
-            expect(headerButton.children[1].nodeName).toEqual('IGX-ICON');
+            expect(headerButton.children[0].className).toEqual(CSS_CLASS_PANEL_TITLE_WRAPPER);
+            expect(headerButton.children[1].className).toEqual(CSS_CLASS_HEADER_ICON_END);
             expect(headerButton.children[0].getBoundingClientRect().left).
                 toBeLessThan(headerButton.children[1].getBoundingClientRect().left);
 
             header.iconPosition = ICON_POSITION.NONE;
             fixture.detectChanges();
             expect(header.iconPosition).toEqual('none');
-            expect(headerButton.children.length).toEqual(1);
-            expect(headerButton.children[0].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
+            expect(headerButton.children[1].className).toEqual(CSS_CLASS_HEADER_ICON_NONE);
 
             header.iconPosition = ICON_POSITION.LEFT;
             fixture.detectChanges();
             expect(header.iconPosition).toEqual('left');
-            expect(headerButton.children[0].nodeName).toEqual('IGX-ICON');
-            expect(headerButton.children[1].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
-            expect(headerButton.children[0].getBoundingClientRect().left).
-                toBeLessThan(headerButton.children[1].getBoundingClientRect().left);
+            expect(headerButton.children[0].className).toEqual(CSS_CLASS_PANEL_TITLE_WRAPPER);
+            expect(headerButton.children[1].className).toEqual(CSS_CLASS_HEADER_ICON_START);
+            expect(headerButton.children[1].getBoundingClientRect().left).
+                toBeLessThan(headerButton.children[0].getBoundingClientRect().left);
         });
 
         it('Should override the default icon when an icon template is passed', () => {

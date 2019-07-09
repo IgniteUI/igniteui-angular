@@ -601,6 +601,13 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     public addRow(data: any, parentRowID?: any) {
         if (parentRowID) {
             super.endEdit(true);
+
+            const state = this.transactions.getState(parentRowID);
+            // we should not allow adding of rows as child of deleted row
+            if (state && state.type === TransactionType.DELETE) {
+                throw Error(`Cannot add child row to deleted parent row`);
+            }
+
             const parentRecord = this.records.get(parentRowID);
 
             if (!parentRecord) {

@@ -666,6 +666,23 @@
     subgroup encapsulates children of each
     thead item and group.
     */
+    %grid-thead-item {
+        display: flex;
+        flex-flow: column nowrap;
+
+        %grid-thead-group {
+            flex: 1 1 auto;
+        }
+
+        %grid-cell-header {
+            flex: 1 1 auto;
+        }
+
+        %grid-thead-title {
+            flex: 0 0 auto;
+        }
+    }
+
     %grid-thead-item,
     %grid-thead-subgroup {
         position: relative;
@@ -1201,7 +1218,7 @@
         user-select: none;
         cursor: initial;
         flex-grow: 1; /* hey IE, the text should take most of the space */
-        align-self: flex-end;
+        // align-self: flex-end; /* commenting out for now on external request */
         line-height: map-get($grid-header-height, 'comfortable') / $grid-head-fs;
     }
 
@@ -1962,7 +1979,7 @@
         position: absolute;
         display: flex;
         width: 100%;
-        height: 50px;
+        height: map-get($grid-header-height, 'comfortable');
         padding: map-get($grid-cell-padding, 'cosy');
         align-items: center;
         justify-content: space-between;
@@ -2007,6 +2024,14 @@
                 }
             }
         }
+    }
+
+    %igx-grid__filtering-row--cosy {
+        height: map-get($grid-header-height, 'cosy');
+    }
+
+    %igx-grid__filtering-row--compact {
+        height: map-get($grid-header-height, 'compact');
     }
 
     %igx-grid__filtering-row-main {
