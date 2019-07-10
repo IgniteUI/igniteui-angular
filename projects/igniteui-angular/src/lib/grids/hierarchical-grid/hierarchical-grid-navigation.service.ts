@@ -3,6 +3,7 @@ import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { first } from 'rxjs/operators';
 import { FilterMode } from '../grid-base.component';
 import { IgxColumnComponent } from '../../grids/column.component';
+import { isIE } from '../../core/utils';
 
 export class IgxHierarchicalGridNavigationService extends IgxGridNavigationService {
     public grid: IgxHierarchicalGridComponent;
@@ -168,6 +169,18 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                         `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
                     if (cells.length > 0) { cells[cells.length - 1].focus(); }
                 });
+            }
+        } else  if (this.grid.parent !== null) {
+            const childContainer = this.grid.nativeElement.parentNode.parentNode;
+            const diff =
+            childContainer.getBoundingClientRect().bottom - this.grid.rootGrid.tbody.nativeElement.getBoundingClientRect().bottom;
+            const endIsVisible = diff < 0;
+            const scrollable = this.getNextScrollableDown(this.grid);
+            if (!endIsVisible) {
+                this.scrollGrid(scrollable.grid, diff,
+                    () => super.navigateBottom(visibleColumnIndex));
+            } else {
+                super.navigateBottom(visibleColumnIndex);
             }
         } else {
             super.navigateBottom(visibleColumnIndex);
@@ -404,6 +417,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         } else {
             super.performShiftTabKey(currentRowEl, rowIndex, visibleColumnIndex, isSummary);
         }
+    }
+
+    public getFocusableGrid() {
+        return (isIE() && this.grid.rootGrid) ? this.grid.rootGrid : this.grid;
     }
 
     private getLastGridElem(trContainer) {
@@ -703,7 +720,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         grid.dataRowList.toArray()[0].virtDirRow.scrollTo(unpinnedIndex);
     }
     private scrollGrid(grid, target, callBackFunc) {
-        grid.nativeElement.focus({preventScroll: true});
+        this.getFocusableGrid().nativeElement.focus({preventScroll: true});
         requestAnimationFrame(() => {
             if (typeof target === 'number') {
                 grid.verticalScrollContainer.addScrollTop(target);
