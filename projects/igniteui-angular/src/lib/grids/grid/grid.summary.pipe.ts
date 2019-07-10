@@ -61,6 +61,7 @@ export class IgxGridSummaryPipe implements PipeTransform {
             let groupByRecord: IGroupByRecord = null;
             if (grid.isGroupByRecord(record)) {
                 skipAdd = !!record.skip;
+                record.skip = null;
                 groupByRecord = record as IGroupByRecord;
                 recordId = this.gridAPI.get_groupBy_record_id(groupByRecord);
             } else {

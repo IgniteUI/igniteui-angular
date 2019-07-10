@@ -107,12 +107,18 @@ export class DataUtil {
         }
         return state.strategy.filter(data, state.expressionsTree);
     }
-
     public static treeGridFilter(data: ITreeGridRecord[], state: IFilteringState): ITreeGridRecord[] {
         if (!state.strategy) {
             state.strategy = new TreeGridFilteringStrategy();
         }
         return state.strategy.filter(data, state.expressionsTree);
+    }
+
+    public static correctPagingState(state: IPagingState, length: number) {
+        const maxPage = Math.ceil(length / state.recordsPerPage) - 1;
+        if (!isNaN(maxPage) && state.index > maxPage) {
+            state.index = maxPage;
+        }
     }
 
     public static getHierarchy(gRow: IGroupByRecord): Array<IGroupByKey> {
