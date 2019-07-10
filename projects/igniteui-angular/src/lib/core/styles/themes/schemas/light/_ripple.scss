@@ -14,9 +14,13 @@
 /// @see $default-palette
 
 $_light-ripple: extend((
+    variant: material,
+
     color: (
         igx-color: ('grays', 800)
     )
 ), $_default-shape-ripple);
 
-$_fluent-ripple: extend((), $_light-ripple);
+$_fluent-ripple: extend($_light-ripple,(
+    variant: fluent
+));

@@ -17,7 +17,14 @@
 /// @see $default-palette
 
 $_light-radio: extend((
+    variant: material,
     name: 'igx-radio',
+
+    hover-color: transparent,
+
+    fill-hover-border-color:(
+        igx-color: ('secondary', 500)
+    ),
 
     label-color: (
         igx-color: ('grays', 900)
@@ -36,5 +43,23 @@ $_light-radio: extend((
     )
 ), $_default-shape-radio);
 
-$_fluent-radio: extend((), $_light-radio);
+$_fluent-radio: extend($_light-radio,(
+    variant: fluent,
+
+    empty-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    fill-color: (
+        igx-color: ('secondary', 400)
+    ),
+
+    hover-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    fill-hover-border-color: (
+        igx-color: ('secondary', 600)
+    ),
+));
 

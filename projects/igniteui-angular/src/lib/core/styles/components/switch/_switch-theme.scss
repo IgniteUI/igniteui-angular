@@ -170,7 +170,6 @@
         fluent: $switch-thumb-width / 3
     ), map-get($theme, variant));
 
-
     $ripple-display: map-get((
         material: block,
         fluent: none

@@ -17,6 +17,8 @@
 /// @prop {Number} border-radius [1] - The border radius fraction, between 0-24 to be used for checkbox ripple.
 /// @see $default-palette
 $_light-checkbox: extend((
+    variant: material,
+
     tick-color: #fff,
 
     label-color: (
@@ -37,7 +39,13 @@ $_light-checkbox: extend((
 ), $_default-shape-checkbox);
 
 $_fluent-checkbox: extend-many($_light-checkbox, (
+    variant: fluent,
+
     fill-color: (
         igx-color: ('primary', 500)
     ),
+
+    empty-color: (
+        igx-color: ('grays', 900)
+    )
 ), $_fluent-shape-checkbox);

@@ -85,11 +85,30 @@
 
     $size: em(20px);
     $checkbox-radius: $size / 2;
-    $border-width: 2px;
+
+    $border-width: map-get((
+        material: 2px,
+        fluent: 1px
+    ), map-get($theme, variant));
+
+    $ripple-display: map-get((
+        material: block,
+        fluent: none
+    ), map-get($theme, variant));
+
     $label-margin: em(8px);
     $radius: 2px;
 
-    $mark-stroke: 3;
+    $mark-stroke: map-get((
+        material: 3,
+        fluent: 1
+    ), map-get($theme, variant));
+
+    $mark-offset: map-get((
+        material: 0,
+        fluent: -1px
+    ), map-get($theme, variant));
+
     $mark-length: 24;
     $mark-x-factor: $mark-stroke / $mark-length;
 
@@ -190,6 +209,13 @@
         transition: opacity .1s $ease-out-quad;
     }
 
+    %igx-checkbox--indeterminate {
+        %cbx-composite-mark {
+            top: $mark-offset;
+            left: $mark-offset;
+        }
+    }
+
     %cbx-composite-mark--x {
         stroke-dashoffset: 0;
         opacity: 1;
@@ -248,6 +274,7 @@
     %cbx-ripple {
         @include igx-ripple($ripple-theme);
         @include igx-css-vars($ripple-theme);
+        display: $ripple-display;
         position: absolute;
         top: calc(50% - #{$ripple-radius});
         right: calc(100% - #{$ripple-radius} - #{$checkbox-radius});
@@ -308,30 +335,6 @@
             transition: none;
         }
     }
-
-    // Checkbox in Combo
-    //.igx-drop-down__item {
-    //    %cbx-label--disabled {
-    //        color: --var($theme, 'label-color');
-    //    }
-    //
-    //    %cbx-ripple {
-    //        display: none;
-    //    }
-    //
-    //    %cbx-composite--disabled {
-    //        border-color: --var($theme, 'fill-color');
-    //        background: transparent;
-    //    }
-    //
-    //    %cbx-composite--x--disabled {
-    //        background: --var($theme, 'fill-color');
-    //
-    //        &::after {
-    //            background: --var($theme, 'fill-color');
-    //        }
-    //    }
-    //}
 }
 
 /// Adds typography styles for the igx-checkbox component.
