@@ -28,6 +28,14 @@
 /// @see $default-palette
 
 $_light-switch: extend((
+    variant: 'material',
+
+    border-color: transparent,
+    border-hover-color: transparent,
+    border-disabled-color: transparent,
+    border-on-color: transparent,
+    border-on-hover-color: transparent,
+
     thumb-on-color: (
         igx-color: ('secondary', 500)
     ),
@@ -64,10 +72,50 @@ $_light-switch: extend((
     ),
 
     resting-elevation: 2,
-
     hover-elevation: 3,
-
     disabled-elevation: 1
 ), $_default-shape-switch);
 
-$_fluent-switch: extend((), $_light-switch);
+$_fluent-switch: extend-many($_light-switch, (
+    variant: 'fluent',
+
+    border-color: (
+        igx-color: ('grays', 500),
+        hexrgba: #fff
+    ),
+
+    border-hover-color:(
+        igx-color: ('grays', 800),
+        hexrgba: #fff
+    ),
+
+    border-disabled-color:(
+        igx-color: ('grays', 300),
+        hexrgba: #fff
+    ),
+
+    border-on-color:(
+        igx-color: ('primary', 500)
+    ),
+
+    border-on-hover-color:(
+        igx-color: ('primary', 500)
+    ),
+
+    thumb-on-color: #fff,
+
+    thumb-off-color: (
+        igx-color: ('grays', 900),
+        hexrgba: #fff
+    ),
+
+    track-on-color: (
+        igx-color: ('secondary', 500),
+    ),
+
+    track-off-color: transparent,
+
+    resting-elevation: 0,
+    hover-elevation: 0,
+    disabled-elevation: 0
+), $_fluent-shape-switch);

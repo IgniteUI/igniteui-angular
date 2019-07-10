@@ -125,14 +125,6 @@ $_fluent-drop-down: extend-many($_light-drop-down, (
         igx-contrast-color: ('grays', 300)
     ),
 
-    disabled-item-background: (
-        igx-color: ('grays', 300)
-    ),
-
-    disabled-item-text-color: (
-        igx-color: ('grays', 500)
-    ),
-
     elevation: 0
 
 ), $_fluent-shape-drop-down);

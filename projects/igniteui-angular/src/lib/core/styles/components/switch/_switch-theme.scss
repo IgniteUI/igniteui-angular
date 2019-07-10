@@ -61,7 +61,12 @@
 
     $border-radius-track: null,
     $border-radius-thumb: null,
-    $border-radius-ripple: null
+    $border-radius-ripple: null,
+    $border-color: null,
+    $border-hover-color: null,
+    $border-disabled-color: null,
+    $border-on-color: null,
+    $border-on-hover-color: null
 ) {
     $name: 'igx-switch';
     $switch-schema: map-get($schema, $name);
@@ -116,7 +121,12 @@
 
         border-radius-track: $border-radius-track,
         border-radius-thumb: $border-radius-thumb,
-        border-radius-ripple: $border-radius-ripple
+        border-radius-ripple: $border-radius-ripple,
+        border-color: $border-color,
+        border-hover-color: $border-hover-color,
+        border-disabled-color: $border-disabled-color,
+        border-on-color: $border-on-color,
+        border-on-hover-color: $border-on-hover-color,
     ));
 }
 
@@ -135,10 +145,37 @@
     @include igx-root-css-vars($theme);
     @include scale-in-out($start-scale: .9);
 
-    $switch-width: 36px ;
-    $switch-height: 14px ;
+    $switch-width: map-get((
+        material: 36px,
+        fluent: 40px,
+    ), map-get($theme, variant));
 
-    $switch-thumb-width: 20px ;
+    $switch-height: map-get((
+        material: 14px,
+        fluent: 20px
+    ), map-get($theme, variant));
+
+    $switch-thumb-width: map-get((
+        material: 20px,
+        fluent: 12px
+    ), map-get($theme, variant));
+
+    $switch-on-offset: map-get((
+        material: 1px,
+        fluent: $switch-thumb-width / 2
+    ), map-get($theme, variant));
+
+    $switch-off-offset: map-get((
+        material: -1px,
+        fluent: $switch-thumb-width / 3
+    ), map-get($theme, variant));
+
+
+    $ripple-display: map-get((
+        material: block,
+        fluent: none
+    ), map-get($theme, variant));
+
     $switch-thumb-height: $switch-thumb-width ;
 
     $ripple-size: em(48px);
@@ -174,19 +211,32 @@
         align-items: center;
         width: $switch-width;
         height: $switch-height;
+        border: 1px solid --var($theme, 'border-color');
         border-radius: --var($theme, 'border-radius-track');
         background: --var($theme, 'track-off-color');
         cursor: pointer;
         user-select: none;
         transition: $input-transition;
+
+        &:hover,
+        &:focus {
+            border-color: --var($theme, 'border-hover-color');
+        }
     }
 
     %switch-composite--x {
         background: --var($theme, 'track-on-color');
+        border-color: --var($theme, 'border-on-color');
+
+        &:hover,
+        &:focus {
+            border-color: --var($theme, 'border-on-hover-color');
+        }
     }
 
     %switch-composite--disabled {
         background: --var($theme, 'track-disabled-color');
+        border-color: --var($theme, 'border-disabled-color');
     }
 
     %switch-composite-thumb {
@@ -199,6 +249,7 @@
         background: --var($theme, 'thumb-off-color');
         box-shadow: --var($theme, 'resting-shadow');
         transition: $input-transition;
+        transform: translateX($switch-off-offset);
 
         &:hover {
             box-shadow: --var($theme, 'hover-shadow');
@@ -206,11 +257,11 @@
     }
 
     %switch-composite-thumb--x {
-        transform: translateX(#{$switch-width - $switch-thumb-width});
+        transform: translateX(#{$switch-width - $switch-thumb-width - $switch-on-offset});
         background: --var($theme, 'thumb-on-color');
 
         [dir='rtl'] & {
-            transform: translateX(-#{$switch-width - $switch-thumb-width});
+            transform: translateX(-#{$switch-width - $switch-thumb-width - $switch-on-offset});
         }
     }
 
@@ -222,6 +273,7 @@
     %switch-ripple {
         @include igx-ripple($ripple-theme);
         @include igx-css-vars($ripple-theme);
+        display: $ripple-display;
         position: absolute;
         top: calc(50% - #{$ripple-radius});
         left: calc(50% - #{$ripple-radius});
