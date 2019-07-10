@@ -173,7 +173,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         } else  if (this.grid.parent !== null) {
             const childContainer = this.grid.nativeElement.parentNode.parentNode;
             const diff =
-            childContainer.getBoundingClientRect().bottom - this.grid.rootGrid.nativeElement.getBoundingClientRect().bottom;
+            childContainer.getBoundingClientRect().bottom - this.grid.rootGrid.tbody.nativeElement.getBoundingClientRect().bottom;
             const endIsVisible = diff < 0;
             const scrollable = this.getNextScrollableDown(this.grid);
             if (!endIsVisible) {
