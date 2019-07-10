@@ -62,6 +62,18 @@ $_light-button: extend((
         igx-color: ('secondary', 500)
     ),
 
+    flat-icon-color: currentColor,
+    flat-hover-icon-color: currentColor,
+    flat-focus-icon-color: currentColor,
+
+    raised-icon-color: currentColor,
+    raised-hover-icon-color: currentColor,
+    raised-focus-icon-color: currentColor,
+
+    outlined-icon-color: currentColor,
+    outlined-hover-icon-color: currentColor,
+    outlined-focus-icon-color: currentColor,
+
     flat-hover-background: (
         igx-color: ('secondary', 500),
         rgba: .05
@@ -205,6 +217,22 @@ $_fluent-button: extend-many($_light-button, (
         igx-color: ('grays', 900)
     ),
 
+    flat-icon-color:  (
+        igx-color: ('primary', 500)
+    ),
+
+    flat-hover-icon-color:  (
+        igx-color: ('primary', 500)
+    ),
+
+    flat-focus-icon-color:  (
+        igx-color: ('primary', 500)
+    ),
+
+    outlined-icon-color: currentColor,
+    outlined-hover-icon-color: currentColor,
+    outlined-focus-icon-color: currentColor,
+
     flat-hover-background: transparent,
 
     flat-hover-text-color: (
@@ -220,7 +248,7 @@ $_fluent-button: extend-many($_light-button, (
     ),
 
     outlined-outline-color: (
-        igx-color: ('grays', 300)
+        igx-color: ('grays', 800)
     ),
 
     outlined-disabled-outline-color: (

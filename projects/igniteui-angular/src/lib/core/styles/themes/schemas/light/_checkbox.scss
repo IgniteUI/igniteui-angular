@@ -35,6 +35,10 @@ $_light-checkbox: extend((
 
     disabled-color: (
         igx-color: ('grays', 400)
+    ),
+
+    disabled-color-label: (
+        igx-color: ('grays', 400)
     )
 ), $_default-shape-checkbox);
 
@@ -47,5 +51,13 @@ $_fluent-checkbox: extend-many($_light-checkbox, (
 
     empty-color: (
         igx-color: ('grays', 900)
+    ),
+
+    disabled-color: (
+        igx-color: ('grays', 300)
+    ),
+
+    disabled-color-label:(
+        igx-color: ('grays', 400)
     )
 ), $_fluent-shape-checkbox);

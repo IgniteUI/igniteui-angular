@@ -39,6 +39,7 @@
     $fill-color: null,
     $tick-color: null,
     $disabled-color: null,
+    $disabled-color-label: null,
     $border-radius-ripple:null
 ) {
     $name: 'igx-checkbox';
@@ -62,6 +63,7 @@
         fill-color: $fill-color,
         tick-color: $tick-color,
         disabled-color: $disabled-color,
+        disabled-color-label: $disabled-color-label,
         border-radius: $border-radius,
         border-radius-ripple: $border-radius-ripple
     ));
@@ -268,7 +270,7 @@
     }
 
     %cbx-label--disabled {
-        color: --var($theme, 'disabled-color');
+        color: --var($theme, 'disabled-color-label');
     }
 
     %cbx-ripple {

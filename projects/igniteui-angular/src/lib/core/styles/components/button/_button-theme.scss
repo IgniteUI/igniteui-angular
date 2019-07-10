@@ -97,6 +97,9 @@
     $flat-hover-text-color: null,
     $flat-focus-background: null,
     $flat-focus-text-color: null,
+    $flat-icon-color: null,
+    $flat-hover-icon-color: null,
+    $flat-focus-icon-color: null,
 
     $outlined-text-color: null,
     $outlined-outline-color: null,
@@ -106,6 +109,9 @@
     $outlined-hover-text-color: null,
     $outlined-focus-background: null,
     $outlined-focus-text-color: null,
+    $outlined-icon-color: null,
+    $outlined-hover-icon-color: null,
+    $outlined-focus-icon-color: null,
 
     $raised-text-color: null,
     $raised-background: null,
@@ -113,6 +119,9 @@
     $raised-hover-text-color: null,
     $raised-focus-background: null,
     $raised-focus-text-color: null,
+    $raised-icon-color: null,
+    $raised-hover-icon-color: null,
+    $raised-focus-icon-color: null,
 
     $raised-resting-shadow: null,
     $raised-hover-shadow: null,
@@ -309,6 +318,9 @@
         flat-hover-text-color: $flat-hover-text-color,
         flat-focus-background: $flat-focus-background,
         flat-focus-text-color: $flat-focus-text-color,
+        flat-icon-color: $flat-icon-color,
+        flat-hover-icon-color: $flat-hover-icon-color,
+        flat-focus-icon-color: $flat-focus-icon-color,
 
         outlined-text-color: $outlined-text-color,
         outlined-outline-color: $outlined-outline-color,
@@ -318,6 +330,9 @@
         outlined-hover-text-color: $outlined-hover-text-color,
         outlined-focus-background: $outlined-focus-background,
         outlined-focus-text-color: $outlined-focus-text-color,
+        outlined-icon-color: $outlined-icon-color,
+        outlined-hover-icon-color: $outlined-hover-icon-color,
+        outlined-focus-icon-color: $outlined-focus-icon-color,
 
         raised-text-color: $raised-text-color,
         raised-background: $raised-background,
@@ -325,6 +340,9 @@
         raised-hover-text-color: $raised-hover-text-color,
         raised-focus-background: $raised-focus-background,
         raised-focus-text-color: $raised-focus-text-color,
+        raised-icon-color: $raised-icon-color,
+        raised-hover-icon-color: $raised-hover-icon-color,
+        raised-focus-icon-color: $raised-focus-icon-color,
 
         fab-text-color: $fab-text-color,
         fab-background: $fab-background,
@@ -387,6 +405,7 @@
         cosy: rem(30px),
         compact: rem(24px)
     );
+
     $button-floating-padding: (
         comfortable: rem(15px),
         cosy: rem(11px),
@@ -442,15 +461,27 @@
         color: --var($theme, 'flat-text-color');
         border-radius: --var($theme, 'flat-border-radius');
 
+        %igx-icon-display {
+            color: --var($theme, 'flat-icon-color')
+        }
+
         &:hover {
             background: --var($theme, 'flat-hover-background');
             color: --var($theme, 'flat-hover-text-color');
+
+            %igx-icon-display {
+                color: --var($theme, 'flat-hover-icon-color')
+            }
         }
 
         &:focus,
         &:active {
             background: --var($theme, 'flat-focus-background');
             color: --var($theme, 'flat-focus-text-color');
+
+            %igx-icon-display {
+                color: --var($theme, 'flat-focus-icon-color')
+            }
         }
     }
 
@@ -461,15 +492,27 @@
         color: --var($theme, 'outlined-text-color');
         border-radius: --var($theme, 'outlined-border-radius');
 
+        %igx-icon-display {
+            color: --var($theme, 'outlined-icon-color')
+        }
+
         &:hover {
             background: --var($theme, 'outlined-hover-background');
             color: --var($theme, 'outlined-hover-text-color');
+
+            %igx-icon-display {
+                color: --var($theme, 'outlined-hover-icon-color')
+            }
         }
 
         &:focus,
         &:active {
             background: --var($theme, 'outlined-focus-background');
             color: --var($theme, 'outlined-focus-text-color');
+
+            %igx-icon-display {
+                color: --var($theme, 'outlined-focus-icon-color')
+            }
         }
     }
 
@@ -479,17 +522,29 @@
         box-shadow: --var($theme, 'raised-resting-shadow');
         border-radius: --var($theme, 'raised-border-radius');
 
+        %igx-icon-display {
+            color: --var($theme, 'raised-icon-color')
+        }
+
         &:focus,
         &:hover {
             color: --var($theme, 'raised-hover-text-color');
             background: --var($theme, 'raised-hover-background');
             box-shadow: --var($theme, 'raised-hover-shadow');
+
+            %igx-icon-display {
+                color: --var($theme, 'raised-hover-icon-color')
+            }
         }
 
         &:active {
             color: --var($theme, 'raised-focus-text-color');
             background: --var($theme, 'raised-focus-background');
             box-shadow: --var($theme, 'raised-focus-shadow');
+
+            %igx-icon-display {
+                color: --var($theme, 'raised-focus-icon-color')
+            }
         }
     }
 
