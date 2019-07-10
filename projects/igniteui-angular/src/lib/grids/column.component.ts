@@ -1303,13 +1303,14 @@ export class IgxColumnComponent implements AfterContentInit {
      * @internal
      */
     protected cacheCalcWidth(): any {
+        const grid = this.gridAPI.grid;
         const colWidth = this.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
         if (isPercentageWidth) {
-            this._calcWidth = parseInt(colWidth, 10) / 100 * this.grid.unpinnedWidth;
+            this._calcWidth = parseInt(colWidth, 10) / 100 * grid.unpinnedWidth;
         } else if (!colWidth) {
             // no width
-            this._calcWidth = this.defaultWidth || this.grid.getPossibleColumnWidth();
+            this._calcWidth = this.defaultWidth || grid.getPossibleColumnWidth();
         } else {
             this._calcWidth = this.width;
         }
