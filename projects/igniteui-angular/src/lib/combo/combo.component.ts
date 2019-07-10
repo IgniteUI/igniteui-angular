@@ -17,7 +17,7 @@ import {
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, CancelableEventArgs, CancelableBrowserEventArgs, mergeObjects } from '../core/utils';
+import { cloneArray, CancelableEventArgs, CancelableBrowserEventArgs } from '../core/utils';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { SortingDirection, ISortingExpression } from '../data-operations/sorting-expression.interface';
@@ -156,8 +156,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     protected virtDir: IgxForOfDirective<any>;
 
     /**
-     * Set the combo's overlaySettings that control how the list of items is displayed.
-     *
+     * Set custom overlay settings that control how the combo's list of items is displayed.
+     * Set:
      * ```html
      * <igx-combo [overlaySettings] = "customOverlaySettings"></igx-combo>
      * ```
@@ -166,34 +166,14 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  const customSettings = { positionStrategy: { settings: { target: myTarget } } };
      *  combo.overlaySettings = customSettings;
      * ```
-     */
-    @Input()
-    public set overlaySettings(val: OverlaySettings) {
-        if (val) {
-            const newSettings = val;
-            if (val.positionStrategy) {
-                newSettings.positionStrategy = val.positionStrategy.clone();
-            }
-            Object.assign(this._overlaySettings, newSettings);
-        } else {
-            console.warn('Please provide valid overlay settings');
-        }
-    }
-
-    /**
-     * Get the combo's overlaySettings.
-     *
+     * Get any custom overlay settings used by the combo:
      * ```typescript
      *  const comboOverlaySettings: OverlaySettings = myCombo.overlaySettings;
      * ```
      */
-    public get overlaySettings(): OverlaySettings {
-        return this._overlaySettings;
-    }
 
-    public get element() {
-        return this.elementRef.nativeElement;
-    }
+    @Input()
+    public overlaySettings: OverlaySettings = null;
 
     /**
      * @hidden @internal
@@ -1273,7 +1253,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public ngOnInit() {
         this.ngControl = this.injector.get(NgControl, null);
-        this.overlaySettings.positionStrategy.settings.target = this.element;
+        this._overlaySettings.positionStrategy.settings.target = this.elementRef.nativeElement;
         this.selection.set(this.id, new Set());
     }
 
@@ -1380,7 +1360,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *```
      */
     public toggle(): void {
-        this.dropdown.toggle(this.overlaySettings);
+        const overlaySettings = Object.assign({}, this._overlaySettings, this.overlaySettings);
+        this.dropdown.toggle(overlaySettings);
     }
 
     /**
@@ -1392,7 +1373,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *```
      */
     public open(): void {
-        this.dropdown.open(this.overlaySettings);
+        const overlaySettings = Object.assign({}, this._overlaySettings, this.overlaySettings);
+        this.dropdown.open(overlaySettings);
     }
 
     /**
