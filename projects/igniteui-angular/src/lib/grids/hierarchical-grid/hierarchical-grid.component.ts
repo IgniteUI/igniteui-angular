@@ -671,6 +671,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
 
             const childGrids = this.getChildGrids(true);
             childGrids.forEach((grid) => {
+                if (grid.isPercentWidth) {
+                    grid.reflow();
+                }
                 grid.updateScrollPosition();
             });
         }
