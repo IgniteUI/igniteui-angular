@@ -726,8 +726,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 }
                 if (scrToBottom && !this._isAtBottomIndex) {
                     const containerSize = parseInt(this.igxForContainerSize, 10);
+                    const maxVirtScrollTop = this._virtHeight - containerSize;
                     this._bScrollInternal = true;
-                    this.scrollPosition = this._virtHeight - containerSize;
+                    this._virtScrollTop = maxVirtScrollTop;
+                    this.scrollPosition = maxVirtScrollTop;
                     return;
                 }
                 if (this._adjustToIndex) {
