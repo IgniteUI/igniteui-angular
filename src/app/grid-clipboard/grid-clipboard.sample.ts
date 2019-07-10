@@ -21,4 +21,9 @@ export class GridClipboardSampleComponent {
     }
 
     formatter = (value: any) => `** ${value} **`;
+
+    initColumn(column) {
+        column.formatter = this.formatter;
+        column.header = `🐱‍👤 ${column.field} 🐱‍🏍`;
+    }
 }

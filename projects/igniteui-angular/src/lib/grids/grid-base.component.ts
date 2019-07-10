@@ -1542,7 +1542,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public onRowDragEnd = new EventEmitter<IRowDragEndEventArgs>();
 
     /**
-     * TODO: Write doc
+     * Emitted when a copy operation is executed.
+     * Fired only if copy behavior is enabled through the [`clipboardOptions`]{@link IgxGridBaseComponent#clipboardOptions}.
      */
     @Output()
     onGridCopy = new EventEmitter<IGridClipboardEvent>();
@@ -2369,13 +2370,25 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
-     * TODO: Write doc
+     * Controls the copy behavior of the grid.
      */
     @Input()
     clipboardOptions = {
+        /**
+         * Enables/disables the copy behavior
+         */
         enabled: true,
+        /**
+         * Include the columns headers in the clipboard output.
+         */
         copyHeaders: true,
+        /**
+         * Apply the columns formatters (if any) on the data in the clipboard output.
+         */
         copyFormatters: true,
+        /**
+         * The separator used for formatting the copy output. Defaults to `\t`.
+         */
         separator: '\t'
     };
 
@@ -2398,7 +2411,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /* End of toolbar related definitions */
 
-    // TODO: Document
+    /**
+     * Emitted when making a range selection either through
+     * drag selection or through keyboard selection.
+     */
     @Output()
     onRangeSelection = new EventEmitter<GridSelectionRange>();
 
@@ -4857,7 +4873,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return this.selectionService.ranges;
     }
 
-    extractDataFromSelection(source: any[], applyColumnFormatters = false): any[] {
+
+    protected extractDataFromSelection(source: any[], formatters = false, headers = false): any[] {
         let columnsArray: IgxColumnComponent[];
         let record = {};
         const selectedData = [];
@@ -4875,7 +4892,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 columnsArray = this.getSelectableColumnsAt(each);
                 columnsArray.forEach((col) => {
                     if (col) {
-                        record[col.field] = applyColumnFormatters && col.formatter ? col.formatter(source[row][col.field])
+                        const key = headers ? col.header || col.field : col.field;
+                        record[key] = formatters && col.formatter ? col.formatter(source[row][col.field])
                         : source[row][col.field];
                     }
                 });
@@ -4903,9 +4921,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
-    getSelectedData(applyColumnFormatters = false) {
+    /**
+     *
+     * Returns an array of the current cell selection in the form of `[{ column.field: cell.value }, ...]`.
+     * If `formatters` is enabled, the cell value will be formatted by its respective column formatter (if any).
+     * If `headers` is enabled, it will use the column header (if any) instead of the column field.
+     */
+    getSelectedData(formatters = false, headers = false) {
         const source = this.verticalScrollContainer.igxForOf;
-        return this.extractDataFromSelection(source, applyColumnFormatters);
+        return this.extractDataFromSelection(source, formatters, headers);
     }
 
     /**
@@ -4951,7 +4975,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             return;
         }
 
-        const data = this.getSelectedData(this.clipboardOptions.copyFormatters);
+        const data = this.getSelectedData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
         const ev = { data, cancel: false } as IGridClipboardEvent;
         this.onGridCopy.emit(ev);
 
