@@ -605,9 +605,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
 
-        if (editableCell && crud.sameRow(this.cellID.rowID)) {
+        if (editableCell && crud.sameRow(this.cellID.rowIndex)) {
             this.gridAPI.submit_value();
-        } else if (editMode && !crud.sameRow(this.cellID.rowID)) {
+        } else if (editMode && !crud.sameRow(this.cellID.rowIndex)) {
             this.grid.endEdit(true);
         }
     }
