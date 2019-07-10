@@ -1864,6 +1864,47 @@ describe('IgxGrid Component Tests', () => {
                 expect(cell.value).toEqual('IG');
 
             }));
+
+            fit(`Should not update row when primary key is edited and tab is pressed`, fakeAsync(() => {
+                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+                const grid = fix.componentInstance.grid;
+                fix.detectChanges();
+                tick();
+
+                spyOn(grid, 'endEdit').and.callThrough();
+                grid.columnList.forEach(c => {
+                    c.editable = true;
+                });
+
+                let cell = grid.getCellByColumn(0, 'ProductID');
+                cell.setEditMode(true);
+                fix.detectChanges();
+                tick();
+
+                expect(grid.crudService.cell).toBeDefined();
+                expect(grid.crudService.cell.id.rowIndex).toBe(0);
+                expect(grid.crudService.cell.id.columnID).toBe(0);
+
+                cell.editValue = 999;
+                UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true);
+                fix.detectChanges();
+                tick();
+
+                expect(grid.crudService.cell).toBeDefined();
+                expect(grid.crudService.cell.id.rowIndex).toBe(0);
+                expect(grid.crudService.cell.id.columnID).toBe(1);
+                expect(grid.endEdit).toHaveBeenCalledTimes(0);
+
+                cell = grid.getCellByColumn(0, grid.crudService.cell.column.field);
+                UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true);
+                fix.detectChanges();
+                tick();
+
+                expect(grid.crudService.cell).toBeDefined();
+                expect(grid.crudService.cell.id.rowIndex).toBe(0);
+                expect(grid.crudService.cell.id.columnID).toBe(2);
+                expect(grid.endEdit).toHaveBeenCalledTimes(0);
+            }));
         });
 
         describe('Row Editing - Navigation - Keyboard', () => {
