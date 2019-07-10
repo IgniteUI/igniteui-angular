@@ -1867,11 +1867,10 @@ describe('IgxGrid Component Tests', () => {
                 expect(editRowTop - bannerBottom).toBeLessThan(2);
             }));
 
-            xit('Should add correct class to the edited row', (async () => {
-                // NOT APPLICABLE, SINCE GRID DOES NOT HAVE TRANSACTIONS
-                const fix = TestBed.createComponent(IgxGridRowEditingComponent);
+            fit('Should add correct class to the edited row', fakeAsync(() => {
+                const fix = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fix.detectChanges();
-                await wait(DEBOUNCETIME);
+                tick();
 
                 const grid = fix.componentInstance.grid;
                 const cell = grid.getCellByColumn(0, 'ProductName');
@@ -1879,11 +1878,13 @@ describe('IgxGrid Component Tests', () => {
                 expect(row.classList).not.toContain('igx-grid__tr--edited');
 
                 cell.setEditMode(true);
-                // expect(rowEditBanned) to be visible
-                cell.update('IG');
-                cell.setEditMode(false);
+                fix.detectChanges();
+                tick();
 
-                await wait(DEBOUNCETIME);
+                cell.editValue = 'IG';
+                grid.endEdit(true);
+                fix.detectChanges();
+                tick();
 
                 expect(row.classList).toContain('igx-grid__tr--edited');
             }));
