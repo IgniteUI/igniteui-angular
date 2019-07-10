@@ -933,7 +933,10 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         }
     }
 
-    getSelectedData(applyColumnFormatters = false): any[] {
+    /**
+     * @inheritdoc
+     */
+    getSelectedData(formatters = false, headers = false): any[] {
         if (this.groupingExpressions.length) {
             const source = [];
 
@@ -947,9 +950,9 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
             };
 
             this.verticalScrollContainer.igxForOf.forEach(process);
-            return this.extractDataFromSelection(source, applyColumnFormatters);
+            return this.extractDataFromSelection(source, formatters, headers);
         } else {
-            return super.getSelectedData(applyColumnFormatters);
+            return super.getSelectedData(formatters, headers);
         }
     }
 
