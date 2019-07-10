@@ -1826,7 +1826,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(editRowTop - bannerBottom).toBeLessThan(2);
             }));
 
-            fit('Should add correct class to the edited row', fakeAsync(() => {
+            it('Should add correct class to the edited row', fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fix.detectChanges();
                 tick();
@@ -1867,7 +1867,7 @@ describe('IgxGrid Component Tests', () => {
 
             }));
 
-            fit(`Should not update row when primary key is edited and tab is pressed`, fakeAsync(() => {
+            it(`Should not update row when primary key is edited and tab is pressed`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 const grid = fix.componentInstance.grid;
                 fix.detectChanges();
