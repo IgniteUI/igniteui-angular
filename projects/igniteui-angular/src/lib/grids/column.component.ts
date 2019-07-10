@@ -319,7 +319,7 @@ export class IgxColumnComponent implements AfterContentInit {
             if (this.grid) {
                 this.cacheCalcWidth();
                 (this.grid as any)._derivePossibleWidth();
-                this.grid.cdr.detectChanges();
+                this.grid.cdr.markForCheck();
             }
         }
     }
