@@ -101,17 +101,6 @@ describe('IgxGrid - Clipboard', () => {
         expect(eventData).toEqual('');
     });
 
-    it('Disable clipboardOptions', () => {
-        const copySpy = spyOn<any>(grid.onGridCopy, 'emit').and.callThrough();
-        grid.clipboardOptions.enabled = false;
-        grid.selectRange({ rowStart: 0, rowEnd: 2, columnStart: 0, columnEnd: 3 });
-        fix.detectChanges();
-
-        const eventData = dispatchCopyEventOnGridBody(fix);
-        expect(copySpy).toHaveBeenCalledTimes(0);
-        expect(eventData).toEqual('');
-    });
-
     it('Disable copyFormatters', () => {
         const copySpy = spyOn<any>(grid.onGridCopy, 'emit').and.callThrough();
         grid.clipboardOptions.copyFormatters = false;
