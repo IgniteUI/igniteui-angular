@@ -37,8 +37,9 @@ describe('IgxGrid - Clipboard', () => {
 
         const eventData = dispatchCopyEventOnGridBody(fix);
         expect(copySpy).toHaveBeenCalledTimes(1);
-        expect(eventData)
-        .toEqual('ProductName\tDownloads\tReleased\r\n** Ignite UI for JavaScript **\t254\tfalse\r\n** NetAdvantage **\t127\ttrue\r\n');
+        expect(eventData).
+            // tslint:disable-next-line:max-line-length
+            toEqual('ProductNameHeader\tDownloads\tReleased\r\n** Ignite UI for JavaScript **\t254\tfalse\r\n** NetAdvantage **\t127\ttrue\r\n');
     });
 
     it('Copy data when there are no selected cells', () => {
@@ -61,14 +62,14 @@ describe('IgxGrid - Clipboard', () => {
 
         let eventData = dispatchCopyEventOnGridBody(fix);
         expect(copySpy).toHaveBeenCalledTimes(1);
-        expect(eventData).toEqual('ID;ProductName\r\n1;\r\n;** NetAdvantage **\r\n');
+        expect(eventData).toEqual('ID;ProductNameHeader\r\n1;\r\n;** NetAdvantage **\r\n');
 
         grid.clipboardOptions.separator = ',';
         fix.detectChanges();
 
         eventData = dispatchCopyEventOnGridBody(fix);
         expect(copySpy).toHaveBeenCalledTimes(2);
-        expect(eventData).toEqual('ID,ProductName\r\n1,\r\n,** NetAdvantage **\r\n');
+        expect(eventData).toEqual('ID,ProductNameHeader\r\n1,\r\n,** NetAdvantage **\r\n');
     });
 
     it('Copy data without headers', () => {
@@ -119,13 +120,13 @@ describe('IgxGrid - Clipboard', () => {
 
         let eventData = dispatchCopyEventOnGridBody(fix);
         expect(copySpy).toHaveBeenCalledTimes(1);
-        expect(eventData).toEqual('ProductName\r\nNetAdvantage\r\nIgnite UI for Angular\r\n\r\n');
+        expect(eventData).toEqual('ProductNameHeader\r\nNetAdvantage\r\nIgnite UI for Angular\r\n\r\n');
         grid.clipboardOptions.copyFormatters = true;
         fix.detectChanges();
 
         eventData = dispatchCopyEventOnGridBody(fix);
         expect(copySpy).toHaveBeenCalledTimes(2);
-        expect(eventData).toEqual('ProductName\r\n** NetAdvantage **\r\n** Ignite UI for Angular **\r\n** null **\r\n');
+        expect(eventData).toEqual('ProductNameHeader\r\n** NetAdvantage **\r\n** Ignite UI for Angular **\r\n** null **\r\n');
     });
 
     it('Cancel onGridCopy event ', () => {
@@ -137,7 +138,7 @@ describe('IgxGrid - Clipboard', () => {
         const eventData = dispatchCopyEventOnGridBody(fix);
         expect(copySpy).toHaveBeenCalledTimes(1);
         expect(copySpy).toHaveBeenCalledWith({
-            data: grid.getSelectedData(true),
+            data: grid.getSelectedData(true, true),
             cancel: true
         });
         expect(eventData).toEqual('');
