@@ -5,7 +5,10 @@ import { RemoteService } from '../shared/remote.service';
 
 @Component({
     selector: 'app-virt-for-sample',
-    templateUrl: 'virtual-for.sample.html'
+    templateUrl: 'virtual-for.sample.html',
+    styles: [`
+        .even { background-color: #1f1f1f; }
+    `],
 })
 export class VirtualForSampleComponent implements OnInit, AfterViewInit {
     search1: string;

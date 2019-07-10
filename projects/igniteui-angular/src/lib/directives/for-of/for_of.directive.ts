@@ -130,6 +130,23 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     public totalItemCount: number = null;
 
     /**
+     * A function that returns whether the element is the first or not
+     */
+    public first = (index) => { return index === 0};
+    /**
+     * A function that returns whether the element is the last or not
+     */
+    public last = (index) => { return index === this.igxForOf.length};
+    /**
+     * A function that returns whether the element is even or not
+     */
+    public even = (index) => { return index % 2 === 0 };
+    /**
+     * A function that returns whether the element is odd or not
+     */
+    public odd = (index) => { return !this.even(index)}; 
+
+    /**
      * An event that is emitted after a new chunk has been loaded.
      * ```html
      * <ng-template igxFor [igxForOf]="data" [igxForScrollOrientation]="'horizontal'" (onChunkLoad)="chunkLoad($event)"></ng-template>
@@ -323,7 +340,14 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 const input = this.igxForOf[i];
                 const embeddedView = this.dc.instance._vcr.createEmbeddedView(
                     this._template,
-                    { $implicit: input, index: this.igxForOf.indexOf(input) }
+                    { 
+                        $implicit: input, 
+                        index: this.igxForOf.indexOf(input), 
+                        first: this.first(this.igxForOf.indexOf(input)),
+                        last: this.last(this.igxForOf.indexOf(input)),
+                        even: this.even(this.igxForOf.indexOf(input)), 
+                        odd: this.odd(this.igxForOf.indexOf(input)) 
+                    }
                 );
                 this._embeddedViews.push(embeddedView);
             }
@@ -787,6 +811,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const cntx = embView.context;
             cntx.$implicit = input;
             cntx.index = this.getContextIndex(input);
+            cntx.first = this.first(cntx.index);
+            cntx.last = this.last(cntx.index);
+            cntx.even = this.even(cntx.index);
+            cntx.odd = this.odd(cntx.index);
             const view: ViewRef = this.dc.instance._vcr.detach(0);
             this.dc.instance._vcr.insert(view);
             this._embeddedViews.push(embView);
@@ -804,6 +832,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const cntx = embView.context;
             cntx.$implicit = input;
             cntx.index = this.getContextIndex(input);
+            cntx.first = this.first(cntx.index);
+            cntx.last = this.last(cntx.index);
+            cntx.even = this.even(cntx.index);
+            cntx.odd = this.odd(cntx.index);
             const view: ViewRef = this.dc.instance._vcr.detach(this.dc.instance._vcr.length - 1);
             this.dc.instance._vcr.insert(view, 0);
             this._embeddedViews.unshift(embView);
@@ -830,6 +862,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             const cntx = (embView as EmbeddedViewRef<any>).context;
             cntx.$implicit = input;
             cntx.index = this.getContextIndex(input);
+            cntx.first = this.first(cntx.index);
+            cntx.last = this.last(cntx.index);
+            cntx.even = this.even(cntx.index);
+            cntx.odd = this.odd(cntx.index);
         }
     }
 
@@ -901,6 +937,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 const cntx = (embView as EmbeddedViewRef<any>).context;
                 cntx.$implicit = input;
                 cntx.index = this.getContextIndex(input);
+                cntx.first = this.first(cntx.index);
+                cntx.last = this.last(cntx.index);
+                cntx.even = this.even(cntx.index);
+                cntx.odd = this.odd(cntx.index);
             }
             this.dc.changeDetectorRef.detectChanges();
             if (prevChunkSize !== this.state.chunkSize) {
@@ -1163,7 +1203,14 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const input = this.igxForOf[elemIndex];
         const embeddedView = this.dc.instance._vcr.createEmbeddedView(
             this._template,
-            { $implicit: input, index: elemIndex }
+            { 
+                $implicit: input, 
+                index: elemIndex, 
+                first: this.first(elemIndex),
+                last: this.last(elemIndex),
+                even: this.even(elemIndex), 
+                odd: this.odd(elemIndex) 
+            },
         );
 
         this._embeddedViews.push(embeddedView);
@@ -1514,7 +1561,14 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         const input = this.igxForOf[elemIndex];
         const embeddedView = this.dc.instance._vcr.createEmbeddedView(
             this._template,
-            { $implicit: input, index: elemIndex }
+            { 
+                $implicit: input, 
+                index: elemIndex, 
+                first: this.first(elemIndex),
+                last: this.last(elemIndex),
+                even: this.even(elemIndex), 
+                odd: this.odd(elemIndex) 
+            },
         );
 
         this._embeddedViews.push(embeddedView);
@@ -1548,6 +1602,10 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 const cntx = (embView as EmbeddedViewRef<any>).context;
                 cntx.$implicit = input;
                 cntx.index = this.getContextIndex(input);
+                cntx.first = this.first(cntx.index);
+                cntx.last = this.last(cntx.index);
+                cntx.even = this.even(cntx.index);
+                cntx.odd = this.odd(cntx.index);
             }
             if (prevChunkSize !== this.state.chunkSize) {
                 this.onChunkLoad.emit(this.state);
