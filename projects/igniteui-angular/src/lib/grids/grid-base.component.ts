@@ -1987,49 +1987,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the state of the grid virtualization, including the start index and how many records are rendered.
-     * ```typescript
-     * const gridVirtState = this.grid1.virtualizationState;
-     * ```
-	 * @memberof IgxGridBaseComponent
-     */
-    get virtualizationState() {
-        return this.verticalScrollContainer.state;
-    }
-
-    /**
-     * @hidden
-     */
-    set virtualizationState(state) {
-        this.verticalScrollContainer.state = state;
-    }
-
-    /**
-     * Returns the total number of records in the data source.
-     * Works only with remote grid virtualization.
-     * ```typescript
-     * const itemCount = this.grid1.totalItemCount;
-     * ```
-	 * @memberof IgxGridBaseComponent
-     */
-    get totalItemCount() {
-        return this.verticalScrollContainer.totalItemCount;
-    }
-
-    /**
-     * Sets the total number of records in the data source.
-     * This property is required for virtualization to function when the grid is bound remotely.
-     * ```typescript
-     * this.grid1.totalItemCount = 55;
-     * ```
-	 * @memberof IgxGridBaseComponent
-     */
-    set totalItemCount(count) {
-        this.verticalScrollContainer.totalItemCount = count;
-        this.cdr.detectChanges();
-    }
-
-    /**
      * @hidden
      */
     get maxLevelHeaderDepth() {
@@ -2531,6 +2488,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected _autoSize = false;
     private _rowHeight;
     protected _ngAfterViewInitPassed = false;
+    protected _baseFontSize: number;
     private _horizontalForOfs;
     private _multiRowLayoutRowSize = 1;
 
@@ -4022,7 +3980,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected get defaultTargetBodyHeight(): number {
-        const allItems = this.totalItemCount || this.dataLength;
+        const allItems = this.dataLength;
         return this.renderedRowHeight * Math.min(this._defaultTargetRecordNumber,
             this.paging ? Math.min(allItems, this.perPage) : allItems);
     }
@@ -4040,10 +3998,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Sets TBODY height i.e. this.calcHeight
      */
     protected calculateGridHeight() {
-        // TODO: Calculate based on grid density
         if (this.maxLevelHeaderDepth) {
-            this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
-                (this.allowFiltering && this.filterMode === FilterMode.quickFilter ? FILTER_ROW_HEIGHT : 0) + 1}px`;
+            this._baseFontSize = parseFloat(getComputedStyle(this.document.documentElement).getPropertyValue('font-size'));
+            let minSize = (this.maxLevelHeaderDepth + 1) * this.defaultRowHeight / this._baseFontSize;
+            if (this._allowFiltering && this._filterMode === FilterMode.quickFilter) {
+                minSize += (FILTER_ROW_HEIGHT + 1) / this._baseFontSize;
+            }
+            this.theadRow.nativeElement.style.minHeight = `${minSize}rem`;
         }
         this.summariesHeight = 0;
         if (this.hasSummarizedColumns && this.rootSummariesEnabled) {
@@ -4808,16 +4769,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     extractDataFromSelection(source: any[]): any[] {
-        let column: IgxColumnComponent;
+        let columnsArray: IgxColumnComponent[];
         let record = {};
         const selectedData = [];
 
         const selectionMap = Array.from(this.selectionService.selection)
             .filter((tuple) => tuple[0] < source.length);
-
-        const visibleColumns = this.visibleColumns
-            .filter(col => !col.columnGroup)
-            .sort((a, b) => a.visibleIndex - b.visibleIndex);
 
 
         for (const [row, set] of selectionMap) {
@@ -4826,10 +4783,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
             const temp = Array.from(set);
             for (const each of temp) {
-                column = visibleColumns[each];
-                if (column) {
-                    record[column.field] = source[row][column.field];
-                }
+                columnsArray = this.getSelectableColumnsAt(each);
+                columnsArray.forEach((col) => {
+                    if (col) {
+                        record[col.field] = source[row][col.field];
+                    }
+                });
             }
             if (Object.keys(record).length) {
                 selectedData.push(record);
@@ -4837,6 +4796,21 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             record = {};
         }
         return selectedData;
+    }
+
+    protected getSelectableColumnsAt(index) {
+        if (this.hasColumnLayouts) {
+            const visibleLayoutColumns = this.visibleColumns
+            .filter(col => col.columnLayout)
+            .sort((a, b) => a.visibleIndex - b.visibleIndex);
+            const colLayout = visibleLayoutColumns[index];
+            return colLayout ? colLayout.children.toArray() : [];
+        } else {
+            const visibleColumns = this.visibleColumns
+            .filter(col => !col.columnGroup)
+            .sort((a, b) => a.visibleIndex - b.visibleIndex);
+            return [ visibleColumns[index] ];
+        }
     }
 
     getSelectedData() {

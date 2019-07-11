@@ -268,6 +268,24 @@ describe('Basic IgxHierarchicalGrid', () => {
         expect(hierarchicalGrid.nativeElement.classList.contains('igx-grid--compact')).toBe(true);
         expect(childGrid.displayDensity).toBe(DisplayDensity.compact);
     }));
+
+    it('when child width is in percents its width should be update if parent width changes while parent row is collapsed. ', async () => {
+        const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+        const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+        expect(childGrid.calcWidth - 370).toBeLessThan(3);
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+        fixture.componentInstance.width = '300px';
+        fixture.detectChanges();
+        await wait(30);
+        fixture.detectChanges();
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+        expect(childGrid.calcWidth - 170).toBeLessThan(3);
+    });
 });
 
 describe('IgxHierarchicalGrid Row Islands', () => {
@@ -944,7 +962,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios', () => {
 @Component({
     template: `
     <igx-hierarchical-grid #grid1 [data]="data"
-     [autoGenerate]="false" [height]="'400px'" [width]="'500px'" #hierarchicalGrid>
+     [autoGenerate]="false" [height]="'400px'" [width]="width" #hierarchicalGrid>
      <igx-column field="ID"></igx-column>
      <igx-column field="ProductName"></igx-column>
         <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland>
@@ -960,6 +978,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios', () => {
 })
 export class IgxHierarchicalGridTestBaseComponent {
     public data;
+    public width = '500px';
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent }) public hgrid: IgxHierarchicalGridComponent;
     @ViewChild('rowIsland', { read: IgxRowIslandComponent }) public rowIsland: IgxRowIslandComponent;
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent }) public rowIsland2: IgxRowIslandComponent;
