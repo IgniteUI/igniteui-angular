@@ -20,6 +20,8 @@
 /// @see $default-palette
 
 $_light-slider: extend((
+    variant: material,
+
     track-color: (
         igx-color: ('secondary', 500)
     ),
@@ -43,14 +45,55 @@ $_light-slider: extend((
         hexrgba: ()
     ),
 
+    disabled-base-track-color: (
+        igx-color: ('grays', 400)
+    ),
+
     base-track-color: (
         igx-color: ('secondary', 500),
         rgba: .24
     ),
 
-    disabled-base-track-color: (
-        igx-color: ('grays', 400)
+    base-track-hover-color:  (
+        igx-color: ('secondary', 500),
+        rgba: .24
+    ),
+
+    track-hover-color: (
+        igx-color: ('secondary', 500)
     )
 ), $_default-shape-slider);
 
-$_fluent-slider: extend((), $_light-slider);
+$_fluent-slider: extend($_light-slider, (
+    variant: fluent,
+
+    track-color: (
+        igx-color: ('grays', 700)
+    ),
+
+    base-track-color: (
+        igx-color: ('grays', 400)
+    ),
+
+    thumb-color: #fff,
+
+    disabled-thumb-color: #fff,
+
+    base-track-hover-color:  (
+        igx-color: ('primary', 500),
+        rgba: .32
+    ),
+
+    track-hover-color: (
+        igx-color: ('primary', 500)
+    ),
+
+    thumb-disabled-border-color: (
+        igx-color: ('grays', 400),
+        hexrgba: ()
+    ),
+
+    thumb-border-color: (
+        igx-color: ('grays', 700)
+    ),
+));

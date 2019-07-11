@@ -39,8 +39,12 @@
 
     $disabled-thumb-color: null,
     $base-track-color: null,
-    $disabled-base-track-color: null
-
+    $disabled-base-track-color: null,
+    $thumb-border-color: null,
+    $thumb-disabled-border-color: null,
+    $track-hover-color: null,
+    $thumb-hover-color: null,
+    $base-track-hover-color: null
 ) {
     $name: 'igx-slider';
     $theme: apply-palette(map-get($schema, $name), $palette);
@@ -53,12 +57,17 @@
         name: $name,
         palette: $palette,
         track-color: $track-color,
+        track-hover-color: $track-hover-color,
         thumb-color: $thumb-color,
+        thumb-hover-color: $thumb-hover-color,
         label-background-color: $label-background-color,
         label-text-color: $label-text-color,
         disabled-thumb-color: $disabled-thumb-color,
         base-track-color: $base-track-color,
-        disabled-base-track-color: $disabled-base-track-color
+        disabled-base-track-color: $disabled-base-track-color,
+        thumb-border-color: $thumb-border-color,
+        thumb-disabled-border-color: $thumb-disabled-border-color,
+        base-track-hover-color: $base-track-hover-color
     ));
 }
 
@@ -69,10 +78,17 @@
 @mixin igx-slider($theme) {
     @include igx-root-css-vars($theme);
 
-    // @debug $theme;
-
     $slider-height: 48px;
-    $slider-track-height: 2px;
+
+    $slider-track-height: map-get((
+        material: 2px,
+        fluent: 4px
+    ), map-get($theme, variant));
+
+    $thumb-border-width: map-get((
+        material: 0,
+        fluent: 2px
+    ), map-get($theme, variant));
 
     // Slider Thumb
     $slider-thumb-width: 40px;
@@ -87,11 +103,48 @@
     $slider-label-font-weight: 600;
     $slider-label-padding: 0 rem(2px);
 
+    $switch-display: map-get((
+        material: block,
+        fluent: none
+    ), map-get($theme, variant));
+
+    $dot-size: map-get((
+        material: rem(12px),
+        fluent: rem(16px)
+    ), map-get($theme, variant));
+
     %igx-slider-display {
         display: flex;
         position: relative;
         height: rem($slider-height);
         align-items: center;
+        transition: all .2s $ease-out-quad;
+
+        &:hover {
+            %igx-slider-track-fill {
+                background: --var($theme, 'track-hover-color');
+            }
+
+            %igx-slider-track {
+                background: --var($theme, 'base-track-hover-color');
+            }
+
+            %igx-slider-track--disabled {
+                background: --var($theme, 'disabled-base-track-color');
+            }
+
+            %igx-thumb-dot {
+                &::before {
+                    border-color: --var($theme, 'track-hover-color');
+                }
+            }
+
+            %igx-thumb-dot--disabled {
+                &::before {
+                    border-color: --var($theme, 'thumb-disabled-border-color');
+                }
+            }
+        }
     }
 
     %igx-slider-thumbs-container {
@@ -227,17 +280,19 @@
         &::before {
             position: absolute;
             content: '';
-            width: rem(12px);
-            height: rem(12px);
-            left: #{rem($slider-thumb-radius) - rem(6px)};
-            top: #{rem($slider-thumb-radius) - rem(6px)};
+            width: $dot-size;
+            height: $dot-size;
+            left: #{rem($slider-thumb-radius) - ($dot-size / 2)};
+            top: #{rem($slider-thumb-radius) - ($dot-size / 2)};
             background: --var($theme, 'thumb-color');
+            border: $thumb-border-width solid --var($theme, 'thumb-border-color');
             transform: rotate(45deg);
             transition: transform .1s $ease-out-quad, border-radius .1s $ease-out-quad;
             border-radius: rem($slider-thumb-radius);
         }
 
         &::after {
+            display: $switch-display;
             position: absolute;
             content: '';
             width: rem($slider-thumb-width);
@@ -258,6 +313,7 @@
 
         &::before {
             background: --var($theme, 'disabled-thumb-color');
+            border-color: --var($theme, 'thumb-disabled-border-color');
             border-radius: rem($slider-thumb-radius);
         }
 
