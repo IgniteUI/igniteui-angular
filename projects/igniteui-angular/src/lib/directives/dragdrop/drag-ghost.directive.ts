@@ -4,8 +4,6 @@ import { IgxDragDirective } from './dragdrop.directive';
 export interface IDragGhostBaseEventArgs {
     owner: IgxDragGhostDirective;
     dragDirective: IgxDragDirective;
-    offsetX: number;
-    offsetY: number;
 }
 
 @Directive({
@@ -13,20 +11,20 @@ export interface IDragGhostBaseEventArgs {
 })
 export class IgxDragGhostDirective {
 
-    @Input('igxDragGhost')
-    public host: ElementRef;
+    @Input()
+    public igxDragGhost: ElementRef;
 
     @Input()
-    public offsetX = 0;
+    public igxDragGhostOffsetX: number;
 
     @Input()
-    public offsetY = 0;
+    public igxDragGhostOffsetY: number;
 
     @Output()
-    public onCreate = new EventEmitter<IDragGhostBaseEventArgs>();
+    public igxDragGhostOnCreate = new EventEmitter<IDragGhostBaseEventArgs>();
 
     @Output()
-    public onDestroy = new EventEmitter<IDragGhostBaseEventArgs>();
+    public igxDragGhostOnDestroy = new EventEmitter<IDragGhostBaseEventArgs>();
 
     constructor(public template: TemplateRef<any>) {}
 }
