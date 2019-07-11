@@ -4779,16 +4779,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     extractDataFromSelection(source: any[]): any[] {
-        let column: IgxColumnComponent;
+        let columnsArray: IgxColumnComponent[];
         let record = {};
         const selectedData = [];
 
         const selectionMap = Array.from(this.selectionService.selection)
             .filter((tuple) => tuple[0] < source.length);
-
-        const visibleColumns = this.visibleColumns
-            .filter(col => !col.columnGroup)
-            .sort((a, b) => a.visibleIndex - b.visibleIndex);
 
 
         for (const [row, set] of selectionMap) {
@@ -4797,10 +4793,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
             const temp = Array.from(set);
             for (const each of temp) {
-                column = visibleColumns[each];
-                if (column) {
-                    record[column.field] = source[row][column.field];
-                }
+                columnsArray = this.getSelectableColumnsAt(each);
+                columnsArray.forEach((col) => {
+                    if (col) {
+                        record[col.field] = source[row][col.field];
+                    }
+                });
             }
             if (Object.keys(record).length) {
                 selectedData.push(record);
@@ -4808,6 +4806,21 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             record = {};
         }
         return selectedData;
+    }
+
+    protected getSelectableColumnsAt(index) {
+        if (this.hasColumnLayouts) {
+            const visibleLayoutColumns = this.visibleColumns
+            .filter(col => col.columnLayout)
+            .sort((a, b) => a.visibleIndex - b.visibleIndex);
+            const colLayout = visibleLayoutColumns[index];
+            return colLayout ? colLayout.children.toArray() : [];
+        } else {
+            const visibleColumns = this.visibleColumns
+            .filter(col => !col.columnGroup)
+            .sort((a, b) => a.visibleIndex - b.visibleIndex);
+            return [ visibleColumns[index] ];
+        }
     }
 
     getSelectedData() {
