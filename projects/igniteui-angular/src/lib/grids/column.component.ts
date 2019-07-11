@@ -116,8 +116,13 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     @Input()
     get editable(): boolean {
-        const editableInRowEdit = this.grid && this.grid.rowEditable && this.field !== this.grid.primaryKey;
-        return this._editable !== undefined ? this._editable : editableInRowEdit;
+        let result = false;
+        if (this._editable !== undefined) {
+            result = this._editable;
+        } else {
+            result = this.grid && this.grid.rowEditable && this.field !== this.grid.primaryKey;
+        }
+        return result;
     }
     /**
      * Sets whether the column is editable.
