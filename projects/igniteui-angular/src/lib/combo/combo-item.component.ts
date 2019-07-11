@@ -102,10 +102,14 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
     /**
      * @hidden
      * @internal
+     * The event that is prevented is the click on the checkbox label element.
+     * That is the only visible element that a user can interact with.
+     * The click propagates to the host and the preventDefault is to stop it from
+     * switching focus to the input it's base on.
+     * The toggle happens in an internal handler in the drop-down on the next task queue cycle.
      */
-    handleFocus(event: MouseEvent) {
+    disableCheck(event: MouseEvent) {
         event.preventDefault();
-        this.dropDown.element.focus();
     }
 
     ngDoCheck() {
