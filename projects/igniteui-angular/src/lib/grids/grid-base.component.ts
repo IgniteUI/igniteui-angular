@@ -4839,10 +4839,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const selectionMap = Array.from(this.selectionService.selection)
             .filter((tuple) => tuple[0] < source.length);
 
-        const visibleColumns = this.visibleColumns
-            .filter(col => !col.columnGroup)
-            .sort((a, b) => a.visibleIndex - b.visibleIndex);
-
 
         for (const [row, set] of selectionMap) {
             if (!source[row]) {
