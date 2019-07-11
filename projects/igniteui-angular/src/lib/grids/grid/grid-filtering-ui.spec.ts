@@ -5353,19 +5353,19 @@ function checkUIForType(type: string, elem: DebugElement) {
     const isReadOnly = type === 'bool' ? true : false;
     switch (type) {
         case 'string':
-            expectedConditions = IgxStringFilteringOperand.instance().operations;
+            expectedConditions = IgxStringFilteringOperand.instance().operations.filter(f => !f.hidden);
             expectedInputType = 'text';
             break;
         case 'number':
-            expectedConditions = IgxNumberFilteringOperand.instance().operations;
+            expectedConditions = IgxNumberFilteringOperand.instance().operations.filter(f => !f.hidden);
             expectedInputType = 'number';
             break;
         case 'date':
-            expectedConditions = IgxDateFilteringOperand.instance().operations;
+            expectedConditions = IgxDateFilteringOperand.instance().operations.filter(f => !f.hidden);
             expectedInputType = 'datePicker';
             break;
         case 'bool':
-            expectedConditions = IgxBooleanFilteringOperand.instance().operations;
+            expectedConditions = IgxBooleanFilteringOperand.instance().operations.filter(f => !f.hidden);
             expectedInputType = 'text';
             break;
     }
