@@ -1,5 +1,6 @@
-import { Component, ViewChild, OnInit, TemplateRef, AfterViewInit } from '@angular/core';
-import { IgxComboComponent, IComboSelectionChangeEventArgs, DisplayDensity, OverlaySettings, AutoPositionStrategy, VerticalAlignment, HorizontalAlignment } from 'igniteui-angular';
+import { Component, ViewChild, OnInit, TemplateRef, AfterViewInit, ElementRef } from '@angular/core';
+import { IgxComboComponent, IComboSelectionChangeEventArgs,
+    DisplayDensity, OverlaySettings, AutoPositionStrategy, VerticalAlignment, HorizontalAlignment } from 'igniteui-angular';
 import { take } from 'rxjs/operators';
 import { cloneDeep } from 'lodash';
 
@@ -34,6 +35,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     private width = '160px';
     @ViewChild(IgxComboComponent, { static: true }) public igxCombo: IgxComboComponent;
     @ViewChild('comboTemplate', { read: IgxComboComponent, static: false }) public comboTemplate: IgxComboComponent;
+    @ViewChild(IgxComboComponent, { read: ElementRef, static: true }) private comboRef: ElementRef;
     public toggleItemState = false;
     private initData: any[] = [];
     public filterableFlag = true;
@@ -128,7 +130,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         this.overlaySettings[0] = cloneDeep(this.igxCombo.overlaySettings);
         this.overlaySettings[1] = {
-            positionStrategy: new AutoPositionStrategy({ target: this.igxCombo.element,
+            positionStrategy: new AutoPositionStrategy({ target: this.comboRef.nativeElement,
                 verticalDirection: VerticalAlignment.Bottom, verticalStartPoint: VerticalAlignment.Bottom,
                 horizontalDirection: HorizontalAlignment.Right, horizontalStartPoint: HorizontalAlignment.Left }),
             modal: true,
