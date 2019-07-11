@@ -42,22 +42,6 @@ import { IgxComboAPIService } from './combo.api';
 import { EditorProvider } from '../core/edit-provider';
 import { take } from 'rxjs/operators';
 
-/** Custom strategy to provide the combo with callback on initial positioning */
-class ComboConnectedPositionStrategy extends ConnectedPositioningStrategy {
-    private _callback: () => void;
-    constructor(callback: () => void) {
-        super();
-        this._callback = callback;
-    }
-
-    position(contentElement, size, document?, initialCall?) {
-        if (initialCall) {
-            this._callback();
-        }
-        super.position(contentElement, size);
-    }
-}
-
 /**
  * @hidden
  */
@@ -124,7 +108,7 @@ const noop = () => { };
     ]
 })
 export class IgxComboComponent extends DisplayDensityBase implements IgxComboBase, AfterViewInit, ControlValueAccessor, OnInit,
- OnDestroy, EditorProvider {
+    OnDestroy, EditorProvider {
     /**
      * @hidden @internal
      */
@@ -148,10 +132,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     private _filteredData = [];
     private _itemHeight = null;
     private _itemsMaxHeight = null;
-    private _positionCallback: () => void;
     private _onChangeCallback: (_: any) => void = noop;
-    private overlaySettings: OverlaySettings = {
+    private _overlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
+        positionStrategy: new ConnectedPositioningStrategy(),
         modal: false,
         closeOnOutsideClick: true,
         excludePositionTarget: true
@@ -170,6 +154,26 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
     @ViewChild(IgxForOfDirective, { read: IgxForOfDirective, static: true })
     protected virtDir: IgxForOfDirective<any>;
+
+    /**
+     * Set custom overlay settings that control how the combo's list of items is displayed.
+     * Set:
+     * ```html
+     * <igx-combo [overlaySettings] = "customOverlaySettings"></igx-combo>
+     * ```
+     *
+     * ```typescript
+     *  const customSettings = { positionStrategy: { settings: { target: myTarget } } };
+     *  combo.overlaySettings = customSettings;
+     * ```
+     * Get any custom overlay settings used by the combo:
+     * ```typescript
+     *  const comboOverlaySettings: OverlaySettings = myCombo.overlaySettings;
+     * ```
+     */
+
+    @Input()
+    public overlaySettings: OverlaySettings = null;
 
     /**
      * @hidden @internal
@@ -1249,9 +1253,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public ngOnInit() {
         this.ngControl = this.injector.get(NgControl, null);
-        this._positionCallback = () => this.dropdown.updateScrollPosition();
-        this.overlaySettings.positionStrategy = new ComboConnectedPositionStrategy(this._positionCallback);
-        this.overlaySettings.positionStrategy.settings.target = this.elementRef.nativeElement;
+        this._overlaySettings.positionStrategy.settings.target = this.elementRef.nativeElement;
         this.selection.set(this.id, new Set());
     }
 
@@ -1263,7 +1265,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
         if (this.ngControl) {
             this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged);
-    }
+        }
     }
 
     /**
@@ -1358,7 +1360,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *```
      */
     public toggle(): void {
-        this.dropdown.toggle(this.overlaySettings);
+        const overlaySettings = Object.assign({}, this._overlaySettings, this.overlaySettings);
+        this.dropdown.toggle(overlaySettings);
     }
 
     /**
@@ -1370,7 +1373,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *```
      */
     public open(): void {
-        this.dropdown.open(this.overlaySettings);
+        const overlaySettings = Object.assign({}, this._overlaySettings, this.overlaySettings);
+        this.dropdown.open(overlaySettings);
     }
 
     /**
