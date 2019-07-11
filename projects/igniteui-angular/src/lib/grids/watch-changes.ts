@@ -14,10 +14,11 @@ export function WatchChanges(): PropertyDecorator {
         const originalSetter = propDesc.set || (function (this: any, val: any) { this[privateKey] = val; });
 
         propDesc.set = function (this: any, val: any) {
+            const init = this._init;
             const oldValue = this[key];
             if (val !== oldValue || (typeof val === 'object' && val === oldValue)) {
                 originalSetter.call(this, val);
-                if (this.ngOnChanges) {
+                if (this.ngOnChanges && !init) {
                     // in case wacthed prop changes trigger ngOnChanges manually
                     const changes: SimpleChanges = {
                         [key]: new SimpleChange(oldValue, val, false)
