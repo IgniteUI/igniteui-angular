@@ -55,6 +55,8 @@ import { DisplayDensity } from '../core/displayDensity';
     template: ``
 })
 export class IgxColumnComponent implements AfterContentInit {
+    private _filterable = true;
+    private _groupable = false;
     /**
      * Sets/gets the `field` value.
      * ```typescript
@@ -105,7 +107,15 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public groupable = false;
+    public get groupable() {
+        return this._groupable;
+    }
+    public set groupable(val) {
+        this._groupable = val;
+        if (this.grid) {
+            this.grid.cdr.markForCheck();
+        }
+    }
     /**
      * Sets/gets whether the column is editable.
      * Default value is `false`.
@@ -131,7 +141,15 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public filterable = true;
+    public get filterable() {
+        return this._filterable;
+    }
+    public set filterable(val) {
+        this._filterable = val;
+        if (this.grid) {
+            this.grid.cdr.markForCheck();
+        }
+    }
     /**
      * Sets/gets whether the column is resizable.
      * Default value is `false`.
@@ -300,6 +318,8 @@ export class IgxColumnComponent implements AfterContentInit {
             this._width = value;
             if (this.grid) {
                 this.cacheCalcWidth();
+                (this.grid as any)._derivePossibleWidth();
+                this.grid.cdr.markForCheck();
             }
         }
     }
