@@ -25,6 +25,8 @@ All notable changes for each version of this project will be documented in this 
         ```
 - `igx-paginator`
     - Replaces the current paginator in all grids. Can be used as a standalone component.
+- `IgxCombo`
+    - Input `[overlaySettings]` - allows an object of type `OverlaySettings` to be passed. These custom overlay settings control how the drop-down list displays.
 
 ## 8.0.2
 - `igx-list-theme` now have some new parameters for styling.

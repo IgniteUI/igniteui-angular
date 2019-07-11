@@ -4,6 +4,7 @@ import { first } from 'rxjs/operators';
 import { FilterMode } from '../grid-base.component';
 import { IgxColumnComponent } from '../../grids/column.component';
 import { ISelectionNode } from '../../core/grid-selection';
+import { isIE } from '../../core/utils';
 
 export class IgxHierarchicalGridNavigationService extends IgxGridNavigationService {
     public grid: IgxHierarchicalGridComponent;
@@ -173,6 +174,18 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                             `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
                         if (cells.length > 0) { cells[cells.length - 1].focus(); }
                     });
+            }
+        } else  if (this.grid.parent !== null) {
+            const childContainer = this.grid.nativeElement.parentNode.parentNode;
+            const diff =
+            childContainer.getBoundingClientRect().bottom - this.grid.rootGrid.tbody.nativeElement.getBoundingClientRect().bottom;
+            const endIsVisible = diff < 0;
+            const scrollable = this.getNextScrollableDown(this.grid);
+            if (!endIsVisible) {
+                this.scrollGrid(scrollable.grid, diff,
+                    () => super.navigateBottom(visibleColumnIndex));
+            } else {
+                super.navigateBottom(visibleColumnIndex);
             }
         } else {
             super.navigateBottom(visibleColumnIndex);
@@ -423,6 +436,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
     }
 
+    public getFocusableGrid() {
+        return (isIE() && this.grid.rootGrid) ? this.grid.rootGrid : this.grid;
+    }
+
     private getLastGridElem(trContainer) {
         const children = trContainer.children;
         const closestChild = children[children.length - 1].children[0].children[0];
@@ -455,14 +472,17 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const cell = cells[0];
         const childContainer = this.grid.nativeElement.parentNode.parentNode;
         const scrTop = this.grid.parent.verticalScrollContainer.getVerticalScroll().scrollTop;
+        const maxScroll = this.grid.parent.verticalScrollContainer.getVerticalScroll().scrollHeight - this.grid.parent.calcHeight;
         const dc = childContainer.parentNode.parentNode;
         const scrWith = parseInt(dc.style.top, 10);
-        if (scrTop === 0 || scrWith === 0) {
+        const parentRowOffset = childContainer.parentNode.offsetTop + this.grid.nativeElement.offsetTop +
+            scrWith;
+        if ((scrTop === 0 && parentRowOffset < 0 ) || parentRowOffset === 0 || (scrTop === maxScroll && parentRowOffset > 0)) {
             // cell is in view
             cell.focus({ preventScroll: true });
         } else {
             // scroll parent so that cell is in view
-            this.scrollGrid(this.grid.parent, scrWith, () => cell.focus({ preventScroll: true }));
+            this.scrollGrid(this.grid.parent, parentRowOffset, () => cell.focus({ preventScroll: true }));
         }
     }
 
@@ -717,7 +737,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         grid.dataRowList.toArray()[0].virtDirRow.scrollTo(unpinnedIndex);
     }
     private scrollGrid(grid, target, callBackFunc) {
-        grid.nativeElement.focus({ preventScroll: true });
+        this.getFocusableGrid().nativeElement.focus({preventScroll: true});
         requestAnimationFrame(() => {
             if (typeof target === 'number') {
                 grid.verticalScrollContainer.addScrollTop(target);
