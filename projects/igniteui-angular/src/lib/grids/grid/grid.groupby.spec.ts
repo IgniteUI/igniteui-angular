@@ -2240,7 +2240,7 @@ describe('IgxGrid - GroupBy', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
 
-        fix.componentInstance.instance.dropAreaTemplate = fix.componentInstance.dropAreaTemplate;
+        fix.componentInstance.currentDropArea = fix.componentInstance.dropAreaTemplate;
         await wait();
         fix.detectChanges();
 
@@ -2589,6 +2589,7 @@ describe('IgxGrid - GroupBy', () => {
         <igx-grid
             [width]='width'
             [height]='height'
+            [dropAreaTemplate]='currentDropArea'
             [data]="data"
             [autoGenerate]="true" (onColumnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)">
         </igx-grid>
@@ -2600,6 +2601,7 @@ describe('IgxGrid - GroupBy', () => {
 export class DefaultGridComponent extends DataParent {
     public width = '800px';
     public height = null;
+    public currentDropArea;
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
