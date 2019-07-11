@@ -17,7 +17,6 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxDropDownItemBase } from '../drop-down/drop-down-item.base';
 import { DisplayDensity, DisplayDensityToken } from '../core/density';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/index';
-import { mergeObjects } from '../core/utils';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
