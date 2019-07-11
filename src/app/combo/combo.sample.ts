@@ -1,6 +1,8 @@
 import { Component, ViewChild, OnInit, TemplateRef, AfterViewInit, ElementRef } from '@angular/core';
 import { IgxComboComponent, IComboSelectionChangeEventArgs,
-    DisplayDensity, OverlaySettings, AutoPositionStrategy, VerticalAlignment, HorizontalAlignment } from 'igniteui-angular';
+    DisplayDensity, OverlaySettings, AutoPositionStrategy, VerticalAlignment, HorizontalAlignment, GlobalPositionStrategy,
+    scaleInCenter, scaleOutCenter, ElasticPositionStrategy
+} from 'igniteui-angular';
 import { take } from 'rxjs/operators';
 import { cloneDeep } from 'lodash';
 
@@ -130,13 +132,14 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         this.overlaySettings[0] = cloneDeep(this.igxCombo.overlaySettings);
         this.overlaySettings[1] = {
-            positionStrategy: new AutoPositionStrategy({ target: this.comboRef.nativeElement,
-                verticalDirection: VerticalAlignment.Bottom, verticalStartPoint: VerticalAlignment.Bottom,
-                horizontalDirection: HorizontalAlignment.Right, horizontalStartPoint: HorizontalAlignment.Left }),
-            modal: true,
+            positionStrategy: new ElasticPositionStrategy({ target: this.comboRef.nativeElement,
+                verticalDirection: VerticalAlignment.Top, verticalStartPoint: VerticalAlignment.Bottom,
+                horizontalDirection: HorizontalAlignment.Left, horizontalStartPoint: HorizontalAlignment.Right }),
+            modal: false,
             closeOnOutsideClick: true,
         };
         this.overlaySettings[2] = {
+            positionStrategy: new GlobalPositionStrategy({ openAnimation: scaleInCenter, closeAnimation: scaleOutCenter }),
             modal: true,
             closeOnOutsideClick: true,
         };
