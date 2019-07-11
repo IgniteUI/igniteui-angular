@@ -394,6 +394,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     @Input()
     set dropAreaMessage(value: string) {
         this._dropAreaMessage = value;
+        this.cdr.markForCheck();
     }
 
     /**
