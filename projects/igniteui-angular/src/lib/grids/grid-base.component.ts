@@ -4107,7 +4107,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected getPagingHeight(): number {
         let pagingHeight = 0;
-        if (this.paging && this.footer) {
+        if (this.footer) {
             pagingHeight = this.footer.nativeElement.firstElementChild ?
                 this.footer.nativeElement.offsetHeight : 0;
         }
