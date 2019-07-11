@@ -35,7 +35,7 @@
 ///     $content-text-color: rgba(0, 0, 0, .8)
 ///   );
 ///   // Pass the theme to the igx-card component mixin
-///   @include igx-calendar($my-card-theme);
+///   @include igx-card($my-card-theme);
 @function igx-card-theme(
     $palette: $default-palette,
     $schema: $light-schema,
