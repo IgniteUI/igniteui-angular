@@ -1,26 +1,26 @@
-<div class="igx-grid-paginator__select">
+<div class="igx-grid-paginator__select" [hidden]="dropdownHidden">
     <label class="igx-grid-paginator__label">{{ selectLabel }}</label>
     <div class="igx-grid-paginator__select-input">
         <igx-select [(ngModel)]="perPage" [displayDensity]="paginatorSelectDisplayDensity()" type="border"
-            (ngModelChange)="handleChange()">
+            (ngModelChange)="handleChange()" [disabled]="!dropdownEnabled">
             <igx-select-item [value]="val" *ngFor="let val of selectOptions">
                 {{val}}
             </igx-select-item>
         </igx-select>
     </div>
 </div>
-<div class="igx-grid-paginator__pager">
-    <button [disabled]="isFirstPage" (click)="paginate(0)" igxButton="icon" igxRipple igxRippleCentered="true">
+<div class="igx-grid-paginator__pager" [hidden]="pagerHidden">
+    <button [disabled]="isFirstPage || !pagerEnabled ? true: false" (click)="paginate(0)" igxButton="icon" igxRipple igxRippleCentered="true">
         <igx-icon fontSet="material">first_page</igx-icon>
     </button>
-    <button [disabled]="isFirstPage" (click)="previousPage()" igxButton="icon" igxRipple igxRippleCentered="true">
+    <button [disabled]="isFirstPage || !pagerEnabled ? true: false" (click)="previousPage()" igxButton="icon" igxRipple igxRippleCentered="true">
         <igx-icon fontSet="material">chevron_left</igx-icon>
     </button>
     <span>{{ page + 1 }} of {{ totalPages }}</span>
-    <button [disabled]="isLastPage" (click)="nextPage()" igxRipple igxRippleCentered="true" igxButton="icon">
+    <button [disabled]="isLastPage || !pagerEnabled ? true: false" (click)="nextPage()" igxRipple igxRippleCentered="true" igxButton="icon">
         <igx-icon fontSet="material">chevron_right</igx-icon>
     </button>
-    <button [disabled]="isLastPage" (click)="paginate(totalPages - 1)" igxButton="icon" igxRipple
+    <button [disabled]="isLastPage || !pagerEnabled ? true: false" (click)="paginate(totalPages - 1)" igxButton="icon" igxRipple
         igxRippleCentered="true">
         <igx-icon fontSet="material">last_page</igx-icon>
     </button>

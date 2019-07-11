@@ -100,7 +100,9 @@ describe('IgxPaginator with custom settings', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
-                CustomizedPaginatorComponent
+                CustomizedPaginatorComponent,
+                DisabledPaginatorComponent,
+                HiddenPaginatorComponent
             ],
             imports: [IgxPaginatorModule, NoopAnimationsModule]
         }).compileComponents();
@@ -143,9 +145,38 @@ describe('IgxPaginator with custom settings', () => {
         expect(selectLabel).toEqual('Per page');
     });
 
+    it('should disable the dropdown and pager buttons if set to false through input', () => {
+        const fix = TestBed.createComponent(DisabledPaginatorComponent);
+        fix.detectChanges();
+
+        const select = fix.debugElement.query(By.css('igx-select')).nativeElement;
+        const selectDisabled = select.getAttribute('ng-reflect-is-disabled');
+
+        const pagingButtons = fix.nativeElement.querySelectorAll('.igx-grid-paginator__pager > button');
+        pagingButtons.forEach(element => {
+            expect(element.className.includes('igx-button--disabled')).toBe(true);
+        });
+
+        expect(selectDisabled).toBeTruthy();
+    });
+
+    it('should hide the dropdown and pager if set to false through input', () => {
+        const fix = TestBed.createComponent(HiddenPaginatorComponent);
+        fix.detectChanges();
+
+        const select = fix.debugElement.query(By.css('.igx-grid-paginator__select')).nativeElement;
+        const selectHidden = select.hasAttribute('hidden');
+
+        const pager = fix.debugElement.query(By.css('.igx-grid-paginator__pager')).nativeElement;
+        const pagerHidden = pager.hasAttribute('hidden');
+
+        expect(selectHidden).toBeTruthy();
+        expect(pagerHidden).toBeTruthy();
+    });
+
 });
 @Component({
-    template: `<igx-paginator [totalRecords]="44"></igx-paginator>`
+    template: `<igx-paginator [totalRecords]="42"></igx-paginator>`
 })
 export class DefaultPaginatorComponent {
     @ViewChild(IgxPaginatorComponent, { static: true }) public paginator: IgxPaginatorComponent;
@@ -160,5 +191,27 @@ export class DefaultPaginatorComponent {
         </igx-paginator>`
 })
 export class CustomizedPaginatorComponent {
+    @ViewChild(IgxPaginatorComponent, { static: true }) public paginator: IgxPaginatorComponent;
+}
+
+@Component({
+    template: `<igx-paginator
+        [pagerEnabled]="false"
+        [dropdownEnabled]="false"
+        >
+        </igx-paginator>`
+})
+export class DisabledPaginatorComponent {
+    @ViewChild(IgxPaginatorComponent, { static: true }) public paginator: IgxPaginatorComponent;
+}
+
+@Component({
+    template: `<igx-paginator
+        [pagerHidden]="true"
+        [dropdownHidden]="true"
+        >
+        </igx-paginator>`
+})
+export class HiddenPaginatorComponent {
     @ViewChild(IgxPaginatorComponent, { static: true }) public paginator: IgxPaginatorComponent;
 }

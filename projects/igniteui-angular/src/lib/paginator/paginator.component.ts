@@ -50,6 +50,47 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit,
      */
     @Input()
     public page = 0;
+
+    /**
+    * An @Input property that sets if the pager in the paginator should be enabled.
+    * ```html
+    * <igx-paginator [pagerEnabled]="true"></igx-paginator>
+    * ```
+    * @memberof IgxPaginatorComponent
+    */
+    @Input()
+    public pagerEnabled = true;
+
+    /**
+    * An @Input property that sets if the pager in the paginator should be hidden.
+    * ```html
+    * <igx-paginator [pagerHidden]="true"></igx-paginator>
+    * ```
+    * @memberof IgxPaginatorComponent
+    */
+    @Input()
+    public pagerHidden = false;
+
+    /**
+    * An @Input property that sets if the dropdown in the paginator should be enabled.
+    * ```html
+    * <igx-paginator [dropdownEnabled]="true"></igx-paginator>
+    * ```
+    * @memberof IgxPaginatorComponent
+    */
+    @Input()
+    public dropdownEnabled = true;
+
+    /**
+    * An @Input property that sets if the dropdown in the paginator should be hidden.
+    * ```html
+    * <igx-paginator [dropdownHidden]="true"></igx-paginator>
+    * ```
+    * @memberof IgxPaginatorComponent
+    */
+    @Input()
+    public dropdownHidden = false;
+
     /**
     * An @Input property that sets the total records.
     * ```typescript
