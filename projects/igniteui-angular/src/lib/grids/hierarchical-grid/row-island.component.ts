@@ -274,6 +274,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
         } else {
             this.rootGrid.hgridAPI.registerChildRowIsland(this);
         }
+        this._init = false;
     }
 
     /**
