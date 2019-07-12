@@ -457,7 +457,7 @@ describe('IgxTreeGrid - Integration ', () => {
 
             // Edit child row child cell
             const childCell = grid.getCellByColumn(4, 'Name');
-            childCell.editMode = true;
+            childCell.setEditMode(true);
             fix.detectChanges();
 
             let banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
