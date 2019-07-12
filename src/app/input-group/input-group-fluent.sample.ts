@@ -15,6 +15,7 @@ export class InputGroupFluentSampleComponent {
         lastName: 'Duduka'
     };
     public inputType = 'fluent';
+    date = new Date();
     constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions) {}
 
     changeDisplayDensity() {

@@ -444,34 +444,111 @@
 
 
     //// FLUENT /////
+
     %igx-input-group--fluent {
         display: flex;
         flex-direction: column;
+
+        igx-prefix,
+        [igxPrefix] {
+            @extend %form-group-prefix-fluent;
+            outline-style: none;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %form-group-suffix-fluent;
+            outline-style: none;
+        }
+
+        select {
+            width: calc(100% + #{rem(8px)});
+            margin-left: rem(-8px) !important;
+            cursor: pointer !important;
+        }
     }
 
+    %igx-input-group--fluent--cosy {
+        igx-prefix,
+        [igxPrefix] {
+            @extend %form-group-prefix-fluent--cosy;
+            outline-style: none;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %form-group-suffix-fluent--cosy;
+            outline-style: none;
+        }
+    }
+
+    %igx-input-group--fluent--compact {
+        igx-prefix,
+        [igxPrefix] {
+            @extend %form-group-prefix-fluent--compact;
+            outline-style: none;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %form-group-suffix-fluent--compact;
+            outline-style: none;
+        }
+    }
+
+    %form-group-bundle-required--fluent {
+        &::after {
+            content: '*';
+            position: absolute;
+            top: rem(-8px);
+            left: calc(100% + #{rem(4px)});
+            color: --var($theme, 'error-secondary-color');
+        }
+    }
+
+    %fluent-label + %form-group-bundle-required--fluent {
+        &::after {
+            display: none;
+        }
+    }
 
     // Bundle
     %form-group-bundle--fluent {
-        min-height: 32px;
         padding: 0;
-        border: 1px solid rgb(138, 136, 134);
+        min-height: 32px;
+        border: 1px solid --var($theme, 'idle-bottom-line-color');
         box-shadow: none;
         border-radius: --var($theme, 'border-border-radius');
         background: --var($theme, 'border-background');
+        position: relative;
     }
 
     %form-group-bundle--fluent--hover {
-        border-color: #000;
+        border-color: --var($theme, 'idle-text-color');
+        box-shadow: none;
+    }
+
+    %form-group-bundle--fluent--focus {
+        border-color: --var($theme, 'idle-text-color');
         box-shadow: none;
     }
 
     %form-group-bundle--fluent--hover-disabled,
     %form-group-bundle--fluent-disabled {
         // the same as non disabled
-        border-color: rgb(138, 136, 134);
-        background: rgb(243, 242, 241);
+        border-color: --var($theme, 'disabled-border-color');
+        background: --var($theme, 'border-disabled-background');
     }
 
+    %form-group-bundle-error--fluent--hover,
+    %form-group-bundle-error--fluent {
+        border-color: --var($theme, 'error-secondary-color');
+    }
+
+    %form-group-bundle-success--fluent--hover,
+    %form-group-bundle-success--fluent {
+        border-color: --var($theme, 'success-secondary-color');
+    }
     
     // Input
     %fluent-input-disabled {
@@ -479,11 +556,20 @@
     }
 
     %fluent-input {
-        padding: 0 rem(8px);
+        padding: 0;
         margin: 0;
         color: rgb(32, 31, 30);
+        border: none;
     }
 
+    %form-group-bundle-main--fluent {
+        padding-left: rem(8px);
+    }
+
+    igx-prefix + %form-group-bundle-main--fluent,
+    [igx-prefix] + %form-group-bundle-main--fluent {
+        padding-left: 0;
+    }
 
     // Label
     %fluent-label {
@@ -501,6 +587,14 @@
         }
     }
 
+    %fluent-label-success {
+        color: --var($theme, 'idle-text-color');
+    }
+
+    %fluent-label-error {
+        color: --var($theme, 'idle-text-color');
+    }
+
     %fluent-label-disabled {
         color: rgb(161, 159, 157);
     }
@@ -515,9 +609,10 @@
     }
 
 
+
     // Textarea
     %fluent-textarea {
-        padding: 0 rem(8px);
+        padding: 0;
     }
 
     //// FLUENT END ////
@@ -835,6 +930,67 @@
     %form-group-suffix--compact {
         padding: rem(8px, map-get($base-scale-size, 'compact')) 0;
     }
+
+    /// FLUENT ////
+    %form-group-prefix-fluent {
+        %igx-icon-display {
+            width: rem(18px);
+            height: rem(18px);
+            font-size: rem(18px);
+        }
+
+        padding: rem(8px, map-get($base-scale-size, 'comfortable'));
+
+        [dir='rtl'] & {
+            padding: rem(8px, map-get($base-scale-size, 'comfortable'))
+        }
+    }
+
+    %form-group-suffix-fluent {
+        %igx-icon-display {
+            width: rem(18px);
+            height: rem(18px);
+            font-size: rem(18px);
+        }
+        padding: rem(8px, map-get($base-scale-size, 'comfortable'));
+    }
+
+    %form-group-prefix-fluent--cosy,
+    %form-group-suffix-fluent--cosy {
+        height: rem(32px, map-get($base-scale-size, 'cosy'));
+    }
+
+    %form-group-prefix-fluent--compact,
+    %form-group-suffix-fluent--compact {
+        font-size: rem(map-get($base-scale-size, 'compact') - 1px, map-get($base-scale-size, 'compact'));
+        height: rem(32px, map-get($base-scale-size, 'compact'));
+    }
+
+    %form-group-prefix-fluent--cosy {
+        padding: rem(8px, map-get($base-scale-size, 'cosy'));
+
+        [dir='rtl'] & {
+            padding: rem(8px, map-get($base-scale-size, 'cosy'));
+        }
+    }
+
+    %form-group-prefix-fluent--compact {
+        padding: rem(8px, map-get($base-scale-size, 'compact'));
+
+        [dir='rtl'] & {
+            padding: rem(8px, map-get($base-scale-size, 'compact'));
+        }
+    }
+
+    %form-group-suffix-fluent--cosy {
+        padding: rem(8px, map-get($base-scale-size, 'cosy'));
+    }
+
+    %form-group-suffix-fluent--compact {
+        padding: rem(8px, map-get($base-scale-size, 'compact'));
+    }
+
+    /// FLUENT END ///
 
     %form-group-prefix--box,
     %form-group-suffix--box {

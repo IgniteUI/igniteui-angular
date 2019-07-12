@@ -151,4 +151,21 @@ $_light-input-group: extend((
     )
 ), $_default-shape-input-group);
 
-$_fluent-input-group: extend-many($_light-input-group, (), $_fluent-shape-input-group);
+$_fluent-input-group: extend-many($_light-input-group, (
+    idle-bottom-line-color: (
+        igx-color: ('grays', 500)
+    ),
+
+    idle-text-color: (
+        igx-color: ('grays', 700)
+    ),
+
+    disabled-border-color: (
+        igx-color: ('grays', 500)
+    ),
+
+    border-disabled-background: (
+        igx-color: ('grays', 100),
+    ),
+
+), $_fluent-shape-input-group);

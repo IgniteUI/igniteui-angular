@@ -381,6 +381,8 @@
         }
     }
 
+    // FLUENT THEME //
+
     @include m(fluent) {
         @extend %igx-input-group--fluent !optional;
 
@@ -390,6 +392,10 @@
             &:hover {
                 @extend %form-group-bundle--fluent--hover !optional;
             }
+        }
+
+        @include e(bundle-main) {
+            @extend %form-group-bundle-main--fluent !optional;
         }
 
         @include e(input) {
@@ -403,6 +409,14 @@
         @include e(textarea) {
             @extend %fluent-textarea !optional;
         }
+    }
+
+    @include mx(cosy, fluent) {
+        @extend %igx-input-group--fluent--cosy !optional;
+    }
+
+    @include mx(compact, fluent) {
+        @extend %igx-input-group--fluent--compact !optional;
     }
 
     @include mx(disabled, fluent) {
@@ -439,16 +453,62 @@
         }
     }
 
-    //@include mx(fluent, cosy) {}
-    //@include mx(fluent, compact) {}
-    //@include mx(valid, fluent) {}
-    //@include mx(invalid, fluent) {}
-
     @include mx(focused, fluent) {
+        @include e(bundle) {
+            @extend %form-group-bundle--focus !optional;
+
+            &:hover {
+                @extend %form-group-bundle--fluent--focus !optional;
+            }
+        }
+
         @include e(label) {
             @extend %fluent-label-focused !optional;
         }
     }
+
+    @include mx(required, fluent) {
+        @include e(bundle) {
+            @extend %form-group-bundle-required--fluent !optional;
+        }
+    }
+
+    //@include mx(fluent, cosy) {}
+    //@include mx(fluent, compact) {}
+
+    @include mx(valid, fluent) {
+        @include e(bundle) {
+            @extend %form-group-bundle-success--fluent !optional;
+
+            &:hover {
+                @extend %form-group-bundle-success--fluent--hover !optional;
+            }
+        }
+
+        @include e(label) {
+            @extend %fluent-label-success !optional;
+        }
+    }
+
+    @include mx(invalid, fluent) {
+        @include e(bundle) {
+            @extend %form-group-bundle-error--fluent !optional;
+
+            &:hover {
+                @extend %form-group-bundle-error--fluent--hover !optional;
+            }
+        }
+
+        @include e(label) {
+            @extend %fluent-label-error !optional;
+        }
+    }
+
+    //@include mx(invalid, fluent) {}
+
+
+
+    // FLUENT THEME END //
 
     @include m(search) {
         @extend %form-group-display--no-margin !optional;

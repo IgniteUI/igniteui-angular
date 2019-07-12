@@ -1,59 +1,75 @@
-<form class="form fluent-form">
-    <h3 class="sample-title">FLUENT INPUT GROUP</h3>
-    <div class="fluent-form-btn-label"><strong>Current density: </strong>{{displayDensityOptions.displayDensity}}</div>
+<igx-card class="fluent-card-holder">
+    <form class="form fluent-form">
+        <h3 class="sample-title">FLUENT INPUT GROUP</h3>
+        <div class="fluent-form__buttons">
+            <button igxButton="raised" (click)="changeDisplayDensity()">Change density</button>
+            <button igxButton="raised" (click)="changeInputType()">Toggle fluent/box</button>
+        </div>
+        <div class="fluent-form-btn-label"><strong>Current density: </strong>{{displayDensityOptions.displayDensity}}</div>
 
-    <!-- Fluent text field -->
-    <igx-input-group [type]="inputType">
-        <label for="fluentfirstName" igxLabel>Text Field</label>
-        <input name="firstName" id="fluentfirstName" igxInput [(ngModel)]="user.firstName" required/>
-    </igx-input-group>
+        <igx-date-picker [value]="date">
+            <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value" let-displayData="displayData">
+                <igx-input-group [type]="inputType">
+                    <label igxLabel>Date: </label>
+                    <input name="date" [value]="displayData" igxInput/>
+                    <igx-suffix>
+                        <igx-icon (click)="openDialog()">date_range</igx-icon>
+                    </igx-suffix>
+                </igx-input-group>
+            </ng-template>
+        </igx-date-picker>
 
-    <!-- Fluent text field no label -->
-    <igx-input-group type="fluent">
-        <input igxInput [(ngModel)]="user.lastName" name="lastName" required/>
-        <igx-hint>This one has no label</igx-hint>
-    </igx-input-group>
+        <!-- Fluent text field -->
+        <igx-input-group [type]="inputType">
+            <label for="fluentfirstName" igxLabel>Text Field</label>
+            <input name="firstName" id="fluentfirstName" igxInput [(ngModel)]="user.firstName" required/>
+            <igx-suffix>
+                <igx-icon>data_usage</igx-icon>
+            </igx-suffix>
+        </igx-input-group>
 
-    <!-- Fluent text field w/ icon prefix/suffix -->
-    <igx-input-group type="fluent">
-        <label igxLabel>Call a Contact</label>
-        <igx-prefix>
-            <igx-icon>face</igx-icon>
-        </igx-prefix>
-        <input igxInput type="tel" />
-        <igx-suffix>
-            <igx-icon>phone</igx-icon>
-        </igx-suffix>
-        <igx-hint>Type the phone number</igx-hint>
-    </igx-input-group>
+        <!-- Fluent text field no label -->
+        <igx-input-group [type]="inputType">
+            <input placeholder="I am a placeholder" igxInput [(ngModel)]="user.lastName" name="lastName" required/>
+            <igx-hint>This one has no label</igx-hint>
+        </igx-input-group>
 
-    <!-- Fluent textarea field -->
-    <igx-input-group type="fluent">
-        <label igxLabel>Message</label>
-        <textarea igxInput></textarea>
-    </igx-input-group>
+        <!-- Fluent text field w/ icon prefix/suffix -->
+        <igx-input-group [type]="inputType">
+            <label igxLabel>Call a Contact</label>
+            <igx-prefix>
+                <igx-icon>face</igx-icon>
+            </igx-prefix>
+            <input igxInput type="tel" />
+            <igx-suffix>
+                <igx-icon>phone</igx-icon>
+            </igx-suffix>
+            <igx-hint>Type the phone number</igx-hint>
+        </igx-input-group>
 
-    <!-- Fluent textarea field -->
-    <igx-input-group type="fluent">
-        <label igxLabel>Select car</label>
-        <select igxInput>
-            <option value="BMW E46">BMW E46 320</option>
-            <option value="BMW E46">BMW E46 330</option>
-            <option value="BMW E46">BMW E46 330 cd</option>
-        </select>
-    </igx-input-group>
+        <!-- Fluent textarea field -->
+        <igx-input-group [type]="inputType">
+            <label igxLabel>Message</label>
+            <textarea igxInput></textarea>
+        </igx-input-group>
 
-    <!-- Fluent text field w/ icon suffix - disabled -->
-    <igx-input-group type="fluent">
-        <label igxLabel>Phone</label>
-        <input igxInput type="tel" value="123456789" disabled="disabled" />
-        <igx-suffix>
-            <igx-icon>phone</igx-icon>
-        </igx-suffix>
-    </igx-input-group>
+        <!-- Fluent textarea field -->
+        <igx-input-group [type]="inputType">
+            <label igxLabel>Select car</label>
+            <select igxInput>
+                <option value="BMW E46">BMW E46 320</option>
+                <option value="BMW E46">BMW E46 330</option>
+                <option value="BMW E46">BMW E46 330 cd</option>
+            </select>
+        </igx-input-group>
 
-    <div class="fluent-form__buttons">
-        <button igxButton="raised" (click)="changeDisplayDensity()">Change density</button>
-        <button igxButton="raised" (click)="changeInputType()">Toggle fluent/box</button>
-    </div>
-</form>
+        <!-- Fluent text field w/ icon suffix - disabled -->
+        <igx-input-group [type]="inputType">
+            <label igxLabel>Phone</label>
+            <input igxInput type="tel" value="123456789" disabled="disabled" />
+            <igx-suffix>
+                <igx-icon>phone</igx-icon>
+            </igx-suffix>
+        </igx-input-group>
+    </form>
+</igx-card>
