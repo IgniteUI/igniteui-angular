@@ -22,17 +22,43 @@ export class IgxFilteringOperand {
             logic: (target: any) => {
                 return target !== null;
             }
+        }, {
+            name: 'in',
+            isUnary: false,
+            iconName: 'is_in',
+            hidden: true,
+            logic: (target: any, searchVal: Set<any>) => {
+                return this.findValueInSet(target, searchVal);
+            }
         }];
     }
 
-    public conditionList(): string[] {
-        return this.operations.map((element) => element.name);
+    /**
+     * @hidden
+     */
+    protected findValueInSet(target: any, searchVal: Set<any>) {
+        return searchVal.has(target);
     }
 
+    /**
+     * Returns an array of names of the conditions which are visible in the UI
+     */
+    public conditionList(): string[] {
+        return this.operations.filter(f => !f.hidden).map((element) => element.name);
+    }
+
+    /**
+     * Returns an instance of the condition with the specified name.
+     * @param name The name of the condition.
+     */
     public condition(name: string): IFilteringOperation {
         return this.operations.find((element) => element.name === name);
     }
 
+    /**
+     * Adds a new condition to the filtering operations.
+     * @param operation The filtering operation.
+     */
     public append(operation: IFilteringOperation) {
         this.operations.push(operation);
     }
@@ -369,6 +395,10 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
             throw new Error('Could not perform filtering on \'date\' column because the datasource object type is not \'Date\'.');
         }
     }
+
+    protected findValueInSet(target: any, searchVal: Set<any>) {
+        return searchVal.has(new Date(target.getFullYear(), target.getMonth(), target.getDate()).toISOString());
+    }
 }
 
 /**
@@ -551,6 +581,7 @@ export interface IFilteringOperation {
     name: string;
     isUnary: boolean;
     iconName: string;
+    hidden?: boolean;
     logic: (value: any, searchVal?: any, ignoreCase?: boolean) => boolean;
 }
 
@@ -567,28 +598,4 @@ export interface IDateParts {
     minutes: number;
     seconds: number;
     milliseconds: number;
-}
-
-/**
- * @hidden
- */
-export class InFilteringOperation implements IFilteringOperation {
-    name = 'in';
-    isUnary = false;
-    iconName = 'is_in';
-    logic = (target: any, searchVal: Set<any>) => {
-        return searchVal.has(target);
-    }
-}
-
-/**
- * @hidden
- */
-export class InDateFilteringOperation extends InFilteringOperation {
-    logic = (target: any, searchVal: Set<any>) => {
-        if (target instanceof Date) {
-            return searchVal.has(new Date(target.getFullYear(), target.getMonth(), target.getDate()).toISOString());
-        }
-        return searchVal.has(target);
-    }
 }
