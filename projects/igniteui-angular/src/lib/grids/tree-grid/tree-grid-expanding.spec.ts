@@ -300,11 +300,13 @@ describe('IgxTreeGrid - Expanding / Collapsing ', () => {
             indicatorDivDOM.triggerEventHandler('click', new Event('click'));
         });
 
-        it('should update current page when \'collapseAll\' ', () => {
+        it('should update current page when \'collapseAll\' ', fakeAsync (() => {
             // Test prerequisites
             treeGrid.paging = true;
             treeGrid.perPage = 4;
             fix.detectChanges();
+            tick(16);
+
             treeGrid.expandAll();
             fix.detectChanges();
 
@@ -315,6 +317,7 @@ describe('IgxTreeGrid - Expanding / Collapsing ', () => {
             // Go to fourth page
             treeGrid.page = 3;
             fix.detectChanges();
+            tick(16);
 
             // Verify current page
             verifyGridPager(fix, 4, '17', '4 of 5', [false, false, false, false]);
@@ -326,7 +329,7 @@ describe('IgxTreeGrid - Expanding / Collapsing ', () => {
             // Verify current page is the first one and only root rows are visible.
             verifyGridPager(fix, 4, '147', '1 of 1', [true, true, true, true]);
             expect(treeGrid.totalPages).toBe(1);
-        });
+        }));
 
         it('Should update the paginator when a row of any level is expanded', fakeAsync(() => {
             // Test prerequisites

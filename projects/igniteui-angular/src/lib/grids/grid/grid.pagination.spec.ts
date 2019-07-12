@@ -63,7 +63,7 @@ describe('IgxGrid - Grid Paging', () => {
         verifyGridPager(fix, 3, '1', '1 of 4', [true, true, false, false]);
     }));
 
-    it('should paginate data API', () => {
+    it('should paginate data API', fakeAsync (() => {
         const fix = TestBed.createComponent(PagingComponent);
         fix.detectChanges();
 
@@ -72,17 +72,22 @@ describe('IgxGrid - Grid Paging', () => {
         grid.paging = true;
         grid.perPage = 3;
         fix.detectChanges();
+        tick(16);
 
         spyOn(grid.onPagingDone, 'emit');
         grid.paginate(2);
 
         fix.detectChanges();
+        tick(16);
+
         expect(grid.onPagingDone.emit).toHaveBeenCalled();
         verifyGridPager(fix, 3, '7', '3 of 4', []);
 
         // Go to next page
         grid.nextPage();
         fix.detectChanges();
+        tick(16);
+
         expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(2);
         expect(grid.isLastPage).toBe(true);
         verifyGridPager(fix, 1, '10', '4 of 4', []);
@@ -90,6 +95,8 @@ describe('IgxGrid - Grid Paging', () => {
         // Go to next page when last page is selected
         grid.nextPage();
         fix.detectChanges();
+        tick(16);
+
         expect(grid.isLastPage).toBe(true);
         expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(2);
         verifyGridPager(fix, 1, '10', '4 of 4', []);
@@ -97,6 +104,8 @@ describe('IgxGrid - Grid Paging', () => {
         // Go to previous page
         grid.previousPage();
         fix.detectChanges();
+        tick(16);
+
         expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(3);
         verifyGridPager(fix, 3, '7', '3 of 4', []);
         expect(grid.isLastPage).toBe(false);
@@ -105,6 +114,8 @@ describe('IgxGrid - Grid Paging', () => {
         // Go to first page
         grid.paginate(0);
         fix.detectChanges();
+        tick(16);
+
         expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(4);
         verifyGridPager(fix, 3, '1', '1 of 4', []);
         expect(grid.isFirstPage).toBe(true);
@@ -112,6 +123,8 @@ describe('IgxGrid - Grid Paging', () => {
         // Go to previous page when first page is selected
         grid.previousPage();
         fix.detectChanges();
+        tick(16);
+
         expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(4);
         verifyGridPager(fix, 3, '1', '1 of 4', []);
         expect(grid.isFirstPage).toBe(true);
@@ -119,9 +132,11 @@ describe('IgxGrid - Grid Paging', () => {
         // Go to negative page number
         grid.paginate(-3);
         fix.detectChanges();
+        tick(16);
+
         expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(4);
         verifyGridPager(fix, 3, '1', '1 of 4', []);
-    });
+    }));
 
     it('change paging settings UI', fakeAsync(() => {
         const fix = TestBed.createComponent(PagingComponent);
@@ -448,7 +463,7 @@ describe('IgxGrid - Grid Paging', () => {
         expect(gridElement.querySelector(PAGER_CLASS)).not.toBeNull();
     }));
 
-    it('should display custom numbers in select from perPage', () => {
+    it('should display custom numbers in select from perPage', fakeAsync (() => {
         const expectedOptions = [3, 5, 10, 15, 25, 50, 100, 500];
         const defaultExpectedOptions = [5, 10, 15, 25, 50, 100, 500];
 
@@ -469,9 +484,10 @@ describe('IgxGrid - Grid Paging', () => {
 
         grid.perPage = 25;
         fix.detectChanges();
+        tick(16);
 
         testOptions(defaultExpectedOptions);
-    });
+    }));
 
     function verifyGridPager(fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) {
         const disabled = 'igx-button--disabled';
