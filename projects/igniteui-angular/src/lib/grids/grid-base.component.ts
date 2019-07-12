@@ -2477,6 +2477,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected _wheelListener = null;
+    /**
+     * @hidden
+     */
+    protected _hasVisibleColumns;
     protected _allowFiltering = false;
     protected _filterMode = FilterMode.quickFilter;
     private resizeHandler;
@@ -3882,6 +3886,22 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     get rootSummariesEnabled(): boolean {
         return this.summaryCalculationMode !== GridSummaryCalculationMode.childLevelsOnly;
+    }
+
+    /**
+     * @hidden
+     */
+    get hasVisibleColumns(): boolean {
+        if (this._hasVisibleColumns === undefined) {
+            return this.columnList ? this.columnList.some(c => !c.hidden) : true;
+        }
+        return this._hasVisibleColumns;
+    }
+
+    set hasVisibleColumns(isHidden) {
+        if (this._hasVisibleColumns === undefined || this._hasVisibleColumns === isHidden) {
+            this._hasVisibleColumns = this.columnList.some(col => !col.hidden);
+        }
     }
     /**
      * Returns if the `IgxGridComponent` has moveable columns.
