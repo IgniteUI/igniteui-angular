@@ -16,6 +16,9 @@
 /// @param {String} $header-border-width [null] - The border width used for header borders.
 /// @param {String} $header-border-style [null] - The border style used for header borders.
 /// @param {Color} $header-border-color [null] - The color used for header borders.
+///
+/// @param {Color} $sorted-header-icon-color [null] - The sort icon color when sorted.
+///
 /// @param {Color} $ghost-header-text-color [null] - The dragged header text color.
 /// @param {Color} $ghost-header-icon-color [null] - The dragged header icon color.
 /// @param {Color} $ghost-header-background [null] - The dragged header background color.
@@ -74,6 +77,7 @@
 /// @param {box-shadow} $drag-shadow [null] - The shadow used for movable elements (ex. column headers).
 /// @param {color} $row-drag-color [null] - The row drag handle color.
 /// @param {color} $row-ghost-background [null] - The dragged row background color.
+/// @param {border-radius} $drop-area-border-radius [null] - The border radius used for column drop area.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -93,6 +97,8 @@
     $header-border-width: null,
     $header-border-style: null,
     $header-border-color: null,
+
+    $sorted-header-icon-color: null,
 
     $content-background: null,
     $content-text-color: null,
@@ -167,11 +173,17 @@
     $grid-shadow: null,
     $drag-shadow: null,
     $row-ghost-background: null,
-    $row-drag-color: null
+    $row-drag-color: null,
+    $drop-area-border-radius: null,
 ) {
     $name: 'igx-grid';
     $grid-schema: map-get($schema, $name);
     $theme: apply-palette($grid-schema, $palette);
+
+    $drop-area-border-radius: round-borders(
+        if($drop-area-border-radius, $drop-area-border-radius, map-get($grid-schema, 'drop-area-border-radius')), 0, 16px
+    );
+
 
     $tree-selected-filtered-row-text-color: rgba(text-contrast(map-get($theme, 'row-selected-background')), .5);
     $tree-selected-filtered-cell-text-color: rgba(text-contrast(map-get($theme, 'cell-selected-background')), .5);
@@ -185,6 +197,10 @@
 
     @if not($ghost-header-text-color) and $ghost-header-background {
         $ghost-header-text-color: text-contrast($ghost-header-background);
+    }
+
+    @if $header-background and alpha($header-background) < 1 {
+        $header-background: hexrgba($header-background, igx-color($palette, 'surface'));
     }
 
     @if not($header-text-color) and $header-background {
@@ -305,6 +321,10 @@
         $drop-area-text-color: text-contrast($drop-area-background)
     }
 
+    @if not($drop-area-icon-color) and $drop-area-background {
+        $drop-area-icon-color: text-contrast($drop-area-background)
+    }
+    
     @if not($filtering-header-background) and $header-background {
         @if type-of($header-background) == 'color' and luminance($header-background) < .5 {
             $filtering-header-background: lighten-color($header-background, 25%);
@@ -352,6 +372,8 @@
         header-border-width: $header-border-width,
         header-border-style: $header-border-style,
         header-border-color: $header-border-color,
+
+        sorted-header-icon-color: $sorted-header-icon-color,
 
         ghost-header-text-color: $ghost-header-text-color,
         ghost-header-icon-color: $ghost-header-icon-color,
@@ -430,7 +452,8 @@
         grid-shadow: $grid-shadow,
         drag-shadow: $drag-shadow,
         row-ghost-background: $row-ghost-background,
-        row-drag-color: $row-drag-color
+        row-drag-color: $row-drag-color,
+        drop-area-border-radius: $drop-area-border-radius
     ));
 }
 
@@ -666,6 +689,23 @@
     subgroup encapsulates children of each
     thead item and group.
     */
+    %grid-thead-item {
+        display: flex;
+        flex-flow: column nowrap;
+
+        %grid-thead-group {
+            flex: 1 1 auto;
+        }
+
+        %grid-cell-header {
+            flex: 1 1 auto;
+        }
+
+        %grid-thead-title {
+            flex: 0 0 auto;
+        }
+    }
+
     %grid-thead-item,
     %grid-thead-subgroup {
         position: relative;
@@ -1153,36 +1193,10 @@
         transition: color 250ms ease-in-out;
     }
 
-    %igx-grid__th--sortable {
-        cursor: pointer;
-
-        %grid-cell-header-title {
-            cursor: pointer;
-        }
-
-        &:hover {
-            color: igx-color($palette, 'grays', 900);
-
-            .sort-icon {
-                opacity: 1;
-            }
-        }
-    }
-
     %grid-cell-header--filtering {
         background: --var($theme, 'filtering-header-background');
         color: --var($theme, 'filtering-header-text-color');
         z-index: 3;
-    }
-
-    %igx-grid__th--filtrable {
-        cursor: pointer;
-
-        &:hover {
-            %grid-cell-header-title {
-                cursor: pointer;
-            }
-        }
     }
 
     %grid-cell-header--cosy {
@@ -1201,8 +1215,10 @@
         user-select: none;
         cursor: initial;
         flex-grow: 1; /* hey IE, the text should take most of the space */
-        align-self: flex-end;
+        // align-self: flex-end; /* commenting out for now on external request */
         line-height: map-get($grid-header-height, 'comfortable') / $grid-head-fs;
+        opacity: .7;
+        transition: opacity 250ms ease-in-out, color 250ms ease-in-out;
     }
 
     %grid-cell-header-title--cosy {
@@ -1231,23 +1247,59 @@
             height: rem(15px);
             min-width: rem(15px); /* yeah IE, it really needs to be 15px wide... */
             font-size: rem(15px);
-            color: igx-color($palette, 'grays', 500);
+        }
+    }
 
-            &:hover {
-                color: igx-color($palette, 'secondary', 500);
+    %igx-grid__th--sortable {
+        &:hover {
+            cursor: pointer;
+
+            %grid-cell-header-title {
+                cursor: pointer;
+                opacity: 1;
+            }
+
+            .sort-icon {
+                opacity: .7;
+
+                &:hover {
+                    opacity: 1;
+                }
             }
         }
     }
 
     %igx-grid__th--sorted {
-        color: igx-color($palette, 'grays', 900);
+        %grid-cell-header-title {
+            opacity: 1;
+        }
+
+        &:hover{
+            .sort-icon {
+                opacity: 1;
+            }
+        }
 
         .sort-icon {
             opacity: 1;
-            color: igx-color($palette, 'secondary', 500);
+            color: --var($theme, 'sorted-header-icon-color');
 
             &:hover {
-                color: igx-color($palette, 'secondary', 600);
+                color: --var($theme, 'sortable-header-icon-hover-color');
+            }
+        }
+    }
+
+    %igx-grid__th--filtrable {
+        %grid-cell-header-title {
+            opacity: .7;
+        }
+    }
+
+    %igx-grid__th--filtrable-sortable {
+        .sort-icon {
+            &:hover {
+                opacity: 1;
             }
         }
     }
@@ -1620,7 +1672,7 @@
 
     %igx-grid__row-indentation {
         background: transparent;
-        z-index: 1;
+        z-index: 9999;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -1710,9 +1762,8 @@
         align-items: center;
         justify-content: flex-start;
         height: map-get($drop-area-height, 'comfortable');
-        border-radius: map-get($drop-area-height, 'comfortable') / 2;
-        padding: map-get($drop-area-padding, 'comfortable');
-        margin: rem(4px);
+        border-radius: --var($theme, 'drop-area-border-radius');
+        padding: map-get($grid-cell-padding, 'comfortable');
         flex: 1 0 0%;
         background: --var($theme, 'drop-area-background');
 
@@ -1731,16 +1782,15 @@
 
     %igx-drop-area--cosy {
         height: map-get($drop-area-height, 'cosy');
-        border-radius: map-get($drop-area-height, 'cosy') / 2;
-        padding: map-get($drop-area-padding, 'cosy');
+        border-radius: --var($theme, 'drop-area-border-radius');
+        padding: map-get($grid-cell-padding, 'cosy');
     }
 
     %igx-drop-area--compact {
         height: map-get($drop-area-height, 'compact');
-        border-radius: map-get($drop-area-height, 'compact') / 2;
-        padding: map-get($drop-area-padding, 'compact');
+        border-radius: --var($theme, 'drop-area-border-radius');
+        padding: map-get($grid-cell-padding, 'compact');
     }
-
 
     %igx-drop-area__text {
         @include ellipsis();
@@ -1962,7 +2012,7 @@
         position: absolute;
         display: flex;
         width: 100%;
-        height: 50px;
+        height: map-get($grid-header-height, 'comfortable');
         padding: map-get($grid-cell-padding, 'cosy');
         align-items: center;
         justify-content: space-between;
@@ -2007,6 +2057,14 @@
                 }
             }
         }
+    }
+
+    %igx-grid__filtering-row--cosy {
+        height: map-get($grid-header-height, 'cosy');
+    }
+
+    %igx-grid__filtering-row--compact {
+        height: map-get($grid-header-height, 'compact');
     }
 
     %igx-grid__filtering-row-main {

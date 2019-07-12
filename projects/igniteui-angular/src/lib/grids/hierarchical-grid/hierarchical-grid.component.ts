@@ -421,21 +421,38 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      */
     ngAfterContentInit() {
         this.updateColumnList(false);
+        this.childLayoutList.notifyOnChanges();
+        this.childLayoutList.changes.pipe(takeUntil(this.destroy$))
+        .subscribe(() => this.onRowIslandChange());
         super.ngAfterContentInit();
+    }
+
+    /**
+    * @hidden
+    */
+    public onRowIslandChange() {
+        if (this.parent) {
+            this.childLayoutKeys = this.parentIsland.children.filter(item => !(item as any)._destroyed).map((item) => item.key);
+        } else {
+            this.childLayoutKeys = this.childLayoutList.filter(item => !(item as any)._destroyed).map((item) => item.key);
+        }
+        if (!(this.cdr as any).destroyed) {
+            this.cdr.detectChanges();
+        }
     }
 
     protected onColumnsChanged(change: QueryList<IgxColumnComponent>) {
         this.updateColumnList();
-        super.onColumnsChanged(change);
+        const cols = change.filter(c => c.grid === this);
+        if (cols.length > 0) {
+            this.columnList.reset(cols);
+            super.onColumnsChanged(this.columnList);
+        }
     }
 
     private updateColumnList(recalcColSizes = true) {
         const childLayouts = this.parent ? this.childLayoutList : this.allLayoutList;
         const nestedColumns = childLayouts.map((layout) => {
-            if (!layout.rootGrid && !this.parent) {
-                // If the layout doesn't have rootGrid set and this is the root, set it
-                layout.rootGrid = this;
-            }
             return layout.columnList.toArray();
         });
         const colsArray = [].concat.apply([], nestedColumns);
@@ -459,7 +476,21 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
                 }
             });
         }
+        if (this.parent && this.selectionService.activeElement) {
+            // in case selection is in destroyed child grid, selection should be cleared.
+            this._clearSeletionHighlights();
+        }
         super.ngOnDestroy();
+    }
+
+    private _clearSeletionHighlights() {
+        [this.rootGrid, ...this.rootGrid.getChildGrids(true)].forEach(grid => {
+            grid.selectionService.clear();
+            grid.selectionService.activeElement = null;
+            grid.nativeElement.classList.remove('igx-grid__tr--highlighted');
+            grid.highlightedRowID = null;
+            grid.cdr.markForCheck();
+        });
     }
 
     /**
@@ -663,6 +694,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
 
             const childGrids = this.getChildGrids(true);
             childGrids.forEach((grid) => {
+                if (grid.isPercentWidth) {
+                    grid.reflow();
+                }
                 grid.updateScrollPosition();
             });
         }
