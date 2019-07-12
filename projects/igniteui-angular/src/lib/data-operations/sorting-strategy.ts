@@ -166,7 +166,8 @@ export class IgxSorting {
             fullResult.data.push(groupRow);
             fullResult.metadata.push(null);
             if (level < expressions.length - 1) {
-                recursiveResult = this.groupDataRecursive(group, state, level + 1, groupRow, metadata, grid, groupsRecords, fullResult);
+                recursiveResult = this.groupDataRecursive(group, state, level + 1, groupRow,
+                    expanded ? metadata : [], grid, groupsRecords, fullResult);
                 if (expanded) {
                     result = result.concat(recursiveResult);
                 }
