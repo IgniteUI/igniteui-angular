@@ -83,6 +83,7 @@ import { TreeGridLoadOnDemandSampleComponent } from './tree-grid-load-on-demand/
 import { GridFilterTemplateSampleComponent } from './grid-filter-template/grid-filter-template.sample';
 import { GridMRLConfigSampleComponent } from './grid-multi-row-layout-config/grid-mrl-config.sample';
 import { GridMRLCustomNavigationSampleComponent } from './grid-mrl-custom-navigation/grid-mrl-custom-navigation';
+import { GridClipboardSampleComponent } from './grid-clipboard/grid-clipboard.sample';
 
 const appRoutes = [
     {
@@ -306,6 +307,10 @@ const appRoutes = [
     {
         path: 'gridFilterTemplate',
         component: GridFilterTemplateSampleComponent
+    },
+    {
+        path: 'gridClipboard',
+        component: GridClipboardSampleComponent
     },
     {
         path: 'gridColumnMoving',
