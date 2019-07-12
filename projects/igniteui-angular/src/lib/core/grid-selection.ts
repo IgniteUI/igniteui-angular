@@ -371,11 +371,14 @@ export class IgxGridSelectionService {
         }
     }
 
-    keyboardStateOnFocus(node: ISelectionNode, emitter: EventEmitter<GridSelectionRange>): void {
+    keyboardStateOnFocus(node: ISelectionNode, emitter: EventEmitter<GridSelectionRange>, dom): void {
         const kbState = this.keyboardState;
 
         // Focus triggered by keyboard navigation
         if (kbState.active) {
+            if (isChromium()) {
+                this._moveSelectionChrome(dom);
+            }
             // Start generating a range if shift is hold
             if (kbState.shift) {
                 this.dragSelect(node, kbState);
@@ -525,6 +528,11 @@ export class IgxGridSelectionService {
         }
     }
 
+    /**
+     * (╯°□°）╯︵ ┻━┻
+     * Chrome and Chromium don't care about the active
+     * range after keyboard navigation, thus this.
+     */
     _moveSelectionChrome(node: Node) {
         const selection = window.getSelection();
         selection.removeAllRanges();
@@ -533,4 +541,8 @@ export class IgxGridSelectionService {
         range.collapse(true);
         selection.addRange(range);
     }
+}
+
+export function isChromium(): boolean {
+    return (/Chrom|e?ium/g.test(navigator.userAgent) || /Google Inc/g.test(navigator.vendor)) && !/Edge/g.test(navigator.userAgent);
 }

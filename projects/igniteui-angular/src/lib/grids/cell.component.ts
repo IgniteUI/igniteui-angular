@@ -520,8 +520,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     protected isInCompositionMode = false;
     protected compositionStartHandler;
     protected compositionEndHandler;
-    protected focusHandlerIE;
-    protected focusOut;
     private _highlight: IgxTextHighlightDirective;
 
 
@@ -552,12 +550,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 // Hitting Enter with IME submits and exits from edit mode instead of first closing the IME dialog
                 this.nativeElement.addEventListener('compositionstart', this.compositionStartHandler);
                 this.nativeElement.addEventListener('compositionend', this.compositionEndHandler);
-
-                // https://stackoverflow.com/q/51404782
-                this.focusHandlerIE = (e: FocusEvent) => this.onFocus(e);
-                this.focusOut = () => this.onBlur();
-                this.nativeElement.addEventListener('focusin', this.focusHandlerIE);
-                this.nativeElement.addEventListener('focusout', this.focusOut);
             }
         });
     }
@@ -575,8 +567,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             if (isIE()) {
                 this.nativeElement.removeEventListener('compositionstart', this.compositionStartHandler);
                 this.nativeElement.removeEventListener('compositionend', this.compositionEndHandler);
-                this.nativeElement.removeEventListener('focusin', this.focusHandlerIE);
-                this.nativeElement.removeEventListener('focusout', this.focusOut);
             }
         });
     }
@@ -791,7 +781,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         this.selectionService.primaryButton = true;
-        this.selectionService.keyboardStateOnFocus(node, this.grid.onRangeSelection);
+        this.selectionService.keyboardStateOnFocus(node, this.grid.onRangeSelection, this.nativeElement);
     }
 
     /**
