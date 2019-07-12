@@ -1086,7 +1086,6 @@ describe('IgxForOf directive -', () => {
             expect(children.length).toEqual(expectedElementsLength);
         });
     });
-    
     describe('even odd first last functions', () => {
         configureTestSuite();
         let fix: ComponentFixture<LocalVariablesComponent>;
@@ -1107,19 +1106,16 @@ describe('IgxForOf directive -', () => {
         });
 
         it('should differentiate even odd items', () => {
-            let allItems: DebugElement[] = fix.debugElement.queryAll(By.css('igx-display-container'))[0].children;
-
+            const allItems: DebugElement[] = fix.debugElement.queryAll(By.css('igx-display-container'))[0].children;
             expect(allItems.length).toEqual(100);
-            
             for (let i = 0; i < allItems.length; i++) {
                 if (i === 0) {
                     expect(allItems[i].classes['first']).toBe(true);
-                } 
+                }
                 if (i === allItems.length - 1) {
-                    debugger;
                     expect(allItems[i].classes['last']).toBe(true);
                 }
-                if (i % 2 === 0) { 
+                if (i % 2 === 0) {
                     expect(allItems[i].classes['even']).toBe(true);
                 } else {
                     expect(allItems[i].classes['odd']).toBe(true);
@@ -1631,14 +1627,14 @@ export class NoWidthAndHeightComponent {
             let-even="even"
             let-first="first"
             let-last="last">
-            
-            <div #markupItem 
+
+            <div #markupItem
                 [ngClass]="{
                     first: first,
                     last: last,
                     even: even,
                     odd: odd
-                }" 
+                }"
                 [style.height]='itemSize'>
                     {{rowIndex}} : {{item.text}}
             </div>
