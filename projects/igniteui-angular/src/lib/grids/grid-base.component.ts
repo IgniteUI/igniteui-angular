@@ -23,12 +23,14 @@ import {
     ViewChildren,
     ViewContainerRef,
     InjectionToken,
-    Optional
+    Optional,
+    OnChanges,
+    SimpleChanges
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil, first, filter } from 'rxjs/operators';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, isEdge, isNavigationKey, CancelableEventArgs, flatten, mergeObjects } from '../core/utils';
+import { cloneArray, isEdge, isNavigationKey, CancelableEventArgs, flatten, mergeObjects, isIE } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
@@ -89,6 +91,7 @@ import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.com
 import { IgxDragIndicatorIconDirective } from './row-drag.directive';
 import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -101,6 +104,11 @@ const FILTER_ROW_HEIGHT = 50;
 const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
+
+export interface IGridClipboardEvent {
+    data: any[];
+    cancel: boolean;
+}
 
 export interface IGridCellEventArgs {
     cell: IgxGridCellComponent;
@@ -233,8 +241,10 @@ export enum GridKeydownTargetType {
     hierarchicalRow = 'hierarchicalRow'
 }
 
-export abstract class IgxGridBaseComponent extends DisplayDensityBase implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
+export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
+    OnInit, OnChanges, OnDestroy, AfterContentInit, AfterViewInit {
     private _scrollWidth: number;
+    protected _init = true;
 
     public get scrollWidth() {
         return this._scrollWidth;
@@ -634,12 +644,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this._height !== value) {
             this._height = value;
             this._autoSize = false;
-            requestAnimationFrame(() => {
-                if (!this._destroyed) {
-                    this.reflow();
-                    this.cdr.markForCheck();
-                }
-            });
+            this.nativeElement.style.height = value;
         }
     }
 
@@ -653,28 +658,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @WatchChanges()
     @HostBinding('style.width')
     @Input()
-    public get width() {
+    get width() {
         return this._width;
     }
-
-    /**
-     * Sets the width of the `IgxGridComponent`.
-     * ```html
-     * <igx-grid #grid [data]="Data" [width]="'305px'" [autoGenerate]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseComponent
-     */
-    public set width(value: string) {
+    set width(value) {
         if (this._width !== value) {
             this._width = value;
-            requestAnimationFrame(() => {
-                // Calling reflow(), because the width calculation
-                // might make the horizontal scrollbar appear/disappear.
-                // This will change the height, which should be recalculated.
-                if (!this._destroyed) {
-                    this.reflow();
-                }
-            });
+            this.nativeElement.style.width = value;
         }
     }
 
@@ -686,7 +676,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     get headerWidth() {
-        return parseInt(this._width, 10) - 17;
+        return parseInt(this.width, 10) - 17;
     }
 
     /**
@@ -1536,6 +1526,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public onRowDragEnd = new EventEmitter<IRowDragEndEventArgs>();
 
     /**
+     * Emitted when a copy operation is executed.
+     * Fired only if copy behavior is enabled through the [`clipboardOptions`]{@link IgxGridBaseComponent#clipboardOptions}.
+     */
+    @Output()
+    onGridCopy = new EventEmitter<IGridClipboardEvent>();
+
+    /**
      * @hidden
      */
     @ViewChild(IgxGridColumnResizerComponent, { static: false })
@@ -2314,6 +2311,29 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
+     * Controls the copy behavior of the grid.
+     */
+    @Input()
+    clipboardOptions = {
+        /**
+         * Enables/disables the copy behavior
+         */
+        enabled: true,
+        /**
+         * Include the columns headers in the clipboard output.
+         */
+        copyHeaders: true,
+        /**
+         * Apply the columns formatters (if any) on the data in the clipboard output.
+         */
+        copyFormatters: true,
+        /**
+         * The separator used for formatting the copy output. Defaults to `\t`.
+         */
+        separator: '\t'
+    };
+
+    /**
      * @hidden
      */
     public rowEditMessage;
@@ -2332,7 +2352,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /* End of toolbar related definitions */
 
-    // TODO: Document
+    /**
+     * Emitted when making a range selection either through
+     * drag selection or through keyboard selection.
+     */
     @Output()
     onRangeSelection = new EventEmitter<GridSelectionRange>();
 
@@ -2577,6 +2600,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     private keydownHandler(event) {
         const key = event.key.toLowerCase();
+        // TODO: Move in a separate handler on the `grid body`.
+        // if (event.ctrlKey && key === 'c' && isIE()) {
+        //     this.copyHandler(null, true);
+        // }
         if ((isNavigationKey(key) && event.keyCode !== 32) || key === 'tab' || key === 'pagedown' || key === 'pageup') {
             event.preventDefault();
             if (key === 'pagedown') {
@@ -2608,6 +2635,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(_displayDensityOptions);
+        this.cdr.detach();
         this.resizeHandler = () => {
             this.zone.run(() => this.calculateGridSizes());
         };
@@ -2619,6 +2647,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.navigation.grid = this;
         this.filteringService.grid = this;
         this.summaryService.grid = this;
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (this._init) { return; }
+        const { height, width } = changes;
+        if (height || width) {
+            this.calculateGridSizes();
+        }
     }
 
     _setupListeners() {
@@ -2672,7 +2708,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this._setupServices();
         this._setupListeners();
         this.columnListDiffer = this.differs.find([]).create(null);
-        this.calcWidth = this._width && this._width.indexOf('%') === -1 ? parseInt(this._width, 10) : 0;
+        this.calcWidth = this.width && this.width.indexOf('%') === -1 ? parseInt(this.width, 10) : 0;
         this.shouldGenerate = this.autoGenerate;
         this._scrollWidth = this.getScrollWidth();
     }
@@ -2827,6 +2863,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 }
             });
         });
+        this._init = false;
+        this.cdr.reattach();
     }
 
     private combineForOfCollections(dataList, summaryList) {
@@ -3965,7 +4003,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected get isPercentWidth() {
-        return this._width && this._width.indexOf('%') !== -1;
+        return this.width && this.width.indexOf('%') !== -1;
     }
 
     /**
@@ -3988,6 +4026,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                     column.defaultWidth = columnWidthCombined + 'px';
                 } else {
                     column.defaultWidth = this._columnWidth;
+                    column.resetCaches();
                 }
             });
             this.resetCachedWidths();
@@ -4189,7 +4228,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             width = computed.getPropertyValue('width').indexOf('%') === -1 ?
                 parseInt(computed.getPropertyValue('width'), 10) : null;
         } else {
-            width = parseInt(this._width, 10);
+            width = parseInt(this.width, 10);
         }
 
         if (!width && el) {
@@ -4348,7 +4387,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected getUnpinnedWidth(takeHidden = false) {
         let width = this.isPercentWidth ?
             this.calcWidth :
-            parseInt(this._width, 10);
+            parseInt(this.width, 10);
         if (this.hasVerticalSroll() && !this.isPercentWidth) {
             width -= this.scrollWidth;
         }
@@ -4787,7 +4826,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return this.selectionService.ranges;
     }
 
-    extractDataFromSelection(source: any[]): any[] {
+
+    protected extractDataFromSelection(source: any[], formatters = false, headers = false): any[] {
         let columnsArray: IgxColumnComponent[];
         let record = {};
         const selectedData = [];
@@ -4805,7 +4845,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 columnsArray = this.getSelectableColumnsAt(each);
                 columnsArray.forEach((col) => {
                     if (col) {
-                        record[col.field] = source[row][col.field];
+                        const key = headers ? col.header || col.field : col.field;
+                        record[key] = formatters && col.formatter ? col.formatter(source[row][col.field])
+                        : source[row][col.field];
                     }
                 });
             }
@@ -4832,10 +4874,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
-    getSelectedData() {
+    /**
+     *
+     * Returns an array of the current cell selection in the form of `[{ column.field: cell.value }, ...]`.
+     * If `formatters` is enabled, the cell value will be formatted by its respective column formatter (if any).
+     * If `headers` is enabled, it will use the column header (if any) instead of the column field.
+     */
+    getSelectedData(formatters = false, headers = false) {
         const source = this.verticalScrollContainer.igxForOf;
-
-        return this.extractDataFromSelection(source);
+        return this.extractDataFromSelection(source, formatters, headers);
     }
 
     /**
@@ -4859,12 +4906,55 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    // @HostListener('scroll', ['$event'])
     public scrollHandler(event) {
         this.parentVirtDir.getHorizontalScroll().scrollLeft += event.target.scrollLeft;
         this.verticalScrollContainer.getVerticalScroll().scrollTop += event.target.scrollTop;
         event.target.scrollLeft = 0;
         event.target.scrollTop = 0;
+    }
+
+    copyHandlerIE() {
+        if (isIE()) {
+            this.copyHandler(null, true);
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public copyHandler(event, ie11 = false) {
+        if (!this.clipboardOptions.enabled || this.crudService.inEditMode) {
+            return;
+        }
+
+        const data = this.getSelectedData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
+        const ev = { data, cancel: false } as IGridClipboardEvent;
+        this.onGridCopy.emit(ev);
+
+        if (ev.cancel) {
+             return;
+        }
+
+        const transformer = new CharSeparatedValueData(ev.data, this.clipboardOptions.separator);
+        let result = transformer.prepareData();
+
+        if (!this.clipboardOptions.copyHeaders) {
+            result = result.substring(result.indexOf('\n') + 1);
+        }
+
+        if (ie11) {
+            (window as any).clipboardData.setData('Text', result);
+            return;
+        }
+
+        event.preventDefault();
+
+        /* Necessary for the hiearachical case but will probably have to
+           change how getSelectedData is propagated in the hiearachical grid
+        */
+        event.stopPropagation();
+        event.clipboardData.setData('text/plain', result);
     }
 
     /**
