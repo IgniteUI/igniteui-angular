@@ -24,17 +24,19 @@
             <table>
                 <tbody style='display:grid;'>
                 <tr style='width:500px; height:100px;'>
-                    <div style='position: relative; overflow: hidden'>
+                    <div class='overflowContainer'>
                         <ng-template igxFor let-item [igxForOf]="data" #virtDirHorizontal
                             [igxForScrollOrientation]="'horizontal'"
                             [igxForContainerSize]='"500px"'
+                            [igxForItemSize]='"200px"'
                             let-rowIndex="index">
-                                <td  [style.width.px]='item.width' [style.min-width.px]='item.width' style='height:100px;'>{{rowIndex}} : {{item.text}}</td>
+                                <td  [style.width.px]='200' [style.min-width.px]='200' style='height:100px;'>{{rowIndex}} : {{item.text}}</td>
                         </ng-template>
                     </div>
                 </tr>
                 </tbody>
             </table>
+            <br/>
             <button (click)="scrNextCol()">Scroll Next Column</button>
             <button (click)="scrPrevCol()">Scroll Prev Column</button>
             <button (click)="scrNextHorizontalPage()">Scroll Next Horizontal Page</button>
