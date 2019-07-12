@@ -560,7 +560,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     @Input()
     get rowDraggable(): boolean {
-        return this._rowDrag;
+        return this._rowDrag && this.hasVisibleColumns;
     }
 
     /**
@@ -3913,6 +3913,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     set hasVisibleColumns(isHidden) {
         if (this._hasVisibleColumns === undefined || this._hasVisibleColumns === isHidden) {
             this._hasVisibleColumns = this.columnList.some(col => !col.hidden);
+            this._pipeTrigger++;
         }
     }
     /**
