@@ -308,7 +308,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             // navigating in child rows, next is child grid's summary row
            this.focusNextRow(summaryRows[0].nativeElement, 0, this.grid.parent, true);
         } else {
-            super.performTab(currentRowEl, rowIndex, visibleColumnIndex, isSummaryRow);
+            super.performTab(currentRowEl, selectedNode);
         }
     }
 
