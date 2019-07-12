@@ -643,6 +643,19 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
+    @HostBinding('style.width')
+    protected get hostWidth() {
+        if (this.width === null && this.columnList && this.columnList.length > 0) {
+            let width = this.columnList.reduce((sum, item) => sum + parseInt((item.width || item.defaultWidth), 10), 0);
+            if (this.hasVerticalSroll()) {
+                width += this.scrollWidth;
+            }
+            return width + 'px';
+        } else {
+            return this.width;
+        }
+    }
+
     /**
      * Returns the width of the `IgxGridComponent`.
      * ```typescript
@@ -651,7 +664,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     @WatchChanges()
-    @HostBinding('style.width')
     @Input()
     public get width() {
         return this._width;
@@ -4348,7 +4360,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected getUnpinnedWidth(takeHidden = false) {
         let width = this.isPercentWidth ?
             this.calcWidth :
-            parseInt(this._width, 10);
+            parseInt(this.hostWidth, 10);
         if (this.hasVerticalSroll() && !this.isPercentWidth) {
             width -= this.scrollWidth;
         }
