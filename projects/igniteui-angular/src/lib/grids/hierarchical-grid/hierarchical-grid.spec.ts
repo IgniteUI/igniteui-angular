@@ -268,6 +268,24 @@ describe('Basic IgxHierarchicalGrid', () => {
         expect(hierarchicalGrid.nativeElement.classList.contains('igx-grid--compact')).toBe(true);
         expect(childGrid.displayDensity).toBe(DisplayDensity.compact);
     }));
+
+    it('when child width is in percents its width should be update if parent width changes while parent row is collapsed. ', async () => {
+        const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+        const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+        expect(childGrid.calcWidth - 370).toBeLessThan(3);
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+        fixture.componentInstance.width = '300px';
+        fixture.detectChanges();
+        await wait(30);
+        fixture.detectChanges();
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+        expect(childGrid.calcWidth - 170).toBeLessThan(3);
+    });
 });
 
 describe('IgxHierarchicalGrid Row Islands', () => {
@@ -857,10 +875,94 @@ describe('IgxHierarchicalGrid Template Changing Scenarios', () => {
     });
 });
 
+describe('IgxHierarchicalGrid Runtime Row Island change Scenarios', () => {
+    configureTestSuite();
+    let fixture: ComponentFixture<IgxHierarchicalGridToggleRIComponent>;
+    let hierarchicalGrid: IgxHierarchicalGridComponent;
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxHierarchicalGridToggleRIComponent
+            ],
+            imports: [
+                NoopAnimationsModule, IgxHierarchicalGridModule]
+        }).compileComponents();
+    }));
+
+    beforeEach(async(() => {
+        fixture = TestBed.createComponent(IgxHierarchicalGridToggleRIComponent);
+        fixture.detectChanges();
+        hierarchicalGrid = fixture.componentInstance.hgrid;
+    }));
+
+    it('should allow changing row islands runtime in root grid.', () => {
+        const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+
+        let hGrids = fixture.debugElement.queryAll(By.css('igx-hierarchical-grid'));
+
+        let childGrids = hierarchicalGrid.hgridAPI.getChildGrids();
+        expect(childGrids.length).toBe(1);
+        expect(hGrids.length).toBe(2);
+
+        fixture.componentInstance.toggleRI = false;
+        fixture.detectChanges();
+
+        hGrids = fixture.debugElement.queryAll(By.css('igx-hierarchical-grid'));
+        childGrids = hierarchicalGrid.hgridAPI.getChildGrids();
+        expect(childGrids.length).toBe(0);
+        expect(hGrids.length).toBe(1);
+        expect(row.expander).toBe(undefined);
+
+        fixture.componentInstance.toggleRI = true;
+        fixture.detectChanges();
+
+        hGrids = fixture.debugElement.queryAll(By.css('igx-hierarchical-grid'));
+        childGrids = hierarchicalGrid.hgridAPI.getChildGrids();
+        expect(childGrids.length).toBe(1);
+        expect(hGrids.length).toBe(2);
+        expect(row.expander).not.toBe(undefined);
+    });
+
+    it('should allow changing row islands runtime in child grid.', () => {
+        const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+
+        let childGrid = hierarchicalGrid.hgridAPI.getChildGrids()[0];
+        const childRow = childGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(childRow.expander);
+        fixture.detectChanges();
+
+        let hGrids = fixture.debugElement.queryAll(By.css('igx-hierarchical-grid'));
+        expect(hGrids.length).toBe(3);
+        expect(childGrid.hgridAPI.getChildGrids().length).toBe(1);
+
+        fixture.componentInstance.toggleChildRI = false;
+        fixture.detectChanges();
+
+        hGrids = fixture.debugElement.queryAll(By.css('igx-hierarchical-grid'));
+        childGrid = hierarchicalGrid.hgridAPI.getChildGrids()[0];
+        expect(hGrids.length).toBe(2);
+        expect(childGrid.hgridAPI.getChildGrids().length).toBe(0);
+
+        fixture.componentInstance.toggleChildRI = true;
+        fixture.detectChanges();
+
+        hGrids = fixture.debugElement.queryAll(By.css('igx-hierarchical-grid'));
+        childGrid = hierarchicalGrid.hgridAPI.getChildGrids()[0];
+        expect(hGrids.length).toBe(3);
+        expect(childGrid.hgridAPI.getChildGrids().length).toBe(1);
+
+    });
+
+});
+
 @Component({
     template: `
     <igx-hierarchical-grid #grid1 [data]="data"
-     [autoGenerate]="false" [height]="'400px'" [width]="'500px'" #hierarchicalGrid>
+     [autoGenerate]="false" [height]="'400px'" [width]="width" #hierarchicalGrid>
      <igx-column field="ID"></igx-column>
      <igx-column field="ProductName"></igx-column>
         <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland>
@@ -876,6 +978,7 @@ describe('IgxHierarchicalGrid Template Changing Scenarios', () => {
 })
 export class IgxHierarchicalGridTestBaseComponent {
     public data;
+    public width = '500px';
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
     @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
@@ -1039,5 +1142,21 @@ export class IgxHierarchicalGridSizingComponent {
 
     @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true })
     public rowIsland: IgxRowIslandComponent;
+}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #grid1 [data]="data"
+     [autoGenerate]="true" [height]="'400px'" [width]="'500px'" #hierarchicalGrid>
+     <igx-row-island *ngIf='toggleRI' [key]="'childData'" [autoGenerate]="true">
+        <igx-row-island *ngIf='toggleChildRI' [key]="'childData'" [autoGenerate]="true">
+        </igx-row-island>
+     </igx-row-island>
+    </igx-hierarchical-grid>`
+})
+export class IgxHierarchicalGridToggleRIComponent  extends IgxHierarchicalGridTestBaseComponent {
+public toggleRI = true;
+public toggleChildRI = true;
+
 }
 

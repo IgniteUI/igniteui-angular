@@ -601,6 +601,13 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     public addRow(data: any, parentRowID?: any) {
         if (parentRowID !== undefined && parentRowID !== null) {
             super.endEdit(true);
+
+            const state = this.transactions.getState(parentRowID);
+            // we should not allow adding of rows as child of deleted row
+            if (state && state.type === TransactionType.DELETE) {
+                throw Error(`Cannot add child row to deleted parent row`);
+            }
+
             const parentRecord = this.records.get(parentRowID);
 
             if (!parentRecord) {
@@ -722,7 +729,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         };
     }
 
-    getSelectedData(): any[] {
+    /**
+     * @inheritdoc
+     */
+    getSelectedData(formatters = false, headers = false): any[] {
         const source = [];
 
         const process = (record) => {
@@ -734,7 +744,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         };
 
         this.verticalScrollContainer.igxForOf.forEach(process);
-        return this.extractDataFromSelection(source);
+        return this.extractDataFromSelection(source, formatters, headers);
     }
 
     /**
