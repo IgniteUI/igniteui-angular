@@ -1900,6 +1900,7 @@ describe('IgxGrid Component Tests', () => {
 
                 cell.setEditMode(true);
                 cell.update('IG');
+                fix.detectChanges();
                 cell.setEditMode(false);
 
                 await wait(DEBOUNCETIME);
