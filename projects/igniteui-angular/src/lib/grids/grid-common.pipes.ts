@@ -86,3 +86,16 @@ export class IgxGridTransactionPipe implements PipeTransform {
         return collection;
     }
 }
+
+/** @hidden */
+@Pipe({
+    name: 'visibleColumns',
+    pure: true
+})
+export class IgxHasVisibleColumnsPipe implements PipeTransform {
+
+    transform(values: any[], hasVisibleColumns) {
+        return hasVisibleColumns ? values : [];
+    }
+
+}
