@@ -2,7 +2,7 @@
     <label class="igx-grid-paginator__label">{{ selectLabel }}</label>
     <div class="igx-grid-paginator__select-input">
         <igx-select [(ngModel)]="perPage" [displayDensity]="paginatorSelectDisplayDensity()" type="border"
-            (ngModelChange)="handleChange()" [disabled]="!dropdownEnabled">
+            [disabled]="!dropdownEnabled">
             <igx-select-item [value]="val" *ngFor="let val of selectOptions">
                 {{val}}
             </igx-select-item>

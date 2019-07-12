@@ -2964,14 +2964,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return DisplayDensity.compact;
     }
 
-    public updatePerPage(value: number): void {
-        this.perPage = value;
-    }
-
-    public updateCurrentPage(value: number): void {
-        this.page = value;
-    }
-
     /**
      * Returns the maximum width of the container for the pinned `IgxColumnComponent`s.
      * The width is 80% of the total grid width.

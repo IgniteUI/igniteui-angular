@@ -1,18 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-    Component,
-    Input,
-    Output,
-    OnInit,
-    OnChanges,
-    NgModule,
-    Optional,
-    Inject,
-    EventEmitter,
-    HostBinding,
-    SimpleChanges
-} from '@angular/core';
+import { Component, Input, Output, NgModule, Optional, Inject, EventEmitter, HostBinding } from '@angular/core';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
 import { IgxSelectModule } from '../select/index';
@@ -20,21 +8,26 @@ import { IgxIconModule } from '../icon/index';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 
-
 @Component({
     selector: 'igx-paginator',
     templateUrl: 'paginator.component.html',
 })
-export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit, OnChanges {
+export class IgxPaginatorComponent extends DisplayDensityBase {
+
     /**
-     * @hidden
+     * Total pages calculated from totalRecords and perPage
      */
     public totalPages: number;
+    protected _page: number;
+    protected _totalRecords: number;
+    protected _selectOptions = [5, 10, 15, 25, 50, 100, 500];
+    protected _perPage = 15;
 
     /**
      * @hidden
      */
-    @HostBinding('class') get classes(): string {
+    @HostBinding('class')
+    public get classes(): string {
         switch (this.displayDensity) {
             case DisplayDensity.cosy:
                 return 'igx-grid-paginator--cosy';
@@ -49,7 +42,66 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit,
      * @hidden
      */
     @Input()
-    public page = 0;
+    public get page() {
+        return this._page;
+    }
+
+    public set page(value: number) {
+        this._page = value;
+        this.pageChange.emit(this._page);
+    }
+
+    /**
+   * An @Input property, sets number of visible items per page in the `IgxPaginatorComponent`.
+   * The default is 15.
+   * ```typescript
+   * let itemsPerPage = this.paginator.perPage;
+   * ```
+   * @memberof IgxPaginatorComponent
+   */
+    @Input()
+    public get perPage() {
+        return this._perPage;
+    }
+
+    public set perPage(value: number) {
+        this._perPage = value;
+        this.perPageChange.emit(this._perPage);
+        this.totalPages = Math.ceil(this.totalRecords / this._perPage);
+    }
+
+    /**
+    * An @Input property that sets the total records.
+    * ```typescript
+    * let totalRecords = this.paginator.totalRecords;
+    * ```
+    * @memberof IgxPaginatorComponent
+    */
+    @Input()
+    public get totalRecords() {
+        return this._totalRecords;
+    }
+
+    public set totalRecords(value: number) {
+        this._totalRecords = value;
+        this.totalPages = Math.ceil(this.totalRecords / this.perPage);
+    }
+
+    /**
+    * An @Input property that sets custom options in the select of the paginator
+    * ```typescript
+    * let options = this.paginator.selectOptions;
+    * ```
+    * @memberof IgxPaginatorComponent
+    */
+    @Input()
+    public get selectOptions() {
+        return this._selectOptions;
+    }
+
+    public set selectOptions(value: Array<number>) {
+        this.selectOptions = this.sortUniqueOptions(value, this._perPage);
+    }
 
     /**
     * An @Input property that sets if the pager in the paginator should be enabled.
@@ -92,37 +144,6 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit,
     public dropdownHidden = false;
 
     /**
-    * An @Input property that sets the total records.
-    * ```typescript
-    * let totalRecords = this.paginator.totalRecords;
-    * ```
-    * @memberof IgxPaginatorComponent
-    */
-    @Input()
-    public totalRecords: number;
-
-    /**
-    * An @Input property that sets cusom options in the select of the paginator
-    * ```typescript
-    * let options = this.paginator.selectOptions;
-    * ```
-    * @memberof IgxPaginatorComponent
-    */
-    @Input()
-    public selectOptions = [5, 10, 15, 25, 50, 100, 500];
-
-    /**
-    * An @Input property, sets number of visible items per page in the `IgxPaginatorComponent`.
-    * The default is 15.
-    * ```typescript
-    * let itemsPerPage = this.paginator.perPage;
-    * ```
-    * @memberof IgxPaginatorComponent
-    */
-    @Input()
-    public perPage = 15;
-
-    /**
     * An @Input property, sets number of label of the select.
     * The default is 'Items per page' localized string.
     * ```html
@@ -134,10 +155,10 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit,
     public selectLabel = CurrentResourceStrings.GridResStrings.igx_grid_paginator_label;
 
     /**
-     *An event that is emitted when the select in the `IgxPaginatorComponent` changes value.
+     *An event that is emitted when the select in the `IgxPaginatorComponent` changes its value.
     */
     @Output()
-    public selectChange = new EventEmitter<number>();
+    public perPageChange = new EventEmitter<number>();
     /**
      *An event that is emitted when the paginating is used.
     */
@@ -167,54 +188,11 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit,
     get isFirstPage(): boolean {
         return this.page === 0;
     }
-    /**
-     * @hidden
-     */
-    public ngOnInit(): void {
-        this.perPage = parseInt(this.perPage.toString(), 10);
-        this.selectOptions = this.sortUniqueOptions(this.selectOptions, this.perPage);
-        this.totalPages = Math.ceil(this.totalRecords / this.perPage);
-    }
-    /**
-     * @hidden
-     */
-    public ngOnChanges(changes: SimpleChanges): void {
-        if (changes.perPage) {
-            this.perPage = changes.perPage.currentValue;
-            this.selectOptions = this.sortUniqueOptions(this.selectOptions, this.perPage);
-            this.totalPages = Math.ceil(this.totalRecords / this.perPage);
-        }
-        if (changes.page) {
-            this.page = changes.page.currentValue;
-        }
-        if (changes.totalRecords) {
-            this.totalRecords = changes.totalRecords.currentValue;
-            this.totalPages = Math.ceil(this.totalRecords / this.perPage);
-        }
-    }
-     /**
-     * Executes on change of select in  `IgxPaginatorComponent`.
-     * ```typescript
-     * this.paginator.handleChange();
-     * ```
-	 * @memberof IgxPaginatorComponent
-     */
-    public handleChange(): void {
-        this.selectChange.emit(this.perPage);
-        this.page = 0;
-        this.totalPages = Math.ceil(this.totalRecords / this.perPage);
-    }
 
     private sortUniqueOptions(values: Array<number>, newOption: number): number[] {
         return Array.from(new Set([...values, newOption])).sort((a, b) => a - b);
     }
-    /**
-     * Set the the class of the `igx-select` dependant on the current display density.
-     * ```typescript
-     * this.paginator.handleChange();
-     * ```
-	 * @memberof IgxPaginatorComponent
-     */
+
     public paginatorSelectDisplayDensity(): string {
         if (this.displayDensity === DisplayDensity.comfortable) {
             return DisplayDensity.cosy;
@@ -232,7 +210,6 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit,
         if (!this.isLastPage) {
             this.page += 1;
         }
-        this.pageChange.emit(this.page);
     }
     /**
      * Goes to the previous page of the `IgxPaginatorComponent`, if the paginator is not already at the first page.
@@ -245,7 +222,6 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit,
         if (!this.isFirstPage) {
             this.page -= 1;
         }
-        this.pageChange.emit(this.page);
     }
     /**
      * Goes to the desired page index.
@@ -259,9 +235,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase implements OnInit,
         if (val < 0 || val > this.totalPages - 1) {
             return;
         }
-
         this.page = val;
-        this.pageChange.emit(this.page);
     }
 }
 
