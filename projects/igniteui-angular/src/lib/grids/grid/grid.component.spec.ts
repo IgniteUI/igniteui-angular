@@ -2772,8 +2772,9 @@ describe('IgxGrid Component Tests', () => {
                 expect(gridAPI.submit_value).not.toHaveBeenCalled();
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
             }));
-
-            it(`Should exit row editing when clicking on a cell from a deleted row`, fakeAsync(() => {
+for (let index = 0; index < 100; index++) {
+            fit(`Should exit row editing when clicking on a cell from a deleted row`, fakeAsync(() => {
+                console.log(`test ${index+1}/100`);
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();
                 tick(16);
@@ -2799,6 +2800,7 @@ describe('IgxGrid Component Tests', () => {
                 expect(targetCell.selected).toBeTruthy();
                 expect(firstCell.selected).toBeFalsy();
             }));
+        }
         });
 
         describe('Row Editing - Paging', () => {
@@ -3553,7 +3555,7 @@ describe('IgxGrid Component Tests', () => {
                 const grid = fixture.componentInstance.grid;
 
                 const columns: IgxColumnComponent[] = grid.columnList.toArray();
-                expect(columns[0].editable).toBeFalsy();
+                expect(columns[0].editable).toBeTruthy();
                 expect(columns[1].editable).toBeFalsy();
                 expect(columns[2].editable).toBeTruthy();
                 expect(columns[3].editable).toBeTruthy();
