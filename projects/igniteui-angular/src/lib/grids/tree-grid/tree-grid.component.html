@@ -101,9 +101,9 @@
         | treeGridFiltering:filteringExpressionsTree:id:pipeTrigger
         | treeGridSorting:sortingExpressions:id:pipeTrigger
         | treeGridFlattening:id:expansionDepth:expansionStates:pipeTrigger
+        | visibleColumns:hasVisibleColumns
         | treeGridPaging:page:perPage:id:pipeTrigger
-        | treeGridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:pipeTrigger:summaryPipeTrigger
-        | visibleColumns:hasVisibleColumns" let-rowIndex="index"
+        | treeGridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:pipeTrigger:summaryPipeTrigger" let-rowIndex="index"
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" #verticalScrollContainer
             (onChunkPreload)="dataLoading($event)">

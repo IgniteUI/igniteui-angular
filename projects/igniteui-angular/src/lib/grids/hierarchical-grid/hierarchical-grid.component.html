@@ -107,9 +107,9 @@
         | gridTransaction:id:pipeTrigger
         | gridFiltering:filteringExpressionsTree:id:pipeTrigger
         | gridSort:sortingExpressions:id:pipeTrigger
+        | visibleColumns:hasVisibleColumns
         | gridHierarchicalPaging:page:perPage:id:pipeTrigger
-        | gridHierarchical:hierarchicalState:id:primaryKey:childLayoutKeys:pipeTrigger
-        | visibleColumns:hasVisibleColumns" let-rowIndex="index"
+        | gridHierarchical:hierarchicalState:id:primaryKey:childLayoutKeys:pipeTrigger" let-rowIndex="index"
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" [igxForTrackBy]='trackChanges'
             #verticalScrollContainer (onChunkPreload)="dataLoading($event)">

@@ -3247,7 +3247,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     get showRowCheckboxes(): boolean {
-        return this.rowSelectable && this.columns.length > this.hiddenColumnsCount;
+        return this.rowSelectable && this.hasVisibleColumns;
     }
 
     /**
