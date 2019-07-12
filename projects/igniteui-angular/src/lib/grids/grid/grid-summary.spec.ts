@@ -2088,14 +2088,16 @@ describe('IgxGrid - Summaries', () => {
             verifyBaseSummaries(fix);
         }));
 
-        it('Paging: should render correct summaries when paging is enable and position is top', () => {
+        it('Paging: should render correct summaries when paging is enable and position is top', fakeAsync(() => {
             grid.paging = true;
             grid.perPage = 2;
             grid.summaryPosition = 'top';
             fix.detectChanges();
+            tick(16);
 
             grid.page = 1;
             fix.detectChanges();
+            tick(16);
 
             expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(3);
             verifyBaseSummaries(fix);
@@ -2104,10 +2106,12 @@ describe('IgxGrid - Summaries', () => {
 
             grid.page = 2;
             fix.detectChanges();
+            tick(16);
+
             expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(2);
             verifySummariesForParentID147(fix, 1);
             verifyBaseSummaries(fix);
-        });
+        }));
 
         it('CRUD: Add grouped item', () => {
             const newRow = {

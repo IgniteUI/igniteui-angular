@@ -1744,10 +1744,11 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(fData);
         }));
 
-        it('Paging: selected range should be cleared on paging', () => {
+        it('Paging: selected range should be cleared on paging',  fakeAsync(() => {
             grid.paging = true;
             grid.perPage = 5;
             fix.detectChanges();
+            tick(16);
 
             const range = { rowStart: 1, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(range);
@@ -1763,17 +1764,19 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
             grid.paginate(1);
             fix.detectChanges();
+            tick(16);
 
             expect(grid.getSelectedRanges().length).toBe(0);
             expect(grid.getSelectedRanges()).toEqual([]);
             expect(grid.getSelectedData().length).toBe(0);
             expect(grid.getSelectedData()).toEqual([]);
-        });
+        }));
 
-        it('Paging: selected range should be cleared when perPage items are changed', () => {
+        it('Paging: selected range should be cleared when perPage items are changed',  fakeAsync(() => {
             grid.paging = true;
             grid.perPage = 5;
             fix.detectChanges();
+            tick(16);
 
             const range = { rowStart: 2, rowEnd: 4, columnStart: 'ID', columnEnd: 'OnPTO' };
             grid.selectRange(range);
@@ -1789,12 +1792,13 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
             grid.perPage = 7;
             fix.detectChanges();
+            tick(16);
 
             expect(grid.getSelectedRanges().length).toBe(0);
             expect(grid.getSelectedRanges()).toEqual([]);
             expect(grid.getSelectedData().length).toBe(0);
             expect(grid.getSelectedData()).toEqual([]);
-        });
+        }));
 
         xit('Resizing: selected range should not change on resizing', fakeAsync(() => {
             const range = { rowStart: 2, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };

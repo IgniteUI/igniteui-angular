@@ -437,11 +437,12 @@ describe('IgxTreeGrid - Summaries ', () => {
             verifySummaryForRow317(fix, 2);
         }));
 
-        it('Paging: should render correct summaries when paging is enable and position is top', () => {
+        it('Paging: should render correct summaries when paging is enable and position is top',  fakeAsync(() => {
             treeGrid.paging = true;
             treeGrid.perPage = 4;
             treeGrid.summaryPosition = 'top';
             fix.detectChanges();
+            tick(16);
 
             expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(1);
             verifyTreeBaseSummaries(fix);
@@ -462,6 +463,7 @@ describe('IgxTreeGrid - Summaries ', () => {
 
             treeGrid.page = 1;
             fix.detectChanges();
+            tick(16);
 
             expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(1);
             verifyTreeBaseSummaries(fix);
@@ -471,7 +473,7 @@ describe('IgxTreeGrid - Summaries ', () => {
 
             expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(2);
             verifySummaryForRow847(fix, 3);
-        });
+        }));
 
         it('CRUD: Add root node', () => {
             treeGrid.expandAll();

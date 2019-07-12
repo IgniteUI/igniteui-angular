@@ -328,13 +328,16 @@ describe('IgxTreeGrid - Expanding / Collapsing ', () => {
             expect(treeGrid.totalPages).toBe(1);
         });
 
-        it('Should update the paginator when a row of any level is expanded', () => {
+        it('Should update the paginator when a row of any level is expanded', fakeAsync(() => {
             // Test prerequisites
             treeGrid.paging = true;
             treeGrid.perPage = 5;
             fix.detectChanges();
+            tick(16);
+
             treeGrid.collapseAll();
             fix.detectChanges();
+            tick(16);
 
             // Verify current page
             verifyGridPager(fix, 4, '147', '1 of 1', [true, true, true, true]);
@@ -356,21 +359,26 @@ describe('IgxTreeGrid - Expanding / Collapsing ', () => {
 
             treeGrid.page = 1;
             fix.detectChanges();
+            tick(16);
+
             indicatorDivDOM = TreeGridFunctions.getExpansionIndicatorDiv(rowsDOM[1]);
             indicatorDivDOM.triggerEventHandler('click', new Event('click'));
 
             // Verify current page
             verifyGridPager(fix, 5, '17', '2 of 3', [false, false, false, false]);
             expect(treeGrid.totalPages).toBe(3);
-        });
+        }));
 
-        it('Should update the paginator when a row of any level is collapsed', () => {
+        it('Should update the paginator when a row of any level is collapsed', fakeAsync(() => {
             // Test prerequisites
             treeGrid.paging = true;
             treeGrid.perPage = 5;
             fix.detectChanges();
+            tick(16);
+
             treeGrid.expandAll();
             fix.detectChanges();
+            tick(16);
 
             // Verify current page
             verifyGridPager(fix, 5, '147', '1 of 4', [true, true, false, false]);
@@ -379,6 +387,7 @@ describe('IgxTreeGrid - Expanding / Collapsing ', () => {
             // Go to third page
             treeGrid.page = 2;
             fix.detectChanges();
+            tick(16);
             verifyGridPager(fix, 5, '19', '3 of 4', [false, false, false, false]);
             expect(treeGrid.totalPages).toBe(4);
 
@@ -396,13 +405,14 @@ describe('IgxTreeGrid - Expanding / Collapsing ', () => {
 
             treeGrid.page = 0;
             fix.detectChanges();
+            tick(16);
             indicatorDivDOM = TreeGridFunctions.getExpansionIndicatorDiv(rowsDOM[0]);
             indicatorDivDOM.triggerEventHandler('click', new Event('click'));
 
             // // Verify current page
             verifyGridPager(fix, 5, '147', '1 of 2', [true, true, false, false]);
             expect(treeGrid.totalPages).toBe(2);
-        });
+        }));
 
         it('Should update the paginator when navigating through pages', () => {
             // Test prerequisites
@@ -731,13 +741,16 @@ describe('IgxTreeGrid - Expanding / Collapsing ', () => {
             tick(16);
         }));
 
-        it('Should update the paginator when a row of any level is expanded', () => {
+        it('Should update the paginator when a row of any level is expanded', fakeAsync(() => {
             // Test prerequisites
             treeGrid.paging = true;
             treeGrid.perPage = 5;
             fix.detectChanges();
+            tick(16);
+
             treeGrid.collapseAll();
             fix.detectChanges();
+            tick(16);
 
             // Verify current page
             verifyGridPager(fix, 3, '1', '1 of 1', [true, true, true, true]);
@@ -762,21 +775,25 @@ describe('IgxTreeGrid - Expanding / Collapsing ', () => {
 
             treeGrid.page = 1;
             fix.detectChanges();
+            tick(16);
             indicatorDivDOM = TreeGridFunctions.getExpansionIndicatorDiv(rowsDOM[1]);
             indicatorDivDOM.triggerEventHandler('click', new Event('click'));
 
             // Verify current page
             verifyGridPager(fix, 3, '6', '2 of 2', [false, false, true, true]);
             expect(treeGrid.totalPages).toBe(2);
-        });
+        }));
 
-        it('Should update the paginator when a row of any level is collapsed', () => {
+        it('Should update the paginator when a row of any level is collapsed',  fakeAsync(() => {
             // Test prerequisites
             treeGrid.paging = true;
             treeGrid.perPage = 5;
             fix.detectChanges();
+            tick(16);
+
             treeGrid.expandAll();
             fix.detectChanges();
+            tick(16);
 
             // Verify current page
             verifyGridPager(fix, 5, '1', '1 of 2', [true, true, false, false]);
@@ -795,13 +812,14 @@ describe('IgxTreeGrid - Expanding / Collapsing ', () => {
             // // Verify current page
             verifyGridPager(fix, 3, '1', '1 of 1', [true, true, true, true]);
             expect(treeGrid.totalPages).toBe(1);
-        });
+        }));
 
-        it('Should update the paginator when navigating through pages', () => {
+        it('Should update the paginator when navigating through pages', fakeAsync(() => {
             // Test prerequisites
             treeGrid.paging = true;
             treeGrid.perPage = 5;
             fix.detectChanges();
+            tick(16);
 
             // Verify current page
             verifyGridPager(fix, 3, '1', '1 of 1', [true, true, true, true]);
@@ -823,16 +841,18 @@ describe('IgxTreeGrid - Expanding / Collapsing ', () => {
             const paginator = tGrid.querySelectorAll('.igx-grid-paginator__pager > button');
             paginator[3].dispatchEvent(new Event('click'));
             fix.detectChanges();
+            tick(16);
             // Verify current page
             verifyGridPager(fix, 1, '9', '2 of 2', [false, false, true, true]);
             expect(treeGrid.totalPages).toBe(2);
 
             paginator[1].dispatchEvent(new Event('click'));
             fix.detectChanges();
+            tick(16);
             // Verify current page
             verifyGridPager(fix, 5, '1', '1 of 2', [true, true, false, false]);
             expect(treeGrid.totalPages).toBe(2);
-        });
+        }));
     });
 
     describe('Load On Demand', () => {
