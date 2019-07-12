@@ -18,7 +18,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * Total pages calculated from totalRecords and perPage
      */
     public totalPages: number;
-    protected _page: number;
+    protected _page = 0;
     protected _totalRecords: number;
     protected _selectOptions = [5, 10, 15, 25, 50, 100, 500];
     protected _perPage = 15;
