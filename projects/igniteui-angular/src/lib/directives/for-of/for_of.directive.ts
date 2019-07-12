@@ -1218,7 +1218,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     private _getItemSize(item, dimension: string): number {
         const dim = item[dimension];
-        return typeof dim === 'number' ? dim : this.igxForItemSize;
+        return typeof dim === 'number' ? dim : parseInt(this.igxForItemSize, 10) || 0;
     }
 }
 
