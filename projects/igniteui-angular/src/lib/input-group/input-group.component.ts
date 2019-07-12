@@ -26,6 +26,7 @@ enum IgxInputGroupType {
     LINE,
     BOX,
     BORDER,
+    FLUENT,
     SEARCH
 }
 
@@ -106,6 +107,12 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     public isSearch = false;
 
     /**
+     * @hidden
+     */
+    @HostBinding('class.igx-input-group--fluent')
+    public isFluent = false;
+
+    /**
      * An @Input property that disables the `IgxInputGroupComponent`.
      * ```html
      * <igx-input-group [disabled]="'true'"></igx-input-group>
@@ -170,13 +177,16 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     set type(value: string) {
         const type: IgxInputGroupType = (IgxInputGroupType as any)[value.toUpperCase()];
         if (type !== undefined) {
-            this.isBox = this.isBorder = this.isSearch = false;
+            this.isBox = this.isFluent = this.isBorder = this.isSearch = false;
             switch (type) {
                 case IgxInputGroupType.BOX:
                     this.isBox = true;
                     break;
                 case IgxInputGroupType.BORDER:
                     this.isBorder = true;
+                    break;
+                case IgxInputGroupType.FLUENT:
+                    this.isFluent = true;
                     break;
                 case IgxInputGroupType.SEARCH:
                     this.isSearch = true;
@@ -331,6 +341,20 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      */
     get isTypeBorder() {
         return this._type === IgxInputGroupType.BORDER;
+    }
+
+    /**
+     * Returns whether the `IgxInputGroupComponent` type is Fluent.
+     * ```typescript
+     *@ViewChild("MyInputGroup1")
+     *public inputGroup: IgxInputGroupComponent;
+     *ngAfterViewInit(){
+     *    let isTypeFluent = this.inputGroup.isTypeFluent;
+     *}
+     * ```
+     */
+    get isTypeFluent() {
+        return this._type === IgxInputGroupType.FLUENT;
     }
 
     /**

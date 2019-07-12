@@ -442,6 +442,86 @@
         box-shadow: inset 0 0 0 1px --var($theme, 'disabled-border-color');
     }
 
+
+    //// FLUENT /////
+    %igx-input-group--fluent {
+        display: flex;
+        flex-direction: column;
+    }
+
+
+    // Bundle
+    %form-group-bundle--fluent {
+        min-height: 32px;
+        padding: 0;
+        border: 1px solid rgb(138, 136, 134);
+        box-shadow: none;
+        border-radius: --var($theme, 'border-border-radius');
+        background: --var($theme, 'border-background');
+    }
+
+    %form-group-bundle--fluent--hover {
+        border-color: #000;
+        box-shadow: none;
+    }
+
+    %form-group-bundle--fluent--hover-disabled,
+    %form-group-bundle--fluent-disabled {
+        // the same as non disabled
+        border-color: rgb(138, 136, 134);
+        background: rgb(243, 242, 241);
+    }
+
+    
+    // Input
+    %fluent-input-disabled {
+        color: rgb(161, 159, 157)
+    }
+
+    %fluent-input {
+        padding: 0 rem(8px);
+        margin: 0;
+        color: rgb(32, 31, 30);
+    }
+
+
+    // Label
+    %fluent-label {
+        padding: rem(5px) 0;
+        line-height: normal !important;
+        position: static;
+        transform: translateY(0);
+        transform-origin: top left;
+        margin-top: 0 !important;
+        height: auto;
+        color: rgb(50, 49, 48);
+
+        [dir='rtl'] & {
+            transform-origin: top right;
+        }
+    }
+
+    %fluent-label-disabled {
+        color: rgb(161, 159, 157);
+    }
+
+    %fluent-label-filled {
+        transform: translateY(0);
+    }
+
+    %fluent-label-focused {
+        color: #333;
+        transform: translateY(0);
+    }
+
+
+    // Textarea
+    %fluent-textarea {
+        padding: 0 rem(8px);
+    }
+
+    //// FLUENT END ////
+
     %form-group-bundle--search {
         padding: 0 rem(16px, map-get($base-scale-size, 'comfortable'));
         border-radius: --var($theme, 'search-border-radius');

@@ -381,6 +381,75 @@
         }
     }
 
+    @include m(fluent) {
+        @extend %igx-input-group--fluent !optional;
+
+        @include e(bundle) {
+            @extend %form-group-bundle--fluent !optional;
+
+            &:hover {
+                @extend %form-group-bundle--fluent--hover !optional;
+            }
+        }
+
+        @include e(input) {
+            @extend %fluent-input !optional;
+        }
+
+        @include e(label) {
+            @extend %fluent-label !optional;
+        }
+
+        @include e(textarea) {
+            @extend %fluent-textarea !optional;
+        }
+    }
+
+    @include mx(disabled, fluent) {
+        @include e(bundle) {
+            @extend %form-group-bundle--fluent-disabled !optional;
+
+            &:hover {
+                @extend %form-group-bundle--fluent--hover-disabled !optional;
+            }
+        }
+
+        @include e(input) {
+            %fluent-input-disabled {
+                @extend %fluent-input-disabled !optional
+            }
+
+            &:hover {
+                @extend %fluent-input-disabled !optional
+            }
+
+            &:focus {
+                @extend %fluent-input-disabled !optional
+            }
+        }
+
+        @include e(label) {
+            @extend %fluent-label-disabled !optional;
+        }
+    }
+
+    @include mx(filled, fluent) {
+        @include e(label) {
+            @extend %fluent-label-filled !optional;
+        }
+    }
+
+    //@include mx(fluent, cosy) {}
+    //@include mx(fluent, compact) {}
+    //@include mx(valid, fluent) {}
+    //@include mx(invalid, fluent) {}
+
+    @include mx(focused, fluent) {
+        @include e(label) {
+            @extend %fluent-label-focused !optional;
+        }
+    }
+
     @include m(search) {
         @extend %form-group-display--no-margin !optional;
 

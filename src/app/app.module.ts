@@ -105,6 +105,7 @@ import { TreeGridLoadOnDemandSampleComponent } from './tree-grid-load-on-demand/
 import { GridFilterTemplateSampleComponent } from './grid-filter-template/grid-filter-template.sample';
 import { GridMRLConfigSampleComponent } from './grid-multi-row-layout-config/grid-mrl-config.sample';
 import { GridMRLCustomNavigationSampleComponent } from './grid-mrl-custom-navigation/grid-mrl-custom-navigation';
+import { InputGroupFluentSampleComponent } from './input-group/input-group-fluent.sample';
 
 
 
@@ -134,6 +135,7 @@ const components = [
     InputSampleComponent,
     InputGroupSampleComponent,
     InputGroupChildSampleComponent,
+    InputGroupFluentSampleComponent,
     LayoutSampleComponent,
     ListSampleComponent,
     ListPanningSampleComponent,

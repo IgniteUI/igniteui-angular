@@ -9,7 +9,32 @@
     font-size: 24px;
 }
 
-.igx-input-group+.igx-input-group,
-.form+.form {
+.igx-input-group + .igx-input-group,
+.form + .form {
     margin-top: 24px;
+}
+
+.fluent-form {
+    display: flex;
+    flex-direction: column;
+    background: rgba(221, 221, 221, .2);
+    padding: 30px;
+    max-width: 500px;
+    margin: 0 auto 50px;
+}
+
+.fluent-form-btn-label {
+    margin-bottom: 24px;
+}
+
+.fluent-form button {
+    align-self: flex-end;
+    margin-left: 16px;
+}
+
+.fluent-form__buttons {
+    margin-top: 32px;
+    display: flex;
+    align-items: center;
+    align-self: flex-end;
 }
