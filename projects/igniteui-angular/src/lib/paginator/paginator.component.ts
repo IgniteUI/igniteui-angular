@@ -100,7 +100,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     }
 
     public set selectOptions(value: Array<number>) {
-        this.selectOptions = this.sortUniqueOptions(value, this._perPage);
+        this._selectOptions = this.sortUniqueOptions(value, this._perPage);
     }
 
     /**
