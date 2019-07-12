@@ -53,7 +53,7 @@
                     </div>
                 </div>
             </ng-container>
-            <ng-container *ngIf="rowSelectable">
+            <ng-container *ngIf="showRowCheckboxes">
                 <div class="igx-grid__cbx-selection" #headerCheckboxContainer [ngClass]="{
                     'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible
                 }">
@@ -102,7 +102,8 @@
         | treeGridSorting:sortingExpressions:id:pipeTrigger
         | treeGridFlattening:id:expansionDepth:expansionStates:pipeTrigger
         | treeGridPaging:page:perPage:id:pipeTrigger
-        | treeGridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:pipeTrigger:summaryPipeTrigger" let-rowIndex="index"
+        | treeGridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:pipeTrigger:summaryPipeTrigger
+        | visibleColumns:hasVisibleColumns" let-rowIndex="index"
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" #verticalScrollContainer
             (onChunkPreload)="dataLoading($event)">

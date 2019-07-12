@@ -222,6 +222,7 @@ export class IgxColumnComponent implements AfterContentInit {
                 this.grid.summaryService.resetSummaryHeight();
                 this.grid.reflow();
                 this.grid.filteringService.refreshExpressions();
+                this.grid.hasVisibleColumns = value;
             }
 
             if (this.columnLayoutChild && this.parent.hidden !== value) {
