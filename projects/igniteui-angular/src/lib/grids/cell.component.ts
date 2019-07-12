@@ -594,7 +594,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         const editableCell = this.crudService.cell;
         const editMode = !!(crud.row || crud.cell);
 
-
         if (this.editable && editMode && !this.row.deleted) {
             if (editableCell) {
                 this.gridAPI.update_cell(editableCell, editableCell.editValue);
@@ -605,9 +604,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
 
-        if (editableCell && crud.sameRow(this.cellID.rowIndex)) {
+        if (editableCell && crud.sameRow(editableCell.rowIndex)) {
             this.gridAPI.submit_value();
-        } else if (editMode && !crud.sameRow(this.cellID.rowIndex)) {
+        } else if (editMode && !crud.sameRow(editableCell.rowIndex)) {
             this.grid.endEdit(true);
         }
     }
@@ -989,14 +988,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         if (this.editMode) {
-            const v = this.crudService.cell;
-            const args = {
-                cellID: v.id,
-                rowID: v.id.rowID,
-                oldValue: v.value,
-                newValue: v.editValue,
-                cancel: false
-            } as IGridEditEventArgs;
+            const args = this.crudService.cell.createEditEventArgs();
             this.grid.onCellEditCancel.emit(args);
             if (args.cancel) {
                 return;
