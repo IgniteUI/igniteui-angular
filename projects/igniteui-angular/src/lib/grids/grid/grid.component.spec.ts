@@ -1545,7 +1545,7 @@ describe('IgxGrid Component Tests', () => {
         it(`Should be able to add a row if another row is in edit mode`, fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
             fixture.detectChanges();
-            tick();
+            tick(16);
 
             const grid = fixture.componentInstance.grid;
             const rowCount = grid.rowList.length;
@@ -1568,7 +1568,7 @@ describe('IgxGrid Component Tests', () => {
                 OrderDate: new Date()
             });
             fixture.detectChanges();
-            tick();
+            tick(16);
 
             expect(grid.rowList.length).toBeGreaterThan(rowCount);
         }));
@@ -1576,13 +1576,13 @@ describe('IgxGrid Component Tests', () => {
         it(`Should be able to add a row if a cell is in edit mode`, fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
             fixture.detectChanges();
-            tick();
+            tick(16);
 
             const grid = fixture.componentInstance.grid;
             const rowCount = grid.rowList.length;
             const cell = grid.getCellByColumn(0, 'ProductName');
             cell.setEditMode(true);
-            tick();
+            tick(16);
             fixture.detectChanges();
 
             grid.addRow({
@@ -1593,7 +1593,7 @@ describe('IgxGrid Component Tests', () => {
                 OrderDate: new Date()
             });
             fixture.detectChanges();
-            tick();
+            tick(16);
 
             expect(grid.rowList.length).toBeGreaterThan(rowCount);
         }));
