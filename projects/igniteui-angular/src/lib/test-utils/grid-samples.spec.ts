@@ -1083,3 +1083,19 @@ export class IgxTestExcelFilteringDatePickerComponent extends IgxGridFilteringCo
         this.cd.detectChanges();
     }
 }
+
+@Component({
+    template: `
+    <igx-grid [data]="data" height="500px" width="500px">
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" [editable]="true" [header]="'ProductNameHeader'"
+            [formatter]="formatter"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" [editable]="true" dataType="number" [header]="'Downloads'"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [editable]="true" dataType="boolean" [header]="'Released'"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" dataType="date"></igx-column>
+    </igx-grid>`
+})
+export class IgxGridClipboardComponent extends BasicGridComponent {
+    public data = SampleTestData.excelFilteringData();
+    formatter = (value: any) => `** ${value} **`;
+}

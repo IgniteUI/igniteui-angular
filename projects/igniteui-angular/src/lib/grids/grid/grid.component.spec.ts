@@ -1915,6 +1915,7 @@ describe('IgxGrid Component Tests', () => {
 
                 cell.inEditMode = true;
                 cell.update('IG');
+                fix.detectChanges();
                 cell.inEditMode = false;
 
                 await wait(DEBOUNCETIME);

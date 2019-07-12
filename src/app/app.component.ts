@@ -139,6 +139,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Cell Editing'
         },
         {
+            link: '/gridClipboard',
+            icon: 'insert_comment',
+            name: 'Grid Clipboard Interaction'
+        },
+        {
             link: '/gridColumnGroups',
             icon: 'view_column',
             name: 'Grid Column Groups'
