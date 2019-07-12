@@ -1097,7 +1097,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      */
     protected get isPrimaryColumn(): boolean {
-        return this.field !== undefined && this.field === this.grid.primaryKey;
+        return this.field !== undefined && this.grid !== undefined && this.field === this.grid.primaryKey;
     }
     /**
      *@hidden
