@@ -2773,7 +2773,6 @@ describe('IgxGrid Component Tests', () => {
                 expect(gridAPI.escape_editMode).toHaveBeenCalled();
             }));
             it(`Should exit row editing when clicking on a cell from a deleted row`, fakeAsync(() => {
-                console.log(`test ${index+1}/100`);
                 const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
                 fixture.detectChanges();
                 tick(16);
