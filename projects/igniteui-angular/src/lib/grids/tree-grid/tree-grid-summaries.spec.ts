@@ -404,16 +404,18 @@ describe('IgxTreeGrid - Summaries ', () => {
             HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['1', 'Feb 1, 2010', 'Feb 1, 2010']);
         }));
 
-        it('Paging: should render correct summaries when paging is enable and position is bottom', () => {
+        it('Paging: should render correct summaries when paging is enable and position is bottom', fakeAsync(() => {
             treeGrid.paging = true;
             treeGrid.perPage = 4;
             fix.detectChanges();
+            tick(16);
 
             expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(1);
             verifyTreeBaseSummaries(fix);
 
             treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
             fix.detectChanges();
+            tick(16);
 
             expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(2);
             verifyTreeBaseSummaries(fix);
@@ -421,17 +423,19 @@ describe('IgxTreeGrid - Summaries ', () => {
 
             treeGrid.toggleRow(treeGrid.getRowByIndex(3).rowID);
             fix.detectChanges();
+            tick(16);
 
             expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(1);
 
             treeGrid.page = 1;
             fix.detectChanges();
+            tick(16);
 
             expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(3);
             verifyTreeBaseSummaries(fix);
             verifySummaryForRow147(fix, 3);
             verifySummaryForRow317(fix, 2);
-        });
+        }));
 
         it('Paging: should render correct summaries when paging is enable and position is top', () => {
             treeGrid.paging = true;
