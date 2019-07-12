@@ -136,7 +136,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     /**
      * A function that returns whether the element is the last or not
      */
-    public last = (index) => { return index === this.igxForOf.length};
+    public last = (index) => { return index === this.igxForOf.length - 1};
     /**
      * A function that returns whether the element is even or not
      */
