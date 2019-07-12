@@ -120,12 +120,14 @@
 
 <div class="igx-grid__footer" #footer>
     <ng-content select="igx-grid-footer"></ng-content>
-    <ng-container *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPaginator">
+    <ng-container *ngIf="paging && totalRecords">
+        <ng-container *ngTemplateOutlet="paginationTemplate ? paginationTemplate : defaultPaginator; context: {$implicit: this}">
+        </ng-container>
     </ng-container>
 </div>
 
 <ng-template #defaultPaginator>
-    <igx-paginator *ngIf="paging && totalRecords" [displayDensity]="displayDensity"
+    <igx-paginator [displayDensity]="displayDensity"
         (selectChange)="updatePerPage($event)" (pageChange)="updateCurrentPage($event)" [totalRecords]="processedExpandedFlatData.length"
         [page]="page"
         [perPage]="perPage">

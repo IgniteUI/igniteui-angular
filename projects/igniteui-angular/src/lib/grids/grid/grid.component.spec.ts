@@ -4285,6 +4285,30 @@ describe('IgxGrid Component Tests', () => {
             expect(footerContent).toEqual('Custom content');
         });
     });
+
+    describe('IgxGrid - with custom pagination template', () => {
+        configureTestSuite();
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxGridWithCustomPaginationTemplateComponent
+                ],
+                imports: [
+                    NoopAnimationsModule, IgxGridModule]
+            }).compileComponents();
+        }));
+
+        it('should have access to grid context', () => {
+            const fix = TestBed.createComponent(IgxGridWithCustomPaginationTemplateComponent);
+            fix.detectChanges();
+
+            const totalRecords = fix.componentInstance.grid.totalRecords.toString();
+            const paginationContent = fix.debugElement.query(By.css('.igx-grid__footer > h2')).nativeElement;
+            const paginationText = paginationContent.textContent.trim();
+
+            expect(paginationText).toEqual(totalRecords);
+        });
+    });
 });
 
 @Component({
@@ -5003,4 +5027,20 @@ export class IgxGridInsideIgxTabsComponent {
         }
         this.data = data;
     }
+}
+
+@Component({
+    template: `
+        <igx-grid #grid [data]="data"
+        [paging]="true" [paginationTemplate]="pager">
+        </igx-grid>
+        <ng-template #pager let-grid>
+            <h2>{{grid.totalRecords}}</h2>
+        </ng-template>
+    `
+})
+export class IgxGridWithCustomPaginationTemplateComponent {
+    public data = SampleTestData.foodProductData();
+    @ViewChild('grid', { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
 }
