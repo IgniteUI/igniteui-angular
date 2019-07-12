@@ -16,6 +16,7 @@ import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxDropDownItemBase } from '../drop-down/drop-down-item.base';
 import { DisplayDensity, DisplayDensityToken } from '../core/density';
+import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/index';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -184,6 +185,23 @@ describe('igxCombo', () => {
             combo.displayKey = 'region';
             expect(combo.displayKey).toEqual('region');
             expect(combo.displayKey === combo.valueKey).toBeFalsy();
+        });
+        it('Should properly get/set overlaySettings', () => {
+            const fixture = TestBed.createComponent(IgxComboTestComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.combo;
+            const defaultSettings = (combo as any)._overlaySettings;
+            spyOn(combo.dropdown, 'toggle');
+            combo.toggle();
+            expect(combo.dropdown.toggle).toHaveBeenCalledWith(defaultSettings);
+            const newSettings = {
+                positionStrategy: new ConnectedPositioningStrategy({ target: fixture.elementRef.nativeElement}),
+                scrollStrategy: new AbsoluteScrollStrategy(fixture.elementRef.nativeElement)
+            };
+            combo.overlaySettings = newSettings;
+            const expectedSettings = Object.assign({}, defaultSettings, newSettings);
+            combo.toggle();
+            expect(combo.dropdown.toggle).toHaveBeenCalledWith(expectedSettings);
         });
 
         describe('EditorProvider', () => {
