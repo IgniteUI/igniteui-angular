@@ -1867,45 +1867,52 @@ describe('IgxGrid Component Tests', () => {
 
             }));
 
-            it(`Should not update row when primary key is edited and tab is pressed`, fakeAsync(() => {
+            it(`Should correctly get column.editable for grid with no transactions`, fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingComponent);
                 const grid = fix.componentInstance.grid;
                 fix.detectChanges();
                 tick();
 
-                spyOn(grid, 'endEdit').and.callThrough();
                 grid.columnList.forEach(c => {
                     c.editable = true;
                 });
 
-                let cell = grid.getCellByColumn(0, 'ProductID');
-                cell.setEditMode(true);
+                const primaryKeyColumn = grid.columnList.find(c => c.field === grid.primaryKey);
+                const nonPrimaryKeyColumn = grid.columnList.find(c => c.field !== grid.primaryKey);
+                expect(primaryKeyColumn).toBeDefined();
+                expect(nonPrimaryKeyColumn).toBeDefined();
+
+                grid.rowEditable = false;
+                expect(primaryKeyColumn.editable).toBeTruthy();
+                expect(nonPrimaryKeyColumn.editable).toBeTruthy();
+
+                grid.rowEditable = true;
+                expect(primaryKeyColumn.editable).toBeFalsy();
+                expect(nonPrimaryKeyColumn.editable).toBeTruthy();
+            }));
+
+            it(`Should correctly get column.editable for grid with transactions`, fakeAsync(() => {
+                const fix = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+                const grid = fix.componentInstance.grid;
                 fix.detectChanges();
                 tick();
 
-                expect(grid.crudService.cell).toBeDefined();
-                expect(grid.crudService.cell.id.rowIndex).toBe(0);
-                expect(grid.crudService.cell.id.columnID).toBe(0);
+                grid.columnList.forEach(c => {
+                    c.editable = true;
+                });
 
-                cell.editValue = 999;
-                UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true);
-                fix.detectChanges();
-                tick();
+                const primaryKeyColumn = grid.columnList.find(c => c.field === grid.primaryKey);
+                const nonPrimaryKeyColumn = grid.columnList.find(c => c.field !== grid.primaryKey);
+                expect(primaryKeyColumn).toBeDefined();
+                expect(nonPrimaryKeyColumn).toBeDefined();
 
-                expect(grid.crudService.cell).toBeDefined();
-                expect(grid.crudService.cell.id.rowIndex).toBe(0);
-                expect(grid.crudService.cell.id.columnID).toBe(1);
-                expect(grid.endEdit).toHaveBeenCalledTimes(0);
+                grid.rowEditable = false;
+                expect(primaryKeyColumn.editable).toBeFalsy();
+                expect(nonPrimaryKeyColumn.editable).toBeTruthy();
 
-                cell = grid.getCellByColumn(0, grid.crudService.cell.column.field);
-                UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true);
-                fix.detectChanges();
-                tick();
-
-                expect(grid.crudService.cell).toBeDefined();
-                expect(grid.crudService.cell.id.rowIndex).toBe(0);
-                expect(grid.crudService.cell.id.columnID).toBe(2);
-                expect(grid.endEdit).toHaveBeenCalledTimes(0);
+                grid.rowEditable = true;
+                expect(primaryKeyColumn.editable).toBeFalsy();
+                expect(nonPrimaryKeyColumn.editable).toBeTruthy();
             }));
         });
 
