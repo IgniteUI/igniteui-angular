@@ -890,7 +890,7 @@ describe('IgxGrid - search API', () => {
             activeHighlight = rv.querySelector('.' + component.activeClass);
             expect(activeHighlight).toBeNull();
 
-            cell.setEditMode(true);
+            cell.setEditMode(false);
             await wait(16);
             fix.detectChanges();
 
