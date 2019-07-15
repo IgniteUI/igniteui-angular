@@ -346,6 +346,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             this.hierarchicalState = this.data.map((rec) => {
                 return { rowID: this.primaryKey ? rec[this.primaryKey] : rec };
             });
+            this.cdr.detectChanges();
         }
 
         this.verticalScrollContainer.onBeforeViewDestroyed.pipe(takeUntil(this.destroy$)).subscribe((view) => {
@@ -372,9 +373,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
                 });
             });
             this.childLayoutKeys = this.parentIsland.children.map((item) => item.key);
-        } else {
-            this.childLayoutKeys = this.childLayoutList.map((item) => item.key);
-            this.cdr.detectChanges();
         }
 
         this.toolbarCustomContentTemplates = this.parentIsland ?
@@ -398,6 +396,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      */
     ngAfterContentInit() {
         this.updateColumnList(false);
+        this.childLayoutKeys = this.parent ?
+        this.parentIsland.children.map((item) => item.key) :
+        this.childLayoutKeys = this.childLayoutList.map((item) => item.key);
         this.childLayoutList.notifyOnChanges();
         this.childLayoutList.changes.pipe(takeUntil(this.destroy$))
         .subscribe(() => this.onRowIslandChange());
@@ -671,6 +672,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
 
             const childGrids = this.getChildGrids(true);
             childGrids.forEach((grid) => {
+                if (grid.isPercentWidth) {
+                    grid.reflow();
+                }
                 grid.updateScrollPosition();
             });
         }

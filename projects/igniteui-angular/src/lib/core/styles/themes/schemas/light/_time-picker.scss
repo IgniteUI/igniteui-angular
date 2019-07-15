@@ -1,4 +1,5 @@
 @import '../shape/time-picker';
+@import '../elevation/time-picker';
 
 ////
 /// @group schemas
@@ -18,48 +19,48 @@
 /// @prop {Map} header-time-period-color [igx-contrast-color: ('secondary', 500), rgba: .8] - The header AM/PM text color of a time picker.
 /// @prop {Map} background-color [igx-color: 'surface'] - The time-picker panel background color.
 /// @prop {Number} modal-elevation [24] - The elevation level used for the time picker in modal mode.
-/// @prop {Number} dropdown-elevation [24] - The elevation level used for the time picker in dropdown mode.
+/// @prop {Number} dropdown-elevation [8] - The elevation level used for the time picker in dropdown mode.
 ///
 /// @see $default-palette
 
-$_light-time-picker: extend((
-    text-color: (
-        igx-color: 'surface',
-        hexrgba: (),
-        text-contrast: (),
-        rgba: .38
-    ),
+$_light-time-picker: extend(
+    $_default-shape-time-picker,
+    $_default-elevation-time-picker,
+    (
+        text-color: (
+            igx-color: 'surface',
+            hexrgba: (),
+            text-contrast: (),
+            rgba: .38
+        ),
 
-    hover-text-color: (
-        igx-color: ('secondary', 500)
-    ),
+        hover-text-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    selected-text-color: (
-        igx-color: ('secondary', 500)
-    ),
+        selected-text-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    active-item-background: (
-        igx-color: ('grays', 100)
-    ),
+        active-item-background: (
+            igx-color: ('grays', 100)
+        ),
 
-    header-background: (
-        igx-color: ('secondary', 500)
-    ),
+        header-background: (
+            igx-color: ('secondary', 500)
+        ),
 
-    header-hour-text-color: (
-        igx-contrast-color: ('secondary', 500)
-    ),
+        header-hour-text-color: (
+            igx-contrast-color: ('secondary', 500)
+        ),
 
-    header-time-period-color: (
-        igx-contrast-color: ('secondary', 500),
-        rgba: .8
-    ),
+        header-time-period-color: (
+            igx-contrast-color: ('secondary', 500),
+            rgba: .8
+        ),
 
-    background-color: (
-        igx-color: 'surface'
-    ),
-
-    modal-elevation: 24,
-
-    dropdown-elevation: 8
-), $_default-shape-time-picker);
+        background-color: (
+            igx-color: 'surface'
+        ),
+    )
+);
