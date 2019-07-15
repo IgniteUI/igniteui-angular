@@ -305,6 +305,24 @@
     $secondary: igx-color($palette, 'secondary');
     $surface: igx-color($palette, 'surface');
 
+    $fluent-button: igx-type-style(
+        $font-size: rem(14px),
+        $font-weight: 400,
+        $letter-spacing: 0,
+        $line-height: rem(16px),
+        $text-transform: capitalize
+    );
+
+    $fluent-type-scale: igx-type-scale(
+        $button: $fluent-button
+    );
+
+    @include igx-typography(
+        $font-family: "'Open Sans', Helvetica, Arial, sans-serif",
+        $type-scale: $fluent-type-scale,
+        $base-color: #323130
+    );
+
     @include igx-theme(
         $palette: igx-palette(
             $primary,
