@@ -1,5 +1,5 @@
 import { Directive, Input, OnDestroy, NgModule } from '@angular/core';
-import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
+import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IRowDragEndEventArgs, IRowDragStartEventArgs } from './grid-base.component';
 import { KEYS } from '../core/utils';
 import { fromEvent, Subscription } from 'rxjs';

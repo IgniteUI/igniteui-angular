@@ -22,7 +22,7 @@ import {
 import { animationFrameScheduler, fromEvent, interval, Subject, Subscription } from 'rxjs';
 import { map, switchMap, takeUntil, throttle, debounceTime } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
-import { IgxDragDirective, IgxDropDirective } from '../directives/dragdrop/dragdrop.directive';
+import { IgxDragDirective, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { ConnectedPositioningStrategy } from '../services';
 import { VerticalAlignment, PositionSettings } from '../services/overlay/utilities';

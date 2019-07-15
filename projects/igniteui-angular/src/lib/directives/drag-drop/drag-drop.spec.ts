@@ -2,7 +2,7 @@ import { Component, DebugElement, ViewChildren, QueryList, ViewChild, ElementRef
 import { async, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { IgxDragDropModule, IgxDragDirective, IgxDropDirective } from './dragdrop.directive';
+import { IgxDragDropModule, IgxDragDirective, IgxDropDirective } from './drag-drop.directive';
 import { UIInteractions, wait} from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
