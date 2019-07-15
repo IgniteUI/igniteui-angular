@@ -14,12 +14,13 @@
     ChangeDetectorRef,
     ContentChild,
     ViewContainerRef,
-    AfterContentInit
+    AfterContentInit,
+    TemplateRef
 } from '@angular/core';
 import { animationFrameScheduler, fromEvent, interval, Subject } from 'rxjs';
 import { takeUntil, throttle } from 'rxjs/operators';
-import { IgxDragGhostDirective } from './drag-ghost.directive';
 import { IgxDragHandleDirective } from './drag-handle.directive';
+import { DeprecateProperty } from '../../core/deprecateDecorators';
 
 export enum RestrictDrag {
     VERTICALLY,
@@ -156,6 +157,17 @@ export interface IDragStartEventArgs extends IDragBaseEventArgs {
     cancel: boolean;
 }
 
+export interface IDragLocation {
+    pageX: number;
+    pageY: number;
+}
+
+export interface IDragCustomAnimationArgs {
+    duration?: number;
+    timingFunction?: string;
+    delay?: number;
+}
+
 @Directive({
     exportAs: 'drag',
     selector: '[igxDrag]'
@@ -167,40 +179,71 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * ```html
      * <div [igxDrag]="{ source: myElement }"></div>
      * ```
+     * @memberof IgxDragDirective
      */
     @Input('igxDrag')
     public data: any;
 
     /**
-     * An @Input property that indicates when the drag should start
-     * By default the drag starts after the draggable element is moved by 5px
+     * An @Input property that indicates when the drag should start.
+     * By default the drag starts after the draggable element is moved by 5px.
      * ```html
      * <div igxDrag [dragTolerance]="100">
      *         <span>Drag Me!</span>
      * </div>
      * ```
+     * @memberof IgxDragDirective
      */
     @Input()
     public dragTolerance = 5;
 
+    /**
+     * An @Input property that provide a way for igxDrag and igxDrop to be linked through channels.
+     * It accepts single value or an array of values and evaluates then using strict equality.
+     * ```html
+     * <div igxDrag [dragChannel]="'odd'">
+     *         <span>95</span>
+     * </div>
+     * <div igxDrag [dropChannel]="['odd', 'irrational']">
+     *         <span>Numbers drop area!</span>
+     * </div>
+     * ```
+     * @memberof IgxDragDirective
+     */
+    @Input()
+    public dragChannel: number | string | number[] | string[];
+
+    /**
+     * An @Input property that specifies if the base element should not be moved and a ghost element should be rendered that represents it.
+     * By default it is set to `true`.
+     * If it is set to `false` when dragging the base element is moved instead and no ghost elements are rendered.
+     * ```html
+     * <div igxDrag [renderGhost]="true">
+     *      <span>Drag Me!</span>
+     * </div>
+     * ```
+     * @memberof IgxDragDirective
+     */
     @Input()
     public renderGhost = true;
 
-    @Input('dragLinkTo')
-    public linkTo: number | string | number[] | string[];
-
     /**
+     * @deprecated Please use ghost template instead.
      * Sets a custom class that will be added to the `dragGhost` element.
      * ```html
      * <div igxDrag [ghostImageClass]="'dragGhost'">
      *         <span>Drag Me!</span>
      * </div>
      * ```
+     * @memberof IgxDragDirective
      */
+    @DeprecateProperty(`'ghostImageClass' @Input property is deprecated and will be removed in future major versions.
+        Please use ghost template instead using 'ghostTemplate'.`)
     @Input()
     public ghostImageClass = '';
 
     /**
+     * @deprecated Please use custom base styling instead.
      * An @Input property that hides the draggable element.
      * By default it's set to false.
      * ```html
@@ -208,7 +251,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      *         <span>Drag Me!</span>
      * </div>
      * ```
+     * @memberof IgxDragDirective
      */
+    @DeprecateProperty(`'hideBaseOnDrag' @Input property is deprecated and will be removed in future major versions.
+        Please use custom base styling instead.`)
     @Input()
     public hideBaseOnDrag = false;
 
@@ -221,9 +267,28 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      *         <span>Drag Me!</span>
      * </div>
      * ```
+     * @memberof IgxDragDirective
      */
     @Input()
     public animateOnRelease = false;
+
+    /**
+     * An @Input property that specifies a template for the ghost element created when dragging starts and `renderGhost` is true.
+     * By default a clone of the base element the igxDrag is instanced is created.
+     * ```html
+     * <div igxDrag [ghostTemplate]="customGhost">
+     *         <span>Drag Me!</span>
+     * </div>
+     * <ng-template #customGhost>
+     *      <div class="customGhostStyle">
+     *          <span>I am being dragged!</span>
+     *      </div>
+     * </ng-template>
+     * ```
+     * @memberof IgxDragDirective
+     */
+    @Input()
+    public ghostTemplate: TemplateRef<any>;
 
     /**
      * An @Input property that sets the element to which the dragged element will be appended.
@@ -234,9 +299,38 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      *         <span>Drag Me!</span>
      * </div>
      * ```
+     * @memberof IgxDragDirective
      */
     @Input()
-    public dragGhostHost = null;
+    public dragGhostHost;
+
+    /**
+     * An @Input property that specifies the offset of the ghost created relative to the mouse.
+     * By default it's taking the relative position to the mouse when the drag started and keeps it the same.
+     * ```html
+     * <div #hostDiv></div>
+     * <div igxDrag [ghostOffsetX]="0">
+     *         <span>Drag Me!</span>
+     * </div>
+     * ```
+     * @memberof IgxDragDirective
+     */
+    @Input()
+    public ghostOffsetX: number;
+
+    /**
+     * An @Input property that specifies the offset of the ghost created relative to the mouse.
+     * By default it's taking the relative position to the mouse when the drag started and keeps it the same.
+     * ```html
+     * <div #hostDiv></div>
+     * <div igxDrag [ghostOffsetY]="0">
+     *         <span>Drag Me!</span>
+     * </div>
+     * ```
+     * @memberof IgxDragDirective
+     */
+    @Input()
+    public ghostOffsetY: number;
 
     /**
      * Event triggered when the draggable element drag starts.
@@ -250,6 +344,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      *      alert("The drag has stared!");
      * }
      * ```
+     * @memberof IgxDragDirective
      */
     @Output()
     public dragStart = new EventEmitter<IDragStartEventArgs>();
@@ -266,9 +361,44 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      *      alert("The drag has ended!");
      * }
      * ```
+     * @memberof IgxDragDirective
      */
     @Output()
     public dragEnd = new EventEmitter<IDragBaseEventArgs>();
+
+    /**
+     * Event triggered when the drag ghost element is created.
+     * ```html
+     * <div igxDrag (onGhostCreated)="ghostCreated()">
+     *         <span>Drag Me!</span>
+     * </div>
+     * ```
+     * ```typescript
+     * public ghostCreated(){
+     *      alert("The ghost has been created!");
+     * }
+     * ```
+     * @memberof IgxDragDirective
+     */
+    @Output()
+    public onGhostCreated = new EventEmitter<any>();
+
+    /**
+     * Event triggered when the drag ghost element is created.
+     * ```html
+     * <div igxDrag (onGhostDestroy)="ghostDestroyed()">
+     *         <span>Drag Me!</span>
+     * </div>
+     * ```
+     * ```typescript
+     * public ghostDestroyed(){
+     *      alert("The ghost has been destroyed!");
+     * }
+     * ```
+     * @memberof IgxDragDirective
+     */
+    @Output()
+    public onGhostDestroy = new EventEmitter<any>();
 
     /**
      * Event triggered after the draggable element is released and after its animation has finished.
@@ -282,6 +412,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      *      alert("The move has ended!");
      * }
      * ```
+     * @memberof IgxDragDirective
      */
     @Output()
     public returnMoveEnd = new EventEmitter<IDragBaseEventArgs>();
@@ -298,13 +429,14 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      *      alert("The elemented has been clicked!");
      * }
      * ```
+     * @memberof IgxDragDirective
      */
     @Output()
     public dragClicked = new EventEmitter<IDragBaseEventArgs>();
 
-    @ContentChild(IgxDragGhostDirective, { static: false })
-    public ghostTemplate: IgxDragGhostDirective;
-
+    /**
+     * @hidden
+     */
     @ContentChild(IgxDragHandleDirective, { static: false })
     public dragHandle: IgxDragHandleDirective;
 
@@ -349,6 +481,13 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         return this._visibility === 'visible';
     }
 
+    public get location(): IDragLocation {
+        return { pageX: this.pageX, pageY: this.pageY};
+    }
+
+    /**
+     * @hidden
+     */
     public get pageX() {
         if (this.renderGhost && this.dragGhost) {
             return this.ghostLeft;
@@ -356,6 +495,9 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         return this.element.nativeElement.getBoundingClientRect().left;
     }
 
+    /**
+     * @hidden
+     */
     public get pageY() {
         if (this.renderGhost && this.dragGhost) {
             return this.ghostTop;
@@ -408,6 +550,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      *     let pointerEvents = this.myDrag.pointerEventsEnabled;
      * }
      * ```
+     * @memberof IgxDragDirective
      */
     public get pointerEventsEnabled() {
         return typeof PointerEvent !== 'undefined';
@@ -422,6 +565,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      *     let touchEvents = this.myDrag.pointerEventsEnabled;
      * }
      * ```
+     * @memberof IgxDragDirective
      */
     public get touchEventsEnabled() {
         return 'ontouchstart' in window;
@@ -445,8 +589,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected _ghostOffsetY;
     protected _ghostStartX;
     protected _ghostStartY;
-    protected _ghostHostX = 0;
-    protected _ghostHostY = 0;
+    protected _dragGhostHostX = 0;
+    protected _dragGhostHostY = 0;
 
     protected _pointerDownId = null;
     protected _clicked = false;
@@ -527,23 +671,23 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         }
     }
 
-    public setPageXY(pageX: number, pageY: number) {
+    public setLocation(newLocation: IDragLocation) {
         if (this.renderGhost && this.dragGhost) {
             const offsetParentX = this.dragGhost.offsetParent.getBoundingClientRect().left;
             const offsetParentY = this.dragGhost.offsetParent.getBoundingClientRect().top;
-            this.ghostLeft = pageX - offsetParentX;
-            this.ghostTop = pageY - offsetParentY;
+            this.ghostLeft = newLocation.pageX - offsetParentX;
+            this.ghostTop = newLocation.pageY - offsetParentY;
         } else if (!this.renderGhost) {
-            const deltaX = pageX - this.pageX;
-            const deltaY = pageY - this.pageY;
+            const deltaX = newLocation.pageX - this.pageX;
+            const deltaY = newLocation.pageY - this.pageY;
             const transformX = this.getTransformX(this.element.nativeElement);
             const transformY = this.getTransformY(this.element.nativeElement);
             this.setTransformXY(transformX + deltaX, transformY + deltaY);
         }
 
         // Reset runtime updated values when dragging
-        this._startX = pageX;
-        this._startY = pageY;
+        this._startX = newLocation.pageX;
+        this._startY = newLocation.pageY;
     }
 
     /** Sets offset to dragged element or the ghost rendered relative to the offset parent. */
@@ -588,29 +732,33 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             this._startY = event.touches[0].pageY;
         }
 
-        // Take margins because getBoundingClientRect() doesn't include margins of the element
-        const marginTop = parseInt(document.defaultView.getComputedStyle(this.element.nativeElement)['margin-top'], 10);
-        const marginLeft = parseInt(document.defaultView.getComputedStyle(this.element.nativeElement)['margin-left'], 10);
-        this._ghostOffsetX = this.element.nativeElement.getBoundingClientRect().left + this.getWindowScrollLeft() - marginLeft -
-            this._startX;
-        this._ghostOffsetY = this.element.nativeElement.getBoundingClientRect().top + this.getWindowScrollTop() - marginTop -
-            this._startY;
-        if (this.ghostTemplate && this.ghostTemplate.igxDragGhostOffsetX !== undefined) {
-            this._ghostOffsetX = this.ghostTemplate.igxDragGhostOffsetX;
-        }
-        if (this.ghostTemplate && this.ghostTemplate.igxDragGhostOffsetY !== undefined) {
-            this._ghostOffsetY = this.ghostTemplate.igxDragGhostOffsetY;
+        let ghostOffsetX;
+        if (this.ghostTemplate && this.ghostOffsetX !== undefined) {
+            ghostOffsetX = this.ghostOffsetX;
+        } else {
+            const marginLeft = parseInt(document.defaultView.getComputedStyle(this.element.nativeElement)['margin-left'], 10);
+            ghostOffsetX = this.element.nativeElement.getBoundingClientRect().left + this.getWindowScrollLeft() - marginLeft -
+                this._startX;
         }
 
-        this._ghostStartX = this._startX + this._ghostOffsetX;
-        this._ghostStartY = this._startY + this._ghostOffsetY;
+        let ghostOffsetY;
+        if (this.ghostTemplate && this.ghostOffsetY !== undefined) {
+            ghostOffsetY = this.ghostOffsetY;
+        } else {
+            const marginTop = parseInt(document.defaultView.getComputedStyle(this.element.nativeElement)['margin-top'], 10);
+            ghostOffsetY = this.element.nativeElement.getBoundingClientRect().top + this.getWindowScrollTop() - marginTop -
+                this._startY;
+        }
+
+        this._ghostStartX = this._startX + ghostOffsetX;
+        this._ghostStartY = this._startY + ghostOffsetY;
         this._lastX = this._startX;
         this._lastY = this._startY;
     }
 
     /**
      * @hidden
-     * Perfmorm drag move logic when dragging and dispatching events if there is igxDrop under the pointer.
+     * Perform drag move logic when dragging and dispatching events if there is igxDrop under the pointer.
      * This method is bound at first at the base element.
      * If dragging starts and after the dragGhost is rendered the pointerId is reassigned to the dragGhost. Then this method is bound to it.
      * @param event PointerMove event captured
@@ -656,8 +804,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             }
 
             if (this.renderGhost) {
-                this.ghostLeft = this._ghostStartX + totalMovedX - this._ghostHostX;
-                this.ghostTop = this._ghostStartY + totalMovedY - this._ghostHostY;
+                this.ghostLeft = this._ghostStartX + totalMovedX - this._dragGhostHostX;
+                this.ghostTop = this._ghostStartY + totalMovedY - this._dragGhostHostY;
             } else {
                 const translateX = this.getTransformX(this.element.nativeElement) + (pageX - this._lastX);
                 const translateY = this.getTransformY(this.element.nativeElement) + (pageY - this._lastY);
@@ -762,15 +910,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @param node The Node object to be cloned.
      */
     protected createDragGhost(event, node: any = null) {
-        let ghostHost;
-        if (this.ghostTemplate && this.ghostTemplate.igxDragGhost) {
-            ghostHost = this.ghostTemplate.igxDragGhost;
-        } else if (this.dragGhostHost) {
-            ghostHost = this.dragGhostHost;
-        }
-
         if (this.ghostTemplate) {
-            const dynamicGhostRef = this.viewContainer.createEmbeddedView(this.ghostTemplate.template);
+            const dynamicGhostRef = this.viewContainer.createEmbeddedView(this.ghostTemplate);
             this.dragGhost = dynamicGhostRef.rootNodes[0];
         } else {
             this.dragGhost = node ? node.cloneNode(true) : this.element.nativeElement.cloneNode(true);
@@ -778,25 +919,25 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
         this.dragGhost.style.transitionDuration = '0.0s';
         this.dragGhost.style.position = 'absolute';
-        this._ghostHostX = ghostHost ? this.getGhostHostOffsetLeft(ghostHost) : 0;
-        this._ghostHostY = ghostHost ? this.getGhostHostOffsetTop(ghostHost) : 0;
-        this.dragGhost.style.left = this._ghostStartX - this._ghostHostX + 'px';
-        this.dragGhost.style.top = this._ghostStartY - this._ghostHostY + 'px';
+        this._dragGhostHostX = this.dragGhostHost ? this.getdragGhostHostOffsetLeft(this.dragGhostHost) : 0;
+        this._dragGhostHostY = this.dragGhostHost ? this.getdragGhostHostOffsetTop(this.dragGhostHost) : 0;
+        this.dragGhost.style.left = this._ghostStartX - this._dragGhostHostX + 'px';
+        this.dragGhost.style.top = this._ghostStartY - this._dragGhostHostY + 'px';
 
         if (this.ghostImageClass) {
             this.renderer.addClass(this.dragGhost, this.ghostImageClass);
         }
 
-        if (ghostHost) {
-            ghostHost.appendChild(this.dragGhost);
+        if (this.dragGhostHost) {
+            this.dragGhostHost.appendChild(this.dragGhost);
         } else {
             document.body.appendChild(this.dragGhost);
         }
 
         if (this.ghostTemplate) {
-            this.ghostTemplate.igxDragGhostOnCreate.emit({
-                owner: this.ghostTemplate,
-                dragDirective: this
+            this.onGhostCreated.emit({
+                owner: this,
+                ghostElement: this.dragGhost
             });
         }
 
@@ -958,24 +1099,25 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         }
 
         if (this.renderGhost) {
+            const ghostDestroyArgs = {
+                owner: this,
+                cancel: false
+            };
+            this.onGhostDestroy.emit(ghostDestroyArgs);
+            if (ghostDestroyArgs.cancel) {
+                return;
+            }
+
             if (this.hideBaseOnDrag) {
                 this.visible = true;
             }
             this.dragGhost.parentNode.removeChild(this.dragGhost);
             this.dragGhost = null;
-
-            this.element.nativeElement.style.transitionDuration = '0.0s';
             this.zone.run(() => {
                 this.returnMoveEnd.emit({
                     originalEvent: event,
                     owner: this
                 });
-                if (this.ghostTemplate) {
-                    this.ghostTemplate.igxDragGhostOnDestroy.emit({
-                        owner: this.ghostTemplate,
-                        dragDirective: this
-                    });
-                }
             });
         }
         this._dragStarted = false;
@@ -1046,18 +1188,18 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         return window.scrollX ? window.scrollX : (window.pageXOffset ? window.pageXOffset : 0);
     }
 
-    protected getGhostHostOffsetLeft(ghostHost: any) {
-        if (ghostHost.offsetParent && ghostHost.computedStyleMap().get('position').value === 'static') {
-            return ghostHost.offsetParent.getBoundingClientRect().left;
+    protected getdragGhostHostOffsetLeft(dragGhostHost: any) {
+        if (dragGhostHost.offsetParent && dragGhostHost.computedStyleMap().get('position').value === 'static') {
+            return dragGhostHost.offsetParent.getBoundingClientRect().left;
         }
-        return ghostHost.getBoundingClientRect().left;
+        return dragGhostHost.getBoundingClientRect().left;
     }
 
-    protected getGhostHostOffsetTop(ghostHost: any) {
-        if (ghostHost.offsetParent && ghostHost.computedStyleMap().get('position').value === 'static') {
-            return ghostHost.offsetParent.getBoundingClientRect().top;
+    protected getdragGhostHostOffsetTop(dragGhostHost: any) {
+        if (dragGhostHost.offsetParent && dragGhostHost.computedStyleMap().get('position').value === 'static') {
+            return dragGhostHost.offsetParent.getBoundingClientRect().top;
         }
-        return ghostHost.getBoundingClientRect().top;
+        return dragGhostHost.getBoundingClientRect().top;
     }
 }
 
@@ -1072,12 +1214,26 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      * ```html
      * <div [igxDrop]="{ source: myElement }"></div>
      * ```
+     * @memberof IgxDropDirective
      */
     @Input('igxDrop')
     public data: any;
 
-    @Input('dropLinkTo')
-    public linkTo: number | string | number[] | string[];
+    /**
+     * An @Input property that provide a way for igxDrag and igxDrop to be linked through channels.
+     * It accepts single value or an array of values and evaluates then using strict equality.
+     * ```html
+     * <div igxDrag [dragChannel]="'odd'">
+     *         <span>95</span>
+     * </div>
+     * <div igxDrag [dropChannel]="['odd', 'irrational']">
+     *         <span>Numbers drop area!</span>
+     * </div>
+     * ```
+     * @memberof IgxDropDirective
+     */
+    @Input()
+    public dropChannel: number | string | number[] | string[];
 
     /** Event triggered when dragged element enters the area of the element.
      * ```html
@@ -1089,6 +1245,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      *     alert("A draggable element has entered the chip area!");
      * }
      * ```
+     * @memberof IgxDropDirective
      */
     @Output()
     public onEnter = new EventEmitter<IgxDropEnterEventArgs>();
@@ -1103,6 +1260,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      *     alert("A draggable element has left the chip area!");
      * }
      * ```
+     * @memberof IgxDropDirective
      */
     @Output()
     public onLeave = new EventEmitter<IgxDropLeaveEventArgs>();
@@ -1119,6 +1277,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      *     alert("A draggable element has been dropped in the chip area!");
      * }
      * ```
+     * @memberof IgxDropDirective
      */
     @Output()
     public onDrop = new EventEmitter<IgxDropEventArgs>();
@@ -1272,28 +1431,28 @@ export class IgxDropDirective implements OnInit, OnDestroy {
     }
 
     protected isDragLinked(drag: IgxDragDirective): boolean {
-        const dragLinkArray = drag.linkTo instanceof Array;
-        const dropLinkArray = this.linkTo instanceof Array;
+        const dragLinkArray = drag.dragChannel instanceof Array;
+        const dropLinkArray = this.dropChannel instanceof Array;
 
         if (!dragLinkArray && !dropLinkArray) {
-            return this.linkTo === drag.linkTo;
+            return this.dropChannel === drag.dragChannel;
         } else if (!dragLinkArray && dropLinkArray) {
-            const dropLinks = <Array<any>>this.linkTo;
+            const dropLinks = <Array<any>>this.dropChannel;
             for (let i = 0; i < dropLinks.length; i ++) {
-                if (dropLinks[i] === drag.linkTo) {
+                if (dropLinks[i] === drag.dragChannel) {
                     return true;
                 }
             }
         } else if (dragLinkArray && !dropLinkArray) {
-            const dragLinks = <Array<any>>drag.linkTo;
+            const dragLinks = <Array<any>>drag.dragChannel;
             for (let i = 0; i < dragLinks.length; i ++) {
-                if (dragLinks[i] === this.linkTo) {
+                if (dragLinks[i] === this.dropChannel) {
                     return true;
                 }
             }
         } else {
-            const dragLinks = <Array<any>>drag.linkTo;
-            const dropLinks = <Array<any>>this.linkTo;
+            const dragLinks = <Array<any>>drag.dragChannel;
+            const dropLinks = <Array<any>>this.dropChannel;
             for (let i = 0; i < dragLinks.length; i ++) {
                 for (let j = 0; j < dropLinks.length; j ++) {
                     if (dragLinks[i] === dropLinks[j]) {
@@ -1312,7 +1471,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
  * @hidden
  */
 @NgModule({
-    declarations: [IgxDragDirective, IgxDropDirective, IgxDragGhostDirective, IgxDragHandleDirective],
-    exports: [IgxDragDirective, IgxDropDirective, IgxDragGhostDirective, IgxDragHandleDirective]
+    declarations: [IgxDragDirective, IgxDropDirective, IgxDragHandleDirective],
+    exports: [IgxDragDirective, IgxDropDirective, IgxDragHandleDirective]
 })
 export class IgxDragDropModule { }

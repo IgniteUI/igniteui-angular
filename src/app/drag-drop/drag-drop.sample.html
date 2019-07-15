@@ -4,34 +4,33 @@
             <article class="sample-column">
                 <h4 class="sample-title">No ghost dragging:</h4>
                 <div [style.height.px]="100">
-                    <div [igxDrag]="{ dragged: false }" [renderGhost]="false" class="dialog" [dragLinkTo]="['Suspect']" (dragStart)="draggedElem = true" (dragEnd)="draggedElem = false">
+                    <div [igxDrag]="{ dragged: false }" [renderGhost]="false" class="dialog" [dragChannel]="['Suspect']" (dragStart)="draggedElem = true" (dragEnd)="draggedElem = false">
                         <span *ngIf="!draggedElem">Drag me</span>
                         <span *ngIf="draggedElem">Weeeee</span>
                     </div>
                 </div>
                 <br>
                 <h4 class="sample-title">Ghost and base templating:</h4>
-                <div #ghostHost [style.height.px]="100">
-                    <div [igxDrag]="{ id: 'customGhost'}" [dragLinkTo]="'Suspect'" [ngClass]="customDragged ? 'dragWithGhostPlaceholder' : 'dragWithGhostDefault'"
-                        (dragStart)="customDragged = true" (dragEnd)="customDragged = false">
+                <div #dragGhostHost [style.height.px]="100">
+                    <div [igxDrag]="{ id: 'customGhost'}" [dragChannel]="'Suspect'"  [ghostTemplate]="dragGhost"
+                        [ngClass]="customDragged ? 'dragWithGhostPlaceholder' : 'dragWithGhostDefault'"
+                        (dragStart)="customDragged = true" (dragEnd)="customDragged = false" >
                         <span *ngIf="!customDragged">Drag me</span>
-                        <div *igxDragGhost="ghostHost; offsetX: 0; offsetY: 0"  class="customGhost" >
-                            <span *ngIf="!ghostInDropArea">Weeeee</span>
-                            <span *ngIf="ghostInDropArea && friendlyArea">It's ok here</span>
-                            <span *ngIf="ghostInDropArea && !friendlyArea">Pls no</span>
-                        </div>
+                        <ng-template #dragGhost>
+                            <div class="customGhost">
+                                <span *ngIf="!ghostInDropArea">Weeeee</span>
+                                <span *ngIf="ghostInDropArea && friendlyArea">It's ok here</span>
+                                <span *ngIf="ghostInDropArea && !friendlyArea">Pls no</span>
+                            </div>
+                        </ng-template>
                     </div>
                 </div>
     
                 <br>
                 <h4 class="sample-title">Drag Handle:</h4>
                 <button igxButton="raised" igxRipple (click)="openDialog()" [style.width.px]="150">Open dialog</button>
-    
-                <!-- <igx-dialog #form leftButtonLabel="Cancel" 
-                            (onLeftButtonSelect)="form.close()" rightButtonLabel="Sign In" backgroundClick="true"
-                            [closeOnOutsideSelect]="true" attr.customClass='myClass'> -->
                 <div igxToggle #toggleForm="toggle" class="igx-dialog" [style.width.px]="280" 
-                     igxDrag [renderGhost]="false" [dragTolerance]="0" [dragLinkTo]="'dialog'">
+                     igxDrag [renderGhost]="false" [dragTolerance]="0" [dragChannel]="'dialog'">
                     <div class="igx-dialog__window">
                         <div class="login-form">
                             <div class="dialogHeader">
@@ -65,16 +64,16 @@
             <article class="sample-column">
                 <div [style.width]="'70%'" >
                     <h4>Drag a suspect inside or outside the cage:</h4>
-                    <div igxDrop class="initialArea" [dropLinkTo]="['Pedestrian', 'Suspect']"
+                    <div igxDrop class="initialArea" [dropChannel]="['Pedestrian', 'Suspect']"
                         (onEnter)="onEnterCustomOutside($event)" (onLeave)="onLeaveCustom($event)">
                         <div igxDrag *ngFor="let elem of draggableElems" class="draggableElem" [hideBaseOnDrag]="true" [animateOnRelease]="true"
-                            [dragLinkTo]="['Joe', 'Suspect']"
+                            [dragChannel]="['Joe', 'Suspect']"
                             (dragStart)="onDragStart()" (dragEnd)="onDragEnd()">
                             <span [style.margin]="'auto'">{{elem}}</span>
                         </div>
                     </div>
     
-                    <div class="cageArea" igxDrop [dropLinkTo]="['Suspect']"
+                    <div class="cageArea" igxDrop [dropChannel]="['Suspect']"
                         [style.backgroundImage]="'url(assets/images/drag-drop/jailBars.png)'"
                         (igxDragEnter)="onDragCageEnter()"
                         (igxDragLeave)="onDragCageLeave()"

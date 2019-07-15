@@ -79,6 +79,6 @@ export class DragDropSampleComponent {
             this.toggleStartPageX = this.toggleFormDrag.pageX;
             this.toggleStartPageY = this.toggleFormDrag.pageY;
         }
-        this.toggleFormDrag.setPageXY(this.toggleStartPageX, this.toggleStartPageY);
+        this.toggleFormDrag.setLocation({ pageX: this.toggleStartPageX, pageY: this.toggleStartPageY});
     }
 }

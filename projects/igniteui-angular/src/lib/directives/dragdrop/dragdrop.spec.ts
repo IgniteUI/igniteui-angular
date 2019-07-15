@@ -53,7 +53,7 @@ class TestDragDropComponent {
     public container: ElementRef;
 }
 
-describe('IgxDrag/IgxDrop', () => {
+fdescribe('IgxDrag/IgxDrop', () => {
     configureTestSuite();
 
     beforeEach(async(() => {
@@ -124,7 +124,7 @@ describe('IgxDrag/IgxDrop', () => {
         });
     });
 
-    it('should throw dragStart and dragEnd events in correct order', (done) => {
+    it('should trigger dragStart and dragEnd events in correct order', (done) => {
         const fix = TestBed.createComponent(TestDragDropComponent);
         fix.detectChanges();
 
