@@ -85,4 +85,4 @@ $_light-grid-toolbar: extend(
     )
 );
 
-$_fluent-grid-toolbar: extend($_light-grid-toolbar, ());
+$_fluent-grid-toolbar: extend($_light-grid-toolbar);

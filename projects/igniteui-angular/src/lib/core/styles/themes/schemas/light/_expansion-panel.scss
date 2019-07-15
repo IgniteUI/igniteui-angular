@@ -50,4 +50,4 @@ $_light-expansion-panel: extend(
     )
 );
 
-$_fluent-expansion-panel: extend($_light-expansion-panel, ());
+$_fluent-expansion-panel: extend($_light-expansion-panel);

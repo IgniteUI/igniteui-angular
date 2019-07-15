@@ -35,4 +35,4 @@ $_light-snackbar: extend(
     )
 );
 
-$_fluent-snackbar: extend($_light-snackbar, ());
+$_fluent-snackbar: extend($_light-snackbar);

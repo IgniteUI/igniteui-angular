@@ -36,4 +36,4 @@ $_light-badge: extend(
     )
 );
 
-$_fluent-badge: extend($_light-badge, ());
+$_fluent-badge: extend($_light-badge);

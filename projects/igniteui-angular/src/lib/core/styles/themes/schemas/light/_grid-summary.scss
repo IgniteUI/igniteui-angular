@@ -45,4 +45,17 @@ $_light-grid-summary: extend(
     )
 );
 
-$_fluent-grid-summary: extend($_light-grid-summary, ());
+$_fluent-grid-summary: extend($_light-grid-summary, (
+    background-color: (
+        igx-color: ('surface')
+    ),
+
+    border-color: (
+        igx-color: ('grays', 100)
+    ),
+
+    pinned-border-color: (
+        igx-color: ('grays', 300),
+        hexrgba: #fff
+    ),
+));

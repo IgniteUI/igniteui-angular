@@ -150,7 +150,7 @@ $_light-input-group: extend(
     )
 );
 
-$_fluent-input-group: extend($_light-input-group, (
+$_fluent-input-group: extend($_light-input-group, $_fluent-shape-input-group, (
     idle-bottom-line-color: (
         igx-color: ('grays', 500)
     ),
@@ -167,4 +167,4 @@ $_fluent-input-group: extend($_light-input-group, (
         igx-color: ('grays', 100),
     ),
 
-), $_fluent-shape-input-group);
+));

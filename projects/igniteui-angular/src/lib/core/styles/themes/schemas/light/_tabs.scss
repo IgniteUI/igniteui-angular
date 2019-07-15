@@ -87,6 +87,6 @@ $_light-tabs: extend(
     )
 );
 
-$_fluent-tabs: extend($_light-tabs, ());
+$_fluent-tabs: extend($_light-tabs);
 
 

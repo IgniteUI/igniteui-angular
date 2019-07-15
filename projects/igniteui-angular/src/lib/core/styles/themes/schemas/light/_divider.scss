@@ -21,4 +21,4 @@ $_light-divider: extend(
     )
 );
 
-$_fluent-divider: extend($_light-divider, ());
+$_fluent-divider: extend($_light-divider);

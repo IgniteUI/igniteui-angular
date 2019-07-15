@@ -22,4 +22,4 @@ $_light-ripple: extend(
     )
 );
 
-$_fluent-ripple: extend($_light-ripple, ());
+$_fluent-ripple: extend($_light-ripple);

@@ -33,11 +33,8 @@ $_light-button-group: extend(
         item-background: #fff,
 
         item-border-color: (
-            igx-color: ('grays', 300)
-        ),
-
-        item-disabled-border: (
-            igx-color: ('grays', 300)
+            igx-color: ('grays', 300),
+            hexrgba: ()
         ),
 
         item-text-color: (
@@ -65,7 +62,8 @@ $_light-button-group: extend(
         ),
 
         item-selected-border-color: (
-            igx-color: ('grays', 300)
+            igx-color: ('grays', 300),
+            hexrgba: ()
         ),
 
         disabled-text-color: (
@@ -75,7 +73,41 @@ $_light-button-group: extend(
         disabled-background-color: (
             igx-color: ('grays', 50)
         ),
+
+        item-disabled-border: (
+            igx-color: ('grays', 300),
+            hexrgba: ()
+        ),
     )
 );
 
-$_fluent-button-group: extend($_light-button-group, (), $_fluent-shape-button-group);
+$_fluent-button-group: extend(
+    $_light-button-group,
+    $_fluent-shape-button-group,
+    $_fluent-elevation-button-group,
+    (
+        item-text-color: (
+            igx-color: ('grays', 900)
+        ),
+
+        item-hover-text-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        item-hover-background: transparent,
+
+        item-selected-background: (
+            igx-color: ('grays', 100)
+        ),
+
+        item-selected-hover-background: (
+            igx-color: ('grays', 100)
+        ),
+
+        item-selected-text-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        disabled-background-color: transparent,
+    )
+);

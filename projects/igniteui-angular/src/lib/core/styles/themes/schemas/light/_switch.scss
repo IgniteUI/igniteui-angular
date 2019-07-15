@@ -76,7 +76,7 @@ $_light-switch: extend(
         ),
     )
 );
-$_fluent-switch: extend($_light-switch, (
+$_fluent-switch: extend($_light-switch, $_fluent-shape-switch, (
     variant: 'fluent',
 
     border-color: (
@@ -118,4 +118,4 @@ $_fluent-switch: extend($_light-switch, (
     resting-elevation: 0,
     hover-elevation: 0,
     disabled-elevation: 0
-), $_fluent-shape-switch);
+));

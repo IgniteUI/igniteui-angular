@@ -67,7 +67,7 @@
     $item-selected-text-color: null,
     $item-selected-background: null,
     $item-selected-border-color: null,
-    $item-selected-hover-background: null,
+    $item-selected-hover-background: null
 ) {
     $name: 'igx-button-group';
     $button-group-schema: map-get($schema, $name);
@@ -162,6 +162,11 @@
             border-radius: 0;
         }
 
+        %igx-icon-display {
+            color: currentColor;
+            transition: all 140ms $ease-in-out-quad;
+        }
+
         border: $group-item-border-thickness solid --var($theme, 'item-border-color');
         color: --var($theme, 'item-text-color');
         background: --var($theme, 'item-background');
@@ -175,6 +180,8 @@
         user-select: none;
         position: relative;
         z-index: 0;
+        transition: all 140ms $ease-in-out-quad;
+
         @include ellipsis();
 
         &:not(:nth-child(0)) {
@@ -199,6 +206,10 @@
 
         &:hover,
         &:focus {
+            %igx-icon-display {
+                color: currentColor;
+            }
+
             color: --var($theme, 'item-hover-text-color');
             background: --var($theme, 'item-hover-background');
             z-index: 1;

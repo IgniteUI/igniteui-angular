@@ -115,4 +115,4 @@ $_light-list: extend(
     )
 );
 
-$_fluent-list: extend($_light-list, ());
+$_fluent-list: extend($_light-list);

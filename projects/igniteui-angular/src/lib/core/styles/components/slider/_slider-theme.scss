@@ -285,7 +285,7 @@
             left: #{rem($slider-thumb-radius) - (rem($dot-size) / 2)};
             top: #{rem($slider-thumb-radius) - (rem($dot-size) / 2)};
             background: --var($theme, 'thumb-color');
-            border: $thumb-border-width solid --var($theme, 'thumb-border-color');
+            border: rem($thumb-border-width) solid --var($theme, 'thumb-border-color');
             transform: rotate(45deg);
             transition: transform .1s $ease-out-quad, border-radius .1s $ease-out-quad;
             border-radius: rem($slider-thumb-radius);

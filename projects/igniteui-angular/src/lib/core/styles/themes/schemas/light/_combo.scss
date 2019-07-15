@@ -35,5 +35,5 @@ $_light-combo: extend(
     )
 );
 
-$_fluent-combo: extend($_light-combo, ());
+$_fluent-combo: extend($_light-combo);
 

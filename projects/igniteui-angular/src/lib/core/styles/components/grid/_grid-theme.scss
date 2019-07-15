@@ -31,6 +31,7 @@
 /// @param {Color} $row-odd-text-color [null] - The text color of odd rows.
 /// @param {Color} $row-even-text-color [null] - The text color of even rows.
 /// @param {Color} $row-selected-background [null] - The selected row background color.
+/// @param {Color} $row-selected-hover-background [null] - The selected row hover background color.
 /// @param {Color} $row-selected-text-color [null] - The selected row text color.
 /// @param {Color} $row-hover-background [null] - The hover row background color.
 /// @param {Color} $row-hover-text-color [null] - The hover row text color.
@@ -129,6 +130,7 @@
     $row-odd-text-color: null,
     $row-even-text-color: null,
     $row-selected-background: null,
+    $row-selected-hover-background: null,
     $row-selected-text-color: null,
     $row-hover-background: null,
     $row-hover-text-color: null,
@@ -192,6 +194,8 @@
     $row-ghost-background: null,
     $row-drag-color: null,
     $drop-area-border-radius: null,
+
+    $grid-border-color: null
 ) {
     $name: 'igx-grid';
     $grid-schema: map-get($schema, $name);
@@ -266,6 +270,10 @@
 
     @if not($row-selected-text-color) and $row-selected-background {
         $row-selected-text-color: $row-selected-background;
+    }
+
+    @if not($row-selected-text-color) and $row-selected-hover-background {
+        $row-selected-text-color: $row-selected-hover-background;
     }
 
     @if not($row-border-color) and $content-background {
@@ -408,6 +416,7 @@
         row-odd-text-color: $row-odd-text-color,
         row-even-text-color: $row-even-text-color,
         row-selected-background: $row-selected-background,
+        row-selected-hover-background: $row-selected-hover-background,
         row-selected-text-color: $row-selected-text-color,
         row-hover-background: $row-hover-background,
         row-hover-text-color: $row-hover-text-color,
@@ -474,7 +483,8 @@
         drag-shadow: $drag-shadow,
         row-ghost-background: $row-ghost-background,
         row-drag-color: $row-drag-color,
-        drop-area-border-radius: $drop-area-border-radius
+        drop-area-border-radius: $drop-area-border-radius,
+        grid-border-color: $grid-border-color,
     ));
 }
 
@@ -574,6 +584,11 @@
     $drag-icon-size: rem(24px);
     $grouping-padding-right: rem(12px);
 
+    $grid-border-width: map-get((
+        material: 0,
+        fluent: 1px
+    ), map-get($theme, variant));
+
     %grid-display {
         position: relative;
         display: grid;
@@ -583,6 +598,7 @@
         box-shadow: $grid-shadow;
         outline-style: none;
         z-index: 0;
+        border: $grid-border-width solid --var($theme, 'grid-border-color');
 
         %cbx-display {
             min-width: rem(20px);
@@ -933,7 +949,7 @@
         }
 
         &:hover {
-            background: --var($theme, 'row-selected-background');
+            background: --var($theme, 'row-selected-hover-background');
             color: --var($theme, 'row-selected-text-color');
         }
 

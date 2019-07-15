@@ -21,4 +21,4 @@ $_light-overlay: extend(
     )
 );
 
-$_fluent-overlay: extend($_light-overlay, ());
+$_fluent-overlay: extend($_light-overlay);

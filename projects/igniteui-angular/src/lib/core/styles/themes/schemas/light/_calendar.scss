@@ -145,7 +145,7 @@ $_light-calendar: extend(
     )
 );
 
-$_fluent-calendar: extend($_light-calendar, (
+$_fluent-calendar: extend($_light-calendar, $_fluent-shape-calendar, (
     date-current-text-color: #fff,
 
     date-current-bg-color: (
@@ -153,10 +153,12 @@ $_fluent-calendar: extend($_light-calendar, (
     ),
 
     date-selected-background: (
-        igx-color: ('primary', 100)
+        igx-color: ('primary', 100),
+        rgba: .5,
+        hexrgba: #fff
     ),
 
     date-selected-text-color: (
         igx-contrast-color: ('primary', 100)
     ),
-), $_fluent-shape-calendar);
+));

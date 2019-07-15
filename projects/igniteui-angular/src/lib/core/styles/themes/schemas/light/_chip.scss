@@ -96,7 +96,7 @@ $_light-chip: extend(
     )
 );
 
-$_fluent-chip: extend($_light-chip, (
+$_fluent-chip: extend($_light-chip, $_fluent-shape-chip, (
     background: transparent,
     hover-background: transparent,
     selected-background: transparent,
@@ -128,5 +128,5 @@ $_fluent-chip: extend($_light-chip, (
         igx-color: ('primary', 500)
     )
 
-), $_fluent-shape-chip);
+));
 

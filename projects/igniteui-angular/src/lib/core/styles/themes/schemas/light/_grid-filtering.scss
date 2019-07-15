@@ -57,4 +57,4 @@ $_light-grid-filtering: extend(
     )
 );
 
-$_fluent-grid-filtering: extend($_light-grid-filtering, ());
+$_fluent-grid-filtering: extend($_light-grid-filtering);

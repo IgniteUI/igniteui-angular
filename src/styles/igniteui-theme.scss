@@ -29,7 +29,7 @@
 
     @include scrollbar-love();
 
-    @include igx-fluent-theme($fluent-word-palette);
+    @include igx-fluent-theme($fluent-excel-palette);
 
     //$my-btn: igx-button-theme(
     //    $schema: $light-fluent-schema,

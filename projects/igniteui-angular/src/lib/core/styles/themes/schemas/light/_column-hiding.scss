@@ -21,4 +21,4 @@ $_light-column-hiding: extend(
     )
 );
 
-$_fluent-column-hiding: extend($_light-column-hiding, ());
+$_fluent-column-hiding: extend($_light-column-hiding);

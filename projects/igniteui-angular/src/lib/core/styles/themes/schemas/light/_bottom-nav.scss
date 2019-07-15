@@ -31,4 +31,4 @@ $_light-bottom-nav: extend(
     )
 );
 
-$_fluent-bottom-nav: extend($_light-bottom-nav, ());
+$_fluent-bottom-nav: extend($_light-bottom-nav, $_fluent-elevation-bottom-nav);

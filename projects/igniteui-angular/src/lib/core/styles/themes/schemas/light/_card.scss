@@ -60,7 +60,7 @@ $_light-card: extend(
     )
 );
 
-$_fluent-card: extend($_light-card, (
+$_fluent-card: extend($_light-card, $_fluent-elevation-card, (
     card-border-color: (
         igx-color: ('grays', 200)
     ),

@@ -55,7 +55,7 @@ $_light-progress-linear: extend(
     )
 );
 
-$_fluent-progress-linear: extend($_light-progress-linear, ());
+$_fluent-progress-linear: extend($_light-progress-linear);
 
 
 /// Generates a light progress-circular schema.

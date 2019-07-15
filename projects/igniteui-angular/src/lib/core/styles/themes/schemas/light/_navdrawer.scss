@@ -92,4 +92,4 @@ $_light-navdrawer: extend(
     )
 );
 
-$_fluent-navdrawer: extend($_light-navdrawer, ());
+$_fluent-navdrawer: extend($_light-navdrawer);

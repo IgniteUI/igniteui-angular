@@ -39,4 +39,4 @@ $_light-banner: extend(
     )
 );
 
-$_fluent-banner: extend($_light-banner, ());
+$_fluent-banner: extend($_light-banner);

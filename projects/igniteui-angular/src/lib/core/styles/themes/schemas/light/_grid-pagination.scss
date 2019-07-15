@@ -28,4 +28,13 @@ $_light-grid-pagination: extend(
     )
 );
 
-$_fluent-grid-pagination: extend($_light-grid-pagination, ());
+$_fluent-grid-pagination: extend($_light-grid-pagination, (
+    background-color: (
+        igx-color: 'surface'
+    ),
+
+    border-color: (
+        igx-color: ('grays', 100),
+        hexrgba: #fff
+    )
+));

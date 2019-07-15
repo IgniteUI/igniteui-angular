@@ -223,7 +223,7 @@ $_light-button: extend(
     )
 );
 
-$_fluent-button: extend($_light-button, (
+$_fluent-button: extend($_light-button, $_fluent-shape-button, $_fluent-elevation-button, (
     flat-text-color: (
         igx-color: ('grays', 900)
     ),
@@ -239,10 +239,6 @@ $_fluent-button: extend($_light-button, (
     flat-focus-icon-color:  (
         igx-color: ('primary', 500)
     ),
-
-    outlined-icon-color: currentColor,
-    outlined-hover-icon-color: currentColor,
-    outlined-focus-icon-color: currentColor,
 
     flat-hover-background: transparent,
 
@@ -285,6 +281,10 @@ $_fluent-button: extend($_light-button, (
     outlined-focus-text-color: (
         igx-color: ('grays', 900)
     ),
+
+    outlined-icon-color: currentColor,
+    outlined-hover-icon-color: currentColor,
+    outlined-focus-icon-color: currentColor,
 
     raised-background: (
         igx-color: ('primary', 500)
@@ -330,4 +330,4 @@ $_fluent-button: extend($_light-button, (
     icon-focus-background: (
         igx-color: ('grays', 100)
     ),
-), $_fluent-shape-button);
+));

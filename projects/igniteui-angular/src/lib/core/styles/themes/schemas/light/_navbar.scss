@@ -40,4 +40,4 @@ $_light-navbar: extend(
     )
 );
 
-$_fluent-navbar: extend($_light-navbar, ());
+$_fluent-navbar: extend($_light-navbar);

@@ -44,7 +44,7 @@ $_light-checkbox: extend(
     )
 );
 
-$_fluent-checkbox: extend($_light-checkbox, (
+$_fluent-checkbox: extend($_light-checkbox, $_fluent-shape-checkbox, (
     variant: fluent,
 
     fill-color: (
@@ -62,4 +62,4 @@ $_fluent-checkbox: extend($_light-checkbox, (
     disabled-color-label:(
         igx-color: ('grays', 400)
     )
-), $_fluent-shape-checkbox);
+));
