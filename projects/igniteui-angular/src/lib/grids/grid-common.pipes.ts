@@ -104,8 +104,10 @@ export class IgxGridPaginatorOptionsPipe implements PipeTransform {
     pure: true
 })
 export class IgxHasVisibleColumnsPipe implements PipeTransform {
-
     transform(values: any[], hasVisibleColumns) {
+        if (!(values && values.length)) {
+            return values;
+        }
         return hasVisibleColumns ? values : [];
     }
 

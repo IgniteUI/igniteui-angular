@@ -3956,7 +3956,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     set hasVisibleColumns(isHidden) {
         if (this._hasVisibleColumns === undefined || this._hasVisibleColumns === isHidden) {
             this._hasVisibleColumns = this.columnList.some(col => !col.hidden);
-            this._pipeTrigger++;
+            this.cdr.markForCheck();
         }
     }
     /**
