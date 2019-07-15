@@ -121,7 +121,7 @@ describe('IgxGrid - Grid Paging', () => {
         verifyGridPager(fix, 3, '1', '1 of 4', []);
     });
 
-    it('change paging settings UI', fakeAsync(() => {
+    fit('change paging settings UI', fakeAsync(() => {
         const fix = TestBed.createComponent(PagingComponent);
         fix.detectChanges();
 
@@ -136,7 +136,7 @@ describe('IgxGrid - Grid Paging', () => {
         select.click();
         fix.detectChanges();
         const selectList = fix.debugElement.query(By.css('.igx-drop-down__list--select'));
-        selectList.children[1].nativeElement.click();
+        selectList.children[2].nativeElement.click();
 
         tick();
         fix.detectChanges();

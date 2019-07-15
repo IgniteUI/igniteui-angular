@@ -20,15 +20,10 @@ describe('IgxPaginator with default settings', () => {
         fix.detectChanges();
         const paginator = fix.componentInstance.paginator;
 
-        // let totalRecords = paginator.totalRecords;
         let totalPages = paginator.totalPages;
         expect(totalPages).toBe(3);
 
-        const select = fix.debugElement.query(By.css('igx-select')).nativeElement;
-        select.click();
-        fix.detectChanges();
-        const selectList = fix.debugElement.query(By.css('.igx-drop-down__list--select'));
-        selectList.children[1].nativeElement.click();
+        paginator.perPage = 10;
 
         fix.detectChanges();
         totalPages = paginator.totalPages;
@@ -79,12 +74,9 @@ describe('IgxPaginator with default settings', () => {
     it('should disable all buttons in the paginate if perPage > total records', () => {
         const fix = TestBed.createComponent(DefaultPaginatorComponent);
         fix.detectChanges();
+        const paginator = fix.componentInstance.paginator;
 
-        const select = fix.debugElement.query(By.css('igx-select')).nativeElement;
-        select.click();
-        fix.detectChanges();
-        const selectList = fix.debugElement.query(By.css('.igx-drop-down__list--select'));
-        selectList.children[5].nativeElement.click();
+        paginator.perPage = 100;
         fix.detectChanges();
 
         const pagingButtons = fix.nativeElement.querySelectorAll('.igx-grid-paginator__pager > button');

@@ -25,18 +25,22 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     protected _perPage = 15;
 
     /**
-     * @hidden
+     * Sets the class of the IgxPaginatorComponent based
+     * on the provided displayDensity.
      */
-    @HostBinding('class')
-    public get classes(): string {
-        switch (this.displayDensity) {
-            case DisplayDensity.cosy:
-                return 'igx-grid-paginator--cosy';
-            case DisplayDensity.compact:
-                return 'igx-grid-paginator--compact';
-            default:
-                return 'igx-grid-paginator';
-        }
+    @HostBinding('class.igx-grid-paginator--cosy')
+    public get classCosy(): boolean {
+        return this.displayDensity === DisplayDensity.cosy
+    }
+
+    @HostBinding('class.igx-grid-paginator--compact')
+    public get classCompact(): boolean {
+        return this.displayDensity === DisplayDensity.compact;
+    }
+
+    @HostBinding('class.igx-grid-paginator')
+    public get classComfortable(): boolean {
+        return this.displayDensity === DisplayDensity.comfortable;
     }
 
     /**
@@ -172,7 +176,8 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     @Output()
     public pageChange = new EventEmitter<number>();
 
-    constructor(@Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+    constructor(@Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions
+    ) {
         super(_displayDensityOptions);
     }
 
