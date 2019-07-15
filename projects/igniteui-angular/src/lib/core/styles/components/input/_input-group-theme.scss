@@ -549,7 +549,7 @@
     %form-group-bundle-success--fluent {
         border-color: --var($theme, 'success-secondary-color');
     }
-    
+
     // Input
     %fluent-input-disabled {
         color: rgb(161, 159, 157)
@@ -1122,24 +1122,22 @@
     $input-text: map-get($categories, 'input-text');
     $input-text-props: igx-type-scale-category($type-scale, $input-text);
 
-    @include igx-scope('.igx-typography') {
-        %form-group-input {
-            @include igx-type-style($type-scale, $input-text) {
-                margin: 0;
-            }
+    %form-group-input {
+        @include igx-type-style($type-scale, $input-text) {
+            margin: 0;
         }
+    }
 
-        %form-group-helper {
-            @include igx-type-style($type-scale, $helper-text) {
-                margin: 0;
-            }
+    %form-group-helper {
+        @include igx-type-style($type-scale, $helper-text) {
+            margin: 0;
         }
+    }
 
-        %form-group-prefix,
-        %form-group-suffix {
-            @include igx-type-style($type-scale, $input-text) {
-                margin: 0;
-            }
+    %form-group-prefix,
+    %form-group-suffix {
+        @include igx-type-style($type-scale, $input-text) {
+            margin: 0;
         }
     }
 }

@@ -524,20 +524,18 @@
 @mixin igx-chip-typography($type-scale, $categories: (text: 'body-2')) {
     $text: map-get($categories, 'text');
 
-    @include igx-scope('.igx-typography') {
-        %igx-chip {
-            @include igx-type-style($type-scale, $text) {
-                font-weight: 600;
-            }
+    %igx-chip {
+        @include igx-type-style($type-scale, $text) {
+            font-weight: 600;
         }
+    }
 
-        %igx-chip--compact,
-        %igx-chip__ghost--compact {
-            %igx-chip__content {
-                @include igx-type-style($type-scale, $text) {
-                    font-size: rem(12px);
-                    font-weight: 600;
-                }
+    %igx-chip--compact,
+    %igx-chip__ghost--compact {
+        %igx-chip__content {
+            @include igx-type-style($type-scale, $text) {
+                font-size: rem(12px);
+                font-weight: 600;
             }
         }
     }

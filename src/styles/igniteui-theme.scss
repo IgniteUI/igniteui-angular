@@ -31,35 +31,9 @@
 
     @include igx-fluent-theme($fluent-excel-palette);
 
-    //$my-btn: igx-button-theme(
-    //    $schema: $light-fluent-schema,
-    //    $raised-background: #333,
-    //    $outlined-background: green
-    //);
-    //
-    //@include igx-button($my-btn);
-
     .nav-header {
         @include nav-logo('../assets/images/rsrcs/igniteui-logo-light-bg', $igx-background-color);
     }
-
-    //$fluent-button: igx-type-style(
-    //    $font-size: rem(14px),
-    //    $font-weight: 600,
-    //    $letter-spacing: 0,
-    //    $line-height: rem(16px),
-    //    $text-transform: capitalize
-    //);
-    //
-    //$fluent-type-scale: igx-type-scale(
-    //    $button: $fluent-button
-    //);
-    //
-    //@include igx-typography(
-    //    $font-family: "'Segoe UI',SegoeUI,Helvetica Neue,Helvetica,Arial,sans-serif",
-    //    $type-scale: $fluent-type-scale,
-    //    $base-color: #323130
-    //);
 }
 
 .fluent-word-theme {

@@ -303,12 +303,10 @@
 ) {
     $label: map-get($categories, 'label');
 
-    @include igx-scope('.igx-typography') {
-        %radio-label {
-            @include igx-type-style($type-scale, $label) {
-                margin-top: 0;
-                margin-bottom: 0;
-            }
+    %radio-label {
+        @include igx-type-style($type-scale, $label) {
+            margin-top: 0;
+            margin-bottom: 0;
         }
     }
 }

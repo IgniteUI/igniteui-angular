@@ -147,17 +147,15 @@
     $title: map-get($categories, 'title');
     $content: map-get($categories, 'content');
 
-    @include igx-scope('.igx-typography') {
-        %igx-dialog-title {
-            @include igx-type-style($type-scale, $title) {
-                margin: 0;
-            }
+    %igx-dialog-title {
+        @include igx-type-style($type-scale, $title) {
+            margin: 0;
         }
+    }
 
-        %igx-dialog-content {
-            @include igx-type-style($type-scale, $content) {
-                margin: 0;
-            }
+    %igx-dialog-content {
+        @include igx-type-style($type-scale, $content) {
+            margin: 0;
         }
     }
 }

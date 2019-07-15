@@ -290,20 +290,18 @@
     $header-hour: map-get($categories, 'header-hour');
     $content: map-get($categories, 'content');
 
-    @include igx-scope('.igx-typography') {
-        %time-picker__header-ampm {
-            @include igx-type-style($type-scale, $time-period);
-        }
+    %time-picker__header-ampm {
+        @include igx-type-style($type-scale, $time-period);
+    }
 
-        %time-picker__header-hour {
-            @include igx-type-style($type-scale, $header-hour);
-        }
+    %time-picker__header-hour {
+        @include igx-type-style($type-scale, $header-hour);
+    }
 
-        %time-picker__column {
-            @include igx-type-style($type-scale, $content) {
-                margin-top: 0;
-                margin-bottom: 0;
-            }
+    %time-picker__column {
+        @include igx-type-style($type-scale, $content) {
+            margin-top: 0;
+            margin-bottom: 0;
         }
     }
 }

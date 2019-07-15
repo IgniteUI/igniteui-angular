@@ -676,11 +676,9 @@
 @mixin igx-button-typography($type-scale, $categories: (text: 'button')) {
     $text: map-get($categories, 'text');
 
-    @include igx-scope('.igx-typography') {
-        %igx-button-display {
-            @include igx-type-style($type-scale, $text) {
-                text-align: center;
-            }
+    %igx-button-display {
+        @include igx-type-style($type-scale, $text) {
+            text-align: center;
         }
     }
 }

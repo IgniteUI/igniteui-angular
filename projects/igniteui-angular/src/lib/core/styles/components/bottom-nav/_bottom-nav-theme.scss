@@ -193,11 +193,9 @@
 @mixin igx-bottom-nav-typography($type-scale, $categories: (label: 'caption')) {
     $label: map-get($categories, 'label');
 
-    @include igx-scope('.igx-typography') {
-        %igx-tab-label {
-            @include igx-type-style($type-scale, $label) {
-                margin: 0
-            }
+    %igx-tab-label {
+        @include igx-type-style($type-scale, $label) {
+            margin: 0
         }
     }
 }
