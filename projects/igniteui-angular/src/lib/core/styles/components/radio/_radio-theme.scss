@@ -86,7 +86,7 @@
         fluent: none
     ), map-get($theme, variant));
 
-    $border-style: $border-width solid;
+    $border-style: rem($border-width) solid;
     $border-radius: 50% 50%;
 
     $transition: all .2s ease-in;

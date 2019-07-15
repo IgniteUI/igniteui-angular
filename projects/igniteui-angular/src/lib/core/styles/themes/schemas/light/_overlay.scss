@@ -12,10 +12,13 @@
 /// @property {map} background-color [igx-color: ('grays', 500)] - The background color used for modal overlays.
 ///
 /// @see $default-palette
-$_light-overlay: extend((
-    background-color: (
-        igx-color: ('grays', 500)
+$_light-overlay: extend(
+    $_default-shape-overlay,
+    (
+        background-color: (
+            igx-color: ('grays', 500)
+        )
     )
-), $_default-shape-overlay);
+);
 
-$_fluent-overlay: extend((), $_light-overlay);
+$_fluent-overlay: extend($_light-overlay, ());

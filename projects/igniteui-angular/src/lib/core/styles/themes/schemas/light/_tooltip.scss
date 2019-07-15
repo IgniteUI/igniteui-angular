@@ -15,21 +15,24 @@
 ///
 /// @see $default-palette
 
-$_light-tooltip: extend((
-    background: (
-        igx-color: ('grays', 700),
-        hexrgba: (),
-        rgba: .9
-    ),
+$_light-tooltip: extend(
+    $_default-shape-tooltip,
+    (
+        background: (
+            igx-color: ('grays', 700),
+            hexrgba: (),
+            rgba: .9
+        ),
 
-    text-color: (
-        igx-color: ('grays', 700),
-        hexrgba: (),
-        rgba: .9,
-        text-contrast: ()
-    ),
+        text-color: (
+            igx-color: ('grays', 700),
+            hexrgba: (),
+            rgba: .9,
+            text-contrast: ()
+        ),
 
-    roundness: rem(4px)
-), $_default-shape-tooltip);
+        roundness: rem(4px)
+    )
+);
 
-$_fluent-tooltip: extend((), $_light-tooltip);
+$_fluent-tooltip: extend($_light-tooltip, ());

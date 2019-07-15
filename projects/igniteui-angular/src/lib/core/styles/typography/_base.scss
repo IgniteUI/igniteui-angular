@@ -66,19 +66,19 @@
 /// @requires igx-type-style
 /// @returns {Map} - A map of all defined type scales.
 @function igx-type-scale(
-    $h1: null,
-    $h2: null,
-    $h3: null,
-    $h4: null,
-    $h5: null,
-    $h6: null,
-    $subtitle-1: null,
-    $subtitle-2: null,
-    $body-1: null,
-    $body-2: null,
-    $button: null,
-    $caption: null,
-    $overline: null
+    $h1: (),
+    $h2: (),
+    $h3: (),
+    $h4: (),
+    $h5: (),
+    $h6: (),
+    $subtitle-1: (),
+    $subtitle-2: (),
+    $body-1: (),
+    $body-2: (),
+    $button: (),
+    $caption: (),
+    $overline: ()
 ) {
     $default-scale: (
         h1: igx-type-style(

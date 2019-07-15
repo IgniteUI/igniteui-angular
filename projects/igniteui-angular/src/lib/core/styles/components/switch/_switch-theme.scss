@@ -208,8 +208,8 @@
     %switch-composite {
         display: flex;
         align-items: center;
-        width: $switch-width;
-        height: $switch-height;
+        width: rem($switch-width);
+        height: rem($switch-height);
         border: 1px solid --var($theme, 'border-color');
         border-radius: --var($theme, 'border-radius-track');
         background: --var($theme, 'track-off-color');
@@ -241,14 +241,14 @@
     %switch-composite-thumb {
         position: relative;
         display: block;
-        width: $switch-thumb-width;
+        width: rem($switch-thumb-width);
         height: $switch-thumb-height;
-        min-width: $switch-thumb-width;
+        min-width: rem($switch-thumb-width);
         border-radius: --var($theme, 'border-radius-thumb');
         background: --var($theme, 'thumb-off-color');
         box-shadow: --var($theme, 'resting-shadow');
         transition: $input-transition;
-        transform: translateX($switch-off-offset);
+        transform: translateX(rem($switch-off-offset));
 
         &:hover {
             box-shadow: --var($theme, 'hover-shadow');
@@ -256,11 +256,11 @@
     }
 
     %switch-composite-thumb--x {
-        transform: translateX(#{$switch-width - $switch-thumb-width - $switch-on-offset});
+        transform: translateX(#{rem($switch-width) - rem($switch-thumb-width) - rem($switch-on-offset)});
         background: --var($theme, 'thumb-on-color');
 
         [dir='rtl'] & {
-            transform: translateX(-#{$switch-width - $switch-thumb-width - $switch-on-offset});
+            transform: translateX(-#{rem($switch-width) - rem($switch-thumb-width) - rem($switch-on-offset)});
         }
     }
 

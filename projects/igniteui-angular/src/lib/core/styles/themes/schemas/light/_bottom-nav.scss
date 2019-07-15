@@ -1,4 +1,6 @@
 @import '../shape/bottom-nav';
+@import '../elevation/bottom-nav';
+
 ////
 /// @group schemas
 /// @access private
@@ -13,18 +15,20 @@
 /// @prop {number} elevation [8] - The elevation level of the bar.
 /// @see $default-palette
 
-$_light-bottom-nav: extend((
-    background: #fff,
+$_light-bottom-nav: extend(
+    $_default-shape-bottom-nav,
+    $_default-elevation-bottom-nav,
+    (
+        background: #fff,
 
-    idle-item-color: (
-        igx-color: ('grays', 700)
-    ),
+        idle-item-color: (
+            igx-color: ('grays', 700)
+        ),
 
-    active-item-color: (
-        igx-color: ('primary', 500)
-    ),
+        active-item-color: (
+            igx-color: ('primary', 500)
+        ),
+    )
+);
 
-    elevation: 8
-), $_default-shape-bottom-nav);
-
-$_fluent-bottom-nav: extend((), $_light-bottom-nav);
+$_fluent-bottom-nav: extend($_light-bottom-nav, ());

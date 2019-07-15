@@ -1,4 +1,5 @@
 @import '../shape/navbar';
+@import '../elevation/navbar';
 
 ////
 /// @group schemas
@@ -17,24 +18,26 @@
 ///
 /// @see $default-palette
 
-$_light-navbar: extend((
-    background: (
-        igx-color: ('primary', 500)
-    ),
+$_light-navbar: extend(
+    $_default-shape-navbar,
+    $_default-elevation-navbar,
+    (
+        background: (
+            igx-color: ('primary', 500)
+        ),
 
-    text-color: (
-        igx-contrast-color: ('primary', 500)
-    ),
+        text-color: (
+            igx-contrast-color: ('primary', 500)
+        ),
 
-    idle-icon-color: (
-        igx-contrast-color: ('primary', 500)
-    ),
+        idle-icon-color: (
+            igx-contrast-color: ('primary', 500)
+        ),
 
-    hover-icon-color: (
-        igx-contrast-color: ('primary', 500)
-    ),
+        hover-icon-color: (
+            igx-contrast-color: ('primary', 500)
+        ),
+    )
+);
 
-    elevation: 4
-), $_default-shape-navbar);
-
-$_fluent-navbar: extend((), $_light-navbar);
+$_fluent-navbar: extend($_light-navbar, ());

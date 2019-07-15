@@ -19,53 +19,63 @@
 ///
 /// @see $default-palette
 
-$_light-slider: extend((
-    variant: material,
+$_light-slider: extend(
+    $_default-shape-slider,
+    (
+        variant: 'material',
 
-    track-color: (
-        igx-color: ('secondary', 500)
-    ),
+        track-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    thumb-color: (
-        igx-color: ('secondary', 500)
-    ),
+        thumb-color: (
+            igx-color: ('secondary', 500)
+        ),
 
+        thumb-border-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    label-background-color: (
-        igx-color: ('secondary', 500),
-        hexrgba: ()
-    ),
+        label-background-color: (
+            igx-color: ('secondary', 500),
+            hexrgba: ()
+        ),
 
-    label-text-color: (
-        igx-contrast-color: ('secondary', 500)
-    ),
+        label-text-color: (
+            igx-contrast-color: ('secondary', 500)
+        ),
 
-    disabled-thumb-color: (
-        igx-color: ('grays', 400),
-        hexrgba: ()
-    ),
+        disabled-thumb-color: (
+            igx-color: ('grays', 400),
+            hexrgba: ()
+        ),
 
-    disabled-base-track-color: (
-        igx-color: ('grays', 400)
-    ),
+        disabled-base-track-color: (
+            igx-color: ('grays', 400)
+        ),
 
-    base-track-color: (
-        igx-color: ('secondary', 500),
-        rgba: .24
-    ),
+        thumb-disabled-border-color: (
+            igx-color: ('grays', 400)
+        ),
 
-    base-track-hover-color:  (
-        igx-color: ('secondary', 500),
-        rgba: .24
-    ),
+        base-track-color: (
+            igx-color: ('secondary', 500),
+            rgba: .24
+        ),
 
-    track-hover-color: (
-        igx-color: ('secondary', 500)
+        base-track-hover-color:  (
+            igx-color: ('secondary', 500),
+            rgba: .24
+        ),
+
+        track-hover-color: (
+            igx-color: ('secondary', 500)
+        )
     )
-), $_default-shape-slider);
+);
 
 $_fluent-slider: extend($_light-slider, (
-    variant: fluent,
+    variant: 'fluent',
 
     track-color: (
         igx-color: ('grays', 700)
@@ -97,3 +107,4 @@ $_fluent-slider: extend($_light-slider, (
         igx-color: ('grays', 700)
     ),
 ));
+

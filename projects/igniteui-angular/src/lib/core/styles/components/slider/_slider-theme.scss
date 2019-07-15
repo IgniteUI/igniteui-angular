@@ -109,8 +109,8 @@
     ), map-get($theme, variant));
 
     $dot-size: map-get((
-        material: rem(12px),
-        fluent: rem(16px)
+        material: 12px,
+        fluent: 16px
     ), map-get($theme, variant));
 
     %igx-slider-display {
@@ -280,10 +280,10 @@
         &::before {
             position: absolute;
             content: '';
-            width: $dot-size;
-            height: $dot-size;
-            left: #{rem($slider-thumb-radius) - ($dot-size / 2)};
-            top: #{rem($slider-thumb-radius) - ($dot-size / 2)};
+            width: rem($dot-size);
+            height: rem($dot-size);
+            left: #{rem($slider-thumb-radius) - (rem($dot-size) / 2)};
+            top: #{rem($slider-thumb-radius) - (rem($dot-size) / 2)};
             background: --var($theme, 'thumb-color');
             border: $thumb-border-width solid --var($theme, 'thumb-border-color');
             transform: rotate(45deg);

@@ -1,4 +1,5 @@
 @import '../shape/input-group';
+@import '../elevation/input-group';
 
 ////
 /// @group schemas
@@ -49,109 +50,107 @@
 /// @see $default-palette
 
 
-$_light-input-group: extend((
-    idle-text-color: (
-        igx-color: ('grays', 600)
-    ),
+$_light-input-group: extend(
+    $_default-shape-input-group,
+    $_default-elevation-input-group,
+    (
+        idle-text-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    filled-text-color: (
-        igx-color: ('grays', 900)
-    ),
+        filled-text-color: (
+            igx-color: ('grays', 900)
+        ),
 
-    focused-text-color: (
-        igx-color: ('grays', 900)
-    ),
+        focused-text-color: (
+            igx-color: ('grays', 900)
+        ),
 
-    disabled-text-color: (
-        igx-color: ('grays', 500)
-    ),
+        disabled-text-color: (
+            igx-color: ('grays', 500)
+        ),
 
-    idle-secondary-color: (
-        igx-color: ('grays', 600)
-    ),
+        idle-secondary-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    filled-secondary-color: (
-        igx-color: ('grays', 600)
-    ),
+        filled-secondary-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    focused-secondary-color: (
-        igx-color: ('primary', 500)
-    ),
+        focused-secondary-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    idle-bottom-line-color: (
-        igx-color: ('grays', 600)
-    ),
+        idle-bottom-line-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    hover-bottom-line-color: (
-        igx-color: ('grays', 900)
-    ),
+        hover-bottom-line-color: (
+            igx-color: ('grays', 900)
+        ),
 
-    focused-bottom-line-color: (
-        igx-color: ('primary', 500)
-    ),
+        focused-bottom-line-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    interim-bottom-line-color: (
-        igx-color: ('primary', 500),
-        rgba: .12
-    ),
+        interim-bottom-line-color: (
+            igx-color: ('primary', 500),
+            rgba: .12
+        ),
 
-    disabled-bottom-line-color: (
-        igx-color: ('grays', 500)
-    ),
+        disabled-bottom-line-color: (
+            igx-color: ('grays', 500)
+        ),
 
-    disabled-border-color: (
-        igx-color: ('grays', 500),
-        rgba: .06
-    ),
+        disabled-border-color: (
+            igx-color: ('grays', 500),
+            rgba: .06
+        ),
 
-    box-background: (
-        igx-color: ('grays', 200)
-    ),
+        box-background: (
+            igx-color: ('grays', 200)
+        ),
 
-    box-disabled-background: (
-        igx-color: ('grays', 100)
-    ),
+        box-disabled-background: (
+            igx-color: ('grays', 100)
+        ),
 
-    border-background: transparent,
+        border-background: transparent,
 
-    border-disabled-background: (
-        igx-color: ('grays', 100)
-    ),
+        border-disabled-background: (
+            igx-color: ('grays', 100)
+        ),
 
-    search-background: #fff,
+        search-background: #fff,
 
-    search-disabled-background: (
-        igx-color: ('grays', 100)
-    ),
+        search-disabled-background: (
+            igx-color: ('grays', 100)
+        ),
 
-    search-resting-elevation: 1,
+        success-secondary-color: (
+            igx-color: ('success')
+        ),
 
-    search-hover-elevation: 2,
+        warning-secondary-color: (
+            igx-color: ('warn')
+        ),
 
-    search-disabled-elevation: 0,
+        error-secondary-color: (
+            igx-color: ('error')
+        ),
 
-    success-secondary-color: (
-        igx-color: ('success')
-    ),
+        placeholder-color: (
+            igx-color: ('grays', 500)
+        ),
 
-    warning-secondary-color: (
-        igx-color: ('warn')
-    ),
-
-    error-secondary-color: (
-        igx-color: ('error')
-    ),
-
-    placeholder-color: (
-        igx-color: ('grays', 500)
-    ),
-
-    disabled-placeholder-color: (
-        igx-color: ('grays', 400)
+        disabled-placeholder-color: (
+            igx-color: ('grays', 400)
+        )
     )
-), $_default-shape-input-group);
+);
 
-$_fluent-input-group: extend-many($_light-input-group, (
+$_fluent-input-group: extend($_light-input-group, (
     idle-bottom-line-color: (
         igx-color: ('grays', 500)
     ),

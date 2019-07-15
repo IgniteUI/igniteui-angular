@@ -12,17 +12,20 @@
 /// @prop {Map} background-color [igx-color: ('grays', 100), hexrgba: #fff] - The background color of the paging panel.
 /// @prop {Map} border-color [igx-color: ('grays', 400)] - The border color of the paging panel.
 /// @see $default-palette
-$_light-grid-pagination: extend((
-    text-color: currentColor,
+$_light-grid-pagination: extend(
+    $_default-shape-grid-pagination,
+    (
+        text-color: currentColor,
 
-    background-color: (
-        igx-color: ('grays', 100),
-        hexrgba: #fff
-    ),
+        background-color: (
+            igx-color: ('grays', 100),
+            hexrgba: #fff
+        ),
 
-    border-color: (
-        igx-color: ('grays', 400)
+        border-color: (
+            igx-color: ('grays', 400)
+        )
     )
-), $_default-shape-grid-pagination);
+);
 
-$_fluent-grid-pagination: extend((), $_light-grid-pagination);
+$_fluent-grid-pagination: extend($_light-grid-pagination, ());
