@@ -43,7 +43,7 @@ const homeKeyEvent = new KeyboardEvent('keydown', { key: 'Home' });
 const tabKeyEvent = new KeyboardEvent('keydown', { key: 'Tab' });
 const shiftTabKeysEvent = new KeyboardEvent('keydown', { 'key': 'Tab', shiftKey: true });
 
-fdescribe('igxSelect', () => {
+describe('igxSelect', () => {
     let fixture;
     let select: IgxSelectComponent;
     let inputElement: DebugElement;
@@ -2115,7 +2115,7 @@ fdescribe('igxSelect', () => {
                         toEqual(selectedItemRect.left + defaultItemLeftPadding);
                 }));
         });
-        fdescribe('Document bigger than the visible viewport tests: ', () => {
+        describe('Document bigger than the visible viewport tests: ', () => {
             beforeEach(fakeAsync(() => {
                 fixture = TestBed.createComponent(IgxSelectMiddleComponent);
                 select = fixture.componentInstance.select;
@@ -2124,7 +2124,7 @@ fdescribe('igxSelect', () => {
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
                 selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
             }));
-            fit('should correctly reposition the items container when perform horizontal scroll', fakeAsync(() => {
+            it('should correctly reposition the items container when perform horizontal scroll', fakeAsync(() => {
                 hasScroll = false;
                 visibleItems = 3;
                 selectedItemIndex = 1;
