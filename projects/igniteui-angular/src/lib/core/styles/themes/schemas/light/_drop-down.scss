@@ -31,74 +31,74 @@ $_light-drop-down: extend(
     $_default-shape-drop-down,
     $_default-elevation-drop-down,
     (
-    background-color: (
-        igx-color: 'surface'
-    ),
+        background-color: (
+            igx-color: 'surface'
+        ),
 
-    header-text-color: (
-        igx-color: ('secondary', 500)
-    ),
+        header-text-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    item-text-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .74
-    ),
+        item-text-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .74
+        ),
 
-    hover-item-text-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .74
-    ),
+        hover-item-text-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .74
+        ),
 
-    hover-item-background: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .04
-    ),
+        hover-item-background: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .04
+        ),
 
-    focused-item-background: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .04
-    ),
+        focused-item-background: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .04
+        ),
 
-    focused-item-text-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .74
-    ),
+        focused-item-text-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .74
+        ),
 
-    selected-item-background: (
-        igx-color: ('secondary', 100),
-    ),
+        selected-item-background: (
+            igx-color: ('secondary', 100),
+        ),
 
-    selected-item-text-color: (
-        igx-contrast-color: ('secondary', 100)
-    ),
+        selected-item-text-color: (
+            igx-contrast-color: ('secondary', 100)
+        ),
 
-    selected-hover-item-background: (
-        igx-color: ('secondary', 200),
-    ),
+        selected-hover-item-background: (
+            igx-color: ('secondary', 200),
+        ),
 
-    selected-hover-item-text-color: (
-        igx-contrast-color: ('secondary', 200)
-    ),
+        selected-hover-item-text-color: (
+            igx-contrast-color: ('secondary', 200)
+        ),
 
-    selected-focus-item-background: (
-        igx-color: ('secondary', 200),
-    ),
+        selected-focus-item-background: (
+            igx-color: ('secondary', 200),
+        ),
 
-    selected-focus-item-text-color: (
-        igx-contrast-color: ('secondary', 200)
-    ),
+        selected-focus-item-text-color: (
+            igx-contrast-color: ('secondary', 200)
+        ),
 
-    disabled-item-background: transparent,
+        disabled-item-background: transparent,
 
-    disabled-item-text-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .38
-    ),
+        disabled-item-text-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .38
+        ),
     )
 );
