@@ -8,7 +8,8 @@ import {
     EventEmitter,
     OnInit,
     OnDestroy,
-    TemplateRef} from '@angular/core';
+    TemplateRef
+} from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { SliderHandle } from '../slider.common';
 import { Subject } from 'rxjs';
@@ -112,7 +113,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
         return this._destroy$;
     }
 
-    constructor (private _elementRef: ElementRef) { }
+    constructor(private _elementRef: ElementRef) { }
 
     /**
      * @hidden

@@ -13,8 +13,11 @@
 ///
 /// @see $default-palette
 
-$_light-ripple: extend((
-    color: (
-        igx-color: ('grays', 800)
+$_light-ripple: extend(
+    $_default-shape-ripple,
+    (
+        color: (
+            igx-color: ('grays', 800)
+        )
     )
-), $_default-shape-ripple);
+);
