@@ -30,7 +30,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      */
     @HostBinding('class.igx-grid-paginator--cosy')
     public get classCosy(): boolean {
-        return this.displayDensity === DisplayDensity.cosy
+        return this.displayDensity === DisplayDensity.cosy;
     }
 
     @HostBinding('class.igx-grid-paginator--compact')
