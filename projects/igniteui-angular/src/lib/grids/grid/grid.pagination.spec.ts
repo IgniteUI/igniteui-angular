@@ -121,7 +121,7 @@ describe('IgxGrid - Grid Paging', () => {
         verifyGridPager(fix, 3, '1', '1 of 4', []);
     });
 
-    fit('change paging settings UI', fakeAsync(() => {
+    it('change paging settings UI', fakeAsync(() => {
         const fix = TestBed.createComponent(PagingComponent);
         fix.detectChanges();
 
