@@ -599,7 +599,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
      * @memberof IgxTreeGridComponent
      */
     public addRow(data: any, parentRowID?: any) {
-        if (parentRowID) {
+        if (parentRowID !== undefined && parentRowID !== null) {
             super.endEdit(true);
 
             const state = this.transactions.getState(parentRowID);
@@ -729,7 +729,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         };
     }
 
-    getSelectedData(): any[] {
+    /**
+     * @inheritdoc
+     */
+    getSelectedData(formatters = false, headers = false): any[] {
         const source = [];
 
         const process = (record) => {
@@ -741,7 +744,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         };
 
         this.verticalScrollContainer.igxForOf.forEach(process);
-        return this.extractDataFromSelection(source);
+        return this.extractDataFromSelection(source, formatters, headers);
     }
 
     /**
