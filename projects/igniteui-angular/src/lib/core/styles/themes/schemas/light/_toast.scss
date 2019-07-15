@@ -15,12 +15,15 @@
 ///
 /// @see $default-palette
 
-$_light-toast: extend((
-    background: (
-        igx-color: ('grays', 600)
-    ),
+$_light-toast: extend(
+    $_default-shape-toast,
+    (
+        background: (
+            igx-color: ('grays', 600)
+        ),
 
-    text-color: (
-        igx-contrast-color: ('grays', 600)
+        text-color: (
+            igx-contrast-color: ('grays', 600)
+        )
     )
-), $_default-shape-toast);
+);

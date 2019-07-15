@@ -1640,6 +1640,7 @@ describe('IgxGrid Component Tests', () => {
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
+                    IgxGridTestComponent,
                     IgxBasicGridRowEditingComponent,
                     IgxGridRowEditingComponent,
                     IgxGridRowEditingWithoutEditableColumnsComponent,
@@ -1899,6 +1900,7 @@ describe('IgxGrid Component Tests', () => {
 
                 cell.inEditMode = true;
                 cell.update('IG');
+                fix.detectChanges();
                 cell.inEditMode = false;
 
                 await wait(DEBOUNCETIME);
@@ -3495,19 +3497,61 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Column editable property', () => {
-            it('Default column editable value is true, when row editing is enabled', fakeAsync(() => {
+            it('Default column editable value is correct, when row editing is enabled', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingWithoutEditableColumnsComponent);
                 fixture.detectChanges();
-                tick(16);
+                tick();
 
                 const grid = fixture.componentInstance.grid;
 
-                const columns: IgxColumnComponent[] = grid.columnList.toArray();
-                expect(columns[0].editable).toBeFalsy();
-                expect(columns[1].editable).toBeFalsy();
-                expect(columns[2].editable).toBeTruthy();
-                expect(columns[3].editable).toBeTruthy();
-                expect(columns[4].editable).toBeFalsy();
+                let columns: IgxColumnComponent[] = grid.columnList.toArray();
+                expect(columns[0].editable).toBeTruthy(); // column.editable not set
+                expect(columns[1].editable).toBeFalsy(); // column.editable not set. Primary column
+                expect(columns[2].editable).toBeTruthy(); // column.editable set to true
+                expect(columns[3].editable).toBeTruthy(); // column.editable not set
+                expect(columns[4].editable).toBeFalsy();  // column.editable set to false
+
+                grid.rowEditable = false;
+                columns = grid.columnList.toArray();
+                expect(columns[0].editable).toBeFalsy(); // column.editable not set
+                expect(columns[1].editable).toBeFalsy(); // column.editable not set. Primary column
+                expect(columns[2].editable).toBeTruthy(); // column.editable set to true
+                expect(columns[3].editable).toBeFalsy(); // column.editable not set
+                expect(columns[4].editable).toBeFalsy();  // column.editable set to false
+
+                grid.rowEditable = true;
+                columns = grid.columnList.toArray();
+                expect(columns[0].editable).toBeTruthy(); // column.editable not set
+                expect(columns[1].editable).toBeFalsy(); // column.editable not set. Primary column
+                expect(columns[2].editable).toBeTruthy(); // column.editable set to true
+                expect(columns[3].editable).toBeTruthy(); // column.editable not set
+                expect(columns[4].editable).toBeFalsy();  // column.editable set to false
+            }));
+
+            it(`Default column editable value is correct, when row edititng is disabled`, fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridTestComponent);
+                fixture.componentInstance.columns.push({ field: 'ID', header: 'ID', dataType: 'number', width: null, hasSummary: false });
+                fixture.componentInstance.data = [
+                    { ID: 0, index: 0, value: 0},
+                    { ID: 1, index: 1, value: 1},
+                    { ID: 2, index: 2, value: 2},
+                ];
+                const grid = fixture.componentInstance.grid;
+                grid.primaryKey = 'ID';
+
+                fixture.detectChanges();
+                tick();
+
+                let columns: IgxColumnComponent[] = grid.columnList.toArray();
+                expect(columns[0].editable).toBeFalsy(); // column.editable not set
+                expect(columns[1].editable).toBeFalsy(); // column.editable not set
+                expect(columns[2].editable).toBeFalsy(); // column.editable not set. Primary column
+
+                grid.rowEditable = true;
+                columns = grid.columnList.toArray();
+                expect(columns[0].editable).toBeTruthy(); // column.editable not set
+                expect(columns[1].editable).toBeTruthy(); // column.editable not set
+                expect(columns[2].editable).toBeFalsy();  // column.editable not set. Primary column
             }));
         });
 

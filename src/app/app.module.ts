@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import {
     IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
-    IgxGridTransaction, IgxTransactionService, IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule} from 'igniteui-angular';
+    IgxGridTransaction, IgxTransactionService, IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule, IgxIconService} from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 import { IgxDragDropModule } from '../../projects/igniteui-angular/src/lib/directives/drag-drop/drag-drop.directive';
@@ -105,6 +105,7 @@ import { TreeGridLoadOnDemandSampleComponent } from './tree-grid-load-on-demand/
 import { GridFilterTemplateSampleComponent } from './grid-filter-template/grid-filter-template.sample';
 import { GridMRLConfigSampleComponent } from './grid-multi-row-layout-config/grid-mrl-config.sample';
 import { GridMRLCustomNavigationSampleComponent } from './grid-mrl-custom-navigation/grid-mrl-custom-navigation';
+import { GridClipboardSampleComponent } from './grid-clipboard/grid-clipboard.sample';
 
 
 
@@ -202,7 +203,8 @@ const components = [
     CalendarViewsSampleComponent,
     GridSearchBoxComponent,
     GridSearchComponent,
-    GridFilterTemplateSampleComponent
+    GridFilterTemplateSampleComponent,
+    GridClipboardSampleComponent
 ];
 
 @NgModule({
@@ -228,6 +230,7 @@ const components = [
         LocalService,
         RemoteService,
         IgxExcelExporterService,
+        IgxIconService,
         IgxCsvExporterService,
         IgxOverlayService,
         { provide: DisplayDensityToken, useFactory: () => ({ displayDensity: DisplayDensity.comfortable }) }

@@ -147,7 +147,9 @@
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        outline: none;
+        width: $slider-thumb-width;
+        height: $slider-thumb-height;
+        outline-style: none;
         top: -#{rem($slider-thumb-radius)};
         margin-left: -#{rem($slider-thumb-radius)};
 
@@ -217,6 +219,7 @@
         position: relative;
         left: 0;
         padding: rem(20px);
+        pointer-events: none;
 
         &:hover::after {
             opacity: .12;
