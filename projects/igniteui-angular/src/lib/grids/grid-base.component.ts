@@ -4517,7 +4517,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         collection.forEach((column: IgxColumnComponent) => {
             column.grid = this;
             column.defaultWidth = this.columnWidth;
-            this.setColumnEditState(column);
 
             if (cb) {
                 cb(column);
@@ -4530,14 +4529,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             collection.forEach((column: IgxColumnComponent) => {
                 column.populateVisibleIndexes();
             });
-        }
-    }
-
-    private setColumnEditState(column: IgxColumnComponent) {
-        // When rowEditable is true, then all columns, with defined field, excluding priamaryKey, are set to editable by default.
-        if (this.rowEditable && column.editable === null &&
-            column.field && column.field !== this.primaryKey) {
-            column.editable = this.rowEditable;
         }
     }
 
