@@ -1,4 +1,5 @@
 @import '../shape/drop-down';
+@import '../elevation/drop-down';
 
 ////
 /// @group schemas
@@ -26,76 +27,78 @@
 /// @prop {Number} elevation [8] - The elevation level, between 0-24, to be used for the badge shadow.
 /// @prop {Number} border-radius [.2] - The border radius fraction, between 0-1 to be used for drop-down component.
 /// @see $default-palette
-$_light-drop-down: extend((
-    background-color: (
-        igx-color: 'surface'
-    ),
+$_light-drop-down: extend(
+    $_default-shape-drop-down,
+    $_default-elevation-drop-down,
+    (
+        background-color: (
+            igx-color: 'surface'
+        ),
 
-    header-text-color: (
-        igx-color: ('secondary', 500)
-    ),
+        header-text-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    item-text-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .74
-    ),
+        item-text-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .74
+        ),
 
-    hover-item-text-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .74
-    ),
+        hover-item-text-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .74
+        ),
 
-    hover-item-background: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .04
-    ),
+        hover-item-background: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .04
+        ),
 
-    focused-item-background: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .04
-    ),
+        focused-item-background: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .04
+        ),
 
-    focused-item-text-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .74
-    ),
+        focused-item-text-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .74
+        ),
 
-    selected-item-background: (
-        igx-color: ('secondary', 500)
-    ),
+        selected-item-background: (
+            igx-color: ('secondary', 500)
+        ),
 
-    selected-item-text-color: (
-        igx-contrast-color: ('secondary', 500)
-    ),
+        selected-item-text-color: (
+            igx-contrast-color: ('secondary', 500)
+        ),
 
-    selected-hover-item-background: (
-        igx-color: ('secondary', 300)
-    ),
+        selected-hover-item-background: (
+            igx-color: ('secondary', 300)
+        ),
 
-    selected-hover-item-text-color: (
-        igx-contrast-color: ('secondary', 300)
-    ),
+        selected-hover-item-text-color: (
+            igx-contrast-color: ('secondary', 300)
+        ),
 
-    selected-focus-item-background: (
-        igx-color: ('secondary', 300)
-    ),
+        selected-focus-item-background: (
+            igx-color: ('secondary', 300)
+        ),
 
-    selected-focus-item-text-color: (
-        igx-contrast-color: ('secondary', 300)
-    ),
+        selected-focus-item-text-color: (
+            igx-contrast-color: ('secondary', 300)
+        ),
 
-    disabled-item-background: transparent,
+        disabled-item-background: transparent,
 
-    disabled-item-text-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .38
-    ),
-
-    elevation: 8
-), $_default-shape-drop-down);
+        disabled-item-text-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .38
+        ),
+    )
+);
