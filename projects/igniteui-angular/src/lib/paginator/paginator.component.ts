@@ -20,7 +20,8 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     public totalPages: number;
     protected _page = 0;
     protected _totalRecords: number;
-    protected _selectOptions = [5, 10, 15, 25, 50, 100, 500];
+    protected _selectOptions;
+    private defaultSelectValues = [5, 10, 15, 25, 50, 100, 500];
     protected _perPage = 15;
 
     /**
@@ -39,8 +40,13 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     }
 
     /**
-     * @hidden
-     */
+   * An @Input property, sets current page of the `IgxPaginatorComponent`.
+   * The default is 0.
+   * ```typescript
+   * let page = this.paginator.page;
+   * ```
+   * @memberof IgxPaginatorComponent
+   */
     @Input()
     public get page() {
         return this._page;
@@ -65,8 +71,9 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     }
 
     public set perPage(value: number) {
-        this._perPage = value;
+        this._perPage = Number(value);
         this.perPageChange.emit(this._perPage);
+        this._selectOptions = this.sortUniqueOptions(this.defaultSelectValues, this._perPage);
         this.totalPages = Math.ceil(this.totalRecords / this._perPage);
     }
 
@@ -101,8 +108,8 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
 
     public set selectOptions(value: Array<number>) {
         this._selectOptions = this.sortUniqueOptions(value, this._perPage);
+        this.defaultSelectValues = [...this._selectOptions];
     }
-
     /**
     * An @Input property that sets if the pager in the paginator should be enabled.
     * ```html
