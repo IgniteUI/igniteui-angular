@@ -14,24 +14,27 @@
 /// @property {Map} initials-color [igx-color: ('grays', 800)] - The text color used for avatars of type initials.
 /// @property {Color} image-background [transparent] - The background color used for avatars of type image.
 /// @see $default-palette
-$_light-avatar: extend((
-    icon-background: (
-        igx-color: ('grays', 400)
-    ),
+$_light-avatar: extend(
+    $_default-shape-avatar,
+    (
+        icon-background: (
+            igx-color: ('grays', 400)
+        ),
 
-    icon-color: (
-        igx-color: ('grays', 800)
-    ),
+        icon-color: (
+            igx-color: ('grays', 800)
+        ),
 
-    initials-background: (
-        igx-color: ('grays', 400)
-    ),
+        initials-background: (
+            igx-color: ('grays', 400)
+        ),
 
-    initials-color: (
-        igx-color: ('grays', 800)
-    ),
+        initials-color: (
+            igx-color: ('grays', 800)
+        ),
 
-    image-background: transparent
-),$_default-shape-avatar);
+        image-background: transparent
+    )
+);
 
-$_fluent-avatar: extend((), $_light-avatar);
+$_fluent-avatar: extend($_light-avatar, ());

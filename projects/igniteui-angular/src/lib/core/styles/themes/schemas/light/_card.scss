@@ -1,4 +1,5 @@
 @import '../shape/card';
+@import '../elevation/card';
 
 ////
 /// @group schemas
@@ -19,50 +20,47 @@
 /// @prop {Map} outline-color [igx-color: ('grays', 400)] - The outline color of an outlined type card.
 /// @prop {color} card-border-color [transparent] - The border color of an card.
 /// @see $default-palette
-$_light-card: extend((
-    background: (
-        igx-color: 'surface'
-    ),
+$_light-card: extend(
+    $_default-shape-card,
+    $_default-elevation-card,
+    (
+        background: (
+            igx-color: 'surface'
+        ),
 
-    header-text-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .87
-    ),
+        header-text-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .87
+        ),
 
-    subtitle-text-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .6
-    ),
+        subtitle-text-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .6
+        ),
 
-    content-text-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .6
-    ),
+        content-text-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .6
+        ),
 
-    actions-text-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .6
-    ),
+        actions-text-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .6
+        ),
 
-    resting-elevation: 2,
+        card-border-color: transparent,
 
-    hover-elevation: 8,
-
-    card-border-color: transparent,
-
-    outline-color: (
-        igx-color: ('grays', 400)
+        outline-color: (
+            igx-color: ('grays', 400)
+        )
     )
-), $_default-shape-card);
+);
 
 $_fluent-card: extend($_light-card, (
-    resting-elevation: 0,
-    hover-elevation: 0,
-
     card-border-color: (
         igx-color: ('grays', 200)
     ),

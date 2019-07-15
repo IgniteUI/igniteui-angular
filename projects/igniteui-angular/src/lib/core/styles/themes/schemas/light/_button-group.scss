@@ -1,4 +1,5 @@
 @import '../shape/button-group';
+@import '../elevation/button-group';
 
 ////
 /// @group schemas
@@ -25,54 +26,56 @@
 /// @prop {Number} elevation [2] - The elevation level, between 0-24, to be used for the badge shadow.
 /// @prop {Number} border-radius [.2] - The border radius fraction, between 0-1 to be used for button-group component.
 /// @see $default-palette
-$_light-button-group: extend((
-    item-background: #fff,
+$_light-button-group: extend(
+    $_default-shape-button-group,
+    $_default-elevation-button-group,
+    (
+        item-background: #fff,
 
-    item-border-color: (
-        igx-color: ('grays', 300)
-    ),
+        item-border-color: (
+            igx-color: ('grays', 300)
+        ),
 
-    item-disabled-border: (
-        igx-color: ('grays', 300)
-    ),
+        item-disabled-border: (
+            igx-color: ('grays', 300)
+        ),
 
-    item-text-color: (
-        igx-color: ('grays', 700)
-    ),
+        item-text-color: (
+            igx-color: ('grays', 700)
+        ),
 
-    item-hover-text-color: (
-        igx-color: ('grays', 800)
-    ),
+        item-hover-text-color: (
+            igx-color: ('grays', 800)
+        ),
 
-    item-hover-background: (
-        igx-color: ('grays', 400)
-    ),
+        item-hover-background: (
+            igx-color: ('grays', 400)
+        ),
 
-    item-selected-text-color: (
-        igx-color: ('grays', 800)
-    ),
+        item-selected-text-color: (
+            igx-color: ('grays', 800)
+        ),
 
-    item-selected-background: (
-        igx-color: ('grays', 400)
-    ),
+        item-selected-background: (
+            igx-color: ('grays', 400)
+        ),
 
-    item-selected-hover-background: (
-        igx-color: ('grays', 500)
-    ),
+        item-selected-hover-background: (
+            igx-color: ('grays', 500)
+        ),
 
-    item-selected-border-color: (
-        igx-color: ('grays', 300)
-    ),
+        item-selected-border-color: (
+            igx-color: ('grays', 300)
+        ),
 
-    disabled-text-color: (
-        igx-color: ('grays', 400)
-    ),
+        disabled-text-color: (
+            igx-color: ('grays', 400)
+        ),
 
-    disabled-background-color: (
-        igx-color: ('grays', 50)
-    ),
+        disabled-background-color: (
+            igx-color: ('grays', 50)
+        ),
+    )
+);
 
-    elevation: 2
-), $_default-shape-button-group);
-
-$_fluent-button-group: extend-many($_light-button-group, (), $_fluent-shape-button-group);
+$_fluent-button-group: extend($_light-button-group, (), $_fluent-shape-button-group);

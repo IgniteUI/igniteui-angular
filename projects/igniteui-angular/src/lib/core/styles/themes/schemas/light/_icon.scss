@@ -15,13 +15,16 @@
 ///
 /// @see $default-palette
 
-$_light-icon: extend((
-    color: currentColor,
+$_light-icon: extend(
+    $_default-shape-icon,
+    (
+        color: currentColor,
 
-    size: rem(24px),
+        size: rem(24px),
 
-    disabled-color: currentColor
-), $_default-shape-icon);
+        disabled-color: currentColor
+    )
+);
 
 
-$_fluent-icon: extend((), $_light-icon);
+$_fluent-icon: extend($_light-icon, ());

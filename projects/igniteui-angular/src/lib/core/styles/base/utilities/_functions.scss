@@ -220,23 +220,15 @@
 
 /// Extends a Map object with the properties of another Map object.
 /// @access private
-/// @param {Map} $map1 - The source map to get extended.
-/// @param {Map} $map2 - The map extending the source map.
-/// @returns {Map} - Returns the original map extended with the properties of the second map.
-@function extend($map1, $map2) {
+/// @param {Map...} $maps - The source map to get extended.
+/// @returns {Map} - Returns the merged maps.
+@function extend($maps...) {
     $result: ();
-    @each $key, $value in $map2 {
-        @if not($value) {
-            $result: map-merge($result, (
-                #{$key}: map-get($map1, $key)
-            ));
-        } @else {
-            $result: map-merge($result, (
-                #{$key}: $value
-            ));
-        }
+
+    @each $map in $maps {
+        $result: map-merge($result, map-clean($map));
     }
-    $result: map-merge($map1, $result);
+
     @return $result;
 }
 
@@ -258,30 +250,11 @@
     @return $result;
 }
 
-/// Extends a Map object with the properties of other Maps objects.
-/// @access private
-/// @param {Map} $source-map - The source map to get extended.
-/// @param {Map} $maps - The maps extending the source map.
-/// @returns {Map} - Returns the $source-map map extended with the properties of the other maps.
-@function extend-many($source-map, $maps...) {
-    $result: map-clean($source-map);
-    $collection: ();
-
-    @each $map in $maps {
-        $collection: map-merge($collection, $map);
-    }
-
-    $result: map-merge($result, $collection);
-
-    @return $result;
-}
-
 /// Generates a Material-like color palette for a single color.
 /// @access private
 /// @group Palettes
 /// @requires {function} gen-color
 /// @requires {function} text-contrast
-/// @requires {function} extend
 /// @param {Color} $color - The base color used to generate the palette.
 /// @param {List} $saturations - The saturation list of color variants.
 //// Based on the Material color system.
@@ -300,7 +273,6 @@
 /// @access private
 /// @group Palettes
 /// @requires {function} text-contrast
-/// @requires {function} extend
 /// @param {Color} $color - The base color used to generate the palette.
 /// @param {Map} $shades - A map of variations as keys and opacities as values.
 /// Based on the Material color system.
@@ -452,6 +424,7 @@
 /// @access private
 /// @param {Map} $schema - A theme schema.
 /// @param {Map} $palette - An igx-palette map.
+/// @requires {function} extend
 /// @requires {function} resolve-value
 /// @example scss Apply an `igx-palette` to theme schema
 ///   $custom-palette: igx-palette($primary: red, $secondary: blue);
@@ -470,7 +443,7 @@
         @if type-of($value) == 'map' {
             $result: extend($result, (#{$key}: resolve-value($value, $palette)));
         } @else {
-            $result: extend($result, (#{$key}: $value));
+            $result: extend($result, (#{$key}: #{$value}));
         }
     }
     @return $result;

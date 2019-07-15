@@ -51,7 +51,7 @@
     $actions-text-color: null,
     $resting-shadow: null,
     $hover-shadow: null,
-    $card-border-color: null,
+    $card-border-color: null
 ) {
     $name: 'igx-card';
     $card-schema: map-get($schema, $name);

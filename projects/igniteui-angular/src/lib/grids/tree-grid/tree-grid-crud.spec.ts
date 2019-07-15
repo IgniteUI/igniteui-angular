@@ -296,6 +296,43 @@ describe('IgxTreeGrid - CRUD ', () => {
                 verifyTreeGridRecordsCount(fix, 3, 8);
                 verifyProcessedTreeGridRecordsCount(fix, 3, 8);
             });
+
+            it('should support adding child rows to a parent with ID=0 through treeGrid API', () => {
+                verifyRowsCount(fix, 8, 8);
+                verifyTreeGridRecordsCount(fix, 3, 8);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 8);
+
+                // Add child row with ID=0 on root level
+                spyOn(treeGrid.onRowAdded, 'emit');
+                let newRow = {
+                    ID: 0,
+                    Name: 'New Employee 1',
+                    JobTitle: 'Senior Web Developer',
+                    Age: 33
+                };
+                treeGrid.addRow(newRow);
+                fix.detectChanges();
+
+                expect(treeGrid.onRowAdded.emit).toHaveBeenCalledWith({ data: newRow });
+                verifyRowsCount(fix, 9, 9);
+                verifyTreeGridRecordsCount(fix, 4, 9);
+                verifyProcessedTreeGridRecordsCount(fix, 4, 9);
+
+                // Add child row to the parent with ID=0
+                newRow = {
+                    ID: 333,
+                    Name: 'New Employee 2',
+                    JobTitle: 'Senior Web Developer',
+                    Age: 33
+                };
+                treeGrid.addRow(newRow, 0);
+                fix.detectChanges();
+
+                expect(treeGrid.onRowAdded.emit).toHaveBeenCalledWith({ data: newRow });
+                verifyRowsCount(fix, 10, 10);
+                verifyTreeGridRecordsCount(fix, 4, 10);
+                verifyProcessedTreeGridRecordsCount(fix, 4, 10);
+            });
         });
     });
 

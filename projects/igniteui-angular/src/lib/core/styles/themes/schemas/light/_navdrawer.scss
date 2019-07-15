@@ -1,4 +1,5 @@
 @import '../shape/navdrawer';
+@import '../elevation/navdrawer';
 
 ////
 /// @group schemas
@@ -26,67 +27,69 @@
 ///
 /// @see $default-palette
 
-$_light-navdrawer: extend((
-    background: (
-        igx-color: 'surface'
-    ),
+$_light-navdrawer: extend(
+    $_default-shape-navdrawer,
+    $_default-elevation-navdrawer,
+    (
+        background: (
+            igx-color: 'surface'
+        ),
 
-    border-color: rgba(0, 0, 0, .14),
+        border-color: rgba(0, 0, 0, .14),
 
-    border-radius: 0,
+        border-radius: 0,
 
-    item-border-radius: .16667,
+        item-border-radius: .16667,
 
-    item-header-text-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .87
-    ),
+        item-header-text-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .87
+        ),
 
-    item-text-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .54
-    ),
+        item-text-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .54
+        ),
 
-    item-icon-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .54
-    ),
+        item-icon-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .54
+        ),
 
-    item-active-text-color: (
-        igx-color: ('primary', 500)
-    ),
+        item-active-text-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    item-active-background: (
-        igx-color: ('primary', 500),
-        rgba: .12
-    ),
+        item-active-background: (
+            igx-color: ('primary', 500),
+            rgba: .12
+        ),
 
-    item-hover-background: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .08
-    ),
+        item-hover-background: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .08
+        ),
 
-    item-hover-text-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .87
-    ),
+        item-hover-text-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .87
+        ),
 
-    item-active-icon-color: (
-        igx-color: ('primary', 500)
-    ),
+        item-active-icon-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    item-hover-icon-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .87
-    ),
+        item-hover-icon-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .87
+        ),
+    )
+);
 
-    elevation: 16
-), $_default-shape-navdrawer);
-
-$_fluent-navdrawer: extend((), $_light-navdrawer);
+$_fluent-navdrawer: extend($_light-navdrawer, ());
