@@ -2415,21 +2415,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public columnWidthSetByUser = false;
 
-    /**
-     * @hidden @internal
-     */
-    public groupingResult: any[];
-
-    /**
-     * @hidden @internal
-     */
-    public groupingMetadata: any[];
-
-    /**
-     * @hidden @internal
-     */
-    public groupingFlatResult: any[];
-
     abstract data: any[];
     abstract filteredData: any[];
     // abstract dataLength;

@@ -73,6 +73,20 @@ export interface IGroupingDoneEventArgs {
 export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit, DoCheck, AfterContentInit {
     private _id = `igx-grid-${NEXT_ID++}`;
     /**
+     * @hidden @internal
+     */
+    public groupingResult: any[];
+
+    /**
+     * @hidden @internal
+     */
+    public groupingMetadata: any[];
+
+    /**
+     * @hidden @internal
+     */
+    public groupingFlatResult: any[];
+    /**
      * @hidden
      */
     protected _groupingExpressions: IGroupingExpression[] = [];
