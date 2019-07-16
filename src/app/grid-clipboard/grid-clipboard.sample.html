@@ -1,0 +1,42 @@
+<div class="wrapper">
+    <app-page-header title="Grid copy interaction"></app-page-header>
+
+    <div class="sample-content">
+        <div class="sample-column">
+            <div style="margin-bottom: 1rem">
+                <igx-input-group type="box">
+                    <label igxLabel>Change copy separator</label>
+                    <input type="text" igxInput [(ngModel)]="options.separator" />
+                    <igx-suffix (pointerup)="options.separator = '\t'"><igx-icon>clear</igx-icon></igx-suffix>
+                    <igx-hint>
+                        The default value is a single tabulation which of course is shown as whitespace above.
+                        Click the clear icon to reset it back to tabulation.
+                    </igx-hint>
+                </igx-input-group>
+                <div style="margin: 0 0.5rem" igxLayout igxLayoutJustify="space-between">
+                    <igx-switch [(ngModel)]="options.enabled">Toggle grid copy behavior</igx-switch>
+                    <igx-switch [(ngModel)]="options.copyHeaders">Toggle copying of header labels</igx-switch>
+                    <igx-switch [(ngModel)]="options.copyFormatters">Toggle copying column formatters</igx-switch>
+                    <button (click)="grid.clearCellSelection()" igxButton="outlined">Clear grid selection</button>
+                </div>
+            </div>
+
+
+            <div style="width: 50wh; height: 50vh">
+                <igx-grid #grid [data]="data" primaryKey="ID"
+                    rowEditable="true"
+                    (onColumnInit)="initColumn($event)"
+                    [clipboardOptions]="options"
+                    [autoGenerate]="true">
+                </igx-grid>
+            </div>
+
+            <div style="margin-top: 0.5rem">
+                <igx-input-group type="box">
+                    <label igxLabel>Paste your data here (or in Excel)</label>
+                    <textarea igxInput cols="30" rows="10"></textarea>
+                </igx-input-group>
+            </div>
+        </div>
+    </div>
+</div>

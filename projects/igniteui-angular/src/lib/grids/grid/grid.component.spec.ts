@@ -1640,6 +1640,7 @@ describe('IgxGrid Component Tests', () => {
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
+                    IgxGridTestComponent,
                     IgxBasicGridRowEditingComponent,
                     IgxGridRowEditingComponent,
                     IgxGridRowEditingWithoutEditableColumnsComponent,
@@ -1899,6 +1900,7 @@ describe('IgxGrid Component Tests', () => {
 
                 cell.inEditMode = true;
                 cell.update('IG');
+                fix.detectChanges();
                 cell.inEditMode = false;
 
                 await wait(DEBOUNCETIME);
@@ -3495,19 +3497,61 @@ describe('IgxGrid Component Tests', () => {
         });
 
         describe('Row Editing - Column editable property', () => {
-            it('Default column editable value is true, when row editing is enabled', fakeAsync(() => {
+            it('Default column editable value is correct, when row editing is enabled', fakeAsync(() => {
                 const fixture = TestBed.createComponent(IgxGridRowEditingWithoutEditableColumnsComponent);
                 fixture.detectChanges();
-                tick(16);
+                tick();
 
                 const grid = fixture.componentInstance.grid;
 
-                const columns: IgxColumnComponent[] = grid.columnList.toArray();
-                expect(columns[0].editable).toBeFalsy();
-                expect(columns[1].editable).toBeFalsy();
-                expect(columns[2].editable).toBeTruthy();
-                expect(columns[3].editable).toBeTruthy();
-                expect(columns[4].editable).toBeFalsy();
+                let columns: IgxColumnComponent[] = grid.columnList.toArray();
+                expect(columns[0].editable).toBeTruthy(); // column.editable not set
+                expect(columns[1].editable).toBeFalsy(); // column.editable not set. Primary column
+                expect(columns[2].editable).toBeTruthy(); // column.editable set to true
+                expect(columns[3].editable).toBeTruthy(); // column.editable not set
+                expect(columns[4].editable).toBeFalsy();  // column.editable set to false
+
+                grid.rowEditable = false;
+                columns = grid.columnList.toArray();
+                expect(columns[0].editable).toBeFalsy(); // column.editable not set
+                expect(columns[1].editable).toBeFalsy(); // column.editable not set. Primary column
+                expect(columns[2].editable).toBeTruthy(); // column.editable set to true
+                expect(columns[3].editable).toBeFalsy(); // column.editable not set
+                expect(columns[4].editable).toBeFalsy();  // column.editable set to false
+
+                grid.rowEditable = true;
+                columns = grid.columnList.toArray();
+                expect(columns[0].editable).toBeTruthy(); // column.editable not set
+                expect(columns[1].editable).toBeFalsy(); // column.editable not set. Primary column
+                expect(columns[2].editable).toBeTruthy(); // column.editable set to true
+                expect(columns[3].editable).toBeTruthy(); // column.editable not set
+                expect(columns[4].editable).toBeFalsy();  // column.editable set to false
+            }));
+
+            it(`Default column editable value is correct, when row edititng is disabled`, fakeAsync(() => {
+                const fixture = TestBed.createComponent(IgxGridTestComponent);
+                fixture.componentInstance.columns.push({ field: 'ID', header: 'ID', dataType: 'number', width: null, hasSummary: false });
+                fixture.componentInstance.data = [
+                    { ID: 0, index: 0, value: 0},
+                    { ID: 1, index: 1, value: 1},
+                    { ID: 2, index: 2, value: 2},
+                ];
+                const grid = fixture.componentInstance.grid;
+                grid.primaryKey = 'ID';
+
+                fixture.detectChanges();
+                tick();
+
+                let columns: IgxColumnComponent[] = grid.columnList.toArray();
+                expect(columns[0].editable).toBeFalsy(); // column.editable not set
+                expect(columns[1].editable).toBeFalsy(); // column.editable not set
+                expect(columns[2].editable).toBeFalsy(); // column.editable not set. Primary column
+
+                grid.rowEditable = true;
+                columns = grid.columnList.toArray();
+                expect(columns[0].editable).toBeTruthy(); // column.editable not set
+                expect(columns[1].editable).toBeTruthy(); // column.editable not set
+                expect(columns[2].editable).toBeFalsy();  // column.editable not set. Primary column
             }));
         });
 
@@ -4261,6 +4305,53 @@ describe('IgxGrid Component Tests', () => {
             expect(parseInt(window.getComputedStyle(grid.nativeElement).height, 10)).toBe(300);
         });
     });
+
+    describe('IgxGrid - footer section', () => {
+        configureTestSuite();
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxGridWithCustomFooterComponent
+                ],
+                imports: [
+                    NoopAnimationsModule, IgxGridModule]
+            }).compileComponents();
+        }));
+
+        it('should be able to display custom content', () => {
+            const fix = TestBed.createComponent(IgxGridWithCustomFooterComponent);
+            fix.detectChanges();
+
+            const footer = fix.debugElement.query(By.css('igx-grid-footer')).nativeElement;
+            const footerContent = footer.textContent.trim();
+
+            expect(footerContent).toEqual('Custom content');
+        });
+    });
+
+    describe('IgxGrid - with custom pagination template', () => {
+        configureTestSuite();
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxGridWithCustomPaginationTemplateComponent
+                ],
+                imports: [
+                    NoopAnimationsModule, IgxGridModule]
+            }).compileComponents();
+        }));
+
+        it('should have access to grid context', () => {
+            const fix = TestBed.createComponent(IgxGridWithCustomPaginationTemplateComponent);
+            fix.detectChanges();
+
+            const totalRecords = fix.componentInstance.grid.totalRecords.toString();
+            const paginationContent = fix.debugElement.query(By.css('.igx-grid__footer > h2')).nativeElement;
+            const paginationText = paginationContent.textContent.trim();
+
+            expect(paginationText).toEqual(totalRecords);
+        });
+    });
 });
 
 @Component({
@@ -4409,6 +4500,19 @@ export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderi
     }
 }
 
+@Component({
+    template:
+        `<div>
+        <igx-grid #grid [data]="data" [displayDensity]="'compact'" [autoGenerate]="true"
+            [paging]="true" [perPage]="5">
+            <igx-grid-footer>
+            Custom content
+            </igx-grid-footer>
+        </igx-grid>
+        </div>`
+})
+export class IgxGridWithCustomFooterComponent extends IgxGridTestComponent {
+}
 @Component({
     template:
         `<div [style.width.px]="outerWidth" [style.height.px]="outerHeight">
@@ -4966,4 +5070,20 @@ export class IgxGridInsideIgxTabsComponent {
         }
         this.data = data;
     }
+}
+
+@Component({
+    template: `
+        <igx-grid #grid [data]="data"
+        [paging]="true" [paginationTemplate]="pager">
+        </igx-grid>
+        <ng-template #pager let-grid>
+            <h2>{{grid.totalRecords}}</h2>
+        </ng-template>
+    `
+})
+export class IgxGridWithCustomPaginationTemplateComponent {
+    public data = SampleTestData.foodProductData();
+    @ViewChild('grid', { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
 }
