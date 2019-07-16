@@ -19,7 +19,7 @@
 $_light-checkbox: extend(
     $_default-shape-checkbox,
     (
-        variant: material,
+        variant: 'material',
         tick-color: #fff,
 
         label-color: (
@@ -45,7 +45,7 @@ $_light-checkbox: extend(
 );
 
 $_fluent-checkbox: extend($_light-checkbox, $_fluent-shape-checkbox, (
-    variant: fluent,
+    variant: 'fluent',
 
     fill-color: (
         igx-color: ('primary', 500)

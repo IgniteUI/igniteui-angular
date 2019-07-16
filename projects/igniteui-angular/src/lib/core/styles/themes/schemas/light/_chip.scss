@@ -1,4 +1,5 @@
 @import '../shape/chip';
+@import '../elevation/chip';
 
 ////
 /// @group schemas
@@ -28,6 +29,7 @@
 /// @see $default-palette
 $_light-chip: extend(
     $_default-shape-chip,
+    $_default-elevation-chip,
     (
         text-color: (
             igx-color: ('grays', 700)
@@ -96,13 +98,17 @@ $_light-chip: extend(
     )
 );
 
-$_fluent-chip: extend($_light-chip, $_fluent-shape-chip, (
+$_fluent-chip: extend($_light-chip, $_fluent-shape-chip, $_fluent-elevation-chip, (
     background: transparent,
     hover-background: transparent,
     selected-background: transparent,
     hover-selected-background: transparent,
     focus-background: transparent,
     focus-selected-background: transparent,
+
+    ghost-background: (
+        igx-color: 'surface'
+    ),
 
     border-color: (
         igx-color: ('grays', 300)

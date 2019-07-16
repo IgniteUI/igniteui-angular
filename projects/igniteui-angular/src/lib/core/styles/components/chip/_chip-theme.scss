@@ -67,7 +67,9 @@
 
     $focus-selected-text-color: null,
     $focus-selected-background: null,
-    $focus-selected-border-color: null
+    $focus-selected-border-color: null,
+
+    $chip-ghost-shadow: null
 ) {
     $name: 'igx-chip';
     $chip-schema: map-get($schema, $name);
@@ -76,6 +78,11 @@
     $border-radius: round-borders(
         if($border-radius, $border-radius, map-get($chip-schema, 'border-radius')), 0, 16px
     );
+
+    @if not($chip-ghost-shadow) {
+        $chip-ghost-elevation: map-get($chip-schema, 'chip-ghost-elevation');
+        $chip-ghost-shadow: igx-elevation($elevations, $chip-ghost-elevation);
+    }
 
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
@@ -174,6 +181,7 @@
         background: $background,
         border-color: $border-color,
         ghost-background: $ghost-background,
+        chip-ghost-shadow: $chip-ghost-shadow,
 
         hover-text-color: $hover-text-color,
         hover-background: $hover-background,
@@ -486,7 +494,7 @@
     %igx-chip__ghost {
         position: absolute;
         z-index: 10;
-        box-shadow: igx-elevation($elevations, 8);
+        box-shadow: --var($theme, 'chip-ghost-shadow');
         overflow: hidden;
         background: --var($theme, 'ghost-background');
 

@@ -74,6 +74,8 @@ $_light-button: extend(
     $_default-shape-button,
     $_default-elevation-button,
     (
+        variant: 'material',
+        
         flat-background: transparent,
 
         flat-text-color: (
@@ -224,6 +226,8 @@ $_light-button: extend(
 );
 
 $_fluent-button: extend($_light-button, $_fluent-shape-button, $_fluent-elevation-button, (
+    variant: 'fluent',
+    
     flat-text-color: (
         igx-color: ('grays', 900)
     ),

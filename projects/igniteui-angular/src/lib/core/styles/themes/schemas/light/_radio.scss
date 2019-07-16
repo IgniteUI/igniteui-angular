@@ -19,7 +19,7 @@
 $_light-radio: extend(
     $_default-shape-radio,
     (
-        variant: material,
+        variant: 'material',
         name: 'igx-radio',
 
         hover-color: transparent,
@@ -47,7 +47,7 @@ $_light-radio: extend(
 );
 
 $_fluent-radio: extend($_light-radio,(
-    variant: fluent,
+    variant: 'fluent',
 
     empty-color: (
         igx-color: ('grays', 800)

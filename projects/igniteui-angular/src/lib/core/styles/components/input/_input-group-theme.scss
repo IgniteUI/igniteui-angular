@@ -22,7 +22,11 @@
 /// @param {Color} $focused-bottom-line-color [null] - The bottom line and border colors in the focused state.
 /// @param {Color} $interim-bottom-line-color [null] - The bottom line and border colors during the to-focused transition.
 /// @param {Color} $disabled-bottom-line-color [null] - The bottom line and border colors in the disabled state.
-/// @param {Color} $disabled-border-color [null] - The disabled border color for input groups of type border.
+///
+/// @param {Color} $border-color [null] - The border color for input groups of type border and fluent.
+/// @param {Color} $hover-border-color [null] - The hover input border for input groups of type border and fluent.
+/// @param {Color} $focused-border-color [null] - The focused input border color for input groups of type border and fluent.
+/// @param {Color} $disabled-border-color [null] - The disabled border color for input groups of type border and fluent.
 ///
 /// @param {Color} $box-background [null] - The background color of an input group of type box.
 /// @param {Color} $box-disabled-background [null] - The background color of an input group of type box in the disabled state.
@@ -31,6 +35,8 @@
 /// @param {Color} $border-disabled-background [null] - The background color of an input group of type border in the disabled state.
 ///
 /// @param {Color} $search-background [null] - The background color of an input group of type search.
+/// @param {Color} $search-border-color [null] - The border color of an input group of type search.
+/// @param {Color} $search-disabled-border-color [null] - The border color of an disabled input group of type search.
 /// @param {Color} $search-disabled-background [null] - The background color of an input group of type search in the disabled state.
 ///
 /// @param {box-shadow} $search-resting-shadow [null] - The shadow color of an input group of type search in its resting state.
@@ -81,6 +87,10 @@
     $focused-bottom-line-color: null,
     $interim-bottom-line-color: null,
     $disabled-bottom-line-color: null,
+
+    $border-color: null,
+    $hover-border-color: null,
+    $focused-border-color: null,
     $disabled-border-color: null,
 
     $box-background: null,
@@ -89,11 +99,13 @@
     $border-disabled-background: null,
 
     $search-background: null,
+    $search-disabled-border-color: null,
     $search-disabled-background: null,
 
     $search-resting-shadow: null,
     $search-hover-shadow: null,
     $search-disabled-shadow: null,
+    $search-border-color: null,
 
     $success-secondary-color: null,
     $warning-secondary-color: null,
@@ -162,6 +174,10 @@
         focused-bottom-line-color: $focused-bottom-line-color,
         interim-bottom-line-color: $interim-bottom-line-color,
         disabled-bottom-line-color: $disabled-bottom-line-color,
+
+        border-color: $border-color,
+        hover-border-color: $hover-border-color,
+        focused-border-color: $focused-border-color,
         disabled-border-color: $disabled-border-color,
 
         box-background: $box-background,
@@ -171,6 +187,8 @@
         border-disabled-background: $border-disabled-background,
 
         search-background: $search-background,
+        search-border-color: $search-border-color,
+        search-disabled-border-color: $search-disabled-border-color,
         search-disabled-background: $search-disabled-background,
 
         search-resting-shadow: $search-resting-shadow,
@@ -404,7 +422,7 @@
 
     %form-group-bundle--border {
         padding: 0 rem(16px, map-get($base-scale-size, 'comfortable'));
-        box-shadow: inset 0 0 0 1px --var($theme, 'idle-bottom-line-color');
+        box-shadow: inset 0 0 0 1px --var($theme, 'border-color');
         border-radius: --var($theme, 'border-border-radius');
         background: --var($theme, 'border-background');
 
@@ -422,11 +440,11 @@
     }
 
     %form-group-bundle-border--hover {
-        box-shadow: inset 0 0 0 2px --var($theme, 'idle-text-color');
+        box-shadow: inset 0 0 0 2px --var($theme, 'hover-border-color');
     }
 
     %form-group-bundle-border--focus {
-        box-shadow: inset 0 0 0 2px --var($theme, 'focused-bottom-line-color');
+        box-shadow: inset 0 0 0 2px --var($theme, 'focused-border-color');
     }
 
     %form-group-bundle-border--error {
@@ -516,7 +534,7 @@
     %form-group-bundle--fluent {
         padding: 0;
         min-height: 32px;
-        border: 1px solid --var($theme, 'idle-bottom-line-color');
+        border: 1px solid --var($theme, 'border-color');
         box-shadow: none;
         border-radius: --var($theme, 'border-border-radius');
         background: --var($theme, 'border-background');
@@ -524,18 +542,17 @@
     }
 
     %form-group-bundle--fluent--hover {
-        border-color: --var($theme, 'idle-text-color');
+        border-color: --var($theme, 'hover-border-color');
         box-shadow: none;
     }
 
     %form-group-bundle--fluent--focus {
-        border-color: --var($theme, 'idle-text-color');
+        border-color: --var($theme, 'focused-border-color');
         box-shadow: none;
     }
 
     %form-group-bundle--fluent--hover-disabled,
     %form-group-bundle--fluent-disabled {
-        // the same as non disabled
         border-color: --var($theme, 'disabled-border-color');
         background: --var($theme, 'border-disabled-background');
     }
@@ -550,7 +567,6 @@
         border-color: --var($theme, 'success-secondary-color');
     }
 
-    // Input
     %fluent-input-disabled {
         color: rgb(161, 159, 157)
     }
@@ -571,7 +587,6 @@
         padding-left: 0;
     }
 
-    // Label
     %fluent-label {
         padding: rem(5px) 0;
         line-height: normal !important;
@@ -608,21 +623,16 @@
         transform: translateY(0);
     }
 
-
-
-    // Textarea
     %fluent-textarea {
         padding: 0;
     }
 
-    //// FLUENT END ////
-
     %form-group-bundle--search {
         padding: 0 rem(16px, map-get($base-scale-size, 'comfortable'));
         border-radius: --var($theme, 'search-border-radius');
-        border-bottom: none;
         background: --var($theme, 'search-background');
         box-shadow: --var($theme, 'search-resting-shadow');
+        border: 1px solid --var($theme, 'search-border-color');
 
         %form-group-label--box + %form-group-input--box {
             transform: translateY(0);
@@ -656,6 +666,7 @@
     %form-group-bundle-search--disabled {
         background: --var($theme, 'search-disabled-background');
         box-shadow: --var($theme, 'search-disabled-shadow');
+        border: 1px solid --var($theme, 'search-disabled-border-color');
     }
 
     %form-group-bundle-main {

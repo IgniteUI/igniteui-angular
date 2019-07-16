@@ -338,7 +338,6 @@ $_fluent-grid: extend(
     (
         variant: 'fluent',
 
-
         grid-border-color: (
             igx-color: ('grays', 100)
         ),
@@ -396,7 +395,7 @@ $_fluent-grid: extend(
         ),
 
         cell-active-border-color: (
-            igx-color: ('grays', 100),
+            igx-color: ('primary', 100),
             hexrgba: #fff
         ),
 
@@ -422,8 +421,6 @@ $_fluent-grid: extend(
             igx-color: ('grays', 100),
             hexrgba: #fff
         ),
-
-
     )
 );
 

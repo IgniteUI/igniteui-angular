@@ -589,6 +589,11 @@
         fluent: 1px
     ), map-get($theme, variant));
 
+    $grid-header-weight: map-get((
+        material: 400,
+        fluent: 800
+    ), map-get($theme, variant));
+
     %grid-display {
         position: relative;
         display: grid;
@@ -1242,6 +1247,7 @@
 
     %grid-cell-header-title {
         @include ellipsis();
+        font-weight: $grid-header-weight;
         min-width: 3ch;
         user-select: none;
         cursor: initial;

@@ -541,12 +541,13 @@
             color: --var($theme, 'raised-hover-text-color');
             background: --var($theme, 'raised-hover-background');
             box-shadow: --var($theme, 'raised-hover-shadow');
-
+            
+            
             %igx-icon-display {
                 color: --var($theme, 'raised-hover-icon-color')
             }
         }
-
+        
         &:active {
             color: --var($theme, 'raised-focus-text-color');
             background: --var($theme, 'raised-focus-background');
