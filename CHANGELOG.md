@@ -12,6 +12,7 @@ All notable changes for each version of this project will be documented in this 
     - You can use this mode to apply directives on the tab items - for example to achieve routing navigation.
     - You are allowed to customize tab items with labels, icons and even templates.
 - `IgxGrid`
+    - **Behavioral Change** - paging now includes the group rows in the page size. You may find more information about the change in the [GroupBy Specification](https://github.com/IgniteUI/igniteui-angular/wiki/Group-By-Specification)
     - `IgxColumnGroup`
         - Re-templating the column group header is now possible using the `headerTemplate` input property or the `igxHeader` directive.
     - `igx-grid-footer` 
