@@ -2051,9 +2051,9 @@ describe('IgxGrid - Summaries', () => {
             expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(3);
         }));
 
-        it('Paging: should render correct summaries when paging is enable and position is buttom', () => {
+        it('Paging: should render correct summaries when paging is enable and position is buttom', fakeAsync(() => {
             grid.paging = true;
-            grid.perPage = 2;
+            grid.perPage = 3;
             fix.detectChanges();
 
             expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(2);
@@ -2078,13 +2078,13 @@ describe('IgxGrid - Summaries', () => {
             const groupRows = grid.groupsRowList.toArray();
             groupRows[0].toggle();
             fix.detectChanges();
-            expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(1);
+            expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(2);
             verifyBaseSummaries(fix);
-        });
+        }));
 
-        it('Paging: should render correct summaries when paging is enable and position is top', () => {
+        it('Paging: should render correct summaries when paging is enable and position is top', fakeAsync(() => {
             grid.paging = true;
-            grid.perPage = 2;
+            grid.perPage = 3;
             grid.summaryPosition = 'top';
             fix.detectChanges();
 
@@ -2098,10 +2098,9 @@ describe('IgxGrid - Summaries', () => {
 
             grid.page = 2;
             fix.detectChanges();
-            expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(2);
-            verifySummariesForParentID147(fix, 1);
+            expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(1);
             verifyBaseSummaries(fix);
-        });
+        }));
 
         it('CRUD: Add grouped item', () => {
             const newRow = {
