@@ -23,6 +23,7 @@ import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
+import { IgxGridFooterComponent } from './grid-footer/grid-footer.component';
 import {
     IgxCellEditorTemplateDirective,
     IgxCellFooterTemplateDirective,
@@ -59,6 +60,7 @@ import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
 import { IgxGridSelectionService } from '../core/grid-selection';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxProgressBarModule } from '../progressbar/progressbar.component';
+import { IgxPaginatorModule } from '../paginator/paginator.component';
 import { IgxFilterModule } from '../directives/filter/filter.directive';
 import { IgxGridPipesModule } from './grid-pipes.module';
 import { IgxGridExcelStyleFilteringModule } from './filtering/excel-style/grid.excel-style-filtering.module';
@@ -99,7 +101,8 @@ import { IgxRowDragModule } from './row-drag.directive';
         IgxSummaryCellComponent,
         IgxGridDragSelectDirective,
         IgxGridColumnResizerComponent,
-        IgxFilterCellTemplateDirective
+        IgxFilterCellTemplateDirective,
+        IgxGridFooterComponent
     ],
     entryComponents: [
         IgxColumnComponent,
@@ -159,7 +162,9 @@ import { IgxRowDragModule } from './row-drag.directive';
         IgxGridPipesModule,
         IgxGridExcelStyleFilteringModule,
         IgxFilterCellTemplateDirective,
-        IgxRowDragModule
+        IgxRowDragModule,
+        IgxPaginatorModule,
+        IgxGridFooterComponent
     ],
     imports: [
         CommonModule,
@@ -187,7 +192,8 @@ import { IgxRowDragModule } from './row-drag.directive';
         IgxFilterModule,
         IgxGridPipesModule,
         IgxGridExcelStyleFilteringModule,
-        IgxRowDragModule
+        IgxRowDragModule,
+        IgxPaginatorModule
     ],
     providers: [
         IgxGridSelectionService,

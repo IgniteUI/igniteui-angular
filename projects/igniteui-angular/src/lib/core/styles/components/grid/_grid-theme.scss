@@ -732,6 +732,10 @@
         z-index: 10001;
     }
 
+    %grid-footer {
+        grid-row: 7;
+    }
+
     %grid-display-container-thead {
         width: 100%;
         overflow: visible;
