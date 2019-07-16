@@ -5195,7 +5195,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```typescript
      * const filteredSortedData = this.grid1.filteredSortedData;
      * ```
-	 * @memberof IgxGridBaseComponent
+     * @memberof IgxGridBaseComponent
      */
     get filteredSortedData(): any[] {
         return this._filteredSortedData;
@@ -5272,11 +5272,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected scrollTo(row: any | number, column: any | number): void {
+    protected scrollTo(row: any | number, column: any | number, inCollection = this.filteredSortedData): void {
         let delayScrolling = false;
 
         if (this.paging && typeof (row) !== 'number') {
-            const rowIndex = this.filteredSortedData.indexOf(row);
+            const rowIndex = inCollection.indexOf(row);
             const page = Math.floor(rowIndex / this.perPage);
 
             if (this.page !== page) {
@@ -5380,13 +5380,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public isExpandedGroup(_group: IGroupByRecord): boolean {
         return undefined;
-    }
-
-    /**
-    * @hidden
-    */
-    protected getGroupByRecords(): IGroupByRecord[] {
-        return null;
     }
 
     protected changeRowEditingOverlayStateOnScroll(row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>) {
