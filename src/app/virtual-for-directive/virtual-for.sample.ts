@@ -1,6 +1,4 @@
-import { Component, ElementRef, ViewChild, Injectable, OnInit, AfterViewInit, ViewEncapsulation } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Component, ViewChild, OnInit, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { IgxForOfDirective } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 
@@ -198,7 +196,7 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
         if (this.itemSize === '50px') {
             this.itemSize = '100px';
         } else {
-            this.itemSize = "50px";
+            this.itemSize = '50px';
         }
 
     }
