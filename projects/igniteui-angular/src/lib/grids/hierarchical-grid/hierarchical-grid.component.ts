@@ -370,6 +370,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
                     }
                 });
             });
+            this.parent.verticalScrollContainer.onDataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+                requestAnimationFrame(() => {
+                    if (!this._destroyed && this.isPercentWidth) {
+                        this.reflow();
+                    }
+                });
+            });
             this.childLayoutKeys = this.parentIsland.children.map((item) => item.key);
         } else {
             this.childLayoutKeys = this.childLayoutList.map((item) => item.key);
