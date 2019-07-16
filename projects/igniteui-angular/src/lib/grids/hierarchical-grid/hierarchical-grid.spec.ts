@@ -297,7 +297,7 @@ describe('Basic IgxHierarchicalGrid', () => {
         UIInteractions.clickElement(row.expander);
         const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
         const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
-        expect(childGrid.calcWidth - 370 - childGrid.scrollWidth).toBeLessThan(3);
+        expect(childGrid.calcWidth - 370 - childGrid.scrollWidth).toBeLessThanOrEqual(5);
 
         hierarchicalGrid.clearFilter();
         fixture.detectChanges();
