@@ -126,21 +126,21 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     @Input()
     get editable(): boolean {
-        let result = false;
-
         // if rowEditable is set to true or transaction service is provided grid has transactions
         const hasTransactions = this.grid && (this.grid.rowEditable || this.grid.transactions.enabled);
 
-        // if this is primary column and grid has transactions column should not be editable,
-        // result should be false
-        if (!(this.isPrimaryColumn && hasTransactions)) {
+        if (this.isPrimaryColumn && hasTransactions) {
+            // if this is primary column and grid has transactions column should not be editable,
+            return false;
+        } else {
+            // if this is not primary column with transactions return what user have set
+            // or if row is editable
             if (this._editable !== undefined) {
-                result = this._editable;
+                return this._editable;
             } else {
-                result = this.grid && this.grid.rowEditable;
+                return this.grid && this.grid.rowEditable;
             }
         }
-        return result;
     }
     /**
      * Sets whether the column is editable.
