@@ -8,7 +8,8 @@ import { By } from '@angular/platform-browser';
 import {
     IgxTreeGridWrappedInContComponent,
     IgxTreeGridAutoGenerateComponent,
-    IgxTreeGridDefaultLoadingComponent
+    IgxTreeGridDefaultLoadingComponent,
+    IgxTreeGridCellSelectionComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
 
@@ -23,7 +24,8 @@ describe('IgxTreeGrid Component Tests', () => {
             declarations: [
                 IgxTreeGridWrappedInContComponent,
                 IgxTreeGridAutoGenerateComponent,
-                IgxTreeGridDefaultLoadingComponent
+                IgxTreeGridDefaultLoadingComponent,
+                IgxTreeGridCellSelectionComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxTreeGridModule]
@@ -142,6 +144,54 @@ describe('IgxTreeGrid Component Tests', () => {
             expect(circularBar).toBeFalsy();
             expect(grid.dataRowList.length).toBeGreaterThan(0);
         });
+    });
+
+    describe('Hide All', () => {
+        beforeEach(async(() => {
+            fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
+            grid = fix.componentInstance.treeGrid;
+            fix.detectChanges()
+        }));
+
+        it('should not render rows, paging and headers group when all cols are hidden', async () => {
+            grid.rowSelectable = true;
+            grid.rowDraggable = true;
+            grid.showToolbar =  true;
+            fix.detectChanges();
+
+            let tHeadItems = fix.nativeElement.querySelector('igx-grid-header-group');
+            let gridRows = fix.nativeElement.querySelector('igx-tree-grid-row');
+            let paging = fix.nativeElement.querySelector('.igx-grid-paginator');
+            let rowSelectors = grid.nativeElement.querySelector('.igx-checkbox');
+            let dragIndicators = grid.nativeElement.querySelector('.igx-grid__drag-indicator');
+            let verticalScrollBar = grid.nativeElement.querySelector('.igx-grid__tbody-scrollbar[hidden]');
+
+            expect(tHeadItems).not.toBeNull();
+            expect(gridRows).not.toBeNull();
+            expect(paging).not.toBeNull();
+            expect(rowSelectors).not.toBeNull();
+            expect(dragIndicators).not.toBeNull();
+            expect(verticalScrollBar).toBeNull();
+
+            grid.columnList.forEach((col) => col.hidden = true);
+            await wait();
+            fix.detectChanges();
+
+            tHeadItems = fix.nativeElement.querySelector('igx-grid-header-group');
+            gridRows = fix.nativeElement.querySelector('igx-tree-grid-row');
+            paging = fix.nativeElement.querySelector('.igx-grid-paginator');
+            rowSelectors = grid.nativeElement.querySelector('.igx-checkbox');
+            dragIndicators = grid.nativeElement.querySelector('.igx-grid__drag-indicator');
+            verticalScrollBar = grid.nativeElement.querySelector('.igx-grid__tbody-scrollbar[hidden]');
+
+            expect(tHeadItems).toBeNull();
+            expect(gridRows).toBeNull();
+            expect(paging).toBeNull();
+            expect(rowSelectors).toBeNull();
+            expect(dragIndicators).toBeNull();
+            expect(verticalScrollBar).not.toBeNull();
+        });
+
     });
 
 });

@@ -13,7 +13,7 @@ import { ColumnHidingTestComponent, ColumnGroupsHidingTestComponent } from '../.
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
-
+import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { take } from 'rxjs/internal/operators/take';
 
@@ -586,6 +586,51 @@ describe('Column Hiding UI', () => {
 
             expect(getButtonDisabledState('Show All')).toBe(false, 'Show All is not enabled!');
             expect(getButtonDisabledState('Hide All')).toBe(false, 'Hide All is not enabled!');
+        }));
+
+        it('- When Hide All columns no rows should be rendered', (async () => {
+            grid.rowSelectable = true;
+            grid.paging = true;
+            fix.detectChanges();
+
+            grid.rowDraggable = true;
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false
+            });
+            fix.detectChanges();
+            let tHeadItems = fix.nativeElement.querySelector('igx-grid-header-group');
+            let gridRows = fix.nativeElement.querySelector('igx-grid-row');
+            let paging = fix.nativeElement.querySelector('.igx-grid-paginator');
+            let rowSelectors = grid.nativeElement.querySelector('.igx-checkbox');
+            let dragIndicators = grid.nativeElement.querySelector('.igx-grid__drag-indicator');
+            let verticalScrollBar = grid.nativeElement.querySelector('.igx-grid__tbody-scrollbar[hidden]');
+
+            expect(tHeadItems).not.toBeNull();
+            expect(gridRows).not.toBeNull();
+            expect(paging).not.toBeNull();
+            expect(rowSelectors).not.toBeNull();
+            expect(dragIndicators).not.toBeNull();
+            expect(verticalScrollBar).toBeNull();
+
+            grid.columnList.forEach((col) => col.hidden = true);
+            await wait();
+            fix.detectChanges();
+
+            tHeadItems = fix.nativeElement.querySelector('igx-grid-header-group');
+            gridRows = fix.nativeElement.querySelector('igx-grid-row');
+            paging = fix.nativeElement.querySelector('.igx-grid-paginator');
+            rowSelectors = grid.nativeElement.querySelector('.igx-checkbox');
+            dragIndicators = grid.nativeElement.querySelector('.igx-grid__drag-indicator');
+            verticalScrollBar = grid.nativeElement.querySelector('.igx-grid__tbody-scrollbar[hidden]');
+
+            expect(tHeadItems).toBeNull();
+            expect(gridRows).toBeNull();
+            expect(paging).toBeNull();
+            expect(rowSelectors).toBeNull();
+            expect(dragIndicators).toBeNull();
+            expect(verticalScrollBar).not.toBeNull();
         }));
 
         it('- Show All button operates over the filtered in columns only', (async () => {
