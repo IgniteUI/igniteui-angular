@@ -15,6 +15,17 @@ All notable changes for each version of this project will be documented in this 
     - **Behavioral Change** - paging now includes the group rows in the page size. You may find more information about the change in the [GroupBy Specification](https://github.com/IgniteUI/igniteui-angular/wiki/Group-By-Specification)
     - `IgxColumnGroup`
         - Re-templating the column group header is now possible using the `headerTemplate` input property or the `igxHeader` directive.
+    - `igx-grid-footer` 
+        - You can use this to insert a custom footer in the grids.
+         ```html
+        <igx-grid>
+            <igx-grid-footer>
+                Custom content
+            </igx-grid-footer>
+        </igx-grid>
+        ```
+- `igx-paginator`
+    - Replaces the current paginator in all grids. Can be used as a standalone component.
 - `IgxCombo`
     - Input `[overlaySettings]` - allows an object of type `OverlaySettings` to be passed. These custom overlay settings control how the drop-down list displays.
 

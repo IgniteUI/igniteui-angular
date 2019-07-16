@@ -1737,8 +1737,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ViewChild('paginator', { read: ElementRef, static: false })
-    public paginator: ElementRef;
+    @ViewChild('footer', { read: ElementRef, static: false })
+    public footer: ElementRef;
 
     /**
      * @hidden
@@ -3245,6 +3245,43 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
+     * Returns if the current page is the first page.
+     * ```typescript
+     * const firstPage = this.grid.isFirstPage;
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    get isFirstPage(): boolean {
+        return this.page === 0;
+    }
+
+    /**
+     * Goes to the next page of the `IgxGridComponent`, if the grid is not already at the last page.
+     * ```typescript
+     * this.grid1.nextPage();
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    public nextPage(): void {
+        if (!this.isLastPage) {
+            this.page += 1;
+        }
+    }
+
+    /**
+     * Goes to the previous page of the `IgxGridComponent`, if the grid is not already at the first page.
+     * ```typescript
+     * this.grid1.previousPage();
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    public previousPage(): void {
+        if (!this.isFirstPage) {
+            this.page -= 1;
+        }
+    }
+
+    /**
      * Returns the total number of records.
      * Only functions when paging is enabled.
      * ```typescript
@@ -3256,17 +3293,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this.pagingState) {
             return this.pagingState.metadata.countRecords;
         }
-    }
-
-    /**
-     * Returns if the current page is the first page.
-     * ```typescript
-     * const firstPage = this.grid.isFirstPage;
-     * ```
-	 * @memberof IgxGridBaseComponent
-     */
-    get isFirstPage(): boolean {
-        return this.page === 0;
     }
 
     /**
@@ -3457,32 +3483,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         };
 
         this.onColumnMovingEnd.emit(args);
-    }
-
-    /**
-     * Goes to the next page of the `IgxGridComponent`, if the grid is not already at the last page.
-     * ```typescript
-     * this.grid1.nextPage();
-     * ```
-	 * @memberof IgxGridBaseComponent
-     */
-    public nextPage(): void {
-        if (!this.isLastPage) {
-            this.page += 1;
-        }
-    }
-
-    /**
-     * Goes to the previous page of the `IgxGridComponent`, if the grid is not already at the first page.
-     * ```typescript
-     * this.grid1.previousPage();
-     * ```
-	 * @memberof IgxGridBaseComponent
-     */
-    public previousPage(): void {
-        if (!this.isFirstPage) {
-            this.page -= 1;
-        }
     }
 
     /**
@@ -4110,9 +4110,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected getPagingHeight(): number {
         let pagingHeight = 0;
-        if (this.paging && this.paginator) {
-            pagingHeight = this.paginator.nativeElement.firstElementChild ?
-                this.paginator.nativeElement.offsetHeight : 0;
+        if (this.footer) {
+            pagingHeight = this.footer.nativeElement.firstElementChild ?
+                this.footer.nativeElement.offsetHeight : 0;
         }
         return pagingHeight;
     }
@@ -4532,7 +4532,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         collection.forEach((column: IgxColumnComponent) => {
             column.grid = this;
             column.defaultWidth = this.columnWidth;
-            this.setColumnEditState(column);
 
             if (cb) {
                 cb(column);
@@ -4545,14 +4544,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             collection.forEach((column: IgxColumnComponent) => {
                 column.populateVisibleIndexes();
             });
-        }
-    }
-
-    private setColumnEditState(column: IgxColumnComponent) {
-        // When rowEditable is true, then all columns, with defined field, excluding priamaryKey, are set to editable by default.
-        if (this.rowEditable && column.editable === null &&
-            column.field && column.field !== this.primaryKey) {
-            column.editable = this.rowEditable;
         }
     }
 
