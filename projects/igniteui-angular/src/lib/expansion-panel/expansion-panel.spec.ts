@@ -1010,7 +1010,7 @@ describe('igxExpansionPanel', () => {
             expect(grid.attributes.getNamedItem('ng-reflect-auto-generate').nodeValue).toEqual('true');
             expect(grid.attributes.getNamedItem('ng-reflect-width').nodeValue).toEqual(fixture.componentInstance.width);
             expect(grid.attributes.getNamedItem('ng-reflect-height').nodeValue).toEqual(fixture.componentInstance.height);
-            expect(grid.childElementCount).toEqual(5);
+            expect(grid.childElementCount).toEqual(6);
         }));
         it('Should apply all appropriate classes on combo initialization_image + text content', fakeAsync(() => {
             const fixture: ComponentFixture<IgxExpansionPanelImageComponent> = TestBed.createComponent(IgxExpansionPanelImageComponent);

@@ -4353,6 +4353,53 @@ describe('IgxGrid Component Tests', () => {
             expect(parseInt(window.getComputedStyle(grid.nativeElement).height, 10)).toBe(300);
         });
     });
+
+    describe('IgxGrid - footer section', () => {
+        configureTestSuite();
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxGridWithCustomFooterComponent
+                ],
+                imports: [
+                    NoopAnimationsModule, IgxGridModule]
+            }).compileComponents();
+        }));
+
+        it('should be able to display custom content', () => {
+            const fix = TestBed.createComponent(IgxGridWithCustomFooterComponent);
+            fix.detectChanges();
+
+            const footer = fix.debugElement.query(By.css('igx-grid-footer')).nativeElement;
+            const footerContent = footer.textContent.trim();
+
+            expect(footerContent).toEqual('Custom content');
+        });
+    });
+
+    describe('IgxGrid - with custom pagination template', () => {
+        configureTestSuite();
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxGridWithCustomPaginationTemplateComponent
+                ],
+                imports: [
+                    NoopAnimationsModule, IgxGridModule]
+            }).compileComponents();
+        }));
+
+        it('should have access to grid context', () => {
+            const fix = TestBed.createComponent(IgxGridWithCustomPaginationTemplateComponent);
+            fix.detectChanges();
+
+            const totalRecords = fix.componentInstance.grid.totalRecords.toString();
+            const paginationContent = fix.debugElement.query(By.css('.igx-grid__footer > h2')).nativeElement;
+            const paginationText = paginationContent.textContent.trim();
+
+            expect(paginationText).toEqual(totalRecords);
+        });
+    });
 });
 
 @Component({
@@ -4501,6 +4548,19 @@ export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderi
     }
 }
 
+@Component({
+    template:
+        `<div>
+        <igx-grid #grid [data]="data" [displayDensity]="'compact'" [autoGenerate]="true"
+            [paging]="true" [perPage]="5">
+            <igx-grid-footer>
+            Custom content
+            </igx-grid-footer>
+        </igx-grid>
+        </div>`
+})
+export class IgxGridWithCustomFooterComponent extends IgxGridTestComponent {
+}
 @Component({
     template:
         `<div [style.width.px]="outerWidth" [style.height.px]="outerHeight">
@@ -5058,4 +5118,20 @@ export class IgxGridInsideIgxTabsComponent {
         }
         this.data = data;
     }
+}
+
+@Component({
+    template: `
+        <igx-grid #grid [data]="data"
+        [paging]="true" [paginationTemplate]="pager">
+        </igx-grid>
+        <ng-template #pager let-grid>
+            <h2>{{grid.totalRecords}}</h2>
+        </ng-template>
+    `
+})
+export class IgxGridWithCustomPaginationTemplateComponent {
+    public data = SampleTestData.foodProductData();
+    @ViewChild('grid', { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
 }
