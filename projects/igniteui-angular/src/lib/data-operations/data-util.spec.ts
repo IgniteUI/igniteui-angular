@@ -7,7 +7,7 @@ import { DefaultSortingStrategy } from './sorting-strategy';
 import { cloneArray } from '../core/utils';
 import { ISortingExpression, SortingDirection } from './sorting-expression.interface';
 import { DataUtil } from './data-util';
-import { IGroupByResult } from './grouping-strategy';
+import { IGroupByResult } from './grouping-result.interface';
 import { IGroupingState } from './groupby-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { FilteringStrategy } from './filtering-strategy';
@@ -23,6 +23,7 @@ import {
 import { IPagingState, PagingError } from './paging-state.interface';
 import { SampleTestData } from '../test-utils/sample-test-data.spec';
 import { Transaction, TransactionType, HierarchicalTransaction } from '../services';
+import { group } from '@angular/animations';
 
 /* Test sorting */
 function testSort() {
@@ -115,27 +116,26 @@ function testGroupBy() {
     describe('Test groupBy', () => {
         it('groups by descending column "boolean", expanded', () => {
             // sort
-            let res = DataUtil.sort(data, [expr]);
-            // first group pipe
-            const gres = DataUtil.group(res, state);
-            // second group pipe
-            res = DataUtil.restoreGroups(gres, state);
-            expect(dataGenerator.getValuesForColumn(res, 'boolean'))
+            let result = DataUtil.sort(data, [expr]);
+            // group by
+            const groupResult = DataUtil.group(result, state);
+            result = groupResult.data;
+            expect(dataGenerator.getValuesForColumn(result, 'boolean'))
                 .toEqual([undefined, false, false, false, undefined, true, true]);
-            const groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(res);
-            const group1: IGroupByRecord = gres.metadata[0];
-            const group2: IGroupByRecord = gres.metadata[3];
+            const groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(result);
+            const group1: IGroupByRecord = groupResult.metadata[1];
+            const group2: IGroupByRecord = groupResult.metadata[5];
             expect(groups[0]).toEqual(null);
-            expect(res[0]).toEqual(group1);
+            expect(result[0]).toEqual(group1);
             expect(groups[4]).toEqual(null);
-            expect(res[4]).toEqual(group2);
-            expect(gres.metadata[0]).toEqual(gres.metadata[1]);
-            expect(gres.metadata[1]).toEqual(gres.metadata[2]);
-            expect(gres.metadata[3]).toEqual(gres.metadata[4]);
+            expect(result[4]).toEqual(group2);
+            expect(groupResult.metadata[1]).toEqual(groupResult.metadata[2]);
+            expect(groupResult.metadata[2]).toEqual(groupResult.metadata[3]);
+            expect(groupResult.metadata[5]).toEqual(groupResult.metadata[6]);
             expect(group1.level).toEqual(0);
             expect(group2.level).toEqual(0);
-            expect(group1.records).toEqual(res.slice(1, 4));
-            expect(group2.records).toEqual(res.slice(5, 7));
+            expect(group1.records).toEqual(result.slice(1, 4));
+            expect(group2.records).toEqual(result.slice(5, 7));
             expect(group1.value).toEqual(false);
             expect(group2.value).toEqual(true);
         });
@@ -144,21 +144,20 @@ function testGroupBy() {
             state.defaultExpanded = false;
             // sort
             const sorted = DataUtil.sort(data, [expr]);
-            // first group pipe
-            const gres = DataUtil.group(sorted, state);
-            // second group pipe
-            const res = DataUtil.restoreGroups(gres, state);
-            expect(dataGenerator.getValuesForColumn(res, 'boolean'))
+            // group by
+            const groupResult = DataUtil.group(sorted, state);
+            const result = groupResult.data;
+            expect(dataGenerator.getValuesForColumn(result, 'boolean'))
                 .toEqual([undefined, undefined]);
-            const groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(res);
+            const groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(result);
             expect(groups[0]).toEqual(null);
             expect(groups[1]).toEqual(null);
-            expect(res[0].level).toEqual(0);
-            expect(res[1].level).toEqual(0);
-            expect(res[0].records).toEqual(sorted.slice(0, 3));
-            expect(res[1].records).toEqual(sorted.slice(3, 5));
-            expect(res[0].value).toEqual(false);
-            expect(res[1].value).toEqual(true);
+            expect(result[0].level).toEqual(0);
+            expect(result[1].level).toEqual(0);
+            expect(result[0].records).toEqual(sorted.slice(0, 3));
+            expect(result[1].records).toEqual(sorted.slice(3, 5));
+            expect(result[0].value).toEqual(false);
+            expect(result[1].value).toEqual(true);
         });
 
         it('groups by ascending column "boolean", partially collapsed', () => {
@@ -168,21 +167,20 @@ function testGroupBy() {
             });
             // sort
             const sorted = DataUtil.sort(data, [expr]);
-            // first group pipe
-            const gres = DataUtil.group(sorted, state);
-            // second group pipe
-            const res = DataUtil.restoreGroups(gres, state);
-            expect(dataGenerator.getValuesForColumn(res, 'boolean'))
+            // group by
+            const groupRecords = DataUtil.group(sorted, state);
+            const result = groupRecords.data;
+            expect(dataGenerator.getValuesForColumn(result, 'boolean'))
                 .toEqual([undefined, undefined, true, true]);
-            const groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(res);
+            const groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(result);
             expect(groups[0]).toEqual(null);
-            expect(res[1]).toEqual(gres.metadata[4]);
-            expect(res[0].level).toEqual(0);
-            expect(res[1].level).toEqual(0);
-            expect(res[0].records).toEqual(sorted.slice(0, 3));
-            expect(res[1].records).toEqual(sorted.slice(3, 5));
-            expect(res[0].value).toEqual(false);
-            expect(res[1].value).toEqual(true);
+            expect(result[1]).toEqual(groupRecords.metadata[2]);
+            expect(result[0].level).toEqual(0);
+            expect(result[1].level).toEqual(0);
+            expect(result[0].records).toEqual(sorted.slice(0, 3));
+            expect(result[1].records).toEqual(sorted.slice(3, 5));
+            expect(result[0].value).toEqual(false);
+            expect(result[1].value).toEqual(true);
         });
 
         it('two level groups', () => {
@@ -195,24 +193,23 @@ function testGroupBy() {
             state.expressions.push(expr2);
             // sort
             const sorted = DataUtil.sort(data, [expr, expr2]);
-            // first group pipe
-            const gres = DataUtil.group(sorted, state);
-            // second group pipe
-            const res = DataUtil.restoreGroups(gres, state);
-            expect(dataGenerator.getValuesForColumn(res, 'boolean'))
+            // group by
+            const groupRecords = DataUtil.group(sorted, state);
+            const result = groupRecords.data;
+            expect(dataGenerator.getValuesForColumn(result, 'boolean'))
                 .toEqual([undefined, undefined, false, undefined, false,
                     undefined, false, undefined, undefined, true, undefined, true]);
-            expect(dataGenerator.getValuesForColumn(res, 'string'))
+            expect(dataGenerator.getValuesForColumn(result, 'string'))
                 .toEqual([undefined, undefined, 'row0, col1', undefined, 'row2, col1',
                     undefined, 'row4, col1', undefined, undefined, 'row1, col1', undefined, 'row3, col1']);
-            const group1: IGroupByRecord = gres.metadata[0];
+            const group1: IGroupByRecord = groupRecords.metadata[2];
             const group2: IGroupByRecord = group1.groupParent;
-            const group3: IGroupByRecord = gres.metadata[3];
+            const group3: IGroupByRecord = groupRecords.metadata[9];
             const group4: IGroupByRecord = group3.groupParent;
-            expect(group1).toEqual(res[1]);
-            expect(group2).toEqual(res[0]);
-            expect(group3).toEqual(res[8]);
-            expect(group4).toEqual(res[7]);
+            expect(group1).toEqual(result[1]);
+            expect(group2).toEqual(result[0]);
+            expect(group3).toEqual(result[8]);
+            expect(group4).toEqual(result[7]);
             expect(group1.level).toEqual(1);
             expect(group2.level).toEqual(0);
             expect(group3.level).toEqual(1);
@@ -222,60 +219,54 @@ function testGroupBy() {
         it('groups by descending column "boolean", paging', () => {
             // sort
             const sorted = DataUtil.sort(data, [expr]);
-            // first group pipe
-            const grouped = DataUtil.group(sorted, state);
+            // group by
+            const groupResult = DataUtil.group(sorted, state);
             // page
             let paged: IGroupByResult = {
-                data: cloneArray(grouped.data),
-                metadata: cloneArray(grouped.metadata)
+                data: cloneArray(groupResult.data),
+                metadata: cloneArray(groupResult.metadata)
             };
-            paged.data = DataUtil.page(paged.data, { index: 0, recordsPerPage: 2 });
-            paged.metadata = DataUtil.page(paged.metadata, { index: 0, recordsPerPage: 2 });
-            // second group pipe
-            let res = DataUtil.restoreGroups(paged, state);
-            expect(dataGenerator.getValuesForColumn(res, 'boolean'))
+            paged.data = DataUtil.page(paged.data, { index: 0, recordsPerPage: 3 });
+            paged.metadata = DataUtil.page(paged.metadata, { index: 0, recordsPerPage: 3 });
+            expect(dataGenerator.getValuesForColumn(paged.data, 'boolean'))
                 .toEqual([undefined, false, false]);
-            let groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(res);
-            const group1: IGroupByRecord = grouped.metadata[0];
+            let groups: Array<IGroupByRecord> = dataGenerator.getGroupRecords(paged.data);
+            const group1: IGroupByRecord = paged.metadata[1];
             expect(groups[0]).toEqual(null);
-            expect(res[0]).toEqual(group1);
-            expect(grouped.metadata[1]).toEqual(group1);
+            expect(paged.data[0]).toEqual(group1);
+            expect(paged.metadata[2]).toEqual(group1);
             expect(group1.level).toEqual(0);
-            expect(group1.records).toEqual(grouped.data.slice(0, 3));
+            expect(group1.records).toEqual(sorted.slice(0, 3));
             expect(group1.value).toEqual(false);
 
             // page 2
             paged = {
-                data: cloneArray(grouped.data),
-                metadata: cloneArray(grouped.metadata)
+                data: cloneArray(groupResult.data),
+                metadata: cloneArray(groupResult.metadata)
             };
-            paged.data = DataUtil.page(paged.data, { index: 1, recordsPerPage: 2 });
-            paged.metadata = DataUtil.page(paged.metadata, { index: 1, recordsPerPage: 2 });
-            // second group pipe
-            res = DataUtil.restoreGroups(paged, state);
-            expect(dataGenerator.getValuesForColumn(res, 'boolean'))
-                .toEqual([undefined, false, undefined, true]);
-            groups = dataGenerator.getGroupRecords(res);
-            const group2: IGroupByRecord = grouped.metadata[2];
-            const group3: IGroupByRecord = grouped.metadata[3];
-            expect(res[0]).toEqual(group2);
-            expect(groups[0]).toEqual(null);
-            expect(res[2]).toEqual(group3);
-            expect(groups[2]).toEqual(null);
+            paged.data = DataUtil.page(paged.data, { index: 1, recordsPerPage: 3 });
+            paged.metadata = DataUtil.page(paged.metadata, { index: 1, recordsPerPage: 3 });
+            expect(dataGenerator.getValuesForColumn(paged.data, 'boolean'))
+                .toEqual([false, undefined, true]);
+            groups = dataGenerator.getGroupRecords(paged.data);
+            const group2: IGroupByRecord = paged.metadata[0];
+            const group3: IGroupByRecord = paged.metadata[2];
+            // group is split
+            expect(group2).toEqual(group1);
+            expect(paged.data[1]).toEqual(group3);
+            expect(groups[1]).toEqual(null);
             expect(group2.value).toEqual(false);
             expect(group3.value).toEqual(true);
-            expect(group2.records).toEqual(grouped.data.slice(0, 3));
-            expect(group3.records).toEqual(grouped.data.slice(3, 5));
+            expect(group2.records).toEqual(sorted.slice(0, 3));
+            expect(group3.records).toEqual(sorted.slice(3, 5));
         });
 
         it('provides groupsRecords array', () => {
             const groupRecords = [];
             // sort
-            let res = DataUtil.sort(data, [expr]);
-            // first group pipe
-            let gres = DataUtil.group(res, state, null, groupRecords);
-            // second group pipe
-            res = DataUtil.restoreGroups(gres, state);
+            const res = DataUtil.sort(data, [expr]);
+            // group by
+            DataUtil.group(res, state, null, groupRecords);
             expect(groupRecords.length).toEqual(2);
             expect(groupRecords[0].records.length).toEqual(3);
             expect(groupRecords[1].records.length).toEqual(2);
@@ -290,10 +281,8 @@ function testGroupBy() {
             state.expressions.push(expr2);
             // sort
             const sorted = DataUtil.sort(data, [expr, expr2]);
-            // first group pipe
-            gres = DataUtil.group(sorted, state, null, groupRecords);
-            // second group pipe
-            res = DataUtil.restoreGroups(gres, state);
+             // group by
+            DataUtil.group(sorted, state, null, groupRecords);
             expect(groupRecords.length).toEqual(2);
             expect(groupRecords[0].records.length).toEqual(3);
             expect(groupRecords[1].records.length).toEqual(2);
@@ -323,13 +312,12 @@ function testGroupBy() {
             state.defaultExpanded = false;
             // sort
             const sorted = DataUtil.sort(data, [expr, expr2, expr3]);
-            // first group pipe
-            const gres = DataUtil.group(sorted, state);
-            // second group pipe
-            const res = DataUtil.restoreGroups(gres, state);
-            expect(res.length).toEqual(4);
-            expect(res[1].groups[0]).toEqual(res[2]);
-            expect(res[1].groups[1]).toEqual(res[3]);
+            // group by
+            const groupResult = DataUtil.group(sorted, state);
+            const result = groupResult.data;
+            expect(result.length).toEqual(4);
+            expect(result[1].groups[0]).toEqual(result[2]);
+            expect(result[1].groups[1]).toEqual(result[3]);
         });
     });
 }
