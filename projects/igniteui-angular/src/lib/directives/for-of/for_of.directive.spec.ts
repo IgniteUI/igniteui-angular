@@ -1086,6 +1086,46 @@ describe('IgxForOf directive -', () => {
             expect(children.length).toEqual(expectedElementsLength);
         });
     });
+    describe('even odd first last functions', () => {
+        configureTestSuite();
+        let fix: ComponentFixture<LocalVariablesComponent>;
+
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    TestIgxForOfDirective,
+                    LocalVariablesComponent
+                ],
+                imports: [IgxForOfModule]
+            }).compileComponents();
+        }));
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(LocalVariablesComponent);
+            fix.detectChanges();
+        });
+
+        it('should differentiate even odd items', () => {
+            const allItems: DebugElement[] = fix.debugElement.queryAll(By.css('igx-display-container'))[0].children;
+            expect(allItems.length).toEqual(100);
+            for (let i = 0; i < allItems.length; i++) {
+                if (i === 0) {
+                    expect(allItems[i].classes['first']).toBe(true);
+                }
+                if (i === allItems.length - 1) {
+                    expect(allItems[i].classes['last']).toBe(true);
+                }
+                if (i % 2 === 0) {
+                    expect(allItems[i].classes['even']).toBe(true);
+                } else {
+                    expect(allItems[i].classes['odd']).toBe(true);
+                }
+            }
+        });
+
+
+    });
+
 });
 
 class DataGenerator {
@@ -1571,6 +1611,43 @@ export class NoWidthAndHeightComponent {
     constructor() {
         for (let i = 0; i < 100; i++) {
             this.items.push({text: i + ''});
+        }
+    }
+}
+
+@Component({
+    template: `
+    <div class='container'>
+        <ng-template igxFor let-item [igxForOf]="data" #virtDirVertical
+            [igxForScrollOrientation]="'vertical'"
+            [igxForContainerSize]='"500px"'
+            [igxForItemSize]='itemSize'
+            let-rowIndex="index"
+            let-odd="odd"
+            let-even="even"
+            let-first="first"
+            let-last="last">
+
+            <div #markupItem
+                [ngClass]="{
+                    first: first,
+                    last: last,
+                    even: even,
+                    odd: odd
+                }"
+                [style.height]='itemSize'>
+                    {{rowIndex}} : {{item.text}}
+            </div>
+        </ng-template>
+    </div>
+    `,
+})
+export class LocalVariablesComponent {
+    public data = [];
+
+    constructor() {
+        for (let i = 0; i < 100; i++) {
+            this.data.push({text: i + ''});
         }
     }
 }
