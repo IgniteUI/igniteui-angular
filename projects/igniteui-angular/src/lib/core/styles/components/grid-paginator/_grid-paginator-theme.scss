@@ -73,7 +73,8 @@
         z-index: 1;
         padding: map-get($paginator-padding, 'comfortable');
         height: map-get($paginator-height, 'comfortable');
-
+        width: 100%;
+        
         &:empty {
             padding: 0;
         }
