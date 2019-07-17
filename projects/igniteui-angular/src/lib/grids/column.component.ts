@@ -116,19 +116,22 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     @Input()
     get editable(): boolean {
-        // if rowEditable is set to true or transaction service is provided grid has transactions
-        const hasTransactions = this.grid && (this.grid.rowEditable || this.grid.transactions.enabled);
+        // Updating the primary key when grid has transactions should not be
+        // allowed. We are aggregating the transactions by primary key. If one
+        // change the primary key the transaction state for the related record
+        // will be corrupted. This is why if this is primary kew column and
+        // grid has transactions we return false here.
+        const hasGrid = this.grid !== undefined;
+        const rowEditable = hasGrid && this.grid.rowEditable;
+        const hasTransactions = hasGrid && this.grid.transactions.enabled;
 
-        if (this.isPrimaryColumn && hasTransactions) {
-            // if this is primary column and grid has transactions column should not be editable,
+        if (this.isPrimaryColumn && (rowEditable || hasTransactions)) {
             return false;
         } else {
-            // if this is not primary column with transactions return what user have set
-            // or if row is editable
             if (this._editable !== undefined) {
                 return this._editable;
             } else {
-                return this.grid && this.grid.rowEditable;
+                return rowEditable;
             }
         }
     }
