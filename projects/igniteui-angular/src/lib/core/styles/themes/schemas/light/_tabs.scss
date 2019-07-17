@@ -30,56 +30,59 @@
 /// @see $default-palette
 
 
-$_light-tabs: extend((
-    item-text-color: (
-        igx-color: ('grays', 700)
-    ),
+$_light-tabs: extend(
+    $_default-shape-tabs,
+    (
+        item-text-color: (
+            igx-color: ('grays', 700)
+        ),
 
-    item-background: #fff,
+        item-background: #fff,
 
-    item-hover-background: (
-        igx-color: ('grays', 200)
-    ),
+        item-hover-background: (
+            igx-color: ('grays', 200)
+        ),
 
-    item-hover-color: (
-        igx-color: ('grays', 700)
-    ),
+        item-hover-color: (
+            igx-color: ('grays', 700)
+        ),
 
-    item-active-color: (
-        igx-color: ('primary', 500)
-    ),
+        item-active-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    item-active-icon-color: (
-        igx-color: ('primary', 500)
-    ),
+        item-active-icon-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    item-active-background: (
-        igx-color: ('grays', 200)
-    ),
+        item-active-background: (
+            igx-color: ('grays', 200)
+        ),
 
-    indicator-color: (
-        igx-color: ('primary', 500)
-    ),
+        indicator-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    button-color: (
-        igx-color: ('grays', 500)
-    ),
+        button-color: (
+            igx-color: ('grays', 500)
+        ),
 
-    button-background: #fff,
+        button-background: #fff,
 
-    button-hover-background: (
-        igx-color: ('grays', 100)
-    ),
+        button-hover-background: (
+            igx-color: ('grays', 100)
+        ),
 
-    button-hover-color: (
-        igx-color: ('grays', 600)
-    ),
+        button-hover-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    tab-ripple-color: (
-        igx-color: ('grays', 100)
-    ),
+        tab-ripple-color: (
+            igx-color: ('grays', 100)
+        ),
 
-    button-ripple-color: (
-        igx-color: ('grays', 100)
+        button-ripple-color: (
+            igx-color: ('grays', 100)
+        )
     )
-), $_default-shape-tabs);
+);

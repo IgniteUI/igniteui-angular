@@ -73,6 +73,20 @@ export interface IGroupingDoneEventArgs {
 export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit, DoCheck, AfterContentInit {
     private _id = `igx-grid-${NEXT_ID++}`;
     /**
+     * @hidden @internal
+     */
+    public groupingResult: any[];
+
+    /**
+     * @hidden @internal
+     */
+    public groupingMetadata: any[];
+
+    /**
+     * @hidden @internal
+     */
+    public groupingFlatResult: any[];
+    /**
      * @hidden
      */
     protected _groupingExpressions: IGroupingExpression[] = [];
@@ -634,6 +648,18 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     }
 
     /**
+     * Expands the specified group and all of its parent groups.
+     * ```typescript
+     * public groupRow: IGroupByRecord;
+     * this.grid.fullyExpandGroup(this.groupRow);
+     * ```
+     * @memberof IgxGridComponent
+     */
+    public fullyExpandGroup(groupRow: IGroupByRecord) {
+        this._fullyExpandGroup(groupRow);
+    }
+
+    /**
      * @hidden
      */
     public isGroupByRecord(record: any): boolean {
@@ -703,6 +729,13 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     /**
      * @hidden
      */
+    protected _fullyExpandGroup(groupRow: IGroupByRecord) {
+        this._gridAPI.groupBy_fully_expand_group(groupRow);
+    }
+
+    /**
+     * @hidden
+     */
     protected _applyGrouping() {
         this._gridAPI.sort_multiple(this._groupingExpressions);
     }
@@ -739,23 +772,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
 
         if (this.dataLength === 0) {
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    protected getGroupByRecords(): IGroupByRecord[] {
-        if (this.groupingExpressions && this.groupingExpressions.length) {
-            const state = {
-                expressions: this.groupingExpressions,
-                expansion: this.groupingExpansionState,
-                defaultExpanded: this.groupsExpanded
-            };
-
-            return DataUtil.group(cloneArray(this.filteredSortedData), state, this).metadata;
-        } else {
-            return null;
         }
     }
 
@@ -861,16 +877,14 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     protected scrollTo(row: any | number, column: any | number): void {
         if (this.groupingExpressions && this.groupingExpressions.length
             && typeof(row) !== 'number') {
-            const groupByRecords = this.getGroupByRecords();
-            const rowIndex = this.filteredSortedData.indexOf(row);
-            const groupByRecord = groupByRecords[rowIndex];
-
-            if (groupByRecord && !this.isExpandedGroup(groupByRecord)) {
-                this.toggleGroup(groupByRecord);
+            const rowIndex = this.groupingResult.indexOf(row);
+            const groupByRecord = this.groupingMetadata[rowIndex];
+            if (groupByRecord) {
+                this._fullyExpandGroup(groupByRecord);
             }
         }
 
-        super.scrollTo(row, column);
+        super.scrollTo(row, column, this.groupingFlatResult);
     }
 
     /**
@@ -934,7 +948,10 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         }
     }
 
-    getSelectedData(): any[] {
+    /**
+     * @inheritdoc
+     */
+    getSelectedData(formatters = false, headers = false): any[] {
         if (this.groupingExpressions.length) {
             const source = [];
 
@@ -948,9 +965,9 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
             };
 
             this.verticalScrollContainer.igxForOf.forEach(process);
-            return this.extractDataFromSelection(source);
+            return this.extractDataFromSelection(source, formatters, headers);
         } else {
-            return super.getSelectedData();
+            return super.getSelectedData(formatters, headers);
         }
     }
 
