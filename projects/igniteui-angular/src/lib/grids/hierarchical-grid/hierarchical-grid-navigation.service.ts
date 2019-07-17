@@ -128,22 +128,17 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     public navigateTop(visibleColumnIndex) {
         if (this.grid.parent !== null) {
             // navigating in child
-            const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
-            const cellSelector = this.getCellSelector(visibleColumnIndex);
-
-            if (verticalScroll.scrollTop === 0) {
-                this._focusScrollCellInView(visibleColumnIndex);
+            const childContainer = this.grid.nativeElement.parentNode.parentNode;
+            const diff =
+            childContainer.getBoundingClientRect().top - this.grid.rootGrid.tbody.nativeElement.getBoundingClientRect().top;
+            const topIsVisible = diff >= 0;
+            const scrollable = this.getNextScrollable(this.grid);
+            if (!topIsVisible) {
+                this.scrollGrid(scrollable.grid, diff,
+                    () => super.navigateTop(visibleColumnIndex));
             } else {
-                this.scrollGrid(this.grid, 'top',
-                () => {
-                    const cells = this.grid.nativeElement.querySelectorAll(
-                        `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
-                    if (cells.length > 0) {
-                        this._focusScrollCellInView(visibleColumnIndex);
-                     }
-                });
+                super.navigateTop(visibleColumnIndex);
             }
-
         } else {
             super.navigateTop(visibleColumnIndex);
         }
@@ -446,27 +441,6 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                 // move to next cell
                 this.navigateUp(currentRowEl, rowIndex, lastIndex);
             }
-    }
-
-    private _focusScrollCellInView(visibleColumnIndex) {
-        const cellSelector = this.getCellSelector(visibleColumnIndex);
-        const cells = this.grid.nativeElement.querySelectorAll(
-            `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
-        const cell = cells[0];
-        const childContainer = this.grid.nativeElement.parentNode.parentNode;
-        const scrTop = this.grid.parent.verticalScrollContainer.getVerticalScroll().scrollTop;
-        const maxScroll = this.grid.parent.verticalScrollContainer.getVerticalScroll().scrollHeight - this.grid.parent.calcHeight;
-        const dc = childContainer.parentNode.parentNode;
-        const scrWith = parseInt(dc.style.top, 10);
-        const parentRowOffset = childContainer.parentNode.offsetTop + this.grid.nativeElement.offsetTop +
-            scrWith;
-        if ((scrTop === 0 && parentRowOffset < 0 ) || parentRowOffset === 0 || (scrTop === maxScroll && parentRowOffset > 0)) {
-            // cell is in view
-            cell.focus({preventScroll: true});
-        } else {
-            // scroll parent so that cell is in view
-            this.scrollGrid(this.grid.parent, parentRowOffset, () => cell.focus({ preventScroll: true }));
-        }
     }
 
     private focusNextChild(elem, visibleColumnIndex, grid) {
