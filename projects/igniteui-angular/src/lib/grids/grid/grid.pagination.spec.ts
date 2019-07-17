@@ -146,32 +146,32 @@ describe('IgxGrid - Grid Paging', () => {
         verifyGridPager(fix, 10, '1', '1 of 1', []);
     }));
 
-    it('change paging settings API', () => {
+    it('change paging settings API', fakeAsync(() => {
         const fix = TestBed.createComponent(ReorderedColumnsComponent);
         fix.detectChanges();
-
         // Change page size
         const grid = fix.componentInstance.grid;
         grid.paging = true;
         grid.perPage = 2;
-
         fix.detectChanges();
+        tick();
+
         expect(grid.paging).toBeTruthy();
         expect(grid.perPage).toEqual(2, 'Invalid page size');
         verifyGridPager(fix, 2, '1', '1 of 5', []);
 
         // Turn off paging
         grid.paging = false;
+        tick();
 
         fix.detectChanges();
-
         expect(grid.paging).toBeFalsy();
         expect(grid.perPage).toEqual(2, 'Invalid page size after paging was turned off');
         verifyGridPager(fix, 10, '1', null, []);
         const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         expect(gridElement.querySelector('.igx-paginator')).toBeNull();
         expect(gridElement.querySelectorAll('.igx-paginator > select').length).toEqual(0);
-    });
+    }));
 
     it('change paging pages per page API', (async () => {
         const fix = TestBed.createComponent(ReorderedColumnsComponent);
@@ -439,31 +439,6 @@ describe('IgxGrid - Grid Paging', () => {
         fix.detectChanges();
         expect(gridElement.querySelector(paginator)).not.toBeNull();
     }));
-
-    it('should display custom numbers in select from perPage', () => {
-        const expectedOptions = [3, 5, 10, 15, 25, 50, 100, 500];
-        const defaultExpectedOptions = [5, 10, 15, 25, 50, 100, 500];
-
-        const fix = TestBed.createComponent(PagingComponent);
-        const grid = fix.componentInstance.grid;
-        fix.detectChanges();
-
-        function testOptions(expectedResults) {
-            const options = fix.debugElement.query(By.css('igx-select')).nativeElement.querySelectorAll('igx-select-item');
-            let option;
-            options.forEach((el, index) => {
-                option = Number(el.textContent.trim());
-                expect(option).toBe(expectedResults[index]);
-            });
-        }
-
-        testOptions(expectedOptions);
-
-        grid.perPage = 25;
-        fix.detectChanges();
-
-        testOptions(defaultExpectedOptions);
-    });
 
     function verifyGridPager(fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) {
         const disabled = 'igx-button--disabled';

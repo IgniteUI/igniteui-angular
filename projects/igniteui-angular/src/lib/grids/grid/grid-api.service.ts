@@ -112,6 +112,17 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
         }
     }
 
+    public groupBy_fully_expand_group(groupRow: IGroupByRecord) {
+        const state: IGroupByExpandState = this.groupBy_get_expanded_for_group(groupRow);
+        const expanded = state ? state.expanded : this.grid.groupsExpanded;
+        if (!expanded) {
+            this.groupBy_toggle_group(groupRow);
+        }
+        if (groupRow.groupParent) {
+            this.groupBy_fully_expand_group(groupRow.groupParent);
+        }
+    }
+
     protected remove_grouping_expression(fieldName) {
         const groupingExpressions = this.grid.groupingExpressions;
         const index = groupingExpressions.findIndex((expr) => expr.fieldName === fieldName);
