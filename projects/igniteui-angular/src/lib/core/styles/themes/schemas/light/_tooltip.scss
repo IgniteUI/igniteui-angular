@@ -35,4 +35,8 @@ $_light-tooltip: extend(
     )
 );
 
-$_fluent-tooltip: extend($_light-tooltip);
+$_fluent-tooltip: extend($_light-tooltip, $_fluent-shape-tooltip, (
+    background: (
+        igx-color: 'surface'
+    )
+));

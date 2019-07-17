@@ -404,17 +404,40 @@
     $button-icon-font-size: rem(24px, 24px);
     $button-icon-padding: 0;
 
-    $button-padding: (
+    $button-padding-material: (
         comfortable: rem(9px, 16px) rem(16px, 16px),
         cosy: rem(6px, 16px) rem(16px, 16px),
         compact: rem(3px, 16px) rem(16px, 16px)
     );
-
-    $button-size: (
+    
+    $button-padding-fluent: (
+        comfortable: 0 rem(16px, 16px),
+        cosy: 0 rem(16px, 16px),
+        compact: 0 rem(16px, 16px)
+    );
+    
+    $button-padding: map-get((
+        material: $button-padding-material,
+        fluent: $button-padding-fluent
+    ), map-get($theme, variant));
+    
+    $button--size-material: (
         comfortable: rem(36px),
         cosy: rem(30px),
         compact: rem(24px)
     );
+    
+    $button--size-fluent: (
+        comfortable: rem(32px),
+        cosy: rem(28px),
+        compact: rem(24px)
+    );
+    
+    $button-size: map-get((
+        material: $button--size-material,
+        fluent: $button--size-fluent
+    ), map-get($theme, variant));
+    
 
     $button-floating-padding: (
         comfortable: rem(15px),

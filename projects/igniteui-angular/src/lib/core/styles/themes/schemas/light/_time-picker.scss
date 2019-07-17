@@ -65,4 +65,4 @@ $_light-time-picker: extend(
     )
 );
 
-$_fluent-time-picker: extend($_light-time-picker);
+$_fluent-time-picker: extend($_light-time-picker, $_fluent-shape-time-picker);

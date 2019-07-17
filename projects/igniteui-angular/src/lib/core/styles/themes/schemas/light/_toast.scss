@@ -28,4 +28,4 @@ $_light-toast: extend(
     )
 );
 
-$_fluent-toast: extend($_light-toast);
+$_fluent-toast: extend($_light-toast, $_fluent-shape-toast);

@@ -19,6 +19,7 @@ $_light-dialog: extend(
     $_default-shape-dialog,
     $_default-elevation-dialog,
     (
+        variant: 'material',
         background: (
             igx-color: 'surface'
         ),
@@ -37,4 +38,6 @@ $_light-dialog: extend(
     )
 );
 
-$_fluent-dialog: extend($_light-dialog);
+$_fluent-dialog: extend($_light-dialog, $_fluent-shape-dialog, (
+    variant: 'fluent',
+));
