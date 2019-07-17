@@ -105,8 +105,8 @@ export class IgxGridCRUDService {
         return new IgxRow(cell.id.rowID, cell.rowIndex, cell.rowData);
     }
 
-    sameRow(rowID): boolean {
-        return this.row && this.row.id === rowID;
+    sameRow(rowIndex): boolean {
+        return this.row && this.row.index === rowIndex;
     }
 
     sameCell(cell: IgxCell): boolean {
@@ -175,7 +175,7 @@ export class IgxGridCRUDService {
                 return;
             }
 
-            if (this.row && !this.sameRow(this.cell.id.rowID)) {
+            if (this.row && !this.sameRow(this.cell.rowIndex)) {
                 this.grid.endEdit(true);
                 this.cell = this.createCell(cell);
                 this.beginRowEdit();
