@@ -15,8 +15,10 @@ export class InputGroupFluentSampleComponent {
         lastName: 'Duduka'
     };
     public inputType = 'fluent';
+    public inputSearchType = 'fluent_search';
     date = new Date();
     constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions) {}
+    public value: 'opt1';
 
     changeDisplayDensity() {
         switch (this.displayDensityOptions.displayDensity) {
@@ -30,6 +32,11 @@ export class InputGroupFluentSampleComponent {
             this.inputType = 'box';
         } else if (this.inputType === 'box') {
             this.inputType = 'fluent';
+        }
+        if (this.inputSearchType === 'fluent_search') {
+            this.inputSearchType = 'search';
+        } else if (this.inputSearchType === 'search') {
+            this.inputSearchType = 'fluent_search';
         }
     }
 }

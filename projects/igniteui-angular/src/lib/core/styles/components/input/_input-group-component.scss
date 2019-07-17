@@ -384,7 +384,7 @@
     // FLUENT THEME //
 
     @include m(fluent) {
-        @extend %igx-input-group--fluent !optional;
+        @extend %igx-input-group-fluent !optional;
 
         @include e(bundle) {
             @extend %form-group-bundle--fluent !optional;
@@ -410,13 +410,19 @@
             @extend %fluent-textarea !optional;
         }
     }
+    
+    @include mx(placeholder, fluent) {
+        @include e(label) {
+            @extend %fluent-placeholder-label !optional;
+        }
+    }
 
     @include mx(cosy, fluent) {
-        @extend %igx-input-group--fluent--cosy !optional;
+        @extend %igx-input-group-fluent--cosy !optional;
     }
 
     @include mx(compact, fluent) {
-        @extend %igx-input-group--fluent--compact !optional;
+        @extend %igx-input-group-fluent--compact !optional;
     }
 
     @include mx(disabled, fluent) {
@@ -461,7 +467,7 @@
                 @extend %form-group-bundle--fluent--focus !optional;
             }
         }
-
+        
         @include e(label) {
             @extend %fluent-label-focused !optional;
         }
@@ -472,10 +478,7 @@
             @extend %form-group-bundle-required--fluent !optional;
         }
     }
-
-    //@include mx(fluent, cosy) {}
-    //@include mx(fluent, compact) {}
-
+    
     @include mx(valid, fluent) {
         @include e(bundle) {
             @extend %form-group-bundle-success--fluent !optional;
@@ -503,11 +506,7 @@
             @extend %fluent-label-error !optional;
         }
     }
-
-    //@include mx(invalid, fluent) {}
-
-
-
+    
     // FLUENT THEME END //
 
     @include m(search) {
@@ -585,6 +584,52 @@
     }
 
     @include mx(disabled, search) {
+        @include e(bundle) {
+            @extend %form-group-bundle-search--disabled !optional;
+        }
+    }
+    
+    @include m(fluent-search) {
+        @extend %igx-input-group-fluent-search !optional;
+    
+        @include e(bundle) {
+            @extend %form-group-bundle--fluent !optional;
+        
+            &:hover {
+                @extend %form-group-bundle--fluent--hover !optional;
+            }
+        }
+    
+        @include e(bundle-main) {
+            @extend %form-group-bundle-main--fluent !optional;
+        }
+    
+        @include e(input) {
+            @extend %fluent-input !optional;
+        }
+    
+        @include e(label) {
+            @extend %fluent-label !optional;
+        }
+        
+        @include e(hint) {
+            @extend %form-group-helper--box !optional;
+        }
+    }
+    
+    @include mx(fluent-search, cosy) {
+        @extend %igx-input-group-fluent-search--cosy !optional;
+    }
+    
+    @include mx(fluent-search, compact) {
+        @extend %igx-input-group-fluent-search--compact !optional;
+    }
+    
+    @include mx(focused, fluent-search) {
+        @extend %igx-input-group-fluent-search--focused !optional;
+    }
+    
+    @include mx(disabled, fluent-search) {
         @include e(bundle) {
             @extend %form-group-bundle-search--disabled !optional;
         }

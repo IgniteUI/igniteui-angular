@@ -7,6 +7,45 @@
         </div>
         <div class="fluent-form-btn-label"><strong>Current density: </strong>{{displayDensityOptions.displayDensity}}</div>
 
+        <igx-input-group [type]="inputSearchType">
+            <input #input igxInput placeholder="Search"/>
+            <igx-prefix>
+                <igx-icon>search</igx-icon>
+            </igx-prefix>
+            <igx-suffix *ngIf="input.value.length > 0" (click)="input.value = input.defaultValue">
+                <igx-icon>clear</igx-icon>
+            </igx-suffix>
+        </igx-input-group>
+
+        <br>
+
+        <igx-input-group [type]="inputSearchType">
+        <input igxInput placeholder="Search" disabled="disabled"/>
+        <igx-prefix>
+            <igx-icon>search</igx-icon>
+        </igx-prefix>
+        </igx-input-group>
+
+        <br>
+
+        <igx-select #select1
+                    [placeholder]="'Pick One'"
+                    [value]="value"
+                    [disabled]="false"
+                    [type]="inputType">
+            <label igxLabel>Sample Label</label>
+            <igx-prefix igxPrefix>
+                <igx-icon fontSet="material">favorite</igx-icon>
+            </igx-prefix>
+            <igx-select-item>None</igx-select-item>
+            <igx-select-item [value]="1">Sofia</igx-select-item>
+            <igx-select-item [value]="2">London</igx-select-item>
+            <igx-select-item [value]="3">Paris</igx-select-item>
+            <igx-select-item [value]="4">New York</igx-select-item>
+        </igx-select>
+
+        <br>
+
         <igx-date-picker [value]="date">
             <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value" let-displayData="displayData">
                 <igx-input-group [type]="inputType">
@@ -36,15 +75,15 @@
 
         <!-- Fluent text field w/ icon prefix/suffix -->
         <igx-input-group [type]="inputType">
-            <label igxLabel>Call a Contact</label>
+            <label igxLabel>Web address</label>
             <igx-prefix>
-                <igx-icon>face</igx-icon>
+               http://
             </igx-prefix>
             <input igxInput type="tel" />
             <igx-suffix>
-                <igx-icon>phone</igx-icon>
+                .com
             </igx-suffix>
-            <igx-hint>Type the phone number</igx-hint>
+            <igx-hint>Type you web address</igx-hint>
         </igx-input-group>
 
         <!-- Fluent textarea field -->

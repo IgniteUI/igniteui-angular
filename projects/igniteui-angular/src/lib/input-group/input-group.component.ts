@@ -27,7 +27,8 @@ enum IgxInputGroupType {
     BOX,
     BORDER,
     FLUENT,
-    SEARCH
+    SEARCH,
+    FLUENT_SEARCH,
 }
 
 @Component({
@@ -105,6 +106,12 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      */
     @HostBinding('class.igx-input-group--search')
     public isSearch = false;
+    /**
+     * @hidden
+     */
+
+    @HostBinding('class.igx-input-group--fluent-search')
+    public isFluentSearch = false;
 
     /**
      * @hidden
@@ -168,7 +175,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
 
     /**
      * An @Input property that sets how the input will be styled.
-     * The allowed values are `line`, `box`, `border` and `search`. The default is `line`.
+     * The allowed values are `line`, `box`, `border`, `fluent`, `search` and `fluentSearch`. The default is `line`.
      * ```html
      *<igx-input-group [type]="'search'">
      * ```
@@ -177,7 +184,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     set type(value: string) {
         const type: IgxInputGroupType = (IgxInputGroupType as any)[value.toUpperCase()];
         if (type !== undefined) {
-            this.isBox = this.isFluent = this.isBorder = this.isSearch = false;
+            this.isBox = this.isFluent = this.isFluentSearch = this.isBorder = this.isSearch = false;
             switch (type) {
                 case IgxInputGroupType.BOX:
                     this.isBox = true;
@@ -187,6 +194,9 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
                     break;
                 case IgxInputGroupType.FLUENT:
                     this.isFluent = true;
+                    break;
+                case IgxInputGroupType.FLUENT_SEARCH:
+                    this.isFluentSearch = true;
                     break;
                 case IgxInputGroupType.SEARCH:
                     this.isSearch = true;
@@ -253,7 +263,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
 
     /**
      * Returns the type of the `IgxInputGroupComponent`. How the input is styled.
-     * Values are `line` - 0, `box` - 1, `border` - 2  and `search` - 3. The default is `line`.
+     * Values are `line` - 0, `box` - 1, `border` - 2,  `fluent` - 3 `fluentSearch` - 4 and `search` - 5. The default is `line`.
      * ```typescript
      *@ViewChild("MyInputGroup")
      *public inputGroup: IgxInputGroupComponent;
@@ -369,6 +379,20 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      */
     get isTypeSearch() {
         return  this._type === IgxInputGroupType.SEARCH;
+    }
+
+    /**
+     * Returns whether the `IgxInputGroupComponent` type is fluentSearch.
+     * ```typescript
+     *@ViewChild("MyInputGroup1")
+     *public inputGroup: IgxInputGroupComponent;
+     *ngAfterViewInit(){
+     *    let isTypeFluentSearch = this.inputGroup.isTypeFluentSearch;
+     *}
+     * ```
+     */
+    get isTypeFluentSearch() {
+        return  this._type === IgxInputGroupType.FLUENT_SEARCH;
     }
 
     get filled() {

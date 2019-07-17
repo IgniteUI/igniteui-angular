@@ -13,6 +13,7 @@ const INPUT_GROUP_BOX_CSS_CLASS = 'igx-input-group--box';
 const INPUT_GROUP_BORDER_CSS_CLASS = 'igx-input-group--border';
 const INPUT_GROUP_FLUENT_CSS_CLASS = 'igx-input-group--fluent';
 const INPUT_GROUP_SEARCH_CSS_CLASS = 'igx-input-group--search';
+const INPUT_GROUP_FLUENT_SEARCH_CSS_CLASS = 'igx-input-group--fluent-search';
 const INPUT_GROUP_COMFORTABLE_DENSITY_CSS_CLASS = 'igx-input-group--comfortable';
 const INPUT_GROUP_COMPACT_DENSITY_CSS_CLASS = 'igx-input-group--compact';
 const INPUT_GROUP_COSY_DENSITY_CSS_CLASS = 'igx-input-group--cosy';
@@ -241,6 +242,7 @@ function testInputGroupType(type, component: IgxInputGroupComponent, nativeEleme
     let isBox = false;
     let isSearch = false;
     let isFluent = false;
+    let isFluentSearch = false;
 
     switch (type) {
         case 'line':
@@ -255,6 +257,9 @@ function testInputGroupType(type, component: IgxInputGroupComponent, nativeEleme
         case 'fluent':
             isFluent = true;
             break;
+        case 'fluentSearch':
+            isFluentSearch = true;
+            break;
         case 'search':
             isSearch = true;
             break;
@@ -265,12 +270,14 @@ function testInputGroupType(type, component: IgxInputGroupComponent, nativeEleme
     expect(nativeElement.classList.contains(INPUT_GROUP_BORDER_CSS_CLASS)).toBe(isBorder);
     expect(nativeElement.classList.contains(INPUT_GROUP_FLUENT_CSS_CLASS)).toBe(isFluent);
     expect(nativeElement.classList.contains(INPUT_GROUP_SEARCH_CSS_CLASS)).toBe(isSearch);
+    expect(nativeElement.classList.contains(INPUT_GROUP_FLUENT_SEARCH_CSS_CLASS)).toBe(isFluentSearch);
 
     expect(component.isTypeLine).toBe(isLine);
     expect(component.isTypeBorder).toBe(isBorder);
     expect(component.isTypeBox).toBe(isBox);
     expect(component.isTypeFluent).toBe(isFluent);
     expect(component.isTypeSearch).toBe(isSearch);
+    expect(component.isTypeFluentSearch).toBe(isFluentSearch);
 }
 
 @Component({
