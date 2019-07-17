@@ -97,10 +97,10 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         }
     }
 
-    protected createDragGhost(event) {
+    protected createDragGhost(pageX, pageY) {
         this.row.grid.endEdit(true);
         this.row.grid.markForCheck();
-        super.createDragGhost(event, this.row.nativeElement);
+        super.createDragGhost(pageX, pageY, this.row.nativeElement);
 
         const ghost = this.dragGhost;
 

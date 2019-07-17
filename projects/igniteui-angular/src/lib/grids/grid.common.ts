@@ -432,17 +432,8 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         this._unsubscribe();
     }
 
-    protected createDragGhost(event) {
-        super.createDragGhost(event);
-
-        let pageX, pageY;
-        if (this.pointerEventsEnabled || !this.touchEventsEnabled) {
-            pageX = event.pageX;
-            pageY = event.pageY;
-        } else {
-            pageX = event.touches[0].pageX;
-            pageY = event.touches[0].pageY;
-        }
+    protected createDragGhost(pageX, pageY) {
+        super.createDragGhost(pageX, pageY);
 
         this.dragGhost.style.height = null;
         this.dragGhost.style.minWidth = null;
