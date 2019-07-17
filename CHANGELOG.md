@@ -28,7 +28,7 @@ All notable changes for each version of this project will be documented in this 
     - Replaces the current paginator in all grids. Can be used as a standalone component.
 - `IgxCombo`
     - Input `[overlaySettings]` - allows an object of type `OverlaySettings` to be passed. These custom overlay settings control how the drop-down list displays.
-- `IgxForOf` now offers usage of local functions `even`, `odd`, `first` and `last` to help with the distinction of the currently iterated element.
+- `IgxForOf` now offers usage of local variables `even`, `odd`, `first` and `last` to help with the distinction of the currently iterated element.
 
 
 ## 8.0.2
