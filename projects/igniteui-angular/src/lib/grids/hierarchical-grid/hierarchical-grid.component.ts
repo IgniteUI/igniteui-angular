@@ -502,6 +502,19 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         return width;
     }
 
+    /**
+     * @hidden
+     * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
+     * Method used to override the calculations.
+     */
+    public getFeatureColumnsWidth() {
+        let width = super.getFeatureColumnsWidth();
+        if (this.hasExpandableChildren) {
+            width += this.headerHierarchyExpander.nativeElement.clientWidth || this.getDefaultExpanderWidth();
+        }
+        return width;
+    }
+
      private getDefaultExpanderWidth(): number {
         switch (this.displayDensity) {
             case DisplayDensity.cosy:
