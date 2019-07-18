@@ -42,72 +42,75 @@
 ///
 /// @see $default-palette
 
-$_light-list: extend((
-    background: (
-        igx-color: 'surface'
-    ),
+$_light-list: extend(
+    $_default-shape-list,
+    (
+        background: (
+            igx-color: 'surface'
+        ),
 
-    header-background: (
-        igx-color: 'surface'
-    ),
+        header-background: (
+            igx-color: 'surface'
+        ),
 
-    header-text-color:  (
-        igx-color: ('secondary', 500)
-    ),
+        header-text-color:  (
+            igx-color: ('secondary', 500)
+        ),
 
-    item-background: (
-        igx-color: 'surface'
-    ),
+        item-background: (
+            igx-color: 'surface'
+        ),
 
-    item-background-hover: (
-        igx-color: ('grays', 200),
-        hexrgba: (#fff)
-    ),
+        item-background-hover: (
+            igx-color: ('grays', 200),
+            hexrgba: (#fff)
+        ),
 
-    item-background-active: (
-        igx-color: ('grays', 200),
-        hexrgba: (#fff)
-    ),
+        item-background-active: (
+            igx-color: ('grays', 200),
+            hexrgba: (#fff)
+        ),
 
-    item-text-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .74
-    ),
+        item-text-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .74
+        ),
 
-    item-text-color-hover: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .74
-    ),
+        item-text-color-hover: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .74
+        ),
 
-    item-text-color-active: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .74
-    ),
+        item-text-color-active: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .74
+        ),
 
-    item-title-color: currentColor,
+        item-title-color: currentColor,
 
-    item-title-color-hover: currentColor,
+        item-title-color-hover: currentColor,
 
-    item-title-color-active: currentColor,
+        item-title-color-active: currentColor,
 
-    item-action-color: currentColor,
+        item-action-color: currentColor,
 
-    item-action-color-hover: currentColor,
+        item-action-color-hover: currentColor,
 
-    item-action-color-active: currentColor,
+        item-action-color-active: currentColor,
 
-    item-subtitle-color: currentColor,
+        item-subtitle-color: currentColor,
 
-    item-subtitle-color-hover: currentColor,
+        item-subtitle-color-hover: currentColor,
 
-    item-subtitle-color-active: currentColor,
+        item-subtitle-color-active: currentColor,
 
-    item-thumbnail-color: currentColor,
+        item-thumbnail-color: currentColor,
 
-    item-thumbnail-color-hover: currentColor,
+        item-thumbnail-color-hover: currentColor,
 
-    item-thumbnail-color-active: currentColor
-), $_default-shape-list);
+        item-thumbnail-color-active: currentColor
+    )
+);
