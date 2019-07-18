@@ -341,15 +341,15 @@
     $item: map-get($categories, 'item');
     $header: map-get($categories, 'header');
 
-    %item {
-        @include igx-type-style($type-scale, $item) {
-            margin: 0;
+    @include igx-scope('.igx-typography') {
+        %item {
+            @include igx-type-style($type-scale, $item);
         }
-    }
 
-    %item--header {
-        @include igx-type-style($type-scale, $header) {
-            margin: 0;
+        %item--header {
+            @include igx-type-style($type-scale, $header) {
+                margin: 0;
+            }
         }
     }
 }

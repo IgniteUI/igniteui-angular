@@ -126,13 +126,20 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     @Input()
     get editable(): boolean {
-        let result = false;
-        if (this._editable !== undefined) {
-            result = this._editable;
-        } else {
-            result = this.grid && this.grid.rowEditable && this.field !== this.grid.primaryKey;
+        // Updating the primary key when grid has transactions (incl. row edit)
+        // should not be allowed, as that can corrupt transaction state.
+        const rowEditable = this.grid && this.grid.rowEditable;
+        const hasTransactions = this.grid && this.grid.transactions.enabled;
+
+        if (this.isPrimaryColumn && (rowEditable || hasTransactions)) {
+            return false;
         }
-        return result;
+
+        if (this._editable !== undefined) {
+            return this._editable;
+        } else {
+            return rowEditable;
+        }
     }
     /**
      * Sets whether the column is editable.
@@ -1085,6 +1092,12 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      */
     protected _editable: boolean;
+    /**
+     * @hidden
+     */
+    protected get isPrimaryColumn(): boolean {
+        return this.field !== undefined && this.grid !== undefined && this.field === this.grid.primaryKey;
+    }
     /**
      *@hidden
      */
