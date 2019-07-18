@@ -725,8 +725,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 }
                 if (scrToBottom && !this._isAtBottomIndex) {
                     const containerSize = parseInt(this.igxForContainerSize, 10);
-                    const scrollOffset = this.fixedUpdateAllElements(this._virtHeight - containerSize);
-                    this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
+                    const maxVirtScrollTop = this._virtHeight - containerSize;
+                    this._bScrollInternal = true;
+                    this._virtScrollTop = maxVirtScrollTop;
+                    this.scrollPosition = maxVirtScrollTop;
                     return;
                 }
                 if (this._adjustToIndex) {
@@ -1215,7 +1217,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     private _getItemSize(item, dimension: string): number {
         const dim = item[dimension];
-        return typeof dim === 'number' ? dim : this.igxForItemSize;
+        return typeof dim === 'number' ? dim : parseInt(this.igxForItemSize, 10) || 0;
     }
 }
 
