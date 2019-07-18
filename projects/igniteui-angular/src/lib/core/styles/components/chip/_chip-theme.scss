@@ -215,18 +215,37 @@
     $transition: all 120ms $ease-in-out-quad;
     $chip-max-width: 24ch;
 
-    $chip-height: (
+    $chip-height-material: (
         comfortable: rem(32px),
         cosy: rem(24px),
         compact: rem(18px)
     );
-
+    
+    $chip-height-fluent: (
+        comfortable: rem(26px),
+        cosy: rem(24px),
+        compact: rem(18px)
+    );
+    
+    $chip-height: map-get((
+        material: $chip-height-material,
+        fluent: $chip-height-fluent
+    ), map-get($theme, variant));
+    
     $chip-padding: (
         comfortable: 0 rem(8px),
         cosy: 0 rem(4px),
         compact: 0 rem(2px)
     );
-
+    
+    $item-padding: 4px;
+    $chip-item-padding: 0 rem($item-padding);
+    
+    $chip-avatar-inset: map-get((
+        material: 0,
+        fluent: -$item-padding
+    ), map-get($theme, variant));
+    
     $chip-icon-size: (
         comfortable: rem(18px),
         cosy: rem(18px),
@@ -339,7 +358,13 @@
         + igx-prefix,
         + [igxPrefix] {
             margin-left: rem(4px);
-
+    
+            &%igx-avatar-display {
+                max-height: 100%;
+                max-width: 100%;
+                margin-left: $chip-avatar-inset!important;
+            }
+            
             [dir='rtl'] & {
                 margin-left: 0;
                 margin-right: rem(4px);
@@ -432,7 +457,7 @@
         justify-content: center;
         flex: 1 1 auto;
         height: map-get($chip-height, 'comfortable');
-        padding: 0 rem(4px);
+        padding: $chip-item-padding;
         color: --var($theme, 'text-color');
         background: --var($theme, 'background');
         border-width: 1px;
@@ -529,7 +554,10 @@
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(text: 'body-2')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} igx-type-style
-@mixin igx-chip-typography($type-scale, $categories: (text: 'body-2')) {
+@mixin igx-chip-typography(
+    $type-scale,
+    $categories: (text: 'body-2'))
+{
     $text: map-get($categories, 'text');
 
     %igx-chip {
@@ -542,7 +570,7 @@
     %igx-chip__ghost--compact {
         %igx-chip__content {
             @include igx-type-style($type-scale, $text) {
-                font-size: rem(12px);
+                font-size: 12px;
                 font-weight: 600;
             }
         }
