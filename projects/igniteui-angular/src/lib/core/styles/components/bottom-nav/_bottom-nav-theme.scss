@@ -35,7 +35,7 @@
     $background: null,
     $idle-item-color: null,
     $active-item-color: null,
-    $shadow: null,
+    $shadow: null
 ) {
     $name: 'igx-bottom-nav';
     $bottom-nav-schema: map-get($schema, $name);
@@ -74,8 +74,6 @@
 /// @requires --var
 @mixin igx-bottom-nav($theme) {
     @include igx-root-css-vars($theme);
-
-    // @debug $theme;
 
     $menu-height: 56px;
     $item-min-width: 80px;

@@ -69,8 +69,6 @@
     $toast-padding: rem(16px) rem(24px);
     $toast-margin: rem(42px) auto;
 
-    // @debug $theme;
-
     %igx-toast-display {
         position: fixed;
         display: flex;

@@ -111,6 +111,45 @@
     @return #fff;
 }
 
+/// Converts a rgba color to a hexidecimal color.
+/// @access public
+/// @requires {function} to-string
+/// @param {Color} $rgba - The rgba color to convert.
+/// @param {Color} $background - The background color to convert against.
+/// @return {Color} - The hexidecimal representation of the rgba value.
+@function hexrgba($rgba, $background: #fff) {
+    @if type-of($rgba) == color {
+        $red: red($rgba);
+        $green: green($rgba);
+        $blue: blue($rgba);
+        $a: alpha($rgba);
+        $r: floor($a * $red + (1 - $a) * red($background));
+        $g: floor($a * $green + (1 - $a) * green($background));
+        $b: floor($a * $blue + (1 - $a) * blue($background));
+        @return rgb($r, $g, $b);
+    }
+    @return $rgba;
+}
+
+/// Returns a contrast color for a passed color.
+/// @access public
+/// @group Palettes
+/// @param {Color} $color - The color used to return a contrast color for.
+/// @returns {Color} - Returns either white or black depending on the luminance of the input color.
+@function text-contrast($color) {
+    @if type-of($color) == 'color' {
+        $lightContrast: contrast($color, white);
+        $darkContrast: contrast($color, black);
+        
+        @if ($lightContrast > $darkContrast) {
+            @return white;
+        } @else {
+            @return black;
+        }
+    }
+    @return $color;
+}
+
 /// Retrieves a contrast text color for a given color from a color palette.
 /// @access public
 /// @group Palettes
@@ -127,25 +166,6 @@
         @return text-contrast(hexrgba($_color));
     }
     @return #fff;
-}
-
-/// Returns a contrast color for a passed color.
-/// @access public
-/// @group Palettes
-/// @param {Color} $color - The color used to return a contrast color for.
-/// @returns {Color} - Returns either white or black depending on the luminance of the input color.
-@function text-contrast($color) {
-    @if type-of($color) == 'color' {
-        $lightContrast: contrast($color, white);
-        $darkContrast: contrast($color, black);
-
-        @if ($lightContrast > $darkContrast) {
-            @return white;
-        } @else {
-            @return black;
-        }
-    }
-    @return $color;
 }
 
 /// Test if `$value` is a valid direction.
@@ -198,24 +218,22 @@
     @return $sign + $result;
 }
 
-/// Converts a rgba color to a hexidecimal color.
-/// @access public
-/// @requires {function} to-string
-/// @param {Color} $rgba - The rgba color to convert.
-/// @param {Color} $background - The background color to convert against.
-/// @return {Color} - The hexidecimal representation of the rgba value.
-@function hexrgba($rgba, $background: #fff) {
-    @if type-of($rgba) == color {
-        $red: red($rgba);
-        $green: green($rgba);
-        $blue: blue($rgba);
-        $a: alpha($rgba);
-        $r: floor($a * $red + (1 - $a) * red($background));
-        $g: floor($a * $green + (1 - $a) * green($background));
-        $b: floor($a * $blue + (1 - $a) * blue($background));
-        @return rgb($r, $g, $b);
+/// Removes all null key-value pairs from the map
+/// @access private
+/// @param {Map} $map - The target map to be cleaned.
+/// @returns {Map} - Returns a clean map.
+@function map-clean($map) {
+    $result: ();
+    
+    @each $key, $value in $map {
+        @if($value) != null {
+            $result: map-merge($result, (
+                #{$key}: $value
+            ));
+        }
     }
-    @return $rgba;
+    
+    @return $result;
 }
 
 /// Extends a Map object with the properties of another Map object.
@@ -227,24 +245,6 @@
 
     @each $map in $maps {
         $result: map-merge($result, map-clean($map));
-    }
-
-    @return $result;
-}
-
-/// Removes all null key-value pairs from the map
-/// @access private
-/// @param {Map} $map - The target map to be cleaned.
-/// @returns {Map} - Returns a clean map.
-@function map-clean($map) {
-    $result: ();
-
-    @each $key, $value in $map {
-        @if($value) != null {
-            $result: map-merge($result, (
-                #{$key}: $value
-            ));
-        }
     }
 
     @return $result;
@@ -309,7 +309,7 @@
     $warn: #fbb13c,
     $error: #ff134a,
     $grays: #000,
-    $surface: #fff,
+    $surface: #fff
 ) {
     $saturations: (50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 'A100', 'A200', 'A400', 'A700');
     $shades: (50: .02, 100: .04, 200: .08, 300: .12, 400: .26, 500: .38, 600: .54, 700: .62, 800: .74, 900: .87);

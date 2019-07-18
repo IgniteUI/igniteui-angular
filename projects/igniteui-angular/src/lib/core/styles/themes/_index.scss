@@ -105,9 +105,6 @@
         @warn unquote('You have excluded the following components from the theme: "#{$excluded}". You can now add your own themes for the excluded components.');
     }
 
-    // @debug 'All registered: #{$components}';
-    // @debug 'All excluded: #{$excluded}';
-
     @if not(index($exclude, 'igx-ripple')) {
         @include igx-ripple(igx-ripple-theme($palette, $schema));
     }
@@ -347,9 +344,9 @@ $fluent_subtitle-1: igx-type-style(
 );
 
 $fluent_subtitle-2: igx-type-style(
-    $font-size: rem(12px),
+    $font-size: rem(10px),
     $font-weight: 400,
-    $line-height: rem(16px),
+    $line-height: rem(14px),
     $text-transform: none,
     $margin-top: 0,
     $margin-bottom: 0
@@ -359,11 +356,10 @@ $fluent_button: igx-type-style(
     $font-size: rem(14px),
     $font-weight: 600,
     $line-height: rem(14px),
-    $text-transform: lowercase,
+    $text-transform: capitalize,
     $margin-top: 0,
     $margin-bottom: 0
 );
-
 
 /// Creates a global theme that can be used with light backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
@@ -468,7 +464,7 @@ $fluent_button: igx-type-style(
     @include igx-typography(
         $font-family: "'Open Sans', Helvetica, Arial, sans-serif",
         $type-scale: $fluent-type-scale,
-        $base-color: #323130
+        $base-color: #fff
     );
     
     @include igx-theme(

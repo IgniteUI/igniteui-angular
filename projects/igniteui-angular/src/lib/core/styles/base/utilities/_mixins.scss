@@ -286,8 +286,6 @@
 ///    //    ...styles rules as output by igx-card-typography mixin
 ///    // }
 @mixin igx-scope($parent) {
-    @debug &;
-
     @each $selector in & {
         $len: length($selector);
         @if $len == null {

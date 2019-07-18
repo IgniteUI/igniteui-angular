@@ -16,5 +16,15 @@ $___dark-input-group: (
     search-background: #222
 );
 $_dark-input-group: extend($_light-input-group, $___dark-input-group);
-$_dark-fluent-input-group: extend($_fluent-input-group, $___dark-input-group);
+$_dark-fluent-input-group: extend($_fluent-input-group, $___dark-input-group, (
+    input-prefix-background: (
+        igx-color: ('grays', 100),
+        hexrgba: #222
+    ),
+    
+    input-suffix-background: (
+        igx-color: ('grays', 100),
+        hexrgba: #222
+    ),
+));
 

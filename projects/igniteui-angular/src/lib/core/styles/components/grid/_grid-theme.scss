@@ -500,7 +500,6 @@
     @include igx-root-css-vars($theme);
 
     $palette: map-get($theme, 'palette');
-    // @debug $theme;
 
     $grid-shadow: --var($theme, 'grid-shadow');
 
