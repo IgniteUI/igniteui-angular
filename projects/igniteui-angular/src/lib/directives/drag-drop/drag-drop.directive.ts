@@ -814,8 +814,9 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                         // We moved enough so dragGhost can be rendered and actual dragging to start.
                         this.createDragGhost(pageX, pageY);
                     }
+                } else {
+                    return;
                 }
-                return;
             } else if (!this._dragStarted) {
                 return;
             }
