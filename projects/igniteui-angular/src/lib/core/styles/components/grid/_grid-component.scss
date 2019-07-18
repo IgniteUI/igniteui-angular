@@ -96,6 +96,10 @@
         @extend %grid-tfoot-thumb !optional;
     }
 
+    @include e(footer) {
+        @extend %grid-footer !optional;
+    }
+
     @include e(tr) {
         @extend %grid-row !optional;
 
