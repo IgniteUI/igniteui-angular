@@ -654,10 +654,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @HostBinding('style.width')
     get hostWidth() {
         if (this.width === null && this.columnList && this.columnList.length > 0) {
-            let width = this.columnList.reduce((sum, item) => sum + parseInt((item.width || item.defaultWidth), 10), 0);
+            let width = this.columnList.filter(x => !x.columnGroup)
+            .reduce((sum, item) => sum + parseInt((item.width || item.defaultWidth), 10), 0);
             if (this.hasVerticalSroll()) {
                 width += this.scrollWidth;
             }
+            width += this.getFeatureColumnsWidth();
             return width + 'px';
         } else {
             return this.width;
