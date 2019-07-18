@@ -21,28 +21,32 @@
 ///
 /// @see $default-palette
 
-$_light-grid-summary: extend((
-    background-color: inherit,
-    focus-background-color: (
-        igx-color: ('grays', 100)
-    ),
+$_light-grid-summary: extend(
+    $_default-shape-grid-summary,
+    (
+        background-color: inherit,
 
-    label-color: (
-        igx-color: ('primary', 500)
-    ),
+        focus-background-color: (
+            igx-color: ('grays', 100)
+        ),
 
-    result-color: currentColor,
-    border-color: (
-        igx-color: ('grays', 400)
-    ),
+        label-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    pinned-border-width: 2px,
-    pinned-border-style: solid,
-    pinned-border-color: (
-        igx-color: ('grays', 400)
-    ),
+        result-color: currentColor,
+        border-color: (
+            igx-color: ('grays', 400)
+        ),
 
-    label-hover-color: (
-        igx-color: ('primary', 700)
+        pinned-border-width: 2px,
+        pinned-border-style: solid,
+        pinned-border-color: (
+            igx-color: ('grays', 400)
+        ),
+
+        label-hover-color: (
+            igx-color: ('primary', 700)
+        )
     )
-), $_default-shape-grid-summary);
+);

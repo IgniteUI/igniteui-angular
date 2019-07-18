@@ -16,6 +16,7 @@ import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxDropDownItemBase } from '../drop-down/drop-down-item.base';
 import { DisplayDensity, DisplayDensityToken } from '../core/density';
+import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/index';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -28,6 +29,7 @@ const CSS_CLASS_DROPDOWNBUTTON = 'igx-combo__toggle-button';
 const CSS_CLASS_CLEARBUTTON = 'igx-combo__clear-button';
 const CSS_CLASS_CHECK_GENERAL = 'igx-combo__checkbox';
 const CSS_CLASS_CHECKBOX = 'igx-checkbox';
+const CSS_CLASS_CHECKBOX_LABEL = 'igx-checkbox__composite';
 const CSS_CLASS_CHECKED = 'igx-checkbox--checked';
 const CSS_CLASS_TOGGLE = 'igx-toggle';
 const CSS_CLASS_SELECTED = 'igx-drop-down__item--selected';
@@ -184,6 +186,23 @@ describe('igxCombo', () => {
             combo.displayKey = 'region';
             expect(combo.displayKey).toEqual('region');
             expect(combo.displayKey === combo.valueKey).toBeFalsy();
+        });
+        it('Should properly get/set overlaySettings', () => {
+            const fixture = TestBed.createComponent(IgxComboTestComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.combo;
+            const defaultSettings = (combo as any)._overlaySettings;
+            spyOn(combo.dropdown, 'toggle');
+            combo.toggle();
+            expect(combo.dropdown.toggle).toHaveBeenCalledWith(defaultSettings);
+            const newSettings = {
+                positionStrategy: new ConnectedPositioningStrategy({ target: fixture.elementRef.nativeElement}),
+                scrollStrategy: new AbsoluteScrollStrategy(fixture.elementRef.nativeElement)
+            };
+            combo.overlaySettings = newSettings;
+            const expectedSettings = Object.assign({}, defaultSettings, newSettings);
+            combo.toggle();
+            expect(combo.dropdown.toggle).toHaveBeenCalledWith(expectedSettings);
         });
 
         describe('EditorProvider', () => {
@@ -932,7 +951,7 @@ describe('igxCombo', () => {
         }
         function clickItemCheckbox(dropdownElement: any, itemIndex: number) {
             const dropdownItems = dropdownElement.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
-            const checkbox = dropdownItems[itemIndex].querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
+            const checkbox = dropdownItems[itemIndex].querySelector('.' + CSS_CLASS_CHECKBOX_LABEL) as HTMLElement;
             checkbox.click();
         }
         function verifyItemIsSelected(

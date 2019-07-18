@@ -1,72 +1,87 @@
 <div class="list-sample">
     <article class="sample-column">
-            <span>Vertical Virtualization</span>
-            <br/>
-            <div style='height:500px; position: relative; overflow: hidden'>
-              <ng-template igxFor let-item [igxForOf]="data" #virtDirVertical
-                [igxForScrollOrientation]="'vertical'"
-                [igxForContainerSize]='"500px"'
-                [igxForItemSize]='itemSize'
-                let-rowIndex="index">
-                <div [style.height]='itemSize'>{{rowIndex}} : {{item.text}}</div>
-                </ng-template>
-            </div>
-            <button (click)="scrNextRow()">Scroll Next Row</button>
-            <button (click)="scrPrevRow()">Scroll Prev Row</button>
-            <button (click)="scrNextPage()">Scroll Next Page</button>
-            <button (click)="scrPrevPage()">Scroll Prev Page</button>
-            <div><input type='number' #input/><button (click)='scrScrollTo(input.value)'>Go To Index</button></div>
-            <button (click)="verticalVisibleItemCount()">Get visible item count</button>
-            <button (click)="changeItemSize()">Change Item Size</button>
+        <span>Vertical Virtualization</span>
+        <br/>
+        <div style='height:500px; position: relative; overflow: hidden'>
+            <ng-template igxFor let-item [igxForOf]="data" #virtDirVertical
+            [igxForScrollOrientation]="'vertical'"
+            [igxForContainerSize]='"500px"'
+            [igxForItemSize]='itemSize'
+            let-rowIndex="index">
+            <div [style.height]='itemSize'>{{rowIndex}} : {{item.text}}</div>
+            </ng-template>
+        </div>
+        <button (click)="scrNextRow()">Scroll Next Row</button>
+        <button (click)="scrPrevRow()">Scroll Prev Row</button>
+        <button (click)="scrNextPage()">Scroll Next Page</button>
+        <button (click)="scrPrevPage()">Scroll Prev Page</button>
+        <div><input type='number' #input/><button (click)='scrScrollTo(input.value)'>Go To Index</button></div>
+        <button (click)="verticalVisibleItemCount()">Get visible item count</button>
+        <button (click)="changeItemSize()">Change Item Size</button>
     </article>
     <article class="sample-column">
-            <span>Horizontal Virtualization</span>
-            <br/>
-            <table>
-                <tbody style='display:grid;'>
-                <tr style='width:500px; height:100px;'>
-                    <div style='position: relative; overflow: hidden'>
-                        <ng-template igxFor let-item [igxForOf]="data" #virtDirHorizontal
-                            [igxForScrollOrientation]="'horizontal'"
-                            [igxForContainerSize]='"500px"'
-                            let-rowIndex="index">
-                                <td  [style.width.px]='item.width' [style.min-width.px]='item.width' style='height:100px;'>{{rowIndex}} : {{item.text}}</td>
-                        </ng-template>
-                    </div>
-                </tr>
-                </tbody>
-            </table>
-            <button (click)="scrNextCol()">Scroll Next Column</button>
-            <button (click)="scrPrevCol()">Scroll Prev Column</button>
-            <button (click)="scrNextHorizontalPage()">Scroll Next Horizontal Page</button>
-            <button (click)="scrPrevHorizontalPage()">Scroll Prev Horizontal Page</button>
-            <input (input)="scrHorizontalScrollTo($event.target.value)" placeholder="scroll to index"/>
-            <button (click)="horizontalVisibleItemCount()">Get visible item count</button>
+        <span>Horizontal Virtualization</span>
+        <br/>
+        <table>
+            <tbody style='display:grid;'>
+            <tr style='width:500px; height:100px;'>
+                <div style='position: relative; overflow: hidden'>
+                    <ng-template igxFor let-item [igxForOf]="data" #virtDirHorizontal
+                        [igxForScrollOrientation]="'horizontal'"
+                        [igxForContainerSize]='"500px"'
+                        let-rowIndex="index">
+                            <td [style.width.px]='item.width' [style.min-width.px]='item.width' style='height:100px;'>{{rowIndex}} : {{item.text}}</td>
+                    </ng-template>
+                </div>
+            </tr>
+            </tbody>
+        </table>
+        <button (click)="scrNextCol()">Scroll Next Column</button>
+        <button (click)="scrPrevCol()">Scroll Prev Column</button>
+        <button (click)="scrNextHorizontalPage()">Scroll Next Horizontal Page</button>
+        <button (click)="scrPrevHorizontalPage()">Scroll Prev Horizontal Page</button>
+        <input (input)="scrHorizontalScrollTo($event.target.value)" placeholder="scroll to index"/>
+        <button (click)="horizontalVisibleItemCount()">Get visible item count</button>
     </article>
     <article class="sample-column">
         <span>Variable heights</span>
         <br/>
         <div style='height:500px; position: relative; overflow: hidden'>
-              <ng-template igxFor let-item [igxForOf]="data" #virtDirVariableVertical [igxForTrackBy]='trackByKey'
-                [igxForScrollOrientation]="'vertical'"
-                [igxForContainerSize]='"500px"'
-                [igxForItemSize]='"100px"'
-                let-rowIndex="index">
-                <div [style.height.px]='item.height'>{{rowIndex}} : {{item.text}}</div>
-                </ng-template>
-            </div>
-</article>
+            <ng-template igxFor let-item [igxForOf]="data" #virtDirVariableVertical [igxForTrackBy]='trackByKey'
+            [igxForScrollOrientation]="'vertical'"
+            [igxForContainerSize]='"500px"'
+            [igxForItemSize]='"100px"'
+            let-rowIndex="index">
+            <div [style.height.px]='item.height'>{{rowIndex}} : {{item.text}}</div>
+            </ng-template>
+        </div>
+    </article>
     <article class="sample-column">
-            <span>Remote Virtualization</span>
-            <br/>
-            <div style='height:500px; position: relative; overflow: hidden'>
-              <ng-template igxFor let-item [igxForOf]="remoteData | async" (onChunkPreload)="chunkLoading($event)"
-                [igxForScrollOrientation]="'vertical'"
-                [igxForContainerSize]='"500px"'
-                [igxForItemSize]='"50px"'
-                let-rowIndex="index" #virtDirRemote>
-                <div style='height:50px;'>Index: {{rowIndex}}, ID: {{item.ProductID}}, Name : {{item.ProductName}}</div>
-                </ng-template>
-            </div>
+        <span><i>Even</i> variable</span>
+        <br/>
+        <div style='height:500px; position: relative; overflow: hidden'>
+          <ng-template igxFor let-item [igxForOf]="data" #virtDirVertical
+            [igxForScrollOrientation]="'vertical'"
+            [igxForContainerSize]='"500px"'
+            [igxForItemSize]='itemSize'
+            let-rowIndex="index"
+            let-odd="odd"
+            let-even="even">
+            <div [ngClass]="{even: even}" [style.height]='itemSize'>{{rowIndex}} : {{item.text}}</div>
+            </ng-template>
+        </div>
+    </article>
+    <article class="sample-column">
+        <span>Remote Virtualization</span>
+        <br/>
+        <div style='height:500px; position: relative; overflow: hidden'>
+            <ng-template igxFor let-item [igxForOf]="remoteData | async" (onChunkPreload)="chunkLoading($event)"
+            [igxForScrollOrientation]="'vertical'"
+            [igxForContainerSize]='"500px"'
+            [igxForItemSize]='"50px"'
+            let-rowIndex="index" #virtDirRemote>
+            <div style='height:50px;'>Index: {{rowIndex}}, ID: {{item.ProductID}}, Name : {{item.ProductName}}</div>
+            </ng-template>
+        </div>
     </article>
 </div>

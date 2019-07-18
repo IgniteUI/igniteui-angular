@@ -141,7 +141,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             this._scrollToY(
                 this._startY + scrollDeltaY * scrollStep
             );
-            this.preventParentScroll(evt);
+            this.preventParentScroll(evt, true);
         }
     }
 
@@ -149,12 +149,14 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
      * @hidden
      * When there is still room to scroll up/down prevent the parent elements from scrolling too.
      */
-    protected preventParentScroll(evt) {
+    protected preventParentScroll(evt, preventDefault) {
         const curScrollTop = this.IgxScrollInertiaScrollContainer.scrollTop;
         const maxScrollTop = this.IgxScrollInertiaScrollContainer.children[0].scrollHeight -
             this.IgxScrollInertiaScrollContainer.offsetHeight;
         if (0 < curScrollTop && curScrollTop < maxScrollTop) {
-            evt.preventDefault();
+            if (preventDefault) {
+                 evt.preventDefault();
+            }
             if (evt.stopPropagation) {
                 evt.stopPropagation();
             }
@@ -195,7 +197,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
 
         this._touchPrevented = false;
         if (this.IgxScrollInertiaDirection === 'vertical') {
-            this.preventParentScroll(event);
+            this.preventParentScroll(event, false);
         }
     }
 
@@ -273,7 +275,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
 
         // On Safari preventing the touchmove would prevent default page scroll behaviour even if there is the element doesn't have overflow
         if (this.IgxScrollInertiaDirection === 'vertical') {
-            this.preventParentScroll(event);
+            this.preventParentScroll(event, true);
         }
     }
 
@@ -298,7 +300,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
                     this._inertiaInit(speedX, speedY);
         }
         if (this.IgxScrollInertiaDirection === 'vertical') {
-            this.preventParentScroll(event);
+            this.preventParentScroll(event, false);
         }
     }
 
