@@ -11,6 +11,6 @@
 /// @requires {function} extend
 /// @requires $_light-time-picker
 /// @see $default-palette
+$_dark-time-picker: extend($_light-time-picker);
+$_dark-fluent-time-picker: extend($_fluent-time-picker);
 
-
-$_dark-time-picker: extend($_light-time-picker, ());

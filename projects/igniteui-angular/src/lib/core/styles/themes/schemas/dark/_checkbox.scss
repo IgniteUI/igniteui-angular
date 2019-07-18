@@ -11,6 +11,10 @@
 /// @requires extend
 /// @requires $_light-checkbox
 /// @see $default-palette
-$_dark-checkbox: extend($_light-checkbox, (
+$___dark-checkbox: (
     tick-color: #222
+);
+$_dark-checkbox: extend($_light-checkbox, $___dark-checkbox);
+$_dark-fluent-checkbox: extend($_fluent-checkbox, (
+    tick-color: #fff
 ));

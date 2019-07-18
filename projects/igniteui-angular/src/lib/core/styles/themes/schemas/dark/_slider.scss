@@ -11,5 +11,15 @@
 /// @requires {function} extend
 /// @requires $_light-slider
 /// @see $default-palette
-
-$_dark-slider: extend($_light-slider, ());
+$_dark-slider: extend($_light-slider);
+$_dark-fluent-slider: extend($_fluent-slider, (
+    track-color: (
+        igx-color: ('grays', 700),
+        hexrgba: #000
+    ),
+    
+    thumb-disabled-border-color: (
+        igx-color: ('grays', 400),
+        hexrgba: #000
+    ),
+));

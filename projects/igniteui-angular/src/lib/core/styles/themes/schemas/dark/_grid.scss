@@ -30,90 +30,108 @@
 /// @requires extend
 /// @requires $_light-grid
 /// @see $default-palette
-$_dark-grid: extend($_light-grid, (
+$___dark-grid: (
     header-background: (
         igx-color: ('grays', 100),
         hexrgba: #222
     ),
-
+    
     content-background: #222,
-
+    
     row-odd-background: #222,
-
+    
     row-even-background: #222,
-
+    
     row-hover-background: (
         igx-color: ('grays', 100),
         hexrgba: #222
     ),
-
+    
     row-hover-text-color: #fff,
-
+    
     row-selected-background: (
         igx-color: ('secondary', 500),
         rgba: .24,
         hexrgba: #222
     ),
-
+    
     row-selected-text-color: #fff,
-
+    
     ghost-header-background: #222,
-
+    
     cell-editing-background: #222,
-
+    
     cell-selected-background: (
         igx-color: ('grays', 200),
         hexrgba: #222
     ),
-
+    
     grouparea-background: (
         igx-color: ('grays', 100),
         hexrgba: #222
     ),
-
+    
     group-row-background: (
         igx-color: ('grays', 100),
         hexrgba: #222
     ),
-
+    
     group-row-selected-background: (
         igx-color: ('grays', 200),
         hexrgba: #222
     ),
-
+    
     filtering-header-background: #222,
-
+    
     filtering-row-background: #222,
-
+    
     cell-selected-text-color: #fff,
-
+    
     body-summaries-background: (
-        igx-color: ('grays', 100),
+        igx-color: ('grays', 300),
         hexrgba: #222
     ),
-
+    
     body-summaries-text-color: (
         igx-color: ('grays', 100),
         hexrgba: #222,
         text-contrast: ()
     ),
-
+    
     root-summaries-background: (
         igx-color: ('grays', 300),
         hexrgba: #222
     ),
-
+    
     root-summaries-text-color: (
         igx-color: ('grays', 300),
         hexrgba: #222,
         text-contrast: ()
     ),
-
+    
     row-highlight: (
         igx-color: ('secondary', 500)
     ),
-
+    
     row-ghost-background: (
         igx-color: ('primary', 900)
     )
+);
+$_dark-grid: extend($_light-grid, $___dark-grid);
+$_dark-fluent-grid: extend($_fluent-grid, $___dark-grid, (
+    row-hover-background: (
+        igx-color: ('grays', 100),
+        hexrgba: #222
+    ),
+    
+    row-selected-background: (
+        igx-color: ('grays', 200),
+        hexrgba: #222
+    ),
+    
+    row-selected-hover-background: (
+        igx-color: ('grays', 300),
+        hexrgba: #222
+    ),
 ));
+

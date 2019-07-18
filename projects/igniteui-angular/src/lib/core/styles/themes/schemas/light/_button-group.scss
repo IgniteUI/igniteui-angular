@@ -34,7 +34,7 @@ $_light-button-group: extend(
 
         item-border-color: (
             igx-color: ('grays', 300),
-            hexrgba: ()
+            hexrgba: #fff
         ),
 
         item-text-color: (
@@ -63,7 +63,7 @@ $_light-button-group: extend(
 
         item-selected-border-color: (
             igx-color: ('grays', 300),
-            hexrgba: ()
+            hexrgba: #fff
         ),
 
         disabled-text-color: (
@@ -76,7 +76,7 @@ $_light-button-group: extend(
 
         item-disabled-border: (
             igx-color: ('grays', 300),
-            hexrgba: ()
+            hexrgba: #fff
         ),
     )
 );
@@ -91,7 +91,7 @@ $_fluent-button-group: extend(
         ),
 
         item-hover-text-color: (
-            igx-color: ('primary', 500)
+            igx-color: ('primary', 200)
         ),
 
         item-hover-background: transparent,
@@ -105,7 +105,7 @@ $_fluent-button-group: extend(
         ),
 
         item-selected-text-color: (
-            igx-color: ('primary', 500)
+            igx-color: ('primary', 200)
         ),
 
         disabled-background-color: transparent,

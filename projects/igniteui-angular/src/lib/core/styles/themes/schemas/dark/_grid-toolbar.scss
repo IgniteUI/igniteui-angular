@@ -12,7 +12,9 @@
 /// @requires {function} extend
 /// @requires $_light-grid-toolbar
 /// @see $default-palette
-$_dark-grid-toolbar: extend($_light-grid-toolbar, (
+$___dark-grid-toolbar: (
     background-color: #222,
     dropdown-background: #222
-));
+);
+$_dark-grid-toolbar: extend($_light-grid-toolbar, $___dark-grid-toolbar);
+$_dark-fluent-grid-toolbar: extend($_fluent-grid-toolbar, $___dark-grid-toolbar);

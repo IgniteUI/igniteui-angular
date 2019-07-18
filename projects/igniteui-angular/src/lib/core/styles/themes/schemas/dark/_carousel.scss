@@ -12,7 +12,10 @@
 /// @requires extend
 /// @requires $_light-carousel
 /// @see $default-palette
-$_dark-carousel: extend($_light-carousel, (
+$___dark-carousel: (
     button-background: #222,
     button-hover-background: #222,
-));
+);
+$_dark-carousel: extend($_light-carousel, $___dark-carousel);
+$_dark-fluent-carousel: extend($_fluent-carousel, $___dark-carousel);
+

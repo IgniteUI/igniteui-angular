@@ -11,4 +11,14 @@
 /// @requires $_light-drop-down
 /// @requires extend
 /// @see $default-palette
-$_dark-drop-down: extend($_light-drop-down, ());
+$_dark-drop-down: extend($_light-drop-down);
+$_dark-fluent-drop-down: extend(
+    $_fluent-drop-down,
+    (
+        selected-item-text-color: #fff,
+        
+        selected-hover-item-text-color:  #fff,
+        
+        selected-focus-item-text-color: #fff,
+    )
+);

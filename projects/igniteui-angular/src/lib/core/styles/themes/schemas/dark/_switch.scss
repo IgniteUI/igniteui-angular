@@ -12,10 +12,29 @@
 /// @requires {function} extend
 /// @requires $_light-switch
 /// @see $default-palette
-
-$_dark-switch: extend($_light-switch, (
+$___dark-switch: (
     thumb-disabled-color: (
         igx-color: ('grays', 400),
         hexrgba: #000
     )
+);
+
+$_dark-switch: extend($_light-switch, $___dark-switch);
+$_dark-fluent-switch: extend($_fluent-switch, $___dark-switch, (
+    border-color: (
+        igx-color: ('grays', 500)
+    ),
+    
+    border-hover-color:(
+        igx-color: ('grays', 800)
+    ),
+    
+    border-disabled-color:(
+        igx-color: ('grays', 200)
+    ),
+    
+    track-disabled-color: (
+        igx-color: ('grays', 200)
+    )
 ));
+

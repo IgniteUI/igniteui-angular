@@ -10,4 +10,5 @@
 /// @requires {function} extend
 /// @requires $_light-divider
 /// @see $default-palette
-$_dark-divider: extend($_light-divider, ());
+$_dark-divider: extend($_light-divider);
+$_dark-fluent-divider: extend($_fluent-divider);

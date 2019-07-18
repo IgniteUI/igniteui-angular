@@ -11,5 +11,5 @@
 /// @requires {function} extend
 /// @requires $_light-grid-summary
 /// @see $default-palette
-
-$_dark-grid-summary: extend($_light-grid-summary, ());
+$_dark-grid-summary: extend($_light-grid-summary);
+$_dark-fluent-grid-summary: extend($_fluent-grid-summary);

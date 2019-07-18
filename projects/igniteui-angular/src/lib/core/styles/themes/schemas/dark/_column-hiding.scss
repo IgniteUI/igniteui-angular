@@ -10,4 +10,5 @@
 /// @requires extend
 /// @requires $_light-column-hiding
 /// @see $default-palette
-$_dark-column-hiding: extend($_light-column-hiding, ());
+$_dark-column-hiding: extend($_light-column-hiding);
+$_dark-fluent-column-hiding: extend($_fluent-column-hiding);

@@ -11,4 +11,5 @@
 /// @requires extend
 /// @requires $_light-badge
 /// @see $default-palette
-$_dark-badge: extend($_light-badge, ());
+$_dark-badge: extend($_light-badge);
+$_dark-fluent-badge: extend($_fluent-badge);

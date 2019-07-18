@@ -105,66 +105,30 @@ $_fluent-chip: extend($_light-chip, $_fluent-shape-chip, $_fluent-elevation-chip
     
     background: (
         igx-color: ('grays', 100),
-        hexrgba: #fff
     ),
     
     hover-background: (
         igx-color: ('grays', 200),
-        hexrgba: #fff
     ),
     
     selected-background: (
         igx-color: ('primary',500),
-        hexrgba: #fff
     ),
     
     hover-selected-background: (
         igx-color: ('primary',500),
-        hexrgba: #fff
     ),
     
     focus-background: (
         igx-color: ('primary',500),
-        hexrgba: #fff
     ),
     
     focus-selected-background:(
         igx-color: ('primary',500),
-        hexrgba: #fff
     ),
 
     ghost-background: (
         igx-color: 'surface'
-    ),
-
-    border-color: (
-        igx-color: ('grays', 100),
-        hexrgba: #fff
-    ),
-
-    hover-border-color: (
-        igx-color: ('grays', 200),
-        hexrgba: #fff
-    ),
-
-    focus-border-color: (
-        igx-color: ('grays', 200),
-        hexrgba: #fff
-    ),
-
-    selected-border-color: (
-        igx-color: ('primary', 500),
-        hexrgba: #fff
-    ),
-
-    hover-selected-border-color: (
-        igx-color: ('primary', 500),
-        hexrgba: #fff
-    ),
-
-    focus-selected-border-color: (
-        igx-color: ('primary', 500),
-        hexrgba: #fff
     ),
     
     selected-text-color: (

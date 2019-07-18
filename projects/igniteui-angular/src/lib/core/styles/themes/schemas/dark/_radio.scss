@@ -11,5 +11,5 @@
 /// @requires {function} extend
 /// @requires $_light-ripple
 /// @see $default-palette
-
-$_dark-radio: extend($_light-radio, ());
+$_dark-radio: extend($_light-radio);
+$_dark-fluent-radio: extend($_fluent-radio);

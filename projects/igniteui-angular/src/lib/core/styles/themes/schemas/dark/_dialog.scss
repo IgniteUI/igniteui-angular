@@ -10,4 +10,5 @@
 /// @requires extend
 /// @requires $_light-dialog
 /// @see $default-palette
-$_dark-dialog: extend($_light-dialog, ());
+$_dark-dialog: extend($_light-dialog);
+$_dark-fluent-dialog: extend($_fluent-dialog);

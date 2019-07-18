@@ -114,8 +114,4 @@ $_fluent-switch: extend($_light-switch, $_fluent-shape-switch, (
     ),
 
     track-off-color: transparent,
-
-    resting-elevation: 0,
-    hover-elevation: 0,
-    disabled-elevation: 0
 ));

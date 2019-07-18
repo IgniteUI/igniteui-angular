@@ -12,7 +12,9 @@
 /// @requires extend
 /// @requires $_light-expansion-panel
 /// @see $default-palette
-$_dark-expansion-panel: extend($_light-expansion-panel, (
+$___dark-expansion-panel: (
     header-background: #222,
     body-background: #222,
-));
+);
+$_dark-expansion-panel: extend($_light-expansion-panel, $___dark-expansion-panel);
+$_dark-fluent-expansion-panel: extend($_fluent-expansion-panel, $___dark-expansion-panel);

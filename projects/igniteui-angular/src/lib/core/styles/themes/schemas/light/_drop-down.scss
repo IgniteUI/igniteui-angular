@@ -103,13 +103,13 @@ $_light-drop-down: extend(
     )
 );
 
-$_fluent-drop-down: extend($_light-drop-down, $_fluent-shape-drop-down, $_default-elevation-drop-down, (
+$_fluent-drop-down: extend($_light-drop-down, $_fluent-shape-drop-down, $_fluent-elevation-drop-down, (
     selected-item-background: (
         igx-color: ('grays', 100)
     ),
 
     selected-item-text-color: (
-        igx-contrast-color: ('grays', 200)
+        igx-contrast-color: ('grays', 100)
     ),
 
     selected-hover-item-background: (

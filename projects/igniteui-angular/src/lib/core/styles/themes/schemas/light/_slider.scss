@@ -78,16 +78,21 @@ $_fluent-slider: extend($_light-slider, (
     variant: 'fluent',
 
     track-color: (
-        igx-color: ('grays', 700)
+        igx-color: ('grays', 700),
+        hexrgba: #fff
     ),
 
     base-track-color: (
         igx-color: ('grays', 400)
     ),
 
-    thumb-color: #fff,
+    thumb-color: (
+        igx-color: 'surface'
+    ),
 
-    disabled-thumb-color: #fff,
+    disabled-thumb-color: (
+        igx-color: 'surface'
+    ),
 
     base-track-hover-color:  (
         igx-color: ('primary', 500),
@@ -100,7 +105,7 @@ $_fluent-slider: extend($_light-slider, (
 
     thumb-disabled-border-color: (
         igx-color: ('grays', 400),
-        hexrgba: ()
+        hexrgba: #fff
     ),
 
     thumb-border-color: (

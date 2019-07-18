@@ -11,6 +11,8 @@
 /// @prop {Map} background-color [#222] - The background color of the paging panel.
 /// @requires $_light-grid-pagination
 /// @see $default-palette
-$_dark-grid-pagination: extend($_light-grid-pagination, (
+$___dark-grid-pagination: (
     background-color: #222
-));
+);
+$_dark-grid-pagination: extend($_light-grid-pagination, $___dark-grid-pagination);
+$_dark-fluent-grid-pagination: extend($_fluent-grid-pagination, $___dark-grid-pagination);

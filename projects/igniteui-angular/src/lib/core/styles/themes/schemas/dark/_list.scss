@@ -13,14 +13,17 @@
 /// @requires {function} extend
 /// @requires $_light-list
 /// @see $default-palette
-$_dark-list: extend($_light-list, (
+$___dark-list: (
     item-background-hover: (
         igx-color: ('grays', 400),
         hexrgba: (#000)
     ),
-
+    
     item-background-active: (
         igx-color: ('grays', 400),
         hexrgba: (#000)
     ),
-));
+);
+$_dark-list: extend($_light-list, $___dark-list);
+$_dark-fluent-list: extend($_fluent-list, $___dark-list);
+

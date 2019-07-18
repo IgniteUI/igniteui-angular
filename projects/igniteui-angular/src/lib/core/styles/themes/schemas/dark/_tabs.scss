@@ -13,8 +13,10 @@
 /// @requires {function} extend
 /// @requires $_light-tabs
 /// @see $default-palette
-
-$_dark-tabs: extend($_light-tabs, (
+$___dark-tabs: (
     item-background: #222,
     button-background: #222
-));
+);
+$_dark-tabs: extend($_light-tabs, $___dark-tabs);
+$_dark-fluent-tabs: extend($_fluent-tabs, $___dark-tabs);
+

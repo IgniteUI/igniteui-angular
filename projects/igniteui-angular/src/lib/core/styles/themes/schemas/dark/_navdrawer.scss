@@ -11,5 +11,18 @@
 /// @requires {function} extend
 /// @requires $_light-navdrawer
 /// @see $default-palette
-
-$_dark-navdrawer: extend($_light-navdrawer, ());
+$_dark-navdrawer: extend($_light-navdrawer);
+$_dark-fluent-navdrawer: extend($_fluent-navdrawer, (
+    item-active-text-color: (
+        igx-color: ('primary', 200)
+    ),
+    
+    item-active-icon-color: (
+        igx-color: ('primary', 100)
+    ),
+    
+    item-active-background: (
+        igx-color: ('primary', 400),
+        rgba: .12
+    ),
+));

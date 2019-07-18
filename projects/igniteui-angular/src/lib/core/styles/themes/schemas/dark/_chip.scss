@@ -11,9 +11,11 @@
 /// @requires extend
 /// @requires $_light-chip
 /// @see $default-palette
-$_dark-chip: extend($_light-chip, (
+$___dark-chip: (
     ghost-background: (
         igx-color: ('grays', 400),
         hexrgba: #000
     )
-));
+);
+$_dark-chip: extend($_light-chip, $___dark-chip);
+$_dark-fluent-chip: extend($_fluent-chip, $___dark-chip);

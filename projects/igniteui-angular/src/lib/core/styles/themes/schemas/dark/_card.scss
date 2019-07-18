@@ -10,4 +10,5 @@
 /// @requires extend
 /// @requires $_light-card
 /// @see $default-palette
-$_dark-card: extend($_light-card, ());
+$_dark-card: extend($_light-card);
+$_dark-fluent-card: extend($_fluent-card);

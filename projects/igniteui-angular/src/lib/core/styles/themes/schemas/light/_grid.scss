@@ -385,13 +385,11 @@ $_fluent-grid: extend(
         ),
 
         row-border-color: (
-            igx-color: ('grays', 100),
-            hexrgba: #fff
+            igx-color: ('grays', 100)
         ),
 
         pinned-border-color: (
-            igx-color: ('grays', 200),
-            hexrgba: #fff
+            igx-color: ('grays', 200)
         ),
 
         cell-active-border-color: (

@@ -11,5 +11,6 @@
 /// @requires {function} extend
 /// @requires $_light-navbar
 /// @see $default-palette
+$_dark-navbar: extend($_light-navbar);
+$_dark-fluent-navbar: extend($_fluent-navbar);
 
-$_dark-navbar: extend($_light-navbar, ());

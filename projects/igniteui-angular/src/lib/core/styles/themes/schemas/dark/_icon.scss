@@ -11,6 +11,11 @@
 /// @requires {function} extend
 /// @requires $_light-icon
 /// @see $default-palette
-
-
-$_dark-icon: extend($_light-icon, ());
+$_dark-icon: extend($_light-icon);
+$_dark-fluent-icon: extend($_fluent-icon, (
+    color: #fff,
+    
+    disabled-color: (
+        igx-color: ('grays' 500)
+    )
+));

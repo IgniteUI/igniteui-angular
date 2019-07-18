@@ -14,23 +14,40 @@
 /// @requires extend
 /// @requires $_light-button
 /// @see $default-palette
-
-$_dark-button: extend($_light-button, (
+$___dark-button: (
     flat-hover-background: (
         igx-color: ('secondary', 500),
         rgba: .12
     ),
-
+    
     flat-focus-background: (
         igx-color: ('secondary', 400),
         rgba: .24
     ),
-
+    
     icon-hover-background: (
         igx-color: ('grays', 300)
     ),
-
+    
     disabled-background: (
         igx-color: ('grays', 200)
     )
+);
+$_dark-button: extend($_light-button, $___dark-button);
+$_dark-fluent-button: extend($_fluent-button, (
+    flat-icon-color:  (
+        igx-color: ('primary', 200)
+    ),
+    
+    flat-hover-icon-color:  (
+        igx-color: ('primary', 200)
+    ),
+    
+    flat-focus-icon-color:  (
+        igx-color: ('primary', 200)
+    ),
+    
+    flat-hover-text-color: (
+        igx-color: ('primary', 200)
+    ),
 ));

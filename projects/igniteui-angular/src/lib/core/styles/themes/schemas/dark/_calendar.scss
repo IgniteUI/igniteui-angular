@@ -10,4 +10,5 @@
 /// @requires extend
 /// @requires $_light-calendar
 /// @see $default-palette
-$_dark-calendar: extend($_light-calendar, ());
+$_dark-calendar: extend($_light-calendar);
+$_dark-fluent-calendar: extend($_fluent-calendar);
