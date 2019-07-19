@@ -4254,8 +4254,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
 
 
-        if (!width) {
+        if (this.width === null || !width) {
             width = this.columnList.reduce((sum, item) => sum + parseInt((item.width || item.defaultWidth), 10), 0);
+            width += this.getFeatureColumnsWidth();
         }
 
         if (this.hasVerticalSroll() && this.width !== null) {
