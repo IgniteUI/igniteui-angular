@@ -18,13 +18,19 @@
 /// @property {map} track-disabled-color [igx-color: ('grays', 300)] - The color of the track when the switch is disabled.
 /// @property {map} label-color [gx-color: ('grays', 900)] - The color of the switch label
 /// @property {map} label-disabled-color [gx-color: ('grays', 400)] - The color of the switch label when the switch is disabled
-/// @prop {Number} resting-elevation [2] - The elevation level, between 0-24, to be used for the resting state.
-/// @prop {Number} hover-elevation [3] - The elevation level, between 0-24, to be used for the hover state.
-/// @prop {Number} disabled-elevation [1] - The elevation level, between 0-24, to be used for the disabled state.
+/// @property {Number} resting-elevation [2] - The elevation level, between 0-24, to be used for the resting state.
+/// @property {Number} hover-elevation [3] - The elevation level, between 0-24, to be used for the hover state.
+/// @property {Number} disabled-elevation [1] - The elevation level, between 0-24, to be used for the disabled state.
 ///
-/// @prop {Number} border-radius-track [1] - The border radius fraction, between 0-7 to be used for switch track.
-/// @prop {Number} border-radius-thumb [1] - The border radius fraction, between 0-10 to be used for switch thumb.
-/// @prop {Number} border-radius-ripple [1] - The border radius fraction, between 0-24 to be used for switch ripple.
+/// @property {Number} border-radius-track [1] - The border radius fraction, between 0-7 to be used for switch track.
+/// @property {Number} border-radius-thumb [1] - The border radius fraction, between 0-10 to be used for switch thumb.
+/// @property {Number} border-radius-ripple [1] - The border radius fraction, between 0-24 to be used for switch ripple.
+///
+/// @property {color} border-color [transparent] - The border color of the switch.
+/// @property {color} border-hover-color [transparent] - The border color of the switch on hover.
+/// @property {color} border-disabled-color [transparent] - The border color of the disabled switch.
+/// @property {color} border-on-color [transparent] - The border color of the on-switch.
+/// @property {color} border-on-hover-color [transparent] - The border color of the  on-switch.
 ///
 /// @see $default-palette
 

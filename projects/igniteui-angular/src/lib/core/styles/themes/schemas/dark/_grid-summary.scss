@@ -12,4 +12,10 @@
 /// @requires $_light-grid-summary
 /// @see $default-palette
 $_dark-grid-summary: extend($_light-grid-summary);
+
+/// Generates a dark fluent grid-summary schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-grid-summary
+/// @see $default-palette
 $_dark-fluent-grid-summary: extend($_fluent-grid-summary);

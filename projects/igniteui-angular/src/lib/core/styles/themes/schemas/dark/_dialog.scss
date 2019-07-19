@@ -11,4 +11,10 @@
 /// @requires $_light-dialog
 /// @see $default-palette
 $_dark-dialog: extend($_light-dialog);
+
+/// Generates a dark fluent dialog schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_fluent-dialog
+/// @see $default-palette
 $_dark-fluent-dialog: extend($_fluent-dialog);

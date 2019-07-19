@@ -5,7 +5,7 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-/// Generates a dark grid schema.
+/// Generates the base dark grid schema.
 /// @type {Map}
 /// @prop {Map} header-background [igx-color: ('grays', 100), hexrgba: #222] - The table header background color.
 /// @prop {Color} content-background [#222] - The table body background color.
@@ -27,10 +27,7 @@
 /// @prop {Map} body-summaries-text-color [igx-color: ('grays', 300), hexrgba: #222, text-contrast: ()] - The text color of the summary groups located the body.
 /// @prop {Map} root-summaries-background [igx-color: ('grays', 100), hexrgba: #222] - The background color of the summary groups located the footer.
 /// @prop {Map} root-summaries-text-color [igx-color: ('grays', 100), hexrgba: #222, text-contrast: ()] - The text color of the summary groups located the footer.
-/// @requires extend
-/// @requires $_light-grid
-/// @see $default-palette
-$___dark-grid: (
+$_base-dark-grid: (
     header-background: (
         igx-color: ('grays', 100),
         hexrgba: #222
@@ -117,8 +114,21 @@ $___dark-grid: (
         igx-color: ('primary', 900)
     )
 );
-$_dark-grid: extend($_light-grid, $___dark-grid);
-$_dark-fluent-grid: extend($_fluent-grid, $___dark-grid, (
+
+/// Generates a dark grid schema based on a mix of $_light-grid and $_base-dark-grid.
+/// @requires extend
+/// @requires $_light-grid
+/// @requires $_base-dark-grid
+/// @see $default-palette
+$_dark-grid: extend($_light-grid, $_base-dark-grid);
+
+
+/// Generates a dark fluent grid schema based on a mix of $_fluent-grid and $_base-dark-grid.
+/// @requires extend
+/// @requires $_fluent-grid
+/// @requires $_base-dark-grid
+/// @see $default-palette
+$_dark-fluent-grid: extend($_fluent-grid, $_base-dark-grid, (
     row-hover-background: (
         igx-color: ('grays', 100),
         hexrgba: #222

@@ -11,4 +11,10 @@
 /// @requires $_light-avatar
 /// @see $default-palette
 $_dark-avatar: extend($_light-avatar);
+
+/// Generates a dark fluent avatar schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-avatar
+/// @see $default-palette
 $_dark-fluent-avatar: extend($_fluent-avatar);

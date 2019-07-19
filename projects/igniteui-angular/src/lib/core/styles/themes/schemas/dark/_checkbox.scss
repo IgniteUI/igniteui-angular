@@ -11,10 +11,16 @@
 /// @requires extend
 /// @requires $_light-checkbox
 /// @see $default-palette
-$___dark-checkbox: (
+$_dark-checkbox: extend($_light-checkbox, (
     tick-color: #222
-);
-$_dark-checkbox: extend($_light-checkbox, $___dark-checkbox);
+));
+
+/// Generates a dark fluent checkbox schema.
+/// @type {Map}
+/// @prop {Color} tick-color [#fff] - The checked mark color.
+/// @requires extend
+/// @requires $_fluent-checkbox
+/// @see $default-palette
 $_dark-fluent-checkbox: extend($_fluent-checkbox, (
     tick-color: #fff
 ));

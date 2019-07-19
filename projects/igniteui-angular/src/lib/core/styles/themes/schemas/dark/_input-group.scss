@@ -6,17 +6,28 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// Generates a light input-group schema.
+/// Generates a base dark input-group schema.
 /// @type {Map}
 /// @prop {Color} search-background [#222] - The background color of an input group of type search.
-/// @requires {function} extend
-/// @requires $_light-input-group
-/// @see $default-palette
-$___dark-input-group: (
+$_base-dark-input-group: (
     search-background: #222
 );
-$_dark-input-group: extend($_light-input-group, $___dark-input-group);
-$_dark-fluent-input-group: extend($_fluent-input-group, $___dark-input-group, (
+
+/// Generates a dark input-group schema based on a mix of $_light-input-group and $_base-dark-input-group..
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-input-group
+/// @requires $_base-dark-input-group
+/// @see $default-palette
+$_dark-input-group: extend($_light-input-group, $_base-dark-input-group);
+
+/// Generates a dark fluent input-group schema based on a mix of $_fluent-input-group and $_base-dark-input-group.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-input-group
+/// @requires $_base-dark-input-group
+/// @see $default-palette
+$_dark-fluent-input-group: extend($_fluent-input-group, $_base-dark-input-group, (
     input-prefix-background: (
         igx-color: ('grays', 100),
         hexrgba: #222

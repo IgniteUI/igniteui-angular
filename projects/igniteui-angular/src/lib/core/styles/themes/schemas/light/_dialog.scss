@@ -14,6 +14,10 @@
 /// @prop {Map} message-color [igx-color: 'surface', text-contrast: (), rgba: .6] - The dialog message text color.
 /// @prop {number} elevation [24] - The elevation level for the dialog.
 /// @prop {Number} border-radius [.1] - The border radius fraction, between 0-1 to be used for dialog component.
+///
+/// @requires {function} extend
+/// @requires {map} $_default-shape-dialog
+/// @requires {map} $_default-elevation-dialog
 /// @see $default-palette
 $_light-dialog: extend(
     $_default-shape-dialog,
@@ -38,6 +42,13 @@ $_light-dialog: extend(
     )
 );
 
+/// Generates a fluent dialog schema.
+/// @type {Map}
+/// @prop {Number} border-radius [2px] - The border radius fraction, between 0-1 to be used for dialog component.
+///
+/// @requires {function} extend
+/// @requires {map} $_light-dialog
+/// @requires {map} $_fluent-shape-dialog
 $_fluent-dialog: extend($_light-dialog, $_fluent-shape-dialog, (
     variant: 'fluent',
 ));

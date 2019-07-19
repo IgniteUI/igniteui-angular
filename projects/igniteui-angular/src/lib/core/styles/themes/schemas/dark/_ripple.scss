@@ -12,4 +12,10 @@
 /// @requires $_light-ripple
 /// @see $default-palette
 $_dark-ripple: extend($_light-ripple);
+
+/// Generates a dark fluent ripple schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-ripple
+/// @see $default-palette
 $_dark-fluent-ripple: extend($_fluent-ripple);

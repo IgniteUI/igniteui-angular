@@ -53,6 +53,9 @@
 /// @prop {Number} border-border-radius [.2] - The border radius fraction, between 0-1 to be used for border input .
 /// @prop {Number} search-border-radius [.2] - The border radius fraction, between 0-1 to be used for search input .
 ///
+/// @requires {function} extend
+/// @requires {map} $_default-shape-input-group
+/// @requires {map} $_default-elevation-input-group
 /// @see $default-palette
 
 
@@ -182,40 +185,73 @@ $_light-input-group: extend(
     )
 );
 
-$_fluent-input-group: extend($_light-input-group, $_fluent-shape-input-group, $_fluent-elevation-input-group, (
-    variant: 'fluent',
+/// Generates a fluent input-group schema.
+/// @type {Map}
+///
+/// @prop {map} border-color [igx-color: ('grays', 600)] - The border color for input groups of type border and fluent.
+/// @prop {map} hover-border-color [igx-color: ('grays', 600)] - The hover input border for input groups of type border and fluent.
+/// @prop {map} focused-border-color [igx-color: ('primary', 500)] - The focused input border color for input groups of type border and fluent.
+/// @prop {map} disabled-border-color [igx-color: ('grays', 500), rgba: .06] - The disabled border color for input groups of type border and fluent.
+///
+/// @prop {map} border-disabled-background [igx-color: ('grays', 100)] - The background color of an input group of type border in the disabled state.
+///
+/// @prop {Color} search-disabled-background [igx-color: ('grays', 100)] - The background color of an input group of type search in the disabled state.
+///
+/// @prop {Color} input-prefix-background [igx-color: ('grays', 100), hexrgba: #fff] - The background color of an input prefix of type line, box, border and fluent.
+/// @prop {Color} input-suffix-background [ igx-color: ('grays', 100), hexrgba: #fff] - The background color of an input suffix of type line, box, border and fluent.
+///
+/// @prop {Number} search-resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state of the search input.
+/// @prop {Number} search-hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state of the search input.
+/// @prop {Number} search-disabled-elevation [0] - The elevation level, between 0-24, to be used for the disabled state of the search input.
+///
+/// @prop {Number} box-border-radius [2px] - The border radius fraction, between 0-1 to be used for box input .
+/// @prop {Number} border-border-radius [2px] - The border radius fraction, between 0-1 to be used for border input .
+/// @prop {Number} search-border-radius [2px] - The border radius fraction, between 0-1 to be used for search input .
+///
+/// @requires {function} extend
+/// @requires {map} $_light-input-group
+/// @requires {map} $_fluent-shape-input-group
+/// @requires {map} $_fluent-elevation-input-group
+/// @see $default-palette
+$_fluent-input-group: extend(
+    $_light-input-group,
+    $_fluent-shape-input-group,
+    $_fluent-elevation-input-group,
+    (
+        variant: 'fluent',
+        
+        border-color: (
+            igx-color: ('grays', 500)
+        ),
     
-    border-color: (
-        igx-color: ('grays', 500)
-    ),
-
-    hover-border-color: (
-        igx-color: ('grays', 800)
-    ),
-
-    focused-border-color: (
-        igx-color: ('grays', 500)
-    ),
-
-    disabled-border-color: (
-        igx-color: ('grays', 500)
-    ),
-
-    border-disabled-background: (
-        igx-color: ('grays', 100),
-    ),
+        hover-border-color: (
+            igx-color: ('grays', 800)
+        ),
     
-    search-disabled-background: (
-        igx-color: ('grays', 100)
-    ),
+        focused-border-color: (
+            igx-color: ('grays', 500)
+        ),
     
-    input-prefix-background: (
-        igx-color: ('grays', 100),
-        hexrgba: #fff
-    ),
+        disabled-border-color: (
+            igx-color: ('grays', 500)
+        ),
     
-    input-suffix-background: (
-        igx-color: ('grays', 100),
-        hexrgba: #fff
-    ),
-));
+        border-disabled-background: (
+            igx-color: ('grays', 100),
+        ),
+        
+        search-disabled-background: (
+            igx-color: ('grays', 100)
+        ),
+        
+        input-prefix-background: (
+            igx-color: ('grays', 100),
+            hexrgba: #fff
+        ),
+        
+        input-suffix-background: (
+            igx-color: ('grays', 100),
+            hexrgba: #fff
+        ),
+    )
+);

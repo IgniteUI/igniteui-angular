@@ -11,14 +11,16 @@
 /// @prop {Map} title-color [igx-color: ('primary', 500)]- The text color used for the title of the list.
 /// @prop {Color} background-color [transparent] - The background color of the panel.
 /// @see $default-palette
-$_light-column-hiding: extend(
-    $_default-shape-column-hiding,
-    (
-        background-color: transparent,
-        title-color: (
-            igx-color: ('primary', 500)
-        )
+$_light-column-hiding: (
+    background-color: transparent,
+    title-color: (
+        igx-color: ('primary', 500)
     )
 );
 
+/// Generates a fluent column hiding schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-column-hiding
+/// @see $default-palette
 $_fluent-column-hiding: extend($_light-column-hiding);

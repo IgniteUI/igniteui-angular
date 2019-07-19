@@ -39,4 +39,8 @@ $_light-banner: extend(
     )
 );
 
+/// Generates a fluent banner schema.
+/// @type {Map}
+/// @requires $_light-banner
+/// @see $default-palette
 $_fluent-banner: extend($_light-banner);

@@ -11,4 +11,10 @@
 /// @requires $_light-grid-filtering
 /// @see $default-palette
 $_dark-grid-filtering: extend($_light-grid-filtering);
+
+/// Generates a dark fluent grid-filtering schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_fluent-grid-filtering
+/// @see $default-palette
 $_dark-fluent-grid-filtering: extend($_fluent-grid-filtering);

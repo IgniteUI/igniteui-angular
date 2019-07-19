@@ -15,16 +15,16 @@
 ///
 /// @see $default-palette
 
-$_light-icon: extend(
-    $_default-shape-icon,
-    (
-        color: currentColor,
-
-        size: rem(24px),
-
-        disabled-color: currentColor
-    )
+$_light-icon: (
+    color: currentColor,
+    size: rem(24px),
+    disabled-color: currentColor
 );
 
-
+/// Generates a fluent icon schema.
+/// @type {Map}
+///
+/// @requires {function} extend
+/// @requires {map} $_light-icon
+/// @see $default-palette
 $_fluent-icon: extend($_light-icon);

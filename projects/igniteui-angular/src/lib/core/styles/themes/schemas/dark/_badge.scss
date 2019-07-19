@@ -12,4 +12,10 @@
 /// @requires $_light-badge
 /// @see $default-palette
 $_dark-badge: extend($_light-badge);
+
+/// Generates a dark fluent badge schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_fluent-badge
+/// @see $default-palette
 $_dark-fluent-badge: extend($_fluent-badge);

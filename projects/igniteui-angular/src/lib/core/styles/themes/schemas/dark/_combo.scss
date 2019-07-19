@@ -12,4 +12,10 @@
 /// @requires $_light-combo
 /// @see $default-palette
 $_dark-combo: extend($_light-combo);
+
+/// Generates a dark fluent combo schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_fluent-combo
+/// @see $default-palette
 $_dark-fluent-combo: extend($_fluent-combo);

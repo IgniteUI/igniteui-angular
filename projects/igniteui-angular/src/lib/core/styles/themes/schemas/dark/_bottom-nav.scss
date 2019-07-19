@@ -5,14 +5,25 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-/// Generates a dark bottom navigation schema.
+/// Generates the base dark bottom-nav schema.
 /// @type {Map}
 /// @prop {Color} background [#222] - The background color used for the toast.
-/// @requires {function} extend
-/// @requires $_light-bottom-nav
-/// @see $default-palette
-$___dark-bottom-nav: (
+$_base-dark-bottom-nav: (
     background: #222
 );
-$_dark-bottom-nav: extend($_light-bottom-nav, $___dark-bottom-nav);
-$_dark-fluent-bottom-nav: extend($_fluent-bottom-nav, $___dark-bottom-nav);
+
+/// Generates a dark bottom-nav schema based on a mix of $_light-bottom-nav and $_base-dark-bottom-nav
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-bottom-nav
+/// @requires $_base-dark-bottom-nav
+/// @see $default-palette
+$_dark-bottom-nav: extend($_light-bottom-nav, $_base-dark-bottom-nav);
+
+/// Generates a dark fluent bottom-nav schema based on a mix of $_fluent-bottom-nav and $_base-dark-bottom-nav
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-bottom-nav
+/// @requires $_base-dark-bottom-na
+/// @see $default-palette
+$_dark-fluent-bottom-nav: extend($_fluent-bottom-nav, $_base-dark-bottom-nav);

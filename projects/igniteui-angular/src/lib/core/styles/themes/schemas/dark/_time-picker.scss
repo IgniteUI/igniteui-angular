@@ -12,5 +12,11 @@
 /// @requires $_light-time-picker
 /// @see $default-palette
 $_dark-time-picker: extend($_light-time-picker);
+
+/// Generates a dark fluent time-picker schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-time-picker
+/// @see $default-palette
 $_dark-fluent-time-picker: extend($_fluent-time-picker);
 

@@ -83,7 +83,6 @@
 /// @property {Map} igx-time-picker [$_dark-time-picker]
 /// @property {Map} igx-toast [$_dark-toast]
 /// @property {Map} igx-tooltip [$_dark-tooltip]
-
 $dark-schema: (
     igx-avatar: $_dark-avatar,
     igx-badge: $_dark-badge,
@@ -126,6 +125,47 @@ $dark-schema: (
     igx-tooltip: $_dark-tooltip
 );
 
+/// The default dark fluent schema for all components.
+/// @type {Map}
+/// @property {map} igx-avatar: [$_dark-fluent-avatar],
+/// @property {map} igx-badge: [$_dark-fluent-badge],
+/// @property {map} igx-banner: [$_dark-fluent-banner],
+/// @property {map} igx-bottom-nav: [$_dark-fluent-bottom-nav],
+/// @property {map} igx-button: [$_dark-fluent-button],
+/// @property {map} igx-button-group: [$_dark-fluent-button-group],
+/// @property {map} igx-calendar: [$_dark-fluent-calendar],
+/// @property {map} igx-card: [$_dark-fluent-card],
+/// @property {map} igx-carousel: [$_dark-fluent-carousel],
+/// @property {map} igx-checkbox: [$_dark-fluent-checkbox],
+/// @property {map} igx-chip: [$_dark-fluent-chip],
+/// @property {map} igx-column-hiding: [$_dark-fluent-column-hiding],
+/// @property {map} igx-combo: [$_dark-fluent-combo],
+/// @property {map} igx-dialog: [$_dark-fluent-dialog],
+/// @property {map} igx-divider: [$_dark-fluent-divider],
+/// @property {map} igx-drop-down: [$_dark-fluent-drop-down],
+/// @property {map} igx-expansion-panel: [$_dark-fluent-expansion-panel],
+/// @property {map} igx-grid: [$_dark-fluent-grid],
+/// @property {map} igx-grid-filtering: [$_dark-fluent-grid-filtering],
+/// @property {map} igx-grid-paginator: [$_dark-fluent-grid-pagination],
+/// @property {map} igx-grid-summary: [$_dark-fluent-grid-summary],
+/// @property {map} igx-grid-toolbar: [$_dark-fluent-grid-toolbar],
+/// @property {map} igx-icon: [$_dark-fluent-icon],
+/// @property {map} igx-input-group: [$_dark-fluent-input-group],
+/// @property {map} igx-list: [$_dark-fluent-list],
+/// @property {map} igx-navbar: [$_dark-fluent-navbar],
+/// @property {map} igx-navdrawer: [$_dark-fluent-navdrawer],
+/// @property {map} igx-overlay: [$_dark-fluent-overlay],
+/// @property {map} igx-linear-bar: [$_dark-fluent-progress-linear],
+/// @property {map} igx-circular-bar: [$_dark-fluent-progress-circular],
+/// @property {map} igx-radio: [$_dark-fluent-radio],
+/// @property {map} igx-ripple: [$_dark-fluent-ripple],
+/// @property {map} igx-slider: [$_dark-fluent-slider],
+/// @property {map} igx-snackbar: [$_dark-fluent-snackbar],
+/// @property {map} igx-switch: [$_dark-fluent-switch],
+/// @property {map} igx-tabs: [$_dark-fluent-tabs],
+/// @property {map} igx-time-picker: [$_dark-fluent-time-picker],
+/// @property {map} igx-toast: [$_dark-fluent-toast],
+/// @property {map} igx-tooltip: [$_dark-fluent-tooltip]
 $dark-fluent-schema: (
     igx-avatar: $_dark-fluent-avatar,
     igx-badge: $_dark-fluent-badge,

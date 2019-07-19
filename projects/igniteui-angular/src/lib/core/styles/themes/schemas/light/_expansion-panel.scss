@@ -17,6 +17,9 @@
 /// @prop {Map} body-color [igx-color: ('grays', 800)] - The panel body text color.
 /// @prop {Map} disabled-color [igx-color: ('grays', 500)] - The panel disabled text color.
 /// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for expansion-panel.
+///
+/// @requires {function} extend
+/// @requires {Map} $_default-shape-expansion-panel
 /// @see $default-palette
 $_light-expansion-panel: extend(
     $_default-shape-expansion-panel,
@@ -50,4 +53,9 @@ $_light-expansion-panel: extend(
     )
 );
 
+/// Generates a fluent expansion panel schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {Map} $_light-expansion-panel
+/// @see $default-palette
 $_fluent-expansion-panel: extend($_light-expansion-panel);

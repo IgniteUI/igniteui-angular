@@ -28,6 +28,7 @@
 /// @prop {Color} row-even-text-color [inherit] - The text color of even rows.
 /// @prop {Map} row-selected-background [igx-color: ('secondary', 50), hexrgba: #fff] - The selected row background color.
 /// @prop {Map} row-selected-text-color [igx-contrast-color: ('secondary', 50)] - The selected row text color.
+/// @prop {Map} row-selected-hover-background [igx-color: ('secondary', 50), hexrgba: #fff] - The selected row hover background.
 /// @prop {Map} row-hover-background [igx-color: ('grays', 100), hexrgba: #fff] - The hover row background color.
 /// @prop {Map} row-hover-text-color [igx-contrast-color: ('grays', 200)] - The hover row text color.
 /// @prop {Map} row-border-color [igx-color: ('grays', 300)] - The row bottom border color.
@@ -71,6 +72,10 @@
 /// @prop {number} grid-elevation [2] - The elevation used for the grid.
 /// @prop {number} drag-elevation [5] - The elevation used for movable elements (ex. column header).
 /// @prop {Number} border-radius [1] - The border radius fraction, between 0-1 to be used for card date.
+///
+/// @requires {function} extend
+/// @requires {map} $_default-shape-grid
+/// @requires {map} $_default-elevation-grid
 /// @see $default-palette
 $_light-grid: extend(
     $_default-shape-grid,
@@ -332,8 +337,35 @@ $_light-grid: extend(
     )
 );
 
+/// Generates a fluent grid schema.
+/// @type {Map}
+/// @prop {Map} grid-border-color [igx-color: ('grays', 100)] - The grid border color only.
+/// @prop {Map} header-background [igx-color: 'surface'] - The table header background color.
+/// @prop {Map} header-border-color [igx-color: ('grays', 100)] - The color used for header borders.
+/// @prop {Map} row-selected-hover-background [igx-color: ('grays', 200), hexrgba: #fff] - The selected row hover background.
+/// @prop {Map} row-border-color [igx-color: ('grays', 100)] - The row bottom border color.
+/// @prop {Map} pinned-border-color [igx-color: ('grays', 200)] - The color of the pinned border.
+/// @prop {Map} cell-active-border-color [igx-color: ('primary', 100), hexrgba: #fff] - The active(focused) cell border color.
+/// @prop {Map} cell-selected-background [igx-color: ('grays', 300), hexrgba: #fff] - The selected cell background color.
+/// @prop {Map} grouparea-background [igx-color: 'surface'] - The grid group area background color.
+/// @prop {Map} group-row-background [igx-color: ('grays', 50), hexrgba: #fff] - The grid group row background color.
+/// @prop {Map} group-row-selected-background [igx-color: ('grays', 100), hexrgba: #fff] - The drop area background on drop color.
+/// @prop {Map} filtering-header-background [igx-color: ('grays', 100), hexrgba: #fff] - The background color of the filtered column header.
+/// @prop {Map} filtering-header-text-color [igx-color: ('grays', 900), hexrgba: #fff] - The text color color of the filtered column header.
+/// @prop {Map} filtering-row-background [igx-color: ('grays', 100), hexrgba: #fff] - The background color of the filtering row.
+/// @prop {Map} root-summaries-background [igx-color: 'surface'] - The background color of the summary groups located the footer.
+/// @prop {Map} row-ghost-background [igx-color: 'surface'] - The background color of the dragged row.
+/// @prop {number} grid-elevation [0] - The elevation used for the grid.
+/// @prop {number} drag-elevation [1] - The elevation used for movable elements (ex. column header).
+/// @prop {Number} border-radius [2px] - The border radius fraction, between 0-1 to be used drop-area.
+///
+/// @requires {function} extend
+/// @requires {map} $_light-grid
+/// @requires {map} $_fluent-elevation-grid
+/// @see $default-palette
 $_fluent-grid: extend(
     $_light-grid,
+    $_fluent-shape-grid,
     $_fluent-elevation-grid,
     (
         variant: 'fluent',
@@ -366,11 +398,6 @@ $_fluent-grid: extend(
 
         header-text-color: (
             igx-color: ('grays', 900),
-            hexrgba: #fff
-        ),
-
-        row-hover-background: (
-            igx-color: ('grays', 100),
             hexrgba: #fff
         ),
 

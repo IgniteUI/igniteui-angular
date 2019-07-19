@@ -6,9 +6,14 @@
 
 /// Generates a dark divider schema.
 /// @type {Map}
-///
 /// @requires {function} extend
 /// @requires $_light-divider
 /// @see $default-palette
 $_dark-divider: extend($_light-divider);
+
+/// Generates a dark fluent divider schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires$_fluent-divider
+/// @see $default-palette
 $_dark-fluent-divider: extend($_fluent-divider);

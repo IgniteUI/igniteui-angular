@@ -5,14 +5,28 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-/// Generates a dark grid pagination schema.
+/// Generates a base dark grid pagination schema.
 /// @type {Map}
 /// @requires extend
 /// @prop {Map} background-color [#222] - The background color of the paging panel.
 /// @requires $_light-grid-pagination
 /// @see $default-palette
-$___dark-grid-pagination: (
+$_base-dark-grid-pagination: (
     background-color: #222
 );
-$_dark-grid-pagination: extend($_light-grid-pagination, $___dark-grid-pagination);
-$_dark-fluent-grid-pagination: extend($_fluent-grid-pagination, $___dark-grid-pagination);
+
+/// Generates a dark grid pagination schema based on a mix of $_light-grid-pagination and $_base-dark-grid-pagination.
+/// @type {Map}
+/// @requires extend
+/// @requires $_light-grid-pagination
+/// @requires $_base-dark-grid-pagination
+/// @see $default-palette
+$_dark-grid-pagination: extend($_light-grid-pagination, $_base-dark-grid-pagination);
+
+/// Generates a dark fluent grid pagination schema based on a mix of $_fluent-grid-pagination and $_base-dark-grid-pagination.
+/// @type {Map}
+/// @requires extend
+/// @requires $_fluent-grid-pagination
+/// @requires $_base-dark-grid-pagination
+/// @see $default-palette
+$_dark-fluent-grid-pagination: extend($_fluent-grid-pagination, $_base-dark-grid-pagination);

@@ -37,4 +37,8 @@ $_light-avatar: extend(
     )
 );
 
+/// Generates a fluent avatar schema.
+/// @type {Map}
+/// @requires $_light-avatar
+/// @see $default-palette
 $_fluent-avatar: extend($_light-avatar);

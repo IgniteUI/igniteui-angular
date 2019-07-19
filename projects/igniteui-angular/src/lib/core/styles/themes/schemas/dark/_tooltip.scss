@@ -11,4 +11,10 @@
 /// @requires $_light-tooltip
 /// @see $default-palette
 $_dark-tooltip: extend($_light-tooltip);
+
+/// Generates a light fluent tooltip schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-tooltip
+/// @see $default-palette
 $_dark-fluent-tooltip: extend($_fluent-tooltip);

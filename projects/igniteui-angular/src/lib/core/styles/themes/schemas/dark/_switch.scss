@@ -6,21 +6,36 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// Generates a light switch schema.
+/// Generates a base dark switch schema.
 /// @type {Map}
 /// @prop {map} thumb-disabled-color [igx-color: ('grays', 400), hexrgba: #000] - The color of the thumb when the switch is disabled.
-/// @requires {function} extend
-/// @requires $_light-switch
 /// @see $default-palette
-$___dark-switch: (
+$_base-dark-switch: (
     thumb-disabled-color: (
         igx-color: ('grays', 400),
         hexrgba: #000
     )
 );
 
-$_dark-switch: extend($_light-switch, $___dark-switch);
-$_dark-fluent-switch: extend($_fluent-switch, $___dark-switch, (
+/// Generates a dark switch schema based on a mix of $_light-switch and $_base-dark-switch.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-switch
+/// @requires $_base-dark-switch
+/// @see $default-palette
+$_dark-switch: extend($_light-switch, $_base-dark-switch);
+
+/// Generates a dark fluent switch schema based on a mix of $_fluent-switch and $_base-dark-switch.
+/// @type {Map}
+/// @property {map} border-color [igx-color: ('grays', 500)] - The border color of the switch.
+/// @property {map} border-hover-color [igx-color: ('grays', 800)] - The border color of the switch on hover.
+/// @property {map} border-disabled-color [igx-color: ('grays', 200)] - The border color of the disabled switch.
+/// @property {map} track-disabled-color [igx-color: ('grays', 200)] - The color of the track when the switch is disabled.
+/// @requires {function} extend
+/// @requires $_fluent-switch
+/// @requires $_base-dark-switch
+/// @see $default-palette
+$_dark-fluent-switch: extend($_fluent-switch, $_base-dark-switch, (
     border-color: (
         igx-color: ('grays', 500)
     ),
