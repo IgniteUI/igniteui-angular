@@ -16,12 +16,12 @@
 /// @prop {Map} hover-item-background [igx-color: 'surface', text-contrast: (), rgba: .04] - The drop-down hover item background color.
 /// @prop {Map} focused-item-background [igx-color: 'surface', text-contrast: (), rgba: .04] - The drop-down focused item background color.
 /// @prop {Map} focused-item-text-color [igx-color: 'surface', text-contrast: (), rgba: .74] - The drop-down focused item text color.
-/// @prop {Map} selected-item-background [igx-color: ('secondary', 500)] - The drop-down selected item background color.
-/// @prop {Map} selected-item-text-color [igx-contrast-color: ('secondary', 500)] - The drop-down selected item text color.
-/// @prop {Map} selected-hover-item-background [igx-color: ('secondary', 300)] - The drop-down selected item hover background color.
-/// @prop {Map} selected-hover-item-text-color [igx-contrast-color: ('secondary', 300)] - The drop-down selected item hover text color.
-/// @prop {Map} selected-focus-item-background [igx-color: ('secondary', 300)] - The drop-down selected item focus background color.
-/// @prop {Map} selected-focus-item-text-color [igx-contrast-color: ('secondary', 300)] - The drop-down selected item focus text color.
+/// @prop {Map} selected-item-background [igx-color: ('secondary', 100)] - The drop-down selected item background color.
+/// @prop {Map} selected-item-text-color [igx-contrast-color: ('secondary', 100)] - The drop-down selected item text color.
+/// @prop {Map} selected-hover-item-background [igx-color: ('secondary', 200)] - The drop-down selected item hover background color.
+/// @prop {Map} selected-hover-item-text-color [igx-contrast-color: ('secondary', 200)] - The drop-down selected item hover text color.
+/// @prop {Map} selected-focus-item-background [igx-color: ('secondary', 200)] - The drop-down selected item focus background color.
+/// @prop {Map} selected-focus-item-text-color [igx-contrast-color: ('secondary', 200)] - The drop-down selected item focus text color.
 /// @prop {Color} disabled-item-background [transparent] - The drop-down disabled item background color.
 /// @prop {Map} disabled-item-text-color [igx-color: 'surface', text-contrast: (), rgba: .38] - The drop-down disabled item text color.
 /// @prop {Number} elevation [8] - The elevation level, between 0-24, to be used for the badge shadow.
@@ -70,27 +70,27 @@ $_light-drop-down: extend(
         ),
 
         selected-item-background: (
-            igx-color: ('secondary', 500)
+            igx-color: ('secondary', 100),
         ),
 
         selected-item-text-color: (
-            igx-contrast-color: ('secondary', 500)
+            igx-contrast-color: ('secondary', 100)
         ),
 
         selected-hover-item-background: (
-            igx-color: ('secondary', 300)
+            igx-color: ('secondary', 200),
         ),
 
         selected-hover-item-text-color: (
-            igx-contrast-color: ('secondary', 300)
+            igx-contrast-color: ('secondary', 200)
         ),
 
         selected-focus-item-background: (
-            igx-color: ('secondary', 300)
+            igx-color: ('secondary', 200),
         ),
 
         selected-focus-item-text-color: (
-            igx-contrast-color: ('secondary', 300)
+            igx-contrast-color: ('secondary', 200)
         ),
 
         disabled-item-background: transparent,
