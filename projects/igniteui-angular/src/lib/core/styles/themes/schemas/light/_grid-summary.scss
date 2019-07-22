@@ -9,7 +9,8 @@
 /// Generates a light grid-summary schema.
 /// @type {Map}
 ///
-/// @property {Color} background-color [inherit] - The summaries background color is inherited form igx-grid__tfoot
+/// @property {Color} background-color [inherit] - The summaries background color is inherited form igx-grid__tfoot.
+/// @property {Color} focus-background-color [igx-color] - The background color when a summary item is on focus.
 /// @property {map} label-color [igx-color: ('primary', 500)] - The summaries label color.
 /// @property {Color} result-color [currentColor] - The summaries value/result color.
 /// @property {map} border-color [igx-color: ('grays', 400)] - The summaries border color.
@@ -24,6 +25,11 @@ $_light-grid-summary: extend(
     $_default-shape-grid-summary,
     (
         background-color: inherit,
+
+        focus-background-color: (
+            igx-color: ('grays', 100)
+        ),
+
         label-color: (
             igx-color: ('primary', 500)
         ),
