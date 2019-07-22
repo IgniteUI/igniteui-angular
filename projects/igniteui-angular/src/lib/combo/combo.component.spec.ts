@@ -29,6 +29,7 @@ const CSS_CLASS_DROPDOWNBUTTON = 'igx-combo__toggle-button';
 const CSS_CLASS_CLEARBUTTON = 'igx-combo__clear-button';
 const CSS_CLASS_CHECK_GENERAL = 'igx-combo__checkbox';
 const CSS_CLASS_CHECKBOX = 'igx-checkbox';
+const CSS_CLASS_CHECKBOX_LABEL = 'igx-checkbox__composite';
 const CSS_CLASS_CHECKED = 'igx-checkbox--checked';
 const CSS_CLASS_TOGGLE = 'igx-toggle';
 const CSS_CLASS_SELECTED = 'igx-drop-down__item--selected';
@@ -950,7 +951,7 @@ describe('igxCombo', () => {
         }
         function clickItemCheckbox(dropdownElement: any, itemIndex: number) {
             const dropdownItems = dropdownElement.querySelectorAll('.' + CSS_CLASS_DROPDOWNLISTITEM);
-            const checkbox = dropdownItems[itemIndex].querySelector('.' + CSS_CLASS_CHECKBOX) as HTMLElement;
+            const checkbox = dropdownItems[itemIndex].querySelector('.' + CSS_CLASS_CHECKBOX_LABEL) as HTMLElement;
             checkbox.click();
         }
         function verifyItemIsSelected(
