@@ -2723,6 +2723,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
         vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
         vertScrDC.addEventListener('wheel', () => { this.wheelHandler(); });
+        vertScrDC.addEventListener('touchmove', () => { this.wheelHandler(); });
 
         this.verticalScrollContainer.onDataChanging.pipe(takeUntil(this.destroy$)).subscribe(($event) => {
             this.calculateGridHeight();
