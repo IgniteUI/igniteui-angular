@@ -343,9 +343,7 @@
 
     @include igx-scope('.igx-typography') {
         %item {
-            @include igx-type-style($type-scale, $item) {
-                margin: 0;
-            }
+            @include igx-type-style($type-scale, $item);
         }
 
         %item--header {
