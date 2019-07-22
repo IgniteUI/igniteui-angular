@@ -2880,7 +2880,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         await wait(100);
         fix.detectChanges();
 
-        targetCell = grid.getCellByColumn(0, 'ID');
+        targetCell = grid.getCellByColumn(0, 'PostalCode');
         expect(targetCell.focused).toBe(true);
     });
 
