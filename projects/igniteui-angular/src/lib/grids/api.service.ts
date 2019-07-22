@@ -548,7 +548,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
     }
 
     public atInexistingPage(): Boolean {
-        const grid = this.grid;
-        return grid.data.length % grid.perPage === 0 && grid.isLastPage && grid.page !== 0;
+        return this.grid.totalPages - 1 > this.grid.page;
     }
 }
