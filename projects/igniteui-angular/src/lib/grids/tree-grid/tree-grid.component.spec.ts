@@ -150,7 +150,7 @@ describe('IgxTreeGrid Component Tests', () => {
         beforeEach(async(() => {
             fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
             grid = fix.componentInstance.treeGrid;
-            fix.detectChanges()
+            fix.detectChanges();
         }));
 
         it('should not render rows, paging and headers group when all cols are hidden', async () => {
