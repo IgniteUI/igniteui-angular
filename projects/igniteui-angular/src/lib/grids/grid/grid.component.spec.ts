@@ -5123,7 +5123,7 @@ export class IgxGridInsideIgxTabsComponent {
 @Component({
     template: `
         <igx-grid #grid [data]="data"
-        [paging]="true" [paginationTemplate]="pager">
+        [paging]="true" [paginationTemplate]="pager" [autoGenerate]="true">
         </igx-grid>
         <ng-template #pager let-grid>
             <h2>{{grid.totalRecords}}</h2>
