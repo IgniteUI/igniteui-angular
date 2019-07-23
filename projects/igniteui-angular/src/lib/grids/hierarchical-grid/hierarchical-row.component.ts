@@ -78,7 +78,7 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
             return;
         }
         const grid = this.gridAPI.grid;
-        this.endEdit(grid);
+        this.endEdit(grid.rootGrid);
         const state = this.gridAPI.grid.hierarchicalState;
         if (!this.expanded) {
             state.push({ rowID: this.rowID });
@@ -95,10 +95,6 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
     }
 
     private endEdit(grid: IgxHierarchicalGridComponent) {
-        while (grid.parent) {
-            grid = grid.parent;
-        }
-
         if (grid.crudService.inEditMode) {
             grid.endEdit();
         }
