@@ -163,12 +163,6 @@ export interface IDragLocation {
     pageY: number;
 }
 
-export interface IDragCustomAnimationArgs {
-    duration?: number;
-    timingFunction?: string;
-    delay?: number;
-}
-
 @Directive({
     exportAs: 'drag',
     selector: '[igxDrag]'
@@ -205,7 +199,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * <div igxDrag [dragChannel]="'odd'">
      *         <span>95</span>
      * </div>
-     * <div igxDrag [dropChannel]="['odd', 'irrational']">
+     * <div igxDrop [dropChannel]="['odd', 'irrational']">
      *         <span>Numbers drop area!</span>
      * </div>
      * ```
@@ -1269,7 +1263,7 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      * <div igxDrag [dragChannel]="'odd'">
      *         <span>95</span>
      * </div>
-     * <div igxDrag [dropChannel]="['odd', 'irrational']">
+     * <div igxDrop [dropChannel]="['odd', 'irrational']">
      *         <span>Numbers drop area!</span>
      * </div>
      * ```
