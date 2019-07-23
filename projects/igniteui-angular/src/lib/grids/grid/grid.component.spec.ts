@@ -3905,7 +3905,7 @@ describe('IgxGrid Component Tests', () => {
             }));
         });
 
-        fdescribe('Row Editing - Grouping', () => {
+        describe('Row Editing - Grouping', () => {
             it('Hide row editing dialog with group collapsing/expanding', fakeAsync(() => {
                 const fix = TestBed.createComponent(IgxGridRowEditingWithFeaturesComponent);
                 const grid = fix.componentInstance.instance;
