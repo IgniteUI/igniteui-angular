@@ -55,6 +55,8 @@ import { DisplayDensity } from '../core/displayDensity';
     template: ``
 })
 export class IgxColumnComponent implements AfterContentInit {
+    private _filterable = true;
+    private _groupable = false;
     /**
      * Sets/gets the `field` value.
      * ```typescript
@@ -105,20 +107,53 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public groupable = false;
+    public get groupable() {
+        return this._groupable;
+    }
+    public set groupable(val) {
+        this._groupable = val;
+        if (this.grid) {
+            this.grid.cdr.markForCheck();
+        }
+    }
     /**
-     * Sets/gets whether the column is editable.
+     * Gets whether the column is editable.
      * Default value is `false`.
      * ```typescript
      * let isEditable = this.column.editable;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    get editable(): boolean {
+        // Updating the primary key when grid has transactions (incl. row edit)
+        // should not be allowed, as that can corrupt transaction state.
+        const rowEditable = this.grid && this.grid.rowEditable;
+        const hasTransactions = this.grid && this.grid.transactions.enabled;
+
+        if (this.isPrimaryColumn && (rowEditable || hasTransactions)) {
+            return false;
+        }
+
+        if (this._editable !== undefined) {
+            return this._editable;
+        } else {
+            return rowEditable;
+        }
+    }
+    /**
+     * Sets whether the column is editable.
+     * ```typescript
+     * this.column.editable = true;
      * ```
      * ```html
      * <igx-column [editable] = "true"></igx-column>
      * ```
      * @memberof IgxColumnComponent
      */
-    @Input()
-    public editable = null;
+    set editable(editable: boolean) {
+        this._editable = editable;
+    }
     /**
      * Sets/gets whether the column is filterable.
      * Default value is `true`.
@@ -131,7 +166,15 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public filterable = true;
+    public get filterable() {
+        return this._filterable;
+    }
+    public set filterable(val) {
+        this._filterable = val;
+        if (this.grid) {
+            this.grid.cdr.markForCheck();
+        }
+    }
     /**
      * Sets/gets whether the column is resizable.
      * Default value is `false`.
@@ -300,6 +343,8 @@ export class IgxColumnComponent implements AfterContentInit {
             this._width = value;
             if (this.grid) {
                 this.cacheCalcWidth();
+                (this.grid as any)._derivePossibleWidth();
+                this.grid.cdr.markForCheck();
             }
         }
     }
@@ -1043,6 +1088,16 @@ export class IgxColumnComponent implements AfterContentInit {
      *@hidden
      */
     protected _hasSummary = false;
+    /**
+     * @hidden
+     */
+    protected _editable: boolean;
+    /**
+     * @hidden
+     */
+    protected get isPrimaryColumn(): boolean {
+        return this.field !== undefined && this.grid !== undefined && this.field === this.grid.primaryKey;
+    }
     /**
      *@hidden
      */

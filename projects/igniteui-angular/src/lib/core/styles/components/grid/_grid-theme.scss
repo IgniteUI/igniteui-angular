@@ -19,11 +19,13 @@
 ///
 /// @param {Color} $sorted-header-icon-color [null] - The sort icon color when sorted.
 ///
+/// @param {Color} $content-background [null] - The table body background color.
+/// @param {Color} $content-text-color [null] - The table body text color.
+///
 /// @param {Color} $ghost-header-text-color [null] - The dragged header text color.
 /// @param {Color} $ghost-header-icon-color [null] - The dragged header icon color.
 /// @param {Color} $ghost-header-background [null] - The dragged header background color.
-/// @param {Color} $content-background [null] - The table body background color.
-/// @param {Color} $content-text-color [null] - The table body text color.
+///
 /// @param {Color} $row-odd-background [null] - The background color of odd rows.
 /// @param {Color} $row-even-background [null] - The background color of even rows.
 /// @param {Color} $row-odd-text-color [null] - The text color of odd rows.
@@ -33,50 +35,64 @@
 /// @param {Color} $row-hover-background [null] - The hover row background color.
 /// @param {Color} $row-hover-text-color [null] - The hover row text color.
 /// @param {Color} $row-border-color [null] - The row bottom border color.
-/// @param {Color} $row-highlight [null] - The grid row highlight indication color.
+///
 /// @param {String} $pinned-border-width [null] - The border width of the pinned border.
 /// @param {String} $pinned-border-style [null] - The CSS border style of the pinned border.
 /// @param {Color} $pinned-border-color [null] - The color of the pinned border.
+///
 /// @param {Color} $cell-active-border-color [null] - The border color for the currently active(focused) cell.
 /// @param {Color} $cell-selected-background [null] - The selected cell background color.
 /// @param {Color} $cell-selected-text-color [null] - The selected cell text color.
+/// @param {Color} $cell-editing-background [null] - The background color of the cell being edited.
+/// @param {Color} $cell-edited-value-color [null] - The text color of a sell that has been edited.
+///
+/// @param {Color} $edit-mode-color [null] - The color applied around the row when in editing mode.
+/// @param {Color} $edited-row-indicator [null] - The color applied to the edited row indicator line.
+///
 /// @param {Color} $resize-line-color [null] - The table header resize line color.
+/// @param {Color} $drop-indicator-color [null] - The color applied to the line between the columns when dragging a column.
 ///
 /// @param {Color} $grouparea-background [null] - The grid group area background color.
 ///
 /// @param {Color} $group-row-background [null] - The grid group row background color.
 /// @param {Color} $group-row-selected-background [null] - The drop area background on drop color.
-/// @param {Color} $active-expand-icon-color [null] - The drop area background on drop color.
-/// @param {Color} $active-expand-icon-hover-color [null] - The drop area background on drop color.
 /// @param {Color} $group-label-column-name-text [null] - The grid group row column name text color.
 /// @param {Color} $group-label-icon [null] - The grid group row icon color.
 /// @param {Color} $group-label-text [null] - The grid group row text color.
 ///
 /// @param {Color} $expand-all-icon-color [null] - The grid header expand all group rows icon color.
 /// @param {Color} $expand-all-icon-hover-color [null] - The grid header expand all group rows icon hover color.
+///
 /// @param {Color} $expand-icon-color [null] - The grid row expand icon color.
 /// @param {Color} $expand-icon-hover-color [null] - The grid row expand icon hover color.
+///
+/// @param {Color} $active-expand-icon-color [null] - The drop area background on drop color.
+/// @param {Color} $active-expand-icon-hover-color [null] - The drop area background on drop color.
+///
 /// @param {Color} $group-count-background [null] - The grid group row cont badge background color.
 /// @param {Color} $group-count-text-color [null] - The grid group row cont badge text color.
+///
 /// @param {Color} $drop-area-text-color [null] - The drop area text color.
 /// @param {Color} $drop-area-icon-color [null] - The drop area icon color.
 /// @param {Color} $drop-area-background [null] - The drop area background color.
 /// @param {Color} $drop-area-on-drop-background [null] - The drop area background on drop color.
-/// @param {Color} $tree-filtered-text-color [null] - grouping row background color on focus.
 ///
 /// @param {Color} $filtering-header-background [null] - The background color of the filtered column header.
 /// @param {Color} $filtering-header-text-color [null] - The text color color of the filtered column header.
 /// @param {Color} $filtering-row-background [null] - The background color of the filtering row.
 /// @param {Color} $filtering-row-text-color [null] - The text-color color of the filtering row.
+/// @param {Color} $tree-filtered-text-color [null] - grouping row background color on focus.
 ///
 /// @param {Color} $body-summaries-background [null] - The background color of the summary groups located the body.
 /// @param {Color} $body-summaries-text-color [null] - The text color of the summary results located the body.
 /// @param {Color} $root-summaries-background [null] - The background color of the summary groups located the footer.
 /// @param {Color} $root-summaries-text-color [null] - The text color of the summary results located the footer.
+///
+/// @param {Color} $row-highlight [null] - The grid row highlight indication color.
 /// @param {box-shadow} $grid-shadow [null] - The shadow of the grid.
 /// @param {box-shadow} $drag-shadow [null] - The shadow used for movable elements (ex. column headers).
-/// @param {color} $row-drag-color [null] - The row drag handle color.
 /// @param {color} $row-ghost-background [null] - The dragged row background color.
+/// @param {color} $row-drag-color [null] - The row drag handle color.
 /// @param {border-radius} $drop-area-border-radius [null] - The border radius used for column drop area.
 ///
 /// @requires $default-palette
@@ -91,6 +107,7 @@
 @function igx-grid-theme(
     $palette: $default-palette,
     $schema: $light-schema,
+    $elevations: $elevations,
 
     $header-background: null,
     $header-text-color: null,
@@ -125,10 +142,10 @@
     $cell-selected-background: null,
     $cell-selected-text-color: null,
     $cell-editing-background: null,
+    $cell-edited-value-color: null,
 
     $edit-mode-color: null,
     $edited-row-indicator: null,
-    $cell-edited-value-color: null,
 
     $resize-line-color: null,
     $drop-indicator-color: null,
@@ -713,6 +730,10 @@
         grid-row: 5;
         border-top: $grid-header-border;
         z-index: 10001;
+    }
+
+    %grid-footer {
+        grid-row: 7;
     }
 
     %grid-display-container-thead {

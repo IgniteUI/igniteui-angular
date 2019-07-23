@@ -1238,12 +1238,12 @@ describe('IgxGrid - GroupBy', () => {
     });
 
     // GroupBy + Paging integration
-    it('should apply paging on data records only.', fakeAsync(() => {
+    it('should apply paging on both data records and group records.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.instance.paging = true;
         tick();
-        fix.componentInstance.instance.perPage = 3;
+        fix.componentInstance.instance.perPage = 4;
         tick();
         fix.detectChanges();
         fix.componentInstance.instance.groupBy({
@@ -1253,7 +1253,7 @@ describe('IgxGrid - GroupBy', () => {
         const dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(2);
-        expect(dataRows.length).toEqual(3);
+        expect(dataRows.length).toEqual(2);
 
         expect(groupRows[0].groupRow.value).toEqual('NetAdvantage');
         expect(groupRows[1].groupRow.value).toEqual('Ignite UI for JavaScript');
@@ -1264,7 +1264,7 @@ describe('IgxGrid - GroupBy', () => {
         const grid = fix.componentInstance.instance;
         fix.componentInstance.instance.paging = true;
         tick();
-        fix.componentInstance.instance.perPage = 3;
+        fix.componentInstance.instance.perPage = 4;
         tick();
         fix.detectChanges();
         fix.componentInstance.instance.groupBy({
@@ -1274,7 +1274,7 @@ describe('IgxGrid - GroupBy', () => {
         let dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(2);
-        expect(dataRows.length).toEqual(3);
+        expect(dataRows.length).toEqual(2);
         expect(groupRows[0].groupRow.records.length).toEqual(2);
         expect(groupRows[1].groupRow.records.length).toEqual(2);
         expect(groupRows[0].groupRow.value).toEqual('NetAdvantage');
@@ -1286,19 +1286,17 @@ describe('IgxGrid - GroupBy', () => {
 
         groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
-        expect(groupRows.length).toEqual(2);
+        expect(groupRows.length).toEqual(1);
         expect(dataRows.length).toEqual(3);
         expect(groupRows[0].groupRow.records.length).toEqual(2);
-        expect(groupRows[1].groupRow.records.length).toEqual(2);
-        expect(groupRows[0].groupRow.value).toEqual('Ignite UI for JavaScript');
-        expect(groupRows[1].groupRow.value).toEqual('Ignite UI for Angular');
+        expect(groupRows[0].groupRow.value).toEqual('Ignite UI for Angular');
     }));
 
     it('should persist groupby state between pages.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.instance.paging = true;
-        fix.componentInstance.instance.perPage = 3;
+        fix.componentInstance.instance.perPage = 4;
         tick();
         fix.componentInstance.instance.groupingExpansionState.push({
             expanded: false,
@@ -1327,7 +1325,7 @@ describe('IgxGrid - GroupBy', () => {
         expect(groupRows.length).toEqual(2);
         expect(dataRows.length).toEqual(2);
         expect(groupRows[0].groupRow.records.length).toEqual(2);
-        expect(groupRows[1].groupRow.records.length).toEqual(2);
+        expect(groupRows[1].groupRow.records.length).toEqual(1);
         expect(dataRows[0].rowData.ProductName).toEqual('Ignite UI for Angular');
 
         fix.componentInstance.instance.paginate(0);
@@ -2242,7 +2240,7 @@ describe('IgxGrid - GroupBy', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
 
-        fix.componentInstance.instance.dropAreaTemplate = fix.componentInstance.dropAreaTemplate;
+        fix.componentInstance.currentDropArea = fix.componentInstance.dropAreaTemplate;
         await wait();
         fix.detectChanges();
 
@@ -2591,6 +2589,7 @@ describe('IgxGrid - GroupBy', () => {
         <igx-grid
             [width]='width'
             [height]='height'
+            [dropAreaTemplate]='currentDropArea'
             [data]="data"
             [autoGenerate]="true" (onColumnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)">
         </igx-grid>
@@ -2602,6 +2601,7 @@ describe('IgxGrid - GroupBy', () => {
 export class DefaultGridComponent extends DataParent {
     public width = '800px';
     public height = null;
+    public currentDropArea;
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;

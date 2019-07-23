@@ -220,23 +220,33 @@
 
 /// Extends a Map object with the properties of another Map object.
 /// @access private
-/// @param {Map} $map1 - The source map to get extended.
-/// @param {Map} $map2 - The map extending the source map.
-/// @returns {Map} - Returns the original map extended with the properties of the second map.
-@function extend($map1, $map2) {
+/// @param {Map...} $maps - The source map to get extended.
+/// @returns {Map} - Returns the merged maps.
+@function extend($maps...) {
     $result: ();
-    @each $key, $value in $map2 {
-        @if not($value) {
-            $result: map-merge($result, (
-                #{$key}: map-get($map1, $key)
-            ));
-        } @else {
+
+    @each $map in $maps {
+        $result: map-merge($result, map-clean($map));
+    }
+
+    @return $result;
+}
+
+/// Removes all null key-value pairs from the map
+/// @access private
+/// @param {Map} $map - The target map to be cleaned.
+/// @returns {Map} - Returns a clean map.
+@function map-clean($map) {
+    $result: ();
+
+    @each $key, $value in $map {
+        @if($value) != null {
             $result: map-merge($result, (
                 #{$key}: $value
             ));
         }
     }
-    $result: map-merge($map1, $result);
+
     @return $result;
 }
 
@@ -245,7 +255,6 @@
 /// @group Palettes
 /// @requires {function} gen-color
 /// @requires {function} text-contrast
-/// @requires {function} extend
 /// @param {Color} $color - The base color used to generate the palette.
 /// @param {List} $saturations - The saturation list of color variants.
 //// Based on the Material color system.
@@ -264,7 +273,6 @@
 /// @access private
 /// @group Palettes
 /// @requires {function} text-contrast
-/// @requires {function} extend
 /// @param {Color} $color - The base color used to generate the palette.
 /// @param {Map} $shades - A map of variations as keys and opacities as values.
 /// Based on the Material color system.
@@ -341,12 +349,12 @@
 ///   // }
 ///   // otherwise, it will return the value for key 'icon-color' in the '$avatar-theme';
 /// @returns {String} - The value of the key in the passed map, or the name of key concatenated with the key name.
-@function --var($map, $key) {
+@function --var($map, $key, $fallback: '') {
     $igx-legacy-support: if(global-variable-exists('igx-legacy-support'), $igx-legacy-support, true);
 
     @if map-has-key($map, $key) {
         @if $igx-legacy-support == false {
-            @return unquote('var(--#{map-get($map, 'name')}-#{$key})');
+            @return unquote('var(--#{map-get($map, 'name')}-#{$key}, #{$fallback})');
         } @else {
             @return map-get($map, $key);
         }
@@ -416,6 +424,7 @@
 /// @access private
 /// @param {Map} $schema - A theme schema.
 /// @param {Map} $palette - An igx-palette map.
+/// @requires {function} extend
 /// @requires {function} resolve-value
 /// @example scss Apply an `igx-palette` to theme schema
 ///   $custom-palette: igx-palette($primary: red, $secondary: blue);
@@ -434,7 +443,7 @@
         @if type-of($value) == 'map' {
             $result: extend($result, (#{$key}: resolve-value($value, $palette)));
         } @else {
-            $result: extend($result, (#{$key}: $value));
+            $result: extend($result, (#{$key}: #{$value}));
         }
     }
     @return $result;
