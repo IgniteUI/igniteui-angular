@@ -3234,6 +3234,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return this.rowSelectable && this.columns.length > this.hiddenColumnsCount;
     }
 
+    get showDragIcons(): boolean {
+        return this.rowDraggable && this.columns.length > this.hiddenColumnsCount;
+    }
+
     /**
      * @hidden
      */
@@ -4119,6 +4123,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         if (this.showRowCheckboxes) {
             computedWidth -= this.headerCheckboxContainer ? this.headerCheckboxContainer.nativeElement.offsetWidth : 0;
+        }
+
+        if (this.showDragIcons) {
+            computedWidth -= this.headerDragContainer ? this.headerDragContainer.nativeElement.offsetWidth : 0;
         }
 
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
