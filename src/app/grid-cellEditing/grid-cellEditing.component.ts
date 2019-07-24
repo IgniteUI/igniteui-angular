@@ -164,7 +164,7 @@ export class GridCellEditingComponent {
     customKeydown(args) {
         const target = args.target;
         const type = args.targetType;
-        if (type === 'dataCell'  && target.inEditMode && args.event.key.toLowerCase() === 'tab') {
+        if (type === 'dataCell'  && target.editMode && args.event.key.toLowerCase() === 'tab') {
             args.event.preventDefault();
             args.cancel = true;
             if (target.column.dataType === 'number' && target.editValue < 10) {
