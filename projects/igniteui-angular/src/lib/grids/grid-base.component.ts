@@ -4285,9 +4285,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
             diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent | IgxColumnGroupComponent>) => {
                 const isColumnGroup = record.item instanceof IgxColumnGroupComponent;
-                if (isColumnGroup) {
-                    this.clearSortingAndFilteringRecursively(record.item);
-                } else {
+                if (!isColumnGroup) {
                     // Clear Filtering
                     this.gridAPI.clear_filter(record.item.field);
 
@@ -5103,19 +5101,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             return true;
         }
         return false;
-    }
-
-    private clearSortingAndFilteringRecursively(column: IgxColumnGroupComponent | IgxColumnComponent) {
-        const isColumnGroup = column instanceof IgxColumnGroupComponent;
-        if (isColumnGroup) {
-            const columnChildren = column.children;
-            columnChildren.forEach((col: IgxColumnComponent | IgxColumnGroupComponent) => {
-                return this.clearSortingAndFilteringRecursively(col);
-            });
-        } else  {
-            this.gridAPI.clear_filter(column.field);
-            this.gridAPI.clear_sort(column.field);
-        }
     }
 
     /**
