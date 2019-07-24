@@ -25,7 +25,7 @@
         <div class="igx-grid__tr" role="row" [style.width.px]='calcWidth + 1'>
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
-                <div class="igx-grid__hierarchical-expander igx-grid__hierarchical-expander--header" #headerHierarchyExpander [hidden]='!hasExpandableChildren'[ngClass]="{
+                <div class="igx-grid__hierarchical-expander igx-grid__hierarchical-expander--header" #headerHierarchyExpander [hidden]='!hasExpandableChildren || !hasVisibleColumns'[ngClass]="{
                     'igx-grid__hierarchical-expander--push': filteringService.isFilterRowVisible,
                     'igx-grid__hierarchical-expander--no-border': rowSelectable || rowDraggable
                 }">
@@ -71,9 +71,9 @@
         | gridTransaction:id:pipeTrigger
         | gridFiltering:filteringExpressionsTree:id:pipeTrigger
         | gridSort:sortingExpressions:id:pipeTrigger
+        | visibleColumns:hasVisibleColumns
         | gridHierarchicalPaging:page:perPage:id:pipeTrigger
-        | gridHierarchical:hierarchicalState:id:primaryKey:childLayoutKeys:pipeTrigger
-        | visibleColumns:hasVisibleColumns" let-rowIndex="index"
+        | gridHierarchical:hierarchicalState:id:primaryKey:childLayoutKeys:pipeTrigger" let-rowIndex="index"
         [igxForScrollOrientation]="'vertical'"  [igxForScrollContainer]='verticalScroll'
         [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" [igxForTrackBy]='trackChanges' #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
                 <ng-template

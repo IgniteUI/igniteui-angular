@@ -556,7 +556,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     @Input()
     get rowDraggable(): boolean {
-        return this._rowDrag;
+        return this._rowDrag && this.hasVisibleColumns;
     }
 
     /**
@@ -3235,7 +3235,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     get showRowCheckboxes(): boolean {
-        return this.rowSelectable && this.columns.length > this.hiddenColumnsCount;
+        return this.rowSelectable && this.hasVisibleColumns;
     }
 
     /**
@@ -3901,6 +3901,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     set hasVisibleColumns(isHidden) {
         if (this._hasVisibleColumns === undefined || this._hasVisibleColumns === isHidden) {
             this._hasVisibleColumns = this.columnList.some(col => !col.hidden);
+            this.cdr.markForCheck();
         }
     }
     /**
@@ -4588,7 +4589,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public updateHeaderCheckboxStatusOnFilter(data) {
-        if (!data) {
+        if (!data || !this.hasVisibleColumns) {
             this.checkHeaderCheckboxStatus();
             return;
         }
