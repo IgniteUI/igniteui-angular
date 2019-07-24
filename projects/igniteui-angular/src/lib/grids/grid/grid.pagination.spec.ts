@@ -166,12 +166,10 @@ describe('IgxGrid - Grid Paging', () => {
     it('change paging settings API', fakeAsync(() => {
         const fix = TestBed.createComponent(ReorderedColumnsComponent);
         fix.detectChanges();
-
         // Change page size
         const grid = fix.componentInstance.grid;
         grid.paging = true;
         grid.perPage = 2;
-
         fix.detectChanges();
         tick(16);
 

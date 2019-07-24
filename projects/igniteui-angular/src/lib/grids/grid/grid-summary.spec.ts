@@ -711,7 +711,6 @@ describe('IgxGrid - Summaries', () => {
             await wait(30);
             fixture.detectChanges();
             const grid = fixture.componentInstance.grid;
-            grid.getColumnByName('ID').editable = true;
             grid.getColumnByName('ParentID').editable = true;
             fixture.detectChanges();
             grid.rowEditable = true;
@@ -735,9 +734,6 @@ describe('IgxGrid - Summaries', () => {
 
             const editTemplate = fixture.debugElement.query(By.css('input[type=\'number\']'));
             UIInteractions.sendInput(editTemplate, 87);
-            fixture.detectChanges();
-
-            UIInteractions.triggerKeyDownEvtUponElem('tab', cell.nativeElement, true, false, true);
             await wait(50);
             fixture.detectChanges();
 
@@ -745,8 +741,7 @@ describe('IgxGrid - Summaries', () => {
             HelperUtils.verifyColumnSummaries(summaryRow, 1,
                 ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '17', '17', '17', '17']);
 
-            const idCell = grid.getCellByColumn(1, 'ID');
-            UIInteractions.triggerKeyDownEvtUponElem('enter', idCell.nativeElement, true);
+            UIInteractions.triggerKeyDownEvtUponElem('enter', cell.nativeElement, true);
             await wait(50);
             fixture.detectChanges();
 
@@ -2053,7 +2048,7 @@ describe('IgxGrid - Summaries', () => {
 
         it('Paging: should render correct summaries when paging is enable and position is buttom', fakeAsync(() => {
             grid.paging = true;
-            grid.perPage = 2;
+            grid.perPage = 3;
             fix.detectChanges();
             tick(16);
 
@@ -2090,7 +2085,7 @@ describe('IgxGrid - Summaries', () => {
 
         it('Paging: should render correct summaries when paging is enable and position is top', fakeAsync(() => {
             grid.paging = true;
-            grid.perPage = 2;
+            grid.perPage = 3;
             grid.summaryPosition = 'top';
             fix.detectChanges();
             tick(16);
