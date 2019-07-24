@@ -2,7 +2,6 @@ import { Component, ChangeDetectorRef, ElementRef, ViewChild, Inject, ChangeDete
 import { IgxGridCellComponent } from '../cell.component';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
-import { IgxSelectionAPIService } from '../../core/selection';
 import { getNodeSizeViaRange } from '../../core/utils';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridBaseComponent, IGridDataBindable } from '../grid';
@@ -20,12 +19,11 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
                 selectionService: IgxGridSelectionService,
                 crudService: IgxGridCRUDService,
                 gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-                selection: IgxSelectionAPIService,
                 cdr: ChangeDetectorRef,
                 element: ElementRef,
                 protected zone: NgZone,
                 @Inject(DOCUMENT) public document) {
-        super(selectionService, crudService, gridAPI, selection, cdr, element, zone);
+        super(selectionService, crudService, gridAPI, cdr, element, zone);
         this.treeGridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 

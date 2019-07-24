@@ -99,6 +99,6 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
         private hselection: IgxHierarchicalSelectionAPIService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef) {
-            super(gridAPI, crudService, selectionService, hselection, element, cdr);
+            super(gridAPI, crudService, selectionService, element, cdr);
         }
 }

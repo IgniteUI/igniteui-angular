@@ -26,7 +26,7 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
         private helement: ElementRef,
         protected zone: NgZone,
         ) {
-            super(selectionService, crudService, gridAPI, selection, cdr, helement, zone);
+            super(selectionService, crudService, gridAPI, cdr, helement, zone);
             this.hSelection = <IgxHierarchicalSelectionAPIService>selection;
          }
 

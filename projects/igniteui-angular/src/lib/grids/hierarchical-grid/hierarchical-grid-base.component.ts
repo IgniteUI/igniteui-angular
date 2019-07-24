@@ -112,7 +112,6 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
             selectionService,
             crudService,
             gridAPI,
-            selection,
             typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
             elementRef,
             zone,

@@ -171,10 +171,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      */
     set filteredData(value) {
         this._filteredData = value;
-
-        if (this.rowSelectable) {
-            this.updateHeaderCheckboxStatusOnFilter(this._filteredData);
-        }
     }
 
     /**
@@ -228,7 +224,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-        selection: IgxSelectionAPIService,
         @Inject(IgxGridTransaction) _transactions: TransactionService<Transaction, State>,
         elementRef: ElementRef,
         zone: NgZone,
@@ -243,7 +238,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(selectionService,
-                  crudService, gridAPI, selection, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
+                  crudService, gridAPI, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
                   filteringService, overlayService, summaryService, _displayDensityOptions);
             this._gridAPI = <IgxGridAPIService>gridAPI;
     }

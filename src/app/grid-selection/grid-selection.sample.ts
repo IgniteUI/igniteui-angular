@@ -14,6 +14,7 @@ export class GridSelectionComponent implements AfterViewInit {
     grid1: IgxGridComponent;
     remote: Observable<any[]>;
     selection = true;
+    selectionModes = ['none', 'single', 'multiple'];
 
     constructor(private remoteService: RemoteService, private cdr: ChangeDetectorRef) {
         this.remoteService.urlBuilder = (state) => this.remoteService.url;
@@ -25,12 +26,12 @@ export class GridSelectionComponent implements AfterViewInit {
         this.cdr.detectChanges();
     }
 
-    private onRowSelectionChange(event) {
-
+    public onRowSelection(event) {
+        this.grid1.rowSelection = event.newSelection.element.nativeElement.textContent.trim();
     }
 
-    private onSelection(event) {
-
+    public onSelection(event) {
+        this.grid1.cellSelection = event.newSelection.element.nativeElement.textContent.trim();
     }
 
     public scrScrollTo(index) {

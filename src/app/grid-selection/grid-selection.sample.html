@@ -1,7 +1,20 @@
 <div class="sample-container">
     <igx-switch [(ngModel)]="selection" (change)="this.grid1.deselectAllRows()">Toggle Multiple Selection</igx-switch>
+
+    <button igxButton="raised" [igxToggleAction]="dropDownComfortable" [igxDropDownItemNavigation]="dropDownComfortable" displayDensity="comfortable">Cell Selection: {{grid1.cellSelection}}</button>
+        <igx-drop-down #dropDownComfortable (onSelection)="onSelection($event)"  displayDensity="comfortable">
+            <igx-drop-down-item *ngFor="let item of selectionModes">
+                    {{ item }}
+            </igx-drop-down-item>
+        </igx-drop-down>
+    <button igxButton="raised" [igxToggleAction]="dropDownRowSelection" [igxDropDownItemNavigation]="dropDownRowSelection" displayDensity="comfortable">Row Selection: {{grid1.rowSelection}}</button>
+        <igx-drop-down #dropDownRowSelection (onSelection)="onRowSelection($event)"  displayDensity="comfortable">
+            <igx-drop-down-item *ngFor="let item of selectionModes">
+                    {{ item }}
+            </igx-drop-down-item>
+        </igx-drop-down>
     <div class="separator"></div>
-    <igx-grid #grid1 [data]="remote | async" [primaryKey]="'ProductID'"
+    <igx-grid #grid1 [data]="remote | async" [allowFiltering]='true'
             [rowSelectable]="selection" (onSelection)="handleRowSelection($event)"
             [width]="'800px'" [height]="'600px'">
         <igx-column [field]="'ProductID'" [editable]="true" [width]="'80%'"></igx-column>

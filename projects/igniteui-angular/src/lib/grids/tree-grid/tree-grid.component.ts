@@ -139,9 +139,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     set filteredData(value) {
         this._filteredData = value;
 
-        if (this.rowSelectable) {
-            this.updateHeaderCheckboxStatusOnFilter(this._filteredData);
-        }
+
     }
 
     /**
@@ -420,7 +418,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-            super(selectionService, crudService, gridAPI, selection,
+            super(selectionService, crudService, gridAPI,
                 _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
                 filteringService, overlayService, summaryService, _displayDensityOptions);
         this._gridAPI = <IgxTreeGridAPIService>gridAPI;
@@ -460,13 +458,13 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
                     this.cdr.markForCheck();
 
                     requestAnimationFrame(() => {
-                        const cellID = this.selection.first_item(`${this.id}-cell`);
+                        /* const cellID = this.selection.first_item(`${this.id}-cell`);
                         if (cellID) {
                             const cell = this._gridAPI.get_cell_by_index(cellID.rowIndex, cellID.columnID);
                             if (cell) {
                                 cell.nativeElement.focus();
                             }
-                        }
+                        } */
                     });
                 });
             }
