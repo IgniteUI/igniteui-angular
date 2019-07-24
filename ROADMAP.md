@@ -27,7 +27,7 @@
 6. **[DONE]** BottomNav and Tabs integration with router outlet container [#4297](https://github.com/IgniteUI/igniteui-angular/issues/4297)
 7. **[DONE]** Date/Time pickers action buttons customization [#4647](https://github.com/IgniteUI/igniteui-angular/issues/4647) Released in [8.0.0](https://github.com/IgniteUI/igniteui-angular/releases/tag/8.0.0)
 8. **[DONE]** Square and oval presets in theming [#4964](https://github.com/IgniteUI/igniteui-angular/issues/4964) Released in [8.0.0](https://github.com/IgniteUI/igniteui-angular/releases/tag/8.0.0)
-9. Grid column group header templates [#3344](https://github.com/IgniteUI/igniteui-angular/issues/3344)
+9. **[DONE]** Grid column group header templates [#3344](https://github.com/IgniteUI/igniteui-angular/issues/3344)
 
 ## Milestone 7 (13.05.2019) 
 
