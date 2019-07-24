@@ -623,12 +623,10 @@ export class IgxOverlayService implements OnDestroy {
                 //  if the click is on the element do not close this overlay
                 if (!info.elementRef.nativeElement.contains(ev.target)) {
                     // if we should exclude position target check if the click is over it. If so do not close overlay
-                    const positionTarget = info.settings.positionStrategy.settings.target as HTMLElement;
+                    const positionTarget = info.settings.positionStrategy.settings.target as any;
                     let clickOnPositionTarget = false;
                     if (positionTarget) {
-                        const positionTargetRect = positionTarget.getBoundingClientRect();
-                        clickOnPositionTarget = ev.clientX >= positionTargetRect.left && ev.clientX <= positionTargetRect.right &&
-                                                ev.clientY >= positionTargetRect.top && ev.clientY <= positionTargetRect.bottom;
+                        clickOnPositionTarget = positionTarget.contains(ev.target);
                     }
 
                     if (!(info.settings.excludePositionTarget && clickOnPositionTarget)) {

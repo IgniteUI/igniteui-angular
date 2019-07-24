@@ -9,7 +9,7 @@
             <g id="Icon-24px">
                 <polygon id="Shape" points="0 0 24 0 24 24 0 24"></polygon>
                 <mask id="mask-2" fill="white">
-                    <use xlink:href="#path-1"></use>
+                    <use xlink:href="#path-1" style="pointer-events: none;"></use>
                 </mask>
                 <g id="A…"></g>
                 <g id="Colors/grays.600" mask="url(#mask-2)" fill="#000000" fill-opacity="0.54">
