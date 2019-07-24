@@ -461,32 +461,6 @@ describe('IgxGrid - Grid Paging', () => {
         expect(gridElement.querySelector(PAGER_CLASS)).not.toBeNull();
     }));
 
-    it('should display custom numbers in select from perPage', fakeAsync (() => {
-        const expectedOptions = [3, 5, 10, 15, 25, 50, 100, 500];
-        const defaultExpectedOptions = [5, 10, 15, 25, 50, 100, 500];
-
-        const fix = TestBed.createComponent(PagingComponent);
-        const grid = fix.componentInstance.grid;
-        fix.detectChanges();
-
-        function testOptions(expectedResults) {
-            const options = fix.debugElement.query(By.css('igx-select')).nativeElement.querySelectorAll('igx-select-item');
-            let option;
-            options.forEach((el, index) => {
-                option = Number(el.textContent.trim());
-                expect(option).toBe(expectedResults[index]);
-            });
-        }
-
-        testOptions(expectedOptions);
-
-        grid.perPage = 25;
-        fix.detectChanges();
-        tick(16);
-
-        testOptions(defaultExpectedOptions);
-    }));
-
     function verifyGridPager(fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) {
         const disabled = 'igx-button--disabled';
         const grid = fix.componentInstance.grid;
