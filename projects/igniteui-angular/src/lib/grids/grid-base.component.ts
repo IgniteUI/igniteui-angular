@@ -2745,6 +2745,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.resetColumnsCaches();
         this.resetColumnCollections();
         this.resetCachedWidths();
+        this.hasVisibleColumns = undefined;
         this._columnGroups = this.columnList.some(col => col.columnGroup);
     }
 
@@ -3898,11 +3899,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return this._hasVisibleColumns;
     }
 
-    set hasVisibleColumns(isHidden) {
-        if (this._hasVisibleColumns === undefined || this._hasVisibleColumns === isHidden) {
-            this._hasVisibleColumns = this.columnList.some(col => !col.hidden);
-            this.cdr.markForCheck();
-        }
+    set hasVisibleColumns(value) {
+        this._hasVisibleColumns = value;
     }
     /**
      * Returns if the `IgxGridComponent` has moveable columns.
