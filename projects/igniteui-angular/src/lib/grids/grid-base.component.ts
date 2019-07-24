@@ -4587,7 +4587,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public updateHeaderCheckboxStatusOnFilter(data) {
-        if (!data || !this.hasVisibleColumns) {
+        if (!data || !this.hasVisibleColumns || !this.headerCheckbox) {
             this.checkHeaderCheckboxStatus();
             return;
         }
