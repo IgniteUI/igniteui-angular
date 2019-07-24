@@ -766,6 +766,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             hierarchicalGrid.rowSelectable = true;
             hierarchicalGrid.rowDraggable = true;
             hierarchicalGrid.paging = true;
+            tick(30);
             fixture.detectChanges();
 
             let tHeadItems = fixture.nativeElement.querySelector('igx-grid-header-group');
