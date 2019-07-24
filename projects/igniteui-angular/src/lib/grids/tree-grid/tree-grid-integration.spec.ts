@@ -855,7 +855,7 @@ describe('IgxTreeGrid - Integration ', () => {
             const grandChildRow = { ID: 13, ParentID: 12, Name: 'Asparuh Pulev', JobTitle: 'wrestler', Age: 14 };
             const trans = treeGrid.transactions;
 
-            treeGrid.addRow(rootRow, 0);
+            treeGrid.addRow(rootRow);
             fix.detectChanges();
 
             treeGrid.addRow(childRow, 11);
@@ -930,7 +930,7 @@ describe('IgxTreeGrid - Integration ', () => {
                 JobTitle: 'Copywriter',
                 Age: 22
             };
-            treeGrid.addRow(newRow, 0);
+            treeGrid.addRow(newRow);
             fix.detectChanges();
 
             const addedRow = treeGrid.rowList.filter(r => r.rowID === addedRowId)[0] as IgxTreeGridRowComponent;
@@ -1356,7 +1356,7 @@ describe('IgxTreeGrid - Integration ', () => {
             const grandChildRow = { ID: 13, ParentID: 12, Name: 'Asparuh Pulev', JobTitle: 'wrestler', Age: 14 };
             const trans = treeGrid.transactions;
 
-            treeGrid.addRow(rootRow, 0);
+            treeGrid.addRow(rootRow);
             fix.detectChanges();
 
             treeGrid.addRow(childRow, 11);
