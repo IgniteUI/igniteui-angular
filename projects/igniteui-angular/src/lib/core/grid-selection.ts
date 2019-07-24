@@ -202,7 +202,7 @@ export class IgxGridCRUDService {
 
 @Injectable()
 export class IgxGridSelectionService {
-
+    grid;
     dragMode = false;
     activeElement: ISelectionNode | null;
     keyboardState = {} as ISelectionKeyboardState;
@@ -213,6 +213,7 @@ export class IgxGridSelectionService {
     temp = new Map<number, Set<number>>();
     _ranges: Set<string> = new Set<string>();
     _selectionRange: Range;
+    rowSelection: Map<any,  any> = new Map<any, any>();
 
 
     /**
@@ -540,6 +541,52 @@ export class IgxGridSelectionService {
         range.selectNode(node);
         range.collapse(true);
         selection.addRange(range);
+    }
+
+    getSelectedRows() {
+        return this.rowSelection.size ? Array.of(this.rowSelection.values()) : [];
+    }
+
+    clearRowSelection() {
+        // emit SelectionEvent
+        this.rowSelection.clear();
+    }
+
+    selectRow(rowID, clearPrevSelection?) {
+        // emit SelectionEvent
+        const rowData = this.grid.primaryKey ? this.grid.getRowByKey(rowID).rowData : rowID;
+        clearPrevSelection = clearPrevSelection === undefined ? this.grid.rowSelection === 'single' : clearPrevSelection;
+        if (clearPrevSelection) {
+            this.rowSelection.clear();
+        }
+        this.rowSelection.set(rowID, rowData);
+    }
+
+    deselectRow(rowID) {
+        // emit SelectionEvent
+        if (this.rowSelection.size && this.rowSelection.has(rowID)) {
+            this.rowSelection.delete(rowID);
+        }
+    }
+
+    isRowSelected(rowID) {
+        return this.rowSelection.has(rowID);
+    }
+
+    areAllRowSelected() {
+        if (this.grid.data === null || this.grid.data === undefined) {
+            return false;
+        }
+        const allItems = this.grid.filteringExpressionsTree ? this.grid.filteredSortedData.length : this.grid.data.length;
+        return this.rowSelection.size >= allItems &&
+            new Set(Array.from(this.rowSelection.values()).concat(this.grid.filteredSortedData)).size === this.rowSelection.size;
+    }
+
+    hasSomeRowSelected() {
+        if (this.grid.data === null || this.grid.data === undefined) {
+            return false;
+        }
+        return this.rowSelection.size > 0 && !this.areAllRowSelected();
     }
 }
 

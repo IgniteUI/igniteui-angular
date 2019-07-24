@@ -12,13 +12,12 @@ import {
     ViewChildren
 } from '@angular/core';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
-import { IgxSelectionAPIService } from '../core/selection';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { TransactionType, State } from '../services';
-import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
+import { IgxGridBaseComponent, IGridDataBindable, GridSelectionMode } from './grid-base.component';
 import { IgxGridSelectionService, IgxGridCRUDService, IgxRow } from '../core/grid-selection';
 
 @Component({
@@ -146,6 +145,26 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     /**
      * @hidden
      */
+    public get isRowSelectable(): boolean {
+        return this.grid.isRowSelectable;
+    }
+
+    /**
+     * @hidden
+     */
+    @Input()
+    get startIndex(): number {
+        return this._startIndex;
+    }
+
+    set startIndex(value: number) {
+        this._startIndex = value;
+    }
+
+    /**
+     * @hidden
+     */
+    @Input()
     @HostBinding('attr.aria-selected')
     public isSelected: boolean;
 
@@ -259,11 +278,14 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      * @hidden
      */
     protected _rowSelection = false;
+    /**
+     * @hidden
+    */
+   private _startIndex = 0;
 
     constructor(public gridAPI: GridBaseAPIService<T>,
         public crudService: IgxGridCRUDService,
         public selectionService: IgxGridSelectionService,
-        private selection: IgxSelectionAPIService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef) { }
 
@@ -272,10 +294,9 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      * @hidden
      */
     public onCheckboxClick(event) {
-        const newSelection = (event.checked) ?
-            this.selection.add_item(this.gridID, this.rowID) :
-            this.selection.delete_item(this.gridID, this.rowID);
-        this.grid.triggerRowSelectionChange(newSelection, this, event);
+        const clear = this.grid.rowSelection === 'single';
+        event.checked ? this.grid.selectionService.selectRow(this.rowID, clear) :
+                this.grid.selectionService.deselectRow(this.rowID);
     }
 
     /**
@@ -324,13 +345,8 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      * @hidden
      */
     public ngDoCheck() {
-        this.isSelected = this.rowSelectable ?
-            this.grid.allRowsSelected ? true : this.selection.is_item_selected(this.gridID, this.rowID) :
-            this.selection.is_item_selected(this.gridID, this.rowID);
         this.cdr.markForCheck();
-        if (this.checkboxElement) {
-            this.checkboxElement.checked = this.isSelected;
-        }
+
     }
 
     /**

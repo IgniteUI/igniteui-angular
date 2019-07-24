@@ -14,7 +14,6 @@
     OnChanges,
     SimpleChanges
 } from '@angular/core';
-import { IgxSelectionAPIService } from '../core/selection';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
@@ -23,7 +22,7 @@ import { State } from '../services/index';
 import { IgxGridBaseComponent, IGridEditEventArgs, IGridDataBindable } from './grid-base.component';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../core/grid-selection';
 import { DeprecateProperty } from '../core/deprecateDecorators';
-
+import { GridSelectionMode } from './grid-base.component';
 /**
  * Providing reference to `IgxGridCellComponent`:
  * ```typescript
@@ -527,7 +526,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         protected selectionService: IgxGridSelectionService,
         protected crudService: IgxGridCRUDService,
         public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-        public selection: IgxSelectionAPIService,
         public cdr: ChangeDetectorRef,
         private element: ElementRef,
         protected zone: NgZone) { }
@@ -681,7 +679,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.selectionService.primaryButton = false;
             return;
         }
-        this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
+        if (this.grid.cellSelection === GridSelectionMode.multiple) {
+            this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
+        }
     }
 
     /**
@@ -690,6 +690,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     pointerenter = (event: PointerEvent) => {
+        if (this.grid.cellSelection !== GridSelectionMode.multiple) { return; }
         const dragMode = this.selectionService.pointerEnter(this.selectionNode, event);
         if (dragMode) {
             this.grid.cdr.detectChanges();
@@ -705,7 +706,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.grid.navigation.setStartNavigationCell(this.colStart, this.rowStart, null);
         }
         if (!isLeftClick(event)) { return; }
-        if (this.selectionService.pointerUp(this.selectionNode, this.grid.onRangeSelection)) {
+        if (this.grid.cellSelection === GridSelectionMode.multiple &&
+            this.selectionService.pointerUp(this.selectionNode, this.grid.onRangeSelection)) {
             this.grid.cdr.detectChanges();
         }
         this._updateCRUDStatus();
@@ -737,6 +739,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             cell: this,
             event
         });
+        if (this.grid.rowSelection === 'none') { return; }
+        if (!event.ctrlKey) {
+            this.grid.selectionService.rowSelection.clear();
+        }
+        this.grid.selectionService.selectRow(this.row.rowID);
     }
 
     /**
@@ -760,11 +767,21 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (this.focused) {
             return;
         }
-
         const node = this.selectionNode;
         const mrl = this.grid.hasColumnLayouts;
         this.focused = true;
         this.row.focused = true;
+        if (this.grid.cellSelection === GridSelectionMode.none) {
+            this.selectionService.activeElement = null;
+            if (this.selectionService.primaryButton) {
+                this._updateCRUDStatus();
+            } else {
+                if (this.crudService.inEditMode && !this.editMode) {
+                    this.gridAPI.submit_value();
+                }
+            }
+            return;
+        }
 
         if (!this.selectionService.isActiveNode(node, mrl)) {
             this.grid.onSelection.emit({ cell: this, event });
@@ -781,7 +798,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         this.selectionService.primaryButton = true;
-        this.selectionService.keyboardStateOnFocus(node, this.grid.onRangeSelection, this.nativeElement);
+        if (this.grid.cellSelection === GridSelectionMode.multiple) {
+            this.selectionService.keyboardStateOnFocus(node, this.grid.onRangeSelection, this.nativeElement);
+        }
     }
 
     /**
