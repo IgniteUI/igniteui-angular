@@ -5,10 +5,11 @@ import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { GridTemplateStrings, ColumnDefinitions } from '../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { ColumnHiddenFromMarkupComponent, ColumnCellFormatterComponent } from '../../test-utils/grid-samples.spec';
+import { ColumnHiddenFromMarkupComponent, ColumnCellFormatterComponent, DynamicColumnsComponent } from '../../test-utils/grid-samples.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { IgxStringFilteringOperand } from 'igniteui-angular';
 
 describe('IgxGrid - Column properties', () => {
     configureTestSuite();
@@ -24,7 +25,8 @@ describe('IgxGrid - Column properties', () => {
                 TemplatedInputColumnsComponent,
                 ColumnCellFormatterComponent,
                 ColumnHaederClassesComponent,
-                ColumnHiddenFromMarkupComponent
+                ColumnHiddenFromMarkupComponent,
+                DynamicColumnsComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
         })
@@ -300,6 +302,31 @@ describe('IgxGrid - Column properties', () => {
             // Check the cell's value is not changed
             expect(grid.getCellByColumn(i, 'Name').value).toBe(expectedVal[i]);
         }
+    });
+
+    it('should remove filter when a columns is removed dynamically', () => {
+        const fix = TestBed.createComponent(DynamicColumnsComponent);
+        fix.detectChanges();
+
+        const columns = fix.componentInstance.columns;
+        const grid = fix.componentInstance.grid;
+        grid.allowFiltering = true;
+        fix.detectChanges();
+
+        expect(grid.columns.length).toBe(7);
+
+        grid.filter('CompanyName', 'NoItemsFound', IgxStringFilteringOperand.instance().condition('contains'), true);
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(0);
+
+        expect(() => {
+            fix.componentInstance.columns =  columns.slice(2, columns.length - 1);
+            fix.detectChanges();
+        }).not.toThrow();
+
+        expect(grid.rowList.length).toBeGreaterThan(10);
+        expect(grid.columns.length).toBe(4);
     });
 });
 

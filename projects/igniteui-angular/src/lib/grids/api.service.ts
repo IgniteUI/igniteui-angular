@@ -328,13 +328,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
     }
 
     public clear_filter(fieldName: string) {
-        if (fieldName) {
-            const column = this.get_column_by_name(fieldName);
-            if (!column) {
-                return;
-            }
-        }
-
         const grid = this.grid;
         grid.endEdit(false);
         const filteringState = grid.filteringExpressionsTree;
