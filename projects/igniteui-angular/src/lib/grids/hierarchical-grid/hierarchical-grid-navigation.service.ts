@@ -564,6 +564,9 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const nextIsSiblingChild = !!childRowContainer.nextElementSibling;
         let next = childRowContainer.nextElementSibling || nextParentElem;
         const verticalScroll = nextParentGrid.verticalScrollContainer.getVerticalScroll();
+        const parentState = nextParentGrid.verticalScrollContainer.state;
+        const atLastChunk = parentState.startIndex + parentState.chunkSize ===
+         nextParentGrid.verticalScrollContainer.igxForOf.length;
         if (next) {
             if (nextIsSiblingChild) {
                 this.focusNextChild(next, visibleColumnIndex, nextParentGrid);
@@ -571,7 +574,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                 this.focusNextRow(next, visibleColumnIndex, grid || nextParentGrid);
             }
         } else if (verticalScroll.scrollTop !==
-            verticalScroll.scrollHeight - nextParentGrid.verticalScrollContainer.igxForContainerSize ) {
+            verticalScroll.scrollHeight - nextParentGrid.verticalScrollContainer.igxForContainerSize && !atLastChunk) {
             this.scrollGrid(nextParentGrid, 'next',
             () => {
                 nextParentElem = parentInfo.nextElement;
