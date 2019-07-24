@@ -2079,7 +2079,7 @@ describe('IgxGrid - Summaries', () => {
             fix.detectChanges();
             tick(16);
 
-            expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(1);
+            expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(2);
             verifyBaseSummaries(fix);
         }));
 
@@ -2103,8 +2103,7 @@ describe('IgxGrid - Summaries', () => {
             fix.detectChanges();
             tick(16);
 
-            expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(2);
-            verifySummariesForParentID147(fix, 1);
+            expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(1);
             verifyBaseSummaries(fix);
         }));
 
