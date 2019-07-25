@@ -535,7 +535,7 @@ describe('IgxGrid - Cell component', () => {
                 expect(cell.value).toBe('Gary Martin');
                 cell = grid.getCellByColumn(1, 'firstName');
                 const cellValue = cell.value;
-                cell.inEditMode = true;
+                cell.setEditMode(true);
                 fixture.detectChanges();
 
                 expect(cell.gridAPI.get_cell_inEditMode()).toBeDefined();

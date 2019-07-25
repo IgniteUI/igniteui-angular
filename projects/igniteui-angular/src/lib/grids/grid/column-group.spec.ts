@@ -1,7 +1,8 @@
 import { async, TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
-import { Component, ViewChild, DebugElement, OnInit, TemplateRef } from '@angular/core';
+import { Component, ViewChild, DebugElement, OnInit, TemplateRef, ElementRef } from '@angular/core';
+
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
@@ -39,7 +40,8 @@ describe('IgxGrid - multi-column headers', () => {
                 NestedColumnGroupsGridComponent,
                 DynamicGridComponent,
                 NumberColWidthGridComponent,
-                NestedColGroupsWithTemplatesGridComponent
+                NestedColGroupsWithTemplatesGridComponent,
+                DynamicColGroupsGridComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -1481,6 +1483,40 @@ describe('IgxGrid - multi-column headers', () => {
         headerSpans = fixture.debugElement.queryAll(By.css('.' + GRID_COL_GROUP_THEAD_TITLE_CLASS));
         expect(headerSpans[1].nativeElement.textContent).toBe('Location');
     }));
+
+    it('There shouldn\'t be any errors when dynamically removing a column group with filtering enabled', () => {
+        const fixture = TestBed.createComponent(DynamicColGroupsGridComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        const button = fixture.componentInstance.removeBtn;
+
+        let columnLength = grid.columnList.length;
+        let firstColumnGroup = grid.columnList.first;
+        let expectedColumnName = 'First';
+        let expectedColumnListLength = 10;
+
+        expect(firstColumnGroup.header).toEqual(expectedColumnName);
+        expect(expectedColumnListLength).toEqual(columnLength);
+
+        expect(() => {
+            // Delete first column group
+            button.nativeElement.dispatchEvent(new Event('click'));
+            fixture.detectChanges();
+
+            // Delete first column group
+            button.nativeElement.dispatchEvent(new Event('click'));
+            fixture.detectChanges();
+        }).not.toThrow();
+
+        firstColumnGroup = grid.columnList.first;
+        expectedColumnName = 'Third';
+        columnLength = grid.columnList.length;
+        expectedColumnListLength = 3;
+
+        expect(firstColumnGroup.header).toEqual(expectedColumnName);
+        expect(expectedColumnListLength).toEqual(columnLength);
+    });
 });
 
 @Component({
@@ -1829,6 +1865,54 @@ export class NestedColGroupsGridComponent {
     cityCol: IgxColumnComponent;
 
     data = SampleTestData.contactInfoDataFull();
+}
+
+@Component({
+    template: `
+        <igx-grid [data]="data" [allowFiltering]="true">
+            <igx-column-group *ngFor="let colGroup of columnGroups" [header]="colGroup.columnHeader">
+                <igx-column *ngFor="let column of colGroup.columns" [field]="column.field" [dataType]="column.type"
+                    [filterable]="true"></igx-column>
+            </igx-column-group>
+        </igx-grid>
+        <article>
+            <button #removeFirstColGroup (click)="removeFirstColumnGroup()">Remove first column group</button>
+        </article>
+    `
+})
+export class DynamicColGroupsGridComponent {
+
+    @ViewChild(IgxGridComponent, { static: true })
+    public grid: IgxGridComponent;
+
+    @ViewChild('removeFirstColGroup', { static: true })
+    public removeBtn: ElementRef;
+
+    public columnGroups: Array<any>;
+    public data = SampleTestData.contactInfoDataFull();
+
+    constructor() {
+        this.columnGroups = [
+            { columnHeader: 'First', columns: [
+                { field: 'ID', type: 'string' },
+                { field: 'CompanyName', type: 'string' },
+                { field: 'ContactName', type: 'string' },
+            ]},
+            { columnHeader: 'Second', columns: [
+                { field: 'ContactTitle', type: 'string' },
+                { field: 'Address', type: 'string' },
+            ]},
+            { columnHeader: 'Third', columns: [
+                { field: 'PostlCode', type: 'string' },
+                { field: 'Contry', type: 'string' },
+            ]},
+        ];
+    }
+
+    public removeFirstColumnGroup() {
+        this.columnGroups = this.columnGroups.splice(1, this.columnGroups.length - 1);
+    }
+
 }
 
 @Component({

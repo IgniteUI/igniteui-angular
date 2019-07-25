@@ -92,10 +92,11 @@ describe('IgxTreeGrid - Indentation ', () => {
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(4), rows[4], 0);
         }));
 
-        it('should persist the indentation on all pages when using paging', () => {
+        it('should persist the indentation on all pages when using paging',  fakeAsync(() => {
             treeGrid.paging = true;
             treeGrid.perPage = 4;
             fix.detectChanges();
+            tick(16);
 
             // Verify page 1
             let rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
@@ -107,6 +108,7 @@ describe('IgxTreeGrid - Indentation ', () => {
 
             treeGrid.page = 1;
             fix.detectChanges();
+            tick(16);
 
             // Verify page 2
             rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
@@ -118,13 +120,14 @@ describe('IgxTreeGrid - Indentation ', () => {
 
             treeGrid.page = 2;
             fix.detectChanges();
+            tick(16);
 
             // Verify page 3
             rows = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix));
             expect(rows.length).toBe(2, 'Incorrect number of rows on page 3.');
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(0), rows[0], 0);
             TreeGridFunctions.verifyRowIndentationLevel(treeGrid.getRowByIndex(1), rows[1], 1);
-        });
+        }));
 
         it('should persist the indentation after resizing the tree-column', fakeAsync(() => {
             const column = treeGrid.columnList.filter(c => c.field === 'ID')[0];
