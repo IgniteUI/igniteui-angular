@@ -329,7 +329,7 @@ describe('IgxTreeGrid - Integration ', () => {
 
             function verifyBannerPositioning(columnIndex: number) {
                 const cell = grid.getCellByColumn(columnIndex, 'Name');
-                cell.inEditMode = true;
+                cell.setEditMode(true);
                 fix.detectChanges();
 
                 const editRow = cell.row.nativeElement;
@@ -351,7 +351,7 @@ describe('IgxTreeGrid - Integration ', () => {
             fix.detectChanges();
 
             const cell = grid.getCellByColumn(1, 'Name');
-            cell.inEditMode = true;
+            cell.setEditMode(true);
             fix.detectChanges();
 
             const editRow = cell.row.nativeElement;
@@ -376,7 +376,7 @@ describe('IgxTreeGrid - Integration ', () => {
             fix.detectChanges();
 
             const cell = grid.getCellByColumn(2, 'Name');
-            cell.inEditMode = true;
+            cell.setEditMode(true);
             tick(16);
             fix.detectChanges();
 
@@ -398,7 +398,7 @@ describe('IgxTreeGrid - Integration ', () => {
             fix.detectChanges();
 
             const cell = grid.getCellByColumn(grid.rowList.length - 1, 'Name');
-            cell.inEditMode = true;
+            cell.setEditMode(true);
             fix.detectChanges();
 
             const editRow = cell.row.nativeElement;
@@ -420,7 +420,7 @@ describe('IgxTreeGrid - Integration ', () => {
 
             // Edit parent row cell
             const cell = grid.getCellByColumn(0, 'Name');
-            cell.inEditMode = true;
+            cell.setEditMode(true);
             fix.detectChanges();
 
             let banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
@@ -431,11 +431,11 @@ describe('IgxTreeGrid - Integration ', () => {
             fix.detectChanges();
 
             banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
-            expect(cell.inEditMode).toBeFalsy();
+            expect(cell.editMode).toBeFalsy();
             expect(banner.parent.attributes['aria-hidden']).toEqual('true');
 
             // Edit parent row cell
-            cell.inEditMode = true;
+            cell.setEditMode(true);
             fix.detectChanges();
 
             banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
@@ -446,7 +446,7 @@ describe('IgxTreeGrid - Integration ', () => {
             fix.detectChanges();
 
             banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
-            expect(cell.inEditMode).toBeFalsy();
+            expect(cell.editMode).toBeFalsy();
             expect(banner.parent.attributes['aria-hidden']).toEqual('true');
         });
 
@@ -457,7 +457,7 @@ describe('IgxTreeGrid - Integration ', () => {
 
             // Edit child row child cell
             const childCell = grid.getCellByColumn(4, 'Name');
-            childCell.inEditMode = true;
+            childCell.setEditMode(true);
             fix.detectChanges();
 
             let banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
@@ -469,12 +469,12 @@ describe('IgxTreeGrid - Integration ', () => {
             fix.detectChanges();
 
             banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
-            expect(childCell.inEditMode).toBeFalsy();
+            expect(childCell.editMode).toBeFalsy();
             expect(banner.parent.attributes['aria-hidden']).toEqual('true');
 
             // Edit child row cell
             const parentCell = grid.getCellByColumn(3, 'Name');
-            parentCell.inEditMode = true;
+            parentCell.setEditMode(true);
             fix.detectChanges();
 
             banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
@@ -486,7 +486,7 @@ describe('IgxTreeGrid - Integration ', () => {
             fix.detectChanges();
 
             banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
-            expect(parentCell.inEditMode).toBeFalsy();
+            expect(parentCell.editMode).toBeFalsy();
             expect(banner.parent.attributes['aria-hidden']).toEqual('true');
         });
 
@@ -497,18 +497,18 @@ describe('IgxTreeGrid - Integration ', () => {
             const nameCell = grid.getCellByColumn(2, 'Name');
             const idCell = grid.getCellByColumn(2, 'ID');
             const ageCell = grid.getCellByColumn(2, 'Age');
-            dateCell.inEditMode = true;
+            dateCell.setEditMode(true);
             await wait(30);
             fix.detectChanges();
 
             await TreeGridFunctions.moveGridCellWithTab(fix, dateCell);
-            expect(dateCell.inEditMode).toBeFalsy();
-            expect(nameCell.inEditMode).toBeTruthy();
+            expect(dateCell.editMode).toBeFalsy();
+            expect(nameCell.editMode).toBeTruthy();
 
             await TreeGridFunctions.moveGridCellWithTab(fix, nameCell);
-            expect(nameCell.inEditMode).toBeFalsy();
-            expect(idCell.inEditMode).toBeFalsy();
-            expect(ageCell.inEditMode).toBeTruthy();
+            expect(nameCell.editMode).toBeFalsy();
+            expect(idCell.editMode).toBeFalsy();
+            expect(ageCell.editMode).toBeTruthy();
 
             const cancelBtn = fix.debugElement.queryAll(By.css('.igx-button--flat'))[0] as DebugElement;
             const doneBtn = fix.debugElement.queryAll(By.css('.igx-button--flat'))[1];
@@ -530,7 +530,7 @@ describe('IgxTreeGrid - Integration ', () => {
             doneBtn.triggerEventHandler('keydown.Tab', mockObj);
             await wait(30);
             fix.detectChanges();
-            expect(dateCell.inEditMode).toBeTruthy();
+            expect(dateCell.editMode).toBeTruthy();
             expect((<any>grid.rowEditTabs.last).move).toHaveBeenCalled();
             expect(mockObj.preventDefault).toHaveBeenCalled();
             expect(mockObj.stopPropagation).toHaveBeenCalled();
@@ -658,7 +658,7 @@ describe('IgxTreeGrid - Integration ', () => {
             const trans = treeGrid.transactions;
 
             const targetCell = treeGrid.getCellByColumn(3, 'Age');
-            targetCell.inEditMode = true;
+            targetCell.setEditMode(true);
             targetCell.update('333');
             flush();
             fix.detectChanges();
@@ -671,7 +671,7 @@ describe('IgxTreeGrid - Integration ', () => {
             fix.detectChanges();
 
             // Verify the value is updated and the correct style is applied before committing
-            expect(targetCell.inEditMode).toBeFalsy();
+            expect(targetCell.editMode).toBeFalsy();
             expect(targetCell.value).toBe(333);
             expect(targetCell.nativeElement.classList).toContain('igx-grid__td--edited');
 
@@ -687,7 +687,7 @@ describe('IgxTreeGrid - Integration ', () => {
 
             // Edit a cell value and check it is correctly updated
             const newTargetCell = treeGrid.getCellByColumn(10, 'Age');
-            newTargetCell.inEditMode = true;
+            newTargetCell.setEditMode(true);
             newTargetCell.update('666');
             flush();
             fix.detectChanges();
