@@ -128,7 +128,7 @@
     </footer>
 </article>
 
-<igx-drop-down [maxHeight]="'397px'" #subMenu (onSelection)="onSubMenuSelection($event)" (onClosed)="onSubMenuClosed()">
+<igx-drop-down [maxHeight]="'397px'" [displayDensity]="grid.displayDensity" #subMenu (onSelection)="onSubMenuSelection($event)" (onClosed)="onSubMenuClosed()">
     <div>
         <igx-drop-down-item
             *ngFor="let condition of conditions"
