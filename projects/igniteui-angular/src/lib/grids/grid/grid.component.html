@@ -23,10 +23,14 @@
 <div [style.width.px]='outerWidth' class="igx-grid__grouparea" *ngIf="groupingExpressions.length > 0 || hasGroupableColumns" #groupArea>
     <igx-chips-area (onReorder)="chipsOrderChanged($event)" (onMoveEnd)="chipsMovingEnded()">
         <ng-container *ngFor="let expr of chipsGoupingExpressions; let last = last;">
-            <igx-chip [id]="expr.fieldName" [attr.title]="getGroupByChipTitle(expr)" [removable]="getColumnByName(expr.fieldName).groupable" [draggable]="getColumnByName(expr.fieldName).groupable" [displayDensity]="displayDensity"
-                    (onKeyDown)="onChipKeyDown($event)" (onRemove)="onChipRemoved($event)" (onClick)="getColumnByName(expr.fieldName).groupable ? onChipClicked($event): null" [disabled]='!getColumnByName(expr.fieldName).groupable'>
-                    <span>{{ getGroupByChipTitle(expr) }}</span>
-                    <igx-icon igxSuffix>{{ expr.dir == 1 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
+            <igx-chip [id]="expr.fieldName" [attr.title]="getGroupByChipTitle(expr)"
+                [removable]="getColumnGroupable(expr.fieldName)"
+                [draggable]="getColumnGroupable(expr.fieldName)" [displayDensity]="displayDensity"
+                (onKeyDown)="onChipKeyDown($event)" (onRemove)="onChipRemoved($event)"
+                (onClick)="getColumnGroupable(expr.fieldName) ? onChipClicked($event): null"
+                [disabled]='!getColumnGroupable(expr.fieldName)'>
+                <span>{{ getGroupByChipTitle(expr) }}</span>
+                <igx-icon igxSuffix>{{ expr.dir == 1 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
             </igx-chip>
             <span class="igx-grid__grouparea-connector">
                 <igx-icon [style.visibility]="(!last || dropAreaVisible) ? 'visible' : 'hidden'" >arrow_forward</igx-icon>
