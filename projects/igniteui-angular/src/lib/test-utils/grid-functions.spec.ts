@@ -511,6 +511,14 @@ export class GridFunctions {
         applyButton.click();
     }
 
+    public static clickCancelExcelStyleCustomFiltering(fix: ComponentFixture<any>) {
+        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+        const customFilterMenu = gridNativeElement.querySelector('.igx-excel-filter__secondary');
+        const flatButtons = Array.from(customFilterMenu.querySelectorAll('.igx-button--flat'));
+        const cancelButton: any = flatButtons.find((rb: any) => rb.innerText === 'cancel');
+        cancelButton.click();
+    }
+
     public static clickAddFilterExcelStyleCustomFiltering(fix: ComponentFixture<any>) {
         const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
         const customFilterMenu = gridNativeElement.querySelector('.igx-excel-filter__secondary');
