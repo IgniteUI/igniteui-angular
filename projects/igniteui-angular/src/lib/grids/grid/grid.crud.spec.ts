@@ -249,7 +249,7 @@ describe('IgxGrid - CRUD operations', () => {
         fix.detectChanges();
         cellDom.triggerEventHandler('dblclick', {});
         fix.detectChanges();
-        expect(cell.inEditMode).toBe(true);
+        expect(cell.editMode).toBe(true);
         grid.deleteRow(1);
         fix.detectChanges();
         const firstRow = grid.getRowByKey(1);
@@ -281,7 +281,7 @@ describe('IgxGrid - CRUD operations', () => {
         fix.detectChanges();
         cellDom.triggerEventHandler('dblclick', {});
         fix.detectChanges();
-        expect(cell.inEditMode).toBe(true);
+        expect(cell.editMode).toBe(true);
         firstRow = grid.getRowByIndex(0);
         firstRow.delete();
         fix.detectChanges();
