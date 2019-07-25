@@ -292,7 +292,7 @@ describe('IgxTreeGrid - Key Board Navigation ', () => {
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);
-            expect(cell.inEditMode).toBe(false);
+            expect(cell.editMode).toBe(false);
 
             // Got ot the last row cell
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', ctrlKey: true }));
@@ -307,7 +307,7 @@ describe('IgxTreeGrid - Key Board Navigation ', () => {
             fix.detectChanges();
 
             cell = treeGrid.getCellByColumn(5, 'OnPTO');
-            expect(cell.inEditMode).toBe(true);
+            expect(cell.editMode).toBe(true);
             // Press tab key and verify the correct cell is opened
             await TreeGridFunctions.moveEditableCellWithTab(fix, treeGrid, 5, 4, treeColumns);
         });
