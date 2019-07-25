@@ -4234,7 +4234,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 this.gridAPI.clear_filter(record.item.field);
 
                 // Close filter row
-                this.filteringService.isFilterRowVisible = false;
+                if (this.filteringService.filteredColumn && this.filteringService.filteredColumn.field === record.item.field) {
+                    this.filteringService.isFilterRowVisible = false;
+                }
 
                 // Clear Sorting
                 this.gridAPI.clear_sort(record.item.field);
