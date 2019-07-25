@@ -1716,10 +1716,11 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
-        it('Filtering, Paging: selected range should not change when perform filtering', () => {
+        it('Filtering, Paging: selected range should not change when perform filtering', fakeAsync(() => {
             grid.paging = true;
             grid.perPage = 5;
             fix.detectChanges();
+            tick(16);
 
             const selectRange = { rowStart: 1, rowEnd: 2, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(selectRange);
@@ -1733,6 +1734,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(selData);
             grid.filter('Name', 'm', IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
+            tick(16);
 
             const fData = [
                 { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
@@ -1740,12 +1742,13 @@ describe('IgxGrid - Multi Cell selection', () => {
             ];
             HelperUtils.verifySelectedRange(grid, 1, 2, 0, 3);
             expect(grid.getSelectedData()).toEqual(fData);
-        });
+        }));
 
-        it('Paging: selected range should be cleared on paging', () => {
+        it('Paging: selected range should be cleared on paging',  fakeAsync(() => {
             grid.paging = true;
             grid.perPage = 5;
             fix.detectChanges();
+            tick(16);
 
             const range = { rowStart: 1, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(range);
@@ -1761,17 +1764,19 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
             grid.paginate(1);
             fix.detectChanges();
+            tick(16);
 
             expect(grid.getSelectedRanges().length).toBe(0);
             expect(grid.getSelectedRanges()).toEqual([]);
             expect(grid.getSelectedData().length).toBe(0);
             expect(grid.getSelectedData()).toEqual([]);
-        });
+        }));
 
-        it('Paging: selected range should be cleared when perPage items are changed', () => {
+        it('Paging: selected range should be cleared when perPage items are changed',  fakeAsync(() => {
             grid.paging = true;
             grid.perPage = 5;
             fix.detectChanges();
+            tick(16);
 
             const range = { rowStart: 2, rowEnd: 4, columnStart: 'ID', columnEnd: 'OnPTO' };
             grid.selectRange(range);
@@ -1787,12 +1792,13 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
             grid.perPage = 7;
             fix.detectChanges();
+            tick(16);
 
             expect(grid.getSelectedRanges().length).toBe(0);
             expect(grid.getSelectedRanges()).toEqual([]);
             expect(grid.getSelectedData().length).toBe(0);
             expect(grid.getSelectedData()).toEqual([]);
-        });
+        }));
 
         xit('Resizing: selected range should not change on resizing', fakeAsync(() => {
             const range = { rowStart: 2, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
