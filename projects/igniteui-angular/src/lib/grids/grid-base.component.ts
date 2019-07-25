@@ -49,7 +49,7 @@ import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
-import { IgxColumnComponent } from './column.component';
+import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
 import { ISummaryExpression } from './summaries/grid-summary';
 import { DropPosition, ContainerPositioningStrategy, IgxDecimalPipeComponent, IgxDatePipeComponent } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
@@ -4285,17 +4285,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             });
 
             diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
-                // Clear Grouping
-                this.gridAPI.clear_groupby(record.item.field);
+                const isColumnGroup = record.item instanceof IgxColumnGroupComponent;
+                if (!isColumnGroup) {
+                    // Clear Grouping
+                    this.gridAPI.clear_groupby(record.item.field);
 
-                // Clear Filtering
-                this.gridAPI.clear_filter(record.item.field);
+                    // Clear Filtering
+                    this.gridAPI.clear_filter(record.item.field);
 
-                // Close filter row
-                this.filteringService.isFilterRowVisible = false;
+                    // Close filter row
+                    this.filteringService.isFilterRowVisible = false;
 
-                // Clear Sorting
-                this.gridAPI.clear_sort(record.item.field);
+                    // Clear Sorting
+                    this.gridAPI.clear_sort(record.item.field);
+                }
                 removed = true;
             });
 
