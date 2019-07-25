@@ -254,6 +254,7 @@ describe('IgxTreeGrid - Filtering actions ', () => {
 
         // collapse first row
         (<IgxTreeGridComponent>grid).toggleRow((<IgxTreeGridRowComponent>grid.getRowByIndex(0)).rowID);
+        fix.detectChanges();
         rows = TreeGridFunctions.getAllRows(fix);
         expect(rows.length).toBe(7);
     });

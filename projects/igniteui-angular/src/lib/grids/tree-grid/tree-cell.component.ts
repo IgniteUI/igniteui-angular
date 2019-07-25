@@ -110,8 +110,10 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
 
         const element = this.grid.selectionService.activeElement;
         this.zone.onStable.pipe(first()).subscribe(_ => {
-            this.gridAPI.get_cell_by_visible_index(element.row, element.column)
+            if (element) {
+                this.gridAPI.get_cell_by_visible_index(element.row, element.column)
                 .nativeElement.focus();
+            }
         });
     }
 
