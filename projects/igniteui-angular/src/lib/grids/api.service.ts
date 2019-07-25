@@ -419,6 +419,9 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
     protected remove_grouping_expression(fieldName) {
     }
 
+    public clear_groupby(name?: string | Array<string>) {
+    }
+
     public should_apply_number_style(column: IgxColumnComponent): boolean {
         return column.dataType === DataType.Number;
     }

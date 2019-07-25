@@ -9,7 +9,7 @@ import { ColumnHiddenFromMarkupComponent, ColumnCellFormatterComponent, DynamicC
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxStringFilteringOperand } from 'igniteui-angular';
+import { IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular';
 
 describe('IgxGrid - Column properties', () => {
     configureTestSuite();
@@ -304,7 +304,7 @@ describe('IgxGrid - Column properties', () => {
         }
     });
 
-    it('should remove filter when a columns is removed dynamically', () => {
+    it('should clear filter when a columns is removed dynamically', () => {
         const fix = TestBed.createComponent(DynamicColumnsComponent);
         fix.detectChanges();
 
@@ -321,11 +321,43 @@ describe('IgxGrid - Column properties', () => {
         expect(grid.rowList.length).toEqual(0);
 
         expect(() => {
-            fix.componentInstance.columns =  columns.slice(2, columns.length - 1);
+            fix.componentInstance.columns = columns.slice(2, columns.length - 1);
             fix.detectChanges();
         }).not.toThrow();
 
         expect(grid.rowList.length).toBeGreaterThan(10);
+        expect(grid.columns.length).toBe(4);
+    });
+
+    it('should clear grouping when a columns is removed dynamically', () => {
+        const fix = TestBed.createComponent(DynamicColumnsComponent);
+        fix.detectChanges();
+
+        const columns = fix.componentInstance.columns;
+        const grid = fix.componentInstance.grid;
+        grid.getColumnByName('CompanyName').groupable = true;
+        grid.getColumnByName('Address').groupable = true;
+        grid.getColumnByName('City').groupable = true;
+        fix.detectChanges();
+
+        grid.groupBy({
+            fieldName: 'CompanyName', dir: SortingDirection.Asc, ignoreCase: false
+        });
+
+        fix.detectChanges();
+
+        let groupRows = grid.nativeElement.querySelectorAll('igx-grid-groupby-row');
+
+        expect(groupRows.length).toBeGreaterThan(0);
+
+        expect(() => {
+            fix.componentInstance.columns = columns.slice(2, columns.length - 1);
+            fix.detectChanges();
+        }).not.toThrow();
+
+        groupRows = grid.nativeElement.querySelectorAll('igx-grid-groupby-row');
+
+        expect(groupRows.length).toBe(0);
         expect(grid.columns.length).toBe(4);
     });
 });
