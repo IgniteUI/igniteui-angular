@@ -265,7 +265,7 @@ describe('IgxGrid - Column properties', () => {
             expect(header.elementRef.nativeElement.querySelector('.customHeaderTemplate')).toBeDefined());
 
         const cell = grid.getCellByColumn(0, 'ID');
-        cell.inEditMode = true;
+        cell.setEditMode(true);
         fixture.detectChanges();
 
         expect(cell.nativeElement.querySelector('.customEditorTemplate')).toBeDefined();
