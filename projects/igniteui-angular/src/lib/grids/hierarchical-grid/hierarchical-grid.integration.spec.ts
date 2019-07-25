@@ -768,13 +768,14 @@ describe('IgxHierarchicalGrid Integration', () => {
             hierarchicalGrid.paging = true;
             fixture.detectChanges();
 
-            let tHeadItems = fixture.nativeElement.querySelector('igx-grid-header-group');
-            let gridRows = fixture.nativeElement.querySelector('igx-hierarchical-grid-row');
-            let paging = fixture.nativeElement.querySelector('.igx-grid-paginator');
-            let rowSelectors = fixture.nativeElement.querySelector('.igx-checkbox');
-            let dragIndicators = fixture.nativeElement.querySelector('.igx-grid__drag-indicator');
-            let verticalScrollBar = fixture.nativeElement.querySelector('.igx-grid__tbody-scrollbar[hidden]');
-            let expander = fixture.nativeElement.querySelector('.igx-grid__hierarchical-expander[hidden]');
+            let fixEl = fixture.nativeElement;
+            let tHeadItems = fixEl.querySelector('igx-grid-header-group');
+            let gridRows = fixEl.querySelector('igx-hierarchical-grid-row');
+            let paging = fixEl.querySelector('.igx-grid-paginator');
+            let rowSelectors = fixEl.querySelector('.igx-checkbox');
+            let dragIndicators = fixEl.querySelector('.igx-grid__drag-indicator');
+            let verticalScrollBar = fixEl.querySelector('.igx-grid__tbody-scrollbar[hidden]');
+            let expander = fixEl.querySelector('.igx-grid__hierarchical-expander[hidden]');
 
             expect(tHeadItems).not.toBeNull();
             expect(gridRows).not.toBeNull();
@@ -787,14 +788,14 @@ describe('IgxHierarchicalGrid Integration', () => {
             hierarchicalGrid.columnList.forEach((col) => col.hidden = true);
             tick(30);
             fixture.detectChanges();
-
-            tHeadItems = fixture.nativeElement.querySelector('igx-grid-header-group');
-            gridRows = fixture.nativeElement.querySelector('igx-hierarchical-grid-row');
-            paging = fixture.nativeElement.querySelector('.igx-grid-paginator');
-            rowSelectors = fixture.nativeElement.querySelector('.igx-checkbox');
-            dragIndicators = fixture.nativeElement.querySelector('.igx-grid__drag-indicator');
-            expander = fixture.nativeElement.querySelector('.igx-grid__hierarchical-expander[hidden]');
-            verticalScrollBar = fixture.nativeElement.querySelector('.igx-grid__tbody-scrollbar[hidden]');
+            fixEl = fixture.nativeElement;
+            tHeadItems = fixEl.querySelector('igx-grid-header-group');
+            gridRows = fixEl.querySelector('igx-hierarchical-grid-row');
+            paging = fixEl.querySelector('.igx-grid-paginator');
+            rowSelectors = fixEl.querySelector('.igx-checkbox');
+            dragIndicators = fixEl.querySelector('.igx-grid__drag-indicator');
+            expander = fixEl.querySelector('.igx-grid__hierarchical-expander[hidden]');
+            verticalScrollBar = fixEl.querySelector('.igx-grid__tbody-scrollbar[hidden]');
 
             expect(tHeadItems).toBeNull();
             expect(gridRows).toBeNull();
