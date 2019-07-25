@@ -20,6 +20,9 @@ export class GridCellEditingComponent {
     dataWithoutPK: any;
     public density = 'compact';
     public displayDensities;
+
+    kk = false;
+    pname = 'ProductName';
     private subscribtion;
 
     constructor() {

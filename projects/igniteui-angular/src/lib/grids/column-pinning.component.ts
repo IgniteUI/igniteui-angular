@@ -1,6 +1,6 @@
 
 import { CommonModule } from '@angular/common';
-import { Directive, Component, EventEmitter, Output, NgModule, ChangeDetectorRef } from '@angular/core';
+import { Directive, Component, NgModule, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { ColumnChooserBase } from './column-chooser-base';

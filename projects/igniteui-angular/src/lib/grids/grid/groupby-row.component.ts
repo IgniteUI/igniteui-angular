@@ -217,8 +217,6 @@ export class IgxGridGroupByRowComponent {
         const selection = this.gridSelection;
         selection.keyboardState.shift = event.shiftKey && !(key === 'tab');
 
-        const visibleColumnIndex = selection.activeElement && this.grid.columnList.filter(col => !col.hidden).map(c => c.visibleIndex)
-            .indexOf(selection.activeElement.column) !== -1 ? selection.activeElement.column : 0;
         const activeNode = selection.activeElement ? Object.assign({}, selection.activeElement) : this.selectionNode;
         activeNode.row = this.index;
         switch (key) {
