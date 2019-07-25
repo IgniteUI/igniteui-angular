@@ -389,9 +389,15 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
                     this._displayDensity = this.rootGrid._displayDensity;
                     if (document.body.contains(this.nativeElement)) {
                         this.reflow();
+                        this.cdr.detectChanges();
                     } else {
                         this.updateOnRender = true;
                     }
+                });
+            });
+            this.parent.verticalScrollContainer.onDataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+                requestAnimationFrame(() => {
+                        this.updateSizes();
                 });
             });
             this.childLayoutKeys = this.parentIsland.children.map((item) => item.key);
@@ -403,6 +409,16 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         this.toolbarCustomContentTemplates = this.parentIsland ?
             this.parentIsland.toolbarCustomContentTemplates :
             this.toolbarCustomContentTemplates;
+    }
+
+    private updateSizes() {
+        if (!this._destroyed && document.body.contains(this.nativeElement) && this.isPercentWidth) {
+            this.reflow();
+
+            this.hgridAPI.getChildGrids(false).forEach((grid) => {
+                grid.updateSizes();
+            });
+        }
     }
 
     public get outletDirective() {
