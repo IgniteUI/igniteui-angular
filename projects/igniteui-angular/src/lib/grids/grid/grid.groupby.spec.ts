@@ -1218,7 +1218,7 @@ describe('IgxGrid - GroupBy', () => {
         await wait();
         fix.detectChanges();
 
-        expect(cell.inEditMode).toBe(true);
+        expect(cell.editMode).toBe(true);
 
         const editCellDom = fix.debugElement.query(By.css('.igx-grid__td--editing'));
         const input = editCellDom.query(By.css('input'));
