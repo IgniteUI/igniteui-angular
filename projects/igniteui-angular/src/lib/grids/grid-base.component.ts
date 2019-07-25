@@ -729,6 +729,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public set columnWidth(value: string) {
         this._columnWidth = value;
         this.columnWidthSetByUser = true;
+        this.notifyChanges(true);
     }
 
     /**
@@ -2781,6 +2782,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         combineLatest([rowListObserver, summaryRowObserver]).pipe(takeUntil(this.destroy$))
             .subscribe(([row, summary]) => this._horizontalForOfs = [...row, ...summary]);
+
+        this._horizontalForOfs = [
+            ...this._dataRowList.filter(elementFilter).map(item => item.virtDirRow),
+            ...this._summaryRowList.filter(elementFilter).map(item => item.virtDirRow)
+        ];
     }
 
     public _zoneBegoneListeners() {
@@ -3990,8 +3996,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Sets columns defaultWidth property
      */
     protected _derivePossibleWidth() {
-        if (!this.columnWidthSetByUser) {
-            this._columnWidth = this.getPossibleColumnWidth();
+        // TODO: This seems to have never worked when a columnWidth is passed
+        // after grid initial rendering
+        // if (!this.columnWidthSetByUser) {
+            this._columnWidth = this.columnWidthSetByUser ? this._columnWidth : this.getPossibleColumnWidth();
             this.columnList.forEach((column: IgxColumnComponent) => {
                 if (this.hasColumnLayouts && parseInt(this._columnWidth, 10)) {
                     const columnWidthCombined = parseInt(this._columnWidth, 10) * (column.colEnd ? column.colEnd - column.colStart : 1);
@@ -4002,7 +4010,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 }
             });
             this.resetCachedWidths();
-        }
+        // }
     }
 
     /**
@@ -4196,7 +4204,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         if (this.isPercentWidth) {
             /* width in %*/
-            width = computed.indexOf('%') === -1 ? parseInt(computed, 10) : null;
+            width = computed.indexOf('%') === -1 ? parseFloat(this.width) / 100 * parseInt(computed, 10) : null;
         } else {
             width = parseInt(this.width, 10);
         }
@@ -5076,8 +5084,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this.document.activeElement &&
             // tslint:disable-next-line:no-bitwise
             (this.document.activeElement.compareDocumentPosition(this.tbody.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS ||
-                // tslint:disable-next-line:no-bitwise
-                (this.document.activeElement.compareDocumentPosition(this.tfoot.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS && isScroll))) {
+            // tslint:disable-next-line:no-bitwise
+            (this.document.activeElement.
+                compareDocumentPosition(this.tfoot.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS && isScroll))) {
             (this.document.activeElement as HTMLElement).blur();
         }
     }
