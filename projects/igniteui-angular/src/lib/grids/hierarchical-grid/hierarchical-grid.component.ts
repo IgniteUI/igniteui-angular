@@ -389,6 +389,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
                     this._displayDensity = this.rootGrid._displayDensity;
                     if (document.body.contains(this.nativeElement)) {
                         this.reflow();
+                        this.cdr.detectChanges();
                     } else {
                         this.updateOnRender = true;
                     }
