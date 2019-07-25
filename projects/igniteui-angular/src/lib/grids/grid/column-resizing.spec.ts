@@ -190,6 +190,14 @@ describe('IgxGrid - Deferred Column Resizing', () => {
     it ('should change the defaultMinWidth on density change', async() => {
         const fixture = TestBed.createComponent(ResizableColumnsComponent);
         fixture.detectChanges();
+
+        const spy = spyOn(window, 'onerror').and.callFake((msg: string, source: string, lineno: number, colno: number, error: Error) => {
+            if (msg.match('ResizeObserver loop limit exceeded')) {
+                return;
+            }
+            spy.and.callThrough().withArgs(msg, source, lineno, colno, error);
+        });
+
         const grid = fixture.componentInstance.grid;
         const column = grid.getColumnByName('ID');
         const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
@@ -729,7 +737,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         await wait(16);
     });
 
-    it('should size headers correctly when column width is below the allowed minimum.', async() => {
+    it('should size headers correctly when column width is below the allowed minimum.', () => {
         const fixture = TestBed.createComponent(ColGridComponent);
         fixture.detectChanges();
 
@@ -748,19 +756,17 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(headerGroups[0].nativeElement.getBoundingClientRect().width).toBe(48);
         expect(headerGroups[1].nativeElement.getBoundingClientRect().width).toBe(50);
         expect(headerGroups[2].nativeElement.getBoundingClientRect().width).toBe(48);
-
-        // height/width setter rAF
-        await wait(16);
     });
 
-    it('should size headers correctly when column width is in %.', async() => {
+    it('should size headers correctly when column width is in %.', () => {
         const fixture = TestBed.createComponent(ColPercentageGridComponent);
         fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        grid.ngAfterViewInit();
 
         const headers = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         const headerGroups = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_GROUP_CLASS));
         const filteringCells = fixture.debugElement.queryAll(By.css(COLUMN_FILTER_CELL_SELECTOR));
-        const grid = fixture.componentInstance.grid;
         const expectedWidth = (parseInt(grid.width, 10) - grid.scrollWidth) / 4;
         expect(headers[0].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
         expect(headers[1].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
@@ -776,9 +782,6 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(headerGroups[1].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
         expect(headerGroups[2].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
         expect(headerGroups[3].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
-
-        // height/width setter rAF
-        await wait(16);
     });
 });
 
