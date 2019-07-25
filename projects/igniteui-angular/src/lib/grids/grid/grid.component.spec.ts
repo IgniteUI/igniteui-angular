@@ -1361,14 +1361,14 @@ describe('IgxGrid Component Tests', () => {
             const grid = fix.componentInstance.grid;
             fix.detectChanges();
 
-             grid.width = null;
+            grid.width = null;
             fix.detectChanges();
             await wait(16);
 
              // grid should render all columns and all should be visible.
             const cells = grid.getRowByIndex(0).cells;
             expect(cells.length).toBe(30);
-            expect(grid.nativeElement.offsetWidth).toBe(30 * 136);
+            expect(parseInt(grid.hostWidth, 10)).toBe(30 * 136);
         });
     });
 
