@@ -762,6 +762,51 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(childHeaders.length).toEqual(2);
         }));
 
+        it('no rows, headers, paging or rowSelectors should be displayed when hideAll columns', fakeAsync(() => {
+            hierarchicalGrid.rowSelectable = true;
+            hierarchicalGrid.rowDraggable = true;
+            hierarchicalGrid.paging = true;
+            tick(30);
+            fixture.detectChanges();
+
+            let fixEl = fixture.nativeElement;
+            let tHeadItems = fixEl.querySelector('igx-grid-header-group');
+            let gridRows = fixEl.querySelector('igx-hierarchical-grid-row');
+            let paging = fixEl.querySelector('.igx-grid-paginator');
+            let rowSelectors = fixEl.querySelector('.igx-checkbox');
+            let dragIndicators = fixEl.querySelector('.igx-grid__drag-indicator');
+            let verticalScrollBar = fixEl.querySelector('.igx-grid__tbody-scrollbar[hidden]');
+            let expander = fixEl.querySelector('.igx-grid__hierarchical-expander[hidden]');
+
+            expect(tHeadItems).not.toBeNull();
+            expect(gridRows).not.toBeNull();
+            expect(paging).not.toBeNull();
+            expect(rowSelectors).not.toBeNull();
+            expect(dragIndicators).not.toBeNull();
+            expect(expander).toBeNull();
+            expect(verticalScrollBar).toBeNull();
+
+            hierarchicalGrid.columnList.forEach((col) => col.hidden = true);
+            tick(30);
+            fixture.detectChanges();
+            fixEl = fixture.nativeElement;
+            tHeadItems = fixEl.querySelector('igx-grid-header-group');
+            gridRows = fixEl.querySelector('igx-hierarchical-grid-row');
+            paging = fixEl.querySelector('.igx-grid-paginator');
+            rowSelectors = fixEl.querySelector('.igx-checkbox');
+            dragIndicators = fixEl.querySelector('.igx-grid__drag-indicator');
+            expander = fixEl.querySelector('.igx-grid__hierarchical-expander[hidden]');
+            verticalScrollBar = fixEl.querySelector('.igx-grid__tbody-scrollbar[hidden]');
+
+            expect(tHeadItems).toBeNull();
+            expect(gridRows).toBeNull();
+            expect(paging).toBeNull();
+            expect(rowSelectors).toBeNull();
+            expect(dragIndicators).toBeNull();
+            expect(expander).not.toBeNull();
+            expect(verticalScrollBar).not.toBeNull();
+        }));
+
         it('should be displayed correctly for child layout and pinning should apply to the correct child.',
         fakeAsync(/** row toggle rAF */() => {
             hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
