@@ -2050,6 +2050,7 @@ describe('IgxGrid - Summaries', () => {
             grid.paging = true;
             grid.perPage = 3;
             fix.detectChanges();
+            tick(16);
 
             expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(2);
             verifyBaseSummaries(fix);
@@ -2057,6 +2058,7 @@ describe('IgxGrid - Summaries', () => {
 
             grid.page = 1;
             fix.detectChanges();
+            tick(16);
 
             expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(2);
             verifyBaseSummaries(fix);
@@ -2064,15 +2066,19 @@ describe('IgxGrid - Summaries', () => {
 
             grid.page = 2;
             fix.detectChanges();
+            tick(16);
             verifySummariesForParentID147(fix, 3);
             verifyBaseSummaries(fix);
 
             grid.page = 0;
             fix.detectChanges();
+            tick(16);
 
             const groupRows = grid.groupsRowList.toArray();
             groupRows[0].toggle();
             fix.detectChanges();
+            tick(16);
+
             expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(2);
             verifyBaseSummaries(fix);
         }));
@@ -2082,9 +2088,11 @@ describe('IgxGrid - Summaries', () => {
             grid.perPage = 3;
             grid.summaryPosition = 'top';
             fix.detectChanges();
+            tick(16);
 
             grid.page = 1;
             fix.detectChanges();
+            tick(16);
 
             expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(3);
             verifyBaseSummaries(fix);
@@ -2093,6 +2101,8 @@ describe('IgxGrid - Summaries', () => {
 
             grid.page = 2;
             fix.detectChanges();
+            tick(16);
+
             expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(1);
             verifyBaseSummaries(fix);
         }));

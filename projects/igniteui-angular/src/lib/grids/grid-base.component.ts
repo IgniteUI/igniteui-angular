@@ -4161,15 +4161,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (!this._height) {
             return null;
         }
-        const footerBordersAndScrollbars = this.tfoot.nativeElement.offsetHeight -
-            this.tfoot.nativeElement.clientHeight;
+        const footerHeight = this.summariesHeight || this.tfoot.nativeElement.offsetHeight -
+        this.tfoot.nativeElement.clientHeight;
         let gridHeight;
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
         const toolbarHeight = this.getToolbarHeight();
         const pagingHeight = this.getPagingHeight();
         const groupAreaHeight = this.getGroupAreaHeight();
         const renderedHeight = toolbarHeight + this.theadRow.nativeElement.offsetHeight +
-            this.summariesHeight + pagingHeight + groupAreaHeight + footerBordersAndScrollbars +
+            footerHeight  + pagingHeight + groupAreaHeight +
             this.scr.nativeElement.clientHeight;
 
         if (this.isPercentHeight) {
