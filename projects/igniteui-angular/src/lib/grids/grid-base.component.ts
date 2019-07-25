@@ -4168,8 +4168,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
 
         if (this.zone.isStable) {
-            this._applyWidthHostBinding();
-            this.cdr.detectChanges();
+            this.zone.run(() => {
+                this._applyWidthHostBinding();
+                this.cdr.detectChanges();
+            });
         } else {
             this.zone.onStable.pipe(first()).subscribe(() => {
                 this._applyWidthHostBinding();
