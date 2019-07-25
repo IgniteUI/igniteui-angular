@@ -200,11 +200,13 @@ describe('Column Hiding UI', () => {
             verifyColumnIsHidden(column, false, 4);
 
             checkbox.click();
+            fix.detectChanges();
             tick();
             expect(checkbox.checked).toBe(true);
             verifyColumnIsHidden(column, true, 3);
 
             checkbox.click();
+            fix.detectChanges();
             tick();
             expect(checkbox.checked).toBe(false);
             verifyColumnIsHidden(column, false, 4);
@@ -489,26 +491,25 @@ describe('Column Hiding UI', () => {
             expect(filterInput.placeholder).toBe('@\#&*');
         });
 
-        it('filters columns on every keystroke in filter input.', (async () => {
+        it('filters columns on every keystroke in filter input.', () => {
             const filterInput = getFilterInput();
 
-
             UIInteractions.sendInput(filterInput, 'r');
-            await wait();
+            fix.detectChanges();
             expect(columnChooser.columnItems.length).toBe(3);
 
             UIInteractions.sendInput(filterInput, 're');
-            await wait();
+            fix.detectChanges();
             expect(columnChooser.columnItems.length).toBe(2);
 
             UIInteractions.sendInput(filterInput, 'r');
-            await wait();
+            fix.detectChanges();
             expect(columnChooser.columnItems.length).toBe(3);
 
             UIInteractions.sendInput(filterInput, '');
-            await wait();
+            fix.detectChanges();
             expect(columnChooser.columnItems.length).toBe(5);
-        }));
+        });
 
         it('filters columns according to the specified filter criteria.', (async () => {
             columnChooser.filterCriteria = 'd';
@@ -636,11 +637,11 @@ describe('Column Hiding UI', () => {
             expect(getButtonDisabledState('Hide All')).toBe(false, 'Hide All is not enabled!');
         }));
 
-        it('hides the proper columns after filtering and clearing the filter', (async () => {
+        it('hides the proper columns after filtering and clearing the filter', () => {
             const filterInput = getFilterInput();
 
             UIInteractions.sendInput(filterInput, 'a', fix);
-            await wait();
+            fix.detectChanges();
 
             expect(getButtonDisabledState('Show All')).toBe(false);
             getButtonElement('Show All').click();
@@ -650,7 +651,7 @@ describe('Column Hiding UI', () => {
             expect(grid.columns[2].hidden).toBe(false, 'Downloads column is not hidden!');
 
             UIInteractions.sendInput(filterInput, '', fix);
-            await wait();
+            fix.detectChanges();
 
             expect(getButtonDisabledState('Show All')).toBe(true, 'Show All is not disabled!');
             expect(grid.columns[0].hidden).toBe(false, 'ID column is not shown!');
@@ -659,9 +660,9 @@ describe('Column Hiding UI', () => {
 
             expect(getButtonDisabledState('Show All')).toBe(false, 'Show All is not enabled!');
             expect(grid.columns[0].hidden).toBe(true, 'ID column is not hidden!');
-        }));
+        });
 
-        it('fires onColumnVisibilityChanged event after filtering and clearing the filter.', (async () => {
+        it('fires onColumnVisibilityChanged event after filtering and clearing the filter.', () => {
             let counter = 0;
             let currentArgs: IColumnVisibilityChangedEventArgs;
             columnChooser.onColumnVisibilityChanged.subscribe((args: IColumnVisibilityChangedEventArgs) => {
@@ -671,23 +672,23 @@ describe('Column Hiding UI', () => {
 
             const filterInput = getFilterInput();
 
-            UIInteractions.sendInput(filterInput, 'a', fix);
-            await wait();
+            UIInteractions.sendInput(filterInput, 'a');
+            fix.detectChanges();
             getCheckboxInput('Downloads', columnChooserElement, fix).click();
 
             expect(counter).toBe(1);
             expect(currentArgs.column.field).toBe('Downloads');
             expect(grid.columns[2].hidden).toBe(false);
 
-            UIInteractions.sendInput(filterInput, '', fix);
-            await wait();
+            UIInteractions.sendInput(filterInput, '');
+            fix.detectChanges();
 
             getCheckboxInput('ID', columnChooserElement, fix).click();
 
             expect(grid.columns[0].hidden).toBe(true);
             expect(counter).toBe(2);
             expect(currentArgs.column.header).toBe('ID');
-        }));
+        });
 
         it('styles are applied.', () => {
             columnChooserElement = fix.debugElement.query(By.css('igx-column-hiding'));
@@ -708,11 +709,9 @@ describe('Column Hiding UI', () => {
             expect(columnChooserElement.nativeElement.offsetHeight <= 255).toBe(true);
         });
 
-        it('should recalculate heights when enough columns are hidden so that there is no need for horizontal scrollbar.', async () => {
+        it('should recalculate heights when enough columns are hidden so that there is no need for horizontal scrollbar.', () => {
             grid.height = '200px';
             fix.detectChanges();
-            grid.reflow();
-            await wait(16);
             expect(grid.scr.nativeElement.hidden).toBe(false);
             const gridHeader = fix.debugElement.query(By.css('.igx-grid__thead'));
             const gridScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
@@ -725,7 +724,7 @@ describe('Column Hiding UI', () => {
             expect(grid.calcHeight).toEqual(expectedHeight);
 
             grid.columns[3].hidden = true;
-            await wait();
+            fix.detectChanges();
             expect(grid.scr.nativeElement.hidden).toBe(true);
 
             expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)

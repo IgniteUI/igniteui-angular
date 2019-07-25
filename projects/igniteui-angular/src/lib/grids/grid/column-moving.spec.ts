@@ -346,7 +346,7 @@ describe('IgxGrid - Column Moving', () => {
 
             cell.triggerEventHandler('dblclick', {});
             fixture.detectChanges();
-            expect(grid.getCellByColumn(0, 'ID').inEditMode).toBe(true);
+            expect(grid.getCellByColumn(0, 'ID').editMode).toBe(true);
 
             // step 2 - enter some new value
             const editTemplate = cell.query(By.css('input'));
@@ -368,7 +368,7 @@ describe('IgxGrid - Column Moving', () => {
 
             // step 4 - verify cell has exited edit mode correctly
             expect(grid.columnList.toArray()[1].field).toEqual('ID');
-            expect(grid.getCellByColumn(0, 'ID').inEditMode).toBe(false);
+            expect(grid.getCellByColumn(0, 'ID').editMode).toBe(false);
             expect(grid.getCellByColumn(0, 'ID').value).toBe('4');
         }));
 
@@ -377,6 +377,7 @@ describe('IgxGrid - Column Moving', () => {
 
             // step 1 - hide a column
             fixture.componentInstance.isHidden = true;
+            fixture.detectChanges();
             fixture.detectChanges();
 
             // step 2 - move a column
@@ -395,6 +396,7 @@ describe('IgxGrid - Column Moving', () => {
 
             // step 3 - show hidden columns and verify correct order
             fixture.componentInstance.isHidden = false;
+            fixture.detectChanges();
             fixture.detectChanges();
 
             expect(grid.visibleColumns[0].field).toEqual('ID');
