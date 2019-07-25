@@ -1,4 +1,5 @@
 <igx-drop-down #dropdownConditions [maxHeight]="'200px'" [width]="getInputWidth()"
+    [displayDensity]="displayDensity"
     (onSelection)="onConditionsChanged($event)">
     <igx-drop-down-item *ngFor="let condition of conditions" [value]="condition"
         [selected]="isConditionSelected(condition)">
