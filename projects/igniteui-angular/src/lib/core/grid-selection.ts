@@ -554,6 +554,7 @@ export class IgxGridSelectionService {
 
     selectRow(rowID, clearPrevSelection?) {
         // emit SelectionEvent
+        if (this.grid.rowSelection === 'none') { return; }
         const rowData = this.grid.primaryKey ? this.grid.getRowByKey(rowID).rowData : rowID;
         clearPrevSelection = clearPrevSelection === undefined ? this.grid.rowSelection === 'single' : clearPrevSelection;
         if (clearPrevSelection) {

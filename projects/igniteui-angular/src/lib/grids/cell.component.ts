@@ -679,6 +679,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.selectionService.primaryButton = false;
             return;
         }
+        if (!event.ctrlKey) {
+            this.grid.selectionService.rowSelection.clear();
+        }
+        this.grid.selectionService.selectRow(this.row.rowID);
         if (this.grid.cellSelection === GridSelectionMode.multiple) {
             this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
         }
@@ -739,11 +743,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             cell: this,
             event
         });
-        if (this.grid.rowSelection === 'none') { return; }
-        if (!event.ctrlKey) {
-            this.grid.selectionService.rowSelection.clear();
-        }
-        this.grid.selectionService.selectRow(this.row.rowID);
     }
 
     /**
@@ -772,7 +771,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         this.focused = true;
         this.row.focused = true;
         if (this.grid.cellSelection === GridSelectionMode.none) {
-            this.selectionService.activeElement = null;
             if (this.selectionService.primaryButton) {
                 this._updateCRUDStatus();
             } else {
@@ -960,8 +958,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             case ' ':
             case 'spacebar':
             case 'space':
-                if (this.row.rowSelectable) {
-                    this.row.checkboxElement.toggle();
+                if (this.grid.rowSelection !== 'none') {
+                    this.grid.selectionService.selectRow(this.row.rowID);
                 }
                 break;
             default:
