@@ -4284,7 +4284,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 added = true;
             });
 
-            diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+            diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent | IgxColumnGroupComponent>) => {
                 const isColumnGroup = record.item instanceof IgxColumnGroupComponent;
                 if (!isColumnGroup) {
                     // Clear Grouping
