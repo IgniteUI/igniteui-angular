@@ -157,18 +157,20 @@ describe('IgxTreeGrid Component Tests ', () => {
             fix.detectChanges();
         }));
 
-        it('should not render rows, paging and headers group when all cols are hidden', async () => {
+        it('should not render rows, paging and headers group when all cols are hidden', fakeAsync(() => {
             grid.rowSelectable = true;
             grid.rowDraggable = true;
             grid.showToolbar =  true;
+            tick(30);
             fix.detectChanges();
 
-            let tHeadItems = fix.nativeElement.querySelector('igx-grid-header-group');
-            let gridRows = fix.nativeElement.querySelector('igx-tree-grid-row');
-            let paging = fix.nativeElement.querySelector('.igx-grid-paginator');
-            let rowSelectors = grid.nativeElement.querySelector('.igx-checkbox');
-            let dragIndicators = grid.nativeElement.querySelector('.igx-grid__drag-indicator');
-            let verticalScrollBar = grid.nativeElement.querySelector('.igx-grid__tbody-scrollbar[hidden]');
+            let fixEl = fix.nativeElement, gridEl = grid.nativeElement;
+            let tHeadItems = fixEl.querySelector('igx-grid-header-group');
+            let gridRows = fixEl.querySelector('igx-tree-grid-row');
+            let paging = fixEl.querySelector('.igx-grid-paginator');
+            let rowSelectors = gridEl.querySelector('.igx-checkbox');
+            let dragIndicators = gridEl.querySelector('.igx-grid__drag-indicator');
+            let verticalScrollBar = gridEl.querySelector('.igx-grid__tbody-scrollbar[hidden]');
 
             expect(tHeadItems).not.toBeNull();
             expect(gridRows).not.toBeNull();
@@ -178,15 +180,16 @@ describe('IgxTreeGrid Component Tests ', () => {
             expect(verticalScrollBar).toBeNull();
 
             grid.columnList.forEach((col) => col.hidden = true);
-            await wait();
+            tick(30);
             fix.detectChanges();
+            fixEl = fix.nativeElement, gridEl = grid.nativeElement;
 
-            tHeadItems = fix.nativeElement.querySelector('igx-grid-header-group');
-            gridRows = fix.nativeElement.querySelector('igx-tree-grid-row');
-            paging = fix.nativeElement.querySelector('.igx-grid-paginator');
-            rowSelectors = grid.nativeElement.querySelector('.igx-checkbox');
-            dragIndicators = grid.nativeElement.querySelector('.igx-grid__drag-indicator');
-            verticalScrollBar = grid.nativeElement.querySelector('.igx-grid__tbody-scrollbar[hidden]');
+            tHeadItems = fixEl.querySelector('igx-grid-header-group');
+            gridRows = fixEl.querySelector('igx-tree-grid-row');
+            paging = fixEl.querySelector('.igx-grid-paginator');
+            rowSelectors = gridEl.querySelector('.igx-checkbox');
+            dragIndicators = gridEl.querySelector('.igx-grid__drag-indicator');
+            verticalScrollBar = gridEl.querySelector('.igx-grid__tbody-scrollbar[hidden]');
 
             expect(tHeadItems).toBeNull();
             expect(gridRows).toBeNull();
@@ -194,7 +197,7 @@ describe('IgxTreeGrid Component Tests ', () => {
             expect(rowSelectors).toBeNull();
             expect(dragIndicators).toBeNull();
             expect(verticalScrollBar).not.toBeNull();
-        });
+        }));
 
     });
 
