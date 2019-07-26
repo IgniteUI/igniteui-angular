@@ -49,7 +49,7 @@ import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
-import { IgxColumnComponent } from './column.component';
+import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
 import { ISummaryExpression } from './summaries/grid-summary';
 import { DropPosition, ContainerPositioningStrategy, IgxDecimalPipeComponent, IgxDatePipeComponent } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
@@ -2851,6 +2851,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
         vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
         vertScrDC.addEventListener('wheel', () => { this.wheelHandler(); });
+        vertScrDC.addEventListener('touchmove', () => { this.wheelHandler(); });
 
         this.verticalScrollContainer.onDataChanging.pipe(takeUntil(this.destroy$)).subscribe(($event) => {
             this.calculateGridHeight();
@@ -4109,15 +4110,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (!this._height) {
             return null;
         }
-        const footerBordersAndScrollbars = this.tfoot.nativeElement.offsetHeight -
-            this.tfoot.nativeElement.clientHeight;
+        const footerHeight = this.summariesHeight || this.tfoot.nativeElement.offsetHeight -
+        this.tfoot.nativeElement.clientHeight;
         let gridHeight;
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
         const toolbarHeight = this.getToolbarHeight();
         const pagingHeight = this.getPagingHeight();
         const groupAreaHeight = this.getGroupAreaHeight();
         const renderedHeight = toolbarHeight + this.theadRow.nativeElement.offsetHeight +
-            this.summariesHeight + pagingHeight + groupAreaHeight + footerBordersAndScrollbars +
+            footerHeight  + pagingHeight + groupAreaHeight +
             this.scr.nativeElement.clientHeight;
 
         if (this.isPercentHeight) {
@@ -4283,12 +4284,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 added = true;
             });
 
-            diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
-                // Clear Filtering
-                this.gridAPI.clear_filter(record.item.field);
+            diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent | IgxColumnGroupComponent>) => {
+                const isColumnGroup = record.item instanceof IgxColumnGroupComponent;
+                if (!isColumnGroup) {
+                    // Clear Filtering
+                    this.gridAPI.clear_filter(record.item.field);
 
-                // Clear Sorting
-                this.gridAPI.clear_sort(record.item.field);
+                    // Clear Sorting
+                    this.gridAPI.clear_sort(record.item.field);
+                }
+
                 removed = true;
             });
 
