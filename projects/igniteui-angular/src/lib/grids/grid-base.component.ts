@@ -890,21 +890,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             if (this.calcHeight) {
                 this.calcHeight += value ? -FILTER_ROW_HEIGHT : FILTER_ROW_HEIGHT;
             }
+
             if (!this._init) {
                 if (this.maxLevelHeaderDepth) {
                     this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
                         (value && this.filterMode === FilterMode.quickFilter ? FILTER_ROW_HEIGHT : 0) + 1}px`;
                 }
-            // }
-
-                this.filteringService.isFilterRowVisible = false;
-                this.filteringService.filteredColumn = null;
-
-                this.notifyChanges();
-                // if (this.gridAPI.grid) {
-                //     this.markForCheck();
-                // }
             }
+
+            this.filteringService.isFilterRowVisible = false;
+            this.filteringService.filteredColumn = null;
+
+            this.notifyChanges();
         }
     }
 

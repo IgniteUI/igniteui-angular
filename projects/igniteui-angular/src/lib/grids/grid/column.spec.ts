@@ -45,8 +45,6 @@ describe('IgxGrid - Column properties', () => {
 
         headerSpans.forEach((span) => expect(span.nativeElement.textContent).toMatch('Header text'));
         cellSpans.forEach((span) => expect(span.nativeElement.textContent).toMatch('Cell text'));
-
-        // TODO: Add footer tests
     });
 
     it('should provide a way to change templates dynamically', () => {
@@ -65,8 +63,6 @@ describe('IgxGrid - Column properties', () => {
 
         headerSpans.forEach((span) => expect(span.nativeElement.textContent).toMatch('New header text'));
         cellSpans.forEach((span) => expect(span.nativeElement.textContent).toMatch('New cell text'));
-
-        // TODO: Add footer tests
     });
 
     it('should reflect column hiding correctly in the DOM dynamically', () => {
@@ -227,14 +223,13 @@ describe('IgxGrid - Column properties', () => {
         }, 100);
     }));
 
-    it('column width should be adjusted after a column has been hidden', async () => {
+    it('column width should be adjusted after a column has been hidden', () => {
         const fix = TestBed.createComponent(ColumnsFromIterableComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
         grid.width = '600px';
         fix.detectChanges();
-        await wait();
 
         expect(grid.calcWidth).toBe(600);
         expect(grid.columns[0].width).toBe('300');
@@ -242,9 +237,11 @@ describe('IgxGrid - Column properties', () => {
         expect(grid.columns[1].width).toBe('300');
         expect(!grid.columns[1].widthSetByUser);
         grid.columns[0].hidden = true;
+        fix.detectChanges();
 
         expect(grid.columns[1].width).toBe('600');
         grid.columns[0].hidden = false;
+        fix.detectChanges();
 
         expect(grid.columns[0].width).toBe('300');
         expect(grid.columns[1].width).toBe('300');
@@ -291,7 +288,8 @@ describe('IgxGrid - Column properties', () => {
         col.formatter = (val: string) => {
             return val.toLowerCase();
         };
-        grid.markForCheck();
+        fix.detectChanges();
+
         expect(col.formatter).toBeTruthy();
         expect(col.formatter).toBeDefined();
         for (let i = 0; i < rowCount; i++) {

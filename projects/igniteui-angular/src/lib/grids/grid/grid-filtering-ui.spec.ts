@@ -66,6 +66,13 @@ describe('IgxGrid - Filtering actions', () => {
 
     let fix, grid;
     beforeEach(fakeAsync(() => {
+        const spy = spyOn(window, 'onerror').and.callFake((msg: string, source: string, lineno: number, colno: number, error: Error) => {
+            if (msg.match('ResizeObserver loop limit exceeded')) {
+                return;
+            }
+            spy.and.callThrough().withArgs(msg, source, lineno, colno, error);
+        });
+
         fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
         grid = fix.componentInstance.grid;
@@ -1685,6 +1692,12 @@ describe('IgxGrid - Filtering Row UI actions', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
+            const spy = spyOn(window, 'onerror').and.callFake((msg: string, source: string, lineno: number, colno: number, error: Error) => {
+                if (msg.match('ResizeObserver loop limit exceeded')) {
+                    return;
+                }
+                spy.and.callThrough().withArgs(msg, source, lineno, colno, error);
+            });
             fix = TestBed.createComponent(IgxGridFilteringComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -3254,6 +3267,12 @@ describe('IgxGrid - Filtering Row UI actions', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
+            const spy = spyOn(window, 'onerror').and.callFake((msg: string, source: string, lineno: number, colno: number, error: Error) => {
+                if (msg.match('ResizeObserver loop limit exceeded')) {
+                    return;
+                }
+                spy.and.callThrough().withArgs(msg, source, lineno, colno, error);
+            });
             fix = TestBed.createComponent(IgxGridFilteringMCHComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -3369,6 +3388,12 @@ describe('IgxGrid - Filtering Row UI actions', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
+            const spy = spyOn(window, 'onerror').and.callFake((msg: string, source: string, lineno: number, colno: number, error: Error) => {
+                if (msg.match('ResizeObserver loop limit exceeded')) {
+                    return;
+                }
+                spy.and.callThrough().withArgs(msg, source, lineno, colno, error);
+            });
             fix = TestBed.createComponent(IgxGridFilteringScrollComponent);
             grid = fix.componentInstance.grid;
             fix.detectChanges();
@@ -3401,6 +3426,12 @@ describe('IgxGrid - Filtering Row UI actions', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
+            const spy = spyOn(window, 'onerror').and.callFake((msg: string, source: string, lineno: number, colno: number, error: Error) => {
+                if (msg.match('ResizeObserver loop limit exceeded')) {
+                    return;
+                }
+                spy.and.callThrough().withArgs(msg, source, lineno, colno, error);
+            });
             fix = TestBed.createComponent(IgxGridFilteringTemplateComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -3454,6 +3485,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
+            const spy = spyOn(window, 'onerror').and.callFake((msg: string, source: string, lineno: number, colno: number, error: Error) => {
+                if (msg.match('ResizeObserver loop limit exceeded')) {
+                    return;
+                }
+                spy.and.callThrough().withArgs(msg, source, lineno, colno, error);
+            });
             fix = TestBed.createComponent(IgxGridFilteringComponent);
             grid = fix.componentInstance.grid;
             grid.filterMode = FilterMode.excelStyleFilter;
@@ -3509,9 +3546,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             fix.detectChanges();
 
             const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
-            const headerResArea = headers[2].children[0].nativeElement;
+            const headerResArea = headers[2];
 
-            const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
+            const filterIcon = headerResArea.query(By.css('.igx-excel-filter__icon')).nativeElement;
             filterIcon.click();
             fix.detectChanges();
 
@@ -5346,6 +5383,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
+            const spy = spyOn(window, 'onerror').and.callFake((msg: string, source: string, lineno: number, colno: number, error: Error) => {
+                if (msg.match('ResizeObserver loop limit exceeded')) {
+                    return;
+                }
+                spy.and.callThrough().withArgs(msg, source, lineno, colno, error);
+            });
             fix = TestBed.createComponent(IgxGridFilteringESFTemplatesComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -5388,6 +5431,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
+            const spy = spyOn(window, 'onerror').and.callFake((msg: string, source: string, lineno: number, colno: number, error: Error) => {
+                if (msg.match('ResizeObserver loop limit exceeded')) {
+                    return;
+                }
+                spy.and.callThrough().withArgs(msg, source, lineno, colno, error);
+            });
             fix = TestBed.createComponent(IgxTestExcelFilteringDatePickerComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;

@@ -159,7 +159,7 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     @notifyChanges()
     @Input()
-    public filterable = false;
+    public filterable = true;
     /**
      * Sets/gets whether the column is resizable.
      * Default value is `false`.
@@ -180,7 +180,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
-    @notifyChanges()
+    @notifyChanges(true)
     @Input()
     get hasSummary() {
         return this._hasSummary;
@@ -197,7 +197,7 @@ export class IgxColumnComponent implements AfterContentInit {
         this._hasSummary = value;
 
         if (this.grid) {
-            this.grid.summaryService.recalculateSummaries();
+            this.grid.summaryService.resetSummaryHeight();
         }
     }
     /**
