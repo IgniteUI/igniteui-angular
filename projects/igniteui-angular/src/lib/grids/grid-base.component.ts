@@ -556,7 +556,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     @Input()
     get rowDraggable(): boolean {
-        return this._rowDrag;
+        return this._rowDrag && this.hasVisibleColumns;
     }
 
     /**
@@ -2477,6 +2477,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected _wheelListener = null;
+    /**
+     * @hidden
+     */
+    protected _hasVisibleColumns;
     protected _allowFiltering = false;
     protected _filterMode = FilterMode.quickFilter;
     private resizeHandler;
@@ -2741,6 +2745,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.resetColumnsCaches();
         this.resetColumnCollections();
         this.resetCachedWidths();
+        this.hasVisibleColumns = undefined;
         this._columnGroups = this.columnList.some(col => col.columnGroup);
     }
 
@@ -2815,6 +2820,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const vertScrDC = this.verticalScrollContainer.dc.instance._viewContainer.element.nativeElement;
         vertScrDC.addEventListener('scroll', (evt) => { this.scrollHandler(evt); });
         vertScrDC.addEventListener('wheel', () => { this.wheelHandler(); });
+        vertScrDC.addEventListener('touchmove', () => { this.wheelHandler(); });
 
         this.verticalScrollContainer.onDataChanging.pipe(takeUntil(this.destroy$)).subscribe(($event) => {
             this.calculateGridHeight();
@@ -3230,7 +3236,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     get showRowCheckboxes(): boolean {
-        return this.rowSelectable && this.columns.length > this.hiddenColumnsCount;
+        return this.rowSelectable && this.hasVisibleColumns;
     }
 
     /**
@@ -3882,6 +3888,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     get rootSummariesEnabled(): boolean {
         return this.summaryCalculationMode !== GridSummaryCalculationMode.childLevelsOnly;
     }
+
+    /**
+     * @hidden
+     */
+    get hasVisibleColumns(): boolean {
+        if (this._hasVisibleColumns === undefined) {
+            return this.columnList ? this.columnList.some(c => !c.hidden) : false;
+        }
+        return this._hasVisibleColumns;
+    }
+
+    set hasVisibleColumns(value) {
+        this._hasVisibleColumns = value;
+    }
     /**
      * Returns if the `IgxGridComponent` has moveable columns.
      * ```typescript
@@ -4459,7 +4479,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         collection.forEach((column: IgxColumnComponent) => {
             column.grid = this;
             column.defaultWidth = this.columnWidth;
-            this.setColumnEditState(column);
 
             if (cb) {
                 cb(column);
@@ -4472,14 +4491,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             collection.forEach((column: IgxColumnComponent) => {
                 column.populateVisibleIndexes();
             });
-        }
-    }
-
-    private setColumnEditState(column: IgxColumnComponent) {
-        // When rowEditable is true, then all columns, with defined field, excluding priamaryKey, are set to editable by default.
-        if (this.rowEditable && column.editable === null &&
-            column.field && column.field !== this.primaryKey) {
-            column.editable = this.rowEditable;
         }
     }
 
@@ -4576,7 +4587,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public updateHeaderCheckboxStatusOnFilter(data) {
-        if (!data) {
+        if (!data || !this.hasVisibleColumns || !this.headerCheckbox) {
             this.checkHeaderCheckboxStatus();
             return;
         }
