@@ -466,8 +466,11 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                 if (prevChild) {
                     this.performShiftTabIntoChild(prevChild, currentRowEl, rowIndex);
                 } else {
-                    this.navigateUp(currentRowEl, rowIndex,
-                        this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
+                    const selNode = {
+                        row:  rowIndex,
+                        column: this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex
+                    };
+                    this.navigateUp(currentRowEl, selNode);
                 }
             } else {
                 // move to prev cell
