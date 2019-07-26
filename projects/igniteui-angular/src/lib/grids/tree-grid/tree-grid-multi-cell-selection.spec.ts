@@ -678,6 +678,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
 
             treeGrid.transactions.undo();
+            fix.detectChanges();
             HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
@@ -803,6 +804,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
 
             treeGrid.transactions.undo();
+            fix.detectChanges();
             HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 

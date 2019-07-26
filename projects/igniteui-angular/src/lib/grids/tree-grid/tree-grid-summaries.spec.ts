@@ -1594,16 +1594,19 @@ describe('IgxTreeGrid - Summaries ', () => {
         (treeGrid as any).scrollTo(23, 0, 0);
         fix.detectChanges();
         await wait(16);
+        fix.detectChanges();
 
         let row = treeGrid.getRowByKey(15);
         (row as IgxTreeGridRowComponent).expanded = false;
         fix.detectChanges();
         await wait(16);
+        fix.detectChanges();
 
         row = treeGrid.getRowByKey(15);
         (row as IgxTreeGridRowComponent).expanded = true;
         fix.detectChanges();
         await wait(16);
+        fix.detectChanges();
 
         expect(treeGrid.dataRowList.length).toEqual(10);
     });

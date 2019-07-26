@@ -338,6 +338,7 @@ describe('IgxTreeGrid - search API ', () => {
                 const actualCount = treeGrid.findNext('an');
                 fix.detectChanges();
                 await wait(16);
+                fix.detectChanges();
                 expect(actualCount).toBe(expectedValues.length);
                 verifyActiveCellValue(fixNativeElement, expectedValue);
             }
@@ -349,6 +350,7 @@ describe('IgxTreeGrid - search API ', () => {
                 const actualCount = treeGrid.findPrev('an');
                 fix.detectChanges();
                 await wait(16);
+                fix.detectChanges();
                 expect(actualCount).toBe(expectedValues.length);
                 verifyActiveCellValue(fixNativeElement, expectedValue);
             }
