@@ -8,7 +8,8 @@ import {
     Directive,
     OnDestroy,
     AfterViewInit,
-    ElementRef
+    ElementRef,
+    Injectable
 } from '@angular/core';
 import {
     HorizontalAlignment,
@@ -81,7 +82,8 @@ export class IgxExcelStylePinningTemplateDirective {
 /**
  * @hidden
  */
-@Component({
+ @Injectable()
+ @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-grid-excel-style-filtering',
@@ -169,7 +171,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         }
     }
 
-    constructor(private cdr: ChangeDetectorRef) {}
+    constructor(public cdr: ChangeDetectorRef) {}
 
     ngOnDestroy(): void {
         this.destroy$.next(true);
@@ -541,7 +543,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
     }
 
     get applyButtonDisabled() {
-        return this.listData[0] && !this.listData[0].isSelected && !this.listData[0].indeterminate;
+        return  (!this.excelStyleSearch.filteredData || this.excelStyleSearch.filteredData.length === 0) ||
+                (this.listData[0] && !this.listData[0].isSelected && !this.listData[0].indeterminate);
     }
 
     public applyFilter() {

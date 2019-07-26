@@ -3,7 +3,8 @@ import {
     Component,
     ChangeDetectionStrategy,
     Input,
-    ViewChild
+    ViewChild,
+    Injectable
 } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
 import { IgxFilterOptions } from '../../../directives/filter/filter.directive';
@@ -12,11 +13,13 @@ import { IgxInputDirective } from '../../../directives/input/input.directive';
 import { DisplayDensity } from '../../../core/density';
 import { IgxForOfDirective } from '../../../directives/for-of/for_of.directive';
 import { FilterListItem } from './grid.excel-style-filtering.component';
+import { cloneArray } from '../../../core/utils';
 
 /**
  * @hidden
  */
-@Component({
+ @Injectable()
+ @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-excel-style-search',
@@ -28,6 +31,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
 
     @Input()
     public data: FilterListItem[];
+
+    public filteredData: FilterListItem[];
 
     @Input()
     public column: IgxColumnComponent;
@@ -46,6 +51,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
     public ngAfterViewInit() {
         requestAnimationFrame(() => {
             this.virtDir.recalcUpdateSizes();
+            this.filteredData = cloneArray(this.data);
         });
     }
 
