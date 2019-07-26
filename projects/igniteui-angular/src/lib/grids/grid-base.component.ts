@@ -87,7 +87,6 @@ import {
 } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
-import { IgxDragIndicatorIconDirective } from './row-drag.directive';
 import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
@@ -580,7 +579,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     @Input()
     get rowDraggable(): boolean {
-        return this._rowDrag;
+        return this._rowDrag && this.hasVisibleColumns;
     }
 
     /**
@@ -2548,6 +2547,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected _wheelListener = null;
+    /**
+     * @hidden
+     */
+    protected _hasVisibleColumns;
     protected _allowFiltering = false;
     protected _filterMode = FilterMode.quickFilter;
     private resizeHandler;
@@ -2828,6 +2831,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.resetColumnsCaches();
         this.resetColumnCollections();
         this.resetCachedWidths();
+        this.hasVisibleColumns = undefined;
         this._columnGroups = this.columnList.some(col => col.columnGroup);
     }
 
@@ -3364,7 +3368,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     get showRowCheckboxes(): boolean {
-        return this.isRowSelectable && this.columns.length > this.hiddenColumnsCount;
+        return this.isRowSelectable  && this.hasVisibleColumns;
     }
 
     /**
@@ -3989,6 +3993,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     get rootSummariesEnabled(): boolean {
         return this.summaryCalculationMode !== GridSummaryCalculationMode.childLevelsOnly;
+    }
+
+    /**
+     * @hidden
+     */
+    get hasVisibleColumns(): boolean {
+        if (this._hasVisibleColumns === undefined) {
+            return this.columnList ? this.columnList.some(c => !c.hidden) : false;
+        }
+        return this._hasVisibleColumns;
+    }
+
+    set hasVisibleColumns(value) {
+        this._hasVisibleColumns = value;
     }
     /**
      * Returns if the `IgxGridComponent` has moveable columns.
@@ -4626,9 +4644,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.headerCheckbox && this.headerCheckbox.checked ? 'Deselect all filtered' : 'Select all filtered' :
             this.headerCheckbox && this.headerCheckbox.checked ? 'Deselect all' : 'Select all';
     }
-
-
-
 
     /**
      * Get current selection state.
