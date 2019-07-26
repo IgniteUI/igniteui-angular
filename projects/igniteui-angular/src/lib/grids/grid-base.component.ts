@@ -4124,9 +4124,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 parseInt(this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
         }
 
-        if (this.showRowCheckboxes) {
-            computedWidth -= this.headerCheckboxContainer ? this.headerCheckboxContainer.nativeElement.offsetWidth : 0;
-        }
+        computedWidth -= this.getFeatureColumnsWidth();
 
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
 
@@ -4202,8 +4200,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     private getColumnWidthSum(): number {
         let colSum = 0;
-        const cols = this.visibleColumns
-        .filter(x => !x.columnGroup);
+        const  cols = this.hasColumnLayouts ?
+         this.visibleColumns.filter(x => x.columnLayout) : this.visibleColumns.filter(x => !x.columnGroup);
         cols.forEach((item) => {
             colSum +=  parseInt((item.width || item.defaultWidth), 10) || MINIMUM_COLUMN_WIDTH;
         });

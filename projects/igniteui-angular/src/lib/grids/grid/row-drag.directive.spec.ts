@@ -213,6 +213,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         }));
         it('should align horizontal scrollbar with first column when column pinning is disabled', fakeAsync(() => {
             // has no draggable and selectable rows
+            grid.width = '400px';
             grid.rowSelectable = false;
             grid.rowDraggable = false;
             tick();
@@ -248,6 +249,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             expect(rowSelectRect.right).toBe(horizontalScrollbarRect.left);
         }));
         it('should align horizontal scrollbar with first non-pinned column when column pinning is enabled', fakeAsync(() => {
+            grid.width = '400px';
             grid.pinColumn('ProductName');
             tick();
             fixture.detectChanges();
