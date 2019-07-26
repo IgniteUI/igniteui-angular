@@ -38,7 +38,6 @@ $_dark-button-group: extend($_light-button-group, $_base-dark-button-group);
 /// @requires {function} extend
 /// @requires $_fluent-button-group
 /// @requires $_base-dark-button-group
-/// @see $default-palette
 $_dark-fluent-button-group: extend(
     $_fluent-button-group,
     $_base-dark-button-group,
@@ -47,39 +46,39 @@ $_dark-fluent-button-group: extend(
             igx-color: ('grays', 100),
             hexrgba: #000
         ),
-    
+
         item-selected-border-color: (
             igx-color: ('grays', 100),
             hexrgba: #000
         ),
-    
+
         item-disabled-border: (
             igx-color: ('grays', 100),
             hexrgba: #000
         ),
-        
+
         item-text-color: (
             igx-color: ('grays', 900)
         ),
-        
+
         item-hover-text-color: (
             igx-color: ('primary', 200)
         ),
-        
+
         item-hover-background: #222,
-        
+
         item-selected-background: (
             igx-color: ('grays', 100)
         ),
-        
+
         item-selected-hover-background: (
             igx-color: ('grays', 100)
         ),
-        
+
         item-selected-text-color: (
             igx-color: ('primary', 200)
         ),
-        
+
         disabled-background-color: #222,
     )
 );

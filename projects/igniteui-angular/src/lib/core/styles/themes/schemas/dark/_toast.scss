@@ -17,6 +17,5 @@ $_dark-toast: extend($_light-toast);
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_fluent-toast
-/// @see $default-palette
 $_dark-fluent-toast: extend($_fluent-toast);
 

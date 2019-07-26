@@ -13,7 +13,6 @@
 /// @see $default-palette
 $_dark-navdrawer: extend($_light-navdrawer);
 
-
 /// Generates a dark fluent navdrawer schema.
 /// @type {Map}
 /// @prop {map} item-active-text-color [igx-color: ('primary', 200)] - The item's active text color.
@@ -21,18 +20,20 @@ $_dark-navdrawer: extend($_light-navdrawer);
 /// @prop {map} item-active-background [igx-color: ('primary', 400), rgba: .12] - The item's active background color.
 /// @requires {function} extend
 /// @requires $_fluent-navdrawer
-/// @see $default-palette
-$_dark-fluent-navdrawer: extend($_fluent-navdrawer, (
-    item-active-text-color: (
-        igx-color: ('primary', 200)
-    ),
-    
-    item-active-icon-color: (
-        igx-color: ('primary', 100)
-    ),
-    
-    item-active-background: (
-        igx-color: ('primary', 400),
-        rgba: .12
-    ),
-));
+$_dark-fluent-navdrawer: extend(
+    $_fluent-navdrawer,
+    (
+        item-active-text-color: (
+            igx-color: ('primary', 200)
+        ),
+
+        item-active-icon-color: (
+            igx-color: ('primary', 100)
+        ),
+
+        item-active-background: (
+            igx-color: ('primary', 400),
+            rgba: .12
+        ),
+    )
+);

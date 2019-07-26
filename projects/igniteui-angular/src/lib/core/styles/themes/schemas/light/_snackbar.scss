@@ -35,4 +35,10 @@ $_light-snackbar: extend(
     )
 );
 
+/// Generates a fluent snackbar schema.
+/// @type {Map}
+/// @prop {Number} border-radius [2px] - The border radius fraction, between 0-1 to be used for the snackbar component.
+/// @requires {function} extend
+/// @requires $_light-snackbar
+/// @requires $_fluent-shape-snackbar
 $_fluent-snackbar: extend($_light-snackbar, $_fluent-shape-snackbar);

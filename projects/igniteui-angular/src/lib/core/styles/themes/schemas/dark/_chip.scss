@@ -28,5 +28,4 @@ $_dark-chip: extend($_light-chip, $_base-dark-chip);
 /// @requires extend
 /// @requires $_fluent-chip
 /// @requires $_base-dark-chip
-/// @see $default-palette
 $_dark-fluent-chip: extend($_fluent-chip, $_base-dark-chip);

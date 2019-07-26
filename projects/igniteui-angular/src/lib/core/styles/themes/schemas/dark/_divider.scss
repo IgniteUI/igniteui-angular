@@ -15,5 +15,4 @@ $_dark-divider: extend($_light-divider);
 /// @type {Map}
 /// @requires {function} extend
 /// @requires$_fluent-divider
-/// @see $default-palette
 $_dark-fluent-divider: extend($_fluent-divider);

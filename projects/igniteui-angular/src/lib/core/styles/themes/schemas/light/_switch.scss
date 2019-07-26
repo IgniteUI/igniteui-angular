@@ -33,7 +33,6 @@
 /// @property {color} border-on-hover-color [transparent] - The border color of the  on-switch.
 ///
 /// @see $default-palette
-
 $_light-switch: extend(
     $_default-shape-switch,
     $_default-elevation-switch,
@@ -82,42 +81,66 @@ $_light-switch: extend(
         ),
     )
 );
-$_fluent-switch: extend($_light-switch, $_fluent-shape-switch, (
-    variant: 'fluent',
 
-    border-color: (
-        igx-color: ('grays', 500),
-        hexrgba: #fff
-    ),
+/// Generates a fluent switch schema.
+/// @type {Map}
+///
+/// @property {map} border-color [igx-color('grays', 500), hexrgba: #fff] - The border color of the switch.
+/// @property {map} border-hover-color [igx-color('grays', 800), hexrgba: #fff] - The border color of the switch on hover.
+/// @property {map} border-disabled-color [igx-color('grays', 300), hexrgba: #fff] - The border color of the disabled switch.
+/// @property {map} border-on-color [igx-color('primary', 500)] - The border color of the on-switch.
+/// @property {map} border-on-hover-color [igx-color('primary', 500)] - The border color of the  on-switch.
+///
+/// @property {color} thumb-on-color [#fff] - The color of the thumb when the switch is on.
+/// @property {map} thumb-off-color [igx-color: ('grays', 900), hexrgba: #fff] - The color of the thumb when the switch is off.
+/// @property {map} track-on-color [igx-color: ('secondary', 500)] - The color of the track when the switch is on.
+/// @property {color} track-off-color [transparent] - The color of the track when the switch is off.
+///
+/// @property {Number} border-radius-track [10px] - The border radius fraction, between 0-7 to be used for switch track.
+///
+/// @requires {function} extend
+/// @requires $_light-switch
+/// @requires $_fluent-shape-switch
+$_fluent-switch: extend(
+    $_light-switch,
+    $_fluent-shape-switch,
+    (
+        variant: 'fluent',
 
-    border-hover-color:(
-        igx-color: ('grays', 800),
-        hexrgba: #fff
-    ),
+        border-color: (
+            igx-color: ('grays', 500),
+            hexrgba: #fff
+        ),
 
-    border-disabled-color:(
-        igx-color: ('grays', 300),
-        hexrgba: #fff
-    ),
+        border-hover-color:(
+            igx-color: ('grays', 800),
+            hexrgba: #fff
+        ),
 
-    border-on-color:(
-        igx-color: ('primary', 500)
-    ),
+        border-disabled-color:(
+            igx-color: ('grays', 300),
+            hexrgba: #fff
+        ),
 
-    border-on-hover-color:(
-        igx-color: ('primary', 500)
-    ),
+        border-on-color:(
+            igx-color: ('primary', 500)
+        ),
 
-    thumb-on-color: #fff,
+        border-on-hover-color:(
+            igx-color: ('primary', 500)
+        ),
 
-    thumb-off-color: (
-        igx-color: ('grays', 900),
-        hexrgba: #fff
-    ),
+        thumb-on-color: #fff,
 
-    track-on-color: (
-        igx-color: ('secondary', 500),
-    ),
+        thumb-off-color: (
+            igx-color: ('grays', 900),
+            hexrgba: #fff
+        ),
 
-    track-off-color: transparent,
-));
+        track-on-color: (
+            igx-color: ('secondary', 500),
+        ),
+
+        track-off-color: transparent,
+    )
+);

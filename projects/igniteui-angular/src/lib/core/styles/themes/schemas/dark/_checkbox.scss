@@ -20,7 +20,6 @@ $_dark-checkbox: extend($_light-checkbox, (
 /// @prop {Color} tick-color [#fff] - The checked mark color.
 /// @requires extend
 /// @requires $_fluent-checkbox
-/// @see $default-palette
 $_dark-fluent-checkbox: extend($_fluent-checkbox, (
     tick-color: #fff
 ));

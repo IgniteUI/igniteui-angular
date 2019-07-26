@@ -34,22 +34,20 @@ $_dark-switch: extend($_light-switch, $_base-dark-switch);
 /// @requires {function} extend
 /// @requires $_fluent-switch
 /// @requires $_base-dark-switch
-/// @see $default-palette
 $_dark-fluent-switch: extend($_fluent-switch, $_base-dark-switch, (
     border-color: (
         igx-color: ('grays', 500)
     ),
-    
+
     border-hover-color:(
         igx-color: ('grays', 800)
     ),
-    
+
     border-disabled-color:(
         igx-color: ('grays', 200)
     ),
-    
+
     track-disabled-color: (
         igx-color: ('grays', 200)
     )
 ));
-

@@ -76,13 +76,17 @@ $_light-card: extend(
 /// @requires {function} extend
 /// @requires {map} $_fluent-shape-card
 /// @requires {map} $_fluent-elevation-card
-/// @see $default-palette
-$_fluent-card: extend($_light-card, $_fluent-shape-card, $_fluent-elevation-card, (
-    card-border-color: (
-        igx-color: ('grays', 200)
-    ),
+$_fluent-card: extend(
+    $_light-card,
+    $_fluent-shape-card,
+    $_fluent-elevation-card,
+    (
+        outline-color: (
+            igx-color: ('grays', 200)
+        ),
 
-    outline-color: (
-        igx-color: ('grays', 200)
+        card-border-color: (
+            igx-color: ('grays', 200)
+        ),
     )
-));
+);

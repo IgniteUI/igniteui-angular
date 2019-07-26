@@ -90,11 +90,11 @@ $_light-button-group: extend(
 ///
 /// @prop {map} item-hover-text-color [igx-color: ('primary', 200)] - The hover text color for button group items.
 /// @prop {map} item-hover-background [transparent] - The hover background color for button group items.
-/// @prop {map} item-selected-text-color [igx-color: ('grays', 800)]- The text color for a selected item in the button group.
-/// @prop {map} item-selected-background [igx-color: ('grays', 400)] - The background color for a selected item in the button group.
-/// @prop {map} item-selected-hover-background [igx-color: ('grays', 500)] - The background color for a selected item in hover or focus state in the button group.
+/// @prop {map} item-selected-background [igx-color: ('grays', 100)] - The background color for a selected item in the button group.
+/// @prop {map} item-selected-hover-background [igx-color: ('grays', 100)] - The background color for a selected item in hover or focus state in the button group.
+/// @prop {map} item-selected-text-color [igx-color: ('primary', 200)]- The text color for a selected item in the button group.
 /// @prop {Color} disabled-background-color [transparent] - The background color for a disabled item in the button group.
-
+///
 /// @prop {Number} elevation [0] - The elevation level, between 0-24, to be used for the badge shadow.
 /// @prop {Number} border-radius [2px] - The border radius fraction, between 0-1 to be used for button-group component.
 ///
@@ -102,7 +102,6 @@ $_light-button-group: extend(
 /// @requires {map} $_light-button-group
 /// @requires {map} $_fluent-shape-button-group
 /// @requires {map} $_fluent-elevation-button-group
-/// @see $default-palette
 $_fluent-button-group: extend(
     $_light-button-group,
     $_fluent-shape-button-group,

@@ -20,5 +20,4 @@ $_light-divider: (
 /// @type {Map}
 /// @requires {function} extend
 /// @requires {map} $_light-divider
-/// @see $default-palette
 $_fluent-divider: extend($_light-divider);

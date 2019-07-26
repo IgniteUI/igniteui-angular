@@ -262,105 +262,6 @@
     }
 }
 
-$fluent_h1: igx-type-style(
-    $font-size: rem(68px),
-    $font-weight: 700,
-    $line-height: rem(76px),
-    $text-transform: none,
-    $margin-top: 0,
-    $margin-bottom: 0
-);
-
-$fluent_h2: igx-type-style(
-    $font-size: rem(42px),
-    $font-weight: 700,
-    $line-height: rem(52px),
-    $text-transform: none,
-    $margin-top: 0,
-    $margin-bottom: 0
-);
-
-$fluent_h3: igx-type-style(
-    $font-size: rem(32px),
-    $font-weight: 600,
-    $line-height: rem(40px),
-    $text-transform: none,
-    $margin-top: 0,
-    $margin-bottom: 0
-);
-
-$fluent_h4: igx-type-style(
-    $font-size: rem(28px),
-    $font-weight: 400,
-    $line-height: rem(36px),
-    $text-transform: none,
-    $margin-top: 0,
-    $margin-bottom: 0
-);
-
-$fluent_h5: igx-type-style(
-    $font-size: rem(20px),
-    $font-weight: 400,
-    $line-height: rem(28px),
-    $text-transform: none,
-    $margin-top: 0,
-    $margin-bottom: 0
-);
-
-$fluent_h6: igx-type-style(
-    $font-size: rem(18px),
-    $font-weight: 400,
-    $line-height: rem(22px),
-    $text-transform: none,
-    $margin-top: 0,
-    $margin-bottom: 0
-);
-
-$fluent_body-1: igx-type-style(
-    $font-size: rem(16px),
-    $font-weight: 400,
-    $line-height: rem(22px),
-    $text-transform: none,
-    $margin-top: 0,
-    $margin-bottom: 0
-);
-
-$fluent_body-2: igx-type-style(
-    $font-size: rem(14px),
-    $font-weight: 400,
-    $line-height: rem(20px),
-    $text-transform: none,
-    $margin-top: 0,
-    $margin-bottom: 0
-);
-
-$fluent_subtitle-1: igx-type-style(
-    $font-size: rem(12px),
-    $font-weight: 400,
-    $line-height: rem(16px),
-    $text-transform: none,
-    $margin-top: 0,
-    $margin-bottom: 0
-);
-
-$fluent_subtitle-2: igx-type-style(
-    $font-size: rem(10px),
-    $font-weight: 400,
-    $line-height: rem(14px),
-    $text-transform: none,
-    $margin-top: 0,
-    $margin-bottom: 0
-);
-
-$fluent_button: igx-type-style(
-    $font-size: rem(14px),
-    $font-weight: 600,
-    $line-height: rem(14px),
-    $text-transform: capitalize,
-    $margin-top: 0,
-    $margin-bottom: 0
-);
-
 /// Creates a global theme that can be used with light backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
@@ -387,99 +288,6 @@ $fluent_button: igx-type-style(
     );
 }
 
-
-/// Creates a global theme that can be used with light backgrounds.
-/// @param {Map} $palette - An igx-palette to be used by the global theme.
-/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
-@mixin igx-fluent-theme(
-    $palette,
-    $exclude: (),
-    $legacy-support: true
-) {
-    $primary: igx-color($palette, 'primary');
-    $secondary: igx-color($palette, 'secondary');
-    $surface: igx-color($palette, 'surface');
-    
-    $fluent-type-scale: igx-type-scale(
-        $h1: $fluent_h1,
-        $h2: $fluent_h2,
-        $h3: $fluent_h3,
-        $h4: $fluent_h4,
-        $h5: $fluent_h5,
-        $h6: $fluent_h6,
-        $subtitle-1: $fluent_subtitle-1,
-        $subtitle-2: $fluent_subtitle-2,
-        $body-1: $fluent_body-1,
-        $body-2: $fluent_body-2,
-        $button: $fluent_button
-    );
-
-    @include igx-typography(
-        $font-family: "'Open Sans', Helvetica, Arial, sans-serif",
-        $type-scale: $fluent-type-scale,
-        $base-color: #323130
-    );
-
-    @include igx-theme(
-        $palette: igx-palette(
-            $primary,
-            $secondary,
-            $surface: if($surface != #fff, $surface, #fff),
-            $grays: #000
-        ),
-        $schema: $light-fluent-schema,
-        $legacy-support: $legacy-support,
-        $exclude: $exclude
-    );
-}
-
-/// Creates a global theme that can be used with dark backgrounds.
-/// @param {Map} $palette - An igx-palette to be used by the global theme.
-/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
-/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
-@mixin igx-fluent-dark-theme(
-    $palette,
-    $exclude: (),
-    $legacy-support: true
-) {
-    $primary: igx-color($palette, 'primary');
-    $secondary: igx-color($palette, 'secondary');
-    $surface: igx-color($palette, 'surface');
-    
-    $fluent-type-scale: igx-type-scale(
-        $h1: $fluent_h1,
-        $h2: $fluent_h2,
-        $h3: $fluent_h3,
-        $h4: $fluent_h4,
-        $h5: $fluent_h5,
-        $h6: $fluent_h6,
-        $subtitle-1: $fluent_subtitle-1,
-        $subtitle-2: $fluent_subtitle-2,
-        $body-1: $fluent_body-1,
-        $body-2: $fluent_body-2,
-        $button: $fluent_button
-    );
-    
-    @include igx-typography(
-        $font-family: "'Open Sans', Helvetica, Arial, sans-serif",
-        $type-scale: $fluent-type-scale,
-        $base-color: #fff
-    );
-    
-    @include igx-theme(
-        $palette: igx-palette(
-            $primary,
-            $secondary,
-            $surface: if($surface != #fff, $surface, #222),
-            $grays: #fff
-        ),
-        $schema: $dark-fluent-schema,
-        $legacy-support: $legacy-support,
-        $exclude: $exclude
-    );
-}
-
 /// Creates a global theme that can be used with dark backgrounds.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
@@ -501,6 +309,70 @@ $fluent_button: igx-type-style(
             $grays: #fff
         ),
         $schema: $dark-schema,
+        $legacy-support: $legacy-support,
+        $exclude: $exclude
+    );
+}
+
+/// Creates a global fluent theme that can be used with light backgrounds.
+/// @param {Map} $palette - An igx-palette to be used by the global theme.
+/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
+@mixin igx-fluent-theme(
+    $palette,
+    $exclude: (),
+    $legacy-support: true
+) {
+    $primary: igx-color($palette, 'primary');
+    $secondary: igx-color($palette, 'secondary');
+    $surface: igx-color($palette, 'surface');
+
+    @include igx-typography(
+        $font-family: "'Open Sans', Helvetica, Arial, sans-serif",
+        $type-scale: $fluent-type-scale,
+        $base-color: #323130
+    );
+
+    @include igx-theme(
+        $palette: igx-palette(
+            $primary,
+            $secondary,
+            $surface: if($surface != #fff, $surface, #fff),
+            $grays: #000
+        ),
+        $schema: $light-fluent-schema,
+        $legacy-support: $legacy-support,
+        $exclude: $exclude
+    );
+}
+
+/// Creates a global fluent theme that can be used with dark backgrounds.
+/// @param {Map} $palette - An igx-palette to be used by the global theme.
+/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
+@mixin igx-fluent-dark-theme(
+    $palette,
+    $exclude: (),
+    $legacy-support: true
+) {
+    $primary: igx-color($palette, 'primary');
+    $secondary: igx-color($palette, 'secondary');
+    $surface: igx-color($palette, 'surface');
+
+    @include igx-typography(
+        $font-family: "'Open Sans', Helvetica, Arial, sans-serif",
+        $type-scale: $fluent-type-scale,
+        $base-color: #fff
+    );
+
+    @include igx-theme(
+        $palette: igx-palette(
+            $primary,
+            $secondary,
+            $surface: if($surface != #fff, $surface, #222),
+            $grays: #fff
+        ),
+        $schema: $dark-fluent-schema,
         $legacy-support: $legacy-support,
         $exclude: $exclude
     );

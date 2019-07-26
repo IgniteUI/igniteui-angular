@@ -61,18 +61,20 @@ $_light-grid-summary: extend(
 ///
 /// @requires {function} extend
 /// @requires {map} $_light-grid-summary
-/// @see $default-palette
-$_fluent-grid-summary: extend($_light-grid-summary, (
-    background-color: (
-        igx-color: ('surface')
-    ),
+$_fluent-grid-summary: extend(
+    $_light-grid-summary,
+    (
+        background-color: (
+            igx-color: ('surface')
+        ),
 
-    border-color: (
-        igx-color: ('grays', 100)
-    ),
+        border-color: (
+            igx-color: ('grays', 100)
+        ),
 
-    pinned-border-color: (
-        igx-color: ('grays', 300),
-        hexrgba: #fff
-    ),
-));
+        pinned-border-color: (
+            igx-color: ('grays', 300),
+            hexrgba: #fff
+        ),
+    )
+);

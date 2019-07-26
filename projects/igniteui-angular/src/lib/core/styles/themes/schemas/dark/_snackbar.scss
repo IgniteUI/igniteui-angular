@@ -17,5 +17,4 @@ $_dark-snackbar: extend($_light-snackbar);
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_fluent-snackbar
-/// @see $default-palette
 $_dark-fluent-snackbar: extend($_fluent-snackbar);

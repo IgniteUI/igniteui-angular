@@ -38,5 +38,4 @@ $_light-bottom-nav: extend(
 /// @requires {function} extend
 /// @requires {map} $_light-bottom-nav
 /// @requires {map} $_fluent-elevation-bottom-nav
-/// @see $default-palette
 $_fluent-bottom-nav: extend($_light-bottom-nav, $_fluent-elevation-bottom-nav);

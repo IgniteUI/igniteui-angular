@@ -16,5 +16,4 @@ $_dark-calendar: extend($_light-calendar);
 /// @type {Map}
 /// @requires extend
 /// @requires $_fluent-calendar
-/// @see $default-palette
 $_dark-fluent-calendar: extend($_fluent-calendar);

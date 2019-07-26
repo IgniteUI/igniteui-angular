@@ -38,6 +38,6 @@ $_light-badge: extend(
 
 /// Generates a fluent badge schema.
 /// @type {Map}
+/// @requires {function} extend
 /// @requires $_light-badge
-/// @see $default-palette
 $_fluent-badge: extend($_light-badge);

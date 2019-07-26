@@ -14,12 +14,12 @@
 /// @see $default-palette
 $_light-grid-pagination: (
     text-color: currentColor,
-    
+
     background-color: (
         igx-color: ('grays', 100),
         hexrgba: #fff
     ),
-    
+
     border-color: (
         igx-color: ('grays', 400)
     )
@@ -31,14 +31,16 @@ $_light-grid-pagination: (
 /// @prop {Map} border-color [igx-color: ('grays', 100), hexrgba: #fff] - The border color of the paging panel.
 /// @requires {function} extend
 /// @requires {map} $_light-grid-pagination
-/// @see $default-palette
-$_fluent-grid-pagination: extend($_light-grid-pagination, (
-    background-color: (
-        igx-color: 'surface'
-    ),
+$_fluent-grid-pagination: extend(
+    $_light-grid-pagination,
+    (
+        background-color: (
+            igx-color: 'surface'
+        ),
 
-    border-color: (
-        igx-color: ('grays', 100),
-        hexrgba: #fff
+        border-color: (
+            igx-color: ('grays', 100),
+            hexrgba: #fff
+        )
     )
-));
+);

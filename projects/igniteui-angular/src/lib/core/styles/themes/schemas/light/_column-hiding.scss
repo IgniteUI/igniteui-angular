@@ -22,5 +22,4 @@ $_light-column-hiding: (
 /// @type {Map}
 /// @requires {function} extend
 /// @requires {map} $_light-column-hiding
-/// @see $default-palette
 $_fluent-column-hiding: extend($_light-column-hiding);

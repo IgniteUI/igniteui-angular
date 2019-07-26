@@ -18,7 +18,6 @@
 /// @requires {function} extend
 /// @requires {map} $_default-shape-dialog
 /// @requires {map} $_default-elevation-dialog
-/// @see $default-palette
 $_light-dialog: extend(
     $_default-shape-dialog,
     $_default-elevation-dialog,
@@ -49,6 +48,10 @@ $_light-dialog: extend(
 /// @requires {function} extend
 /// @requires {map} $_light-dialog
 /// @requires {map} $_fluent-shape-dialog
-$_fluent-dialog: extend($_light-dialog, $_fluent-shape-dialog, (
-    variant: 'fluent',
-));
+$_fluent-dialog: extend(
+    $_light-dialog,
+    $_fluent-shape-dialog,
+    (
+        variant: 'fluent',
+    )
+);

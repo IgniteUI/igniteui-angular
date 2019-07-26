@@ -122,29 +122,33 @@ $_light-drop-down: extend(
 /// @requires {map} $_light-drop-down
 /// @requires {map} $_fluent-shape-drop-down
 /// @requires {map} $_fluent-elevation-drop-down
-/// @see $default-palette
-$_fluent-drop-down: extend($_light-drop-down, $_fluent-shape-drop-down, $_fluent-elevation-drop-down, (
-    selected-item-background: (
-        igx-color: ('grays', 100)
-    ),
+$_fluent-drop-down: extend(
+    $_light-drop-down,
+    $_fluent-shape-drop-down,
+    $_fluent-elevation-drop-down,
+    (
+        selected-item-background: (
+            igx-color: ('grays', 100)
+        ),
 
-    selected-item-text-color: (
-        igx-contrast-color: ('grays', 100)
-    ),
+        selected-item-text-color: (
+            igx-contrast-color: ('grays', 100)
+        ),
 
-    selected-hover-item-background: (
-        igx-color: ('grays', 200)
-    ),
+        selected-hover-item-background: (
+            igx-color: ('grays', 200)
+        ),
 
-    selected-hover-item-text-color: (
-        igx-contrast-color: ('grays', 200)
-    ),
+        selected-hover-item-text-color: (
+            igx-contrast-color: ('grays', 200)
+        ),
 
-    selected-focus-item-background: (
-        igx-color: ('grays', 200)
-    ),
+        selected-focus-item-background: (
+            igx-color: ('grays', 200)
+        ),
 
-    selected-focus-item-text-color: (
-        igx-contrast-color: ('grays', 200)
-    ),
-));
+        selected-focus-item-text-color: (
+            igx-contrast-color: ('grays', 200)
+        ),
+    )
+);

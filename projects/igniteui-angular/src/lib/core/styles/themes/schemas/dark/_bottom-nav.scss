@@ -25,5 +25,4 @@ $_dark-bottom-nav: extend($_light-bottom-nav, $_base-dark-bottom-nav);
 /// @requires {function} extend
 /// @requires $_fluent-bottom-nav
 /// @requires $_base-dark-bottom-na
-/// @see $default-palette
 $_dark-fluent-bottom-nav: extend($_fluent-bottom-nav, $_base-dark-bottom-nav);

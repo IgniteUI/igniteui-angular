@@ -26,6 +26,5 @@ $_dark-tabs: extend($_light-tabs, $_base-dark-tabs);
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_fluent-tabs
-/// @see $default-palette
 $_dark-fluent-tabs: extend($_fluent-tabs, $_base-dark-tabs);
 

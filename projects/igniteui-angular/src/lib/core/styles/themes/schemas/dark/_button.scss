@@ -20,16 +20,16 @@ $_dark-button: extend($_light-button, (
         igx-color: ('secondary', 500),
         rgba: .12
     ),
-    
+
     flat-focus-background: (
         igx-color: ('secondary', 400),
         rgba: .24
     ),
-    
+
     icon-hover-background: (
         igx-color: ('grays', 300)
     ),
-    
+
     disabled-background: (
         igx-color: ('grays', 200)
     )
@@ -43,20 +43,19 @@ $_dark-button: extend($_light-button, (
 /// @prop {Map} flat-hover-text-color [igx-color: ('primary', 200)] - The text color of a flat button on hover.
 /// @requires extend
 /// @requires $_fluent-button
-/// @see $default-palette
 $_dark-fluent-button: extend($_fluent-button, (
     flat-icon-color:  (
         igx-color: ('primary', 200)
     ),
-    
+
     flat-hover-icon-color:  (
         igx-color: ('primary', 200)
     ),
-    
+
     flat-focus-icon-color:  (
         igx-color: ('primary', 200)
     ),
-    
+
     flat-hover-text-color: (
         igx-color: ('primary', 200)
     ),

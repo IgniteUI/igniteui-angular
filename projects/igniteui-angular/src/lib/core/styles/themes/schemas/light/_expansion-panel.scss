@@ -57,5 +57,4 @@ $_light-expansion-panel: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires {Map} $_light-expansion-panel
-/// @see $default-palette
 $_fluent-expansion-panel: extend($_light-expansion-panel);

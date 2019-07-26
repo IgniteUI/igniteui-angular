@@ -16,5 +16,4 @@ $_dark-column-hiding: extend($_light-column-hiding);
 /// @type {Map}
 /// @requires extend
 /// @requires $_fluent-column-hiding
-/// @see $default-palette
 $_dark-fluent-column-hiding: extend($_fluent-column-hiding);

@@ -26,7 +26,6 @@
 /// @prop {Number} item-border-radius [.16667] - The border radius fraction, between 0 - 24 to be used for the navdrawer item.
 ///
 /// @see $default-palette
-
 $_light-navdrawer: extend(
     $_default-shape-navdrawer,
     $_default-elevation-navdrawer,
@@ -88,4 +87,8 @@ $_light-navdrawer: extend(
     )
 );
 
+/// Generates a fluent navdrawer schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-navdrawer
 $_fluent-navdrawer: extend($_light-navdrawer);

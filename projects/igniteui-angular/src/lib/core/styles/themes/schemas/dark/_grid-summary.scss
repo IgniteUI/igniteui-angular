@@ -17,5 +17,4 @@ $_dark-grid-summary: extend($_light-grid-summary);
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_fluent-grid-summary
-/// @see $default-palette
 $_dark-fluent-grid-summary: extend($_fluent-grid-summary);

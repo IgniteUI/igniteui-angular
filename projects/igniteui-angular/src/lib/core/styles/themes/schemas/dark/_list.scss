@@ -15,7 +15,7 @@ $_base-dark-list: (
         igx-color: ('grays', 400),
         hexrgba: (#000)
     ),
-    
+
     item-background-active: (
         igx-color: ('grays', 400),
         hexrgba: (#000)
@@ -35,6 +35,5 @@ $_dark-list: extend($_light-list, $_base-dark-list);
 /// @requires {function} extend
 /// @requires $_fluent-list
 /// @requires $_base-dark-list
-/// @see $default-palette
 $_dark-fluent-list: extend($_fluent-list, $_base-dark-list);
 

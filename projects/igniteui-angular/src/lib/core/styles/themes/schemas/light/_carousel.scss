@@ -19,7 +19,6 @@
 ///
 /// @requires {function} extend
 /// @requires {map} $_default-shape-carousel
-/// @see $default-palette
 $_light-carousel: extend(
     $_default-shape-carousel,
     (
@@ -45,4 +44,4 @@ $_light-carousel: extend(
 /// @requires {function} extend
 /// @requires {map} $_light-carousel
 /// @see $default-palette
-$_fluent-carousel: extend($_light-carousel);
+$_fluent-carousel: extend($_light-carousel, $_fluent-shape-carousel);

@@ -72,12 +72,18 @@ $elevations: igx-elevations(
 /// Green palette
 /// @type {Map}
 /// @group palettes
-$green-palette: igx-palette($primary: #09f, $secondary: #72da67) !default;
+$green-palette: igx-palette(
+    $primary: #09f,
+    $secondary: #72da67
+) !default;
 
 /// Red palette
 /// @type {Map}
 /// @group palettes
-$purple-palette: igx-palette($primary: #00b4d6, $secondary: #514590) !default;
+$purple-palette: igx-palette(
+    $primary: #00b4d6,
+    $secondary: #514590
+) !default;
 
 
 /// Fluent Excel palette

@@ -19,7 +19,6 @@
 /// @property {map} text-color [igx-color: ('grays', 700)] - The track value text color.
 ///
 /// @see $default-palette
-
 $_light-progress-linear: extend(
     $_default-shape-progress,
     (
@@ -55,8 +54,11 @@ $_light-progress-linear: extend(
     )
 );
 
+/// Generates a fluent progress-linear schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-progress-linear
 $_fluent-progress-linear: extend($_light-progress-linear);
-
 
 /// Generates a light progress-circular schema.
 /// @type {Map}
@@ -64,9 +66,6 @@ $_fluent-progress-linear: extend($_light-progress-linear);
 /// @property {map} base-circle-color [igx-color: ('grays', 300)] - The base circle fill color.
 /// @property {map} progress-circle-color [igx-color: ('primary', 500)] - The progress circle fill color.
 /// @property {map} text-color [igx-color: ('grays', 700)] - The value text color.
-///
-/// @see $default-palette
-
 $_light-progress-circular: extend(
     $_default-shape-progress,
     (
@@ -84,4 +83,8 @@ $_light-progress-circular: extend(
     )
 );
 
-$_fluent-progress-circular: extend($_light-progress-circular, ());
+/// Generates a fluent progress-circular schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-progress-circular
+$_fluent-progress-circular: extend($_light-progress-circular);

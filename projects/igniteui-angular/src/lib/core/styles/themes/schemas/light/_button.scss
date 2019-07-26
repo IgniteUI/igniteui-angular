@@ -78,7 +78,7 @@ $_light-button: extend(
     $_default-elevation-button,
     (
         variant: 'material',
-        
+
         flat-background: transparent,
 
         flat-text-color: (
@@ -142,11 +142,11 @@ $_light-button: extend(
         outlined-focus-text-color: (
             igx-color: ('secondary', 500)
         ),
-    
+
         outlined-disabled-outline-color: (
             igx-color: ('grays', 300)
         ),
-        
+
         raised-background: (
             igx-color: ('secondary', 500)
         ),
@@ -241,7 +241,7 @@ $_light-button: extend(
 /// @prop {Map} flat-focus-text-color [igx-color: ('primary', 500)] - The focus text color of a flat button.
 ///
 /// @prop {Map} outlined-outline-color [igx-color: ('grays', 800)] - The border color of an outlined button.
-/// @prop {Map} outlined-text-color [igx-color: ('secondary', 500)] - The idle text color of an outlined button.
+/// @prop {Map} outlined-text-color [igx-color: ('grays', 000)] - The idle text color of an outlined button.
 /// @prop {Color} outlined-hover-background [igx-color: ('grays', 100)] - The hover background color of an outlined button.
 /// @prop {Map} outlined-hover-text-color [igx-color: ('grays', 900)] - The hover text color of an outlined button.
 /// @prop {Map} outlined-focus-background [igx-color: ('grays', 100)] - The focus background color of an outlined button.
@@ -262,7 +262,7 @@ $_light-button: extend(
 /// @prop {Color} fab-focus-text-color [#fff] - The focus text color of a floating action button.
 ///
 /// @prop {Map} icon-hover-background [igx-color: ('grays', 50)] - The hover background color of an icon button.
-/// @prop {Map} icon-focus-color [igx-color: ('grays', 100)] - The focus icon color of an icon button.
+/// @prop {Map} icon-focus-background [igx-color: ('grays', 100)] - The focus icon color of an icon button.
 ///
 /// @prop {Number} raised-resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
 /// @prop {Number} raised-hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
@@ -271,7 +271,7 @@ $_light-button: extend(
 /// @prop {Number} fab-hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
 /// @prop {Number} fab-focus-elevation [0] - The elevation level, between 0-24, to be used for the focus state.
 ///
-/// @prop {Number} flat-border-radius [2px] - The border radius fraction used for flat button.
+/// @prop {Number} flat-border-radius [0] - The border radius fraction used for flat button.
 /// @prop {Number} raised-border-radius [2px] - The border radius fraction used for raised button.
 /// @prop {Number} outlined-border-radius [2px] - The border radius fraction used for outlined button.
 /// @prop {Number} icon-border-radius [2px] - The border radius fraction used for icon button.
@@ -280,105 +280,109 @@ $_light-button: extend(
 /// @requires {map} $_light-button
 /// @requires {map} $_fluent-shape-button
 /// @requires {map} $_fluent-elevation-button
-/// @see $default-palette
-$_fluent-button: extend($_light-button, $_fluent-shape-button, $_fluent-elevation-button, (
-    variant: 'fluent',
-    
-    flat-text-color: (
-        igx-color: ('grays', 900)
-    ),
+$_fluent-button: extend(
+    $_light-button,
+    $_fluent-shape-button,
+    $_fluent-elevation-button,
+    (
+        variant: 'fluent',
 
-    flat-icon-color:  (
-        igx-color: ('primary', 500)
-    ),
+        flat-text-color: (
+            igx-color: ('grays', 900)
+        ),
 
-    flat-hover-icon-color:  (
-        igx-color: ('primary', 500)
-    ),
+        flat-icon-color:  (
+            igx-color: ('primary', 500)
+        ),
 
-    flat-focus-icon-color:  (
-        igx-color: ('primary', 500)
-    ),
+        flat-hover-icon-color:  (
+            igx-color: ('primary', 500)
+        ),
 
-    flat-hover-background: transparent,
+        flat-focus-icon-color:  (
+            igx-color: ('primary', 500)
+        ),
 
-    flat-hover-text-color: (
-        igx-color: ('primary', 500)
-    ),
+        flat-hover-background: transparent,
 
-    flat-focus-background:(
-        igx-color:('grays', 100)
-    ),
+        flat-hover-text-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    flat-focus-text-color: (
-        igx-color: ('primary', 500)
-    ),
+        flat-focus-background:(
+            igx-color:('grays', 100)
+        ),
 
-    outlined-outline-color: (
-        igx-color: ('grays', 800)
-    ),
+        flat-focus-text-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    outlined-text-color: (
-        igx-color: ('grays', 900)
-    ),
+        outlined-outline-color: (
+            igx-color: ('grays', 800)
+        ),
 
-    outlined-hover-background: (
-        igx-color: ('grays', 100)
-    ),
+        outlined-text-color: (
+            igx-color: ('grays', 900)
+        ),
 
-    outlined-hover-text-color: (
-        igx-color: ('grays', 900)
-    ),
+        outlined-hover-background: (
+            igx-color: ('grays', 100)
+        ),
 
-    outlined-focus-background: (
-        igx-color: ('grays', 100)
-    ),
+        outlined-hover-text-color: (
+            igx-color: ('grays', 900)
+        ),
 
-    outlined-focus-text-color: (
-        igx-color: ('grays', 900)
-    ),
-    
-    raised-background: (
-        igx-color: ('primary', 500)
-    ),
+        outlined-focus-background: (
+            igx-color: ('grays', 100)
+        ),
 
-    raised-text-color: #fff,
+        outlined-focus-text-color: (
+            igx-color: ('grays', 900)
+        ),
 
-    raised-hover-background: (
-        igx-color: ('primary', 600)
-    ),
-    
-    raised-hover-text-color: #fff,
+        raised-background: (
+            igx-color: ('primary', 500)
+        ),
 
-    raised-focus-background: (
-        igx-color: ('primary', 600)
-    ),
+        raised-text-color: #fff,
 
-    raised-focus-text-color: #fff,
+        raised-hover-background: (
+            igx-color: ('primary', 600)
+        ),
 
-    fab-background: (
-        igx-color: ('primary', 500)
-    ),
+        raised-hover-text-color: #fff,
 
-    fab-text-color: #fff,
+        raised-focus-background: (
+            igx-color: ('primary', 600)
+        ),
 
-    fab-hover-background: (
-        igx-color: ('primary', 600)
-    ),
+        raised-focus-text-color: #fff,
 
-    fab-hover-text-color: #fff,
+        fab-background: (
+            igx-color: ('primary', 500)
+        ),
 
-    fab-focus-background: (
-        igx-color: ('primary', 600)
-    ),
+        fab-text-color: #fff,
 
-    fab-focus-text-color: #fff,
+        fab-hover-background: (
+            igx-color: ('primary', 600)
+        ),
 
-    icon-hover-background: (
-        igx-color: ('grays', 50)
-    ),
+        fab-hover-text-color: #fff,
 
-    icon-focus-background: (
-        igx-color: ('grays', 100)
-    ),
-));
+        fab-focus-background: (
+            igx-color: ('primary', 600)
+        ),
+
+        fab-focus-text-color: #fff,
+
+        icon-hover-background: (
+            igx-color: ('grays', 50)
+        ),
+
+        icon-focus-background: (
+            igx-color: ('grays', 100)
+        ),
+    )
+);

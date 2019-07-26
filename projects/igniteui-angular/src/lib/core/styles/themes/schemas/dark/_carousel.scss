@@ -27,6 +27,5 @@ $_dark-carousel: extend($_light-carousel, $_base-dark-carousel);
 /// @requires extend
 /// @requires $_fluent-carousel
 /// @requires $_base-dark-carousel
-/// @see $default-palette
 $_dark-fluent-carousel: extend($_fluent-carousel, $_base-dark-carousel);
 

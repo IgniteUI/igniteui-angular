@@ -64,9 +64,11 @@ $_light-grid-filtering: extend(
 /// @prop {Map} menu-background [igx-color: 'surface'] - The idle menu background color.
 /// @requires {function} extend
 /// @requires {map} $_default-shape-grid-filtering
-/// @see $default-palette
-$_fluent-grid-filtering: extend($_light-grid-filtering, (
-    menu-background: (
-        igx-color: 'surface'
-    ),
-));
+$_fluent-grid-filtering: extend(
+    $_light-grid-filtering,
+    (
+        menu-background: (
+            igx-color: 'surface'
+        ),
+    )
+);

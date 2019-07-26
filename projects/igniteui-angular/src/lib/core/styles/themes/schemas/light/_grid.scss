@@ -71,7 +71,7 @@
 /// @prop {Map} row-ghost-background [igx-color: ('primary', 50))] - The background color of the dragged row.
 /// @prop {number} grid-elevation [2] - The elevation used for the grid.
 /// @prop {number} drag-elevation [5] - The elevation used for movable elements (ex. column header).
-/// @prop {Number} border-radius [1] - The border radius fraction, between 0-1 to be used for card date.
+/// @prop {Number} drop-area-border-radius [1] - The border radius fraction, between 0-1 to be used for card date.
 ///
 /// @requires {function} extend
 /// @requires {map} $_default-shape-grid
@@ -357,12 +357,11 @@ $_light-grid: extend(
 /// @prop {Map} row-ghost-background [igx-color: 'surface'] - The background color of the dragged row.
 /// @prop {number} grid-elevation [0] - The elevation used for the grid.
 /// @prop {number} drag-elevation [1] - The elevation used for movable elements (ex. column header).
-/// @prop {Number} border-radius [2px] - The border radius fraction, between 0-1 to be used drop-area.
+/// @prop {Number} drop-area-border-radius [2px] - The border radius fraction, between 0-1 to be used drop-area.
 ///
 /// @requires {function} extend
 /// @requires {map} $_light-grid
 /// @requires {map} $_fluent-elevation-grid
-/// @see $default-palette
 $_fluent-grid: extend(
     $_light-grid,
     $_fluent-shape-grid,
@@ -378,32 +377,8 @@ $_fluent-grid: extend(
             igx-color: 'surface'
         ),
 
-        filtering-header-background: (
-            igx-color: ('grays', 100),
-            hexrgba: #fff
-        ),
-
-        filtering-row-background: (
-            igx-color: ('grays', 100),
-            hexrgba: #fff
-        ),
-
         header-border-color: (
             igx-color: ('grays', 100)
-        ),
-
-        grouparea-background: (
-            igx-color: 'surface'
-        ),
-
-        header-text-color: (
-            igx-color: ('grays', 900),
-            hexrgba: #fff
-        ),
-
-        row-selected-background: (
-            igx-color: ('grays', 100),
-            hexrgba: #fff
         ),
 
         row-selected-hover-background: (
@@ -429,11 +404,7 @@ $_fluent-grid: extend(
             hexrgba: #fff
         ),
 
-        root-summaries-background: (
-            igx-color: 'surface'
-        ),
-
-        row-ghost-background: (
+        grouparea-background: (
             igx-color: 'surface'
         ),
 
@@ -445,6 +416,39 @@ $_fluent-grid: extend(
         group-row-selected-background: (
             igx-color: ('grays', 100),
             hexrgba: #fff
+        ),
+
+        filtering-header-background: (
+            igx-color: ('grays', 100),
+            hexrgba: #fff
+        ),
+
+        filtering-header-text-color: (
+            igx-color: ('grays', 900),
+            hexrgba: #fff
+        ),
+
+        filtering-row-background: (
+            igx-color: ('grays', 100),
+            hexrgba: #fff
+        ),
+
+        header-text-color: (
+            igx-color: ('grays', 900),
+            hexrgba: #fff
+        ),
+
+        row-selected-background: (
+            igx-color: ('grays', 100),
+            hexrgba: #fff
+        ),
+
+        root-summaries-background: (
+            igx-color: 'surface'
+        ),
+
+        row-ghost-background: (
+            igx-color: 'surface'
         ),
     )
 );

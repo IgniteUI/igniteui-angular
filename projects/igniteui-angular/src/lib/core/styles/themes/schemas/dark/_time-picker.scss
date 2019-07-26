@@ -17,6 +17,5 @@ $_dark-time-picker: extend($_light-time-picker);
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_fluent-time-picker
-/// @see $default-palette
 $_dark-fluent-time-picker: extend($_fluent-time-picker);
 

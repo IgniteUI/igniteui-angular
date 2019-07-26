@@ -28,5 +28,4 @@ $_dark-grid-pagination: extend($_light-grid-pagination, $_base-dark-grid-paginat
 /// @requires extend
 /// @requires $_fluent-grid-pagination
 /// @requires $_base-dark-grid-pagination
-/// @see $default-palette
 $_dark-fluent-grid-pagination: extend($_fluent-grid-pagination, $_base-dark-grid-pagination);

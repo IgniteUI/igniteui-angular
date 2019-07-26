@@ -27,5 +27,4 @@ $_dark-grid-toolbar: extend($_light-grid-toolbar, $_base-dark-grid-toolbar);
 /// @requires {function} extend
 /// @requires $_fluent-grid-toolbar
 /// @requires $_base-dark-grid-toolbar
-/// @see $default-palette
 $_dark-fluent-grid-toolbar: extend($_fluent-grid-toolbar, $_base-dark-grid-toolbar);

@@ -17,7 +17,6 @@
 /// @prop {Number} $elevation [4] - The navbar elevation shadow level.
 ///
 /// @see $default-palette
-
 $_light-navbar: extend(
     $_default-shape-navbar,
     $_default-elevation-navbar,
@@ -40,4 +39,8 @@ $_light-navbar: extend(
     )
 );
 
+/// Generates a fluent navbar schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-navbar
 $_fluent-navbar: extend($_light-navbar);

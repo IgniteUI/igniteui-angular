@@ -40,18 +40,18 @@
     $tick-color: null,
     $disabled-color: null,
     $disabled-color-label: null,
-    $border-radius-ripple:null
+    $border-radius-ripple: null
 ) {
     $name: 'igx-checkbox';
     $checkbox-schema: map-get($schema, $name);
     $theme: apply-palette($checkbox-schema, $palette);
 
     $border-radius: round-borders(
-        if($border-radius, $border-radius, map-get($checkbox-schema, 'border-radius')),0 ,10px
+        if($border-radius, $border-radius, map-get($checkbox-schema, 'border-radius')), 0, 10px
     );
 
     $border-radius-ripple: round-borders(
-        if($border-radius-ripple, $border-radius-ripple, map-get($checkbox-schema, 'border-radius-ripple')),0 ,24px
+        if($border-radius-ripple, $border-radius-ripple, map-get($checkbox-schema, 'border-radius-ripple')), 0, 24px
     );
 
 

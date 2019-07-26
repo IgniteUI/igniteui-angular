@@ -64,19 +64,19 @@ $_light-input-group: extend(
     $_default-elevation-input-group,
     (
         variant: 'material',
-    
+
         input-prefix-color: (
             igx-color: ('grays', 600)
         ),
-    
+
         input-prefix-background: transparent,
-    
+
         input-suffix-color: (
             igx-color: ('grays', 600)
         ),
-    
+
         input-suffix-background: transparent,
-        
+
         idle-text-color: (
             igx-color: ('grays', 600)
         ),
@@ -188,10 +188,10 @@ $_light-input-group: extend(
 /// Generates a fluent input-group schema.
 /// @type {Map}
 ///
-/// @prop {map} border-color [igx-color: ('grays', 600)] - The border color for input groups of type border and fluent.
-/// @prop {map} hover-border-color [igx-color: ('grays', 600)] - The hover input border for input groups of type border and fluent.
-/// @prop {map} focused-border-color [igx-color: ('primary', 500)] - The focused input border color for input groups of type border and fluent.
-/// @prop {map} disabled-border-color [igx-color: ('grays', 500), rgba: .06] - The disabled border color for input groups of type border and fluent.
+/// @prop {map} border-color [igx-color: ('grays', 500)] - The border color for input groups of type border and fluent.
+/// @prop {map} hover-border-color [igx-color: ('grays', 800)] - The hover input border for input groups of type border and fluent.
+/// @prop {map} focused-border-color [igx-color: ('grays', 500)] - The focused input border color for input groups of type border and fluent.
+/// @prop {map} disabled-border-color [igx-color: ('grays', 500)] - The disabled border color for input groups of type border and fluent.
 ///
 /// @prop {map} border-disabled-background [igx-color: ('grays', 100)] - The background color of an input group of type border in the disabled state.
 ///
@@ -212,43 +212,42 @@ $_light-input-group: extend(
 /// @requires {map} $_light-input-group
 /// @requires {map} $_fluent-shape-input-group
 /// @requires {map} $_fluent-elevation-input-group
-/// @see $default-palette
 $_fluent-input-group: extend(
     $_light-input-group,
     $_fluent-shape-input-group,
     $_fluent-elevation-input-group,
     (
         variant: 'fluent',
-        
+
         border-color: (
             igx-color: ('grays', 500)
         ),
-    
+
         hover-border-color: (
             igx-color: ('grays', 800)
         ),
-    
+
         focused-border-color: (
             igx-color: ('grays', 500)
         ),
-    
+
         disabled-border-color: (
             igx-color: ('grays', 500)
         ),
-    
+
         border-disabled-background: (
             igx-color: ('grays', 100),
         ),
-        
+
         search-disabled-background: (
             igx-color: ('grays', 100)
         ),
-        
+
         input-prefix-background: (
             igx-color: ('grays', 100),
             hexrgba: #fff
         ),
-        
+
         input-suffix-background: (
             igx-color: ('grays', 100),
             hexrgba: #fff
