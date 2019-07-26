@@ -465,10 +465,27 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
              childGrid.allowFiltering && childGrid.filterMode === FilterMode.quickFilter) {
                  // move to filter cell
                 childGrid.navigation.moveFocusToFilterCell();
+            } else if (childGrid.rowList.toArray().length === 0) {
+                // move to prev child or parent row
+                const prevChild = this.getSibling(childGrid);
+                if (prevChild) {
+                    this.performShiftTabIntoChild(prevChild, currentRowEl, rowIndex);
+                } else {
+                    this.navigateUp(currentRowEl, rowIndex,
+                        this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex);
+                }
             } else {
                 // move to prev cell
                 childGrid.navigation.goToLastCell();
             }
+    }
+
+    private getSibling(childGrid) {
+        const prevChildRow = childGrid.childRow.nativeElement.previousElementSibling;
+        if (prevChildRow) {
+            return prevChildRow.children[0].children[0];
+        }
+        return null;
     }
 
     private _focusScrollCellInView(visibleColumnIndex) {
@@ -740,7 +757,12 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         grid.parentVirtDir.onChunkLoad
             .pipe(first())
             .subscribe(callBackFunc);
-        grid.dataRowList.toArray()[0].virtDirRow.scrollTo(unpinnedIndex);
+        if (grid.dataRowList.toArray().length > 0) {
+            grid.dataRowList.toArray()[0].virtDirRow.scrollTo(unpinnedIndex);
+        } else {
+            grid.headerContainer.scrollTo(unpinnedIndex);
+        }
+
     }
     private scrollGrid(grid, target, callBackFunc) {
         this.getFocusableGrid().nativeElement.focus({preventScroll: true});
