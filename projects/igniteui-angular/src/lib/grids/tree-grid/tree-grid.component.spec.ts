@@ -40,6 +40,7 @@ describe('IgxTreeGrid Component Tests ', () => {
         }));
 
         it('should render 10 records if height is unset and parent container\'s height is unset', () => {
+            fix.detectChanges();
             const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             expect(defaultHeight).not.toBeNull();
             expect(parseInt(defaultHeight, 10)).toBeGreaterThan(400);

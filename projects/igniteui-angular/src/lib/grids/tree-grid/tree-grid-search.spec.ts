@@ -221,6 +221,7 @@ describe('IgxTreeGrid - search API ', () => {
 
         it('Should update search highlights when a column is pinned/unpinned', () => {
             treeGrid.findNext('casey');
+            fix.detectChanges();
 
             // Verify a 'Name' cell is unpinned and has active search result in it.
             let treeCell = TreeGridFunctions.getTreeCell(TreeGridFunctions.getAllRows(fix)[0]);
@@ -231,6 +232,7 @@ describe('IgxTreeGrid - search API ', () => {
             // Pin column
             const column = treeGrid.columns.filter(c => c.field === 'Name')[0];
             column.pinned = true;
+            fix.detectChanges();
 
             // Verify a 'Name' cell is pinned tree cell and has active search result in it.
             treeCell = TreeGridFunctions.getTreeCell(TreeGridFunctions.getAllRows(fix)[0]);
@@ -240,6 +242,7 @@ describe('IgxTreeGrid - search API ', () => {
 
             // Unpin column
             column.pinned = false;
+            fix.detectChanges();
 
             // Verify a 'Name' cell is unpinned and has active search result in it.
             treeCell = TreeGridFunctions.getTreeCell(TreeGridFunctions.getAllRows(fix)[0]);
@@ -257,12 +260,14 @@ describe('IgxTreeGrid - search API ', () => {
             // Hide 'Age' column
             const column = treeGrid.columns.filter(c => c.field === 'Age')[0];
             column.hidden = true;
+            fix.detectChanges();
 
             cell = TreeGridFunctions.getCell(fix, 0, 'Name');
             verifySearchResult(cell.nativeElement, 1, 0);
 
             // Show 'Age' column
             column.hidden = false;
+            fix.detectChanges();
 
             cell = TreeGridFunctions.getCell(fix, 0, 'Name');
             verifySearchResult(cell.nativeElement, 1, 0);
@@ -277,11 +282,13 @@ describe('IgxTreeGrid - search API ', () => {
             // Hide 'Name' column
             const column = treeGrid.columns.filter(c => c.field === 'Name')[0];
             column.hidden = true;
+            fix.detectChanges();
 
             verifySearchResult(fixNativeElement, 0, -1);
 
             // Show 'Name' column
             column.hidden = false;
+            fix.detectChanges();
 
             cell = TreeGridFunctions.getCell(fix, 0, 'Name');
             verifySearchResult(cell.nativeElement, 1, 0);
@@ -291,15 +298,19 @@ describe('IgxTreeGrid - search API ', () => {
 
         it('Search highlights should work for case sensitive and exact match searches', () => {
             let actualCount = treeGrid.findNext('er');
+            fix.detectChanges();
             verifySearchResult(fixNativeElement, 6, 0, actualCount);
 
             actualCount = treeGrid.findNext('er', true, false);
+            fix.detectChanges();
             verifySearchResult(fixNativeElement, 5, 0, actualCount);
 
             actualCount = treeGrid.findNext('Software Developer');
+            fix.detectChanges();
             verifySearchResult(fixNativeElement, 3, 0, actualCount);
 
             actualCount = treeGrid.findNext('Software Developer', false, true);
+            fix.detectChanges();
             verifySearchResult(fixNativeElement, 1, 0, actualCount);
         });
     });

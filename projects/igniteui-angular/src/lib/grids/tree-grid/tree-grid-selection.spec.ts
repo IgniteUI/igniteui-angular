@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule, IgxGridCellComponent } from './index';
@@ -58,6 +58,7 @@ describe('IgxTreeGrid - Selection ', () => {
             });
 
             treeGrid.rowSelectable = false;
+            fix.detectChanges();
 
             expect(rows.length).toBe(10);
             rows.forEach((row) => {
@@ -184,10 +185,12 @@ describe('IgxTreeGrid - Selection ', () => {
 
             // Collapse row and verify visible selected rows
             treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+            fix.detectChanges();
             expect(getVisibleSelectedRows(fix).length).toBe(1);
 
             // Expand same row and verify visible selected rows
             treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+            fix.detectChanges();
             expect(getVisibleSelectedRows(fix).length).toBe(3);
 
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 3, 5], true);
@@ -368,10 +371,12 @@ describe('IgxTreeGrid - Selection ', () => {
 
             // Collapse row and verify visible selected rows
             TreeGridFunctions.clickRowIndicator(fix, 0);
+            fix.detectChanges();
             expect(getVisibleSelectedRows(fix).length).toBe(1);
 
             // Expand same row and verify visible selected rows
             TreeGridFunctions.clickRowIndicator(fix, 0);
+            fix.detectChanges();
             expect(getVisibleSelectedRows(fix).length).toBe(3);
 
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 3, 5], true);
