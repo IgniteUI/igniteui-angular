@@ -20,7 +20,7 @@
                     </div>
                 </div>
             </ng-container>
-            <ng-container *ngIf="rowSelectable">
+            <ng-container *ngIf="showRowCheckboxes">
                 <div class="igx-grid__cbx-selection" #headerCheckboxContainer [ngClass]="{
                     'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible
                 }">
@@ -64,6 +64,7 @@
         <ng-template igxGridFor let-rowData
             [igxGridForOf]="data
         | treeGridTransaction:id:pipeTrigger
+        | visibleColumns:hasVisibleColumns
         | treeGridHierarchizing:primaryKey:foreignKey:childDataKey:id:pipeTrigger
         | treeGridFiltering:filteringExpressionsTree:id:pipeTrigger
         | treeGridSorting:sortingExpressions:id:pipeTrigger
