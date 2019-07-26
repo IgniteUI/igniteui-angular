@@ -4068,7 +4068,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const cols = this.visibleColumns
         .filter(x => !x.columnGroup);
         cols.forEach((item) => {
-            colSum +=  parseInt((item.width || item.defaultWidth), 10) || MINIMUM_COLUMN_WIDTH;
+            const isWidthInPercent = item.width && typeof item.width === 'string' && item.width.indexOf('%') !== -1;
+            colSum += !isWidthInPercent ?  parseInt((item.width || item.defaultWidth), 10) || MINIMUM_COLUMN_WIDTH : MINIMUM_COLUMN_WIDTH;
         });
         colSum += this.getFeatureColumnsWidth();
         return colSum;
