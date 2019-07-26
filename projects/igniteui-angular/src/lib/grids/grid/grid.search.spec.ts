@@ -734,7 +734,7 @@ describe('IgxGrid - search API', () => {
 
             cell.column.editable = true;
             fix.detectChanges();
-            cell.inEditMode = true;
+            cell.setEditMode(true);
             await wait();
             fix.detectChanges();
 
@@ -749,7 +749,7 @@ describe('IgxGrid - search API', () => {
             const highlights = cell.nativeElement.querySelectorAll('.' + fix.componentInstance.highlightClass);
             const activeHighlight = cell.nativeElement.querySelector('.' + fix.componentInstance.activeClass);
 
-            expect(cell.inEditMode).toBeFalsy();
+            expect(cell.editMode).toBeFalsy();
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
 
@@ -882,15 +882,15 @@ describe('IgxGrid - search API', () => {
             activeHighlight = rv.querySelector('.' + component.activeClass);
             expect(activeHighlight).not.toBeNull();
 
-            cell.inEditMode = true;
+            cell.setEditMode(true);
             await wait(16);
             fix.detectChanges();
 
-            expect(cell.inEditMode).toBe(true);
+            expect(cell.editMode).toBe(true);
             activeHighlight = rv.querySelector('.' + component.activeClass);
             expect(activeHighlight).toBeNull();
 
-            cell.inEditMode = false;
+            cell.setEditMode(false);
             await wait(16);
             fix.detectChanges();
 
@@ -915,9 +915,9 @@ describe('IgxGrid - search API', () => {
             activeHighlight = rv.nativeElement.querySelector('.' + component.activeClass);
             expect(activeHighlight).not.toBeNull();
 
-            cell.inEditMode = true;
+            cell.setEditMode(true);
             fix.detectChanges();
-            expect(cell.inEditMode).toBe(true);
+            expect(cell.editMode).toBe(true);
 
             const inputElem: HTMLInputElement = rv.nativeElement.querySelector('input') as HTMLInputElement;
             inputElem.value = '11';
@@ -949,9 +949,9 @@ describe('IgxGrid - search API', () => {
             activeHighlight = rv.querySelector('.' + component.activeClass);
             expect(activeHighlight).not.toBeNull();
 
-            cell.inEditMode = true;
+            cell.setEditMode(true);
             fix.detectChanges();
-            expect(cell.inEditMode).toBe(true);
+            expect(cell.editMode).toBe(true);
 
             const inputElem: HTMLInputElement = rv.querySelector('input') as HTMLInputElement;
             inputElem.value = '';
