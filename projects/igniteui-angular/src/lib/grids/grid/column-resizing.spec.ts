@@ -13,6 +13,7 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IColumnResized } from '../../test-utils/grid-interfaces.spec';
 import { MultiColumnHeadersComponent } from '../../test-utils/grid-samples.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 describe('IgxGrid - Deferred Column Resizing', () => {
     configureTestSuite();
@@ -191,12 +192,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         const fixture = TestBed.createComponent(ResizableColumnsComponent);
         fixture.detectChanges();
 
-        const spy = spyOn(window, 'onerror').and.callFake((msg: string, source: string, lineno: number, colno: number, error: Error) => {
-            if (msg.match('ResizeObserver loop limit exceeded')) {
-                return;
-            }
-            spy.and.callThrough().withArgs(msg, source, lineno, colno, error);
-        });
+        resizeObserverIgnoreError();
 
         const grid = fixture.componentInstance.grid;
         const column = grid.getColumnByName('ID');

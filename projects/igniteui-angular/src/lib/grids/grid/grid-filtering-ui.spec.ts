@@ -43,6 +43,7 @@ import {
     IgxGridFilteringTemplateComponent,
     IgxGridFilteringESFTemplatesComponent
 } from '../../test-utils/grid-samples.spec';
+import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
@@ -66,12 +67,7 @@ describe('IgxGrid - Filtering actions', () => {
 
     let fix, grid;
     beforeEach(fakeAsync(() => {
-        const spy = spyOn(window, 'onerror').and.callFake((msg: string, source: string, lineno: number, colno: number, error: Error) => {
-            if (msg.match('ResizeObserver loop limit exceeded')) {
-                return;
-            }
-            spy.and.callThrough().withArgs(msg, source, lineno, colno, error);
-        });
+        resizeObserverIgnoreError();
 
         fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
@@ -1692,12 +1688,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
-            const spy = spyOn(window, 'onerror').and.callFake((msg: string, source: string, lineno: number, colno: number, error: Error) => {
-                if (msg.match('ResizeObserver loop limit exceeded')) {
-                    return;
-                }
-                spy.and.callThrough().withArgs(msg, source, lineno, colno, error);
-            });
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridFilteringComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -3267,12 +3258,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
-            const spy = spyOn(window, 'onerror').and.callFake((msg: string, source: string, lineno: number, colno: number, error: Error) => {
-                if (msg.match('ResizeObserver loop limit exceeded')) {
-                    return;
-                }
-                spy.and.callThrough().withArgs(msg, source, lineno, colno, error);
-            });
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridFilteringMCHComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -3388,12 +3374,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
-            const spy = spyOn(window, 'onerror').and.callFake((msg: string, source: string, lineno: number, colno: number, error: Error) => {
-                if (msg.match('ResizeObserver loop limit exceeded')) {
-                    return;
-                }
-                spy.and.callThrough().withArgs(msg, source, lineno, colno, error);
-            });
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridFilteringScrollComponent);
             grid = fix.componentInstance.grid;
             fix.detectChanges();
@@ -3426,12 +3407,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
-            const spy = spyOn(window, 'onerror').and.callFake((msg: string, source: string, lineno: number, colno: number, error: Error) => {
-                if (msg.match('ResizeObserver loop limit exceeded')) {
-                    return;
-                }
-                spy.and.callThrough().withArgs(msg, source, lineno, colno, error);
-            });
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridFilteringTemplateComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -3485,12 +3461,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
-            const spy = spyOn(window, 'onerror').and.callFake((msg: string, source: string, lineno: number, colno: number, error: Error) => {
-                if (msg.match('ResizeObserver loop limit exceeded')) {
-                    return;
-                }
-                spy.and.callThrough().withArgs(msg, source, lineno, colno, error);
-            });
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridFilteringComponent);
             grid = fix.componentInstance.grid;
             grid.filterMode = FilterMode.excelStyleFilter;
@@ -5383,12 +5354,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
-            const spy = spyOn(window, 'onerror').and.callFake((msg: string, source: string, lineno: number, colno: number, error: Error) => {
-                if (msg.match('ResizeObserver loop limit exceeded')) {
-                    return;
-                }
-                spy.and.callThrough().withArgs(msg, source, lineno, colno, error);
-            });
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridFilteringESFTemplatesComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -5431,12 +5397,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
-            const spy = spyOn(window, 'onerror').and.callFake((msg: string, source: string, lineno: number, colno: number, error: Error) => {
-                if (msg.match('ResizeObserver loop limit exceeded')) {
-                    return;
-                }
-                spy.and.callThrough().withArgs(msg, source, lineno, colno, error);
-            });
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxTestExcelFilteringDatePickerComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;

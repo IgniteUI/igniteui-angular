@@ -3025,6 +3025,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
                 ]
             }
         ];
+        fix.detectChanges();
         const grid = fix.componentInstance.grid;
         grid.width = '500px';
         setupGridScrollDetection(fix, grid);

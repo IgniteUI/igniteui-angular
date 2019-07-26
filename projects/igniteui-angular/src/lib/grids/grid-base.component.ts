@@ -2665,16 +2665,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
         });
 
-        this.verticalScrollContainer.onDataChanging.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
-            this.calculateGridHeight();
-            // this.verticalScrollContainer.recalcUpdateSizes();
-            $event.containerSize = this.calcHeight;
-        });
+        /*
+            TODO: Stamen should probably take the call if we actually need the handlers below
+        */
 
-        this.verticalScrollContainer.onDataChanged.pipe(destructor, filter(() => !this._init)).subscribe(() => {
-            // this.calculateGridHeight();
-            // this.verticalScrollContainer.recalcUpdateSizes();
-        });
+        // this.verticalScrollContainer.onDataChanging.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
+        //     // this.calculateGridHeight();
+        //     // this.verticalScrollContainer.recalcUpdateSizes();
+        //     // $event.containerSize = this.calcHeight;
+        // });
+
+        // this.verticalScrollContainer.onDataChanged.pipe(destructor, filter(() => !this._init)).subscribe(() => {
+        //     // this.calculateGridHeight();
+        //     // this.verticalScrollContainer.recalcUpdateSizes();
+        // });
 
         this.onDensityChanged.pipe(destructor).subscribe(() => {
             requestAnimationFrame(() => {
@@ -3598,7 +3602,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
             const row = new IgxRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector));
             this.gridAPI.update_row(row, value);
-            // this.cdr.markForCheck();
             this.notifyChanges();
         }
     }
@@ -3672,7 +3675,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         } else {
             this._summaries(rest[0], true, rest[1]);
         }
-        this.notifyChanges(true);
     }
 
     /**
@@ -4308,12 +4310,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
 
         this.cdr.detectChanges();
-        // this.resetCaches();
         // in case scrollbar has appeared recalc to size correctly.
         if (hasScroll !== this.hasVerticalSroll()) {
             this.calculateGridWidth();
             this.cdr.detectChanges();
-            // this.resetCaches();
         }
         this.resetCaches();
     }

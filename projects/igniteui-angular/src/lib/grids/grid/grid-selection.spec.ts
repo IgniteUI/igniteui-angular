@@ -66,12 +66,13 @@ describe('IgxGrid - Row Selection', () => {
         const fix = TestBed.createComponent(GridWithPrimaryKeyComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.grid;
-        spyOn(grid.cdr, 'markForCheck').and.callThrough();
+        // R.K. Why would the test care about the underlying implementation ?
+        // spyOn(grid.cdr, 'markForCheck').and.callThrough();
         expect(grid.primaryKey).toBeTruthy();
         expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
         expect(grid.getRowByKey(2).rowData['JobTitle']).toMatch('Director');
         grid.updateRow({ID: 2, Name: 'Gilberto Todd', JobTitle: 'Vice President'}, 2);
-        expect(grid.cdr.markForCheck).toHaveBeenCalledTimes(1);
+        // expect(grid.cdr.markForCheck).toHaveBeenCalledTimes(1);
         fix.detectChanges();
         expect(grid.getRowByIndex(1).rowData['JobTitle']).toMatch('Vice President');
         expect(grid.getRowByKey(2).rowData['JobTitle']).toMatch('Vice President');
@@ -398,6 +399,7 @@ describe('IgxGrid - Row Selection', () => {
         const grid = fix.componentInstance.grid;
 
         grid.rowSelectable = false;
+        fix.detectChanges();
 
         for (const row of grid.rowList.toArray()) {
             const checkBoxElement = row.nativeElement.querySelector('div.igx-grid__cbx-selection');
@@ -405,6 +407,8 @@ describe('IgxGrid - Row Selection', () => {
         }
 
         grid.rowSelectable = true;
+        fix.detectChanges();
+
         for (const row of grid.rowList.toArray()) {
             const checkBoxElement = row.nativeElement.querySelector('div.igx-grid__cbx-selection');
             expect(checkBoxElement).toBeDefined();

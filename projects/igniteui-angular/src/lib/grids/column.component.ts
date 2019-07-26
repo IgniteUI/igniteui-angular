@@ -513,7 +513,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
-    @notifyChanges()
+    @notifyChanges(true)
     @Input()
     public get summaries(): any {
         return this._summaries;
@@ -531,7 +531,7 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this.grid) {
             this.grid.summaryService.removeSummariesCachePerColumn(this.field);
             (this.grid as any)._summaryPipeTrigger++;
-            this.grid.summaryService.recalculateSummaries();
+            this.grid.summaryService.resetSummaryHeight();
         }
     }
     /**
