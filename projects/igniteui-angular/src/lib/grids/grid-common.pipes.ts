@@ -98,3 +98,17 @@ export class IgxGridPaginatorOptionsPipe implements PipeTransform {
         return Array.from(new Set([...values])).sort((a, b) => a - b);
     }
 }
+
+@Pipe({
+    name: 'visibleColumns',
+    pure: true
+})
+export class IgxHasVisibleColumnsPipe implements PipeTransform {
+    transform(values: any[], hasVisibleColumns) {
+        if (!(values && values.length)) {
+            return values;
+        }
+        return hasVisibleColumns ? values : [];
+    }
+
+}
