@@ -8,6 +8,7 @@
 2. IgxGrid row and cell selection modes [#4989](https://github.com/IgniteUI/igniteui-angular/issues/4989)
 3. Fluent Theme [#5335](https://github.com/IgniteUI/igniteui-angular/issues/5335)
 4. Drag and Drop enhancements [#5319](https://github.com/IgniteUI/igniteui-angular/issues/5319)
+5. Multi-View Calendar + Range DatePicker [#4282](https://github.com/IgniteUI/igniteui-angular/issues/4282)
 
 ## Going down the road
 
