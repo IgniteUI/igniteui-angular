@@ -1,0 +1,7 @@
+.overflowContainer > .igx-display-container {
+    overflow: visible !important;
+}
+.overflowContainer  {
+    position: relative;
+    overflow: hidden;
+}

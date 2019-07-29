@@ -647,7 +647,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         const containerSize = parseInt(this.igxForContainerSize, 10);
         const maxRealScrollTop = event.target.children[0].scrollHeight - containerSize;
-        const realPercentScrolled = event.target.scrollTop / maxRealScrollTop;
+        const realPercentScrolled = maxRealScrollTop !== 0 ?  event.target.scrollTop / maxRealScrollTop : 0;
         if (!this._bScrollInternal) {
             const maxVirtScrollTop = this._virtHeight - containerSize;
             this._virtScrollTop = realPercentScrolled * maxVirtScrollTop;
@@ -726,8 +726,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 }
                 if (scrToBottom && !this._isAtBottomIndex) {
                     const containerSize = parseInt(this.igxForContainerSize, 10);
-                    const scrollOffset = this.fixedUpdateAllElements(this._virtHeight - containerSize);
-                    this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
+                    const maxVirtScrollTop = this._virtHeight - containerSize;
+                    this._bScrollInternal = true;
+                    this._virtScrollTop = maxVirtScrollTop;
+                    this.scrollPosition = maxVirtScrollTop;
                     return;
                 }
                 if (this._adjustToIndex) {
@@ -1216,7 +1218,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     private _getItemSize(item, dimension: string): number {
         const dim = item[dimension];
-        return typeof dim === 'number' ? dim : this.igxForItemSize;
+        return typeof dim === 'number' ? dim : parseInt(this.igxForItemSize, 10) || 0;
     }
 }
 
@@ -1475,7 +1477,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
         const containerSize = parseInt(this.igxForContainerSize, 10);
         const maxRealScrollTop = event.target.children[0].scrollHeight - containerSize;
-        const realPercentScrolled = event.target.scrollTop / maxRealScrollTop;
+        const realPercentScrolled = maxRealScrollTop !== 0 ?  event.target.scrollTop / maxRealScrollTop : 0;
         if (!this._bScrollInternal) {
             const maxVirtScrollTop = this._virtHeight - containerSize;
             this._virtScrollTop = realPercentScrolled * maxVirtScrollTop;

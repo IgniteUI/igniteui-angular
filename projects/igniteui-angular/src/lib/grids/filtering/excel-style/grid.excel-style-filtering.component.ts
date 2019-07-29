@@ -25,9 +25,7 @@ import {
     IgxStringFilteringOperand,
     IgxNumberFilteringOperand,
     IgxBooleanFilteringOperand,
-    IgxDateFilteringOperand,
-    InFilteringOperation,
-    InDateFilteringOperation
+    IgxDateFilteringOperand
 } from '../../../data-operations/filtering-condition';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { FilteringLogic, IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
@@ -579,22 +577,14 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
                     selectedItems.splice(blanksItemIndex, 1);
                 }
 
-                if (this.column.dataType === DataType.Date) {
-                    filterTree.filteringOperands.push({
-                        condition: new InDateFilteringOperation(),
-                        fieldName: this.column.field,
-                        ignoreCase: this.column.filteringIgnoreCase,
-                        searchVal: new Set(selectedItems.map(d =>
-                            new Date(d.value.getFullYear(), d.value.getMonth(), d.value.getDate()).toISOString()))
-                    });
-                } else {
-                    filterTree.filteringOperands.push({
-                        condition: new InFilteringOperation(),
-                        fieldName: this.column.field,
-                        ignoreCase: this.column.filteringIgnoreCase,
-                        searchVal: new Set(selectedItems.map(e => e.value))
-                    });
-                }
+                filterTree.filteringOperands.push({
+                    condition: this.createCondition('in'),
+                    fieldName: this.column.field,
+                    ignoreCase: this.column.filteringIgnoreCase,
+                    searchVal: new Set(this.column.dataType === DataType.Date ?
+                        selectedItems.map(d => new Date(d.value.getFullYear(), d.value.getMonth(), d.value.getDate()).toISOString()) :
+                        selectedItems.map(e => e.value))
+                });
 
                 if (blanksItem) {
                     filterTree.filteringOperands.push({
