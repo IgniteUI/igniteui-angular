@@ -93,6 +93,7 @@
 /// @param {box-shadow} $drag-shadow [null] - The shadow used for movable elements (ex. column headers).
 /// @param {color} $row-ghost-background [null] - The dragged row background color.
 /// @param {color} $row-drag-color [null] - The row drag handle color.
+/// @param {color} sortable-header-icon-hover-color [null] - The icon color on hover in grid header when the column is sortable.
 /// @param {border-radius} $drop-area-border-radius [null] - The border radius used for column drop area.
 ///
 /// @requires $default-palette
@@ -192,6 +193,7 @@
     $row-ghost-background: null,
     $row-drag-color: null,
     $drop-area-border-radius: null,
+    $sortable-header-icon-hover-color: null
 ) {
     $name: 'igx-grid';
     $grid-schema: map-get($schema, $name);
@@ -474,7 +476,8 @@
         drag-shadow: $drag-shadow,
         row-ghost-background: $row-ghost-background,
         row-drag-color: $row-drag-color,
-        drop-area-border-radius: $drop-area-border-radius
+        drop-area-border-radius: $drop-area-border-radius,
+        sortable-header-icon-hover-color: $sortable-header-icon-hover-color
     ));
 }
 
