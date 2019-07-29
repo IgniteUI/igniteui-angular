@@ -81,7 +81,7 @@ In order to re-template a date picker in `dropdown` mode, you should pass the dr
 ```html
 <igx-date-picker>
     <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value" let-displayData="displayData">
-        <igx-input-group (click)="openDialog(dropDownTarget)" #dropDownTarget> 
+        <igx-input-group (click)="openDialog(dropDownTarget)" #dropDownTarget>
             <label igxLabel>Date</label>
             <input igxInput [value]="displayData"/>
         </igx-input-group>
@@ -137,6 +137,7 @@ The DatePicker action buttons could be retemplated.
 | `onClose`  | `datePicker` | Emitted when a datePicker calendar is being closed. |
 | `onDisabledDate`  | `IDatePickerDisabledDateEventArgs` | Emitted when a disabled date is entered in `dropdown` mode. |
 | `onValidationFailed`  | `IDatePickerValidationFailedEventArgs` | Emitted when an invalid date is entered in `dropdown` mode. |
+| `onValueChanged` | `IDatePickerValueChangedEventArgs` | Fired when date picker value is changed |
 
 ### Methods
 | Name   | Arguments | Return Type | Description |
