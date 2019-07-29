@@ -1,6 +1,9 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 7.3.12
+ - `IgxDatePicker` changes
+    - `onValueChanged` event is added.
 
 ## 7.3.7
  - **Behavioral Change** default min column width is changed according the grid display density property:

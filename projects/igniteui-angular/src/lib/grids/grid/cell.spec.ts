@@ -398,6 +398,53 @@ describe('IgxGrid - Cell component', () => {
                 expect(cell.value.getTime()).toBe(selectedDate.getTime());
             });
 
+            it('should be able to change value form date picker input-- date', () => {
+                const cell = grid.getCellByColumn(0, 'birthday');
+                const cellDomDate = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
+                const selectedDate = new Date('04/12/2017');
+                const editValue = '04/12/2017';
+
+                cellDomDate.triggerEventHandler('dblclick', {});
+                fixture.detectChanges();
+
+                expect(cell.editMode).toBe(true);
+                const datePicker = cellDomDate.query(By.css('igx-date-picker')).componentInstance;
+                expect(datePicker).toBeDefined();
+
+                const editTemplate = cellDomDate.query(By.css('.igx-date-picker__input-date'));
+                UIInteractions.sendInput(editTemplate, editValue);
+                fixture.detectChanges();
+
+                expect(datePicker.value).toEqual(selectedDate);
+                UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomDate.nativeElement, true);
+                fixture.detectChanges();
+
+                expect(cell.editMode).toBe(false);
+                expect(cell.value.getTime()).toEqual(selectedDate.getTime());
+            });
+
+            it('should be able to clear value -- date', () => {
+                const cell = grid.getCellByColumn(0, 'birthday');
+                const cellDomDate = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
+
+                cellDomDate.triggerEventHandler('dblclick', {});
+                fixture.detectChanges();
+
+                expect(cell.editMode).toBe(true);
+                const datePicker = cellDomDate.query(By.css('igx-date-picker')).componentInstance;
+                expect(datePicker).toBeDefined();
+
+                const clear = cellDomDate.queryAll(By.css('.igx-icon'))[1];
+                UIInteractions.clickElement(clear);
+
+                expect(datePicker.value).toBeNull();
+                UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomDate.nativeElement, true);
+                fixture.detectChanges();
+
+                expect(cell.editMode).toBe(false);
+                expect(cell.value).toBeNull();
+            });
+
             it('should exit edit mode on filtering', () => {
                 let cell = grid.getCellByColumn(0, 'fullName');
                 const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
