@@ -85,6 +85,12 @@ export class TreeGridLoadOnDemandSampleComponent implements OnInit {
 
     public addChildRow() {
         const selectedRowId = this.grid1.selectedRows()[0];
+        const parent = this.grid1.records.get(selectedRowId).data;
+
+        if (!parent[this.grid1.hasChildrenKey]) {
+            parent[this.grid1.hasChildrenKey] = true;
+        }
+
         this.grid1.addRow(
             {
                 'employeeID': this.data1.length + this.nextRow++,
