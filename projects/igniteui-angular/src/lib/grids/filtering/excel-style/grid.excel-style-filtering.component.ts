@@ -8,8 +8,7 @@ import {
     Directive,
     OnDestroy,
     AfterViewInit,
-    ElementRef,
-    Injectable
+    ElementRef
 } from '@angular/core';
 import {
     HorizontalAlignment,
@@ -82,7 +81,6 @@ export class IgxExcelStylePinningTemplateDirective {
 /**
  * @hidden
  */
- @Injectable()
  @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
