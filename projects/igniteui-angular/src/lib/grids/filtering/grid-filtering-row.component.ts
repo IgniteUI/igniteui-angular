@@ -567,6 +567,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         if (eventArgs.selected && this.input) {
             this.input.nativeElement.focus();
         }
+
+        this.showHideArrowButtons();
     }
 
     /**
