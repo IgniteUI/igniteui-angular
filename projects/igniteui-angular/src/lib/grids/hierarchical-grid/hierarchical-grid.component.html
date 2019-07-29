@@ -14,14 +14,14 @@
             <div class="igx-grid__hierarchical-expander igx-grid__hierarchical-expander--header"
                 #headerHierarchyExpander [hidden]='!hasExpandableChildren || !hasVisibleColumns' [ngClass]="{
                     'igx-grid__hierarchical-expander--push': filteringService.isFilterRowVisible,
-                    'igx-grid__hierarchical-expander--no-border': rowSelectable || rowDraggable
+                    'igx-grid__hierarchical-expander--no-border': isRowSelectable || rowDraggable
                 }">
                 <igx-icon role="button" fontSet="material"
                     [isActive]='hierarchicalState.length > 0 && hasExpandableChildren' (click)="collapseAllRows()">unfold_less</igx-icon>
             </div>
             <ng-container *ngIf="rowDraggable">
                 <div class="igx-grid__drag-indicator" [ngClass]="{
-                        'igx-grid__drag-indicator--header': !rowSelectable
+                        'igx-grid__drag-indicator--header': !isRowSelectable
                     }" #headerDragContainer>
                     <div style="visibility: hidden;">
                         <ng-container
@@ -87,7 +87,7 @@
             <!-- <ng-container *igxTemplateOutlet="(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template)); context: getContext(rowData)"></ng-container> -->
         </ng-template>
         <ng-template #hierarchical_record_template let-rowIndex="index" let-rowData>
-            <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
+            <igx-hierarchical-grid-row [gridID]="id" [isSelected]="selectionService.isRowSelected(rowData)" [index]="rowIndex" [rowData]="rowData" #row>
             </igx-hierarchical-grid-row>
         </ng-template>
         <ng-template #child_record_template let-rowIndex="index" let-rowData>
