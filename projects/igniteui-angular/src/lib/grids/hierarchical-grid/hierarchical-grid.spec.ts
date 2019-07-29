@@ -10,6 +10,7 @@ import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { By } from '@angular/platform-browser';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { DisplayDensity } from '../../core/displayDensity';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 
 describe('Basic IgxHierarchicalGrid', () => {
     configureTestSuite();
@@ -269,6 +270,53 @@ describe('Basic IgxHierarchicalGrid', () => {
         expect(childGrid.displayDensity).toBe(DisplayDensity.compact);
     }));
 
+    it('should update child grid data when root grid data is changed.', () => {
+        const newData1 = [
+            {
+                ID: 0, ChildLevels: 0,  ProductName: 'Product: A', childData: [ {   ID: 1, ProductName: 'Product: Child A' } ]
+            },
+            {
+                ID: 1, ChildLevels: 0,  ProductName: 'Product: A1', childData: [ {   ID: 2, ProductName: 'Product: Child A' } ]
+            },
+            {
+                ID: 2, ChildLevels: 0,  ProductName: 'Product: A2', childData: [ {   ID: 3, ProductName: 'Product: Child A' } ]
+            }
+        ];
+        fixture.componentInstance.data = newData1;
+        fixture.detectChanges();
+        let row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+        let childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        let childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+
+        expect(childGrid.data).toBe(newData1[0].childData);
+
+        const newData2 = [
+            {
+                ID: 0, ChildLevels: 0,  ProductName: 'Product: A', childData: [ {   ID: 10, ProductName: 'Product: New Child A' } ]
+            },
+            {
+                ID: 1, ChildLevels: 0,  ProductName: 'Product: A1', childData: [ {   ID: 20, ProductName: 'Product: New Child A' } ]
+            },
+            {
+                ID: 2, ChildLevels: 0,  ProductName: 'Product: A2', childData: [ {   ID: 30, ProductName: 'Product: New Child A' } ]
+            }
+        ];
+        fixture.componentInstance.data = newData2;
+        fixture.detectChanges();
+
+        row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+
+        childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+
+        expect(childGrid.data).toBe(newData2[0].childData);
+
+    });
+
     it('when child width is in percents its width should be update if parent width changes while parent row is collapsed. ', async () => {
         const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         UIInteractions.clickElement(row.expander);
@@ -285,6 +333,24 @@ describe('Basic IgxHierarchicalGrid', () => {
         UIInteractions.clickElement(row.expander);
         fixture.detectChanges();
         expect(childGrid.calcWidth - 170).toBeLessThan(3);
+    });
+
+    it('child grid width should be recalculated if parent no longer shows scrollbar.', async () => {
+        hierarchicalGrid.height = '1000px';
+        fixture.detectChanges();
+        hierarchicalGrid.filter('ProductName', 'A0', IgxStringFilteringOperand.instance().condition('contains'), true);
+        fixture.detectChanges();
+        const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+        expect(childGrid.calcWidth - 370 - childGrid.scrollWidth).toBeLessThanOrEqual(5);
+
+        hierarchicalGrid.clearFilter();
+        fixture.detectChanges();
+        await wait(30);
+
+        expect(childGrid.calcWidth - 370 ).toBeLessThan(3);
     });
 });
 

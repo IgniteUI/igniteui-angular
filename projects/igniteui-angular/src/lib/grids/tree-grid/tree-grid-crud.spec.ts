@@ -296,6 +296,43 @@ describe('IgxTreeGrid - CRUD ', () => {
                 verifyTreeGridRecordsCount(fix, 3, 8);
                 verifyProcessedTreeGridRecordsCount(fix, 3, 8);
             });
+
+            it('should support adding child rows to a parent with ID=0 through treeGrid API', () => {
+                verifyRowsCount(fix, 8, 8);
+                verifyTreeGridRecordsCount(fix, 3, 8);
+                verifyProcessedTreeGridRecordsCount(fix, 3, 8);
+
+                // Add child row with ID=0 on root level
+                spyOn(treeGrid.onRowAdded, 'emit');
+                let newRow = {
+                    ID: 0,
+                    Name: 'New Employee 1',
+                    JobTitle: 'Senior Web Developer',
+                    Age: 33
+                };
+                treeGrid.addRow(newRow);
+                fix.detectChanges();
+
+                expect(treeGrid.onRowAdded.emit).toHaveBeenCalledWith({ data: newRow });
+                verifyRowsCount(fix, 9, 9);
+                verifyTreeGridRecordsCount(fix, 4, 9);
+                verifyProcessedTreeGridRecordsCount(fix, 4, 9);
+
+                // Add child row to the parent with ID=0
+                newRow = {
+                    ID: 333,
+                    Name: 'New Employee 2',
+                    JobTitle: 'Senior Web Developer',
+                    Age: 33
+                };
+                treeGrid.addRow(newRow, 0);
+                fix.detectChanges();
+
+                expect(treeGrid.onRowAdded.emit).toHaveBeenCalledWith({ data: newRow });
+                verifyRowsCount(fix, 10, 10);
+                verifyTreeGridRecordsCount(fix, 4, 10);
+                verifyProcessedTreeGridRecordsCount(fix, 4, 10);
+            });
         });
     });
 
@@ -705,32 +742,32 @@ describe('IgxTreeGrid - CRUD ', () => {
                 cellDOM.triggerEventHandler('dblclick', new Event('dblclick'));
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                expect(cell.inEditMode).toBe(true, 'cannot enter edit mode with double click');
+                expect(cell.editMode).toBe(true, 'cannot enter edit mode with double click');
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', cellDOM.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                expect(cell.inEditMode).toBe(false, 'cannot exit edit mode after entering with double click');
+                expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with double click');
 
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDOM.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                expect(cell.inEditMode).toBe(true, 'cannot enter edit mode with enter');
+                expect(cell.editMode).toBe(true, 'cannot enter edit mode with enter');
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', cellDOM.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                expect(cell.inEditMode).toBe(false, 'cannot exit edit mode after entering with enter');
+                expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with enter');
 
                 UIInteractions.triggerKeyDownEvtUponElem('f2', cellDOM.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                expect(cell.inEditMode).toBe(true, 'cannot enter edit mode with F2');
+                expect(cell.editMode).toBe(true, 'cannot enter edit mode with F2');
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', cellDOM.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                expect(cell.inEditMode).toBe(false, 'cannot exit edit mode after entering with F2');
+                expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with F2');
             });
 
             it('should be able to enter edit mode of a non-tree-grid column on dblclick, enter and F2', async() => {
@@ -744,32 +781,32 @@ describe('IgxTreeGrid - CRUD ', () => {
                 cellDOM.triggerEventHandler('dblclick', new Event('dblclick'));
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                expect(cell.inEditMode).toBe(true, 'cannot enter edit mode with double click');
+                expect(cell.editMode).toBe(true, 'cannot enter edit mode with double click');
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', cellDOM.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                expect(cell.inEditMode).toBe(false, 'cannot exit edit mode after entering with double click');
+                expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with double click');
 
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDOM.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                expect(cell.inEditMode).toBe(true, 'cannot enter edit mode with enter');
+                expect(cell.editMode).toBe(true, 'cannot enter edit mode with enter');
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', cellDOM.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                expect(cell.inEditMode).toBe(false, 'cannot exit edit mode after entering with enter');
+                expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with enter');
 
                 UIInteractions.triggerKeyDownEvtUponElem('f2', cellDOM.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                expect(cell.inEditMode).toBe(true, 'cannot enter edit mode with F2');
+                expect(cell.editMode).toBe(true, 'cannot enter edit mode with F2');
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', cellDOM.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                expect(cell.inEditMode).toBe(false, 'cannot exit edit mode after entering with F2');
+                expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with F2');
             });
 
             it('should be able to edit a tree-grid cell through UI', async() => {
@@ -780,7 +817,7 @@ describe('IgxTreeGrid - CRUD ', () => {
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
-                expect(cell.inEditMode).toBe(true);
+                expect(cell.editMode).toBe(true);
                 const editTemplate = cellDomNumber.query(By.css('input'));
                 expect(editTemplate).toBeDefined();
 
@@ -792,7 +829,7 @@ describe('IgxTreeGrid - CRUD ', () => {
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
-                expect(cell.inEditMode).toBe(false);
+                expect(cell.editMode).toBe(false);
                 expect(parseInt(cell.value, 10)).toBe(146);
                 expect(editTemplate.nativeElement.type).toBe('number');
                 verifyCellValue(fix, 0, 'ID', '146');
@@ -806,7 +843,7 @@ describe('IgxTreeGrid - CRUD ', () => {
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
-                expect(cell.inEditMode).toBe(true);
+                expect(cell.editMode).toBe(true);
                 const editTemplate = cellDomNumber.query(By.css('input'));
                 expect(editTemplate).toBeDefined();
 
@@ -816,7 +853,7 @@ describe('IgxTreeGrid - CRUD ', () => {
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
-                expect(cell.inEditMode).toBe(false);
+                expect(cell.editMode).toBe(false);
                 expect(cell.value).toBe('Abc Def');
                 expect(editTemplate.nativeElement.type).toBe('text');
                 verifyCellValue(fix, 0, 'Name', 'Abc Def');
@@ -834,7 +871,7 @@ describe('IgxTreeGrid - CRUD ', () => {
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
-                expect(cellComponent.inEditMode).toBe(true);
+                expect(cellComponent.editMode).toBe(true);
                 let editTemplate = cellDomNumber.query(By.css('input'));
                 expect(editTemplate).toBeDefined();
 
@@ -845,7 +882,7 @@ describe('IgxTreeGrid - CRUD ', () => {
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
-                expect(cellComponent.inEditMode).toBe(false);
+                expect(cellComponent.editMode).toBe(false);
                 expect(cellComponent.value).toBe(146);
                 editTemplate = cellDomNumber.query(By.css('input'));
                 expect(editTemplate).toBeNull();
@@ -875,32 +912,32 @@ describe('IgxTreeGrid - CRUD ', () => {
                 cellDOM.triggerEventHandler('dblclick', new Event('dblclick'));
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                expect(cell.inEditMode).toBe(true, 'cannot enter edit mode with double click');
+                expect(cell.editMode).toBe(true, 'cannot enter edit mode with double click');
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', cellDOM.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                expect(cell.inEditMode).toBe(false, 'cannot exit edit mode after entering with double click');
+                expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with double click');
 
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDOM.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                expect(cell.inEditMode).toBe(true, 'cannot enter edit mode with enter');
+                expect(cell.editMode).toBe(true, 'cannot enter edit mode with enter');
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', cellDOM.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                expect(cell.inEditMode).toBe(false, 'cannot exit edit mode after entering with enter');
+                expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with enter');
 
                 UIInteractions.triggerKeyDownEvtUponElem('f2', cellDOM.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                expect(cell.inEditMode).toBe(true, 'cannot enter edit mode with F2');
+                expect(cell.editMode).toBe(true, 'cannot enter edit mode with F2');
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', cellDOM.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                expect(cell.inEditMode).toBe(false, 'cannot exit edit mode after entering with F2');
+                expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with F2');
             });
 
             it('should be able to enter edit mode of a non-tree-grid column on dblclick, enter and F2', async() => {
@@ -914,32 +951,32 @@ describe('IgxTreeGrid - CRUD ', () => {
                 cellDOM.triggerEventHandler('dblclick', new Event('dblclick'));
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                expect(cell.inEditMode).toBe(true, 'cannot enter edit mode with double click');
+                expect(cell.editMode).toBe(true, 'cannot enter edit mode with double click');
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', cellDOM.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                expect(cell.inEditMode).toBe(false, 'cannot exit edit mode after entering with double click');
+                expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with double click');
 
                 UIInteractions.triggerKeyDownEvtUponElem('enter', cellDOM.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                expect(cell.inEditMode).toBe(true, 'cannot enter edit mode with enter');
+                expect(cell.editMode).toBe(true, 'cannot enter edit mode with enter');
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', cellDOM.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                expect(cell.inEditMode).toBe(false, 'cannot exit edit mode after entering with enter');
+                expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with enter');
 
                 UIInteractions.triggerKeyDownEvtUponElem('f2', cellDOM.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                expect(cell.inEditMode).toBe(true, 'cannot enter edit mode with F2');
+                expect(cell.editMode).toBe(true, 'cannot enter edit mode with F2');
 
                 UIInteractions.triggerKeyDownEvtUponElem('escape', cellDOM.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                expect(cell.inEditMode).toBe(false, 'cannot exit edit mode after entering with F2');
+                expect(cell.editMode).toBe(false, 'cannot exit edit mode after entering with F2');
             });
 
             it('should be able to edit a tree-grid cell through UI', async() => {
@@ -950,7 +987,7 @@ describe('IgxTreeGrid - CRUD ', () => {
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
-                expect(cell.inEditMode).toBe(true);
+                expect(cell.editMode).toBe(true);
                 const editTemplate = cellDomNumber.query(By.css('input'));
                 expect(editTemplate).toBeDefined();
 
@@ -960,7 +997,7 @@ describe('IgxTreeGrid - CRUD ', () => {
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
-                expect(cell.inEditMode).toBe(false);
+                expect(cell.editMode).toBe(false);
                 expect(parseInt(cell.value, 10)).toBe(146);
                 expect(editTemplate.nativeElement.type).toBe('number');
                 verifyCellValue(fix, 0, 'ID', '146');
@@ -974,7 +1011,7 @@ describe('IgxTreeGrid - CRUD ', () => {
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
-                expect(cell.inEditMode).toBe(true);
+                expect(cell.editMode).toBe(true);
                 const editTemplate = cellDomNumber.query(By.css('input'));
                 expect(editTemplate).toBeDefined();
 
@@ -984,7 +1021,7 @@ describe('IgxTreeGrid - CRUD ', () => {
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
-                expect(cell.inEditMode).toBe(false);
+                expect(cell.editMode).toBe(false);
                 expect(cell.value).toBe('Abc Def');
                 expect(editTemplate.nativeElement.type).toBe('text');
                 verifyCellValue(fix, 0, 'Name', 'Abc Def');
@@ -1002,7 +1039,7 @@ describe('IgxTreeGrid - CRUD ', () => {
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
-                expect(cellComponent.inEditMode).toBe(true);
+                expect(cellComponent.editMode).toBe(true);
                 let editTemplate = cellDomNumber.query(By.css('input'));
                 expect(editTemplate).toBeDefined();
 
@@ -1012,7 +1049,7 @@ describe('IgxTreeGrid - CRUD ', () => {
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
-                expect(cellComponent.inEditMode).toBe(false);
+                expect(cellComponent.editMode).toBe(false);
                 expect(cellComponent.value).toBe(146);
                 editTemplate = cellDomNumber.query(By.css('input'));
                 expect(editTemplate).toBeNull();
