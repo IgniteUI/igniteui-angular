@@ -373,6 +373,7 @@ export class IgxGridSelectionService {
     }
 
     keyboardStateOnFocus(node: ISelectionNode, emitter: EventEmitter<GridSelectionRange>, dom): void {
+        if (this.grid.cellSelection !== 'multiple') { return; }
         const kbState = this.keyboardState;
 
         // Focus triggered by keyboard navigation
@@ -445,6 +446,7 @@ export class IgxGridSelectionService {
     }
 
     pointerEnter(node: ISelectionNode, event: PointerEvent): boolean {
+        if (this.grid.cellSelection !== 'multiple') { return false; }
         // https://www.w3.org/TR/pointerevents/#the-button-property
         this.dragMode = event.buttons === 1 && event.button === -1;
         if (!this.dragMode) {
@@ -465,6 +467,7 @@ export class IgxGridSelectionService {
     }
 
     pointerUp(node: ISelectionNode, emitter: EventEmitter<GridSelectionRange>): boolean {
+        if (this.grid.cellSelection !== 'multiple') { return false; }
         if (this.dragMode) {
             this.restoreTextSelection();
             this.addRangeMeta(node, this.pointerState);
@@ -549,18 +552,44 @@ export class IgxGridSelectionService {
 
     clearRowSelection() {
         // emit SelectionEvent
+        if (this.grid.filteringExpressionsTree) {
+            this.grid.filteredSortedData.forEach(row => {
+                const rowID = this.grid.primaryKey ? row[this.grid.primaryKey] : row;
+                this.deselectRow(rowID);
+            });
+            return;
+        }
         this.rowSelection.clear();
     }
 
-    selectRow(rowID, clearPrevSelection?) {
+    selectRow(rowID) {
         // emit SelectionEvent
         if (this.grid.rowSelection === 'none') { return; }
         const rowData = this.grid.primaryKey ? this.grid.getRowByKey(rowID).rowData : rowID;
-        clearPrevSelection = clearPrevSelection === undefined ? this.grid.rowSelection === 'single' : clearPrevSelection;
+        const clearPrevSelection = this.grid.rowSelection === 'single';
         if (clearPrevSelection) {
             this.rowSelection.clear();
         }
         this.rowSelection.set(rowID, rowData);
+    }
+
+    selectRows(rowIDs: any[], clearPrevSelection?) {
+        rowIDs.forEach(rowID => {
+            let rowData;
+            if (this.grid.primaryKey) {
+                const row = this.grid.getRowByKey(rowID);
+                if (!row) {console.log('no such row'); return; }
+                rowData = row.rowData;
+            } else {
+                if (this.grid.data.indexOf(rowData) === -1) {console.log('no such row'); return; }
+                rowData = rowID;
+            }
+
+            if (clearPrevSelection) {
+                this.rowSelection.clear();
+            }
+            this.rowSelection.set(rowID, rowData);
+        });
     }
 
     deselectRow(rowID) {
@@ -570,7 +599,8 @@ export class IgxGridSelectionService {
         }
     }
 
-    isRowSelected(rowID) {
+    isRowSelected(rowData) {
+        const rowID = this.grid.primaryKey ? rowData[this.grid.primaryKey] : rowData;
         return this.rowSelection.has(rowID);
     }
 
@@ -588,6 +618,11 @@ export class IgxGridSelectionService {
             return false;
         }
         return this.rowSelection.size > 0 && !this.areAllRowSelected();
+    }
+
+    allRowIDs() {
+        const data = this.grid.filteringExpressionsTree ? this.grid.filteredSortedData.length : this.grid.data.length;
+        return this.grid.primaryKey ? data.map(rec => rec[this.grid.primaryKey]) : data;
     }
 }
 

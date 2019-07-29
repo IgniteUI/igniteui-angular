@@ -17,7 +17,7 @@ import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { TransactionType, State } from '../services';
-import { IgxGridBaseComponent, IGridDataBindable, GridSelectionMode } from './grid-base.component';
+import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxGridSelectionService, IgxGridCRUDService, IgxRow } from '../core/grid-selection';
 
 @Component({
@@ -131,15 +131,8 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     /**
      * @hidden
      */
-    public get rowSelectable(): boolean {
-        return this.grid.rowSelectable;
-    }
-
-    /**
-     * @hidden
-     */
     public get showRowCheckboxes(): boolean {
-        return this.grid.showRowCheckboxes;
+        return this.grid.showRowCheckboxes && !this.grid.hideRowSelectors;
     }
 
     /**
@@ -147,18 +140,6 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      */
     public get isRowSelectable(): boolean {
         return this.grid.isRowSelectable;
-    }
-
-    /**
-     * @hidden
-     */
-    @Input()
-    get startIndex(): number {
-        return this._startIndex;
-    }
-
-    set startIndex(value: number) {
-        this._startIndex = value;
     }
 
     /**
@@ -294,8 +275,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      * @hidden
      */
     public onCheckboxClick(event) {
-        const clear = this.grid.rowSelection === 'single';
-        event.checked ? this.grid.selectionService.selectRow(this.rowID, clear) :
+        event.checked ? this.grid.selectionService.selectRow(this.rowID) :
                 this.grid.selectionService.deselectRow(this.rowID);
     }
 
