@@ -57,8 +57,6 @@
 /// @requires {map} $_default-shape-input-group
 /// @requires {map} $_default-elevation-input-group
 /// @see $default-palette
-
-
 $_light-input-group: extend(
     $_default-shape-input-group,
     $_default-elevation-input-group,

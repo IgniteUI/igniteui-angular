@@ -175,6 +175,21 @@
         fluent: none
     ), map-get($theme, variant));
 
+    $thumb-resting-shadow: map-get((
+        material: --var($theme, 'resting-shadow'),
+        fluent: none
+    ), map-get($theme, variant));
+
+    $thumb-hover-shadow: map-get((
+        material: --var($theme, 'hover-shadow'),
+        fluent: none
+    ), map-get($theme, variant));
+
+    $thumb-disabled-shadow: map-get((
+        material: --var($theme, 'disabled-shadow'),
+        fluent: none
+    ), map-get($theme, variant));
+
     $switch-thumb-height: $switch-thumb-width ;
 
     $ripple-size: em(48px);
@@ -246,12 +261,12 @@
         min-width: rem($switch-thumb-width);
         border-radius: --var($theme, 'border-radius-thumb');
         background: --var($theme, 'thumb-off-color');
-        box-shadow: --var($theme, 'resting-shadow');
+        box-shadow: $thumb-resting-shadow;
         transition: $input-transition;
         transform: translateX(rem($switch-off-offset));
 
         &:hover {
-            box-shadow: --var($theme, 'hover-shadow');
+            box-shadow: $thumb-hover-shadow;
         }
     }
 
@@ -266,7 +281,7 @@
 
     %switch-composite-thumb--disabled {
         background: --var($theme, 'thumb-disabled-color');
-        box-shadow: --var($theme, 'disabled-shadow');
+        box-shadow: $thumb-disabled-shadow;
     }
 
     %switch-ripple {

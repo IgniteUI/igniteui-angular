@@ -658,16 +658,14 @@
         border-color: --var($theme, 'success-secondary-color');
     }
 
-    %fluent-input-disabled {
-        // TODO: this should be a variable
-        color: rgb(161, 159, 157)
-    }
-
     %fluent-input {
         padding: 0;
         margin: 0;
-        // TODO: this should be a variable
         border: none;
+    }
+
+    %fluent-input-disabled {
+        color: --var($theme, 'disabled-text-color');
     }
 
     %form-group-bundle-main--fluent {
@@ -691,7 +689,7 @@
         transform-origin: top left;
         margin-top: 0 !important;
         height: auto;
-        color: rgb(50, 49, 48);
+        color: igx-color(map-get($theme, 'palette'), 'grays', 800);
 
         [dir='rtl'] & {
             transform-origin: top right;
@@ -707,7 +705,7 @@
     }
 
     %fluent-label-disabled {
-        color: rgb(161, 159, 157);
+        color: igx-color(map-get($theme, 'palette'), 'grays', 500);
     }
 
     %fluent-label-filled {
@@ -715,7 +713,7 @@
     }
 
     %fluent-label-focused {
-        color: #333;
+        color: igx-color(map-get($theme, 'palette'), 'grays', 800);
         transform: translateY(0) scale(1);
     }
 
