@@ -588,9 +588,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      */
     public onChipRemoved(eventArgs: IBaseChipEventArgs, item: ExpressionUI) {
         const indexToRemove = this.expressionsList.indexOf(item);
-        this.scrollChipsOnRemove();
-
         this.removeExpression(indexToRemove, item.expression);
+
+        this.scrollChipsOnRemove();
     }
 
     /**
@@ -753,7 +753,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     }
 
     private scrollChipsOnRemove() {
-        let count = 0;
+        let count = -1;
         const chipAraeChildren = this.chipsArea.element.nativeElement.children;
         const containerRect = this.container.nativeElement.getBoundingClientRect();
 
