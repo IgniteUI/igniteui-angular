@@ -68,6 +68,7 @@
 /// @prop {Map} root-summaries-text-color [igx--color: ('grays', 100), hexrgba: #fff, text-contrast: ()] - The text color of the summary groups located the footer.
 /// @prop {Map} row-drag-color [igx-color: ('grays', 200))] - The color of the drag handle.
 /// @prop {Map} row-ghost-background [igx-color: ('primary', 50))] - The background color of the dragged row.
+/// @prop {Map} sortable-header-icon-hover-color [igx-color: ('secondary', 500)] - The icon color on hover in grid header when the column is sortable.
 /// @prop {number} grid-elevation [2] - The elevation used for the grid.
 /// @prop {number} drag-elevation [5] - The elevation used for movable elements (ex. column header).
 /// @prop {Number} border-radius [1] - The border radius fraction, between 0-1 to be used for card date.
@@ -85,20 +86,8 @@ $_light-grid: extend(
             igx-color: ('grays', 600)
         ),
 
-        sortable-header-hover-color: (
-            igx-color: ('grays', 900)
-        ),
-
-        sortable-header-hover-icon-color: (
-            igx-color: ('grays', 500)
-        ),
-
         sortable-header-icon-hover-color: (
             igx-color: ('secondary', 500)
-        ),
-
-        sorted-header-color: (
-            igx-color: ('grays', 900)
         ),
 
         sorted-header-icon-color: (
