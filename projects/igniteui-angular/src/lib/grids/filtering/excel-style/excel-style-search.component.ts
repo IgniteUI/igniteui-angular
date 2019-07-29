@@ -3,8 +3,7 @@ import {
     Component,
     ChangeDetectionStrategy,
     Input,
-    ViewChild,
-    Injectable
+    ViewChild
 } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
 import { IgxFilterOptions } from '../../../directives/filter/filter.directive';
@@ -18,7 +17,6 @@ import { cloneArray } from '../../../core/utils';
 /**
  * @hidden
  */
- @Injectable()
  @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
