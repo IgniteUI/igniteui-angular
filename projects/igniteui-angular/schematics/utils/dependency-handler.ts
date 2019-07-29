@@ -1,13 +1,37 @@
-import { Tree } from '@angular-devkit/schematics/src/tree/interface';
 import { SchematicContext, Rule, SchematicsException } from '@angular-devkit/schematics';
-import { WorkspaceSchema } from '@angular-devkit/core/src/workspace';
+import { Tree } from '@angular-devkit/schematics/src/tree/interface';
 import { getWorkspace } from '@schematics/angular/utility/config';
 import { Options } from '../interfaces/options';
-
-const hammerJsMinAddress = './node_modules/hammerjs/hammer.min.js';
+import { WorkspaceProject, ProjectType, WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 
 function logIncludingDependency(context: SchematicContext, pkg: string, version: string): void {
     context.logger.info(`Including ${pkg} - Version: ${version}`);
+}
+
+function getTargetedProjectOptions(project: WorkspaceProject<ProjectType>, target: string) {
+    if (project.targets &&
+        project.targets[target] &&
+        project.targets[target].options) {
+        return project.targets[target].options;
+    }
+
+    if (project.architect &&
+        project.architect[target] &&
+        project.architect[target].options) {
+        return project.architect[target].options;
+    }
+
+    throw new SchematicsException(`Cannot determine the project's configuration for: ${target}`);
+}
+
+function getMainFile(project: WorkspaceProject<ProjectType>): string {
+    const buildOptions = getTargetedProjectOptions(project, 'build');
+    if (!buildOptions.main) {
+        throw new SchematicsException(`Could not find the project main file inside of the ` +
+            `workspace config (${project.sourceRoot})`);
+    }
+
+    return buildOptions.main;
 }
 
 export function overwriteJsonFile(tree: Tree, targetFile: string, data: any) {
@@ -29,20 +53,7 @@ export function addDependencies(options: Options): Rule {
         const dependencies = 'dependencies';
         const devDependencies = 'devDependencies';
 
-        Object.keys(pkgJson.dependencies).forEach(pkg => {
-            const version = pkgJson.dependencies[pkg];
-            switch (pkg) {
-                case 'hammerjs':
-                    addPackageToPkgJson(tree, pkg, version, dependencies);
-                    addHammerJsToWorkspace(tree);
-                    logIncludingDependency(context, pkg, version);
-                    break;
-                default:
-                    addPackageToPkgJson(tree, pkg, version, dependencies);
-                    logIncludingDependency(context, pkg, version);
-                    break;
-            }
-        });
+        includeDependencies(pkgJson, context, tree, dependencies);
 
         // Add web-animations-js to dependencies
         Object.keys(pkgJson.peerDependencies).forEach(pkg => {
@@ -59,32 +70,72 @@ export function addDependencies(options: Options): Rule {
     };
 }
 
-function addHammerJsToWorkspace(tree: Tree): Tree {
-    try {
-        const workspace = getWorkspace(tree);
-        const addedtoBuildScripts = addHammerToAngularWorkspace(workspace, 'build');
-        const addedtoToTestScripts = addHammerToAngularWorkspace(workspace, 'test');
-
-        if (addedtoBuildScripts || addedtoToTestScripts) {
-            overwriteJsonFile(tree, 'angular.json', workspace);
-        }
-
-        return tree;
-    } catch (e) {
-        if (e.toString().includes('Could not find (undefined)')) {
-            throw new SchematicsException('angular.json was not found in the project\'s root');
-        }
-
-        throw new Error(e.message);
+/**
+ * Recursively search for the first property that matches targetProp within the angular.json file.
+ */
+export function getPropertyFromWorkspace(targetProp: string, workspace: any, curKey = ''): any {
+    if (workspace.hasOwnProperty(targetProp)) {
+        return { key: targetProp, value: workspace[targetProp] };
     }
+
+    const workspaceKeys = Object.keys(workspace);
+    for (const key of workspaceKeys) {
+        // If the target property is an array, return its key and its contents.
+        if (Array.isArray(workspace[key])) {
+            return {
+                key: curKey,
+                value: workspace[key]
+            };
+        } else if (workspace[key] instanceof Object) {
+            // If the target property is an object, go one level in.
+            if (workspace.hasOwnProperty(key)) {
+                const newValue = getPropertyFromWorkspace(targetProp, workspace[key], key);
+                if (newValue !== null) {
+                    return newValue;
+                }
+            }
+        }
+    }
+
+    return null;
+}
+
+function includeDependencies(pkgJson: any, context: SchematicContext, tree: Tree, dependenciesKey: string) {
+    Object.keys(pkgJson.dependencies).forEach(pkg => {
+        const version = pkgJson.dependencies[pkg];
+        switch (pkg) {
+            case 'hammerjs':
+                logIncludingDependency(context, pkg, version);
+                addPackageToPkgJson(tree, pkg, version, dependenciesKey);
+
+                const workspace = getWorkspace(tree);
+                const project = workspace.projects[workspace.defaultProject];
+                const projectOptions = getTargetedProjectOptions(project, 'build');
+                const mainTsPath = getMainFile(project);
+                const hammerImport = 'import \'hammerjs\';\n';
+                const mainTsContent = tree.read(mainTsPath).toString();
+                // if there are no elements in the architect.build.options.scripts array that contain hammerjs
+                // and main.ts does not contain an import with hammerjs
+                if (!projectOptions.scripts.some(el => el.includes('hammerjs')) && !mainTsContent.includes(hammerImport)) {
+                    // import hammerjs in the main.ts file
+                    const contents = hammerImport + mainTsContent;
+                    tree.overwrite(mainTsPath, contents);
+                }
+                break;
+            default:
+                logIncludingDependency(context, pkg, version);
+                addPackageToPkgJson(tree, pkg, version, dependenciesKey);
+                break;
+        }
+    });
 }
 
 /**
- * Add Hammer script to angular.json section
+ * Add an item to an angular.json section, within the architect
  * @param workspace Angular Workspace Schema (angular.json)
  * @param key Architect tool key to add option to
  */
-function addHammerToAngularWorkspace(workspace: WorkspaceSchema, key: string): boolean {
+function addItemToAngularWorkspace(workspace: WorkspaceSchema, key: string, item: string): boolean {
     const currentProjectName = workspace.defaultProject;
     if (currentProjectName) {
         if (!workspace.projects[currentProjectName].architect) {
@@ -99,8 +150,8 @@ function addHammerToAngularWorkspace(workspace: WorkspaceSchema, key: string): b
         if (!workspace.projects[currentProjectName].architect[key].options.scripts) {
             workspace.projects[currentProjectName].architect[key].options.scripts = [];
         }
-        if (!workspace.projects[currentProjectName].architect[key].options.scripts.includes(hammerJsMinAddress)) {
-            workspace.projects[currentProjectName].architect[key].options.scripts.push(hammerJsMinAddress);
+        if (!workspace.projects[currentProjectName].architect[key].options.scripts.includes(item)) {
+            workspace.projects[currentProjectName].architect[key].options.scripts.push(item);
             return true;
         }
 

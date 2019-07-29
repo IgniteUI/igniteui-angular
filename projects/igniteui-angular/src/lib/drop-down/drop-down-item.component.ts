@@ -83,4 +83,12 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
             this.dropDown.selectItem(this, event);
         }
     }
+
+    /**
+     * @hidden @internal
+     */
+    @HostListener('mousedown', ['$event'])
+    mousedownHandler(event) {
+        event.preventDefault();
+    }
 }

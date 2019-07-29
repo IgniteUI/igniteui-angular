@@ -96,6 +96,10 @@
         @extend %grid-tfoot-thumb !optional;
     }
 
+    @include e(footer) {
+        @extend %grid-footer !optional;
+    }
+
     @include e(tr) {
         @extend %grid-row !optional;
 
@@ -116,12 +120,20 @@
         @extend %igx-grid__drag-indicator !optional;
     }
 
+    @include e(drag-indicator, $m: 'header') {
+        @extend %igx-grid__drag-indicator--header !optional;
+    }
+
     @include e(drag-indicator, $m: 'off') {
         @extend %igx-grid__drag-indicator--off !optional;
     }
 
     @include e(tr,  $m: mrl) {
         @extend %grid-row--mrl !optional;
+    }
+
+    @include e(tr, $mods: (mrl, edit)) {
+        @extend %grid-row--edit-mrl !optional;
     }
 
     @include e(summaries) {
@@ -197,6 +209,10 @@
 
     @include e(th, $m: filtrable) {
         @extend %igx-grid__th--filtrable !optional;
+    }
+
+    @include e(th, $mods: (filtrable, sortable)) {
+        @extend %igx-grid__th--filtrable-sortable !optional;
     }
 
     @include e(th, $m: sorted) {
@@ -393,6 +409,10 @@
         @extend %igx-grid__header-indentation !optional;
     }
 
+    @include e(header-indentation, $m: 'no-border') {
+        @extend %igx-grid__header-indentation--no-border !optional;
+    }
+
     @include e(group-expand-btn) {
         @extend %igx-grid__group-expand-btn !optional;
     }
@@ -424,6 +444,14 @@
 
     @include e(filtering-row) {
         @extend %igx-grid__filtering-row !optional;
+    }
+
+    @include e(filtering-row, $m: cosy) {
+        @extend %igx-grid__filtering-row--cosy !optional;
+    }
+
+    @include e(filtering-row, $m: compact) {
+        @extend %igx-grid__filtering-row--compact !optional;
     }
 
     @include e(filtering-row-buttons) {
@@ -458,6 +486,10 @@
         @extend %igx-grid__hierarchical-expander--push !optional;
     }
 
+    @include e(hierarchical-expander, $m: no-border) {
+        @extend %igx-grid__hierarchical-expander--no-border !optional;
+    }
+
     @include e(hierarchical-indent, $m: scroll) {
         @extend %igx-grid__hierarchical-indent--scroll !optional;
     }
@@ -480,6 +512,10 @@
 
     @include m(cosy) {
         @extend %grid-display !optional;
+
+        @include e(drag-indicator) {
+            @extend %igx-grid__drag-indicator--cosy !optional;
+        }
 
         @include e(cbx-selection) {
             @extend %grid__cbx-selection--cosy !optional;
@@ -576,6 +612,10 @@
 
     @include m(compact) {
         @extend %grid-display !optional;
+
+        @include e(drag-indicator) {
+            @extend %igx-grid__drag-indicator--compact !optional;
+        }
 
         @include e(cbx-selection) {
             @extend %grid__cbx-selection--compact !optional;

@@ -1,7 +1,8 @@
 import { IFilteringState } from './filtering-state.interface';
 
 import { IgxSorting, IgxDataRecordSorting } from './sorting-strategy';
-import { IGroupByResult, IgxGrouping } from './grouping-strategy';
+import { IgxGrouping } from './grouping-strategy';
+import { IGroupByResult } from './grouping-result.interface';
 
 import { IPagingState, PagingError } from './paging-state.interface';
 
@@ -63,56 +64,11 @@ export class DataUtil {
         return rec;
     }
 
-    public static group<T>(data: T[], state: IGroupingState, grid: any = null, groupsRecords: any[] = []): IGroupByResult {
+    public static group<T>(data: T[], state: IGroupingState, grid: any = null,
+        groupsRecords: any[] = [], fullResult: IGroupByResult = { data: [], metadata: [] }): IGroupByResult {
         const grouping = new IgxGrouping();
         groupsRecords.splice(0, groupsRecords.length);
-        return grouping.groupBy(data, state.expressions, grid, groupsRecords);
-    }
-    public static restoreGroups(groupData: IGroupByResult, state: IGroupingState): any[] {
-        if (state.expressions.length === 0) {
-            return groupData.data;
-        }
-        return this.restoreGroupsIterative(groupData, state);
-    }
-    private static restoreGroupsIterative(groupData: IGroupByResult, state: IGroupingState): any[] {
-        const metadata = groupData.metadata;
-        const result = [], added = [];
-        let chain: any[];
-        let i = 0, j;
-        let pointer: IGroupByRecord;
-        let expanded: boolean;
-        for (i = 0; i < metadata.length;) {
-            chain = [metadata[i]];
-            pointer = metadata[i].groupParent;
-            // break off if the parent is already added
-            while (pointer && added[0] !== pointer) {
-                chain.push(pointer);
-                if (added[0] && added[0].level === pointer.level) {
-                    added.shift();
-                }
-                pointer = pointer.groupParent;
-            }
-            for (j = chain.length - 1; j >= 0; j--) {
-                result.push(chain[j]);
-                added.unshift(chain[j]);
-                const hierarchy = this.getHierarchy(chain[j]);
-                const expandState: IGroupByExpandState = state.expansion.find((s) =>
-                    this.isHierarchyMatch(s.hierarchy || [{ fieldName: chain[j].expression.fieldName, value: chain[j].value }], hierarchy));
-                expanded = expandState ? expandState.expanded : state.defaultExpanded;
-                if (!expanded) {
-                    break;
-                }
-            }
-            added.shift();
-            j = Math.max(j, 0);
-            const start = chain[j].records.findIndex(r => r === groupData.data[i]);
-            const end = Math.min(metadata.length - i + start, chain[j].records.length);
-            if (expanded) {
-                result.push(...chain[j].records.slice(start, end));
-            }
-            i += end - start;
-        }
-        return result;
+        return grouping.groupBy(data, state, grid, groupsRecords, fullResult);
     }
     public static page<T>(data: T[], state: IPagingState): T[] {
         if (!state) {
@@ -151,12 +107,18 @@ export class DataUtil {
         }
         return state.strategy.filter(data, state.expressionsTree);
     }
-
     public static treeGridFilter(data: ITreeGridRecord[], state: IFilteringState): ITreeGridRecord[] {
         if (!state.strategy) {
             state.strategy = new TreeGridFilteringStrategy();
         }
         return state.strategy.filter(data, state.expressionsTree);
+    }
+
+    public static correctPagingState(state: IPagingState, length: number) {
+        const maxPage = Math.ceil(length / state.recordsPerPage) - 1;
+        if (!isNaN(maxPage) && state.index > maxPage) {
+            state.index = maxPage;
+        }
     }
 
     public static getHierarchy(gRow: IGroupByRecord): Array<IGroupByKey> {
@@ -230,7 +192,6 @@ export class DataUtil {
         childDataKey: any,
         primaryKey?: any,
         deleteRows: boolean = false): any[] {
-
         for (const transaction of transactions) {
             if (transaction.path) {
                 const parent = this.findParentFromPath(data, primaryKey, childDataKey, transaction.path);

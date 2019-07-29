@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTreeGridModule } from './index';
 import {
@@ -15,7 +15,7 @@ import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxNumberFilteringOperand } from 'igniteui-angular';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 
-describe('IgxTreeGrid - Summaries', () => {
+describe('IgxTreeGrid - Summaries ', () => {
     configureTestSuite();
     const DEBOUNCETIME = 30;
 
@@ -39,7 +39,7 @@ describe('IgxTreeGrid - Summaries', () => {
     describe('', () => {
         let fix;
         let treeGrid;
-        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        beforeEach(async(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSummariesKeyComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
@@ -95,7 +95,7 @@ describe('IgxTreeGrid - Summaries', () => {
             fix.detectChanges();
 
             verifySummaryForRow317(fix, 5);
-            expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(3);
+            expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(4);
         });
 
         it('should be able to change summaryPosition at runtime', () => {
@@ -110,9 +110,9 @@ describe('IgxTreeGrid - Summaries', () => {
             fix.detectChanges();
 
             verifyTreeBaseSummaries(fix);
-            expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(3);
+            expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(4);
 
-            expect(HelperUtils.getAllVisibleSummariesRowIndexes(fix)).toEqual([0, 1, 5]);
+            expect(HelperUtils.getAllVisibleSummariesRowIndexes(fix)).toEqual([0, 1, 5, 9]);
 
             treeGrid.summaryPosition = 'bottom';
             fix.detectChanges();
@@ -142,8 +142,8 @@ describe('IgxTreeGrid - Summaries', () => {
             fix.detectChanges();
             await wait(50);
 
-            expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(2);
-            expect(HelperUtils.getAllVisibleSummariesRowIndexes(fix)).toEqual([6, 7]);
+            expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(4);
+            expect(HelperUtils.getAllVisibleSummariesRowIndexes(fix)).toEqual([6, 7, 12, 13]);
             const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 0);
             expect(summaryRow).toBeNull();
 
@@ -681,8 +681,10 @@ describe('IgxTreeGrid - Summaries', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSummariesTransactionsComponent);
             fix.detectChanges();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
             setupGridScrollDetection(fix, treeGrid);
+            tick(16);
         }));
 
         it('Delete root node', () => {
@@ -1196,8 +1198,10 @@ describe('IgxTreeGrid - Summaries', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSummariesKeyScroliingComponent);
             fix.detectChanges();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
             setupGridScrollDetection(fix, treeGrid);
+            tick(16);
         }));
 
         it('should be able to select root summaries with arrow keys', async () => {
@@ -1595,7 +1599,7 @@ describe('IgxTreeGrid - Summaries', () => {
         fix.detectChanges();
         await wait(16);
 
-        expect(treeGrid.dataRowList.length).toEqual(9);
+        expect(treeGrid.dataRowList.length).toEqual(10);
     });
 
     function verifySummaryForRow147(fixture, visibleIndex) {

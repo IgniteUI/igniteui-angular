@@ -1,3 +1,5 @@
+@import '../shape/overlay';
+
 ////
 /// @group schemas
 /// @access private
@@ -10,8 +12,11 @@
 /// @property {map} background-color [igx-color: ('grays', 500)] - The background color used for modal overlays.
 ///
 /// @see $default-palette
-$_light-overlay: (
-    background-color: (
-        igx-color: ('grays', 500)
+$_light-overlay: extend(
+    $_default-shape-overlay,
+    (
+        background-color: (
+            igx-color: ('grays', 500)
+        )
     )
 );

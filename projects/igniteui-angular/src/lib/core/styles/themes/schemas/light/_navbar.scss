@@ -1,3 +1,6 @@
+@import '../shape/navbar';
+@import '../elevation/navbar';
+
 ////
 /// @group schemas
 /// @access private
@@ -15,22 +18,24 @@
 ///
 /// @see $default-palette
 
-$_light-navbar: (
-    background: (
-        igx-color: ('primary', 500)
-    ),
+$_light-navbar: extend(
+    $_default-shape-navbar,
+    $_default-elevation-navbar,
+    (
+        background: (
+            igx-color: ('primary', 500)
+        ),
 
-    text-color: (
-        igx-contrast-color: ('primary', 500)
-    ),
+        text-color: (
+            igx-contrast-color: ('primary', 500)
+        ),
 
-    idle-icon-color: (
-        igx-contrast-color: ('primary', 500)
-    ),
+        idle-icon-color: (
+            igx-contrast-color: ('primary', 500)
+        ),
 
-    hover-icon-color: (
-        igx-contrast-color: ('primary', 500)
+        hover-icon-color: (
+            igx-contrast-color: ('primary', 500)
+        ),
     ),
-
-    elevation: 4
 );

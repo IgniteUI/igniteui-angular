@@ -1,3 +1,5 @@
+@import '../shape/carousel';
+
 ////
 /// @group schemas
 /// @access private
@@ -15,21 +17,22 @@
 /// @prop {Color} indicator-active-border-color [#fff] - The active indicator border color.
 /// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for carousel.
 /// @see $default-palette
-$_light-carousel: (
-    border-radius: 0,
+$_light-carousel: extend(
+    $_default-shape-carousel,
+    (
+        button-background: #fff,
+        button-hover-background: #fff,
 
-    button-background: #fff,
-    button-hover-background: #fff,
+        button-arrow-color: (
+            igx-color: ('grays', 700)
+        ),
 
-    button-arrow-color: (
-        igx-color: ('grays', 700)
-    ),
+        button-hover-arrow-color: (
+            igx-color: ('grays', 900)
+        ),
 
-    button-hover-arrow-color: (
-        igx-color: ('grays', 900)
-    ),
-
-    indicator-dot-color: #fff,
-    indicator-border-color: #fff,
-    indicator-active-border-color: #fff
+        indicator-dot-color: #fff,
+        indicator-border-color: #fff,
+        indicator-active-border-color: #fff
+    )
 );

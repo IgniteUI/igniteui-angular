@@ -83,6 +83,26 @@ export class IgxChipComponent extends DisplayDensityBase {
     public draggable = false;
 
     /**
+     * An @Input property that enables/disables the draggable element animation when the element is released.
+     * By default it's set to true.
+     * ```html
+     * <igx-chip [id]="'igx-chip-1'" [draggable]="true" [animateOnRelease]="false"></igx-chip>
+     * ```
+     */
+    @Input()
+    public animateOnRelease = true;
+
+    /**
+     * An @Input property that enables/disables the hiding of the base element that has been dragged.
+     * By default it's set to true.
+     * ```html
+     * <igx-chip [id]="'igx-chip-1'" [draggable]="true" [hideBaseOnDrag]="false"></igx-chip>
+     * ```
+     */
+    @Input()
+    public hideBaseOnDrag = true;
+
+    /**
      * An @Input property that defines if the `IgxChipComponent` should render remove button and throw remove events.
      * By default it is set to false.
      * ```html
@@ -311,27 +331,35 @@ export class IgxChipComponent extends DisplayDensityBase {
     }
 
     /**
+     * Property that contains a reference to the `IgxDragDirective` the `IgxChipComponent` uses for dragging behavior.
+     * ```html
+     * <igx-chip [id]="chip.id" [draggable]="true"></igx-chip>
+     * ```
+     * ```typescript
+     * onMoveStart(event: IBaseChipEventArgs){
+     *     let dragDirective = event.owner.dragDirective;
+     * }
+     * ```
+     */
+    @ViewChild('chipArea', { read: IgxDragDirective, static: true })
+    public dragDirective: IgxDragDirective;
+
+    /**
      * @hidden
      */
-    @ViewChild('chipArea', { read: ElementRef })
+    @ViewChild('chipArea', { read: ElementRef, static: true })
     public chipArea: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('chipArea', { read: IgxDragDirective })
-    public dragDir: IgxDragDirective;
-
-    /**
-     * @hidden
-     */
-    @ViewChild('defaultRemoveIcon', { read: TemplateRef })
+    @ViewChild('defaultRemoveIcon', { read: TemplateRef, static: true })
     public defaultRemoveIcon: TemplateRef<any>;
 
     /**
      * @hidden
      */
-    @ViewChild('defaultSelectIcon', { read: TemplateRef })
+    @ViewChild('defaultSelectIcon', { read: TemplateRef, static: true })
     public defaultSelectIcon: TemplateRef<any>;
 
     /**
@@ -501,7 +529,7 @@ export class IgxChipComponent extends DisplayDensityBase {
      * @hidden
      */
     public onChipDragEnd() {
-        this.dragDir.dropFinished();
+        this.dragDirective.dropFinished();
     }
 
     /**
@@ -542,7 +570,7 @@ export class IgxChipComponent extends DisplayDensityBase {
     // -----------------------------
     // Start chip igxDrop behaviour
     public onChipDragEnterHandler(event: IgxDropEnterEventArgs) {
-        if (this.dragDir === event.drag || !event.dragData || !event.dragData.chip) {
+        if (this.dragDirective === event.drag || !event.dragData || !event.dragData.chip) {
             return;
         }
 

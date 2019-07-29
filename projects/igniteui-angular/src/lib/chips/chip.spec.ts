@@ -40,7 +40,7 @@ class TestChipComponent {
 
     constructor(public cdr: ChangeDetectorRef) { }
 
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent})
+    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true  })
     public chipsArea: IgxChipsAreaComponent;
 
     @ViewChildren('chipElem', { read: IgxChipComponent})
@@ -73,7 +73,7 @@ class TestChipsLabelAndSuffixComponent {
         { id: 'FirstName', text: 'First Name', removable: true , selectable: true, draggable: true},
     ];
 
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent})
+    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true  })
     public chipsArea: IgxChipsAreaComponent;
 
     @ViewChildren('chipElem', { read: IgxChipComponent})
@@ -83,9 +83,7 @@ class TestChipsLabelAndSuffixComponent {
 
 describe('IgxChip', () => {
     configureTestSuite();
-    const CHIP = 'igx-chip';
     const CHIP_ITEM = 'igx-chip__item';
-    const CHIP_PREFIX = 'igx-chip__prefix';
     const CHIP_REMOVE_BUTTON = 'igx-chip__remove';
 
     beforeEach(async(() => {
@@ -389,12 +387,12 @@ describe('IgxChip', () => {
         }).then(() => {
             fix.detectChanges();
 
-            expect(thirdChip.dragDir['dragGhost'].className).toEqual('igx-chip__item igx-chip__ghost--compact');
+            expect(thirdChip.dragDirective['dragGhost'].className).toEqual('igx-chip__item igx-chip__ghost--compact');
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            UIInteractions.simulatePointerEvent('pointerup', thirdChip.dragDir['dragGhost'], startingX + 10, startingY + 10);
+            UIInteractions.simulatePointerEvent('pointerup', thirdChip.dragDirective['dragGhost'], startingX + 10, startingY + 10);
 
             done();
         });

@@ -24,9 +24,9 @@ import {
     OverlaySettings,
     Point,
     OverlayEventArgs,
-    OverlayCancelableEventArgs
+    OverlayCancelableEventArgs,
+    Util
 } from './utilities';
-import * as utilities from './utilities';
 import { NoOpScrollStrategy } from './scroll/NoOpScrollStrategy';
 import { BlockScrollStrategy } from './scroll/block-scroll-strategy';
 import { AbsoluteScrollStrategy } from './scroll/absolute-scroll-strategy';
@@ -418,9 +418,7 @@ describe('igxOverlay', () => {
             const mockItem = document.createElement('div');
             mockElement.append(mockItem);
             spyOn(mockItem, 'getBoundingClientRect').and.callFake(() => {
-                return {
-                    width, height, right, bottom
-                };
+                return new DOMRect(top, left, width, height);
             });
 
             const mockPositioningSettings1: PositionSettings = {
@@ -548,6 +546,7 @@ describe('igxOverlay', () => {
             fixture.componentInstance.hide();
         }));
 
+        // TODO: refactor utilities to include all exported methods in a class
         it('fix for #1799 - content div should reposition on window resize.', fakeAsync(() => {
             const rect: ClientRect = {
                 bottom: 50,
@@ -557,7 +556,7 @@ describe('igxOverlay', () => {
                 top: 50,
                 width: 0
             };
-            const getPointSpy = spyOn(utilities, 'getTargetRect').and.returnValue(rect);
+            const getPointSpy = spyOn(Util, 'getTargetRect').and.returnValue(rect);
             const fix = TestBed.createComponent(FlexContainerComponent);
             fix.detectChanges();
             const overlayInstance = fix.componentInstance.overlay;
@@ -3411,10 +3410,10 @@ export class SimpleDynamicComponent {
 }
 
 @Component({
-    template: '<div #item style=\'position: absolute; width:100px; height: 100px; background-color: red\'></div>'
+    template: `<div #item style='position: absolute; width:100px; height: 100px; background-color: red'></div>`
 })
 export class SimpleRefComponent {
-    @ViewChild('item')
+    @ViewChild('item', { static: true })
     public item: ElementRef;
 
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
@@ -3435,8 +3434,8 @@ export class SimpleBigSizeComponent {
 @Component({
     template: `
             <div igxToggle>
-                <div class='scrollableDiv' *ngIf='visible' style =\'position: absolute; width: 200px; height: 200px;
-        overflow-y: scroll; background-color: red; \'>
+                <div class='scrollableDiv' *ngIf='visible' style ='position: absolute; width: 200px; height: 200px;
+        overflow-y: scroll; background-color: red;'>
             <p> AAAAA </p>
             <p> AAAAA </p>
             <p> AAAAA </p>
@@ -3452,7 +3451,7 @@ export class SimpleBigSizeComponent {
 export class SimpleDynamicWithDirectiveComponent {
     public visible = false;
 
-    @ViewChild(IgxToggleDirective)
+    @ViewChild(IgxToggleDirective, { static: true })
     private _overlay: IgxToggleDirective;
 
     public get overlay(): IgxToggleDirective {
@@ -3472,7 +3471,8 @@ export class SimpleDynamicWithDirectiveComponent {
 
 @Component({
     template: `
-        <button #button (click)=\'click($event)\' class='button'>Show Overlay</button>
+        <button #button (click)='click()' class='button'>Show Overlay</button>
+        <div #div></div>
     `,
     styles: [`button {
         position: absolute;
@@ -3488,10 +3488,10 @@ export class SimpleDynamicWithDirectiveComponent {
 export class EmptyPageComponent {
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 
-    @ViewChild('button') buttonElement: ElementRef;
-    @ViewChild('div') divElement: ElementRef;
+    @ViewChild('button', { static: true }) buttonElement: ElementRef;
+    @ViewChild('div', { static: true }) divElement: ElementRef;
 
-    click(event) {
+    click() {
         this.overlay.show(SimpleDynamicComponent);
     }
 }
@@ -3514,7 +3514,7 @@ export class DownRightButtonComponent {
 
     public positionStrategy: IPositionStrategy;
 
-    @ViewChild('button') buttonElement: ElementRef;
+    @ViewChild('button', { static: true }) buttonElement: ElementRef;
 
     public ButtonPositioningSettings: PositionSettings = {
         horizontalDirection: HorizontalAlignment.Right,
@@ -3535,7 +3535,7 @@ export class DownRightButtonComponent {
     }
 }
 @Component({
-    template: `<button class='300_button' #button (click)=\'click($event)\'>Show Overlay</button>`,
+    template: `<button class='300_button' #button (click)='click()'>Show Overlay</button>`,
     styles: [`button {
         position: absolute;
         top: 300px;
@@ -3549,8 +3549,8 @@ export class TopLeftOffsetComponent {
 
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 
-    @ViewChild('button') buttonElement: ElementRef;
-    click(event) {
+    @ViewChild('button', { static: true }) buttonElement: ElementRef;
+    click() {
         this.overlay.show(SimpleDynamicComponent);
     }
 }
@@ -3585,7 +3585,7 @@ export class TwoButtonsComponent {
 @Component({
     template: `
     <div style="width: 420px; height: 280px;">
-        <button class='300_button' igxToggle #button (click)=\'click($event)\'>Show Overlay</button>
+        <button class='300_button' igxToggle #button (click)='click($event)'>Show Overlay</button>
         <div #myCustomComponent class="customList" style="width: 100%; height: 100%;">
             Some Content
         </div>
@@ -3606,8 +3606,8 @@ export class WidthTestOverlayComponent {
         public elementRef: ElementRef
     ) { }
 
-    @ViewChild('button') buttonElement: ElementRef;
-    @ViewChild('myCustomComponent') customComponent: ElementRef;
+    @ViewChild('button', { static: true }) buttonElement: ElementRef;
+    @ViewChild('myCustomComponent', { static: true }) customComponent: ElementRef;
     public overlaySettings: OverlaySettings = {};
     click(event) {
         this.overlaySettings.positionStrategy = new ConnectedPositioningStrategy();
@@ -3623,7 +3623,7 @@ export class WidthTestOverlayComponent {
 @Component({
     template: `
     <div igxToggle>
-        <div class='scrollableDiv' *ngIf='visible' style=\'width:200px; height:200px; overflow-y:scroll;\'>
+        <div class='scrollableDiv' *ngIf='visible' style='width:200px; height:200px; overflow-y:scroll;'>
             <p>AAAAA</p>
             <p>AAAAA</p>
             <p>AAAAA</p>
@@ -3639,7 +3639,7 @@ export class WidthTestOverlayComponent {
 export class ScrollableComponent {
     public visible = false;
 
-    @ViewChild(IgxToggleDirective)
+    @ViewChild(IgxToggleDirective, { static: true })
     private _toggle: IgxToggleDirective;
 
     public get toggle(): IgxToggleDirective {
@@ -3661,8 +3661,8 @@ export class ScrollableComponent {
 
 @Component({
     template: `
-    <div style=\'display:flex; width:100%; height:500px; justify-content:center;\'>
-        <button #button style=\'display:inline-flex; width:150px; height:30px;\' (click)=\'click($event)\' class=\'button\'>
+    <div style='display:flex; width:100%; height:500px; justify-content:center;'>
+        <button #button style='display:inline-flex; width:150px; height:30px;' (click)='click()' class='button'>
             Show Overlay
         </button>
     </div>
@@ -3672,8 +3672,8 @@ export class FlexContainerComponent {
     public overlaySettings: OverlaySettings = {};
     constructor(@Inject(IgxOverlayService) public overlay: IgxOverlayService) { }
 
-    @ViewChild('button') buttonElement: ElementRef;
-    click(event) {
+    @ViewChild('button', { static: true }) buttonElement: ElementRef;
+    click() {
         this.overlay.show(SimpleDynamicComponent, this.overlaySettings);
     }
 }

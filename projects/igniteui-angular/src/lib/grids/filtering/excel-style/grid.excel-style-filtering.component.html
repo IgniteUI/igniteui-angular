@@ -1,10 +1,14 @@
 <article #dropdown
     class="igx-excel-filter__menu"
+    [ngClass]="{
+        'igx-excel-filter__menu--cosy': grid.displayDensity === 'cosy',
+        'igx-excel-filter__menu--compact': grid.displayDensity === 'compact'
+    }"
     [id]="overlayComponentId"
     (keydown)="onKeyDown($event)">
 
     <header class="igx-excel-filter__menu-header">
-        <h4 class="igx-typography__h6">{{ column.header || column.field }}</h4>
+        <h4>{{ column.header || column.field }}</h4>
         <div *ngIf="grid.displayDensity!=='comfortable'" class="igx-excel-filter__menu-header-actions">
             <button *ngIf="!column.disablePinning && !column.pinned"
                 igxButton="icon"
@@ -31,9 +35,8 @@
     </header>
 
     <ng-template #defaultExcelStyleSortingTemplate>
-        <igx-excel-style-sorting
-            #excelStyleSorting
-            [ngClass]="(grid.displayDensity==='compact')? 'igx-excel-filter__sort--compact': 'igx-excel-filter__sort'"
+        <igx-excel-style-sorting #excelStyleSorting
+            class="igx-excel-filter__sort"
             [column]="column"
             [grid]="grid"
             [displayDensity]="grid.displayDensity">
@@ -48,7 +51,7 @@
 
         <ng-template #defaultExcelStyleMovingTemplate>
             <igx-excel-style-column-moving
-                [ngClass]="(grid.displayDensity==='compact')? 'igx-excel-filter__move--compact': 'igx-excel-filter__move'"
+                class="igx-excel-filter__move"
                 [column]="column"
                 [grid]="grid"
                 [displayDensity]="grid.displayDensity">
@@ -99,7 +102,7 @@
             [ngClass]="clearFilterClass()"
             (keydown)="onClearFilterKeyDown($event)"
             (click)="clearFilter()">
-            <span>{{ grid.resourceStrings.igx_grid_excel_custom_dialog_clear }}</span>
+            <span>{{ grid.resourceStrings.igx_grid_excel_filter_clear }}</span>
             <igx-icon>clear</igx-icon>
         </div>
 
@@ -136,7 +139,7 @@
             <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
             <span style="margin-left: 16px">{{ translateCondition(condition) }}</span>
         </igx-drop-down-item>
-        <igx-drop-down-item *ngIf="column.filteringExpressionsTree">
+        <igx-drop-down-item *ngIf="showCustomFilterItem()">
             <igx-icon>filter_list</igx-icon>
             <span style="margin-left: 16px">{{ grid.resourceStrings.igx_grid_excel_custom_filter }}</span>
         </igx-drop-down-item>

@@ -5,6 +5,7 @@
  * @export
  */
 export class IgxFilteringOperand {
+    protected static _instance: IgxFilteringOperand = null;
     public operations: IFilteringOperation[];
 
     public constructor() {
@@ -22,17 +23,47 @@ export class IgxFilteringOperand {
             logic: (target: any) => {
                 return target !== null;
             }
+        }, {
+            name: 'in',
+            isUnary: false,
+            iconName: 'is_in',
+            hidden: true,
+            logic: (target: any, searchVal: Set<any>) => {
+                return this.findValueInSet(target, searchVal);
+            }
         }];
     }
 
-    public conditionList(): string[] {
-        return this.operations.map((element) => element.name);
+    public static instance(): IgxFilteringOperand {
+        return this._instance || (this._instance = new this());
     }
 
+    /**
+     * @hidden
+     */
+    protected findValueInSet(target: any, searchVal: Set<any>) {
+        return searchVal.has(target);
+    }
+
+    /**
+     * Returns an array of names of the conditions which are visible in the UI
+     */
+    public conditionList(): string[] {
+        return this.operations.filter(f => !f.hidden).map((element) => element.name);
+    }
+
+    /**
+     * Returns an instance of the condition with the specified name.
+     * @param name The name of the condition.
+     */
     public condition(name: string): IFilteringOperation {
         return this.operations.find((element) => element.name === name);
     }
 
+    /**
+     * Adds a new condition to the filtering operations.
+     * @param operation The filtering operation.
+     */
     public append(operation: IFilteringOperation) {
         this.operations.push(operation);
     }
@@ -44,8 +75,6 @@ export class IgxFilteringOperand {
  * @export
  */
 export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
-    private static _instance: IgxBooleanFilteringOperand = null;
-
     protected constructor() {
         super();
         this.operations = [{
@@ -85,10 +114,6 @@ export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
             }
         }].concat(this.operations);
     }
-
-    public static instance(): IgxBooleanFilteringOperand {
-        return this._instance || (this._instance = new this());
-    }
 }
 
 /**
@@ -97,8 +122,6 @@ export class IgxBooleanFilteringOperand extends IgxFilteringOperand {
  * @export
  */
 export class IgxDateFilteringOperand extends IgxFilteringOperand {
-    private static _instance: IgxDateFilteringOperand = null;
-
     protected constructor() {
         super();
         this.operations = [{
@@ -318,10 +341,6 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         }].concat(this.operations);
     }
 
-    public static instance(): IgxDateFilteringOperand {
-        return this._instance || (this._instance = new this());
-    }
-
     /**
      * Splits a Date object into parts
      *
@@ -369,6 +388,10 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
             throw new Error('Could not perform filtering on \'date\' column because the datasource object type is not \'Date\'.');
         }
     }
+
+    protected findValueInSet(target: any, searchVal: Set<any>) {
+        return searchVal.has(new Date(target.getFullYear(), target.getMonth(), target.getDate()).toISOString());
+    }
 }
 
 /**
@@ -377,8 +400,6 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
  * @export
  */
 export class IgxNumberFilteringOperand extends IgxFilteringOperand {
-    private static _instance: IgxNumberFilteringOperand = null;
-
     protected constructor() {
         super();
         this.operations = [{
@@ -439,10 +460,6 @@ export class IgxNumberFilteringOperand extends IgxFilteringOperand {
             }
         }].concat(this.operations);
     }
-
-    public static instance(): IgxNumberFilteringOperand {
-        return this._instance || (this._instance = new this());
-    }
 }
 
 /**
@@ -451,8 +468,6 @@ export class IgxNumberFilteringOperand extends IgxFilteringOperand {
  * @export
  */
 export class IgxStringFilteringOperand extends IgxFilteringOperand {
-    private static _instance: IgxStringFilteringOperand = null;
-
     protected constructor() {
         super();
         this.operations = [{
@@ -526,10 +541,6 @@ export class IgxStringFilteringOperand extends IgxFilteringOperand {
         }].concat(this.operations);
     }
 
-    public static instance(): IgxStringFilteringOperand {
-        return this._instance || (this._instance = new this());
-    }
-
     /**
      * Applies case sensitivity on strings if provided
      *
@@ -551,6 +562,7 @@ export interface IFilteringOperation {
     name: string;
     isUnary: boolean;
     iconName: string;
+    hidden?: boolean;
     logic: (value: any, searchVal?: any, ignoreCase?: boolean) => boolean;
 }
 

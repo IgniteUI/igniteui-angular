@@ -2,13 +2,13 @@ import { Component, ViewChild, PipeTransform, Pipe, OnInit } from '@angular/core
 import { IgxDatePickerComponent, DateRangeType } from 'igniteui-angular';
 import { DatePipe, formatDate } from '@angular/common';
 
-// import { registerLocaleData } from '@angular/common';
+import { registerLocaleData } from '@angular/common';
 // import localeDE from '@angular/common/locales/de';
-// import localeJA from '@angular/common/locales/ja';
+import localeJA from '@angular/common/locales/ja';
 
 @Component({
     selector: 'app-date-picker-sample',
-    styleUrls: ['date-picker.sample.css'],
+    styleUrls: ['date-picker.sample.scss'],
     templateUrl: 'date-picker.sample.html'
 })
 
@@ -36,7 +36,7 @@ export class DatePickerSampleComponent {
         new Date(new Date().getFullYear(), new Date().getMonth(), 8)
     ];
 
-    @ViewChild('retemplated')
+    @ViewChild('retemplated', { static: true })
     private retemplatedDP;
 
     formatter = (_: Date) => {
@@ -48,7 +48,7 @@ export class DatePickerSampleComponent {
     }
 
     constructor() {
-        // registerLocaleData(localeJA);
+        registerLocaleData(localeJA);
         // registerLocaleData(localeDE);
         const date1 = new Date();
         date1.setDate(8);
@@ -73,7 +73,21 @@ export class DatePickerSampleComponent {
 
     public changeDate(event) {
         const input = event.target.value;
-        const parsedDate = (input !== '') ? new Date(input) : '';
+        const dateParts = input.split(new RegExp('[^0-9]', 'g')).filter((part) => part !== '');
+
+        let date = '';
+        for (let i = 0; i < dateParts.length; i++) {
+            date += dateParts[i];
+            if (i !== dateParts.length - 1) {
+                date += '/';
+            }
+        }
+
+        const parsedDate = (date !== '') ? new Date(formatDate(date, this.retemplatedDP.format, this.retemplatedDP.locale)) : '';
         this.retemplatedDP.value = parsedDate;
+    }
+
+    public selectToday(picker: IgxDatePickerComponent) {
+        picker.calendar.value = picker.calendar.viewDate = new Date(Date.now());
     }
 }

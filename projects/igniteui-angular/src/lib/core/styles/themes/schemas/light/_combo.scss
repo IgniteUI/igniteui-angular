@@ -1,3 +1,5 @@
+@import '../shape/combo';
+
 ////
 /// @group schemas
 /// @access private
@@ -10,22 +12,25 @@
 /// @prop {Map} search-separator-border-color [igx-color: 'surface', hexrgba: (), text-contrast: (), rgba: .12] - The combo search box separator color.
 /// @prop {Map} empty-list-placeholder-color [igx-color: 'surface', hexrgba: (), text-contrast: (), rgba: .26] - The combo placeholder text color.
 /// @see $default-palette
-$_light-combo: (
-    empty-list-background: (
-        igx-color: 'surface'
-    ),
+$_light-combo: extend(
+    $_default-shape-combo,
+    (
+        empty-list-background: (
+            igx-color: 'surface'
+        ),
 
-    search-separator-border-color: (
-        igx-color: 'surface',
-        hexrgba: (),
-        text-contrast: (),
-        rgba: .12
-    ),
+        search-separator-border-color: (
+            igx-color: 'surface',
+            hexrgba: (),
+            text-contrast: (),
+            rgba: .12
+        ),
 
-    empty-list-placeholder-color: (
-        igx-color: 'surface',
-        hexrgba: (),
-        text-contrast: (),
-        rgba: .26
+        empty-list-placeholder-color: (
+            igx-color: 'surface',
+            hexrgba: (),
+            text-contrast: (),
+            rgba: .26
+        )
     )
 );

@@ -21,24 +21,28 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
             if (expressions instanceof FilteringExpressionsTree) {
                 const expressionsTree = expressions as IFilteringExpressionsTree;
                 const operator = expressionsTree.operator as FilteringLogic;
-                let match, matchOperand, operand;
+                let matchOperand, operand;
 
-                if (expressionsTree.filteringOperands) {
+                if (expressionsTree.filteringOperands && expressionsTree.filteringOperands.length) {
                     for (let i = 0; i < expressionsTree.filteringOperands.length; i++) {
                         operand = expressionsTree.filteringOperands[i];
                         matchOperand = this.matchRecord(rec, operand);
 
-                        if (match === undefined) {
-                            match = matchOperand;
-                        } else if (operator === FilteringLogic.And) {
-                            match = match && matchOperand;
-                        } else if (operator === FilteringLogic.Or) {
-                            match = match || matchOperand;
+                        // Return false if at least one operand does not match and the filtering logic is And
+                        if (!matchOperand && operator === FilteringLogic.And) {
+                            return false;
+                        }
+
+                        // Return true if at least one operand matches and the filtering logic is Or
+                        if (matchOperand && operator === FilteringLogic.Or) {
+                            return true;
                         }
                     }
+
+                    return matchOperand;
                 }
 
-                return match === undefined ? true : match;
+                return true;
             } else {
                 const expression = expressions as IFilteringExpression;
                 return this.findMatchByExpression(rec, expression);

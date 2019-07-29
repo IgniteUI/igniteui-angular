@@ -13,6 +13,7 @@ export abstract class IgxTabsBase {
     itemsContainer: ElementRef;
     headerContainer: ElementRef;
     onTabItemSelected: EventEmitter<{}>; // TODO: Define event arg interface!
+    hasContentTabs: boolean;
     scrollElement(element: any, scrollRight: boolean) {}
 }
 

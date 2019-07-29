@@ -1,0 +1,19 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+$_default-shape-navdrawer: (
+    border-radius: 0,
+    item-border-radius: .16667,
+);
+
+$_round-shape-navdrawer: (
+    border-radius: 1,
+    item-border-radius: 1,
+);
+
+$_square-shape-navdrawer: (
+    border-radius: 0%,
+    item-border-radius: 0%
+);

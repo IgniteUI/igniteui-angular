@@ -1,0 +1,17 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+$_default-shape-expansion-panel: (
+    border-radius: 0,
+);
+
+$_round-shape-expansion-panel: (
+    border-radius: 1,
+);
+
+$_square-shape-expansion-panel: (
+    border-radius: 0%,
+);
+

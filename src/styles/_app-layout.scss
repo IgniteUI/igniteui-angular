@@ -19,6 +19,10 @@
     }
 }
 
+.navdrawer-ellipsis {
+    @include ellipsis();
+}
+
 #igniteui-demo-app {
     @include fade-in-fwd();
 
@@ -52,7 +56,7 @@
         display: flex;
         align-items: center;
         padding: 24px 16px;
-        height: 142px;
+        height: 90px;
     }
 
     .sample {

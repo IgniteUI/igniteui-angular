@@ -1,3 +1,5 @@
+@import '../shape/divider';
+
 ////
 /// @group schemas
 /// @access private
@@ -10,8 +12,11 @@
 /// @property {Map} color [igx-color: ('grays', 300)] - The color used for the divider.
 ///
 /// @see $default-palette
-$_light-divider: (
-    color: (
-        igx-color: ('grays', 300)
+$_light-divider: extend(
+    $_default-shape-divider,
+    (
+        color: (
+            igx-color: ('grays', 300)
+        )
     )
 );

@@ -1,0 +1,10 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+$_default-elevation-switch: (
+    resting-elevation: 2,
+    hover-elevation: 3,
+    disabled-elevation: 1
+);

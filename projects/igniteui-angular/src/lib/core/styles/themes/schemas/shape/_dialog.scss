@@ -1,0 +1,16 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+$_default-shape-dialog: (
+    border-radius: .1,
+);
+
+$_round-shape-dialog: (
+    border-radius: 1,
+);
+
+$_square-shape-dialog: (
+    border-radius: 0%,
+);

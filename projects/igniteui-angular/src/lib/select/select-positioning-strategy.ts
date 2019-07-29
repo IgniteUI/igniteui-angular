@@ -1,4 +1,4 @@
-import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Point, getViewportRect } from '../services/overlay/utilities';
+import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Point, Util } from '../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../services/overlay/position/connected-positioning-strategy';
 import { IPositionStrategy } from '../services/overlay/position';
 import { fadeOut, fadeIn } from '../animations/main';
@@ -32,30 +32,30 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
     }
 
     private defaultWindowToListOffset = 5;
-    private viewPort = getViewportRect(document);
+    private viewPort = Util.getViewportRect(document);
     private deltaY: number;
     private deltaX: number;
     private itemTextPadding: number;
     private itemTextIndent: number;
-    private inputBorderTop: number;
     private listContainerBoundRect: DOMRect;
+    private itemTextToInputTextDiff: number;
 
     private positionAndScrollBottom(contentElement: HTMLElement, outBoundsAmount: number) {
         contentElement.style.top = `${this.viewPort.bottom - this.listContainerBoundRect.height - this.defaultWindowToListOffset}px`;
-        contentElement.firstElementChild.scrollTop -= outBoundsAmount - (this.inputBorderTop - this.defaultWindowToListOffset);
+        contentElement.firstElementChild.scrollTop -= outBoundsAmount - (this.defaultWindowToListOffset);
         this.deltaY = this.viewPort.bottom - this.listContainerBoundRect.height -
             this.defaultWindowToListOffset - (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top;
     }
 
     private positionNoScroll(contentElement: HTMLElement, CURRENT_POSITION_Y: number) {
-        contentElement.style.top = `${CURRENT_POSITION_Y - this.inputBorderTop}px`;
-        this.deltaY = CURRENT_POSITION_Y - this.inputBorderTop -
-            (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top;
+        contentElement.style.top = `${CURRENT_POSITION_Y - this.itemTextToInputTextDiff}px`;
+        this.deltaY = CURRENT_POSITION_Y -
+            (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top - this.itemTextToInputTextDiff;
     }
 
     private positionAndScrollTop(contentElement: HTMLElement, outBoundsAmount: number) {
         contentElement.style.top = `${this.viewPort.top + this.defaultWindowToListOffset}px`;
-        contentElement.firstElementChild.scrollTop += outBoundsAmount + this.inputBorderTop + this.defaultWindowToListOffset;
+        contentElement.firstElementChild.scrollTop += outBoundsAmount + this.itemTextToInputTextDiff + this.defaultWindowToListOffset;
         this.deltaY = this.viewPort.top + this.defaultWindowToListOffset -
             (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top;
     }
@@ -86,7 +86,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
             TOP: elementContainer.top,
             BOTTOM: elementContainer.bottom,
         };
-        const viewPort = getViewportRect(document);
+        const viewPort = Util.getViewportRect(document);
         const documentElement = {
             TOP: viewPort.top,
             BOTTOM: viewPort.bottom
@@ -140,6 +140,14 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         const itemTopListOffset = itemBoundRect.top - this.listContainerBoundRect.top;
         const itemHeight = itemBoundRect.height;
 
+        const inputFontSize = window.getComputedStyle(inputElement).fontSize;
+        const numericInputFontSize = parseInt(inputFontSize.slice(0, inputFontSize.indexOf('p')), 10) || 0;
+        const itemFontSize = window.getComputedStyle(itemElement).fontSize;
+        const numericItemFontSize = parseInt(itemFontSize.slice(0, itemFontSize.indexOf('p')), 10) || 0;
+        const inputTextToInputTop = (inputHeight - numericInputFontSize) / 2;
+        const itemTextToItemTop = (itemHeight - numericItemFontSize) / 2;
+        this.itemTextToInputTextDiff = itemTextToItemTop - inputTextToInputTop;
+
         let CURRENT_POSITION_Y = START.Y - itemTopListOffset;
         const CURRENT_BOTTOM_Y = CURRENT_POSITION_Y + this.listContainerBoundRect.height;
 
@@ -155,17 +163,16 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                 CURRENT_POSITION_Y += START.Y;
             }
         }
-        const inputBorderTop = window.getComputedStyle(inputElement).borderTopWidth;
-        this.inputBorderTop = parseInt(inputBorderTop.slice(0, inputBorderTop.indexOf('p')), 10) || 0;
+        const selectItemPaddingHorizontal = 24;
         const itemLeftPadding = window.getComputedStyle(itemElement).paddingLeft;
         const itemTextIndent = window.getComputedStyle(itemElement).textIndent;
-        const numericPadding = parseInt(itemLeftPadding.slice(0, itemLeftPadding.indexOf('p')), 10) || 0;
+        const numericLeftPadding = parseInt(itemLeftPadding.slice(0, itemLeftPadding.indexOf('p')), 10) || 0;
         const numericTextIndent = parseInt(itemTextIndent.slice(0, itemTextIndent.indexOf('r')), 10) || 0;
-        this.itemTextPadding = numericPadding;
+        this.itemTextPadding = numericLeftPadding;
         this.itemTextIndent = numericTextIndent;
-        contentElement.style.left += `${START.X - numericPadding - numericTextIndent}px`;
-        contentElement.style.width = inputRect.width + 24 + 32 + 'px';
-        this.deltaX = START.X - numericPadding - numericTextIndent;
+        contentElement.style.left += `${START.X - numericLeftPadding - numericTextIndent}px`;
+        contentElement.style.width = inputRect.width + 24 + selectItemPaddingHorizontal * 2 + 'px';
+        this.deltaX = START.X - numericLeftPadding - numericTextIndent;
         const currentScroll = this.getItemsOutOfView(contentElement, itemHeight)['currentScroll'];
         const remainingScroll = this.getItemsOutOfView(contentElement, itemHeight)['remainingScroll'];
 
@@ -191,7 +198,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
                         if (currentScroll === 0) {
                             this.positionNoScroll(contentElement, CURRENT_POSITION_Y);
                             return;
-                        // (more than 5 items) and current scroll
+                            // (more than 5 items) and current scroll
                         } else {
                             this.positionAndScrollBottom(contentElement, OUT_OF_BOUNDS.Amount);
                             return;

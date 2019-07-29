@@ -1,11 +1,10 @@
 import { IPositionStrategy } from './IPositionStrategy';
 import {
-  getTargetRect,
-  cloneInstance,
   HorizontalAlignment,
   Point,
   PositionSettings,
   Size,
+  Util,
   VerticalAlignment
 } from './../utilities';
 import { scaleInVerTop, scaleOutVerTop } from '../../../animations/main';
@@ -36,7 +35,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
 
   /** @inheritdoc */
   position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
-    const targetRect = getTargetRect(this.settings);
+    const targetRect = Util.getTargetRect(this.settings);
     const contentElementRect = contentElement.getBoundingClientRect();
     this.setStyle(contentElement, targetRect, contentElementRect);
   }
@@ -47,7 +46,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
    * @returns clone of this position strategy
    */
   clone(): IPositionStrategy {
-    return cloneInstance(this);
+    return Util.cloneInstance(this);
   }
 
   /**

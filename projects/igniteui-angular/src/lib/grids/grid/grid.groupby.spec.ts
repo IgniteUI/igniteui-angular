@@ -769,9 +769,9 @@ describe('IgxGrid - GroupBy', () => {
         expect(grid.dataRowList.toArray().length).toEqual(1);
         expect(grid.rowList.toArray().length).toEqual(5);
 
-        // verify scrollbar is updated - 4 rows x 50px are hidden.
+        // verify scrollbar is updated - 4 rows x 51px are hidden.
         expect(parseInt(grid.verticalScrollContainer.getVerticalScroll().children[0].style.height, 10))
-            .toEqual(origScrollHeight - 200);
+            .toEqual(origScrollHeight - 204);
 
         grRows[0].toggle();
         tick();
@@ -1238,12 +1238,12 @@ describe('IgxGrid - GroupBy', () => {
     });
 
     // GroupBy + Paging integration
-    it('should apply paging on data records only.', fakeAsync(() => {
+    it('should apply paging on both data records and group records.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.instance.paging = true;
         tick();
-        fix.componentInstance.instance.perPage = 3;
+        fix.componentInstance.instance.perPage = 4;
         tick();
         fix.detectChanges();
         fix.componentInstance.instance.groupBy({
@@ -1253,7 +1253,7 @@ describe('IgxGrid - GroupBy', () => {
         const dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(2);
-        expect(dataRows.length).toEqual(3);
+        expect(dataRows.length).toEqual(2);
 
         expect(groupRows[0].groupRow.value).toEqual('NetAdvantage');
         expect(groupRows[1].groupRow.value).toEqual('Ignite UI for JavaScript');
@@ -1264,7 +1264,7 @@ describe('IgxGrid - GroupBy', () => {
         const grid = fix.componentInstance.instance;
         fix.componentInstance.instance.paging = true;
         tick();
-        fix.componentInstance.instance.perPage = 3;
+        fix.componentInstance.instance.perPage = 4;
         tick();
         fix.detectChanges();
         fix.componentInstance.instance.groupBy({
@@ -1274,7 +1274,7 @@ describe('IgxGrid - GroupBy', () => {
         let dataRows = grid.dataRowList.toArray();
 
         expect(groupRows.length).toEqual(2);
-        expect(dataRows.length).toEqual(3);
+        expect(dataRows.length).toEqual(2);
         expect(groupRows[0].groupRow.records.length).toEqual(2);
         expect(groupRows[1].groupRow.records.length).toEqual(2);
         expect(groupRows[0].groupRow.value).toEqual('NetAdvantage');
@@ -1286,19 +1286,17 @@ describe('IgxGrid - GroupBy', () => {
 
         groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
-        expect(groupRows.length).toEqual(2);
+        expect(groupRows.length).toEqual(1);
         expect(dataRows.length).toEqual(3);
         expect(groupRows[0].groupRow.records.length).toEqual(2);
-        expect(groupRows[1].groupRow.records.length).toEqual(2);
-        expect(groupRows[0].groupRow.value).toEqual('Ignite UI for JavaScript');
-        expect(groupRows[1].groupRow.value).toEqual('Ignite UI for Angular');
+        expect(groupRows[0].groupRow.value).toEqual('Ignite UI for Angular');
     }));
 
     it('should persist groupby state between pages.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.instance.paging = true;
-        fix.componentInstance.instance.perPage = 3;
+        fix.componentInstance.instance.perPage = 4;
         tick();
         fix.componentInstance.instance.groupingExpansionState.push({
             expanded: false,
@@ -1327,7 +1325,7 @@ describe('IgxGrid - GroupBy', () => {
         expect(groupRows.length).toEqual(2);
         expect(dataRows.length).toEqual(2);
         expect(groupRows[0].groupRow.records.length).toEqual(2);
-        expect(groupRows[1].groupRow.records.length).toEqual(2);
+        expect(groupRows[1].groupRow.records.length).toEqual(1);
         expect(dataRows[0].rowData.ProductName).toEqual('Ignite UI for Angular');
 
         fix.componentInstance.instance.paginate(0);
@@ -1836,21 +1834,22 @@ describe('IgxGrid - GroupBy', () => {
         const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
         // Disable chip animations
         chipComponents.forEach((chip) => {
-            chip.componentInstance.dragDir.animateOnRelease = false;
+            chip.componentInstance.dragDirective.animateOnRelease = false;
         });
 
         // Trigger initial pointer events on the element with igxDrag. When the drag begins the dragGhost should receive events.
-        UIInteractions.simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDir.element.nativeElement, 75, 30);
+        UIInteractions.simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDirective.element.nativeElement, 75, 30);
         await wait();
-        UIInteractions.simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir.element.nativeElement, 110, 30);
-        await wait();
-        fix.detectChanges();
-
-        UIInteractions.simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir['dragGhost'], 250, 30);
+        UIInteractions.simulatePointerEvent('pointermove',
+            chipComponents[0].componentInstance.dragDirective.element.nativeElement, 110, 30);
         await wait();
         fix.detectChanges();
 
-        UIInteractions.simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDir['dragGhost'], 250, 30);
+        UIInteractions.simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDirective['dragGhost'], 250, 30);
+        await wait();
+        fix.detectChanges();
+
+        UIInteractions.simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDirective['dragGhost'], 250, 30);
         await wait();
         fix.detectChanges();
         const chipsElems = fix.nativeElement.querySelectorAll('igx-chip');
@@ -1903,22 +1902,24 @@ describe('IgxGrid - GroupBy', () => {
         let chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
         // Disable chip animations
         chipComponents.forEach((chip) => {
-            chip.componentInstance.dragDir.animateOnRelease = false;
+            chip.componentInstance.dragDirective.animateOnRelease = false;
         });
         fix.detectChanges();
 
         // Trigger initial pointer events on the element with igxDrag. When the drag begins the dragGhost should receive events.
-        UIInteractions.simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDir.element.nativeElement, 100, 30);
+        UIInteractions.simulatePointerEvent('pointerdown',
+            chipComponents[0].componentInstance.dragDirective.element.nativeElement, 100, 30);
         await wait();
-        UIInteractions.simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir.element.nativeElement, 110, 30);
-        await wait();
-        fix.detectChanges();
-
-        UIInteractions.simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir['dragGhost'], 250, 30);
+        UIInteractions.simulatePointerEvent('pointermove',
+            chipComponents[0].componentInstance.dragDirective.element.nativeElement, 110, 30);
         await wait();
         fix.detectChanges();
 
-        UIInteractions.simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDir['dragGhost'], 250, 30);
+        UIInteractions.simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDirective['dragGhost'], 250, 30);
+        await wait();
+        fix.detectChanges();
+
+        UIInteractions.simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDirective['dragGhost'], 250, 30);
         await wait();
         fix.detectChanges();
 
@@ -1933,17 +1934,19 @@ describe('IgxGrid - GroupBy', () => {
         chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
 
         // Trigger initial pointer events on the element with igxDrag. When the drag begins the dragGhost should receive events.
-        UIInteractions.simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDir.element.nativeElement, 100, 30);
+        UIInteractions.simulatePointerEvent('pointerdown',
+            chipComponents[0].componentInstance.dragDirective.element.nativeElement, 100, 30);
         await wait();
-        UIInteractions.simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir.element.nativeElement, 110, 30);
-        await wait();
-        fix.detectChanges();
-
-        UIInteractions.simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDir['dragGhost'], 250, 30);
+        UIInteractions.simulatePointerEvent('pointermove',
+            chipComponents[0].componentInstance.dragDirective.element.nativeElement, 110, 30);
         await wait();
         fix.detectChanges();
 
-        UIInteractions.simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDir['dragGhost'], 250, 30);
+        UIInteractions.simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDirective['dragGhost'], 250, 30);
+        await wait();
+        fix.detectChanges();
+
+        UIInteractions.simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDirective['dragGhost'], 250, 30);
         await wait();
         fix.detectChanges();
 
@@ -2237,7 +2240,7 @@ describe('IgxGrid - GroupBy', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
 
-        fix.componentInstance.instance.dropAreaTemplate = fix.componentInstance.dropAreaTemplate;
+        fix.componentInstance.currentDropArea = fix.componentInstance.dropAreaTemplate;
         await wait();
         fix.detectChanges();
 
@@ -2528,6 +2531,52 @@ describe('IgxGrid - GroupBy', () => {
         });
     }));
 
+    it('should apply custom comparer function when grouping by dragging a column into the group area', async () => {
+        const fix = TestBed.createComponent(GroupableGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        await wait();
+
+        grid.paging = false;
+        grid.columns[1].groupingComparer = function (a, b) {
+            if (a instanceof Date && b instanceof Date &&
+                a.getFullYear() === b.getFullYear()) {
+                return 0;
+            }
+            return DefaultSortingStrategy.instance().compareValues(a, b);
+        };
+        fix.detectChanges();
+
+        const firstColumn = fix.debugElement.queryAll(By.directive(IgxColumnMovingDragDirective))[1];
+        const directiveInstance = firstColumn.injector.get(IgxColumnMovingDragDirective);
+
+        // Trigger initial pointer events on the element with igxDrag. When the drag begins the dragGhost should receive events.
+        UIInteractions.simulatePointerEvent('pointerdown', firstColumn.nativeElement, 75, 30);
+        await wait();
+        UIInteractions.simulatePointerEvent('pointermove', firstColumn.nativeElement, 110, 30);
+        await wait();
+
+        expect(async () => {
+            fix.detectChanges();
+            UIInteractions.simulatePointerEvent('pointermove', directiveInstance['dragGhost'], 250, 30);
+            await wait();
+        }).not.toThrow();
+
+        fix.detectChanges();
+        UIInteractions.simulatePointerEvent('pointerup', directiveInstance['dragGhost'], 250, 30);
+        await wait();
+
+        const groupRows = fix.debugElement.queryAll(By.css('igx-grid-groupby-row'));
+        const rows = fix.debugElement.queryAll(By.css('igx-grid-row'));
+
+        expect(groupRows.length).toEqual(2);
+        expect(grid.groupsRecords.length).toEqual(2);
+        expect(grid.groupsRecords[1].records.length).toEqual(6);
+        for (let i = 0; i < grid.groupsRecords[1].records.length; i++) {
+            expect(grid.groupsRecords[1].records[i].ReleaseDate.getFullYear().toString()).toEqual('2019');
+        }
+    });
+
     function sendInput(element, text, fix) {
         element.nativeElement.value = text;
         element.nativeElement.dispatchEvent(new Event('input'));
@@ -2540,6 +2589,7 @@ describe('IgxGrid - GroupBy', () => {
         <igx-grid
             [width]='width'
             [height]='height'
+            [dropAreaTemplate]='currentDropArea'
             [data]="data"
             [autoGenerate]="true" (onColumnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)">
         </igx-grid>
@@ -2551,11 +2601,12 @@ describe('IgxGrid - GroupBy', () => {
 export class DefaultGridComponent extends DataParent {
     public width = '800px';
     public height = null;
+    public currentDropArea;
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
-    @ViewChild('dropArea', { read: TemplateRef })
+    @ViewChild('dropArea', { read: TemplateRef, static: true })
     public dropAreaTemplate: TemplateRef<any>;
 
     public enableSorting = false;
@@ -2598,7 +2649,7 @@ export class GroupableGridComponent extends DataParent {
     public width = '800px';
     public height = '700px';
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 }
 
@@ -2623,7 +2674,7 @@ export class CustomTemplateGridComponent extends DataParent {
     public width = '800px';
     public height = null;
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 }
 
@@ -2658,7 +2709,7 @@ export class GroupByDataMoreColumnsComponent extends DataParent {
         { field: 'N', width: 100 }
     ];
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 }
 

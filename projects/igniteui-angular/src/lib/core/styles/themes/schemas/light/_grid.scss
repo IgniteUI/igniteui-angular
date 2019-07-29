@@ -1,3 +1,6 @@
+@import '../shape/grid';
+@import '../elevation/grid';
+
 ////
 /// @group schemas
 /// @access private
@@ -8,6 +11,9 @@
 /// @type {Map}
 /// @prop {Map} header-background [igx-color: ('grays', 100), hexrgba: #fff] - The table header background color.
 /// @prop {Map} header-text-color [igx-color: ('grays', 600)] - The table header text color.
+///
+/// @prop {Map} $sorted-header-icon-color [igx-color: ('secondary', 500)] - The sorted table header icon color.
+///
 /// @prop {Number} header-border-width [1px] - The border width used for header borders.
 /// @prop {String} header-border-style [solid] - The border style used for header borders.
 /// @prop {Map} header-border-color [igx-color: ('grays', 200)] - The color used for header borders.
@@ -64,233 +70,255 @@
 /// @prop {Map} row-ghost-background [igx-color: ('primary', 50))] - The background color of the dragged row.
 /// @prop {number} grid-elevation [2] - The elevation used for the grid.
 /// @prop {number} drag-elevation [5] - The elevation used for movable elements (ex. column header).
+/// @prop {Number} border-radius [1] - The border radius fraction, between 0-1 to be used for card date.
 /// @see $default-palette
-$_light-grid: (
-    header-background: (
-        igx-color: ('grays', 100),
-        hexrgba: #fff
-    ),
+$_light-grid: extend(
+    $_default-shape-grid,
+    $_default-elevation-grid,
+    (
+        header-background: (
+            igx-color: ('grays', 100),
+            hexrgba: #fff
+        ),
 
-    header-text-color: (
-        igx-color: ('grays', 600)
-    ),
+        header-text-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    header-border-width: 1px,
-    header-border-style: solid,
+        sortable-header-hover-color: (
+            igx-color: ('grays', 900)
+        ),
 
-    header-border-color: (
-        igx-color: ('grays', 200)
-    ),
+        sortable-header-hover-icon-color: (
+            igx-color: ('grays', 500)
+        ),
 
-    content-background: #fff,
-    content-text-color: (
-        igx-color: ('grays', 800)
-    ),
+        sortable-header-icon-hover-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    ghost-header-text-color: (
-        igx-color: ('grays', 600)
-    ),
+        sorted-header-color: (
+            igx-color: ('grays', 900)
+        ),
 
-    ghost-header-icon-color: (
-        igx-color: ('grays', 500)
-    ),
+        sorted-header-icon-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    ghost-header-background: #fff,
+        header-border-width: 1px,
+        header-border-style: solid,
 
-    row-odd-background: #fff,
-    row-even-background: #fff,
-    row-odd-text-color: inherit,
-    row-even-text-color: inherit,
+        header-border-color: (
+            igx-color: ('grays', 200)
+        ),
 
-    row-selected-background: (
-        igx-color: ('secondary', 50),
-        hexrgba: #fff
-    ),
+        content-background: #fff,
+        content-text-color: (
+            igx-color: ('grays', 800)
+        ),
 
-    row-selected-text-color: (
-        igx-contrast-color: ('secondary', 50)
-    ),
+        ghost-header-text-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    row-hover-background: (
-        igx-color: ('grays', 100),
-        hexrgba: #fff
-    ),
+        ghost-header-icon-color: (
+            igx-color: ('grays', 500)
+        ),
 
-    row-hover-text-color: (
-        igx-contrast-color: ('grays', 200)
-    ),
-    row-border-color: (
-        igx-color: ('grays', 300)
-    ),
+        ghost-header-background: #fff,
 
-    pinned-border-width: 2px,
-    pinned-border-style: solid,
+        row-odd-background: #fff,
+        row-even-background: #fff,
+        row-odd-text-color: inherit,
+        row-even-text-color: inherit,
 
-    pinned-border-color: (
-        igx-color: ('grays', 400)
-    ),
+        row-selected-background: (
+            igx-color: ('secondary', 50),
+            hexrgba: #fff
+        ),
 
-    cell-active-border-color: (
-        igx-color: ('secondary', 500)
-    ),
+        row-selected-text-color: (
+            igx-contrast-color: ('secondary', 50)
+        ),
 
-    cell-selected-background: (
-        igx-color: ('grays', 200),
-        hexrgba: #fff
-    ),
+        row-hover-background: (
+            igx-color: ('grays', 100),
+            hexrgba: #fff
+        ),
 
-    cell-selected-text-color: (
-        igx-contrast-color: ('grays', 200)
-    ),
+        row-hover-text-color: (
+            igx-contrast-color: ('grays', 200)
+        ),
+        row-border-color: (
+            igx-color: ('grays', 300)
+        ),
 
-    cell-editing-background: #fff,
+        pinned-border-width: 2px,
+        pinned-border-style: solid,
 
-    edit-mode-color: (
-        igx-color: ('secondary', 500)
-    ),
+        pinned-border-color: (
+            igx-color: ('grays', 400)
+        ),
 
-    edited-row-indicator: (
-        igx-color: ('grays', 400)
-    ),
+        cell-active-border-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    cell-edited-value-color: (
-        igx-color: ('grays', 600)
-    ),
+        cell-selected-background: (
+            igx-color: ('grays', 200),
+            hexrgba: #fff
+        ),
 
-    resize-line-color: (
-        igx-color: ('secondary', 500)
-    ),
+        cell-selected-text-color: (
+            igx-contrast-color: ('grays', 200)
+        ),
 
-    drop-indicator-color: (
-        igx-color: ('secondary', 500)
-    ),
+        cell-editing-background: #fff,
 
-    grouparea-background: (
-        igx-color: ('grays', 100),
-        hexrgba: #fff
-    ),
+        edit-mode-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    group-label-column-name-text: (
-        igx-color: ('primary', 500)
-    ),
+        edited-row-indicator: (
+            igx-color: ('grays', 400)
+        ),
 
-    group-label-icon: (
-        igx-color: ('primary', 500)
-    ),
+        cell-edited-value-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    group-label-text: (
-        igx-color: ('grays', 800)
-    ),
+        resize-line-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    expand-all-icon-color: (
-        igx-color: ('grays', 600)
-    ),
+        drop-indicator-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    expand-all-icon-hover-color: (
-        igx-color: ('grays', 800)
-    ),
+        grouparea-background: (
+            igx-color: ('grays', 100),
+            hexrgba: #fff
+        ),
 
-    expand-icon-color: (
-        igx-color: ('grays', 600)
-    ),
+        group-label-column-name-text: (
+            igx-color: ('primary', 500)
+        ),
 
-    expand-icon-hover-color: (
-        igx-color: ('primary', 500)
-    ),
+        group-label-icon: (
+            igx-color: ('primary', 500)
+        ),
 
-    active-expand-icon-color: (
-        igx-color: ('grays', 500)
-    ),
+        group-label-text: (
+            igx-color: ('grays', 800)
+        ),
 
-    active-expand-icon-hover-color: (
-        igx-color: ('primary', 500)
-    ),
+        expand-all-icon-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    group-count-background: (
-        igx-color: ('grays', 200)
-    ),
+        expand-all-icon-hover-color: (
+            igx-color: ('grays', 800)
+        ),
 
-    group-count-text-color: (
-        igx-color: ('grays', 600)
-    ),
+        expand-icon-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    drop-area-text-color: (
-        igx-color: ('grays', 600)
-    ),
+        expand-icon-hover-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    drop-area-icon-color: (
-        igx-color: ('grays', 500)
-    ),
+        active-expand-icon-color: (
+            igx-color: ('grays', 500)
+        ),
 
-    drop-area-background: (
-        igx-color: ('grays', 100)
-    ),
+        active-expand-icon-hover-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    drop-area-on-drop-background: (
-        igx-color: ('grays', 200)
-    ),
+        group-count-background: (
+            igx-color: ('grays', 200)
+        ),
 
-    group-row-background: (
-        igx-color: ('grays', 100),
-        hexrgba: #fff
-    ),
+        group-count-text-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    group-row-selected-background: (
-        igx-color: ('grays', 200),
-        hexrgba: #fff
-    ),
+        drop-area-text-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    filtering-header-background: #fff,
+        drop-area-icon-color: (
+            igx-color: ('grays', 500),
+            hexrgba: ()
+        ),
 
-    filtering-header-text-color: (
-        igx-color: ('grays', 800)
-    ),
+        drop-area-background: (
+            igx-color: ('grays', 100)
+        ),
 
-    filtering-row-background: #fff,
+        drop-area-on-drop-background: (
+            igx-color: ('grays', 200)
+        ),
 
-    filtering-row-text-color: (
-        igx-color: ('grays', 800)
-    ),
+        group-row-background: (
+            igx-color: ('grays', 100),
+            hexrgba: #fff
+        ),
 
-    tree-filtered-text-color: (
-        igx-color: ('grays', 500)
-    ),
+        group-row-selected-background: (
+            igx-color: ('grays', 200),
+            hexrgba: #fff
+        ),
 
-    body-summaries-background: (
-        igx-color: ('grays', 100),
-        hexrgba: #fff
-    ),
+        filtering-header-background: #fff,
 
-    body-summaries-text-color: (
-        igx-color: ('grays', 100),
-        hexrgba: #fff,
-        text-contrast: ()
-    ),
+        filtering-header-text-color: (
+            igx-color: ('grays', 800)
+        ),
 
-    root-summaries-background: (
-        igx-color: ('grays', 300),
-        hexrgba: #fff
-    ),
+        filtering-row-background: #fff,
 
-    root-summaries-text-color: (
-        igx-color: ('grays', 300),
-        hexrgba: #fff,
-        text-contrast: ()
-    ),
+        filtering-row-text-color: (
+            igx-color: ('grays', 800)
+        ),
 
-    row-highlight: (
-        igx-color: ('secondary', 500)
-    ),
+        tree-filtered-text-color: (
+            igx-color: ('grays', 500)
+        ),
 
-    grid-elevation: 2,
+        body-summaries-background: (
+            igx-color: ('grays', 100),
+            hexrgba: #fff
+        ),
 
-    drag-elevation: 5,
+        body-summaries-text-color: (
+            igx-color: ('grays', 100),
+            hexrgba: #fff,
+            text-contrast: ()
+        ),
 
-    row-ghost-background: (
-        igx-color: ('primary', 50)
-    ),
+        root-summaries-background: (
+            igx-color: ('grays', 300),
+            hexrgba: #fff
+        ),
 
-    row-drag-color: (
-        igx-color: ('grays', 200)
+        root-summaries-text-color: (
+            igx-color: ('grays', 300),
+            hexrgba: #fff,
+            text-contrast: ()
+        ),
+
+        row-highlight: (
+            igx-color: ('secondary', 500)
+        ),
+
+        row-ghost-background: (
+            igx-color: ('primary', 50)
+        ),
+
+        row-drag-color: (
+            igx-color: ('grays', 200)
+        )
     )
 );

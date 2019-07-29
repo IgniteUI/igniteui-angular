@@ -1,3 +1,5 @@
+@import '../shape/calendar';
+
 ////
 /// @group schemas
 /// @access private
@@ -29,109 +31,111 @@
 /// @prop {Map} date-special-text-color [igx-color: ('grays', 900)] - The text color used for special dates.
 /// @prop {Map} date-disabled-text-color [igx-color: ('grays', 500), hexrgba: (), rgba: .6] - The text color for disabled dates.
 /// @prop {Number} border-radius [1] - The border radius fraction, between 0-1 to be used for calendar.
-
+/// @prop {Number} date-border-radius [1] - The border radius fraction, between 0-1 to be used for calendar.
+/// @prop {Number} month-border-radius [1] - The border radius fraction, between 0-1 to be used for calendar.
 /// @see $default-palette
-$_light-calendar: (
-    content-background: (
-        igx-color: 'surface'
-    ),
+$_light-calendar: extend(
+    $_default-shape-calendar,
+    (
+        content-background: (
+            igx-color: 'surface'
+        ),
 
-    border-radius: .2,
+        content-text-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .87
+        ),
 
-    content-text-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .87
-    ),
+        header-background: (
+            igx-color: ('secondary', 500)
+        ),
 
-    header-background: (
-        igx-color: ('secondary', 500)
-    ),
+        header-text-color: (
+            igx-contrast-color: ('secondary', 500)
+        ),
 
-    header-text-color: (
-        igx-contrast-color: ('secondary', 500)
-    ),
+        picker-arrow-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .74
+        ),
 
-    picker-arrow-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .74
-    ),
+        picker-arrow-hover-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    picker-arrow-hover-color: (
-        igx-color: ('secondary', 500)
-    ),
+        picker-text-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .74
+        ),
 
-    picker-text-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .74
-    ),
+        picker-text-hover-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    picker-text-hover-color: (
-        igx-color: ('secondary', 500)
-    ),
+        inactive-text-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .26
+        ),
 
-    inactive-text-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .26
-    ),
+        weekend-text-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .38
+        ),
 
-    weekend-text-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .38
-    ),
+        year-current-text-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    year-current-text-color: (
-        igx-color: ('secondary', 500)
-    ),
+        month-current-text-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    month-current-text-color: (
-        igx-color: ('secondary', 500)
-    ),
+        year-hover-text-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    year-hover-text-color: (
-        igx-color: ('secondary', 500)
-    ),
+        month-hover-background: (
+            igx-color: ('grays', 200)
+        ),
 
-    month-hover-background: (
-        igx-color: ('grays', 200)
-    ),
+        month-hover-text-color: (
+            igx-color: 'surface',
+            text-contrast: ()
+        ),
 
-    month-hover-text-color: (
-        igx-color: 'surface',
-        text-contrast: ()
-    ),
+        date-selected-background: (
+            igx-color: ('secondary', 500)
+        ),
 
-    date-selected-background: (
-        igx-color: ('secondary', 500)
-    ),
+        date-selected-text-color: (
+            igx-contrast-color: ('secondary', 500)
+        ),
 
-    date-selected-text-color: (
-        igx-contrast-color: ('secondary', 500)
-    ),
+        date-current-text-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    date-current-text-color: (
-        igx-color: ('secondary', 500)
-    ),
+        date-hover-background: (
+            igx-color: ('grays', 200)
+        ),
 
-    date-hover-background: (
-        igx-color: ('grays', 200)
-    ),
+        date-special-background: (
+            igx-color: ('grays', 100)
+        ),
 
-    date-special-background: (
-        igx-color: ('grays', 100)
-    ),
+        date-special-text-color: (
+            igx-color: ('grays', 900)
+        ),
 
-    date-special-text-color: (
-        igx-color: ('grays', 900)
-    ),
-
-    date-disabled-text-color: (
-        igx-color: ('grays', 500),
-        hexrgba: (),
-        rgba: .6
+        date-disabled-text-color: (
+            igx-color: ('grays', 500),
+            hexrgba: (),
+            rgba: .6
+        )
     )
 );

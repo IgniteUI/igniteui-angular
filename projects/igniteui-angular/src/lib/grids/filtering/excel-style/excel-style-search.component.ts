@@ -1,4 +1,5 @@
 import {
+    AfterViewInit,
     Component,
     ChangeDetectionStrategy,
     Input,
@@ -9,6 +10,8 @@ import { IgxFilterOptions } from '../../../directives/filter/filter.directive';
 import { IChangeCheckboxEventArgs } from '../../../checkbox/checkbox.component';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
 import { DisplayDensity } from '../../../core/density';
+import { IgxForOfDirective } from '../../../directives/for-of/for_of.directive';
+import { FilterListItem } from './grid.excel-style-filtering.component';
 
 /**
  * @hidden
@@ -19,29 +22,31 @@ import { DisplayDensity } from '../../../core/density';
     selector: 'igx-excel-style-search',
     templateUrl: './excel-style-search.component.html'
 })
-export class IgxExcelStyleSearchComponent {
+export class IgxExcelStyleSearchComponent implements AfterViewInit {
 
     public searchValue: any;
 
     @Input()
-    public data: any[];
+    public data: FilterListItem[];
 
     @Input()
     public column: IgxColumnComponent;
 
-    @ViewChild('input', { read: IgxInputDirective })
+    @ViewChild('input', { read: IgxInputDirective, static: true })
     public searchInput: IgxInputDirective;
 
     @Input()
     public displayDensity: DisplayDensity;
 
-    constructor() {}
+    @ViewChild(IgxForOfDirective, { static: true })
+    protected virtDir: IgxForOfDirective<any>;
 
-    get filterOptions() {
-        const fo = new IgxFilterOptions();
-        fo.key = 'value';
-        fo.inputValue = this.searchValue;
-        return fo;
+    constructor() { }
+
+    public ngAfterViewInit() {
+        requestAnimationFrame(() => {
+            this.virtDir.recalcUpdateSizes();
+        });
     }
 
     public clearInput() {
@@ -49,18 +54,18 @@ export class IgxExcelStyleSearchComponent {
     }
 
     public onCheckboxChange(eventArgs: IChangeCheckboxEventArgs) {
-        const selectAll = this.column.grid.resourceStrings.igx_grid_excel_select_all;
-        if (eventArgs.checkbox.value.value === selectAll) {
+        const selectedIndex = this.data.indexOf(eventArgs.checkbox.value);
+        if (selectedIndex === 0) {
             this.data.forEach(element => {
                 element.isSelected = eventArgs.checked;
                 this.data[0].indeterminate = false;
             });
         } else {
             eventArgs.checkbox.value.isSelected = eventArgs.checked;
-            if (!this.data.filter(el => el.value !== selectAll).find(el => el.isSelected === false)) {
+            if (!this.data.slice(1, this.data.length).find(el => el.isSelected === false)) {
                 this.data[0].indeterminate = false;
                 this.data[0].isSelected = true;
-            } else if (!this.data.filter(el => el.value !== selectAll).find(el => el.isSelected === true)) {
+            } else if (!this.data.slice(1, this.data.length).find(el => el.isSelected === true)) {
                 this.data[0].indeterminate = false;
                 this.data[0].isSelected = false;
             } else {
@@ -71,10 +76,10 @@ export class IgxExcelStyleSearchComponent {
     }
 
     public get itemSize() {
-        let itemSize = '48px';
+        let itemSize = '40px';
         switch (this.displayDensity) {
             case DisplayDensity.cosy: itemSize = '32px'; break;
-            case DisplayDensity.compact: itemSize = '28px'; break;
+            case DisplayDensity.compact: itemSize = '24px'; break;
             default: break;
         }
         return itemSize;

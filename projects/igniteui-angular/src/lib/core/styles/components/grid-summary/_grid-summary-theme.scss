@@ -9,13 +9,13 @@
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $background-color [null] - The summaries background color is inherited form igx-grid__tfoot
+/// @param {Color} $focus-background-color [null] - The background color when a summary item is on focus.
 /// @param {Color} $label-color [null] - The summaries label color.
 /// @param {Color} $result-color [null] - The summaries value/result color.
 /// @param {Color} $border-color [null] - The summaries border color.
 /// @param {Color} $pinned-border-width [null] - The border width of the summary panel.
 /// @param {Color} $pinned-border-style [null] - The border style of the summary panel.
 /// @param {Color} $pinned-border-color [null] - The border color of the summary panel.
-/// @param {Color} $inactive-color [null] - The summaries inactive label color.
 /// @param {Color} $label-hover-color [null] - The summaries hover label color.
 ///
 /// @requires $default-palette
@@ -36,13 +36,13 @@
     $schema: $light-schema,
 
     $background-color: null,
+    $focus-background-color: null,
     $label-color: null,
     $result-color: null,
     $border-color: null,
     $pinned-border-width: null,
     $pinned-border-style: null,
     $pinned-border-color: null,
-    $inactive-color: null,
     $label-hover-color: null
 ) {
     $name: 'igx-grid-summary';
@@ -64,13 +64,13 @@
         name: $name,
         palette: $palette,
         background-color: $background-color,
+        focus-background-color: $focus-background-color,
         label-color: $label-color,
         result-color: $result-color,
         border-color: $border-color,
         pinned-border-width: $pinned-border-width,
         pinned-border-style: $pinned-border-style,
         pinned-border-color: $pinned-border-color,
-        inactive-color: $inactive-color,
         label-hover-color: $label-hover-color
     ));
 }
@@ -101,12 +101,27 @@
     );
 
     %igx-grid-summary {
+        position: relative;
         display: flex;
         flex-direction: column;
         flex: 1 1 0%;
         padding: map-get($summary-padding, 'comfortable');
-        background: --var($theme, 'background-color');
+        background: --var($theme, 'background-color', inherit);
         overflow: hidden;
+        outline-style: none;
+
+        &::after {
+            position: absolute;
+            content: '';
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        &:focus::after {
+            background: --var($theme, 'focus-background-color');
+        }
     }
 
     %igx-grid-summary--cosy {
@@ -128,6 +143,9 @@
 
     %igx-grid-summary--pinned-last {
         border-right: map-get($cell-pin, 'style') map-get($cell-pin, 'color');
+        @media print {
+            border-right: map-get($cell-pin, 'style') #999;
+        }
     }
 
     %igx-grid-summary__item {
@@ -161,16 +179,6 @@
         font-weight: 600;
         flex: 1 1 auto;
         text-align: right;
-    }
-
-    %igx-grid-summary__item--inactive {
-        %igx-grid-summary__label {
-            color: --var($theme, 'inactive-color');
-        }
-
-        %igx-grid-summary__result {
-            display: none;
-        }
     }
 
     %igx-grid-summary__label,

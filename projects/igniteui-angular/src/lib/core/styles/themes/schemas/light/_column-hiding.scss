@@ -1,3 +1,5 @@
+@import '../shape/column-hiding';
+
 ////
 /// @group schemas
 /// @access private
@@ -9,9 +11,12 @@
 /// @prop {Map} title-color [igx-color: ('primary', 500)]- The text color used for the title of the list.
 /// @prop {Color} background-color [transparent] - The background color of the panel.
 /// @see $default-palette
-$_light-column-hiding: (
-    background-color: transparent,
-    title-color: (
-        igx-color: ('primary', 500)
+$_light-column-hiding: extend(
+    $_default-shape-column-hiding,
+    (
+        background-color: transparent,
+        title-color: (
+            igx-color: ('primary', 500)
+        )
     )
 );

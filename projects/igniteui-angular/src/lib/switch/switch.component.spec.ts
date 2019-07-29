@@ -200,7 +200,7 @@ class InitSwitchComponent { }
     template: `<igx-switch #switch (change)="onChange($event)" (click)="onClick($event)"
 [(ngModel)]="subscribed" [checked]="subscribed">Simple</igx-switch>`})
 class SwitchSimpleComponent {
-    @ViewChild('switch') public switch: IgxSwitchComponent;
+    @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
     public changeEventCalled = false;
     public subscribed = false;
     public clickCounter = 0;
@@ -211,21 +211,12 @@ class SwitchSimpleComponent {
         this.clickCounter++;
     }
 }
-@Component({
-    template: `<igx-switch #switch
-                                [(ngModel)]="subscribed"
-                                >Indeterminate</igx-switch>`})
-class SwitchIndeterminateComponent {
-    @ViewChild('switch') public switch: IgxSwitchComponent;
-
-    public subscribed = false;
-}
 
 @Component({
     template: `<igx-switch #switch [required]="true">Required</igx-switch>`
 })
 class SwitchRequiredComponent {
-    @ViewChild('switch') public switch: IgxSwitchComponent;
+    @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
 }
 
 @Component({
@@ -234,7 +225,7 @@ class SwitchRequiredComponent {
                                 [checked]="subscribed"
                                 [disabled]="true">Disabled</igx-switch>`})
 class SwitchDisabledComponent {
-    @ViewChild('switch') public switch: IgxSwitchComponent;
+    @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
 
     public subscribed = false;
 }
@@ -244,7 +235,7 @@ class SwitchDisabledComponent {
     <igx-switch #switch aria-labelledby="my-label"></igx-switch>`
 })
 class SwitchExternalLabelComponent {
-    @ViewChild('switch') public switch: IgxSwitchComponent;
+    @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
     label = 'My Label';
 }
 
@@ -252,6 +243,6 @@ class SwitchExternalLabelComponent {
     template: `<igx-switch #switch [aria-label]="label"></igx-switch>`
 })
 class SwitchInvisibleLabelComponent {
-    @ViewChild('switch') public switch: IgxSwitchComponent;
+    @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
     label = 'Invisible Label';
 }

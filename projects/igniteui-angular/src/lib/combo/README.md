@@ -233,6 +233,10 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 
 - `ArrowUp` focus will be moved back to the last list item or if list is empty will be moved to the search input.
 
+## Display Density
+**igx-combo** supports setting of different display densities.
+Display density is received through Angular's DI engine or can be set through the `[displayDensity]` input. The possilbe display densities are `compact`, `cosy` and `comfortable` (default).
+Setting `[displayDensity]` affects the control's items' and inputs' css properties, most notably heights, padding, font-size.
 
 ## API
 
@@ -261,6 +265,7 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 |  `ariaLabelledBy`        | defines label ID related to combo                 | boolean                     |
 |  `type`                  | Combo style. - "line", "box", "border", "search"                                        | string                      |
 |  `valid`                 | gets if control is valid, when used in a form     | boolean                     |
+|  `overlaySettings`       | gets/sets the custom overlay settings that control how the drop-down list displays | OverlaySettings         |
 
 ### Getters
 | Name                     | Description                                       | Type                        |

@@ -1,3 +1,6 @@
+@import '../shape/switch';
+@import '../elevation/switch';
+
 ////
 /// @group schemas
 /// @access private
@@ -19,47 +22,49 @@
 /// @prop {Number} hover-elevation [3] - The elevation level, between 0-24, to be used for the hover state.
 /// @prop {Number} disabled-elevation [1] - The elevation level, between 0-24, to be used for the disabled state.
 ///
+/// @prop {Number} border-radius-track [1] - The border radius fraction, between 0-7 to be used for switch track.
+/// @prop {Number} border-radius-thumb [1] - The border radius fraction, between 0-10 to be used for switch thumb.
+/// @prop {Number} border-radius-ripple [1] - The border radius fraction, between 0-24 to be used for switch ripple.
+///
 /// @see $default-palette
 
-$_light-switch: (
-    thumb-on-color: (
-        igx-color: ('secondary', 500)
-    ),
+$_light-switch: extend(
+    $_default-shape-switch,
+    $_default-elevation-switch,
+    (
+        thumb-on-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    track-on-color: (
-        igx-color: ('secondary', 500),
-        rgba: .5
-    ),
+        track-on-color: (
+            igx-color: ('secondary', 500),
+            rgba: .5
+        ),
 
-    thumb-off-color: (
-        igx-color: ('grays', 200),
-        hexrgba: #fff
-    ),
+        thumb-off-color: (
+            igx-color: ('grays', 200),
+            hexrgba: #fff
+        ),
 
-    track-disabled-color: (
-        igx-color: ('grays', 300)
-    ),
+        track-disabled-color: (
+            igx-color: ('grays', 300)
+        ),
 
-    track-off-color: (
-        igx-color: ('grays', 600)
-    ),
+        track-off-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    thumb-disabled-color: (
-        igx-color: ('grays', 400),
-        hexrgba: #fff
-    ),
+        thumb-disabled-color: (
+            igx-color: ('grays', 400),
+            hexrgba: #fff
+        ),
 
-    label-color: (
-        igx-color: ('grays', 900)
-    ),
+        label-color: (
+            igx-color: ('grays', 900)
+        ),
 
-    label-disabled-color: (
-        igx-color: ('grays', 400)
-    ),
-
-    resting-elevation: 2,
-
-    hover-elevation: 3,
-
-    disabled-elevation: 1
+        label-disabled-color: (
+            igx-color: ('grays', 400)
+        ),
+    )
 );

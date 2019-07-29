@@ -4,7 +4,7 @@
     <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
 </div>
 <igx-grid #grid1 [data]="data" [primaryKey]="'ProductID'" [autoGenerate]="false" [displayDensity]="density" width="800px" height="550px" [paging]="true" [rowSelectable]="true"
-(onFocusChange)="changeFocus($event)">
+(onGridKeydown)="customKeydown($event)">
     <igx-column [pinned]="true">
         <ng-template igxCell let-cell="cell" let-val >
             <button (click)="deleteRow($event, cell.cellID.rowID)">Delete</button>

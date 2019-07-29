@@ -11,10 +11,30 @@
 /// @param {Color} $background [null] - The list background color.
 /// @param {Color} $header-background [null] - The list header background color.
 /// @param {Color} $header-text-color [null] - The list header text color.
+///
 /// @param {Color} $item-background [null] - The list item background color.
-/// @param {Color} $item-text-color [null] - The list item text color.
+/// @param {Color} $item-background-hover [null] - The list item hover background color.
 /// @param {Color} $item-background-active [null] - The active list item background color.
+//
+/// @param {Color} $item-text-color [null] - The list item text color.
+/// @param {Color} $item-text-color-hover [null] - The list item hover text color.
 /// @param {Color} $item-text-color-active [null] - The active list item text color.
+///
+/// @param {Color} $item-title-color [null] - The list item title color.
+/// @param {Color} $item-title-color-hover [null] - The list item hover title color.
+/// @param {Color} $item-title-color-active [null] - The active list item title color.
+///
+/// @param {Color} $item-subtitle-color [null] - The list item subtitle color.
+/// @param {Color} $item-subtitle-color-hover [null] - The list item hover subtitle color.
+/// @param {Color} $item-subtitle-color-active [null] - The active list item subtitle color.
+///
+/// @param {Color} $item-action-color [null] - The list item action color.
+/// @param {Color} $item-action-color-hover [null] - The list item hover action color.
+/// @param {Color} $item-action-color-active [null] - The active list item action color.
+///
+/// @param {Color} $item-thumbnail-color [null] - The list item thumbnail color.
+/// @param {Color} $item-thumbnail-color-hover [null] - The list item hover thumbnail color.
+/// @param {Color} $item-thumbnail-color-active [null] - The active list item thumbnail color.
 ///
 /// @param {border-radius} $border-radius [null] - The border radius used for list component.
 /// @param {border-radius} $item-border-radius [null] - The border radius used for list item.
@@ -23,6 +43,7 @@
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires extend
+/// @requires hexrgba
 /// @requires text-contrast
 /// @requires round-borders
 ///
@@ -40,9 +61,23 @@
     $header-background: null,
     $header-text-color: null,
     $item-background: null,
-    $item-text-color: null,
+    $item-background-hover: null,
     $item-background-active: null,
-    $item-text-color-active: null
+    $item-text-color: null,
+    $item-text-color-hover: null,
+    $item-text-color-active: null,
+    $item-title-color: null,
+    $item-title-color-hover: null,
+    $item-title-color-active: null,
+    $item-subtitle-color: null,
+    $item-subtitle-color-hover: null,
+    $item-subtitle-color-active: null,
+    $item-action-color: null,
+    $item-action-color-hover: null,
+    $item-action-color-active: null,
+    $item-thumbnail-color: null,
+    $item-thumbnail-color-hover: null,
+    $item-thumbnail-color-active: null
 ) {
     $name: 'igx-list';
     $list-schema: map-get($schema, $name);
@@ -60,17 +95,31 @@
         $header-background: $background;
     }
 
+    @if not($header-background) and $item-background {
+        $header-background: $item-background;
+    }
+
     @if not($item-background) and $background {
         $item-background: $background;
     }
 
-    @if not($item-background-active) and $background {
-        @if type-of($background) == 'color' {
-            @if lightness($background) > 50 {
-                $item-background-active: rgba(text-contrast($background), .04);
-            } @else {
-                $item-background-active: rgba(text-contrast($background), .12);
-            }
+    @if not($background) and $item-background {
+        $background: $item-background;
+    }
+
+    @if not($item-background-hover) and $item-background {
+        @if type-of($item-background) == 'color' and luminance($item-background) < .5 {
+            $item-background-hover: lighten-color($item-background, 8%);
+        } @else {
+            $item-background-hover: darken-color($item-background, 8%);
+        }
+    }
+
+    @if not($item-background-active) and $item-background {
+        @if type-of($item-background) == 'color' and luminance($item-background) < .5 {
+            $item-background-active: lighten-color($item-background, 8%);
+        } @else {
+            $item-background-active: darken-color($item-background, 8%);
         }
     }
 
@@ -82,8 +131,72 @@
         $item-text-color: text-contrast($item-background);
     }
 
-    @if not($item-text-color-active) and $item-text-color {
-        $item-text-color-active: $item-text-color;
+    @if not($item-title-color) and $item-background {
+        $item-title-color: text-contrast($item-background);
+    }
+
+    @if not($item-action-color) and $item-background {
+        $item-action-color: text-contrast($item-background);
+    }
+
+    @if not($item-thumbnail-color) and $item-background {
+        $item-thumbnail-color: text-contrast($item-background);
+    }
+
+    @if not($item-subtitle-color) and $item-background {
+        $item-subtitle-color: rgba(text-contrast($item-background), .74);
+    }
+
+    @if not($item-subtitle-color) and $item-text-color {
+        $item-subtitle-color: $item-text-color;
+    }
+
+    @if not($item-text-color-hover) and $item-background-hover {
+        $item-text-color-hover: text-contrast($item-background-hover);
+    }
+
+    @if not($item-title-color-hover) and $item-background-hover {
+        $item-title-color-hover: text-contrast($item-background-hover);
+    }
+
+    @if not($item-action-color-hover) and $item-background-hover {
+        $item-action-color-hover: text-contrast($item-background-hover);
+    }
+
+    @if not($item-thumbnail-color-hover) and $item-background-hover {
+        $item-thumbnail-color-hover: text-contrast($item-background-hover);
+    }
+
+    @if not($item-subtitle-color-hover) and $item-background-hover {
+        $item-subtitle-color-hover: rgba(text-contrast($item-background-hover), .74);
+    }
+
+    @if not($item-subtitle-color-hover) and $item-text-color-hover {
+        $item-subtitle-color-hover: $item-text-color-hover;
+    }
+
+    @if not($item-text-color-active) and $item-background-active {
+        $item-text-color-active: text-contrast($item-background-active);
+    }
+
+    @if not($item-title-color-active) and $item-background-active {
+        $item-title-color-active: text-contrast($item-background-active);
+    }
+
+    @if not($item-action-color-active) and $item-background-active {
+        $item-action-color-active: text-contrast($item-background-active);
+    }
+
+    @if not($item-thumbnail-color-active) and $item-background-active {
+        $item-thumbnail-color-active: text-contrast($item-background-active);
+    }
+
+    @if not($item-subtitle-color-active) and $item-background-active {
+        $item-subtitle-color-active: rgba(text-contrast($item-background-active), .74);
+    }
+
+    @if not($item-subtitle-color-active) and $item-text-color-active {
+        $item-subtitle-color-active: $item-text-color-active;
     }
 
     @return extend($theme, (
@@ -95,9 +208,23 @@
         header-background: $header-background,
         header-text-color: $header-text-color,
         item-background: $item-background,
-        item-text-color: $item-text-color,
+        item-background-hover: $item-background-hover,
         item-background-active: $item-background-active,
-        item-text-color-active: $item-text-color-active
+        item-text-color: $item-text-color,
+        item-text-color-hover: $item-text-color-hover,
+        item-text-color-active: $item-text-color-active,
+        item-title-color:$item-title-color,
+        item-title-color-hover:$item-title-color-hover,
+        item-title-color-active:$item-title-color-active,
+        item-subtitle-color: $item-subtitle-color,
+        item-subtitle-color-hover: $item-subtitle-color-hover,
+        item-subtitle-color-active: $item-subtitle-color-active,
+        item-action-color: $item-action-color,
+        item-action-color-hover: $item-action-color-hover,
+        item-action-color-active: $item-action-color-active,
+        item-thumbnail-color: $item-thumbnail-color,
+        item-thumbnail-color-hover: $item-thumbnail-color-hover,
+        item-thumbnail-color-active: $item-thumbnail-color-active
     ));
 }
 
@@ -106,14 +233,6 @@
 /// @requires --var
 @mixin igx-list($theme) {
     @include igx-root-css-vars($theme);
-
-    // @debug $theme;
-
-    $list-item-height: (
-        comfortable: rem(48px),
-        cosy: rem(32px),
-        compact: rem(24px)
-    );
 
     $list-empty-padding: (
         comfortable: rem(16px),
@@ -125,6 +244,30 @@
         comfortable: rem(8px) rem(16px),
         cosy: rem(4px) rem(8px),
         compact: rem(2px) rem(4px)
+    );
+
+    $list-icon-margin: (
+        comfortable: rem(8px) rem(16px) rem(8px) 0,
+        cosy: rem(6px) rem(8px) rem(6px) 0,
+        compact: rem(4px) rem(4px) rem(4px) 0
+    );
+
+    $list-icon-margin-rtl: (
+        comfortable: rem(8px) 0 rem(8px) rem(16px),
+        cosy: rem(6px) 0 rem(6px) rem(8px),
+        compact: rem(4px) 0 rem(4px) rem(4px)
+    );
+
+    $list-line-margin: (
+        comfortable: 0 0 0 rem(16px),
+        cosy: 0 0 0 rem(12px),
+        compact: 0 0 0 rem(8px)
+    );
+
+    $list-line-margin-rtl: (
+        comfortable: 0 rem(16px) 0 0 ,
+        cosy: 0 rem(12px) 0 0 ,
+        compact: 0 rem(8px) 0 0
     );
 
     %igx-list {
@@ -155,11 +298,11 @@
         z-index: 1;
     }
 
-    %igx-list-empty-message--cosy{
+    %igx-list-empty-message--cosy {
         padding: map-get($list-empty-padding, 'cosy');
     }
 
-    %igx-list-empty-message--compact{
+    %igx-list-empty-message--compact {
         padding: map-get($list-empty-padding, 'compact');
     }
 
@@ -194,33 +337,232 @@
         z-index: 1;
     }
 
+    %igx-list__item-lines {
+        color: --var($theme, 'item-text-color');
+        display: flex;
+        flex-direction: column;
+        flex: 1 0 0%;
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    %igx-list__item-line-subtitle {
+        color: --var($theme, 'item-subtitle-color');
+        opacity: .74
+    }
+
+    %igx-list__item-line-title {
+        color: --var($theme, 'item-title-color');
+    }
+
+    %igx-list__item-actions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: --var($theme, 'item-action-color');
+
+        > * {
+            margin-left: rem(8px);
+        }
+
+        &:empty {
+            display: none;
+        }
+
+        %igx-icon-display {
+            color: --var($theme, 'item-action-color')
+        }
+    }
+
     %igx-list-item-content {
         display: flex;
+        align-items: center;
         position: relative;
-        flex-flow: column wrap;
-        justify-content: center;
         padding: map-get($list-item-padding, 'comfortable');
-        min-height: map-get($list-item-height, 'comfortable');
         color: --var($theme, 'item-text-color');
         background: --var($theme, 'item-background');
-        z-index: 2;
         border-radius: --var($theme, 'item-border-radius');
+        z-index: 2;
+
+        &:hover {
+            color: --var($theme, 'item-text-color-hover');
+            background: --var($theme, 'item-background-hover');
+
+            %igx-list__item-lines {
+                color: currentColor;
+            }
+
+            %igx-list__item-line-title {
+                color: --var($theme, 'item-title-color-hover');
+            }
+
+            %igx-list__item-line-subtitle {
+                color: --var($theme, 'item-subtitle-color-hover');
+            }
+
+            %igx-list__item-actions {
+                color: --var($theme, 'item-action-color-hover');
+
+                %igx-icon-display {
+                    color: --var($theme, 'item-action-color-hover')
+                }
+            }
+
+            %igx-list__item-thumbnail {
+                color: --var($theme, 'item-thumbnail-color-hover');
+
+                %igx-icon-display {
+                    color: --var($theme, 'item-thumbnail-color-hover')
+                }
+            }
+        }
     }
 
     %igx-list-item-content--compact {
         padding: map-get($list-item-padding, 'compact');
-        min-height: map-get($list-item-height, 'compact');
     }
 
     %igx-list-item-content--cosy {
         padding: map-get($list-item-padding, 'cosy');
-        min-height: map-get($list-item-height, 'cosy');
+    }
+
+    %igx-list__item-thumbnail {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        align-self: flex-start;
+        padding: 0;
+        color: --var($theme, 'item-thumbnail-color');
+
+        > %igx-icon-display {
+            margin: map-get($list-icon-margin, 'comfortable');
+        }
+
+        > %igx-avatar-display {
+            > %igx-icon-display {
+                margin: 0;
+            }
+        }
+
+        &:empty {
+            display: none;
+        }
+    }
+
+    %igx-list__item-thumbnail:not(:empty) + %igx-list__item-lines {
+        margin: map-get($list-line-margin, 'comfortable');
+    }
+
+    %igx-list__item-thumbnail--cosy:not(:empty) + %igx-list__item-lines {
+        margin: map-get($list-line-margin, 'cosy');
+    }
+
+    %igx-list__item-thumbnail--compact:not(:empty) + %igx-list__item-lines {
+        margin: map-get($list-line-margin, 'compact');
+    }
+
+    %igx-list__item-thumbnail--cosy {
+        > %igx-icon-display {
+            margin: map-get($list-icon-margin, 'cosy');
+        }
+    }
+
+    %igx-list__item-thumbnail--compact {
+        > %igx-icon-display {
+            margin: map-get($list-icon-margin, 'compact');
+        }
+    }
+
+    %igx-list__item-actions--cosy {
+        > * {
+            margin-left: rem(6px);
+        }
+    }
+
+    %igx-list__item-actions--compact {
+        > * {
+            margin-left: rem(4px);
+        }
+    }
+
+    %igx-list__item-lines + %igx-list__item-actions {
+        margin-left: rem(8px);
     }
 
     %igx-list-item-content--active {
+        %igx-list__item-line-title {
+            color: --var($theme, 'item-title-color-active')
+        }
+
+        %igx-list__item-line-subtitle {
+            color: --var($theme, 'item-subtitle-color-active')
+        }
+
+        %igx-list__item-actions {
+            color: --var($theme, 'item-action-color-active');
+
+            %igx-icon-display {
+                color: --var($theme, 'item-action-color-active')
+            }
+        }
+
+        %igx-list__item-thumbnail {
+            color: --var($theme, 'item-thumbnail-color-active');
+
+            %igx-icon-display {
+                color: --var($theme, 'item-thumbnail-color-active')
+            }
+        }
+
         color: --var($theme, 'item-text-color-active');
         background: --var($theme, 'item-background-active');
         z-index: 3;
+    }
+
+    [dir='rtl'] {
+        %igx-list__item-thumbnail:not(:empty) + %igx-list__item-lines {
+            margin: map-get($list-line-margin-rtl, 'comfortable');
+        }
+
+        %igx-list__item-thumbnail {
+            > %igx-icon-display {
+                margin: map-get($list-icon-margin-rtl, 'comfortable');
+            }
+
+            > %igx-avatar-display {
+                > %igx-icon-display {
+                    margin: 0;
+                }
+            }
+        }
+
+        %igx-list__item-actions {
+            > * {
+                margin-left: 0;
+                margin-right: rem(8px);
+            }
+        }
+
+        %igx-list__item-actions--cosy {
+            > * {
+                margin-left: 0;
+                margin-right: rem(6px);
+            }
+        }
+
+        %igx-list__item-actions--compact {
+            > * {
+                margin-left: 0;
+                margin-right: rem(4px);
+            }
+        }
+
+        %igx-list__item-lines + %igx-list__item-actions {
+            margin-left: 0;
+            margin-right: rem(8px);
+        }
     }
 
     %igx-list-item-content--inactive {
@@ -239,11 +581,15 @@
     $type-scale,
     $categories: (
         header: 'overline',
-        item: 'subtitle-1'
+        item: 'subtitle-1',
+        title: 'subtitle-1',
+        subtitle: 'caption'
     )
 ) {
     $header: map-get($categories, 'header');
     $item: map-get($categories, 'item');
+    $title: map-get($categories, 'title');
+    $subtitle: map-get($categories, 'subtitle');
 
     @include igx-scope('.igx-typography') {
         %igx-list-header {
@@ -254,6 +600,19 @@
 
         %igx-list-item {
             @include igx-type-style($type-scale, $item) {
+                margin: 0;
+            }
+        }
+
+        %igx-list__item-lines,
+        %igx-list__item-line-title {
+            @include igx-type-style($type-scale, $title) {
+                margin: 0;
+            }
+        }
+
+        %igx-list__item-line-subtitle {
+            @include igx-type-style($type-scale, $subtitle) {
                 margin: 0;
             }
         }

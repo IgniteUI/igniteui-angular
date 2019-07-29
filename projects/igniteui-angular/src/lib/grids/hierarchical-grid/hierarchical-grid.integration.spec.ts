@@ -16,6 +16,7 @@ import { IgxStringFilteringOperand } from '../../data-operations/filtering-condi
 import { take } from 'rxjs/operators';
 import { IgxHierarchicalTransactionServiceFactory } from './hierarchical-grid-base.component';
 import { IgxIconModule } from '../../icon';
+import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
 
 describe('IgxHierarchicalGrid Integration', () => {
     configureTestSuite();
@@ -86,7 +87,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             hierarchicalGrid.reflow();
             fixture.detectChanges();
 
-        let firstRow = hierarchicalGrid.dataRowList.toArray()[0];
+        let firstRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
             firstRow.nativeElement.children[0].click();
             fixture.detectChanges();
             expect(firstRow.expanded).toBeTruthy();
@@ -113,7 +114,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(fCell.selected).toBeFalsy();
 
             // select parent cell
-            firstRow = hierarchicalGrid.dataRowList.toArray()[0];
+            firstRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
             fCell = firstRow.cells.toArray()[0];
             fCell.nativeElement.focus();
             await wait(100);
@@ -168,6 +169,37 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(lastRow.query(By.css('igx-icon')).nativeElement).toHaveClass('igx-icon--inactive');
             hierarchicalGrid.transactions.commit(hierarchicalGrid.data);
             expect(lastRow.query(By.css('igx-icon')).nativeElement).not.toHaveClass('igx-icon--inactive');
+        }));
+
+        it('should now allow expand using Ctrl + Right/Down for uncommitted added rows', (async () => {
+            hierarchicalGrid.data = hierarchicalGrid.data.slice(0, 3);
+            fixture.detectChanges();
+            hierarchicalGrid.addRow({ ID: -1, ProductName: 'Name1' });
+            const rows = fixture.debugElement.queryAll(By.directive(IgxHierarchicalRowComponent));
+            const lastRowCells = rows[rows.length - 1].queryAll(By.directive(IgxHierarchicalGridCellComponent));
+
+            lastRowCells[1].nativeElement.click();
+            fixture.detectChanges();
+
+            lastRowCells[1].nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', altKey: true }));
+            fixture.detectChanges();
+
+            let childRows = fixture.debugElement.queryAll(By.directive(IgxChildGridRowComponent));
+            expect(childRows.length).toEqual(0);
+
+            lastRowCells[1].nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
+            fixture.detectChanges();
+
+            childRows = fixture.debugElement.queryAll(By.directive(IgxChildGridRowComponent));
+            expect(childRows.length).toEqual(0);
+
+            hierarchicalGrid.transactions.commit(hierarchicalGrid.data);
+
+            lastRowCells[1].nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
+            fixture.detectChanges();
+
+            childRows = fixture.debugElement.queryAll(By.directive(IgxChildGridRowComponent));
+            expect(childRows.length).toEqual(1);
         }));
 
         it('should revert changes when transactions are cleared for child grids', fakeAsync(/** row toggle rAF */() => {
@@ -410,7 +442,7 @@ describe('IgxHierarchicalGrid Integration', () => {
     });
 
     describe('Summaries', () => {
-        const INDENT_LEVEL_CLASS = 'igx-grid__row-indentation--level-1';
+        const SUMMARIES_MARGIN_CLASS = '.igx-grid__summaries-patch';
         it('should allow defining summaries for child grid and child should be sized correctly.', fakeAsync(/** row toggle rAF */() => {
             hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
             fixture.detectChanges();
@@ -421,13 +453,9 @@ describe('IgxHierarchicalGrid Integration', () => {
 
             // Expect expansion cell to be rendered and sized the same as the expansion cell inside the grid
             const summaryRow = childGrid.summariesRowList.first.nativeElement;
+            const summaryRowIndentation = summaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
             expect(summaryRow.children.length).toEqual(2);
-            expect(summaryRow.children[0].tagName.toLowerCase()).toEqual('div');
-            expect(summaryRow.children[0].offsetWidth).toEqual(expander.nativeElement.offsetWidth);
-            expect(summaryRow.children[1].tagName.toLowerCase()).toEqual('igx-display-container');
-
-            // there should be indentation of the summaries
-            expect(summaryRow.children[0].className.indexOf(INDENT_LEVEL_CLASS) !== -1).toBe(true);
+            expect(summaryRowIndentation.offsetWidth).toEqual(expander.nativeElement.offsetWidth);
 
             const gridHeight = childGrid.nativeElement.offsetHeight;
             const childElems: HTMLElement[] = Array.from(childGrid.nativeElement.children);
@@ -444,10 +472,36 @@ describe('IgxHierarchicalGrid Integration', () => {
             const childGridDebugElement = childGrids[0].query(By.css('igx-hierarchical-grid'));
             const grandChild = childGridDebugElement.query(By.css('igx-hierarchical-grid')).componentInstance;
             const grandChildSummaryRow = grandChild.summariesRowList.first.nativeElement;
+            const childSummaryRowIndentation = grandChildSummaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
 
             expect(grandChildSummaryRow.children.length).toEqual(1);
-            // there should be no indentation of the summaries of the leaf grid
-            expect(grandChildSummaryRow.children[0].className.indexOf(INDENT_LEVEL_CLASS) === -1).toBe(true);
+            expect(childSummaryRowIndentation).toBeNull();
+        }));
+
+        it('should size summaries with row selectors for parent and children grids correctly.', fakeAsync(/** row toggle rAF */() => {
+            hierarchicalGrid.rowSelectable = true;
+            hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
+            fixture.detectChanges();
+
+            const rootExpander =  (hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent).expander;
+            const rootCheckbox =  hierarchicalGrid.headerCheckboxContainer;
+            const rootSummaryRow = hierarchicalGrid.summariesRowList.first.nativeElement;
+            const rootSummaryIndentation = rootSummaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
+
+            expect(rootSummaryRow.children.length).toEqual(2);
+            expect(rootSummaryIndentation.offsetWidth)
+                .toEqual(rootExpander.nativeElement.offsetWidth + rootCheckbox.nativeElement.offsetWidth);
+
+            const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+            const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+            const expander =  childGrid.dataRowList.toArray()[0].expander;
+
+            // Expect expansion cell to be rendered and sized the same as the expansion cell inside the grid
+            const summaryRow = childGrid.summariesRowList.first.nativeElement;
+            const childSummaryIndentation = summaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
+
+            expect(summaryRow.children.length).toEqual(2);
+            expect(childSummaryIndentation.offsetWidth).toEqual(expander.nativeElement.offsetWidth);
         }));
 
         it('should render summaries for column inside a column group.', fakeAsync(/** row toggle rAF */() => {
@@ -501,8 +555,8 @@ describe('IgxHierarchicalGrid Integration', () => {
             hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
             fixture.detectChanges();
 
-            expect(hierarchicalGrid.dataRowList.toArray()[0].expanded).toBeTruthy();
-            expect(hierarchicalGrid.dataRowList.toArray()[1].expanded).toBeTruthy();
+            expect((hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent).expanded).toBeTruthy();
+            expect((hierarchicalGrid.dataRowList.toArray()[1] as IgxHierarchicalRowComponent).expanded).toBeTruthy();
             expect(hierarchicalGrid.verticalScrollContainer.igxForOf.length).toEqual(17);
 
             let childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
@@ -511,13 +565,13 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(childGrid.dataRowList.first.cells.first.value).toEqual('00');
 
             // Go to next page
-            const pagingButtons = hierarchicalGrid.nativeElement.querySelectorAll('.igx-paginator > button');
+            const pagingButtons = hierarchicalGrid.nativeElement.querySelectorAll('.igx-grid-paginator__pager > button');
             pagingButtons[2].dispatchEvent(new Event('click'));
             fixture.detectChanges();
 
             expect(hierarchicalGrid.dataRowList.toArray()[0].cells.first.value).toEqual('15');
-            expect(hierarchicalGrid.dataRowList.toArray()[0].expanded).toBeFalsy();
-            expect(hierarchicalGrid.dataRowList.toArray()[1].expanded).toBeFalsy();
+            expect((hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent).expanded).toBeFalsy();
+            expect((hierarchicalGrid.dataRowList.toArray()[1] as IgxHierarchicalRowComponent).expanded).toBeFalsy();
             expect(hierarchicalGrid.verticalScrollContainer.igxForOf.length).toEqual(15);
 
             childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
@@ -528,8 +582,8 @@ describe('IgxHierarchicalGrid Integration', () => {
             fixture.detectChanges();
 
             expect(hierarchicalGrid.dataRowList.toArray()[0].cells.first.value).toEqual('0');
-            expect(hierarchicalGrid.dataRowList.toArray()[0].expanded).toBeTruthy();
-            expect(hierarchicalGrid.dataRowList.toArray()[1].expanded).toBeTruthy();
+            expect((hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent).expanded).toBeTruthy();
+            expect((hierarchicalGrid.dataRowList.toArray()[1] as IgxHierarchicalRowComponent).expanded).toBeTruthy();
             expect(hierarchicalGrid.verticalScrollContainer.igxForOf.length).toEqual(17);
 
             childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
@@ -882,9 +936,9 @@ describe('IgxHierarchicalGrid Integration', () => {
 })
 export class IgxHierarchicalGridTestBaseComponent {
     public data;
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent }) public hgrid: IgxHierarchicalGridComponent;
-    @ViewChild('rowIsland', { read: IgxRowIslandComponent }) public rowIsland: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent }) public rowIsland2: IgxRowIslandComponent;
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
 
     constructor() {
         // 3 level hierarchy
@@ -932,9 +986,9 @@ export class IgxHierarchicalGridTestBaseComponent {
 })
 export class IgxHierarchicalGridTestCustomToolbarComponent {
     public data;
-    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent }) public hgrid: IgxHierarchicalGridComponent;
-    @ViewChild('rowIsland1', { read: IgxRowIslandComponent }) public rowIsland: IgxRowIslandComponent;
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent }) public rowIsland2: IgxRowIslandComponent;
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
+    @ViewChild('rowIsland1', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
 
     constructor() {
         this.data = this.generateData(10, 2);

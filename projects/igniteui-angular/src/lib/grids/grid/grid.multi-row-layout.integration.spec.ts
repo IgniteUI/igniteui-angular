@@ -619,7 +619,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             const lastCell = grid.rowList.first.cells.toArray()[4];
             expect(lastCell.column.field).toBe('Address');
             expect(lastCell.column.parent.field).toBe('group4');
-            expect(Math.round(lastCell.nativeElement.getBoundingClientRect().right) - 1)
+            expect(Math.round(lastCell.nativeElement.getBoundingClientRect().right) + 1)
             .toEqual(grid.tbody.nativeElement.getBoundingClientRect().right);
         });
 
@@ -717,6 +717,62 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             expect(checkbox.checked).toBe(false);
             expect(column.pinned).toBeFalsy();
         }));
+
+        it('should work when pinning group with columns that do not have and the unpinned group has width in percentages.', async() => {
+            const uniqueGroups = [
+                {
+                    group: 'group1',
+                    // total colspan 3
+                    columns: [
+                        { field: 'Address', rowStart: 1, colStart: 1, colEnd : 4, rowEnd: 3},
+                        { field: 'County', rowStart: 3, colStart: 1},
+                        { field: 'Region', rowStart: 3, colStart: 2},
+                        { field: 'City', rowStart: 3, colStart: 3}
+                    ]
+                },
+                {
+                    group: 'group2',
+                    // total colspan 2
+                    columns: [
+                        { field: 'CompanyName', rowStart: 1, colStart: 1, width: '50%'},
+                        { field: 'Address', rowStart: 1, colStart: 2, width: '15%'},
+                        { field: 'ContactName', rowStart: 2, colStart: 1, colEnd : 3, rowEnd: 4}
+                    ]
+                }
+            ];
+            fixture.componentInstance.colGroups = uniqueGroups;
+            fixture.componentInstance.grid.width = (800 + grid.scrollWidth) + 'px';
+            fixture.detectChanges();
+
+            // pin group3
+            grid.pinColumn('group1');
+            fixture.detectChanges();
+
+            // check group 3 is pinned
+            expect(grid.getColumnByName('group1').pinned).toBeTruthy();
+            expect(grid.getColumnByName('Address').pinned).toBeTruthy();
+            expect(grid.getColumnByName('County').pinned).toBeTruthy();
+            const gridFirstRow = grid.rowList.first;
+            const firstRowCells = gridFirstRow.cells.toArray();
+            const headerCells = grid.headerGroups.first.children.toArray();
+
+            verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups.slice(2, 3));
+             // headers are aligned to cells
+             verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
+
+            // check virtualization state
+            const horizontalVirtualization = grid.rowList.first.virtDirRow;
+            expect(grid.hasHorizontalScroll()).toBeTruthy();
+            expect(horizontalVirtualization.igxForOf.length).toBe(1);
+            expect(horizontalVirtualization.igxForOf[0]).toBe(grid.getColumnByName('group2'));
+            // check their sizes are correct
+            const totalExpected = 0.65 * 800;
+            expect(horizontalVirtualization.getSizeAt(0)).toBe(totalExpected);
+
+            // check width scrollbar
+            const horizonatalScrElem = horizontalVirtualization.getHorizontalScroll();
+            expect(parseInt(horizonatalScrElem.children[0].style.width, 10)).toBe(totalExpected);
+        });
     });
 
     describe('Filtering ', () => {
@@ -1051,9 +1107,45 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             fixture.detectChanges();
 
             // Small misalignment in the third column occurs when cols are being intersected.
-            expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 640px 80px 100px 200px');
+            expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 650px 50px 100px 200px');
         });
     });
+
+    describe('Selection ', () => {
+        beforeEach(async(() => {
+            fixture = TestBed.createComponent(ColumnLayoutGroupingTestComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+            colGroups = fixture.componentInstance.colGroups;
+        }));
+
+        it('should return correct selected data via getSelectedData API.', () => {
+            const selectedData1 = [{
+                ID: 'ALFKI',
+                CompanyName: 'Alfreds Futterkiste',
+                ContactName: 'Maria Anders',
+                ContactTitle: 'Sales Representative'
+            }];
+            const selectedData2 = [{
+                PostalCode: '05021',
+                City: 'México D.F.',
+                Country: 'Mexico',
+                Address: 'Avda. de la Constitución 2222'
+            }];
+            let cell = grid.getCellByColumn(0, 'CompanyName');
+            UIInteractions.clickElement(cell);
+            fixture.detectChanges();
+
+            expect(grid.getSelectedData()).toEqual(selectedData1);
+
+            cell = grid.getCellByColumn(1, 'City');
+            UIInteractions.clickElement(cell);
+            fixture.detectChanges();
+
+            expect(grid.getSelectedData()).toEqual(selectedData2);
+        });
+    });
+
 });
 
 @Component({
@@ -1068,7 +1160,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
     `
 })
 export class ColumnLayouHidingTestComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
     cols1: Array<any> = [
         { field: 'ID', rowStart: 1, colStart: 1},
@@ -1109,7 +1201,7 @@ export class ColumnLayouHidingTestComponent {
     `
 })
 export class ColumnLayoutPinningTestComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
     cols1: Array<any> = [
         { field: 'ID', rowStart: 1, colStart: 1},
@@ -1190,7 +1282,7 @@ export class ColumnLayoutGroupingTestComponent extends ColumnLayoutPinningTestCo
 })
 export class ColumnLayoutResizingTestComponent {
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
 
     cols: Array<any> = [

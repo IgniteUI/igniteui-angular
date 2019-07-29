@@ -33,13 +33,13 @@
     />
 </igx-input-group>
 
-<igx-date-picker #datePicker mode="dropdown" [(ngModel)]="expressionUI.expression.searchVal" [locale]="grid.locale">
+<igx-date-picker #datePicker mode="dropdown" [(ngModel)]="expressionUI.expression.searchVal" [locale]="grid.locale" [outlet]="grid.outletDirective">
     <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value">
         <igx-input-group #dropDownTarget type="box" [displayDensity]="displayDensity" [supressInputAutofocus]="true">
             <input #input
                     igxInput
                     tabindex="0"
-                    (click)="openDatePicker(openDialog)"
+                    (click)="openDialog(dropDownTarget.element.nativeElement)"
                     [placeholder]="inputDatePlaceholder"
                     autocomplete="off"
                     [value]="value | igxdate: grid.locale"

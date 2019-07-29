@@ -1,5 +1,9 @@
 <article #toggle igxToggle
     class="igx-excel-filter__secondary"
+    [ngClass]="{
+        'igx-excel-filter__secondary--cosy': grid.displayDensity === 'cosy',
+        'igx-excel-filter__secondary--compact': grid.displayDensity === 'compact'
+    }"
     (keydown)="onKeyDown($event)"
     (onOpening)="onCustomDialogOpening()"
     (onOpened)="onCustomDialogOpened()">
@@ -9,7 +13,7 @@
         </h4>
     </header>
 
-    <article class="igx-excel-filter__secondary-main">
+    <article #expressionsContainer class="igx-excel-filter__secondary-main">
         <ng-container *ngIf="column.dataType === 'date'">
             <igx-excel-style-date-expression *ngFor="let expression of expressionsList;"
                 class="igx-excel-filter__condition"

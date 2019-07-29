@@ -1,4 +1,4 @@
-import { InjectionToken, Input, Output, EventEmitter, DoCheck } from '@angular/core';
+import { InjectionToken, Input, Output, EventEmitter, DoCheck, OnInit } from '@angular/core';
 
 
 /**
@@ -30,8 +30,13 @@ export const DisplayDensityToken = new InjectionToken<IDisplayDensityOptions>('D
 /**
  * Base class containing all logic required for implementing DisplayDensity.
  */
-export class DisplayDensityBase implements DoCheck {
+export class DisplayDensityBase implements DoCheck, OnInit {
     protected _displayDensity: DisplayDensity;
+
+     /**
+     * @hidden
+     */
+    public initialDensity: DisplayDensity;
 
     /**
      * Returns the theme of the component.
@@ -72,6 +77,13 @@ export class DisplayDensityBase implements DoCheck {
 
     constructor(protected displayDensityOptions: IDisplayDensityOptions) {
         Object.assign(this.oldDisplayDensityOptions, displayDensityOptions);
+    }
+
+    /**
+     * @hidden
+     */
+    public ngOnInit(): void {
+        this.initialDensity = this._displayDensity;
     }
 
     public ngDoCheck() {

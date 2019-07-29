@@ -1,13 +1,12 @@
 import { async, TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
-import { Component, ViewChild, DebugElement, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, DebugElement, OnInit, TemplateRef } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { By } from '@angular/platform-browser';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { wait } from '../../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -38,7 +37,8 @@ describe('IgxGrid - multi-column headers', () => {
                 OneColPerGroupGridComponent,
                 NestedColumnGroupsGridComponent,
                 DynamicGridComponent,
-                NumberColWidthGridComponent
+                NumberColWidthGridComponent,
+                NestedColGroupsWithTemplatesGridComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -1369,6 +1369,53 @@ describe('IgxGrid - multi-column headers', () => {
             fixture.detectChanges();
         }).not.toThrow();
     }));
+
+    it('Should correctly initialize column group templates.', fakeAsync(() => {
+        const fixture = TestBed.createComponent(NestedColGroupsWithTemplatesGridComponent);
+        fixture.detectChanges();
+        const ci = fixture.componentInstance;
+        const locationColGroup = ci.locationColGroup;
+        const contactInfoColGroup = ci.contactInfoColGroup;
+
+        expect(locationColGroup.headerTemplate).toBeDefined();
+        expect(contactInfoColGroup.headerTemplate).toBeUndefined();
+
+        const headerSpans: DebugElement[] = fixture.debugElement.queryAll(By.css('.col-group-template'));
+        expect(headerSpans.length).toBe(1);
+        expect(headerSpans[0].nativeElement.textContent).toMatch('Column group template');
+    }));
+
+    it('Should correctly change column group templates dynamically.', fakeAsync(() => {
+        const fixture = TestBed.createComponent(NestedColGroupsWithTemplatesGridComponent);
+        fixture.detectChanges();
+        const ci = fixture.componentInstance;
+        const locationColGroup = ci.locationColGroup;
+        const genInfoColGroup = ci.genInfoColGroup;
+        const headerTemplate = ci.dynamicColGroupTemplate;
+
+        locationColGroup.headerTemplate = headerTemplate;
+        genInfoColGroup.headerTemplate = headerTemplate;
+        fixture.detectChanges();
+
+        let headerSpans: DebugElement[] = fixture.debugElement.queryAll(By.css('.dynamic-col-group-template'));
+        expect(headerSpans.length).toBe(2);
+        headerSpans.forEach(headerSpan => {
+            expect(headerSpan.nativeElement.textContent).toMatch('Dynamic column group template');
+        });
+
+        locationColGroup.headerTemplate = null;
+        fixture.detectChanges();
+
+        headerSpans = fixture.debugElement.queryAll(By.css('.dynamic-col-group-template'));
+        expect(headerSpans.length).toBe(1);
+        headerSpans.forEach(headerSpan => {
+            expect(headerSpan.nativeElement.textContent).toMatch('Dynamic column group template');
+        });
+        headerSpans = fixture.debugElement.queryAll(By.css('.col-group-template'));
+        expect(headerSpans.length).toBe(0);
+        headerSpans = fixture.debugElement.queryAll(By.css('.' + GRID_COL_GROUP_THEAD_TITLE_CLASS));
+        expect(headerSpans[1].nativeElement.textContent).toBe('Location');
+    }));
 });
 
 @Component({
@@ -1383,7 +1430,7 @@ describe('IgxGrid - multi-column headers', () => {
     `
 })
 export class OneGroupOneColGridComponent {
-    @ViewChild('grid') public grid: IgxGridComponent;
+    @ViewChild('grid', { static: true }) public grid: IgxGridComponent;
     public gridWrapperWidthPx = '1000';
     public gridHeight = '500px';
     public columnWidth: string;
@@ -1404,7 +1451,7 @@ export class OneGroupOneColGridComponent {
     `
 })
 export class OneGroupThreeColsGridComponent {
-    @ViewChild('grid') public grid: IgxGridComponent;
+    @ViewChild('grid', { static: true }) public grid: IgxGridComponent;
     public gridWrapperWidthPx = '900';
     public gridHeight = '500px';
     public columnWidth: string;
@@ -1439,7 +1486,7 @@ export class OneGroupThreeColsGridComponent {
     `
 })
 export class ColumnGroupTestComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
 
     data = SampleTestData.contactInfoDataFull();
@@ -1476,49 +1523,49 @@ export class ColumnGroupTestComponent {
     </igx-grid>
     `
 })
-export class ColumnGroupFourLevelTestComponent implements AfterViewInit {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+export class ColumnGroupFourLevelTestComponent implements OnInit {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
 
-    @ViewChild('idCol', { read: IgxColumnComponent })
+    @ViewChild('idCol', { read: IgxColumnComponent, static: true })
     idCol: IgxColumnComponent;
 
-    @ViewChild('genInfoColGroup', { read: IgxColumnGroupComponent })
+    @ViewChild('genInfoColGroup', { read: IgxColumnGroupComponent, static: true })
     genInfoColGroup: IgxColumnGroupComponent;
-    @ViewChild('companyNameCol', { read: IgxColumnComponent })
+    @ViewChild('companyNameCol', { read: IgxColumnComponent, static: true })
     companyNameCol: IgxColumnComponent;
-    @ViewChild('pDetailsColGroup', { read: IgxColumnGroupComponent })
+    @ViewChild('pDetailsColGroup', { read: IgxColumnGroupComponent, static: true })
     pDetailsColGroup: IgxColumnGroupComponent;
-    @ViewChild('contactNameCol', { read: IgxColumnComponent })
+    @ViewChild('contactNameCol', { read: IgxColumnComponent, static: true })
     contactNameCol: IgxColumnComponent;
-    @ViewChild('contactTitleCol', { read: IgxColumnComponent })
+    @ViewChild('contactTitleCol', { read: IgxColumnComponent, static: true })
     contactTitleCol: IgxColumnComponent;
 
     public genInfoColsAndGroups = [];
 
-    @ViewChild('addrInfoColGroup', { read: IgxColumnGroupComponent })
+    @ViewChild('addrInfoColGroup', { read: IgxColumnGroupComponent, static: true })
     addrInfoColGroup: IgxColumnGroupComponent;
-    @ViewChild('locationColGroup', { read: IgxColumnGroupComponent })
+    @ViewChild('locationColGroup', { read: IgxColumnGroupComponent, static: true })
     locationColGroup: IgxColumnGroupComponent;
-    @ViewChild('countryCol', { read: IgxColumnComponent })
+    @ViewChild('countryCol', { read: IgxColumnComponent, static: true })
     countryCol: IgxColumnComponent;
-    @ViewChild('regionCol', { read: IgxColumnComponent })
+    @ViewChild('regionCol', { read: IgxColumnComponent, static: true })
     regionCol: IgxColumnComponent;
-    @ViewChild('locCityColGroup', { read: IgxColumnGroupComponent })
+    @ViewChild('locCityColGroup', { read: IgxColumnGroupComponent, static: true })
     locCityColGroup: IgxColumnGroupComponent;
-    @ViewChild('cityCol', { read: IgxColumnComponent })
+    @ViewChild('cityCol', { read: IgxColumnComponent, static: true })
     cityCol: IgxColumnComponent;
-    @ViewChild('addressCol', { read: IgxColumnComponent })
+    @ViewChild('addressCol', { read: IgxColumnComponent, static: true })
     addressCol: IgxColumnComponent;
-    @ViewChild('contactInfoColGroup', { read: IgxColumnGroupComponent })
+    @ViewChild('contactInfoColGroup', { read: IgxColumnGroupComponent, static: true })
     contactInfoColGroup: IgxColumnGroupComponent;
-    @ViewChild('phoneCol', { read: IgxColumnComponent })
+    @ViewChild('phoneCol', { read: IgxColumnComponent, static: true })
     phoneCol: IgxColumnComponent;
-    @ViewChild('faxCol', { read: IgxColumnComponent })
+    @ViewChild('faxCol', { read: IgxColumnComponent, static: true })
     faxCol: IgxColumnComponent;
-    @ViewChild('postalCodeColGroup', { read: IgxColumnGroupComponent })
+    @ViewChild('postalCodeColGroup', { read: IgxColumnGroupComponent, static: true })
     postalCodeColGroup: IgxColumnGroupComponent;
-    @ViewChild('postalCodeCol', { read: IgxColumnComponent })
+    @ViewChild('postalCodeCol', { read: IgxColumnComponent, static: true })
     postalCodeCol: IgxColumnComponent;
 
     public addressColsAndGroups = [];
@@ -1526,7 +1573,7 @@ export class ColumnGroupFourLevelTestComponent implements AfterViewInit {
 
     data = SampleTestData.contactInfoDataFull();
 
-    ngAfterViewInit() {
+    ngOnInit() {
         this.genInfoColsAndGroups = [this.genInfoColGroup, this.companyNameCol, this.pDetailsColGroup,
         this.contactNameCol, this.contactTitleCol];
 
@@ -1561,7 +1608,7 @@ export class ColumnGroupFourLevelTestComponent implements AfterViewInit {
     `
 })
 export class ColumnGroupChildLevelTestComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
 
     data = SampleTestData.contactInfoDataFull();
@@ -1586,7 +1633,7 @@ export class ColumnGroupChildLevelTestComponent {
     `
 })
 export class ColumnGroupGroupingTestComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
 
     data = SampleTestData.contactInfoData();
@@ -1617,7 +1664,7 @@ export class ColumnGroupGroupingTestComponent {
        `
 })
 export class ColumnGroupTwoGroupsTestComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
 
     data = SampleTestData.contactInfoDataFull();
@@ -1645,34 +1692,34 @@ export class ColumnGroupTwoGroupsTestComponent {
     `
 })
 export class ThreeGroupsThreeColumnsGridComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
 
-    @ViewChild('genInfoColGroup', { read: IgxColumnGroupComponent })
+    @ViewChild('genInfoColGroup', { read: IgxColumnGroupComponent, static: true })
     genInfoColGroup: IgxColumnGroupComponent;
-    @ViewChild('companyNameCol', { read: IgxColumnComponent })
+    @ViewChild('companyNameCol', { read: IgxColumnComponent, static: true })
     companyNameCol: IgxColumnComponent;
-    @ViewChild('contactNameCol', { read: IgxColumnComponent })
+    @ViewChild('contactNameCol', { read: IgxColumnComponent, static: true })
     contactNameCol: IgxColumnComponent;
-    @ViewChild('contactTitleCol', { read: IgxColumnComponent })
+    @ViewChild('contactTitleCol', { read: IgxColumnComponent, static: true })
     contactTitleCol: IgxColumnComponent;
 
-    @ViewChild('locationColGroup', { read: IgxColumnGroupComponent })
+    @ViewChild('locationColGroup', { read: IgxColumnGroupComponent, static: true })
     locationColGroup: IgxColumnGroupComponent;
-    @ViewChild('countryCol', { read: IgxColumnComponent })
+    @ViewChild('countryCol', { read: IgxColumnComponent, static: true })
     countryCol: IgxColumnComponent;
-    @ViewChild('regionCol', { read: IgxColumnComponent })
+    @ViewChild('regionCol', { read: IgxColumnComponent, static: true })
     regionCol: IgxColumnComponent;
-    @ViewChild('cityCol', { read: IgxColumnComponent })
+    @ViewChild('cityCol', { read: IgxColumnComponent, static: true })
     cityCol: IgxColumnComponent;
 
-    @ViewChild('contactInfoColGroup', { read: IgxColumnGroupComponent })
+    @ViewChild('contactInfoColGroup', { read: IgxColumnGroupComponent, static: true })
     contactInfoColGroup: IgxColumnGroupComponent;
-    @ViewChild('phoneCol', { read: IgxColumnComponent })
+    @ViewChild('phoneCol', { read: IgxColumnComponent, static: true })
     phoneCol: IgxColumnComponent;
-    @ViewChild('faxCol', { read: IgxColumnComponent })
+    @ViewChild('faxCol', { read: IgxColumnComponent, static: true })
     faxCol: IgxColumnComponent;
-    @ViewChild('postalCodeCol', { read: IgxColumnComponent })
+    @ViewChild('postalCodeCol', { read: IgxColumnComponent, static: true })
     postalCodeCol: IgxColumnComponent;
 
     data = SampleTestData.contactInfoDataFull();
@@ -1696,24 +1743,24 @@ export class ThreeGroupsThreeColumnsGridComponent {
     `
 })
 export class NestedColGroupsGridComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
 
-    @ViewChild('contactInfoColGroup', { read: IgxColumnGroupComponent })
+    @ViewChild('contactInfoColGroup', { read: IgxColumnGroupComponent, static: true })
     contactInfoColGroup: IgxColumnGroupComponent;
-    @ViewChild('locationColGroup', { read: IgxColumnGroupComponent })
+    @ViewChild('locationColGroup', { read: IgxColumnGroupComponent, static: true })
     locationColGroup: IgxColumnGroupComponent;
-    @ViewChild('countryCol', { read: IgxColumnComponent })
+    @ViewChild('countryCol', { read: IgxColumnComponent, static: true })
     countryCol: IgxColumnComponent;
-    @ViewChild('phoneCol', { read: IgxColumnComponent })
+    @ViewChild('phoneCol', { read: IgxColumnComponent, static: true })
     phoneCol: IgxColumnComponent;
 
-    @ViewChild('genInfoColGroup', { read: IgxColumnGroupComponent })
+    @ViewChild('genInfoColGroup', { read: IgxColumnGroupComponent, static: true })
     genInfoColGroup: IgxColumnGroupComponent;
-    @ViewChild('companyNameCol', { read: IgxColumnComponent })
+    @ViewChild('companyNameCol', { read: IgxColumnComponent, static: true })
     companyNameCol: IgxColumnComponent;
 
-    @ViewChild('cityCol', { read: IgxColumnComponent })
+    @ViewChild('cityCol', { read: IgxColumnComponent, static: true })
     cityCol: IgxColumnComponent;
 
     data = SampleTestData.contactInfoDataFull();
@@ -1754,57 +1801,57 @@ export class NestedColGroupsGridComponent {
     </igx-grid>
     `
 })
-export class StegosaurusGridComponent implements AfterViewInit {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+export class StegosaurusGridComponent implements OnInit {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
 
-    @ViewChild('idCol', { read: IgxColumnComponent })
+    @ViewChild('idCol', { read: IgxColumnComponent, static: true })
     idCol: IgxColumnComponent;
 
-    @ViewChild('genInfoColGroup', { read: IgxColumnGroupComponent })
+    @ViewChild('genInfoColGroup', { read: IgxColumnGroupComponent, static: true })
     genInfoColGroup: IgxColumnGroupComponent;
-    @ViewChild('companyNameCol', { read: IgxColumnComponent })
+    @ViewChild('companyNameCol', { read: IgxColumnComponent, static: true })
     companyNameCol: IgxColumnComponent;
-    @ViewChild('pDetailsColGroup', { read: IgxColumnGroupComponent })
+    @ViewChild('pDetailsColGroup', { read: IgxColumnGroupComponent, static: true })
     pDetailsColGroup: IgxColumnGroupComponent;
-    @ViewChild('contactNameCol', { read: IgxColumnComponent })
+    @ViewChild('contactNameCol', { read: IgxColumnComponent, static: true })
     contactNameCol: IgxColumnComponent;
-    @ViewChild('contactTitleCol', { read: IgxColumnComponent })
+    @ViewChild('contactTitleCol', { read: IgxColumnComponent, static: true })
     contactTitleCol: IgxColumnComponent;
 
-    @ViewChild('postalCodeColGroup', { read: IgxColumnGroupComponent })
+    @ViewChild('postalCodeColGroup', { read: IgxColumnGroupComponent, static: true })
     postalCodeColGroup: IgxColumnGroupComponent;
-    @ViewChild('postalCodeCol', { read: IgxColumnComponent })
+    @ViewChild('postalCodeCol', { read: IgxColumnComponent, static: true })
     postalCodeCol: IgxColumnComponent;
 
-    @ViewChild('cityColGroup', { read: IgxColumnGroupComponent })
+    @ViewChild('cityColGroup', { read: IgxColumnGroupComponent, static: true })
     cityColGroup: IgxColumnGroupComponent;
-    @ViewChild('cityCol', { read: IgxColumnComponent })
+    @ViewChild('cityCol', { read: IgxColumnComponent, static: true })
     cityCol: IgxColumnComponent;
 
-    @ViewChild('countryColGroup', { read: IgxColumnGroupComponent })
+    @ViewChild('countryColGroup', { read: IgxColumnGroupComponent, static: true })
     countryColGroup: IgxColumnGroupComponent;
-    @ViewChild('countryCol', { read: IgxColumnComponent })
+    @ViewChild('countryCol', { read: IgxColumnComponent, static: true })
     countryCol: IgxColumnComponent;
 
-    @ViewChild('regionColGroup', { read: IgxColumnGroupComponent })
+    @ViewChild('regionColGroup', { read: IgxColumnGroupComponent, static: true })
     regionColGroup: IgxColumnGroupComponent;
-    @ViewChild('regionCol', { read: IgxColumnComponent })
+    @ViewChild('regionCol', { read: IgxColumnComponent, static: true })
     regionCol: IgxColumnComponent;
 
-    @ViewChild('addressColGroup', { read: IgxColumnGroupComponent })
+    @ViewChild('addressColGroup', { read: IgxColumnGroupComponent, static: true })
     addressColGroup: IgxColumnGroupComponent;
-    @ViewChild('addressCol', { read: IgxColumnComponent })
+    @ViewChild('addressCol', { read: IgxColumnComponent, static: true })
     addressCol: IgxColumnComponent;
 
-    @ViewChild('phoneColGroup', { read: IgxColumnGroupComponent })
+    @ViewChild('phoneColGroup', { read: IgxColumnGroupComponent, static: true })
     phoneColGroup: IgxColumnGroupComponent;
-    @ViewChild('phoneCol', { read: IgxColumnComponent })
+    @ViewChild('phoneCol', { read: IgxColumnComponent, static: true })
     phoneCol: IgxColumnComponent;
 
-    @ViewChild('faxColGroup', { read: IgxColumnGroupComponent })
+    @ViewChild('faxColGroup', { read: IgxColumnGroupComponent, static: true })
     faxColGroup: IgxColumnGroupComponent;
-    @ViewChild('faxCol', { read: IgxColumnComponent })
+    @ViewChild('faxCol', { read: IgxColumnComponent, static: true })
     faxCol: IgxColumnComponent;
 
     public genInfoColList;
@@ -1818,7 +1865,7 @@ export class StegosaurusGridComponent implements AfterViewInit {
 
     data = SampleTestData.contactInfoDataFull();
 
-    ngAfterViewInit() {
+    ngOnInit() {
         this.genInfoColList = [this.genInfoColGroup, this.companyNameCol, this.pDetailsColGroup,
         this.contactNameCol, this.contactTitleCol];
         this.postalCodeColList = [this.postalCodeColGroup, this.postalCodeCol];
@@ -1870,7 +1917,7 @@ export class StegosaurusGridComponent implements AfterViewInit {
     `
 })
 export class BlueWhaleGridComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
 
     public gridHeight = '500px';
@@ -1897,10 +1944,10 @@ export class BlueWhaleGridComponent {
     `
 })
 export class EmptyColGridComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
 
-    @ViewChild('emptyColGroup', { read: IgxColumnGroupComponent })
+    @ViewChild('emptyColGroup', { read: IgxColumnGroupComponent, static: true })
     emptyColGroup: IgxColumnGroupComponent;
 
     data = SampleTestData.contactInfoDataFull();
@@ -1922,7 +1969,7 @@ export class EmptyColGridComponent {
     `
 })
 export class OneColPerGroupGridComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
 
     columnWidth = '100px';
@@ -1961,7 +2008,7 @@ export class OneColPerGroupGridComponent {
     `
 })
 export class NestedColumnGroupsGridComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
 
     columnWidth = '100px';
@@ -1991,7 +2038,7 @@ export class NestedColumnGroupsGridComponent {
     `
 })
 export class DynamicGridComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
     mchCount = new Array(1);
 
@@ -2011,7 +2058,7 @@ export class DynamicGridComponent {
     `
 })
 export class NumberColWidthGridComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
 
     data = SampleTestData.contactInfoDataFull();
@@ -2022,6 +2069,55 @@ export class NumberColWidthGridComponent {
         { field: 'ContactName', width: 150 },
         { field: 'City', width: 100 },
     ];
+}
+
+@Component({
+    template: `
+    <ng-template #dynamicColGroupTemplate>
+        <span class="dynamic-col-group-template">Dynamic column group template</span>
+    </ng-template>
+    <igx-grid #grid [data]="data" height="600px" width="1000px">
+        <igx-column-group #contactInfoColGroup header="Contact Info">
+            <igx-column-group #locationColGroup header="Location">
+                <ng-template igxHeader>
+                    <span class="col-group-template">Column group template</span>
+                </ng-template>
+                <igx-column #countryCol field="Country"></igx-column>
+            </igx-column-group>
+            <igx-column #phoneCol field="Phone"></igx-column>
+        </igx-column-group>
+        <igx-column-group #genInfoColGroup header="General Information">
+            <igx-column #companyNameCol field="CompanyName"></igx-column>
+        </igx-column-group>
+        <igx-column #cityCol field="City"></igx-column>
+    </igx-grid>
+    `
+})
+export class NestedColGroupsWithTemplatesGridComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    grid: IgxGridComponent;
+
+    @ViewChild('contactInfoColGroup', { read: IgxColumnGroupComponent, static: true })
+    contactInfoColGroup: IgxColumnGroupComponent;
+    @ViewChild('locationColGroup', { read: IgxColumnGroupComponent, static: true })
+    locationColGroup: IgxColumnGroupComponent;
+    @ViewChild('countryCol', { read: IgxColumnComponent, static: true })
+    countryCol: IgxColumnComponent;
+    @ViewChild('phoneCol', { read: IgxColumnComponent, static: true })
+    phoneCol: IgxColumnComponent;
+
+    @ViewChild('genInfoColGroup', { read: IgxColumnGroupComponent, static: true })
+    genInfoColGroup: IgxColumnGroupComponent;
+    @ViewChild('companyNameCol', { read: IgxColumnComponent, static: true })
+    companyNameCol: IgxColumnComponent;
+
+    @ViewChild('cityCol', { read: IgxColumnComponent, static: true })
+    cityCol: IgxColumnComponent;
+
+    @ViewChild('dynamicColGroupTemplate', { read: TemplateRef, static: true })
+    dynamicColGroupTemplate: TemplateRef<any>;
+
+    data = SampleTestData.contactInfoDataFull();
 }
 
 function getColGroup(grid: IgxGridComponent, headerName: string): IgxColumnGroupComponent {

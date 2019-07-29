@@ -7,7 +7,8 @@ import {
     AfterViewInit,
     TemplateRef,
     ViewChildren,
-    QueryList
+    QueryList,
+    ElementRef
 } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
@@ -86,14 +87,17 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     @ViewChildren(IgxExcelStyleDateExpressionComponent)
     private expressionDateComponents: QueryList<IgxExcelStyleDateExpressionComponent>;
 
-    @ViewChild('toggle', { read: IgxToggleDirective })
+    @ViewChild('toggle', { read: IgxToggleDirective, static: true })
     public toggle: IgxToggleDirective;
 
-    @ViewChild('defaultExpressionTemplate', { read: TemplateRef })
+    @ViewChild('defaultExpressionTemplate', { read: TemplateRef, static: false })
     protected defaultExpressionTemplate: TemplateRef<any>;
 
-    @ViewChild('dateExpressionTemplate', { read: TemplateRef })
+    @ViewChild('dateExpressionTemplate', { read: TemplateRef, static: false })
     protected dateExpressionTemplate: TemplateRef<any>;
+
+    @ViewChild('expressionsContainer', { static: true })
+    protected expressionsContainer: ElementRef;
 
     constructor(private cdr: ChangeDetectorRef) {}
 
@@ -172,6 +176,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         this.expressionsList.push(exprUI);
 
         this.markChildrenForCheck();
+        this.scrollToBottom();
     }
 
     public onExpressionRemoved(event: ExpressionUI) {
@@ -256,5 +261,11 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         secondExprUI.beforeOperator = FilteringLogic.And;
 
         this.expressionsList.push(secondExprUI);
+    }
+
+    private scrollToBottom() {
+        requestAnimationFrame(() => {
+            this.expressionsContainer.nativeElement.scrollTop = this.expressionsContainer.nativeElement.scrollHeight;
+        });
     }
 }

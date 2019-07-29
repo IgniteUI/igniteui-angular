@@ -1,6 +1,5 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { IgxIconService } from './icon.service';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { DOCUMENT } from '@angular/common';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
@@ -17,7 +16,6 @@ describe('Icon Service', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
             providers: [IgxIconService]
         }).compileComponents();
     });
@@ -54,27 +52,22 @@ describe('Icon Service', () => {
 
     it('should add custom svg icon from url', () => {
         const iconService = TestBed.get(IgxIconService) as IgxIconService;
-        const httpMock = TestBed.get(HttpTestingController);
         const document = TestBed.get(DOCUMENT);
 
         const iconName = 'test';
         const fontSet = 'svg-icons';
         const iconKey = fontSet + '_' + iconName;
 
+        spyOn(XMLHttpRequest.prototype, 'open').and.callThrough();
+        spyOn(XMLHttpRequest.prototype, 'send');
+
         iconService.addSvgIcon(iconName, 'test.svg', fontSet);
 
-        const req = httpMock.expectOne('test.svg');
-        expect(req.request.method).toBe('GET');
-        req.flush(svgText);
-
-        expect(iconService.isSvgIconCached(iconName, fontSet)).toBeTruthy();
-        expect(iconService.getSvgIconKey(iconName, fontSet)).toEqual(iconKey);
+        expect(XMLHttpRequest.prototype.open).toHaveBeenCalledTimes(1);
+        expect(XMLHttpRequest.prototype.send).toHaveBeenCalledTimes(1);
 
         const svgElement = document.querySelector(`svg[id='${iconKey}']`);
         expect(svgElement).toBeDefined();
-
-        // make sure thare are no outstanding requests
-        httpMock.verify();
     });
 
     it('should add custom svg icon from text', () => {

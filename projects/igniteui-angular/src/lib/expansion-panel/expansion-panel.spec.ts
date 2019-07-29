@@ -1,6 +1,6 @@
 
 import { Component, ViewChild } from '@angular/core';
-import { async, TestBed, ComponentFixture, tick, fakeAsync, flush } from '@angular/core/testing';
+import { async, TestBed, ComponentFixture, tick, fakeAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
@@ -16,8 +16,12 @@ import { By } from '@angular/platform-browser';
 
 const CSS_CLASS_EXPANSION_PANEL = 'igx-expansion-panel';
 const CSS_CLASS_PANEL_HEADER = 'igx-expansion-panel__header';
+const CSS_CLASS_PANEL_TITLE_WRAPPER = 'igx-expansion-panel__title-wrapper';
 const CSS_CLASS_PANEL_BODY = 'igx-expansion-panel-body';
 const CSS_CLASS_HEADER_EXPANDED = 'igx-expansion-panel__header--expanded';
+const CSS_CLASS_HEADER_ICON_START = 'igx-expansion-panel__header-icon--start';
+const CSS_CLASS_HEADER_ICON_END = 'igx-expansion-panel__header-icon--end';
+const CSS_CLASS_HEADER_ICON_NONE = 'igx-expansion-panel__header-icon--none';
 const CSS_CLASS_PANEL_ICON = 'igx-icon';
 const CSS_CLASS_LIST = 'igx-list';
 const CSS_CLASS_GRID = 'igx-grid';
@@ -51,7 +55,7 @@ describe('igxExpansionPanel', () => {
 
 
     describe('General tests: ', () => {
-        configureTestSuite();
+        // configureTestSuite();
         it('Should initialize the expansion panel component properly', () => {
             const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
@@ -153,7 +157,7 @@ describe('igxExpansionPanel', () => {
     });
 
     describe('Expansion tests: ', () => {
-        configureTestSuite();
+        // configureTestSuite();
         function verifyPanelExpansionState(
             collapsed: boolean,
             panel: IgxExpansionPanelComponent,
@@ -668,7 +672,7 @@ describe('igxExpansionPanel', () => {
             tick();
             expect(headerButton.getAttribute('aria-disabled')).toMatch('false');
         }));
-        xit('Should display expand/collapse button according to its position', () => {
+        it('Should display expand/collapse button according to its position', () => {
             const fixture: ComponentFixture<IgxExpansionPanelListComponent> = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
             const header = fixture.componentInstance.header;
@@ -676,38 +680,36 @@ describe('igxExpansionPanel', () => {
             const headerButton = panelHeader.querySelector('div [role = \'button\']');
 
             expect(header.iconPosition).toEqual('left');
-            expect(headerButton.children[0].nodeName).toEqual('IGX-ICON');
-            expect(headerButton.children[1].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
-            expect(headerButton.children[0].getBoundingClientRect().left).
-                toBeLessThan(headerButton.children[1].getBoundingClientRect().left);
+            expect(headerButton.children[0].className).toEqual(CSS_CLASS_PANEL_TITLE_WRAPPER);
+            expect(headerButton.children[1].className).toEqual(CSS_CLASS_HEADER_ICON_START);
+            expect(headerButton.children[1].getBoundingClientRect().left).
+                toBeLessThan(headerButton.children[0].getBoundingClientRect().left);
 
             header.iconPosition = ICON_POSITION.NONE;
             fixture.detectChanges();
             expect(header.iconPosition).toEqual('none');
-            expect(headerButton.children.length).toEqual(1);
-            expect(headerButton.children[0].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
+            expect(headerButton.children[1].className).toEqual(CSS_CLASS_HEADER_ICON_NONE);
 
             header.iconPosition = ICON_POSITION.RIGHT;
             fixture.detectChanges();
             expect(header.iconPosition).toEqual('right');
-            expect(headerButton.children[0].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
-            expect(headerButton.children[1].nodeName).toEqual('IGX-ICON');
+            expect(headerButton.children[0].className).toEqual(CSS_CLASS_PANEL_TITLE_WRAPPER);
+            expect(headerButton.children[1].className).toEqual(CSS_CLASS_HEADER_ICON_END);
             expect(headerButton.children[0].getBoundingClientRect().left).
                 toBeLessThan(headerButton.children[1].getBoundingClientRect().left);
 
             header.iconPosition = ICON_POSITION.NONE;
             fixture.detectChanges();
             expect(header.iconPosition).toEqual('none');
-            expect(headerButton.children.length).toEqual(1);
-            expect(headerButton.children[0].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
+            expect(headerButton.children[1].className).toEqual(CSS_CLASS_HEADER_ICON_NONE);
 
             header.iconPosition = ICON_POSITION.LEFT;
             fixture.detectChanges();
             expect(header.iconPosition).toEqual('left');
-            expect(headerButton.children[0].nodeName).toEqual('IGX-ICON');
-            expect(headerButton.children[1].nodeName).toEqual('IGX-EXPANSION-PANEL-TITLE');
-            expect(headerButton.children[0].getBoundingClientRect().left).
-                toBeLessThan(headerButton.children[1].getBoundingClientRect().left);
+            expect(headerButton.children[0].className).toEqual(CSS_CLASS_PANEL_TITLE_WRAPPER);
+            expect(headerButton.children[1].className).toEqual(CSS_CLASS_HEADER_ICON_START);
+            expect(headerButton.children[1].getBoundingClientRect().left).
+                toBeLessThan(headerButton.children[0].getBoundingClientRect().left);
         });
 
         it('Should override the default icon when an icon template is passed', () => {
@@ -778,7 +780,7 @@ describe('igxExpansionPanel', () => {
     });
 
     describe('Aria tests', () => {
-        configureTestSuite();
+        // configureTestSuite();
         it('Should properly apply default aria properties', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxExpansionPanelListComponent);
             fixture.detectChanges();
@@ -901,7 +903,7 @@ describe('igxExpansionPanel', () => {
     });
 
     describe('Rendering tests: ', () => {
-        configureTestSuite();
+        // configureTestSuite();
         it('Should apply all appropriate classes on combo initialization', fakeAsync(() => {
             const fixture: ComponentFixture<IgxExpansionPanelSampleComponent> = TestBed.createComponent(IgxExpansionPanelSampleComponent);
             fixture.detectChanges();
@@ -1008,7 +1010,7 @@ describe('igxExpansionPanel', () => {
             expect(grid.attributes.getNamedItem('ng-reflect-auto-generate').nodeValue).toEqual('true');
             expect(grid.attributes.getNamedItem('ng-reflect-width').nodeValue).toEqual(fixture.componentInstance.width);
             expect(grid.attributes.getNamedItem('ng-reflect-height').nodeValue).toEqual(fixture.componentInstance.height);
-            expect(grid.childElementCount).toEqual(5);
+            expect(grid.childElementCount).toEqual(6);
         }));
         it('Should apply all appropriate classes on combo initialization_image + text content', fakeAsync(() => {
             const fixture: ComponentFixture<IgxExpansionPanelImageComponent> = TestBed.createComponent(IgxExpansionPanelImageComponent);
@@ -1084,9 +1086,9 @@ describe('igxExpansionPanel', () => {
 })
 export class IgxExpansionPanelGridComponent {
 
-    @ViewChild('expansionPanel', { read: IgxExpansionPanelComponent })
+    @ViewChild('expansionPanel', { read: IgxExpansionPanelComponent, static: true })
     public expansionPanel: IgxExpansionPanelComponent;
-    @ViewChild('grid1', { read: IgxGridComponent })
+    @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public grid1: IgxGridComponent;
 
     public width = '800px';
@@ -1128,9 +1130,9 @@ export class IgxExpansionPanelGridComponent {
 `
 })
 export class IgxExpansionPanelListComponent {
-    @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
+    @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent, static: true })
     public header: IgxExpansionPanelHeaderComponent;
-    @ViewChild(IgxExpansionPanelComponent, { read: IgxExpansionPanelComponent })
+    @ViewChild(IgxExpansionPanelComponent, { read: IgxExpansionPanelComponent, static: true })
     public expansionPanel: IgxExpansionPanelComponent;
 }
 
@@ -1138,8 +1140,8 @@ export class IgxExpansionPanelListComponent {
 @Component({
     template: `
 <igx-expansion-panel
-    (onCollapsed)="handleCollapsing($event)"
-    (onExpanded)="handleExpanded($event)">
+    (onCollapsed)="handleCollapsed()"
+    (onExpanded)="handleExpanded()">
     <igx-expansion-panel-header *ngIf="showHeader" headerHeight="50px">
         <igx-expansion-panel-title *ngIf="showTitle">Example Title</igx-expansion-panel-title>
         <igx-expansion-panel-description>Example Description</igx-expansion-panel-description>
@@ -1160,15 +1162,15 @@ export class IgxExpansionPanelSampleComponent {
     public showBody = true;
     public showHeader = true;
     public customIcon = false;
-    @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
+    @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent, static: false })
     public header: IgxExpansionPanelHeaderComponent;
-    @ViewChild(IgxExpansionPanelComponent, { read: IgxExpansionPanelComponent })
+    @ViewChild(IgxExpansionPanelComponent, { read: IgxExpansionPanelComponent, static: true })
     public panel: IgxExpansionPanelComponent;
-    @ViewChild(IgxExpansionPanelTitleDirective, { read: IgxExpansionPanelTitleDirective })
+    @ViewChild(IgxExpansionPanelTitleDirective, { read: IgxExpansionPanelTitleDirective, static: false })
     public title: IgxExpansionPanelTitleDirective;
-    public handleExpanded(event?) {
+    public handleExpanded() {
     }
-    public handleCollapsed(event?) {
+    public handleCollapsed() {
     }
     public handleInterraction() {
     }
@@ -1194,9 +1196,9 @@ export class IgxExpansionPanelImageComponent {
     public imagePath = 'http://milewalk.com/wp-content/uploads/2016/01/My-2-Morning-Tricks-to-Eating-the-Frog.jpg';
     // tslint:disable-next-line:max-line-length
     public text = 'A frog is any member of a diverse and largely carnivorous group of short-bodied, tailless amphibians composing the order Anura. The oldest fossil \"proto-frog\" appeared in the early Triassic of Madagascar, but molecular clock dating suggests their origins may extend further back to the Permian, 265 million years ago. Frogs are widely distributed, ranging from the tropics to subarctic regions, but the greatest concentration of species diversity is in tropical rainforests. There are approximately 4,800 recorded species, accounting for over 85% of extant amphibian species. They are also one of the five most diverse vertebrate orders. The body plan of an adult frog is generally characterized by a stout body, protruding eyes, cleft tongue, limbs folded underneath, and the absence of a tail. Besides living in fresh water and on dry land, the adults of some species are adapted for living underground or in trees. The skins of frogs are glandular, with secretions ranging from distasteful to toxic. Warty species of frog tend to be called toads but the distinction between frogs and toads is based on informal naming conventions concentrating on the warts rather than taxonomy or evolutionary history.';
-    @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
+    @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent, static: true })
     public header: IgxExpansionPanelHeaderComponent;
-    @ViewChild(IgxExpansionPanelComponent, { read: IgxExpansionPanelComponent })
+    @ViewChild(IgxExpansionPanelComponent, { read: IgxExpansionPanelComponent, static: true })
     public panel: IgxExpansionPanelComponent;
 }
 

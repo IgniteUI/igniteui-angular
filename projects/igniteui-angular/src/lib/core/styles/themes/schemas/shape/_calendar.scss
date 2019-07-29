@@ -1,0 +1,22 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+$_default-shape-calendar: (
+    border-radius: .2,
+    date-border-radius: 1,
+    month-border-radius: 1,
+);
+
+$_round-shape-calendar: (
+    border-radius: 1,
+    date-border-radius: 1,
+    month-border-radius: 1,
+);
+
+$_square-shape-calendar: (
+    border-radius: 0%,
+    date-border-radius: 0%,
+    month-border-radius: 0%,
+);

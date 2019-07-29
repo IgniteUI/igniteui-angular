@@ -124,7 +124,7 @@ describe('IgCircularBar', () => {
         const fixture = TestBed.createComponent(CircularBarComponent);
         fixture.detectChanges();
 
-        const progressBar = fixture.componentInstance.circularBar;
+        const progressBar = fixture.componentInstance.progressbar;
         let expectedValue = 50;
 
         fixture.componentInstance.value = expectedValue;
@@ -149,7 +149,7 @@ describe('IgCircularBar', () => {
         const fixture = TestBed.createComponent(CircularBarComponent);
         fixture.detectChanges();
 
-        const progressBar = fixture.componentInstance.circularBar;
+        const progressBar = fixture.componentInstance.progressbar;
         let expectedValue = 50;
 
         fixture.componentInstance.animate = false;
@@ -169,13 +169,13 @@ describe('IgCircularBar', () => {
         const fix = TestBed.createComponent(CircularBarComponent);
         fix.detectChanges();
 
-        const bar = fix.componentInstance.circularBar;
-        const expectedRes = fix.componentInstance.value;
+        const bar = fix.componentInstance.progressbar;
+        const expectedRes = fix.componentInstance.value as number;
 
         tick(tickTime);
         expect(bar.value).toEqual(expectedRes);
 
-        bar.value = '0345-234';
+        fix.componentInstance.value = '0345-234';
         tick(tickTime);
         fix.detectChanges();
         expect(bar.value).toEqual(expectedRes);
@@ -206,7 +206,7 @@ describe('IgCircularBar', () => {
         fix.detectChanges();
 
         tick(tickTime);
-        const bar = compInstance.circularBar;
+        const bar = compInstance.progressbar;
         const expectedRes = 0;
         expect(bar.value).toBe(expectedRes);
         expect(bar.valueInPercent).toBe(expectedRes);
@@ -229,7 +229,7 @@ describe('IgCircularBar', () => {
         compInstance.value = value;
         fix.detectChanges();
 
-        const bar = compInstance.circularBar;
+        const bar = compInstance.progressbar;
         tick(tickTime);
         expect(bar.value).toBe(max);
         expect(bar.valueInPercent).toBe(100);
@@ -250,11 +250,9 @@ describe('IgCircularBar', () => {
         compInstance.value = stringValue;
         fix.detectChanges();
 
-        const bar = compInstance.circularBar;
+        const bar = compInstance.progressbar;
 
-        let expectedRes: number | string = stringValue.toString();
-        expect(bar.value).not.toBe(expectedRes);
-        expectedRes = parseFloat(stringValue);
+        const expectedRes = parseFloat(stringValue);
         expect(bar.value).toBe(expectedRes);
     });
 
@@ -349,14 +347,14 @@ describe('IgCircularBar', () => {
 
     // UI TESTS
     describe('Circular bar UI TESTS', () => {
-        configureTestSuite();
+        // configureTestSuite();
         it('The value representation should respond to passed value correctly', fakeAsync(() => {
             const fixture = TestBed.createComponent(CircularBarComponent);
             fixture.detectChanges();
 
             const componentInstance = fixture.componentInstance;
             const progressBarElem = fixture.debugElement.query(By.css('svg')).nativeElement;
-            let expectedTextContent = componentInstance.circularBar.value + '%';
+            let expectedTextContent = componentInstance.progressbar.value + '%';
 
             tick(tickTime);
             fixture.detectChanges();
@@ -369,13 +367,13 @@ describe('IgCircularBar', () => {
             expect(progressBarElem.children[2].children[0].classList.value).toBe(CIRCULAR_TEXT_CLASS);
             expect(progressBarElem.children[2].children[0].textContent.trim()).toMatch(expectedTextContent);
 
-            componentInstance.circularBar.text = 'No progress';
+            componentInstance.progressbar.text = 'No progress';
             fixture.detectChanges();
 
             expectedTextContent = 'No progress';
             expect(progressBarElem.children[2].children[0].textContent.trim()).toMatch(expectedTextContent);
 
-            componentInstance.circularBar.textVisibility = false;
+            componentInstance.progressbar.textVisibility = false;
             fixture.detectChanges();
 
             expect(progressBarElem.children[2].classList.value).toMatch(CIRCULAR_HIDDEN_TEXT_CLASS);
@@ -456,7 +454,7 @@ describe('IgCircularBar', () => {
 });
 @Component({ template: `<igx-circular-bar></igx-circular-bar>` })
 class InitCircularProgressBarComponent {
-    @ViewChild(IgxCircularProgressBarComponent) public circularBar: IgxCircularProgressBarComponent;
+    @ViewChild(IgxCircularProgressBarComponent, { static: true }) public circularBar: IgxCircularProgressBarComponent;
 }
 
 @Component({
@@ -467,9 +465,8 @@ class InitCircularProgressBarComponent {
     </div>`
 })
 class CircularBarComponent {
-    @ViewChild(IgxCircularProgressBarComponent) public progressbar: IgxCircularProgressBarComponent;
-    @ViewChild('wrapper') public wrapper;
-    @ViewChild('circularBar') public circularBar;
+    @ViewChild(IgxCircularProgressBarComponent, { static: true }) public progressbar: IgxCircularProgressBarComponent;
+    @ViewChild('wrapper', { static: true }) public wrapper;
 
     public value: string | number = 30;
     public max = 100;
@@ -486,5 +483,5 @@ class CircularBarComponent {
         </igx-circular-bar>`
 })
 class CircularBarTemplateComponent {
-    @ViewChild(IgxCircularProgressBarComponent) public progressbar: IgxCircularProgressBarComponent;
+    @ViewChild(IgxCircularProgressBarComponent, { static: true }) public progressbar: IgxCircularProgressBarComponent;
 }

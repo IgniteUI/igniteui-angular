@@ -5,7 +5,7 @@ import { ButtonSampleComponent } from './button/button.sample';
 import { CalendarSampleComponent } from './calendar/calendar.sample';
 import { CardSampleComponent } from './card/card.sample';
 import { CarouselSampleComponent } from './carousel/carousel.sample';
-import { ChipsSampleComponent} from './chips/chips.sample';
+import { ChipsSampleComponent } from './chips/chips.sample';
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
@@ -28,7 +28,17 @@ import { ColorsSampleComponent } from './styleguide/colors/color.sample';
 import { ShadowsSampleComponent } from './styleguide/shadows/shadows.sample';
 import { TypographySampleComponent } from './styleguide/typography/typography.sample';
 import { BottomNavSampleComponent, CustomContentComponent } from './bottomnav/bottomnav.sample';
+import { BottomNavRoutingSampleComponent } from './bottomnav-routing/bottomnav-routing.sample';
+import {
+    BottomNavRoutingView1Component,
+    BottomNavRoutingView2Component,
+    BottomNavRoutingView3Component } from './bottomnav-routing/bottomnav-routing-views.sample';
 import { TabsSampleComponent } from './tabs/tabs.sample';
+import { TabsRoutingSampleComponent } from './tabs-routing/tabs-routing.sample';
+import {
+    TabsRoutingView1Component,
+    TabsRoutingView2Component,
+    TabsRoutingView3Component } from './tabs-routing/tabs-routing-views.sample';
 import { TimePickerSampleComponent } from './time-picker/time-picker.sample';
 import { ToastSampleComponent } from './toast/toast.sample';
 import { VirtualForSampleComponent } from './virtual-for-directive/virtual-for.sample';
@@ -48,6 +58,7 @@ import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/
 import { ButtonGroupSampleComponent } from './buttonGroup/buttonGroup.sample';
 import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-column-groups.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
+import { DisplayDensityDropDownComponent } from './drop-down/display-density/display-density.sample';
 import { DropDownVirtualComponent } from './drop-down/drop-down-virtual/drop-down-virtual.component';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
@@ -71,6 +82,8 @@ import { GridMRLSampleComponent } from './grid-multi-row-layout/grid-mrl.sample'
 import { TreeGridLoadOnDemandSampleComponent } from './tree-grid-load-on-demand/tree-grid-load-on-demand.sample';
 import { GridFilterTemplateSampleComponent } from './grid-filter-template/grid-filter-template.sample';
 import { GridMRLConfigSampleComponent } from './grid-multi-row-layout-config/grid-mrl-config.sample';
+import { GridMRLCustomNavigationSampleComponent } from './grid-mrl-custom-navigation/grid-mrl-custom-navigation';
+import { GridClipboardSampleComponent } from './grid-clipboard/grid-clipboard.sample';
 
 const appRoutes = [
     {
@@ -143,6 +156,10 @@ const appRoutes = [
         component: DropDownSampleComponent
     },
     {
+        path: 'dropDown-density',
+        component: DisplayDensityDropDownComponent
+    },
+    {
         path: 'virtual-dropdown',
         component: DropDownVirtualComponent
     },
@@ -156,7 +173,7 @@ const appRoutes = [
     },
     {
         path: 'lazyIconModule',
-        loadChildren: './icon/LazyModule/lazyIcon.module#LazyIconModule'
+        loadChildren: () => import('./icon/LazyModule/lazyIcon.module').then(m => m.LazyIconModule)
     },
     {
         path: 'inputs',
@@ -222,7 +239,6 @@ const appRoutes = [
         path: 'snackbar',
         component: SnackbarSampleComponent
     },
-
     {
         path: 'colors',
         component: ColorsSampleComponent
@@ -237,11 +253,32 @@ const appRoutes = [
     },
     {
         path: 'bottom-navigation',
-        component: BottomNavSampleComponent
+        component: BottomNavSampleComponent,
+        children: [
+            { path: 'tabContentPath', component: CustomContentComponent, outlet: 'tabPanelOutlet' }
+        ]
+    },
+    {
+        path: 'bottom-navigation-routing',
+        component: BottomNavRoutingSampleComponent,
+        children: [
+            { path: 'view1', component: BottomNavRoutingView1Component },
+            { path: 'view2', component: BottomNavRoutingView2Component },
+            { path: 'view3', component: BottomNavRoutingView3Component },
+        ]
     },
     {
         path: 'tabs',
         component: TabsSampleComponent
+    },
+    {
+        path: 'tabs-routing',
+        component: TabsRoutingSampleComponent,
+        children: [
+            { path: 'view1', component: TabsRoutingView1Component },
+            { path: 'view2', component: TabsRoutingView2Component },
+            { path: 'view3', component: TabsRoutingView3Component },
+        ]
     },
     {
         path: 'timePicker',
@@ -270,6 +307,10 @@ const appRoutes = [
     {
         path: 'gridFilterTemplate',
         component: GridFilterTemplateSampleComponent
+    },
+    {
+        path: 'gridClipboard',
+        component: GridClipboardSampleComponent
     },
     {
         path: 'gridColumnMoving',
@@ -326,6 +367,10 @@ const appRoutes = [
     {
         path: 'gridMRLConfig',
         component: GridMRLConfigSampleComponent
+    },
+    {
+        path: 'gridMRLCustomNav',
+        component: GridMRLCustomNavigationSampleComponent
     },
     {
         path: 'gridGroupBy',

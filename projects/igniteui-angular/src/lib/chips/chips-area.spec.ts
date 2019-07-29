@@ -33,7 +33,7 @@ class TestChipComponent {
         { id: 'City', text: 'City', removable: true, selectable: true, draggable: true }
     ];
 
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent})
+    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true  })
     public chipsArea: IgxChipsAreaComponent;
 
     @ViewChildren('chipElem', { read: IgxChipComponent})
@@ -80,7 +80,7 @@ class TestChipReorderComponent {
         { id: 'FirstName', text: 'First Name' },
     ];
 
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent})
+    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true  })
     public chipsArea: IgxChipsAreaComponent;
 
     @ViewChildren('chipElem', { read: IgxChipComponent})
@@ -208,7 +208,7 @@ describe('IgxChipsArea', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            const dragDir = firstChip.dragDir['dragGhost'];
+            const dragDir = firstChip.dragDirective['dragGhost'];
 
             expect(dragDir).toBeUndefined();
         });
@@ -245,14 +245,14 @@ describe('IgxChipsArea', () => {
             fix.detectChanges();
             UIInteractions.simulatePointerEvent(
                 'pointermove',
-                secondChip.dragDir['dragGhost'],
+                secondChip.dragDirective['dragGhost'],
                 startingX + xDragDifference,
                 startingY + yDragDifference
             );
 
             setTimeout(() => {
-                const afterDragTop = secondChip.dragDir['dragGhost'].getBoundingClientRect().top;
-                const afterDragLeft = secondChip.dragDir['dragGhost'].getBoundingClientRect().left;
+                const afterDragTop = secondChip.dragDirective['dragGhost'].getBoundingClientRect().top;
+                const afterDragLeft = secondChip.dragDirective['dragGhost'].getBoundingClientRect().left;
                 expect(afterDragTop - startingTop).toEqual(yDragDifference);
                 expect(afterDragLeft - startingLeft).toEqual(xDragDifference);
             }, 100);
@@ -269,8 +269,8 @@ describe('IgxChipsArea', () => {
         const firstChip = chipComponents[0].componentInstance;
         const secondChip = chipComponents[1].componentInstance;
 
-        firstChip.dragDir.animateOnRelease = false;
-        secondChip.dragDir.animateOnRelease = false;
+        firstChip.dragDirective.animateOnRelease = false;
+        secondChip.dragDirective.animateOnRelease = false;
 
         const firstChipElem = firstChip.chipArea.nativeElement;
         const secondChipElem = secondChip.chipArea.nativeElement;
@@ -301,12 +301,12 @@ describe('IgxChipsArea', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            UIInteractions.simulatePointerEvent('pointermove', firstChip.dragDir['dragGhost'], secondChipX, secondChipY);
+            UIInteractions.simulatePointerEvent('pointermove', firstChip.dragDirective['dragGhost'], secondChipX, secondChipY);
             fix.detectChanges();
 
             return fix.whenRenderingDone();
         }).then(() => {
-            UIInteractions.simulatePointerEvent('pointerup', firstChip.dragDir['dragGhost'], secondChipX, secondChipY);
+            UIInteractions.simulatePointerEvent('pointerup', firstChip.dragDirective['dragGhost'], secondChipX, secondChipY);
             return fix.whenRenderingDone();
         }).then(() => {
             setTimeout(() => {
@@ -329,8 +329,8 @@ describe('IgxChipsArea', () => {
         const firstChip = chipComponents[0].componentInstance;
         const secondChip = chipComponents[1].componentInstance;
 
-        firstChip.dragDir.animateOnRelease = false;
-        secondChip.dragDir.animateOnRelease = false;
+        firstChip.dragDirective.animateOnRelease = false;
+        secondChip.dragDirective.animateOnRelease = false;
 
         const firstChipElem = firstChip.chipArea.nativeElement;
         const secondChipElem = secondChip.chipArea.nativeElement;
@@ -361,12 +361,12 @@ describe('IgxChipsArea', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            UIInteractions.simulatePointerEvent('pointermove', secondChip.dragDir['dragGhost'], firstChipX, firstChipY);
+            UIInteractions.simulatePointerEvent('pointermove', secondChip.dragDirective['dragGhost'], firstChipX, firstChipY);
             fix.detectChanges();
 
             return fix.whenRenderingDone();
         }).then(() => {
-            UIInteractions.simulatePointerEvent('pointerup', secondChip.dragDir['dragGhost'], firstChipX, firstChipY);
+            UIInteractions.simulatePointerEvent('pointerup', secondChip.dragDirective['dragGhost'], firstChipX, firstChipY);
             return fix.whenRenderingDone();
         }).then(() => {
             setTimeout(() => {
@@ -746,7 +746,7 @@ describe('IgxChipsArea', () => {
         const secondChip = chipComponents[1].componentInstance;
         const secondChipElem = secondChip.chipArea.nativeElement;
 
-        secondChip.dragDir.animateOnRelease = false;
+        secondChip.dragDirective.animateOnRelease = false;
         secondChip.chipArea.nativeElement.dispatchEvent(spaceKeyEvent);
 
         const startingTop = secondChipElem.getBoundingClientRect().top;
@@ -770,7 +770,7 @@ describe('IgxChipsArea', () => {
             fix.detectChanges();
             UIInteractions.simulatePointerEvent(
                 'pointermove',
-                secondChip.dragDir['dragGhost'],
+                secondChip.dragDirective['dragGhost'],
                  startingX + xDragDifference,
                   startingY + yDragDifference
             );
@@ -779,7 +779,7 @@ describe('IgxChipsArea', () => {
 
             UIInteractions.simulatePointerEvent(
                 'pointerup',
-                secondChip.dragDir['dragGhost'],
+                secondChip.dragDirective['dragGhost'],
                 startingX + xDragDifference,
                 startingY + yDragDifference
             );

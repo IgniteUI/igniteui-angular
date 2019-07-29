@@ -8,7 +8,8 @@ import {
     Input,
     QueryList,
     TemplateRef,
-    forwardRef
+    forwardRef,
+    AfterViewInit
 } from '@angular/core';
 import { DataType } from '../data-operations/data-util';
 import { GridBaseAPIService } from './api.service';
@@ -29,13 +30,15 @@ import {
     IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
     IgxStringFilteringOperand,
-    IgxFilteringOperand } from '../data-operations/filtering-condition';
+    IgxFilteringOperand
+} from '../data-operations/filtering-condition';
 import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { MRLColumnSizeInfo, MRLResizeColumnInfo } from '../data-operations/multi-row-layout.interfaces';
+import { DisplayDensity } from '../core/displayDensity';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -52,6 +55,8 @@ import { MRLColumnSizeInfo, MRLResizeColumnInfo } from '../data-operations/multi
     template: ``
 })
 export class IgxColumnComponent implements AfterContentInit {
+    private _filterable = true;
+    private _groupable = false;
     /**
      * Sets/gets the `field` value.
      * ```typescript
@@ -102,20 +107,53 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public groupable = false;
+    public get groupable() {
+        return this._groupable;
+    }
+    public set groupable(val) {
+        this._groupable = val;
+        if (this.grid) {
+            this.grid.cdr.markForCheck();
+        }
+    }
     /**
-     * Sets/gets whether the column is editable.
+     * Gets whether the column is editable.
      * Default value is `false`.
      * ```typescript
      * let isEditable = this.column.editable;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    get editable(): boolean {
+        // Updating the primary key when grid has transactions (incl. row edit)
+        // should not be allowed, as that can corrupt transaction state.
+        const rowEditable = this.grid && this.grid.rowEditable;
+        const hasTransactions = this.grid && this.grid.transactions.enabled;
+
+        if (this.isPrimaryColumn && (rowEditable || hasTransactions)) {
+            return false;
+        }
+
+        if (this._editable !== undefined) {
+            return this._editable;
+        } else {
+            return rowEditable;
+        }
+    }
+    /**
+     * Sets whether the column is editable.
+     * ```typescript
+     * this.column.editable = true;
      * ```
      * ```html
      * <igx-column [editable] = "true"></igx-column>
      * ```
      * @memberof IgxColumnComponent
      */
-    @Input()
-    public editable = null;
+    set editable(editable: boolean) {
+        this._editable = editable;
+    }
     /**
      * Sets/gets whether the column is filterable.
      * Default value is `true`.
@@ -128,7 +166,15 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public filterable = true;
+    public get filterable() {
+        return this._filterable;
+    }
+    public set filterable(val) {
+        this._filterable = val;
+        if (this.grid) {
+            this.grid.cdr.markForCheck();
+        }
+    }
     /**
      * Sets/gets whether the column is resizable.
      * Default value is `false`.
@@ -203,7 +249,7 @@ export class IgxColumnComponent implements AfterContentInit {
                 this.grid.filteringService.refreshExpressions();
             }
 
-            if (this.parent && this.parent.columnLayout && this.parent.hidden !== value) {
+            if (this.columnLayoutChild && this.parent.hidden !== value) {
                 this.parent.hidden = value;
             }
         }
@@ -291,23 +337,27 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     public set width(value: string) {
         if (value) {
+            this._calcWidth = null;
+            this.calcPixelWidth = NaN;
             this.widthSetByUser = true;
             this._width = value;
+            if (this.grid) {
+                this.cacheCalcWidth();
+                (this.grid as any)._derivePossibleWidth();
+                this.grid.cdr.markForCheck();
+            }
         }
     }
 
+    /**
+     * @hidden
+     */
     public get calcWidth(): any {
-        const colWidth = this.width;
-        const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
-        if (isPercentageWidth) {
-            return parseInt(colWidth, 10) / 100 * this.grid.unpinnedWidth;
-        } else if (!colWidth) {
-            // no width
-            return this.defaultWidth || this.grid.getPossibleColumnWidth();
-        } else {
-            return this.width;
-        }
+        return this.getCalcWidth();
     }
+
+    private _calcWidth = null;
+    public calcPixelWidth: number;
 
     /**
      * Sets/gets the maximum `width` of the column.
@@ -333,7 +383,15 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public minWidth = this.defaultMinWidth;
+    public set minWidth(value: string) {
+        const minVal = parseFloat(value);
+        if (Number.isNaN(minVal)) { return; }
+        this._defaultMinWidth = value;
+
+    }
+    public get minWidth(): string {
+        return !this._defaultMinWidth ? this.defaultMinWidth : this._defaultMinWidth;
+    }
     /**
      * Sets/gets the class selector of the column header.
      * ```typescript
@@ -388,9 +446,22 @@ export class IgxColumnComponent implements AfterContentInit {
         return this.grid.columns.indexOf(this);
     }
     /**
-     * Gets formatter for the column.
+     * When autogenerating columns, the formatter is used to format the display of the column data
+     * without modifying the underlying bound values.
+     *
+     * In this example, we check to see if the column name is Salary, and then provide a method as the column formatter
+     * to format the value into a currency string.
+     *
      * ```typescript
-     * let columnFormatter = this.column.formatter;
+     * onColumnInit(column: IgxColumnComponent) {
+     *   if (column.field == "Salary") {
+     *     column.formatter = (salary => this.format(salary));
+     *   }
+     * }
+     *
+     * format(value: number) : string {
+     *   return formatCurrency(value, "en-us", "$");
+     * }
      * ```
      * @memberof IgxColumnComponent
      */
@@ -595,7 +666,15 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     get defaultMinWidth(): string {
-        return this._defaultMinWidth;
+        if (!this.grid) { return '80'; }
+        switch (this.grid.displayDensity) {
+            case DisplayDensity.cosy:
+                return '64';
+            case DisplayDensity.compact:
+                return '56';
+            default:
+                return '80';
+        }
     }
     /**
      * The reference to the `igx-grid` owner.
@@ -651,6 +730,7 @@ export class IgxColumnComponent implements AfterContentInit {
     }
     /**
      * Sets the header template.
+     * Note that the column header height is fixed and any content bigger than it will be cut off.
      * ```html
      * <ng-template #headerTemplate>
      *   <div style = "background-color:black" (click) = "changeColor(val)">
@@ -765,6 +845,9 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this.columnGroup) {
             col = this.allChildren.filter(c => !c.columnGroup)[0] as any;
         }
+        if (this.columnLayoutChild) {
+            return this.parent.childrenVisibleIndexes.find(x => x.column === this).index;
+        }
 
         if (!this.pinned) {
             const indexInCollection = unpinnedColumns.indexOf(col);
@@ -794,6 +877,17 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     get columnLayout() {
         return false;
+    }
+
+     /**
+     * Returns a boolean indicating if the column is a child of a `ColumnLayout` for multi-row layout.
+     * ```typescript
+     * let columnLayoutChild =  this.column.columnLayoutChild;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    get columnLayoutChild() {
+        return this.parent && this.parent.columnLayout;
     }
 
     /**
@@ -989,32 +1083,42 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    protected _defaultMinWidth = '80';
+    protected _defaultMinWidth = '';
     /**
      *@hidden
      */
     protected _hasSummary = false;
     /**
+     * @hidden
+     */
+    protected _editable: boolean;
+    /**
+     * @hidden
+     */
+    protected get isPrimaryColumn(): boolean {
+        return this.field !== undefined && this.grid !== undefined && this.field === this.grid.primaryKey;
+    }
+    /**
      *@hidden
      */
-    @ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective })
+    @ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective, static: true })
     protected cellTemplate: IgxCellTemplateDirective;
     /**
      *@hidden
      */
-    @ContentChild(IgxCellHeaderTemplateDirective, { read: IgxCellHeaderTemplateDirective })
-    protected headTemplate: IgxCellHeaderTemplateDirective;
+    @ContentChildren(IgxCellHeaderTemplateDirective, { read: IgxCellHeaderTemplateDirective, descendants: false })
+    protected headTemplate: QueryList<IgxCellHeaderTemplateDirective>;
     /**
      *@hidden
      */
-    @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective })
+    @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective, static: true })
     protected editorTemplate: IgxCellEditorTemplateDirective;
 
-    private _vIndex = NaN;
+    protected _vIndex = NaN;
     /**
      *@hidden
      */
-    @ContentChild(IgxFilterCellTemplateDirective, { read: IgxFilterCellTemplateDirective })
+    @ContentChild(IgxFilterCellTemplateDirective, { read: IgxFilterCellTemplateDirective, static: true })
     public filterCellTemplateDirective: IgxFilterCellTemplateDirective;
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, public cdr: ChangeDetectorRef) { }
@@ -1023,8 +1127,11 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      * @internal
      */
-    public resetVisibleIndex() {
+    public resetCaches() {
         this._vIndex = NaN;
+        if (this.grid) {
+            this.cacheCalcWidth();
+        }
     }
 
     /**
@@ -1034,8 +1141,8 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this.cellTemplate) {
             this._bodyTemplate = this.cellTemplate.template;
         }
-        if (this.headTemplate) {
-            this._headerTemplate = this.headTemplate.template;
+        if (this.headTemplate && this.headTemplate.length) {
+            this._headerTemplate = this.headTemplate.toArray()[0].template;
         }
         if (this.editorTemplate) {
             this._inlineEditorTemplate = this.editorTemplate.template;
@@ -1083,14 +1190,14 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      */
     getGridTemplate(isRow: boolean, isIE: boolean): string {
-        const colSpanAccum = (acc, val) => Math.max(val.colStart + val.gridColumnSpan - 1, acc);
-        const templateItems = !isRow ?
-            this.children && this.children.reduce(colSpanAccum, 1) || 1 :
-            this.grid.multiRowLayoutRowSize;
-        const generatedSizes = !isRow ? this.getColumnSizesString(this.children) : null;
-        return isIE ?
-        generatedSizes || `(1fr)[${templateItems}]` :
-            generatedSizes || `repeat(${templateItems},1fr)`;
+        if (isRow) {
+            const rowsCount = this.grid.multiRowLayoutRowSize;
+            return isIE ?
+                `(1fr)[${rowsCount}]` :
+                `repeat(${rowsCount},1fr)`;
+        } else {
+            return this.getColumnSizesString(this.children);
+        }
     }
 
     public getInitialChildColumnSizes(children: QueryList<IgxColumnComponent>): Array<MRLColumnSizeInfo> {
@@ -1205,7 +1312,7 @@ export class IgxColumnComponent implements AfterContentInit {
         return columnSizes;
     }
 
-    protected getFilledChildColumnSizes(children: QueryList<IgxColumnComponent>): Array<string> {
+    public getFilledChildColumnSizes(children: QueryList<IgxColumnComponent>): Array<string> {
         const columnSizes = this.getInitialChildColumnSizes(children);
 
         // fill the gaps if there are any
@@ -1226,7 +1333,7 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     public getResizableColUnderEnd(): MRLResizeColumnInfo[] {
-        if (this.columnLayout || !this.parent.columnLayout || this.columnGroup) {
+        if (this.columnLayout || !this.columnLayoutChild || this.columnGroup) {
             return [{ target: this, spanUsed: 1 }];
         }
 
@@ -1316,6 +1423,9 @@ export class IgxColumnComponent implements AfterContentInit {
 
         grid.resetCaches();
         grid.cdr.detectChanges();
+        if (this.columnLayoutChild) {
+            this.grid.columns.filter(x => x.columnLayout).forEach( x => x.populateVisibleIndexes());
+        }
         this.grid.filteringService.refreshExpressions();
         this.grid.refreshSearch(true);
         return true;
@@ -1376,6 +1486,9 @@ export class IgxColumnComponent implements AfterContentInit {
         grid.onColumnPinning.emit(args);
 
         grid.cdr.detectChanges();
+        if (this.columnLayoutChild) {
+            this.grid.columns.filter(x => x.columnLayout).forEach( x => x.populateVisibleIndexes());
+        }
         this.grid.filteringService.refreshExpressions();
         this.grid.refreshSearch(true);
 
@@ -1458,6 +1571,17 @@ export class IgxColumnComponent implements AfterContentInit {
 
     /**
      * @hidden
+     */
+    public getCalcWidth(): any {
+        if (this._calcWidth !== null && !isNaN(this.calcPixelWidth)) {
+            return this._calcWidth;
+        }
+        this.cacheCalcWidth();
+        return this._calcWidth;
+    }
+
+    /**
+     * @hidden
      * Returns the size (in pixels) of the longest currently visible cell, including the header cell.
      * ```typescript
      * @ViewChild('grid') grid: IgxGridComponent;
@@ -1490,7 +1614,7 @@ export class IgxColumnComponent implements AfterContentInit {
         if (this.headerCell) {
             let headerCell;
             if (this.headerTemplate && this.headerCell.elementRef.nativeElement.children[0].children.length > 0) {
-                headerCell =  Math.max(...Array.from(this.headerCell.elementRef.nativeElement.children[0].children)
+                headerCell = Math.max(...Array.from(this.headerCell.elementRef.nativeElement.children[0].children)
                     .map((child) => getNodeSizeViaRange(range, child)));
             } else {
                 headerCell = getNodeSizeViaRange(range, this.headerCell.elementRef.nativeElement.children[0]);
@@ -1524,7 +1648,7 @@ export class IgxColumnComponent implements AfterContentInit {
         const colWidth = this.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
 
-        if (this.parent && this.parent.columnLayout) {
+        if (this.columnLayoutChild) {
             return '';
         }
 
@@ -1540,6 +1664,30 @@ export class IgxColumnComponent implements AfterContentInit {
             return colWidth;
         }
     }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    protected cacheCalcWidth(): any {
+        const grid = this.gridAPI.grid;
+        const colWidth = this.width;
+        const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
+        if (isPercentageWidth) {
+            this._calcWidth = parseInt(colWidth, 10) / 100 * (grid.calcWidth - grid.featureColumnsWidth);
+        } else if (!colWidth) {
+            // no width
+            this._calcWidth = this.defaultWidth || grid.getPossibleColumnWidth();
+        } else {
+            this._calcWidth = this.width;
+        }
+        this.calcPixelWidth = parseInt(this._calcWidth, 10);
+    }
+
+    /**
+     * @hidden
+     */
+    public populateVisibleIndexes() { }
 }
 
 
@@ -1604,16 +1752,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     public set filters(classRef: any) { }
-    /**
-     * Gets the default minimum `width` of the column group.
-     * ```typescript
-     * let defaultMinWidth = this.columnGroup.defaultMinWidth;
-     * ```
-     * @memberof IgxColumnGroupComponent
-     */
-    get defaultMinWidth(): string {
-        return this._defaultMinWidth;
-    }
+
     /**
      * Returns a reference to the body template.
      * ```typescript
@@ -1628,21 +1767,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @hidden
      */
     set bodyTemplate(template: TemplateRef<any>) { }
-    /**
-     * Returns a reference to the header template.
-     * ```typescript
-     * let headerTemplate = this.columnGroup.headerTemplate;
-     * ```
-     * @memberof IgxColumnGroupComponent
-     */
-    get headerTemplate(): TemplateRef<any> {
-        return this._headerTemplate;
-    }
-    /**
-     * @hidden
-     * @memberof IgxColumnGroupComponent
-     */
-    set headerTemplate(template: TemplateRef<any>) { }
+
     /**
      * Returns a reference to the inline editor template.
      * ```typescript
@@ -1697,6 +1822,9 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
             @ContentChildren with descendants still returns the `parent`
             component in the query list.
         */
+        if (this.headTemplate && this.headTemplate.length) {
+            this._headerTemplate = this.headTemplate.toArray()[0].template;
+        }
         this.children.reset(this.children.toArray().slice(1));
         this.children.forEach(child => {
             child.parent = this;
@@ -1768,6 +1896,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     template: ``
 })
 export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements AfterContentInit {
+    public childrenVisibleIndexes = [];
     /**
      * Gets the width of the column layout.
      * ```typescript
@@ -1775,18 +1904,59 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      * ```
      * @memberof IgxColumnGroupComponent
      */
-    get width() {
+    get width(): any {
         const width = this.getFilledChildColumnSizes(this.children).reduce((acc, val) => acc + parseInt(val, 10), 0);
         return width;
     }
 
-    set width(val) { }
+    set width(val: any) { }
 
     get columnLayout() {
         return true;
     }
 
     /**
+     * @hidden
+     */
+    public getCalcWidth(): any {
+        let borderWidth = 0;
+
+        if (this.headerGroup && this.headerGroup.hasLastPinnedChildColumn) {
+            const headerStyles = this.grid.document.defaultView.getComputedStyle(this.headerGroup.element.nativeElement.children[0]);
+            borderWidth = parseInt(headerStyles.borderRightWidth, 10);
+        }
+
+        return super.getCalcWidth() + borderWidth;
+    }
+
+    /**
+     * Gets the column visible index.
+     * If the column is not visible, returns `-1`.
+     * ```typescript
+     * let visibleColumnIndex =  this.column.visibleIndex;
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    get visibleIndex(): number {
+        if (!isNaN(this._vIndex)) {
+            return this._vIndex;
+        }
+
+        const unpinnedColumns = this.grid.unpinnedColumns.filter(c => c.columnLayout && !c.hidden);
+        const pinnedColumns = this.grid.pinnedColumns.filter(c => c.columnLayout && !c.hidden);
+        let vIndex = -1;
+
+        if (!this.pinned) {
+            const indexInCollection = unpinnedColumns.indexOf(this);
+            vIndex = indexInCollection === -1 ? -1 : pinnedColumns.length + indexInCollection;
+        } else {
+            vIndex = pinnedColumns.indexOf(this);
+        }
+        this._vIndex = vIndex;
+        return vIndex;
+    }
+
+    /*
      * Gets whether the column layout is hidden.
      * ```typescript
      * let isHidden = this.columnGroup.hidden;
@@ -1808,6 +1978,10 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
     set hidden(value: boolean) {
         this._hidden = value;
         this.children.forEach(child => child.hidden = value);
+        if (this.grid && this.grid.columns && this.grid.columns.length > 0) {
+            // reset indexes in case columns are hidden/shown runtime
+            this.grid.columns.filter(x => x.columnGroup).forEach( x => x.populateVisibleIndexes());
+        }
     }
 
     /**
@@ -1824,6 +1998,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         this.children.forEach(child => {
             child.disableHiding = true;
             child.disablePinning = true;
+            child.movable = false;
         });
     }
 
@@ -1836,6 +2011,27 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      */
     get hasLastPinnedChildColumn() {
         return this.children.some(child => child.isLastPinned);
+    }
+
+    /**
+     *@hidden
+    */
+    public populateVisibleIndexes() {
+        this.childrenVisibleIndexes = [];
+        const grid = this.gridAPI.grid;
+        const columns = grid && grid.pinnedColumns && grid.unpinnedColumns ? grid.pinnedColumns.concat(grid.unpinnedColumns) : [];
+        const orderedCols = columns
+        .filter(x => !x.columnGroup && !x.hidden)
+        .sort((a, b) => a.rowStart - b.rowStart || columns.indexOf(a.parent) - columns.indexOf(b.parent) || a.colStart - b.colStart);
+        this.children.forEach(child => {
+            const rs = child.rowStart || 1;
+            let vIndex = 0;
+            // filter out all cols with larger rowStart
+            const cols = orderedCols.filter(c =>
+                !c.columnGroup && (c.rowStart || 1) <= rs);
+            vIndex = cols.indexOf(child);
+            this.childrenVisibleIndexes.push({column: child, index: vIndex});
+        });
     }
 
 }

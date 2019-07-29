@@ -1091,7 +1091,7 @@ describe('IgxGrid - multi-row-layout', () => {
         expect(lastRow.element.nativeElement.getBoundingClientRect().bottom).toBe(grid.tbody.nativeElement.getBoundingClientRect().bottom);
 
         // check size is correct
-        expect(grid.verticalScrollContainer.getSizeAt(lastIndex)).toBe(150);
+        expect(grid.verticalScrollContainer.getSizeAt(lastIndex)).toBe(151);
 
         // check DOM
         const lastRowCells = lastRow.cells.toArray();
@@ -1132,6 +1132,36 @@ describe('IgxGrid - multi-row-layout', () => {
         const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
         expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('118px 118px 118px 118px 118px 118px');
     });
+
+    it('should disregard hideGroupedColumns option and not hide columns when grouping when having column layouts.', () => {
+        const fixture = TestBed.createComponent(ColumnLayoutTestComponent);
+        fixture.componentInstance.colGroups = [{
+            group: 'group1',
+            columns: [
+                { field: 'ContactName', rowStart: 1, colStart: 1, colEnd : 4},
+                { field: 'ContactTitle', rowStart: 1, colStart: 4, colEnd: 6},
+                { field: 'Country', rowStart: 1, colStart: 6, colEnd: 7},
+                { field: 'Phone', rowStart: 2, colStart: 1, colEnd: 3},
+                { field: 'City', rowStart: 2, colStart: 3, colEnd: 5},
+                { field: 'Address', rowStart: 2, colStart: 5, colEnd: 7},
+                { field: 'CompanyName', rowStart: 3, colStart: 1, colEnd: 2},
+                { field: 'PostalCode', rowStart: 3, colStart: 2, colEnd: 3},
+                { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7},
+            ]
+        }];
+        const grid = fixture.componentInstance.grid;
+        grid.hideGroupedColumns = true;
+        fixture.detectChanges();
+
+        grid.groupBy({ fieldName: 'ContactTitle', dir: SortingDirection.Desc, ignoreCase: false,
+        strategy: DefaultSortingStrategy.instance() });
+        fixture.detectChanges();
+
+        // check column and group are not hidden
+        const col = grid.getColumnByName('ContactTitle');
+        expect(col.hidden).toBe(false);
+        expect(col.parent.hidden).toBe(false);
+    });
 });
 
 @Component({
@@ -1146,7 +1176,7 @@ describe('IgxGrid - multi-row-layout', () => {
     `
 })
 export class ColumnLayoutTestComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
     cols: Array<any> = [
         { field: 'ID', rowStart: 1, colStart: 1 },
