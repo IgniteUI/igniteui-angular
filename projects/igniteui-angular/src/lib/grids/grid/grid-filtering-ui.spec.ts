@@ -1563,8 +1563,8 @@ describe('IgxGrid - Filtering actions', () => {
 
         reset.nativeElement.focus();
         inputGroup.nativeElement.dispatchEvent(new FocusEvent('focusout'));
+        await wait(100);
         fix.detectChanges();
-        await wait(16);
 
         expect(filterChip.componentInstance.selected).toBeFalsy();
     });
