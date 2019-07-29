@@ -32,8 +32,8 @@
                             </div>
                 </div>
             </ng-container>
-            <ng-container *ngIf="rowSelectable">
-                <div class="igx-grid__cbx-selection" #headerCheckboxContainer  [ngClass]="{
+            <ng-container *ngIf="showRowCheckboxes">
+                <div class="igx-grid__cbx-selection" #headerCheckboxContainer [ngClass]="{
                     'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible
                 }">
                     <igx-checkbox [checked]="allRowsSelected" (change)="onHeaderCheckboxClick($event, filteredData)" disableRipple="true" [aria-label]="headerCheckboxAriaLabel" #headerCheckbox></igx-checkbox>
@@ -61,6 +61,7 @@
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
         | treeGridTransaction:id:pipeTrigger
+        | visibleColumns:hasVisibleColumns
         | treeGridHierarchizing:primaryKey:foreignKey:childDataKey:id:pipeTrigger
         | treeGridFiltering:filteringExpressionsTree:id:pipeTrigger
         | treeGridSorting:sortingExpressions:id:pipeTrigger
