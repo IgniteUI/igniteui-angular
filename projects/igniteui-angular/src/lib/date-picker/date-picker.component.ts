@@ -50,7 +50,7 @@ import {
 } from './date-picker.utils';
 import { DatePickerDisplayValuePipe, DatePickerInputValuePipe } from './date-picker.pipes';
 import { IDatePicker } from './date-picker.common';
-import { KEYS, CancelableBrowserEventArgs, isIE } from '../core/utils';
+import { KEYS, CancelableBrowserEventArgs, isIE, isEqual } from '../core/utils';
 import { IgxDatePickerTemplateDirective, IgxDatePickerActionsDirective } from './date-picker.directives';
 import { IgxCalendarContainerComponent } from './calendar-container.component';
 import { InteractionMode } from '../core/enums';
@@ -77,6 +77,10 @@ export interface IDatePickerValidationFailedEventArgs {
     prevValue: Date;
 }
 
+/**
+ * This interface is used to provide information about date picker old and new value
+ * when valueChange event is fired.
+ */
 export interface IDatePickerValueChangedEventArgs {
     oldValue: Date;
     newValue: Date;
@@ -635,11 +639,11 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         *}
         *```
         *```html
-        *<igx-date-picker (onValueChanged)="valueChanged($event)" mode="dropdown"></igx-date-picker>
+        *<igx-date-picker (valueChange)="valueChanged($event)" mode="dropdown"></igx-date-picker>
         *```
     */
     @Output()
-    public onValueChanged = new EventEmitter<IDatePickerValueChangedEventArgs>();
+    public valueChange = new EventEmitter<IDatePickerValueChangedEventArgs>();
 
     /**
     *An @Output property that fires when the user types/spins to a disabled date in the date-picker editor.
@@ -935,15 +939,10 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      * @memberOf {@link IgxDatePickerComponent}
      */
     public selectDate(date: Date): void {
-        const oldDate = this.value;
+        const oldValue = this.value;
         this.value = date;
-        if ((oldDate && oldDate.getTime()) !== (this.value && this.value.getTime())) {
-            const args: IDatePickerValueChangedEventArgs = {
-                oldValue: oldDate,
-                newValue: this.value
-            };
-            this.onValueChanged.emit(args);
-        }
+
+        this.emitValueChangeEvent(oldValue, this.value );
         this.onSelection.emit(date);
         this._onChangeCallback(date);
     }
@@ -962,15 +961,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public deselectDate(): void {
         const oldValue = this.value;
         this.value = null;
-
-        if (oldValue !== null) {
-            const args: IDatePickerValueChangedEventArgs = {
-                oldValue: oldValue,
-                newValue: null
-            };
-            this.onValueChanged.emit(args);
-        }
-
+        this.emitValueChangeEvent(oldValue, this.value );
         if (this.calendar) {
             this.calendar.deselectDate();
         }
@@ -1065,14 +1056,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         const oldValue = this.value;
         this.value = date;
 
-        if ((oldValue && oldValue.getTime()) !== (this.value && this.value.getTime())) {
-            const args: IDatePickerValueChangedEventArgs = {
-                oldValue: oldValue,
-                newValue: this.value
-            };
-            this.onValueChanged.emit(args);
-        }
-
+        this.emitValueChangeEvent(oldValue, this.value );
         this.calendar.viewDate = date;
         this._onChangeCallback(date);
         this.closeCalendar();
@@ -1190,6 +1174,16 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         }
     }
 
+    private emitValueChangeEvent(oldValue: Date, newValue: Date) {
+        if (!isEqual(oldValue, newValue)) {
+            const args: IDatePickerValueChangedEventArgs = {
+                oldValue: oldValue,
+                newValue: newValue
+            };
+            this.valueChange.emit(args);
+        }
+    }
+
     private calculateDate(dateString: string, invokedByEvent: string): void {
         if (dateString !== '') {
             const prevDateValue = this.value;
@@ -1210,13 +1204,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
                     || (this.disabledDates !== null && !isDateInRanges(newValue, this.disabledDates))) {
                         const oldValue = this.value;
                         this.value = newValue;
-                        if ((this.value && this.value.getTime()) !== (oldValue && oldValue.getTime())) {
-                            const args: IDatePickerValueChangedEventArgs = {
-                                oldValue: oldValue,
-                                newValue: this.value
-                            };
-                            this.onValueChanged.emit(args);
-                        }
+
+                        this.emitValueChangeEvent(oldValue, this.value );
                         this.invalidDate = '';
                         this._onChangeCallback(newValue);
                 } else {
