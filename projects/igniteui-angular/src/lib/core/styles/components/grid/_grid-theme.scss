@@ -93,7 +93,7 @@
 /// @param {box-shadow} $drag-shadow [null] - The shadow used for movable elements (ex. column headers).
 /// @param {color} $row-ghost-background [null] - The dragged row background color.
 /// @param {color} $row-drag-color [null] - The row drag handle color.
-/// @param {color} sortable-header-icon-hover-color [null] - The icon color on hover in grid header when the column is sortable.
+/// @param {color} $sortable-header-icon-hover-color [null] - The icon color on hover in grid header when the column is sortable.
 /// @param {border-radius} $drop-area-border-radius [null] - The border radius used for column drop area.
 ///
 /// @requires $default-palette
