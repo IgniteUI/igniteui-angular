@@ -106,18 +106,18 @@
             class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
         | gridTransaction:id:pipeTrigger
+        | visibleColumns:hasVisibleColumns
         | gridFiltering:filteringExpressionsTree:id:pipeTrigger
         | gridSort:sortingExpressions:id:pipeTrigger
-        | gridPreGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger
+        | gridGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger
         | gridPaging:page:perPage:id:pipeTrigger
-        | gridPostGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:pipeTrigger
         | gridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:pipeTrigger:summaryPipeTrigger"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight'
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
             #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
             <ng-template #record_template>
-                <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
+                <igx-grid-row  [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
                 </igx-grid-row>
             </ng-template>
             <ng-template #group_template>
@@ -175,8 +175,7 @@
 </div>
 
 <ng-template #defaultPaginator>
-    <igx-paginator [displayDensity]="displayDensity" [(page)]="page"
-        [totalRecords]="filteredData ? filteredData.length : totalRecords" [(perPage)]="perPage">
+    <igx-paginator [displayDensity]="displayDensity" [(page)]="page" [totalRecords]="totalRecords" [(perPage)]="perPage">
     </igx-paginator>
 </ng-template>
 

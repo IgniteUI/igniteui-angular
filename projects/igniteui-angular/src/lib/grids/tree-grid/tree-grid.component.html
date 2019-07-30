@@ -20,7 +20,7 @@
                     </div>
                 </div>
             </ng-container>
-            <ng-container *ngIf="rowSelectable">
+            <ng-container *ngIf="showRowCheckboxes">
                 <div class="igx-grid__cbx-selection" #headerCheckboxContainer [ngClass]="{
                     'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible
                 }">
@@ -64,6 +64,7 @@
         <ng-template igxGridFor let-rowData
             [igxGridForOf]="data
         | treeGridTransaction:id:pipeTrigger
+        | visibleColumns:hasVisibleColumns
         | treeGridHierarchizing:primaryKey:foreignKey:childDataKey:id:pipeTrigger
         | treeGridFiltering:filteringExpressionsTree:id:pipeTrigger
         | treeGridSorting:sortingExpressions:id:pipeTrigger
@@ -156,14 +157,28 @@
     </div>
 </div>
 
+<ng-template #defaultRowEditText>
+    You have {{ rowChangesCount }} changes in this row
+</ng-template>
+
+<ng-template #defaultRowEditActions>
+    <button igxButton igxRowEditTabStop (click)="endEdit(false, $event)">Cancel</button>
+    <button igxButton igxRowEditTabStop (click)="endEdit(true, $event)">Done</button>
+</ng-template>
+
 <ng-template #defaultRowEditTemplate>
     <div class="igx-banner__message">
-        <span class="igx-banner__text">You have {{ rowChangesCount }} changes in this row</span>
+        <span class="igx-banner__text">
+            <ng-container
+                *ngTemplateOutlet="rowEditText ? rowEditText : defaultRowEditText; context: { $implicit: rowChangesCount }">
+            </ng-container>
+        </span>
     </div>
     <div class="igx-banner__actions">
         <div class="igx-banner__row">
-            <button igxButton igxRowEditTabStop (click)="endEdit(false, $event)">Cancel</button>
-            <button igxButton igxRowEditTabStop (click)="endEdit(true, $event)">Done</button>
+            <ng-container
+                *ngTemplateOutlet="rowEditActions ? rowEditActions : defaultRowEditActions; context: { $implicit: endEdit.bind(this) }">
+            </ng-container>
         </div>
     </div>
 </ng-template>
