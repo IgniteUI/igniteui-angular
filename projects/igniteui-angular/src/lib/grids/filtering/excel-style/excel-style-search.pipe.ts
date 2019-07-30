@@ -19,7 +19,7 @@ export class IgxExcelStyleSearchFilterPipe implements PipeTransform {
 
         searchText = searchText.toLowerCase();
         const result = items.filter((it, i) => (i === 0 && it.isSpecial) ||
-            (it.value || it.value === 0) &&
+            (it.value !== null && it.value !== undefined) &&
             it.value.toString().toLowerCase().indexOf(searchText) > -1);
 
         return result.length > 1 ? result : [];
