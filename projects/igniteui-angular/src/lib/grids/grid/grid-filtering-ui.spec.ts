@@ -3250,7 +3250,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(true, 'chip is not selected');
         }));
 
-        it('Verify condition chips are scrolled into/(out of) view by using arrow buttons.', (async () => {
+        it('Should not throw error when deleting the last chip', (async () => {
             grid.width = '700px';
             fix.detectChanges();
             await wait(100);
@@ -3296,7 +3296,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
                 await wait(300);
                 fix.detectChanges();
 
-                verifyMultipleChipsVisibility(fix, [false, false, true]);
+                verifyMultipleChipsVisibility(fix, [false, true, false]);
                 chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
                 expect(chips.length).toBe(3);
             } catch (ex) {
