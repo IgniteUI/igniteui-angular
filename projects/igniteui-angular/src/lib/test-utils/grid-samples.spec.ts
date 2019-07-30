@@ -1089,3 +1089,23 @@ export class IgxTestExcelFilteringDatePickerComponent extends IgxGridFilteringCo
         this.cd.detectChanges();
     }
 }
+
+@Component({
+    template: GridTemplateStrings.declareGrid(` [height]="height" [width]="width"`, ``,
+                ColumnDefinitions.generatedWithDataType)
+})
+export class DynamicColumnsComponent extends GridWithSizeComponent {
+    public columns = [
+        { field: 'ID', width: 100 , dataType: 'number'},
+        { field: 'CompanyName', width: 300 , dataType: 'string'},
+        { field: 'ContactName', width: 200 , dataType: 'string'},
+        { field: 'ContactTitle', width: 200 , dataType: 'string'},
+        { field: 'Address', width: 300 , dataType: 'string'},
+        { field: 'City', width: 100 , dataType: 'string'},
+        { field: 'Region', width: 100 , dataType: 'string'}
+    ];
+
+    data = SampleTestData.contactInfoDataFull();
+    width = '800px';
+    height = '800px';
+}
