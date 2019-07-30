@@ -369,6 +369,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             this.rootGrid.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
                 this._displayDensity = this.rootGrid._displayDensity;
                 this.notifyChanges(true);
+                this.cdr.markForCheck();
             });
             this.parent.verticalScrollContainer.onDataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
                      this.notifyChanges(true);
