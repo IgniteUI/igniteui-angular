@@ -39,6 +39,9 @@ export class DatePickerSampleComponent {
     @ViewChild('retemplated', { static: true })
     private retemplatedDP;
 
+    @ViewChild('datePicker', { static: true })
+    private dp: IgxDatePickerComponent;
+
     formatter = (_: Date) => {
         return _.toLocaleString('en');
     }
@@ -89,5 +92,9 @@ export class DatePickerSampleComponent {
 
     public selectToday(picker: IgxDatePickerComponent) {
         picker.calendar.value = picker.calendar.viewDate = new Date(Date.now());
+    }
+
+    public d() {
+        this.dp.triggerTodaySelection();
     }
 }
