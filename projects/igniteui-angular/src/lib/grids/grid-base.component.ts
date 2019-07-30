@@ -4254,8 +4254,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             });
 
             diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                // Clear Grouping
+                this.gridAPI.clear_groupby(record.item.field);
+
                 // Clear Filtering
                 this.gridAPI.clear_filter(record.item.field);
+
+                // Close filter row
+                if ( this.filteringService.isFilterRowVisible
+                    && this.filteringService.filteredColumn
+                    && this.filteringService.filteredColumn.field === record.item.field) {
+                    this.filteringRow.close();
+                }
 
                 // Clear Sorting
                 this.gridAPI.clear_sort(record.item.field);
