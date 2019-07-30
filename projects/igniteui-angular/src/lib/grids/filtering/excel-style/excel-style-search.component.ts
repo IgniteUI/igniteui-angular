@@ -17,7 +17,7 @@ import { cloneArray } from '../../../core/utils';
 /**
  * @hidden
  */
- @Component({
+@Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-excel-style-search',
@@ -49,7 +49,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
     public ngAfterViewInit() {
         requestAnimationFrame(() => {
             this.virtDir.recalcUpdateSizes();
-            this.filteredData = cloneArray(this.data);
+            this.filteredData = null;
         });
     }
 

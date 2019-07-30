@@ -1,6 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { FilterListItem, IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filtering.component';
-import { IgxExcelStyleSearchComponent } from './excel-style-search.component';
 import { cloneArray } from '../../../core/utils';
 
 /**
@@ -11,8 +10,7 @@ import { cloneArray } from '../../../core/utils';
 })
 export class IgxExcelStyleSearchFilterPipe implements PipeTransform {
 
-    constructor(private excelStyleSearch: IgxExcelStyleSearchComponent,
-                private esf: IgxGridExcelStyleFilteringComponent) { }
+    constructor(private esf: IgxGridExcelStyleFilteringComponent) { }
 
     transform(items: FilterListItem[], searchText: string): any[] {
         if (!items || !items.length) {
@@ -20,7 +18,7 @@ export class IgxExcelStyleSearchFilterPipe implements PipeTransform {
         }
 
         if (!searchText) {
-            this.excelStyleSearch.filteredData = cloneArray(items);
+            this.esf.excelStyleSearch.filteredData = null;
             return items;
         }
 
@@ -34,7 +32,7 @@ export class IgxExcelStyleSearchFilterPipe implements PipeTransform {
         const finalResult = result.length > 1 ? result : [];
 
         // Update the filteredData of the search component.
-        this.excelStyleSearch.filteredData = cloneArray(finalResult);
+        this.esf.excelStyleSearch.filteredData = cloneArray(finalResult);
         this.esf.cdr.detectChanges();
 
         return finalResult;

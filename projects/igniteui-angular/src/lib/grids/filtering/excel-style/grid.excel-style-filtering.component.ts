@@ -131,7 +131,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
     public customDialog: IgxExcelStyleCustomDialogComponent;
 
     @ViewChild('excelStyleSearch', { read: IgxExcelStyleSearchComponent, static: true })
-    protected excelStyleSearch: IgxExcelStyleSearchComponent;
+    public excelStyleSearch: IgxExcelStyleSearchComponent;
 
     @ViewChild('excelStyleSorting', { read: IgxExcelStyleSortingComponent, static: false })
     protected excelStyleSorting: IgxExcelStyleSortingComponent;
@@ -541,7 +541,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
     }
 
     get applyButtonDisabled() {
-        return  (!this.excelStyleSearch.filteredData || this.excelStyleSearch.filteredData.length === 0) ||
+        return  (this.excelStyleSearch.filteredData && this.excelStyleSearch.filteredData.length === 0) ||
                 (this.listData[0] && !this.listData[0].isSelected && !this.listData[0].indeterminate);
     }
 
