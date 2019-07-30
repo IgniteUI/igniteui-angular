@@ -67,6 +67,7 @@ import { IgxGridExcelStyleFilteringModule } from './filtering/excel-style/grid.e
 import { IgxGridDragSelectDirective } from './drag-select.directive';
 import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 import { IgxRowDragModule } from './row-drag.directive';
+import { IgxSelectorsModule } from './igx-selection.module';
 /**
  * @hidden
  */
@@ -193,7 +194,8 @@ import { IgxRowDragModule } from './row-drag.directive';
         IgxGridPipesModule,
         IgxGridExcelStyleFilteringModule,
         IgxRowDragModule,
-        IgxPaginatorModule
+        IgxPaginatorModule,
+        IgxSelectorsModule
     ],
     providers: [
         IgxGridSelectionService,

@@ -16,7 +16,6 @@ import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayD
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../../chips/chip.component';
 import { IChipsAreaReorderEventArgs } from '../../chips/chips-area.component';
-import { DataUtil } from '../../data-operations/data-util';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { TransactionService, Transaction, State } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
@@ -31,6 +30,7 @@ import { IgxOverlayService } from '../../services/index';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
+import { IgxRowSelectorDirective, IgxHeadSelectorDirective } from '../igx-selection.module';
 
 let NEXT_ID = 0;
 
@@ -492,6 +492,12 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      */
     @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef, static: true })
     public dragIndicatorIconTemplate: TemplateRef<any> = null;
+
+    @ContentChild(IgxRowSelectorDirective, { read: TemplateRef, static: true })
+    public rowSelectorTemplate: TemplateRef<any>;
+
+    @ContentChild(IgxHeadSelectorDirective, { read: TemplateRef, static: true })
+    public headSelectorTemplate: TemplateRef<any>;
 
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
     private _groupsRowList: QueryList<IgxGridGroupByRowComponent>;

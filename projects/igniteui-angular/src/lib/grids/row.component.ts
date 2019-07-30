@@ -69,6 +69,12 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     /**
      * @hidden
      */
+    @Input()
+    public rowSelected = false;
+
+    /**
+     * @hidden
+     */
     @ViewChild('igxDirRef', { read: IgxGridForOfDirective, static: false })
     public virtDirRow: IgxGridForOfDirective<any>;
 
@@ -139,8 +145,8 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     /**
      * @hidden
      */
-    public get showRowCheckboxes(): boolean {
-        return this.grid.showRowCheckboxes;
+    public get showRowSelectors(): boolean {
+        return this.grid.showRowSelectors;
     }
 
     /**
@@ -267,12 +273,12 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
         public element: ElementRef,
         public cdr: ChangeDetectorRef) { }
 
-
     /**
      * @hidden
      */
-    public onCheckboxClick(event) {
-        const newSelection = (event.checked) ?
+    public onRowSelect(event) {
+        this.rowSelected = !this.rowSelected;
+        const newSelection = (this.rowSelected) ?
             this.selection.add_item(this.gridID, this.rowID) :
             this.selection.delete_item(this.gridID, this.rowID);
         this.grid.triggerRowSelectionChange(newSelection, this, event);

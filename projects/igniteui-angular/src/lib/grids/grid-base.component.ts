@@ -88,7 +88,6 @@ import {
 } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
-import { IgxDragIndicatorIconDirective } from './row-drag.directive';
 import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
@@ -241,6 +240,12 @@ export enum GridKeydownTargetType {
     hierarchicalRow = 'hierarchicalRow'
 }
 
+export enum HeadSelectorStatus {
+    checked = 'checked',
+    unchecked = 'unchecked',
+    indeterminate = 'indeterminate'
+}
+
 export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     OnInit, OnChanges, OnDestroy, AfterContentInit, AfterViewInit {
     private _scrollWidth: number;
@@ -257,7 +262,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _locale = null;
     private _observer: MutationObserver;
     protected _destroyed = false;
+    protected _headSelectorStatus: HeadSelectorStatus;
     private overlayIDs = [];
+    public rowSelected = false;
+
     /**
      * An accessor that sets the resource strings.
      * By default it uses EN resources.
@@ -1749,8 +1757,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ViewChild('headerCheckboxContainer', { static: false })
-    public headerCheckboxContainer: ElementRef;
+    @ViewChild('headerSelectorContainer', { static: false })
+    public headerSelectorContainer: ElementRef;
 
     /**
      * @hidden
@@ -1767,8 +1775,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ViewChild('headerCheckbox', { read: IgxCheckboxComponent, static: false })
-    public headerCheckbox: IgxCheckboxComponent;
+    @ViewChild(IgxCheckboxComponent, { read: IgxCheckboxComponent, static: false })
+    public headSelectorBaseTemplate: IgxCheckboxComponent;
 
     /**
      * @hidden
@@ -1847,6 +1855,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @ViewChild('defaultRowEditTemplate', { read: TemplateRef, static: true })
     private defaultRowEditTemplate: TemplateRef<any>;
+
     /**
      * @hidden
      */
@@ -3312,7 +3321,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return totalWidth;
     }
 
-    get showRowCheckboxes(): boolean {
+    get showRowSelectors(): boolean {
         return this.rowSelectable && this.columns.length > this.hiddenColumnsCount;
     }
 
@@ -4175,8 +4184,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 parseInt(this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
         }
 
-        if (this.showRowCheckboxes) {
-            computedWidth -= this.headerCheckboxContainer ? this.headerCheckboxContainer.nativeElement.offsetWidth : 0;
+        if (this.showRowSelectors) {
+            computedWidth -= this.headerSelectorContainer ? this.headerSelectorContainer.nativeElement.offsetWidth : 0;
         }
 
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
@@ -4349,8 +4358,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public getFeatureColumnsWidth() {
         let width = 0;
 
-        if (this.headerCheckboxContainer) {
-            width += this.headerCheckboxContainer.nativeElement.getBoundingClientRect().width;
+        if (this.headerSelectorContainer) {
+            width += this.headerSelectorContainer.nativeElement.getBoundingClientRect().width;
         }
         if (this.headerDragContainer) {
             width += this.headerDragContainer.nativeElement.getBoundingClientRect().width;
@@ -4552,18 +4561,22 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    public onHeaderCheckboxClick(event, filteredData) {
-        this.allRowsSelected = event.checked;
-        const newSelection =
-            event.checked ?
-                filteredData ?
-                    this.selection.add_items(this.id, this.selection.get_all_ids(filteredData, this.primaryKey)) :
-                    this.selection.get_all_ids(this.gridAPI.get_all_data(true), this.primaryKey) :
-                filteredData ?
-                    this.selection.delete_items(this.id, this.selection.get_all_ids(filteredData, this.primaryKey)) :
-                    this.selection.get_empty();
-        this.triggerRowSelectionChange(newSelection, null, event, event.checked);
-        this.checkHeaderCheckboxStatus(event.checked);
+    public onHeadSelectorClick(event, filteredData) {
+        this.rowSelected = !this.rowSelected;
+        this.allRowsSelected = this.rowSelected;
+        let newSelection;
+        if (this.rowSelected) {
+            newSelection = filteredData ?
+                this.selection.add_items(this.id, this.selection.get_all_ids(filteredData, this.primaryKey)) :
+                this.selection.get_all_ids(this.gridAPI.get_all_data(true), this.primaryKey);
+        } else {
+            newSelection = filteredData ?
+                this.selection.delete_items(this.id, this.selection.get_all_ids(filteredData, this.primaryKey)) :
+                this.selection.get_empty();
+        }
+
+        this.triggerRowSelectionChange(newSelection, null, event, this.rowSelected);
+        this.calculateRowSelectionStatus(this.rowSelected);
     }
 
     /**
@@ -4571,29 +4584,49 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     get headerCheckboxAriaLabel() {
         return this._filteringExpressionsTree.filteringOperands.length > 0 ?
-            this.headerCheckbox && this.headerCheckbox.checked ? 'Deselect all filtered' : 'Select all filtered' :
-            this.headerCheckbox && this.headerCheckbox.checked ? 'Deselect all' : 'Select all';
+            this.headSelectorBaseTemplate && this.headSelectorBaseTemplate.checked ? 'Deselect all filtered' : 'Select all filtered' :
+            this.headSelectorBaseTemplate && this.headSelectorBaseTemplate.checked ? 'Deselect all' : 'Select all';
     }
 
     /**
      * @hidden
      */
-    public checkHeaderCheckboxStatus(headerStatus?: boolean) {
+    public calculateRowSelectionStatus(
+        headerStatus?: boolean): void {
+        const filteredData = this.filteringService.filteredData;
+        const dataLength = filteredData ? filteredData.length : this.dataLength;
+        this.allRowsSelected = this.selection.are_all_selected(this.id, dataLength);
+        const areNoneSelected = this.selection.are_none_selected(this.id);
         if (headerStatus === undefined) {
-            const filteredData = this.filteringService.filteredData;
-            const dataLength = filteredData ? filteredData.length : this.dataLength;
-            this.allRowsSelected = this.selection.are_all_selected(this.id, dataLength);
-            if (this.headerCheckbox) {
-                this.headerCheckbox.indeterminate = !this.allRowsSelected && !this.selection.are_none_selected(this.id);
-                if (!this.headerCheckbox.indeterminate) {
-                    this.headerCheckbox.checked =
-                        this.allRowsSelected;
-                }
+            if (this.allRowsSelected) {
+                this.headSelectorStatus = HeadSelectorStatus.checked;
+            } else if (areNoneSelected) {
+                this.headSelectorStatus = HeadSelectorStatus.unchecked;
+            } else {
+                this.headSelectorStatus = HeadSelectorStatus.indeterminate;
             }
-            this.cdr.markForCheck();
-        } else if (this.headerCheckbox) {
-            this.headerCheckbox.checked = headerStatus !== undefined ? headerStatus : false;
+        } else {
+            this.headSelectorStatus = headerStatus ?
+                HeadSelectorStatus.checked : HeadSelectorStatus.unchecked;
         }
+        if (this.headSelectorBaseTemplate) {
+            this.headSelectorBaseTemplate.indeterminate = !this.allRowsSelected && !areNoneSelected;
+            if (!this.headSelectorBaseTemplate.indeterminate) {
+                this.headSelectorBaseTemplate.checked =
+                    this.allRowsSelected;
+            }
+        }
+
+        this.cdr.markForCheck();
+    }
+
+    protected get headSelectorStatus(): HeadSelectorStatus {
+        return this._headSelectorStatus;
+    }
+
+    @Input()
+    protected set headSelectorStatus(v: HeadSelectorStatus) {
+        this._headSelectorStatus = v;
     }
 
     /**
@@ -4627,7 +4660,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public updateHeaderCheckboxStatusOnFilter(data) {
         if (!data) {
-            this.checkHeaderCheckboxStatus();
+            this.calculateRowSelectionStatus();
             return;
         }
         switch (this.filteredItemsStatus(this.id, data, this.primaryKey)) {
@@ -4635,8 +4668,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 if (!this.allRowsSelected) {
                     this.allRowsSelected = true;
                 }
-                if (this.headerCheckbox.indeterminate) {
-                    this.headerCheckbox.indeterminate = false;
+                if (this.headSelectorBaseTemplate.indeterminate) {
+                    this.headSelectorBaseTemplate.indeterminate = false;
                 }
                 break;
             }
@@ -4644,14 +4677,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 if (this.allRowsSelected) {
                     this.allRowsSelected = false;
                 }
-                if (this.headerCheckbox.indeterminate) {
-                    this.headerCheckbox.indeterminate = false;
+                if (this.headSelectorBaseTemplate.indeterminate) {
+                    this.headSelectorBaseTemplate.indeterminate = false;
                 }
                 break;
             }
             default: {
-                if (!this.headerCheckbox.indeterminate) {
-                    this.headerCheckbox.indeterminate = true;
+                if (!this.headSelectorBaseTemplate.indeterminate) {
+                    this.headSelectorBaseTemplate.indeterminate = true;
                 }
                 if (this.allRowsSelected) {
                     this.allRowsSelected = false;
@@ -4892,7 +4925,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             newSelectionAsSet.add(args.newSelection[i]);
         }
         this.selection.set(this.id, newSelectionAsSet);
-        this.checkHeaderCheckboxStatus(headerStatus);
+        this.calculateRowSelectionStatus(headerStatus);
     }
 
     /**
@@ -4925,7 +4958,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.onGridCopy.emit(ev);
 
         if (ev.cancel) {
-             return;
+            return;
         }
 
         const transformer = new CharSeparatedValueData(ev.data, this.clipboardOptions.separator);
