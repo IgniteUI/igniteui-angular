@@ -80,13 +80,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             this._column = val;
 
             this.expressionsList = this.filteringService.getExpressions(this._column.field);
-            const selectedChip = this.expressionsList.find(ex => ex.isSelected);
-
-            if (selectedChip) {
-                this.expression = selectedChip.expression;
-            } else {
             this.resetExpression();
-            }
 
             this.chipAreaScrollOffset = 0;
             this.transform(this.chipAreaScrollOffset);
@@ -370,8 +364,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Commits the value of the input.
      */
     public commitInput() {
-        const selectedChip = this.expressionsList.filter(ex => ex.isSelected === true);
-        selectedChip.forEach(e => e.isSelected = false);
+        const selectedItem = this.expressionsList.filter(ex => ex.isSelected === true);
+        selectedItem.forEach(e => e.isSelected = false);
 
         let indexToDeselect = -1;
         for (let index = 0; index < this.expressionsList.length; index++) {
@@ -392,8 +386,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      */
     public clearInput() {
         this.value = null;
-        const selectedChip = this.expressionsList.findIndex(ex => ex.isSelected === true);
-        this.expressionsList.splice(selectedChip, 1);
+        const selectedItem = this.expressionsList.findIndex(ex => ex.isSelected === true);
+        this.expressionsList.splice(selectedItem, 1);
     }
 
     /**
