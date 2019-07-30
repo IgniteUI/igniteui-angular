@@ -9,8 +9,8 @@
 /// @prop {Map} header-background [igx-color: ('grays', 100), hexrgba: #fff] - The table header background color.
 /// @prop {Map} header-text-color [igx-color: ('grays', 600)] - The table header text color.
 ///
-/// @prop {Map} $sorted-header-icon-color [igx-color: ('secondary', 500)] - The sorted table header icon color.
-/// @prop {Map} $sorted-header-icon-hover-color [igx-color: ('secondary', 600)] - The sorted table header icon hover color.
+/// @prop {Map} sorted-header-icon-color [igx-color: ('secondary', 500)] - The sorted table header icon color.
+/// @prop {Map} sortable-header-icon-hover-color [igx-color: ('secondary', 500)] - The icon color on hover in grid header when the column is sortable.
 ///
 /// @prop {Number} header-border-width [1px] - The border width used for header borders.
 /// @prop {String} header-border-style [solid] - The border style used for header borders.
@@ -66,7 +66,6 @@
 /// @prop {Map} root-summaries-text-color [igx--color: ('grays', 100), hexrgba: #fff, text-contrast: ()] - The text color of the summary groups located the footer.
 /// @prop {Map} row-drag-color [igx-color: ('grays', 200))] - The color of the drag handle.
 /// @prop {Map} row-ghost-background [igx-color: ('primary', 50))] - The background color of the dragged row.
-/// @prop {Map} sortable-header-icon-hover-color [igx-color: ('secondary', 500)] - The icon color on hover in grid header when the column is sortable.
 /// @prop {number} grid-elevation [2] - The elevation used for the grid.
 /// @prop {number} drag-elevation [5] - The elevation used for movable elements (ex. column header).
 /// @prop {number} drop-area-border-radius - The border radius fraction, between 0-1 to be used for drop area.
@@ -89,10 +88,6 @@ $_light-grid: (
 
     sorted-header-icon-color: (
         igx-color: ('secondary', 500)
-    ),
-
-    sorted-header-icon-hover-color: (
-        igx-color: ('secondary', 600)
     ),
 
     header-border-width: 1px,
