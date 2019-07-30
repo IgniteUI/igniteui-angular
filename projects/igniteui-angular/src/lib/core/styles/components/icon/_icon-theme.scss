@@ -61,6 +61,10 @@
             width: inherit;
             height: inherit;
             fill: currentColor;
+
+            use {
+                pointer-events: none;
+            }
         }
     }
 
