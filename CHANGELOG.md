@@ -38,7 +38,7 @@ All notable changes for each version of this project will be documented in this 
     - Input `[overlaySettings]` - allows an object of type `OverlaySettings` to be passed. These custom overlay settings control how the drop-down list displays.
 - `IgxForOf` now offers usage of local variables `even`, `odd`, `first` and `last` to help with the distinction of the currently iterated element.
 - `IgxDatePicker`
-    - `onValueChanged` event is added.
+    - `valueChange` event is added.
 
 
 ## 8.0.2
