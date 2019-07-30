@@ -87,9 +87,9 @@
             <ng-container *ngFor="let item of expressionsList; index as i; let last = last;" tabindex="0">
                 <igx-chip #chip id='chip'
                     (pointerdown)="onChipPointerdown($event, chip)"
-                    (click)="onChipClick($event, item)"
-                    (onSelection)="onChipSelected($event)"
-                    (keydown)="onChipKeyDown($event, item)"
+                    (click)="onChipClick($event, chip)"
+                    (onSelection)="onChipSelected($event, item.expression)"
+                    (keydown)="onChipKeyDown($event, chip)"
                     (onRemove)="onChipRemoved($event, item)"
                     [selectable]="false"
                     [selected]="item.isSelected"

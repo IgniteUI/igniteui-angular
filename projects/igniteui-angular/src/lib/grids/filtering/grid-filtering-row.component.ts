@@ -79,13 +79,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             this._column = val;
 
             this.expressionsList = this.filteringService.getExpressions(this._column.field);
-            const selectedChip = this.expressionsList.find(ex => ex.isSelected);
 
-            if (selectedChip) {
-                this.expression = selectedChip.expression;
-            } else {
             this.resetExpression();
-            }
 
             this.chipAreaScrollOffset = 0;
             this.transform(this.chipAreaScrollOffset);
@@ -369,8 +364,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Commits the value of the input.
      */
     public commitInput() {
-        const selectedChip = this.expressionsList.filter(ex => ex.isSelected === true);
-        selectedChip.forEach(e => e.isSelected = false);
+        this.expressionsList.forEach(ex => ex.isSelected = false);
+        this.chipsArea.chipsList.forEach(chip => chip.selected = false);
 
         let indexToDeselect = -1;
         for (let index = 0; index < this.expressionsList.length; index++) {
@@ -391,8 +386,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      */
     public clearInput() {
         this.value = null;
-        const selectedChip = this.expressionsList.findIndex(ex => ex.isSelected === true);
-        this.expressionsList.splice(selectedChip, 1);
     }
 
     /**
@@ -442,8 +435,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         }
         requestAnimationFrame(() => {
             const focusedElement = document.activeElement;
-            if (!(focusedElement && this.inputGroup.nativeElement.contains(focusedElement))
-                && this.dropDownConditions.collapsed) {
+            if (!(focusedElement && this.inputGroup.nativeElement.contains(focusedElement)) &&
+                this.dropDownConditions.collapsed) {
                 this.commitInput();
             }
         });
@@ -534,53 +527,44 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this._cancelChipClick = chip.selected && activeElement && this.inputGroup.nativeElement.contains(activeElement);
     }
 
-    public onChipClick(args, item: ExpressionUI) {
+    public onChipClick(args, chip: IgxChipComponent) {
         if (this._cancelChipClick) {
             return;
         }
 
         this._cancelChipClick = false;
-        item.isSelected = !item.isSelected;
-
-        if (item.isSelected) {
-            if (this.expressionsList) {
-                this.expressionsList.forEach((expr) => {
-                    if (expr !== item) {
-                        expr.isSelected = false;
-                    }
-                });
-            }
-            this.expression = item.expression;
-
-            if (this.input) {
-                this.input.nativeElement.focus();
-            }
-        } else if (this.expression === item.expression) {
-            this.resetExpression();
-        }
+        chip.selected = !chip.selected;
     }
 
     /**
      *  Event handler for chip selected event.
      */
-    public onChipSelected(eventArgs: IChipSelectEventArgs) {
-        if (eventArgs.selected && this.input) {
-            this.input.nativeElement.focus();
+    public onChipSelected(eventArgs: IChipSelectEventArgs, expression: IFilteringExpression) {
+        if (eventArgs.selected) {
+            if (this.chipsArea.chipsList) {
+                this.chipsArea.chipsList.forEach((chip) => {
+                    if (chip !== eventArgs.owner) {
+                        chip.selected = false;
+                    }
+                });
+            }
+            this.expression = expression;
+
+            if (this.input) {
+                this.input.nativeElement.focus();
+            }
+        } else if (this.expression === expression) {
+            this.resetExpression();
         }
     }
 
     /**
      * Event handler for chip keydown event.
      */
-    public onChipKeyDown(eventArgs: KeyboardEvent, item: ExpressionUI) {
+    public onChipKeyDown(eventArgs: KeyboardEvent, chip: IgxChipComponent) {
         if (eventArgs.key === KEYS.ENTER) {
             eventArgs.preventDefault();
-            item.isSelected = !item.isSelected;
-
-            this.expression = item.expression;
-            if (this.input) {
-                this.input.nativeElement.focus();
-            }
+            chip.selected = !chip.selected;
         }
     }
 
