@@ -17,7 +17,7 @@ import {
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, CancelableEventArgs, CancelableBrowserEventArgs } from '../core/utils';
+import { cloneArray, CancelableEventArgs, CancelableBrowserEventArgs, diffInSets } from '../core/utils';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { SortingDirection, ISortingExpression } from '../data-operations/sorting-expression.interface';
@@ -86,6 +86,8 @@ export enum IgxComboState {
 export interface IComboSelectionChangeEventArgs extends CancelableEventArgs {
     oldSelection: any[];
     newSelection: any[];
+    added: any[];
+    removed: any[];
     event?: Event;
 }
 
@@ -327,7 +329,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  <igx-combo #combo>
      *      ...
      *      <ng-template igxComboEmpty>
-     *          <div class="combo--emtpy">
+     *          <div class="combo--empty">
      *              There are no items to display
      *          </div>
      *      </ng-template>
@@ -703,7 +705,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * Combo value data source propery.
+     * Combo value data source property.
      *
      * ```typescript
      * // get
@@ -724,7 +726,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * Combo text data source propery.
+     * Combo text data source property.
      *
      * ```typescript
      * // get
@@ -737,7 +739,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *
      * ```html
      * <!--set-->
-     * <igx-combo [displayKey]='mydisplayKey'></igx-combo>
+     * <igx-combo [displayKey]='myDisplayKey'></igx-combo>
      * ```
      */
     get displayKey() {
@@ -1472,7 +1474,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * Selects/Deselects an item using it's valueKey value
      * @param itemID the valueKey of the specified item
-     * @param select If the item should be selected (true) or deselcted (false)
+     * @param select If the item should be selected (true) or deselected (false)
      *
      * ```typescript
      * items: { field: string, region: string}[] = data;
@@ -1496,11 +1498,15 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     protected setSelection(newSelection: Set<any>, event?: Event): void {
+        const removed = Array.from(diffInSets(this.selection.get(this.id), newSelection));
+        const added = Array.from(diffInSets(newSelection, this.selection.get(this.id)));
         const oldSelectionEmit = Array.from(this.selection.get(this.id) || []);
         const newSelectionEmit = Array.from(newSelection || []);
         const args: IComboSelectionChangeEventArgs = {
             newSelection: newSelectionEmit,
             oldSelection: oldSelectionEmit,
+            added,
+            removed,
             event,
             cancel: false
         };
