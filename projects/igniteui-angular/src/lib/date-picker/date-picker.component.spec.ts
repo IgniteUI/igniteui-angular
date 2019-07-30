@@ -100,16 +100,12 @@ describe('IgxDatePicker', () => {
             spyOn(datePicker.onSelection, 'emit');
             spyOn(datePicker.valueChange, 'emit');
             const newDate: Date = new Date(2016, 4, 6);
-            const valueChangedArgs: IDatePickerValueChangedEventArgs = {
-                oldValue: datePicker.value,
-                newValue: newDate
-            };
-            datePicker.selectDate(newDate);
+                    datePicker.selectDate(newDate);
             fixture.detectChanges();
 
             expect(datePicker.onSelection.emit).toHaveBeenCalled();
             expect(datePicker.valueChange.emit).toHaveBeenCalled();
-            expect(datePicker.valueChange.emit).toHaveBeenCalledWith(valueChangedArgs);
+            expect(datePicker.valueChange.emit).toHaveBeenCalledWith(newDate);
             expect(datePicker.value).toBe(newDate);
         });
 
@@ -688,16 +684,12 @@ describe('IgxDatePicker', () => {
             spyOn(datePicker.onSelection, 'emit');
             spyOn(datePicker.valueChange, 'emit');
             const newDate: Date = new Date(2016, 4, 6);
-            const valueChangedArgs: IDatePickerValueChangedEventArgs = {
-                oldValue: datePicker.value,
-                newValue: newDate
-            };
             datePicker.selectDate(newDate);
             fixture.detectChanges();
 
             expect(datePicker.onSelection.emit).toHaveBeenCalled();
             expect(datePicker.valueChange.emit).toHaveBeenCalled();
-            expect(datePicker.valueChange.emit).toHaveBeenCalledWith(valueChangedArgs);
+            expect(datePicker.valueChange.emit).toHaveBeenCalledWith(newDate);
             expect(datePicker.value).toBe(newDate);
 
             const input = fixture.debugElement.query(By.directive(IgxInputDirective));
@@ -938,18 +930,14 @@ describe('IgxDatePicker', () => {
 
         it('should reset value on clear button click - dropdown mode', () => {
             spyOn(datePicker.valueChange, 'emit');
-            const valueChangedArgs: IDatePickerValueChangedEventArgs = {
-                oldValue: datePicker.value,
-                newValue: null
-            };
-            const input = fixture.debugElement.query(By.directive(IgxInputDirective));
+                   const input = fixture.debugElement.query(By.directive(IgxInputDirective));
             const dom = fixture.debugElement;
             const clear = dom.queryAll(By.css('.igx-icon'))[1];
             UIInteractions.clickElement(clear);
             fixture.detectChanges();
 
             expect(datePicker.valueChange.emit).toHaveBeenCalled();
-            expect(datePicker.valueChange.emit).toHaveBeenCalledWith(valueChangedArgs);
+            expect(datePicker.valueChange.emit).toHaveBeenCalledWith(null);
             expect(datePicker.value).toEqual(null);
             expect(input.nativeElement.innerText).toEqual('');
 

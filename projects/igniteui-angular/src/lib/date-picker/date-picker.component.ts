@@ -79,15 +79,6 @@ export interface IDatePickerValidationFailedEventArgs {
 }
 
 /**
- * This interface is used to provide information about date picker old and new value
- * when valueChange event is fired.
- */
-export interface IDatePickerValueChangedEventArgs {
-    oldValue: Date;
-    newValue: Date;
-}
-
-/**
  * This interface is used to configure calendar format view options.
  */
 export interface IFormatViews {
@@ -644,7 +635,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         *```
     */
     @Output()
-    public valueChange = new EventEmitter<IDatePickerValueChangedEventArgs>();
+    public valueChange = new EventEmitter<Date>();
 
     /**
     *An @Output property that fires when the user types/spins to a disabled date in the date-picker editor.
@@ -1160,11 +1151,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     private emitValueChangeEvent(oldValue: Date, newValue: Date) {
         if (!isEqual(oldValue, newValue)) {
-            const args: IDatePickerValueChangedEventArgs = {
-                oldValue: oldValue,
-                newValue: newValue
-            };
-            this.valueChange.emit(args);
+            this.valueChange.emit(newValue);
         }
     }
 
