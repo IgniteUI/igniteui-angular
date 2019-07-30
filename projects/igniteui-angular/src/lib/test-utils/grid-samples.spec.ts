@@ -885,6 +885,21 @@ export class SelectionWithScrollsComponent extends BasicGridComponent {
 }
 
 @Component({
+    template: `${GridTemplateStrings.declareGrid(`height="300px"  width="600px" [primaryKey]="'ID'" cellSelection="none"`, '',
+    ColumnDefinitions.selectionWithScrollsColumns)}`,
+})
+export class CellSelectionNoneComponent extends BasicGridComponent {
+    public data = SampleTestData.employeeGroupByData();
+}
+
+@Component({
+    template: `${GridTemplateStrings.declareGrid(`height="300px"  width="600px" [primaryKey]="'ID'" cellSelection="single"`, '',
+    ColumnDefinitions.selectionWithScrollsColumns)}`,
+})
+export class CellSelectionSingleComponent extends BasicGridComponent {
+    public data = SampleTestData.employeeGroupByData();
+}
+@Component({
     template: `${GridTemplateStrings.declareGrid(`height="300px"  width="600px" [primaryKey]="'ID'"`, '',
     ColumnDefinitions.selectionWithScrollsColumns)}`,
     providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }]

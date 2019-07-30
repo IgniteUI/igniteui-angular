@@ -108,7 +108,6 @@ describe('IgxGrid - Row Selection', () => {
             expect(headerCheckboxElement.indeterminate).toBeFalsy();
         }));
 
-
         it('Should be able to select/deselect rows programatically', fakeAsync(() => {
             let rowsCollection = [];
             const firstRow = grid.getRowByKey('0_0');
@@ -247,7 +246,7 @@ describe('IgxGrid - Row Selection', () => {
             expect(firstRow.isSelected).toBeFalsy();
         }));
 
-        it('Hide row checkboxes, when all columns are hidden', fakeAsync(/** height/width setter rAF */() => {
+        it('Hide row checkboxes, when all columns are hidden', () => {
             let headerCheck: HTMLElement = fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-checkbox__input');
             let rowCheck: HTMLElement = grid.getRowByIndex(0).nativeElement.querySelector('.igx-checkbox__input');
             expect(headerCheck).toBeDefined();
@@ -264,7 +263,7 @@ describe('IgxGrid - Row Selection', () => {
             rowCheck = grid.getRowByIndex(0).nativeElement.querySelector('.igx-checkbox__input');
             expect(headerCheck).toBeDefined();
             expect(rowCheck).toBeDefined();
-        }));
+        });
     });
 
     describe('Selection with primaryKey', () => {
@@ -866,8 +865,6 @@ describe('IgxGrid - Row Selection', () => {
         }
     }));
 
-    // API Methods
-
     it('Summaries integration', () => {
         const fixture = TestBed.createComponent(SummariesComponent);
         fixture.detectChanges();
@@ -906,7 +903,6 @@ describe('IgxGrid - Row Selection', () => {
         expect(secondRow.isSelected).toBeFalsy();
         expect(thirdRow.isSelected).toBeFalsy();
     });
-
 
     it('Set rowSelectable on HGrid row island', fakeAsync(() => {
         expect(() => {
