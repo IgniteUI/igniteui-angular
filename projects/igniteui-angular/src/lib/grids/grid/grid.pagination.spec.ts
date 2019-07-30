@@ -9,6 +9,7 @@ import { IgxGridComponent } from './grid.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
+import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 describe('IgxGrid - Grid Paging', () => {
     configureTestSuite();
@@ -304,6 +305,7 @@ describe('IgxGrid - Grid Paging', () => {
     }));
 
     it('should change not leave prev page data after scorlling', (async () => {
+        resizeObserverIgnoreError();
         const fix = TestBed.createComponent(PagingComponent);
         fix.componentInstance.perPage = 5;
         fix.componentInstance.grid.height = '300px';
@@ -311,6 +313,7 @@ describe('IgxGrid - Grid Paging', () => {
         fix.detectChanges();
 
         fix.componentInstance.scrollTop(25);
+        fix.detectChanges();
         await wait(100);
         fix.componentInstance.grid.paginate(1);
         fix.detectChanges();
