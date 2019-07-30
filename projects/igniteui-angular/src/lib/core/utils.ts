@@ -14,6 +14,14 @@ export function cloneArray(array: any[], deep?: boolean) {
 }
 
 /**
+ * When called with sets A & B, returns A - B (as set);
+ * @hidden
+ */
+export function diffInSets(set1: Set<any>, set2: Set<any>): Set<any> {
+    return new Set(Array.from(set1).filter(entry => !set2.has(entry)));
+}
+
+/**
  * Doesn't clone leaf items
  * @hidden
  */
