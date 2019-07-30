@@ -78,6 +78,7 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
             return;
         }
         const grid = this.gridAPI.grid;
+        this.endEdit(grid.rootGrid);
         const state = this.gridAPI.grid.hierarchicalState;
         if (!this.expanded) {
             state.push({ rowID: this.rowID });
@@ -91,6 +92,16 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
         requestAnimationFrame(() => {
             grid.reflow();
         });
+    }
+
+    private endEdit(grid: IgxHierarchicalGridComponent) {
+        if (grid.crudService.inEditMode) {
+            grid.endEdit();
+        }
+        grid.hgridAPI.getChildGrids(true).forEach(g => {
+            if (g.crudService.inEditMode) {
+            g.endEdit();
+        }});
     }
 
     constructor(public gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>,
