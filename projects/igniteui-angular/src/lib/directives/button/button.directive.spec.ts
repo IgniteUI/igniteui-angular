@@ -108,6 +108,33 @@ describe('IgxButton', () => {
         verifyDisplayDensity(fabButton, fabButtonDOM, 'fab', DisplayDensity.cosy);
         verifyDisplayDensity(iconButton, iconButtonDOM, 'icon', DisplayDensity.cosy);
     });
+
+    it('Should set the correct CSS class on the element using the "type" input', () => {
+        const fixture = TestBed.createComponent(InitButtonComponent);
+        fixture.detectChanges();
+        const theButton = fixture.componentInstance.button;
+        const theButtonNativeEl = theButton.nativeElement;
+
+        theButton.type = 'raised';
+        fixture.detectChanges();
+        expect(theButtonNativeEl.classList).toEqual('igx-button--raised');
+
+        theButton.type = 'outlined';
+        fixture.detectChanges();
+        expect(theButtonNativeEl.classList).toEqual('igx-button--outlined');
+
+        theButton.type = 'fab';
+        fixture.detectChanges();
+        expect(theButtonNativeEl.classList).toEqual('igx-button--fab');
+
+        theButton.type = 'icon';
+        fixture.detectChanges();
+        expect(theButtonNativeEl.classList).toEqual('igx-button--icon');
+
+        theButton.type = 'flat';
+        fixture.detectChanges();
+        expect(theButtonNativeEl.classList).toEqual('igx-button--flat');
+    });
 });
 
 @Component({
@@ -117,6 +144,8 @@ describe('IgxButton', () => {
     </span>`
 })
 class InitButtonComponent {
+    @ViewChild(IgxButtonDirective, { read: IgxButtonDirective })
+    button: IgxButtonDirective;
 }
 
 @Component({
