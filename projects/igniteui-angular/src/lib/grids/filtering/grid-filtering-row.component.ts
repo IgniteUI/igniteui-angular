@@ -748,12 +748,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     }
 
     private scrollChipsOnRemove() {
-        let count = -1;
+        let count = 0;
         const chipAraeChildren = this.chipsArea.element.nativeElement.children;
         const containerRect = this.container.nativeElement.getBoundingClientRect();
 
         for (let index = 0; index < chipAraeChildren.length; index++) {
-            if (Math.ceil(chipAraeChildren[index].getBoundingClientRect().left) < Math.ceil(containerRect.left)) {
+            if (Math.ceil(chipAraeChildren[index].getBoundingClientRect().left) < Math.ceil(containerRect.left) &&
+                Math.ceil(chipAraeChildren[index].getBoundingClientRect().right) < Math.ceil(containerRect.left)) {
                 count++;
             }
         }
