@@ -44,6 +44,23 @@ export class IgxTemplateOutletDirective implements OnChanges {
         }
     }
 
+    public cleanCache() {
+        this._embeddedViewsMap.forEach((item) => {
+            if (!item.destroyed) {
+                item.destroy();
+            }
+        });
+        this._embeddedViewsMap.clear();
+    }
+
+    public cleanView(tmplID) {
+        const embView = this._embeddedViewsMap.get(tmplID);
+        if (embView) {
+            embView.destroy();
+            this._embeddedViewsMap.delete(tmplID);
+        }
+    }
+
     private _recreateView() {
         // detach old and create new
         if (this._viewRef) {

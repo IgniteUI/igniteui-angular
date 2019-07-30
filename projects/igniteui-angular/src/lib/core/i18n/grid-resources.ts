@@ -56,6 +56,7 @@ export interface IGridResourceStrings {
     igx_grid_excel_filter_sorting_desc?: string;
     igx_grid_excel_filter_sorting_desc_short?: string;
     igx_grid_excel_filter_sorting_header?: string;
+    igx_grid_excel_filter_clear?: string;
     igx_grid_excel_custom_dialog_add?: string;
     igx_grid_excel_custom_dialog_clear?: string;
     igx_grid_excel_custom_dialog_header?: string;
@@ -72,6 +73,7 @@ export interface IGridResourceStrings {
     igx_grid_excel_date_filter?: string;
     igx_grid_excel_boolean_filter?: string;
     igx_grid_excel_custom_filter?: string;
+    igx_grid_paginator_label?: string;
 }
 
 export const GridResourceStringsEN: IGridResourceStrings = {
@@ -132,6 +134,7 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_excel_filter_sorting_desc: 'descending',
     igx_grid_excel_filter_sorting_desc_short: 'desc',
     igx_grid_excel_filter_sorting_header: 'sort',
+    igx_grid_excel_filter_clear: 'Clear column filters',
     igx_grid_excel_custom_dialog_add: 'add filter',
     igx_grid_excel_custom_dialog_clear: 'Clear filter',
     igx_grid_excel_custom_dialog_header: 'Custom auto-filter on column: ',
@@ -147,5 +150,6 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_excel_number_filter: 'Number filter',
     igx_grid_excel_date_filter: 'Date filter',
     igx_grid_excel_boolean_filter: 'Boolean filter',
-    igx_grid_excel_custom_filter: 'Custom filter...'
+    igx_grid_excel_custom_filter: 'Custom filter...',
+    igx_grid_paginator_label: 'Items per page'
 };

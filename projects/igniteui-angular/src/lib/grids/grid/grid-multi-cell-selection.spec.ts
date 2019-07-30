@@ -87,6 +87,30 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
         });
 
+        it('Should not lose selection on right clicking', () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            const range = { rowStart: 2, rowEnd: 3, columnStart: 0, columnEnd: 1 };
+            grid.setSelection(range);
+            detect();
+
+            HelperUtils.verifySelectedRange(grid, 2, 3, 0, 1, 0, 1);
+
+            // Simulate right-click
+            const endCell = grid.getCellByColumn(4, 'ID');
+            UIInteractions.simulateNonPrimaryClick(endCell);
+            detect();
+
+            HelperUtils.verifySelectedRange(grid, 2, 3, 0, 1, 0, 1);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+
+            const c = grid.getCellByColumn(0, 'ID');
+            UIInteractions.simulateClickAndSelectCellEvent(c);
+            detect();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+            HelperUtils.verifySelectedRange(grid, 0, 0, 0, 0, 0, 1);
+        });
+
         it('Should be able to select multiple ranges with Ctrl key and mouse drag', () => {
             let firstCell = grid.getCellByColumn(1, 'ParentID');
             let secondCell = grid.getCellByColumn(2, 'Name');
@@ -219,6 +243,20 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
             HelperUtils.verifySelectedRange(grid, 0, 3, 2, 3);
+        });
+
+        it('Should return correct ranges from `getSelectedRanges` on shfit + click in the event handler', () => {
+            const firstCell = grid.getCellByColumn(3, 'HireDate');
+            const secondCell = grid.getCellByColumn(1, 'ID');
+
+            const sub = grid.onRangeSelection.subscribe(_ => {
+                expect(grid.selectedCells.length).toEqual(12);
+                const range = grid.getSelectedRanges()[0];
+                HelperUtils.verifySelectedRange(grid, range.rowStart, range.rowEnd, range.columnStart, range.columnEnd);
+                HelperUtils.verifySelectedRange(grid, 1, 3, 0, 3);
+            });
+            HelperUtils.selectCellsRangeWithShiftKeyNoWait(fix, firstCell, secondCell);
+            sub.unsubscribe();
         });
 
         it('Should be able to select range with Shift key when first cell is not visible', (async () => {
@@ -751,7 +789,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellSelected(cell);
             HelperUtils.verifySelectedRange(grid, 1, 1, 1, 1);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true, false, true);
 
             fix.detectChanges();
 
@@ -759,20 +797,20 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellsRegionSelected(grid, 1, 2, 1, 1);
 
             cell = grid.getCellByColumn(2, 'ParentID');
-            UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowright', cell.nativeElement, true, false, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 2, 1, 2);
             cell = grid.getCellByColumn(2, 'Name');
-            UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowup', cell.nativeElement, true, false, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(3);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 1, 1, 2);
             HelperUtils.verifyCellsRegionSelected(grid, 2, 2, 1, 3, false);
             cell = grid.getCellByColumn(1, 'Name');
-            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowleft', cell.nativeElement, true, false, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(4);
@@ -780,13 +818,42 @@ describe('IgxGrid - Multi Cell selection', () => {
             cell = grid.getCellByColumn(1, 'ParentID');
             HelperUtils.verifyCellSelected(cell);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowleft', cell.nativeElement, true, false, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 1, 0, 1);
             HelperUtils.verifySelectedRange(grid, 1, 1, 0, 1);
             expect(grid.getSelectedData()).toEqual([{ID: 957, ParentID: 147}]);
+        });
+
+        it(`Should not clear selection from keyboard shift-state on non-primary click`, () => {
+            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+            let cell = grid.getCellByColumn(1, 'ParentID');
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            fix.detectChanges();
+            HelperUtils.verifyCellSelected(cell);
+            HelperUtils.verifySelectedRange(grid, 1, 1, 1, 1);
+
+            UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true, false, true);
+
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 2, 1, 1);
+
+            cell = grid.getCellByColumn(2, 'ParentID');
+            UIInteractions.triggerKeyDownWithBlur('arrowright', cell.nativeElement, true, false, true);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 2, 1, 2);
+
+            UIInteractions.simulateNonPrimaryClick(cell);
+            fix.detectChanges();
+
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
+            HelperUtils.verifyCellsRegionSelected(grid, 1, 2, 1, 2);
         });
 
         it(`Should not clear range when try to navigate out the grid with shift
@@ -798,9 +865,9 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellSelected(cell);
             HelperUtils.verifySelectedRange(grid, 0, 0, 0, 0);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowup', cell.nativeElement, true, false, true);
             fix.detectChanges();
-            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowleft', cell.nativeElement, true, false, true);
             fix.detectChanges();
 
             HelperUtils.verifyCellSelected(cell);
@@ -824,7 +891,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellSelected(cell);
             for (let i = 3; i < 6; i++) {
                 cell = grid.getCellByColumn(1, grid.columns[i - 1].field);
-                UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, false, true);
+                UIInteractions.triggerKeyDownWithBlur('arrowright', cell.nativeElement, true, false, true);
                 await wait(100);
                 fix.detectChanges();
             }
@@ -833,7 +900,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellsRegionSelected(grid, 1, 1, 2, 5);
             for (let i = 1; i < 6; i++) {
                 cell = grid.getCellByColumn(i, 'OnPTO');
-                UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true);
+                UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true, false, true);
                 await wait(100);
                 fix.detectChanges();
             }
@@ -842,7 +909,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellsRegionSelected(grid, 3, 6, 2, 5);
             for (let i = 7; i > 0; i--) {
                 cell = grid.getCellByColumn(i, 'OnPTO');
-                UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, false, true);
+                UIInteractions.triggerKeyDownWithBlur('arrowup', cell.nativeElement, true, false, true);
                 await wait(100);
                 fix.detectChanges();
             }
@@ -851,7 +918,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellsRegionSelected(grid, 0, 1, 2, 5);
             for (let i = 5; i > 0; i--) {
                 cell = grid.getCellByColumn(0, grid.columns[i - 1].field);
-                UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
+                UIInteractions.triggerKeyDownWithBlur('arrowleft', cell.nativeElement, true, false, true);
                 await wait(100);
                 fix.detectChanges();
             }
@@ -868,7 +935,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             fix.detectChanges();
             HelperUtils.verifyCellSelected(cell);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowup', cell.nativeElement, true, false, true);
             await wait(50);
             fix.detectChanges();
 
@@ -876,7 +943,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellsRegionSelected(grid, 0, 0, 0, 0);
             HelperUtils.verifySelectedRange(grid, 0, 0, 0, 0);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowleft', cell.nativeElement, true, false, true);
             await wait(50);
             fix.detectChanges();
 
@@ -899,14 +966,14 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellSelected(cell);
             HelperUtils.verifySelectedRange(grid, 7, 7, 5, 5);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true, false, true);
             await wait(50);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
             HelperUtils.verifyCellsRegionSelected(grid, 7, 7, 5, 5);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowright', cell.nativeElement, true, false, true);
             await wait(50);
             fix.detectChanges();
 
@@ -927,7 +994,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             fix.detectChanges();
             HelperUtils.verifyCellSelected(firstCell);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowup', firstCell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowup', firstCell.nativeElement, true, false, true);
             await wait(50);
             fix.detectChanges();
 
@@ -956,7 +1023,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             fix.detectChanges();
             HelperUtils.verifyCellSelected(firstCell);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowright', firstCell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowright', firstCell.nativeElement, true, false, true);
             await wait(50);
             fix.detectChanges();
 
@@ -985,7 +1052,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifySelectedRange(grid, 1, 4, 1, 2);
             expect(firstCell.focused);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', firstCell.nativeElement, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowdown', firstCell.nativeElement, true);
             await wait(100);
             fix.detectChanges();
 
@@ -1007,7 +1074,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifySelectedRange(grid, 0, 2, 0, 2);
             expect(secondCell.focused);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowright', secondCell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowright', secondCell.nativeElement, true, false, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1040,7 +1107,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellSelected(secondCell);
             expect(grid.selectedCells.length).toBe(2);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowup', secondCell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowup', secondCell.nativeElement, true, false, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1061,7 +1128,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellSelected(firstCell);
             expect(grid.selectedCells.length).toBe(1);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', firstCell.nativeElement, true, false, true, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowdown', firstCell.nativeElement, true, false, true, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1070,7 +1137,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellsRegionSelected(grid, 3, 7, 2, 2);
 
             const lastCell = grid.getCellByColumn(7, 'Name');
-            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', lastCell.nativeElement, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowdown', lastCell.nativeElement, true);
             await wait(50);
             fix.detectChanges();
             HelperUtils.verifyCellSelected(lastCell);
@@ -1087,7 +1154,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellSelected(cell);
             expect(grid.selectedCells.length).toBe(1);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, false, true, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowup', cell.nativeElement, true, false, true, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1107,7 +1174,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellSelected(firstCell);
             expect(grid.selectedCells.length).toBe(1);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', firstCell.nativeElement, true, false, true, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowleft', firstCell.nativeElement, true, false, true, true);
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -1126,7 +1193,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellSelected(firstCell);
             expect(grid.selectedCells.length).toBe(1);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowright', firstCell.nativeElement, true, false, true, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowright', firstCell.nativeElement, true, false, true, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1146,7 +1213,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellSelected(firstCell);
             expect(grid.selectedCells.length).toBe(1);
 
-            UIInteractions.triggerKeyDownEvtUponElem('home', firstCell.nativeElement, true, false, true, true);
+            UIInteractions.triggerKeyDownWithBlur('home', firstCell.nativeElement, true, false, true, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1155,7 +1222,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellsRegionSelected(grid, 0, 3, 0, 3);
 
             const lastCell = grid.getCellByColumn(0, 'ID');
-            UIInteractions.triggerKeyDownEvtUponElem('arrowup', lastCell.nativeElement, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowup', lastCell.nativeElement, true);
             await wait(50);
             fix.detectChanges();
             HelperUtils.verifyCellSelected(lastCell);
@@ -1172,7 +1239,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellSelected(firstCell);
             expect(grid.selectedCells.length).toBe(1);
 
-            UIInteractions.triggerKeyDownEvtUponElem('end', firstCell.nativeElement, true, false, true, true);
+            UIInteractions.triggerKeyDownWithBlur('end', firstCell.nativeElement, true, false, true, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1199,7 +1266,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellSelected(cell);
             expect(grid.selectedCells.length).toBe(1);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true, false, true);
             await wait(100);
             fix.detectChanges();
 
@@ -1212,7 +1279,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
             expect(row.focused).toBe(true);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', row.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowdown', row.nativeElement, true, false, true);
             await wait(100);
             fix.detectChanges();
 
@@ -1221,7 +1288,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellSelected(cell);
             expect(grid.selectedCells.length).toBe(2);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowleft', cell.nativeElement, true, false, true);
             await wait(100);
             fix.detectChanges();
 
@@ -1230,7 +1297,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellSelected(cell);
             expect(grid.selectedCells.length).toBe(4);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowup', cell.nativeElement, true, false, true);
             await wait(100);
             fix.detectChanges();
 
@@ -1239,7 +1306,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
             expect(row.focused).toBe(true);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowup', row.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowup', row.nativeElement, true, false, true);
             await wait(100);
             fix.detectChanges();
 
@@ -1265,7 +1332,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifyCellSelected(cell);
             expect(grid.selectedCells.length).toBe(1);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true, false, true);
             await wait(100);
             fix.detectChanges();
 
@@ -1273,7 +1340,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             const row = grid.getRowByIndex(3);
             expect(row.focused).toBe(true);
 
-            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', row.nativeElement, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowdown', row.nativeElement, true);
             await wait(100);
             fix.detectChanges();
 
@@ -1306,14 +1373,14 @@ describe('IgxGrid - Multi Cell selection', () => {
                 if (!obj) {
                     obj = grid.getRowByIndex(i);
                 }
-                UIInteractions.triggerKeyDownEvtUponElem('arrowdown', obj.nativeElement, true, false, true);
+                UIInteractions.triggerKeyDownWithBlur('arrowdown', obj.nativeElement, true, false, true);
                 await wait(50);
                 fix.detectChanges();
             }
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
             cell = grid.getCellByColumn(10, 'Name');
-            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowleft', cell.nativeElement, true, false, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1351,7 +1418,7 @@ describe('IgxGrid - Multi Cell selection', () => {
                         .summaryCells.find(sCell => sCell.visibleColumnIndex === 1);
                     }
                 }
-                UIInteractions.triggerKeyDownEvtUponElem('arrowdown', obj.nativeElement, true, false, true);
+                UIInteractions.triggerKeyDownWithBlur('arrowdown', obj.nativeElement, true, false, true);
                 await wait(50);
                 fix.detectChanges();
             }
@@ -1361,7 +1428,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.selectedCells.length).toBe(5);
 
             cell = grid.getCellByColumn(10, 'ParentID');
-            UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, false, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowright', cell.nativeElement, true, false, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1378,7 +1445,7 @@ describe('IgxGrid - Multi Cell selection', () => {
                         .summaryCells.find(sCell => sCell.visibleColumnIndex === 2);
                     }
                 }
-                UIInteractions.triggerKeyDownEvtUponElem('arrowup', obj.nativeElement, true, false, true);
+                UIInteractions.triggerKeyDownWithBlur('arrowup', obj.nativeElement, true, false, true);
                 await wait(50);
                 fix.detectChanges();
             }
@@ -1389,7 +1456,7 @@ describe('IgxGrid - Multi Cell selection', () => {
 
             const summaryCell = grid.summariesRowList.find(row => row.index === 3)
             .summaryCells.find(sCell => sCell.visibleColumnIndex === 2);
-            UIInteractions.triggerKeyDownEvtUponElem('arrowleft', summaryCell.nativeElement, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowleft', summaryCell.nativeElement, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1427,7 +1494,7 @@ describe('IgxGrid - Multi Cell selection', () => {
                         .summaryCells.find(sCell => sCell.visibleColumnIndex === 0);
                     }
                 }
-                UIInteractions.triggerKeyDownEvtUponElem('arrowdown', obj.nativeElement, true, false, true);
+                UIInteractions.triggerKeyDownWithBlur('arrowdown', obj.nativeElement, true, false, true);
                 await wait(50);
                 fix.detectChanges();
             }
@@ -1437,7 +1504,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             for (let i = 0; i < 5; i++) {
                 const summaryCell = grid.summariesRowList.find(row => row.index === 8)
                         .summaryCells.find(sCell => sCell.visibleColumnIndex === i);
-                UIInteractions.triggerKeyDownEvtUponElem('arrowright', summaryCell.nativeElement, true);
+                UIInteractions.triggerKeyDownWithBlur('arrowright', summaryCell.nativeElement, true);
                 await wait(50);
                 fix.detectChanges();
             }
@@ -1446,7 +1513,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifySelectedRange(grid, 2, 7, 0, 0);
             const sumCell = grid.summariesRowList.find(row => row.index === 8)
                 .summaryCells.find(sCell => sCell.visibleColumnIndex === 5);
-            UIInteractions.triggerKeyDownEvtUponElem('arrowup', sumCell.nativeElement, true);
+            UIInteractions.triggerKeyDownWithBlur('arrowup', sumCell.nativeElement, true);
             await wait(50);
             fix.detectChanges();
 
@@ -1649,10 +1716,11 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
-        it('Filtering, Paging: selected range should not change when perform filtering', () => {
+        it('Filtering, Paging: selected range should not change when perform filtering', fakeAsync(() => {
             grid.paging = true;
             grid.perPage = 5;
             fix.detectChanges();
+            tick(16);
 
             const selectRange = { rowStart: 1, rowEnd: 2, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(selectRange);
@@ -1666,6 +1734,7 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(selData);
             grid.filter('Name', 'm', IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
+            tick(16);
 
             const fData = [
                 { ID: 957, ParentID: 147, Name: 'Thomas Hardy', HireDate: new Date('Jul 19, 2009')},
@@ -1673,12 +1742,13 @@ describe('IgxGrid - Multi Cell selection', () => {
             ];
             HelperUtils.verifySelectedRange(grid, 1, 2, 0, 3);
             expect(grid.getSelectedData()).toEqual(fData);
-        });
+        }));
 
-        it('Paging: selected range should be cleared on paging', () => {
+        it('Paging: selected range should be cleared on paging',  fakeAsync(() => {
             grid.paging = true;
             grid.perPage = 5;
             fix.detectChanges();
+            tick(16);
 
             const range = { rowStart: 1, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(range);
@@ -1694,17 +1764,19 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
             grid.paginate(1);
             fix.detectChanges();
+            tick(16);
 
             expect(grid.getSelectedRanges().length).toBe(0);
             expect(grid.getSelectedRanges()).toEqual([]);
             expect(grid.getSelectedData().length).toBe(0);
             expect(grid.getSelectedData()).toEqual([]);
-        });
+        }));
 
-        it('Paging: selected range should be cleared when perPage items are changed', () => {
+        it('Paging: selected range should be cleared when perPage items are changed',  fakeAsync(() => {
             grid.paging = true;
             grid.perPage = 5;
             fix.detectChanges();
+            tick(16);
 
             const range = { rowStart: 2, rowEnd: 4, columnStart: 'ID', columnEnd: 'OnPTO' };
             grid.selectRange(range);
@@ -1720,12 +1792,13 @@ describe('IgxGrid - Multi Cell selection', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
             grid.perPage = 7;
             fix.detectChanges();
+            tick(16);
 
             expect(grid.getSelectedRanges().length).toBe(0);
             expect(grid.getSelectedRanges()).toEqual([]);
             expect(grid.getSelectedData().length).toBe(0);
             expect(grid.getSelectedData()).toEqual([]);
-        });
+        }));
 
         xit('Resizing: selected range should not change on resizing', fakeAsync(() => {
             const range = { rowStart: 2, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
@@ -2397,6 +2470,29 @@ describe('IgxGrid - Multi Cell selection', () => {
             HelperUtils.verifySelectedRange(grid, 1, 4, 0, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 1, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
+        });
+
+        it('CRUD: Non-primary click with a cell in edit mode', () => {
+            grid.getColumnByName('Name').editable = true;
+            fix.detectChanges();
+
+            const cell = grid.getCellByColumn(0, 'Name');
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            fix.detectChanges();
+
+            cell.setEditMode(true);
+            cell.editValue = 'No name';
+            fix.detectChanges();
+
+            const target = grid.getCellByColumn(0, 'Age');
+            UIInteractions.simulateNonPrimaryClick(target);
+            fix.detectChanges();
+
+            expect(cell.editMode).toEqual(false);
+            expect(cell.value).toMatch('No name');
+            expect(target.focused).toEqual(true);
+            expect(target.selected).toEqual(false);
+            expect(cell.selected).toEqual(true);
         });
 
         it('Search: selection range should be preserved when perform search', () => {

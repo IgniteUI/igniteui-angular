@@ -22,6 +22,11 @@ import { IgxTabsBase, IgxTabsGroupBase } from './tabs.common';
 export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit, AfterViewChecked {
 
     /**
+     * @hidden
+     */
+    private _isSelected = false;
+
+    /**
     * An @Input property that allows you to enable/disable the `IgxTabGroupComponent`.
     *```html
     *<igx-tabs-group label="Tab 2  Lorem ipsum dolor sit" icon="home" [disabled]="true">
@@ -49,12 +54,33 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
     @Input()
     public label: string;
 
-    public isSelected = false;
+    /**
+     * Sets/gets whether a tab group is selected.
+     * ```typescript
+     * this.tabGroup.isSelected = true;
+     * ```
+     * ```typescript
+     * let isSelected = this.tabGroup.isSelected;
+     * ```
+     * @memberof IgxTabsGroupComponent
+     */
+    public get isSelected(): boolean {
+        return this._isSelected;
+    }
+    public set isSelected(newValue: boolean) {
+        if (this._isSelected !== newValue) {
+            if (newValue) {
+                this.select();
+            } else {
+                this._isSelected = newValue;
+            }
+        }
+    }
 
     /**
      * @hidden
      */
-    @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective })
+    @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective, static: true })
     protected tabTemplate: IgxTabItemTemplateDirective;
 
     private _tabTemplate: TemplateRef<any>;
@@ -167,7 +193,7 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
             return;
         }
 
-        this.isSelected = true;
+        this._isSelected = true;
         this.relatedTab.tabindex = 0;
 
         if (focusDelay !== 0) {

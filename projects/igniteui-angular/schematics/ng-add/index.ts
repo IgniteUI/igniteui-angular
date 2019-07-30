@@ -1,28 +1,12 @@
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { Options } from '../interfaces/options';
 import { installPackageJsonDependencies } from '../utils/package-handler';
-import { logSuccess, addDependencies, overwriteJsonFile } from '../utils/dependency-handler';
+import { logSuccess, addDependencies, overwriteJsonFile, getPropertyFromWorkspace } from '../utils/dependency-handler';
 
-import * as os from 'os';
 import { addResetCss } from './add-normalize';
 import { getWorkspace } from '@schematics/angular/utility/config';
-import { WorkspaceSchema } from '@angular-devkit/core/src/workspace';
+import { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 
-/**
- *  ES7 `Object.entries` needed for igxGrid to render in IE.
- * - https://github.com/IgniteUI/igniteui-cli/issues/344
- */
-function addIgxGridSupportForIe(polyfillsData: string): string {
-  const targetImportPattern = /import \'classlist.js\';.*/;
-  const targetImport = targetImportPattern.exec(polyfillsData);
-  const lineToAdd = 'import \'core-js/es7/object\';';
-  const comment = '/** ES7 `Object.entries` needed for igxGrid to render in IE. */';
-  if (!polyfillsData.includes(lineToAdd)) {
-    return polyfillsData.replace(targetImportPattern, `${targetImport}${os.EOL}${os.EOL}${comment}${os.EOL}${lineToAdd}`);
-  }
-
-  return polyfillsData;
-}
 
 /**
  * Checks whether a property exists in the angular workspace.
@@ -32,37 +16,7 @@ function propertyExistsInWorkspace(targetProp: string, workspace: WorkspaceSchem
   return foundProp !== null && foundProp.key === targetProp;
 }
 
-/**
- * Recursively search for the targetted property name within the angular.json file.
- */
-function getPropertyFromWorkspace(targetProp: string, workspace: any, curKey = ''): any {
-  if (workspace.hasOwnProperty(targetProp)) {
-    return { key: targetProp, value: workspace[targetProp] };
-  }
-
-  const workspaceKeys = Object.keys(workspace);
-  for (const key of workspaceKeys) {
-    // If the target property is an array, return its key and its contents.
-    if (Array.isArray(workspace[key])) {
-      return {
-        key: curKey,
-        value: workspace[key]
-      };
-    } else if (workspace[key] instanceof Object) {
-      // If the target property is an object, go one level in.
-      if (workspace.hasOwnProperty(key)) {
-        const newValue = getPropertyFromWorkspace(targetProp, workspace[key], key);
-        if (newValue !== null) {
-          return newValue;
-        }
-      }
-    }
-  }
-
-  return null;
-}
-
-function enablePolyfills(tree: Tree, context: SchematicContext): any {
+function enablePolyfills(tree: Tree, context: SchematicContext): string {
   const targetFile = 'src/polyfills.ts';
   if (!tree.exists(targetFile)) {
     context.logger.warn(`${targetFile} not found. You may need to update polyfills.ts manually.`);
@@ -88,7 +42,6 @@ function enableWebAnimationsAndGridSupport(tree: Tree, targetFile: string, polyf
   polyfillsData = polyfillsData.replace(webAnimationsLine,
     webAnimationsLine.substring(3, webAnimationsLine.length));
 
-  polyfillsData = addIgxGridSupportForIe(polyfillsData);
   tree.overwrite(targetFile, polyfillsData);
 }
 

@@ -1,3 +1,5 @@
+@import '../shape/list';
+
 ////
 /// @group schemas
 /// @access private
@@ -10,49 +12,105 @@
 /// @property {Map} background [igx-color: 'surface'] - The list background color.
 /// @property {Map} header-background [igx-color: 'surface'] - The list header background color.
 /// @property {Color} header-text-color [igx-color: ('secondary', 500)] - The list header text color.
+///
 /// @property {Map} item-background [igx-color: 'surface'] - The list item background color.
+/// @property {Map} item-background-hover [igx-color: ('grays', 200),  hexrgba: (#fff)] - The list item hover background.
+/// @property {Map} item-background-active [igx-color: ('grays', 200),  hexrgba: (#fff)] - The active list item background color.
+///
 /// @property {Map} item-text-color [igx-color: 'surface', text-contrast: (), rgba: .74] - The list item text color.
-/// @property {Map} item-background-active [igx-color: ('grays', 200)] - The active list item background color.
-/// @property {Map} item-text-color-active [igx-color: 'surface', text-contrast: ()] - The active list item text color.
+/// @property {Map} item-text-color-hover [igx-color: 'surface', text-contrast: (), rgba: .74] - The list item text color.
+/// @property {Map} item-text-color-active [igx-color: 'surface', text-contrast: (), rgba: .74] - The active list item text color.
+///
+/// @property {Color} item-title-color [currentColor] - The list item title color.
+/// @property {Color} item-title-color-hover [currentColor] - The list item title hover color.
+/// @property {Color} item-title-color-active [currentColor] - The list item title active color.
+///
+/// @property {Color} item-subtitle-color [currentColor] - The list item subtitle color.
+/// @property {Color} item-subtitle-color-hover [currentColor] - The list item subtitle hover color.
+/// @property {Color} item-subtitle-color-active [currentColor] - The list item subtitle active color.
+///
+/// @property {Color} item-action-color [currentColor] - The list item action color.
+/// @property {Color} item-action-color-hover [currentColor] - The list item action hover color.
+/// @property {Color} item-action-color-active [currentColor] - The list item action active color.
+///
+/// @property {Color} item-thumbnail-color [currentColor] - The list item thumbnail color.
+/// @property {Color} item-thumbnail-color-hover [currentColor] - The list item thumbnail hover color.
+/// @property {Color} item-thumbnail-color-active [currentColor] - The list item thumbnail active color.
 ///
 /// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for list component.
 /// @prop {Number} item-border-radius [0] - The border radius fraction, between 0-1 to be used for list item.
 ///
 /// @see $default-palette
 
-$_light-list: (
+$_light-list: extend(
+    $_default-shape-list,
+    (
+        background: (
+            igx-color: 'surface'
+        ),
 
-    border-radius: 0,
-    item-border-radius: 0,
+        header-background: (
+            igx-color: 'surface'
+        ),
 
-    background: (
-        igx-color: 'surface'
-    ),
+        header-text-color:  (
+            igx-color: ('secondary', 500)
+        ),
 
-    header-background: (
-        igx-color: 'surface'
-    ),
+        item-background: (
+            igx-color: 'surface'
+        ),
 
-    header-text-color:  (
-        igx-color: ('secondary', 500)
-    ),
+        item-background-hover: (
+            igx-color: ('grays', 200),
+            hexrgba: (#fff)
+        ),
 
-    item-background: (
-        igx-color: 'surface'
-    ),
+        item-background-active: (
+            igx-color: ('grays', 200),
+            hexrgba: (#fff)
+        ),
 
-    item-text-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .74
-    ),
+        item-text-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .74
+        ),
 
-    item-background-active: (
-        igx-color: ('grays', 200)
-    ),
+        item-text-color-hover: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .74
+        ),
 
-    item-text-color-active: (
-        igx-color: 'surface',
-        text-contrast: ()
+        item-text-color-active: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .74
+        ),
+
+        item-title-color: currentColor,
+
+        item-title-color-hover: currentColor,
+
+        item-title-color-active: currentColor,
+
+        item-action-color: currentColor,
+
+        item-action-color-hover: currentColor,
+
+        item-action-color-active: currentColor,
+
+        item-subtitle-color: currentColor,
+
+        item-subtitle-color-hover: currentColor,
+
+        item-subtitle-color-active: currentColor,
+
+        item-thumbnail-color: currentColor,
+
+        item-thumbnail-color-hover: currentColor,
+
+        item-thumbnail-color-active: currentColor
     )
 );

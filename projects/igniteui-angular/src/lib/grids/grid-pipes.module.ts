@@ -6,7 +6,9 @@ import {
     IgxGridTransactionPipe,
     IgxGridNotGroupedPipe,
     IgxGridTopLevelColumns,
-    IgxGridCellStylesPipe
+    IgxGridCellStylesPipe,
+    IgxGridPaginatorOptionsPipe,
+    IgxHasVisibleColumnsPipe
 } from './grid-common.pipes';
 
 @NgModule({
@@ -17,7 +19,9 @@ import {
         IgxGridTransactionPipe,
         IgxGridNotGroupedPipe,
         IgxGridTopLevelColumns,
-        IgxGridCellStylesPipe
+        IgxGridCellStylesPipe,
+        IgxGridPaginatorOptionsPipe,
+        IgxHasVisibleColumnsPipe
     ],
     exports: [
         IgxDatePipeComponent,
@@ -26,7 +30,9 @@ import {
         IgxGridTransactionPipe,
         IgxGridNotGroupedPipe,
         IgxGridTopLevelColumns,
-        IgxGridCellStylesPipe
+        IgxGridCellStylesPipe,
+        IgxGridPaginatorOptionsPipe,
+        IgxHasVisibleColumnsPipe
     ],
     imports: [
         CommonModule

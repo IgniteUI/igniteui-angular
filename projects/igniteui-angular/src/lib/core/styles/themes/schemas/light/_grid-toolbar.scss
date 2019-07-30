@@ -1,3 +1,5 @@
+@import '../shape/grid-toolbar';
+
 ////
 /// @group schemas
 /// @access private
@@ -24,58 +26,61 @@
 ///
 /// @see $default-palette
 
-$_light-grid-toolbar: (
-    background-color: (
-        igx-color: ('grays', 50)
-    ),
+$_light-grid-toolbar: extend(
+    $_default-shape-grid-toolbar,
+    (
+        background-color: (
+            igx-color: ('grays', 50)
+        ),
 
-    title-text-color : (
-        igx-color: ('grays', 600)
-    ),
+        title-text-color : (
+            igx-color: ('grays', 600)
+        ),
 
-    button-background: (
-        igx-color: ('grays', 100)
-    ),
+        button-background: (
+            igx-color: ('grays', 100)
+        ),
 
-    button-text-color: (
-        igx-color: ('grays', 600)
-    ),
+        button-text-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    button-hover-background: (
-        igx-color: ('grays', 100)
-    ),
+        button-hover-background: (
+            igx-color: ('grays', 100)
+        ),
 
-    button-hover-text-color: (
-        igx-color: ('grays', 600)
-    ),
+        button-hover-text-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    button-focus-background: (
-        igx-color: ('grays', 100)
-    ),
+        button-focus-background: (
+            igx-color: ('grays', 100)
+        ),
 
-    button-focus-text-color: (
-        igx-color: ('grays', 600)
-    ),
+        button-focus-text-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    dropdown-background: #fff,
+        dropdown-background: #fff,
 
-    item-text-color: (
-        igx-color: ('grays', 600)
-    ),
+        item-text-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    item-hover-background: (
-        igx-color: ('grays', 100)
-    ),
+        item-hover-background: (
+            igx-color: ('grays', 100)
+        ),
 
-    item-hover-text-color: (
-        igx-color: ('grays', 600)
-    ),
+        item-hover-text-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    item-focus-background: (
-        igx-color: ('grays', 100)
-    ),
+        item-focus-background: (
+            igx-color: ('grays', 100)
+        ),
 
-    item-focus-text-color: (
-        igx-color: ('grays', 600)
+        item-focus-text-color: (
+            igx-color: ('grays', 600)
+        )
     )
 );

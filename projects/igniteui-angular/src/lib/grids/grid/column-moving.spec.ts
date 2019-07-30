@@ -48,7 +48,7 @@ describe('IgxGrid - Column Moving', () => {
     });
 
     describe('', () => {
-        configureTestSuite();
+        // configureTestSuite();
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(MovableColumnsComponent);
             fixture.detectChanges();
@@ -346,7 +346,7 @@ describe('IgxGrid - Column Moving', () => {
 
             cell.triggerEventHandler('dblclick', {});
             fixture.detectChanges();
-            expect(grid.getCellByColumn(0, 'ID').inEditMode).toBe(true);
+            expect(grid.getCellByColumn(0, 'ID').editMode).toBe(true);
 
             // step 2 - enter some new value
             const editTemplate = cell.query(By.css('input'));
@@ -368,7 +368,7 @@ describe('IgxGrid - Column Moving', () => {
 
             // step 4 - verify cell has exited edit mode correctly
             expect(grid.columnList.toArray()[1].field).toEqual('ID');
-            expect(grid.getCellByColumn(0, 'ID').inEditMode).toBe(false);
+            expect(grid.getCellByColumn(0, 'ID').editMode).toBe(false);
             expect(grid.getCellByColumn(0, 'ID').value).toBe('4');
         }));
 
@@ -496,7 +496,7 @@ describe('IgxGrid - Column Moving', () => {
     });
 
     describe('', () => {
-        configureTestSuite();
+        // configureTestSuite();
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(MovableTemplatedColumnsComponent);
             fixture.detectChanges();
@@ -532,7 +532,7 @@ describe('IgxGrid - Column Moving', () => {
     });
 
     describe('', () => {
-        configureTestSuite();
+        // configureTestSuite();
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(MovableColumnsLargeComponent);
             fixture.detectChanges();
@@ -940,10 +940,70 @@ describe('IgxGrid - Column Moving', () => {
             expect(grid.getColumnByName('ID').pinned).toBeFalsy();
             expect(grid.unpinnedColumns[0].field).toEqual('ID');
         }));
+
+        it('Pinning - Should not be able to pin a column if disablePinning is enabled for that column', (async() => {
+            // step 1 - pin some columns
+            grid.getColumnByName('Address').pinned = true;
+            grid.getColumnByName('ID').pinned = true;
+            grid.getColumnByName('ContactName').disablePinning = true;
+            fixture.detectChanges();
+
+            // step 2 - drag/drop an unpinned column among pinned columns
+            const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[3].nativeElement;
+            UIInteractions.simulatePointerEvent('pointerdown', header, 350, 25);
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', header, 350, 31);
+            await wait(50);
+            UIInteractions.simulatePointerEvent('pointermove', header, 130, 31);
+            await wait(50);
+            UIInteractions.simulatePointerEvent('pointerup', header, 130, 31);
+            await wait();
+            fixture.detectChanges();
+
+            // step 3 - verify column is still unpinned
+            expect(grid.pinnedColumns.length).toEqual(2);
+            expect(grid.pinnedColumns[0].field).toEqual('Address');
+            expect(grid.pinnedColumns[1].field).toEqual('ID');
+            expect(grid.unpinnedColumns[0].field).toEqual('CompanyName');
+            expect(grid.unpinnedColumns[1].field).toEqual('ContactName');
+            expect(grid.getColumnByName('ContactName').pinned).toBeFalsy();
+        }));
+
+        it('Pinning - Should not be able to move unpinned column if disablePinning is enabled for all unpinned columns', (async() => {
+            // step 1 - pin some columns
+            grid.getColumnByName('Address').pinned = true;
+            grid.getColumnByName('ContactTitle').pinned = true;
+
+            grid.columnList.forEach((column) => {
+                if (column.field !== 'Address' && column.field !== 'ContactTitle') {
+                    column.disablePinning = true;
+                }
+            });
+            fixture.detectChanges();
+
+            // step 2 - drag/drop a pinned column among unpinned columns
+            const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[2].nativeElement;
+            UIInteractions.simulatePointerEvent('pointerdown', header, 350, 25);
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', header, 350, 31);
+            await wait(50);
+            UIInteractions.simulatePointerEvent('pointermove', header, 400, 31);
+            await wait(50);
+            UIInteractions.simulatePointerEvent('pointerup', header, 400, 31);
+            await wait();
+            fixture.detectChanges();
+
+            // step 3 - verify column is unpinned at the correct place
+            expect(grid.pinnedColumns[0].field).toEqual('Address');
+            expect(grid.pinnedColumns[1].field).toEqual('ContactTitle');
+            expect(grid.unpinnedColumns[0].field).toEqual('CompanyName');
+            expect(grid.unpinnedColumns[1].field).toEqual('ID');
+            expect(grid.getColumnByName('ID').pinned).toBeFalsy();
+        }));
     });
 
     describe('', () => {
-        configureTestSuite();
+        // configureTestSuite();
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(MultiColumnHeadersComponent);
             fixture.detectChanges();

@@ -16,12 +16,13 @@ export class IgxGridCellStylesPipe implements PipeTransform {
 
         const result = [];
 
-        Object.entries(cssClasses).forEach(([cssClass, callbackOrValue]) => {
+        for (const cssClass of Object.keys(cssClasses)) {
+            const callbackOrValue = cssClasses[cssClass];
             const apply = typeof callbackOrValue === 'function' ? callbackOrValue(data, field) : callbackOrValue;
             if (apply) {
                 result.push(cssClass);
             }
-        });
+        }
 
         return result.join(' ');
     }
@@ -85,4 +86,29 @@ export class IgxGridTransactionPipe implements PipeTransform {
         }
         return collection;
     }
+}
+
+/** @hidden */
+@Pipe({
+    name: 'paginatorOptions',
+    pure: true,
+})
+export class IgxGridPaginatorOptionsPipe implements PipeTransform {
+    public transform(values: Array<number>) {
+        return Array.from(new Set([...values])).sort((a, b) => a - b);
+    }
+}
+
+@Pipe({
+    name: 'visibleColumns',
+    pure: true
+})
+export class IgxHasVisibleColumnsPipe implements PipeTransform {
+    transform(values: any[], hasVisibleColumns) {
+        if (!(values && values.length)) {
+            return values;
+        }
+        return hasVisibleColumns ? values : [];
+    }
+
 }

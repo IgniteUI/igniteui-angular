@@ -1,3 +1,5 @@
+@import '../shape/radio';
+
 ////
 /// @group schemas
 /// @access private
@@ -14,22 +16,25 @@
 ///
 /// @see $default-palette
 
-$_light-radio: (
-    name: 'igx-radio',
+$_light-radio: extend(
+    $_default-shape-radio,
+    (
+        name: 'igx-radio',
 
-    label-color: (
-        igx-color: ('grays', 900)
-    ),
+        label-color: (
+            igx-color: ('grays', 900)
+        ),
 
-    empty-color: (
-        igx-color: ('grays', 600)
-    ),
+        empty-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    fill-color: (
-        igx-color: ('secondary', 500)
-    ),
+        fill-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    disabled-color: (
-        igx-color: ('grays', 400)
+        disabled-color: (
+            igx-color: ('grays', 400)
+        )
     )
 );

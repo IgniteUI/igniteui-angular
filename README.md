@@ -17,7 +17,7 @@ You can find source files under the [`src`](https://github.com/IgniteUI/igniteui
 
 **IMPORTANT** The repository has been renamed from `igniteui-js-blocks` to `igniteui-angular`. Read more on our new [naming convention](https://www.infragistics.com/community/blogs/b/infragistics/posts/ignite-ui-github-repo-name-changes).
  
-Current list of controls include:
+#### Current List of Components Include:
 
 |Components|Status|||Directives|Status|||
 |:--|:--|:--|:--|:--|:--|:--|:--|
@@ -55,6 +55,33 @@ Current list of controls include:
 |time picker|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/time-picker/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/time_picker.html)|||||
 |toast|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/toast/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toast.html)|||||
 |tree grid|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/grids/tree-grid/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid.html)|||||
+
+#### Components available in [igniteui-angular-charts](https://www.npmjs.com/package/igniteui-angular-charts)
+|Components||
+|:---|:---|
+|Category Chart|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/categorychart.html)|
+|Data Chart|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/datachart.html)|
+|Financial Chart|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/financialchart.html)|
+|Doughnut Chart|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/doughnutchart.html)|
+|Pie Chart|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/piechart.html)|
+
+#### Components available in [igniteui-angular-gauges](https://www.npmjs.com/package/igniteui-angular-gauges)
+|Components||
+|:---|:---|
+|Bullet Graph|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/bulletgraph.html)|
+|Linear Gauge|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/lineargauge.html)|
+|Radial Gauge|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/radialgauge.html)|
+
+#### Components available in [igniteui-angular-excel](https://www.npmjs.com/package/igniteui-angular-excel)
+|Components||
+|:---|:---|
+|Excel Library|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/excel_library.html)|
+
+
+#### Components available in [igniteui-angular-spreadsheet](https://www.npmjs.com/package/igniteui-angular-spreadsheet)
+|Components||
+|:---|:---|
+|Spreadsheet|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/spreadsheet_overview.html)|
 
 ## Setup
 From the root folder run:
@@ -154,9 +181,7 @@ You can include Ignite UI for Angular in your project as a dependency using the 
 `npm install igniteui-angular`
 
 ## Contributing
-[Coding Guidelines](../../wiki//Coding-guidelines-for-Ignite-UI-for-Angular)
-
-[General Naming Guidelines](../../wiki//General-Naming-Guidelines-for-Ignite-UI-for-Angular)
+[General Naming and Coding Guidelines for Ignite UI for Angular](https://github.com/IgniteUI/igniteui-angular/wiki/General-Naming-and-Coding--Guidelines-for-Ignite-UI-for-Angular)
 
 ## Demo Apps & Documentation
 The [Warehouse Picklist App](https://github.com/IgniteUI/warehouse-js-blocks) demonstrates using several Ignite UI for Angular widgets together to build a modern, mobile app.

@@ -41,11 +41,20 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     /**
     * Provides an observable collection of all `IgxTabsGroupComponent`s.
     * ```typescript
-    * const groupItems = this.myTabComponent.tabs;
+    * const groupItems = this.myTabComponent.groups;
     * ```
     */
     @ContentChildren(forwardRef(() => IgxTabsGroupComponent))
     public groups: QueryList<IgxTabsGroupComponent>;
+
+    /**
+    * Provides an observable collection of all `IgxTabItemComponent`s defined in the page.
+    * ```typescript
+    * const tabItems = this.myTabComponent.contentTabs;
+    * ```
+    */
+    @ContentChildren(forwardRef(() => IgxTabItemComponent))
+    public contentTabs: QueryList<IgxTabItemComponent>;
 
     /**
     * An @Input property that sets the value of the `selectedIndex`.
@@ -60,8 +69,11 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     }
 
     public set selectedIndex(index: number) {
-        this._selectedIndex = index;
-        this.setSelectedGroup();
+        const newIndex = typeof index !== 'number' ? parseInt(index, 10) : index;
+        if (this._selectedIndex !== newIndex) {
+            this._selectedIndex = newIndex;
+            this.setSelectedGroup();
+        }
     }
 
     /**
@@ -119,47 +131,68 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
-    @ViewChild('contentsContainer')
+    @ViewChild('contentsContainer', { static: true })
     public contentsContainer: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('headerContainer')
+    @ViewChild('headerContainer', { static: true })
     public headerContainer: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('itemsContainer')
+    @ViewChild('itemsContainer', { static: true })
     public itemsContainer: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('selectedIndicator')
+    @ViewChild('selectedIndicator', { static: false })
     public selectedIndicator: ElementRef;
 
     /**
     * @hidden
     */
-    @ViewChild('tabsContainer')
+    @ViewChild('tabsContainer', { static: true })
     public tabsContainer: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('viewPort')
+    @ViewChild('viewPort', { static: true })
     public viewPort: ElementRef;
 
     /**
      * Provides an observable collection of all `IgxTabItemComponent`s.
      * ```typescript
-     * const tabItems = this.myTabComponent.tabs;
+     * const tabItems = this.myTabComponent.viewTabs;
      * ```
      */
     @ViewChildren(forwardRef(() => IgxTabItemComponent))
-    public tabs: QueryList<IgxTabItemComponent>;
+    public viewTabs: QueryList<IgxTabItemComponent>;
+
+    /**
+     * Provides an observable collection of all `IgxTabItemComponent`s.
+     * First try to get them as content children if not available get them as view children.
+     * ```typescript
+     * const tabItems = this.myTabComponent.tabs;
+     * ```
+     */
+    public get tabs(): QueryList<IgxTabItemComponent> {
+        if (this.hasContentTabs) {
+            return this.contentTabs;
+        }
+        return this.viewTabs;
+    }
+
+    /**
+     *@hidden
+     */
+    public get hasContentTabs(): boolean {
+        return (this.contentTabs && this.contentTabs.length > 0);
+    }
 
     /**
      * @hidden
@@ -177,7 +210,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     public offset = 0;
 
     private _groupChanges$: Subscription;
-    private _selectedIndex = 0;
+    private _selectedIndex = -1;
 
     /**
      * @hidden
@@ -187,7 +220,8 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         const defaultStyle = `igx-tabs`;
         const fixedStyle = `igx-tabs--fixed`;
         const iconStyle = `igx-tabs--icons`;
-        const iconLabelFound = this.groups.find((group) => group.icon != null && group.label != null);
+        const iconLabelFoundInGroups = this.groups.find((group) => group.icon != null && group.label != null);
+        const iconLabelFoundInTabs = this.contentTabs.find((tab) => tab.icon != null && tab.label != null);
         let css;
         switch (TabsType[this.tabsType.toUpperCase()]) {
             case TabsType.FIXED: {
@@ -201,7 +235,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         }
 
         // Layout fix for items with icons
-        if (iconLabelFound !== undefined) {
+        if (iconLabelFoundInGroups !== undefined || iconLabelFoundInTabs !== undefined) {
             css = `${css} ${iconStyle}`;
         }
 
@@ -213,21 +247,33 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      */
     @HostListener('onTabItemSelected', ['$event'])
     public selectedGroupHandler(args) {
-        const prevSelectedIndex = this.selectedIndex;
-        if (prevSelectedIndex !== -1 && this.groups.toArray()[prevSelectedIndex] !== undefined) {
-            this.onTabItemDeselected.emit(
-                {
-                    tab: this.groups.toArray()[prevSelectedIndex].relatedTab,
-                    group: this.groups.toArray()[prevSelectedIndex]
-                });
-        }
-
-        this.selectedIndex = args.group.index;
-        this.groups.forEach((p) => {
-            if (p.index !== this.selectedIndex) {
-                this.deselectGroup(p);
+        if (this.hasContentTabs) {
+            const theTabsArray = this.tabs.toArray();
+            if (this.selectedIndex !== -1 && this.selectedIndex !== args.tab.index && theTabsArray[this.selectedIndex] !== undefined) {
+                theTabsArray[this.selectedIndex].isSelected = false;
+                this.onTabItemDeselected.emit({ tab: theTabsArray[this.selectedIndex], groups: null });
             }
-        });
+            this.selectedIndex = args.tab.index;
+        } else {
+            const prevSelectedIndex = this.selectedIndex;
+            if (prevSelectedIndex !== -1 && this.groups && this.groups.toArray()[prevSelectedIndex] !== undefined) {
+                this.onTabItemDeselected.emit(
+                    {
+                        tab: this.groups.toArray()[prevSelectedIndex].relatedTab,
+                        group: this.groups.toArray()[prevSelectedIndex]
+                    });
+            }
+            if (args.group) {
+                this.selectedIndex = args.group.index;
+            }
+            if (this.groups) {
+                this.groups.forEach((p) => {
+                    if (p.index !== this.selectedIndex) {
+                        this.deselectGroup(p);
+                    }
+                });
+            }
+        }
     }
 
     /**
@@ -273,6 +319,18 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * @hidden
      */
     public ngAfterViewInit() {
+        if (this._selectedIndex === -1) {
+            this.tabs.forEach((t) => {
+                if (t.isSelected) {
+                    this._selectedIndex = t.index;
+                }
+            });
+        }
+
+        if (!this.hasContentTabs && (this.selectedIndex < 0 || this.selectedIndex >= this.groups.length)) {
+            this._selectedIndex = 0;
+        }
+
         requestAnimationFrame(() => {
             this.setSelectedGroup();
         });
@@ -293,10 +351,16 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
 
     private setSelectedGroup(): void {
         requestAnimationFrame(() => {
-            if (this.selectedIndex <= 0 || this.selectedIndex >= this.groups.length) {
-                // if nothing is selected - select the first tabs group
-                this.selectGroupByIndex(0);
+            if (this.hasContentTabs) {
+                if (this.selectedIndex < 0 || this.selectedIndex >= this.contentTabs.length) {
+                    this.selectedIndicator.nativeElement.style.visibility = 'hidden';
+                } else {
+                    this.selectGroupByIndex(this.selectedIndex);
+                }
             } else {
+                if (this.selectedIndex < 0 || this.selectedIndex >= this.groups.length) {
+                    this._selectedIndex = 0;
+                }
                 this.selectGroupByIndex(this.selectedIndex);
             }
         });
@@ -317,11 +381,17 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     }
 
     private selectGroupByIndex(selectedIndex: number): void {
-        const selectableGroups = this.groups.filter((selectableGroup) => !selectableGroup.disabled);
-        const group = selectableGroups[selectedIndex];
-
-        if (group) {
-            group.select(0);
+        if (this.hasContentTabs) {
+            const aTab = this.tabs.toArray()[selectedIndex];
+            if (aTab) {
+                aTab.select();
+            }
+        } else {
+            const selectableGroups = this.groups.filter((selectableGroup) => !selectableGroup.disabled);
+            const group = selectableGroups[selectedIndex];
+            if (group) {
+                group.select(0);
+            }
         }
     }
 

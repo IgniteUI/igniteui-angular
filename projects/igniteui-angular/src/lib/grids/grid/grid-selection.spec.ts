@@ -793,7 +793,7 @@ describe('IgxGrid - Row Selection', () => {
         fixture.detectChanges();
 
         const grid = fixture.componentInstance.gridSummaries;
-        expect(grid.summariesMargin).toBe(grid.headerFixedWidth);
+        expect(grid.summariesMargin).toBe(grid.featureColumnsWidth);
     });
 
 
@@ -953,10 +953,8 @@ describe('IgxGrid - Row Selection', () => {
 
         grid.columns.forEach(c => c.hidden = true);
         fix.detectChanges();
-        headerCheck = fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-checkbox__input');
-        rowCheck = grid.getRowByIndex(0).nativeElement.querySelector('.igx-checkbox__input');
+        headerCheck = fix.nativeElement.querySelector('.igx-checkbox__input');
         expect(headerCheck).toBeNull();
-        expect(rowCheck).toBeNull();
 
         grid.columns.forEach(c => c.hidden = false);
         fix.detectChanges();
@@ -987,7 +985,7 @@ describe('IgxGrid - Row Selection', () => {
 export class GridWithPagingAndSelectionComponent implements OnInit {
     public data = [];
 
-    @ViewChild('gridSelection2', {read: IgxGridComponent})
+    @ViewChild('gridSelection2', { read: IgxGridComponent, static: true })
     public gridSelection2: IgxGridComponent;
 
     ngOnInit() {
@@ -1037,12 +1035,12 @@ export class GridWithSelectionFilteringComponent {
     public timeGenerator: Calendar = new Calendar();
     public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
 
-    @ViewChild('gridSelection4', {read: IgxGridComponent})
+    @ViewChild('gridSelection4', { read: IgxGridComponent, static: true })
     public gridSelection4: IgxGridComponent;
 
     public data = SampleTestData.productInfoData();
 
-    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 }
 
 
@@ -1065,7 +1063,7 @@ export class GridWithSelectionFilteringComponent {
 })
 export class GridSummaryComponent {
     public data = SampleTestData.foodProductData();
-    @ViewChild('grid1', {read: IgxGridComponent})
+    @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public gridSummaries: IgxGridComponent;
 }
 
@@ -1087,7 +1085,7 @@ export class GridSummaryComponent {
 })
 export class GridCancelableComponent {
     public data = SampleTestData.foodProductData();
-    @ViewChild('gridCancelable', {read: IgxGridComponent})
+    @ViewChild('gridCancelable', { read: IgxGridComponent, static: true })
     public gridCancelable: IgxGridComponent;
 
     public cancelClick(evt) {
@@ -1117,7 +1115,7 @@ export class GridCancelableComponent {
 })
 export class GridFeaturesComponent {
 
-    @ViewChild('grid1', {read: IgxGridComponent}) public grid: IgxGridComponent;
+    @ViewChild('grid1', { read: IgxGridComponent, static: true }) public grid: IgxGridComponent;
     public data = [
         {
             Name: 'Alice',

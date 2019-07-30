@@ -19,7 +19,7 @@ import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait } from '../../test-utils/ui-interactions.spec';
 
-describe('IgxTreeGrid - Selection', () => {
+describe('IgxTreeGrid - Selection ', () => {
     configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
@@ -37,7 +37,7 @@ describe('IgxTreeGrid - Selection', () => {
     }));
 
     describe('API Row Selection', () => {
-        configureTestSuite();
+        // configureTestSuite();
         beforeEach(async () => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
@@ -194,14 +194,16 @@ describe('IgxTreeGrid - Selection', () => {
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
         });
 
-        it('should persist selection after paging', () => {
+        it('should persist selection after paging', fakeAsync(() => {
             treeGrid.selectRows([treeGrid.getRowByIndex(0).rowID, treeGrid.getRowByIndex(3).rowID,
             treeGrid.getRowByIndex(5).rowID], true);
             fix.detectChanges();
+            tick(16);
 
             treeGrid.paging = true;
             treeGrid.perPage = 4;
             fix.detectChanges();
+            tick(16);
 
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, true);
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, false);
@@ -210,6 +212,7 @@ describe('IgxTreeGrid - Selection', () => {
 
             treeGrid.page = 1;
             fix.detectChanges();
+            tick(16);
 
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, false);
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, true);
@@ -218,14 +221,15 @@ describe('IgxTreeGrid - Selection', () => {
 
             treeGrid.page = 2;
             fix.detectChanges();
+            tick(16);
 
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, false);
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, false);
-        });
+        }));
     });
 
     describe('UI Row Selection', () => {
-        configureTestSuite();
+        // configureTestSuite();
         beforeEach(async() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
@@ -374,7 +378,7 @@ describe('IgxTreeGrid - Selection', () => {
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
         });
 
-        it('should persist selection after paging', () => {
+        it('should persist selection after paging', fakeAsync(() => {
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 3);
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 5);
@@ -383,6 +387,7 @@ describe('IgxTreeGrid - Selection', () => {
             treeGrid.paging = true;
             treeGrid.perPage = 4;
             fix.detectChanges();
+            tick(16);
 
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, true);
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, false);
@@ -391,6 +396,7 @@ describe('IgxTreeGrid - Selection', () => {
 
             treeGrid.page = 1;
             fix.detectChanges();
+            tick(16);
 
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, false);
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, true);
@@ -399,20 +405,20 @@ describe('IgxTreeGrid - Selection', () => {
 
             treeGrid.page = 2;
             fix.detectChanges();
+            tick(16);
 
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, false);
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, false);
-        });
+        }));
     });
 
     describe('Cell Selection', () => {
-        configureTestSuite();
+        // configureTestSuite();
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
             fix.detectChanges();
-
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
-            fix.detectChanges();
         }));
 
         it('should return the correct type of cell when clicking on a cells', () => {
@@ -468,14 +474,18 @@ describe('IgxTreeGrid - Selection', () => {
         it('should not persist selection after paging', () => {
             let rows = TreeGridFunctions.getAllRows(fix);
             let treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
-            treeGridCell.triggerEventHandler('focus', new Event('focus'));
+            treeGridCell.nativeElement.dispatchEvent(new Event('focus'));
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(1);
             expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
             expect(TreeGridFunctions.verifyGridCellHasSelectedClass(treeGridCell)).toBe(true);
 
+            // Clicking on the pager buttons triggers a blur event.
+
             navigateToNextPage(fix);
+            treeGridCell.nativeElement.dispatchEvent(new Event('blur'));
+            fix.detectChanges();
             navigateToFirstPage(fix);
             fix.detectChanges();
 
@@ -483,7 +493,7 @@ describe('IgxTreeGrid - Selection', () => {
 
             rows = TreeGridFunctions.getAllRows(fix);
             treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
-            treeGridCell.triggerEventHandler('focus', new Event('focus'));
+            treeGridCell.nativeElement.dispatchEvent(new Event('focus'));
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(1);
@@ -491,6 +501,8 @@ describe('IgxTreeGrid - Selection', () => {
             expect(TreeGridFunctions.verifyGridCellHasSelectedClass(treeGridCell)).toBe(true);
 
             navigateToLastPage(fix);
+            treeGridCell.nativeElement.dispatchEvent(new Event('blur'));
+            fix.detectChanges();
             navigateToFirstPage(fix);
             fix.detectChanges();
 
@@ -595,7 +607,7 @@ describe('IgxTreeGrid - Selection', () => {
     });
 
     describe('Cell/Row Selection With Row Editing', () => {
-        configureTestSuite();
+        // configureTestSuite();
         beforeEach(async () => {
             fix = TestBed.createComponent(IgxTreeGridSelectionRowEditingComponent);
             fix.detectChanges();
@@ -612,15 +624,15 @@ describe('IgxTreeGrid - Selection', () => {
 
             // select the second row
             treeGrid.selectRows([targetCell.cellID.rowID], true);
-            tick();
+            tick(16);
             fix.detectChanges();
 
             // check if any rows were selected
             expect(treeGrid.selectedRows().length).toBeGreaterThan(0);
 
             // enter edit mode
-            targetCell.inEditMode = true;
-            tick();
+            targetCell.setEditMode(true);
+            tick(16);
             fix.detectChanges();
 
             // the banner should appear
@@ -638,7 +650,7 @@ describe('IgxTreeGrid - Selection', () => {
             // select a cell
             const targetCell = treeGridCells[0];
             targetCell.triggerEventHandler('focus', new Event('focus'));
-            tick();
+            tick(16);
             fix.detectChanges();
 
             // there should be at least one selected cell
@@ -646,7 +658,7 @@ describe('IgxTreeGrid - Selection', () => {
 
             // enter edit mode
             targetCell.triggerEventHandler('dblclick', new Event('dblclick'));
-            tick();
+            tick(16);
             fix.detectChanges();
 
             // the banner should appear
@@ -680,6 +692,6 @@ function navigateToLastPage(fix) {
 
 function clickPagerButton(fix, button: number) {
     const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
-    const pagingButtons = gridElement.querySelectorAll('.igx-paginator > button');
+    const pagingButtons = gridElement.querySelectorAll('.igx-grid-paginator__pager > button');
     pagingButtons[button].dispatchEvent(new Event('click'));
 }

@@ -53,7 +53,9 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
      * @hidden
      */
     get maxLevelHeaderDepth() {
-        this._maxLevelHeaderDepth = this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
+        if (this._maxLevelHeaderDepth === null) {
+            this._maxLevelHeaderDepth = this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
+        }
         return this._maxLevelHeaderDepth;
     }
 
@@ -85,7 +87,7 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
      * @hidden
      * @internal
      */
-    @ViewChild('dragIndicatorIconBase', { read: TemplateRef })
+    @ViewChild('dragIndicatorIconBase', { read: TemplateRef, static: true })
     public dragIndicatorIconBase: TemplateRef<any>;
 
     constructor(

@@ -95,7 +95,7 @@
                     (onRowEditCancel)="rowEditCancel($event)" (onRowEditEnter)="rowEditEnter($event)"
                     (onCellEditEnter)="cellEnterEditMode($event)" (onCellEdit)="cellEditDone($event)"
                     (onCellEditCancel)="cellEditCancel($event)">
-                    <igx-column width="100px" [editable]="false">
+                    <igx-column width="100px" [editable]="false" [groupable]="true">
                         <ng-template igxCell let-cell="cell" let-val>
                             <button (click)="deleteRow($event, 'gridRowEditTransaction', cell.cellID.rowID)">Delete</button>
                         </ng-template>
@@ -159,8 +159,8 @@
                     </ng-template>
                     <!-- https://github.com/angular/angular/issues/16643 -->
                     <ng-template igxRowEditActions let-endEdit>
-                        <button igxButton igxRowEditTabStop (click)="endEdit(false)">Cancel</button>
-                        <button igxButton igxRowEditTabStop (click)="endEdit(true)">Apply</button>
+                        <button igxButton igxRowEditTabStop (click)="endEdit(false, $event)">Cancel</button>
+                        <button igxButton igxRowEditTabStop (click)="endEdit(true, $event)">Apply</button>
                     </ng-template>
                 </igx-grid>
             </app-grid-with-transactions>

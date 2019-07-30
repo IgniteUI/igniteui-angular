@@ -1,13 +1,11 @@
 import { IPositionStrategy } from './IPositionStrategy';
 import {
-  getPointFromPositionsSettings,
-  getViewportRect,
   HorizontalAlignment,
-  PositionSettings,
   Point,
+  PositionSettings,
   Size,
-  VerticalAlignment,
-  cloneInstance
+  Util,
+  VerticalAlignment
 } from './../utilities';
 import { scaleInVerTop, scaleOutVerTop } from '../../../animations/main';
 
@@ -35,47 +33,63 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
     this.settings = Object.assign({}, this._defaultSettings, settings);
   }
 
-  position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
-    const startPoint = getPointFromPositionsSettings(this.settings, contentElement.parentElement);
-    this.setStyle(contentElement, startPoint, this.settings);
-  }
-
   /** @inheritdoc */
-  clone(): IPositionStrategy {
-    return cloneInstance(this);
+  position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
+    const targetRect = Util.getTargetRect(this.settings);
+    const contentElementRect = contentElement.getBoundingClientRect();
+    this.setStyle(contentElement, targetRect, contentElementRect);
   }
 
-  protected setStyle(contentElement: HTMLElement, startPont: Point, settings: PositionSettings) {
-    const size = contentElement.getBoundingClientRect();
-    const wrapperRect: ClientRect = contentElement.parentElement.getBoundingClientRect();
+  /**
+   * @inheritdoc
+   * Creates clone of this position strategy
+   * @returns clone of this position strategy
+   */
+  clone(): IPositionStrategy {
+    return Util.cloneInstance(this);
+  }
+
+  /**
+   * Sets element's style which effectively positions provided element according
+   * to provided position settings
+   * @param element Element to position
+   * @param targetRect Bounding rectangle of strategy target
+   * @param elementRect Bounding rectangle of the element
+   */
+  protected setStyle(element: HTMLElement, targetRect: ClientRect, elementRect: ClientRect) {
+    const startPoint: Point = {
+      x: targetRect.right + targetRect.width * this.settings.horizontalStartPoint,
+      y: targetRect.bottom + targetRect.height * this.settings.verticalStartPoint,
+    };
+    const wrapperRect: ClientRect = element.parentElement.getBoundingClientRect();
 
     //  clean up styles - if auto position strategy is chosen we may pass here several times
-    contentElement.style.right = '';
-    contentElement.style.left = '';
-    contentElement.style.bottom = '';
-    contentElement.style.top = '';
+    element.style.right = '';
+    element.style.left = '';
+    element.style.bottom = '';
+    element.style.top = '';
 
-    switch (settings.horizontalDirection) {
+    switch (this.settings.horizontalDirection) {
       case HorizontalAlignment.Left:
-        contentElement.style.right = `${Math.round(wrapperRect.right - startPont.x)}px`;
+        element.style.right = `${Math.round(wrapperRect.right - startPoint.x)}px`;
         break;
       case HorizontalAlignment.Center:
-        contentElement.style.left = `${Math.round(startPont.x - wrapperRect.left - size.width / 2)}px`;
+        element.style.left = `${Math.round(startPoint.x - wrapperRect.left - elementRect.width / 2)}px`;
         break;
       case HorizontalAlignment.Right:
-        contentElement.style.left = `${Math.round(startPont.x - wrapperRect.left)}px`;
+        element.style.left = `${Math.round(startPoint.x - wrapperRect.left)}px`;
         break;
     }
 
-    switch (settings.verticalDirection) {
+    switch (this.settings.verticalDirection) {
       case VerticalAlignment.Top:
-        contentElement.style.bottom = `${Math.round(wrapperRect.bottom - startPont.y)}px`;
+        element.style.bottom = `${Math.round(wrapperRect.bottom - startPoint.y)}px`;
         break;
       case VerticalAlignment.Middle:
-        contentElement.style.top = `${Math.round(startPont.y - wrapperRect.top - size.height / 2)}px`;
+        element.style.top = `${Math.round(startPoint.y - wrapperRect.top - elementRect.height / 2)}px`;
         break;
       case VerticalAlignment.Bottom:
-        contentElement.style.top = `${Math.round(startPont.y - wrapperRect.top)}px`;
+        element.style.top = `${Math.round(startPoint.y - wrapperRect.top)}px`;
         break;
     }
   }

@@ -1,6 +1,10 @@
-import { Component, ViewChild, OnInit, TemplateRef } from '@angular/core';
-import { IgxComboComponent, IComboSelectionChangeEventArgs, DisplayDensity } from 'igniteui-angular';
+import { Component, ViewChild, OnInit, TemplateRef, AfterViewInit, ElementRef } from '@angular/core';
+import { IgxComboComponent, IComboSelectionChangeEventArgs,
+    DisplayDensity, OverlaySettings, AutoPositionStrategy, VerticalAlignment, HorizontalAlignment, GlobalPositionStrategy,
+    scaleInCenter, scaleOutCenter, ElasticPositionStrategy
+} from 'igniteui-angular';
 import { take } from 'rxjs/operators';
+import { cloneDeep } from 'lodash';
 
 const primitive = ['1', '2', '3', '4', '5', '6'];
 const complex = [{
@@ -28,10 +32,12 @@ const complex = [{
     templateUrl: './combo.sample.html',
     styleUrls: ['combo.sample.css']
 })
-export class ComboSampleComponent implements OnInit {
+export class ComboSampleComponent implements OnInit, AfterViewInit {
+    private overlaySettings: OverlaySettings[] = [null, null, null];
     private width = '160px';
-    @ViewChild(IgxComboComponent) public igxCombo: IgxComboComponent;
-    @ViewChild('comboTemplate', { read: IgxComboComponent }) public comboTemplate: IgxComboComponent;
+    @ViewChild(IgxComboComponent, { static: true }) public igxCombo: IgxComboComponent;
+    @ViewChild('comboTemplate', { read: IgxComboComponent, static: false }) public comboTemplate: IgxComboComponent;
+    @ViewChild(IgxComboComponent, { read: ElementRef, static: true }) private comboRef: ElementRef;
     public toggleItemState = false;
     private initData: any[] = [];
     public filterableFlag = true;
@@ -39,7 +45,7 @@ export class ComboSampleComponent implements OnInit {
     public items: any[] = [];
     public valueKeyVar = 'field';
     public currentDataType = '';
-    @ViewChild('customItemTemplate', {read: TemplateRef})
+    @ViewChild('customItemTemplate', { read: TemplateRef, static: true })
     private customItemTemplate;
     private initialItemTemplate: TemplateRef<any> = null;
 
@@ -121,6 +127,26 @@ export class ComboSampleComponent implements OnInit {
         this.igxCombo.onSearchInput.subscribe((e) => {
             console.log(e);
         });
+    }
+
+    ngAfterViewInit() {
+        this.overlaySettings[0] = cloneDeep(this.igxCombo.overlaySettings);
+        this.overlaySettings[1] = {
+            positionStrategy: new ElasticPositionStrategy({ target: this.comboRef.nativeElement,
+                verticalDirection: VerticalAlignment.Top, verticalStartPoint: VerticalAlignment.Bottom,
+                horizontalDirection: HorizontalAlignment.Left, horizontalStartPoint: HorizontalAlignment.Right }),
+            modal: false,
+            closeOnOutsideClick: true,
+        };
+        this.overlaySettings[2] = {
+            positionStrategy: new GlobalPositionStrategy({ openAnimation: scaleInCenter, closeAnimation: scaleOutCenter }),
+            modal: true,
+            closeOnOutsideClick: true,
+        };
+    }
+
+    changeOverlaySettings(index: number) {
+        this.igxCombo.overlaySettings = this.overlaySettings[index];
     }
 
     changeItemTemplate() {

@@ -12,7 +12,6 @@ import {
     HostListener,
     ChangeDetectionStrategy
 } from '@angular/core';
-import { Subject } from 'rxjs';
 import { DataType } from '../../data-operations/data-util';
 import { IgxColumnComponent } from '../column.component';
 import { IgxDropDownComponent, ISelectionEventArgs } from '../../drop-down/index';
@@ -64,6 +63,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     private _column = null;
     private isKeyPressed = false;
     private isComposing = false;
+    private _cancelChipClick = false;
 
     public showArrows: boolean;
     public expression: IFilteringExpression;
@@ -95,6 +95,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     set value(val) {
         if (!val && val !== 0) {
             this.expression.searchVal = null;
+            this.showHideArrowButtons();
         } else {
             this.expression.searchVal = this.transformValue(val);
             if (this.expressionsList.find(item => item.expression === this.expression) === undefined) {
@@ -105,37 +106,37 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this.filter();
     }
 
-    @ViewChild('defaultFilterUI', { read: TemplateRef })
+    @ViewChild('defaultFilterUI', { read: TemplateRef, static: true })
     protected defaultFilterUI: TemplateRef<any>;
 
-    @ViewChild('defaultDateUI', { read: TemplateRef })
+    @ViewChild('defaultDateUI', { read: TemplateRef, static: true })
     protected defaultDateUI: TemplateRef<any>;
 
-    @ViewChild('input', { read: ElementRef })
+    @ViewChild('input', { read: ElementRef, static: false })
     protected input: ElementRef;
 
-    @ViewChild('inputGroupConditions', { read: IgxDropDownComponent })
+    @ViewChild('inputGroupConditions', { read: IgxDropDownComponent, static: true })
     protected dropDownConditions: IgxDropDownComponent;
 
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent })
+    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
     protected chipsArea: IgxChipsAreaComponent;
 
     @ViewChildren('operators', { read: IgxDropDownComponent })
     protected dropDownOperators: QueryList<IgxDropDownComponent>;
 
-    @ViewChild('inputGroup', { read: ElementRef })
+    @ViewChild('inputGroup', { read: ElementRef, static: false })
     protected inputGroup: ElementRef;
 
-    @ViewChild('inputGroupPrefix', { read: ElementRef })
+    @ViewChild('inputGroupPrefix', { read: ElementRef, static: false })
     protected inputGroupPrefix: ElementRef;
 
-    @ViewChild('container')
+    @ViewChild('container', { static: true })
     protected container: ElementRef;
 
-    @ViewChild('operand')
+    @ViewChild('operand', { static: false })
     protected operand: ElementRef;
 
-    @ViewChild('closeButton')
+    @ViewChild('closeButton', { static: true })
     public closeButton: ElementRef;
 
     @HostBinding('class.igx-grid__filtering-row')
@@ -272,7 +273,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     public onInput(eventArgs) {
         // The 'iskeyPressed' flag is needed for a case in IE, because the input event is fired on focus and for some reason,
         // when you have a japanese character as a placeholder, on init the value here is empty string .
-        if (isEdge() || this.isKeyPressed) {
+        if (isEdge() || this.isKeyPressed || eventArgs.target.value) {
             this.value = eventArgs.target.value;
         }
     }
@@ -363,7 +364,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Commits the value of the input.
      */
     public commitInput() {
-        this.chipsArea.chipsList.filter(chip => chip.selected = false);
+        this.expressionsList.forEach(ex => ex.isSelected = false);
+        this.chipsArea.chipsList.forEach(chip => chip.selected = false);
+
         let indexToDeselect = -1;
         for (let index = 0; index < this.expressionsList.length; index++) {
             const expression = this.expressionsList[index].expression;
@@ -455,10 +458,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             });
         }
 
+        this.filteringService.isFilterRowVisible = false;
+
         this.filteringService.updateFilteringCell(this.column);
         this.filteringService.focusFilterCellChip(this.column, true);
 
-        this.filteringService.isFilterRowVisible = false;
         this.filteringService.filteredColumn = null;
         this.filteringService.selectedExpression = null;
         this.cdr.detectChanges();
@@ -468,13 +472,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     }
 
     /*
-    * Opens date-picker if condition is not unary
+    * noop
     */
-    public openDatePicker(openDialog: Function) {
-        if (!this.expression.condition.isUnary) {
-            openDialog();
-        }
-    }
+    public noop() {}
 
     /**
      *  Event handler for date picker's selection.
@@ -519,6 +519,21 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             // if it has been focused and then set to readonly.
             requestAnimationFrame(() => this.input.nativeElement.focus());
         }
+    }
+
+
+    public onChipPointerdown(args, chip: IgxChipComponent) {
+        const activeElement = document.activeElement;
+        this._cancelChipClick = chip.selected && activeElement && this.inputGroup.nativeElement.contains(activeElement);
+    }
+
+    public onChipClick(args, chip: IgxChipComponent) {
+        if (this._cancelChipClick) {
+            return;
+        }
+
+        this._cancelChipClick = false;
+        chip.selected = !chip.selected;
     }
 
     /**
@@ -626,13 +641,15 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
     private showHideArrowButtons() {
         requestAnimationFrame(() => {
-            const containerWidth = this.container.nativeElement.getBoundingClientRect().width;
-            this.chipsAreaWidth = this.chipsArea.element.nativeElement.getBoundingClientRect().width;
+            if (this.filteringService.isFilterRowVisible) {
+                const containerWidth = this.container.nativeElement.getBoundingClientRect().width;
+                this.chipsAreaWidth = this.chipsArea.element.nativeElement.getBoundingClientRect().width;
 
-            this.showArrows = this.chipsAreaWidth >= containerWidth;
+                this.showArrows = this.chipsAreaWidth >= containerWidth && this.isColumnFiltered;
 
-            // TODO: revise the cdr.detectChanges() usage here
-            this.cdr.detectChanges();
+                // TODO: revise the cdr.detectChanges() usage here
+                this.cdr.detectChanges();
+            }
         });
     }
 
@@ -713,6 +730,17 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         }
     }
 
+    /**
+     * @hidden
+     * Resets the chips area
+     * @memberof IgxGridFilteringRowComponent
+     */
+    public resetChipsArea() {
+        this.chipAreaScrollOffset = 0;
+        this.transform(this.chipAreaScrollOffset);
+        this.showHideArrowButtons();
+    }
+
     private transform(offset: number) {
         requestAnimationFrame(() => {
             this.chipsArea.element.nativeElement.style.transform = `translate(${offset}px)`;
@@ -760,5 +788,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
     private filter() {
         this.filteringService.filterInternal(this.column.field);
+    }
+
+    private get isColumnFiltered() {
+        return this.column.filteringExpressionsTree && this.column.filteringExpressionsTree.filteringOperands.length > 0;
     }
 }

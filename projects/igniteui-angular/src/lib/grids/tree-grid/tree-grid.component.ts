@@ -300,7 +300,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     /**
      * @hidden
      */
-    @ContentChild(IgxRowLoadingIndicatorTemplateDirective, { read: IgxRowLoadingIndicatorTemplateDirective })
+    @ContentChild(IgxRowLoadingIndicatorTemplateDirective, { read: IgxRowLoadingIndicatorTemplateDirective, static: true })
     protected rowLoadingTemplate: IgxRowLoadingIndicatorTemplateDirective;
 
     /**
@@ -321,7 +321,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
      *  </igx-grid>
      * ```
      */
-    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef })
+    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef, static: true })
     public dragIndicatorIconTemplate: TemplateRef<any> = null;
 
     /**
@@ -398,7 +398,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
      * @hidden
      * @internal
      */
-    @ViewChild('dragIndicatorIconBase', { read: TemplateRef })
+    @ViewChild('dragIndicatorIconBase', { read: TemplateRef, static: true })
     public dragIndicatorIconBase: TemplateRef<any>;
 
     constructor(
@@ -599,7 +599,15 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
      * @memberof IgxTreeGridComponent
      */
     public addRow(data: any, parentRowID?: any) {
-        if (parentRowID) {
+        if (parentRowID !== undefined && parentRowID !== null) {
+            super.endEdit(true);
+
+            const state = this.transactions.getState(parentRowID);
+            // we should not allow adding of rows as child of deleted row
+            if (state && state.type === TransactionType.DELETE) {
+                throw Error(`Cannot add child row to deleted parent row`);
+            }
+
             const parentRecord = this.records.get(parentRowID);
 
             if (!parentRecord) {
@@ -666,6 +674,14 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     }
 
     /**
+     * @hidden @internal
+     */
+    protected getDataBasedBodyHeight(): number {
+        return !this.flatData || (this.flatData.length < this._defaultTargetRecordNumber) ?
+            0 : this.defaultTargetBodyHeight;
+    }
+
+    /**
      * @hidden
      */
     protected scrollTo(row: any | number, column: any | number): void {
@@ -713,7 +729,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         };
     }
 
-    getSelectedData(): any[] {
+    /**
+     * @inheritdoc
+     */
+    getSelectedData(formatters = false, headers = false): any[] {
         const source = [];
 
         const process = (record) => {
@@ -725,7 +744,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         };
 
         this.verticalScrollContainer.igxForOf.forEach(process);
-        return this.extractDataFromSelection(source);
+        return this.extractDataFromSelection(source, formatters, headers);
     }
 
     /**
@@ -756,7 +775,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         if (this.hasColumnLayouts) {
             // invalid configuration - tree grid should not allow column layouts
             // remove column layouts
-            const nonColumnLayoutColumns = this.columnList.filter((col) => !col.columnLayout && !(col.parent && col.parent.columnLayout));
+            const nonColumnLayoutColumns = this.columnList.filter((col) => !col.columnLayout && !col.columnLayoutChild);
             this.columnList.reset(nonColumnLayoutColumns);
         }
         super.initColumns(collection, cb);

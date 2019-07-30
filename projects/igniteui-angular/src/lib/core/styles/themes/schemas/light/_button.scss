@@ -1,3 +1,6 @@
+@import '../shape/button';
+@import '../elevation/button';
+
 ////
 /// @group schemas
 /// @access private
@@ -53,158 +56,143 @@
 /// @prop {Number} fab-border-radius [1] - The border radius fraction used for fab button.
 /// @prop {Number} icon-border-radius [1] - The border radius fraction used for icon button.
 /// @see $default-palette
-$_light-button: (
+$_light-button: extend(
+    $_default-shape-button,
+    $_default-elevation-button,
+    (
+        flat-background: transparent,
 
-    flat-border-radius: .2,
+        flat-text-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    raised-border-radius: .2,
+        flat-hover-background: (
+            igx-color: ('secondary', 500),
+            rgba: .05
+        ),
 
-    outlined-border-radius: .2,
+        flat-hover-text-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    fab-border-radius: 1,
+        flat-focus-background: (
+            igx-color: ('secondary', 400),
+            rgba: .12
+        ),
 
-    icon-border-radius: 1,
+        flat-focus-text-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    flat-background: transparent,
+        outlined-background: transparent,
 
-    flat-text-color: (
-        igx-color: ('secondary', 500)
-    ),
+        outlined-outline-color: (
+            igx-color: ('grays', 300)
+        ),
 
-    flat-hover-background: (
-        igx-color: ('secondary', 500),
-        rgba: .05
-    ),
+        outlined-disabled-outline-color: (
+            igx-color: ('grays', 300)
+        ),
 
-    flat-hover-text-color: (
-        igx-color: ('secondary', 500)
-    ),
+        outlined-text-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    flat-focus-background: (
-        igx-color: ('secondary', 400),
-        rgba: .12
-    ),
+        outlined-hover-background: (
+            igx-color: ('secondary', 500),
+            rgba: .05
+        ),
 
-    flat-focus-text-color: (
-        igx-color: ('secondary', 500)
-    ),
+        outlined-hover-text-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    outlined-background: transparent,
+        outlined-focus-background: (
+            igx-color: ('secondary', 400),
+            rgba: .12
+        ),
 
-    outlined-outline-color: (
-        igx-color: ('grays', 300)
-    ),
+        outlined-focus-text-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    outlined-disabled-outline-color: (
-        igx-color: ('grays', 300)
-    ),
+        raised-background: (
+            igx-color: ('secondary', 500)
+        ),
 
-    outlined-text-color: (
-        igx-color: ('secondary', 500)
-    ),
+        raised-text-color: (
+            igx-contrast-color: ('secondary', 500)
+        ),
 
-    outlined-hover-background: (
-        igx-color: ('secondary', 500),
-        rgba: .05
-    ),
-
-    outlined-hover-text-color: (
-        igx-color: ('secondary', 500)
-    ),
-
-    outlined-focus-background: (
-        igx-color: ('secondary', 400),
-        rgba: .12
-    ),
-
-    outlined-focus-text-color: (
-        igx-color: ('secondary', 500)
-    ),
-
-    raised-background: (
-        igx-color: ('secondary', 500)
-    ),
-
-    raised-text-color: (
-        igx-contrast-color: ('secondary', 500)
-    ),
-
-    raised-hover-background: (
-        igx-color: ('secondary', 300)
-    ),
+        raised-hover-background: (
+            igx-color: ('secondary', 300)
+        ),
 
 
-    raised-hover-text-color: (
-        igx-contrast-color: ('secondary', 300)
-    ),
+        raised-hover-text-color: (
+            igx-contrast-color: ('secondary', 300)
+        ),
 
-    raised-focus-background: (
-        igx-color: ('secondary', 300)
-    ),
+        raised-focus-background: (
+            igx-color: ('secondary', 300)
+        ),
 
-    raised-focus-text-color: (
-        igx-contrast-color: ('secondary', 300)
-    ),
+        raised-focus-text-color: (
+            igx-contrast-color: ('secondary', 300)
+        ),
 
-    fab-background: (
-        igx-color: ('secondary', 500)
-    ),
+        fab-background: (
+            igx-color: ('secondary', 500)
+        ),
 
-    fab-text-color: (
-        igx-contrast-color: ('secondary', 500)
-    ),
+        fab-text-color: (
+            igx-contrast-color: ('secondary', 500)
+        ),
 
-    fab-hover-background: (
-        igx-color: ('secondary', 300)
-    ),
+        fab-hover-background: (
+            igx-color: ('secondary', 300)
+        ),
 
-    fab-hover-text-color: (
-        igx-contrast-color: ('secondary', 300)
-    ),
+        fab-hover-text-color: (
+            igx-contrast-color: ('secondary', 300)
+        ),
 
-    fab-focus-background: (
-        igx-color: ('secondary', 300)
-    ),
+        fab-focus-background: (
+            igx-color: ('secondary', 300)
+        ),
 
-    fab-focus-text-color: (
-        igx-contrast-color: ('secondary', 300)
-    ),
+        fab-focus-text-color: (
+            igx-contrast-color: ('secondary', 300)
+        ),
 
-    icon-color: (
-        igx-color: ('grays', 800)
-    ),
+        icon-color: (
+            igx-color: ('grays', 800)
+        ),
 
-    icon-background: transparent,
+        icon-background: transparent,
 
-    icon-hover-background: (
-        igx-color: ('grays', 100)
-    ),
+        icon-hover-background: (
+            igx-color: ('grays', 100)
+        ),
 
-    icon-hover-color: (
-        igx-color: ('grays', 800)
-    ),
+        icon-hover-color: (
+            igx-color: ('grays', 800)
+        ),
 
-    icon-focus-background: (
-        igx-color: ('grays', 400)
-    ),
+        icon-focus-background: (
+            igx-color: ('grays', 400)
+        ),
 
-    icon-focus-color: (
-        igx-color: ('grays', 800)
-    ),
+        icon-focus-color: (
+            igx-color: ('grays', 800)
+        ),
 
-    disabled-color: (
-        igx-color: ('grays', 400)
-    ),
+        disabled-color: (
+            igx-color: ('grays', 400)
+        ),
 
-    disabled-background: (
-        igx-color: ('grays', 100)
-    ),
-
-    raised-resting-elevation: 2,
-    raised-hover-elevation: 4,
-    raised-focus-elevation: 8,
-
-    fab-resting-elevation: 6,
-    fab-hover-elevation: 12,
-    fab-focus-elevation: 12
+        disabled-background: (
+            igx-color: ('grays', 100)
+        )
+    )
 );

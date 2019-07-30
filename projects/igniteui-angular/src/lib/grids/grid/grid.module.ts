@@ -8,8 +8,7 @@ import {
 import { IgxGridComponent } from './grid.component';
 import {
     IgxGridPagingPipe,
-    IgxGridPostGroupingPipe,
-    IgxGridPreGroupingPipe,
+    IgxGridGroupingPipe,
     IgxGridSortingPipe,
     IgxGridFilteringPipe
 } from './grid.pipes';
@@ -19,6 +18,7 @@ import { IgxChipsModule } from '../../chips/chips.module';
 import { IgxGridCommonModule } from '../grid-common.module';
 import { DeprecateMethod } from '../../core/deprecateDecorators';
 import { IgxGridSummaryPipe } from './grid.summary.pipe';
+import { IgxSelectModule } from '../../select/index';
 
 /**
  * @hidden
@@ -30,8 +30,7 @@ import { IgxGridSummaryPipe } from './grid.summary.pipe';
     IgxGridGroupByRowComponent,
     IgxGroupByRowTemplateDirective,
     IgxGroupAreaDropDirective,
-    IgxGridPreGroupingPipe,
-    IgxGridPostGroupingPipe,
+    IgxGridGroupingPipe,
     IgxGridPagingPipe,
     IgxGridSortingPipe,
     IgxGridFilteringPipe,
@@ -44,8 +43,7 @@ import { IgxGridSummaryPipe } from './grid.summary.pipe';
     IgxGroupByRowTemplateDirective,
     IgxGroupAreaDropDirective,
     IgxGridCommonModule,
-    IgxGridPreGroupingPipe,
-    IgxGridPostGroupingPipe,
+    IgxGridGroupingPipe,
     IgxGridPagingPipe,
     IgxGridSortingPipe,
     IgxGridFilteringPipe,
@@ -55,7 +53,8 @@ import { IgxGridSummaryPipe } from './grid.summary.pipe';
     CommonModule,
     FormsModule,
     IgxChipsModule,
-    IgxGridCommonModule
+    IgxGridCommonModule,
+    IgxSelectModule
   ]
 })
 export class IgxGridModule {

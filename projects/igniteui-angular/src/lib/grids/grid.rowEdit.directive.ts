@@ -1,7 +1,5 @@
 import { Directive, ElementRef, forwardRef, HostListener, Inject, QueryList } from '@angular/core';
 import { IgxGridBaseComponent } from './grid-base.component';
-import { first, tap } from 'rxjs/operators';
-import { IgxGridNavigationService } from './grid-navigation.service';
 
 /** @hidden */
 @Directive({
@@ -28,54 +26,65 @@ export class IgxRowEditActionsDirective { }
     selector: `[igxRowEditTabStop]`
 })
 export class IgxRowEditTabStopDirective {
+    private currentCellIndex: number;
+
     private get allTabs(): QueryList<IgxRowEditTabStopDirective> {
         return this.grid.rowEditTabs;
     }
 
-    private grid: IgxGridBaseComponent;
-    private navigationService: IgxGridNavigationService;
-
     constructor(
-        @Inject(forwardRef(() => IgxGridBaseComponent)) grid,
-        public element: ElementRef,
-        @Inject(forwardRef(() => IgxGridNavigationService)) navigationService) {
-            this.grid = grid;
-            this.navigationService = navigationService;
-            this.navigationService.grid = grid;
-        }
+        @Inject(forwardRef(() => IgxGridBaseComponent)) private grid: IgxGridBaseComponent,
+        public element: ElementRef) {
+    }
+
     @HostListener('keydown.Tab', [`$event`])
     @HostListener('keydown.Shift.Tab', [`$event`])
     public handleTab(event: KeyboardEvent): void {
         event.stopPropagation();
-        if (this.allTabs.length > 1) {
-            if ((this.allTabs.last ===  this && !event.shiftKey) ||
-                (this.allTabs.first ===  this && event.shiftKey)
-            ) {
-                this.move(event);
-            }
-        } else {
+        if ((this.allTabs.last === this && !event.shiftKey) ||
+            (this.allTabs.first === this && event.shiftKey)
+        ) {
             this.move(event);
         }
     }
-    private focusNextCell(rowIndex, cellIndex) {
-        const grid = this.grid as any;
-        grid.parentVirtDir.onChunkLoad.pipe(first(), tap(() => grid.markForCheck())).subscribe(() => {
-            grid.rowInEditMode.cells.find(c => c.visibleColumnIndex === cellIndex).element.nativeElement.focus();
-        });
+
+    @HostListener('keydown.Escape', [`$event`])
+    public handleEscape(event: KeyboardEvent): void {
+        this.grid.endEdit(false, event);
+        const activeNode = this.grid.selectionService.activeElement;
+        //  on right click activeNode is deleted, so we may have no one
+        if (activeNode) {
+            const cell = this.grid.navigation.getCellElementByVisibleIndex(
+                activeNode.row,
+                activeNode.layout ? activeNode.layout.columnVisibleIndex : activeNode.column);
+            cell.focus();
+        }
     }
+
+    /**
+     * Moves focus to first/last editable cell in the editable row and put the cell in edit mode.
+     * If cell is out of view first scrolls to the cell
+     * @param event keyboard event containing information about whether SHIFT key was pressed
+     */
     private move(event: KeyboardEvent) {
         event.preventDefault();
-        const horizontalScroll = this.grid.parentVirtDir.getHorizontalScroll();
-        const targetIndex = event.shiftKey ? this.grid.lastEditableColumnIndex : this.grid.firstEditableColumnIndex;
-        const targetCell = this.grid.rowInEditMode.cells.find(e => e.visibleColumnIndex === targetIndex);
-        if (!targetCell ||
-            !this.navigationService.isColumnFullyVisible(targetIndex)
-            || !this.navigationService.isColumnLeftFullyVisible(targetIndex)) {
-            this.focusNextCell(this.grid.rowInEditMode.index, targetIndex);
-            horizontalScroll.scrollLeft =
-            this.grid.rowInEditMode.virtDirRow.getColumnScrollLeft(this.navigationService.getColumnUnpinnedIndex(targetIndex));
+        this.currentCellIndex = event.shiftKey ? this.grid.lastEditableColumnIndex : this.grid.firstEditableColumnIndex;
+        if (!this.grid.navigation.isColumnFullyVisible(this.currentCellIndex)) {
+            this.grid.navigation.performHorizontalScrollToCell(
+                this.grid.rowInEditMode.index, this.currentCellIndex, false, this.activateCell);
         } else {
-            targetCell.nativeElement.focus();
+            this.activateCell();
         }
+    }
+
+    /**
+     * Sets the cell in edit mode and focus its native element
+     * @param cellIndex index of the cell to activate
+     */
+    private activateCell = (): void => {
+        const cell = this.grid.rowInEditMode.cells.find(e => e.visibleColumnIndex === this.currentCellIndex);
+        cell.nativeElement.focus();
+        cell.setEditMode(true);
+        this.currentCellIndex = -1;
     }
 }

@@ -16,7 +16,7 @@ export class IgxMonthPickerBase extends IgxCalendarBase {
     /**
      * @hidden
      */
-    @ViewChild('yearsBtn')
+    @ViewChild('yearsBtn', { static: false })
     public yearsBtn: ElementRef;
 
     /**

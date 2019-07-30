@@ -1,3 +1,5 @@
+@import '../shape/toast';
+
 ////
 /// @group schemas
 /// @access private
@@ -13,14 +15,15 @@
 ///
 /// @see $default-palette
 
-$_light-toast: (
-    border-radius: 1,
+$_light-toast: extend(
+    $_default-shape-toast,
+    (
+        background: (
+            igx-color: ('grays', 600)
+        ),
 
-    background: (
-        igx-color: ('grays', 600)
-    ),
-
-    text-color: (
-        igx-contrast-color: ('grays', 600)
+        text-color: (
+            igx-contrast-color: ('grays', 600)
+        )
     )
 );

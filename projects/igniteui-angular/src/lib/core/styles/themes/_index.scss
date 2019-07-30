@@ -67,7 +67,6 @@
 /// @requires {mixin} igx-drop-down
 /// @requires {mixin} igx-expansion-panel
 /// @requires {mixin} igx-grid
-/// @requires {mixin} igx-grid-filtering
 /// @requires {mixin} igx-grid-summary
 /// @requires {mixin} igx-grid-paginator
 /// @requires {mixin} igx-icon
@@ -275,17 +274,22 @@
     $exclude: (),
     $legacy-support: true
 ) {
-    $primary: igx-color($palette, 'primary');
-    $secondary: igx-color($palette, 'secondary');
+    $grays: igx-color($palette, 'grays');
     $surface: igx-color($palette, 'surface');
 
+    $light-palette: igx-palette(
+        $primary: igx-color($palette, 'primary'),
+        $secondary: igx-color($palette, 'secondary'),
+        $info: igx-color($palette, 'info'),
+        $success: igx-color($palette, 'success'),
+        $warn: igx-color($palette, 'warn'),
+        $error: igx-color($palette, 'error'),
+        $surface: if($surface != #fff, $surface, #fff),
+        $grays: if($grays != rgba(0, 0, 0, .38), $grays, #000),
+    );
+
     @include igx-theme(
-        $palette: igx-palette(
-            $primary,
-            $secondary,
-            $surface: if($surface != #fff, $surface, #fff),
-            $grays: #000
-        ),
+        $palette: $light-palette,
         $schema: $light-schema,
         $legacy-support: $legacy-support,
         $exclude: $exclude
@@ -301,17 +305,22 @@
     $exclude: (),
     $legacy-support: true
 ) {
-    $primary: igx-color($palette, 'primary');
-    $secondary: igx-color($palette, 'secondary');
+    $grays: igx-color($palette, 'grays');
     $surface: igx-color($palette, 'surface');
 
+    $dark-palette: igx-palette(
+        $primary: igx-color($palette, 'primary'),
+        $secondary: igx-color($palette, 'secondary'),
+        $info: igx-color($palette, 'info'),
+        $success: igx-color($palette, 'success'),
+        $warn: igx-color($palette, 'warn'),
+        $error: igx-color($palette, 'error'),
+        $surface: if($surface != #fff, $surface, #222),
+        $grays: if($grays != rgba(0, 0, 0, .38), $grays, #fff),
+    );
+
     @include igx-theme(
-        $palette: igx-palette(
-            $primary,
-            $secondary,
-            $surface: if($surface != #fff, $surface, #222),
-            $grays: #fff
-        ),
+        $palette: $dark-palette,
         $schema: $dark-schema,
         $legacy-support: $legacy-support,
         $exclude: $exclude

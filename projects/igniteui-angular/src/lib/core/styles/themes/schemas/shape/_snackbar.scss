@@ -1,0 +1,16 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+$_default-shape-snackbar: (
+    border-radius: .17,
+);
+
+$_round-shape-snackbar: (
+    border-radius: 1
+);
+
+$_square-shape-snackbar: (
+    border-radius: 0%,
+);

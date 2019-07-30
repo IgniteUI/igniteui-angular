@@ -77,7 +77,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     @Input()
     public index: number;
 
-    @ViewChild('hgrid')
+    @ViewChild('hgrid', { static: true })
     private hGrid: any/* TODO: IgxHierarchicalGridComponent*/;
 
     /**
@@ -141,9 +141,6 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      * @hidden
      */
     ngOnInit() {
-        // setting child data only once on init
-        // due to context change issues when moving cached views containing hierarchical child grids
-        this.hGrid.data = this.rowData.childGridsData[this.layout.key];
         this.layout.onLayoutChange.subscribe((ch) => {
             this._handleLayoutChanges(ch);
         });
@@ -154,6 +151,9 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         this.hGrid.parent = this.parentGrid;
         this.hGrid.parentIsland = this.layout;
         this.hGrid.childRow =  this;
+        if (this.hGrid.isPercentHeight) {
+            this.hGrid._autoSize = true;
+        }
         this.layout.onGridCreated.emit({
             owner: this.layout,
             parentID: this.rowData.rowID,

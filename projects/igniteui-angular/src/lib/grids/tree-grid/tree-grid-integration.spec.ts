@@ -1,4 +1,4 @@
-import { async, fakeAsync, TestBed, tick, flush } from '@angular/core/testing';
+import { async, fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
@@ -25,7 +25,7 @@ import { IgxGridCellComponent } from '../grid';
 const CSS_CLASS_BANNER = 'igx-banner';
 const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';
 
-describe('IgxTreeGrid - Integration', () => {
+describe('IgxTreeGrid - Integration ', () => {
     configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
@@ -55,6 +55,7 @@ describe('IgxTreeGrid - Integration', () => {
         // Init test
         fix = TestBed.createComponent(IgxTreeGridStringTreeColumnComponent);
         fix.detectChanges();
+        tick(16);
         treeGrid = fix.componentInstance.treeGrid;
 
         TreeGridFunctions.verifyTreeColumn(fix, 'Name', 4);
@@ -64,6 +65,7 @@ describe('IgxTreeGrid - Integration', () => {
         // Init test
         fix = TestBed.createComponent(IgxTreeGridDateTreeColumnComponent);
         fix.detectChanges();
+        tick(16);
         treeGrid = fix.componentInstance.treeGrid;
 
         TreeGridFunctions.verifyTreeColumn(fix, 'HireDate', 4);
@@ -73,16 +75,18 @@ describe('IgxTreeGrid - Integration', () => {
         // Init test
         fix = TestBed.createComponent(IgxTreeGridBooleanTreeColumnComponent);
         fix.detectChanges();
+        tick(16);
         treeGrid = fix.componentInstance.treeGrid;
 
         TreeGridFunctions.verifyTreeColumn(fix, 'PTO', 5);
     }));
 
     describe('Child Collection', () => {
-        configureTestSuite();
+        // configureTestSuite();
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
         }));
 
@@ -191,10 +195,11 @@ describe('IgxTreeGrid - Integration', () => {
     });
 
     describe('Primary/Foreign key', () => {
-        configureTestSuite();
+        // configureTestSuite();
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
         }));
 
@@ -306,6 +311,7 @@ describe('IgxTreeGrid - Integration', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridRowEditingComponent);
             fix.detectChanges();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
         }));
 
@@ -323,7 +329,7 @@ describe('IgxTreeGrid - Integration', () => {
 
             function verifyBannerPositioning(columnIndex: number) {
                 const cell = grid.getCellByColumn(columnIndex, 'Name');
-                cell.inEditMode = true;
+                cell.setEditMode(true);
                 fix.detectChanges();
 
                 const editRow = cell.row.nativeElement;
@@ -345,7 +351,7 @@ describe('IgxTreeGrid - Integration', () => {
             fix.detectChanges();
 
             const cell = grid.getCellByColumn(1, 'Name');
-            cell.inEditMode = true;
+            cell.setEditMode(true);
             fix.detectChanges();
 
             const editRow = cell.row.nativeElement;
@@ -370,8 +376,8 @@ describe('IgxTreeGrid - Integration', () => {
             fix.detectChanges();
 
             const cell = grid.getCellByColumn(2, 'Name');
-            cell.inEditMode = true;
-            tick();
+            cell.setEditMode(true);
+            tick(16);
             fix.detectChanges();
 
             const editRow = cell.row.nativeElement;
@@ -392,7 +398,7 @@ describe('IgxTreeGrid - Integration', () => {
             fix.detectChanges();
 
             const cell = grid.getCellByColumn(grid.rowList.length - 1, 'Name');
-            cell.inEditMode = true;
+            cell.setEditMode(true);
             fix.detectChanges();
 
             const editRow = cell.row.nativeElement;
@@ -414,7 +420,7 @@ describe('IgxTreeGrid - Integration', () => {
 
             // Edit parent row cell
             const cell = grid.getCellByColumn(0, 'Name');
-            cell.inEditMode = true;
+            cell.setEditMode(true);
             fix.detectChanges();
 
             let banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
@@ -425,11 +431,11 @@ describe('IgxTreeGrid - Integration', () => {
             fix.detectChanges();
 
             banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
-            expect(cell.inEditMode).toBeFalsy();
+            expect(cell.editMode).toBeFalsy();
             expect(banner.parent.attributes['aria-hidden']).toEqual('true');
 
             // Edit parent row cell
-            cell.inEditMode = true;
+            cell.setEditMode(true);
             fix.detectChanges();
 
             banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
@@ -440,7 +446,7 @@ describe('IgxTreeGrid - Integration', () => {
             fix.detectChanges();
 
             banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
-            expect(cell.inEditMode).toBeFalsy();
+            expect(cell.editMode).toBeFalsy();
             expect(banner.parent.attributes['aria-hidden']).toEqual('true');
         });
 
@@ -451,7 +457,7 @@ describe('IgxTreeGrid - Integration', () => {
 
             // Edit child row child cell
             const childCell = grid.getCellByColumn(4, 'Name');
-            childCell.inEditMode = true;
+            childCell.setEditMode(true);
             fix.detectChanges();
 
             let banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
@@ -463,12 +469,12 @@ describe('IgxTreeGrid - Integration', () => {
             fix.detectChanges();
 
             banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
-            expect(childCell.inEditMode).toBeFalsy();
+            expect(childCell.editMode).toBeFalsy();
             expect(banner.parent.attributes['aria-hidden']).toEqual('true');
 
             // Edit child row cell
             const parentCell = grid.getCellByColumn(3, 'Name');
-            parentCell.inEditMode = true;
+            parentCell.setEditMode(true);
             fix.detectChanges();
 
             banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
@@ -480,7 +486,7 @@ describe('IgxTreeGrid - Integration', () => {
             fix.detectChanges();
 
             banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
-            expect(parentCell.inEditMode).toBeFalsy();
+            expect(parentCell.editMode).toBeFalsy();
             expect(banner.parent.attributes['aria-hidden']).toEqual('true');
         });
 
@@ -491,18 +497,18 @@ describe('IgxTreeGrid - Integration', () => {
             const nameCell = grid.getCellByColumn(2, 'Name');
             const idCell = grid.getCellByColumn(2, 'ID');
             const ageCell = grid.getCellByColumn(2, 'Age');
-            dateCell.inEditMode = true;
+            dateCell.setEditMode(true);
             await wait(30);
             fix.detectChanges();
 
             await TreeGridFunctions.moveGridCellWithTab(fix, dateCell);
-            expect(dateCell.inEditMode).toBeFalsy();
-            expect(nameCell.inEditMode).toBeTruthy();
+            expect(dateCell.editMode).toBeFalsy();
+            expect(nameCell.editMode).toBeTruthy();
 
             await TreeGridFunctions.moveGridCellWithTab(fix, nameCell);
-            expect(nameCell.inEditMode).toBeFalsy();
-            expect(idCell.inEditMode).toBeFalsy();
-            expect(ageCell.inEditMode).toBeTruthy();
+            expect(nameCell.editMode).toBeFalsy();
+            expect(idCell.editMode).toBeFalsy();
+            expect(ageCell.editMode).toBeTruthy();
 
             const cancelBtn = fix.debugElement.queryAll(By.css('.igx-button--flat'))[0] as DebugElement;
             const doneBtn = fix.debugElement.queryAll(By.css('.igx-button--flat'))[1];
@@ -524,7 +530,7 @@ describe('IgxTreeGrid - Integration', () => {
             doneBtn.triggerEventHandler('keydown.Tab', mockObj);
             await wait(30);
             fix.detectChanges();
-            expect(dateCell.inEditMode).toBeTruthy();
+            expect(dateCell.editMode).toBeTruthy();
             expect((<any>grid.rowEditTabs.last).move).toHaveBeenCalled();
             expect(mockObj.preventDefault).toHaveBeenCalled();
             expect(mockObj.stopPropagation).toHaveBeenCalled();
@@ -595,14 +601,14 @@ describe('IgxTreeGrid - Integration', () => {
 
             treeGrid.deleteRowById(1);
             fix.detectChanges();
-            tick();
+            tick(16);
 
             expect(row.classList).toContain('igx-grid__tr--deleted');
             expect(treeGrid.getRowByKey(1).index).toBe(0);
             expect(treeGrid.getRowByKey(2).index).toBe(1);
             expect(treeGrid.getRowByKey(3).index).toBe(2);
             trans.commit(treeGrid.data);
-            tick();
+            tick(16);
 
             expect(row.classList).not.toContain('igx-grid__tr--deleted');
             expect(treeGrid.getRowByKey(2).index).toBe(0);
@@ -619,7 +625,7 @@ describe('IgxTreeGrid - Integration', () => {
 
             treeGrid.deleteRowById(1);
             fix.detectChanges();
-            tick();
+            tick(16);
 
             for (let i = 0; i < 5; i++) {
                 const curRow: HTMLElement = treeGrid.getRowByIndex(i).nativeElement;
@@ -632,7 +638,7 @@ describe('IgxTreeGrid - Integration', () => {
             expect(treeGrid.getRowByKey(4).index).toBe(4);
 
             trans.commit(treeGrid.data);
-            tick();
+            tick(16);
 
             expect(treeGrid.getRowByKey(1)).toBeUndefined();
             expect(treeGrid.getRowByKey(2)).toBeUndefined();
@@ -652,7 +658,7 @@ describe('IgxTreeGrid - Integration', () => {
             const trans = treeGrid.transactions;
 
             const targetCell = treeGrid.getCellByColumn(3, 'Age');
-            targetCell.inEditMode = true;
+            targetCell.setEditMode(true);
             targetCell.update('333');
             flush();
             fix.detectChanges();
@@ -665,7 +671,7 @@ describe('IgxTreeGrid - Integration', () => {
             fix.detectChanges();
 
             // Verify the value is updated and the correct style is applied before committing
-            expect(targetCell.inEditMode).toBeFalsy();
+            expect(targetCell.editMode).toBeFalsy();
             expect(targetCell.value).toBe(333);
             expect(targetCell.nativeElement.classList).toContain('igx-grid__td--edited');
 
@@ -681,7 +687,7 @@ describe('IgxTreeGrid - Integration', () => {
 
             // Edit a cell value and check it is correctly updated
             const newTargetCell = treeGrid.getCellByColumn(10, 'Age');
-            newTargetCell.inEditMode = true;
+            newTargetCell.setEditMode(true);
             newTargetCell.update('666');
             flush();
             fix.detectChanges();
@@ -764,20 +770,20 @@ describe('IgxTreeGrid - Integration', () => {
 
             treeGrid.addRow({ ID: 11, ParentID: -1, Name: 'Dan Kolov', JobTitle: 'wrestler', Age: 32 });
             fix.detectChanges();
-            tick();
+            tick(16);
 
             expect(trans.canUndo).toBe(true);
             expect(treeGrid.getRowByKey(11).nativeElement.classList).toContain(CSS_CLASS_ROW_EDITED);
 
             trans.commit(treeGrid.data);
-            tick();
+            tick(16);
 
             expect(treeGrid.getRowByKey(11).nativeElement.classList).not.toContain(CSS_CLASS_ROW_EDITED);
             expect(trans.canUndo).toBe(false);
 
             treeGrid.addRow({ ID: 12, ParentID: -1, Name: 'Kubrat Pulev', JobTitle: 'Boxer', Age: 33 });
             fix.detectChanges();
-            tick();
+            tick(16);
 
             expect(trans.canUndo).toBe(true);
             expect(treeGrid.getRowByKey(12).nativeElement.classList).toContain(CSS_CLASS_ROW_EDITED);
@@ -849,7 +855,7 @@ describe('IgxTreeGrid - Integration', () => {
             const grandChildRow = { ID: 13, ParentID: 12, Name: 'Asparuh Pulev', JobTitle: 'wrestler', Age: 14 };
             const trans = treeGrid.transactions;
 
-            treeGrid.addRow(rootRow, 0);
+            treeGrid.addRow(rootRow);
             fix.detectChanges();
 
             treeGrid.addRow(childRow, 11);
@@ -891,7 +897,7 @@ describe('IgxTreeGrid - Integration', () => {
             expect(treeGrid.data.findIndex(e => e.ID === rowData.child.ID)).toEqual(-1);
             expect(treeGrid.transactions.getAggregatedChanges(true).length).toEqual(2);
             // 4. Commit
-            treeGrid.transactions.commit(treeGrid.data, treeGrid.primaryKey, treeGrid.childDataKey);
+            treeGrid.transactions.commit(treeGrid.data);
             // 5. verify the rows are committed, the styles are OK
             expect(treeGrid.data.findIndex(e => e.ID === rowData.parent.ID)).not.toEqual(-1);
             expect(treeGrid.data.findIndex(e => e.ID === rowData.child.ID)).not.toEqual(-1);
@@ -924,7 +930,7 @@ describe('IgxTreeGrid - Integration', () => {
                 JobTitle: 'Copywriter',
                 Age: 22
             };
-            treeGrid.addRow(newRow, 0);
+            treeGrid.addRow(newRow);
             fix.detectChanges();
 
             const addedRow = treeGrid.rowList.filter(r => r.rowID === addedRowId)[0] as IgxTreeGridRowComponent;
@@ -985,7 +991,7 @@ describe('IgxTreeGrid - Integration', () => {
             expect(trans.add).toHaveBeenCalledWith(transParams, null);
 
             treeGrid.deleteRowById(treeGrid.selectedRows()[0]);
-            tick();
+            tick(16);
             fix.detectChanges();
             expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(0);
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(2);
@@ -1084,7 +1090,7 @@ describe('IgxTreeGrid - Integration', () => {
             expect(trans.add).toHaveBeenCalledWith(transPasrams, null);
 
             treeGrid.deleteRowById(treeGrid.selectedRows()[0]);
-            tick();
+            tick(16);
             fix.detectChanges();
             expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(0);
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(2);
@@ -1107,24 +1113,24 @@ describe('IgxTreeGrid - Integration', () => {
             treeGrid = fix.componentInstance.treeGrid;
 
             treeGrid.rowSelectable = true;
-            tick();
+            tick(16);
             fix.detectChanges();
             /** Select deleted row */
             treeGrid.deleteRowById(663);
-            tick();
+            tick(16);
             fix.detectChanges();
             expect(treeGrid.selectedRows()).toEqual([]);
             treeGrid.selectRows([663]);
-            tick();
+            tick(16);
             fix.detectChanges();
             expect(treeGrid.selectedRows()).toEqual([]);
             /** Select row with deleted parent */
             treeGrid.deleteRowById(147);
-            tick();
+            tick(16);
             fix.detectChanges();
             // 147 -> 475
             treeGrid.selectRows([475]);
-            tick();
+            tick(16);
             fix.detectChanges();
             expect(treeGrid.selectedRows()).toEqual([]);
         }));
@@ -1135,26 +1141,53 @@ describe('IgxTreeGrid - Integration', () => {
             treeGrid = fix.componentInstance.treeGrid;
 
             treeGrid.rowSelectable = true;
-            tick();
+            tick(16);
             fix.detectChanges();
             /** Select deleted row */
             treeGrid.deleteRowById(6);
-            tick();
+            tick(16);
             fix.detectChanges();
             expect(treeGrid.selectedRows()).toEqual([]);
             treeGrid.selectRows([6]);
-            tick();
+            tick(16);
             fix.detectChanges();
             expect(treeGrid.selectedRows()).toEqual([]);
             /** Select row with deleted parent */
             treeGrid.deleteRowById(10);
-            tick();
+            tick(16);
             fix.detectChanges();
             // 10 -> 9
             treeGrid.selectRows([9]);
-            tick();
+            tick(16);
             fix.detectChanges();
             expect(treeGrid.selectedRows()).toEqual([]);
+        }));
+
+        it('Should not add child row to deleted parent row - Hierarchical DS', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
+            const grid = fixture.componentInstance.treeGrid;
+            tick();
+            fixture.detectChanges();
+
+            grid.deleteRowById(147);
+            expect(grid.transactions.getTransactionLog().length).toBe(1);
+
+            expect(() => grid.addRow(grid.data, 147)).toThrow(Error(`Cannot add child row to deleted parent row`));
+            expect(grid.transactions.getTransactionLog().length).toBe(1);
+        }));
+
+        it('Should not add child row to deleted parent row - Flat DS', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
+            const grid = (fixture as ComponentFixture<IgxTreeGridRowEditingTransactionComponent>).componentInstance.treeGrid;
+            grid.cascadeOnDelete = false;
+            tick();
+            fixture.detectChanges();
+
+            grid.deleteRowById(1);
+            expect(grid.transactions.getTransactionLog().length).toBe(1);
+
+            expect(() => grid.addRow(grid.data, 1)).toThrow(Error(`Cannot add child row to deleted parent row`));
+            expect(grid.transactions.getTransactionLog().length).toBe(1);
         }));
     });
 
@@ -1162,6 +1195,7 @@ describe('IgxTreeGrid - Integration', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridMultiColHeadersComponent);
             fix.detectChanges();
+            tick(16);
             treeGrid = fix.componentInstance.treeGrid;
         }));
 
@@ -1322,7 +1356,7 @@ describe('IgxTreeGrid - Integration', () => {
             const grandChildRow = { ID: 13, ParentID: 12, Name: 'Asparuh Pulev', JobTitle: 'wrestler', Age: 14 };
             const trans = treeGrid.transactions;
 
-            treeGrid.addRow(rootRow, 0);
+            treeGrid.addRow(rootRow);
             fix.detectChanges();
 
             treeGrid.addRow(childRow, 11);

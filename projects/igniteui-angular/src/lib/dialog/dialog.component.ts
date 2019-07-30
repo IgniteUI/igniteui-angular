@@ -59,7 +59,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     private static NEXT_ID = 1;
     private static readonly DIALOG_CLASS = 'igx-dialog';
 
-    @ViewChild(IgxToggleDirective)
+    @ViewChild(IgxToggleDirective, { static: true })
     public toggleRef: IgxToggleDirective;
 
     /**
@@ -259,8 +259,8 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public onRightButtonSelect = new EventEmitter<IDialogEventArgs>();
 
     private _animaitonSettings: PositionSettings = {
-        openAnimation: useAnimation(slideInBottom, {params: {fromPosition: 'translateY(100%)'}}),
-        closeAnimation: useAnimation(slideOutTop, {params: {toPosition: 'translateY(-100%)'}})
+        openAnimation: useAnimation(slideInBottom, { params: { fromPosition: 'translateY(100%)' } }),
+        closeAnimation: useAnimation(slideOutTop, { params: { toPosition: 'translateY(-100%)' } })
     };
 
     private _overlayDefaultSettings: OverlaySettings;
@@ -391,6 +391,9 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     public open(overlaySettings: OverlaySettings = this._overlayDefaultSettings) {
         this.toggleRef.open(overlaySettings);
         this.onOpen.emit({ dialog: this, event: null });
+        if (!this.leftButtonLabel && !this.rightButtonLabel) {
+            this.toggleRef.element.focus();
+        }
     }
 
     /**

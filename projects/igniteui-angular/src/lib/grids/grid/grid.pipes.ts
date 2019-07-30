@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
-import { IGroupByResult } from '../../data-operations/grouping-strategy';
+import { IGroupByResult } from '../../data-operations/grouping-result.interface';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { IgxGridAPIService } from './grid-api.service';
@@ -44,10 +44,10 @@ export class IgxGridSortingPipe implements PipeTransform {
  *@hidden
  */
 @Pipe({
-    name: 'gridPreGroupBy',
+    name: 'gridGroupBy',
     pure: true
 })
-export class IgxGridPreGroupingPipe implements PipeTransform {
+export class IgxGridGroupingPipe implements PipeTransform {
     private gridAPI: IgxGridAPIService;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) {
@@ -61,56 +61,25 @@ export class IgxGridPreGroupingPipe implements PipeTransform {
         const state = { expressions: [], expansion: [], defaultExpanded };
         const grid: IgxGridComponent = this.gridAPI.grid;
         state.expressions = grid.groupingExpressions;
+        let result: IGroupByResult;
+        const fullResult: IGroupByResult = { data: [], metadata: [] };
 
         if (!state.expressions.length) {
             // empty the array without changing reference
             groupsRecords.splice(0, groupsRecords.length);
-            return {
+            result = {
                 data: collection,
                 metadata: collection
             };
+        } else {
+            state.expansion = grid.groupingExpansionState;
+            state.defaultExpanded = grid.groupsExpanded;
+            result = DataUtil.group(cloneArray(collection), state, grid, groupsRecords, fullResult);
         }
-
-        state.expansion = grid.groupingExpansionState;
-        state.defaultExpanded = grid.groupsExpanded;
-
-        return DataUtil.group(cloneArray(collection), state, groupsRecords);
-    }
-}
-
-/**
- *@hidden
- */
-@Pipe({
-    name: 'gridPostGroupBy',
-    pure: true
-})
-export class IgxGridPostGroupingPipe implements PipeTransform {
-    private gridAPI: IgxGridAPIService;
-
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) {
-        this.gridAPI = <IgxGridAPIService>gridAPI;
-    }
-
-    public transform(collection: IGroupByResult, expression: IGroupingExpression | IGroupingExpression[],
-        expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
-        id: string, pipeTrigger: number): any[] {
-
-        const state = { expressions: [], expansion: [], defaultExpanded };
-        const grid: IgxGridComponent = this.gridAPI.grid;
-        state.expressions = grid.groupingExpressions;
-
-        if (!state.expressions.length) {
-            return collection.data;
-        }
-
-        state.expansion = grid.groupingExpansionState;
-        state.defaultExpanded = grid.groupsExpanded;
-
-        return DataUtil.restoreGroups({
-            data: cloneArray(collection.data),
-            metadata: cloneArray(collection.metadata)
-        }, state);
+        grid.groupingFlatResult = result.data;
+        grid.groupingResult = fullResult.data;
+        grid.groupingMetadata = fullResult.metadata;
+        return result;
     }
 }
 
@@ -135,11 +104,15 @@ export class IgxGridPagingPipe implements PipeTransform {
             index: page,
             recordsPerPage: perPage
         };
+        DataUtil.correctPagingState(state, collection.data.length);
 
-        const result: IGroupByResult = {
+        const result = {
             data: DataUtil.page(cloneArray(collection.data), state),
             metadata: DataUtil.page(cloneArray(collection.metadata), state)
         };
+        if (this.gridAPI.grid.page !== state.index) {
+            this.gridAPI.grid.page = state.index;
+        }
         this.gridAPI.grid.pagingState = state;
         return result;
     }

@@ -1,0 +1,22 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+$_default-shape-input-group: (
+    box-border-radius: .2 .2 0 0,
+    border-border-radius: .2,
+    search-border-radius: .2,
+);
+
+$_round-shape-input-group: (
+    box-border-radius: 1 1 1 1,
+    border-border-radius: 1,
+    search-border-radius: 1,
+);
+
+$_square-shape-input-group: (
+    box-border-radius: 0%,
+    border-border-radius: 0%,
+    search-border-radius: 0%,
+);
