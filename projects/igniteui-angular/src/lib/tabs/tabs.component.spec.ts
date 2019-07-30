@@ -578,16 +578,12 @@ describe('IgxTabs', () => {
             expect(theTabs[2].nativeTabItem.nativeElement.classList.contains(tabItemSelectedCssClass)).toBe(true);
         });
 
-        it('should clear the selection indicator when not tab item is selected', fakeAsync(() => {
-            fixture.ngZone.run(() => { router.initialNavigation(); });
-            tick();
+        it('should hide the selection indicator when no tab item is selected', () => {
             expect(tabsComp.selectedIndicator.nativeElement.style.visibility).toBe('visible');
-
-            fixture.ngZone.run(() => { router.navigate(['/']); });
-            tick();
+            theTabs[1].isSelected = false;
             fixture.detectChanges();
             expect(tabsComp.selectedIndicator.nativeElement.style.visibility).toBe('hidden');
-        }));
+        });
 
     });
 

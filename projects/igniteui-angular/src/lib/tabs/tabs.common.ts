@@ -15,15 +15,22 @@ export abstract class IgxTabsBase {
     onTabItemSelected: EventEmitter<{}>; // TODO: Define event arg interface!
     hasContentTabs: boolean;
     scrollElement(element: any, scrollRight: boolean) {}
+    performSelectionChange(newTab: IgxTabItemBase) {}
+    transformContentAnimation(tab: IgxTabItemBase, duration: number) {}
+    transformIndicatorAnimation(element: HTMLElement) {}
 }
 
 /** @hidden */
-export interface IgxTabItemBase {
+export abstract class IgxTabItemBase {
     nativeTabItem: ElementRef;
-    select(focusDelay?: number);
+    _isSelected = false;
+    tabindex;
+    select(focusDelay?: number): void {}
+    get index(): number { return 0; }
 }
 
 /** @hidden */
-export interface IgxTabsGroupBase {
-    select(focusDelay?: number);
+export abstract class IgxTabsGroupBase {
+    _isSelected = false;
+    select(focusDelay?: number): void {}
 }
