@@ -81,7 +81,7 @@ export class IgxExcelStylePinningTemplateDirective {
 /**
  * @hidden
  */
- @Component({
+@Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-grid-excel-style-filtering',
