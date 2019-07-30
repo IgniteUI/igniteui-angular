@@ -297,6 +297,7 @@ describe('IgxGrid - multi-row-layout', () => {
             ]
         }];
         fixture.detectChanges();
+        fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
         // check columns
         expect(grid.getCellByColumn(0, 'ID').nativeElement.offsetWidth).toBe(100);
@@ -325,6 +326,7 @@ describe('IgxGrid - multi-row-layout', () => {
             ]
         });
         fixture.componentInstance.grid.width = '1117px';
+        fixture.detectChanges();
         fixture.detectChanges();
 
         // first group takes 600px, 500px left for second group
@@ -360,6 +362,7 @@ describe('IgxGrid - multi-row-layout', () => {
             ]
         });
         fixture.componentInstance.grid.width = '1617px';
+        fixture.detectChanges();
         fixture.detectChanges();
 
         // check columns
@@ -681,6 +684,7 @@ describe('IgxGrid - multi-row-layout', () => {
         }];
         fixture.componentInstance.grid.width = (1000 + grid.scrollWidth) + 'px';
         fixture.detectChanges();
+        fixture.detectChanges();
 
         // check columns
         expect(grid.getCellByColumn(0, 'ID').nativeElement.offsetWidth).toBe(100);
@@ -706,6 +710,7 @@ describe('IgxGrid - multi-row-layout', () => {
                 { field: 'Fax', rowStart: 3, colStart: 3, width: '20%' }
             ]
         });
+        fixture.detectChanges();
         fixture.detectChanges();
 
         // check columns
@@ -734,6 +739,7 @@ describe('IgxGrid - multi-row-layout', () => {
                 { field: 'ContactTitle', rowStart: 3, colStart: 1, rowEnd: 5, colEnd: 4, width: '60%' },
             ]
         }];
+        fixture.detectChanges();
         fixture.detectChanges();
 
         // check columns
@@ -1120,6 +1126,7 @@ describe('IgxGrid - multi-row-layout', () => {
                 { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7},
             ]
         }];
+        fixture.detectChanges();
         fixture.detectChanges();
         const grid = fixture.componentInstance.grid;
         const gridFirstRow = grid.rowList.first;

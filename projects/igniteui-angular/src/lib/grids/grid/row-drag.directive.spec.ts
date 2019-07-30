@@ -21,6 +21,7 @@ import { IgxStringFilteringOperand } from '../../data-operations/filtering-condi
 import { IgxHierarchicalGridComponent, IgxHierarchicalGridModule, IgxRowComponent } from '../hierarchical-grid';
 import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';
 import { IgxTreeGridComponent, IgxTreeGridModule } from '../tree-grid';
+import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 
 const DEBOUNCE_TIME = 50;
@@ -68,6 +69,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         let dragRows: DebugElement[];
         // configureTestSuite();
         beforeEach(async(() => {
+            resizeObserverIgnoreError();
             fixture = TestBed.createComponent(IgxGridRowDraggableComponent);
             grid = fixture.componentInstance.instance;
             dropArea = fixture.componentInstance.dropArea;
@@ -399,6 +401,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             }
         }
         beforeEach(async(() => {
+            resizeObserverIgnoreError();
             fixture = TestBed.createComponent(IgxGridFeaturesRowDragComponent);
             dragGrid = fixture.componentInstance.dragGrid;
             dropGrid = fixture.componentInstance.dropGrid;
@@ -460,6 +463,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         }));
         it('should be able to drag grid row when column pinning is enabled', (async () => {
             dragGrid.pinColumn('ProductName');
+            fixture.detectChanges();
 
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
             const row = dragGridRows[1];

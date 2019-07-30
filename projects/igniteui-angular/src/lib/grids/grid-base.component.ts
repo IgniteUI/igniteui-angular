@@ -246,7 +246,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected _init = true;
     private _tick;
     private _cdrRequests = false;
-    private _cdrRequestRepaint = false;
+    protected _cdrRequestRepaint = false;
 
     public get scrollWidth() {
         return this._scrollWidth;
@@ -4520,7 +4520,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this._columns = this.columnList.toArray();
         collection.forEach((column: IgxColumnComponent) => {
             column.grid = this;
-            column.defaultWidth = this.columnWidth;
+            column.defaultWidth = this.columnWidthSetByUser ? this._columnWidth : this.getPossibleColumnWidth();
 
             if (cb) {
                 cb(column);
