@@ -633,8 +633,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this._height !== value) {
             this._height = value;
             this._autoSize = false;
+            this.nativeElement.style.height = value;
             this.notifyChanges(true);
-            // this.nativeElement.style.height = value;
         }
     }
 
@@ -654,8 +654,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     set width(value) {
         if (this._width !== value) {
             this._width = value;
+            this.nativeElement.style.width = value;
             this.notifyChanges(true);
-            // this.nativeElement.style.width = value;
         }
     }
 
@@ -2635,7 +2635,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         });
 
         this.resizeNotify.pipe(destructor, filter(() => !this._init), throttleTime(40))
-            .subscribe(() => this.notifyChanges(true));
+            .subscribe(() => { this._autoSize = false; this.notifyChanges(true); });
 
         this.bodyResizeNotify.pipe(destructor, filter(() => !this._init), throttleTime(40))
             .subscribe(() => {
@@ -2672,11 +2672,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             TODO: Stamen should probably take the call if we actually need the handlers below
         */
 
-        // this.verticalScrollContainer.onDataChanging.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
-        //     // this.calculateGridHeight();
-        //     // this.verticalScrollContainer.recalcUpdateSizes();
-        //     // $event.containerSize = this.calcHeight;
-        // });
+        this.verticalScrollContainer.onDataChanging.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
+            this.calculateGridHeight();
+            $event.containerSize = this.calcHeight;
+        });
 
         // this.verticalScrollContainer.onDataChanged.pipe(destructor, filter(() => !this._init)).subscribe(() => {
         //     // this.calculateGridHeight();
@@ -2688,8 +2687,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 this.summaryService.summaryHeight = 0;
                 this.endEdit(true);
                 this.notifyChanges(true);
-                // this.calculateGridSizes();
-                // this.verticalScrollContainer.recalcUpdateSizes();
             });
         });
     }
@@ -4110,16 +4107,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (!this._height) {
             return null;
         }
-        const footerHeight = this.summariesHeight || this.tfoot.nativeElement.offsetHeight -
-        this.tfoot.nativeElement.clientHeight;
-        let gridHeight;
-        const computed = this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('height');
+
+
+        const footerHeight = this.summariesHeight || this.tfoot.nativeElement.offsetHeight - this.tfoot.nativeElement.clientHeight;
         const toolbarHeight = this.getToolbarHeight();
         const pagingHeight = this.getPagingHeight();
         const groupAreaHeight = this.getGroupAreaHeight();
         const renderedHeight = toolbarHeight + this.theadRow.nativeElement.offsetHeight +
             footerHeight  + pagingHeight + groupAreaHeight +
             this.scr.nativeElement.clientHeight;
+
+        const computed = this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('height');
+        let gridHeight = 0;
 
         if (this.isPercentHeight) {
             /*height in %*/
@@ -4229,7 +4228,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         if (this.isPercentWidth) {
             /* width in %*/
-            width = computed.indexOf('%') === -1 ? parseFloat(this.width) / 100 * parseInt(computed, 10) : null;
+            width = computed.indexOf('%') === -1 ? parseInt(computed, 10) : null;
         } else {
             width = parseInt(this.width, 10);
         }

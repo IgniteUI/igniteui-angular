@@ -75,46 +75,7 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
      */
     public toggle(event: Event) {
         event.stopPropagation();
-        // TODO: TBD
-        // this.treeGridAPI.trigger_row_expansion_toggle(this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
-
-        const grid = this.grid;
-        const expanded = !this.row.expanded;
-        const row = this.row.treeRow;
-
-        if (row.expanded === expanded ||
-            ((!row.children || !row.children.length) && (!grid.loadChildrenOnDemand ||
-            (grid.hasChildrenKey && !row.data[grid.hasChildrenKey])))) {
-            return;
-        }
-
-        const args = {
-            rowID: row.rowID,
-            expanded: expanded,
-            event: event,
-            cancel: false
-        };
-        grid.onRowToggle.emit(args);
-
-        if (args.cancel) {
-            return;
-        }
-
-        const expandedStates = grid.expansionStates;
-        expandedStates.set(row.rowID, expanded);
-        grid.expansionStates = expandedStates;
-
-        if (grid.rowEditable) {
-            grid.endEdit(true);
-        }
-
-        const element = this.grid.selectionService.activeElement;
-        this.zone.onStable.pipe(first()).subscribe(_ => {
-            if (element) {
-                this.gridAPI.get_cell_by_visible_index(element.row, element.column)
-                .nativeElement.focus();
-            }
-        });
+        this.treeGridAPI.trigger_row_expansion_toggle(this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
     }
 
     /**

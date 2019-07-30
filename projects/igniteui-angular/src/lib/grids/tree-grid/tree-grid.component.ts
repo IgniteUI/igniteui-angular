@@ -111,9 +111,8 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
             this.setupColumns();
-            this.reflow();
         }
-        this.cdr.markForCheck();
+        this.notifyChanges(true);
     }
 
     /**

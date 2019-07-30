@@ -7,7 +7,7 @@ import { IgxCsvExporterOptions, IgxCsvExporterService, IgxExcelExporterOptions, 
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { DisplayDensity } from '../../core/displayDensity';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
@@ -432,8 +432,8 @@ describe('IgxGrid - Grid Toolbar', () => {
         verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.comfortable);
 
         grid.displayDensity = DisplayDensity.compact;
+        tick(16);
         fixture.detectChanges();
-        tick(100);
 
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.compact);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar--compact');
@@ -441,16 +441,13 @@ describe('IgxGrid - Grid Toolbar', () => {
         verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.compact);
 
         grid.displayDensity = DisplayDensity.cosy;
+        tick(16);
         fixture.detectChanges();
-        tick(100);
 
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.cosy);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar--cosy');
         expect(parseFloat(toolbar.offsetHeight)).toBe(52);
         verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.cosy);
-
-        grid.displayDensity = DisplayDensity.cosy;
-        fixture.detectChanges();
     }));
 
     it('display density is properly applied through the grid.', fakeAsync(() => {
@@ -464,24 +461,24 @@ describe('IgxGrid - Grid Toolbar', () => {
         verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.comfortable);
 
         grid.displayDensity = DisplayDensity.compact;
+        tick(16);
         fixture.detectChanges();
-        tick(100);
 
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.compact);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar--compact');
         verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.compact);
 
         grid.displayDensity = DisplayDensity.cosy;
+        tick(16);
         fixture.detectChanges();
-        tick(100);
 
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.cosy);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar--cosy');
         verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.cosy);
 
         grid.displayDensity = DisplayDensity.comfortable;
+        tick(16);
         fixture.detectChanges();
-        tick(100);
 
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.comfortable);
         verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.comfortable);

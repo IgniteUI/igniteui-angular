@@ -143,9 +143,8 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
             this.setupColumns();
-            this.reflow();
         }
-        this.cdr.markForCheck();
+        this.notifyChanges(true);
     }
 
     /**
@@ -644,6 +643,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      */
     public toggleGroup(groupRow: IGroupByRecord) {
         this._toggleGroup(groupRow);
+        this.notifyChanges();
     }
 
     /**
@@ -656,6 +656,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      */
     public fullyExpandGroup(groupRow: IGroupByRecord) {
         this._fullyExpandGroup(groupRow);
+        this.notifyChanges();
     }
 
     /**
