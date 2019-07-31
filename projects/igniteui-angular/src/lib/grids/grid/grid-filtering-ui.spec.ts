@@ -4277,6 +4277,169 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             fix.detectChanges();
         }));
 
+        it('display density is properly applied on the excel style cascade dropdown', fakeAsync(() => {
+            const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+
+            // Open excel style cascade operators dropdown and verify its display density
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+            verifyGridSubmenuDisplayDensity(gridNativeElement, DisplayDensity.comfortable);
+            GridFunctions.clickCancelExcelStyleFiltering(fix);
+            fix.detectChanges();
+
+            grid.displayDensity = DisplayDensity.cosy;
+            tick(200);
+            fix.detectChanges();
+
+            // Open excel style cascade operators dropdown and verify its display density
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+            verifyGridSubmenuDisplayDensity(gridNativeElement, DisplayDensity.cosy);
+            GridFunctions.clickCancelExcelStyleFiltering(fix);
+            fix.detectChanges();
+
+            grid.displayDensity = DisplayDensity.compact;
+            tick(200);
+            fix.detectChanges();
+
+            // Open excel style cascade operators dropdown and verify its display density
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+            verifyGridSubmenuDisplayDensity(gridNativeElement, DisplayDensity.compact);
+            GridFunctions.clickCancelExcelStyleFiltering(fix);
+            fix.detectChanges();
+        }));
+
+        it('display density is properly applied on the excel custom dialog\'s default expression dropdown',
+        fakeAsync(() => {
+            const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+
+            // Open excel style custom filtering dialog.
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+            fix.detectChanges();
+
+            // Click the left input to open the operators dropdown and verify its display density.
+            let expr = GridFunctions.getExcelCustomFilteringDefaultExpressions(fix)[0];
+            let inputs = GridFunctions.sortNativeElementsHorizontally(Array.from(expr.querySelectorAll('input')));
+            let conditionsInput = inputs[0];
+            conditionsInput.click();
+            tick(100);
+            fix.detectChanges();
+            verifyGridSubmenuDisplayDensity(gridNativeElement, DisplayDensity.comfortable);
+            GridFunctions.clickCancelExcelStyleCustomFiltering(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Change display density
+            grid.displayDensity = DisplayDensity.cosy;
+            tick(200);
+            fix.detectChanges();
+
+            // Open excel style custom filtering dialog.
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+            fix.detectChanges();
+
+            // Click the left input to open the operators dropdown and verify its display density.
+            expr = GridFunctions.getExcelCustomFilteringDefaultExpressions(fix)[0];
+            inputs = GridFunctions.sortNativeElementsHorizontally(Array.from(expr.querySelectorAll('input')));
+            conditionsInput = inputs[0];
+            conditionsInput.click();
+            tick(100);
+            fix.detectChanges();
+            verifyGridSubmenuDisplayDensity(gridNativeElement, DisplayDensity.cosy);
+            GridFunctions.clickCancelExcelStyleCustomFiltering(fix);
+            tick(100);
+            fix.detectChanges();
+        }));
+
+        it('display density is properly applied on the excel custom dialog\'s date expression dropdown',
+        fakeAsync(() => {
+            const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+
+            // Open excel style custom filtering dialog.
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+            fix.detectChanges();
+
+            // Click the left input to open the operators dropdown and verify its display density.
+            let expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
+            let inputs = GridFunctions.sortNativeElementsHorizontally(Array.from(expr.querySelectorAll('input')));
+            let conditionsInput = inputs[0];
+            conditionsInput.click();
+            tick(100);
+            fix.detectChanges();
+            verifyGridSubmenuDisplayDensity(gridNativeElement, DisplayDensity.comfortable);
+            GridFunctions.clickCancelExcelStyleCustomFiltering(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Change display density
+            grid.displayDensity = DisplayDensity.cosy;
+            tick(200);
+            fix.detectChanges();
+
+            // Open excel style custom filtering dialog.
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            fix.detectChanges();
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+            tick(200);
+            fix.detectChanges();
+
+            // Click the left input to open the operators dropdown and verify its display density.
+            expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
+            inputs = GridFunctions.sortNativeElementsHorizontally(Array.from(expr.querySelectorAll('input')));
+            conditionsInput = inputs[0];
+            conditionsInput.click();
+            tick(100);
+            fix.detectChanges();
+            verifyGridSubmenuDisplayDensity(gridNativeElement, DisplayDensity.cosy);
+            GridFunctions.clickCancelExcelStyleCustomFiltering(fix);
+            tick(100);
+            fix.detectChanges();
+        }));
+
+        it('Should include \'false\' value in results when searching.', fakeAsync(() => {
+            // Open excel style custom filtering dialog.
+            GridFunctions.clickExcelFilterIcon(fix, 'Released');
+            fix.detectChanges();
+
+            // Type string in search box.
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const inputNativeElement = searchComponent.querySelector('.igx-input-group__input');
+            sendInputNativeElement(inputNativeElement, 'false', fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Verify that the first item is 'Select All' and the second item is 'false'.
+            const listItems = GridFunctions.sortNativeElementsVertically(
+                Array.from(searchComponent.querySelectorAll('igx-list-item')));
+            expect(listItems.length).toBe(2, 'incorrect rendered list items count');
+            expect(listItems[0].innerText).toBe('Select All');
+            expect(listItems[1].innerText).toBe('false');
+        }));
+
         it('should scroll items in search list correctly', (async () => {
             // Add additional rows as prerequisite for the test
             for (let index = 0; index < 30; index++) {
@@ -5638,6 +5801,17 @@ function verifyExcelCustomFilterDisplayDensity(gridNativeElement: HTMLElement, e
     });
 }
 
+function verifyGridSubmenuDisplayDensity(gridNativeElement: HTMLElement, expectedDisplayDensity: DisplayDensity) {
+    const outlet = gridNativeElement.querySelector('.igx-grid__outlet');
+    const dropdowns = Array.from(outlet.querySelectorAll('.igx-drop-down__list'));
+    const visibleDropdown: any = dropdowns.find((d) => !d.classList.contains('igx-toggle--hidden'));
+    const dropdownItems = visibleDropdown.querySelectorAll('igx-drop-down-item');
+    dropdownItems.forEach((dropdownItem) => {
+        expect(dropdownItem.classList.contains(getDropdownItemDensityClass(expectedDisplayDensity))).toBe(true,
+            'incorrect dropdown item density');
+    });
+}
+
 function getListDensityClass(displayDensity: DisplayDensity) {
     let densityClass;
     switch (displayDensity) {
@@ -5668,6 +5842,16 @@ function getButtonDensityClass(displayDensity: DisplayDensity) {
         case DisplayDensity.compact: densityClass = 'igx-button--compact'; break;
         case DisplayDensity.cosy: densityClass = 'igx-button--cosy'; break;
         default: densityClass = ''; break;
+    }
+    return densityClass;
+}
+
+function getDropdownItemDensityClass(displayDensity: DisplayDensity) {
+    let densityClass;
+    switch (displayDensity) {
+        case DisplayDensity.compact: densityClass = 'igx-drop-down__item--compact'; break;
+        case DisplayDensity.cosy: densityClass = 'igx-drop-down__item--cosy'; break;
+        default: densityClass = 'igx-drop-down__item'; break;
     }
     return densityClass;
 }
