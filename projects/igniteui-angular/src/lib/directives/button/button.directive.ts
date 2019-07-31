@@ -75,8 +75,11 @@ export class IgxButtonDirective extends DisplayDensityBase {
      * @memberof IgxButtonDirective
      */
     @Input('igxButton') set type(value: string) {
-        this._type = value || this._type;
-        this._renderer.addClass(this.nativeElement, `${this._cssClass}--${this._type}`);
+        if (value && this._type !== value) {
+            this._renderer.removeClass(this.nativeElement, `${this._cssClass}--${this._type}`);
+            this._type = value;
+            this._renderer.addClass(this.nativeElement, `${this._cssClass}--${this._type}`);
+        }
     }
     /**
      * Sets the button text color.
