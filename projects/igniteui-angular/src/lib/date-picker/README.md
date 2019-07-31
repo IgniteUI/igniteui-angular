@@ -135,10 +135,10 @@ The DatePicker action buttons could be retemplated.
 | `onSelection` | `Date` | Fired when selection is made in the calendar. The event contains the selected value(s) based on the type of selection the component is set to |
 | `onOpened`  | `datePicker` | Emitted when a datePicker calendar is opened. |
 | `onClosed`  | `datePicker` | Emitted when a datePicker calendar is closed. |
-| `onClosing`  | `datePicker` | Emitted when a datePicker calendar is being closed. |
+| `onClosing`  | `CancelableBrowserEventArgs` | Emitted when a datePicker calendar is being closed. |
 | `onDisabledDate`  | `IDatePickerDisabledDateEventArgs` | Emitted when a disabled date is entered in `dropdown` mode. |
 | `onValidationFailed`  | `IDatePickerValidationFailedEventArgs` | Emitted when an invalid date is entered in `dropdown` mode. |
-| `valueChange` | `IDatePickerValueChangedEventArgs` | Fired when date picker value is changed |
+| `valueChange` | `Date` | Fired when date picker value is changed |
 
 ### Methods
 | Name   | Arguments | Return Type | Description |

@@ -1,7 +1,7 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
-## 7.3.12
+## 7.3.13
  - `IgxDatePicker` changes
     - `valueChange` event is added.
 
