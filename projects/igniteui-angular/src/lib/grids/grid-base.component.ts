@@ -3239,6 +3239,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return this.rowSelectable && this.hasVisibleColumns;
     }
 
+    get showDragIcons(): boolean {
+        return this.rowDraggable && this.columns.length > this.hiddenColumnsCount;
+    }
+
     /**
      * @hidden
      */
@@ -4140,6 +4144,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             computedWidth -= this.headerCheckboxContainer ? this.headerCheckboxContainer.nativeElement.offsetWidth : 0;
         }
 
+        if (this.showDragIcons) {
+            computedWidth -= this.headerDragContainer ? this.headerDragContainer.nativeElement.offsetWidth : 0;
+        }
+
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
 
 
@@ -4246,8 +4254,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             });
 
             diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                // Clear Grouping
+                this.gridAPI.clear_groupby(record.item.field);
+
                 // Clear Filtering
                 this.gridAPI.clear_filter(record.item.field);
+
+                // Close filter row
+                if ( this.filteringService.isFilterRowVisible
+                    && this.filteringService.filteredColumn
+                    && this.filteringService.filteredColumn.field === record.item.field) {
+                    this.filteringRow.close();
+                }
 
                 // Clear Sorting
                 this.gridAPI.clear_sort(record.item.field);
