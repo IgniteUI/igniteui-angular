@@ -17,6 +17,16 @@ const FAB_BUTTON_COSY = 'igx-button--fab-cosy';
 
 describe('IgxButton', () => {
     configureTestSuite();
+
+    const baseClass = 'igx-button';
+    const classes = {
+        flat: `${baseClass}--flat`,
+        raised: `${baseClass}--raised`,
+        outlined: `${baseClass}--outlined`,
+        fab: `${baseClass}--fab`,
+        icon: `${baseClass}--icon`
+    };
+
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -117,23 +127,28 @@ describe('IgxButton', () => {
 
         theButton.type = 'raised';
         fixture.detectChanges();
-        expect(theButtonNativeEl.classList).toEqual('igx-button--raised');
+        expect(theButtonNativeEl.classList.length).toEqual(1);
+        expect(theButtonNativeEl.classList).toContain(classes.raised);
 
         theButton.type = 'outlined';
         fixture.detectChanges();
-        expect(theButtonNativeEl.classList).toEqual('igx-button--outlined');
+        expect(theButtonNativeEl.classList.length).toEqual(1);
+        expect(theButtonNativeEl.classList).toContain(classes.outlined);
 
         theButton.type = 'fab';
         fixture.detectChanges();
-        expect(theButtonNativeEl.classList).toEqual('igx-button--fab');
+        expect(theButtonNativeEl.classList.length).toEqual(1);
+        expect(theButtonNativeEl.classList).toContain(classes.fab);
 
         theButton.type = 'icon';
         fixture.detectChanges();
-        expect(theButtonNativeEl.classList).toEqual('igx-button--icon');
+        expect(theButtonNativeEl.classList.length).toEqual(1);
+        expect(theButtonNativeEl.classList).toContain(classes.icon);
 
         theButton.type = 'flat';
         fixture.detectChanges();
-        expect(theButtonNativeEl.classList).toEqual('igx-button--flat');
+        expect(theButtonNativeEl.classList.length).toEqual(1);
+        expect(theButtonNativeEl.classList).toContain(classes.flat);
     });
 });
 
