@@ -113,6 +113,7 @@ export class IgxColumnComponent implements AfterContentInit {
     public set groupable(val) {
         this._groupable = val;
         if (this.grid) {
+            this.grid.reflow();
             this.grid.cdr.markForCheck();
         }
     }
