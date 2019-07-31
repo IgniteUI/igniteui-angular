@@ -108,6 +108,7 @@
             class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
         | gridTransaction:id:pipeTrigger
+        | visibleColumns:hasVisibleColumns
         | gridFiltering:filteringExpressionsTree:id:pipeTrigger
         | gridSort:sortingExpressions:id:pipeTrigger
         | gridGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger
@@ -176,8 +177,7 @@
 </div>
 
 <ng-template #defaultPaginator>
-    <igx-paginator [displayDensity]="displayDensity" [(page)]="page"
-        [totalRecords]="filteredData ? filteredData.length : totalRecords" [(perPage)]="perPage">
+    <igx-paginator [displayDensity]="displayDensity" [(page)]="page" [totalRecords]="totalRecords" [(perPage)]="perPage">
     </igx-paginator>
 </ng-template>
 
