@@ -124,11 +124,16 @@
             $palette,
             $schema,
             $border-radius: $roundness,
+            $shadow: if($elevation == false, 0, null),
         ));
     }
 
     @if not(index($exclude, 'igx-bottom-nav')) {
-        @include igx-bottom-nav(igx-bottom-nav-theme($palette, $schema));
+        @include igx-bottom-nav(igx-bottom-nav-theme(
+            $palette,
+            $schema,
+            $shadow: if($elevation == false, 0, null),
+        ));
     }
 
     @if not(index($exclude, 'igx-button')) {
@@ -140,6 +145,12 @@
             $outlined-border-radius: $roundness,
             $fab-border-radius: $roundness,
             $icon-border-radius: $roundness,
+            $raised-resting-shadow: if($elevation == false, 0, null),
+            $raised-hover-shadow: if($elevation == false, 0, null),
+            $raised-focus-shadow: if($elevation == false, 0, null),
+            $fab-resting-shadow: if($elevation == false, 0, null),
+            $fab-hover-shadow: if($elevation == false, 0, null),
+            $fab-focus-shadow: if($elevation == false, 0, null),
         ));
     }
 
@@ -147,7 +158,8 @@
         @include igx-button-group(igx-button-group-theme(
             $palette,
             $schema,
-            $border-radius: $roundness
+            $border-radius: $roundness,
+            $shadow: if($elevation == false, 0, null),
         ));
     }
 
@@ -183,6 +195,7 @@
             $palette,
             $schema,
             $border-radius: $roundness,
+            $disable-button-shadow: if($elevation == false, 0, true),
         ));
     }
 
@@ -200,6 +213,7 @@
             $palette,
             $schema,
             $border-radius: $roundness,
+            $ghost-shadow: if($elevation == false, 0, null),
         ));
     }
 
@@ -224,6 +238,7 @@
             $palette,
             $schema,
             $border-radius: $roundness,
+            $shadow: if($elevation == false, 0, null),
         ));
     }
 
@@ -236,6 +251,7 @@
             $palette,
             $schema,
             $border-radius: $roundness,
+            $shadow: if($elevation == false, 0, null),
         ));
     }
 
@@ -252,6 +268,8 @@
             $palette,
             $schema,
             $drop-area-border-radius: $roundness,
+            $grid-shadow: if($elevation == false, 0, null),
+            $drag-shadow: if($elevation == false, 0, null),
         ));
     }
 
@@ -274,6 +292,9 @@
             $box-border-radius: $roundness,
             $border-border-radius: $roundness,
             $search-border-radius: $roundness,
+            $search-resting-shadow: if($elevation == false, 0, null),
+            $search-hover-shadow: if($elevation == false, 0, null),
+            $search-disabled-shadow: if($elevation == false, 0, null),
         ));
     }
 
@@ -287,7 +308,11 @@
     }
 
     @if not(index($exclude, 'igx-navbar')) {
-        @include igx-navbar(igx-navbar-theme($palette, $schema));
+        @include igx-navbar(igx-navbar-theme(
+            $palette,
+            $schema,
+            $shadow: if($elevation == false, 0, null),
+        ));
     }
 
     @if not(index($exclude, 'igx-nav-drawer')) {
@@ -296,6 +321,7 @@
             $schema,
             $border-radius: $roundness,
             $item-border-radius: $roundness,
+            $shadow: if($elevation == false, 0, null),
         ));
     }
 
@@ -328,6 +354,7 @@
             $palette,
             $schema,
             $border-radius: $roundness,
+            $shadow: if($elevation == false, 0, null),
         ));
     }
 
@@ -338,11 +365,18 @@
             $border-radius-track: $roundness,
             $border-radius-thumb: $roundness,
             $border-radius-ripple: $roundness,
+            $resting-shadow: if($elevation == false, 0, null),
+            $hover-shadow: if($elevation == false, 0, null),
+            $disabled-shadow: if($elevation == false, 0, null),
         ));
     }
 
     @if not(index($exclude, 'igx-tabs')) {
-        @include igx-tabs(igx-tabs-theme($palette, $schema));
+        @include igx-tabs(igx-tabs-theme(
+            $palette,
+            $schema,
+            $disable-shadow: if($elevation == false, true, false),
+        ));
     }
 
     @if not(index($exclude, 'igx-toast')) {
@@ -367,6 +401,8 @@
             $schema,
             $border-radius: $roundness,
             $active-item-border-radius: $roundness,
+            $modal-shadow: if($elevation == false, 0, null),
+            $dropdown-shadow: if($elevation == false, 0, null),
         ));
     }
 }
