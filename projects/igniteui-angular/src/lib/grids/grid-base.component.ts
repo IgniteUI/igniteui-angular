@@ -2675,6 +2675,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.verticalScrollContainer.onDataChanging.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
             this.calculateGridHeight();
             $event.containerSize = this.calcHeight;
+            this.notifyChanges(true);
         });
 
         // this.verticalScrollContainer.onDataChanged.pipe(destructor, filter(() => !this._init)).subscribe(() => {
@@ -4302,6 +4303,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             if (added || removed) {
                 this.summaryService.clearSummaryCache();
                 this.notifyChanges(true);
+                this.cdr.markForCheck();
             }
         }
         this.notifyChanges();

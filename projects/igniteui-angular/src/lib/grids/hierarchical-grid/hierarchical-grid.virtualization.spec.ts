@@ -246,16 +246,14 @@ describe('IgxHierarchicalGrid Virtualization', () => {
         hierarchicalGrid.hierarchicalState = fixture.componentInstance.data.map((rec) => {
             return { rowID: hierarchicalGrid.primaryKey ? rec[hierarchicalGrid.primaryKey] : rec };
         });
-        await wait(100);
         fixture.detectChanges();
-        hierarchicalGrid.cdr.detectChanges();
         // scroll to bottom
         hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
         await wait(100);
-        hierarchicalGrid.cdr.detectChanges();
+        fixture.detectChanges();
         hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
         await wait(100);
-        hierarchicalGrid.cdr.detectChanges();
+        fixture.detectChanges();
 
         expect(
             hierarchicalGrid.verticalScrollContainer.state.startIndex +
