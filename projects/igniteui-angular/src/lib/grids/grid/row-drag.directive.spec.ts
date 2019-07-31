@@ -241,12 +241,11 @@ describe('IgxGrid - Row Drag Tests', () => {
             grid.rowSelectable = true;
             grid.rowDraggable = true;
             fixture.detectChanges();
-            rowSelectElement = fixture.debugElement.query(By.css(CSS_CLASS_SELECTION_CHECKBOX));
-            dragIndicatorElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
             horizontalScrollbarElement = fixture.debugElement.query(By.css(CSS_CLASS_VIRTUAL_HSCROLLBAR));
-            const rowSelectRect = rowSelectElement.nativeElement.getBoundingClientRect();
             horizontalScrollbarRect = horizontalScrollbarElement.nativeElement.getBoundingClientRect();
-            expect(rowSelectRect.right).toBe(horizontalScrollbarRect.left);
+
+            // The horizontal scrollbar should not be visible
+            expect(horizontalScrollbarRect.left).toBe(0);
         }));
         it('should align horizontal scrollbar with first non-pinned column when column pinning is enabled', fakeAsync(() => {
             grid.width = '400px';
@@ -259,7 +258,9 @@ describe('IgxGrid - Row Drag Tests', () => {
             let horizontalScrollbarRect = horizontalScrollbarElement.nativeElement.getBoundingClientRect();
             let pinnedColumnHeaderElement: DebugElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_LAST_PINNED_HEADER));
             let pinnedColumnHeaderRect = pinnedColumnHeaderElement.nativeElement.getBoundingClientRect();
-            expect(pinnedColumnHeaderRect.right).toBe(horizontalScrollbarRect.left);
+
+            // The horizontal scrollbar should not be visible
+            expect(horizontalScrollbarRect.left).toBe(0);
 
             // selectable rows enabled
             grid.rowSelectable = true;

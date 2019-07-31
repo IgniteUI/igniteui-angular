@@ -218,10 +218,10 @@ export class IgxFilteringService implements OnDestroy {
         if (!this.columnToExpressionsMap.has(columnId)) {
             const column = this.grid.columns.find((col) => col.field === columnId);
             const expressionUIs = new Array<ExpressionUI>();
-
-            this.generateExpressionsList(column.filteringExpressionsTree, this.grid.filteringExpressionsTree.operator, expressionUIs);
-            this.columnToExpressionsMap.set(columnId, expressionUIs);
-
+            if (column) {
+                this.generateExpressionsList(column.filteringExpressionsTree, this.grid.filteringExpressionsTree.operator, expressionUIs);
+                this.columnToExpressionsMap.set(columnId, expressionUIs);
+            }
             return expressionUIs;
         }
 
@@ -322,7 +322,7 @@ export class IgxFilteringService implements OnDestroy {
         }
 
         const column = this.grid.columns.find((col) => col.field === columnId);
-        const isComplex = this.isFilteringTreeComplex(column.filteringExpressionsTree);
+        const isComplex = column && this.isFilteringTreeComplex(column.filteringExpressionsTree);
         if (isComplex) {
             this.columnsWithComplexFilter.add(columnId);
         }
