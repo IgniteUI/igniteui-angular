@@ -2,6 +2,7 @@
     #dropdownConditions
     [maxHeight]="'200px'"
     [width]="getInputWidth()"
+    [displayDensity]="displayDensity"
     (onSelection)="onConditionsChanged($event)">
     <igx-drop-down-item *ngFor="let condition of conditions" [value]="condition" [selected]="isConditionSelected(condition)">
         <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
