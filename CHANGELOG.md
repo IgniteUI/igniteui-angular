@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 8.1.2
+
+### New Features
+- `IgxDatePicker`
+    - `valueChange` event is added.
+
 ## 8.1.0
 
 ### New Features
@@ -37,8 +43,6 @@ All notable changes for each version of this project will be documented in this 
 - `IgxCombo`
     - Input `[overlaySettings]` - allows an object of type `OverlaySettings` to be passed. These custom overlay settings control how the drop-down list displays.
 - `IgxForOf` now offers usage of local variables `even`, `odd`, `first` and `last` to help with the distinction of the currently iterated element.
-- `IgxDatePicker`
-    - `valueChange` event is added.
 
 
 ## 8.0.2
