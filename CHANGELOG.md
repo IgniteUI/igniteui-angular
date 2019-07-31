@@ -26,6 +26,14 @@ All notable changes for each version of this project will be documented in this 
         ```
 - `igx-paginator`
     - Replaces the current paginator in all grids. Can be used as a standalone component.
+      <br/>Have in mind that if you have set the `paginationTemplate`, you may have to modify your css to display the pagination correctly. The style should be something similar to:
+      ```
+      .pagination-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+       }
+       ```
 - `IgxCombo`
     - Input `[overlaySettings]` - allows an object of type `OverlaySettings` to be passed. These custom overlay settings control how the drop-down list displays.
 - `IgxForOf` now offers usage of local variables `even`, `odd`, `first` and `last` to help with the distinction of the currently iterated element.

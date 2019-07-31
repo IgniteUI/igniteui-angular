@@ -49,7 +49,7 @@ import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
-import { IgxColumnComponent } from './column.component';
+import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
 import { ISummaryExpression } from './summaries/grid-summary';
 import { DropPosition, ContainerPositioningStrategy, IgxDecimalPipeComponent, IgxDatePipeComponent } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
@@ -567,7 +567,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     @Input()
     get rowDraggable(): boolean {
-        return this._rowDrag;
+        return this._rowDrag && this.hasVisibleColumns;
     }
 
     /**
@@ -2507,6 +2507,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected _wheelListener = null;
+    /**
+     * @hidden
+     */
+    protected _hasVisibleColumns;
     protected _allowFiltering = false;
     protected _filterMode = FilterMode.quickFilter;
     private resizeHandler;
@@ -2784,6 +2788,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.resetColumnsCaches();
         this.resetColumnCollections();
         this.resetCachedWidths();
+        this.hasVisibleColumns = undefined;
         this._columnGroups = this.columnList.some(col => col.columnGroup);
     }
 
@@ -3320,7 +3325,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     get showRowCheckboxes(): boolean {
-        return this.rowSelectable && this.columns.length > this.hiddenColumnsCount;
+        return this.rowSelectable && this.hasVisibleColumns;
+    }
+
+    get showDragIcons(): boolean {
+        return this.rowDraggable && this.columns.length > this.hiddenColumnsCount;
     }
 
     /**
@@ -3946,6 +3955,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     get rootSummariesEnabled(): boolean {
         return this.summaryCalculationMode !== GridSummaryCalculationMode.childLevelsOnly;
     }
+
+    /**
+     * @hidden
+     */
+    get hasVisibleColumns(): boolean {
+        if (this._hasVisibleColumns === undefined) {
+            return this.columnList ? this.columnList.some(c => !c.hidden) : false;
+        }
+        return this._hasVisibleColumns;
+    }
+
+    set hasVisibleColumns(value) {
+        this._hasVisibleColumns = value;
+    }
     /**
      * Returns if the `IgxGridComponent` has moveable columns.
      * ```typescript
@@ -4117,15 +4140,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (!this._height) {
             return null;
         }
-        const footerBordersAndScrollbars = this.tfoot.nativeElement.offsetHeight -
-            this.tfoot.nativeElement.clientHeight;
+        const footerHeight = this.summariesHeight || this.tfoot.nativeElement.offsetHeight -
+        this.tfoot.nativeElement.clientHeight;
         let gridHeight;
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
         const toolbarHeight = this.getToolbarHeight();
         const pagingHeight = this.getPagingHeight();
         const groupAreaHeight = this.getGroupAreaHeight();
         const renderedHeight = toolbarHeight + this.theadRow.nativeElement.offsetHeight +
-            this.summariesHeight + pagingHeight + groupAreaHeight + footerBordersAndScrollbars +
+            footerHeight  + pagingHeight + groupAreaHeight +
             this.scr.nativeElement.clientHeight;
 
         if (this.isPercentHeight) {
@@ -4183,6 +4206,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
 
         computedWidth -= this.getFeatureColumnsWidth();
+
+        if (this.showDragIcons) {
+            computedWidth -= this.headerDragContainer ? this.headerDragContainer.nativeElement.offsetWidth : 0;
+        }
 
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
 
@@ -4307,12 +4334,25 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 added = true;
             });
 
-            diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
-                // Clear Filtering
-                this.gridAPI.clear_filter(record.item.field);
+            diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent | IgxColumnGroupComponent>) => {
+                const isColumnGroup = record.item instanceof IgxColumnGroupComponent;
+                if (!isColumnGroup) {
+                    // Clear Grouping
+                    this.gridAPI.clear_groupby(record.item.field);
 
-                // Clear Sorting
-                this.gridAPI.clear_sort(record.item.field);
+                    // Clear Filtering
+                    this.gridAPI.clear_filter(record.item.field);
+
+                    // Close filter row
+                    if ( this.filteringService.isFilterRowVisible
+                        && this.filteringService.filteredColumn
+                        && this.filteringService.filteredColumn.field === record.item.field) {
+                        this.filteringRow.close();
+                    }
+
+                    // Clear Sorting
+                    this.gridAPI.clear_sort(record.item.field);
+                }
                 removed = true;
             });
 
@@ -4674,7 +4714,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public updateHeaderCheckboxStatusOnFilter(data) {
-        if (!data) {
+        if (!data || !this.hasVisibleColumns || !this.headerCheckbox) {
             this.checkHeaderCheckboxStatus();
             return;
         }
