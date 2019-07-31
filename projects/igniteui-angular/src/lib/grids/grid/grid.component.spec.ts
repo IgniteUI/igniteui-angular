@@ -4325,7 +4325,7 @@ describe('IgxGrid Component Tests', () => {
             const summaries = fix.debugElement.queryAll(By.css('igx-grid-summary-cell'));
             expect(headers.length).toBe(4);
             expect(summaries.length).toBe(4);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(138);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(139);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);
         });
 
