@@ -3,7 +3,7 @@ import { async, fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angul
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxDatePickerComponent, IgxDatePickerModule, IDatePickerValueChangedEventArgs } from './date-picker.component';
+import { IgxDatePickerComponent, IgxDatePickerModule } from './date-picker.component';
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
