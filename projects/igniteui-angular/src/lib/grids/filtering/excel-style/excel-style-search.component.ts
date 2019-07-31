@@ -49,7 +49,6 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
     public ngAfterViewInit() {
         requestAnimationFrame(() => {
             this.virtDir.recalcUpdateSizes();
-            this.filteredData = null;
         });
     }
 
