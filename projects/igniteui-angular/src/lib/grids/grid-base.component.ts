@@ -4249,7 +4249,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this.hasVerticalSroll() && this.width !== null) {
             width -= this.scrollWidth;
         }
-        if (Number.isFinite(width) && width !== this.calcWidth) {
+        if ((Number.isFinite(width) || width === null) && width !== this.calcWidth) {
             this.calcWidth = width;
             this.cdr.detectChanges();
         }
@@ -4262,8 +4262,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
          this.visibleColumns.filter(x => x.columnLayout) : this.visibleColumns.filter(x => !x.columnGroup);
         cols.forEach((item) => {
             const isWidthInPercent = item.width && typeof item.width === 'string' && item.width.indexOf('%') !== -1;
-            colSum += !isWidthInPercent ?  parseInt((item.width || item.defaultWidth), 10) || MINIMUM_COLUMN_WIDTH : MINIMUM_COLUMN_WIDTH;
+            if (isWidthInPercent) {
+                item.width = MINIMUM_COLUMN_WIDTH + 'px';
+            }
+            colSum +=  parseInt((item.width || item.defaultWidth), 10) || MINIMUM_COLUMN_WIDTH;
         });
+        if (!colSum) {
+            return null;
+        }
         colSum += this.getFeatureColumnsWidth();
         return colSum;
     }
