@@ -383,7 +383,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     }
 
     private updateSizes() {
-        if (this.isPercentWidth) {
+        if (document.body.contains(this.nativeElement) && this.isPercentWidth) {
             this.reflow();
 
             this.hgridAPI.getChildGrids(false).forEach((grid) => {
