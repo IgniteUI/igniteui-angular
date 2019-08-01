@@ -20,12 +20,13 @@
                     </div>
                 </div>
             </ng-container>
-            <ng-container *ngIf="showRowCheckboxes">
-                <div class="igx-grid__cbx-selection" #headerCheckboxContainer [ngClass]="{
+            <ng-container *ngIf="showRowSelectors">
+                <div class="igx-grid__cbx-selection" #headerSelectorContainer [ngClass]="{
                     'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible
                 }">
-                    <igx-checkbox [checked]="allRowsSelected" (change)="onHeaderCheckboxClick($event, filteredData)"
-                        disableRipple="true" [aria-label]="headerCheckboxAriaLabel" #headerCheckbox></igx-checkbox>
+                    <ng-template #headSelector
+                        *ngTemplateOutlet="this.headSelectorTemplate ? this.headSelectorTemplate : headSelectorBaseTemplate">
+                    </ng-template>
                 </div>
             </ng-container>
             <ng-container *ngIf="pinnedColumns.length > 0">
@@ -75,7 +76,7 @@
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" #verticalScrollContainer
             (onChunkPreload)="dataLoading($event)">
             <ng-template #record_template>
-                <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" #row>
+                <igx-tree-grid-row [rowSelected]="rowSelected" [gridID]="id" [index]="rowIndex" [treeRow]="rowData" #row>
                 </igx-tree-grid-row>
             </ng-template>
             <ng-template #summary_template>
@@ -185,6 +186,11 @@
 
 <ng-template #dragIndicatorIconBase>
     <igx-icon fontSet="material">drag_indicator</igx-icon>
+</ng-template>
+
+<ng-template #headSelectorBaseTemplate>
+    <igx-checkbox [checked]="allRowsSelected" (change)="onHeadSelectorClick($event, filteredData)"
+        disableRipple="true" [aria-label]="headerCheckboxAriaLabel"></igx-checkbox>
 </ng-template>
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>
