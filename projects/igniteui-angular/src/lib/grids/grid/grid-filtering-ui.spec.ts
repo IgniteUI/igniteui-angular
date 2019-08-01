@@ -3509,7 +3509,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             fix.detectChanges();
 
             const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
-            const headerResArea = headers[2].children[0].nativeElement;
+            const headerResArea = headers[2].children[1].nativeElement;
 
             const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
             filterIcon.click();
