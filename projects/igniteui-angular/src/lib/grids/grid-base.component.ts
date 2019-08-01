@@ -3014,6 +3014,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return this._unpinnedWidth;
     }
 
+    get isHorizontalScrollHidden() {
+        const diff = this.unpinnedWidth - this.totalWidth;
+        return this.width === null || diff >= 0;
+    }
+
     /**
      * @hidden
      * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
@@ -4348,7 +4353,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             });
         } else {
             this.zone.onStable.pipe(first()).subscribe(() => {
-                this._applyWidthHostBinding();
+                this.zone.run(() => {
+                    this._applyWidthHostBinding();
+                });
             });
         }
     }
@@ -4362,9 +4369,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
             width = currentWidth + 'px';
             this.resetCaches();
-            this.cdr.markForCheck();
         }
         this._hostWidth = width;
+        this.cdr.markForCheck();
     }
 
     /**
@@ -4415,7 +4422,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected getUnpinnedWidth(takeHidden = false) {
         let width = this.isPercentWidth ?
             this.calcWidth :
-            parseInt(this.width, 10) ||  parseInt(this.hostWidth, 10);
+            parseInt(this.width, 10) ||  parseInt(this.hostWidth, 10) || this.calcWidth;
         if (this.hasVerticalSroll() && !this.isPercentWidth) {
             width -= this.scrollWidth;
         }
