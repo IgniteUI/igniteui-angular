@@ -985,7 +985,11 @@ describe('igxCombo', () => {
             expect(combo.selectItems).toHaveBeenCalledTimes(1);
 
             // Calling "SelectItems" through the writeValue accessor should clear the previous values;
-            expect(combo.selectItems).toHaveBeenCalledWith(['EXAMPLE'], true);
+            // Value key is specified, so no items match
+            expect(combo.selectItems).toHaveBeenCalledWith([], true);
+            combo.writeValue([combo.data[0][combo.valueKey]]);
+            // Data[0] will be matched by valueKey and selectItems will be called with the proper array;
+            expect(combo.selectItems).toHaveBeenCalledWith([combo.data[0]], true);
         });
         it(`Should properly select/deselect items`, fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
@@ -3452,7 +3456,7 @@ class IgxComboInputTestComponent {
 <p>
 <igx-combo #comboReactive formControlName="townCombo"
 class="input-container" [filterable]="true" placeholder="Location(s)"
-[data]="items" [displayKey]="'field'" [valueKey]="'field'" [groupKey]="'region'"></igx-combo>
+[data]="items" [displayKey]="'field'" [groupKey]="'region'"></igx-combo>
 </p>
 <p>
 <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
