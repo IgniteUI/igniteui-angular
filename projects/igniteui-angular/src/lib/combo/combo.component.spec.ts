@@ -75,6 +75,8 @@ describe('igxCombo', () => {
                 IgxComboInContainerFixedWidthComponent,
                 IgxComboFormComponent,
                 SimpleBindComboComponent,
+                ComboModelBindingComponent,
+                ComboModelBinding2Component,
                 DensityParentComponent,
                 DensityInputComponent
             ],
@@ -196,7 +198,7 @@ describe('igxCombo', () => {
             combo.toggle();
             expect(combo.dropdown.toggle).toHaveBeenCalledWith(defaultSettings);
             const newSettings = {
-                positionStrategy: new ConnectedPositioningStrategy({ target: fixture.elementRef.nativeElement}),
+                positionStrategy: new ConnectedPositioningStrategy({ target: fixture.elementRef.nativeElement }),
                 scrollStrategy: new AbsoluteScrollStrategy(fixture.elementRef.nativeElement)
             };
             combo.overlaySettings = newSettings;
@@ -3117,7 +3119,7 @@ describe('igxCombo', () => {
             fix.debugElement.query(By.css('button')).nativeElement.click();
         });
 
-        it('Should properly bind to values when used as a form control wihtout valueKey', fakeAsync(() => {
+        it('Should properly bind to values when used as a form control without valueKey', fakeAsync(() => {
             const fixture = TestBed.createComponent(SimpleBindComboComponent);
             fixture.detectChanges();
             const combo = fixture.componentInstance.combo;
@@ -3129,6 +3131,34 @@ describe('igxCombo', () => {
             combo.selectItems([...data].splice(1, 3), true);
             fixture.detectChanges();
             expect(fixture.componentInstance.comboSelectedItems).toEqual([...data].splice(1, 3));
+        }));
+
+        it('Should properly bind to object value w/ valueKey', fakeAsync(() => {
+            const fixture = TestBed.createComponent(ComboModelBindingComponent);
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+            const component = fixture.componentInstance;
+            const combo = fixture.componentInstance.combo;
+            expect(combo.selectedItems()).toEqual([combo.data[0], combo.data[2]]);
+            combo.selectItems([combo.data[4]]);
+            tick();
+            fixture.detectChanges();
+            expect(component.selection).toEqual([0, 2, 4]);
+        }));
+
+        it('Should properly bind to object value w/o valueKey', fakeAsync(() => {
+            const fixture = TestBed.createComponent(ComboModelBinding2Component);
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+            const component = fixture.componentInstance;
+            const combo = fixture.componentInstance.combo;
+            expect(combo.selectedItems()).toEqual([combo.data[0], combo.data[2]]);
+            combo.selectItems([combo.data[4]]);
+            tick();
+            fixture.detectChanges();
+            expect(component.selectedItems).toEqual([combo.data[0], combo.data[2], combo.data[4]]);
         }));
     });
 
@@ -3439,7 +3469,7 @@ class IgxComboFormComponent {
     get valuesTemplate() {
         return this.combo.selectedItems();
     }
-    set valuesTemplate(values: Array<any>) {
+    set valuesTemplate(values: any[]) {
         this.combo.selectItems(values);
     }
 
@@ -3698,14 +3728,48 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
 export class SimpleBindComboComponent implements OnInit {
     @ViewChild(IgxComboComponent, { read: IgxComboComponent, static: true })
     public combo: IgxComboComponent;
-    public items: Array<any>;
-    public comboSelectedItems: Array<any>;
+    public items: any[];
+    public comboSelectedItems: any[];
 
     ngOnInit() {
         this.items = ['One', 'Two', 'Three', 'Four', 'Five'];
         this.comboSelectedItems = ['One', 'Two'];
     }
 }
+
+@Component({
+    template: `<igx-combo [(ngModel)]="selection" [valueKey]="valueKey" [data]="items"></igx-combo>`
+})
+export class ComboModelBindingComponent implements OnInit {
+    @ViewChild(IgxComboComponent, { read: IgxComboComponent, static: true })
+    public combo: IgxComboComponent;
+    public items: any[];
+    public selection: any[];
+    public valueKey = 'id';
+
+    ngOnInit() {
+        this.items = [{ text: 'One', id: 0 }, { text: 'Two', id: 1 }, { text: 'Three', id: 2 },
+        { text: 'Four', id: 3 }, { text: 'Five', id: 4 }];
+        this.selection = [0, 2];
+    }
+}
+
+@Component({
+    template: `<igx-combo [(ngModel)]="selectedItems" [data]="items"></igx-combo>`
+})
+export class ComboModelBinding2Component implements OnInit {
+    @ViewChild(IgxComboComponent, { read: IgxComboComponent, static: true })
+    public combo: IgxComboComponent;
+    public items: any[];
+    public selectedItems: any[];
+
+    ngOnInit() {
+        this.items = [{ text: 'One', id: 0 }, { text: 'Two', id: 1 }, { text: 'Three', id: 2 },
+        { text: 'Four', id: 3 }, { text: 'Five', id: 4 }];
+        this.selectedItems = [this.items[0], this.items[2]];
+    }
+}
+
 
 @Component({
     template: `
