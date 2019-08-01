@@ -3860,8 +3860,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Sets columns defaultWidth property
      */
     protected _derivePossibleWidth() {
-        if (!this._columnWidthSetByUser) {
-            this._columnWidth = this.getPossibleColumnWidth();
+        if (!this.columnWidthSetByUser) {
+            this._columnWidth = this.width ? this.getPossibleColumnWidth() : MINIMUM_COLUMN_WIDTH + 'px';
             this.columnList.forEach((column: IgxColumnComponent) => {
                 column.defaultWidth = this._columnWidth;
             });
