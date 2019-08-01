@@ -240,7 +240,7 @@ export enum GridKeydownTargetType {
     hierarchicalRow = 'hierarchicalRow'
 }
 
-export enum HeadSelectorStatus {
+export enum TriState {
     checked = 'checked',
     unchecked = 'unchecked',
     indeterminate = 'indeterminate'
@@ -262,7 +262,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _locale = null;
     private _observer: MutationObserver;
     protected _destroyed = false;
-    protected _headSelectorStatus: HeadSelectorStatus;
+    protected _headSelectorStatus: TriState;
     private overlayIDs = [];
     public rowSelected = false;
 
@@ -4622,15 +4622,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const areNoneSelected = this.selection.are_none_selected(this.id);
         if (headerStatus === undefined) {
             if (this.allRowsSelected) {
-                this.headSelectorStatus = HeadSelectorStatus.checked;
+                this.headSelectorStatus = TriState.checked;
             } else if (areNoneSelected) {
-                this.headSelectorStatus = HeadSelectorStatus.unchecked;
+                this.headSelectorStatus = TriState.unchecked;
             } else {
-                this.headSelectorStatus = HeadSelectorStatus.indeterminate;
+                this.headSelectorStatus = TriState.indeterminate;
             }
         } else {
             this.headSelectorStatus = headerStatus ?
-                HeadSelectorStatus.checked : HeadSelectorStatus.unchecked;
+                TriState.checked : TriState.unchecked;
         }
         if (this.headSelectorBaseTemplate) {
             this.headSelectorBaseTemplate.indeterminate = !this.allRowsSelected && !areNoneSelected;
@@ -4643,12 +4643,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.cdr.markForCheck();
     }
 
-    protected get headSelectorStatus(): HeadSelectorStatus {
+    protected get headSelectorStatus(): TriState {
         return this._headSelectorStatus;
     }
 
-    @Input()
-    protected set headSelectorStatus(v: HeadSelectorStatus) {
+    protected set headSelectorStatus(v: TriState) {
         this._headSelectorStatus = v;
     }
 
