@@ -2828,6 +2828,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (!this._tick) {
             this._tick = Promise.resolve().then(() => this._tick = null);
         }
+        this.cdr.markForCheck();
     }
 
     protected resetNotifyChanges() {
