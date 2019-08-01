@@ -58,17 +58,34 @@ The service, should inform the combo for the total items that are on the server 
 If we want to use a two-way data-binding, we could just use `ngModel` like this:
 
 ```html
-<igx-combo #combo [data]="data" [(ngModel)]="values"></igx-combo>
+<igx-combo #combo [data]="data" valueKey="id" displayKey="text" [(ngModel)]="values"></igx-combo>
 ```
-
 ```typescript
 export class MyExampleComponent {
     ...
-    public data: ExampleType[] = ...;
+    public data: {text: string, id: number, ... }[] = ...;
     ...
-    public values: ExampleType[] = ...;
+    public values: number[] = ...;
 }
 ```
+
+When the `data` input is made up of complex types (i.e. objects), it is advised to bind the selected data via `valueKey` (as in the above code snippet). Specify a property that is unique for each data entry and pass an array with values for those properties, corresponding to the items you want selected.
+
+If you want to bind the selected data by reference, **do not** specify a `valueKey`:
+
+```html
+<igx-combo #combo [data]="data" displayKey="text" [(ngModel)]="values"></igx-combo>
+```
+```typescript
+export class MyExampleComponent {
+    ...
+    public data: {text: string, id: number, ... }[] = ...;
+    ...
+    public values: {text: string, id: number, ...} [] = [this.items[0], this.items[5]];
+}
+```
+
+If a valueKey **is specified**, the combo will try to map the passed value to the specific property of the data entries.
 
 <div class="divider--half"></div>
 

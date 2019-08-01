@@ -2,6 +2,38 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 8.2.0
+- `IgxCombo`
+    - The combo now allows to bind selected data via `ngModel` by passing only the valueKeys of the items (instead of object references):
+    ```html
+    <igx-combo [data]="items" valueKey="id" displayKey="text" [(ngModel)]="selected">
+    ```
+    ```typescript
+        export class Example {
+            ...
+            public items: { text: string, id: number } = ...;
+            public selected: number[] = [2,3,8]
+            /*
+             * items with **id** 2,3 and 8 will be selected
+             */
+        }
+    ```
+    - **Breaking Change** if you want to bind selected data via `ngModel` based on item equality, **do not** pass value key. If you have a case using `ngModel` binding with object references, remove the `[valueKey]` input, as shown below: 
+    ```html
+    <!-- do not specify a value key if you want the selected === combo.selectedItems()>
+    <igx-combo [data]="items" displayKey="text" [(ngModel)]="selected">
+    ```
+    ```typescript
+        export class Example {
+            ...
+            public items: { text: string, id: number } = ...;
+            public selected: number[] = [this.items[2], this.items[3], this.items[8]]
+            /*
+             * items with **data index** 2,3 and 8 will be selected
+             */
+        }
+    ```
+
 ## 8.1.0
 
 ### New Features
