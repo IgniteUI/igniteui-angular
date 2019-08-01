@@ -1083,7 +1083,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden @internal
      */
     public get dataType(): string {
-        if (this.valueKey) {
+        if (this.displayKey) {
             return DataTypes.COMPLEX;
         }
         return DataTypes.PRIMITIVE;
@@ -1288,9 +1288,14 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden @internal
      */
-    public writeValue(value: any): void {
-        // selectItems can handle Array<any>, no valueKey is needed;
-        this.selectItems(value, true);
+    public writeValue(value: any[]): void {
+        let selectedItems: any[];
+        if (this.valueKey !== null && this.valueKey !== undefined && value) {
+            selectedItems = this.data.filter(entry => value.indexOf(entry[this.valueKey]) > -1);
+        } else {
+            selectedItems = value || [];
+        }
+        this.selectItems(selectedItems, true);
         this.cdr.markForCheck();
     }
 
@@ -1510,7 +1515,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             this._value = this.dataType !== DataTypes.PRIMITIVE ?
                 args.newSelection.map((id) => this._parseItemID(id)[this.displayKey]).join(', ') :
                 args.newSelection.join(', ');
-            this._onChangeCallback(args.newSelection);
+            this._onChangeCallback(this.valueKey ? args.newSelection.map(e => e[this.valueKey]) : args.newSelection);
         }
     }
     /**
