@@ -1525,7 +1525,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: true })
-    public columnList: QueryList<IgxColumnComponent>;
+    public columnList: QueryList<IgxColumnComponent> = new QueryList<IgxColumnComponent>();
 
     /**
      *@hidden
@@ -2635,7 +2635,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         });
 
         this.resizeNotify.pipe(destructor, filter(() => !this._init), throttleTime(40))
-            .subscribe(() => { this._autoSize = false; this.notifyChanges(true); });
+            .subscribe(() => this.notifyChanges(true));
 
         this.bodyResizeNotify.pipe(destructor, filter(() => !this._init), throttleTime(40))
             .subscribe(() => {
@@ -2677,10 +2677,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             $event.containerSize = this.calcHeight;
         });
 
-        // this.verticalScrollContainer.onDataChanged.pipe(destructor, filter(() => !this._init)).subscribe(() => {
-        //     // this.calculateGridHeight();
-        //     // this.verticalScrollContainer.recalcUpdateSizes();
-        // });
+        this.verticalScrollContainer.onDataChanged.pipe(destructor, filter(() => !this._init)).subscribe(() => {
+            this._autoSize = false;
+        });
 
         this.onDensityChanged.pipe(destructor).subscribe(() => {
             requestAnimationFrame(() => {
@@ -4302,9 +4301,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             if (added || removed) {
                 this.summaryService.clearSummaryCache();
                 this.notifyChanges(true);
+                this.markForCheck();
             }
         }
-        this.notifyChanges();
+        // this.notifyChanges();
     }
 
     /**
@@ -4320,6 +4320,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             in a broken layout.
         */
         this.resetCaches();
+        this.cdr.detectChanges();
         const hasScroll = this.hasVerticalSroll();
         this.calculateGridWidth();
         this.resetCaches();
@@ -4519,8 +4520,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this._maxLevelHeaderDepth = null;
         this._columns = this.columnList.toArray();
         collection.forEach((column: IgxColumnComponent) => {
-            column.grid = this;
-            column.defaultWidth = this.columnWidthSetByUser ? this._columnWidth : this.getPossibleColumnWidth();
+            // column.grid = this;
+            // column.defaultWidth = this.columnWidthSetByUser ? this._columnWidth : this.getPossibleColumnWidth();
 
             if (cb) {
                 cb(column);

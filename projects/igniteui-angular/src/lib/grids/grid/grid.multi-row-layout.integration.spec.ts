@@ -1,5 +1,5 @@
 ﻿import { configureTestSuite } from '../../test-utils/configure-suite';
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
@@ -32,12 +32,12 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
     }));
 
     describe('Hiding ', () => {
-        beforeEach(async(() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(ColumnLayouHidingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
             colGroups = fixture.componentInstance.colGroups;
-        }));
+        });
 
         it('should allow setting a whole group as hidden/shown.', () => {
 
@@ -188,7 +188,6 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             fixture.componentInstance.colGroups = uniqueGroups;
             grid.columnWidth = '200px';
             fixture.componentInstance.grid.width = '600px';
-            fixture.detectChanges();
             fixture.detectChanges();
 
             // group1 should be hidden on init, check DOM
@@ -578,9 +577,9 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             }
             ];
             fixture.componentInstance.colGroups = uniqueGroups;
+            fixture.detectChanges();
             grid.columnWidth = '200px';
             fixture.componentInstance.grid.width = '600px';
-            fixture.detectChanges();
             fixture.detectChanges();
 
             // pin group3
@@ -627,7 +626,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             expect(lastCell.column.field).toBe('Address');
             expect(lastCell.column.parent.field).toBe('group4');
             expect(Math.round(lastCell.nativeElement.getBoundingClientRect().right) + 1)
-            .toEqual(grid.tbody.nativeElement.getBoundingClientRect().right);
+                .toEqual(grid.tbody.nativeElement.getBoundingClientRect().right);
         });
 
         it('UI - pinned columns count and drop-down items text in pinnig toolbar should be correct when group is pinned. ', () => {
@@ -852,8 +851,9 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             expect(lastRowOffset).toEqual(tbody.scrollHeight);
         });
 
-        it('should render rows correctly and collapsing all should render all groups and there should be no scrollbar.', async() => {
+        it('should render rows correctly and collapsing all should render all groups and there should be no scrollbar.', fakeAsync(() => {
             grid.height = '600px';
+            fixture.detectChanges();
             grid.groupBy({
                 dir: SortingDirection.Desc,
                 fieldName: 'Country',
@@ -867,13 +867,15 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
                 grid.verticalScrollContainer.getVerticalScroll().offsetHeight).toBeGreaterThan(0);
 
             grid.toggleAllGroupRows();
-            await wait(100);
+            tick(100);
+            fixture.detectChanges();
+            tick(100);
             fixture.detectChanges();
 
             expect(grid.rowList.length).toEqual(12);
             expect(grid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight -
                 grid.verticalScrollContainer.getVerticalScroll().offsetHeight).toBeLessThanOrEqual(0);
-        });
+        }));
     });
 
     describe('Resizing', () => {

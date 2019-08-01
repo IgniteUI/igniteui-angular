@@ -193,7 +193,7 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
             (<IgxColumnGroupComponent>ref.instance).children.reset(newChildren);
             (<IgxColumnGroupComponent>ref.instance).children.notifyOnChanges();
         }
-        (<IgxColumnGroupComponent>ref.instance).grid = this;
+        // (<IgxColumnGroupComponent>ref.instance).grid = this;
         return ref;
     }
 
@@ -208,7 +208,7 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
                 (<any>ref.instance)[propName] = col[propName].constructor;
             }
         });
-        (<IgxColumnComponent>ref.instance).grid = this;
+        // (<IgxColumnComponent>ref.instance).grid = this;
         return ref;
     }
 

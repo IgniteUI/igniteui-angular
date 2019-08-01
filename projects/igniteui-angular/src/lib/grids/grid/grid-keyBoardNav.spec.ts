@@ -498,6 +498,7 @@ describe('IgxGrid - Keyboard navigation', () => {
                 cols.push({ field: 'col' + i });
             }
             fix.componentInstance.columns = cols;
+            fix.detectChanges();
             fix.componentInstance.data = fix.componentInstance.generateData(1000);
             fix.detectChanges();
 
@@ -524,6 +525,7 @@ describe('IgxGrid - Keyboard navigation', () => {
                 cols.push({ field: 'col' + i });
             }
             fix.componentInstance.columns = cols;
+            fix.detectChanges();
             fix.componentInstance.data = fix.componentInstance.generateData(1000);
             fix.detectChanges();
 
@@ -724,9 +726,10 @@ describe('IgxGrid - Keyboard navigation', () => {
 
         it('should scroll into view the not fully visible cells when navigating left', async () => {
             fix.componentInstance.columns = fix.componentInstance.generateCols(100);
-            fix.componentInstance.data = fix.componentInstance.generateData(1000);
-
             fix.detectChanges();
+            fix.componentInstance.data = fix.componentInstance.generateData(1000);
+            fix.detectChanges();
+
             const rows = fix.nativeElement.querySelectorAll('igx-grid-row');
             const rowDisplayContainer = rows[1].querySelector('igx-display-container');
             fix.componentInstance.scrollLeft(50);
@@ -848,6 +851,7 @@ describe('IgxGrid - Keyboard navigation', () => {
 
         it('Custom KB navigation: onGridKeydown should be emitted', async () => {
             fix.componentInstance.columns = fix.componentInstance.generateCols(25);
+            fix.detectChanges();
             fix.componentInstance.data = fix.componentInstance.generateData(25);
             fix.detectChanges();
             const gridKeydown = spyOn<any>(grid.onGridKeydown, 'emit').and.callThrough();

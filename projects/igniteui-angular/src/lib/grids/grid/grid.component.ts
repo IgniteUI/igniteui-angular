@@ -16,7 +16,6 @@ import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayD
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../../chips/chip.component';
 import { IChipsAreaReorderEventArgs } from '../../chips/chips-area.component';
-import { DataUtil } from '../../data-operations/data-util';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { TransactionService, Transaction, State } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
@@ -909,13 +908,13 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      * @hidden
      */
     public ngAfterContentInit() {
+        super.ngAfterContentInit();
         if (this.allowFiltering && this.hasColumnLayouts) {
             this.filterMode = FilterMode.excelStyleFilter;
         }
         if (this.groupTemplate) {
             this._groupRowTemplate = this.groupTemplate.template;
         }
-        super.ngAfterContentInit();
 
         if (this.hideGroupedColumns && this.columnList && this.groupingExpressions) {
             this._setGroupColsVisibility(this.hideGroupedColumns);

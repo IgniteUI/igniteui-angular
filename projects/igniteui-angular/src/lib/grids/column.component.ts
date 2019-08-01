@@ -640,7 +640,9 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
-    public grid: IgxGridBaseComponent;
+    public get grid(): IgxGridBaseComponent {
+        return this.gridAPI.grid;
+    }
     /**
      * Returns a reference to the `bodyTemplate`.
      * ```typescript
