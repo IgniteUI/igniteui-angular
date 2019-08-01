@@ -2641,7 +2641,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             .subscribe(() => {
                 this.zone.runTask(() => {
                     this.calculateGridSizes();
-                    this.verticalScrollContainer.recalcUpdateSizes();
+                    this.recalcUpdateSizes();
                 });
             });
 
@@ -2702,6 +2702,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.calcWidth = this.width && this.width.indexOf('%') === -1 ? parseInt(this.width, 10) : 0;
         this.shouldGenerate = this.autoGenerate;
         this._scrollWidth = this.getScrollWidth();
+    }
+
+    protected recalcUpdateSizes() {
+        this.verticalScrollContainer.recalcUpdateSizes();
     }
 
     protected setupColumns() {

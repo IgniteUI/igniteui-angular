@@ -103,6 +103,24 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         }
     }
 
+    protected recalcUpdateSizes() {
+        super.recalcUpdateSizes();
+        let currGrid = this.parent;
+        while (currGrid) {
+            const hadScrollbar = currGrid.hasVerticalSroll();
+            const virt = currGrid.verticalScrollContainer;
+            virt.recalcUpdateSizes();
+
+            if (hadScrollbar !== currGrid.hasVerticalSroll()) {
+                // If after recalculations the grid should show vertical scrollbar it should also reflow.
+                currGrid.reflow();
+            }
+
+            currGrid = currGrid.parent;
+        }
+    }
+
+
     /**
      * Returns an array of data set to the `IgxHierarchicalGridComponent`.
      * ```typescript
