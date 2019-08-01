@@ -9,6 +9,7 @@ import {
     ViewChild,
 } from '@angular/core';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
+import { DataType } from '../../data-operations/data-util';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
 import { IgxGridSelectionService, ISelectionNode } from '../../core/grid-selection';
@@ -248,7 +249,8 @@ export class IgxGridGroupByRowComponent {
      * @hidden
      */
     get dataType(): any {
-        return this.grid.getColumnByName(this.groupRow.expression.fieldName).dataType;
+        const column = this.grid.getColumnByName(this.groupRow.expression.fieldName);
+        return (column && column.dataType) || DataType.String;
     }
 
     private handleTabKey(shift: boolean, activeNode: ISelectionNode) {

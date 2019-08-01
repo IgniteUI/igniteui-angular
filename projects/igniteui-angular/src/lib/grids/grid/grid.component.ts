@@ -901,7 +901,16 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      * @hidden
      */
     public getGroupByChipTitle(expression: IGroupingExpression): string {
-        return this.getColumnByName(expression.fieldName).header || expression.fieldName;
+        const column = this.getColumnByName(expression.fieldName);
+        return (column && column.header) || expression.fieldName;
+    }
+
+    /**
+     * @hidden
+     */
+    public getColumnGroupable(fieldName: string): boolean {
+        const column = this.getColumnByName(fieldName);
+        return column && column.groupable;
     }
 
     /**
