@@ -10,14 +10,12 @@
 /// @type {Map}
 ///
 /// @property {Color} background-color [inherit] - The summaries background color is inherited form igx-grid__tfoot.
-/// @property {Color} focus-background-color [igx-color] - The background color when a summary item is on focus.
+/// @property {Map} focus-background-color [igx-color: ('grays', 100)] - The background color when a summary item is on focus.
 /// @property {map} label-color [igx-color: ('primary', 500)] - The summaries label color.
 /// @property {Color} result-color [currentColor] - The summaries value/result color.
-/// @property {map} border-color [igx-color: ('grays', 400)] - The summaries border color.
 /// @property {String} pinned-border-width [2px] - The border width of the summary panel.
 /// @property {String} pinned-border-style [solid] - The border style of the summary panel.
 /// @property {map} pinned-border-color [igx-color: ('grays', 400)] - The border color of the summary panel.
-/// @property {map} label-hover-color [igx-color: ('primary', 700)] - The summaries hover label color.
 ///
 /// @see $default-palette
 
@@ -35,18 +33,11 @@ $_light-grid-summary: extend(
         ),
 
         result-color: currentColor,
-        border-color: (
-            igx-color: ('grays', 400)
-        ),
 
         pinned-border-width: 2px,
         pinned-border-style: solid,
         pinned-border-color: (
             igx-color: ('grays', 400)
         ),
-
-        label-hover-color: (
-            igx-color: ('primary', 700)
-        )
     )
 );
