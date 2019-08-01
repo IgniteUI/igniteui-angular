@@ -1,0 +1,61 @@
+<article #toggle
+    class="igx-excel-filter__secondary"
+    [ngClass]="{
+        'igx-excel-filter__secondary--cosy': grid.displayDensity === 'cosy',
+        'igx-excel-filter__secondary--compact': grid.displayDensity === 'compact'
+    }"
+    (keydown)="onKeyDown($event)"
+    (onOpening)="onCustomDialogOpening()"
+    (onOpened)="onCustomDialogOpened()">
+    <header class="igx-advanced-filter__secondary-header">
+        <h4 class="igx-typography__h6">
+            Adv. Filtering
+        </h4>
+    </header>
+
+    <article #expressionsContainer class="igx-advanced-filter__secondary-main">
+        <!-- <ng-container *ngIf="column.dataType === 'date'">
+            <igx-excel-style-date-expression *ngFor="let expression of expressionsList;"
+                class="igx-excel-filter__condition"
+                [expressionUI]="expression"
+                [column]="column"
+                [grid]="grid"
+                [displayDensity]="displayDensity"
+                [expressionsList]="expressionsList"
+                (onExpressionRemoved)="onExpressionRemoved($event)"
+                (onLogicOperatorChanged)="onLogicOperatorChanged($event)">
+            </igx-excel-style-date-expression>
+        </ng-container> -->
+
+        <!-- <ng-container *ngIf="column.dataType !== 'date'">
+            <igx-excel-style-default-expression *ngFor="let expression of expressionsList;"
+                class="igx-excel-filter__condition"
+                [expressionUI]="expression"
+                [column]="column"
+                [grid]="grid"
+                [displayDensity]="displayDensity"
+                [expressionsList]="expressionsList"
+                (onExpressionRemoved)="onExpressionRemoved($event)"
+                (onLogicOperatorChanged)="onLogicOperatorChanged($event)">
+            </igx-excel-style-default-expression>
+        </ng-container> -->
+
+        <!-- <button igxButton [displayDensity]="displayDensity"
+            class="igx-advanced-filter__add-filter"
+            (click)="onAddButtonClick()">
+            <igx-icon>add</igx-icon>
+            <span>{{ grid.resourceStrings.igx_grid_excel_custom_dialog_add }}</span>
+        </button> -->
+    </article>
+
+    <footer class="igx-advanced-filter__secondary-footer">
+        <button igxButton [displayDensity]="displayDensity" (click)="onClearButtonClick()">{{ grid.resourceStrings.igx_grid_excel_custom_dialog_clear }}</button>
+
+        <div>
+            <button igxButton [displayDensity]="displayDensity" (click)="closeDialog()">{{ grid.resourceStrings.igx_grid_excel_cancel }}</button>
+            <button igxButton="raised" [displayDensity]="displayDensity" (click)="onApplyButtonClick()" (keydown)="onApplyButtonKeyDown($event)">
+                {{ grid.resourceStrings.igx_grid_excel_apply }}
+            </button>
+        </div>
+    </footer>
+</article>

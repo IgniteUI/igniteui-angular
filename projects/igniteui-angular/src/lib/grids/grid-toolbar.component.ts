@@ -7,7 +7,10 @@ import {
     Optional,
     ViewChild,
     Inject,
-    TemplateRef
+    TemplateRef,
+    NgModuleRef,
+    OnInit,
+    OnDestroy
 } from '@angular/core';
 
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
@@ -18,7 +21,8 @@ import {
     IgxCsvExporterService,
     IgxExcelExporterOptions,
     IgxExcelExporterService,
-    AbsoluteScrollStrategy
+    AbsoluteScrollStrategy,
+    IgxOverlayService
 } from '../services/index';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
@@ -26,7 +30,13 @@ import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxColumnHidingComponent } from './column-hiding.component';
 import { IgxColumnPinningComponent } from './column-pinning.component';
 import { OverlaySettings, PositionSettings, HorizontalAlignment, VerticalAlignment } from '../services/overlay/utilities';
-import { ConnectedPositioningStrategy } from '../services/overlay/position';
+import { ConnectedPositioningStrategy, AutoPositionStrategy, GlobalPositionStrategy } from '../services/overlay/position';
+import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
+import { IgxFilteringService } from './filtering/grid-filtering.service';
+import { filter, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { useAnimation } from '@angular/animations';
+import { fadeIn, fadeOut } from '../animations/main';
 
 /**
  * This class encapsulates the Toolbar's logic and is internally used by
@@ -36,7 +46,8 @@ import { ConnectedPositioningStrategy } from '../services/overlay/position';
     selector: 'igx-grid-toolbar',
     templateUrl: './grid-toolbar.component.html'
 })
-export class IgxGridToolbarComponent extends DisplayDensityBase {
+export class IgxGridToolbarComponent extends DisplayDensityBase implements OnInit, OnDestroy {
+    private _componentOverlayId: string;
 
     /**
      * @hidden
@@ -218,10 +229,14 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
         public cdr: ChangeDetectorRef,
         @Optional() public excelExporter: IgxExcelExporterService,
         @Optional() public csvExporter: IgxCsvExporterService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        private _moduleRef: NgModuleRef<any>,
+        private _filteringService: IgxFilteringService,
+        @Inject(IgxOverlayService) private _overlayService: IgxOverlayService) {
             super(_displayDensityOptions);
     }
 
+    private _destroy$ = new Subject<boolean>();
     private _positionSettings: PositionSettings = {
         horizontalDirection: HorizontalAlignment.Left,
         horizontalStartPoint: HorizontalAlignment.Right,
@@ -237,6 +252,49 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
         excludePositionTarget: true
     };
 
+    // private _filterMenuPositionSettings =  {
+    //     verticalStartPoint: VerticalAlignment.Bottom,
+    //     openAnimation: useAnimation(fadeIn, {
+    //         params: {
+    //             duration: '250ms'
+    //         }
+    //     }),
+    //     closeAnimation: useAnimation(fadeOut, {
+    //         params: {
+    //             duration: '200ms'
+    //         }
+    //     })
+    // };
+
+    private _filterMenuOverlaySettings: OverlaySettings = {
+        closeOnOutsideClick: false,
+        modal: true,
+        positionStrategy:  new GlobalPositionStrategy(), // new AutoPositionStrategy(this._filterMenuPositionSettings),
+        scrollStrategy: new AbsoluteScrollStrategy()
+    };
+
+    ngOnInit() {
+        this._overlayService.onOpening.pipe(
+            filter((overlay) => overlay.id === this._componentOverlayId),
+            takeUntil(this._destroy$)).subscribe((eventArgs) => {
+                this.onOverlayOpening(eventArgs);
+            });
+
+        this._overlayService.onClosed.pipe(
+            filter(overlay => overlay.id === this._componentOverlayId),
+            takeUntil(this._destroy$)).subscribe(() => {
+                this.onOverlayClosed();
+            });
+    }
+
+    ngOnDestroy(): void {
+        this._destroy$.next(true);
+        this._destroy$.complete();
+
+        if (this._componentOverlayId) {
+            this._overlayService.hide(this._componentOverlayId);
+        }
+    }
 
     /**
      * Returns the title of `IgxGridToolbarComponent`.
@@ -349,6 +407,29 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
         this._overlaySettings.positionStrategy.settings.target = this.columnPinningButton.nativeElement;
         this._overlaySettings.outlet = this.grid.outletDirective;
         this.columnPinningDropdown.toggle(this._overlaySettings);
+    }
+
+    public showAdvancedFilteringUI() {
+        if (!this._componentOverlayId) {
+            this._filterMenuOverlaySettings.positionStrategy.settings.target =
+                (this.grid as any).rootGrid ? (this.grid as any).rootGrid.nativeElement : this.grid.nativeElement;
+            this._filterMenuOverlaySettings.outlet = this.grid.outletDirective;
+
+            this._componentOverlayId =
+                this._overlayService.attach(IgxAdvancedFilteringDialogComponent, this._filterMenuOverlaySettings, this._moduleRef);
+            this._overlayService.show(this._componentOverlayId, this._filterMenuOverlaySettings);
+        }
+    }
+
+    private onOverlayOpening(eventArgs) {
+        const instance = eventArgs.componentRef.instance as IgxAdvancedFilteringDialogComponent;
+        if (instance) {
+            instance.initialize(this._filteringService, this._overlayService, eventArgs.id);
+        }
+    }
+
+    private onOverlayClosed() {
+        this._componentOverlayId = null;
     }
 
     /**

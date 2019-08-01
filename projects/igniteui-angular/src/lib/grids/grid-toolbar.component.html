@@ -48,6 +48,13 @@
         </igx-drop-down>
     </div>
 
+    <button igxButton="flat" [displayDensity]="grid.displayDensity" igxButton igxRipple
+        (click)="showAdvancedFilteringUI()">
+        <div class="igx-grid-toolbar__button-space">
+            <igx-icon fontSet="material">filter_list</igx-icon>
+            <span>Adv. Filtering</span>
+        </div>
+    </button>
 
     <div class="igx-grid-toolbar__dropdown" *ngIf="shouldShowExportButton" id="btnExport">
         <button igxButton="flat" [displayDensity]="grid.displayDensity" igxRipple #btnExport
