@@ -15,7 +15,7 @@ const FLAT_RAISED_OUTLINED_BUTTON_COSY = 'igx-button--cosy';
 const FAB_BUTTON_COMPACT = 'igx-button--fab-compact';
 const FAB_BUTTON_COSY = 'igx-button--fab-cosy';
 
-fdescribe('IgxButton', () => {
+describe('IgxButton', () => {
     configureTestSuite();
 
     const baseClass = 'igx-button';
