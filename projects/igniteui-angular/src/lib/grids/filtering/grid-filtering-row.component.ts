@@ -758,8 +758,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         const containerRect = this.container.nativeElement.getBoundingClientRect();
 
         for (let index = 0; index < chipAraeChildren.length; index++) {
-            if (Math.ceil(chipAraeChildren[index].getBoundingClientRect().left) < Math.ceil(containerRect.left) &&
-                Math.ceil(chipAraeChildren[index].getBoundingClientRect().right) < Math.ceil(containerRect.left)) {
+            if (Math.ceil(chipAraeChildren[index].getBoundingClientRect().right) < Math.ceil(containerRect.left)) {
                 count++;
             }
         }
