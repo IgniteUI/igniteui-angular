@@ -725,6 +725,8 @@ describe('IgxHierarchicalGrid Integration', () => {
             fixture.detectChanges();
             await wait(30);
             fixture.detectChanges();
+            await wait(30);
+            fixture.detectChanges();
 
             expect(hierarchicalGrid.hasVerticalSroll()).toBeTruthy();
         }));

@@ -2705,7 +2705,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     protected recalcUpdateSizes() {
-        this.verticalScrollContainer.recalcUpdateSizes();
+        const virt = this.verticalScrollContainer as any;
+        virt.recalcUpdateSizes();
+        // After sizes are updated chunk size and scroll position may change.
+        virt._applyChanges();
+        virt._updateScrollOffset();
+        this.notifyChanges(true);
     }
 
     protected setupColumns() {
