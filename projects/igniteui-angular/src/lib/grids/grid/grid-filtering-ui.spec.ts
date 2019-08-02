@@ -1595,7 +1595,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(filterChip.componentInstance.selected).toBeTruthy();
 
         // Click on the chip to commit it
-        ClickElemAndBlur(filterChip, input);
+        clickElemAndBlur(filterChip, input);
         await wait(200);
         fix.detectChanges();
         expect(filterChip.componentInstance.selected).toBeFalsy();
@@ -1607,7 +1607,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(filterChip.componentInstance.selected).toBeTruthy();
 
         // Click on the chip to commit it
-        ClickElemAndBlur(filterChip, input);
+        clickElemAndBlur(filterChip, input);
         await wait(100);
         fix.detectChanges();
         expect(filterChip.componentInstance.selected).toBeFalsy();
@@ -1628,7 +1628,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(filterChip.componentInstance.selected).toBeTruthy();
 
          // Click on the chip to commit it
-        ClickElemAndBlur(filterChip, input);
+        clickElemAndBlur(filterChip, input);
         fix.detectChanges();
         await wait(100);
         expect(filterChip.componentInstance.selected).toBeFalsy();
