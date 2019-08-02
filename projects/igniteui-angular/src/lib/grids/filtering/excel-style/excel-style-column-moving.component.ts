@@ -23,6 +23,9 @@ export class IgxExcelStyleColumnMovingComponent {
     @Input()
     public displayDensity: DisplayDensity;
 
+    @Input()
+    public isColumnPinnable: boolean;
+
     constructor() {}
 
     private get visibleColumns() {
@@ -32,6 +35,7 @@ export class IgxExcelStyleColumnMovingComponent {
     get canNotMoveLeft() {
         return this.column.visibleIndex === 0 ||
             (this.grid.unpinnedColumns.indexOf(this.column) === 0 && this.column.disablePinning) ||
+            (this.grid.unpinnedColumns.indexOf(this.column) === 0 && !this.isColumnPinnable) ||
             (this.column.level !== 0 && !this.findColumn(0, this.visibleColumns));
     }
 
