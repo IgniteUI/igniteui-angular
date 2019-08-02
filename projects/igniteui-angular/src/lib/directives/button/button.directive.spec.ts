@@ -15,7 +15,7 @@ const FLAT_RAISED_OUTLINED_BUTTON_COSY = 'igx-button--cosy';
 const FAB_BUTTON_COMPACT = 'igx-button--fab-compact';
 const FAB_BUTTON_COSY = 'igx-button--fab-cosy';
 
-describe('IgxButton', () => {
+fdescribe('IgxButton', () => {
     configureTestSuite();
 
     const baseClass = 'igx-button';
@@ -124,6 +124,8 @@ describe('IgxButton', () => {
         fixture.detectChanges();
         const theButton = fixture.componentInstance.button;
         const theButtonNativeEl = theButton.nativeElement;
+        expect(theButtonNativeEl.classList.length).toEqual(1);
+        expect(theButtonNativeEl.classList).toContain(classes.flat);
 
         theButton.type = 'raised';
         fixture.detectChanges();
