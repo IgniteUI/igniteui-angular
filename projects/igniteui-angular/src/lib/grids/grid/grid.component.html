@@ -69,7 +69,8 @@
                 }">
                     <ng-template #headSelector
                         *ngTemplateOutlet="
-                        this.headSelectorTemplate ? this.headSelectorTemplate : headSelectorBaseTemplate">
+                        this.headSelectorTemplate ? this.headSelectorTemplate : headSelectorBaseTemplate;
+                        context: {$implicit: { selectedCount: _selectedRows, totalCount: this._gridAPI.get_all_data().length }}">
                     </ng-template>
                 </div>
             </ng-container>
@@ -239,10 +240,13 @@
     <igx-icon fontSet="material">drag_indicator</igx-icon>
 </ng-template>
 
-
 <ng-template #headSelectorBaseTemplate>
-    <igx-checkbox [checked]="allRowsSelected" (change)="onHeadSelectorClick($event, filteredData)"
-        disableRipple="true" [aria-label]="headerCheckboxAriaLabel"></igx-checkbox>
+    <igx-checkbox
+        [checked]="allRowsSelected"
+        (change)="onHeadSelectorClick($event, filteredData)"
+        disableRipple="true"
+        [aria-label]="headerCheckboxAriaLabel">
+    </igx-checkbox>
 </ng-template>
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>

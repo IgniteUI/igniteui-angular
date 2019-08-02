@@ -511,7 +511,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         if (grid.rowSelectable && grid.selection.is_item_selected(grid.id, rowId)) {
             grid.deselectRows([rowId]);
         } else {
-            grid.calculateRowSelectionStatus();
+            grid.determineRowSelectionStatus();
         }
 
         this.deleteRowFromData(rowId, index);

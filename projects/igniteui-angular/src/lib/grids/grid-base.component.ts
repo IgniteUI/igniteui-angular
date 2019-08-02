@@ -240,12 +240,6 @@ export enum GridKeydownTargetType {
     hierarchicalRow = 'hierarchicalRow'
 }
 
-export enum TriState {
-    checked = 'checked',
-    unchecked = 'unchecked',
-    indeterminate = 'indeterminate'
-}
-
 export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     OnInit, OnChanges, OnDestroy, AfterContentInit, AfterViewInit {
     private _scrollWidth: number;
@@ -262,7 +256,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _locale = null;
     private _observer: MutationObserver;
     protected _destroyed = false;
-    protected _headSelectorStatus: TriState;
+    protected _selectedRows = 0;
     private overlayIDs = [];
     public rowSelected = false;
 
@@ -4139,14 +4133,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             return null;
         }
         const footerHeight = this.summariesHeight || this.tfoot.nativeElement.offsetHeight -
-        this.tfoot.nativeElement.clientHeight;
+            this.tfoot.nativeElement.clientHeight;
         let gridHeight;
         const computed = this.document.defaultView.getComputedStyle(this.nativeElement);
         const toolbarHeight = this.getToolbarHeight();
         const pagingHeight = this.getPagingHeight();
         const groupAreaHeight = this.getGroupAreaHeight();
         const renderedHeight = toolbarHeight + this.theadRow.nativeElement.offsetHeight +
-            footerHeight  + pagingHeight + groupAreaHeight +
+            footerHeight + pagingHeight + groupAreaHeight +
             this.scr.nativeElement.clientHeight;
 
         if (this.isPercentHeight) {
@@ -4599,7 +4593,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
 
         this.triggerRowSelectionChange(newSelection, null, event, this.rowSelected);
-        this.calculateRowSelectionStatus(this.rowSelected);
+        this.determineRowSelectionStatus(this.rowSelected);
     }
 
     /**
@@ -4614,41 +4608,28 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    public calculateRowSelectionStatus(
+    public determineRowSelectionStatus(
         headerStatus?: boolean): void {
-        const filteredData = this.filteringService.filteredData;
-        const dataLength = filteredData ? filteredData.length : this.dataLength;
-        this.allRowsSelected = this.selection.are_all_selected(this.id, dataLength);
-        const areNoneSelected = this.selection.are_none_selected(this.id);
         if (headerStatus === undefined) {
-            if (this.allRowsSelected) {
-                this.headSelectorStatus = TriState.checked;
-            } else if (areNoneSelected) {
-                this.headSelectorStatus = TriState.unchecked;
-            } else {
-                this.headSelectorStatus = TriState.indeterminate;
+            const filteredData = this.filteringService.filteredData;
+            const dataLength = filteredData ? filteredData.length : this.dataLength;
+            this.allRowsSelected = this.selection.are_all_selected(this.id, dataLength);
+            const areNoneSelected = this.selection.are_none_selected(this.id);
+            if (this.headSelectorBaseTemplate) {
+                this.headSelectorBaseTemplate.indeterminate = !this.allRowsSelected && !areNoneSelected;
+                if (!this.headSelectorBaseTemplate.indeterminate) {
+                    this.headSelectorBaseTemplate.checked =
+                        this.allRowsSelected;
+                }
             }
         } else {
-            this.headSelectorStatus = headerStatus ?
-                TriState.checked : TriState.unchecked;
-        }
-        if (this.headSelectorBaseTemplate) {
-            this.headSelectorBaseTemplate.indeterminate = !this.allRowsSelected && !areNoneSelected;
-            if (!this.headSelectorBaseTemplate.indeterminate) {
-                this.headSelectorBaseTemplate.checked =
-                    this.allRowsSelected;
+            if (this.headSelectorBaseTemplate) {
+                this.headSelectorBaseTemplate.checked = headerStatus;
             }
         }
 
+        this._selectedRows = this.selectedRows().length;
         this.cdr.markForCheck();
-    }
-
-    protected get headSelectorStatus(): TriState {
-        return this._headSelectorStatus;
-    }
-
-    protected set headSelectorStatus(v: TriState) {
-        this._headSelectorStatus = v;
     }
 
     /**
@@ -4682,7 +4663,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public updateHeaderCheckboxStatusOnFilter(data) {
         if (!data || !this.hasVisibleColumns || !this.headSelectorBaseTemplate) {
-            this.calculateRowSelectionStatus();
+            this.determineRowSelectionStatus();
             return;
         }
         switch (this.filteredItemsStatus(this.id, data, this.primaryKey)) {
@@ -4894,7 +4875,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                     if (col) {
                         const key = headers ? col.header || col.field : col.field;
                         record[key] = formatters && col.formatter ? col.formatter(source[row][col.field])
-                        : source[row][col.field];
+                            : source[row][col.field];
                     }
                 });
             }
@@ -4909,15 +4890,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected getSelectableColumnsAt(index) {
         if (this.hasColumnLayouts) {
             const visibleLayoutColumns = this.visibleColumns
-            .filter(col => col.columnLayout)
-            .sort((a, b) => a.visibleIndex - b.visibleIndex);
+                .filter(col => col.columnLayout)
+                .sort((a, b) => a.visibleIndex - b.visibleIndex);
             const colLayout = visibleLayoutColumns[index];
             return colLayout ? colLayout.children.toArray() : [];
         } else {
             const visibleColumns = this.visibleColumns
-            .filter(col => !col.columnGroup)
-            .sort((a, b) => a.visibleIndex - b.visibleIndex);
-            return [ visibleColumns[index] ];
+                .filter(col => !col.columnGroup)
+                .sort((a, b) => a.visibleIndex - b.visibleIndex);
+            return [visibleColumns[index]];
         }
     }
 
@@ -4947,7 +4928,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             newSelectionAsSet.add(args.newSelection[i]);
         }
         this.selection.set(this.id, newSelectionAsSet);
-        this.calculateRowSelectionStatus(headerStatus);
+        this.determineRowSelectionStatus(headerStatus);
     }
 
     /**

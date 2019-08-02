@@ -24,9 +24,11 @@
                 <div class="igx-grid__cbx-selection" #headerSelectorContainer [ngClass]="{
                     'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible
                 }">
-                    <ng-template #headSelector
-                        *ngTemplateOutlet="this.headSelectorTemplate ? this.headSelectorTemplate : headSelectorBaseTemplate">
-                    </ng-template>
+            <ng-template #headSelector
+                *ngTemplateOutlet="
+                this.headSelectorTemplate ? this.headSelectorTemplate : headSelectorBaseTemplate;
+                context: {$implicit: { selectedCount: _selectedRows, totalCount: this._gridAPI.get_all_data().length }}">
+            </ng-template>
                 </div>
             </ng-container>
             <ng-container *ngIf="pinnedColumns.length > 0">
