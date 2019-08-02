@@ -3,7 +3,8 @@ import {
     Component,
     ChangeDetectionStrategy,
     Input,
-    ViewChild
+    ViewChild,
+    ChangeDetectorRef
 } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
 import { IgxFilterOptions } from '../../../directives/filter/filter.directive';
@@ -24,7 +25,21 @@ import { FilterListItem } from './grid.excel-style-filtering.component';
 })
 export class IgxExcelStyleSearchComponent implements AfterViewInit {
 
+    private _isLoading;
+
+    public get isLoading() {
+        return this._isLoading;
+    }
+
+    public set isLoading(value: boolean) {
+        this._isLoading = value;
+        this._cdr.detectChanges();
+    }
+
     public searchValue: any;
+
+    @Input()
+    public grid: any;
 
     @Input()
     public data: FilterListItem[];
@@ -41,7 +56,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
     @ViewChild(IgxForOfDirective, { static: true })
     protected virtDir: IgxForOfDirective<any>;
 
-    constructor() { }
+    constructor(private _cdr: ChangeDetectorRef) { }
 
     public ngAfterViewInit() {
         requestAnimationFrame(() => {

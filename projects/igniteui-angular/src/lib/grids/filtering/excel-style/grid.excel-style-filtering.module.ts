@@ -29,6 +29,7 @@ import { IgxFilterModule } from '../../../directives/filter/filter.directive';
 import { IgxToggleModule } from '../../../directives/toggle/toggle.directive';
 import { IgxListModule } from '../../../list/list.component';
 import { IgxExcelStyleSearchFilterPipe } from './excel-style-search.pipe';
+import { IgxProgressBarModule } from '../../../progressbar/progressbar.component';
 
 /**
  * @hidden
@@ -71,7 +72,8 @@ import { IgxExcelStyleSearchFilterPipe } from './excel-style-search.pipe';
         IgxCheckboxModule,
         IgxFilterModule,
         IgxToggleModule,
-        IgxListModule
+        IgxListModule,
+        IgxProgressBarModule
     ],
     entryComponents: [
         IgxGridExcelStyleFilteringComponent

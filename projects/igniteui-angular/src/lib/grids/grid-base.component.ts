@@ -250,6 +250,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return this._scrollWidth;
     }
 
+    private _esfLoadingIndicatorTemplate: TemplateRef<any>;
     private _resourceStrings = CurrentResourceStrings.GridResStrings;
     private _emptyGridMessage = null;
     private _emptyFilteredGridMessage = null;
@@ -999,6 +1000,19 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.cdr.markForCheck();
         }
     }
+
+    @Input()
+    public get esfLoadingIndicatorTemplate(): TemplateRef<any> {
+        return this._esfLoadingIndicatorTemplate;
+    }
+
+    public set esfLoadingIndicatorTemplate(value: TemplateRef<any>) {
+        this._esfLoadingIndicatorTemplate = value;
+        this.cdr.markForCheck();
+    }
+
+    @Input()
+    public loadColumnValuesOnDemand: (field: string, done: (values: any[]) => void) => void;
 
     /**
      * Emitted when `IgxGridCellComponent` is clicked. Returns the `IgxGridCellComponent`.
