@@ -8,9 +8,12 @@
     </div>
 </ng-container>
 <ng-container *ngIf="rowSelectable">
-        <div class="igx-grid__cbx-selection">
-            <igx-checkbox [checked]="isSelected" (change)="onCheckboxClick($event)" disableRipple="true" [disableTransitions]="grid.disableTransitions" [aria-label]="rowCheckboxAriaLabel"></igx-checkbox>
-        </div>
+    <div class="igx-grid__cbx-selection">
+        <ng-template *ngTemplateOutlet="
+            this.grid.rowSelectorTemplate ? this.grid.rowSelectorTemplate : rowSelectorBaseTemplate;
+            context: {$implicit: {index: dataRowIndex, rowID: rowID, selected: isSelected}}">
+        </ng-template>
+    </div>
 </ng-container>
 
 <ng-container *ngIf="pinnedColumns.length > 0">
@@ -54,3 +57,12 @@
     </igx-hierarchical-grid-cell>
 </ng-template>
 
+<ng-template #rowSelectorBaseTemplate>
+        <igx-checkbox
+            [checked]="isSelected"
+            (change)="onRowSelect($event)"
+            disableRipple="true"
+            [disableTransitions]="grid.disableTransitions"
+            [aria-label]="rowCheckboxAriaLabel">
+        </igx-checkbox>
+</ng-template>

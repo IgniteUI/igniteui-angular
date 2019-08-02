@@ -1,6 +1,4 @@
 import {
-    QueryList,
-    ContentChildren,
     ElementRef,
     NgZone,
     ChangeDetectorRef,
@@ -11,7 +9,8 @@ import {
     Optional,
     Input,
     ViewChild,
-    TemplateRef
+    TemplateRef,
+    ContentChild
 } from '@angular/core';
 import { IgxGridBaseComponent, IgxGridTransaction, IGridDataBindable } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
@@ -28,6 +27,8 @@ import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-naviga
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
+import { IgxRowSelectorDirective, IgxHeadSelectorDirective } from '../igx-selection.module';
+import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 
 export const IgxHierarchicalTransactionServiceFactory = {
     provide: IgxGridTransaction,
@@ -148,6 +149,12 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
      * ```
      */
     public dragIndicatorIconTemplate: TemplateRef<any> = null;
+
+    @ContentChild(IgxRowSelectorDirective, { read: TemplateRef, static: true })
+    public rowSelectorTemplate: TemplateRef<IgxRowSelectorDirective>;
+
+    @ContentChild(IgxHeadSelectorDirective, { read: TemplateRef, static: true })
+    public headSelectorTemplate: TemplateRef<IgxHeadSelectorDirective>;
 
     /**
      * @hidden

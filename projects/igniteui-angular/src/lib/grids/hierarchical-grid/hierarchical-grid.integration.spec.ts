@@ -484,7 +484,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             fixture.detectChanges();
 
             const rootExpander =  (hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent).expander;
-            const rootCheckbox =  hierarchicalGrid.headerCheckboxContainer;
+            const rootCheckbox =  hierarchicalGrid.headerSelectorContainer;
             const rootSummaryRow = hierarchicalGrid.summariesRowList.first.nativeElement;
             const rootSummaryIndentation = rootSummaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
 
