@@ -1595,39 +1595,20 @@ describe('IgxGrid - Filtering actions', () => {
         expect(filterChip.componentInstance.selected).toBeTruthy();
 
         // Click on the chip to commit it
-        const elementRect = filterChip.nativeElement.getBoundingClientRect();
-        UIInteractions.simulatePointerEvent('pointerdown', filterChip.nativeElement, elementRect.left, elementRect.top);
-        await wait(16);
-        input.nativeElement.blur();
-        await wait(16);
-        input.nativeElement.dispatchEvent(new FocusEvent('focusout', {bubbles: true}));
-        await wait(16);
-        (filterChip as DebugElement).nativeElement.focus();
-        UIInteractions.simulatePointerEvent('pointerup', filterChip.nativeElement, elementRect.left, elementRect.top);
-        UIInteractions.simulateMouseEvent('click', filterChip.nativeElement, 10 , 10);
-
-        await wait(16);
+        ClickElemAndBlur(filterChip, input);
+        await wait(200);
         fix.detectChanges();
         expect(filterChip.componentInstance.selected).toBeFalsy();
 
         // Click on the chip to select it
         GridFunctions.clickChip(filterChip);
         fix.detectChanges();
-        await wait(16);
+        await wait(100);
         expect(filterChip.componentInstance.selected).toBeTruthy();
 
         // Click on the chip to commit it
-        UIInteractions.simulatePointerEvent('pointerdown', filterChip.nativeElement, elementRect.left, elementRect.top);
-        await wait(16);
-        input.nativeElement.blur();
-        await wait(16);
-        input.nativeElement.dispatchEvent(new FocusEvent('focusout', {bubbles: true}));
-        await wait(16);
-        (filterChip as DebugElement).nativeElement.focus();
-        UIInteractions.simulatePointerEvent('pointerup', filterChip.nativeElement, elementRect.left, elementRect.top);
-        UIInteractions.simulateMouseEvent('click', filterChip.nativeElement, 10 , 10);
-
-        await wait(16);
+        ClickElemAndBlur(filterChip, input);
+        await wait(100);
         fix.detectChanges();
         expect(filterChip.componentInstance.selected).toBeFalsy();
     });
@@ -1647,17 +1628,7 @@ describe('IgxGrid - Filtering actions', () => {
         expect(filterChip.componentInstance.selected).toBeTruthy();
 
          // Click on the chip to commit it
-         const elementRect = filterChip.nativeElement.getBoundingClientRect();
-         UIInteractions.simulatePointerEvent('pointerdown', filterChip.nativeElement, elementRect.left, elementRect.top);
-         await wait(16);
-         input.nativeElement.blur();
-         await wait(16);
-         input.nativeElement.dispatchEvent(new FocusEvent('focusout', {bubbles: true}));
-         await wait(16);
-         (filterChip as DebugElement).nativeElement.focus();
-         UIInteractions.simulatePointerEvent('pointerup', filterChip.nativeElement, elementRect.left, elementRect.top);
-         UIInteractions.simulateMouseEvent('click', filterChip.nativeElement, 10 , 10);
-
+        ClickElemAndBlur(filterChip, input);
         fix.detectChanges();
         await wait(100);
         expect(filterChip.componentInstance.selected).toBeFalsy();
@@ -6049,4 +6020,14 @@ function verifyChipVisibility(fix, index: number, shouldBeFullyVisible: boolean)
 
     expect(chipRect.left >= visibleChipAreaRect.left && chipRect.right <= visibleChipAreaRect.right)
         .toBe(shouldBeFullyVisible, 'chip[' + index + '] visibility is incorrect');
+}
+
+function ClickElemAndBlur(clickElem, blurElem) {
+    const elementRect = clickElem.nativeElement.getBoundingClientRect();
+    UIInteractions.simulatePointerEvent('pointerdown', clickElem.nativeElement, elementRect.left, elementRect.top);
+    blurElem.nativeElement.blur();
+    blurElem.nativeElement.dispatchEvent(new FocusEvent('focusout', {bubbles: true}));
+    (clickElem as DebugElement).nativeElement.focus();
+    UIInteractions.simulatePointerEvent('pointerup', clickElem.nativeElement, elementRect.left, elementRect.top);
+    UIInteractions.simulateMouseEvent('click', clickElem.nativeElement, 10 , 10);
 }
