@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxGridComponent } from 'igniteui-angular';
+import { IgxGridComponent, IgxColumnComponent } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
 import { GridESFLoadOnDemandService } from './grid-esf-load-on-demand.service';
 
@@ -19,8 +19,8 @@ export class GridEsfLoadOnDemandComponent implements OnInit {
   @ViewChild('grid1', { static: true })
   public grid1: IgxGridComponent;
 
-  public loadColumnValues = (columnField: string, done: (uniqueValues: string[]) => void) => {
-    this.esfService.getData(columnField, uniqueValues => done(uniqueValues));
+  public loadColumnValues = (column: IgxColumnComponent, done: (uniqueValues: string[]) => void) => {
+    this.esfService.getData(column.field, uniqueValues => done(uniqueValues));
   }
 
   public ngOnInit(): void {

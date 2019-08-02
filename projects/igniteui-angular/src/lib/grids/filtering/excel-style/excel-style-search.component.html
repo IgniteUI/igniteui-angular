@@ -39,13 +39,13 @@
 
     <ng-template igxDataLoading>        
         <div style="display: flex; align-items: center;" class="esf-loading-indicator">
-            <ng-container *ngTemplateOutlet="grid.esfLoadingIndicatorTemplate ? grid.esfLoadingIndicatorTemplate : defaultEsfLoadingIndicatorTemplate">
+            <ng-container *ngTemplateOutlet="valuesLoadingTemplate">
             </ng-container>
         </div>
     </ng-template>
 </igx-list>
 
-<ng-template #defaultEsfLoadingIndicatorTemplate>
+<ng-template #defaultExcelStyleLoadingValuesTemplate>
     <igx-circular-bar [indeterminate]="true">
     </igx-circular-bar>
 </ng-template>

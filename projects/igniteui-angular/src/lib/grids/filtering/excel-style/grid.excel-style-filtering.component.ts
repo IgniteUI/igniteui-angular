@@ -332,7 +332,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
     }
 
     public populateColumnData() {
-        if (this.grid.loadColumnValuesOnDemand) {
+        if (this.grid.loadExcelStyleUniqueValuesOnDemand) {
             this.loadValuesOnDemand();
         } else {
             this.loadValuesFromGridData();
@@ -341,7 +341,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
 
     private loadValuesOnDemand() {
         this.excelStyleSearch.isLoading = true;
-        this.grid.loadColumnValuesOnDemand(this.column.field, (columnUniqueValues: any[]) => {
+        this.grid.loadExcelStyleUniqueValuesOnDemand(this.column, (columnUniqueValues: any[]) => {
             if (this.column.dataType === DataType.Date) {
                 this.uniqueValues = Array.from(new Set(columnUniqueValues.map(val => val ? val.toDateString() : val)));
                 this.generateFilterValues(true);

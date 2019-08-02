@@ -4,15 +4,23 @@ import {
     ChangeDetectionStrategy,
     Input,
     ViewChild,
-    ChangeDetectorRef
+    ChangeDetectorRef,
+    TemplateRef,
+    Directive
 } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
-import { IgxFilterOptions } from '../../../directives/filter/filter.directive';
 import { IChangeCheckboxEventArgs } from '../../../checkbox/checkbox.component';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
 import { DisplayDensity } from '../../../core/density';
 import { IgxForOfDirective } from '../../../directives/for-of/for_of.directive';
 import { FilterListItem } from './grid.excel-style-filtering.component';
+
+@Directive({
+    selector: '[igxExcelStyleLoadingValuesTemplate]'
+})
+export class IgxExcelStyleLoadingValuesTemplateDirective {
+    constructor(public template: TemplateRef<any>) {}
+}
 
 /**
  * @hidden
@@ -55,6 +63,17 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
 
     @ViewChild(IgxForOfDirective, { static: true })
     protected virtDir: IgxForOfDirective<any>;
+
+    @ViewChild('defaultExcelStyleLoadingValuesTemplate', { read: TemplateRef, static: true })
+    protected defaultExcelStyleLoadingValuesTemplate: TemplateRef<any>;
+
+    public get valuesLoadingTemplate() {
+        if (this.grid.excelStyleLoadingValuesTemplateDirective) {
+            return this.grid.excelStyleLoadingValuesTemplateDirective.template;
+        } else {
+            return this.defaultExcelStyleLoadingValuesTemplate;
+        }
+    }
 
     constructor(private _cdr: ChangeDetectorRef) { }
 

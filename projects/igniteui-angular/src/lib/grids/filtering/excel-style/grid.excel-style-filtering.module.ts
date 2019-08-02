@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { IgxExcelStyleLoadingValuesTemplateDirective } from './excel-style-search.component';
 import {
     IgxGridExcelStyleFilteringComponent,
     IgxExcelStyleSortingTemplateDirective,
@@ -47,6 +48,7 @@ import { IgxProgressBarModule } from '../../../progressbar/progressbar.component
         IgxExcelStyleHidingTemplateDirective,
         IgxExcelStyleMovingTemplateDirective,
         IgxExcelStylePinningTemplateDirective,
+        IgxExcelStyleLoadingValuesTemplateDirective,
         IgxExcelStyleSearchFilterPipe
     ],
     exports: [
@@ -55,6 +57,7 @@ import { IgxProgressBarModule } from '../../../progressbar/progressbar.component
         IgxExcelStyleHidingTemplateDirective,
         IgxExcelStyleMovingTemplateDirective,
         IgxExcelStylePinningTemplateDirective,
+        IgxExcelStyleLoadingValuesTemplateDirective,
         IgxExcelStyleDateExpressionComponent
     ],
     imports: [

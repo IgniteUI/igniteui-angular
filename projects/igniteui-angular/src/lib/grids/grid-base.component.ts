@@ -80,6 +80,7 @@ import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { IgxGridSelectionService, GridSelectionRange, IgxGridCRUDService, IgxRow, IgxCell } from '../core/grid-selection';
 import { DragScrollDirection } from './drag-select.directive';
 import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
+import { IgxExcelStyleLoadingValuesTemplateDirective } from './filtering/excel-style/excel-style-search.component';
 import {
     IgxExcelStyleSortingTemplateDirective,
     IgxExcelStylePinningTemplateDirective,
@@ -1002,17 +1003,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     @Input()
-    public get esfLoadingIndicatorTemplate(): TemplateRef<any> {
-        return this._esfLoadingIndicatorTemplate;
-    }
-
-    public set esfLoadingIndicatorTemplate(value: TemplateRef<any>) {
-        this._esfLoadingIndicatorTemplate = value;
-        this.cdr.markForCheck();
-    }
-
-    @Input()
-    public loadColumnValuesOnDemand: (field: string, done: (values: any[]) => void) => void;
+    public loadExcelStyleUniqueValuesOnDemand: (field: string, done: (values: any[]) => void) => void;
 
     /**
      * Emitted when `IgxGridCellComponent` is clicked. Returns the `IgxGridCellComponent`.
@@ -1582,6 +1573,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @ContentChild(IgxExcelStylePinningTemplateDirective, { read: IgxExcelStylePinningTemplateDirective, static: true })
     public excelStylePinningTemplateDirective: IgxExcelStylePinningTemplateDirective;
 
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxExcelStyleLoadingValuesTemplateDirective, { read: IgxExcelStyleLoadingValuesTemplateDirective, static: true })
+    public excelStyleLoadingValuesTemplateDirective: IgxExcelStyleLoadingValuesTemplateDirective;
 
     /**
      * @hidden

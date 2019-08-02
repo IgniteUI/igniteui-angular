@@ -8,13 +8,11 @@
       <div class="density-chooser">
         <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)"></igx-buttongroup>
       </div>
-      <igx-grid #grid1 [data]="data" [displayDensity]="density" [showToolbar]="true"
-                [columnHiding]="true" [allowFiltering]="true" [rowSelectable]="true"
-                [filterMode]="'excelStyleFilter'" [width]="'900px'"
-                [height]="'800px'" [style.zIndex]="'1'"
+      <igx-grid #grid1 [data]="data" [width]="'900px'" [height]="'800px'" [displayDensity]="density"
+                [showToolbar]="true" [columnHiding]="true" [allowFiltering]="true" [rowSelectable]="true"
+                [filterMode]="'excelStyleFilter'" 
                 
-                [loadColumnValuesOnDemand]="loadColumnValues"
-                [esfLoadingIndicatorTemplate]="loadTemplate"
+                [loadExcelStyleUniqueValuesOnDemand]="loadColumnValues"
                 >
 
         <igx-column [field]="'ID'" [filterable]="true" [sortable]="true" [movable]="true" [dataType]="'string'"></igx-column>
@@ -22,11 +20,11 @@
         <igx-column [field]="'Employees'" [filterable]="true" [sortable]="true" [movable]="true" [dataType]="'number'"></igx-column>
         <igx-column [field]="'Contract'" [filterable]="true" [sortable]="true" [movable]="true" [dataType]="'boolean'"></igx-column>
         <igx-column [field]="'DateCreated'" [filterable]="true" [sortable]="true" [movable]="true" [dataType]="'date'"></igx-column>
+
+        <!-- <ng-template igxExcelStyleLoadingValuesTemplate>
+          Loading ...
+        </ng-template> -->
       </igx-grid>
     </div>
   </div>
 </div>
-
-<ng-template #loadTemplate>
-  Loading ...
-</ng-template>
