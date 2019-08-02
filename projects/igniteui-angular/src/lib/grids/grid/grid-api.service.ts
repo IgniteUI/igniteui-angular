@@ -82,29 +82,19 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
 
     public groupBy_toggle_group(groupRow: IGroupByRecord) {
         const grid = this.grid;
-        const expansionState = grid.groupingExpansionState;
-        let toggleRowEditingOverlay: boolean;
-        let isEditRowInGroup = false;
-        if (grid.rowEditable) {
-            const rowState = this.grid.crudService.row;
-
-            // Toggle only row editing overlays that are inside current expanded/collapsed group.
-            isEditRowInGroup = rowState ? this.groupBy_is_row_in_group(groupRow, rowState.id) : false;
+        if (grid.crudService.isInEditMode) {
+            grid.endEdit(true);
         }
+
+        const expansionState = grid.groupingExpansionState;
         const state: IGroupByExpandState = this.groupBy_get_expanded_for_group(groupRow);
         if (state) {
             state.expanded = !state.expanded;
-            if (isEditRowInGroup) {
-                toggleRowEditingOverlay = state.expanded;
-            }
         } else {
             expansionState.push({
                 expanded: !grid.groupsExpanded,
                 hierarchy: DataUtil.getHierarchy(groupRow)
             });
-            if (isEditRowInGroup) {
-                toggleRowEditingOverlay = false;
-            }
         }
         this.grid.groupingExpansionState = expansionState;
         if (grid.rowEditable) {

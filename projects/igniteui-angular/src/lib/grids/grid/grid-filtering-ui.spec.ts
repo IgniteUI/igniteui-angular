@@ -4487,6 +4487,26 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             fix.detectChanges();
         }));
 
+        it('Should include \'false\' value in results when searching.', fakeAsync(() => {
+            // Open excel style custom filtering dialog.
+            GridFunctions.clickExcelFilterIcon(fix, 'Released');
+            fix.detectChanges();
+
+            // Type string in search box.
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const inputNativeElement = searchComponent.querySelector('.igx-input-group__input');
+            sendInputNativeElement(inputNativeElement, 'false', fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Verify that the first item is 'Select All' and the second item is 'false'.
+            const listItems = GridFunctions.sortNativeElementsVertically(
+                Array.from(searchComponent.querySelectorAll('igx-list-item')));
+            expect(listItems.length).toBe(2, 'incorrect rendered list items count');
+            expect(listItems[0].innerText).toBe('Select All');
+            expect(listItems[1].innerText).toBe('false');
+        }));
+
         it('should scroll items in search list correctly', (async () => {
             // Add additional rows as prerequisite for the test
             for (let index = 0; index < 30; index++) {
