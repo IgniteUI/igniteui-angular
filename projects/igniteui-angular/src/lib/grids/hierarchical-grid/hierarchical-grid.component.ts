@@ -103,24 +103,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         }
     }
 
-    protected recalcUpdateSizes() {
-        super.recalcUpdateSizes();
-        let currGrid = this.parent;
-        while (currGrid) {
-            const hadScrollbar = currGrid.hasVerticalSroll();
-            const virt = currGrid.verticalScrollContainer;
-            virt.recalcUpdateSizes();
-
-            if (hadScrollbar !== currGrid.hasVerticalSroll()) {
-                // If after recalculations the grid should show vertical scrollbar it should also reflow.
-                currGrid.reflow();
-            }
-
-            currGrid = currGrid.parent;
-        }
-    }
-
-
     /**
      * Returns an array of data set to the `IgxHierarchicalGridComponent`.
      * ```typescript
@@ -744,6 +726,26 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             const keys = layoutsList.map((item) => item.key);
             return keys.indexOf(field) === -1;
         });
+    }
+
+    protected recalcUpdateSizes() {
+        super.recalcUpdateSizes();
+        let currGrid = this.parent;
+        while (currGrid) {
+            const hadScrollbar = currGrid.hasVerticalSroll();
+            const virt = currGrid.verticalScrollContainer;
+            virt.recalcUpdateSizes();
+            const offset = parseInt(virt.dc.instance._viewContainer.element.nativeElement.style.top, 10);
+            const scr = virt.getVerticalScroll();
+            scr.scrollTop = virt.getScrollForIndex(virt.state.startIndex) - offset;
+
+            if (hadScrollbar !== currGrid.hasVerticalSroll()) {
+                // If after recalculations the grid should show vertical scrollbar it should also reflow.
+                currGrid.reflow();
+            }
+
+            currGrid = currGrid.parent;
+        }
     }
 
     private hg_verticalScrollHandler(event) {
