@@ -8,7 +8,7 @@ import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
 import { By } from '@angular/platform-browser';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
-import { setupHierarchicalGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { setupHierarchicalGridScrollDetection, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 describe('IgxHierarchicalGrid Basic Navigation', () => {
     configureTestSuite();
@@ -297,6 +297,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
     }));
 
     it('should not lose focus when pressing Ctrl+ArrowDown is pressed at the bottom row(expended) in a child grid.', (async () => {
+        resizeObserverIgnoreError();
         hierarchicalGrid.height = '600px';
         hierarchicalGrid.width = '800px';
         fixture.componentInstance.rowIsland.height = '400px';
@@ -355,14 +356,12 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
     }));
 
     it('should scroll top of child grid into view when pressing Ctrl + Arrow Up when cell is selected in it.', (async () => {
-        hierarchicalGrid.verticalScrollContainer.scrollTo(3);
+        hierarchicalGrid.verticalScrollContainer.scrollTo(7);
         await wait(100);
         fixture.detectChanges();
 
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[3];
         const childLastRowCell =  childGrid.dataRowList.toArray()[9].cells.toArray()[0];
-        childLastRowCell.nativeElement.focus();
-        fixture.detectChanges();
         childLastRowCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', ctrlKey: true }));
         await wait(100);
         fixture.detectChanges();
@@ -378,7 +377,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
     it('when navigating down from parent into child should scroll child grid to top and start navigation from first row.', (async () => {
         const ri = fixture.componentInstance.rowIsland;
         ri.height = '200px';
-        ri.cdr.detectChanges();
+        fixture.detectChanges();
         await wait(100);
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         childGrid.verticalScrollContainer.scrollTo(9);
