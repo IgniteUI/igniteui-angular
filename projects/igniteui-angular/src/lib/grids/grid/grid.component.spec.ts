@@ -5185,9 +5185,22 @@ export class IgxGridWithCustomPaginationTemplateComponent {
 @Component({
     template: `<igx-grid #grid [width]="'2000px'" [height]="'2000px'" [data]="data"
         [autoGenerate]="autoGenerate" [displayDensity]="'compact'">
-        <igx-column *ngFor="let column of columns;" [field]="column.field" [hasSummary]="column.hasSummary"
-            [header]="column.field" [width]="column.width">
+        <igx-column [field]="'field0'" [header]="'field0'" [width]="'100px'">
+            <ng-template igxCell let-value let-cell="cell">
+                <div [style.background-color]="cell.row.index % 2 === 0 ? 'gray' : 'white'">
+                    <p>{{ value }}</p>
+                </div>
+            </ng-template>
         </igx-column>
+        <igx-column [field]="'field1'" [header]="'field1'" [width]="'100px'"></igx-column>
+        <igx-column [field]="'field2'" [header]="'field2'" [width]="'100px'"></igx-column>
+        <igx-column [field]="'field3'" [header]="'field3'" [width]="'100px'"></igx-column>
+        <igx-column [field]="'field4'" [header]="'field4'" [width]="'100px'"></igx-column>
+        <igx-column [field]="'field5'" [header]="'field5'" [width]="'100px'"></igx-column>
+        <igx-column [field]="'field6'" [header]="'field6'" [width]="'100px'"></igx-column>
+        <igx-column [field]="'field7'" [header]="'field7'" [width]="'100px'"></igx-column>
+        <igx-column [field]="'field8'" [header]="'field8'" [width]="'100px'"></igx-column>
+        <igx-column [field]="'field9'" [header]="'field9'" [width]="'100px'"></igx-column>
     </igx-grid>`
 })
 export class IgxGridPerformanceComponent implements AfterViewInit, OnInit, OnDestroy {
@@ -5249,6 +5262,6 @@ export class IgxGridPerformanceComponent implements AfterViewInit, OnInit, OnDes
         };
 
         this.observer = new MutationObserver(callback);
-        this.observer.observe(this.grid.rowList.first.cells.first.nativeElement.children[0], config);
+        this.observer.observe(this.grid.tbody.nativeElement, config);
     }
 }
