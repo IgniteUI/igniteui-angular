@@ -4275,6 +4275,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (!colSum) {
             return null;
         }
+        this.cdr.detectChanges();
         colSum += this.getFeatureColumnsWidth();
         return colSum;
     }
