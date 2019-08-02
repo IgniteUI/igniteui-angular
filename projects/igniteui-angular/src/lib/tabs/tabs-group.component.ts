@@ -75,6 +75,7 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
     protected tabTemplate: IgxTabItemTemplateDirective;
 
     private _tabTemplate: TemplateRef<any>;
+    private _isSelected = false;
 
     constructor(private _tabs: IgxTabsBase, private _element: ElementRef) {
         super();
@@ -161,12 +162,6 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
     public ngAfterViewChecked() {
         this._element.nativeElement.setAttribute('aria-labelledby', `igx-tab-item-${this.index}`);
         this._element.nativeElement.setAttribute('id', `igx-tabs__group-${this.index}`);
-
-        if (this.isSelected) {
-            const tabItem = this.relatedTab.nativeTabItem.nativeElement;
-            this._tabs.transformContentAnimation(this.relatedTab, 0);
-            this._tabs.transformIndicatorAnimation(tabItem);
-        }
     }
 
     /**
@@ -179,12 +174,18 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
      *    this.tab.select();
      *}
      *```
-     * @param focusDelay A number representing the expected delay.
      */
     public select(): void {
         if (!this.disabled && !this.isSelected) {
             this._tabs.performSelectionChange(this.relatedTab);
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public setSelectedInternal(newValue: boolean) {
+        this._isSelected = newValue;
     }
 
 }

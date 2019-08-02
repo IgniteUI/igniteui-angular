@@ -23,14 +23,13 @@ export abstract class IgxTabsBase {
 /** @hidden */
 export abstract class IgxTabItemBase {
     nativeTabItem: ElementRef;
-    _isSelected = false;
-    tabindex;
-    select(focusDelay?: number): void {}
     get index(): number { return 0; }
+    select(): void {}
+    setSelectedInternal(newValue: boolean) {}
 }
 
 /** @hidden */
 export abstract class IgxTabsGroupBase {
-    _isSelected = false;
-    select(focusDelay?: number): void {}
+    select(): void {}
+    setSelectedInternal(newValue: boolean) {}
 }

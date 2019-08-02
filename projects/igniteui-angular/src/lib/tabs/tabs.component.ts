@@ -370,31 +370,30 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         if (newTab) {
             this.performSelection(newTab);
         } else {
-            // if there is no new selected tab hide the visibility indicator
+            // if there is no new selected tab hide the selection indicator
             this.hideIndicator();
         }
     }
 
     private performDeselection(oldTab: IgxTabItemBase): void {
-        oldTab._isSelected = false;
+        oldTab.setSelectedInternal(false);
         const oldTabRelatedGroup = this.groups.toArray()[oldTab.index];
         if (oldTabRelatedGroup) {
-            oldTabRelatedGroup._isSelected = false;
+            oldTabRelatedGroup.setSelectedInternal(false);
         }
         this._selectedIndex = -1;
         this.onTabItemDeselected.emit({ tab: oldTab, group: oldTabRelatedGroup });
     }
 
     private performSelection(newTab: IgxTabItemBase): void {
-        newTab._isSelected = true;
-        newTab.tabindex = 0;
+        newTab.setSelectedInternal(true);
         this._selectedIndex = newTab.index;
 
         let newTabRelatedGroup = null;
         if (!this.hasContentTabs && this.groups) {
             newTabRelatedGroup = this.groups.toArray()[newTab.index];
             if (newTabRelatedGroup) {
-                newTabRelatedGroup._isSelected = true;
+                newTabRelatedGroup.setSelectedInternal(true);
             }
         }
 

@@ -80,6 +80,7 @@ export class IgxTabItemComponent extends IgxTabItemBase {
 
     private _nativeTabItem: ElementRef;
     private _changesCount = 0; // changes and updates accordingly applied to the tab.
+    private _isSelected = false;
     private _disabled = false;
 
     constructor(private _tabs: IgxTabsBase, private _element: ElementRef) {
@@ -261,6 +262,14 @@ export class IgxTabItemComponent extends IgxTabItemBase {
             return this._tabs.tabs.toArray().indexOf(this);
         }
         return -1;
+    }
+
+    /**
+     * @hidden
+     */
+    public setSelectedInternal(newValue: boolean) {
+        this._isSelected = newValue;
+        this.tabindex = newValue ? 0 : -1;
     }
 
     private onKeyDown(isLeftArrow: boolean, index = null): void {
