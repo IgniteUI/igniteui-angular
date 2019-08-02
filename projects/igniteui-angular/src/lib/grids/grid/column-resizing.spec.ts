@@ -597,7 +597,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
 
         column.autosize();
         fixture.detectChanges();
-        expect(column.width).toEqual('119px');
+        expect(column.width).toEqual('120px');
 
         // height/width setter rAF
         await wait(16);
