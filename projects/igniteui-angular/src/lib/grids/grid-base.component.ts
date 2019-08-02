@@ -256,9 +256,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _locale = null;
     private _observer: MutationObserver;
     protected _destroyed = false;
-    protected _selectedRows = 0;
     private overlayIDs = [];
     public rowSelected = false;
+
+    /**
+     * @hidden
+     */
+    public selectedRowsCount = 0;
+
+    /**
+     * @hidden
+     */
+    public totalRowsCount = 0;
 
     /**
      * An accessor that sets the resource strings.
@@ -4628,7 +4637,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
         }
 
-        this._selectedRows = this.selectedRows().length;
+        this.selectedRowsCount = this.selectedRows().length;
+        this.totalRowsCount = this.gridAPI.get_all_data().length;
         this.cdr.markForCheck();
     }
 

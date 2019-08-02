@@ -27,7 +27,7 @@
             <ng-template #headSelector
                 *ngTemplateOutlet="
                 this.headSelectorTemplate ? this.headSelectorTemplate : headSelectorBaseTemplate;
-                context: {$implicit: { selectedCount: _selectedRows, totalCount: this._gridAPI.get_all_data().length }}">
+                context: {$implicit: { selectedCount: selectedRowsCount, totalCount: totalRowsCount }}">
             </ng-template>
                 </div>
             </ng-container>
