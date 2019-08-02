@@ -1594,19 +1594,41 @@ describe('IgxGrid - Filtering actions', () => {
         expect(filterChip).toBeTruthy();
         expect(filterChip.componentInstance.selected).toBeTruthy();
 
-        filterChip.nativeElement.dispatchEvent(new MouseEvent('click'));
-        fix.detectChanges();
+        // Click on the chip to commit it
+        const elementRect = filterChip.nativeElement.getBoundingClientRect();
+        UIInteractions.simulatePointerEvent('pointerdown', filterChip.nativeElement, elementRect.left, elementRect.top);
         await wait(16);
+        input.nativeElement.blur();
+        await wait(16);
+        input.nativeElement.dispatchEvent(new FocusEvent('focusout', {bubbles: true}));
+        await wait(16);
+        (filterChip as DebugElement).nativeElement.focus();
+        UIInteractions.simulatePointerEvent('pointerup', filterChip.nativeElement, elementRect.left, elementRect.top);
+        UIInteractions.simulateMouseEvent('click', filterChip.nativeElement, 10 , 10);
+
+        await wait(16);
+        fix.detectChanges();
         expect(filterChip.componentInstance.selected).toBeFalsy();
 
-        filterChip.nativeElement.dispatchEvent(new MouseEvent('click'));
+        // Click on the chip to select it
+        GridFunctions.clickChip(filterChip);
         fix.detectChanges();
         await wait(16);
         expect(filterChip.componentInstance.selected).toBeTruthy();
 
-        filterChip.nativeElement.dispatchEvent(new MouseEvent('click'));
-        fix.detectChanges();
+        // Click on the chip to commit it
+        UIInteractions.simulatePointerEvent('pointerdown', filterChip.nativeElement, elementRect.left, elementRect.top);
         await wait(16);
+        input.nativeElement.blur();
+        await wait(16);
+        input.nativeElement.dispatchEvent(new FocusEvent('focusout', {bubbles: true}));
+        await wait(16);
+        (filterChip as DebugElement).nativeElement.focus();
+        UIInteractions.simulatePointerEvent('pointerup', filterChip.nativeElement, elementRect.left, elementRect.top);
+        UIInteractions.simulateMouseEvent('click', filterChip.nativeElement, 10 , 10);
+
+        await wait(16);
+        fix.detectChanges();
         expect(filterChip.componentInstance.selected).toBeFalsy();
     });
 
@@ -1624,15 +1646,26 @@ describe('IgxGrid - Filtering actions', () => {
         expect(filterChip).toBeTruthy();
         expect(filterChip.componentInstance.selected).toBeTruthy();
 
-         filterChip.nativeElement.dispatchEvent(new MouseEvent('click'));
+         // Click on the chip to commit it
+         const elementRect = filterChip.nativeElement.getBoundingClientRect();
+         UIInteractions.simulatePointerEvent('pointerdown', filterChip.nativeElement, elementRect.left, elementRect.top);
+         await wait(16);
+         input.nativeElement.blur();
+         await wait(16);
+         input.nativeElement.dispatchEvent(new FocusEvent('focusout', {bubbles: true}));
+         await wait(16);
+         (filterChip as DebugElement).nativeElement.focus();
+         UIInteractions.simulatePointerEvent('pointerup', filterChip.nativeElement, elementRect.left, elementRect.top);
+         UIInteractions.simulateMouseEvent('click', filterChip.nativeElement, 10 , 10);
+
         fix.detectChanges();
-        await wait(16);
+        await wait(100);
         expect(filterChip.componentInstance.selected).toBeFalsy();
 
          filterValue = 'c';
         sendInput(input, filterValue, fix);
         fix.detectChanges();
-        await wait(16);
+        await wait(100);
 
          let filterChips = filterUIRow.queryAll(By.directive(IgxChipComponent));
         expect(filterChips[1]).toBeTruthy();
@@ -1640,18 +1673,18 @@ describe('IgxGrid - Filtering actions', () => {
 
          GridFunctions.simulateKeyboardEvent(input, 'keydown', 'Enter');
         fix.detectChanges();
-        await wait(16);
+        await wait(100);
         expect(filterChips[1].componentInstance.selected).toBeFalsy();
 
          let selectedColumn = GridFunctions.getColumnHeader('Downloads', fix);
         selectedColumn.nativeElement.dispatchEvent(new MouseEvent('click'));
         fix.detectChanges();
-        await wait(16);
+        await wait(100);
 
          selectedColumn = GridFunctions.getColumnHeader('ProductName', fix);
         selectedColumn.nativeElement.dispatchEvent(new MouseEvent('click'));
         fix.detectChanges();
-        await wait(16);
+        await wait(100);
 
          filterChips = filterUIRow.queryAll(By.directive(IgxChipComponent));
         expect(filterChips[0].componentInstance.selected).toBeFalsy();
