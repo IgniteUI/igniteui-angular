@@ -6038,7 +6038,7 @@ function verifyChipVisibility(fix, index: number, shouldBeFullyVisible: boolean)
         .toBe(shouldBeFullyVisible, 'chip[' + index + '] visibility is incorrect');
 }
 
-function ClickElemAndBlur(clickElem, blurElem) {
+function clickElemAndBlur(clickElem, blurElem) {
     const elementRect = clickElem.nativeElement.getBoundingClientRect();
     UIInteractions.simulatePointerEvent('pointerdown', clickElem.nativeElement, elementRect.left, elementRect.top);
     blurElem.nativeElement.blur();
