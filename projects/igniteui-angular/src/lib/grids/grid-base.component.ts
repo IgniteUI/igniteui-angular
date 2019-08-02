@@ -556,7 +556,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     @Input()
     get rowDraggable(): boolean {
-        return this._rowDrag;
+        return this._rowDrag && this.hasVisibleColumns;
     }
 
     /**
@@ -2477,6 +2477,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected _wheelListener = null;
+    /**
+     * @hidden
+     */
+    protected _hasVisibleColumns;
     protected _allowFiltering = false;
     protected _filterMode = FilterMode.quickFilter;
     private resizeHandler;
@@ -2741,6 +2745,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.resetColumnsCaches();
         this.resetColumnCollections();
         this.resetCachedWidths();
+        this.hasVisibleColumns = undefined;
         this._columnGroups = this.columnList.some(col => col.columnGroup);
     }
 
@@ -3231,7 +3236,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     get showRowCheckboxes(): boolean {
-        return this.rowSelectable && this.columns.length > this.hiddenColumnsCount;
+        return this.rowSelectable && this.hasVisibleColumns;
+    }
+
+    get showDragIcons(): boolean {
+        return this.rowDraggable && this.columns.length > this.hiddenColumnsCount;
     }
 
     /**
@@ -3883,6 +3892,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     get rootSummariesEnabled(): boolean {
         return this.summaryCalculationMode !== GridSummaryCalculationMode.childLevelsOnly;
     }
+
+    /**
+     * @hidden
+     */
+    get hasVisibleColumns(): boolean {
+        if (this._hasVisibleColumns === undefined) {
+            return this.columnList ? this.columnList.some(c => !c.hidden) : false;
+        }
+        return this._hasVisibleColumns;
+    }
+
+    set hasVisibleColumns(value) {
+        this._hasVisibleColumns = value;
+    }
     /**
      * Returns if the `IgxGridComponent` has moveable columns.
      * ```typescript
@@ -4121,6 +4144,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             computedWidth -= this.headerCheckboxContainer ? this.headerCheckboxContainer.nativeElement.offsetWidth : 0;
         }
 
+        if (this.showDragIcons) {
+            computedWidth -= this.headerDragContainer ? this.headerDragContainer.nativeElement.offsetWidth : 0;
+        }
+
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
 
 
@@ -4227,8 +4254,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             });
 
             diff.forEachRemovedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
+                // Clear Grouping
+                this.gridAPI.clear_groupby(record.item.field);
+
                 // Clear Filtering
                 this.gridAPI.clear_filter(record.item.field);
+
+                // Close filter row
+                if ( this.filteringService.isFilterRowVisible
+                    && this.filteringService.filteredColumn
+                    && this.filteringService.filteredColumn.field === record.item.field) {
+                    this.filteringRow.close();
+                }
 
                 // Clear Sorting
                 this.gridAPI.clear_sort(record.item.field);
@@ -4568,7 +4605,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public updateHeaderCheckboxStatusOnFilter(data) {
-        if (!data) {
+        if (!data || !this.hasVisibleColumns || !this.headerCheckbox) {
             this.checkHeaderCheckboxStatus();
             return;
         }

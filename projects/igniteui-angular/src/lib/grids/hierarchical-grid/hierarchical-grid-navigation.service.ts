@@ -133,22 +133,17 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     public navigateTop(visibleColumnIndex) {
         if (this.grid.parent !== null) {
             // navigating in child
-            const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
-            const cellSelector = this.getCellSelector(visibleColumnIndex);
-
-            if (verticalScroll.scrollTop === 0) {
-                this._focusScrollCellInView(visibleColumnIndex);
+            const childContainer = this.grid.nativeElement.parentNode.parentNode;
+            const diff =
+            childContainer.getBoundingClientRect().top - this.grid.rootGrid.tbody.nativeElement.getBoundingClientRect().top;
+            const topIsVisible = diff >= 0;
+            const scrollable = this.getNextScrollable(this.grid);
+            if (!topIsVisible) {
+                this.scrollGrid(scrollable.grid, diff,
+                    () => super.navigateTop(visibleColumnIndex));
             } else {
-                this.scrollGrid(this.grid, 'top',
-                () => {
-                    const cells = this.grid.nativeElement.querySelectorAll(
-                        `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
-                    if (cells.length > 0) {
-                        this._focusScrollCellInView(visibleColumnIndex);
-                     }
-                });
+                super.navigateTop(visibleColumnIndex);
             }
-
         } else {
             super.navigateTop(visibleColumnIndex);
         }
@@ -297,33 +292,39 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                 } else {
                     this.focusNextChildDOMElem(currentRowEl, this.grid);
                 }
+            } else if (this.grid.parent && this.grid.parent.summariesRowList.length > 0) {
+               this._navigateToNextParentRow(currentRowEl);
             } else {
                 this.navigateDown(currentRowEl, { row:  rowIndex, column: 0});
             }
         } else if (isLastSummaryRow && isLastColumn && this.grid.parent) {
-            // navigating in child summary, next is parent summary or next parent row
-            const parent = this.grid.parent;
-            const parentHasSummary = parent.summariesRowList.toArray().length > 0;
-            const parentRowIndex = parseInt(
-                this.getClosestElemByTag(currentRowEl, 'igx-child-grid-row').parentNode.getAttribute('data-rowindex'), 10);
-            const isLastRowInParent = parent.verticalScrollContainer.igxForOf.length - 1 === parentRowIndex;
-            // check if next is sibling
-            const childRowContainer = this.getChildGridRowContainer(this.grid);
-            const nextIsSiblingChild = !!childRowContainer.nextElementSibling;
-            if (isLastRowInParent && parentHasSummary && !nextIsSiblingChild) {
-                // next is parent summary
-                const parentSummary = parent.summariesRowList.toArray()[0].nativeElement;
-                parent.navigation.focusNextRow(parentSummary, 0, this.grid.rootGrid, true);
-            } else {
-                // next is sibling or parent
-                this.focusNext(0);
-            }
+            this._navigateToNextParentRow(currentRowEl);
         } else  if (isLastDataRow && hasSummaries && isLastColumn && this.grid.parent) {
             // navigating in child rows, next is child grid's summary row
            this.focusNextRow(summaryRows[0].nativeElement, 0, this.grid.parent, true);
         } else {
             super.performTab(currentRowEl, selectedNode);
         }
+    }
+
+    private _navigateToNextParentRow(currentRowEl: any): void {
+         // next is parent summary or next parent row
+         const parent = this.grid.parent;
+         const parentHasSummary = parent.summariesRowList.length > 0;
+         const parentRowIndex = parseInt(
+            this.getClosestElemByTag(currentRowEl, 'igx-child-grid-row').parentNode.getAttribute('data-rowindex'), 10);
+         const isLastRowInParent = parent.verticalScrollContainer.igxForOf.length - 1 === parentRowIndex;
+         // check if next is sibling
+         const childRowContainer = this.getChildGridRowContainer(this.grid);
+         const nextIsSiblingChild = !!childRowContainer.nextElementSibling;
+         if (isLastRowInParent && parentHasSummary && !nextIsSiblingChild) {
+             // next is parent summary
+             const parentSummary = parent.summariesRowList.first.nativeElement;
+             parent.navigation.focusNextRow(parentSummary, 0, parent, true);
+         } else {
+             // next is sibling or parent
+             this.focusNext(0);
+         }
     }
 
     private focusNextChildDOMElem(currentRowEl, grid) {
@@ -459,31 +460,30 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
              childGrid.allowFiltering && childGrid.filterMode === FilterMode.quickFilter) {
                  // move to filter cell
                 childGrid.navigation.moveFocusToFilterCell();
+            } else if (childGrid.rowList.length === 0) {
+                // move to prev child or parent row
+                const prevChild = this.getSibling(childGrid);
+                if (prevChild) {
+                    this.performShiftTabIntoChild(prevChild, currentRowEl, rowIndex);
+                } else {
+                    const selNode = {
+                        row:  rowIndex,
+                        column: this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex
+                    };
+                    this.navigateUp(currentRowEl, selNode);
+                }
             } else {
-                // move to next cell
-                this.navigateUp(currentRowEl, { row : rowIndex, column: lastIndex});
+                // move to prev cell
+                childGrid.navigation.goToLastCell();
             }
     }
 
-    private _focusScrollCellInView(visibleColumnIndex) {
-        const cellSelector = this.getCellSelector(visibleColumnIndex);
-        const cells = this.grid.nativeElement.querySelectorAll(
-            `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
-        const cell = cells[0];
-        const childContainer = this.grid.nativeElement.parentNode.parentNode;
-        const scrTop = this.grid.parent.verticalScrollContainer.getVerticalScroll().scrollTop;
-        const maxScroll = this.grid.parent.verticalScrollContainer.getVerticalScroll().scrollHeight - this.grid.parent.calcHeight;
-        const dc = childContainer.parentNode.parentNode;
-        const scrWith = parseInt(dc.style.top, 10);
-        const parentRowOffset = childContainer.parentNode.offsetTop + this.grid.nativeElement.offsetTop +
-            scrWith;
-        if ((scrTop === 0 && parentRowOffset < 0 ) || parentRowOffset === 0 || (scrTop === maxScroll && parentRowOffset > 0)) {
-            // cell is in view
-            cell.focus({preventScroll: true});
-        } else {
-            // scroll parent so that cell is in view
-            this.scrollGrid(this.grid.parent, parentRowOffset, () => cell.focus({ preventScroll: true }));
+    private getSibling(childGrid) {
+        const prevChildRow = childGrid.childRow.nativeElement.previousElementSibling;
+        if (prevChildRow) {
+            return prevChildRow.children[0].children[0];
         }
+        return null;
     }
 
     private focusNextChild(elem, visibleColumnIndex, grid) {
@@ -607,6 +607,9 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const nextIsSiblingChild = !!childRowContainer.nextElementSibling;
         let next = childRowContainer.nextElementSibling || nextParentElem;
         const verticalScroll = nextParentGrid.verticalScrollContainer.getVerticalScroll();
+        const parentState = nextParentGrid.verticalScrollContainer.state;
+        const atLastChunk = parentState.startIndex + parentState.chunkSize ===
+         nextParentGrid.verticalScrollContainer.igxForOf.length;
         if (next) {
             if (nextIsSiblingChild) {
                 this.focusNextChild(next, visibleColumnIndex, nextParentGrid);
@@ -614,7 +617,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                 this.focusNextRow(next, visibleColumnIndex, grid || nextParentGrid);
             }
         } else if (verticalScroll.scrollTop !==
-            verticalScroll.scrollHeight - nextParentGrid.verticalScrollContainer.igxForContainerSize ) {
+            verticalScroll.scrollHeight - nextParentGrid.verticalScrollContainer.igxForContainerSize && !atLastChunk) {
             this.scrollGrid(nextParentGrid, 'next',
             () => {
                 nextParentElem = parentInfo.nextElement;
@@ -734,7 +737,12 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         grid.parentVirtDir.onChunkLoad
             .pipe(first())
             .subscribe(callBackFunc);
-        grid.dataRowList.toArray()[0].virtDirRow.scrollTo(unpinnedIndex);
+        if (grid.dataRowList.length > 0) {
+            grid.dataRowList.first.virtDirRow.scrollTo(unpinnedIndex);
+        } else {
+            grid.headerContainer.scrollTo(unpinnedIndex);
+        }
+
     }
     private scrollGrid(grid, target, callBackFunc) {
         this.getFocusableGrid().nativeElement.focus({preventScroll: true});
