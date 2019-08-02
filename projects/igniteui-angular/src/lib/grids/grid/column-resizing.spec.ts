@@ -687,7 +687,8 @@ describe('IgxGrid - Deferred Column Resizing', () => {
 
         column.autosize();
         fixture.detectChanges();
-        expect(column.width).toEqual('120px');
+        // the exact width is different between chrome and chrome headless so an exact match is erroneous
+        expect(Math.abs(parseInt(column.width, 10) - 120)).toBeLessThan(2);
 
         // height/width setter rAF
         await wait(16);
