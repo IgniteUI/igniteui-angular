@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-tabs-routing-sample',
@@ -6,6 +7,9 @@ import { Component } from '@angular/core';
     templateUrl: 'tabs-routing.sample.html'
 })
 export class TabsRoutingSampleComponent {
+
+    constructor(private router: Router) {
+    }
 
     contacts: any[] = [{
         avatar: 'assets/images/avatar/1.jpg',
@@ -36,6 +40,22 @@ export class TabsRoutingSampleComponent {
         phone: '901-747-3428',
         text: 'Lisa Landers'
     }];
+
+    public clickHandler0() {
+        this.router.navigateByUrl('/tabs-routing');
+    }
+
+    public clickHandler1() {
+        this.router.navigateByUrl('/tabs-routing/view1');
+    }
+
+    public clickHandler2() {
+        this.router.navigateByUrl('/tabs-routing/view2');
+    }
+
+    public clickHandler3() {
+        this.router.navigateByUrl('/tabs-routing/view3');
+    }
 
 }
 
