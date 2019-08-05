@@ -4,6 +4,7 @@ All notable changes for each version of this project will be documented in this 
 ## 7.3.13
  - `IgxDatePicker` changes
     - `valueChange` event is added.
+- `IgxDialog` new @Input `positionSettings` is now available. It provides the ability to get/set both position and animation settings of the Dialog component. 
 
 ## 7.3.7
  - **Behavioral Change** default min column width is changed according the grid display density property:
