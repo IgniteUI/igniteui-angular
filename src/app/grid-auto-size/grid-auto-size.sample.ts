@@ -17,8 +17,8 @@ export class GridAutoSizeSampleComponent implements OnInit {
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
     public density = 'comfortable';
     public displayDensities;
-    public height = '800px';
-    public gridContainerHidden = true;
+    public height = '100%';
+    public gridContainerHidden = false;
     public containerHeight;
 
     public ngOnInit(): void {
@@ -28,7 +28,7 @@ export class GridAutoSizeSampleComponent implements OnInit {
             { label: 'compact', selected: this.density === 'compact', togglable: true }
         ];
 
-        this.data = SAMPLE_DATA.slice(0);
+        // this.data = SAMPLE_DATA.slice(0);
 
         this.columns = [
             { field: 'ID', width: 150, resizable: true, movable: true, sortable: false, filterable: true, groupable: true, summary: true, type: 'string' },

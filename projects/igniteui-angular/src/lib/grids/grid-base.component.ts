@@ -632,7 +632,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public set height(value: string) {
         if (this._height !== value) {
             this._height = value;
-            this._autoSize = false;
             this.nativeElement.style.height = value;
             this.notifyChanges(true);
         }
@@ -2477,7 +2476,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _pinnedColumnsText = '';
     private _height = '100%';
     private _width = '100%';
-    protected _autoSize = false;
     private _rowHeight;
     protected _baseFontSize: number;
     private _horizontalForOfs: Array<IgxGridForOfDirective<any>> = [];
@@ -2673,10 +2671,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.calculateGridHeight();
             $event.containerSize = this.calcHeight;
             this.notifyChanges(true);
-        });
-
-        this.verticalScrollContainer.onDataChanged.pipe(destructor, filter(() => !this._init)).subscribe(() => {
-            this._autoSize = false;
         });
 
         this.onDensityChanged.pipe(destructor).subscribe(() => {
@@ -4138,14 +4132,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         let gridHeight = 0;
 
         if (this.isPercentHeight) {
-            /*height in %*/
-            if (!this.nativeElement.parentElement ||
-                this.nativeElement.parentElement.clientHeight === renderedHeight) {
-                /* parent element is sized by the rendered elements which means
-                the grid should attempt a content-box style rendering */
-                this._autoSize = true;
-            }
-            if (this._autoSize || computed.indexOf('%') !== -1) {
+            const autoSize = this._shouldAutoSize(renderedHeight);
+            if (autoSize || computed.indexOf('%') !== -1) {
                 const bodyHeight = this.getDataBasedBodyHeight();
                 return bodyHeight > 0 ? bodyHeight : null;
             }
@@ -4159,8 +4147,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             const bodyHeight = this.defaultTargetBodyHeight;
             return bodyHeight > 0 ? bodyHeight : null;
         }
-
         return height;
+    }
+
+    protected _shouldAutoSize(renderedHeight) {
+        this.tbody.nativeElement.style.display = 'none';
+        const res = !this.nativeElement.parentElement ||
+        this.nativeElement.parentElement.clientHeight === 0 ||
+        this.nativeElement.parentElement.clientHeight === renderedHeight;
+        this.tbody.nativeElement.style.display = '';
+        return res;
     }
 
     public get outerWidth() {

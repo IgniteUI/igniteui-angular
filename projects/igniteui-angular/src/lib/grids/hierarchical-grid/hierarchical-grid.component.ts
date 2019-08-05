@@ -389,6 +389,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         }
     }
 
+    protected _shouldAutoSize(renderedHeight) {
+        if (this.isPercentHeight && this.parent) {
+            return true;
+        }
+        return super._shouldAutoSize(renderedHeight);
+    }
+
     public get outletDirective() {
         return this.rootGrid._outletDirective;
     }

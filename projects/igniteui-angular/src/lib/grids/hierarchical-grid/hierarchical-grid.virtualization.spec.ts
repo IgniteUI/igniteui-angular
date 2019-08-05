@@ -32,6 +32,7 @@ describe('IgxHierarchicalGrid Virtualization', () => {
     }));
 
     it('should retain expansion state when scrolling.', async () => {
+        resizeObserverIgnoreError();
         const firstRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
         // first child of the row should expand indicator
         firstRow.nativeElement.children[0].click();
@@ -323,6 +324,7 @@ describe('IgxHierarchicalGrid Virtualization', () => {
     });
 
     it('should update context information correctly for child grid container after scrolling',  async() => {
+        resizeObserverIgnoreError();
         // expand 3rd row
         const row = hierarchicalGrid.dataRowList.toArray()[3];
         row.nativeElement.children[0].click();
