@@ -32,7 +32,8 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
      * @hidden
      */
     public get itemID() {
-        return this.comboAPI.isRemote ? JSON.stringify(this.value) : this.value;
+        const valueKey = this.comboAPI.valueKey;
+        return this.comboAPI.valueKey !== null ? this.value[valueKey] : this.value;
     }
 
     /**

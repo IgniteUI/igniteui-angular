@@ -4,35 +4,41 @@ All notable changes for each version of this project will be documented in this 
 
 ## 8.2.0
 - `IgxCombo`
-    - The combo now allows to bind selected data via `ngModel` by passing only the valueKeys of the items (instead of object references):
+    - Combo selection is now consistent when `valueKey` is defined. When `valueKey` is specified, selection is based on the value keys of the items. For example:
     ```html
-    <igx-combo [data]="items" valueKey="id" displayKey="text" [(ngModel)]="selected">
+    <igx-combo [data]="myCustomData" valueKey="id" displayKey="text"></igx-combo>
     ```
     ```typescript
-        export class Example {
-            ...
-            public items: { text: string, id: number } = ...;
-            public selected: number[] = [2,3,8]
-            /*
-             * items with **id** 2,3 and 8 will be selected
-             */
+    export class MyCombo {
+        ...
+        public combo: IgxComboComponent;
+        public myCustomData: { id: number, text: string } = [{ id: 0, name: "One" }, ...];
+        ...
+        ngOnInit() {
+            // Selection is done only by valueKey property value
+            this.combo.selectItems([0, 1]);
         }
+    }
     ```
-    - **Breaking Change** if you want to bind selected data via `ngModel` based on item equality, **do not** pass value key. If you have a case using `ngModel` binding with object references, remove the `[valueKey]` input, as shown below: 
+    This affects **all** methods and events tied to the selection:
+        - **Methods** - `selectedItems()`, `selectItems()`, `deselectItems()`, `setSelectedItem()` - Selection is done based on specified `valueKey` property.
+        - **Events** - `(onSelectionChange)` - `newSelection` and `oldSelection` arrays contain  the specified `valueKey` properties.
+        - **Model Binding** - Binding with `[(ngModel)]` is now correct when using `valueKey`.
+
+    - **Breaking Change** When using `[valueKey]`, all selection methods and outputs should be handled with the items' unique values in the property specified in `[valueKey]`:
     ```html
-    <!-- do not specify a value key if you want the selected === combo.selectedItems()>
-    <igx-combo [data]="items" displayKey="text" [(ngModel)]="selected">
+    <igx-combo [data]="myCustomData" valueKey="id" displayKey="text"></igx-combo>
     ```
     ```typescript
-        export class Example {
-            ...
-            public items: { text: string, id: number } = ...;
-            public selected: number[] = [this.items[2], this.items[3], this.items[8]]
-            /*
-             * items with **data index** 2,3 and 8 will be selected
-             */
+    export class MyCombo {
+        ngOnInit() {
+            // THIS IS INVALID!
+            // Since valueKey is specified, the values for "id" should be passed
+            this.combo.selectItems(this.data[0], this.data[1]);
         }
+    }
     ```
+    - When **no** `valueKey` is specified, selection is handled by **equality (===)**. In order to select items by object reference, the `valueKey` property can be removed from the configuration.
 
 ## 8.1.0
 

@@ -132,6 +132,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     private _filteredData = [];
     private _itemHeight = null;
     private _itemsMaxHeight = null;
+    private _remoteSelection = {};
     private _onChangeCallback: (_: any) => void = noop;
     private _overlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
@@ -1050,18 +1051,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         this.sortingExpressions = sortingState;
     }
 
-    /**
-     * @hidden @internal
-     */
-    public getValueByValueKey(val: any): any {
-        if (!val && val !== 0) {
-            return undefined;
-        }
-        return this.valueKey ?
-            this.data.filter((e) => e[this.valueKey] === val)[0] :
-            this.data.filter((e) => e === val);
-    }
-
     protected prepare_sorting_expression(state: ISortingExpression[], fieldName: string, dir: SortingDirection, ignoreCase: boolean,
         strategy: ISortingStrategy) {
 
@@ -1098,17 +1087,26 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             this.dataType === DataTypes.COMPLEX;
     }
 
-    /**
-     * If the data source is remote, returns JSON.stringify(itemID)
-     * @hidden
-     * @internal
-     */
-    private _stringifyItemID(itemID: any) {
-        return this.isRemote && typeof itemID === 'object' ? JSON.stringify(itemID) : itemID;
+    private registerRemoteEntries(ids: any[], add = true) {
+        const selection = this.remoteSelection(ids);
+        if (add) {
+            for (let i = 0; i < selection.length; i++) {
+                this._remoteSelection[selection[i][this.valueKey]] = selection[i][this.displayKey];
+            }
+        } else {
+            for (let i = 0; i < selection.length; i++) {
+                delete this._remoteSelection[selection[i][this.valueKey]];
+            }
+        }
     }
 
-    private _parseItemID(itemID) {
-        return this.isRemote && typeof itemID === 'string' ? JSON.parse(itemID) : itemID;
+    private remoteSelection(ids: any[]) {
+        return this.data.filter(entry => ids.indexOf(entry[this.valueKey]) > -1).map(e => {
+            return {
+                [this.valueKey]: e[this.valueKey],
+                [this.displayKey]: e[this.displayKey]
+            };
+        });
     }
 
     /**
@@ -1117,7 +1115,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @internal
      */
     public isItemSelected(item: any): boolean {
-        return this.selection.is_item_selected(this.id, this._stringifyItemID(item));
+        return this.selection.is_item_selected(this.id, item);
     }
 
     /**
@@ -1289,13 +1287,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden @internal
      */
     public writeValue(value: any[]): void {
-        let selectedItems: any[];
-        if (this.valueKey !== null && this.valueKey !== undefined && value) {
-            selectedItems = this.data.filter(entry => value.indexOf(entry[this.valueKey]) > -1);
-        } else {
-            selectedItems = value || [];
-        }
-        this.selectItems(selectedItems, true);
+        this.selectItems(value, true);
         this.cdr.markForCheck();
     }
 
@@ -1414,7 +1406,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     public selectedItems() {
         const items = Array.from(this.selection.get(this.id));
-        return this.isRemote ? items.map(item => this._parseItemID(item)) : items;
+        return items;
     }
 
     /**
@@ -1490,33 +1482,52 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         if (itemID === null || itemID === undefined) {
             return;
         }
-        const itemValue = this.getValueByValueKey(itemID);
-        if (itemValue !== null && itemValue !== undefined) {
-            if (select) {
-                this.selectItems([itemValue], false, event);
-            } else {
-                this.deselectItems([itemValue], event);
-            }
+        if (select) {
+            this.selectItems([itemID], false, event);
+        } else {
+            this.deselectItems([itemID], event);
         }
     }
 
     protected setSelection(newSelection: Set<any>, event?: Event): void {
-        const oldSelectionEmit = Array.from(this.selection.get(this.id) || []);
-        const newSelectionEmit = Array.from(newSelection || []);
         const args: IComboSelectionChangeEventArgs = {
-            newSelection: newSelectionEmit,
-            oldSelection: oldSelectionEmit,
+            newSelection: Array.from(newSelection),
+            oldSelection: Array.from(this.selection.get(this.id) || []),
             event,
             cancel: false
         };
         this.onSelectionChange.emit(args);
         if (!args.cancel) {
             this.selection.select_items(this.id, args.newSelection, true);
-            this._value = this.dataType !== DataTypes.PRIMITIVE ?
-                args.newSelection.map((id) => this._parseItemID(id)[this.displayKey]).join(', ') :
-                args.newSelection.join(', ');
-            this._onChangeCallback(this.valueKey ? args.newSelection.map(e => e[this.valueKey]) : args.newSelection);
+            let value: string;
+            if (this.isRemote) {
+                if (args.newSelection.length) {
+                    // use setDiffs when events PR is merged
+                    const items = {
+                        removed: [],
+                        added: []
+                    };
+                    items.removed = args.oldSelection.filter(e => args.newSelection.indexOf(e) < 0);
+                    items.added = args.newSelection.filter(e => args.oldSelection.indexOf(e) < 0);
+                    this.registerRemoteEntries(items.added);
+                    this.registerRemoteEntries(items.removed, false);
+                    value = Object.keys(this._remoteSelection).map(e => this._remoteSelection[e]).join(', ');
+                } else {
+                    value = '';
+                }
+            } else {
+                value = this.displayKey !== null && this.displayKey !== undefined ?
+                    this.convertKeysToItems(args.newSelection).map(entry => entry[this.displayKey]).join(', ') :
+                    args.newSelection.join(', ');
+            }
+            this._value = value;
+            this._onChangeCallback(args.newSelection);
         }
+    }
+
+    /** if there is a valueKey - map the keys to data items, else - just return the keys */
+    private convertKeysToItems(keys: any[]) {
+        return this.comboAPI.valueKey !== null ? this.data.filter(entry => keys.indexOf(entry[this.valueKey]) > -1) : keys;
     }
     /**
      * Event handlers

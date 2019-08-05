@@ -22,7 +22,7 @@
                             [data]="items"
                             [allowCustomValues]="customValuesFlag"
                             [displayDensity]="'comfortable'"
-                            [filterable]="filterableFlag" [displayKey]="valueKeyVar" [valueKey]="valueKeyVar"
+                            [filterable]="filterableFlag" [displayKey]="valueKeyVar"
                                 [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
                     <ng-template *ngIf="currentDataType !== 'primitive'" #itemTemplate let-display let-key="valueKey">
                         <div class="state-card--simple">

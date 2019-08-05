@@ -58,7 +58,7 @@ const fiftyItems = Array.apply(null, { length: 50 }).map((e, i) => ({
     name: `Item ${i + 1}`
 }));
 
-describe('igxCombo', () => {
+fdescribe('igxCombo', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -169,17 +169,7 @@ describe('igxCombo', () => {
             const comboElement = fixture.debugElement.query(By.css('input[name=\'comboInput\']'));
             expect(comboElement.attributes['readonly']).toBeDefined();
         }));
-        it('Should properly handle getValueByValueKey calls', () => {
-            const fix = TestBed.createComponent(IgxComboSampleComponent);
-            fix.detectChanges();
-            const combo = fix.componentInstance.combo;
-            expect(combo.getValueByValueKey('Connecticut')).toEqual({ field: 'Connecticut', region: 'New England' });
-            expect(combo.getValueByValueKey('')).toEqual(undefined);
-            expect(combo.getValueByValueKey(null)).toEqual(undefined);
-            expect(combo.getValueByValueKey(undefined)).toEqual(undefined);
-            expect(combo.getValueByValueKey({ field: 'Connecticut', region: 'New England' })).toEqual(undefined);
-            expect(combo.getValueByValueKey(1)).toEqual(undefined);
-        });
+
         it('Should properly get/set displayKey', () => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
             fix.detectChanges();
