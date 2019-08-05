@@ -194,14 +194,16 @@ describe('IgxTreeGrid - Selection ', () => {
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
         });
 
-        it('should persist selection after paging', () => {
+        it('should persist selection after paging', fakeAsync(() => {
             treeGrid.selectRows([treeGrid.getRowByIndex(0).rowID, treeGrid.getRowByIndex(3).rowID,
             treeGrid.getRowByIndex(5).rowID], true);
             fix.detectChanges();
+            tick(16);
 
             treeGrid.paging = true;
             treeGrid.perPage = 4;
             fix.detectChanges();
+            tick(16);
 
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, true);
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, false);
@@ -210,6 +212,7 @@ describe('IgxTreeGrid - Selection ', () => {
 
             treeGrid.page = 1;
             fix.detectChanges();
+            tick(16);
 
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, false);
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, true);
@@ -218,10 +221,11 @@ describe('IgxTreeGrid - Selection ', () => {
 
             treeGrid.page = 2;
             fix.detectChanges();
+            tick(16);
 
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, false);
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, false);
-        });
+        }));
     });
 
     describe('UI Row Selection', () => {
@@ -374,7 +378,7 @@ describe('IgxTreeGrid - Selection ', () => {
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
         });
 
-        it('should persist selection after paging', () => {
+        it('should persist selection after paging', fakeAsync(() => {
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 3);
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 5);
@@ -383,6 +387,7 @@ describe('IgxTreeGrid - Selection ', () => {
             treeGrid.paging = true;
             treeGrid.perPage = 4;
             fix.detectChanges();
+            tick(16);
 
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, true);
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, false);
@@ -391,6 +396,7 @@ describe('IgxTreeGrid - Selection ', () => {
 
             treeGrid.page = 1;
             fix.detectChanges();
+            tick(16);
 
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, false);
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, true);
@@ -399,10 +405,11 @@ describe('IgxTreeGrid - Selection ', () => {
 
             treeGrid.page = 2;
             fix.detectChanges();
+            tick(16);
 
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, false);
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, false);
-        });
+        }));
     });
 
     describe('Cell Selection', () => {
