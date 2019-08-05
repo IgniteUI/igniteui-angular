@@ -214,6 +214,7 @@ export class IgxGridSelectionService {
     _ranges: Set<string> = new Set<string>();
     _selectionRange: Range;
     rowSelection: Map<any,  any> = new Map<any, any>();
+    lastSelectedRowData;
 
 
     /**
@@ -396,7 +397,7 @@ export class IgxGridSelectionService {
     }
 
     pointerDown(node: ISelectionNode, shift: boolean, ctrl: boolean): void {
-
+        if (this.grid.cellSelection !== 'multiple') { return; }
         this.addKeyboardRange();
         this.initKeyboardState();
         this.pointerState.ctrl = ctrl;
@@ -510,7 +511,8 @@ export class IgxGridSelectionService {
         this.selectRange(node, state);
     }
 
-    clear(): void {
+    clear(clearAcriveEl = false): void {
+        if (clearAcriveEl) { this.activeElement = null; }
         this.selection.clear();
         this.temp.clear();
         this._ranges.clear();
@@ -552,42 +554,42 @@ export class IgxGridSelectionService {
 
     clearRowSelection() {
         // emit SelectionEvent
-        if (this.grid.filteringExpressionsTree) {
+        if (this.isFilteringApplied()) {
             this.grid.filteredSortedData.forEach(row => {
-                const rowID = this.grid.primaryKey ? row[this.grid.primaryKey] : row;
-                this.deselectRow(rowID);
+                this.deselectRow(this.getRowID(row));
             });
             return;
         }
         this.rowSelection.clear();
     }
 
-    selectRow(rowID) {
-        // emit SelectionEvent
+    selectRowbyID(rowID, rowData?, clearPrevSelection?) {
+        // emit selection event
         if (this.grid.rowSelection === 'none') { return; }
-        const rowData = this.grid.primaryKey ? this.grid.getRowByKey(rowID).rowData : rowID;
-        const clearPrevSelection = this.grid.rowSelection === 'single';
-        if (clearPrevSelection) {
+        debugger;
+        const args = { oldSelection: this.getSelectedRows(), newSelection: Array.of(...this.getSelectedRows(), rowData), cancel: false};
+        this.grid.onRowSelectionChange.emit(args);
+        if (args.cancel) { return; }
+        if (this.grid.rowSelection === 'single' || clearPrevSelection) {
             this.rowSelection.clear();
         }
+        if (!rowData) {
+            rowData = this.getRowDataByID(rowID);
+        }
+        this.lastSelectedRowData = rowData;
         this.rowSelection.set(rowID, rowData);
     }
 
     selectRows(rowIDs: any[], clearPrevSelection?) {
+        if (clearPrevSelection) { this.rowSelection.clear(); }
         rowIDs.forEach(rowID => {
-            let rowData;
+            let rowData = rowID;
             if (this.grid.primaryKey) {
-                const row = this.grid.getRowByKey(rowID);
-                if (!row) {console.log('no such row'); return; }
-                rowData = row.rowData;
-            } else {
-                if (this.grid.data.indexOf(rowData) === -1) {console.log('no such row'); return; }
-                rowData = rowID;
+                const rowIndex = this.grid.data.map(rec => rec[this.grid.primaryKey]).indexOf(rowID); // this.grid.getRowByKey(rowID);
+                if (rowIndex < 0) { return; } // remove this if no validation need for existingRow
+                rowData = this.grid.data[rowIndex];
             }
-
-            if (clearPrevSelection) {
-                this.rowSelection.clear();
-            }
+            if (this.grid.data.indexOf(rowData) === -1) { return; } // remove this if no validation need for existingRow
             this.rowSelection.set(rowID, rowData);
         });
     }
@@ -599,30 +601,54 @@ export class IgxGridSelectionService {
         }
     }
 
-    isRowSelected(rowData) {
-        const rowID = this.grid.primaryKey ? rowData[this.grid.primaryKey] : rowData;
+    isRowSelected(rowID) {
         return this.rowSelection.has(rowID);
     }
 
     areAllRowSelected() {
-        if (this.grid.data === null || this.grid.data === undefined) {
-            return false;
-        }
-        const allItems = this.grid.filteringExpressionsTree ? this.grid.filteredSortedData.length : this.grid.data.length;
-        return this.rowSelection.size >= allItems &&
+        if (!this.hasData()) { return false; }
+
+        const allItems = this.isFilteringApplied() ? this.grid.filteredSortedData.length : this.grid.data.length;
+        return allItems > 0 && this.rowSelection.size >= allItems &&
             new Set(Array.from(this.rowSelection.values()).concat(this.grid.filteredSortedData)).size === this.rowSelection.size;
     }
 
-    hasSomeRowSelected() {
-        if (this.grid.data === null || this.grid.data === undefined) {
-            return false;
+    selectMultipleRows(rowData) {
+        if (this.rowSelection.size && this.lastSelectedRowData) {
+            const currLastIndex = this.grid.data.indexOf(this.lastSelectedRowData);
+            const newRowIndex = this.grid.data.indexOf(rowData);
+            const rows = currLastIndex < newRowIndex ? this.grid.data.slice(currLastIndex, newRowIndex + 1) :
+                this.grid.data.slice(newRowIndex, currLastIndex + 1);
+            rows.forEach(rec => this.selectRowbyID(this.getRowID(rec), rec));
         }
-        return this.rowSelection.size > 0 && !this.areAllRowSelected();
+    }
+
+    hasSomeRowSelected() {
+        const filterData = this.isFilteringApplied() ? this.grid.filteredSortedData.some(rec => this.isRowSelected(rec)) : true;
+        return this.rowSelection.size > 0 && filterData && !this.areAllRowSelected();
     }
 
     allRowIDs() {
-        const data = this.grid.filteringExpressionsTree ? this.grid.filteredSortedData.length : this.grid.data.length;
+        const data = this.isFilteringApplied() ? this.grid.filteredSortedData.length : this.grid.data.length;
         return this.grid.primaryKey ? data.map(rec => rec[this.grid.primaryKey]) : data;
+    }
+
+    public getRowDataByID(rowID) {
+        if (! this.grid.primaryKey) { return rowID; }
+        const rowIndex = this.grid.data.map(rec => rec[this.grid.primaryKey]).indexOf(rowID);
+        if (rowIndex < 0) { return {}; }
+        return this.grid.data[rowIndex];
+    }
+
+    public getRowID(rowData) {
+        return this.grid.primaryKey ? rowData[this.grid.primaryKey] : rowData;
+    }
+    private isFilteringApplied() {
+        return this.grid.filteringExpressionsTree.filteringOperands.length > 0;
+    }
+
+    private hasData() {
+        return this.grid.isDefined(this.grid.data) &&  this.grid.data.length > 0;
     }
 }
 

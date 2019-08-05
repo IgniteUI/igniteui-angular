@@ -149,10 +149,11 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
 
         this.grid.summaryService.clearSummaryCache(args);
         this.updateData(this.grid, cell.id.rowID, data[index], cell.rowData, { [cell.column.field ]: args.newValue });
+        const newId = this.grid.primaryKey ? args.newValue[this.grid.primaryKey] : args.newValue;
         if (this.grid.primaryKey === cell.column.field) {
              if (this.grid.selectionService.isRowSelected(cell.id.rowID)) {
                 this.grid.selectionService.deselectRow(cell.id.rowID);
-                this.grid.selectionService.selectRow(args.newValue);
+                this.grid.selectionService.selectRowbyID(newId, args.newValue);
             }
             if (this.grid.hasSummarizedColumns) {
                 this.grid.summaryService.removeSummaries(cell.id.rowID);
@@ -248,7 +249,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         const newId = grid.primaryKey ? args.newValue[grid.primaryKey] : args.newValue;
         if (selected) {
             grid.selectionService.deselectRow(row.id);
-            grid.selectionService.selectRow(newId);
+            grid.selectionService.selectRowbyID(newId, args.newValue);
         }
         if (hasSummarized) {
             grid.summaryService.removeSummaries(newId);
