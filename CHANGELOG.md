@@ -7,6 +7,7 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxDatePicker`
     - `valueChange` event is added.
+- `IgxDialog` new @Input `positionSettings` is now available. It provides the ability to get/set both position and animation settings of the Dialog component. 
 
 ## 8.1.0
 
