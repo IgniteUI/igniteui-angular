@@ -1383,6 +1383,22 @@ describe('IgxGrid Component Tests', () => {
             expect(virtDir.getSizeAt(2)).toEqual(150);
 
         });
+
+        it('should render all columns if grid width is set to null.', async () => {
+            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            fix.componentInstance.initColumnsRows(5, 30);
+            const grid = fix.componentInstance.grid;
+            fix.detectChanges();
+
+            grid.width = null;
+            fix.detectChanges();
+            await wait(16);
+
+             // grid should render all columns and all should be visible.
+            const cells = grid.getRowByIndex(0).cells;
+            expect(cells.length).toBe(30);
+            expect(parseInt(grid.hostWidth, 10)).toBe(30 * 136);
+        });
     });
 
     describe('IgxGrid - API methods', () => {
