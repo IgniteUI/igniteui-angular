@@ -9,6 +9,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridComponent } from './grid.component';
 import { IgxRowComponent } from '../row.component';
+import { IgxGridRowComponent } from './grid-row.component';
 import { IgxGridTransaction, IGridEditEventArgs } from '../grid-base.component';
 import { IgxColumnComponent } from '../column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
@@ -23,7 +24,7 @@ import {
     IgxRowEditTabStopDirective
 } from '../grid.rowEdit.directive';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { SortingDirection, ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from '../cell.component';
 import { TransactionType, Transaction, IgxTransactionService } from '../../services';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -4401,7 +4402,7 @@ describe('IgxGrid Component Tests', () => {
         });
     });
 
-    describe('IgxGrid - Performance tests', () => {
+    fdescribe('IgxGrid - Performance tests', () => {
         configureTestSuite();
         beforeEach(async(() => {
             TestBed.configureTestingModule({
@@ -4422,25 +4423,59 @@ describe('IgxGrid Component Tests', () => {
             expect(fix.componentInstance.delta).toBeLessThan(1800);
         });
 
+        it('should render grouped grid in a certain amount of time', async () => {
+            const fix = TestBed.createComponent(IgxGridPerformanceComponent);
+            fix.componentInstance.groupingExpressions.push({
+                fieldName: 'field0',
+                dir: SortingDirection.Asc
+            });
+            fix.detectChanges();
+            expect(fix.componentInstance.delta).toBeLessThan(1500);
+        });
+
         it('should scroll (optimized delta) the grid vertically in a certain amount of time', async () => {
             const fix = TestBed.createComponent(IgxGridPerformanceComponent);
             fix.detectChanges();
             await wait(16);
             fix.componentInstance.startTime = new Date().getTime();
-            fix.componentInstance.grid.verticalScrollContainer.getVerticalScroll().scrollTop = 80;
-            await wait(100);
+            fix.componentInstance.verticalScroll.scrollTop = 80;
+            await wait(16);
             fix.detectChanges();
             console.log('\x1b[44m\x1b[37mOptimized Scroll Time: ' + fix.componentInstance.delta + '\x1b[0m');
             expect(fix.componentInstance.delta).toBeLessThan(100);
         });
 
-        fit('should scroll (unoptimized delta) the grid vertically in a certain amount of time', async () => {
+        it('should scroll (unoptimized delta) the grid vertically in a certain amount of time', async () => {
             const fix = TestBed.createComponent(IgxGridPerformanceComponent);
             fix.detectChanges();
-            await wait(1000);
+            await wait(16);
             fix.componentInstance.startTime = new Date().getTime();
-            fix.componentInstance.grid.verticalScrollContainer.getVerticalScroll().scrollTop = 200;
-            await wait(1000);
+            fix.componentInstance.verticalScroll.scrollTop = 200;
+            await wait(16);
+            fix.detectChanges();
+            console.log('\x1b[42m\x1b[30mUnoptimized Scroll Time: ' + fix.componentInstance.delta + '\x1b[0m');
+            expect(fix.componentInstance.delta).toBeLessThan(100);
+        });
+
+        it('should scroll (optimized delta) the grid horizontally in a certain amount of time', async () => {
+            const fix = TestBed.createComponent(IgxGridPerformanceComponent);
+            fix.detectChanges();
+            await wait(16);
+            fix.componentInstance.startTime = new Date().getTime();
+            fix.componentInstance.horizontalScroll.scrollLeft = 150;
+            await wait(16);
+            fix.detectChanges();
+            console.log('\x1b[44m\x1b[37mOptimized Scroll Time: ' + fix.componentInstance.delta + '\x1b[0m');
+            expect(fix.componentInstance.delta).toBeLessThan(100);
+        });
+
+        it('should scroll (unoptimized delta) the grid horizontally in a certain amount of time', async () => {
+            const fix = TestBed.createComponent(IgxGridPerformanceComponent);
+            fix.detectChanges();
+            await wait(16);
+            fix.componentInstance.startTime = new Date().getTime();
+            fix.componentInstance.horizontalScroll.scrollLeft = 500;
+            await wait(16);
             fix.detectChanges();
             console.log('\x1b[42m\x1b[30mUnoptimized Scroll Time: ' + fix.componentInstance.delta + '\x1b[0m');
             expect(fix.componentInstance.delta).toBeLessThan(100);
@@ -5184,23 +5219,8 @@ export class IgxGridWithCustomPaginationTemplateComponent {
 
 @Component({
     template: `<igx-grid #grid [width]="'2000px'" [height]="'2000px'" [data]="data"
-        [autoGenerate]="autoGenerate" [displayDensity]="'compact'">
-        <igx-column [field]="'field0'" [header]="'field0'" [width]="'100px'">
-            <ng-template igxCell let-value let-cell="cell">
-                <div [style.background-color]="cell.row.index % 2 === 0 ? 'gray' : 'white'">
-                    <p>{{ value }}</p>
-                </div>
-            </ng-template>
-        </igx-column>
-        <igx-column [field]="'field1'" [header]="'field1'" [width]="'100px'"></igx-column>
-        <igx-column [field]="'field2'" [header]="'field2'" [width]="'100px'"></igx-column>
-        <igx-column [field]="'field3'" [header]="'field3'" [width]="'100px'"></igx-column>
-        <igx-column [field]="'field4'" [header]="'field4'" [width]="'100px'"></igx-column>
-        <igx-column [field]="'field5'" [header]="'field5'" [width]="'100px'"></igx-column>
-        <igx-column [field]="'field6'" [header]="'field6'" [width]="'100px'"></igx-column>
-        <igx-column [field]="'field7'" [header]="'field7'" [width]="'100px'"></igx-column>
-        <igx-column [field]="'field8'" [header]="'field8'" [width]="'100px'"></igx-column>
-        <igx-column [field]="'field9'" [header]="'field9'" [width]="'100px'"></igx-column>
+        [autoGenerate]="autoGenerate" [displayDensity]="'compact'" [groupingExpressions]="groupingExpressions">
+        <igx-column *ngFor="let column of columns" [field]="column.field" [header]="column.field" [width]="column.width"></igx-column>
     </igx-grid>`
 })
 export class IgxGridPerformanceComponent implements AfterViewInit, OnInit, OnDestroy {
@@ -5213,7 +5233,18 @@ export class IgxGridPerformanceComponent implements AfterViewInit, OnInit, OnDes
     public startTime;
     public delta;
 
-    protected observer: MutationObserver;
+    protected observerA: MutationObserver;
+    protected observerB: MutationObserver;
+
+    public groupingExpressions: Array<ISortingExpression> = [];
+
+    public get verticalScroll() {
+        return this.grid.verticalScrollContainer.getVerticalScroll();
+    }
+
+    public get horizontalScroll() {
+        return this.grid.parentVirtDir.getHorizontalScroll();
+    }
 
     public ngOnInit() {
         const cols = [], d = [];
@@ -5240,28 +5271,42 @@ export class IgxGridPerformanceComponent implements AfterViewInit, OnInit, OnDes
     }
 
     public ngOnDestroy() {
-        if (this.observer) {
-            this.observer.disconnect();
+        if (this.observerA) {
+            this.observerA.disconnect();
+        }
+        if (this.observerB) {
+            this.observerB.disconnect();
         }
     }
 
     protected attachObserver() {
-        const config: MutationObserverInit = { childList: true, subtree: true, characterData: true };
-        const callback = (mutationsList) => {
+        const configA: MutationObserverInit = { childList: true, subtree: true };
+        const configB: MutationObserverInit = { attributes: true };
+        const callbackA = (mutationsList) => {
             const childListHasChanged = mutationsList.filter((mutation) => {
                 return mutation.type === 'childList';
             }).length > 0;
-            const characterDataChanged = mutationsList.filter((mutation) => {
-                return mutation.type === 'characterData';
-            }).length > 0;
-            if (childListHasChanged || characterDataChanged) {
+            if (childListHasChanged) {
                 this.delta = new Date().getTime() - this.startTime;
-                this.observer.disconnect();
-                delete this.observer;
+                this.observerA.disconnect();
+                delete this.observerA;
             }
         };
 
-        this.observer = new MutationObserver(callback);
-        this.observer.observe(this.grid.tbody.nativeElement, config);
+        const callbackB = (mutationsList) => {
+            const attributesHaveChanged = mutationsList.filter((mutation) => {
+                return mutation.type === 'attributes';
+            }).length > 0;
+            if (attributesHaveChanged) {
+                this.delta = new Date().getTime() - this.startTime;
+                this.observerB.disconnect();
+                delete this.observerB;
+            }
+        };
+
+        this.observerA = new MutationObserver(callbackA);
+        this.observerA.observe(this.grid.tbody.nativeElement, configA);
+        this.observerB = new MutationObserver(callbackB);
+        this.observerB.observe(this.grid.rowList.last.cells.first.nativeElement, configB);
     }
 }
