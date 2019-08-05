@@ -3246,6 +3246,69 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             const chipDiv = GridFunctions.getFilterConditionChip(fix, 0).querySelector('.igx-chip__item');
             expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(true, 'chip is not selected');
         }));
+
+        it('Should not throw error when deleting the last chip', (async () => {
+            grid.width = '700px';
+            fix.detectChanges();
+            await wait(100);
+
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            fix.detectChanges();
+
+            // Add first chip.
+            GridFunctions.typeValueInFilterRowInput('a', fix);
+            await wait(16);
+            GridFunctions.submitFilterRowInput(fix);
+            await wait(100);
+            // Add second chip.
+            GridFunctions.typeValueInFilterRowInput('e', fix);
+            await wait(16);
+            GridFunctions.submitFilterRowInput(fix);
+            await wait(100);
+            // Add third chip.
+            GridFunctions.typeValueInFilterRowInput('i', fix);
+            await wait(16);
+            GridFunctions.submitFilterRowInput(fix);
+            await wait(100);
+            // Add fourth chip.
+            GridFunctions.typeValueInFilterRowInput('o', fix);
+            await wait(16);
+            GridFunctions.submitFilterRowInput(fix);
+            await wait(200);
+
+            verifyMultipleChipsVisibility(fix, [false, false, false, true]);
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            let chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
+            expect(chips.length).toBe(4);
+
+            const leftArrowButton = GridFunctions.getFilterRowLeftArrowButton(fix).nativeElement;
+            expect(leftArrowButton).toBeTruthy('Left scroll arrow should be visible');
+
+            const rightArrowButton = GridFunctions.getFilterRowRightArrowButton(fix).nativeElement;
+            expect(rightArrowButton).toBeTruthy('Right scroll arrow should be visible');
+            expect(grid.rowList.length).toBe(2);
+
+            let chipToRemove = filterUIRow.componentInstance.expressionsList[3];
+            expect(() => { filterUIRow.componentInstance.onChipRemoved(null, chipToRemove); })
+            .not.toThrowError(/\'id\' of undefined/);
+            await wait(200);
+            fix.detectChanges();
+
+            verifyMultipleChipsVisibility(fix, [false, true, false]);
+            chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
+            expect(chips.length).toBe(3);
+
+            chipToRemove = filterUIRow.componentInstance.expressionsList[2];
+            expect(() => { filterUIRow.componentInstance.onChipRemoved(null, chipToRemove); })
+            .not.toThrowError(/\'id\' of undefined/);
+            await wait(200);
+            fix.detectChanges();
+
+            verifyMultipleChipsVisibility(fix, [true, false]);
+            chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
+            expect(chips.length).toBe(2);
+            expect(grid.rowList.length).toBe(3);
+        }));
     });
 
     describe(null, () => {
