@@ -4310,7 +4310,7 @@ describe('IgxGrid Component Tests', () => {
             const summaries = fix.debugElement.queryAll(By.css('igx-grid-summary-cell'));
             expect(headers.length).toBe(4);
             expect(summaries.length).toBe(4);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(138);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(139);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);
         });
 
@@ -5204,7 +5204,7 @@ export class IgxGridInsideIgxTabsComponent {
 @Component({
     template: `
         <igx-grid #grid [data]="data"
-        [paging]="true" [paginationTemplate]="pager">
+        [paging]="true" [paginationTemplate]="pager" [autoGenerate]="true">
         </igx-grid>
         <ng-template #pager let-grid>
             <h2>{{grid.totalRecords}}</h2>

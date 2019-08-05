@@ -953,10 +953,8 @@ describe('IgxGrid - Row Selection', () => {
 
         grid.columns.forEach(c => c.hidden = true);
         fix.detectChanges();
-        headerCheck = fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-checkbox__input');
-        rowCheck = grid.getRowByIndex(0).nativeElement.querySelector('.igx-checkbox__input');
+        headerCheck = fix.nativeElement.querySelector('.igx-checkbox__input');
         expect(headerCheck).toBeNull();
-        expect(rowCheck).toBeNull();
 
         grid.columns.forEach(c => c.hidden = false);
         fix.detectChanges();

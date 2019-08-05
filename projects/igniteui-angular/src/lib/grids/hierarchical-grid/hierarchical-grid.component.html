@@ -12,7 +12,7 @@
                 [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left"
                 class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
             <div class="igx-grid__hierarchical-expander igx-grid__hierarchical-expander--header"
-                #headerHierarchyExpander [hidden]='!hasExpandableChildren' [ngClass]="{
+                #headerHierarchyExpander [hidden]='!hasExpandableChildren || !hasVisibleColumns' [ngClass]="{
                     'igx-grid__hierarchical-expander--push': filteringService.isFilterRowVisible,
                     'igx-grid__hierarchical-expander--no-border': rowSelectable || rowDraggable
                 }">
@@ -72,6 +72,7 @@
             class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
         | gridTransaction:id:pipeTrigger
+        | visibleColumns:hasVisibleColumns
         | gridFiltering:filteringExpressionsTree:id:pipeTrigger
         | gridSort:sortingExpressions:id:pipeTrigger
         | gridHierarchicalPaging:page:perPage:id:pipeTrigger
@@ -147,8 +148,7 @@
 </div>
 
 <ng-template #defaultPaginator>
-    <igx-paginator [displayDensity]="displayDensity" [(page)]="page"
-        [totalRecords]="filteredData ? filteredData.length : totalRecords" [(perPage)]="perPage">
+    <igx-paginator [displayDensity]="displayDensity" [(page)]="page" [totalRecords]="totalRecords" [(perPage)]="perPage">
     </igx-paginator>
 </ng-template>
 
