@@ -2904,7 +2904,6 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         it('Verify condition chips are scrolled into/(out of) view by using arrow buttons.', (async () => {
             grid.width = '700px';
             fix.detectChanges();
-            await wait(100);
 
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
             fix.detectChanges();
@@ -2912,18 +2911,24 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             // Add first chip.
             GridFunctions.typeValueInFilterRowInput('a', fix);
             await wait(16);
+            fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await wait(100);
+            fix.detectChanges();
             // Add second chip.
             GridFunctions.typeValueInFilterRowInput('e', fix);
             await wait(16);
+            fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await wait(100);
+            fix.detectChanges();
             // Add third chip.
             GridFunctions.typeValueInFilterRowInput('i', fix);
             await wait(16);
+            fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await wait(100);
+            fix.detectChanges();
 
             verifyMultipleChipsVisibility(fix, [false, false, true]);
 
@@ -2931,41 +2936,44 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             const leftArrowButton = GridFunctions.getFilterRowLeftArrowButton(fix).nativeElement;
             leftArrowButton.click();
             await wait(300);
-            leftArrowButton.click();
             fix.detectChanges();
+            leftArrowButton.click();
             await wait(300);
+            fix.detectChanges();
             verifyMultipleChipsVisibility(fix, [false, true, false]);
 
             // Click left arrow 2 times.
             leftArrowButton.click();
             await wait(300);
-            leftArrowButton.click();
             fix.detectChanges();
+            leftArrowButton.click();
             await wait(300);
+            fix.detectChanges();
             verifyMultipleChipsVisibility(fix, [true, false, false]);
 
             // Click right arrow 2 times.
             const rightArrowButton = GridFunctions.getFilterRowRightArrowButton(fix).nativeElement;
             rightArrowButton.click();
             await wait(300);
-            rightArrowButton.click();
             fix.detectChanges();
+            rightArrowButton.click();
             await wait(300);
+            fix.detectChanges();
             verifyMultipleChipsVisibility(fix, [false, true, false]);
 
             // Click right arrow 2 times.
             rightArrowButton.click();
             await wait(300);
-            rightArrowButton.click();
             fix.detectChanges();
+            rightArrowButton.click();
             await wait(300);
+            fix.detectChanges();
             verifyMultipleChipsVisibility(fix, [false, false, true]);
         }));
 
         it('Should navigate from left arrow button to first condition chip Tab.', (async () => {
             grid.width = '700px';
             fix.detectChanges();
-            await wait(100);
 
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
             fix.detectChanges();
@@ -2973,18 +2981,24 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             // Add first chip.
             GridFunctions.typeValueInFilterRowInput('a', fix);
             await wait(16);
+            fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await wait(100);
+            fix.detectChanges();
             // Add second chip.
             GridFunctions.typeValueInFilterRowInput('e', fix);
             await wait(16);
+            fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await wait(100);
+            fix.detectChanges();
             // Add third chip.
             GridFunctions.typeValueInFilterRowInput('i', fix);
             await wait(16);
+            fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await wait(100);
+            fix.detectChanges();
 
             // Verify first chip is not in view.
             verifyChipVisibility(fix, 0, false);
@@ -2992,8 +3006,10 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             const leftArrowButton = GridFunctions.getFilterRowLeftArrowButton(fix).nativeElement;
             leftArrowButton.focus();
             await wait(16);
+            fix.detectChanges();
             leftArrowButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
             await wait(300);
+            fix.detectChanges();
 
             // Verify first chip is in view.
             verifyChipVisibility(fix, 0, true);

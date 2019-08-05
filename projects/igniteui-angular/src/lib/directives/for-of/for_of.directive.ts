@@ -1427,7 +1427,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         // should update scroll top/left according to change so that same startIndex is in view
         if (Math.abs(diff) > 0) {
             // TODO: Leave it to grid observer
-            // requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
                 this.recalcUpdateSizes();
                 const offset = parseInt(this.dc.instance._viewContainer.element.nativeElement.style.top, 10);
                 if (this.scrollPosition !== 0) {
@@ -1435,7 +1435,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 } else {
                     this._updateScrollOffset();
                 }
-            // });
+            });
         }
     }
 
@@ -1549,8 +1549,6 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         // Updating horizontal chunks
         const scrollOffset = this.fixedUpdateAllElements(scrollAmount);
         this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
-        // this.writeQueue.push(() => this.displayContainer.style.left = `${-scrollOffset}px`);
-        // this.mutate();
     }
 
     protected addLastElem() {
@@ -1606,9 +1604,9 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
             }
             if (this.igxForScrollOrientation === 'vertical') {
                 // TODO: Leave it to grid observer
-                // requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
                     this.recalcUpdateSizes();
-                // });
+                });
             }
         }
     }

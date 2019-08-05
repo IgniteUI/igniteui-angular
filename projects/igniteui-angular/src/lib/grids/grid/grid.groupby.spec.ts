@@ -2344,6 +2344,7 @@ describe('IgxGrid - GroupBy', () => {
     there are initially set groupingExpressions and columns are autogenareted`,
     fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
         const grid = fix.componentInstance.instance;
         grid.hideGroupedColumns = true;
         grid.groupingExpressions = [

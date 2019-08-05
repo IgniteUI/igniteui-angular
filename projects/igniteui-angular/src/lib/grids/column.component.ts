@@ -231,7 +231,7 @@ export class IgxColumnComponent implements AfterContentInit {
                 this.grid.endEdit(false);
                 this.grid.summaryService.resetSummaryHeight();
                 this.grid.filteringService.refreshExpressions();
-                this.grid.refreshSearch(true);
+                // this.grid.refreshSearch(true);
             }
         }
     }
@@ -545,6 +545,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
+    @notifyChanges()
     @Input()
     public searchable = true;
     /**
@@ -1377,7 +1378,7 @@ export class IgxColumnComponent implements AfterContentInit {
             this.grid.columns.filter(x => x.columnLayout).forEach( x => x.populateVisibleIndexes());
         }
         this.grid.filteringService.refreshExpressions();
-        this.grid.refreshSearch(true);
+        // this.grid.refreshSearch(true);
         return true;
     }
     /**
@@ -1440,7 +1441,7 @@ export class IgxColumnComponent implements AfterContentInit {
             this.grid.columns.filter(x => x.columnLayout).forEach( x => x.populateVisibleIndexes());
         }
         this.grid.filteringService.refreshExpressions();
-        this.grid.refreshSearch(true);
+        // this.grid.refreshSearch(true);
 
         return true;
     }

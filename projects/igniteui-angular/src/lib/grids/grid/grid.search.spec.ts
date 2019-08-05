@@ -491,7 +491,6 @@ describe('IgxGrid - search API', () => {
 
             grid.columns[1].hidden = true;
             fix.detectChanges();
-            fix.detectChanges();
 
             activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
             highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
@@ -593,6 +592,7 @@ describe('IgxGrid - search API', () => {
         it('Unsearchable column should not interfere with active highlight for other columns on its right', () => {
             grid.columns[1].searchable = false;
             grid.columns[3].searchable = false;
+            fix.detectChanges();
 
             const count = grid.findNext('Software');
             let spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
@@ -1288,7 +1288,6 @@ describe('IgxGrid - search API', () => {
         it('Should be able to search when grouping is enabled', async () => {
             grid.height = '400px';
             fix.detectChanges();
-            await wait();
 
             grid.groupBy({
                 fieldName: 'JobTitle',
@@ -1299,7 +1298,6 @@ describe('IgxGrid - search API', () => {
             fix.detectChanges();
 
             grid.findNext('Casey');
-            fix.detectChanges();
             await wait(30);
             fix.detectChanges();
 
@@ -1310,11 +1308,12 @@ describe('IgxGrid - search API', () => {
             grid.toggleAllGroupRows();
             fix.detectChanges();
             (grid as any).scrollTo(0, 0);
+            await wait();
             fix.detectChanges();
             grid.toggleGroup(grid.groupsRecords[0]);
+            fix.detectChanges();
             grid.toggleGroup(grid.groupsRecords[1]);
             fix.detectChanges();
-            await wait();
 
             grid.findNext('Casey');
             await wait();

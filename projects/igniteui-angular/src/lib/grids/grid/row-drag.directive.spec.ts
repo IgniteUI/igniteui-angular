@@ -787,6 +787,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         }));
 
         it('should be able to drag row on every hiearchical level', (async () => {
+            resizeObserverIgnoreError();
             // first level row
             let dragIndicatorElement: Element = dragIndicatorElements[1].nativeElement;
             let rowToDrag = dragGrid.getRowByIndex(0);
