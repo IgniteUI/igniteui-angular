@@ -39,10 +39,15 @@ export class GridSelectionComponent implements AfterViewInit {
     }
 
     handleRowSelection(args) {
-        const targetCell = args.cell as IgxGridCellComponent;
+        console.log('ONSELECTIONEVENTFIRED');
+/*         const targetCell = args.cell as IgxGridCellComponent;
         if  (!this.selection) {
             this.grid1.selectRows([targetCell.row.rowID], true);
-        }
+        } */
+    }
+
+    selectCells() {
+        this.grid1.selectRange({rowStart: 1, rowEnd: 3, columnStart: 0, columnEnd: 2});
     }
 
     toggle() {
@@ -64,8 +69,20 @@ export class GridSelectionComponent implements AfterViewInit {
             this.grid1.deselectAllRows();
         }
     }
+    log(args) {
+        console.log(args);
+    }
 
     callSelectAll() {
         this.grid1.selectAllRows();
+    }
+
+    selectRow() {
+        this.grid1.selectRows(['abc']);
+    }
+
+    deleteSectedRow() {
+        const r = this.grid1.selectedRows()[0];
+        this.grid1.deleteRow(r[this.grid1.primaryKey]);
     }
 }

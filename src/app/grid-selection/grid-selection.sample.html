@@ -1,5 +1,5 @@
 <div class="sample-container">
-    <igx-switch [(ngModel)]="selection" (change)="this.grid1.deselectAllRows()">Toggle Multiple Selection</igx-switch>
+    <igx-switch [(ngModel)]="grid1.hideRowSelectors">Hide row selectors</igx-switch>
 
     <button igxButton="raised" [igxToggleAction]="dropDownComfortable" [igxDropDownItemNavigation]="dropDownComfortable" displayDensity="comfortable">Cell Selection: {{grid1.cellSelection}}</button>
         <igx-drop-down #dropDownComfortable (onSelection)="onSelection($event)"  displayDensity="comfortable">
@@ -14,15 +14,21 @@
             </igx-drop-down-item>
         </igx-drop-down>
     <div class="separator"></div>
-    <igx-grid #grid1 [data]="remote | async" [allowFiltering]='true'
-            [rowSelectable]="selection" (onSelection)="handleRowSelection($event)"
-            [width]="'800px'" [height]="'600px'">
+    <igx-grid #grid1 [data]="remote | async" [allowFiltering]='true' [primaryKey]="'ProductID'" (onSelection)="handleRowSelection($event)"
+            [width]="'800px'" [height]="'600px'"  (onRowSelectionChange)="log($event)">
         <igx-column [field]="'ProductID'" [editable]="true" [width]="'80%'"></igx-column>
         <igx-column [field]="'ProductName'"></igx-column>
         <igx-column [field]="'UnitsInStock'"></igx-column>
     </igx-grid>
+    <button (click)="selectRow()">Non Existing row</button>
+    <button (click)="deleteSectedRow()">Delete Selected Row</button>
+    <button (click)="selectCells()">Select Range throught API</button>
     <div class="separator"></div>
     <div><input type='number' #input/><button (click)='scrScrollTo(input.value)'>Go To Index</button></div>
+    <button (click)='log(grid1.selectedCells)'>Selected Cells</button>
+    <button (click)='log(grid1.getSelectedRanges())'>Selected Ranges</button>
+    <button (click)='log(grid1.getSelectedData())'>Selected Data</button>
+    <button (click)="grid1.paging = true"></button>
 
     <ng-container *ngIf="selection">
         <button igxButton="flat" class="igx-button--flat" (click)="toggle()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" >Toggle rows with ID 1,2,5 </button>
