@@ -161,7 +161,7 @@ describe('IgxButton', () => {
     </span>`
 })
 class InitButtonComponent {
-    @ViewChild(IgxButtonDirective, { read: IgxButtonDirective })
+    @ViewChild(IgxButtonDirective, { read: IgxButtonDirective, static: true })
     button: IgxButtonDirective;
 }
 
