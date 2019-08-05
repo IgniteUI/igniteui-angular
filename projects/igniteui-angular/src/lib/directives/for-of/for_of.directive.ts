@@ -679,7 +679,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         const containerSize = parseInt(this.igxForContainerSize, 10);
         const maxRealScrollTop = event.target.children[0].scrollHeight - containerSize;
-        const realPercentScrolled = event.target.scrollTop / maxRealScrollTop;
+        const realPercentScrolled = maxRealScrollTop !== 0 ?  event.target.scrollTop / maxRealScrollTop : 0;
         if (!this._bScrollInternal) {
             const maxVirtScrollTop = this._virtHeight - containerSize;
             this._virtScrollTop = realPercentScrolled * maxVirtScrollTop;
@@ -1512,7 +1512,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
         const containerSize = parseInt(this.igxForContainerSize, 10);
         const maxRealScrollTop = event.target.children[0].scrollHeight - containerSize;
-        const realPercentScrolled = event.target.scrollTop / maxRealScrollTop;
+        const realPercentScrolled = maxRealScrollTop !== 0 ?  event.target.scrollTop / maxRealScrollTop : 0;
         if (!this._bScrollInternal) {
             const maxVirtScrollTop = this._virtHeight - containerSize;
             this._virtScrollTop = realPercentScrolled * maxVirtScrollTop;

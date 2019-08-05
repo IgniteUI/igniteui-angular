@@ -1391,9 +1391,7 @@ export class IgxColumnComponent implements AfterContentInit {
             return false;
         }
 
-        const width = parseInt(this.width, 10);
-
-        if (!this.parent && (grid.getUnpinnedWidth(true) - width < grid.unpinnedAreaMinWidth)) {
+        if (!this.parent && !this.pinnable) {
             return false;
         }
 
@@ -1682,6 +1680,15 @@ export class IgxColumnComponent implements AfterContentInit {
             this._calcWidth = this.width;
         }
         this.calcPixelWidth = parseInt(this._calcWidth, 10);
+    }
+
+    /**
+     *@hidden
+    */
+    public get pinnable() {
+        const gridUnpinnedWidth = (this.grid as any).getUnpinnedWidth(true);
+        const columnWidth = parseInt(this.width, 10);
+        return !((gridUnpinnedWidth - columnWidth) < this.grid.unpinnedAreaMinWidth);
     }
 
     /**

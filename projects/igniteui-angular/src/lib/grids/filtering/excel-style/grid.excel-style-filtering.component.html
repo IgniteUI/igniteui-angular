@@ -14,6 +14,7 @@
                 igxButton="icon"
                 [displayDensity]="grid.displayDensity"
                 (click)="onPin()"
+                [disabled]="!isColumnPinnable"
                 tabindex="0">
                 <igx-icon fontSet="filtering-icons" name="pin"></igx-icon>
             </button>
@@ -54,6 +55,7 @@
                 class="igx-excel-filter__move"
                 [column]="column"
                 [grid]="grid"
+                [isColumnPinnable]="isColumnPinnable"
                 [displayDensity]="grid.displayDensity">
             </igx-excel-style-column-moving>
         </ng-template>
@@ -63,7 +65,7 @@
         </div>
 
         <ng-template #defaultExcelStylePinningTemplate>
-            <div class="igx-excel-filter__actions-pin"
+            <div [ngClass]="pinClass()"
                 (click)="onPin()"
                 tabindex="0"
                 *ngIf="!column.pinned">
@@ -131,7 +133,7 @@
     </footer>
 </article>
 
-<igx-drop-down [maxHeight]="'397px'" #subMenu (onSelection)="onSubMenuSelection($event)" (onClosed)="onSubMenuClosed()">
+<igx-drop-down [maxHeight]="'397px'" [displayDensity]="grid.displayDensity" #subMenu (onSelection)="onSubMenuSelection($event)" (onClosed)="onSubMenuClosed()">
     <div>
         <igx-drop-down-item
             *ngFor="let condition of conditions"
