@@ -354,7 +354,11 @@
 
     @if map-has-key($map, $key) {
         @if $igx-legacy-support == false {
-            @return unquote('var(--#{map-get($map, 'name')}-#{$key}, #{$fallback})');
+            @if ($fallback != '') {
+                @return unquote('var(--#{map-get($map, 'name')}-#{$key}, #{$fallback})')
+            } @else {
+                @return unquote('var(--#{map-get($map, 'name')}-#{$key})')
+            }
         } @else {
             @return map-get($map, $key);
         }
