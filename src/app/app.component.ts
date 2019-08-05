@@ -204,6 +204,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Percentage'
         },
         {
+            link: '/gridAutoSize',
+            icon: 'view_column',
+            name: 'Grid Auto Size'
+        },
+        {
             link: '/gridPerformance',
             icon: 'view_column',
             name: 'Grid Performance'
