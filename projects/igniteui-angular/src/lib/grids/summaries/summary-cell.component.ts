@@ -28,7 +28,7 @@ export class IgxSummaryCellComponent {
     @Input()
     public density;
 
-    constructor(private element: ElementRef, private selectionService: IgxGridSelectionService) {
+    constructor(private element: ElementRef) {
     }
 
     @Input()
@@ -89,7 +89,7 @@ export class IgxSummaryCellComponent {
 
         if (!this.isKeySupportedInCell(key, ctrl)) { return; }
 
-        this.selectionService.keyboardState.shift = shift && !(key === 'tab');
+        this.grid.selectionService.keyboardState.shift = shift && !(key === 'tab');
         const row = this.getRowElementByIndex(this.rowIndex);
         switch (key) {
             case 'tab':

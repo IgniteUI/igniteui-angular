@@ -6,6 +6,7 @@ import {
     ElementRef,
     forwardRef,
     HostBinding,
+    HostListener,
     Input,
     QueryList,
     ViewChild,
@@ -110,6 +111,20 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     /**
      * @hidden
      */
+    @Input()
+    @HostBinding('attr.aria-selected')
+    get selected(): boolean {
+        return this.selectionService.isRowSelected(this.rowID);
+    }
+
+    set selected(value: boolean) {
+        value ? this.selectionService.selectRowbyID(this.rowID, this.rowData) :
+        this.selectionService.deselectRow(this.rowID);
+    }
+
+    /**
+     * @hidden
+     */
     get columns(): IgxColumnComponent[] {
         return this.grid.visibleColumns;
     }
@@ -142,13 +157,6 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
         return this.grid.isRowSelectable;
     }
 
-    /**
-     * @hidden
-     */
-    @Input()
-    @HostBinding('attr.aria-selected')
-    public isSelected: boolean;
-
     /** @hidden */
     public get dirty(): boolean {
         const row: State = this.grid.transactions.getState(this.rowID);
@@ -157,6 +165,11 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
         }
 
         return false;
+    }
+
+    // TODO: should be deprecated?????
+    public get isSelected() {
+        return this.selectionService.isRowSelected(this.rowID);
     }
 
     /**
@@ -255,14 +268,6 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      */
     public defaultCssClass = 'igx-grid__tr';
 
-    /**
-     * @hidden
-     */
-    protected _rowSelection = false;
-    /**
-     * @hidden
-    */
-   private _startIndex = 0;
 
     constructor(public gridAPI: GridBaseAPIService<T>,
         public crudService: IgxGridCRUDService,
@@ -273,10 +278,25 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
 
     /**
      * @hidden
+     * @internal
+     */
+    @HostListener('click', ['$event'])
+    public onClick(event: MouseEvent) { // move the logic below to selection Service
+        if (this.grid.rowSelection === 'none') { return; }
+        if (event.shiftKey && this.grid.rowSelection === 'multiple') {
+            this.selectionService.selectMultipleRows(this.rowData);
+            return;
+        }
+        this.selectionService.selectRowbyID(this.rowID, this.rowData, !event.ctrlKey );
+
+    }
+
+    /**
+     * @hidden
      */
     public onCheckboxClick(event) {
-        event.checked ? this.grid.selectionService.selectRow(this.rowID) :
-                this.grid.selectionService.deselectRow(this.rowID);
+        event.checked ? this.selectionService.selectRowbyID(this.rowID, this.rowData) :
+                this.selectionService.deselectRow(this.rowID);
     }
 
     /**
@@ -317,8 +337,8 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      */
     get rowCheckboxAriaLabel() {
         return this.grid.primaryKey ?
-            this.isSelected ? 'Deselect row with key ' + this.rowID : 'Select row with key ' + this.rowID :
-            this.isSelected ? 'Deselect row' : 'Select row';
+            this.selected ? 'Deselect row with key ' + this.rowID : 'Select row with key ' + this.rowID :
+            this.selected ? 'Deselect row' : 'Select row';
     }
 
     /**
@@ -334,7 +354,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      */
     protected resolveClasses(): string {
         const indexClass = this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS;
-        const selectedClass = this.isSelected ? 'igx-grid__tr--selected' : '';
+        const selectedClass = this.selected ? 'igx-grid__tr--selected' : '';
         const editClass = this.inEditMode ? 'igx-grid__tr--edit' : '';
         const dirtyClass = this.dirty ? 'igx-grid__tr--edited' : '';
         const deletedClass = this.deleted ? 'igx-grid__tr--deleted' : '';

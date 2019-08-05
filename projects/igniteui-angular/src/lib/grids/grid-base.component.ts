@@ -146,7 +146,7 @@ export interface IColumnResizeEventArgs {
     newWidth: string;
 }
 
-export interface IRowSelectionEventArgs {
+export interface IRowSelectionEventArgs extends CancelableEventArgs  {
     oldSelection: any[];
     newSelection: any[];
     row?: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
@@ -576,6 +576,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     set hideRowSelectors(value: boolean) {
         this._hideRowSelectors = value;
+        this.calculateGridSizes();
         this.cdr.markForCheck();
     }
 
@@ -2355,9 +2356,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     set cellSelection(value:  GridSelectionMode) {
         this._cellSelectionMode = value;
-        if (this) {
-            this.selectionService.activeElement = null;
-            this.selectionService.clear();
+        if (this.gridAPI.grid) {
+            this.selectionService.clear(true);
+            this.cdr.markForCheck();
         }
     }
 
@@ -2368,10 +2369,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     set rowSelection(value:  GridSelectionMode) {
         this._rowSelectionMode = value;
-        if (this) {
+        if (this.gridAPI.grid) {
             this.selectionService.rowSelection.clear();
+            this.calculateGridSizes();
         }
-        this.cdr.markForCheck();
     }
 
     /**
@@ -2730,8 +2731,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.onPagingDone.pipe(destructor).subscribe(() => {
             this.endEdit(true);
-            this.selectionService.clear();
-            this.selectionService.activeElement = null;
+            this.selectionService.clear(true);
         });
 
         this.onColumnMoving.pipe(destructor).subscribe(() => this.endEdit(true));
@@ -4639,14 +4639,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    public onHeaderCheckboxClick(event, filteredData) {
-        // TODO: when filtering is applied select only the filtered result
+    public onHeaderCheckboxClick(event, filteredData?) {
         if (event.checked) {
-            this.verticalScrollContainer.igxForOf.forEach((rec) => {
-                this.selectionService.selectRow(rec);
-            });
+            this.selectAllRows();
         } else {
-            this.selectionService.clearRowSelection();
+            this.deselectAllRows();
         }
     }
 
@@ -4707,9 +4704,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     public selectAllRows() {
-        let allData = this.filteringExpressionsTree ? this.filteredSortedData : this.data;
-        allData = this.primaryKey ? allData.map(rec => rec[this.primaryKey]) : allData;
-        allData.forEach(rID => this.selectionService.selectRow(rID));
+        const allData = this.filteringExpressionsTree ? this.filteredSortedData : this.data;
+        allData.forEach(rowData => {
+            const rowID = this.selectionService.getRowID(rowData);
+            this.selectionService.selectRowbyID(rowID, rowData);
+        });
     }
 
     /**
@@ -4724,8 +4723,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     clearCellSelection(): void {
-        this.selectionService.clear();
-        this.selectionService.activeElement = null;
+        this.selectionService.clear(true);
         this.cdr.markForCheck();
     }
 
@@ -4813,10 +4811,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         let columnsArray: IgxColumnComponent[];
         let record = {};
         const selectedData = [];
+        const activeEl = this.selectionService.activeElement;
 
         const selectionMap = Array.from(this.selectionService.selection)
             .filter((tuple) => tuple[0] < source.length);
 
+        if (this.cellSelection === GridSelectionMode.single && activeEl) {
+            selectionMap.push([activeEl.row, new Set<number>().add(activeEl.column)]);
+        }
 
         for (const [row, set] of selectionMap) {
             if (!source[row]) {

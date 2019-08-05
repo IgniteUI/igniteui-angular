@@ -531,16 +531,28 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         protected zone: NgZone) { }
 
 
+    public addPointerListeners() {
+        if (this.grid.cellSelection !== GridSelectionMode.multiple) { return; }
+        this.nativeElement.addEventListener('pointerdown', this.pointerdown);
+        this.nativeElement.addEventListener('pointerenter', this.pointerenter);
+        this.nativeElement.addEventListener('pointerup', this.pointerup);
+    }
+
+    public  removePointerListeners(currentSelection?) {
+        if (currentSelection && this.grid.cellSelection !== GridSelectionMode.multiple) { return; }
+        this.nativeElement.removeEventListener('pointerdown', this.pointerdown);
+        this.nativeElement.removeEventListener('pointerenter', this.pointerenter);
+        this.nativeElement.removeEventListener('pointerup', this.pointerup);
+    }
+
+
     /**
      * @hidden
      * @internal
      */
     ngOnInit() {
         this.zone.runOutsideAngular(() => {
-            this.nativeElement.addEventListener('pointerdown', this.pointerdown);
-            this.nativeElement.addEventListener('pointerenter', this.pointerenter);
-            this.nativeElement.addEventListener('pointerup', this.pointerup);
-
+            this.addPointerListeners();
             // IE 11 workarounds
             if (isIE()) {
                 this.compositionStartHandler = () => this.isInCompositionMode = true;
@@ -558,10 +570,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     ngOnDestroy() {
         this.zone.runOutsideAngular(() => {
-            this.nativeElement.removeEventListener('pointerdown', this.pointerdown);
-            this.nativeElement.removeEventListener('pointerenter', this.pointerenter);
-            this.nativeElement.removeEventListener('pointerup', this.pointerup);
-
+            this.removePointerListeners();
             if (isIE()) {
                 this.nativeElement.removeEventListener('compositionstart', this.compositionStartHandler);
                 this.nativeElement.removeEventListener('compositionend', this.compositionEndHandler);
@@ -599,6 +608,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
+    // should be derprecated???
     /**
      * Gets whether the cell is selected.
      * ```typescript
@@ -679,13 +689,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.selectionService.primaryButton = false;
             return;
         }
-        if (!event.ctrlKey) {
-            this.grid.selectionService.rowSelection.clear();
-        }
-        this.grid.selectionService.selectRow(this.row.rowID);
-        if (this.grid.cellSelection === GridSelectionMode.multiple) {
-            this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
-        }
+        this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
     }
 
     /**
@@ -945,7 +949,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             case 'spacebar':
             case 'space':
                 if (this.grid.rowSelection !== 'none') {
-                    this.grid.selectionService.selectRow(this.row.rowID);
+                    this.row.selected ? this.selectionService.deselectRow(this.row.rowID) :
+                    this.selectionService.selectRowbyID(this.row.rowID, this.row.rowData);
                 }
                 break;
             default:

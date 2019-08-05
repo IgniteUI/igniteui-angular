@@ -8,7 +8,7 @@
 </ng-container>
 <ng-container *ngIf="showRowCheckboxes">
     <div class="igx-grid__cbx-selection">
-        <igx-checkbox [checked]="isSelected" [disabled]="deleted || !isRowSelectable" (change)="onCheckboxClick($event)" disableRipple="true" [disableTransitions]="grid.disableTransitions" [aria-label]="rowCheckboxAriaLabel"></igx-checkbox>
+        <igx-checkbox [checked]="selected" (click)="$event.stopPropagation()" [disabled]="deleted || !isRowSelectable" (change)="onCheckboxClick($event)" disableRipple="true" [disableTransitions]="grid.disableTransitions" [aria-label]="rowCheckboxAriaLabel"></igx-checkbox>
     </div>
 </ng-container>
 
