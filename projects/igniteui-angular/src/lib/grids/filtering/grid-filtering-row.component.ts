@@ -76,11 +76,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     }
 
     set column(val) {
+        if (this._column) {
+            this.expressionsList.forEach(exp => exp.isSelected = false);
+        }
         if (val) {
             this._column = val;
 
             this.expressionsList = this.filteringService.getExpressions(this._column.field);
-
             this.resetExpression();
 
             this.chipAreaScrollOffset = 0;
@@ -148,6 +150,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     ngAfterViewInit() {
         this._conditionsOverlaySettings.outlet = this.column.grid.outletDirective;
         this._operatorsOverlaySettings.outlet = this.column.grid.outletDirective;
+
+        const selectedItem = this.expressionsList.find(expr => expr.isSelected === true);
+        if (selectedItem) {
+            this.expression = selectedItem.expression;
+        }
 
         this.input.nativeElement.focus();
     }
@@ -365,8 +372,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Commits the value of the input.
      */
     public commitInput() {
-        this.expressionsList.forEach(ex => ex.isSelected = false);
-        this.chipsArea.chipsList.forEach(chip => chip.selected = false);
+        const selectedItem = this.expressionsList.filter(ex => ex.isSelected === true);
+        selectedItem.forEach(e => e.isSelected = false);
 
         let indexToDeselect = -1;
         for (let index = 0; index < this.expressionsList.length; index++) {
@@ -436,8 +443,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         }
         requestAnimationFrame(() => {
             const focusedElement = document.activeElement;
-            if (!(focusedElement && this.inputGroup.nativeElement.contains(focusedElement)) &&
-                this.dropDownConditions.collapsed) {
+            if (!(focusedElement && this.inputGroup.nativeElement.contains(focusedElement))
+                && this.dropDownConditions.collapsed) {
                 this.commitInput();
             }
         });
@@ -532,44 +539,37 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this._cancelChipClick = chip.selected && activeElement && this.inputGroup.nativeElement.contains(activeElement);
     }
 
-    public onChipClick(args, chip: IgxChipComponent) {
+    public onChipClick(args, item: ExpressionUI) {
         if (this._cancelChipClick) {
             return;
         }
 
         this._cancelChipClick = false;
-        chip.selected = !chip.selected;
+
+        this.expressionsList.forEach(ex => ex.isSelected = false);
+
+        this.toggleChip(item);
     }
 
-    /**
-     *  Event handler for chip selected event.
-     */
-    public onChipSelected(eventArgs: IChipSelectEventArgs, expression: IFilteringExpression) {
-        if (eventArgs.selected) {
-            if (this.chipsArea.chipsList) {
-                this.chipsArea.chipsList.forEach((chip) => {
-                    if (chip !== eventArgs.owner) {
-                        chip.selected = false;
-                    }
-                });
-            }
-            this.expression = expression;
+    public toggleChip(item: ExpressionUI) {
+        item.isSelected = !item.isSelected;
+        if (item.isSelected) {
+            this.expression = item.expression;
 
             if (this.input) {
                 this.input.nativeElement.focus();
             }
-        } else if (this.expression === expression) {
-            this.resetExpression();
         }
     }
 
     /**
      * Event handler for chip keydown event.
      */
-    public onChipKeyDown(eventArgs: KeyboardEvent, chip: IgxChipComponent) {
+    public onChipKeyDown(eventArgs: KeyboardEvent, item: ExpressionUI) {
         if (eventArgs.key === KEYS.ENTER) {
             eventArgs.preventDefault();
-            chip.selected = !chip.selected;
+
+            this.toggleChip(item);
         }
     }
 
