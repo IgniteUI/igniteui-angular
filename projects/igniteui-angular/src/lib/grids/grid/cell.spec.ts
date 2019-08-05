@@ -8,6 +8,7 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { HammerGesturesManager } from '../../core/touch';
 
 const DEBOUNCETIME = 30;
 
@@ -171,6 +172,7 @@ describe('IgxGrid - Cell component', () => {
 
         spyOn(grid.onDoubleClick, 'emit').and.callThrough();
         const event = new Event('dblclick');
+        spyOn(event, 'preventDefault');
         cellElem.nativeElement.dispatchEvent(event);
         const args: IGridCellEventArgs = {
             cell: firstCell,
@@ -179,6 +181,38 @@ describe('IgxGrid - Cell component', () => {
 
         fix.detectChanges();
 
+        expect(event.preventDefault).not.toHaveBeenCalled();
+        expect(grid.onDoubleClick.emit).toHaveBeenCalledWith(args);
+        expect(firstCell).toBe(fix.componentInstance.clickedCell);
+    });
+
+    it('Should handle doubletap, trigger onDoubleClick event', () => {
+        const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        const cellElem = fix.debugElement.query(By.css(CELL_CSS_CLASS));
+        const firstCell = grid.getCellByColumn(0, 'index');
+
+        // should attach 'doubletap'
+        expect(addListenerSpy.calls.count()).toBeGreaterThan(1);
+        expect(addListenerSpy).toHaveBeenCalledWith(firstCell.nativeElement, 'doubletap', firstCell.onDoubleClick, { cssProps: { } });
+
+        spyOn(grid.onDoubleClick, 'emit').and.callThrough();
+
+        const event = {
+            type: 'doubletap',
+            preventDefault: jasmine.createSpy('preventDefault')
+        };
+        firstCell.onDoubleClick(event as any);
+        const args: IGridCellEventArgs = {
+            cell: firstCell,
+            event
+        } as any;
+
+        fix.detectChanges();
+        expect(event.preventDefault).toHaveBeenCalled();
         expect(grid.onDoubleClick.emit).toHaveBeenCalledWith(args);
         expect(firstCell).toBe(fix.componentInstance.clickedCell);
     });
