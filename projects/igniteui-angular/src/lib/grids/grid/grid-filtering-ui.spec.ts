@@ -1563,8 +1563,8 @@ describe('IgxGrid - Filtering actions', () => {
 
         reset.nativeElement.focus();
         inputGroup.nativeElement.dispatchEvent(new FocusEvent('focusout'));
+        await wait(100);
         fix.detectChanges();
-        await wait(16);
 
         expect(filterChip.componentInstance.selected).toBeFalsy();
     });
@@ -1594,19 +1594,22 @@ describe('IgxGrid - Filtering actions', () => {
         expect(filterChip).toBeTruthy();
         expect(filterChip.componentInstance.selected).toBeTruthy();
 
-        filterChip.nativeElement.dispatchEvent(new MouseEvent('click'));
+        // Click on the chip to commit it
+        clickElemAndBlur(filterChip, input);
+        await wait(200);
         fix.detectChanges();
-        await wait(16);
         expect(filterChip.componentInstance.selected).toBeFalsy();
 
-        filterChip.nativeElement.dispatchEvent(new MouseEvent('click'));
+        // Click on the chip to select it
+        GridFunctions.clickChip(filterChip);
         fix.detectChanges();
-        await wait(16);
+        await wait(100);
         expect(filterChip.componentInstance.selected).toBeTruthy();
 
-        filterChip.nativeElement.dispatchEvent(new MouseEvent('click'));
+        // Click on the chip to commit it
+        clickElemAndBlur(filterChip, input);
+        await wait(100);
         fix.detectChanges();
-        await wait(16);
         expect(filterChip.componentInstance.selected).toBeFalsy();
     });
 
@@ -1624,15 +1627,16 @@ describe('IgxGrid - Filtering actions', () => {
         expect(filterChip).toBeTruthy();
         expect(filterChip.componentInstance.selected).toBeTruthy();
 
-         filterChip.nativeElement.dispatchEvent(new MouseEvent('click'));
+         // Click on the chip to commit it
+        clickElemAndBlur(filterChip, input);
         fix.detectChanges();
-        await wait(16);
+        await wait(100);
         expect(filterChip.componentInstance.selected).toBeFalsy();
 
          filterValue = 'c';
         sendInput(input, filterValue, fix);
         fix.detectChanges();
-        await wait(16);
+        await wait(100);
 
          let filterChips = filterUIRow.queryAll(By.directive(IgxChipComponent));
         expect(filterChips[1]).toBeTruthy();
@@ -1640,18 +1644,18 @@ describe('IgxGrid - Filtering actions', () => {
 
          GridFunctions.simulateKeyboardEvent(input, 'keydown', 'Enter');
         fix.detectChanges();
-        await wait(16);
+        await wait(100);
         expect(filterChips[1].componentInstance.selected).toBeFalsy();
 
          let selectedColumn = GridFunctions.getColumnHeader('Downloads', fix);
         selectedColumn.nativeElement.dispatchEvent(new MouseEvent('click'));
         fix.detectChanges();
-        await wait(16);
+        await wait(100);
 
          selectedColumn = GridFunctions.getColumnHeader('ProductName', fix);
         selectedColumn.nativeElement.dispatchEvent(new MouseEvent('click'));
         fix.detectChanges();
-        await wait(16);
+        await wait(100);
 
          filterChips = filterUIRow.queryAll(By.directive(IgxChipComponent));
         expect(filterChips[0].componentInstance.selected).toBeFalsy();
@@ -3572,7 +3576,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             fix.detectChanges();
 
             const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
-            const headerResArea = headers[2].children[0].nativeElement;
+            const headerResArea = headers[2].children[1].nativeElement;
 
             const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
             filterIcon.click();
@@ -6079,4 +6083,14 @@ function verifyChipVisibility(fix, index: number, shouldBeFullyVisible: boolean)
 
     expect(chipRect.left >= visibleChipAreaRect.left && chipRect.right <= visibleChipAreaRect.right)
         .toBe(shouldBeFullyVisible, 'chip[' + index + '] visibility is incorrect');
+}
+
+function clickElemAndBlur(clickElem, blurElem) {
+    const elementRect = clickElem.nativeElement.getBoundingClientRect();
+    UIInteractions.simulatePointerEvent('pointerdown', clickElem.nativeElement, elementRect.left, elementRect.top);
+    blurElem.nativeElement.blur();
+    blurElem.nativeElement.dispatchEvent(new FocusEvent('focusout', {bubbles: true}));
+    (clickElem as DebugElement).nativeElement.focus();
+    UIInteractions.simulatePointerEvent('pointerup', clickElem.nativeElement, elementRect.left, elementRect.top);
+    UIInteractions.simulateMouseEvent('click', clickElem.nativeElement, 10 , 10);
 }
