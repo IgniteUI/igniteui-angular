@@ -16,7 +16,7 @@ import { IgxForOfDirective } from '../../../directives/for-of/for_of.directive';
 import { FilterListItem } from './grid.excel-style-filtering.component';
 
 @Directive({
-    selector: '[igxExcelStyleLoadingValuesTemplate]'
+    selector: '[igxExcelStyleLoading]'
 })
 export class IgxExcelStyleLoadingValuesTemplateDirective {
     constructor(public template: TemplateRef<any>) {}

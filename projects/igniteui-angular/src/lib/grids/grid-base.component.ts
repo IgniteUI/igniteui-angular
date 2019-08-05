@@ -1003,7 +1003,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     @Input()
-    public loadExcelStyleUniqueValuesOnDemand: (field: string, done: (values: any[]) => void) => void;
+    public uniqueColumnValuesStrategy: (column: IgxColumnComponent,
+                                        filteringExpressionsTree: IFilteringExpressionsTree,
+                                        done: (values: any[]) => void) => void;
 
     /**
      * Emitted when `IgxGridCellComponent` is clicked. Returns the `IgxGridCellComponent`.

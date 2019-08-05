@@ -332,57 +332,51 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
     }
 
     public populateColumnData() {
-        if (this.grid.loadExcelStyleUniqueValuesOnDemand) {
-            this.loadValuesOnDemand();
+        if (this.grid.uniqueColumnValuesStrategy) {
+            this.renderColumnValuesRemotely();
         } else {
-            this.loadValuesFromGridData();
+            this.renderColumnValuesFromData();
         }
     }
 
-    private loadValuesOnDemand() {
+    private renderColumnValuesRemotely() {
         this.excelStyleSearch.isLoading = true;
-        this.grid.loadExcelStyleUniqueValuesOnDemand(this.column, (columnUniqueValues: any[]) => {
-            if (this.column.dataType === DataType.Date) {
-                this.uniqueValues = Array.from(new Set(columnUniqueValues.map(val => val ? val.toDateString() : val)));
-                this.generateFilterValues(true);
-            } else {
-                this.uniqueValues = Array.from(new Set(columnUniqueValues));
-                this.generateFilterValues();
-            }
-            this.generateListData();
+        const expressionsTree: FilteringExpressionsTree = this.getColumnFilterExpressionsTree();
+
+        this.grid.uniqueColumnValuesStrategy(this.column, expressionsTree, (colVals: any[]) => {
+            const columnValues = (this.column.dataType === DataType.Date) ?
+                colVals.map(val => val ? val.toDateString() : val) : colVals;
+
+            this.renderValues(columnValues);
             this.excelStyleSearch.isLoading = false;
         });
     }
 
-    public loadValuesFromGridData() {
+    public renderColumnValuesFromData() {
         let data = this.column.gridAPI.get_all_data(this.grid.id);
-        const gridExpressionsTree: IFilteringExpressionsTree = this.grid.filteringExpressionsTree;
-        const expressionsTree = new FilteringExpressionsTree(gridExpressionsTree.operator, gridExpressionsTree.fieldName);
-
-        for (const operand of gridExpressionsTree.filteringOperands) {
-            if (operand instanceof FilteringExpressionsTree) {
-                const columnExprTree = operand as FilteringExpressionsTree;
-                if (columnExprTree.fieldName === this.column.field) {
-                    break;
-                }
-            }
-            expressionsTree.filteringOperands.push(operand);
-        }
+        const expressionsTree = this.getColumnFilterExpressionsTree();
 
         if (expressionsTree.filteringOperands.length) {
             const state = { expressionsTree: expressionsTree };
             data = DataUtil.filter(cloneArray(data), state);
         }
 
-        if (this.column.dataType === DataType.Date) {
-            this.uniqueValues = Array.from(new Set(data.map(record =>
-                record[this.column.field] ? record[this.column.field].toDateString() : record[this.column.field])));
-            this.generateFilterValues(true);
-        } else {
-            this.uniqueValues = Array.from(new Set(data.map(record => record[this.column.field])));
-            this.generateFilterValues();
-        }
+        const columnField = this.column.field;
+        const columnValues = (this.column.dataType === DataType.Date) ?
+            data.map(record => record[columnField] ? record[columnField].toDateString() : record[columnField]) :
+            data.map(record => record[columnField]);
+
+        this.renderValues(columnValues);
+    }
+
+    private renderValues(columnValues: any[]) {
+        this.generateUniqueValues(columnValues);
+        this.generateFilterValues(this.column.dataType === DataType.Date);
         this.generateListData();
+    }
+
+    private generateUniqueValues(columnValues: any[]) {
+        this.uniqueValues = Array.from(new Set(columnValues));
     }
 
     private generateFilterValues(isDateColumn: boolean = false) {
@@ -430,71 +424,22 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         this.cdr.detectChanges();
     }
 
+    private getColumnFilterExpressionsTree() {
+        const gridExpressionsTree: IFilteringExpressionsTree = this.grid.filteringExpressionsTree;
+        const expressionsTree = new FilteringExpressionsTree(gridExpressionsTree.operator, gridExpressionsTree.fieldName);
 
+        for (const operand of gridExpressionsTree.filteringOperands) {
+            if (operand instanceof FilteringExpressionsTree) {
+                const columnExprTree = operand as FilteringExpressionsTree;
+                if (columnExprTree.fieldName === this.column.field) {
+                    break;
+                }
+            }
+            expressionsTree.filteringOperands.push(operand);
+        }
 
-    // public populateColumnData() {
-    //     let data = this.column.gridAPI.get_all_data(this.grid.id);
-    //     const gridExpressionsTree: IFilteringExpressionsTree = this.grid.filteringExpressionsTree;
-    //     const expressionsTree = new FilteringExpressionsTree(gridExpressionsTree.operator, gridExpressionsTree.fieldName);
-
-    //     for (const operand of gridExpressionsTree.filteringOperands) {
-    //         if (operand instanceof FilteringExpressionsTree) {
-    //             const columnExprTree = operand as FilteringExpressionsTree;
-    //             if (columnExprTree.fieldName === this.column.field) {
-    //                 break;
-    //             }
-    //         }
-    //         expressionsTree.filteringOperands.push(operand);
-    //     }
-
-    //     if (expressionsTree.filteringOperands.length) {
-    //         const state = { expressionsTree: expressionsTree };
-    //         data = DataUtil.filter(cloneArray(data), state);
-    //     }
-
-    //     if (this.column.dataType === DataType.Date) {
-    //         this.uniqueValues = Array.from(new Set(data.map(record =>
-    //             record[this.column.field] ? record[this.column.field].toDateString() : record[this.column.field])));
-    //         this.filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
-    //             if (e.expression.condition.name === 'in') {
-    //                 return [ ...arr, ...Array.from((e.expression.searchVal as Set<any>).values()).map(v =>
-    //                     new Date(v).toDateString()) ];
-    //             }
-    //             return [ ...arr, ...[e.expression.searchVal ? e.expression.searchVal.toDateString() : e.expression.searchVal] ];
-    //         }, []));
-    //     } else {
-    //         this.uniqueValues = Array.from(new Set(data.map(record => record[this.column.field])));
-    //         this.filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
-    //             if (e.expression.condition.name === 'in') {
-    //                 return [ ...arr, ...Array.from((e.expression.searchVal as Set<any>).values()) ];
-    //             }
-    //             return [ ...arr, ...[e.expression.searchVal] ];
-    //         }, []));
-    //     }
-    //     this.listData = new Array<FilterListItem>();
-
-    //     const shouldUpdateSelection = this.areExpressionsSelectable() && this.areExpressionsValuesInTheList();
-
-    //     if (this.column.dataType === DataType.Boolean) {
-    //         this.addBooleanItems();
-    //     } else {
-    //         this.addItems(shouldUpdateSelection);
-    //     }
-
-    //     this.listData.sort((a, b) => this.sortData(a, b));
-
-    //     if (this.column.dataType === DataType.Date) {
-    //         this.uniqueValues = this.uniqueValues.map(value => new Date(value));
-    //     }
-
-    //     if (this.containsNullOrEmpty) {
-    //         this.addBlanksItem(shouldUpdateSelection);
-    //     }
-
-    //     this.addSelectAllItem();
-
-    //     this.cdr.detectChanges();
-    // }
+        return expressionsTree;
+    }
 
     private addBooleanItems() {
         this.selectAllSelected = true;
