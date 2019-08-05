@@ -892,10 +892,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
 
             if (!this._init) {
-                if (this.maxLevelHeaderDepth) {
-                    this.theadRow.nativeElement.style.height = `${(this.maxLevelHeaderDepth + 1) * this.defaultRowHeight +
-                        (value && this.filterMode === FilterMode.quickFilter ? FILTER_ROW_HEIGHT : 0) + 1}px`;
-                }
+                this.calcGridHeadRow();
             }
 
             this.filteringService.isFilterRowVisible = false;
@@ -2854,12 +2851,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this._cdrRequestRepaint) {
             this.resetNotifyChanges();
             this.calculateGridSizes();
+            this.refreshSearch(true);
             return;
         }
 
         if (this._cdrRequests) {
             this.resetNotifyChanges();
             this.cdr.detectChanges();
+            this.refreshSearch(true);
         }
     }
 
@@ -4060,9 +4059,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /**
      * @hidden
-     * Sets TBODY height i.e. this.calcHeight
+     * @internal
      */
-    protected calculateGridHeight() {
+    protected calcGridHeadRow() {
         if (this.maxLevelHeaderDepth) {
             this._baseFontSize = parseFloat(getComputedStyle(this.document.documentElement).getPropertyValue('font-size'));
             let minSize = (this.maxLevelHeaderDepth + 1) * this.defaultRowHeight / this._baseFontSize;
@@ -4071,6 +4070,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
             this.theadRow.nativeElement.style.minHeight = `${minSize}rem`;
         }
+    }
+
+    /**
+     * @hidden
+     * Sets TBODY height i.e. this.calcHeight
+     */
+    protected calculateGridHeight() {
+        this.calcGridHeadRow();
         this.summariesHeight = 0;
         if (this.hasSummarizedColumns && this.rootSummariesEnabled) {
             this.summariesHeight = this.summaryService.calcMaxSummaryHeight();

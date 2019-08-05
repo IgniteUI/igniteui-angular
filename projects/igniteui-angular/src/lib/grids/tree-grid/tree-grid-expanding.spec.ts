@@ -13,6 +13,7 @@ import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
 import { wait } from '../../test-utils/ui-interactions.spec';
+import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 describe('IgxTreeGrid - Expanding / Collapsing ', () => {
     configureTestSuite();
@@ -254,6 +255,7 @@ describe('IgxTreeGrid - Expanding / Collapsing ', () => {
         });
 
         it('should expand/collapse when using \'expandAll\' and \'collapseAll\' methods', async () => {
+            resizeObserverIgnoreError();
             treeGrid.perPage = 50;
             await wait();
             fix.detectChanges();
@@ -709,6 +711,7 @@ describe('IgxTreeGrid - Expanding / Collapsing ', () => {
         });
 
         it('should expand/collapse when using \'expandAll\' and \'collapseAll\' methods', () => {
+            resizeObserverIgnoreError();
             let rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(3);
 

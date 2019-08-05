@@ -1,6 +1,4 @@
 import {
-    QueryList,
-    ContentChildren,
     ElementRef,
     NgZone,
     ChangeDetectorRef,

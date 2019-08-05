@@ -5,14 +5,11 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../../calendar/index';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxColumnComponent } from '../column.component';
-import { IgxGridHeaderComponent } from '../grid-header.component';
 import { IgxGridComponent } from './grid.component';
 import { IGridCellEventArgs } from '../grid-base.component';
 import { IgxGridModule } from './index';
 import { IgxGridRowComponent } from './grid-row.component';
-import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridHeaderGroupComponent } from '../grid-header-group.component';
 
