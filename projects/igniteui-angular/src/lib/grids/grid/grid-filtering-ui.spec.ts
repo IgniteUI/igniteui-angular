@@ -4420,6 +4420,26 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             fix.detectChanges();
         }));
 
+        it('Should include \'false\' value in results when searching.', fakeAsync(() => {
+            // Open excel style custom filtering dialog.
+            GridFunctions.clickExcelFilterIcon(fix, 'Released');
+            fix.detectChanges();
+
+            // Type string in search box.
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const inputNativeElement = searchComponent.querySelector('.igx-input-group__input');
+            sendInputNativeElement(inputNativeElement, 'false', fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Verify that the first item is 'Select All' and the second item is 'false'.
+            const listItems = GridFunctions.sortNativeElementsVertically(
+                Array.from(searchComponent.querySelectorAll('igx-list-item')));
+            expect(listItems.length).toBe(2, 'incorrect rendered list items count');
+            expect(listItems[0].innerText).toBe('Select All');
+            expect(listItems[1].innerText).toBe('false');
+        }));
+
         it('should scroll items in search list correctly', (async () => {
             // Add additional rows as prerequisite for the test
             for (let index = 0; index < 30; index++) {
@@ -5340,6 +5360,96 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             fix.detectChanges();
 
             expect(grid.filteredData).toBeNull();
+        }));
+
+        it('Move-left button is disabled when using it to pin a column and max pin area width is reached.',
+        fakeAsync(() => {
+            // Test prerequisites
+            grid.width = '500px';
+            fix.detectChanges();
+            grid.getColumnByName('ID').filterable = true;
+            grid.getColumnByName('ID').movable = true;
+            grid.cdr.detectChanges();
+            tick(100);
+
+            // Pin columns until maximum pin area width is reached.
+            const columns = ['ProductName', 'Downloads', 'Released'];
+            columns.forEach((columnField) => {
+                GridFunctions.clickExcelFilterIcon(fix, columnField);
+                fix.detectChanges();
+                GridFunctions.clickPinIconInExcelStyleFiltering(fix, false);
+                tick(200);
+                fix.detectChanges();
+            });
+
+            // Verify pinned columns and 'ID' column position.
+            const column = grid.columns.find((col) => col.field === 'ID');
+            GridFunctions.verifyColumnIsPinned(column, false, 3);
+            expect(GridFunctions.getColumnHeaderByIndex(fix, 3).innerText).toBe('ID');
+
+            // Open ESF for the 'ID' column and verify that 'move left' button is disabled.
+            GridFunctions.clickExcelFilterIcon(fix, 'ID');
+            fix.detectChanges();
+            const moveComponent = GridFunctions.getExcelFilteringMoveComponent(fix);
+            const moveLeftButton = GridFunctions.sortNativeElementsHorizontally(
+                Array.from(moveComponent.querySelectorAll('.igx-button--flat')))[0];
+            expect(moveLeftButton.classList.contains('igx-button--disabled')).toBe(true);
+        }));
+
+        it('Pin button is disabled when using it to pin a column and max pin area width is reached.',
+        fakeAsync(() => {
+            // Test prerequisites
+            grid.width = '500px';
+            fix.detectChanges();
+            grid.getColumnByName('ID').filterable = true;
+            grid.getColumnByName('ID').movable = true;
+            grid.cdr.detectChanges();
+            tick(100);
+
+            // Pin columns until maximum pin area width is reached.
+            const columns = ['ProductName', 'Downloads', 'Released'];
+            columns.forEach((columnField) => {
+                GridFunctions.clickExcelFilterIcon(fix, columnField);
+                fix.detectChanges();
+                GridFunctions.clickPinIconInExcelStyleFiltering(fix, false);
+                tick(200);
+                fix.detectChanges();
+            });
+
+            // Verify pinned columns and 'ID' column position.
+            const column = grid.columns.find((col) => col.field === 'ID');
+            GridFunctions.verifyColumnIsPinned(column, false, 3);
+            expect(GridFunctions.getColumnHeaderByIndex(fix, 3).innerText).toBe('ID');
+
+            // Open ESF for the 'ID' column and verify that 'pin column' button is disabled.
+            GridFunctions.clickExcelFilterIcon(fix, 'ID');
+            fix.detectChanges();
+            let pinButton = GridFunctions.getExcelFilteringPinContainer(fix);
+            expect(pinButton.classList.contains('igx-excel-filter__actions-pin--disabled')).toBe(true,
+                'pinButton should be disabled');
+
+            // Close ESF.
+            GridFunctions.clickCancelExcelStyleFiltering(fix);
+            fix.detectChanges();
+
+            grid.displayDensity = DisplayDensity.compact;
+            tick(200);
+            fix.detectChanges();
+
+            // Pin one more column, because there is enough space for one more in 'compact' density.
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            fix.detectChanges();
+            GridFunctions.clickPinIconInExcelStyleFiltering(fix, true);
+            tick(200);
+            fix.detectChanges();
+
+            // Open ESF for the 'ID' column and verify that 'pin column' icon button is disabled.
+            GridFunctions.clickExcelFilterIcon(fix, 'ID');
+            fix.detectChanges();
+            const headerButtons = GridFunctions.getExcelFilteringHeaderIcons(fix);
+            pinButton = GridFunctions.sortNativeElementsHorizontally(Array.from(headerButtons))[0];
+            expect(pinButton.classList.contains('igx-button--disabled')).toBe(true,
+                'pinButton in header area should be disabled');
         }));
     });
 
