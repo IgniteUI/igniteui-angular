@@ -209,6 +209,10 @@
     %aside--mini {
         width: rem(60px);
         transition-duration: .2s, .2s;
+
+        %item {
+            justify-content: center;
+        }
     }
 
     %aside--normal {
@@ -251,17 +255,18 @@
     %item {
         position: relative;
         display: flex;
+        align-items: center;
         flex-flow: row nowrap;
         color: --var($theme, 'item-text-color');
         max-height: rem(48px);
-        padding: rem(12px) rem(16px);
+        min-width: rem(32px);
+        padding: rem(12px) rem(8px);
         cursor: pointer;
-        align-items: center;
         user-select: none;
         outline: transparent;
         white-space: nowrap;
         border-radius: --var($theme, 'item-border-radius');
-        margin: 8px;
+        margin: rem(8px) rem(4px);
 
         > igx-icon + span {
             margin-left: rem(32px);
