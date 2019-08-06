@@ -87,7 +87,7 @@
             <!-- <ng-container *igxTemplateOutlet="(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template)); context: getContext(rowData)"></ng-container> -->
         </ng-template>
         <ng-template #hierarchical_record_template let-rowIndex="index" let-rowData>
-            <igx-hierarchical-grid-row [gridID]="id" [selected]="selectionService.isRowSelected(rowData)" [index]="rowIndex" [rowData]="rowData" #row>
+            <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
             </igx-hierarchical-grid-row>
         </ng-template>
         <ng-template #child_record_template let-rowIndex="index" let-rowData>

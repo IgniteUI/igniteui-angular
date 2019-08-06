@@ -50,6 +50,12 @@ export class GridSelectionComponent implements AfterViewInit {
         this.grid1.selectRange({rowStart: 1, rowEnd: 3, columnStart: 0, columnEnd: 2});
     }
 
+    selectCell() {
+        this.grid1.getCellByColumn(1, 'ProductName').selected = this.grid1.getCellByColumn(1, 'ProductName').selected ?
+        false : true;
+        this.grid1.cdr.detectChanges();
+    }
+
     toggle() {
         const currentSelection = this.grid1.selectedRows();
         if (currentSelection !== undefined) {
@@ -79,6 +85,12 @@ export class GridSelectionComponent implements AfterViewInit {
 
     selectRow() {
         this.grid1.selectRows(['abc']);
+    }
+
+    selectThirdRow() {
+        this.grid1.getRowByIndex(2).selected = this.grid1.getRowByIndex(2).selected ?
+        false : true;
+        this.grid1.cdr.detectChanges();
     }
 
     deleteSectedRow() {

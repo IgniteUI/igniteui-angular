@@ -20,19 +20,24 @@
         <igx-column [field]="'ProductName'"></igx-column>
         <igx-column [field]="'UnitsInStock'"></igx-column>
     </igx-grid>
-    <button (click)="selectRow()">Non Existing row</button>
-    <button (click)="deleteSectedRow()">Delete Selected Row</button>
-    <button (click)="selectCells()">Select Range throught API</button>
-    <div class="separator"></div>
-    <div><input type='number' #input/><button (click)='scrScrollTo(input.value)'>Go To Index</button></div>
-    <button (click)='log(grid1.selectedCells)'>Selected Cells</button>
-    <button (click)='log(grid1.getSelectedRanges())'>Selected Ranges</button>
-    <button (click)='log(grid1.getSelectedData())'>Selected Data</button>
-    <button (click)="grid1.paging = true"></button>
 
-    <ng-container *ngIf="selection">
-        <button igxButton="flat" class="igx-button--flat" (click)="toggle()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" >Toggle rows with ID 1,2,5 </button>
-        <button igxButton="flat" class="igx-button--flat" (click)="toggleAll()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" >Toggle All rows</button>
-        <button igxButton="flat" class="igx-button--flat" (click)="callSelectAll()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" >Select All Rows</button>
-    </ng-container>
+<button (click)="selectRow()">Non Existing row</button>
+<button (click)="deleteSectedRow()">Delete Selected Row</button>
+<button (click)="selectCells()">Select Range throught API</button>
+
+<div><input type='number' #input/><button (click)='scrScrollTo(input.value)'>Go To Index</button></div>
+<button (click)='log(grid1.selectedCells)'>Selected Cells</button>
+<button (click)='log(grid1.getSelectedRanges())'>Selected Ranges</button>
+<button (click)='log(grid1.getSelectedData())'>Selected Data</button>
+<button (click)="grid1.paging = true">Enable Paging</button>
+<button (click)="selectCell()">Select (1.1)</button>
+<button (click)="selectThirdRow()">Select Thrid row</button>
+<button (click)="log(grid1.selectedRows())">Selected RowsS</button>
+
+<ng-container *ngIf="selection">
+    <button igxButton="flat" class="igx-button--flat" (click)="toggle()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" >Toggle rows with ID 1,2,5 </button>
+    <button igxButton="flat" class="igx-button--flat" (click)="toggleAll()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" >Toggle All rows</button>
+    <button igxButton="flat" class="igx-button--flat" (click)="callSelectAll()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" >Select All Rows</button>
+</ng-container>
+
 </div>

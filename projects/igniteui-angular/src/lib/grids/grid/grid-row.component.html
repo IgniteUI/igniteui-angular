@@ -30,7 +30,8 @@
             [width]="col.getCellWidth()"
             [visibleColumnIndex]="col.visibleIndex"
             [value]="rowData[col.field]"
-            [cellTemplate]="col.bodyTemplate">
+            [cellTemplate]="col.bodyTemplate"
+            [cellSelectionMode]="grid.cellSelection">
         </igx-grid-cell>
     </ng-container>
     <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForSizePropName]='"calcPixelWidth"' [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
@@ -49,7 +50,8 @@
             [width]="col.getCellWidth()"
             [visibleColumnIndex]="col.visibleIndex"
             [value]="rowData[col.field]"
-            [cellTemplate]="col.bodyTemplate">
+            [cellTemplate]="col.bodyTemplate"
+            [cellSelectionMode]="grid.cellSelection">
         </igx-grid-cell>
     </ng-template>
 </ng-container>
@@ -75,7 +77,8 @@
                 [rowData]="rowData"
                 [visibleColumnIndex]="child.visibleIndex"
                 [value]="rowData[child.field]"
-                [cellTemplate]="child.bodyTemplate"></igx-grid-cell>
+                [cellTemplate]="child.bodyTemplate"
+                [cellSelectionMode]="grid.cellSelection"></igx-grid-cell>
         </div>
     </ng-container>
     <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxTopLevel" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForSizePropName]='"calcPixelWidth"' [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
@@ -96,7 +99,8 @@
                 [rowData]="rowData"
                 [visibleColumnIndex]="child.visibleIndex"
                 [value]="rowData[child.field]"
-                [cellTemplate]="child.bodyTemplate"></igx-grid-cell>
+                [cellTemplate]="child.bodyTemplate"
+                [cellSelectionMode]="grid.cellSelection"></igx-grid-cell>
         </div>
     </ng-template>
 </ng-container>

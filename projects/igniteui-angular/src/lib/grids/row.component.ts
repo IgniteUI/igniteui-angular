@@ -118,7 +118,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     }
 
     set selected(value: boolean) {
-        value ? this.selectionService.selectRowbyID(this.rowID, this.rowData) :
+        value ? this.selectionService.rowSelection.set(this.rowID, this.rowData) :
         this.selectionService.deselectRow(this.rowID);
     }
 
