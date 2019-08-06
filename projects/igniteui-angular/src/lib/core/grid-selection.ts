@@ -397,7 +397,6 @@ export class IgxGridSelectionService {
     }
 
     pointerDown(node: ISelectionNode, shift: boolean, ctrl: boolean): void {
-        if (this.grid.cellSelection !== 'multiple') { return; }
         this.addKeyboardRange();
         this.initKeyboardState();
         this.pointerState.ctrl = ctrl;
@@ -447,7 +446,6 @@ export class IgxGridSelectionService {
     }
 
     pointerEnter(node: ISelectionNode, event: PointerEvent): boolean {
-        if (this.grid.cellSelection !== 'multiple') { return false; }
         // https://www.w3.org/TR/pointerevents/#the-button-property
         this.dragMode = event.buttons === 1 && event.button === -1;
         if (!this.dragMode) {
@@ -468,7 +466,6 @@ export class IgxGridSelectionService {
     }
 
     pointerUp(node: ISelectionNode, emitter: EventEmitter<GridSelectionRange>): boolean {
-        if (this.grid.cellSelection !== 'multiple') { return false; }
         if (this.dragMode) {
             this.restoreTextSelection();
             this.addRangeMeta(node, this.pointerState);
@@ -549,7 +546,7 @@ export class IgxGridSelectionService {
     }
 
     getSelectedRows() {
-        return this.rowSelection.size ? Array.of(this.rowSelection.values()) : [];
+        return this.rowSelection.size ? Array.from(this.rowSelection.values()) : [];
     }
 
     clearRowSelection() {
@@ -566,10 +563,11 @@ export class IgxGridSelectionService {
     selectRowbyID(rowID, rowData?, clearPrevSelection?) {
         // emit selection event
         if (this.grid.rowSelection === 'none') { return; }
-        debugger;
+
         const args = { oldSelection: this.getSelectedRows(), newSelection: Array.of(...this.getSelectedRows(), rowData), cancel: false};
         this.grid.onRowSelectionChange.emit(args);
         if (args.cancel) { return; }
+
         if (this.grid.rowSelection === 'single' || clearPrevSelection) {
             this.rowSelection.clear();
         }
@@ -583,14 +581,7 @@ export class IgxGridSelectionService {
     selectRows(rowIDs: any[], clearPrevSelection?) {
         if (clearPrevSelection) { this.rowSelection.clear(); }
         rowIDs.forEach(rowID => {
-            let rowData = rowID;
-            if (this.grid.primaryKey) {
-                const rowIndex = this.grid.data.map(rec => rec[this.grid.primaryKey]).indexOf(rowID); // this.grid.getRowByKey(rowID);
-                if (rowIndex < 0) { return; } // remove this if no validation need for existingRow
-                rowData = this.grid.data[rowIndex];
-            }
-            if (this.grid.data.indexOf(rowData) === -1) { return; } // remove this if no validation need for existingRow
-            this.rowSelection.set(rowID, rowData);
+            this.rowSelection.set(rowID, this.getRowDataByID(rowID));
         });
     }
 
@@ -634,10 +625,9 @@ export class IgxGridSelectionService {
     }
 
     public getRowDataByID(rowID) {
-        if (! this.grid.primaryKey) { return rowID; }
+        if (!this.grid.primaryKey) { return rowID; }
         const rowIndex = this.grid.data.map(rec => rec[this.grid.primaryKey]).indexOf(rowID);
-        if (rowIndex < 0) { return {}; }
-        return this.grid.data[rowIndex];
+        return rowIndex < 0 ? {} : this.grid.data[rowIndex];
     }
 
     public getRowID(rowData) {
