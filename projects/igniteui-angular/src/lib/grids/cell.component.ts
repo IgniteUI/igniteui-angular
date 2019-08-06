@@ -290,6 +290,24 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     @Input()
+    get cellSelectionMode() {
+        return this._cellSelection;
+    }
+
+    set cellSelectionMode(value) {
+        if (this._cellSelection === value) { return; }
+         this.zone.runOutsideAngular(() => {
+            value === GridSelectionMode.multiple ?
+            this.addPointerListeners(this._cellSelection) : this.removePointerListeners(this._cellSelection);
+        });
+        this._cellSelection = value;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @Input()
     @HostBinding('class.igx-grid__td--pinned-last')
     lastPinned = false;
 
@@ -520,6 +538,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     protected compositionStartHandler;
     protected compositionEndHandler;
     private _highlight: IgxTextHighlightDirective;
+    private _cellSelection = GridSelectionMode.multiple;
 
 
     constructor(
@@ -530,21 +549,19 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         private element: ElementRef,
         protected zone: NgZone) { }
 
-
-    public addPointerListeners() {
-        if (this.grid.cellSelection !== GridSelectionMode.multiple) { return; }
+    public addPointerListeners(selection) {
+        if (selection !== GridSelectionMode.multiple) { return; }
         this.nativeElement.addEventListener('pointerdown', this.pointerdown);
         this.nativeElement.addEventListener('pointerenter', this.pointerenter);
         this.nativeElement.addEventListener('pointerup', this.pointerup);
     }
 
-    public  removePointerListeners(currentSelection?) {
-        if (currentSelection && this.grid.cellSelection !== GridSelectionMode.multiple) { return; }
+    public  removePointerListeners(selection) {
+        if (selection !== GridSelectionMode.multiple) { return; }
         this.nativeElement.removeEventListener('pointerdown', this.pointerdown);
         this.nativeElement.removeEventListener('pointerenter', this.pointerenter);
         this.nativeElement.removeEventListener('pointerup', this.pointerup);
     }
-
 
     /**
      * @hidden
@@ -552,7 +569,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     ngOnInit() {
         this.zone.runOutsideAngular(() => {
-            this.addPointerListeners();
+            this.addPointerListeners(this.cellSelectionMode);
             // IE 11 workarounds
             if (isIE()) {
                 this.compositionStartHandler = () => this.isInCompositionMode = true;
@@ -570,7 +587,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     ngOnDestroy() {
         this.zone.runOutsideAngular(() => {
-            this.removePointerListeners();
+            this.removePointerListeners(this.cellSelectionMode);
             if (isIE()) {
                 this.nativeElement.removeEventListener('compositionstart', this.compositionStartHandler);
                 this.nativeElement.removeEventListener('compositionend', this.compositionEndHandler);
@@ -1034,6 +1051,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private get isCellSelectable() {
-        return this.grid.cellSelection !== GridSelectionMode.none;
+        return this.cellSelectionMode !== GridSelectionMode.none;
     }
 }
