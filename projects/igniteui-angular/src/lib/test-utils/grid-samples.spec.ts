@@ -949,10 +949,10 @@ export class IgxGridFilteringComponent extends BasicGridComponent {
         <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
             dataType="string" [filters]="customFilter" [sortable]="'true'" [movable]="'true'">
         </igx-column>
-        <ng-template igxExcelStyleSortingTemplate><div class="esf-custom-sorting">Sorting Template</div></ng-template>
-        <ng-template igxExcelStyleHidingTemplate><div class="esf-custom-hiding">Hiding Template</div></ng-template>
-        <ng-template igxExcelStyleMovingTemplate><div class="esf-custom-moving">Moving Template</div></ng-template>
-        <ng-template igxExcelStylePinningTemplate><div class="esf-custom-pinning">Pinning Template</div></ng-template>
+        <ng-template igxExcelStyleSorting><div class="esf-custom-sorting">Sorting Template</div></ng-template>
+        <ng-template igxExcelStyleHiding><div class="esf-custom-hiding">Hiding Template</div></ng-template>
+        <ng-template igxExcelStyleMoving><div class="esf-custom-moving">Moving Template</div></ng-template>
+        <ng-template igxExcelStylePinning><div class="esf-custom-pinning">Pinning Template</div></ng-template>
     </igx-grid>`
 })
 export class IgxGridFilteringESFTemplatesComponent extends BasicGridComponent {

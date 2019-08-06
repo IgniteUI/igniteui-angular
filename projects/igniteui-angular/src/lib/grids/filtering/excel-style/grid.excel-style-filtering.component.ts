@@ -51,28 +51,28 @@ export class FilterListItem {
 }
 
 @Directive({
-    selector: '[igxExcelStyleSortingTemplate]'
+    selector: '[igxExcelStyleSorting]'
 })
 export class IgxExcelStyleSortingTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
-    selector: '[igxExcelStyleMovingTemplate]'
+    selector: '[igxExcelStyleMoving]'
 })
 export class IgxExcelStyleMovingTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
-    selector: '[igxExcelStyleHidingTemplate]'
+    selector: '[igxExcelStyleHiding]'
 })
 export class IgxExcelStyleHidingTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
-    selector: '[igxExcelStylePinningTemplate]'
+    selector: '[igxExcelStylePinning]'
 })
 export class IgxExcelStylePinningTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
