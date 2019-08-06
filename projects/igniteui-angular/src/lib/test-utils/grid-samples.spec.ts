@@ -11,6 +11,8 @@ import { IgxColumnComponent } from '../grids/column.component';
 import { IgxTransactionService } from '../services';
 import { IgxFilteringOperand } from '../data-operations/filtering-condition';
 import { ExpressionUI } from '../grids/filtering/grid-filtering.service';
+import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
+import { FilteringStrategy } from '../data-operations/filtering-strategy';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -930,6 +932,32 @@ export class IgxGridFilteringComponent extends BasicGridComponent {
     public activateFiltering(activate: boolean) {
         this.grid.allowFiltering = activate;
         this.grid.cdr.markForCheck();
+    }
+}
+
+@Component({
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true'
+                         [filterMode]="'excelStyleFilter'" [uniqueColumnValuesStrategy]="columnValuesStrategy">
+        <igx-column width="100px" [field]="'ID'"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'Released'" dataType="boolean"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" dataType="date">
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent {
+    private _filteringStrategy = new FilteringStrategy();
+    public data = SampleTestData.excelFilteringData();
+
+    public columnValuesStrategy = (column: IgxColumnComponent,
+                                   columnExprTree: IFilteringExpressionsTree,
+                                   done: (uniqueValues: any[]) => void) => {
+        setTimeout(() => {
+            const filteredData = this._filteringStrategy.filter(this.data, columnExprTree);
+            const columnValues = filteredData.map(record => record[column.field]);
+            done(columnValues);
+        }, 1000);
     }
 }
 

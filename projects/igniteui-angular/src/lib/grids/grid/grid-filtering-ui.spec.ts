@@ -41,7 +41,8 @@ import {
     IgxGridFilteringMCHComponent,
     IgxTestExcelFilteringDatePickerComponent,
     IgxGridFilteringTemplateComponent,
-    IgxGridFilteringESFTemplatesComponent
+    IgxGridFilteringESFTemplatesComponent,
+    IgxGridFilteringESFLoadOnDemandComponent
 } from '../../test-utils/grid-samples.spec';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
@@ -3504,7 +3505,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             declarations: [
                 IgxGridFilteringComponent,
                 IgxTestExcelFilteringDatePickerComponent,
-                IgxGridFilteringESFTemplatesComponent
+                IgxGridFilteringESFTemplatesComponent,
+                IgxGridFilteringESFLoadOnDemandComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -5576,6 +5578,38 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             expect(datePicker.componentInstance.mode).toBe('dropdown');
             // templateDropDownTarget is no longer available
             // expect(datePicker.componentInstance.templateDropDownTarget).toBeTruthy();
+        }));
+    });
+
+    describe('Load values on demand', () => {
+        let fix, grid;
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridFilteringESFLoadOnDemandComponent);
+            grid = fix.componentInstance.grid;
+            fix.detectChanges();
+        }));
+
+        fit('TEST', fakeAsync(() => {
+            // Open excel style custom filtering dialog and wait a bit.
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            fix.detectChanges();
+            tick(400);
+
+            // Verify items in search have not loaded yet and that the loading indicator is visible.
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            let listItems = searchComponent.querySelectorAll('igx-list-item');
+            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
+            let loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).not.toBeNull('esf loading indicator is not visible');
+
+            // Wait for items to load.
+            tick(650);
+
+            // Verify items in search have loaded and that the loading indicator is not visible.
+            listItems = searchComponent.querySelectorAll('igx-list-item');
+            expect(listItems.length).toBe(6, 'incorrect rendered list items count');
+            loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
         }));
     });
 });
