@@ -251,7 +251,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return this._scrollWidth;
     }
 
-    private _esfLoadingIndicatorTemplate: TemplateRef<any>;
     private _resourceStrings = CurrentResourceStrings.GridResStrings;
     private _emptyGridMessage = null;
     private _emptyFilteredGridMessage = null;
