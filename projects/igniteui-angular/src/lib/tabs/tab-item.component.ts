@@ -18,7 +18,7 @@ import { IgxTabItemTemplateDirective } from './tabs.directives';
     templateUrl: 'tab-item.component.html'
 })
 
-export class IgxTabItemComponent implements IgxTabItemBase {
+export class IgxTabItemComponent extends IgxTabItemBase {
 
     /**
     * Gets the group associated with the tab.
@@ -84,6 +84,7 @@ export class IgxTabItemComponent implements IgxTabItemBase {
     private _disabled = false;
 
     constructor(private _tabs: IgxTabsBase, private _element: ElementRef) {
+        super();
         this._nativeTabItem = _element;
     }
 
@@ -158,9 +159,7 @@ export class IgxTabItemComponent implements IgxTabItemBase {
     @HostListener('window:resize', ['$event'])
     public onResize(event) {
         if (this.isSelected) {
-            this._tabs.selectedIndicator.nativeElement.style.visibility = 'visible';
-            this._tabs.selectedIndicator.nativeElement.style.width = `${this.nativeTabItem.nativeElement.offsetWidth}px`;
-            this._tabs.selectedIndicator.nativeElement.style.transform = `translate(${this.nativeTabItem.nativeElement.offsetLeft}px)`;
+            this._tabs.transformIndicatorAnimation(this.nativeTabItem.nativeElement);
         }
     }
 
@@ -241,13 +240,17 @@ export class IgxTabItemComponent implements IgxTabItemBase {
         return this.relatedGroup ? this.relatedGroup.isSelected : this._isSelected;
     }
     set isSelected(newValue: boolean) {
-        if (this.relatedGroup) {
-            this.relatedGroup.isSelected = newValue;
-        } else if (this._isSelected !== newValue) {
-            this._isSelected = newValue;
-            if (this._isSelected) {
-                this.select();
-            }
+        if (!this.disabled && this.isSelected !== newValue) {
+            this._tabs.performSelectionChange(newValue ? this : null);
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    public select(): void {
+        if (!this.disabled && !this.isSelected) {
+            this._tabs.performSelectionChange(this);
         }
     }
 
@@ -258,46 +261,15 @@ export class IgxTabItemComponent implements IgxTabItemBase {
         if (this._tabs.tabs) {
             return this._tabs.tabs.toArray().indexOf(this);
         }
+        return -1;
     }
 
     /**
      * @hidden
      */
-    public select(focusDelay = 200): void {
-        if (this.relatedGroup) {
-            this.relatedGroup.select(focusDelay);
-        } else {
-            this._isSelected = true;
-            this._tabs.onTabItemSelected.emit({ tab: this, group: null });
-            this.handleTabSelectionAnimation();
-        }
-    }
-
-    private handleTabSelectionAnimation(): void {
-        const tabElement = this.nativeTabItem.nativeElement;
-
-        // Scroll to the left
-        if (tabElement.offsetLeft < this._tabs.offset) {
-            this._tabs.scrollElement(tabElement, false);
-        }
-
-        // Scroll to the right
-        const viewPortOffsetWidth = this._tabs.viewPort.nativeElement.offsetWidth;
-        const delta = (tabElement.offsetLeft + tabElement.offsetWidth) - (viewPortOffsetWidth + this._tabs.offset);
-        // Fix for IE 11, a difference is accumulated from the widths calculations
-        if (delta > 1) {
-            this._tabs.scrollElement(tabElement, true);
-        }
-
-        this.transformIndicatorAnimation(tabElement);
-    }
-
-    private transformIndicatorAnimation(element: HTMLElement): void {
-        if (this._tabs && this._tabs.selectedIndicator) {
-            this._tabs.selectedIndicator.nativeElement.style.visibility = `visible`;
-            this._tabs.selectedIndicator.nativeElement.style.width = `${element.offsetWidth}px`;
-            this._tabs.selectedIndicator.nativeElement.style.transform = `translate(${element.offsetLeft}px)`;
-        }
+    public setSelectedInternal(newValue: boolean) {
+        this._isSelected = newValue;
+        this.tabindex = newValue ? 0 : -1;
     }
 
     private onKeyDown(isLeftArrow: boolean, index = null): void {
@@ -308,7 +280,7 @@ export class IgxTabItemComponent implements IgxTabItemBase {
                 : (this._tabs.selectedIndex === tabsArray.length - 1) ? 0 : this._tabs.selectedIndex + 1;
         }
         const tab = tabsArray[index];
-        tab.select(200);
+        tab.select();
     }
 
     /**
@@ -330,4 +302,5 @@ export class IgxTabItemComponent implements IgxTabItemBase {
     public get context(): any {
         return this.relatedGroup ? this.relatedGroup : this;
     }
+
 }
