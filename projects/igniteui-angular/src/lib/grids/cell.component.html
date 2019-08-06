@@ -21,8 +21,8 @@
             [igxFocus]="focused" [disableRipple]="true"></igx-checkbox>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'date'">
-        <igx-date-picker [style.width.%]="100" [outlet]="grid.outletDirective" mode="dropdown" (onSelection)="editValue = $event"
-            [locale]="grid.locale" [value]="editValue" [igxFocus]="focused" [labelVisibility]="false">
+        <igx-date-picker [style.width.%]="100" [outlet]="grid.outletDirective" mode="dropdown"
+            [locale]="grid.locale" [(value)]="editValue" [igxFocus]="focused" [labelVisibility]="false">
         </igx-date-picker>
     </ng-container>
 </ng-template>
