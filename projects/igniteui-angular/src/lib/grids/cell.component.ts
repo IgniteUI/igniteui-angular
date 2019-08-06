@@ -23,6 +23,8 @@ import { IgxGridBaseComponent, IGridEditEventArgs, IGridDataBindable } from './g
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../core/grid-selection';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { GridSelectionMode } from './grid-base.component';
+import { HammerGesturesManager } from '../core/touch';
+
 /**
  * Providing reference to `IgxGridCellComponent`:
  * ```typescript
@@ -39,7 +41,8 @@ import { GridSelectionMode } from './grid-base.component';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-cell',
-    templateUrl: './cell.component.html'
+    templateUrl: './cell.component.html',
+    providers: [HammerGesturesManager]
 })
 export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     private _vIndex = -1;
@@ -547,7 +550,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         public cdr: ChangeDetectorRef,
         private element: ElementRef,
-        protected zone: NgZone) { }
+        protected zone: NgZone,
+        private touchManager: HammerGesturesManager) { }
 
     public addPointerListeners(selection) {
         if (selection !== GridSelectionMode.multiple) { return; }
@@ -579,6 +583,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 this.nativeElement.addEventListener('compositionend', this.compositionEndHandler);
             }
         });
+        this.touchManager.addEventListener(this.nativeElement, 'doubletap', this.onDoubleClick, {
+            cssProps: { } /* don't disable user-select, etc */
+        } as HammerOptions);
     }
 
     /**
@@ -593,6 +600,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 this.nativeElement.removeEventListener('compositionend', this.compositionEndHandler);
             }
         });
+        this.touchManager.destroy();
     }
 
     /**
@@ -741,7 +749,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     @HostListener('dblclick', ['$event'])
-    public onDoubleClick(event: MouseEvent) {
+    public onDoubleClick = (event: MouseEvent| HammerInput) => {
+        if (event.type === 'doubletap') {
+            // prevent double-tap to zoom on iOS
+            event.preventDefault();
+        }
         if (this.editable && !this.editMode && !this.row.deleted) {
             this.crudService.begin(this);
         }

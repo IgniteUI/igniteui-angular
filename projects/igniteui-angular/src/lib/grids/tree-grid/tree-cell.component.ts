@@ -6,11 +6,13 @@ import { getNodeSizeViaRange } from '../../core/utils';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridBaseComponent, IGridDataBindable } from '../grid';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+import { HammerGesturesManager } from '../../core/touch';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-tree-grid-cell',
-    templateUrl: 'tree-cell.component.html'
+    templateUrl: 'tree-cell.component.html',
+    providers: [HammerGesturesManager]
 })
 export class IgxTreeGridCellComponent extends IgxGridCellComponent implements OnInit {
     private treeGridAPI: IgxTreeGridAPIService;
@@ -22,8 +24,9 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
                 cdr: ChangeDetectorRef,
                 element: ElementRef,
                 protected zone: NgZone,
+                touchManager: HammerGesturesManager,
                 @Inject(DOCUMENT) public document) {
-        super(selectionService, crudService, gridAPI, cdr, element, zone);
+        super(selectionService, crudService, gridAPI, cdr, element, zone, touchManager);
         this.treeGridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
