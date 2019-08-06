@@ -4421,10 +4421,10 @@ describe('IgxGrid Component Tests', () => {
     describe('IgxGrid - Performance tests', () => {
         const MAX_RAW_RENDER = 1800;
         const MAX_GROUPED_RENDER = 1500;
-        const MAX_VER_SCROLL_O = 20;
-        const MAX_HOR_SCROLL_O = 20;
-        const MAX_VER_SCROLL_U = 480;
-        const MAX_HOR_SCROLL_U = 480;
+        const MAX_VER_SCROLL_O = 30;
+        const MAX_HOR_SCROLL_O = 30;
+        const MAX_VER_SCROLL_U = 530;
+        const MAX_HOR_SCROLL_U = 530;
         const MAX_FOCUS = 80;
 
         configureTestSuite();
