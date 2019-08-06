@@ -717,7 +717,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Input()
-    public valueKey: string;
+    public valueKey: string = null;
 
     @Input()
     set displayKey(val: string) {
@@ -1090,12 +1090,12 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     private registerRemoteEntries(ids: any[], add = true) {
         const selection = this.remoteSelection(ids);
         if (add) {
-            for (let i = 0; i < selection.length; i++) {
-                this._remoteSelection[selection[i][this.valueKey]] = selection[i][this.displayKey];
+            for (const entry of selection) {
+                this._remoteSelection[entry[this.valueKey]] = entry[this.displayKey];
             }
         } else {
-            for (let i = 0; i < selection.length; i++) {
-                delete this._remoteSelection[selection[i][this.valueKey]];
+            for (const entry of selection) {
+                delete this._remoteSelection[entry[this.valueKey]];
             }
         }
     }
@@ -1170,7 +1170,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         // If you mutate the array, no pipe is invoked and the display isn't updated;
         // if you replace the array, the pipe executes and the display is updated.
         this.data = cloneArray(this.data);
-        this.selectItems([addedItem], false);
+        this.selectItems(this.comboAPI.valueKey !== null ? [addedItem[this.valueKey]] : [addedItem], false);
         this.customValueFlag = false;
         this.searchInput.nativeElement.focus();
         this.dropdown.focusedItem = null;
@@ -1499,7 +1499,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         this.onSelectionChange.emit(args);
         if (!args.cancel) {
             this.selection.select_items(this.id, args.newSelection, true);
-            let value: string;
+            let value = '';
             if (this.isRemote) {
                 if (args.newSelection.length) {
                     // use setDiffs when events PR is merged
@@ -1512,8 +1512,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
                     this.registerRemoteEntries(items.added);
                     this.registerRemoteEntries(items.removed, false);
                     value = Object.keys(this._remoteSelection).map(e => this._remoteSelection[e]).join(', ');
-                } else {
-                    value = '';
                 }
             } else {
                 value = this.displayKey !== null && this.displayKey !== undefined ?
@@ -1527,7 +1525,11 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
     /** if there is a valueKey - map the keys to data items, else - just return the keys */
     private convertKeysToItems(keys: any[]) {
-        return this.comboAPI.valueKey !== null ? this.data.filter(entry => keys.indexOf(entry[this.valueKey]) > -1) : keys;
+        if (this.comboAPI.valueKey === null) {
+            return keys;
+        }
+        // map keys vs. filter data to retain the order of the selected items
+        return keys.map(key => this.data.find(entry => entry[this.valueKey] === key)).filter(e => e !== undefined);
     }
     /**
      * Event handlers
