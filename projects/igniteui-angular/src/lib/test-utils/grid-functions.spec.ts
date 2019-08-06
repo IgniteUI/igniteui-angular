@@ -715,7 +715,9 @@ export class GridFunctions {
     public static getExcelFilteringPinContainer(fix: ComponentFixture<any>) {
         const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
         const excelMenu = gridNativeElement.querySelector('.igx-excel-filter__menu');
-        return excelMenu.querySelector('.igx-excel-filter__actions-pin');
+        const pinContainer = excelMenu.querySelector('.igx-excel-filter__actions-pin');
+        const pinContainerDisabled = excelMenu.querySelector('.igx-excel-filter__actions-pin--disabled');
+        return pinContainer ? pinContainer : pinContainerDisabled;
     }
 
     public static getExcelFilteringUnpinContainer(fix: ComponentFixture<any>) {

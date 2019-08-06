@@ -68,6 +68,11 @@
             @extend %grid-excel-actions__action !optional;
         }
 
+        @include e(actions-pin, $m: disabled) {
+            @extend %grid-excel-actions__action !optional;
+            @extend %grid-excel-actions__action--disabled !optional;
+        }
+
         @include e(actions-unpin) {
             @extend %grid-excel-actions__action !optional;
         }

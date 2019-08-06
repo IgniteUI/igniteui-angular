@@ -12,7 +12,8 @@
 /// @prop {Map} header-background [igx-color: ('grays', 100), hexrgba: #fff] - The table header background color.
 /// @prop {Map} header-text-color [igx-color: ('grays', 600)] - The table header text color.
 ///
-/// @prop {Map} $sorted-header-icon-color [igx-color: ('secondary', 500)] - The sorted table header icon color.
+/// @prop {Map} sorted-header-icon-color [igx-color: ('secondary', 500)] - The sorted table header icon color.
+/// @prop {Map} sortable-header-icon-hover-color [igx-color: ('secondary', 500)] - The icon color on hover in grid header when the column is sortable.
 ///
 /// @prop {Number} header-border-width [1px] - The border width used for header borders.
 /// @prop {String} header-border-style [solid] - The border style used for header borders.
@@ -85,20 +86,8 @@ $_light-grid: extend(
             igx-color: ('grays', 600)
         ),
 
-        sortable-header-hover-color: (
-            igx-color: ('grays', 900)
-        ),
-
-        sortable-header-hover-icon-color: (
-            igx-color: ('grays', 500)
-        ),
-
         sortable-header-icon-hover-color: (
             igx-color: ('secondary', 500)
-        ),
-
-        sorted-header-color: (
-            igx-color: ('grays', 900)
         ),
 
         sorted-header-icon-color: (
