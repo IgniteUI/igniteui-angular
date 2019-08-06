@@ -29,7 +29,7 @@ import { TransactionType, Transaction, IgxTransactionService } from '../../servi
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxTabsModule, IgxTabsComponent } from '../../tabs';
-import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { setupGridScrollDetection, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 const DEBOUNCETIME = 30;
 
@@ -4251,6 +4251,7 @@ describe('IgxGrid Component Tests', () => {
         });
 
         it('IgxTabs: should initialize a grid with correct width/height', async () => {
+            resizeObserverIgnoreError();
 
             const grid = fix.componentInstance.grid3;
             const tab = fix.componentInstance.tabs;

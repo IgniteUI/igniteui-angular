@@ -5,10 +5,10 @@ import { IgxHierarchicalGridModule, IgxHierarchicalRowComponent } from './index'
 import { Component, ViewChild } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowIslandComponent } from './row-island.component';
-import { wait } from '../../test-utils/ui-interactions.spec';
+import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand } from 'igniteui-angular';
 import { By } from '@angular/platform-browser';
-import { first, delay } from 'rxjs/operators';
+import { first, delay, take } from 'rxjs/operators';
 import { setupHierarchicalGridScrollDetection, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 describe('IgxHierarchicalGrid Virtualization', () => {
@@ -185,6 +185,7 @@ describe('IgxHierarchicalGrid Virtualization', () => {
     });
 
     it('should not lose scroll position after expanding a row when there are already expanded rows above.', async() => {
+        resizeObserverIgnoreError();
         // Expand two rows at the top
         hierarchicalGrid.dataRowList.toArray()[2].nativeElement.children[0].click();
         await wait(100);
@@ -267,18 +268,18 @@ describe('IgxHierarchicalGrid Virtualization', () => {
     it('should update scroll height after expanding/collapsing rows.', async() => {
         const scrHeight = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight;
         const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
-        firstRow.nativeElement.children[0].click();
-        hierarchicalGrid.verticalScrollContainer.addScrollTop(1);
-        await wait(100);
-        hierarchicalGrid.cdr.detectChanges();
-        const childGrid1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
-        expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight)
-        .toBeGreaterThan(scrHeight + childGrid1.calcHeight);
-        expect(childGrid1.nativeElement.parentElement.className.indexOf('igx-grid__hierarchical-indent--scroll'))
-        .not.toBe(-1);
+        UIInteractions.clickElement(firstRow.nativeElement.children[0]);
+        fixture.detectChanges();
+        hierarchicalGrid.verticalScrollContainer.onContentSizeChange.pipe(take(1)).subscribe(() => {
+            const childGrid1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight)
+            .toBeGreaterThan(scrHeight + childGrid1.calcHeight);
+            expect(childGrid1.nativeElement.parentElement.className.indexOf('igx-grid__hierarchical-indent--scroll'))
+            .not.toBe(-1);
+        });
     });
 
-    it('should update scroll height after expanding/collapsing row in a nested child grid that has no height.', async () => {
+it('should update scroll height after expanding/collapsing row in a nested child grid that has no height.', async () => {
         resizeObserverIgnoreError();
         fixture.componentInstance.data = [
             { ID: 0, ChildLevels: 3, ProductName: 'Product: A0 ' },

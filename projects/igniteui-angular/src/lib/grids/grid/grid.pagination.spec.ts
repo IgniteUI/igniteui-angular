@@ -192,6 +192,7 @@ describe('IgxGrid - Grid Paging', () => {
     }));
 
     it('change paging pages per page API', (async () => {
+        resizeObserverIgnoreError();
         const fix = TestBed.createComponent(ReorderedColumnsComponent);
         fix.detectChanges();
 

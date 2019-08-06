@@ -2466,10 +2466,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected _filterMode = FilterMode.quickFilter;
 
     protected observer: ResizeObserver;
-    protected bodyObserver: ResizeObserver;
 
     protected resizeNotify = new Subject();
-    protected bodyResizeNotify = new Subject();
+
 
     private columnListDiffer;
     private _hiddenColumnsText = '';
@@ -2632,14 +2631,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.resizeNotify.pipe(destructor, filter(() => !this._init), throttleTime(40))
             .subscribe(() => this.notifyChanges(true));
 
-        this.bodyResizeNotify.pipe(destructor, filter(() => !this._init), throttleTime(40))
-            .subscribe(() => {
-                this.zone.runTask(() => {
-                    this.calculateGridSizes();
-                    this.recalcUpdateSizes();
-                });
-            });
-
         this.onPagingDone.pipe(destructor).subscribe(() => {
             this.endEdit(true);
             this.selectionService.clear();
@@ -2673,6 +2664,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.notifyChanges(true);
         });
 
+        this.verticalScrollContainer.onContentSizeChange.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
+            this.calculateGridSizes();
+        });
+
         this.onDensityChanged.pipe(destructor).subscribe(() => {
             requestAnimationFrame(() => {
                 this.summaryService.summaryHeight = 0;
@@ -2693,15 +2688,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.calcWidth = this.width && this.width.indexOf('%') === -1 ? parseInt(this.width, 10) : 0;
         this.shouldGenerate = this.autoGenerate;
         this._scrollWidth = this.getScrollWidth();
-    }
-
-    protected recalcUpdateSizes() {
-        const virt = this.verticalScrollContainer as any;
-        virt.recalcUpdateSizes();
-        // After sizes are updated chunk size and scroll position may change.
-        virt._applyChanges();
-        virt._updateScrollOffset();
-        this.notifyChanges(true);
     }
 
     protected setupColumns() {
@@ -2798,10 +2784,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', this.horizontalScrollHandler);
 
             this.observer = new ResizeObserver(() => this.resizeNotify.next());
-            this.bodyObserver = new ResizeObserver(() => this.bodyResizeNotify.next());
-
             this.observer.observe(this.nativeElement);
-            this.bodyObserver.observe(this.tbody.nativeElement.querySelector('igx-display-container'));
         });
     }
 
@@ -2870,7 +2853,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.zone.runOutsideAngular(() => {
             this.observer.disconnect();
-            this.bodyObserver.disconnect();
             this.nativeElement.removeEventListener('keydown', this.keydownHandler);
             this.verticalScrollContainer.getVerticalScroll().removeEventListener('scroll', this.verticalScrollHandler);
             this.parentVirtDir.getHorizontalScroll().removeEventListener('scroll', this.horizontalScrollHandler);

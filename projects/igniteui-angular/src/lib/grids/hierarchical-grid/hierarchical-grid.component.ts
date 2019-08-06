@@ -732,15 +732,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         });
     }
 
-    protected recalcUpdateSizes() {
-        super.recalcUpdateSizes();
-        let currGrid = this.parent;
-        while (currGrid) {
-            currGrid.recalcUpdateSizes()
-            currGrid.notifyChanges(true);
-            currGrid = currGrid.parent;
-        }
-    }
 
     private hg_verticalScrollHandler(event) {
         this.scrollTop = event.target.scrollTop;
