@@ -360,6 +360,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
 
             this.renderValues(columnValues);
             this.excelStyleSearch.isLoading = false;
+            this.excelStyleSearch.refreshSize();
         });
     }
 

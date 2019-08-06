@@ -78,6 +78,10 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
     constructor(private _cdr: ChangeDetectorRef) { }
 
     public ngAfterViewInit() {
+        this.refreshSize();
+    }
+
+    public refreshSize() {
         requestAnimationFrame(() => {
             this.virtDir.recalcUpdateSizes();
         });
