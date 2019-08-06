@@ -85,8 +85,6 @@ export class MyExampleComponent {
 }
 ```
 
-If a valueKey **is specified**, the combo will try to map the passed value to the specific property of the data entries.
-
 <div class="divider--half"></div>
 
 ### Filtering

@@ -33,7 +33,7 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
      */
     public get itemID() {
         const valueKey = this.comboAPI.valueKey;
-        return this.comboAPI.valueKey !== null ? this.value[valueKey] : this.value;
+        return valueKey !== null ? this.value[valueKey] : this.value;
     }
 
     /**

@@ -328,7 +328,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  <igx-combo #combo>
      *      ...
      *      <ng-template igxComboEmpty>
-     *          <div class="combo--emtpy">
+     *          <div class="combo--empty">
      *              There are no items to display
      *          </div>
      *      </ng-template>
@@ -704,7 +704,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * Combo value data source propery.
+     * Combo value data source property.
      *
      * ```typescript
      * // get
@@ -725,7 +725,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * Combo text data source propery.
+     * Combo text data source property.
      *
      * ```typescript
      * // get
@@ -738,7 +738,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *
      * ```html
      * <!--set-->
-     * <igx-combo [displayKey]='mydisplayKey'></igx-combo>
+     * <igx-combo [displayKey]='myDisplayKey'></igx-combo>
      * ```
      */
     get displayKey() {
@@ -1087,8 +1087,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             this.dataType === DataTypes.COMPLEX;
     }
 
+    /** Contains key-value pairs of the selected valueKeys and their resp. displayKeys */
     private registerRemoteEntries(ids: any[], add = true) {
-        const selection = this.remoteSelection(ids);
+        const selection = this.getValueDisplayPairs(ids);
         if (add) {
             for (const entry of selection) {
                 this._remoteSelection[entry[this.valueKey]] = entry[this.displayKey];
@@ -1100,7 +1101,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         }
     }
 
-    private remoteSelection(ids: any[]) {
+    /** For `id: any[]` returns a mapped `{ [combo.valueKey]: any, [combo.displayKey]: any }[]`*/
+    private getValueDisplayPairs(ids: any[]) {
         return this.data.filter(entry => ids.indexOf(entry[this.valueKey]) > -1).map(e => {
             return {
                 [this.valueKey]: e[this.valueKey],
@@ -1467,15 +1469,21 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * Selects/Deselects an item using it's valueKey value
-     * @param itemID the valueKey of the specified item
-     * @param select If the item should be selected (true) or deselcted (false)
+     * Selects/Deselects a single item
+     * @param itemID the itemID of the specific item
+     * @param select If the item should be selected (true) or deselected (false)
      *
+     * Without specified valueKey;
      * ```typescript
-     * items: { field: string, region: string}[] = data;
+     * this.combo.valueKey = null;
+     * const items: { field: string, region: string}[] = data;
+     * this.combo.setSelectedItem(items[0], true);
+     * ```
+     * With specified valueKey;
+     * ```typescript
+     * this.combo.valueKey = 'field';
+     * const items: { field: string, region: string}[] = data;
      * this.combo.setSelectedItem('Connecticut', true);
-     * // combo.valueKey === 'field'
-     * // items[n] === { field: 'Connecticut', state: 'New England'}
      * ```
      */
     public setSelectedItem(itemID: any, select = true, event?: Event): void {
