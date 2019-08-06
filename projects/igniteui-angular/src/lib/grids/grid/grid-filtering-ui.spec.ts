@@ -5589,7 +5589,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             fix.detectChanges();
         }));
 
-        fit('TEST', fakeAsync(() => {
+        it('Verify unique values are loaded correctly in ESF search component.', fakeAsync(() => {
             // Open excel style custom filtering dialog and wait a bit.
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
             fix.detectChanges();

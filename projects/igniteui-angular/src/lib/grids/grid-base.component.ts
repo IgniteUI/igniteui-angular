@@ -1008,6 +1008,22 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
+    /**
+     * An @Input property that provides a callback for loading unique column values on demand.
+     * If this property is provided, the unique values it generates will be used by the Excel Style Filtering.
+     * ```html
+     * <igx-grid [data]="localData" [filterMode]="'excelStyleFilter'" [uniqueColumnValuesStrategy]="columnValuesStrategy"></igx-grid>
+     * ```
+     *
+     * ```typescript
+     * public columnValuesStrategy = (column: IgxColumnComponent,
+     *                               filteringExpressionsTree: IFilteringExpressionsTree,
+     *                               done: (uniqueValues: any[]) => void) => {
+     *     this.dataService.getColumnData(column, filteringExpressionsTree, uniqueValues => done(uniqueValues));
+     * }
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
     @Input()
     public uniqueColumnValuesStrategy: (column: IgxColumnComponent,
                                         filteringExpressionsTree: IFilteringExpressionsTree,
