@@ -4402,7 +4402,7 @@ describe('IgxGrid Component Tests', () => {
         });
     });
 
-    fdescribe('IgxGrid - Performance tests', () => {
+    describe('IgxGrid - Performance tests', () => {
         configureTestSuite();
         beforeEach(async(() => {
             TestBed.configureTestingModule({
@@ -4438,24 +4438,24 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
             await wait(16);
             fix.componentInstance.startTime = new Date().getTime();
-            fix.componentInstance.verticalScroll.scrollTop = 80;
-            await wait(16);
+            fix.componentInstance.verticalScroll.scrollTop = 120;
+            await wait(100);
             fix.detectChanges();
-            console.log('\x1b[44m\x1b[37mOptimized Scroll Time: ' + fix.componentInstance.delta + '\x1b[0m');
-            expect(fix.componentInstance.delta).toBeLessThan(100);
+            expect(fix.componentInstance.delta).toBeLessThan(30);
         });
 
-        it('should scroll (unoptimized delta) the grid vertically in a certain amount of time', async () => {
+        /* This is currently unrecognizable by Mutation Observers
+        xit('should scroll (unoptimized delta) the grid vertically in a certain amount of time', async () => {
             const fix = TestBed.createComponent(IgxGridPerformanceComponent);
             fix.detectChanges();
             await wait(16);
             fix.componentInstance.startTime = new Date().getTime();
             fix.componentInstance.verticalScroll.scrollTop = 200;
-            await wait(16);
+            await wait(100);
             fix.detectChanges();
-            console.log('\x1b[42m\x1b[30mUnoptimized Scroll Time: ' + fix.componentInstance.delta + '\x1b[0m');
+            console.log('\x1b[42m\x1b[30mVertical Unoptimized Scroll Time: ' + fix.componentInstance.delta + '\x1b[0m');
             expect(fix.componentInstance.delta).toBeLessThan(100);
-        });
+        });*/
 
         it('should scroll (optimized delta) the grid horizontally in a certain amount of time', async () => {
             const fix = TestBed.createComponent(IgxGridPerformanceComponent);
@@ -4463,23 +4463,25 @@ describe('IgxGrid Component Tests', () => {
             await wait(16);
             fix.componentInstance.startTime = new Date().getTime();
             fix.componentInstance.horizontalScroll.scrollLeft = 150;
-            await wait(16);
+            await wait(100);
             fix.detectChanges();
-            console.log('\x1b[44m\x1b[37mOptimized Scroll Time: ' + fix.componentInstance.delta + '\x1b[0m');
-            expect(fix.componentInstance.delta).toBeLessThan(100);
+            expect(fix.componentInstance.delta).toBeLessThan(30);
         });
 
-        it('should scroll (unoptimized delta) the grid horizontally in a certain amount of time', async () => {
+        /* This is currently unrecognizable by Mutation Observers
+        xit('should scroll (unoptimized delta) the grid horizontally in a certain amount of time', async () => {
             const fix = TestBed.createComponent(IgxGridPerformanceComponent);
             fix.detectChanges();
             await wait(16);
+            fix.componentInstance.attachObserver();
             fix.componentInstance.startTime = new Date().getTime();
             fix.componentInstance.horizontalScroll.scrollLeft = 500;
-            await wait(16);
+            await wait(100);
             fix.detectChanges();
-            console.log('\x1b[42m\x1b[30mUnoptimized Scroll Time: ' + fix.componentInstance.delta + '\x1b[0m');
+            console.log('\x1b[42m\x1b[30mHorizontal Unoptimized Scroll Time: ' + fix.componentInstance.delta + '\x1b[0m');
             expect(fix.componentInstance.delta).toBeLessThan(100);
         });
+        */
     });
 });
 
@@ -5233,8 +5235,7 @@ export class IgxGridPerformanceComponent implements AfterViewInit, OnInit, OnDes
     public startTime;
     public delta;
 
-    protected observerA: MutationObserver;
-    protected observerB: MutationObserver;
+    protected observer: MutationObserver;
 
     public groupingExpressions: Array<ISortingExpression> = [];
 
@@ -5266,47 +5267,29 @@ export class IgxGridPerformanceComponent implements AfterViewInit, OnInit, OnDes
 
     public ngAfterViewInit() {
         this.delta = new Date().getTime() - this.startTime;
-        console.log('\x1b[43m\x1b[31mInit Time: ' + this.delta + '\x1b[0m');
         this.attachObserver();
     }
 
     public ngOnDestroy() {
-        if (this.observerA) {
-            this.observerA.disconnect();
-        }
-        if (this.observerB) {
-            this.observerB.disconnect();
+        if (this.observer) {
+            this.observer.disconnect();
         }
     }
 
     protected attachObserver() {
-        const configA: MutationObserverInit = { childList: true, subtree: true };
-        const configB: MutationObserverInit = { attributes: true };
-        const callbackA = (mutationsList) => {
+        const config: MutationObserverInit = { childList: true, subtree: true };
+        const callback = (mutationsList) => {
             const childListHasChanged = mutationsList.filter((mutation) => {
                 return mutation.type === 'childList';
             }).length > 0;
             if (childListHasChanged) {
                 this.delta = new Date().getTime() - this.startTime;
-                this.observerA.disconnect();
-                delete this.observerA;
+                this.observer.disconnect();
+                delete this.observer;
             }
         };
 
-        const callbackB = (mutationsList) => {
-            const attributesHaveChanged = mutationsList.filter((mutation) => {
-                return mutation.type === 'attributes';
-            }).length > 0;
-            if (attributesHaveChanged) {
-                this.delta = new Date().getTime() - this.startTime;
-                this.observerB.disconnect();
-                delete this.observerB;
-            }
-        };
-
-        this.observerA = new MutationObserver(callbackA);
-        this.observerA.observe(this.grid.tbody.nativeElement, configA);
-        this.observerB = new MutationObserver(callbackB);
-        this.observerB.observe(this.grid.rowList.last.cells.first.nativeElement, configB);
+        this.observer = new MutationObserver(callback);
+        this.observer.observe(this.grid.tbody.nativeElement, config);
     }
 }
