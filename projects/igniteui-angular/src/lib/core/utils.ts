@@ -178,7 +178,7 @@ export const enum KEYS {
  */
 export function getNodeSizeViaRange(range: Range, node: any): number {
     let overflow = null;
-    if (isIE() || isEdge()) {
+    if (!isFirefox()) {
         overflow = node.style.overflow;
         // we need that hack - otherwise content won't be measured correctly in IE/Edge
         node.style.overflow = 'visible';
@@ -187,7 +187,7 @@ export function getNodeSizeViaRange(range: Range, node: any): number {
     range.selectNodeContents(node);
     const width = range.getBoundingClientRect().width;
 
-    if (isIE() || isEdge()) {
+    if (!isFirefox()) {
         // we need that hack - otherwise content won't be measured correctly in IE/Edge
         node.style.overflow = overflow;
     }
