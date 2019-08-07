@@ -373,12 +373,27 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
                     }
                 });
             });
+            this.parent.verticalScrollContainer.onDataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+                requestAnimationFrame(() => {
+                        this.updateSizes();
+                });
+            });
             this.childLayoutKeys = this.parentIsland.children.map((item) => item.key);
         }
 
         this.toolbarCustomContentTemplates = this.parentIsland ?
             this.parentIsland.toolbarCustomContentTemplates :
             this.toolbarCustomContentTemplates;
+    }
+
+    private updateSizes() {
+        if (!this._destroyed && document.body.contains(this.nativeElement) && this.isPercentWidth) {
+            this.reflow();
+
+            this.hgridAPI.getChildGrids(false).forEach((grid) => {
+                grid.updateSizes();
+            });
+        }
     }
 
     public get outletDirective() {
@@ -504,7 +519,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         return width;
     }
 
-    private getDefaultExpanderWidth(): number {
+     private getDefaultExpanderWidth(): number {
         switch (this.displayDensity) {
             case DisplayDensity.cosy:
                 return 57;
@@ -693,16 +708,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         if (hScr) {
             hScr.scrollLeft = this.scrollLeft;
         }
-    }
-
-    /**
-     * @hidden
-     */
-    public getPossibleColumnWidth() {
-        let computedWidth = this.calcWidth || parseInt(
-            this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
-        computedWidth -= this.headerHierarchyExpander.nativeElement.clientWidth;
-        return super.getPossibleColumnWidth(computedWidth);
     }
 
     protected getChildGrids(inDeph?: boolean) {
