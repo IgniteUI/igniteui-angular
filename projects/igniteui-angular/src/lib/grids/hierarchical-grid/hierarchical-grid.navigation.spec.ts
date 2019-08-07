@@ -201,25 +201,23 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         childGrid.getColumnByName('ID').hasSummary = true;
         fixture.detectChanges();
-        childGrid.cdr.detectChanges();
+        await wait(200);
         hierarchicalGrid.verticalScrollContainer.scrollTo(2);
-        await wait(100);
         fixture.detectChanges();
+        await wait(200);
 
         const parentCell = hierarchicalGrid.getCellByKey(1, 'ID');
-        parentCell.nativeElement.focus();
-
         parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
-        await wait(100);
         fixture.detectChanges();
+        await wait(200);
 
         const summaryCells = fixture.debugElement.queryAll(By.css('igx-grid-summary-cell'));
         const lastSummaryCell = summaryCells[summaryCells.length - 1].nativeElement;
         expect(document.activeElement).toBe(lastSummaryCell);
 
         lastSummaryCell.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
-        await wait(100);
         fixture.detectChanges();
+        await wait(200);
 
         expect(parentCell.selected).toBe(true);
         expect(parentCell.focused).toBe(true);

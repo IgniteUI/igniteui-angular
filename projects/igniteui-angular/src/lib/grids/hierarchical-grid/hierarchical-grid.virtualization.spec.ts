@@ -268,15 +268,14 @@ describe('IgxHierarchicalGrid Virtualization', () => {
     it('should update scroll height after expanding/collapsing rows.', async() => {
         const scrHeight = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight;
         const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
-        UIInteractions.clickElement(firstRow.nativeElement.children[0]);
-        fixture.detectChanges();
-        hierarchicalGrid.verticalScrollContainer.onContentSizeChange.pipe(take(1)).subscribe(() => {
+            UIInteractions.clickElement(firstRow.nativeElement.children[0]);
+            fixture.detectChanges();
+            await wait(200);
             const childGrid1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
             expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight)
             .toBeGreaterThan(scrHeight + childGrid1.calcHeight);
             expect(childGrid1.nativeElement.parentElement.className.indexOf('igx-grid__hierarchical-indent--scroll'))
             .not.toBe(-1);
-        });
     });
 
 it('should update scroll height after expanding/collapsing row in a nested child grid that has no height.', async () => {
@@ -399,15 +398,14 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios', () => {
         const row = hierarchicalGrid.dataRowList.toArray()[0];
         row.nativeElement.children[0].click();
         fixture.detectChanges();
+        await wait(200);
 
         expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().parentElement.hidden).toBeTruthy();
         expect(hierarchicalGrid.tbody.nativeElement.offsetWidth).toEqual(initialBodyWidth);
-
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         childGrid.data = fixture.componentInstance.generateData(10, 0);
-        await wait(200);
         fixture.detectChanges();
-
+        await wait(200);
         expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().parentElement.hidden).toBeFalsy();
         expect(hierarchicalGrid.tbody.nativeElement.offsetWidth).toBeLessThan(initialBodyWidth);
     });
