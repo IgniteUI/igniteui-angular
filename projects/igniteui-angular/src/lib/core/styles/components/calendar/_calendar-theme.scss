@@ -271,13 +271,13 @@
     $cal-value-w: em(40px);
     $cal-value-h: $cal-value-w;
     $cal-value-br: $cal-value-w / 2;
-    $cal-value-margin: em(2px);
     $cal-value-fw: 600;
 
     $cal-value-month-margin: 0 em(12px);
     $cal-value-month-height: em(91px);
 
     $cal-row-padding: 0 em(16px);
+    $cal-row-margin: em(2px) 0;
 
     %cal-display {
         display: flex;
@@ -371,6 +371,7 @@
     %cal-row-display {
         display: flex;
         justify-content: space-between;
+        margin: $cal-row-margin;
         padding: $cal-row-padding;
     }
 
@@ -390,16 +391,22 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: $cal-value-w;
-        height: $cal-value-h;
-        min-width: 2ch;
-        margin: $cal-value-margin;
-        // border-radius: $cal-value-br;
-        border-radius: --var($theme, 'date-border-radius');
+        flex-grow: 1;
         color: --var($theme, 'content-text-color');
         cursor: pointer;
         outline: none;
-        transition: background .15s ease-out;
+        // transition: background .15s ease-out;
+    }
+
+    %cal-value-content {
+        position: relative;
+        width: $cal-value-w;
+        height: $cal-value-h;
+        min-width: 2ch;
+        line-height: $cal-value-h;
+        text-align: center;
+        border-radius: --var($theme, 'date-border-radius');
+        // transition: background .15s ease-out;
     }
 
     %cal-value--label {
@@ -485,9 +492,13 @@
 
     %cal-value--selected {
         position: relative;
-        color: --var($theme, 'date-selected-text-color');
-        background: --var($theme, 'date-selected-background') !important;
-        font-weight: $cal-value-fw !important;
+        background: --var($theme, 'date-selected-background');
+
+        %cal-value-content {
+            font-weight: $cal-value-fw !important;
+            color: --var($theme, 'date-selected-text-color');
+            background: --var($theme, 'date-selected-background') !important;
+        }
     }
 
     %cal-value--current {
@@ -496,7 +507,52 @@
     }
 
     %cal-value--hover {
-        background: --var($theme, 'date-hover-background');
+        %cal-value-content {
+            background: --var($theme, 'date-hover-background');
+        }
+    }
+
+    %cal-value--single {
+        background: transparent;
+
+        &::before,
+        &::after {
+            background: transparent;
+        }
+    }
+
+    %cal-value--first {
+        position: relative;
+        background: transparent;
+        z-index: 0;
+
+        &::after {
+            position: absolute;
+            content: '';
+            width: 50%;
+            top: 0;
+            left: 50%;
+            bottom: 0;
+            background: --var($theme, 'date-selected-background');
+            z-index: -1;
+        }
+    }
+
+    %cal-value--last {
+        position: relative;
+        background: transparent;
+        z-index: 0;
+
+        &::before {
+            position: absolute;
+            content: '';
+            width: 50%;
+            top: 0;
+            right: 50%;
+            bottom: 0;
+            background: --var($theme, 'date-selected-background');
+            z-index: -1;
+        }
     }
 }
 
