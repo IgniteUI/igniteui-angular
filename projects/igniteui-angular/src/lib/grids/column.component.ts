@@ -1629,7 +1629,7 @@ export class IgxColumnComponent implements AfterContentInit {
     public get pinnable() {
         const gridUnpinnedWidth = (this.grid as any).getUnpinnedWidth(true);
         const columnWidth = parseInt(this.width, 10);
-        return !((gridUnpinnedWidth - columnWidth) < this.grid.unpinnedAreaMinWidth);
+        return (this.grid as any)._init || !((gridUnpinnedWidth - columnWidth) < this.grid.unpinnedAreaMinWidth);
     }
 
     /**
