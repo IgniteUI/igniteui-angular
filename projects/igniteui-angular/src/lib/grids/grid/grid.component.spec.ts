@@ -4128,6 +4128,7 @@ describe('IgxGrid Component Tests', () => {
                 // set cell in second group in edit mode
                 cell.setEditMode(true);
                 fix.detectChanges();
+                tick(100);
 
                 expect(grid.crudService.inEditMode).toBeTruthy();
                 const groupRows = grid.groupsRowList.toArray();
@@ -4197,7 +4198,7 @@ describe('IgxGrid Component Tests', () => {
             }));
 
             it('Hide row editing dialog when hierarchical group is collapsed/expanded',
-                fakeAsync(() => {
+            fakeAsync(() => {
                     const fix = TestBed.createComponent(IgxGridRowEditingWithFeaturesComponent);
                     fix.detectChanges();
                     const grid = fix.componentInstance.instance;
@@ -4217,6 +4218,7 @@ describe('IgxGrid Component Tests', () => {
                     const cell = grid.getCellByColumn(2, 'ProductName');
                     cell.setEditMode(true);
                     fix.detectChanges();
+                    tick(100);
                     expect(grid.crudService.inEditMode).toBeTruthy();
                     const groupRows = grid.groupsRowList.toArray();
 
