@@ -211,6 +211,7 @@ describe('IgxGrid - Summaries', () => {
             resizeObserverIgnoreError();
             const fixture = TestBed.createComponent(VirtualSummaryColumnComponent);
             fixture.detectChanges();
+            await wait(100);
 
             const grid = fixture.componentInstance.grid;
             let rowsRendered;
@@ -219,6 +220,7 @@ describe('IgxGrid - Summaries', () => {
             let firstCellsText;
 
             fixture.componentInstance.scrollTop(10000);
+            fixture.detectChanges();
             await wait(100);
             fixture.detectChanges();
 
@@ -228,7 +230,8 @@ describe('IgxGrid - Summaries', () => {
             expect(rowsRendered.length).toEqual(expectedRowLenght);
 
             grid.disableSummaries(['ProductName', 'InStock', 'UnitsInStock']);
-            await wait(50);
+            fixture.detectChanges();
+            await wait(100);
             fixture.detectChanges();
 
             rowsRendered = Array.from(fixture.nativeElement.querySelectorAll('igx-grid-row'));
@@ -246,7 +249,8 @@ describe('IgxGrid - Summaries', () => {
             }
 
             grid.disableSummaries(['OrderDate']);
-            await wait(50);
+            fixture.detectChanges();
+            await wait(100);
             fixture.detectChanges();
 
             rowsRendered = Array.from(fixture.nativeElement.querySelectorAll('igx-grid-row'));
