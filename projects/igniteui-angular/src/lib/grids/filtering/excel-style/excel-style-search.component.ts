@@ -41,7 +41,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
 
     public set isLoading(value: boolean) {
         this._isLoading = value;
-        this._cdr.detectChanges();
+        if (!(this._cdr as any).destroyed) {
+            this._cdr.detectChanges();
+        }
     }
 
     public searchValue: any;

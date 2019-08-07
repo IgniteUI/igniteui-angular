@@ -433,7 +433,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
 
         this.addSelectAllItem();
 
-        this.cdr.detectChanges();
+        if (!(this.cdr as any).destroyed) {
+            this.cdr.detectChanges();
+        }
     }
 
     private getColumnFilterExpressionsTree() {
