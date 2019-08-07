@@ -4445,8 +4445,8 @@ describe('IgxGrid Component Tests', () => {
             const fix = TestBed.createComponent(IgxGridPerformanceComponent);
             fix.detectChanges();
             expect(fix.componentInstance.delta)
-            //    .withContext('Rendering took: ' + fix.componentInstance.delta +
-            //        'ms but should have taken at most: ' + MAX_RAW_RENDER + 'ms')
+                .withContext('Rendering took: ' + fix.componentInstance.delta +
+                    'ms but should have taken at most: ' + MAX_RAW_RENDER + 'ms')
                 .toBeLessThan(MAX_RAW_RENDER);
         });
 
@@ -4458,12 +4458,12 @@ describe('IgxGrid Component Tests', () => {
             });
             fix.detectChanges();
             expect(fix.componentInstance.delta)
-            //    .withContext('Rendering took: ' + fix.componentInstance.delta +
-            //        'ms but should have taken at most: ' + MAX_GROUPED_RENDER + 'ms')
+                .withContext('Rendering took: ' + fix.componentInstance.delta +
+                    'ms but should have taken at most: ' + MAX_GROUPED_RENDER + 'ms')
                 .toBeLessThan(MAX_GROUPED_RENDER);
         });
 
-        it('should scroll (optimized delta) the grid vertically in a certain amount of time', async () => {
+        it('should scroll (optimized delta) the grid vertically in a certain amount of time', async (done) => {
             const fix = TestBed.createComponent(IgxGridPerformanceComponent);
             fix.detectChanges();
             await wait(16);
@@ -4477,9 +4477,10 @@ describe('IgxGrid Component Tests', () => {
                 if (childListHasChanged) {
                     const delta = new Date().getTime() - startTime;
                     expect(delta)
-            //            .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_VER_SCROLL_O + 'ms')
+                        .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_VER_SCROLL_O + 'ms')
                         .toBeLessThan(MAX_VER_SCROLL_O);
                     observer.disconnect();
+                    done();
                 }
             };
             observer = new MutationObserver(callback);
@@ -4489,7 +4490,7 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
         });
 
-        it('should scroll (unoptimized delta) the grid vertically in a certain amount of time', async () => {
+        it('should scroll (unoptimized delta) the grid vertically in a certain amount of time', async (done) => {
             const fix = TestBed.createComponent(IgxGridPerformanceComponent);
             fix.detectChanges();
             await wait(16);
@@ -4507,9 +4508,10 @@ describe('IgxGrid Component Tests', () => {
                 if (cellMutated) {
                     const delta = new Date().getTime() - startTime;
                     expect(delta)
-           //             .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_VER_SCROLL_U + 'ms')
+                        .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_VER_SCROLL_U + 'ms')
                         .toBeLessThan(MAX_VER_SCROLL_U);
                     observer.disconnect();
+                    done();
                 }
             };
             observer = new MutationObserver(callback);
@@ -4519,7 +4521,7 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
         });
 
-        it('should scroll (optimized delta) the grid horizontally in a certain amount of time', async () => {
+        it('should scroll (optimized delta) the grid horizontally in a certain amount of time', async (done) => {
             const fix = TestBed.createComponent(IgxGridPerformanceComponent);
             fix.detectChanges();
             await wait(16);
@@ -4533,9 +4535,10 @@ describe('IgxGrid Component Tests', () => {
                 if (childListHasChanged) {
                     const delta = new Date().getTime() - startTime;
                     expect(delta)
-              //          .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_HOR_SCROLL_O + 'ms')
+                        .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_HOR_SCROLL_O + 'ms')
                         .toBeLessThan(MAX_HOR_SCROLL_O);
                     observer.disconnect();
+                    done();
                 }
             };
             observer = new MutationObserver(callback);
@@ -4545,7 +4548,7 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
         });
 
-        it('should scroll (unoptimized delta) the grid horizontally in a certain amount of time', async () => {
+        it('should scroll (unoptimized delta) the grid horizontally in a certain amount of time', async (done) => {
             const fix = TestBed.createComponent(IgxGridPerformanceComponent);
             fix.detectChanges();
             await wait(16);
@@ -4563,9 +4566,10 @@ describe('IgxGrid Component Tests', () => {
                 if (cellMutated) {
                     const delta = new Date().getTime() - startTime;
                     expect(delta)
-           //             .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_HOR_SCROLL_U + 'ms')
+                        .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_HOR_SCROLL_U + 'ms')
                         .toBeLessThan(MAX_HOR_SCROLL_U);
                     observer.disconnect();
+                    done();
                 }
             };
             observer = new MutationObserver(callback);
@@ -4575,7 +4579,7 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
         });
 
-        it('should focus a cell in a certain amount of time', async () => {
+        it('should focus a cell in a certain amount of time', async (done) => {
             const fix = TestBed.createComponent(IgxGridPerformanceComponent);
             fix.detectChanges();
             await wait(16);
@@ -4593,9 +4597,10 @@ describe('IgxGrid Component Tests', () => {
                 if (cellMutated) {
                     const delta = new Date().getTime() - startTime;
                     expect(delta)
-               //         .withContext('Focusing took: ' + delta + 'ms but should have taken at most: ' + MAX_FOCUS + 'ms')
+                        .withContext('Focusing took: ' + delta + 'ms but should have taken at most: ' + MAX_FOCUS + 'ms')
                         .toBeLessThan(MAX_FOCUS);
                     observer.disconnect();
+                    done();
                 }
             };
             observer = new MutationObserver(callback);
