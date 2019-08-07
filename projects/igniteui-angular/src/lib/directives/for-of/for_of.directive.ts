@@ -68,7 +68,7 @@ export class IgxForOfContext<T> {
 }
 
 @Directive({ selector: '[igxFor][igxForOf]' })
-export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestroy {
+export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestroy, AfterViewInit {
 
     /**
      * An @Input property that sets the data to be rendered.
@@ -400,6 +400,13 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 this.vh.instance.elementRef.nativeElement.addEventListener('scroll', this.verticalScrollHandler);
                 this.dc.instance.scrollContainer = this.vh.instance.elementRef.nativeElement;
             });
+            const destructor = takeUntil<any>(this.destroy$);
+            this.contentResizeNotify.pipe(destructor, filter(() => this.igxForContainerSize && this.igxForOf.length > 0), throttleTime(40))
+            .subscribe(() => {
+                this._zone.runTask(() => {
+                    this.updateSizes();
+                });
+            });
         }
 
         if (this.igxForScrollOrientation === 'horizontal') {
@@ -422,6 +429,15 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 });
             }
             this._updateHScrollOffset();
+        }
+    }
+
+    ngAfterViewInit(): void {
+        if (this.igxForScrollOrientation === 'vertical') {
+            this._zone.runOutsideAngular(() => {
+                this.contentObserver = new ResizeObserver(() => this.contentResizeNotify.next());
+                this.contentObserver.observe(this.dc.instance._viewContainer.element.nativeElement);
+            });
         }
     }
 
@@ -724,10 +740,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
 
-        requestAnimationFrame(() => {
-            // check if height/width has changes in views.
-            this.recalcUpdateSizes();
-        });
         this.dc.changeDetectorRef.detectChanges();
         if (prevStartIndex !== this.state.startIndex) {
             this.onChunkLoad.emit(this.state);
@@ -979,12 +991,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 cntx.index = this.getContextIndex(input);
                 cntx.count = this.igxForOf.length;
             }
-            this.dc.changeDetectorRef.detectChanges();
             if (prevChunkSize !== this.state.chunkSize) {
                 this.onChunkLoad.emit(this.state);
-            }
-            if (this.igxForScrollOrientation === 'vertical') {
-                this.recalcUpdateSizes();
             }
         }
     }
@@ -1314,7 +1322,7 @@ export interface IForOfDataChangingEventArgs {
 @Directive({
     selector: '[igxGridFor][igxGridForOf]'
 })
-export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, AfterViewInit {
+export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck {
 
     constructor(
         _viewContainer: ViewContainerRef,
@@ -1347,22 +1355,6 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         this.syncService.setMaster(this);
         super.ngOnInit();
         this.removeScrollEventListeners();
-        const destructor = takeUntil<any>(this.destroy$);
-        this.contentResizeNotify.pipe(destructor, filter(() => this.igxForContainerSize && this.igxForOf.length > 0), throttleTime(40))
-        .subscribe(() => {
-            this._zone.runTask(() => {
-                this.updateSizes();
-            });
-        });
-    }
-
-    ngAfterViewInit(): void {
-        if (this.igxForScrollOrientation === 'vertical') {
-            this._zone.runOutsideAngular(() => {
-                this.contentObserver = new ResizeObserver(() => this.contentResizeNotify.next());
-                this.contentObserver.observe(this.dc.instance._viewContainer.element.nativeElement);
-            });
-        }
     }
 
     ngOnChanges(changes: SimpleChanges) {
