@@ -2,7 +2,7 @@ import { IgxInputDirective, IgxInputState } from './../directives/input/input.di
 import {
     Component, ContentChildren, forwardRef, QueryList, ViewChild, Input, ContentChild,
     AfterContentInit, HostBinding, Directive, TemplateRef, ElementRef, ChangeDetectorRef, Optional,
-    Injector, OnInit, AfterViewInit, OnDestroy, Inject
+    Injector, OnInit, AfterViewInit, OnDestroy, Inject, Type
 
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
@@ -355,7 +355,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * @hidden @internal
      */
     public ngOnInit() {
-        this.ngControl = this._injector.get(NgControl, null);
+        this.ngControl = this._injector.get<NgControl>(NgControl as Type<NgControl>, null);
     }
 
     /**
