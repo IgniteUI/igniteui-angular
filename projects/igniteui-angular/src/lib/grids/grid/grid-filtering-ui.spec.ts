@@ -5639,7 +5639,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             fix.detectChanges();
         }));
 
-        fit('TEST', fakeAsync(() => {
+        it('Should not pin column when its parent group cannot be pinned.', fakeAsync(() => {
             // Test prerequisites
             grid.width = '1000px';
             fix.detectChanges();
