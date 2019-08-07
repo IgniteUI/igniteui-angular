@@ -959,19 +959,19 @@ describe('IgxGrid Component Tests', () => {
         }));
 
         it(`should render 10 records if height is 100% and parent container's height is unset and
-            display density is changed`, fakeAsync(() => {
+            display density is changed`, async() => {
+            resizeObserverIgnoreError();
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             fix.detectChanges();
 
             fix.componentInstance.grid.height = '100%';
             fix.componentInstance.data = fix.componentInstance.fullData.slice(0, 11);
             fix.detectChanges();
+            await wait(100);
 
             fix.componentInstance.density = DisplayDensity.compact;
-            tick(16);
             fix.detectChanges();
-            tick(16);
-            fix.detectChanges();
+            await wait(100);
 
             const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
             const defaultHeightNum = parseInt(defaultHeight, 10);
@@ -979,7 +979,7 @@ describe('IgxGrid Component Tests', () => {
             expect(defaultHeightNum).toBe(330);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
             expect(fix.componentInstance.grid.rowList.length).toEqual(11);
-        }));
+        });
 
         it(`should render grid with correct height when parent container's height is set
             and the total row height is smaller than parent height #1861`, fakeAsync(() => {
