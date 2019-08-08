@@ -1128,7 +1128,7 @@ export class IgxTreeGridTestComponent {
     <igx-tree-grid #treeGrid [data]="data" expansionDepth="0"
         childDataKey="Employees" width="800px" height="540px" [autoGenerate]="false"
         [rowDraggable]="true" [paging]="true" [allowFiltering]="true" [columnHiding]="true" [columnPinning]="true"
-        [exportExcel]="true" [exportCsv]="true" exportExcelText="To Excel" [primaryKey]="'ID'" exportCsvText="To CSV" 
+        [exportExcel]="true" [exportCsv]="true" exportExcelText="To Excel" [primaryKey]="'ID'" exportCsvText="To CSV"
         (onRowDragEnd)="onRowDragEnd($event)">
         <igx-column field="Name" dataType="string" [sortable]="true" [editable]="true" [movable]="true" [resizable]="true">
         </igx-column>
