@@ -846,10 +846,16 @@ describe('IgxGrid - Row Selection', () => {
         expect(firstRow.isSelected).toBeTruthy();
         expect(secondRow.isSelected).toBeTruthy();
 
-        firstRowCheckbox.dispatchEvent(new Event('click', {}));
+        grid.deselectAllRows();
         fixture.detectChanges();
 
         expect(firstRow.isSelected).toBeFalsy();
+        expect(secondRow.isSelected).toBeFalsy();
+
+        firstRowCheckbox.click();
+        fixture.detectChanges();
+
+        expect(firstRow.isSelected).toBeTruthy();
     }));
 
     it('Should be able to programatically select all rows with a correct reference, #1297', () => {
