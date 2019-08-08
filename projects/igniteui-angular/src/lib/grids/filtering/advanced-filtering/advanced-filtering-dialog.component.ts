@@ -99,35 +99,7 @@ export class IgxAdvancedFilteringDialogComponent {
     }
 
     public addAndGroup(parent?: ExpressionGroupItem, afterExpression?: ExpressionItem) {
-        const tree = new FilteringExpressionsTree(FilteringLogic.And);
-        tree.filteringOperands.push({
-           fieldName: 'ID',
-           condition: IgxStringFilteringOperand.instance().condition('contains'),
-           searchVal: 'a',
-           ignoreCase: true
-        });
-        const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
-        orTree.filteringOperands.push({
-            fieldName: 'ID',
-            condition: IgxStringFilteringOperand.instance().condition('contains'),
-            searchVal: 'b',
-            ignoreCase: true
-        });
-        orTree.filteringOperands.push({
-            fieldName: 'CompanyName',
-            condition: IgxStringFilteringOperand.instance().condition('contains'),
-            searchVal: 'c',
-            ignoreCase: true
-        });
-        tree.filteringOperands.push(orTree);
-        tree.filteringOperands.push({
-           fieldName: 'CompanyName',
-           condition: IgxStringFilteringOperand.instance().condition('contains'),
-           searchVal: 'd',
-           ignoreCase: true
-        });
-        this.rootGroup = this.createExpressionGroupItem(tree);
-        this.currentGroup = this.rootGroup;
+        this.addGroup(FilteringLogic.And, parent, afterExpression);
     }
 
     public addOrGroup(parent?: ExpressionGroupItem, afterExpression?: ExpressionItem) {
@@ -181,7 +153,7 @@ export class IgxAdvancedFilteringDialogComponent {
         this.currentGroup = groupItem;
     }
 
-    private createExpressionGroupItem(expressionTree: FilteringExpressionsTree, parent?: ExpressionGroupItem): ExpressionGroupItem {
+    private createExpressionGroupItem(expressionTree: IFilteringExpressionsTree, parent?: ExpressionGroupItem): ExpressionGroupItem {
         let groupItem: ExpressionGroupItem;
         if (expressionTree) {
             groupItem = new ExpressionGroupItem(expressionTree.operator, parent);
@@ -197,6 +169,21 @@ export class IgxAdvancedFilteringDialogComponent {
         }
 
         return groupItem;
+    }
+
+    private createExpressionsTreeFromGroupItem(groupItem: ExpressionGroupItem): FilteringExpressionsTree {
+        const expressionsTree = new FilteringExpressionsTree(groupItem.operator);
+
+        for (const item of groupItem.children) {
+            if (item instanceof ExpressionGroupItem) {
+                const subTree = this.createExpressionsTreeFromGroupItem((item as ExpressionGroupItem));
+                expressionsTree.filteringOperands.push(subTree);
+            } else {
+                expressionsTree.filteringOperands.push((item as ExpressionOperandItem).expression);
+            }
+        }
+
+        return expressionsTree;
     }
 
     public onChipRemove(expressionItem: ExpressionItem) {
@@ -273,7 +260,41 @@ export class IgxAdvancedFilteringDialogComponent {
         this.overlayService = overlayService;
         this.overlayComponentId = overlayComponentId;
 
-        // this.filteringExpressionsTree = this.grid.crossFieldFilteringExpressionsTree;
+        if (!this.grid.crossFieldFilteringExpressionsTree) {
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands.push({
+                fieldName: 'ID',
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                searchVal: 'a',
+                ignoreCase: true
+            });
+            const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
+            orTree.filteringOperands.push({
+                fieldName: 'ID',
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                searchVal: 'b',
+                ignoreCase: true
+            });
+            orTree.filteringOperands.push({
+                fieldName: 'CompanyName',
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                searchVal: 'c',
+                ignoreCase: true
+            });
+            tree.filteringOperands.push(orTree);
+            tree.filteringOperands.push({
+                fieldName: 'CompanyName',
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                searchVal: 'd',
+                ignoreCase: true
+            });
+            this.grid.crossFieldFilteringExpressionsTree = tree;
+        }
+
+        if (this.grid.crossFieldFilteringExpressionsTree) {
+            this.rootGroup = this.createExpressionGroupItem(this.grid.crossFieldFilteringExpressionsTree);
+            this.currentGroup = this.rootGroup;
+        }
     }
 
     public context(expression: ExpressionItem, afterExpression?: ExpressionItem) {
@@ -295,7 +316,7 @@ export class IgxAdvancedFilteringDialogComponent {
     }
 
     public onApplyButtonClick() {
-        // this.grid.crossFieldFilteringExpressionsTree = this.filteringExpressionsTree;
+        this.grid.crossFieldFilteringExpressionsTree = this.createExpressionsTreeFromGroupItem(this.rootGroup);
         this.closeDialog();
     }
 }
