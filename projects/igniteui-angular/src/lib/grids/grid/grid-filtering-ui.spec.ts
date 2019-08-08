@@ -1566,8 +1566,8 @@ describe('IgxGrid - Filtering actions', () => {
 
         reset.nativeElement.focus();
         inputGroup.nativeElement.dispatchEvent(new FocusEvent('focusout'));
+        await wait(100);
         fix.detectChanges();
-        await wait(16);
 
         expect(filterChip.componentInstance.selected).toBeFalsy();
     });
@@ -1597,19 +1597,22 @@ describe('IgxGrid - Filtering actions', () => {
         expect(filterChip).toBeTruthy();
         expect(filterChip.componentInstance.selected).toBeTruthy();
 
-        filterChip.nativeElement.dispatchEvent(new MouseEvent('click'));
+        // Click on the chip to commit it
+        clickElemAndBlur(filterChip, input);
+        await wait(200);
         fix.detectChanges();
-        await wait(16);
         expect(filterChip.componentInstance.selected).toBeFalsy();
 
-        filterChip.nativeElement.dispatchEvent(new MouseEvent('click'));
+        // Click on the chip to select it
+        GridFunctions.clickChip(filterChip);
         fix.detectChanges();
-        await wait(16);
+        await wait(100);
         expect(filterChip.componentInstance.selected).toBeTruthy();
 
-        filterChip.nativeElement.dispatchEvent(new MouseEvent('click'));
+        // Click on the chip to commit it
+        clickElemAndBlur(filterChip, input);
+        await wait(100);
         fix.detectChanges();
-        await wait(16);
         expect(filterChip.componentInstance.selected).toBeFalsy();
     });
 
@@ -1627,15 +1630,16 @@ describe('IgxGrid - Filtering actions', () => {
         expect(filterChip).toBeTruthy();
         expect(filterChip.componentInstance.selected).toBeTruthy();
 
-         filterChip.nativeElement.dispatchEvent(new MouseEvent('click'));
+         // Click on the chip to commit it
+        clickElemAndBlur(filterChip, input);
         fix.detectChanges();
-        await wait(16);
+        await wait(100);
         expect(filterChip.componentInstance.selected).toBeFalsy();
 
          filterValue = 'c';
         sendInput(input, filterValue, fix);
         fix.detectChanges();
-        await wait(16);
+        await wait(100);
 
          let filterChips = filterUIRow.queryAll(By.directive(IgxChipComponent));
         expect(filterChips[1]).toBeTruthy();
@@ -1643,18 +1647,18 @@ describe('IgxGrid - Filtering actions', () => {
 
          GridFunctions.simulateKeyboardEvent(input, 'keydown', 'Enter');
         fix.detectChanges();
-        await wait(16);
+        await wait(100);
         expect(filterChips[1].componentInstance.selected).toBeFalsy();
 
          let selectedColumn = GridFunctions.getColumnHeader('Downloads', fix);
         selectedColumn.nativeElement.dispatchEvent(new MouseEvent('click'));
         fix.detectChanges();
-        await wait(16);
+        await wait(100);
 
          selectedColumn = GridFunctions.getColumnHeader('ProductName', fix);
         selectedColumn.nativeElement.dispatchEvent(new MouseEvent('click'));
         fix.detectChanges();
-        await wait(16);
+        await wait(100);
 
          filterChips = filterUIRow.queryAll(By.directive(IgxChipComponent));
         expect(filterChips[0].componentInstance.selected).toBeFalsy();
@@ -3269,6 +3273,69 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             const chipDiv = GridFunctions.getFilterConditionChip(fix, 0).querySelector('.igx-chip__item');
             expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(true, 'chip is not selected');
         }));
+
+        it('Should not throw error when deleting the last chip', (async () => {
+            grid.width = '700px';
+            fix.detectChanges();
+            await wait(100);
+
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            fix.detectChanges();
+
+            // Add first chip.
+            GridFunctions.typeValueInFilterRowInput('a', fix);
+            await wait(16);
+            GridFunctions.submitFilterRowInput(fix);
+            await wait(100);
+            // Add second chip.
+            GridFunctions.typeValueInFilterRowInput('e', fix);
+            await wait(16);
+            GridFunctions.submitFilterRowInput(fix);
+            await wait(100);
+            // Add third chip.
+            GridFunctions.typeValueInFilterRowInput('i', fix);
+            await wait(16);
+            GridFunctions.submitFilterRowInput(fix);
+            await wait(100);
+            // Add fourth chip.
+            GridFunctions.typeValueInFilterRowInput('o', fix);
+            await wait(16);
+            GridFunctions.submitFilterRowInput(fix);
+            await wait(200);
+
+            verifyMultipleChipsVisibility(fix, [false, false, false, true]);
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            let chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
+            expect(chips.length).toBe(4);
+
+            const leftArrowButton = GridFunctions.getFilterRowLeftArrowButton(fix).nativeElement;
+            expect(leftArrowButton).toBeTruthy('Left scroll arrow should be visible');
+
+            const rightArrowButton = GridFunctions.getFilterRowRightArrowButton(fix).nativeElement;
+            expect(rightArrowButton).toBeTruthy('Right scroll arrow should be visible');
+            expect(grid.rowList.length).toBe(2);
+
+            let chipToRemove = filterUIRow.componentInstance.expressionsList[3];
+            expect(() => { filterUIRow.componentInstance.onChipRemoved(null, chipToRemove); })
+            .not.toThrowError(/\'id\' of undefined/);
+            await wait(200);
+            fix.detectChanges();
+
+            verifyMultipleChipsVisibility(fix, [false, true, false]);
+            chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
+            expect(chips.length).toBe(3);
+
+            chipToRemove = filterUIRow.componentInstance.expressionsList[2];
+            expect(() => { filterUIRow.componentInstance.onChipRemoved(null, chipToRemove); })
+            .not.toThrowError(/\'id\' of undefined/);
+            await wait(200);
+            fix.detectChanges();
+
+            verifyMultipleChipsVisibility(fix, [true, false]);
+            chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
+            expect(chips.length).toBe(2);
+            expect(grid.rowList.length).toBe(3);
+        }));
     });
 
     describe(null, () => {
@@ -3533,7 +3600,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             fix.detectChanges();
 
             const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
-            const headerResArea = headers[2];
+            const headerResArea = headers[2].children[1].nativeElement;
 
             const filterIcon = headerResArea.query(By.css('.igx-excel-filter__icon')).nativeElement;
             filterIcon.click();
@@ -6042,4 +6109,14 @@ function verifyChipVisibility(fix, index: number, shouldBeFullyVisible: boolean)
 
     expect(chipRect.left >= visibleChipAreaRect.left && chipRect.right <= visibleChipAreaRect.right)
         .toBe(shouldBeFullyVisible, 'chip[' + index + '] visibility is incorrect');
+}
+
+function clickElemAndBlur(clickElem, blurElem) {
+    const elementRect = clickElem.nativeElement.getBoundingClientRect();
+    UIInteractions.simulatePointerEvent('pointerdown', clickElem.nativeElement, elementRect.left, elementRect.top);
+    blurElem.nativeElement.blur();
+    blurElem.nativeElement.dispatchEvent(new FocusEvent('focusout', {bubbles: true}));
+    (clickElem as DebugElement).nativeElement.focus();
+    UIInteractions.simulatePointerEvent('pointerup', clickElem.nativeElement, elementRect.left, elementRect.top);
+    UIInteractions.simulateMouseEvent('click', clickElem.nativeElement, 10 , 10);
 }

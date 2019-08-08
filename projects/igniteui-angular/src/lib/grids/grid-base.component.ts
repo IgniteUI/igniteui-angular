@@ -259,6 +259,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _locale = null;
     public _destroyed = false;
     private overlayIDs = [];
+    private _hostWidth;
     /**
      * An accessor that sets the resource strings.
      * By default it uses EN resources.
@@ -638,6 +639,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden
+    */
+    @HostBinding('style.width')
+    get hostWidth() {
+        return this._width || this._hostWidth;
+    }
+    /**
      * Returns the width of the `IgxGridComponent`.
      * ```typescript
      * let gridWidth = this.grid.width;
@@ -645,7 +653,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     @WatchChanges()
-    @HostBinding('style.width')
     @Input()
     get width() {
         return this._width;
@@ -3022,6 +3029,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return this._unpinnedWidth;
     }
 
+    get isHorizontalScrollHidden() {
+        const diff = this.unpinnedWidth - this.totalWidth;
+        return this.width === null || diff >= 0;
+    }
+
     /**
      * @hidden
      * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
@@ -4002,7 +4014,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         // TODO: This seems to have never worked when a columnWidth is passed
         // after grid initial rendering
         // if (!this.columnWidthSetByUser) {
-            this._columnWidth = this.columnWidthSetByUser ? this._columnWidth : this.getPossibleColumnWidth();
+            if (!this.columnWidthSetByUser) {
+                this._columnWidth = this.width !== null ? this.getPossibleColumnWidth() : MINIMUM_COLUMN_WIDTH + 'px'; 
+             }
+            
             this.columnList.forEach((column: IgxColumnComponent) => {
                 if (this.hasColumnLayouts && parseInt(this._columnWidth, 10)) {
                     const columnWidthCombined = parseInt(this._columnWidth, 10) * (column.colEnd ? column.colEnd - column.colStart : 1);
@@ -4169,9 +4184,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 parseInt(this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
         }
 
-        if (this.showRowCheckboxes) {
-            computedWidth -= this.headerCheckboxContainer ? this.headerCheckboxContainer.nativeElement.offsetWidth : 0;
-        }
+        computedWidth -= this.getFeatureColumnsWidth();
 
         if (this.showDragIcons) {
             computedWidth -= this.headerDragContainer ? this.headerDragContainer.nativeElement.offsetWidth : 0;
@@ -4233,17 +4246,36 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
 
 
-        if (!width) {
-            width = this.columnList.reduce((sum, item) => sum + parseInt((item.width || item.defaultWidth), 10), 0);
+        if (this.width === null || !width) {
+            width = this.getColumnWidthSum();
         }
 
-        if (this.hasVerticalSroll()) {
+        if (this.hasVerticalSroll() && this.width !== null) {
             width -= this.scrollWidth;
         }
-        if (Number.isFinite(width) && width !== this.calcWidth) {
+        if ((Number.isFinite(width) || width === null) && width !== this.calcWidth) {
             this.calcWidth = width;
         }
         this._derivePossibleWidth();
+    }
+
+    private getColumnWidthSum(): number {
+        let colSum = 0;
+        const  cols = this.hasColumnLayouts ?
+         this.visibleColumns.filter(x => x.columnLayout) : this.visibleColumns.filter(x => !x.columnGroup);
+        cols.forEach((item) => {
+            const isWidthInPercent = item.width && typeof item.width === 'string' && item.width.indexOf('%') !== -1;
+            if (isWidthInPercent) {
+                item.width = MINIMUM_COLUMN_WIDTH + 'px';
+            }
+            colSum +=  parseInt((item.width || item.defaultWidth), 10) || MINIMUM_COLUMN_WIDTH;
+        });
+        if (!colSum) {
+            return null;
+        }
+        this.cdr.detectChanges();
+        colSum += this.getFeatureColumnsWidth();
+        return colSum;
     }
 
     public hasVerticalSroll() {
@@ -4346,8 +4378,35 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.calculateGridWidth();
             this.cdr.detectChanges();
         }
+        if (this.zone.isStable) {
+            this.zone.run(() => {
+                this._applyWidthHostBinding();
+                this.cdr.detectChanges();
+            });
+        } else {
+            this.zone.onStable.pipe(first()).subscribe(() => {
+                this.zone.run(() => {
+                    this._applyWidthHostBinding();
+                });
+            });
+        }
         this.resetCaches();
     }
+
+    private _applyWidthHostBinding() {
+        let width = this._width;
+        if (width === null) {
+            let currentWidth = this.calcWidth;
+            if (this.hasVerticalSroll()) {
+                currentWidth += this.scrollWidth;
+            }
+            width = currentWidth + 'px';
+            this.resetCaches();
+        }
+        this._hostWidth = width;
+        this.cdr.markForCheck();
+    }
+
 
     /**
      * @hidden
@@ -4397,7 +4456,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected getUnpinnedWidth(takeHidden = false) {
         let width = this.isPercentWidth ?
             this.calcWidth :
-            parseInt(this.width, 10);
+            parseInt(this.width, 10) ||  parseInt(this.hostWidth, 10) || this.calcWidth;
         if (this.hasVerticalSroll() && !this.isPercentWidth) {
             width -= this.scrollWidth;
         }
