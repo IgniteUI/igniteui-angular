@@ -17,7 +17,7 @@ import {
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, CancelableEventArgs, CancelableBrowserEventArgs, diffInSets } from '../core/utils';
+import { cloneArray, CancelableEventArgs, CancelableBrowserEventArgs } from '../core/utils';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { SortingDirection, ISortingExpression } from '../data-operations/sorting-expression.interface';
@@ -83,11 +83,17 @@ export enum IgxComboState {
     INVALID
 }
 
+/** Event emitted when an igx-combo's selection is changing */
 export interface IComboSelectionChangeEventArgs extends CancelableEventArgs {
+    /** An array containing the values that are currently selected */
     oldSelection: any[];
+    /** An array containing the values that will be selected after this event */
     newSelection: any[];
+    /** An array containing the values that will be added to the selection (if any) */
     added: any[];
+    /** An array containing the values that will be removed from the selection (if any) */
     removed: any[];
+    /** The user interaction that triggered the selection change */
     event?: Event;
 }
 
@@ -95,6 +101,20 @@ export interface IComboItemAdditionEvent {
     oldCollection: any[];
     addedItem: any;
     newCollection: any[];
+}
+
+/**
+ * When called with sets A & B, returns A - B (as array);
+ * @hidden
+ */
+function diffInSets(set1: Set<any>, set2: Set<any>): any[] {
+    const results = [];
+    set1.forEach(entry => {
+        if (!set2.has(entry)) {
+            results.push(entry);
+        }
+    });
+    return results;
 }
 
 let NEXT_ID = 0;
@@ -1498,8 +1518,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     protected setSelection(newSelection: Set<any>, event?: Event): void {
-        const removed = Array.from(diffInSets(this.selection.get(this.id), newSelection));
-        const added = Array.from(diffInSets(newSelection, this.selection.get(this.id)));
+        const removed = diffInSets(this.selection.get(this.id), newSelection);
+        const added = diffInSets(newSelection, this.selection.get(this.id));
         const oldSelectionEmit = Array.from(this.selection.get(this.id) || []);
         const newSelectionEmit = Array.from(newSelection || []);
         const args: IComboSelectionChangeEventArgs = {

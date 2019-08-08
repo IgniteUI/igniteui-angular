@@ -276,7 +276,7 @@ Setting `[displayDensity]` affects the control's items' and inputs' css properti
 
 | Name                | Description                                                             | Cancelable   | Parameters                              |
 |------------------   |-------------------------------------------------------------------------|------------- |-----------------------------------------|
-| `onSelectionChange` | Emitted when item selection is changing, before the selection completes | true         | { oldSelection: `any[]`, newSelection: `any[]`, event?: `Event`, added: `any[]`, removed: `any[]`, cancel: `boolean` } |
+| `onSelectionChange` | Emitted when item selection is changing, before the selection completes | true         | [`IComboSelectionChangeEventArgs`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/interfaces/icomboselectionchangeeventargs.html) |
 | `onSearchInput`     | Emitted when an the search input's input event is triggered             | false        | { searchValue: `string` }               |
 | `onAddition`        | Emitted when an item is being added to the data collection              | false        | { oldCollection: `any[]`, addedItem: `<any>`, newCollection: `any[]` }|
 | `onDataPreLoad`     | Emitted when new chunk of data is loaded from the virtualization        | false        | { event: `Event` }                        |
