@@ -150,12 +150,6 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
      */
     public dragIndicatorIconTemplate: TemplateRef<any> = null;
 
-    @ContentChild(IgxRowSelectorDirective, { read: TemplateRef, static: true })
-    public rowSelectorTemplate: TemplateRef<IgxRowSelectorDirective>;
-
-    @ContentChild(IgxHeadSelectorDirective, { read: TemplateRef, static: true })
-    public headSelectorTemplate: TemplateRef<IgxHeadSelectorDirective>;
-
     /**
      * @hidden
      */
