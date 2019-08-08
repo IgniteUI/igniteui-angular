@@ -213,9 +213,7 @@ export class IgxGridSelectionService {
     temp = new Map<number, Set<number>>();
     _ranges: Set<string> = new Set<string>();
     _selectionRange: Range;
-    rowSelection: Map<any,  any> = new Map<any, any>();
-    lastSelectedRowData;
-
+    rowSelection: Set<any> = new Set<any>();
 
     /**
      * Returns the current selected ranges in the grid from both
@@ -563,23 +561,20 @@ export class IgxGridSelectionService {
     selectAllRows(onlyFiltered) {
         const allData = onlyFiltered && this.isFilteringApplied() ? this.grid.filteredData : this.grid.data;
         allData.filter((rowData) => !this.grid.gridAPI.row_deleted_transaction(this.getRowID(rowData))).forEach((row) => {
-            this.rowSelection.set(this.getRowID(row), row);
+            this.rowSelection.add(this.getRowID(row));
         });
      }
 
-    selectRowbyID(rowID, rowData?, clearPrevSelection?) {
+    selectRowbyID(rowID, clearPrevSelection?) {
         if (this.grid.rowSelection === 'none' || this.grid.gridAPI.row_deleted_transaction(rowID)) { return; }
-
-        const args = { oldSelection: this.getSelectedRows(), newSelection: Array.of(...this.getSelectedRows(), rowData), cancel: false};
+/*         const args = { oldSelection: this.getSelectedRows(), newSelection: Array.of(...this.getSelectedRows(), rowData), cancel: false};
         this.grid.onRowSelectionChange.emit(args);
-        if (args.cancel) { return; }
+        if (args.cancel) { return; } */
 
         if (this.grid.rowSelection === 'single' || clearPrevSelection) {
             this.rowSelection.clear();
         }
-        rowData = !rowData ? rowData = this.getRowDataByID(rowID) : rowData;
-        this.lastSelectedRowData = rowData;
-        this.rowSelection.set(rowID, rowData);
+        this.rowSelection.add(rowID);
     }
 
     deselectRow(rowID) {
@@ -591,9 +586,8 @@ export class IgxGridSelectionService {
 
     selectRows(rowIDs: any[], clearPrevSelection?) {
         if (clearPrevSelection) { this.rowSelection.clear(); }
-        rowIDs.forEach(rowID => {
-            this.rowSelection.set(rowID, this.getRowDataByID(rowID));
-        });
+
+        rowIDs.forEach(rowID => { this.rowSelection.add(rowID); });
     }
 
     isRowSelected(rowID) {
@@ -610,16 +604,18 @@ export class IgxGridSelectionService {
     }
 
     selectMultipleRows(rowData) {
-        const gridData = this.grid.nativeElement.tagName.toLocaleLowerCase() === 'igx-tree-grid' ? this.grid.flatData : this.grid.data;
-        if (this.rowSelection.size && this.lastSelectedRowData) {
-            const currLastIndex = gridData.indexOf(this.lastSelectedRowData);
+        const gridData = this.isFilteringApplied() ? this.grid.filteredSortedData :
+            this.grid.nativeElement.tagName.toLocaleLowerCase() === 'igx-tree-grid' ? this.grid.flatData : this.grid.data;
+        if (this.rowSelection.size) {
+            const lastSelectedRowID = Array.from(this.rowSelection.keys())[this.rowSelection.size - 1];
+            const currLastIndex = gridData.indexOf(this.getRowDataByID(lastSelectedRowID));
             const newRowIndex = gridData.indexOf(rowData);
             const rows = currLastIndex < newRowIndex ? gridData.slice(currLastIndex, newRowIndex + 1) :
             gridData.slice(newRowIndex, currLastIndex + 1);
 
-            rows.forEach(rec => this.rowSelection.set(this.getRowID(rec), rec));
+            rows.forEach(rec => this.rowSelection.add(this.getRowID(rec)));
         } else {
-            this.selectRowbyID(this.getRowID(rowData), rowData);
+            this.selectRowbyID(this.getRowID(rowData));
         }
     }
 
@@ -642,6 +638,7 @@ export class IgxGridSelectionService {
     public getRowID(rowData) {
         return this.grid.primaryKey ? rowData[this.grid.primaryKey] : rowData;
     }
+
     private isFilteringApplied() {
         return this.grid.filteringExpressionsTree.filteringOperands.length > 0;
     }

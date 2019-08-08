@@ -560,12 +560,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     set rowSelectable(val: boolean) {
         this._rowSelection = val;
         if (this.gridAPI.grid && this.columnList) {
-/*
-            // should selection persist?
-            this.allRowsSelected = false;
-            this.deselectAllRows();
-            this.calculateGridSizes();
-            this.cdr.markForCheck(); */
         }
     }
 

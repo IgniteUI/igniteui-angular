@@ -979,7 +979,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             case 'space':
                 if (this.grid.rowSelection !== 'none') {
                     this.row.selected ? this.selectionService.deselectRow(this.row.rowID) :
-                    this.selectionService.selectRowbyID(this.row.rowID, this.row.rowData);
+                    this.selectionService.selectRowbyID(this.row.rowID);
                 }
                 break;
             default:

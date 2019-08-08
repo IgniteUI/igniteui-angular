@@ -280,14 +280,14 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
             this.selectionService.selectMultipleRows(this.rowData);
             return;
         }
-        this.selectionService.selectRowbyID(this.rowID, this.rowData, !event.ctrlKey);
+        this.selectionService.selectRowbyID(this.rowID, !event.ctrlKey);
     }
 
     /**
      * @hidden
      */
     public onCheckboxClick(event) {
-        event.checked ? this.selectionService.selectRowbyID(this.rowID, this.rowData) :
+        event.checked ? this.selectionService.selectRowbyID(this.rowID) :
                 this.selectionService.deselectRow(this.rowID);
     }
 
