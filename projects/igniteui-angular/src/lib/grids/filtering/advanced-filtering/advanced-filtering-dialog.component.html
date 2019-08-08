@@ -1,54 +1,145 @@
-<article #toggle
-    class="igx-excel-filter__secondary"
-    [ngClass]="{
-        'igx-excel-filter__secondary--cosy': grid.displayDensity === 'cosy',
-        'igx-excel-filter__secondary--compact': grid.displayDensity === 'compact'
-    }"
-    (keydown)="onKeyDown($event)"
-    (onOpening)="onCustomDialogOpening()"
-    (onOpened)="onCustomDialogOpened()">
-    <header class="igx-advanced-filter__secondary-header">
+<article class="igx-excel-filter__secondary"
+         (keydown)="onKeyDown($event)"
+         [ngClass]="{
+             'igx-excel-filter__secondary--cosy': grid.displayDensity === 'cosy',
+             'igx-excel-filter__secondary--compact': grid.displayDensity === 'compact'
+         }">
+    <header class="igx-excel-filter__secondary-header">
         <h4 class="igx-typography__h6">
             Adv. Filtering
         </h4>
     </header>
 
-    <article #expressionsContainer class="igx-advanced-filter__secondary-main">
-        <!-- <ng-container *ngIf="column.dataType === 'date'">
-            <igx-excel-style-date-expression *ngFor="let expression of expressionsList;"
-                class="igx-excel-filter__condition"
-                [expressionUI]="expression"
-                [column]="column"
-                [grid]="grid"
-                [displayDensity]="displayDensity"
-                [expressionsList]="expressionsList"
-                (onExpressionRemoved)="onExpressionRemoved($event)"
-                (onLogicOperatorChanged)="onLogicOperatorChanged($event)">
-            </igx-excel-style-date-expression>
-        </ng-container> -->
+    <article #expressionsContainer class="igx-excel-filter__secondary-main" style="padding: 10px;">
+        <ng-container *ngIf="!rootGroup">
+            <button igxButton [displayDensity]="displayDensity" (click)="addAndGroup()">
+                <igx-icon fontSet="material">add</igx-icon>
+                <span>"And" Group</span>
+            </button>
+            <button igxButton [displayDensity]="displayDensity" (click)="addOrGroup()">
+                <igx-icon fontSet="material">add</igx-icon>
+                <span>"Or" Group</span>
+            </button>
+        </ng-container>
 
-        <!-- <ng-container *ngIf="column.dataType !== 'date'">
-            <igx-excel-style-default-expression *ngFor="let expression of expressionsList;"
-                class="igx-excel-filter__condition"
-                [expressionUI]="expression"
-                [column]="column"
-                [grid]="grid"
-                [displayDensity]="displayDensity"
-                [expressionsList]="expressionsList"
-                (onExpressionRemoved)="onExpressionRemoved($event)"
-                (onLogicOperatorChanged)="onLogicOperatorChanged($event)">
-            </igx-excel-style-default-expression>
-        </ng-container> -->
+        <ng-template #addExpressionsTemplate let-expressionItem let-afterExpression="afterExpression">
+            <button igxButton 
+                    [displayDensity]="displayDensity"
+                    [disabled]="editedExpression"
+                    (click)="addCondition(expressionItem, afterExpression)">
+                <igx-icon fontSet="material">add</igx-icon>
+                <span>Condition</span>
+            </button>
+            <button igxButton
+                    [displayDensity]="displayDensity"
+                    [disabled]="editedExpression"
+                    (click)="addAndGroup(expressionItem, afterExpression)">
+                <igx-icon fontSet="material">add</igx-icon>
+                <span>"And" Group</span>
+            </button>
+            <button igxButton
+                    [displayDensity]="displayDensity"
+                    [disabled]="editedExpression"
+                    (click)="addOrGroup(expressionItem, afterExpression)">
+                <igx-icon fontSet="material">add</igx-icon>
+                <span>"Or" Group</span>
+            </button>
+        </ng-template>
 
-        <!-- <button igxButton [displayDensity]="displayDensity"
-            class="igx-advanced-filter__add-filter"
-            (click)="onAddButtonClick()">
-            <igx-icon>add</igx-icon>
-            <span>{{ grid.resourceStrings.igx_grid_excel_custom_dialog_add }}</span>
-        </button> -->
+        <ng-template #filterOperandTemplate let-expressionItem>
+            <span>
+                <igx-chip *ngIf="!expressionItem.inEditMode"
+                        [removable]="true"
+                        [selected]="expressionItem.selected"
+                        (click)="onChipClick(expressionItem)"
+                        (dblclick)="onChipDblClick(expressionItem)"
+                        (onRemove)="onChipRemove(expressionItem)"
+                        style="margin-bottom: 10px">
+                    {{ expressionItem.expression.fieldName }}
+                    {{ expressionItem.expression.condition ? expressionItem.expression.condition.name : '' }}
+                    {{ expressionItem.expression.searchVal }}
+                </igx-chip>
+                <span *ngIf="!expressionItem.inEditMode && expressionItem.selected && selectedExpressions.length === 1">
+                    <button igxButton="icon"
+                            (click)="enterExpressionEdit(expressionItem)">
+                        <igx-icon fontSet="material">edit</igx-icon>
+                    </button>
+                    <button igxButton="icon"
+                            (click)="enterExpressionAdd(expressionItem)">
+                        <igx-icon fontSet="material">add</igx-icon>
+                    </button>
+                </span>
+            </span>
+            <span *ngIf="expressionItem.inEditMode">
+                Editing...
+                <button igxButton="icon"
+                        (click)="commitOperandEdit(expressionItem)">
+                    <igx-icon fontSet="material">check</igx-icon>
+                </button>
+                <button igxButton="icon"
+                        (click)="cancelOperandEdit()">
+                    <igx-icon fontSet="material">close</igx-icon>
+                </button>
+            </span>
+            <div *ngIf="expressionItem.inAddMode"
+                 style="display: flex;">
+                <ng-container *ngTemplateOutlet="addExpressionsTemplate; context: context(expressionItem.parent, expressionItem)"></ng-container>
+                <button igxButton="icon"
+                        (click)="cancelOperandAdd()">
+                    <igx-icon fontSet="material">close</igx-icon>
+                </button>
+            </div>
+        </ng-template>
+
+        <ng-template #expressionTreeTemplate let-expressionItem>
+            <div style="display: flex;">
+                <div tabindex="0" style="width: 10px; margin-right: 10px;"
+                     [style.background-color]="expressionItem.operator === 0 ? 'lightblue' : 'lightcoral'"></div>
+                <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                    <ng-container *ngFor="let expr of expressionItem.children">
+                        <ng-container *ngTemplateOutlet="isExpressionGroup(expr) ? expressionTreeTemplate : filterOperandTemplate; context: context(expr)"></ng-container>
+                    </ng-container>
+                    <div *ngIf="currentGroup === expressionItem">
+                        <!-- <button igxButton 
+                                [displayDensity]="displayDensity"
+                                [disabled]="editedExpression"
+                                (click)="addCondition(expressionItem)">
+                            <igx-icon fontSet="material">add</igx-icon>
+                            <span>Condition</span>
+                        </button>
+                        <button igxButton
+                                [displayDensity]="displayDensity"
+                                [disabled]="editedExpression"
+                                (click)="addAndGroup(expressionItem)">
+                            <igx-icon fontSet="material">add</igx-icon>
+                            <span>"And" Group</span>
+                        </button>
+                        <button igxButton
+                                [displayDensity]="displayDensity"
+                                [disabled]="editedExpression"
+                                (click)="addOrGroup(expressionItem)">
+                            <igx-icon fontSet="material">add</igx-icon>
+                            <span>"Or" Group</span>
+                        </button> -->
+                        <ng-container *ngTemplateOutlet="addExpressionsTemplate; context: context(expressionItem)"></ng-container>
+                        <button igxButton
+                                *ngIf="expressionItem !== rootGroup"
+                                [displayDensity]="displayDensity"
+                                [disabled]="editedExpression"
+                                (click)="endGroup(expressionItem)">
+                            <span>End Group</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+
+        <ng-container *ngIf="rootGroup">
+            <ng-container *ngTemplateOutlet="expressionTreeTemplate; context: context(rootGroup)"></ng-container>
+        </ng-container>
     </article>
 
-    <footer class="igx-advanced-filter__secondary-footer">
+    <footer class="igx-excel-filter__secondary-footer">
         <button igxButton [displayDensity]="displayDensity" (click)="onClearButtonClick()">{{ grid.resourceStrings.igx_grid_excel_custom_dialog_clear }}</button>
 
         <div>

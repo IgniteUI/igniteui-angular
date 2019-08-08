@@ -265,11 +265,17 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnIni
     //         }
     //     })
     // };
+    private _filterMenuPositionSettings: PositionSettings = {
+        verticalDirection: VerticalAlignment.Middle,
+        horizontalDirection: HorizontalAlignment.Center,
+        horizontalStartPoint: HorizontalAlignment.Center,
+        verticalStartPoint: VerticalAlignment.Middle
+    };
 
     private _filterMenuOverlaySettings: OverlaySettings = {
-        closeOnOutsideClick: false,
+        closeOnOutsideClick: true,
         modal: true,
-        positionStrategy:  new GlobalPositionStrategy(), // new AutoPositionStrategy(this._filterMenuPositionSettings),
+        positionStrategy:  new ConnectedPositioningStrategy(this._filterMenuPositionSettings),
         scrollStrategy: new AbsoluteScrollStrategy()
     };
 

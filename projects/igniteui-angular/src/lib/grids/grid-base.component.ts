@@ -380,6 +380,60 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
+     * Returns the cross-field filtering state of `IgxGridComponent`.
+     * ```typescript
+     * let crossFieldFilteringExpressionsTree = this.grid.crossFieldFilteringExpressionsTree;
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    @WatchChanges()
+    @Input()
+    get crossFieldFilteringExpressionsTree() {
+        return this._crossFieldFilteringExpressionsTree;
+    }
+
+    /**
+     * Sets the cross-field filtering state of the `IgxGridComponent`.
+     * ```typescript
+     * const logic = new FilteringExpressionsTree(FilteringLogic.And, "ID");
+     * logic.filteringOperands = [
+     *     {
+     *          condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+     *          fieldName: 'ID',
+     *          searchVal: 1
+     *     }
+     * ];
+     * this.grid.crossFieldFilteringExpressionsTree = logic;
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    set crossFieldFilteringExpressionsTree(value) {
+        if (value && value instanceof FilteringExpressionsTree) {
+            // const val = (value as FilteringExpressionsTree);
+            // for (let index = 0; index < val.filteringOperands.length; index++) {
+            //     if (!(val.filteringOperands[index] instanceof FilteringExpressionsTree)) {
+            //         const newExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, val.filteringOperands[index].fieldName);
+            //         newExpressionsTree.filteringOperands.push(val.filteringOperands[index] as IFilteringExpression);
+            //         val.filteringOperands[index] = newExpressionsTree;
+            //     }
+            // }
+
+            // clone the filtering expression tree in order to trigger the filtering pipe
+            const filteringExpressionTreeClone = new FilteringExpressionsTree(value.operator, value.fieldName);
+            filteringExpressionTreeClone.filteringOperands = value.filteringOperands;
+            this._crossFieldFilteringExpressionsTree = filteringExpressionTreeClone;
+
+            // TODO
+            if (this.filteringService.isFilteringExpressionsTreeEmpty()) {
+                this.filteredData = null;
+            }
+
+            this.summaryService.clearSummaryCache();
+            this.markForCheck();
+        }
+    }
+
+    /**
      * Returns the locale of the grid.
      * If not set, returns browser's language.
      */
@@ -2468,6 +2522,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected _filteringExpressionsTree: IFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+    /**
+     * @hidden
+     */
+    protected _crossFieldFilteringExpressionsTree: IFilteringExpressionsTree;
     /**
      * @hidden
      */
