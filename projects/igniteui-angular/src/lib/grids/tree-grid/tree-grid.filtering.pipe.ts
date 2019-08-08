@@ -11,27 +11,31 @@ import { IgxGridBaseComponent, IGridDataBindable } from '../grid';
 
 /** @hidden */
 export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
-    public filter(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree): ITreeGridRecord[] {
-        return this.filterImpl(data, expressionsTree, undefined);
+    public filter(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
+        crossFieldExpressionsTree?: IFilteringExpressionsTree): ITreeGridRecord[] {
+        return this.filterImpl(data, expressionsTree, crossFieldExpressionsTree, undefined);
     }
 
-    private filterImpl(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree, parent: ITreeGridRecord): ITreeGridRecord[] {
+    private filterImpl(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
+        crossFieldExpressionsTree: IFilteringExpressionsTree, parent: ITreeGridRecord): ITreeGridRecord[] {
         let i: number;
         let rec: ITreeGridRecord;
         const len = data.length;
         const res: ITreeGridRecord[] = [];
-        if (!expressionsTree || !expressionsTree.filteringOperands || expressionsTree.filteringOperands.length === 0 || !len) {
+        if (((!expressionsTree || !expressionsTree.filteringOperands || expressionsTree.filteringOperands.length === 0) &&
+            (!crossFieldExpressionsTree || !crossFieldExpressionsTree.filteringOperands ||
+                crossFieldExpressionsTree.filteringOperands.length === 0)) || !len) {
             return data;
         }
         for (i = 0; i < len; i++) {
             rec = DataUtil.cloneTreeGridRecord(data[i]);
             rec.parent = parent;
             if (rec.children) {
-                const filteredChildren = this.filterImpl(rec.children, expressionsTree, rec);
+                const filteredChildren = this.filterImpl(rec.children, expressionsTree, crossFieldExpressionsTree, rec);
                 rec.children = filteredChildren.length > 0 ? filteredChildren : null;
             }
 
-            if (this.matchRecord(rec, expressionsTree)) {
+            if (this.matchRecord(rec, expressionsTree) && this.matchRecord(rec, crossFieldExpressionsTree)) {
                 res.push(rec);
             } else if (rec.children && rec.children.length > 0) {
                 rec.isFilteredOutParent = true;
@@ -60,18 +64,22 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
      }
 
     public transform(hierarchyData: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
-        id: string, pipeTrigger: number): ITreeGridRecord[] {
+        crossFieldFilteringExpressionsTree: IFilteringExpressionsTree, id: string, pipeTrigger: number): ITreeGridRecord[] {
         const grid: IgxTreeGridComponent = this.gridAPI.grid;
         const state = {
             expressionsTree: expressionsTree,
+            crossFieldExpressionsTree: crossFieldFilteringExpressionsTree,
             strategy: new TreeGridFilteringStrategy()
         };
 
         this.resetFilteredOutProperty(grid.records);
 
-        if (!state.expressionsTree ||
+        if ((!state.expressionsTree ||
             !state.expressionsTree.filteringOperands ||
-            state.expressionsTree.filteringOperands.length === 0) {
+            state.expressionsTree.filteringOperands.length === 0)
+            && (!state.crossFieldExpressionsTree ||
+            !state.crossFieldExpressionsTree.filteringOperands ||
+            state.crossFieldExpressionsTree.filteringOperands.length === 0)) {
             grid.filteredData = null;
             return hierarchyData;
         }
@@ -111,6 +119,6 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
     }
 
     private filter(data: ITreeGridRecord[], state: IFilteringState): ITreeGridRecord[] {
-        return state.strategy.filter(data, state.expressionsTree);
+        return state.strategy.filter(data, state.expressionsTree, state.crossFieldExpressionsTree);
     }
 }
