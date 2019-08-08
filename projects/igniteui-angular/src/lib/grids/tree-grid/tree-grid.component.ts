@@ -325,12 +325,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef, static: true })
     public dragIndicatorIconTemplate: TemplateRef<any> = null;
 
-    @ContentChild(IgxHeadSelectorDirective, {read: TemplateRef, static: true})
-    public headSelectorTemplate: TemplateRef<IgxHeadSelectorDirective>;
-
-    @ContentChild(IgxRowSelectorDirective, {read: TemplateRef, static: true})
-    public rowSelectorTemplate: TemplateRef<IgxRowSelectorDirective>;
-
     /**
      * An @Input property that provides a template for the row loading indicator when load on demand is enabled.
      * ```html
