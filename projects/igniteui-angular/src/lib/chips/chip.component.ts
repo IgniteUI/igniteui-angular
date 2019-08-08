@@ -19,7 +19,7 @@ import {
     IDragStartEventArgs,
     IgxDropEnterEventArgs,
     IgxDropEventArgs
-} from '../directives/dragdrop/dragdrop.directive';
+} from '../directives/drag-drop/drag-drop.directive';
 
 
 export interface IBaseChipEventArgs {
