@@ -1145,7 +1145,7 @@ export class IgxTreeGridTestComponent {
     `
 })
 export class IgxTreeGridDeleteRowTestComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
 
     public data = SampleTestData.employeeSmallTreeData();
     newData = [];
