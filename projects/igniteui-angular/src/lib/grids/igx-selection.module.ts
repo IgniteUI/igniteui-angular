@@ -1,15 +1,17 @@
-import { Directive, NgModule } from '@angular/core';
+import { Directive, NgModule, TemplateRef } from '@angular/core';
 
 @Directive({
     selector: '[igxRowSelector]'
 })
 export class IgxRowSelectorDirective {
+    constructor(public templateRef: TemplateRef<any>) { }
 }
 
 @Directive({
     selector: '[igxHeadSelector]'
 })
 export class IgxHeadSelectorDirective {
+    constructor(public templateRef: TemplateRef<any>) { }
 }
 
 @NgModule({

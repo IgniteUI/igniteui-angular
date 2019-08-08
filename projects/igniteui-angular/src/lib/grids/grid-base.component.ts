@@ -91,6 +91,7 @@ import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.com
 import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
+import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './igx-selection.module';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -1726,6 +1727,28 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     @ContentChildren(IgxGridToolbarCustomContentDirective, { read: IgxGridToolbarCustomContentDirective, descendants: false })
     public toolbarCustomContentTemplates: QueryList<IgxGridToolbarCustomContentDirective>;
+
+    public get headSelectorTemplate(): TemplateRef<IgxHeadSelectorDirective> {
+        if (this.headSelectorsTemplate && this.headSelectorsTemplate.first) {
+            return this.headSelectorsTemplate.first.templateRef;
+        }
+
+        return null;
+    }
+
+    @ContentChildren(IgxHeadSelectorDirective, { read: IgxHeadSelectorDirective, descendants: false })
+    public headSelectorsTemplate: QueryList<IgxHeadSelectorDirective>;
+
+    public get rowSelectorTemplate(): TemplateRef<IgxRowSelectorDirective> {
+        if (this.rowSelectorsTemplate && this.rowSelectorsTemplate.first) {
+            return this.rowSelectorsTemplate.first.templateRef;
+        }
+
+        return null;
+    }
+
+    @ContentChildren(IgxRowSelectorDirective, { read: IgxRowSelectorDirective, descendants: false })
+    public rowSelectorsTemplate: QueryList<IgxRowSelectorDirective>;
 
     /**
      * @hidden
@@ -5665,7 +5688,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             const index = args.context.index;
             args.view.detectChanges();
             const row = tmplId === 'dataRow' ? this.getRowByIndex(index) : null;
-            const summaryRow = tmplId === 'summaryRow' ? this.summariesRowList.toArray().find((sr) => sr.dataRowIndex === index) : null;
+            const summaryRow = tmplId === 'summaryRow' ? this.summariesRowList.toArray().find((sr) => sr.index === index) : null;
             if (row && row instanceof IgxRowComponent) {
                 this._restoreVirtState(row);
             } else if (summaryRow) {
