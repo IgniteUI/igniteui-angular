@@ -37,7 +37,7 @@
                     <ng-container *ngFor="let row of collection; index as rowIndex">
                         <div #gridCell tabindex="0" *ngFor="let col of row; index as colIndex" class="columnIn" [class.columnInHovered]="col.hovered"
                             [ngStyle]="{'grid-row-start': col.rowStart, 'grid-column-start': col.colStart, 'grid-column-end': col.colStart + col.colSpan, 'grid-row-end': col.rowStart + col.rowSpan}"
-                            igxDrop (onDrop)="onColDropped($event, rowIndex, colIndex)" (onEnter)="onColEnter($event, rowIndex, colIndex)" (onLeave)="onColLeave($event, rowIndex, colIndex)"
+                            igxDrop (dropped)="onColDropped($event, rowIndex, colIndex)" (enter)="onColEnter($event, rowIndex, colIndex)" (leave)="onColLeave($event, rowIndex, colIndex)"
                                 (click)="clickCell(gridCell, rowIndex, colIndex)" (blur)="onBlur($event, rowIndex, colIndex)" (keyup)="onCellKey($event, rowIndex, colIndex)">
                             <div class="textWrapper">{{col.key}}</div>
                             <ng-container *ngIf="this.collection[rowIndex][colIndex].selected">

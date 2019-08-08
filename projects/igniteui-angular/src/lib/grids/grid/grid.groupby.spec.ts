@@ -1837,7 +1837,7 @@ describe('IgxGrid - GroupBy', () => {
             chip.componentInstance.animateOnRelease = false;
         });
 
-        // Trigger initial pointer events on the element with igxDrag. When the drag begins the dragGhost should receive events.
+        // Trigger initial pointer events on the element with igxDrag. When the drag begins the ghostElement should receive events.
         UIInteractions.simulatePointerEvent('pointerdown', chipComponents[0].componentInstance.dragDirective.element.nativeElement, 75, 30);
         await wait();
         UIInteractions.simulatePointerEvent('pointermove',
@@ -1845,11 +1845,11 @@ describe('IgxGrid - GroupBy', () => {
         await wait();
         fix.detectChanges();
 
-        UIInteractions.simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDirective['dragGhost'], 250, 30);
+        UIInteractions.simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDirective.ghostElement, 250, 30);
         await wait();
         fix.detectChanges();
 
-        UIInteractions.simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDirective['dragGhost'], 250, 30);
+        UIInteractions.simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDirective.ghostElement, 250, 30);
         await wait();
         fix.detectChanges();
         const chipsElems = fix.nativeElement.querySelectorAll('igx-chip');
@@ -1906,7 +1906,7 @@ describe('IgxGrid - GroupBy', () => {
         });
         fix.detectChanges();
 
-        // Trigger initial pointer events on the element with igxDrag. When the drag begins the dragGhost should receive events.
+        // Trigger initial pointer events on the element with igxDrag. When the drag begins the ghostElement should receive events.
         UIInteractions.simulatePointerEvent('pointerdown',
             chipComponents[0].componentInstance.dragDirective.element.nativeElement, 100, 30);
         await wait();
@@ -1915,11 +1915,11 @@ describe('IgxGrid - GroupBy', () => {
         await wait();
         fix.detectChanges();
 
-        UIInteractions.simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDirective['dragGhost'], 250, 30);
+        UIInteractions.simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDirective.ghostElement, 250, 30);
         await wait();
         fix.detectChanges();
 
-        UIInteractions.simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDirective['dragGhost'], 250, 30);
+        UIInteractions.simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDirective.ghostElement, 250, 30);
         await wait();
         fix.detectChanges();
 
@@ -1933,7 +1933,7 @@ describe('IgxGrid - GroupBy', () => {
         // reorder chips again to revert them in original state
         chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
 
-        // Trigger initial pointer events on the element with igxDrag. When the drag begins the dragGhost should receive events.
+        // Trigger initial pointer events on the element with igxDrag. When the drag begins the ghostElement should receive events.
         UIInteractions.simulatePointerEvent('pointerdown',
             chipComponents[0].componentInstance.dragDirective.element.nativeElement, 100, 30);
         await wait();
@@ -1942,11 +1942,11 @@ describe('IgxGrid - GroupBy', () => {
         await wait();
         fix.detectChanges();
 
-        UIInteractions.simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDirective['dragGhost'], 250, 30);
+        UIInteractions.simulatePointerEvent('pointermove', chipComponents[0].componentInstance.dragDirective.ghostElement, 250, 30);
         await wait();
         fix.detectChanges();
 
-        UIInteractions.simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDirective['dragGhost'], 250, 30);
+        UIInteractions.simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDirective.ghostElement, 250, 30);
         await wait();
         fix.detectChanges();
 
@@ -1973,7 +1973,7 @@ describe('IgxGrid - GroupBy', () => {
         const firstColumn = fix.debugElement.query(By.directive(IgxColumnMovingDragDirective));
         const directiveInstance = firstColumn.injector.get(IgxColumnMovingDragDirective);
 
-        // Trigger initial pointer events on the element with igxDrag. When the drag begins the dragGhost should receive events.
+        // Trigger initial pointer events on the element with igxDrag. When the drag begins the ghostElement should receive events.
         UIInteractions.simulatePointerEvent('pointerdown', firstColumn.nativeElement, 75, 30);
         await wait();
         UIInteractions.simulatePointerEvent('pointermove', firstColumn.nativeElement, 110, 30);
@@ -1981,12 +1981,12 @@ describe('IgxGrid - GroupBy', () => {
 
         expect(async () => {
             fix.detectChanges();
-            UIInteractions.simulatePointerEvent('pointermove', directiveInstance['dragGhost'], 250, 30);
+            UIInteractions.simulatePointerEvent('pointermove', directiveInstance.ghostElement, 250, 30);
             await wait();
         }).not.toThrow();
 
         fix.detectChanges();
-        UIInteractions.simulatePointerEvent('pointerup', directiveInstance['dragGhost'], 250, 30);
+        UIInteractions.simulatePointerEvent('pointerup', directiveInstance.ghostElement, 250, 30);
         await wait();
     });
 
@@ -2550,7 +2550,7 @@ describe('IgxGrid - GroupBy', () => {
         const firstColumn = fix.debugElement.queryAll(By.directive(IgxColumnMovingDragDirective))[1];
         const directiveInstance = firstColumn.injector.get(IgxColumnMovingDragDirective);
 
-        // Trigger initial pointer events on the element with igxDrag. When the drag begins the dragGhost should receive events.
+        // Trigger initial pointer events on the element with igxDrag. When the drag begins the ghostElement should receive events.
         UIInteractions.simulatePointerEvent('pointerdown', firstColumn.nativeElement, 75, 30);
         await wait();
         UIInteractions.simulatePointerEvent('pointermove', firstColumn.nativeElement, 110, 30);
@@ -2558,12 +2558,12 @@ describe('IgxGrid - GroupBy', () => {
 
         expect(async () => {
             fix.detectChanges();
-            UIInteractions.simulatePointerEvent('pointermove', directiveInstance['dragGhost'], 250, 30);
+            UIInteractions.simulatePointerEvent('pointermove', directiveInstance.ghostElement, 250, 30);
             await wait();
         }).not.toThrow();
 
         fix.detectChanges();
-        UIInteractions.simulatePointerEvent('pointerup', directiveInstance['dragGhost'], 250, 30);
+        UIInteractions.simulatePointerEvent('pointerup', directiveInstance.ghostElement, 250, 30);
         await wait();
 
         const groupRows = fix.debugElement.queryAll(By.css('igx-grid-groupby-row'));

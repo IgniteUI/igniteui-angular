@@ -7,7 +7,7 @@ import {
     IgxDragDirective,
     IgxInsertDropStrategy,
     IDragBaseEventArgs,
-    IDragLocation
+    IgxDragLocation
 } from 'igniteui-angular';
 
 @Component({
@@ -92,21 +92,21 @@ export class DragDropSampleComponent {
         event.owner.transitionToOrigin();
     }
 
-    public onEnterCustomOutside(event) {
+    public enterCustomOutside(event) {
         if (event.drag.data.id === 'customGhost') {
             this.ghostInDropArea = true;
             this.friendlyArea = true;
         }
     }
 
-    public onEnterCustomCage(event) {
+    public enterCustomCage(event) {
         if (event.drag.data.id === 'customGhost') {
             this.ghostInDropArea = true;
             this.friendlyArea = false;
         }
     }
 
-    public onLeaveCustom(event) {
+    public leaveCustom(event) {
         if (event.drag.data.id === 'customGhost') {
             this.ghostInDropArea = false;
         }
@@ -119,13 +119,13 @@ export class DragDropSampleComponent {
             this.toggleStartPageX = this.toggleFormDrag.pageX;
             this.toggleStartPageY = this.toggleFormDrag.pageY;
         }
-        this.toggleFormDrag.setLocation(new IDragLocation(this.toggleStartPageX, this.toggleStartPageY));
+        this.toggleFormDrag.setLocation(new IgxDragLocation(this.toggleStartPageX, this.toggleStartPageY));
     }
 
     public toOriginNoGhost() {
         const startX = this.startX.nativeElement.value;
         const startY = this.startY.nativeElement.value;
-        const startLocation: IDragLocation = startX && startY ? new IDragLocation(startX, startY) : null ;
+        const startLocation: IgxDragLocation = startX && startY ? new IgxDragLocation(startX, startY) : null ;
         this.dragNoGhostAnim.transitionToOrigin({
             duration: this.animationDuration.nativeElement.value,
             timingFunction: this.animationFunction.nativeElement.value,
@@ -136,11 +136,11 @@ export class DragDropSampleComponent {
     public toLocationNoGhost() {
         const startX = this.startX.nativeElement.value;
         const startY = this.startY.nativeElement.value;
-        const startLocation: IDragLocation = startX && startY ? new IDragLocation(startX, startY) : null ;
+        const startLocation: IgxDragLocation = startX && startY ? new IgxDragLocation(startX, startY) : null ;
 
         const endX = this.endX.nativeElement.value;
         const endY = this.endY.nativeElement.value;
-        const endLocation: IDragLocation = endX && endY ? new IDragLocation(endX, endY) : null;
+        const endLocation: IgxDragLocation = endX && endY ? new IgxDragLocation(endX, endY) : null;
 
         this.dragNoGhostAnim.transitionTo(
             endLocation,
@@ -168,7 +168,7 @@ export class DragDropSampleComponent {
     public toOriginGhost() {
         const startX = this.startX.nativeElement.value;
         const startY = this.startY.nativeElement.value;
-        const startLocation: IDragLocation = startX && startY ? new IDragLocation(startX, startY) : null ;
+        const startLocation: IgxDragLocation = startX && startY ? new IgxDragLocation(startX, startY) : null ;
         this.dragGhostAnim.transitionToOrigin({
             duration: this.animationDuration.nativeElement.value,
             timingFunction: this.animationFunction.nativeElement.value,
@@ -179,11 +179,11 @@ export class DragDropSampleComponent {
     public toLocationGhost() {
         const startX = this.startX.nativeElement.value;
         const startY = this.startY.nativeElement.value;
-        const startLocation: IDragLocation = startX && startY ? new IDragLocation(startX, startY) : null ;
+        const startLocation: IgxDragLocation = startX && startY ? new IgxDragLocation(startX, startY) : null ;
 
         const endX = this.endX.nativeElement.value;
         const endY = this.endY.nativeElement.value;
-        const endLocation: IDragLocation = endX && endY ? new IDragLocation(endX, endY) : null;
+        const endLocation: IgxDragLocation = endX && endY ? new IgxDragLocation(endX, endY) : null;
 
         this.dragGhostAnim.transitionTo(
             endLocation,
@@ -194,5 +194,9 @@ export class DragDropSampleComponent {
             },
              startLocation
         );
+    }
+
+    public dragClick(event) {
+        console.log(event);
     }
 }

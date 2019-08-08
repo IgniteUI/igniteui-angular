@@ -50,8 +50,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
             this.row.grid.onRowDragStart.emit(args);
             if (args.cancel) {
-                this.dragGhost.parentNode.removeChild(this.dragGhost);
-                this.dragGhost = null;
+                this.ghostElement.parentNode.removeChild(this.ghostElement);
+                this.ghostElement = null;
                 this._dragStarted = false;
                 this._clicked = false;
                 return;
@@ -87,18 +87,18 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         const dropArea = this._lastDropArea;
         super.onPointerUp(event);
         if (!dropArea) {
-            this.dragGhost.addEventListener('transitionend', this.transitionEndEvent, false);
+            this.ghostElement.addEventListener('transitionend', this.transitionEndEvent, false);
         }   else {
             this.endDragging();
         }
     }
 
-    protected createDragGhost(pageX, pageY) {
+    protected createGhost(pageX, pageY) {
         this.row.grid.endEdit(true);
         this.row.grid.markForCheck();
-        super.createDragGhost(pageX, pageY, this.row.nativeElement);
+        super.createGhost(pageX, pageY, this.row.nativeElement);
 
-        const ghost = this.dragGhost;
+        const ghost = this.ghostElement;
 
         const gridRect = this.row.grid.nativeElement.getBoundingClientRect();
         const rowRect = this.row.nativeElement.getBoundingClientRect();
@@ -131,8 +131,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     }
 
     private transitionEndEvent = (evt?) => {
-        if (this.dragGhost) {
-            this.dragGhost.removeEventListener('transitionend', this.transitionEndEvent, false);
+        if (this.ghostElement) {
+            this.ghostElement.removeEventListener('transitionend', this.transitionEndEvent, false);
         }
         this.endDragging();
     }

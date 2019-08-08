@@ -208,7 +208,7 @@ describe('IgxChipsArea', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            const dragDir = firstChip.dragDirective['dragGhost'];
+            const dragDir = firstChip.dragDirective.ghostElement;
 
             expect(dragDir).toBeUndefined();
         });
@@ -245,14 +245,14 @@ describe('IgxChipsArea', () => {
             fix.detectChanges();
             UIInteractions.simulatePointerEvent(
                 'pointermove',
-                secondChip.dragDirective['dragGhost'],
+                secondChip.dragDirective.ghostElement,
                 startingX + xDragDifference,
                 startingY + yDragDifference
             );
 
             setTimeout(() => {
-                const afterDragTop = secondChip.dragDirective['dragGhost'].getBoundingClientRect().top;
-                const afterDragLeft = secondChip.dragDirective['dragGhost'].getBoundingClientRect().left;
+                const afterDragTop = secondChip.dragDirective.ghostElement.getBoundingClientRect().top;
+                const afterDragLeft = secondChip.dragDirective.ghostElement.getBoundingClientRect().left;
                 expect(afterDragTop - startingTop).toEqual(yDragDifference);
                 expect(afterDragLeft - startingLeft).toEqual(xDragDifference);
             }, 100);
@@ -301,12 +301,12 @@ describe('IgxChipsArea', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            UIInteractions.simulatePointerEvent('pointermove', firstChip.dragDirective['dragGhost'], secondChipX, secondChipY);
+            UIInteractions.simulatePointerEvent('pointermove', firstChip.dragDirective.ghostElement, secondChipX, secondChipY);
             fix.detectChanges();
 
             return fix.whenRenderingDone();
         }).then(() => {
-            UIInteractions.simulatePointerEvent('pointerup', firstChip.dragDirective['dragGhost'], secondChipX, secondChipY);
+            UIInteractions.simulatePointerEvent('pointerup', firstChip.dragDirective.ghostElement, secondChipX, secondChipY);
             return fix.whenRenderingDone();
         }).then(() => {
             setTimeout(() => {
@@ -361,12 +361,12 @@ describe('IgxChipsArea', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            UIInteractions.simulatePointerEvent('pointermove', secondChip.dragDirective['dragGhost'], firstChipX, firstChipY);
+            UIInteractions.simulatePointerEvent('pointermove', secondChip.dragDirective.ghostElement, firstChipX, firstChipY);
             fix.detectChanges();
 
             return fix.whenRenderingDone();
         }).then(() => {
-            UIInteractions.simulatePointerEvent('pointerup', secondChip.dragDirective['dragGhost'], firstChipX, firstChipY);
+            UIInteractions.simulatePointerEvent('pointerup', secondChip.dragDirective.ghostElement, firstChipX, firstChipY);
             return fix.whenRenderingDone();
         }).then(() => {
             setTimeout(() => {
@@ -770,7 +770,7 @@ describe('IgxChipsArea', () => {
             fix.detectChanges();
             UIInteractions.simulatePointerEvent(
                 'pointermove',
-                secondChip.dragDirective['dragGhost'],
+                secondChip.dragDirective.ghostElement,
                  startingX + xDragDifference,
                   startingY + yDragDifference
             );
@@ -779,7 +779,7 @@ describe('IgxChipsArea', () => {
 
             UIInteractions.simulatePointerEvent(
                 'pointerup',
-                secondChip.dragDirective['dragGhost'],
+                secondChip.dragDirective.ghostElement,
                 startingX + xDragDifference,
                 startingY + yDragDifference
             );
