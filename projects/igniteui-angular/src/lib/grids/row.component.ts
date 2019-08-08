@@ -118,7 +118,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     }
 
     set selected(value: boolean) {
-        value ? this.selectionService.rowSelection.set(this.rowID, this.rowData) :
+        value ? this.selectionService.selectRows([this.rowID]) :
         this.selectionService.deselectRow(this.rowID);
     }
 
@@ -147,14 +147,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      * @hidden
      */
     public get showRowCheckboxes(): boolean {
-        return this.grid.showRowCheckboxes && !this.grid.hideRowSelectors;
-    }
-
-    /**
-     * @hidden
-     */
-    public get isRowSelectable(): boolean {
-        return this.grid.isRowSelectable;
+        return this.grid.showRowCheckboxes;
     }
 
     /** @hidden */
@@ -281,14 +274,13 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      * @internal
      */
     @HostListener('click', ['$event'])
-    public onClick(event: MouseEvent) { // move the logic below to selection Service
-        if (this.grid.rowSelection === 'none') { return; }
+    public onClick(event: MouseEvent) {
+        if (this.grid.rowSelection === 'none' || this.deleted) { return; }
         if (event.shiftKey && this.grid.rowSelection === 'multiple') {
             this.selectionService.selectMultipleRows(this.rowData);
             return;
         }
-        this.selectionService.selectRowbyID(this.rowID, this.rowData, !event.ctrlKey );
-
+        this.selectionService.selectRowbyID(this.rowID, this.rowData, !event.ctrlKey);
     }
 
     /**
@@ -346,7 +338,6 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      */
     public ngDoCheck() {
         this.cdr.markForCheck();
-
     }
 
     /**

@@ -301,7 +301,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (this._cellSelection === value) { return; }
          this.zone.runOutsideAngular(() => {
             value === GridSelectionMode.multiple ?
-            this.addPointerListeners(this._cellSelection) : this.removePointerListeners(this._cellSelection);
+            this.addPointerListeners(value) : this.removePointerListeners(this._cellSelection);
         });
         this._cellSelection = value;
     }

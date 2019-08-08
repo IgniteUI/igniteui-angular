@@ -4759,12 +4759,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    public selectAllRows() {
-        const allData = this.filteringExpressionsTree ? this.filteredSortedData : this.data;
-        allData.forEach(rowData => {
-            const rowID = this.selectionService.getRowID(rowData);
-            this.selectionService.selectRowbyID(rowID, rowData);
-        });
+    public selectAllRows(onlyFilterData = true) {
+        this.selectionService.selectAllRows(onlyFilterData);
     }
 
     /**
@@ -4774,8 +4770,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
      * Note: If filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
      */
-    public deselectAllRows() {
-        this.selectionService.clearRowSelection();
+    public deselectAllRows(onlyFilterData = true) {
+        this.selectionService.clearRowSelection(onlyFilterData);
     }
 
     clearCellSelection(): void {

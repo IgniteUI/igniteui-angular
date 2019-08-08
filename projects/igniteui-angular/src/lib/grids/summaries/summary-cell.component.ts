@@ -2,7 +2,7 @@ import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, E
 import { IgxSummaryResult } from './grid-summary';
 import { IgxColumnComponent } from '../column.component';
 import { DataType } from '../../data-operations/data-util';
-import { IgxGridSelectionService, ISelectionNode } from '../../core/grid-selection';
+import { ISelectionNode } from '../../core/grid-selection';
 import { SUPPORTED_KEYS } from '../../core/utils';
 
 @Component({
