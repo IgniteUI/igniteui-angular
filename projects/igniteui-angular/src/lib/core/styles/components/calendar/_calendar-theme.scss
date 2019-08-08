@@ -47,6 +47,7 @@
 /// @param {Color} $date-special-text-color [null] - The text color used for special dates.
 ///
 /// @param {Color} $date-disabled-text-color [null] - The text color for disabled dates.
+/// @param {Color} $date-disabled-background [null] - The background color for disabled dates in a range.
 ///
 /// @param {border-radius} $border-radius [null] - The border radius used for the outline of the calendar.
 /// @param {border-radius} $date-border-radius [null] - The border radius used for the outline outline of the date.
@@ -105,7 +106,8 @@
     $date-special-background: null,
     $date-special-text-color: null,
 
-    $date-disabled-text-color: null
+    $date-disabled-text-color: null,
+    $date-disabled-background: null,
 ) {
     $name: 'igx-calendar';
     $calendar-schema: map-get($schema, $name);
@@ -211,6 +213,10 @@
         }
     }
 
+    @if not($date-disabled-text-color) and $date-disabled-background {
+        $date-disabled-color: rgba(text-contrast($date-disabled-background), .38);
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -249,7 +255,8 @@
         date-special-text-color: $date-special-text-color,
         date-special-background: $date-special-background,
 
-        date-disabled-text-color: $date-disabled-text-color
+        date-disabled-text-color: $date-disabled-text-color,
+        date-disabled-background: $date-disabled-background,
     ));
 }
 
@@ -396,6 +403,11 @@
         cursor: pointer;
         outline: none;
         // transition: background .15s ease-out;
+
+        &:hover,
+        &:focus {
+            @extend %cal-value--hover;
+        }
     }
 
     %cal-value-content {
@@ -417,18 +429,6 @@
 
     %cal-value--weekend {
         color: --var($theme, 'weekend-text-color');
-    }
-
-    %cal-value--special {
-        color: --var($theme, 'date-special-text-color');
-        background: --var($theme, 'date-special-background');
-        font-weight: $cal-value-fw;
-    }
-
-    %cal-value--disabled {
-        pointer-events: none;
-        color: --var($theme, 'date-disabled-text-color');
-        cursor: not-allowed;
     }
 
     %cal-value--year {
@@ -482,7 +482,7 @@
     }
 
     %cal-value--month-current {
-        color: --var($theme, 'month-current-text-color') !important;
+        color: --var($theme, 'month-current-text-color') ;
     }
 
     %cal-value--inactive {
@@ -495,15 +495,35 @@
         background: --var($theme, 'date-selected-background');
 
         %cal-value-content {
-            font-weight: $cal-value-fw !important;
+            font-weight: $cal-value-fw ;
             color: --var($theme, 'date-selected-text-color');
-            background: --var($theme, 'date-selected-background') !important;
+            background: --var($theme, 'date-selected-background') ;
+
+            :hover &,
+            :focus &,
+            :focus-within & {
+                background: --var($theme, 'date-selected-background', inherit) !important;
+            }
         }
     }
 
     %cal-value--current {
         color: --var($theme, 'date-current-text-color');
-        font-weight: $cal-value-fw !important;
+        font-weight: $cal-value-fw ;
+    }
+
+    %cal-value--special {
+        %cal-value-content {
+            background: --var($theme, 'date-special-background');
+            color: --var($theme, 'date-special-text-color');
+            font-weight: $cal-value-fw;
+        }
+    }
+
+    %cal-value--disabled {
+        pointer-events: none;
+        cursor: not-allowed;
+        color: --var($theme, 'date-disabled-text-color');
     }
 
     %cal-value--hover {
@@ -517,6 +537,14 @@
 
         &::before,
         &::after {
+            background: transparent;
+        }
+    }
+
+    %cal-value--disabled-range {
+        background: --var($theme, 'date-disabled-background');
+
+        %cal-value-content {
             background: transparent;
         }
     }

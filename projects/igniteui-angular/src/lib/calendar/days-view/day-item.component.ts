@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, HostBinding, ElementRef, HostListener } from '@angular/core';
 import { ICalendarDate, isDateInRanges, Calendar } from '../calendar';
-import { DateRangeDescriptor } from '../../core/dates';
+import { DateRangeDescriptor, DateRangeType } from '../../core/dates';
 import { CalendarSelection } from '../calendar-base';
 
 /**
@@ -145,6 +145,22 @@ export class IgxDayItemComponent {
     @HostBinding('class.igx-calendar__date--disabled')
     public get isDisabledCSS(): boolean {
         return this.isDisabled || this.isOutOfRange;
+    }
+
+    @HostBinding('class.igx-calendar__date--range')
+    public get isWithinRange() {
+        if (this.selection === CalendarSelection.RANGE) {
+            return isDateInRanges(this.date.date,
+                [
+                    {
+                        type: DateRangeType.Between,
+                        dateRange: (this.value as Date[])
+                    }
+                ]
+            );
+        }
+
+        return false;
     }
 
     @HostBinding('class.igx-calendar__date--special')
