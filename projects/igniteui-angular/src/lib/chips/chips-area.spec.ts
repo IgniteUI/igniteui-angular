@@ -269,8 +269,8 @@ describe('IgxChipsArea', () => {
         const firstChip = chipComponents[0].componentInstance;
         const secondChip = chipComponents[1].componentInstance;
 
-        firstChip.dragDirective.animateOnRelease = false;
-        secondChip.dragDirective.animateOnRelease = false;
+        firstChip.animateOnRelease = false;
+        secondChip.animateOnRelease = false;
 
         const firstChipElem = firstChip.chipArea.nativeElement;
         const secondChipElem = secondChip.chipArea.nativeElement;
@@ -329,8 +329,8 @@ describe('IgxChipsArea', () => {
         const firstChip = chipComponents[0].componentInstance;
         const secondChip = chipComponents[1].componentInstance;
 
-        firstChip.dragDirective.animateOnRelease = false;
-        secondChip.dragDirective.animateOnRelease = false;
+        firstChip.animateOnRelease = false;
+        secondChip.animateOnRelease = false;
 
         const firstChipElem = firstChip.chipArea.nativeElement;
         const secondChipElem = secondChip.chipArea.nativeElement;
@@ -746,7 +746,7 @@ describe('IgxChipsArea', () => {
         const secondChip = chipComponents[1].componentInstance;
         const secondChipElem = secondChip.chipArea.nativeElement;
 
-        secondChip.dragDirective.animateOnRelease = false;
+        secondChip.animateOnRelease = false;
         secondChip.chipArea.nativeElement.dispatchEvent(spaceKeyEvent);
 
         const startingTop = secondChipElem.getBoundingClientRect().top;

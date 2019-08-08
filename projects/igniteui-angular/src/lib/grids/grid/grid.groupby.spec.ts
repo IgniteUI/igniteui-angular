@@ -1834,7 +1834,7 @@ describe('IgxGrid - GroupBy', () => {
         const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
         // Disable chip animations
         chipComponents.forEach((chip) => {
-            chip.componentInstance.dragDirective.animateOnRelease = false;
+            chip.componentInstance.animateOnRelease = false;
         });
 
         // Trigger initial pointer events on the element with igxDrag. When the drag begins the dragGhost should receive events.
@@ -1902,7 +1902,7 @@ describe('IgxGrid - GroupBy', () => {
         let chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
         // Disable chip animations
         chipComponents.forEach((chip) => {
-            chip.componentInstance.dragDirective.animateOnRelease = false;
+            chip.componentInstance.animateOnRelease = false;
         });
         fix.detectChanges();
 

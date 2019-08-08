@@ -535,7 +535,7 @@ describe('General igxDrag/igxDrop', () => {
         expect(firstElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top + 20);
 
         // pageX/pageY from the directive should be equal to the getBoundingClientRect top/left.
-        const startLocation: IDragLocation = { pageX: initialPageX, pageY: initialPageY };
+        const startLocation = new IDragLocation(initialPageX,  initialPageY);
         firstDrag.setLocation(startLocation);
 
         expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
