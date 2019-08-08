@@ -85,6 +85,7 @@ import { GridMRLConfigSampleComponent } from './grid-multi-row-layout-config/gri
 import { GridMRLCustomNavigationSampleComponent } from './grid-mrl-custom-navigation/grid-mrl-custom-navigation';
 import { GridClipboardSampleComponent } from './grid-clipboard/grid-clipboard.sample';
 import { GridAutoSizeSampleComponent } from './grid-auto-size/grid-auto-size.sample';
+import { GridFlexSampleComponent } from './grid-flex-layout/grid-flex.sample';
 
 const appRoutes = [
     {
@@ -413,6 +414,10 @@ const appRoutes = [
     {
         path: 'gridAutoSize',
         component: GridAutoSizeSampleComponent
+    },
+    {
+        path: 'gridFlex',
+        component: GridFlexSampleComponent
     },
     {
         path: 'gridSearch',
