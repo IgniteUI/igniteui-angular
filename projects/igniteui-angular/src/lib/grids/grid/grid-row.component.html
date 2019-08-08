@@ -10,7 +10,7 @@
     <div class="igx-grid__cbx-selection">
          <ng-template *ngTemplateOutlet="
             this.grid.rowSelectorTemplate ? this.grid.rowSelectorTemplate : rowSelectorBaseTemplate;
-            context: {$implicit: {index: dataRowIndex, rowID: rowID, selected: isSelected}}">
+            context: {$implicit: {index: this.index + this.grid.page * this.grid.perPage, rowID: rowID, selected: isSelected}}">
         </ng-template>
     </div>
 </ng-container>

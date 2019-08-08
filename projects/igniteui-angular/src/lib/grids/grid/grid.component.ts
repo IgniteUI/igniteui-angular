@@ -493,12 +493,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef, static: true })
     public dragIndicatorIconTemplate: TemplateRef<any> = null;
 
-    @ContentChild(IgxRowSelectorDirective, { read: TemplateRef, static: true })
-    public rowSelectorTemplate: TemplateRef<IgxRowSelectorDirective>;
-
-    @ContentChild(IgxHeadSelectorDirective, { read: TemplateRef, static: true })
-    public headSelectorTemplate: TemplateRef<IgxHeadSelectorDirective>;
-
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
     private _groupsRowList: QueryList<IgxGridGroupByRowComponent>;
 
