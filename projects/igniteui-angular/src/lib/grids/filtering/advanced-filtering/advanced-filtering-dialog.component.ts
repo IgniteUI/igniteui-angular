@@ -6,7 +6,7 @@ import { IgxFilteringService } from '../grid-filtering.service';
 import { IgxOverlayService } from '../../../services/overlay/overlay';
 import { DisplayDensity } from '../../../core/displayDensity';
 import { IgxToggleDirective } from 'igniteui-angular';
-import { IgxGridBaseComponent } from '../../grid';
+import { IgxGridBaseComponent, IgxColumnComponent } from '../../grid';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { FilteringLogic, IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { IgxStringFilteringOperand } from '../../../data-operations/filtering-condition';
@@ -68,6 +68,10 @@ export class IgxAdvancedFilteringDialogComponent {
 
     public addModeExpression: ExpressionOperandItem;
 
+    public selectedColumn: IgxColumnComponent;
+    public selectedCondition: string;
+    public searchValue: string;
+
     private _clickTimer;
     private _dblClickDelay = 200;
     private _preventChipClick = false;
@@ -111,6 +115,10 @@ export class IgxAdvancedFilteringDialogComponent {
     }
 
     public commitOperandEdit(item: ExpressionOperandItem) {
+        item.expression.fieldName = this.selectedColumn.field;
+        item.expression.condition = this.selectedColumn.filters.condition(this.selectedCondition);
+        item.expression.searchVal = this.searchValue;
+
         item.inEditMode = false;
         this.editedExpression = null;
     }
@@ -214,6 +222,12 @@ export class IgxAdvancedFilteringDialogComponent {
         if (this.editedExpression) {
             this.editedExpression.inEditMode = false;
         }
+
+        this.selectedColumn = expressionItem.expression.fieldName ?
+            this.grid.getColumnByName(expressionItem.expression.fieldName) : null;
+        this.selectedCondition = expressionItem.expression.condition ?
+            expressionItem.expression.condition.name : null;
+        this.searchValue = expressionItem.expression.searchVal;
 
         expressionItem.inEditMode = true;
         this.editedExpression = expressionItem;

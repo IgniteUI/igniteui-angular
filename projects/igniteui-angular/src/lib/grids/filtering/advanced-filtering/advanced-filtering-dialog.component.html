@@ -47,19 +47,18 @@
         </ng-template>
 
         <ng-template #filterOperandTemplate let-expressionItem>
-            <span>
-                <igx-chip *ngIf="!expressionItem.inEditMode"
-                        [removable]="true"
-                        [selected]="expressionItem.selected"
-                        (click)="onChipClick(expressionItem)"
-                        (dblclick)="onChipDblClick(expressionItem)"
-                        (onRemove)="onChipRemove(expressionItem)"
-                        style="margin-bottom: 10px">
+            <span *ngIf="!expressionItem.inEditMode">
+                <igx-chip [removable]="true"
+                          [selected]="expressionItem.selected"
+                          (click)="onChipClick(expressionItem)"
+                          (dblclick)="onChipDblClick(expressionItem)"
+                          (onRemove)="onChipRemove(expressionItem)"
+                          style="margin-bottom: 10px">
                     {{ expressionItem.expression.fieldName }}
                     {{ expressionItem.expression.condition ? expressionItem.expression.condition.name : '' }}
                     {{ expressionItem.expression.searchVal }}
                 </igx-chip>
-                <span *ngIf="!expressionItem.inEditMode && expressionItem.selected && selectedExpressions.length === 1">
+                <span *ngIf="expressionItem.selected && selectedExpressions.length === 1">
                     <button igxButton="icon"
                             (click)="enterExpressionEdit(expressionItem)">
                         <igx-icon fontSet="material">edit</igx-icon>
@@ -70,9 +69,41 @@
                     </button>
                 </span>
             </span>
-            <span *ngIf="expressionItem.inEditMode">
-                Editing...
+            <div *ngIf="expressionItem.inEditMode"
+                 style="display: flex; align-items: center;">
+                <igx-select type="box" 
+                            [(ngModel)]="selectedColumn">
+                    <igx-select-item *ngFor="let column of grid.columns" [value]="column">
+                        {{column.header}}
+                    </igx-select-item>
+                </igx-select>
+
+                <ng-container *ngIf="!selectedColumn">
+                    <igx-select type="box"
+                                [disabled]="true">
+                    </igx-select>
+                </ng-container>
+
+                <ng-container *ngIf="selectedColumn">
+                    <igx-select type="box" 
+                                [(ngModel)]="selectedCondition"
+                                [disabled]="!selectedColumn">
+                            <igx-select-item *ngFor="let condition of selectedColumn.filters.conditionList()" [value]="condition">
+                                {{condition}}
+                            </igx-select-item>
+                    </igx-select>
+                </ng-container>
+
+                <igx-input-group type="box"
+                                 [disabled]="!selectedColumn || !selectedCondition || (selectedColumn && selectedColumn.filters.condition(selectedCondition).isUnary)"
+                                 [displayDensity]="displayDensity">
+                    <input #input
+                           igxInput
+                           [(ngModel)]="searchValue"/>
+                </igx-input-group>
+
                 <button igxButton="icon"
+                        [disabled]="!selectedColumn || !selectedCondition || (!searchValue && !selectedColumn.filters.condition(selectedCondition).isUnary)"
                         (click)="commitOperandEdit(expressionItem)">
                     <igx-icon fontSet="material">check</igx-icon>
                 </button>
@@ -80,7 +111,7 @@
                         (click)="cancelOperandEdit()">
                     <igx-icon fontSet="material">close</igx-icon>
                 </button>
-            </span>
+            </div>
             <div *ngIf="expressionItem.inAddMode"
                  style="display: flex;">
                 <ng-container *ngTemplateOutlet="addExpressionsTemplate; context: context(expressionItem.parent, expressionItem)"></ng-container>
@@ -100,27 +131,6 @@
                         <ng-container *ngTemplateOutlet="isExpressionGroup(expr) ? expressionTreeTemplate : filterOperandTemplate; context: context(expr)"></ng-container>
                     </ng-container>
                     <div *ngIf="currentGroup === expressionItem">
-                        <!-- <button igxButton 
-                                [displayDensity]="displayDensity"
-                                [disabled]="editedExpression"
-                                (click)="addCondition(expressionItem)">
-                            <igx-icon fontSet="material">add</igx-icon>
-                            <span>Condition</span>
-                        </button>
-                        <button igxButton
-                                [displayDensity]="displayDensity"
-                                [disabled]="editedExpression"
-                                (click)="addAndGroup(expressionItem)">
-                            <igx-icon fontSet="material">add</igx-icon>
-                            <span>"And" Group</span>
-                        </button>
-                        <button igxButton
-                                [displayDensity]="displayDensity"
-                                [disabled]="editedExpression"
-                                (click)="addOrGroup(expressionItem)">
-                            <igx-icon fontSet="material">add</igx-icon>
-                            <span>"Or" Group</span>
-                        </button> -->
                         <ng-container *ngTemplateOutlet="addExpressionsTemplate; context: context(expressionItem)"></ng-container>
                         <button igxButton
                                 *ngIf="expressionItem !== rootGroup"

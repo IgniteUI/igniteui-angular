@@ -68,6 +68,7 @@ import { IgxGridDragSelectDirective } from './drag-select.directive';
 import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 import { IgxRowDragModule } from './row-drag.directive';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
+import { IgxSelectModule } from '../select';
 /**
  * @hidden
  */
@@ -197,6 +198,7 @@ import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filter
         IgxGridPipesModule,
         IgxGridExcelStyleFilteringModule,
         IgxRowDragModule,
+        IgxSelectModule,
         IgxPaginatorModule
     ],
     providers: [
