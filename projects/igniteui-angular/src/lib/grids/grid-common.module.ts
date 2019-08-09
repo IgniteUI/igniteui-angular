@@ -165,7 +165,8 @@ import { IgxSelectorsModule } from './igx-selection.module';
         IgxFilterCellTemplateDirective,
         IgxRowDragModule,
         IgxPaginatorModule,
-        IgxGridFooterComponent
+        IgxGridFooterComponent,
+        IgxSelectorsModule
     ],
     imports: [
         CommonModule,
