@@ -283,7 +283,7 @@
     $cal-value-month-margin: 0 em(12px);
     $cal-value-month-height: em(91px);
 
-    $cal-row-padding: 0 em(16px);
+    $cal-row-padding: 0;
     $cal-row-margin: em(2px) 0;
 
     %cal-display {
@@ -335,16 +335,16 @@
         justify-content: space-between;
         align-items: center;
         padding-bottom: $cal-picker-padding;
-        padding-left: $cal-picker-padding;
-        padding-right: $cal-picker-padding;
     }
 
     %cal-picker-arrow {
         display: inline-flex;
+        justify-content: center;
         color: --var($theme, 'picker-arrow-color');
         user-select: none;
         outline: none;
         cursor: pointer;
+        flex-basis: 14.28%; /* equals the width of a single date 100% / 7 (days) */
 
         &:focus,
         &:hover {
@@ -418,7 +418,19 @@
         line-height: $cal-value-h;
         text-align: center;
         border-radius: --var($theme, 'date-border-radius');
+        z-index: 0;
         // transition: background .15s ease-out;
+
+        &::after {
+            position: absolute;
+            content: '';
+            width: inherit;
+            height: inherit;
+            top: 0;
+            left: 0;
+            border-radius: inherit;
+            z-index: -1;
+        }
     }
 
     %cal-value--label {
@@ -510,12 +522,6 @@
         %cal-value-content {
             color: --var($theme, 'date-selected-text-color');
             background: --var($theme, 'date-selected-background') ;
-
-            :hover &,
-            :focus &,
-            :focus-within & {
-                background: --var($theme, 'date-selected-background', inherit) !important;
-            }
         }
     }
 
@@ -526,7 +532,7 @@
     }
 
     %cal-value--hover {
-        %cal-value-content {
+        %cal-value-content::after {
             background: --var($theme, 'date-hover-background');
         }
     }
