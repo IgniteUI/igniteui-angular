@@ -490,12 +490,24 @@
         color: --var($theme, 'inactive-text-color');
     }
 
+    %cal-value--current {
+        color: --var($theme, 'date-current-text-color');
+        font-weight: $cal-value-fw;
+    }
+
+    %cal-value--special {
+        %cal-value-content {
+            background: --var($theme, 'date-special-background');
+            color: --var($theme, 'date-special-text-color');
+            font-weight: 900;
+        }
+    }
+
     %cal-value--selected {
         position: relative;
         background: --var($theme, 'date-selected-background');
 
         %cal-value-content {
-            font-weight: $cal-value-fw ;
             color: --var($theme, 'date-selected-text-color');
             background: --var($theme, 'date-selected-background') ;
 
@@ -504,19 +516,6 @@
             :focus-within & {
                 background: --var($theme, 'date-selected-background', inherit) !important;
             }
-        }
-    }
-
-    %cal-value--current {
-        color: --var($theme, 'date-current-text-color');
-        font-weight: $cal-value-fw ;
-    }
-
-    %cal-value--special {
-        %cal-value-content {
-            background: --var($theme, 'date-special-background');
-            color: --var($theme, 'date-special-text-color');
-            font-weight: $cal-value-fw;
         }
     }
 
@@ -542,10 +541,11 @@
     }
 
     %cal-value--disabled-range {
-        background: --var($theme, 'date-disabled-background');
+        background: --var($theme, 'date-disabled-background') !important;
 
         %cal-value-content {
-            background: transparent;
+            color: --var($theme, 'date-disabled-text-color');
+            background: transparent !important;
         }
     }
 

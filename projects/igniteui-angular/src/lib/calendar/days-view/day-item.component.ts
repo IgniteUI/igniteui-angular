@@ -129,7 +129,7 @@ export class IgxDayItemComponent {
 
     @HostBinding('class.igx-calendar__date--current')
     public get isTodayCSS(): boolean {
-        return this.isToday && !this.selected;
+        return this.isToday;
     }
 
     @HostBinding('class.igx-calendar__date--selected')
@@ -149,12 +149,13 @@ export class IgxDayItemComponent {
 
     @HostBinding('class.igx-calendar__date--range')
     public get isWithinRange() {
-        if (this.selection === CalendarSelection.RANGE) {
+        if (Array.isArray(this.value) && this.value.length > 1) {
+
             return isDateInRanges(this.date.date,
                 [
                     {
                         type: DateRangeType.Between,
-                        dateRange: (this.value as Date[])
+                        dateRange: [this.value[0], this.value[this.value.length - 1]]
                     }
                 ]
             );

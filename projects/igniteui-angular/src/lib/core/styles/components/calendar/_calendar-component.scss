@@ -104,6 +104,13 @@
         @extend %cal-value--disabled-range !optional;
     }
 
+    // This is added due to a bug in JavaScript
+    // where the selected dates collection also includes
+    // disabled dates.
+    @include e(date, $mods: ('selected', 'disabled', 'range')) {
+        @extend %cal-value--disabled-range !optional;
+    }
+
     @include e(date-content) {
         @extend %cal-value-content !optional;
     }
