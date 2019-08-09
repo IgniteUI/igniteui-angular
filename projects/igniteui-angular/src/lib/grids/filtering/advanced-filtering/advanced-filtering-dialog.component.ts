@@ -68,15 +68,31 @@ export class IgxAdvancedFilteringDialogComponent {
 
     public addModeExpression: ExpressionOperandItem;
 
-    public selectedColumn: IgxColumnComponent;
     public selectedCondition: string;
     public searchValue: string;
 
+    private _selectedColumn: IgxColumnComponent;
     private _clickTimer;
     private _dblClickDelay = 200;
     private _preventChipClick = false;
 
     constructor(public cdr: ChangeDetectorRef) { }
+
+    public get selectedColumn(): IgxColumnComponent {
+        return this._selectedColumn;
+    }
+
+    public set selectedColumn(value: IgxColumnComponent) {
+        const oldValue = this._selectedColumn;
+
+        if (this._selectedColumn !== value) {
+            this._selectedColumn = value;
+            if (oldValue && this._selectedColumn.dataType !== oldValue.dataType) {
+                this.selectedCondition = null;
+                this.searchValue = null;
+            }
+        }
+    }
 
     get grid(): IgxGridBaseComponent {
         return this.filteringService.grid;
