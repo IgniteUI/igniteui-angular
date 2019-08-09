@@ -6,7 +6,7 @@ import { IgxAvatarModule } from '../avatar/avatar.component';
 import { IgxIconModule } from '../icon/index';
 import { IgxChipComponent } from './chip.component';
 import { IgxChipsAreaComponent } from './chips-area.component';
-import { IgxDragDropModule } from '../directives/dragdrop/dragdrop.directive';
+import { IgxDragDropModule } from '../directives/drag-drop/drag-drop.directive';
 import { IgxPrefixModule, IgxPrefixDirective} from '../directives/prefix/prefix.directive';
 import { IgxSuffixModule, IgxSuffixDirective } from '../directives/suffix/suffix.directive';
 
