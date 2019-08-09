@@ -5666,7 +5666,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             fix.detectChanges();
             tick(100);
             // Adjust column widths, so their group can be pinned.
-            const columnFields = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate'];
+            const columnFields = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'AnotherField'];
             columnFields.forEach((columnField) => {
                 const col = grid.columns.find((c) => c.field === columnField);
                 col.width = '100px';
