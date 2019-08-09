@@ -266,11 +266,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public selectedRowsCount = 0;
 
     /**
-     * @hidden
-     */
-    public totalRowsCount = 0;
-
-    /**
      * An accessor that sets the resource strings.
      * By default it uses EN resources.
     */
@@ -4661,7 +4656,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
 
         this.selectedRowsCount = this.selectedRows().length;
-        this.totalRowsCount = this.gridAPI.get_all_data().length;
         this.cdr.markForCheck();
     }
 
