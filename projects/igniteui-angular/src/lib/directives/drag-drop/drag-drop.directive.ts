@@ -551,6 +551,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         return new IgxDragLocation(this.pageX, this.pageY);
     }
 
+    public get originLocation(): IgxDragLocation {
+        return new IgxDragLocation(this.baseOriginLeft, this.baseOriginTop);
+    }
+
     /**
      * @hidden
      */
@@ -623,6 +627,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      */
     public ghostElement;
 
+    /**
+     * @hidden
+     */
+    public animInProgress = false;
+
     protected _marginLeft = 0;
     protected _marginTop = 0;
     protected _baseOriginX;
@@ -634,7 +643,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected _lastX = 0;
     protected _lastY = 0;
     protected _dragStarted = false;
-    protected _animInProgress = false;
 
     /** Drag ghost related properties */
     protected _ghostOffsetX;
@@ -785,7 +793,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             this.setLocation(startLocation);
         }
 
-        this._animInProgress = true;
+        this.animInProgress = true;
         setTimeout(() => {
             if (this.ghost) {
                 this.ghostElement.style.transitionProperty = 'top, left';
@@ -802,7 +810,9 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 this.element.nativeElement.style.transitionTimingFunction =
                     customAnimArgs && customAnimArgs.timingFunction ? customAnimArgs.timingFunction : '';
                 this.element.nativeElement.style.transitionDelay = customAnimArgs && customAnimArgs.delay ? customAnimArgs.delay + 's' : '';
-                this.setLocation(new IgxDragLocation(this.baseOriginLeft, this.baseOriginTop));
+                this._startX = this.baseLeft;
+                this._startY = this.baseTop;
+                this.setTransformXY(0, 0);
             }
         }, 0);
     }
@@ -832,7 +842,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             this.createGhost(this._startX, this._startY);
         }
 
-        this._animInProgress = true;
+        this.animInProgress = true;
         setTimeout(() => {
             const movedElem = this.ghost ? this.ghostElement : this.element.nativeElement;
             movedElem.style.transitionProperty = this.ghost && this.ghostElement ? 'left, top' : 'transform';
@@ -1002,7 +1012,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         this._pointerDownId = null;
         this._clicked = false;
         if (this._dragStarted) {
-            if (this._lastDropArea && this._lastDropArea !== this.element.nativeElement) {
+            if (this._lastDropArea && this._lastDropArea !== this.element.nativeElement ) {
                 this.dispatchDropEvent(event.pageX, event.pageY, event);
             } else if (this.animateOnRelease) {
                 this.transitionToOrigin();
@@ -1012,7 +1022,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 this.dragEnd.emit(eventArgs);
             });
 
-            if (!this._animInProgress) {
+            if (!this.animInProgress) {
                 this.onTransitionEnd(null);
             }
         }
@@ -1042,7 +1052,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             });
             if (this.animateOnRelease) {
                 this.transitionToOrigin();
-            } else if (!this._animInProgress) {
+            } else if (!this.animInProgress) {
                 this.onTransitionEnd(null);
             }
         }
@@ -1143,27 +1153,29 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
         const elementsFromPoint = this.getElementsAtPoint(pageX, pageY);
         for (let i = 0; i < elementsFromPoint.length; i++) {
-            if (elementsFromPoint[i].getAttribute('droppable') === 'true' && elementsFromPoint[i] !== this.ghostElement) {
+            if (elementsFromPoint[i].getAttribute('droppable') === 'true' &&
+                elementsFromPoint[i] !== this.ghostElement && elementsFromPoint[i] !== this.element.nativeElement) {
                 topDropArea = elementsFromPoint[i];
                 break;
             }
         }
 
-        if (topDropArea) {
-            this.dispatchEvent(topDropArea, 'igxDragOver', eventArgs);
-        }
-
         if (topDropArea &&
             (!this._lastDropArea || (this._lastDropArea && this._lastDropArea !== topDropArea))) {
-            if (this._lastDropArea) {
+                if (this._lastDropArea) {
+                    this.dispatchEvent(this._lastDropArea, 'igxDragLeave', eventArgs);
+                }
+
+                this._lastDropArea = topDropArea;
+                this.dispatchEvent(this._lastDropArea, 'igxDragEnter', eventArgs);
+            } else if (!topDropArea && this._lastDropArea) {
                 this.dispatchEvent(this._lastDropArea, 'igxDragLeave', eventArgs);
+                this._lastDropArea = null;
+                return;
             }
 
-            this._lastDropArea = topDropArea;
-            this.dispatchEvent(this._lastDropArea, 'igxDragEnter', eventArgs);
-        } else if (!topDropArea && this._lastDropArea) {
-            this.dispatchEvent(this._lastDropArea, 'igxDragLeave', eventArgs);
-            this._lastDropArea = null;
+        if (topDropArea) {
+            this.dispatchEvent(topDropArea, 'igxDragOver', eventArgs);
         }
     }
 
@@ -1242,6 +1254,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @hidden
      */
     public onTransitionEnd(event) {
+        if ((!this._dragStarted && !this.animInProgress) || this._clicked) {
+            // Return if no dragging started and there is no animation in progress.
+            return ;
+        }
+
         if (this.ghost && this.ghostElement) {
             const ghostDestroyArgs = {
                 owner: this,
@@ -1265,7 +1282,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             this.element.nativeElement.style.transitionTimingFunction = '';
             this.element.nativeElement.style.transitionDelay = '';
         }
-        this._animInProgress = false;
+        this.animInProgress = false;
         this._dragStarted = false;
 
         this.zone.run(() => {
@@ -1516,7 +1533,24 @@ export class IgxDropDirective implements OnInit, OnDestroy {
      * @hidden
      */
     public onDragOver(event) {
-        this.over.emit();
+        const elementPosX = this.element.nativeElement.getBoundingClientRect().left + this.getWindowScrollLeft();
+        const elementPosY = this.element.nativeElement.getBoundingClientRect().top + this.getWindowScrollTop();
+        const offsetX = event.detail.pageX - elementPosX;
+        const offsetY = event.detail.pageY - elementPosY;
+        const eventArgs: IgxDropLeaveEventArgs = {
+            originalEvent: event.detail.originalEvent,
+            owner: this,
+            drag: event.detail.owner,
+            dragData: event.detail.owner.data,
+            startX: event.detail.startX,
+            startY: event.detail.startY,
+            pageX: event.detail.pageX,
+            pageY: event.detail.pageY,
+            offsetX: offsetX,
+            offsetY: offsetY
+        };
+
+        this.over.emit(eventArgs);
      }
 
     /**

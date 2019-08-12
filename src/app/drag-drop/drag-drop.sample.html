@@ -135,6 +135,21 @@
         <hr [style.width]="'100%'">
         <section class="sample-content">
             <article class="sample-column">
+                <h4 class="sample-title">Wishlist reorder with transitions:</h4>
+
+                <div #listArea class="listArea">
+                    <div #listItem *ngFor="let item of listNotes; index as itemIndex" class="listItem"
+                        [ngStyle]="{ 'box-shadow': item.dragged ? '0px 5px 15px 3px rgb(20, 20, 20)': '', 'border-radius': item.dragged ? '4px' : '0px', 'z-index': item.dragged ? '2' : '1' }"
+                        [igxDrag]="{ id: item.text, moved: false }" [ghost]="false" (dragStart)="listItemDragStart($event, item, itemIndex)" (dragEnd)="listItemDragEnd($event, item)" (transitioned)="litsItemTransitioned($event, item, itemIndex)" 
+                        igxDrop (enter)="listItemEnter($event, itemIndex)" (over)="listItemOver($event, itemIndex)">
+                        {{item.text}}
+                    </div>
+                </div>
+            </article>
+        </section>
+        <hr [style.width]="'100%'">
+        <section class="sample-content">
+            <article class="sample-column">
                 <div [style.width]="'70%'" >
                     <h4>Drag a suspect inside or outside the cage:</h4>
                     <div igxDrop class="initialArea" [dropChannel]="['Pedestrian', 'Suspect']" [dropStrategy]="dropStrategy"
