@@ -77,7 +77,7 @@ import { IGridResourceStrings } from '../core/i18n/grid-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
-import { IgxGridSelectionService, GridSelectionRange, IgxGridCRUDService, IgxRow, IgxCell } from '../core/grid-selection';
+import { IgxGridSelectionService, GridSelectionRange, IgxGridCRUDService, IgxRow, IgxCell, isChromium } from '../core/grid-selection';
 import { DragScrollDirection } from './drag-select.directive';
 import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
 import {
@@ -4146,11 +4146,24 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return height;
     }
 
+    protected checkContainerSizeChange() {
+        const origHeight = this.nativeElement.parentElement.offsetHeight;
+        this.nativeElement.style.display = 'none';
+        const height = this.nativeElement.parentElement.offsetHeight;
+        this.nativeElement.style.display = '';
+        return origHeight !== height;
+    }
+
     protected _shouldAutoSize(renderedHeight) {
         this.tbody.nativeElement.style.display = 'none';
-        const res = !this.nativeElement.parentElement ||
+        let res = !this.nativeElement.parentElement ||
         this.nativeElement.parentElement.clientHeight === 0 ||
         this.nativeElement.parentElement.clientHeight === renderedHeight;
+        if (!isChromium()) {
+            // If grid causes the parent container to extend (for example when container is flex)
+            // we should always auto-size since the actual size of the container will continuously change as the grid renders elements.
+           res = this.checkContainerSizeChange();
+        }
         this.tbody.nativeElement.style.display = '';
         return res;
     }

@@ -269,7 +269,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             const lastCell = grid.rowList.first.cells.toArray()[9];
             expect(lastCell.column.field).toBe('Address');
             expect(lastCell.column.parent.field).toBe('group4');
-            expect(lastCell.nativeElement.getBoundingClientRect().right + 1)
+            expect(lastCell.nativeElement.getBoundingClientRect().right)
              .toEqual(grid.tbody.nativeElement.getBoundingClientRect().right);
 
         });
@@ -627,7 +627,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             expect(lastCell.column.parent.field).toBe('group4');
             expect(Math.round(lastCell.nativeElement.getBoundingClientRect().right) -
              grid.tbody.nativeElement.getBoundingClientRect().right)
-            .toBeLessThanOrEqual(1);
+            .toBeLessThanOrEqual(2);
         });
 
         it('UI - pinned columns count and drop-down items text in pinnig toolbar should be correct when group is pinned. ', () => {

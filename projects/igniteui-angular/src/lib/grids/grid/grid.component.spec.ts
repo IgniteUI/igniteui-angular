@@ -1290,7 +1290,7 @@ describe('IgxGrid Component Tests', () => {
             const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
             const header2 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[2];
 
-            expect(header0.nativeElement.offsetWidth).toEqual(351);
+            expect(header0.nativeElement.offsetWidth).toEqual(350);
             expect(header1.nativeElement.offsetWidth).toEqual(136);
             expect(header2.nativeElement.offsetWidth).toEqual(136);
             expect(hScroll.nativeElement.hidden).toBe(false);
@@ -1321,7 +1321,7 @@ describe('IgxGrid Component Tests', () => {
             const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
             const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
             const header2 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[2];
-            expect(header0.nativeElement.offsetWidth).toEqual(701);
+            expect(header0.nativeElement.offsetWidth).toEqual(700);
             expect(header1.nativeElement.offsetWidth).toEqual(150);
             expect(header2.nativeElement.offsetWidth).toEqual(150);
 
@@ -1375,7 +1375,7 @@ describe('IgxGrid Component Tests', () => {
             const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
             const header2 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[2];
 
-            expect(header0.nativeElement.offsetWidth).toEqual(251);
+            expect(header0.nativeElement.offsetWidth).toEqual(250);
             expect(header1.nativeElement.offsetWidth).toEqual(100);
             expect(header2.nativeElement.offsetWidth).toEqual(150);
             expect(hScroll.nativeElement.hidden).toBe(true);
@@ -4282,9 +4282,9 @@ describe('IgxGrid Component Tests', () => {
             const gridHeader = fix.debugElement.query(By.css(THEAD_CLASS));
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
-            expect(parseInt(window.getComputedStyle(gridHeader.nativeElement).width, 10)).toBe(601);
+            expect(parseInt(window.getComputedStyle(gridHeader.nativeElement).width, 10)).toBe(600);
             expect(headers.length).toBe(4);
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10)).toBe(601);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10)).toBe(600);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(510);
         });
 
@@ -4302,7 +4302,7 @@ describe('IgxGrid Component Tests', () => {
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             expect(headers.length).toBe(4);
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
-            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10) + grid.scrollWidth).toBe(501);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10) + grid.scrollWidth).toBe(500);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(230);
         });
 

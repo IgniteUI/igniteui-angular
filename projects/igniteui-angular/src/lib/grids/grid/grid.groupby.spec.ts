@@ -1061,7 +1061,7 @@ describe('IgxGrid - GroupBy', () => {
 
         let grRows = grid.groupsRowList.toArray();
         for (const grRow of grRows) {
-            expect(grRow.element.nativeElement.clientWidth - 1).toEqual(1200);
+            expect(grRow.element.nativeElement.clientWidth).toEqual(1200);
         }
 
         const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_GROUP_CLASS));
@@ -1084,7 +1084,7 @@ describe('IgxGrid - GroupBy', () => {
 
         grRows = grid.groupsRowList.toArray();
         for (const grRow of grRows) {
-            expect(grRow.element.nativeElement.clientWidth - 1).toEqual(1200);
+            expect(grRow.element.nativeElement.clientWidth).toEqual(1200);
         }
     }));
 
@@ -1111,7 +1111,7 @@ describe('IgxGrid - GroupBy', () => {
 
         const grRows = grid.groupsRowList.toArray();
         for (const grRow of grRows) {
-            expect(grRow.element.nativeElement.clientWidth - 1).toEqual(1200);
+            expect(grRow.element.nativeElement.clientWidth).toEqual(1200);
         }
     }));
 
@@ -1135,7 +1135,7 @@ describe('IgxGrid - GroupBy', () => {
         fix.detectChanges();
         const grRows = grid.groupsRowList.toArray();
         for (const grRow of grRows) {
-            expect(grRow.element.nativeElement.clientWidth - 1).toEqual(500);
+            expect(grRow.element.nativeElement.clientWidth).toEqual(500);
         }
     }));
 
