@@ -3,7 +3,7 @@
 
 ## Usage
 ```html
-<div igxDrag [hideBaseOnDrag]="true" [animateOnRelease]="true" *ngFor="let elem of draggableElems" >
+<div igxDrag [animateOnRelease]="true" *ngFor="let elem of draggableElems" >
     <span [style.margin]="'auto'">{{elem.label}}</span>
 </div>
 ```
@@ -26,11 +26,9 @@ The `igxDrag` directive can be applied on any DOM element by just adding it to i
 
 By default a drag operation starts when the end user swipes at least 5 px in any direction. Otherwise the interaction is considered as a click and the `dragClicked` event is emitted.
 
-When dragging occurs a drag ghost element is spawned and moves along with the mouse cursor or touch interaction. The original element is still present, but it can be hidden automatically when dragging starts with the `hideBaseOnDrag` input.
+When dragging occurs a drag ghost element is spawned and moves along with the mouse cursor or touch interaction.The dragging can be canceled by setting the `cancel` property of the `dragStart` event to `true`. This will cancel the default dragging logic.
 
-The dragging can be canceled by setting the `cancel` property of the `dragStart` event to `true`. This will cancel the default dragging logic.
-
-After the user releases the mouse/touch the drag ghost element is removed from the DOM and if the `hideBaseOnDrag` is enabled it will make the original element visible again and the `dragEnd` event will be emitted. If the `animateOnRelease` input is set to `true` all this will execute after the default animation of the drag ghost is finished which consist of returning it from the last dragged position to the position of the original element. Then the drag ghost will be removed and the `returnMoveEnd` event will be emitted.
+After the user releases the mouse/touch the drag ghost element is removed from the DOM and the `dragEnd` event will be emitted. If the `animateOnRelease` input is set to `true` all this will execute after the default animation of the drag ghost is finished which consist of returning it from the last dragged position to the position of the original element. Then the drag ghost will be removed and the `returnMoveEnd` event will be emitted.
 
 ## API
 
@@ -40,10 +38,9 @@ After the user releases the mouse/touch the drag ghost element is removed from t
 | :--- | :--- | :--- | :--- |
 | igxDrag          | any | - | Input used to save data inside the `igxDrag` directive. This can be set when instancing `igxDrag` on an element. |
 | dragTolerance    | number | 5 | Indicates when the drag should start (in pixels). By default the drag starts after the draggable element is moved by 5px |
-| ghostImageClass  | string | '' | Sets a custom class that will be added to the `dragGhost` element. |
-| hideBaseOnDrag   | boolean | false | Sets if the draggable element should hide when dragging starts. |
-| animateOnRelease | boolean | false | Enables/disables the draggable element animation when the element is released. |
 | dragGhostHost | any | null | Sets the element to which the dragged element will be appended.
+| ghostImageClass  | string | '' | Sets a custom class that will be added to the `dragGhost` element. |
+| animateOnRelease | boolean | false | Enables/disables the draggable element animation when the element is released. |
 
 ### Outputs
 

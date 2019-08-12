@@ -18,6 +18,7 @@
 /// @param {Color} $header-border-color [null] - The color used for header borders.
 ///
 /// @param {Color} $sorted-header-icon-color [null] - The sort icon color when sorted.
+/// @param {color} $sortable-header-icon-hover-color [null] - The icon color on hover in grid header when the column is sortable.
 ///
 /// @param {Color} $content-background [null] - The table body background color.
 /// @param {Color} $content-text-color [null] - The table body text color.
@@ -194,8 +195,8 @@
     $row-ghost-background: null,
     $row-drag-color: null,
     $drop-area-border-radius: null,
-
-    $grid-border-color: null
+    $grid-border-color: null,
+    $sortable-header-icon-hover-color: null
 ) {
     $name: 'igx-grid';
     $grid-schema: map-get($schema, $name);
@@ -484,6 +485,7 @@
         row-ghost-background: $row-ghost-background,
         row-drag-color: $row-drag-color,
         drop-area-border-radius: $drop-area-border-radius,
+        sortable-header-icon-hover-color: $sortable-header-icon-hover-color,
         grid-border-color: $grid-border-color,
     ));
 }

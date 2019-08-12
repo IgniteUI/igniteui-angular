@@ -23,7 +23,7 @@ import { IgxIconModule } from '../icon/index';
 import { IgxTabItemComponent } from './tab-item.component';
 import { IgxTabsGroupComponent } from './tabs-group.component';
 import { IgxLeftButtonStyleDirective, IgxRightButtonStyleDirective, IgxTabItemTemplateDirective } from './tabs.directives';
-import { IgxTabsBase } from './tabs.common';
+import { IgxTabsBase, IgxTabItemBase } from './tabs.common';
 
 export enum TabsType {
     FIXED = 'fixed',
@@ -71,8 +71,14 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     public set selectedIndex(index: number) {
         const newIndex = typeof index !== 'number' ? parseInt(index, 10) : index;
         if (this._selectedIndex !== newIndex) {
-            this._selectedIndex = newIndex;
-            this.setSelectedGroup();
+            if (this.tabs && this.tabs.length > 0) {
+                const newTab = this.tabs.toArray()[newIndex];
+                if (newTab) {
+                   this.performSelectionChange(newTab);
+                }
+            } else {
+                this._selectedIndex = newIndex;
+            }
         }
     }
 
@@ -109,7 +115,8 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * }
      * ```
      */
-    @Output() public onTabItemDeselected = new EventEmitter();
+    @Output()
+    public onTabItemDeselected = new EventEmitter();
 
     /**
     * Emitted when a tab item is selected.
@@ -126,7 +133,8 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     * }
     * ```
     */
-    @Output() public onTabItemSelected = new EventEmitter();
+    @Output()
+    public onTabItemSelected = new EventEmitter();
 
     /**
      * @hidden
@@ -245,40 +253,6 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
-    @HostListener('onTabItemSelected', ['$event'])
-    public selectedGroupHandler(args) {
-        if (this.hasContentTabs) {
-            const theTabsArray = this.tabs.toArray();
-            if (this.selectedIndex !== -1 && this.selectedIndex !== args.tab.index && theTabsArray[this.selectedIndex] !== undefined) {
-                theTabsArray[this.selectedIndex].isSelected = false;
-                this.onTabItemDeselected.emit({ tab: theTabsArray[this.selectedIndex], groups: null });
-            }
-            this.selectedIndex = args.tab.index;
-        } else {
-            const prevSelectedIndex = this.selectedIndex;
-            if (prevSelectedIndex !== -1 && this.groups && this.groups.toArray()[prevSelectedIndex] !== undefined) {
-                this.onTabItemDeselected.emit(
-                    {
-                        tab: this.groups.toArray()[prevSelectedIndex].relatedTab,
-                        group: this.groups.toArray()[prevSelectedIndex]
-                    });
-            }
-            if (args.group) {
-                this.selectedIndex = args.group.index;
-            }
-            if (this.groups) {
-                this.groups.forEach((p) => {
-                    if (p.index !== this.selectedIndex) {
-                        this.deselectGroup(p);
-                    }
-                });
-            }
-        }
-    }
-
-    /**
-     * @hidden
-     */
     public scrollLeft(event): void {
         this.scroll(false);
     }
@@ -332,7 +306,12 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         }
 
         requestAnimationFrame(() => {
-            this.setSelectedGroup();
+            const newTab = this.tabs.toArray()[this._selectedIndex];
+            if (newTab) {
+                this.performSelection(newTab);
+            } else {
+                this.hideIndicator();
+            }
         });
 
         this._groupChanges$ = this.groups.changes.subscribe(() => {
@@ -349,60 +328,17 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         }
     }
 
-    private setSelectedGroup(): void {
+    private resetSelectionOnCollectionChanged(): void {
         requestAnimationFrame(() => {
-            if (this.hasContentTabs) {
-                if (this.selectedIndex < 0 || this.selectedIndex >= this.contentTabs.length) {
-                    this.selectedIndicator.nativeElement.style.visibility = 'hidden';
-                } else {
-                    this.selectGroupByIndex(this.selectedIndex);
-                }
+            const currentTab = this.tabs.toArray()[this.selectedIndex];
+            if (currentTab) {
+                this.performSelectionChange(currentTab);
+            } else if (this.selectedIndex >= this.tabs.length) {
+                this.performSelectionChange(this.tabs.last);
             } else {
-                if (this.selectedIndex < 0 || this.selectedIndex >= this.groups.length) {
-                    this._selectedIndex = 0;
-                }
-                this.selectGroupByIndex(this.selectedIndex);
+                this.hideIndicator();
             }
         });
-    }
-
-    private resetSelectionOnCollectionChanged(): void {
-        setTimeout(() => {
-            if (this.groups.toArray()[this.selectedIndex] !== undefined) {
-                // persist the selected index and applied it to the new collection
-                this.selectGroupByIndex(this.selectedIndex);
-            } else {
-                if (this.selectedIndex >= this.groups.length) {
-                    // in case the selected index is no longer valid, select the last group in the new collection
-                    this.selectGroupByIndex(this.groups.length - 1);
-                }
-            }
-        }, 0);
-    }
-
-    private selectGroupByIndex(selectedIndex: number): void {
-        if (this.hasContentTabs) {
-            const aTab = this.tabs.toArray()[selectedIndex];
-            if (aTab) {
-                aTab.select();
-            }
-        } else {
-            const selectableGroups = this.groups.filter((selectableGroup) => !selectableGroup.disabled);
-            const group = selectableGroups[selectedIndex];
-            if (group) {
-                group.select(0);
-            }
-        }
-    }
-
-    private deselectGroup(group: IgxTabsGroupComponent): void {
-        // Cannot deselect the selected tab - this will mean that there will be not selected tab left
-        if (group.disabled || this.selectedTabItem.index === group.index) {
-            return;
-        }
-
-        group.isSelected = false;
-        group.relatedTab.tabindex = -1;
     }
 
     private scroll(scrollRight: boolean): void {
@@ -422,6 +358,104 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             }
         }
     }
+
+    /**
+     * @hidden
+     */
+    public performSelectionChange(newTab: IgxTabItemBase): void {
+        const oldTab = this.selectedTabItem;
+        if (oldTab) {
+            this.performDeselection(oldTab);
+        }
+        if (newTab) {
+            this.performSelection(newTab);
+        } else {
+            // if there is no new selected tab hide the selection indicator
+            this.hideIndicator();
+        }
+    }
+
+    private performDeselection(oldTab: IgxTabItemBase): void {
+        oldTab.setSelectedInternal(false);
+        const oldTabRelatedGroup = this.groups.toArray()[oldTab.index];
+        if (oldTabRelatedGroup) {
+            oldTabRelatedGroup.setSelectedInternal(false);
+        }
+        this._selectedIndex = -1;
+        this.onTabItemDeselected.emit({ tab: oldTab, group: oldTabRelatedGroup });
+    }
+
+    private performSelection(newTab: IgxTabItemBase): void {
+        newTab.setSelectedInternal(true);
+        this._selectedIndex = newTab.index;
+
+        let newTabRelatedGroup = null;
+        if (!this.hasContentTabs && this.groups) {
+            newTabRelatedGroup = this.groups.toArray()[newTab.index];
+            if (newTabRelatedGroup) {
+                newTabRelatedGroup.setSelectedInternal(true);
+            }
+        }
+
+        this.onTabItemSelected.emit({ tab: newTab, group: newTabRelatedGroup });
+
+        requestAnimationFrame(() => {
+            // bring the new selected tab into view if it is not
+            this.bringNewTabIntoView(newTab);
+            // animate the new selection indicator
+            this.transformIndicatorAnimation(newTab.nativeTabItem.nativeElement);
+            // animate the new tab's group content
+            if (!this.hasContentTabs) {
+                this.transformContentAnimation(newTab, 0.2);
+            }
+        });
+    }
+
+    private bringNewTabIntoView(newTab: IgxTabItemBase): void {
+        const tabNativeElement = newTab.nativeTabItem.nativeElement;
+
+        // Scroll left if there is need
+        if (tabNativeElement.offsetLeft < this.offset) {
+            this.scrollElement(tabNativeElement, false);
+        }
+
+        // Scroll right if there is need
+        const viewPortOffsetWidth = this.viewPort.nativeElement.offsetWidth;
+        const delta = (tabNativeElement.offsetLeft + tabNativeElement.offsetWidth) - (viewPortOffsetWidth + this.offset);
+
+        // Fix for IE 11, a difference is accumulated from the widths calculations
+        if (delta > 1) {
+            this.scrollElement(tabNativeElement, true);
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    // animation for the new panel/group (not needed for tab only mode)
+    public transformContentAnimation(tab: IgxTabItemBase, duration: number): void {
+        const contentOffset = this.tabsContainer.nativeElement.offsetWidth * tab.index;
+        this.contentsContainer.nativeElement.style.transitionDuration = `${duration}s`;
+        this.contentsContainer.nativeElement.style.transform = `translate(${-contentOffset}px)`;
+    }
+
+    /**
+     * @hidden
+     */
+    public transformIndicatorAnimation(element: HTMLElement): void {
+        if (this.selectedIndicator) {
+            this.selectedIndicator.nativeElement.style.visibility = 'visible';
+            this.selectedIndicator.nativeElement.style.width = `${element.offsetWidth}px`;
+            this.selectedIndicator.nativeElement.style.transform = `translate(${element.offsetLeft}px)`;
+        }
+    }
+
+    public hideIndicator(): void {
+        if (this.selectedIndicator) {
+            this.selectedIndicator.nativeElement.style.visibility = 'hidden';
+        }
+    }
+
 }
 
 /**

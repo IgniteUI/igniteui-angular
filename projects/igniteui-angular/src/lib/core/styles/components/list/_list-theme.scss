@@ -373,7 +373,7 @@
     }
 
     %igx-list__item-lines {
-        color: --var($theme, 'item-text-color');
+        color: currentColor;
         display: flex;
         flex-direction: column;
         flex: 1 0 0%;
