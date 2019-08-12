@@ -158,7 +158,7 @@ export interface IDragStartEventArgs extends IDragBaseEventArgs {
     cancel: boolean;
 }
 
-export interface IDragCustomAnimationArgs {
+export interface IDragCustomTransitionArgs {
     duration?: number;
     timingFunction?: string;
     delay?: number;
@@ -779,7 +779,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @param customAnimArgs Custom transition properties that will be applied when performing the transition.
      * @param startLocation Start location from where the transition should start.
      */
-    public transitionToOrigin(customAnimArgs?: IDragCustomAnimationArgs, startLocation?: IgxDragLocation) {
+    public transitionToOrigin(customAnimArgs?: IDragCustomTransitionArgs, startLocation?: IgxDragLocation) {
         if ((!!startLocation && startLocation.pageX === this.baseOriginLeft && startLocation.pageY === this.baseOriginLeft) ||
             (!startLocation && this.ghost && !this.ghostElement)) {
             return;
@@ -825,7 +825,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @param customAnimArgs Custom transition properties that will be applied when performing the transition.
      * @param startLocation Start location from where the transition should start.
      */
-    public transitionTo(target: IgxDragLocation | ElementRef, customAnimArgs?: IDragCustomAnimationArgs, startLocation?: IgxDragLocation) {
+    public transitionTo(target: IgxDragLocation | ElementRef, customAnimArgs?: IDragCustomTransitionArgs, startLocation?: IgxDragLocation) {
         if (!!startLocation && !this.ghost) {
             this.setLocation(startLocation);
         } else if (!!startLocation && this.ghost && !this.ghostElement) {
