@@ -382,6 +382,16 @@
         justify-content: space-between;
         margin: $cal-row-margin;
         padding: $cal-row-padding;
+
+        %cal-value {
+            &:first-of-type {
+                padding-left: em(8px);
+            }
+
+            &:last-of-type {
+                padding-right: em(8px);
+            }
+        }
     }
 
     %cal-row-display--wrap {
