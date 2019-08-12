@@ -469,7 +469,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     /**
      * @hidden
      */
-    @ContentChild(IgxGroupByRowTemplateDirective, { read: IgxGroupByRowTemplateDirective, static: true })
+    @ContentChild(IgxGroupByRowTemplateDirective, { read: IgxGroupByRowTemplateDirective, static: false })
     protected groupTemplate: IgxGroupByRowTemplateDirective;
 
     /**
@@ -490,7 +490,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      *  </igx-grid>
      * ```
      */
-    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef, static: false })
     public dragIndicatorIconTemplate: TemplateRef<any> = null;
 
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })

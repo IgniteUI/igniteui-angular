@@ -1554,25 +1554,25 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      *@hidden
      */
-    @ContentChild(IgxExcelStyleSortingTemplateDirective, { read: IgxExcelStyleSortingTemplateDirective, static: true })
+    @ContentChild(IgxExcelStyleSortingTemplateDirective, { read: IgxExcelStyleSortingTemplateDirective, static: false })
     public excelStyleSortingTemplateDirective: IgxExcelStyleSortingTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxExcelStyleMovingTemplateDirective, { read: IgxExcelStyleMovingTemplateDirective, static: true })
+    @ContentChild(IgxExcelStyleMovingTemplateDirective, { read: IgxExcelStyleMovingTemplateDirective, static: false })
     public excelStyleMovingTemplateDirective: IgxExcelStyleMovingTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxExcelStyleHidingTemplateDirective, { read: IgxExcelStyleHidingTemplateDirective, static: true })
+    @ContentChild(IgxExcelStyleHidingTemplateDirective, { read: IgxExcelStyleHidingTemplateDirective, static: false })
     public excelStyleHidingTemplateDirective: IgxExcelStyleHidingTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxExcelStylePinningTemplateDirective, { read: IgxExcelStylePinningTemplateDirective, static: true })
+    @ContentChild(IgxExcelStylePinningTemplateDirective, { read: IgxExcelStylePinningTemplateDirective, static: false })
     public excelStylePinningTemplateDirective: IgxExcelStylePinningTemplateDirective;
 
 
@@ -1857,7 +1857,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ContentChild(IgxRowEditTemplateDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxRowEditTemplateDirective, { read: TemplateRef, static: false })
     public rowEditCustom: TemplateRef<any>;
 
     /** @hidden */
@@ -1865,10 +1865,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return this.rowEditCustom ? this.rowEditCustom : this.defaultRowEditTemplate;
     }
     /** @hidden */
-    @ContentChild(IgxRowEditTextDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxRowEditTextDirective, { read: TemplateRef, static: false })
     public rowEditText: TemplateRef<any>;
     /** @hidden */
-    @ContentChild(IgxRowEditActionsDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxRowEditActionsDirective, { read: TemplateRef, static: false })
     public rowEditActions: TemplateRef<any>;
 
     /**
