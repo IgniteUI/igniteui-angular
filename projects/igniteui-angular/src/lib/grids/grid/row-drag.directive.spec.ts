@@ -14,7 +14,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../column.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxRowDragDirective } from '../row-drag.directive';
-import { IRowDragStartEventArgs, IgxGridBaseComponent, IRowDragEndEventArgs } from '../grid-base.component';
+import { IRowDragStartEventArgs, IgxGridBaseComponent, IRowDragEndEventArgs, GridSelectionMode } from '../grid-base.component';
 import { IgxDropDirective } from '../../directives/dragdrop/dragdrop.directive';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -213,7 +213,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         }));
         it('should align horizontal scrollbar with first column when column pinning is disabled', fakeAsync(() => {
             // has no draggable and selectable rows
-            grid.rowSelectable = false;
+            grid.rowSelection = GridSelectionMode.none;
             grid.rowDraggable = false;
             tick();
             fixture.detectChanges();
@@ -224,7 +224,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             expect(dragIndicatorElement).toBeNull();
 
             // has draggable rows and has no selectable rows
-            grid.rowSelectable = false;
+            grid.rowSelection = GridSelectionMode.none;
             grid.rowDraggable = true;
             tick();
             fixture.detectChanges();
@@ -237,7 +237,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             expect(dragIndicatorRect.right).toBe(horizontalScrollbarRect.left);
 
             // has draggable and selectable rows
-            grid.rowSelectable = true;
+            grid.rowSelection = GridSelectionMode.multiple;
             grid.rowDraggable = true;
             fixture.detectChanges();
             horizontalScrollbarElement = fixture.debugElement.query(By.css(CSS_CLASS_VIRTUAL_HSCROLLBAR));
@@ -261,7 +261,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             expect(horizontalScrollbarRect.left).toBe(0);
 
             // selectable rows enabled
-            grid.rowSelectable = true;
+            grid.rowSelection = GridSelectionMode.multiple;
             fixture.detectChanges();
             horizontalScrollbarElement = fixture.debugElement.query(By.css(CSS_CLASS_VIRTUAL_HSCROLLBAR));
             horizontalScrollbarRect = horizontalScrollbarElement.nativeElement.getBoundingClientRect();
@@ -579,7 +579,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             verifyDragAndDropRowCellValues(1, 0);
         }));
         it('should be able to drag selected grid row', (async () => {
-            dragGrid.rowSelectable = true;
+            dragGrid.rowSelection = GridSelectionMode.multiple;
             fixture.detectChanges();
             dragGrid.selectRows([2], false);
             fixture.detectChanges();
@@ -611,7 +611,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             expect(row.isSelected).toBeTruthy();
         }));
         it('should not apply selection class to ghost element when dragging selected grid row', (async () => {
-            dragGrid.rowSelectable = true;
+            dragGrid.rowSelection = GridSelectionMode.multiple;
             fixture.detectChanges();
             dragGrid.selectRows([2], false);
             fixture.detectChanges();

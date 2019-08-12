@@ -2,7 +2,12 @@ import { Component, ViewChild, TemplateRef } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnComponent, IgxGridCellComponent, IgxGridModule, IgxGridRowComponent, IgxGridGroupByRowComponent, } from './index';
+import { IgxColumnComponent,
+        IgxGridCellComponent,
+        IgxGridModule,
+        IgxGridRowComponent,
+        IgxGridGroupByRowComponent,
+        GridSelectionMode, } from './index';
 import { IgxGridComponent } from './grid.component';
 import { DataParent } from '../../test-utils/sample-test-data.spec';
 import { IGridCellEventArgs } from '../grid-base.component';
@@ -1177,7 +1182,7 @@ describe('IgxGrid - Keyboard navigation', () => {
         }));
 
         it('should correct work when press tab and sft+tab on a grouped row when have row selectors', (async () => {
-            grid.rowSelectable = true;
+            grid.rowSelection = GridSelectionMode.multiple;
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 

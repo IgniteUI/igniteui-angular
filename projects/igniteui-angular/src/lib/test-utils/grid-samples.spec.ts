@@ -161,13 +161,23 @@ export class SelectionAndPagingComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(
-            ` #gridSelection3 [primaryKey]="'ID'" [width]="'800px'" [height]="'600px'" [autoGenerate]="true" [rowSelectable]="true"`,
+            ` #gridSelection3 [primaryKey]="'ID'" [width]="'800px'" [height]="'600px'" [autoGenerate]="true" [rowSelection]="'multiple'"`,
             '', '')
 })
 export class SelectionComponent extends BasicGridComponent {
-    data = SampleTestData.generateBigValuesData(100);
+    data = SampleTestData.generateBigValuesData(20);
 }
 
+@Component({
+    template: GridTemplateStrings.declareGrid(
+            ` [width]="width" [height]="height" [rowSelection]="'multiple'" [primaryKey]="'ProductID'"`,
+            '', ColumnDefinitions.productBasic)
+})
+export class RowSelectionComponent extends BasicGridComponent {
+    data = SampleTestData.foodProductDataExtended();
+    public width = '800px';
+    public height = '600px';
+}
 @Component({
     template: GridTemplateStrings.declareGrid(
             ` [rowSelectable]="true"`,
@@ -266,7 +276,6 @@ export class VirtualSummaryColumnComponent extends BasicGridComponent {
         const hScrollbar = this.grid.parentVirtDir.getHorizontalScroll();
         hScrollbar.scrollLeft = newLeft;
     }
-
 }
 
 @Component({

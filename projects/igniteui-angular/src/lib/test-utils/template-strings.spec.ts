@@ -231,7 +231,7 @@ export class ColumnDefinitions {
     `;
 
     public static productBasic = `
-        <igx-column field="ProductID" header="Product ID">
+        <igx-column field="ProductID" header="Product ID" [dataType]="'number'">
         </igx-column>
         <igx-column field="ProductName">
         </igx-column>
