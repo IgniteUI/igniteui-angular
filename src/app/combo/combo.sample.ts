@@ -44,8 +44,8 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     public filterableFlag = true;
     public customValuesFlag = true;
     public items: any[] = [];
-    public values1: any[] = [];
-    public values2: any[] = [];
+    public values1:  Array<any>;
+    public values2:  Array<any>;
 
     public valueKeyVar = 'field';
     public currentDataType = '';
