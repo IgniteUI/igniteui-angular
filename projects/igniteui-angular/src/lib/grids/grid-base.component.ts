@@ -89,7 +89,7 @@ import {
 import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 import { IgxDragIndicatorIconDirective } from './row-drag.directive';
-import { IgxDragDirective } from '../directives/dragdrop/dragdrop.directive';
+import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
 
