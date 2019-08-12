@@ -746,7 +746,7 @@ export class GridFunctions {
 
     public static getExcelFilteringLoadingIndicator(fix: ComponentFixture<any>) {
         const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
-        const loadingIndicator = searchComponent.querySelector('.igx-excel-filter-loading');
+        const loadingIndicator = searchComponent.querySelector('.igx-excel-filter__loading');
         return loadingIndicator;
     }
 
