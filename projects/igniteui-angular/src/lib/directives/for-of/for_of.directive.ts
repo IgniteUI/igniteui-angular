@@ -1574,6 +1574,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         const scrollOffset = this.fixedUpdateAllElements(this._virtScrollTop);
 
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
+        this.recalcUpdateSizes();
     }
 
     onHScroll(scrollAmount) {
