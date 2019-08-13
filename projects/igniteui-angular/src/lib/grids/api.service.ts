@@ -153,7 +153,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         if (this.grid.primaryKey === cell.column.field) {
              if (this.grid.selectionService.isRowSelected(cell.id.rowID)) {
                 this.grid.selectionService.deselectRow(cell.id.rowID);
-                this.grid.selectionService.selectRowbyID(newId, args.newValue);
+                this.grid.selectionService.selectRowbyID(newId);
             }
             if (this.grid.hasSummarizedColumns) {
                 this.grid.summaryService.removeSummaries(cell.id.rowID);
@@ -249,7 +249,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         const newId = grid.primaryKey ? args.newValue[grid.primaryKey] : args.newValue;
         if (selected) {
             grid.selectionService.deselectRow(row.id);
-            grid.selectionService.selectRowbyID(newId, args.newValue);
+            grid.selectionService.selectRowbyID(newId);
         }
         if (hasSummarized) {
             grid.summaryService.removeSummaries(newId);

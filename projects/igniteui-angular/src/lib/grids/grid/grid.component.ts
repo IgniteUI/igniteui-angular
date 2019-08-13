@@ -4,7 +4,7 @@ import {
     IterableDiffers, ViewContainerRef, Inject, AfterContentInit, HostBinding, forwardRef, OnInit, Optional
 } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent, IgxGridTransaction, IFocusChangeEventArgs, IGridDataBindable, FilterMode } from '../grid-base.component';
+import { IgxGridBaseComponent, IgxGridTransaction, IGridDataBindable, FilterMode } from '../grid-base.component';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridAPIService } from './grid-api.service';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
@@ -16,8 +16,6 @@ import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayD
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../../chips/chip.component';
 import { IChipsAreaReorderEventArgs } from '../../chips/chips-area.component';
-import { DataUtil } from '../../data-operations/data-util';
-import { IgxSelectionAPIService } from '../../core/selection';
 import { TransactionService, Transaction, State } from '../../services/transaction/transaction';
 import { DOCUMENT } from '@angular/common';
 import { IgxColumnComponent } from '../column.component';
@@ -33,10 +31,6 @@ import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 
 let NEXT_ID = 0;
-
-export interface IGridFocusChangeEventArgs extends IFocusChangeEventArgs {
-    groupRow: IgxGridGroupByRowComponent;
-}
 export interface IGroupingDoneEventArgs {
     expressions: Array<ISortingExpression> | ISortingExpression;
     groupedColumns: Array<IgxColumnComponent> | IgxColumnComponent;

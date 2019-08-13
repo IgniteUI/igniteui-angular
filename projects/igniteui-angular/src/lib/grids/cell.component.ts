@@ -19,7 +19,7 @@ import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { getNodeSizeViaRange, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, NAVIGATION_KEYS, isIE, isLeftClick } from '../core/utils';
 import { State } from '../services/index';
-import { IgxGridBaseComponent, IGridEditEventArgs, IGridDataBindable } from './grid-base.component';
+import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../core/grid-selection';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { GridSelectionMode } from './grid-base.component';
@@ -806,9 +806,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.grid.onSelection.emit({ cell: this, event });
         }
 
-        if (this.isCellSelectable && this.selectionService.primaryButton) {
+        if (this.selectionService.primaryButton) {
             this._updateCRUDStatus();
-            this.selectionService.activeElement = node;
+            this.isCellSelectable ? this.selectionService.activeElement = node : this.selectionService.activeElement = null;
         } else {
             this.selectionService.activeElement = null;
             if (this.crudService.inEditMode && !this.editMode) {
@@ -915,13 +915,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
         if (NAVIGATION_KEYS.has(key)) {
             event.preventDefault();
-        }
-
-        // TODO: to be deleted when onFocusChange event is removed #4054
-        const args = { cell: this, groupRow: null, event: event, cancel: false };
-        this.grid._onFocusChange.emit(args);
-        if (args.cancel) {
-            return;
         }
 
         switch (key) {

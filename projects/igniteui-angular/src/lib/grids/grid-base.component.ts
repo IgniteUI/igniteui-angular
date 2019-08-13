@@ -183,13 +183,6 @@ export interface IColumnMovingEndEventArgs {
     target: IgxColumnComponent;
 }
 
-// TODO: to be deleted when onFocusChange event is removed #4054
-export interface IFocusChangeEventArgs {
-    cell: IgxGridCellComponent;
-    event: Event;
-    cancel: boolean;
-}
-
 export interface IGridKeydownEventArgs {
     targetType: GridKeydownTargetType;
     target: Object;
@@ -1501,19 +1494,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public onColumnMovingEnd = new EventEmitter<IColumnMovingEndEventArgs>();
 
     /**
-     * @deprecated you should use onGridKeydown event
-     */
-    @Output()
-    @DeprecateProperty('onFocusChange event is deprecated. Use onGridKeydown event instead.')
-    public get onFocusChange(): EventEmitter<IFocusChangeEventArgs> {
-        return this._onFocusChange;
-    }
-
-    public set onFocusChange(val: EventEmitter<IFocusChangeEventArgs>) {
-        this._onFocusChange = val;
-    }
-
-    /**
      * Emitted when keydown is triggered over element inside grid's body.
      * This event is fired only if the key combination is supported in the grid.
      * Return the target type, target object and the original event. This event is cancelable.
@@ -2579,7 +2559,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _columnWidth: string;
 
     protected _defaultTargetRecordNumber = 10;
-    protected _onFocusChange = new EventEmitter<IFocusChangeEventArgs>();
 
     private _summaryPosition = GridSummaryPosition.bottom;
     private _summaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
@@ -4690,7 +4669,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    public onHeaderCheckboxClick(event, filteredData?) {
+    public onHeaderCheckboxClick(event) {
         if (event.checked) {
             this.selectAllRows();
         } else {
@@ -4729,9 +4708,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @memberof IgxGridBaseComponent
      */
     public selectRows(rowIDs: any[], clearCurrentSelection?: boolean) {
+        // should check if it is deleted
         const selectableRows = this.transactions.enabled ? rowIDs.filter(e => !this.gridAPI.row_deleted_transaction(e)) : rowIDs;
         this.selectionService.selectRows(selectableRows, clearCurrentSelection);
-
     }
 
     /**
