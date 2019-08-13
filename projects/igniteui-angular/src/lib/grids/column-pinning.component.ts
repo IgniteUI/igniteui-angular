@@ -25,10 +25,7 @@ export class IgxColumnPinningItemDirective extends ColumnChooserItemBase {
      * ```
      */
     get pinnable() {
-        if (this.column.grid.getUnpinnedWidth(true) - this.column.width < this.column.grid.unpinnedAreaMinWidth) {
-            return false;
-        }
-        return true;
+        return this.column.pinnable;
     }
 }
 
