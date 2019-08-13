@@ -1,7 +1,7 @@
 import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { IgxTreeGridModule, IgxGridCellComponent } from './index';
+import { IgxTreeGridModule, IgxGridCellComponent, GridSelectionMode } from './index';
 import { IgxTreeGridCellComponent } from './tree-cell.component';
 import {
     IgxTreeGridSimpleComponent,
@@ -43,7 +43,7 @@ describe('IgxTreeGrid - Selection ', () => {
             fix.detectChanges();
 
             treeGrid = fix.componentInstance.treeGrid;
-            treeGrid.rowSelectable = true;
+            treeGrid.rowSelection = GridSelectionMode.multiple;
             await wait();
             fix.detectChanges();
         });
@@ -57,7 +57,7 @@ describe('IgxTreeGrid - Selection ', () => {
                 expect(checkBoxElement).not.toBeNull();
             });
 
-            treeGrid.rowSelectable = false;
+            treeGrid.rowSelection = GridSelectionMode.none;
 
             expect(rows.length).toBe(10);
             rows.forEach((row) => {
@@ -235,7 +235,7 @@ describe('IgxTreeGrid - Selection ', () => {
             fix.detectChanges();
 
             treeGrid = fix.componentInstance.treeGrid;
-            treeGrid.rowSelectable = true;
+            treeGrid.rowSelection = GridSelectionMode.multiple;
             await wait();
             fix.detectChanges();
         });
@@ -618,7 +618,7 @@ describe('IgxTreeGrid - Selection ', () => {
 
         it('should display the banner correctly on row selection', fakeAsync(() => {
             const targetCell = treeGrid.getCellByColumn(1, 'Name');
-            treeGrid.rowSelectable = true;
+            treeGrid.rowSelection = GridSelectionMode.multiple;
             treeGrid.rowEditable = true;
 
             // select the second row

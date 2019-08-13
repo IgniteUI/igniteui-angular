@@ -12,7 +12,7 @@ import { IgxRowComponent } from '../row.component';
 import { IgxGridTransaction, IGridEditEventArgs } from '../grid-base.component';
 import { IgxColumnComponent } from '../column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { IgxGridModule } from './index';
+import { IgxGridModule, GridSelectionMode } from './index';
 import { DisplayDensity } from '../../core/displayDensity';
 import { DataType } from '../../data-operations/data-util';
 import { GridTemplateStrings } from '../../test-utils/template-strings.spec';
@@ -1335,7 +1335,7 @@ describe('IgxGrid Component Tests', () => {
             fix.detectChanges();
             const grid = fix.componentInstance.grid;
             const hScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
-            grid.rowSelectable = true;
+            grid.rowSelection = GridSelectionMode.multiple;
             fix.detectChanges();
             grid.columns[0].width = '70%';
 
@@ -4063,24 +4063,6 @@ describe('IgxGrid Component Tests', () => {
                 tick(16);
                 expect(grid.page).toEqual(1);
                 expect(grid.totalPages).toEqual(2);
-            }));
-
-            it('Should not allow selecting rows that are deleted', fakeAsync(() => {
-                const fixture = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
-                fixture.detectChanges();
-                tick(16);
-
-                const grid = fixture.componentInstance.grid;
-                grid.rowSelectable = true;
-                fixture.detectChanges();
-
-                grid.deleteRowById(2);
-                grid.deleteRowById(3);
-
-                fixture.detectChanges();
-                grid.selectRows([2, 3, 4]);
-                fixture.detectChanges();
-                expect(grid.selectedRows()).toEqual([4]);
             }));
 
             it('Should not log transaction when exit edit mode on row with state and with no changes', fakeAsync(() => {

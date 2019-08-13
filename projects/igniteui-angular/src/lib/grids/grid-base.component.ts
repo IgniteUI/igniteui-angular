@@ -3185,7 +3185,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the `IgxColumnComponent` by index.
+     * Returns the `IgxRowComponent` by index.
      * ```typescript
      * const myRow = this.grid1.getRowByIndex(1);
      * ```

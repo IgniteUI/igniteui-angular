@@ -5,7 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../../calendar/calendar';
 import { IgxInputDirective } from '../../directives/input/input.directive';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './index';
+import { IgxGridModule, GridSelectionMode } from './index';
 import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -43,6 +43,7 @@ import {
     IgxGridFilteringTemplateComponent,
     IgxGridFilteringESFTemplatesComponent
 } from '../../test-utils/grid-samples.spec';
+import { HelperUtils } from '../../test-utils/helper-utils.spec';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
@@ -2241,7 +2242,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
         // Filtering + Row Selectors
         it('should display the Row Selector header checkbox above the filter row.', fakeAsync(() => {
-            grid.rowSelectable = true;
+            grid.rowSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
             const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
@@ -2253,8 +2254,8 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
             const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
             const frElem = filteringRow.nativeElement;
-            const chkBox = fix.debugElement.query(By.css('.igx-grid__cbx-selection')).query(By.directive(IgxCheckboxComponent));
-            const chkBoxElem = chkBox.nativeElement;
+
+            const chkBoxElem = HelperUtils.getRowCheckboxDiv(HelperUtils.getHeaderRow(fix));;
             expect(frElem.offsetTop).toBeGreaterThanOrEqual(chkBoxElem.offsetTop + chkBoxElem.clientHeight);
         }));
 

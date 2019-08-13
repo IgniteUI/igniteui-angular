@@ -2592,7 +2592,7 @@ describe('IgxGrid - Cell selection', () => {
         });
 
         it('Row Selection: the selection range should not change when select row', () => {
-            grid.rowSelectable = true;
+            grid.rowSelection = GridSelectionMode.multiple;
             const range = { rowStart: 2, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(range);
             fix.detectChanges();
@@ -2609,14 +2609,14 @@ describe('IgxGrid - Cell selection', () => {
             grid.selectRows([row.rowID]);
             fix.detectChanges();
 
-            expect(row.isSelected).toBeTruthy();
+            expect(row.select).toBeTruthy();
             HelperUtils.verifySelectedRange(grid, 2, 4, 0, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
         it('Row Selection: selected range should be preserved when select row with space', () => {
-            grid.rowSelectable = true;
+            grid.rowSelection = GridSelectionMode.multiple;
             const range = { rowStart: 2, rowEnd: 4, columnStart: 'ID', columnEnd: 'HireDate' };
             grid.selectRange(range);
             fix.detectChanges();
@@ -2634,14 +2634,14 @@ describe('IgxGrid - Cell selection', () => {
             UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true, false, false);
             fix.detectChanges();
 
-            expect(grid.getRowByIndex(2).isSelected).toBeTruthy();
+            expect(grid.getRowByIndex(2).select).toBeTruthy();
             HelperUtils.verifySelectedRange(grid, 2, 4, 0, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
         it('Row Selection: selected range with mouse interaction should be preserved when select row with space', () => {
-            grid.rowSelectable = true;
+            grid.rowSelection = GridSelectionMode.multiple;
             const firstCell = grid.getCellByColumn(2, 'ID');
             const secondCell = grid.getCellByColumn(4, 'HireDate');
             HelperUtils.selectCellsRangeNoWait(fix, firstCell, secondCell);
@@ -2659,7 +2659,7 @@ describe('IgxGrid - Cell selection', () => {
             UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true, false, false);
             fix.detectChanges();
 
-            expect(grid.getRowByIndex(2).isSelected).toBeTruthy();
+            expect(grid.getRowByIndex(2).select).toBeTruthy();
             HelperUtils.verifySelectedRange(grid, 2, 4, 0, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);

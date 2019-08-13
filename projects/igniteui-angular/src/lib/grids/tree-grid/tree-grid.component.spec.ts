@@ -1,6 +1,6 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTreeGridModule } from './index';
+import { IgxTreeGridModule, GridSelectionMode } from './index';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { DisplayDensity } from '../../core/displayDensity';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -158,7 +158,7 @@ describe('IgxTreeGrid Component Tests ', () => {
         }));
 
         it('should not render rows, paging and headers group when all cols are hidden', fakeAsync(() => {
-            grid.rowSelectable = true;
+            grid.rowSelection = GridSelectionMode.multiple;
             grid.rowDraggable = true;
             grid.showToolbar =  true;
             tick(30);
