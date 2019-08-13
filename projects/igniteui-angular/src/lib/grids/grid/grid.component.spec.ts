@@ -4554,7 +4554,7 @@ describe('IgxGrid Component Tests', () => {
                 }).length === 1;
                 if (cellMutated) {
                     const delta = new Date().getTime() - startTime;
-                    console.log("HOS:" + delta);
+                    console.log('HOS:' + delta);
                     expect(delta)
                         .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_HOR_SCROLL_O + 'ms')
                         .toBeLessThan(MAX_HOR_SCROLL_O);
