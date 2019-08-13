@@ -3505,7 +3505,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             declarations: [
                 IgxGridFilteringComponent,
                 IgxTestExcelFilteringDatePickerComponent,
-                IgxGridFilteringESFTemplatesComponent
+                IgxGridFilteringESFTemplatesComponent,
+                IgxGridFilteringMCHComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -5613,6 +5614,37 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             expect(datePicker.componentInstance.mode).toBe('dropdown');
             // templateDropDownTarget is no longer available
             // expect(datePicker.componentInstance.templateDropDownTarget).toBeTruthy();
+        }));
+    });
+
+    describe(null, () => {
+        let fix, grid;
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridFilteringMCHComponent);
+            grid = fix.componentInstance.grid;
+            grid.filterMode = FilterMode.excelStyleFilter;
+            fix.detectChanges();
+        }));
+
+        it('Should not pin column when its parent group cannot be pinned.', fakeAsync(() => {
+            // Test prerequisites
+            grid.width = '1000px';
+            fix.detectChanges();
+            tick(100);
+
+            // Pin the 'AnotherField' column.
+            GridFunctions.clickExcelFilterIcon(fix, 'AnotherField');
+            fix.detectChanges();
+            GridFunctions.clickPinIconInExcelStyleFiltering(fix, false);
+            tick(200);
+            fix.detectChanges();
+
+            // Verify that the 'ProductName' pin button is disabled, because its parent column cannot be pinned.
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            fix.detectChanges();
+            const pinButton = GridFunctions.getExcelFilteringPinContainer(fix);
+            expect(pinButton.classList.contains('igx-excel-filter__actions-pin--disabled')).toBe(true,
+                'pinButton should be disabled');
         }));
     });
 });
