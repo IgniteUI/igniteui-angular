@@ -401,7 +401,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 this.dc.instance.scrollContainer = this.vh.instance.elementRef.nativeElement;
             });
             const destructor = takeUntil<any>(this.destroy$);
-            this.contentResizeNotify.pipe(destructor, filter(() => this.igxForContainerSize && this.igxForOf.length > 0), throttleTime(40))
+            this.contentResizeNotify.pipe(destructor,
+            filter(() => this.igxForContainerSize && this.igxForOf && this.igxForOf.length > 0), throttleTime(40))
             .subscribe(() => {
                 this._zone.runTask(() => {
                     this.updateSizes();
