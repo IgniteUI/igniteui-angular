@@ -24,7 +24,7 @@
                 <div class="igx-grid__cbx-selection" #headerCheckboxContainer [ngClass]="{
                     'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible
                 }">
-                    <igx-checkbox  *ngIf="isMultiRowSelectionEnabled" [checked]="allRowsSelected" (change)="onHeaderCheckboxClick($event, filteredData)"
+                    <igx-checkbox  *ngIf="isMultiRowSelectionEnabled" [checked]="allRowsSelected" (change)="onHeaderCheckboxClick($event)"
                         disableRipple="true" [aria-label]="headerCheckboxAriaLabel" #headerCheckbox></igx-checkbox>
                 </div>
             </ng-container>
