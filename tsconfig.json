@@ -30,7 +30,7 @@
         "mode": "file",
         "out": "dist/igniteui-angular/docs/typescript",
         "exclude": "**/*.spec.ts",
-        "theme":  "./node_modules/igniteui-typedoc-theme/typedoc/bin",
+        "theme":  "node_modules/igniteui-typedoc-theme/typedoc/bin",
         "excludePrivate": true,
         "excludeProtected": true,
         "excludeNotExported": true,

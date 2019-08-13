@@ -18,6 +18,7 @@ const path = require('path');
 const EventEmitter = require('events').EventEmitter;
 const typedocGulp = require('igniteui-typedoc-theme/gulpfile');
 const { series, parallel } = require('gulp');
+const {execSync} = require('child_process');
 
 sass.compiler = require('sass');
 
@@ -35,7 +36,10 @@ const STYLES = {
 };
 
 const TYPEDOC_THEME = {
-    SRC: `${path.join(__dirname, "node_modules", "igniteui_typedoc_theme", "typedoc", "src")}`,
+    // SRC: `${path.join(__dirname, "node_modules", "igniteui_typedoc_theme", "typedoc", "src")}`,
+    // SRC: `${path.join(__dirname, 'extras', 'docs', 'themes', 'typedoc', 'src')}`,
+    SRC: './extras/docs/themes/typedoc/src'
+
     // DIST: './extras/docs/themes/typedoc/bin/',
     // STYLES: {
     //     ENTRY: './assets/css/main.sass',
@@ -71,55 +75,55 @@ const TYPEDOC_THEME = {
 //         .pipe(gulp.dest(STYLES.DIST))
 // });
 
-// gulp.task('copy-git-hooks', () => {
+gulp.task('copy-git-hooks', () => {
 
-//     if (process.env.AZURE_PIPELINES || process.env.TRAVIS || process.env.CI || !fs.existsSync('.git')) {
-//         return;
-//     }
+    if (process.env.AZURE_PIPELINES || process.env.TRAVIS || process.env.CI || !fs.existsSync('.git')) {
+        return;
+    }
 
-//     const gitHooksDir = './.git/hooks/';
-//     const defaultCopyHookDir = gitHooksDir + 'scripts/';
-//     const dirs = [
-//         gitHooksDir,
-//         defaultCopyHookDir,
-//         defaultCopyHookDir + 'templates',
-//         defaultCopyHookDir + 'templateValidators',
-//         defaultCopyHookDir + 'utils'
-//     ];
+    const gitHooksDir = './.git/hooks/';
+    const defaultCopyHookDir = gitHooksDir + 'scripts/';
+    const dirs = [
+        gitHooksDir,
+        defaultCopyHookDir,
+        defaultCopyHookDir + 'templates',
+        defaultCopyHookDir + 'templateValidators',
+        defaultCopyHookDir + 'utils'
+    ];
 
-//     dirs.forEach((dir) => {
-//         if (!fs.existsSync(dir)) {
-//             fs.mkdir(dir, (err) => {
-//                 if (err) {
-//                     throw err;
-//                 }
-//             });
-//         }
-//     });
+    dirs.forEach((dir) => {
+        if (!fs.existsSync(dir)) {
+            fs.mkdir(dir, (err) => {
+                if (err) {
+                    throw err;
+                }
+            });
+        }
+    });
 
-//     const defaultHookDir = './.hooks/scripts/';
+    const defaultHookDir = './.hooks/scripts/';
 
-//     fs.copyFileSync(defaultHookDir + 'templates/default.js',
-//         defaultCopyHookDir + 'templates/default.js');
+    fs.copyFileSync(defaultHookDir + 'templates/default.js',
+        defaultCopyHookDir + 'templates/default.js');
 
-//     fs.copyFileSync(defaultHookDir + 'templateValidators/default-style-validator.js',
-//         defaultCopyHookDir + 'templateValidators/default-style-validator.js');
+    fs.copyFileSync(defaultHookDir + 'templateValidators/default-style-validator.js',
+        defaultCopyHookDir + 'templateValidators/default-style-validator.js');
 
-//     fs.copyFileSync(defaultHookDir + 'utils/issue-validator.js',
-//         defaultCopyHookDir + 'utils/issue-validator.js');
+    fs.copyFileSync(defaultHookDir + 'utils/issue-validator.js',
+        defaultCopyHookDir + 'utils/issue-validator.js');
 
-//     fs.copyFileSync(defaultHookDir + 'utils/line-limits.js',
-//         defaultCopyHookDir + 'utils/line-limits.js');
+    fs.copyFileSync(defaultHookDir + 'utils/line-limits.js',
+        defaultCopyHookDir + 'utils/line-limits.js');
 
-//     fs.copyFileSync(defaultHookDir + 'common.js',
-//         defaultCopyHookDir + 'common.js');
+    fs.copyFileSync(defaultHookDir + 'common.js',
+        defaultCopyHookDir + 'common.js');
 
-//     fs.copyFileSync(defaultHookDir + 'validate.js',
-//         defaultCopyHookDir + 'validate.js');
+    fs.copyFileSync(defaultHookDir + 'validate.js',
+        defaultCopyHookDir + 'validate.js');
 
-//     fs.copyFileSync('./.hooks/prepare-commit-msg',
-//         './.git/hooks/prepare-commit-msg');
-// });
+    fs.copyFileSync('./.hooks/prepare-commit-msg',
+        './.git/hooks/prepare-commit-msg');
+});
 
 // gulp.task('copy-migrations', () => {
 //     return gulp.src([
@@ -246,25 +250,57 @@ const TYPEDOC_THEME = {
 //     ], ['typedoc-build:theme']);
 // });
 
-async function buildTheme() {
-   return await shell.task(`typedoc ${TYPEDOC.PROJECT_PATH}`);
+async function typedocBuildTheme(cb) {
+    console.log('build:theme');
+    await execSync(`typedoc ${TYPEDOC.PROJECT_PATH}`, {stdio: 'inherit'});
+    cb();
 }
 
-function typedocWatch() {
-   return gulp.watch([
+typedocBuildTheme.displayName = 'typedoc-build:theme';
+
+function typedocServe(cb) {
+    browserSync.init({
+        server: './dist/igniteui-angular/docs/typescript'
+    });
+
+    console.log('typedoc:serve');
+
+    gulp.watch('./dist/igniteui-angular/docs/typescript/**/*')
+        .on('change', browserSync.reload);
+
+    cb();
+}
+
+function typedocWatch(cb) {
+    console.log('typedc:watch');
+    gulp.watch([
         `${TYPEDOC_THEME.SRC}/assets/js/src/**/*.{ts,js}`,
         `${TYPEDOC_THEME.SRC}/assets/css/**/*.{scss,sass}`,
         `${TYPEDOC_THEME.SRC}/**/*.hbs`,
-        `${TYPEDOC_THEME.SRC}/assets/images/**/*.{png,jpg,gif}`]);
+        `${TYPEDOC_THEME.SRC}/assets/images/**/*.{png,jpg,gif}`], {}, typedocBuildTheme);
+
+    cb();
 }
+typedocWatch.displayName = 'typedoc-watch';
 
 // async function build() {
 //     return await typedocGulp.typedocBuild();
 // }
 
 // gulp.task('typedoc-build', typedocGulp.typedocBuild);
-module.exports.testGen = parallel(buildTheme);
-module.exports.testdoc = parallel(typedocGulp.typedocBuild, buildTheme, typedocWatch, typedocGulp.typedocBuild, buildTheme);
+// module.exports.testGen = series(buildTheme);
+module.exports.typedocBuildThemeSeries = series(typedocGulp.typedocBuild, typedocBuildTheme);
+module.exports.typedocWatchMod = series(this.typedocBuildThemeSeries, typedocWatch);
+module.exports.typedocServe = series(this.typedocWatchMod, typedocServe);
+
+module.exports.execTypedoc = series(
+    // typedocGulp.typedocBuild,
+    // typedocBuildTheme,
+    typedocWatch,
+    // typedocServe
+    // typedocServe
+    );
+// module.exports.testdoc = parallel(typedocGulp.typedocBuild, buildTheme, typedocWatch, typedocGulp.typedocBuild, buildTheme);
 
 // gulp.task('typedoc-build', [
 //     'typedoc-images',
