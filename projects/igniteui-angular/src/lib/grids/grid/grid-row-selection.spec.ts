@@ -137,7 +137,7 @@ describe('IgxGrid - Row Selection', () => {
 
             HelperUtils.verifyHeaderRowCheckboxState(fix, false, false);
             HelperUtils.verifyRowsArraySelected(grid.rowList.toArray(), false);
-            //expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
+            // expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
         });
 
         it('Header checkbox should deselect all rows - scenario when clicking first row, while header checkbox is clicked', () => {
@@ -418,7 +418,7 @@ describe('IgxGrid - Row Selection', () => {
         it('Should be able to select/deselect rows programmatically', fakeAsync(() => {
             let rowsCollection = [];
             const rowsToCheck = [grid.getRowByKey('0_0'), grid.getRowByKey('0_1'), grid.getRowByKey('0_2')];
-            //spyOn(grid, 'triggerRowSelectionChange').and.callThrough();
+            // spyOn(grid, 'triggerRowSelectionChange').and.callThrough();
             spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
 
             rowsCollection = grid.selectedRows();
@@ -450,7 +450,7 @@ describe('IgxGrid - Row Selection', () => {
             rowsCollection = grid.selectedRows();
 
             expect(rowsCollection.length).toEqual(0);
-            //expect(grid.triggerRowSelectionChange).toHaveBeenCalledTimes(3);
+            // expect(grid.triggerRowSelectionChange).toHaveBeenCalledTimes(3);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(3);
         }));
 
@@ -463,7 +463,7 @@ describe('IgxGrid - Row Selection', () => {
 
             expect(rowsCollection).toEqual([]);
             expect(firstRow.selected).toBeFalsy();
-            //spyOn(grid, 'triggerRowSelectionChange').and.callThrough();
+            // spyOn(grid, 'triggerRowSelectionChange').and.callThrough();
             spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
 
             grid.selectAllRows();

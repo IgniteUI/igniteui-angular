@@ -2255,7 +2255,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
             const frElem = filteringRow.nativeElement;
 
-            const chkBoxElem = HelperUtils.getRowCheckboxDiv(HelperUtils.getHeaderRow(fix));;
+            const chkBoxElem = HelperUtils.getRowCheckboxDiv(HelperUtils.getHeaderRow(fix));
             expect(frElem.offsetTop).toBeGreaterThanOrEqual(chkBoxElem.offsetTop + chkBoxElem.clientHeight);
         }));
 
