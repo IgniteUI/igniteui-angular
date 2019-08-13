@@ -893,9 +893,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this._allowFiltering !== value) {
             this._allowFiltering = value;
             this.filteringService.registerSVGIcons();
-            if (this.calcHeight) {
-                this.calcHeight += value ? -FILTER_ROW_HEIGHT : FILTER_ROW_HEIGHT;
-            }
 
             if (!this._init) {
                 this.calcGridHeadRow();
@@ -904,7 +901,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.filteringService.isFilterRowVisible = false;
             this.filteringService.filteredColumn = null;
 
-            this.notifyChanges();
+            this.notifyChanges(true);
         }
     }
 
