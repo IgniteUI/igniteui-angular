@@ -2837,7 +2837,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this._cdrRequests) {
             this.resetNotifyChanges();
             this.cdr.detectChanges();
-            this.refreshSearch(true);
         }
     }
 
