@@ -2676,11 +2676,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         });
 
         this.onDensityChanged.pipe(destructor).subscribe(() => {
-            requestAnimationFrame(() => {
-                this.summaryService.summaryHeight = 0;
-                this.endEdit(true);
-                this.notifyChanges(true);
-            });
+            this.summaryService.summaryHeight = 0;
+            this.endEdit(true);
+            this.cdr.markForCheck();
         });
     }
 
