@@ -386,8 +386,7 @@ describe('IgxChipsArea', () => {
         const firstChipComp = fix.componentInstance.chips.toArray()[1];
         spyOn(firstChipComp.onClick, 'emit');
 
-        firstChipComp.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1}));
-        firstChipComp.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerup'));
+        firstChipComp.chipArea.nativeElement.click();
 
         fix.detectChanges();
         expect(firstChipComp.onClick.emit).toHaveBeenCalled();
@@ -493,7 +492,9 @@ describe('IgxChipsArea', () => {
         expect(selectedChip.selected).toBe(true);
         expect(selectedChipIconContainer.children.length).toEqual(1);
         expect(selectedChipIconContainer.children[0].tagName).toEqual('IGX-ICON');
-        expect(selectedChip.elementRef.nativeElement.children[0].children[0].offsetWidth).not.toEqual(0);
+        // expect(selectedChip.elementRef.nativeElement.children[0].children[0].offsetWidth).not.toEqual(0);
+        expect(selectedChip.elementRef.nativeElement.children[0].children[0].className).toEqual('igx-chip__select');
+        expect(selectedChip.elementRef.nativeElement.children[0].children[0].className).not.toEqual('igx-chip__select--hidden');
         expect(unselectedChipIconContainer.children.length).toEqual(1);
         expect(unselectedChipIconContainer.children[0].tagName).toEqual('IGX-ICON');
         expect(unselectedChip.elementRef.nativeElement.children[0].children[0].offsetWidth).toEqual(0);
@@ -856,29 +857,24 @@ describe('IgxChipsArea', () => {
 
         const chipAreaComp = fix.componentInstance.chipsArea;
         const secondChipComp = fix.componentInstance.chips.toArray()[1];
-        const pointerDownEvt = new PointerEvent('pointerdown', { pointerId: 1 });
-        const pointerUpEvt = new PointerEvent('pointerup', { pointerId: 1 });
 
         spyOn(chipAreaComp.onSelection, 'emit');
-
-        secondChipComp.chipArea.nativeElement.dispatchEvent(pointerDownEvt);
         fix.detectChanges();
-        secondChipComp.chipArea.nativeElement.dispatchEvent(pointerUpEvt);
+
+        secondChipComp.chipArea.nativeElement.click();
         fix.detectChanges();
 
         expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
-            originalEvent: pointerUpEvt,
+            originalEvent: null,
             owner: chipAreaComp,
             newSelection: [secondChipComp]
         });
 
-        secondChipComp.chipArea.nativeElement.dispatchEvent(pointerDownEvt);
-        fix.detectChanges();
-        secondChipComp.chipArea.nativeElement.dispatchEvent(pointerUpEvt);
+        secondChipComp.chipArea.nativeElement.click();
         fix.detectChanges();
 
         expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
-            originalEvent: pointerUpEvt,
+            originalEvent: null,
             owner: chipAreaComp,
             newSelection: []
         });
