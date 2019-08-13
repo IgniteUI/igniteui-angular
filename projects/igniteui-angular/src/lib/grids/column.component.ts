@@ -1101,7 +1101,7 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    @ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective, static: true })
+    @ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective, static: false })
     protected cellTemplate: IgxCellTemplateDirective;
     /**
      *@hidden
@@ -1111,14 +1111,14 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective, static: true })
+    @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective, static: false })
     protected editorTemplate: IgxCellEditorTemplateDirective;
 
     protected _vIndex = NaN;
     /**
      *@hidden
      */
-    @ContentChild(IgxFilterCellTemplateDirective, { read: IgxFilterCellTemplateDirective, static: true })
+    @ContentChild(IgxFilterCellTemplateDirective, { read: IgxFilterCellTemplateDirective, static: false })
     public filterCellTemplateDirective: IgxFilterCellTemplateDirective;
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, public cdr: ChangeDetectorRef) { }
