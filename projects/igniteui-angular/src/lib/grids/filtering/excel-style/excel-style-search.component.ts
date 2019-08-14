@@ -12,6 +12,7 @@ import { IgxInputDirective } from '../../../directives/input/input.directive';
 import { DisplayDensity } from '../../../core/density';
 import { IgxForOfDirective } from '../../../directives/for-of/for_of.directive';
 import { FilterListItem } from './grid.excel-style-filtering.component';
+import { cloneArray } from '../../../core/utils';
 
 /**
  * @hidden
@@ -28,6 +29,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
 
     @Input()
     public data: FilterListItem[];
+
+    public filteredData: FilterListItem[];
 
     @Input()
     public column: IgxColumnComponent;

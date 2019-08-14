@@ -40,7 +40,7 @@ steps:
     testResultsFiles: '**/TESTS-*.xml' 
 
 - task: PublishCodeCoverageResults@1
-  inputs: 
+  inputs:
     codeCoverageTool: Cobertura
     summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml'
     reportDirectory: '$(System.DefaultWorkingDirectory)/coverage'
