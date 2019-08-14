@@ -40,6 +40,22 @@ All notable changes for each version of this project will be documented in this 
     ```
     - When **no** `valueKey` is specified, selection is handled by **equality (===)**. In order to select items by object reference, the `valueKey` property can be removed from the configuration.
 
+## 8.1.3
+- `IgxCombo`
+    - Combo `onSelectionChange` events now emits the item(s) that were added to or removed from the collection:
+    ```html
+    <igx-combo (onSelectionChange)="handleChange($event)">
+    ```
+    ```typescript
+        export class Example {
+            ...
+            handleChange(event: IComboSelectionChangeEventArgs) {
+            console.log("Items added: ", [...event.added]); // the items added to the selection in this change
+            console.log("Items removed: ", [...event.removed]); // the items removed from the selection in this change
+            }
+        }
+    ```
+
 ## 8.1.2
 
 ### New Features

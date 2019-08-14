@@ -23,7 +23,7 @@ import {
 } from './chip.component';
 import {
     IgxDropEnterEventArgs
-} from '../directives/dragdrop/dragdrop.directive';
+} from '../directives/drag-drop/drag-drop.directive';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs/internal/Subject';
 

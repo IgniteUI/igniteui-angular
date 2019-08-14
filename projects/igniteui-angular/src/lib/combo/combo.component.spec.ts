@@ -1020,6 +1020,8 @@ describe('igxCombo', () => {
             expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
                 oldSelection: [],
                 newSelection: [targetItem.itemID],
+                added: [targetItem.itemID],
+                removed: [],
                 event: undefined,
                 cancel: false
             });
@@ -1032,6 +1034,8 @@ describe('igxCombo', () => {
             expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
                 oldSelection: [targetItem.itemID],
                 newSelection: [],
+                added: [],
+                removed: [targetItem.itemID],
                 event: undefined,
                 cancel: false
             });
@@ -1054,6 +1058,8 @@ describe('igxCombo', () => {
             expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
                 oldSelection: oldSelection,
                 newSelection: newSelection,
+                added: [combo.data[1], combo.data[5], combo.data[6]],
+                removed: [],
                 event: undefined,
                 cancel: false
             });
@@ -1068,6 +1074,8 @@ describe('igxCombo', () => {
             expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
                 oldSelection: oldSelection,
                 newSelection: newSelection,
+                removed: [],
+                added: [combo.data[3]],
                 event: undefined,
                 cancel: false
             });
@@ -1081,6 +1089,8 @@ describe('igxCombo', () => {
             expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
                 oldSelection: oldSelection,
                 newSelection: newSelection,
+                removed: oldSelection,
+                added: [combo.data[0]],
                 event: undefined,
                 cancel: false
             });
@@ -1096,6 +1106,8 @@ describe('igxCombo', () => {
             expect(combo.onSelectionChange.emit).toHaveBeenCalledWith({
                 oldSelection: oldSelection,
                 newSelection: newSelection,
+                removed: [combo.data[0]],
+                added: [],
                 event: undefined,
                 cancel: false
             });
@@ -1415,6 +1427,8 @@ describe('igxCombo', () => {
             const eventParams = {
                 oldSelection: [],
                 newSelection: [],
+                added: [],
+                removed: [],
                 event: mockEvent,
                 cancel: false
             };
@@ -1432,29 +1446,23 @@ describe('igxCombo', () => {
                 expect(combo.onSelectionChange.emit).toHaveBeenCalledWith(eventParams);
             };
 
-            eventParams.newSelection.push(dropdown.items[3].value);
+            eventParams.newSelection = [dropdown.items[3].value];
+            eventParams.added = [dropdown.items[3].value];
             verifyOnSelectionChangeEventIsFired(3);
             timesFired++;
 
-            eventParams.oldSelection.push(dropdown.items[3].value);
-            eventParams.newSelection.push(dropdown.items[7].value);
+            eventParams.oldSelection = [dropdown.items[3].value];
+            eventParams.newSelection = [dropdown.items[3].value, dropdown.items[7].value];
+            eventParams.added = [dropdown.items[7].value];
             verifyOnSelectionChangeEventIsFired(7);
-            timesFired++;
-
-            eventParams.oldSelection.push(dropdown.items[7].value);
-            eventParams.newSelection.push(dropdown.items[1].value);
-            verifyOnSelectionChangeEventIsFired(1);
             timesFired++;
 
             // Deselecting an item
-            eventParams.oldSelection.push(dropdown.items[1].value);
-            eventParams.newSelection = eventParams.newSelection.filter(item => item !== dropdown.items[7].value);
+            eventParams.oldSelection = [dropdown.items[3].value, dropdown.items[7].value];
+            eventParams.newSelection = [dropdown.items[3].value];
+            eventParams.added = [];
+            eventParams.removed = [dropdown.items[7].value];
             verifyOnSelectionChangeEventIsFired(7);
-            timesFired++;
-
-            eventParams.oldSelection = eventParams.oldSelection.filter(item => item !== dropdown.items[7].value);
-            eventParams.newSelection = eventParams.newSelection.filter(item => item !== dropdown.items[1].value);
-            verifyOnSelectionChangeEventIsFired(1);
         }));
         it('Should be able to select item when in grouped state', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboSampleComponent);
@@ -1581,6 +1589,64 @@ describe('igxCombo', () => {
             // onSelectionChange fires and overrides the selection to be [];
             expect(combo.selectedItems()).toEqual([]);
         }));
+
+        it('Should properly emit added and removed values in change event - single values', () => {
+            const fixture = TestBed.createComponent(IgxComboSampleComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.combo;
+            const selectionSpy = spyOn(fixture.componentInstance, 'onSelectionChange');
+            const expectedResults = {
+                newSelection: [combo.data[0]],
+                oldSelection: [],
+                added: [combo.data[0]],
+                removed: [],
+                event: undefined,
+                cancel: false
+            };
+            combo.selectItems([combo.data[0]]);
+            expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
+            Object.assign(expectedResults, {
+                newSelection: [],
+                oldSelection: [combo.data[0]],
+                added: [],
+                removed: [combo.data[0]]
+            });
+            combo.deselectItems([combo.data[0]]);
+            expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
+        });
+
+        it('Should properly emit added and removed values in change event - multiple values', () => {
+            const fixture = TestBed.createComponent(IgxComboSampleComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.combo;
+            const selectionSpy = spyOn(fixture.componentInstance, 'onSelectionChange');
+            const expectedResults = {
+                newSelection: [combo.data[0], combo.data[1], combo.data[2]],
+                oldSelection: [],
+                added: [combo.data[0], combo.data[1], combo.data[2]],
+                removed: [],
+                event: undefined,
+                cancel: false
+            };
+            combo.selectItems([combo.data[0], combo.data[1], combo.data[2]]);
+            expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
+            combo.deselectItems([combo.data[0]]);
+            Object.assign(expectedResults, {
+                newSelection: [combo.data[1], combo.data[2]],
+                oldSelection: [combo.data[0], combo.data[1], combo.data[2]],
+                added: [],
+                removed: [combo.data[0]]
+            });
+            expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
+            Object.assign(expectedResults, {
+                newSelection: [combo.data[4], combo.data[5], combo.data[6]],
+                oldSelection: [combo.data[1], combo.data[2]],
+                added: [combo.data[4], combo.data[5], combo.data[6]],
+                removed: [combo.data[1], combo.data[2]]
+            });
+            combo.selectItems([combo.data[4], combo.data[5], combo.data[6]], true);
+            expect(selectionSpy).toHaveBeenCalledWith(expectedResults);
+        });
     });
 
     describe('Rendering tests: ', () => {
