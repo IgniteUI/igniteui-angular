@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IgxDragDropModule, IgxDragDirective, IgxDropDirective, IgxDragLocation } from './drag-drop.directive';
 import { UIInteractions, wait} from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { IgxInsertDropStrategy } from './drag-drop.strategy';
 
 describe('General igxDrag/igxDrop', () => {
     let fix: ComponentFixture<TestDragDropComponent>;
@@ -500,8 +501,8 @@ describe('General igxDrag/igxDrop', () => {
         const initialPageY = firstDrag.pageY;
         firstDrag.ghost = false;
 
-        expect(initialPageX).toEqual(dragDirsRects[0].left);
-        expect(initialPageY).toEqual(dragDirsRects[0].top);
+        expect(initialPageX).toEqual(dragDirsRects[0].left - 10);
+        expect(initialPageY).toEqual(dragDirsRects[0].top - 10);
 
         // Step 1.
         UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
@@ -539,7 +540,7 @@ describe('General igxDrag/igxDrop', () => {
         firstDrag.setLocation(startLocation);
 
         expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
-        expect(firstElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top);
+        expect(firstElement.getBoundingClientRect().top).toEqual(Math.round(dragDirsRects[0].top));
     }));
 
     it('should correctly drag using drag handle and not the whole element', (async() => {
@@ -601,6 +602,9 @@ describe('General igxDrag/igxDrop', () => {
     }));
 
     it('should trigger enter, onDrop and leave events when element is dropped inside igxDrop element.', (async() => {
+        fix.componentInstance.dropArea.dropStrategy = IgxInsertDropStrategy;
+        fix.detectChanges();
+
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
         const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
@@ -695,6 +699,7 @@ describe('Linked igxDrag/igxDrop ', () => {
 
     it('should trigger enter/onDrop/leave events when element is dropped inside and is linked with it.', (async() => {
         const fix = TestBed.createComponent(TestDragDropLinkedSingleComponent);
+        fix.componentInstance.dropArea.dropStrategy = IgxInsertDropStrategy;
         fix.detectChanges();
 
         const firstDrag = fix.componentInstance.dragElems.first;
