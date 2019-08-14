@@ -15,7 +15,7 @@ before_install:
 - sleep 3
 before_script:
 # more heap mem per https://github.com/angular/angular-cli/issues/12645, https://github.com/npm/npm/issues/12238#issuecomment-367147962
-- export NODE_OPTIONS="--max_old_space_size=4096"
+- export NODE_OPTIONS="--max_old_space_size=8192"
 - npm install -g gulp
 script:
 - npm run lint:lib
