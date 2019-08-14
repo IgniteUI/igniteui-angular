@@ -214,7 +214,7 @@ export class IgxGridSelectionService {
     _ranges: Set<string> = new Set<string>();
     _selectionRange: Range;
     rowSelection: Set<any> = new Set<any>();
-    private allRowsSelected: boolean;
+    allRowsSelected: boolean;
 
     /**
      * Returns the current selected ranges in the grid from both
@@ -551,8 +551,9 @@ export class IgxGridSelectionService {
     clearRowSelection(onlyFiltered = true, shouldEmitEvent = true, event?) {
         this.allRowsSelected = false;
         onlyFiltered = this.isFilteringApplied() && onlyFiltered;
-        const removedRec = onlyFiltered ? this.getRowIDs(this.grid.filteredData) : this.getSelectedRows();
-        if (shouldEmitEvent && this.emitRowSelectionEvent(undefined, [], removedRec, event)) {
+        const removedRec = onlyFiltered ? this.getRowIDs(this.allData).filter(rID => this.isRowSelected(rID)) : this.getSelectedRows();
+        const newSelection = this.getSelectedRows().filter(x => !removedRec.includes(x));
+        if (shouldEmitEvent && this.emitRowSelectionEvent(newSelection, [], removedRec, event)) {
             return;
         }
        onlyFiltered ? removedRec.forEach(rID => { this.deselectRow(rID); }) :  this.rowSelection.clear();
@@ -641,7 +642,7 @@ export class IgxGridSelectionService {
 
     public emitRowSelectionEvent(newSelection, added, removed, event?): boolean {
         const currSelection = this.getSelectedRows();
-        if( currSelection.length === newSelection.length &&
+        if (currSelection.length === newSelection.length &&
             new Set(currSelection.concat(newSelection)).size === currSelection.length) { return; }
         const args = {oldSelection: currSelection, newSelection: newSelection,
             added: added, removed: removed, event: event, cancel: false};

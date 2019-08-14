@@ -27,7 +27,8 @@
                 [width]="col.getCellWidth()"
                 [visibleColumnIndex]="col.visibleIndex"
                 [value]="rowData[col.field]"
-                [cellTemplate]="col.bodyTemplate" #treeCell>
+                [cellTemplate]="col.bodyTemplate"
+                [cellSelectionMode]="grid.cellSelection" #treeCell>
             </igx-grid-cell>
             </ng-template>
         <ng-template #treeCellTemplate>
@@ -51,7 +52,8 @@
                 [visibleColumnIndex]="col.visibleIndex"
                 [value]="rowData[col.field]"
                 [isLoading]="isLoading"
-                [cellTemplate]="col.bodyTemplate" #treeCell>
+                [cellTemplate]="col.bodyTemplate"
+                [cellSelectionMode]="grid.cellSelection"  #treeCell>
             </igx-tree-grid-cell>
         </ng-template>
         <ng-container *ngTemplateOutlet="col.visibleIndex === 0 ? treeCellTemplate : cellTemplate"></ng-container>
@@ -74,7 +76,8 @@
             [width]="col.getCellWidth()"
             [visibleColumnIndex]="col.visibleIndex"
             [value]="rowData[col.field]"
-            [cellTemplate]="col.bodyTemplate" #treeCell>
+            [cellTemplate]="col.bodyTemplate"
+            [cellSelectionMode]="grid.cellSelection"  #treeCell>
         </igx-grid-cell>
     </ng-template>
     <ng-template #treeCellTemplate>
@@ -97,7 +100,8 @@
             [visibleColumnIndex]="col.visibleIndex"
             [value]="rowData[col.field]"
             [isLoading]="isLoading"
-            [cellTemplate]="col.bodyTemplate" #treeCell>
+            [cellTemplate]="col.bodyTemplate"
+            [cellSelectionMode]="grid.cellSelection"  #treeCell>
         </igx-tree-grid-cell>
     </ng-template>
     <ng-container *ngTemplateOutlet="col.visibleIndex === 0 ? treeCellTemplate : cellTemplate"></ng-container>

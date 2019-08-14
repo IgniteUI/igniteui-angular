@@ -553,14 +553,14 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         protected zone: NgZone,
         private touchManager: HammerGesturesManager) { }
 
-    public addPointerListeners(selection) {
+    private addPointerListeners(selection) {
         if (selection !== GridSelectionMode.multiple) { return; }
         this.nativeElement.addEventListener('pointerdown', this.pointerdown);
         this.nativeElement.addEventListener('pointerenter', this.pointerenter);
         this.nativeElement.addEventListener('pointerup', this.pointerup);
     }
 
-    public  removePointerListeners(selection) {
+    private  removePointerListeners(selection) {
         if (selection !== GridSelectionMode.multiple) { return; }
         this.nativeElement.removeEventListener('pointerdown', this.pointerdown);
         this.nativeElement.removeEventListener('pointerenter', this.pointerenter);

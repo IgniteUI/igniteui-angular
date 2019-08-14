@@ -373,6 +373,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
 
             this.filteringService.refreshExpressions();
+            this.selectionService.allRowsSelected = undefined;
             this.summaryService.clearSummaryCache();
             this.markForCheck();
         }
@@ -3800,6 +3801,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public refreshGridState(args?) {
+        this.selectionService.allRowsSelected = undefined;
         this.endEdit(true);
         this.summaryService.clearSummaryCache(args);
     }
@@ -4670,7 +4672,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public onHeaderCheckboxClick(event) {
-        event.checked ? this.selectionService.selectAllRows() : this.selectionService.clearRowSelection();
+        event.checked ? this.selectionService.selectAllRows(true, true, event) : this.selectionService.clearRowSelection(true, true, event);
     }
 
     /**

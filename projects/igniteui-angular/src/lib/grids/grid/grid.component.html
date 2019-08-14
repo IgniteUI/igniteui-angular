@@ -64,7 +64,7 @@
                 </div>
             </ng-container>
             <ng-container *ngIf="showRowCheckboxes">
-                <div class="igx-grid__cbx-selection" style="min-width: 53px;" #headerCheckboxContainer [ngClass]="{
+                <div class="igx-grid__cbx-selection" #headerCheckboxContainer [ngClass]="{
                     'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible
                 }">
                     <igx-checkbox [checked]="selectionService.areAllRowSelected()" (change)="onHeaderCheckboxClick($event)"
