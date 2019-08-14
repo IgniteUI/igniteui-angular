@@ -214,7 +214,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
 
     update_row(row: IgxRow, value: any) {
         const grid = this.grid;
-        const selected = grid.selection.is_item_selected(grid.id, row.id);
         const rowInEditMode = grid.crudService.row;
         const data = this.get_all_data(grid.transactions.enabled);
         const index = this.get_row_index_in_data(row.id);
@@ -249,6 +248,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
 
         this.updateData(grid, row.id, data[index], args.oldValue, args.newValue);
         const newId = grid.primaryKey ? args.newValue[grid.primaryKey] : args.newValue;
+        const selected = grid.selection.is_item_selected(grid.id, row.id);
         if (selected) {
             grid.selection.deselect_item(grid.id, row.id);
             grid.selection.select_item(grid.id, newId);
