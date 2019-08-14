@@ -1,0 +1,100 @@
+<div  class="sample-wrapper">	
+    <app-page-header title="Grid MRL"></app-page-header>	
+    <section style="height: 800px" class="sample-content">	
+        <div style="width: 100%; margin-bottom: 15px; text-align:center;"><h4>Multi-row layout configurator:</h4></div>	
+        <div style="width: 100%; margin-bottom: 15px; text-align:center; display: flex; justify-content: center;">	
+            <div style="margin-right: 5px; text-align: start">	
+                <br/>	
+                <div>Count:</div>	
+                <div>Default size:</div>	
+            </div>	
+            <div style="margin-right: 5px;">	
+                <div>Rows </div>	
+                <input #rowsInput type="number" [value]="rowsCount" style="width: 100px;"  (input)="rowCountChanged($event)"/>	
+                <br/>	
+                <input #rowsInput type="string" [value]="rowsHeight" style="width: 100px;"  (input)="rowHeightChanged($event)"/>	
+            </div>	
+            <div style="margin-right: 5px;">	
+                <div>Columns </div>	
+                <input #colsInput type="number" [value]="colsCount" style="width: 100px;"  (input)="colCountChanged($event)"/>	
+                <br/>	
+                <input #colsInput type="string" [value]="colsWidth" style="width: 100px;"  (input)="colWidthChanged($event)"/>	
+            </div>	
+        </div>	
+        <div style="width: 100%; margin-bottom: 15px; text-align:center;">	
+            <div class="colsWrapper">	
+                <div *ngFor="let col of columnsList" class="columnOut"	
+                    [igxDrag]="{ key: col.key }" [hideBaseOnDrag]="true" >	
+                    <div style="margin: 6px;">	
+                            {{col.key}}	
+                    </div>	
+                </div>	
+            </div>	
+        </div>	
+        <div style="width: 100%; margin-bottom: 15px; text-align:center;">	
+            <div style="display: flex;">	
+                <div class="rowLayoutView" [ngStyle]="{'grid-template-rows': layoutRowStyle, 'grid-template-columns': layoutColsStyle}">	
+                    <ng-container *ngFor="let row of collection; index as rowIndex">	
+                        <div #gridCell tabindex="0" *ngFor="let col of row; index as colIndex" class="columnIn" [class.columnInHovered]="col.hovered"	
+                            [ngStyle]="{'grid-row-start': col.rowStart, 'grid-column-start': col.colStart, 'grid-column-end': col.colStart + col.colSpan, 'grid-row-end': col.rowStart + col.rowSpan}"	
+                            igxDrop (onDrop)="onColDropped($event, rowIndex, colIndex)" (onEnter)="onColEnter($event, rowIndex, colIndex)" (onLeave)="onColLeave($event, rowIndex, colIndex)"	
+                                (click)="clickCell(gridCell, rowIndex, colIndex)" (blur)="onBlur($event, rowIndex, colIndex)" (keyup)="onCellKey($event, rowIndex, colIndex)">	
+                            <div class="textWrapper">{{col.key}}</div>	
+                            <ng-container *ngIf="this.collection[rowIndex][colIndex].selected">	
+                                <span #resizeHandleRight class="resizerLeft" 	
+                                    (pointerdown)="pointerDownResize($event, rowIndex, colIndex)"	
+                                    (pointermove)="pointerMoveResizeLeft($event, gridCell, rowIndex, colIndex)"	
+                                    (pointerup)="pointerUpResizeLeft($event, gridCell, rowIndex, colIndex)">	
+                                </span>	
+                                <span #resizeHandleRight class="resizerRight" 	
+                                    (pointerdown)="pointerDownResize($event, rowIndex, colIndex)"	
+                                    (pointermove)="pointerMoveResizeRight($event, gridCell, rowIndex, colIndex)"	
+                                    (pointerup)="pointerUpResizeRight($event, gridCell, rowIndex, colIndex)">	
+                                </span>	
+                                <span #resizeHandleBottom class="resizerBottom" 	
+                                    (pointerdown)="pointerDownResize($event, rowIndex, colIndex)"	
+                                    (pointermove)="pointerMoveResizeBottom($event, gridCell, rowIndex, colIndex)"	
+                                    (pointerup)="pointerUpResizeBottom($event, gridCell, rowIndex, colIndex)">	
+                                </span>	
+                            </ng-container>	
+                        </div>	
+                    </ng-container>	
+                </div>	
+            </div>	
+            <div #resizeIndicator style="position: absolute; border: 1px dotted #2f79ef;"	
+                [ngStyle]="{'top': resizeTop + 'px', 'left': resizeLeft  + 'px', 'right': resizeRight + 'px', 'width': resizeWidth + 'px', 'height': resizeHeight + 'px', 'display': resizeVisible ? 'block' : 'none'}">	
+            </div>	
+        </div>	
+        <div style="width: 100%; text-align: center; margin: 10px;">	
+            <span igxButton="raised" (click)="rerenderGrid()">Render Grid.</span>	
+            <span igxButton="raised" (click)="renderJson()">Get JSON!</span>	
+        </div>	
+
+         <div style="width: 100%; text-align: center; margin: 10px;">	
+                <div>Sample:</div>	
+        </div>	
+        <igx-grid *ngIf="renderGrid" [rowSelectable]="false" #grid [data]="data" displayDensity="compact" [width]="'800px'">	
+            <igx-column-layout [movable]="false" [pinned]="false">	
+                <igx-column *ngFor="let col of gridCollection" [field]="col.key" sortable="true" resizable="true"	
+                    [rowStart]="col.rowStart" [rowEnd]="col.rowStart + col.rowSpan" [colStart]="col.colStart" [colEnd]="col.colStart + col.colSpan" ></igx-column>	
+            </igx-column-layout>	
+            <!-- <igx-column-group [movable]="false" [pinned]="false">	
+                <igx-column [rowStart]="1" [colStart]="1" [movable]="false" [pinned]="false" sortable="true" resizable="true" field="ContactName" [width]='"50%"'></igx-column>	
+                <igx-column [rowStart]="1" [colStart]="2" [movable]="false" sortable="true" resizable="true" field="ContactTitle" [width]='"10%"'></igx-column>	
+                <igx-column [rowStart]="1" [colStart]="3" [movable]="false" sortable="true" resizable="true" field="Country" [width]='"15%"'></igx-column>	
+                <igx-column [rowStart]="1" [colStart]="4" [movable]="false" sortable="true" resizable="true" field="Phone" [width]='"15%"'></igx-column>	
+                 <igx-column [rowStart]="2" [colStart]="4" [movable]="false" sortable="true" resizable="true" field="City"></igx-column>	
+                <igx-column [rowStart]="3" [colStart]="4" [movable]="false" sortable="true" resizable="true" field="Address"></igx-column>	
+                <igx-column [rowStart]="2" [colStart]="1" [rowEnd]="4" [colEnd]="4" [movable]="false" [filterable]="false" sortable="true" resizable="true"  field="CompanyName"></igx-column>	
+            </igx-column-group> -->	
+        </igx-grid>	
+
+         <igx-dialog #jsonDialog title="Multi-row layout result:"	
+            leftButtonLabel="Cancel" (onLeftButtonSelect)="jsonDialog.close()" rightButtonLabel="Copy" (onRightButtonSelect)="copyToClipboard()"	
+            backgroundClick="true" [closeOnOutsideSelect]="true">	
+            <div class="login-form">	
+                <textarea #textArea rows="18" cols="101" readonly style="margin: 10px;">{{jsonCollection}}</textarea>	
+            </div>	
+        </igx-dialog>	
+    </section>	
+</div>
