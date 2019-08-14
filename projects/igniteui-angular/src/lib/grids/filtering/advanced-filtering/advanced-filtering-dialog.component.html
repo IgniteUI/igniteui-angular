@@ -12,32 +12,32 @@
 
     <article #expressionsContainer class="igx-excel-filter__secondary-main" style="padding: 10px;">
         <ng-container *ngIf="!rootGroup">
-            <button igxButton [displayDensity]="displayDensity" (click)="addAndGroup()">
+            <button igxButton="outlined" [displayDensity]="displayDensity" (click)="addAndGroup()">
                 <igx-icon fontSet="material">add</igx-icon>
                 <span>"And" Group</span>
             </button>
-            <button igxButton [displayDensity]="displayDensity" (click)="addOrGroup()">
+            <button igxButton="outlined" [displayDensity]="displayDensity" (click)="addOrGroup()">
                 <igx-icon fontSet="material">add</igx-icon>
                 <span>"Or" Group</span>
             </button>
         </ng-container>
 
         <ng-template #addExpressionsTemplate let-expressionItem let-afterExpression="afterExpression">
-            <button igxButton 
+            <button igxButton="outlined" 
                     [displayDensity]="displayDensity"
                     [disabled]="editedExpression"
                     (click)="addCondition(expressionItem, afterExpression)">
                 <igx-icon fontSet="material">add</igx-icon>
                 <span>Condition</span>
             </button>
-            <button igxButton
+            <button igxButton="outlined"
                     [displayDensity]="displayDensity"
                     [disabled]="editedExpression"
                     (click)="addAndGroup(expressionItem, afterExpression)">
                 <igx-icon fontSet="material">add</igx-icon>
                 <span>"And" Group</span>
             </button>
-            <button igxButton
+            <button igxButton="outlined"
                     [displayDensity]="displayDensity"
                     [disabled]="editedExpression"
                     (click)="addOrGroup(expressionItem, afterExpression)">
@@ -143,7 +143,7 @@
                     </ng-container>
                     <div *ngIf="currentGroup === expressionItem">
                         <ng-container *ngTemplateOutlet="addExpressionsTemplate; context: context(expressionItem)"></ng-container>
-                        <button igxButton
+                        <button igxButton="outlined"
                                 *ngIf="expressionItem !== rootGroup"
                                 [displayDensity]="displayDensity"
                                 [disabled]="editedExpression"
@@ -186,21 +186,21 @@
                     </button>
                 </igx-buttongroup>
 
-                <button igxButton [displayDensity]="displayDensity" [disabled]="!selectedGroups[0].parent" (click)="ungroup()">
+                <button igxButton="outlined" [displayDensity]="displayDensity" [disabled]="!selectedGroups[0].parent" (click)="ungroup()">
                     Ungroup
                 </button>
-                <button igxButton [displayDensity]="displayDensity" [disabled]="!selectedGroups[0].parent" (click)="deleteGroup()">
+                <button igxButton="outlined" [displayDensity]="displayDensity" [disabled]="!selectedGroups[0].parent" (click)="deleteGroup()">
                     Delete
                 </button>
             </ng-container>
             <ng-container *ngIf="selectedGroups.length !== 1 && selectedExpressions.length > 1">
-                <button igxButton [displayDensity]="displayDensity" (click)="createAndGroup()">
+                <button igxButton="outlined" [displayDensity]="displayDensity" (click)="createAndGroup()">
                     Create "And" Group
                 </button>
-                <button igxButton [displayDensity]="displayDensity" (click)="createOrGroup()">
+                <button igxButton="outlined" [displayDensity]="displayDensity" (click)="createOrGroup()">
                     Create "Or" Group
                 </button>
-                <button igxButton [displayDensity]="displayDensity" (click)="deleteFilters()">
+                <button igxButton="outlined" [displayDensity]="displayDensity" (click)="deleteFilters()">
                     Delete Filters
                 </button>
             </ng-container>
