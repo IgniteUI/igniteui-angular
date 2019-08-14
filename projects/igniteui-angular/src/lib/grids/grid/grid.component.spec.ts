@@ -4421,11 +4421,11 @@ describe('IgxGrid Component Tests', () => {
     describe('IgxGrid - Performance tests', () => {
         const MAX_RAW_RENDER = 1800;
         const MAX_GROUPED_RENDER = 1500;
-        const MAX_VER_SCROLL_O = 230;
-        const MAX_HOR_SCROLL_O = 230;
-        const MAX_VER_SCROLL_U = 530;
-        const MAX_HOR_SCROLL_U = 530;
-        const MAX_FOCUS = 160;
+        const MAX_VER_SCROLL_O = 200;
+        const MAX_HOR_SCROLL_O = 200;
+        const MAX_VER_SCROLL_U = 350;
+        const MAX_HOR_SCROLL_U = 350;
+        const MAX_FOCUS = 120;
         let observer: MutationObserver;
 
         configureTestSuite();
@@ -4490,7 +4490,6 @@ describe('IgxGrid Component Tests', () => {
                 }
                 if (ready) {
                     const delta = new Date().getTime() - startTime;
-                    console.log('VOS:' + delta);
                     expect(delta)
                         .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_VER_SCROLL_O + 'ms')
                         .toBeLessThan(MAX_VER_SCROLL_O);
@@ -4520,10 +4519,8 @@ describe('IgxGrid Component Tests', () => {
                 const cellMutated = mutationsList.filter((mutation) => {
                     return mutation.oldValue === '60' && mutation.target.attributes['ng-reflect-value'].nodeValue === '84';
                 }).length === 1;
-                console.log(mutationsList);
                 if (cellMutated) {
                     const delta = new Date().getTime() - startTime;
-                    console.log('VUS:' + delta);
                     expect(delta)
                         .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_VER_SCROLL_U + 'ms')
                         .toBeLessThan(MAX_VER_SCROLL_U);
@@ -4554,7 +4551,6 @@ describe('IgxGrid Component Tests', () => {
                 }).length === 1;
                 if (cellMutated) {
                     const delta = new Date().getTime() - startTime;
-                    console.log('HOS:' + delta);
                     expect(delta)
                         .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_HOR_SCROLL_O + 'ms')
                         .toBeLessThan(MAX_HOR_SCROLL_O);
@@ -4585,7 +4581,6 @@ describe('IgxGrid Component Tests', () => {
                 }).length === 1;
                 if (cellMutated) {
                     const delta = new Date().getTime() - startTime;
-                    console.log('HUS:' + delta);
                     expect(delta)
                         .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_HOR_SCROLL_U + 'ms')
                         .toBeLessThan(MAX_HOR_SCROLL_U);
@@ -4616,7 +4611,6 @@ describe('IgxGrid Component Tests', () => {
                 }).length === 1;
                 if (cellMutated) {
                     const delta = new Date().getTime() - startTime;
-                    console.log('FS:' + delta);
                     expect(delta)
                         .withContext('Focusing took: ' + delta + 'ms but should have taken at most: ' + MAX_FOCUS + 'ms')
                         .toBeLessThan(MAX_FOCUS);
