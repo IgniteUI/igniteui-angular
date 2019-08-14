@@ -276,14 +276,14 @@ Setting `[displayDensity]` affects the control's items' and inputs' css properti
 
 | Name                | Description                                                             | Cancelable   | Parameters                              |
 |------------------   |-------------------------------------------------------------------------|------------- |-----------------------------------------|
-| `onSelectionChange` | Emitted when item selection is changing, before the selection completes | true         | { oldSelection: `Array<any>`, newSelection: `Array<any>`, event: Event } |
+| `onSelectionChange` | Emitted when item selection is changing, before the selection completes | true         | [`IComboSelectionChangeEventArgs`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/interfaces/icomboselectionchangeeventargs.html) |
 | `onSearchInput`     | Emitted when an the search input's input event is triggered             | false        | { searchValue: `string` }               |
-| `onAddition`        | Emitted when an item is being added to the data collection              | false        | { oldCollection: `Array<any>`, addedItem: `<any>`, newCollection: `Array<any>` }|
-| `onDataPreLoad`     | Emitted when new chunk of data is loaded from the virtualization        | false        | { event: Event }                        |
-| `onOpening`   | Emitted before the dropdown is opened                                   | false        | { event: Event }                        |
-| `onOpened`    | Emitted after the dropdown is opened                                    | false        | { event: Event }                        |
-| `onClosing`   | Emitted before the dropdown is closed                                   | false        | { event: Event }                        |
-| `onClosed`    | Emitted after the dropdown is closed                                    | false        | { event: Event }                        |
+| `onAddition`        | Emitted when an item is being added to the data collection              | false        | { oldCollection: `any[]`, addedItem: `<any>`, newCollection: `any[]` }|
+| `onDataPreLoad`     | Emitted when new chunk of data is loaded from the virtualization        | false        | { event: `Event` }                        |
+| `onOpening`   | Emitted before the dropdown is opened                                   | false        | { event: `Event` }                        |
+| `onOpened`    | Emitted after the dropdown is opened                                    | false        | { event: `Event` }                        |
+| `onClosing`   | Emitted before the dropdown is closed                                   | false        | { event: `Event` }                        |
+| `onClosed`    | Emitted after the dropdown is closed                                    | false        | { event: `Event` }                        |
 
 ### Methods
 
@@ -292,9 +292,9 @@ Setting `[displayDensity]` affects the control's items' and inputs' css properti
 | `open`           | Opens drop down             | `void`               | `None`                      |
 | `close`          | Closes drop down            | `void`               | `None`                      |
 | `toggle`         | Toggles drop down           | `void`               | `None`                      |
-| `selectedItems`  | Get current selection state | `Array<any>`         | `None`                      |
-| `selectItems`    | Select defined items        | `void`               | items: `Array<any>`, clearCurrentSelection: `boolean` |
-| `deselectItems`  | Deselect defined items      | `void`               | items: `Array<any>`         |
+| `selectedItems`  | Get current selection state | `any[]`         | `None`                      |
+| `selectItems`    | Select defined items        | `void`               | items: `any[]`, clearCurrentSelection: `boolean` |
+| `deselectItems`  | Deselect defined items      | `void`               | items: `any[]`         |
 | `selectAllItems` | Select all (filtered) items | `void`               | ignoreFilter?: `boolean` - if `true` selects **all** values |
 | `deselectAllItems` | Deselect (filtered) all items | `void`           | ignoreFilter?: `boolean` - if `true` deselects **all** values |
 | `setSelectedItem` | Toggles (select/deselect) an item by key | `void` | itemID: any, select = true, event?: Event |
