@@ -2685,10 +2685,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
         });
 
-        /*
-            TODO: Stamen should probably take the call if we actually need the handlers below
-        */
-
         this.verticalScrollContainer.onDataChanging.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
             this.calculateGridHeight();
             $event.containerSize = this.calcHeight;
@@ -4035,23 +4031,19 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Sets columns defaultWidth property
      */
     protected _derivePossibleWidth() {
-        // TODO: This seems to have never worked when a columnWidth is passed
-        // after grid initial rendering
-        // if (!this.columnWidthSetByUser) {
-            if (!this.columnWidthSetByUser) {
-                this._columnWidth = this.width !== null ? this.getPossibleColumnWidth() : MINIMUM_COLUMN_WIDTH + 'px';
+        if (!this.columnWidthSetByUser) {
+            this._columnWidth = this.width !== null ? this.getPossibleColumnWidth() : MINIMUM_COLUMN_WIDTH + 'px';
+        }
+        this.columnList.forEach((column: IgxColumnComponent) => {
+            if (this.hasColumnLayouts && parseInt(this._columnWidth, 10)) {
+                const columnWidthCombined = parseInt(this._columnWidth, 10) * (column.colEnd ? column.colEnd - column.colStart : 1);
+                column.defaultWidth = columnWidthCombined + 'px';
+            } else {
+                column.defaultWidth = this._columnWidth;
+                column.resetCaches();
             }
-            this.columnList.forEach((column: IgxColumnComponent) => {
-                if (this.hasColumnLayouts && parseInt(this._columnWidth, 10)) {
-                    const columnWidthCombined = parseInt(this._columnWidth, 10) * (column.colEnd ? column.colEnd - column.colStart : 1);
-                    column.defaultWidth = columnWidthCombined + 'px';
-                } else {
-                    column.defaultWidth = this._columnWidth;
-                    column.resetCaches();
-                }
-            });
-            this.resetCachedWidths();
-        // }
+        });
+        this.resetCachedWidths();
     }
 
     /**
