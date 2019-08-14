@@ -196,7 +196,7 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
         if (this.itemSize === '50px') {
             this.itemSize = '100px';
         } else {
-            this.itemSize = "50px";
+            this.itemSize = '50px';
         }
 
     }
