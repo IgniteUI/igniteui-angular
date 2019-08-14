@@ -80,6 +80,7 @@ import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { IgxGridSelectionService, GridSelectionRange, IgxGridCRUDService, IgxRow, IgxCell } from '../core/grid-selection';
 import { DragScrollDirection } from './drag-select.directive';
 import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
+import { IgxExcelStyleLoadingValuesTemplateDirective } from './filtering/excel-style/excel-style-search.component';
 import {
     IgxExcelStyleSortingTemplateDirective,
     IgxExcelStylePinningTemplateDirective,
@@ -1008,6 +1009,27 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
+     * An @Input property that provides a callback for loading unique column values on demand.
+     * If this property is provided, the unique values it generates will be used by the Excel Style Filtering.
+     * ```html
+     * <igx-grid [data]="localData" [filterMode]="'excelStyleFilter'" [uniqueColumnValuesStrategy]="columnValuesStrategy"></igx-grid>
+     * ```
+     *
+     * ```typescript
+     * public columnValuesStrategy = (column: IgxColumnComponent,
+     *                               filteringExpressionsTree: IFilteringExpressionsTree,
+     *                               done: (uniqueValues: any[]) => void) => {
+     *     this.dataService.getColumnData(column, filteringExpressionsTree, uniqueValues => done(uniqueValues));
+     * }
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    @Input()
+    public uniqueColumnValuesStrategy: (column: IgxColumnComponent,
+                                        filteringExpressionsTree: IFilteringExpressionsTree,
+                                        done: (values: any[]) => void) => void;
+
+    /**
      * Emitted when `IgxGridCellComponent` is clicked. Returns the `IgxGridCellComponent`.
      * ```html
      * <igx-grid #grid (onCellClick)="onCellClick($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
@@ -1575,6 +1597,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @ContentChild(IgxExcelStylePinningTemplateDirective, { read: IgxExcelStylePinningTemplateDirective, static: false })
     public excelStylePinningTemplateDirective: IgxExcelStylePinningTemplateDirective;
 
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxExcelStyleLoadingValuesTemplateDirective, { read: IgxExcelStyleLoadingValuesTemplateDirective, static: true })
+    public excelStyleLoadingValuesTemplateDirective: IgxExcelStyleLoadingValuesTemplateDirective;
 
     /**
      * @hidden
