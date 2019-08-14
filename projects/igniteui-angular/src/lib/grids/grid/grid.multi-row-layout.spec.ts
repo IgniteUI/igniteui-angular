@@ -166,9 +166,8 @@ describe('IgxGrid - multi-row-layout', () => {
         verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
         // verify block style
-        let groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css(GRID_MRL_BLOCK));
-        expect(groupHeaderBlocks[0].nativeElement.style.gridTemplateColumns).toBe('200px 200px 200px');
-        expect(groupHeaderBlocks[0].nativeElement.style.gridTemplateRows).toBe('1fr 1fr 1fr');
+        expect(grid.columnList.first.getGridTemplate(false, false)).toBe('200px 200px 200px');
+        expect(grid.columnList.first.getGridTemplate(true, false)).toBe('repeat(3,1fr)');
 
         // creating an incomplete layout 2
         fixture.componentInstance.colGroups = [{
@@ -183,9 +182,8 @@ describe('IgxGrid - multi-row-layout', () => {
         fixture.componentInstance.grid.width = '617px';
         fixture.detectChanges();
 
-        groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css(GRID_MRL_BLOCK));
-        expect(groupHeaderBlocks[0].nativeElement.style.gridTemplateColumns).toBe('200px 200px 200px');
-        expect(groupHeaderBlocks[0].nativeElement.style.gridTemplateRows).toBe('1fr 1fr 1fr');
+        expect(grid.columnList.first.getGridTemplate(false, false)).toBe('200px 200px 200px');
+        expect(grid.columnList.first.getGridTemplate(true, false)).toBe('repeat(3,1fr)');
 
     });
     it('should initialize correctly when no column widths are set.', () => {
@@ -854,14 +852,16 @@ describe('IgxGrid - multi-row-layout', () => {
 
         // check first group has height of 2 row spans in header and rows but the header itself should span 1 row
         // check group block and column header height
-        const groupHeaderBlocks = fixture.debugElement.query(By.css('.igx-grid__thead')).queryAll(By.css(GRID_MRL_BLOCK));
+        const firstLayout = grid.columnList.toArray()[0];
         expect(grid.multiRowLayoutRowSize).toEqual(2);
-        expect(groupHeaderBlocks[0].nativeElement.style.gridTemplateRows).toEqual('1fr 1fr');
-        expect(groupHeaderBlocks[0].nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 2);
+        expect(firstLayout.getGridTemplate(true, false)).toEqual('repeat(2,1fr)');
+        expect(firstLayout.headerGroup.element.nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 2);
         expect(grid.getColumnByName('Fax').headerCell.elementRef.nativeElement.offsetHeight).toBe(grid.rowHeight + 1);
 
-        expect(groupHeaderBlocks[1].nativeElement.style.gridTemplateRows).toEqual('1fr 1fr');
-        expect(groupHeaderBlocks[1].nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 2);
+        const secondLayout = grid.columnList.toArray()[2];
+        const contactNameColumn = grid.getColumnByName('ContactName');
+        expect(contactNameColumn.getGridTemplate(true, false)).toEqual('repeat(2,1fr)');
+        expect(secondLayout.headerGroup.element.nativeElement.offsetHeight).toBe((grid.rowHeight + 1) * 2);
 
         // check cell height in row. By default should span 1 row
         const firstCell = grid.getCellByColumn(0, 'Fax').nativeElement;

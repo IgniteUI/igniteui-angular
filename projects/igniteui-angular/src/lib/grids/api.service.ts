@@ -331,13 +331,6 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
     }
 
     public clear_filter(fieldName: string) {
-        if (fieldName) {
-            const column = this.get_column_by_name(fieldName);
-            if (!column) {
-                return;
-            }
-        }
-
         const grid = this.grid;
         grid.endEdit(false);
         const filteringState = grid.filteringExpressionsTree;
@@ -427,6 +420,9 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
     }
 
     protected remove_grouping_expression(fieldName) {
+    }
+
+    public clear_groupby(name?: string | Array<string>) {
     }
 
     public should_apply_number_style(column: IgxColumnComponent): boolean {
