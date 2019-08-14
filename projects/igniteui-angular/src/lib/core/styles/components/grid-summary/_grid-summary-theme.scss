@@ -12,11 +12,9 @@
 /// @param {Color} $focus-background-color [null] - The background color when a summary item is on focus.
 /// @param {Color} $label-color [null] - The summaries label color.
 /// @param {Color} $result-color [null] - The summaries value/result color.
-/// @param {Color} $border-color [null] - The summaries border color.
-/// @param {Color} $pinned-border-width [null] - The border width of the summary panel.
-/// @param {Color} $pinned-border-style [null] - The border style of the summary panel.
+/// @param {String} $pinned-border-width [null] - The border width of the summary panel.
+/// @param {String} $pinned-border-style [null] - The border style of the summary panel.
 /// @param {Color} $pinned-border-color [null] - The border color of the summary panel.
-/// @param {Color} $label-hover-color [null] - The summaries hover label color.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -39,21 +37,15 @@
     $focus-background-color: null,
     $label-color: null,
     $result-color: null,
-    $border-color: null,
     $pinned-border-width: null,
     $pinned-border-style: null,
     $pinned-border-color: null,
-    $label-hover-color: null
 ) {
     $name: 'igx-grid-summary';
     $theme: apply-palette(map-get($schema, $name), $palette);
 
     @if not($result-color) and $background-color {
         $result-color: text-contrast($background-color);
-    }
-
-    @if not($border-color) and $background-color {
-        $border-color: rgba(text-contrast($background-color), .26);
     }
 
     @if not($pinned-border-color) and $background-color {
@@ -67,11 +59,9 @@
         focus-background-color: $focus-background-color,
         label-color: $label-color,
         result-color: $result-color,
-        border-color: $border-color,
         pinned-border-width: $pinned-border-width,
         pinned-border-style: $pinned-border-style,
         pinned-border-color: $pinned-border-color,
-        label-hover-color: $label-hover-color
     ));
 }
 
@@ -117,6 +107,7 @@
             bottom: 0;
             left: 0;
             right: 0;
+            z-index: 0;
         }
 
         &:focus::after {
@@ -134,7 +125,7 @@
 
     %igx-grid-summary--pinned {
         position: relative;
-        z-index: 1;
+        z-index: 2;
     }
 
     %grid-summary--fixed-width {
@@ -154,6 +145,7 @@
         padding: map-get($item-padding, 'comfortable');
         font-size: rem(12px);
         position: relative;
+        z-index: 1;
     }
 
     %igx-grid-summary__item--cosy {
@@ -168,10 +160,6 @@
         color: --var($theme, 'label-color');
         min-width: rem(30px);
         margin-right: rem(3px);
-
-        &:hover {
-            color: --var($theme, 'label-hover-color');
-        }
     }
 
     %igx-grid-summary__result {
