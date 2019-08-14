@@ -17,6 +17,16 @@ const FAB_BUTTON_COSY = 'igx-button--fab-cosy';
 
 describe('IgxButton', () => {
     configureTestSuite();
+
+    const baseClass = 'igx-button';
+    const classes = {
+        flat: `${baseClass}--flat`,
+        raised: `${baseClass}--raised`,
+        outlined: `${baseClass}--outlined`,
+        fab: `${baseClass}--fab`,
+        icon: `${baseClass}--icon`
+    };
+
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -108,6 +118,40 @@ describe('IgxButton', () => {
         verifyDisplayDensity(fabButton, fabButtonDOM, 'fab', DisplayDensity.cosy);
         verifyDisplayDensity(iconButton, iconButtonDOM, 'icon', DisplayDensity.cosy);
     });
+
+    it('Should set the correct CSS class on the element using the "type" input', () => {
+        const fixture = TestBed.createComponent(InitButtonComponent);
+        fixture.detectChanges();
+        const theButton = fixture.componentInstance.button;
+        const theButtonNativeEl = theButton.nativeElement;
+        expect(theButtonNativeEl.classList.length).toEqual(1);
+        expect(theButtonNativeEl.classList).toContain(classes.flat);
+
+        theButton.type = 'raised';
+        fixture.detectChanges();
+        expect(theButtonNativeEl.classList.length).toEqual(1);
+        expect(theButtonNativeEl.classList).toContain(classes.raised);
+
+        theButton.type = 'outlined';
+        fixture.detectChanges();
+        expect(theButtonNativeEl.classList.length).toEqual(1);
+        expect(theButtonNativeEl.classList).toContain(classes.outlined);
+
+        theButton.type = 'fab';
+        fixture.detectChanges();
+        expect(theButtonNativeEl.classList.length).toEqual(1);
+        expect(theButtonNativeEl.classList).toContain(classes.fab);
+
+        theButton.type = 'icon';
+        fixture.detectChanges();
+        expect(theButtonNativeEl.classList.length).toEqual(1);
+        expect(theButtonNativeEl.classList).toContain(classes.icon);
+
+        theButton.type = 'flat';
+        fixture.detectChanges();
+        expect(theButtonNativeEl.classList.length).toEqual(1);
+        expect(theButtonNativeEl.classList).toContain(classes.flat);
+    });
 });
 
 @Component({
@@ -117,6 +161,8 @@ describe('IgxButton', () => {
     </span>`
 })
 class InitButtonComponent {
+    @ViewChild(IgxButtonDirective, { read: IgxButtonDirective, static: true })
+    button: IgxButtonDirective;
 }
 
 @Component({

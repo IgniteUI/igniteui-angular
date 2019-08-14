@@ -23,6 +23,7 @@ import { State } from '../services/index';
 import { IgxGridBaseComponent, IGridEditEventArgs, IGridDataBindable } from './grid-base.component';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../core/grid-selection';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { HammerGesturesManager } from '../core/touch';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -40,7 +41,8 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-cell',
-    templateUrl: './cell.component.html'
+    templateUrl: './cell.component.html',
+    providers: [HammerGesturesManager]
 })
 export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     private _vIndex = -1;
@@ -530,7 +532,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         public selection: IgxSelectionAPIService,
         public cdr: ChangeDetectorRef,
         private element: ElementRef,
-        protected zone: NgZone) { }
+        protected zone: NgZone,
+        private touchManager: HammerGesturesManager) { }
 
 
     /**
@@ -552,6 +555,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 this.nativeElement.addEventListener('compositionend', this.compositionEndHandler);
             }
         });
+        this.touchManager.addEventListener(this.nativeElement, 'doubletap', this.onDoubleClick, {
+            cssProps: { } /* don't disable user-select, etc */
+        } as HammerOptions);
     }
 
     /**
@@ -569,6 +575,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 this.nativeElement.removeEventListener('compositionend', this.compositionEndHandler);
             }
         });
+        this.touchManager.destroy();
     }
 
     /**
@@ -594,9 +601,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
 
-        if (editableCell && crud.sameRow(this.rowIndex)) {
+        if (editableCell && crud.sameRow(this.cellID.rowID)) {
             this.gridAPI.submit_value();
-        } else if (editMode && !crud.sameRow(this.rowIndex)) {
+        } else if (editMode && !crud.sameRow(this.cellID.rowID)) {
             this.grid.endEdit(true);
         }
     }
@@ -716,7 +723,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     @HostListener('dblclick', ['$event'])
-    public onDoubleClick(event: MouseEvent) {
+    public onDoubleClick = (event: MouseEvent| HammerInput) => {
+        if (event.type === 'doubletap') {
+            // prevent double-tap to zoom on iOS
+            event.preventDefault();
+        }
         if (this.editable && !this.editMode && !this.row.deleted) {
             this.crudService.begin(this);
         }
