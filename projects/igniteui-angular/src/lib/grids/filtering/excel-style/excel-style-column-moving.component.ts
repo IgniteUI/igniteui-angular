@@ -55,6 +55,9 @@ export class IgxExcelStyleColumnMovingComponent {
             }
         } else if (this.grid.unpinnedColumns.indexOf(this.column) === 0 && moveDirection === 0) {
             targetColumn = this.grid.pinnedColumns[this.grid.pinnedColumns.length - 1];
+            if (targetColumn.parent) {
+                targetColumn = targetColumn.topLevelParent;
+            }
             moveDirection = 1;
         } else {
             targetColumn = this.findColumn(moveDirection, this.grid.unpinnedColumns);
