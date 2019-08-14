@@ -55,9 +55,6 @@ export class IgxAdvancedFilteringDialogComponent {
     @Input()
     public overlayService: IgxOverlayService;
 
-    @Input()
-    public displayDensity: DisplayDensity;
-
     public rootGroup: ExpressionGroupItem;
 
     public selectedExpressions: ExpressionOperandItem[] = [];
@@ -69,8 +66,6 @@ export class IgxAdvancedFilteringDialogComponent {
     public editedExpression: ExpressionOperandItem;
 
     public addModeExpression: ExpressionOperandItem;
-
-    public selectedGroup: ExpressionGroupItem;
 
     public selectedCondition: string;
     public searchValue: string;
@@ -98,6 +93,10 @@ export class IgxAdvancedFilteringDialogComponent {
     private _preventChipClick = false;
 
     constructor(public cdr: ChangeDetectorRef) { }
+
+    public get displayDensity() {
+        return this.grid.displayDensity;
+    }
 
     public get selectedColumn(): IgxColumnComponent {
         return this._selectedColumn;
@@ -413,27 +412,31 @@ export class IgxAdvancedFilteringDialogComponent {
     }
 
     public ungroup() {
-        const parent = this.selectedGroup.parent;
+        const selectedGroup = this.selectedGroups[0];
+        const parent = selectedGroup.parent;
         if (parent) {
-            const index = parent.children.indexOf(this.selectedGroup);
-            parent.children.splice(index, 1, ...this.selectedGroup.children);
+            const index = parent.children.indexOf(selectedGroup);
+            parent.children.splice(index, 1, ...selectedGroup.children);
 
-            for (const expr of this.selectedGroup.children) {
+            for (const expr of selectedGroup.children) {
                 expr.parent = parent;
             }
         }
 
-        this.selectedGroup = null;
+        this.selectedGroups = [];
+        this.clearSelection();
         this.toggleContextMenu();
     }
 
     public deleteGroup() {
-        const parent = this.selectedGroup.parent;
+        const selectedGroup = this.selectedGroups[0];
+        const parent = selectedGroup.parent;
         if (parent) {
-            const index = parent.children.indexOf(this.selectedGroup);
+            const index = parent.children.indexOf(selectedGroup);
             parent.children.splice(index, 1);
         }
-        this.selectedGroup = null;
+        this.selectedGroups = [];
+        this.clearSelection();
         this.toggleContextMenu();
     }
 

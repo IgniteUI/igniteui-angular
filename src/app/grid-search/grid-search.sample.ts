@@ -12,10 +12,18 @@ export class GridSearchComponent implements OnInit {
 
     public data: Array<any>;
     public columns: Array<any>;
+    public displayDensities;
+    public density = 'comfortable';
 
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
 
     public ngOnInit(): void {
+        this.displayDensities = [
+            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
+            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
+            { label: 'compact', selected: this.density === 'compact', togglable: true }
+        ];
+
         this.columns = [
             { field: 'ID', width: 80, resizable: true, movable: true },
             { field: 'CompanyName', width: 150, resizable: true, movable: true, type: 'string'},
@@ -464,6 +472,10 @@ export class GridSearchComponent implements OnInit {
                 'Contract': false
             }
         ];
+    }
+
+    public selectDensity(event) {
+        this.density = this.displayDensities[event.index].label;
     }
 
     toggleColumn(name: string) {

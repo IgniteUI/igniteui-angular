@@ -3,11 +3,18 @@
         Allows search in a grid.
     </app-page-header>
 
+    
+
     <div class="sample-content">
         <div class="sample-column">
+            <div class="density-chooser">
+                <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)"></igx-buttongroup>
+            </div>
+
             <igx-grid
                 #grid1
                 [data]="data"
+                [displayDensity]="density"
                 [allowFiltering]="true"
                 [rowSelectable]="true"
                 [paging]="false"
