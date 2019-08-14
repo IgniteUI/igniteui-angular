@@ -174,6 +174,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`filteringLogic`| FilteringLogic | The filtering logic of the grid. Defaults to _AND_. |
 |`filteringExpressionsTree`| IFilteringExpressionsTree | The filtering state of the grid. |
 |`emptyFilteredGridMessage`| string | The message displayed when there are no records and the grid is filtered.|
+|`uniqueColumnValuesStrategy`| void | Property that provides a callback for loading unique column values on demand. If this property is provided, the unique values it generates will be used by the Excel Style Filtering. |
 |`sortingExpressions`|Array|The sorting state of the grid.|
 |`rowSelectable`|boolean|Enables multiple row selection, default is _false_.|
 |`height`|string|The height of the grid element. You can pass values such as `1000px`, `75%`, etc.|
