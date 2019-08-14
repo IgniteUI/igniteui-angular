@@ -48,7 +48,8 @@
 
         <ng-template #filterOperandTemplate let-expressionItem>
             <span *ngIf="!expressionItem.inEditMode">
-                <igx-chip [removable]="true"
+                <igx-chip [data]="expressionItem"
+                          [removable]="true"
                           [selected]="expressionItem.selected"
                           (click)="onChipClick(expressionItem)"
                           (dblclick)="onChipDblClick(expressionItem)"
@@ -125,7 +126,8 @@
         <ng-template #expressionTreeTemplate let-expressionItem>
             <div style="display: flex;">
                 <div tabindex="0" style="width: 10px; margin-right: 10px;"
-                     [style.background-color]="expressionItem.operator === 0 ? 'lightblue' : 'lightcoral'"></div>
+                     [style.background-color]="expressionItem.operator === 0 ? expressionItem.selected ? 'blue' : 'lightblue' : expressionItem.selected ? 'red' : 'lightcoral'"
+                     (click)="onGroupClick(expressionItem)"></div>
                 <div style="display: flex; flex-direction: column; align-items: flex-start;">
                     <ng-container *ngFor="let expr of expressionItem.children">
                         <ng-container *ngTemplateOutlet="isExpressionGroup(expr) ? expressionTreeTemplate : filterOperandTemplate; context: context(expr)"></ng-container>
@@ -147,6 +149,52 @@
         <ng-container *ngIf="rootGroup">
             <ng-container *ngTemplateOutlet="expressionTreeTemplate; context: context(rootGroup)"></ng-container>
         </ng-container>
+
+        <div igxToggle
+             style="display: flex; flex-flow: column; width: 200px; background-color: black; margin-left: 20px">
+            <ng-container *ngIf="selectedGroups.length === 1">
+                <igx-buttongroup #logicOperatorButtonGroup
+                                 [multiSelection]="false">
+                    <span igxButton [displayDensity]="displayDensity"
+                        #andButton
+                        (keydown)="onLogicOperatorKeyDown(0)"
+                        tabindex="0"
+                        [selected]="selectedGroups[0].operator === 0"
+                        type="button"
+                        (click)="onLogicOperatorButtonClicked(0)">
+                        {{ grid.resourceStrings.igx_grid_filter_operator_and }}
+                    </span>
+                
+                    <span igxButton [displayDensity]="displayDensity"
+                        #orButton
+                        tabindex="0"
+                        (keydown)="onLogicOperatorKeyDown(1)"
+                        [selected]="selectedGroups[0].operator === 1"
+                        type="button"
+                        (click)="onLogicOperatorButtonClicked($event, 1)">
+                        {{ grid.resourceStrings.igx_grid_filter_operator_or }}
+                    </span>
+                </igx-buttongroup>
+
+                <button igxButton [displayDensity]="displayDensity" [disabled]="!selectedGroups[0].parent" (click)="ungroup()">
+                    Ungroup
+                </button>
+                <button igxButton [displayDensity]="displayDensity" [disabled]="!selectedGroups[0].parent" (click)="deleteGroup()">
+                    Delete
+                </button>
+            </ng-container>
+            <ng-container *ngIf="selectedGroups.length !== 1 && selectedExpressions.length > 1">
+                <button igxButton [displayDensity]="displayDensity" (click)="createAndGroup()">
+                    Create "And" Group
+                </button>
+                <button igxButton [displayDensity]="displayDensity" (click)="createOrGroup()">
+                    Create "Or" Group
+                </button>
+                <button igxButton [displayDensity]="displayDensity" (click)="deleteFilters()">
+                    Delete Filters
+                </button>
+            </ng-container>
+        </div>
     </article>
 
     <footer class="igx-excel-filter__secondary-footer">
