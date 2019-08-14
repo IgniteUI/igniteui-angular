@@ -2720,6 +2720,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public resetForOfCache() {
         const firstVirtRow = this.dataRowList.first;
         if (firstVirtRow) {
+            if (this._cdrRequests) {
+                firstVirtRow.virtDirRow.cdr.detectChanges();
+            }
             firstVirtRow.virtDirRow.assumeMaster();
         }
     }

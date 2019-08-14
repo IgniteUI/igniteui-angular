@@ -231,6 +231,7 @@ export class IgxColumnComponent implements AfterContentInit {
                 this.grid.endEdit(false);
                 this.grid.summaryService.resetSummaryHeight();
                 this.grid.filteringService.refreshExpressions();
+                this.grid.notifyChanges();
                 // this.grid.refreshSearch(true);
             }
         }
