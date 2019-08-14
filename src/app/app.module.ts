@@ -108,6 +108,7 @@ import { GridMRLCustomNavigationSampleComponent } from './grid-mrl-custom-naviga
 import { GridClipboardSampleComponent } from './grid-clipboard/grid-clipboard.sample';
 import { GridAutoSizeSampleComponent } from './grid-auto-size/grid-auto-size.sample';
 import { GridFlexSampleComponent } from './grid-flex-layout/grid-flex.sample';
+import { GridEsfLoadOnDemandComponent } from './grid-esf-load-on-demand/grid-esf-load-on-demand.component';
 
 
 
@@ -208,7 +209,8 @@ const components = [
     GridFilterTemplateSampleComponent,
     GridClipboardSampleComponent,
     GridAutoSizeSampleComponent,
-    GridFlexSampleComponent
+    GridFlexSampleComponent,
+    GridEsfLoadOnDemandComponent
 ];
 
 @NgModule({

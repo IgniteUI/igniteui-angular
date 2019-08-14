@@ -174,6 +174,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Filter Template'
         },
         {
+            link: '/gridEsfLoadOnDemand',
+            icon: 'view_column',
+            name: 'Grid ESF Load On Demand'
+        },
+        {
             link: '/gridColumnMoving',
             icon: 'view_column',
             name: 'Grid Column Moving'
