@@ -87,7 +87,6 @@ import {
 } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
-import { IgxDragIndicatorIconDirective } from './row-drag.directive';
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
@@ -150,7 +149,8 @@ export interface IColumnResizeEventArgs {
 export interface IRowSelectionEventArgs extends CancelableEventArgs  {
     oldSelection: any[];
     newSelection: any[];
-    row?: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
+    added: any[];
+    removed: any[];
     event?: Event;
 }
 
@@ -4670,11 +4670,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public onHeaderCheckboxClick(event) {
-        if (event.checked) {
-            this.selectAllRows();
-        } else {
-            this.deselectAllRows();
-        }
+        event.checked ? this.selectionService.selectAllRows() : this.selectionService.clearRowSelection();
     }
 
     /**
@@ -4708,9 +4704,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @memberof IgxGridBaseComponent
      */
     public selectRows(rowIDs: any[], clearCurrentSelection?: boolean) {
-        // should check if it is deleted
-        const selectableRows = this.transactions.enabled ? rowIDs.filter(e => !this.gridAPI.row_deleted_transaction(e)) : rowIDs;
-        this.selectionService.selectRows(selectableRows, clearCurrentSelection);
+        this.selectionService.selectRows(rowIDs, clearCurrentSelection);
     }
 
     /**
@@ -4722,7 +4716,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @memberof IgxGridBaseComponent
      */
     public deselectRows(rowIDs: any[]) {
-        rowIDs.forEach(rID => { this.selectionService.deselectRow(rID); });
+        this.selectionService.deselectRowsWithNoEvent(rowIDs);
     }
 
     /**
@@ -4734,7 +4728,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     public selectAllRows(onlyFilterData = true) {
-        this.selectionService.selectAllRows(onlyFilterData);
+        this.selectionService.selectAllRows(onlyFilterData, false);
     }
 
     /**
@@ -4745,7 +4739,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Note: If filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
      */
     public deselectAllRows(onlyFilterData = true) {
-        this.selectionService.clearRowSelection(onlyFilterData);
+        this.selectionService.clearRowSelection(onlyFilterData, false);
     }
 
     clearCellSelection(): void {

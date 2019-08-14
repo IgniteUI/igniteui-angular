@@ -119,7 +119,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
 
     set selected(value: boolean) {
         value ? this.selectionService.selectRows([this.rowID]) :
-        this.selectionService.deselectRow(this.rowID);
+        this.selectionService.deselectRowsWithNoEvent([this.rowID]);
     }
 
     /**
@@ -277,18 +277,18 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     public onClick(event: MouseEvent) {
         if (this.grid.rowSelection === 'none' || this.deleted) { return; }
         if (event.shiftKey && this.grid.rowSelection === 'multiple') {
-            this.selectionService.selectMultipleRows(this.rowID, this.rowData);
+            this.selectionService.selectMultipleRows(this.rowID, this.rowData, event);
             return;
         }
-        this.selectionService.selectRowbyID(this.rowID, !event.ctrlKey);
+        this.selectionService.selectRowbyID(this.rowID, !event.ctrlKey, event);
     }
 
     /**
      * @hidden
      */
     public onCheckboxClick(event) {
-        event.checked ? this.selectionService.selectRowbyID(this.rowID) :
-                this.selectionService.deselectRow(this.rowID);
+        event.checked ? this.selectionService.selectRowbyID(this.rowID, false, event) :
+                this.selectionService.deselectRow(this.rowID, event);
     }
 
     /**
