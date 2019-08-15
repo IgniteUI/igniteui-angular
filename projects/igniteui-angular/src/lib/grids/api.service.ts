@@ -522,8 +522,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
     }
 
     public get_row_id(rowData) {
-        const grid = this.grid;
-        return grid.primaryKey ? rowData[grid.primaryKey] : rowData;
+        return this.grid.primaryKey ? rowData[this.grid.primaryKey] : rowData;
     }
 
     public row_deleted_transaction(rowID: any): boolean {
