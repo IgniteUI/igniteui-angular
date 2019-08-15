@@ -3,6 +3,17 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 8.2.0
+
+### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - `uniqueColumnValuesStrategy` input is added. This property provides a callback for loading unique column values on demand. If this property is provided, the unique values it generates will be used by the Excel Style Filtering (instead of using the unique values from the data that is bound to the grid).
+    - `igxExcelStyleLoading` directive is added, which can be used to provide a custom loading template for the Excel Style Filtering. If this property is not provided, a default loading template will be used instead.
+### General
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Breaking Change** `igxExcelStyleSortingTemplate` directive is renamed to `igxExcelStyleSorting`.
+    - **Breaking Change** `igxExcelStyleMovingTemplate` directive is renamed to `igxExcelStyleMoving`.
+    - **Breaking Change** `igxExcelStyleHidingTemplate` directive is renamed to `igxExcelStyleHiding`.
+    - **Breaking Change** `igxExcelStylePinningTemplate` directive is renamed to `igxExcelStylePinning`.
 - `IgxCombo`
     - Combo selection is now consistent when `valueKey` is defined. When `valueKey` is specified, selection is based on the value keys of the items. For example:
     ```html
