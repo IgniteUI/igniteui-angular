@@ -71,7 +71,7 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
     /**
      * @hidden
      */
-    @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective, static: true })
+    @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective, static: false })
     protected tabTemplate: IgxTabItemTemplateDirective;
 
     private _tabTemplate: TemplateRef<any>;
