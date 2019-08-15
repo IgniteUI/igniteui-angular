@@ -2941,9 +2941,7 @@ describe('IgxGrid - Cell selection', () => {
         });
 
         it('Should select a region from API', () => {
-            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             const range = { rowStart: 0, rowEnd: 2, columnStart: 'Name', columnEnd: 'ParentID' };
-            const cell = grid.getCellByColumn(1, 'Name');
             const expectedData = [
                 { ParentID: 147, Name: 'Michael Langdon' },
                 { ParentID: 147, Name: 'Thomas Hardy' },
@@ -3161,7 +3159,7 @@ describe('IgxGrid - Cell selection', () => {
             HelperUtils.verifyCellsRegionSelected(grid, 2, 3, 1, 2);
             expect(grid.selectedCells.length).toBe(4);
             expect(grid.getSelectedData()).toEqual(expectedData);
-            HelperUtils.verifySelectedRange(grid, 2, 3, 1, 3);
+            HelperUtils.verifySelectedRange(grid, 2, 3, 1, 2);
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
         });
 
