@@ -2696,7 +2696,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.onRowAdded.pipe(destructor).subscribe(args => this.refreshGridState(args));
         this.onRowDeleted.pipe(destructor).subscribe(args => {
-            this.summaryService.deleteOperation = true;
+            this.summaryService.deleteOperation = true; // do not consider removed rows
             this.summaryService.clearSummaryCache(args);
         });
         this.transactions.onStateUpdate.pipe(takeUntil(this.destroy$)).subscribe(() => {

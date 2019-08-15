@@ -600,6 +600,7 @@ export class IgxGridSelectionService {
 
     deselectRowsWithNoEvent(rowIDs: any[]) {
         rowIDs.forEach(rowID => this.rowSelection.delete(rowID));
+        this.allRowsSelected = undefined;
     }
 
     isRowSelected(rowID) {
@@ -630,7 +631,8 @@ export class IgxGridSelectionService {
 
         const filteredItems = this.grid.isDefined(this.grid.filteredData) ? this.grid.filteredData : [];
         const filteredItemsID = this.getRowIDs(filteredItems);
-        return this.allRowsSelected = this.rowSelection.size >= this.allData.length &&
+        return this.allRowsSelected =
+        this.rowSelection.size >= this.getRowIDs(this.allData).filter(id => !this.grid.gridAPI.row_deleted_transaction(id)).length &&
             new Set(Array.from(this.rowSelection.values()).concat(filteredItemsID)).size === this.rowSelection.size;
     }
 
