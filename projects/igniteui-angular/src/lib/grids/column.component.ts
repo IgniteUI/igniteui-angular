@@ -1980,8 +1980,6 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         }
 
         this.children.forEach(child => {
-            child.disableHiding = true;
-            child.disablePinning = true;
             child.movable = false;
         });
     }
