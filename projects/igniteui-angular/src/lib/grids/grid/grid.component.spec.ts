@@ -4421,10 +4421,10 @@ describe('IgxGrid Component Tests', () => {
     describe('IgxGrid - Performance tests', () => {
         const MAX_RAW_RENDER = 1800;
         const MAX_GROUPED_RENDER = 1500;
-        const MAX_VER_SCROLL_O = 200;
-        const MAX_HOR_SCROLL_O = 200;
-        const MAX_VER_SCROLL_U = 350;
-        const MAX_HOR_SCROLL_U = 350;
+        const MAX_VER_SCROLL_O = 220;
+        const MAX_HOR_SCROLL_O = 220;
+        const MAX_VER_SCROLL_U = 380;
+        const MAX_HOR_SCROLL_U = 380;
         const MAX_FOCUS = 120;
         let observer: MutationObserver;
 
