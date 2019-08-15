@@ -558,7 +558,6 @@ describe('IgxGrid - Row Selection', () => {
             HelperUtils.verifyRowSelected(grid.getRowByIndex(2));
         });
 
-
         it('Should have persistent selection through data operations - sorting', fakeAsync(() => {
             const rowsToCheck = [grid.getRowByIndex(0), grid.getRowByIndex(1)];
             HelperUtils.verifyRowsArraySelected(rowsToCheck, false);
@@ -580,7 +579,6 @@ describe('IgxGrid - Row Selection', () => {
 
             HelperUtils.verifyRowsArraySelected(rowsToCheck, true);
         }));
-
     });
 
     describe('API test', () => {
@@ -594,6 +592,7 @@ describe('IgxGrid - Row Selection', () => {
         }));
 
         it('Should be able to programmatically select all rows and keep the header checkbox intact,  #1298', () => {
+            spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
             grid.selectAllRows();
             grid.cdr.detectChanges();
             fix.detectChanges();
@@ -609,106 +608,75 @@ describe('IgxGrid - Row Selection', () => {
             HelperUtils.verifyHeaderRowCheckboxState(fix, true);
 
             grid.deselectAllRows();
-            grid.cdr.detectChanges();
             fix.detectChanges();
 
             HelperUtils.verifyRowsArraySelected(grid.rowList.toArray(), false);
             HelperUtils.verifyHeaderRowCheckboxState(fix);
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
         });
 
-        it('Should be able to programmatically get a collection of all selected rows', () => {
-            const firstRow = grid.getRowByIndex(0);
-            const thirdRow = grid.getRowByIndex(2);
-            const thirdRowCheckbox: HTMLElement = thirdRow.nativeElement.querySelector('.igx-checkbox__input');
-
-            expect(firstRow.selected).toBeFalsy();
-            expect(thirdRow.selected).toBeFalsy();
-            expect(grid.selectedRows()).toEqual([]);
-
-            thirdRowCheckbox.click();
-            fix.detectChanges();
-
-            expect(firstRow.selected).toBeFalsy();
-            expect(thirdRow.selected).toBeTruthy();
-            expect(grid.selectedRows()).toEqual([3]);
-
-            thirdRowCheckbox.click();
-            fix.detectChanges();
-
-            expect(firstRow.selected).toBeFalsy();
-            expect(thirdRow.selected).toBeFalsy();
-            expect(grid.selectedRows()).toEqual([]);
-        });
-
-        it('Should be able to select/deselect rows programmatically', fakeAsync(() => {
-            let rowsCollection = [];
-            const rowsToCheck = [grid.getRowByKey(1), grid.getRowByKey(2), grid.getRowByKey(3)];
-            // spyOn(grid, 'triggerRowSelectionChange').and.callThrough();
+        it('Should be able to select/deselect rows programmatically', () => {
             spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
+            const firstRow = grid.getRowByIndex(0);
+            const secondRow = grid.getRowByIndex(1);
+            const thirdRow = grid.getRowByIndex(2);
+            const forthRow = grid.getRowByIndex(2);
 
-            rowsCollection = grid.selectedRows();
-
-            expect(rowsCollection).toEqual([]);
-            HelperUtils.verifyRowsArraySelected(rowsToCheck, false);
+            expect(grid.selectedRows()).toEqual([]);
+            HelperUtils.verifyRowsArraySelected(grid.rowList.toArray(), false);
 
             grid.deselectRows([1, 2, 3]);
-            tick();
             fix.detectChanges();
 
-            expect(rowsCollection).toEqual([]);
+            expect(grid.selectedRows()).toEqual([]);
+            HelperUtils.verifyHeaderRowCheckboxState(fix);
 
             grid.selectRows([1, 2, 3], false);
-            tick();
             fix.detectChanges();
 
-            HelperUtils.verifyRowsArraySelected(rowsToCheck, true);
+            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            HelperUtils.verifyRowsArraySelected([firstRow, secondRow, thirdRow]);
+            expect(grid.selectedRows()).toEqual([1, 2, 3]);
 
-            rowsCollection = grid.selectedRows();
-            expect(rowsCollection.length).toEqual(3);
-
-            grid.deselectRows([1, 2, 3]);
-            tick();
+            grid.deselectRows([1, 3]);
             fix.detectChanges();
 
-            HelperUtils.verifyRowsArraySelected(rowsToCheck, false);
+            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            HelperUtils.verifyRowsArraySelected([firstRow, thirdRow], false);
+            HelperUtils.verifyRowSelected(secondRow);
 
-            rowsCollection = grid.selectedRows();
+            grid.selectRows([1, 2, 3, 4], true);
+            fix.detectChanges();
 
-            expect(rowsCollection.length).toEqual(0);
+            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            HelperUtils.verifyRowsArraySelected([firstRow, secondRow, thirdRow, forthRow]);
+            expect(grid.selectedRows()).toEqual([1, 2, 3, 4]);
+
+            grid.selectRows([1], false);
+            fix.detectChanges();
+
+            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            HelperUtils.verifyRowsArraySelected([secondRow, thirdRow, forthRow], false);
+            HelperUtils.verifyRowSelected(firstRow);
+            expect(grid.selectedRows()).toEqual([1]);
+
+            grid.deselectRows([2, 3, 100]);
+            fix.detectChanges();
+
+            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            HelperUtils.verifyRowsArraySelected([secondRow, thirdRow, forthRow], false);
+            HelperUtils.verifyRowSelected(firstRow);
+            expect(grid.selectedRows()).toEqual([1]);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
-        }));
 
-        it('Should be able to select/deselect ALL rows programmatically', fakeAsync(() => {
-            spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
-            let rowsCollection = [];
-            const firstRow = grid.getRowByKey(1);
-
-            rowsCollection = grid.selectedRows();
-
-            expect(rowsCollection).toEqual([]);
-            expect(firstRow.selected).toBeFalsy();
-
-            grid.selectAllRows();
-            tick();
+            grid.deselectRows([1]);
             fix.detectChanges();
 
-            expect(firstRow.selected).toBeTruthy();
-
-            rowsCollection = grid.selectedRows();
-
-            expect(rowsCollection.length).toEqual(19);
-
-            grid.deselectAllRows();
-            tick();
-            fix.detectChanges();
-
-            expect(firstRow.selected).toBeFalsy();
-
-            rowsCollection = grid.selectedRows();
-
-            expect(rowsCollection.length).toEqual(0);
+            HelperUtils.verifyHeaderRowCheckboxState(fix);
+            HelperUtils.verifyRowsArraySelected([firstRow, secondRow, thirdRow, forthRow], false);
+            expect(grid.selectedRows()).toEqual([]);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
-        }));
+        });
 
         it('Should be able to correctly select all rows programmatically', fakeAsync(() => {
             const firstRow = grid.getRowByIndex(0);
@@ -1185,8 +1153,6 @@ describe('IgxGrid - Row Selection', () => {
         expect(thirdRow.selected).toBeFalsy();
     });
 });
-
-
 
 @Component({
     template: `
