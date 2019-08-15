@@ -75,7 +75,8 @@
             </span>
             <div *ngIf="expressionItem.inEditMode"
                  style="display: flex; align-items: center;">
-                <igx-select type="box"
+                <igx-select #columnSelect
+                            type="box"
                             [displayDensity]="displayDensity"
                             [(ngModel)]="selectedColumn">
                     <igx-select-item *ngFor="let column of grid.columns" [value]="column">
@@ -91,7 +92,8 @@
                 </ng-container>
 
                 <ng-container *ngIf="selectedColumn">
-                    <igx-select type="box" 
+                    <igx-select #conditionSelect
+                                type="box" 
                                 [displayDensity]="displayDensity"
                                 [(ngModel)]="selectedCondition"
                                 [disabled]="!selectedColumn">
@@ -104,15 +106,15 @@
                 <igx-input-group type="box"
                                  [disabled]="!selectedColumn || !selectedCondition || (selectedColumn && selectedColumn.filters.condition(selectedCondition).isUnary)"
                                  [displayDensity]="displayDensity">
-                    <input #input
+                    <input #searchValueInput
                            igxInput
                            [(ngModel)]="searchValue"/>
                 </igx-input-group>
 
                 <button igxButton="icon"
                         [displayDensity]="displayDensity"
-                        [disabled]="!selectedColumn || !selectedCondition || (!searchValue && !selectedColumn.filters.condition(selectedCondition).isUnary)"
-                        (click)="commitOperandEdit(expressionItem)">
+                        [disabled]="!operandCanBeCommitted()"
+                        (click)="commitOperandEdit()">
                     <igx-icon fontSet="material">check</igx-icon>
                 </button>
                 <button igxButton="icon"

@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
+import { Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { PositionSettings, VerticalAlignment, HorizontalAlignment, OverlaySettings, Point } from '../../../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../../../services/overlay/position/connected-positioning-strategy';
 import { IgxFilteringService } from '../grid-filtering.service';
@@ -10,6 +10,7 @@ import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../da
 import { FilteringLogic, IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { IgxStringFilteringOperand } from '../../../data-operations/filtering-condition';
 import { IgxChipComponent } from '../../../chips';
+import { IgxSelectComponent } from '../../../select';
 
 class ExpressionItem {
     constructor(parent?: ExpressionGroupItem) {
@@ -81,6 +82,15 @@ export class IgxAdvancedFilteringDialogComponent {
         scrollStrategy: new CloseScrollStrategy()
     };
 
+    @ViewChild('columnSelect', { read: IgxSelectComponent, static: false })
+    public columnSelect: IgxSelectComponent;
+
+    @ViewChild('conditionSelect', { read: IgxSelectComponent, static: false })
+    public conditionSelect: IgxSelectComponent;
+
+    @ViewChild('searchValueInput', { read: ElementRef, static: false })
+    public searchValueInput: ElementRef;
+
     @ViewChild(IgxToggleDirective, { static: true })
     public contextMenuToggle: IgxToggleDirective;
 
@@ -150,13 +160,15 @@ export class IgxAdvancedFilteringDialogComponent {
         this.currentGroup = groupItem.parent;
     }
 
-    public commitOperandEdit(item: ExpressionOperandItem) {
-        item.expression.fieldName = this.selectedColumn.field;
-        item.expression.condition = this.selectedColumn.filters.condition(this.selectedCondition);
-        item.expression.searchVal = this.searchValue;
+    public commitOperandEdit() {
+        if (this.editedExpression) {
+            this.editedExpression.expression.fieldName = this.selectedColumn.field;
+            this.editedExpression.expression.condition = this.selectedColumn.filters.condition(this.selectedCondition);
+            this.editedExpression.expression.searchVal = this.searchValue;
 
-        item.inEditMode = false;
-        this.editedExpression = null;
+            this.editedExpression.inEditMode = false;
+            this.editedExpression = null;
+        }
     }
 
     public cancelOperandAdd() {
@@ -170,6 +182,23 @@ export class IgxAdvancedFilteringDialogComponent {
         if (this.editedExpression) {
             this.editedExpression.inEditMode = false;
             this.editedExpression = null;
+        }
+    }
+
+    public operandCanBeCommitted(): boolean {
+        return this.selectedColumn && this.selectedCondition &&
+            (!!this.searchValue || this.selectedColumn.filters.condition(this.selectedCondition).isUnary);
+    }
+
+    public exitOperandEdit() {
+        if (!this.editedExpression) {
+            return;
+        }
+
+        if (this.operandCanBeCommitted()) {
+            this.commitOperandEdit();
+        } else {
+            this.cancelOperandEdit();
         }
     }
 
@@ -264,6 +293,16 @@ export class IgxAdvancedFilteringDialogComponent {
 
         expressionItem.inEditMode = true;
         this.editedExpression = expressionItem;
+
+        requestAnimationFrame(() => {
+            if (!this.selectedColumn) {
+                this.columnSelect.input.nativeElement.focus();
+            } else if (this.selectedColumn.filters.condition(this.selectedCondition).isUnary) {
+                this.conditionSelect.input.nativeElement.focus();
+            } else {
+                this.searchValueInput.nativeElement.focus();
+            }
+        });
     }
 
     private clearSelection() {
@@ -282,6 +321,7 @@ export class IgxAdvancedFilteringDialogComponent {
     }
 
     private toggleExpression(expressionItem: ExpressionOperandItem) {
+        this.exitOperandEdit();
         expressionItem.selected = !expressionItem.selected;
 
         if (expressionItem.selected) {
@@ -374,6 +414,7 @@ export class IgxAdvancedFilteringDialogComponent {
     }
 
     private toggleGroup(groupItem: ExpressionGroupItem) {
+        this.exitOperandEdit();
         groupItem.selected = !groupItem.selected;
 
         if (groupItem.selected) {
@@ -495,6 +536,11 @@ export class IgxAdvancedFilteringDialogComponent {
     }
 
     public onClearButtonClick() {
+        this.cancelOperandAdd();
+        this.cancelOperandEdit();
+        this.selectedExpressions = [];
+        this.selectedGroups = [];
+        this.currentGroup = null;
         this.rootGroup = null;
         this.grid.crossFieldFilteringExpressionsTree = null;
     }
@@ -506,6 +552,7 @@ export class IgxAdvancedFilteringDialogComponent {
     }
 
     public onApplyButtonClick() {
+        this.exitOperandEdit();
         this.grid.crossFieldFilteringExpressionsTree = this.createExpressionsTreeFromGroupItem(this.rootGroup);
         this.closeDialog();
     }
