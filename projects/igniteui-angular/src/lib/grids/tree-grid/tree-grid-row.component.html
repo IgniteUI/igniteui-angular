@@ -1,5 +1,5 @@
 <ng-container *ngIf="rowDraggable">
-    <div [class]="resolveDragIndicatorClasses" [igxRowDrag]="this">
+    <div [class]="resolveDragIndicatorClasses" [igxRowDrag]="this" (click)="$event.stopPropagation()">
         <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : this.grid.dragIndicatorIconBase"></ng-container>
     </div>
 </ng-container>
