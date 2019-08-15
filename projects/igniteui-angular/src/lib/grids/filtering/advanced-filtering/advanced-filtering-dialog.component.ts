@@ -181,6 +181,11 @@ export class IgxAdvancedFilteringDialogComponent {
     public cancelOperandEdit() {
         if (this.editedExpression) {
             this.editedExpression.inEditMode = false;
+
+            if (!this.editedExpression.expression.fieldName) {
+                this.deleteItem(this.editedExpression);
+            }
+
             this.editedExpression = null;
         }
     }
