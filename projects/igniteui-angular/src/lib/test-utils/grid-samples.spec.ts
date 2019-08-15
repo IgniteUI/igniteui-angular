@@ -654,7 +654,7 @@ export class GridIDNameJobTitleComponent extends PagingComponent {
 export class MovableColumnsComponent extends BasicGridComponent {
     data = SampleTestData.personIDNameRegionData();
     autoGenerate = false;
-    rowSelection = 'multiple';
+    rowSelection = 'none';
     isFilterable = false;
     isSortable = false;
     isResizable = false;
