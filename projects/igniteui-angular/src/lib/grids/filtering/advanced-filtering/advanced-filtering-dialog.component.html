@@ -163,39 +163,21 @@
 
         <div igxToggle
              style="display: flex; flex-flow: column; width: 200px; background-color: black; margin-left: 20px">
-            <ng-container *ngIf="selectedGroups.length === 1">
-                <igx-buttongroup #logicOperatorButtonGroup
-                                 [displayDensity]="displayDensity"
-                                 [multiSelection]="false">
-                    <button igxButton [displayDensity]="displayDensity"
-                            #andButton
-                            (keydown)="onLogicOperatorKeyDown(0)"
-                            tabindex="0"
-                            [selected]="selectedGroups[0].operator === 0"
-                            type="button"
-                            (click)="onLogicOperatorButtonClicked(0)">
-                        {{ grid.resourceStrings.igx_grid_filter_operator_and }}
-                    </button>
-                
-                    <button igxButton [displayDensity]="displayDensity"
-                            #orButton
-                            tabindex="0"
-                            (keydown)="onLogicOperatorKeyDown(1)"
-                            [selected]="selectedGroups[0].operator === 1"
-                            type="button"
-                            (click)="onLogicOperatorButtonClicked($event, 1)">
-                        {{ grid.resourceStrings.igx_grid_filter_operator_or }}
-                    </button>
+            <ng-container *ngIf="contextualGroup">
+                <igx-buttongroup [displayDensity]="displayDensity"
+                                 [multiSelection]="false"
+                                 [values]="filteringLogics"
+                                 (onSelect)="selectFilteringLogic($event)">
                 </igx-buttongroup>
 
-                <button igxButton="outlined" [displayDensity]="displayDensity" [disabled]="!selectedGroups[0].parent" (click)="ungroup()">
+                <button igxButton="outlined" [displayDensity]="displayDensity" [disabled]="!contextualGroup.parent" (click)="ungroup()">
                     Ungroup
                 </button>
-                <button igxButton="outlined" [displayDensity]="displayDensity" [disabled]="!selectedGroups[0].parent" (click)="deleteGroup()">
+                <button igxButton="outlined" [displayDensity]="displayDensity" (click)="deleteGroup()">
                     Delete
                 </button>
             </ng-container>
-            <ng-container *ngIf="selectedGroups.length !== 1 && selectedExpressions.length > 1">
+            <ng-container *ngIf="!contextualGroup">
                 <button igxButton="outlined" [displayDensity]="displayDensity" (click)="createAndGroup()">
                     Create "And" Group
                 </button>

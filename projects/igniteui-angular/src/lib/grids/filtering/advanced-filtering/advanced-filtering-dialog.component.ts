@@ -1,16 +1,19 @@
-import { Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef } from '@angular/core';
-import { PositionSettings, VerticalAlignment, HorizontalAlignment, OverlaySettings, Point } from '../../../services/overlay/utilities';
+import {
+    Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, AfterViewInit, OnDestroy
+} from '@angular/core';
+import { VerticalAlignment, HorizontalAlignment, Point } from '../../../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../../../services/overlay/position/connected-positioning-strategy';
 import { IgxFilteringService } from '../grid-filtering.service';
 import { IgxOverlayService } from '../../../services/overlay/overlay';
-import { DisplayDensity } from '../../../core/displayDensity';
-import { IgxToggleDirective, CloseScrollStrategy } from 'igniteui-angular';
+import { IgxToggleDirective, CloseScrollStrategy, IButtonGroupEventArgs } from 'igniteui-angular';
 import { IgxGridBaseComponent, IgxColumnComponent } from '../../grid';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { FilteringLogic, IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { IgxStringFilteringOperand } from '../../../data-operations/filtering-condition';
 import { IgxChipComponent } from '../../../chips';
 import { IgxSelectComponent } from '../../../select';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 class ExpressionItem {
     constructor(parent?: ExpressionGroupItem) {
@@ -46,7 +49,7 @@ class ExpressionOperandItem extends ExpressionItem {
     selector: 'igx-advanced-filtering-dialog',
     templateUrl: './advanced-filtering-dialog.component.html'
 })
-export class IgxAdvancedFilteringDialogComponent {
+export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDestroy {
     @Input()
     public filteringService: IgxFilteringService;
 
@@ -67,6 +70,10 @@ export class IgxAdvancedFilteringDialogComponent {
     public editedExpression: ExpressionOperandItem;
 
     public addModeExpression: ExpressionOperandItem;
+
+    public contextualGroup: ExpressionGroupItem;
+
+    public filteringLogics;
 
     public selectedCondition: string;
     public searchValue: string;
@@ -97,12 +104,24 @@ export class IgxAdvancedFilteringDialogComponent {
     @ViewChildren(IgxChipComponent)
     public chips: QueryList<IgxChipComponent>;
 
+    private destroy$ = new Subject<any>();
     private _selectedColumn: IgxColumnComponent;
     private _clickTimer;
     private _dblClickDelay = 200;
     private _preventChipClick = false;
 
     constructor(public cdr: ChangeDetectorRef) { }
+
+    public ngAfterViewInit(): void {
+        this.contextMenuToggle.onClosed.pipe(takeUntil(this.destroy$)).subscribe((args) => {
+            this.contextualGroup = null;
+        });
+    }
+
+    public ngOnDestroy(): void {
+        this.destroy$.next(true);
+        this.destroy$.complete();
+    }
 
     public get displayDensity() {
         return this.grid.displayDensity;
@@ -271,7 +290,7 @@ export class IgxAdvancedFilteringDialogComponent {
     public onChipClick(expressionItem: ExpressionOperandItem) {
         this._clickTimer = setTimeout(() => {
             if (!this._preventChipClick) {
-                this.toggleExpression(expressionItem);
+                this.onToggleExpression(expressionItem);
             }
             this._preventChipClick = false;
         }, this._dblClickDelay);
@@ -311,6 +330,11 @@ export class IgxAdvancedFilteringDialogComponent {
     }
 
     private clearSelection() {
+        for (const group of this.selectedGroups) {
+            group.selected = false;
+        }
+        this.selectedGroups = [];
+
         for (const expr of this.selectedExpressions) {
             expr.selected = false;
         }
@@ -325,8 +349,14 @@ export class IgxAdvancedFilteringDialogComponent {
         this.toggleExpression(expressionItem);
     }
 
-    private toggleExpression(expressionItem: ExpressionOperandItem) {
+    private onToggleExpression(expressionItem: ExpressionOperandItem) {
         this.exitOperandEdit();
+        this.toggleExpression(expressionItem);
+
+        this.toggleContextMenu();
+    }
+
+    private toggleExpression(expressionItem: ExpressionOperandItem) {
         expressionItem.selected = !expressionItem.selected;
 
         if (expressionItem.selected) {
@@ -334,13 +364,29 @@ export class IgxAdvancedFilteringDialogComponent {
         } else {
             const index = this.selectedExpressions.indexOf(expressionItem);
             this.selectedExpressions.splice(index, 1);
+            this.deselectParentRecursive(expressionItem);
         }
-
-        this.toggleContextMenu();
     }
 
     private toggleContextMenu() {
-        if (this.selectedExpressions.length > 1) {
+        const contextualGroup = this.findSingleSelectedGroup();
+
+        if (contextualGroup || this.selectedExpressions.length > 1) {
+            this.contextualGroup = contextualGroup;
+
+            if (contextualGroup) {
+                this.filteringLogics = [
+                    {
+                        label: this.grid.resourceStrings.igx_grid_filter_operator_and,
+                        selected: contextualGroup.operator === FilteringLogic.And
+                    },
+                    {
+                        label: this.grid.resourceStrings.igx_grid_filter_operator_or,
+                        selected: contextualGroup.operator === FilteringLogic.Or
+                    }
+                ];
+            }
+
             setTimeout(() => {
                 const chips = this.chips.filter(c => this.selectedExpressions.includes(c.data));
                 const minTop = chips.reduce((t, c) =>
@@ -350,14 +396,38 @@ export class IgxAdvancedFilteringDialogComponent {
                 this._overlaySettings.positionStrategy.settings.target = new Point(maxRight, minTop);
 
                 if (this.contextMenuToggle.collapsed) {
-                        this.contextMenuToggle.open(this._overlaySettings);
+                    this.contextMenuToggle.open(this._overlaySettings);
                 } else {
-                        this.contextMenuToggle.reposition();
+                    this.contextMenuToggle.reposition();
                 }
             }, 200);
         } else {
             this.contextMenuToggle.close();
         }
+    }
+
+    private findSingleSelectedGroup(): ExpressionGroupItem {
+        for (const group of this.selectedGroups) {
+            const containsAllSelectedExpressions = this.selectedExpressions.every(op => this.isInsideGroup(op, group));
+
+            if (containsAllSelectedExpressions) {
+                return group;
+            }
+        }
+
+        return null;
+    }
+
+    private isInsideGroup(item: ExpressionItem, group: ExpressionGroupItem): boolean {
+        if (!item) {
+            return false;
+        }
+
+        if (item.parent === group) {
+            return true;
+        }
+
+        return this.isInsideGroup(item.parent, group);
     }
 
     private deleteItem(expressionItem: ExpressionItem) {
@@ -420,45 +490,51 @@ export class IgxAdvancedFilteringDialogComponent {
 
     private toggleGroup(groupItem: ExpressionGroupItem) {
         this.exitOperandEdit();
-        groupItem.selected = !groupItem.selected;
-
-        if (groupItem.selected) {
-            this.selectedGroups.push(groupItem);
-        } else {
-            const index = this.selectedGroups.indexOf(groupItem);
-            this.selectedGroups.splice(index, 1);
+        this.toggleGroupRecursive(groupItem, !groupItem.selected);
+        if (!groupItem.selected) {
+            this.deselectParentRecursive(groupItem);
         }
-
-        this.clearSelection();
-
-        for (const group of this.selectedGroups) {
-            this.selectGroupRecursive(group);
-        }
-
         this.toggleContextMenu();
     }
 
-    private selectGroupRecursive(group: ExpressionGroupItem) {
-        for (const expr of group.children) {
-            if (expr instanceof ExpressionGroupItem) {
-                if (!expr.selected) {
-                    expr.selected = true;
-                }
-                if (!this.selectedGroups.includes(expr)) {
-                    this.selectedGroups.push(expr);
-                }
-                this.selectGroupRecursive(expr);
+    private toggleGroupRecursive(groupItem: ExpressionGroupItem, selected: boolean) {
+        if (groupItem.selected !== selected) {
+            groupItem.selected = selected;
+
+            if (groupItem.selected) {
+                this.selectedGroups.push(groupItem);
             } else {
-                const operandItem = expr as ExpressionOperandItem;
-                if (!operandItem.selected) {
-                    this.toggleExpression(operandItem);
+                const index = this.selectedGroups.indexOf(groupItem);
+                this.selectedGroups.splice(index, 1);
+            }
+        }
+
+        for (const expr of groupItem.children) {
+            if (expr instanceof ExpressionGroupItem) {
+                this.toggleGroupRecursive(expr, selected);
+            } else {
+                const operandExpression = expr as ExpressionOperandItem;
+                if (operandExpression.selected !== selected) {
+                    this.toggleExpression(operandExpression);
                 }
             }
         }
     }
 
+    private deselectParentRecursive(expressionItem: ExpressionItem) {
+        const parent = expressionItem.parent;
+        if (parent) {
+            if (parent.selected) {
+                parent.selected = false;
+                const index = this.selectedGroups.indexOf(parent);
+                this.selectedGroups.splice(index, 1);
+            }
+            this.deselectParentRecursive(parent);
+        }
+    }
+
     public ungroup() {
-        const selectedGroup = this.selectedGroups[0];
+        const selectedGroup = this.contextualGroup;
         const parent = selectedGroup.parent;
         if (parent) {
             const index = parent.children.indexOf(selectedGroup);
@@ -469,25 +545,24 @@ export class IgxAdvancedFilteringDialogComponent {
             }
         }
 
-        this.selectedGroups = [];
         this.clearSelection();
-        this.toggleContextMenu();
     }
 
     public deleteGroup() {
-        const selectedGroup = this.selectedGroups[0];
+        const selectedGroup = this.contextualGroup;
         const parent = selectedGroup.parent;
         if (parent) {
             const index = parent.children.indexOf(selectedGroup);
             parent.children.splice(index, 1);
+        } else {
+            this.rootGroup = null;
         }
-        this.selectedGroups = [];
+
         this.clearSelection();
-        this.toggleContextMenu();
     }
 
-    public onLogicOperatorButtonClicked(operator: FilteringLogic) {
-        this.selectedGroups[0].operator = operator;
+    public selectFilteringLogic(event: IButtonGroupEventArgs) {
+        this.contextualGroup.operator = event.index as FilteringLogic;
     }
 
     public initialize(filteringService: IgxFilteringService, overlayService: IgxOverlayService,
