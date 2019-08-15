@@ -107,6 +107,7 @@ import { GridMRLConfigSampleComponent } from './grid-multi-row-layout-config/gri
 import { GridMRLCustomNavigationSampleComponent } from './grid-mrl-custom-navigation/grid-mrl-custom-navigation';
 import { InputGroupFluentSampleComponent } from './input-group/input-group-fluent.sample';
 import { GridClipboardSampleComponent } from './grid-clipboard/grid-clipboard.sample';
+import { GridEsfLoadOnDemandComponent } from './grid-esf-load-on-demand/grid-esf-load-on-demand.component';
 
 
 
@@ -206,7 +207,8 @@ const components = [
     GridSearchBoxComponent,
     GridSearchComponent,
     GridFilterTemplateSampleComponent,
-    GridClipboardSampleComponent
+    GridClipboardSampleComponent,
+    GridEsfLoadOnDemandComponent
 ];
 
 @NgModule({

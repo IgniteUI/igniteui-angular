@@ -11,8 +11,8 @@
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0"
                 [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left"
                 class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
-            <div class="igx-grid__hierarchical-expander igx-grid__hierarchical-expander--header"
-                #headerHierarchyExpander [hidden]='!hasExpandableChildren || !hasVisibleColumns' [ngClass]="{
+                <div #headerHierarchyExpander [hidden]='!hasExpandableChildren || !hasVisibleColumns' [ngClass]="{
+                    'igx-grid__hierarchical-expander igx-grid__hierarchical-expander--header': hasExpandableChildren,
                     'igx-grid__hierarchical-expander--push': filteringService.isFilterRowVisible,
                     'igx-grid__hierarchical-expander--no-border': rowSelectable || rowDraggable
                 }">

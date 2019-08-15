@@ -16,6 +16,12 @@
         display: block;
     }
 
+    %igx-excel-filter__loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
     %grid-excel-icon {
         cursor: pointer;
 

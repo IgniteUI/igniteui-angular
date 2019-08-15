@@ -1166,7 +1166,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         const viewPortY = pageY - window.pageYOffset;
         if (document['msElementsFromPoint']) {
             // Edge and IE special snowflakes
-            return document['msElementsFromPoint'](viewPortX, viewPortY);
+            const elements = document['msElementsFromPoint'](viewPortX, viewPortY);
+            return elements === null ? [] : elements;
         } else {
             // Other browsers like Chrome, Firefox, Opera
             return document.elementsFromPoint(viewPortX, viewPortY);

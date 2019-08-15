@@ -52,28 +52,28 @@ export class FilterListItem {
 }
 
 @Directive({
-    selector: '[igxExcelStyleSortingTemplate]'
+    selector: '[igxExcelStyleSorting]'
 })
 export class IgxExcelStyleSortingTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
-    selector: '[igxExcelStyleMovingTemplate]'
+    selector: '[igxExcelStyleMoving]'
 })
 export class IgxExcelStyleMovingTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
-    selector: '[igxExcelStyleHidingTemplate]'
+    selector: '[igxExcelStyleHiding]'
 })
 export class IgxExcelStyleHidingTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
-    selector: '[igxExcelStylePinningTemplate]'
+    selector: '[igxExcelStylePinning]'
 })
 export class IgxExcelStylePinningTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
@@ -343,28 +343,56 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
     }
 
     public populateColumnData() {
-        let data = this.column.gridAPI.get_all_data(this.grid.id);
-        const gridExpressionsTree: IFilteringExpressionsTree = this.grid.filteringExpressionsTree;
-        const expressionsTree = new FilteringExpressionsTree(gridExpressionsTree.operator, gridExpressionsTree.fieldName);
-
-        for (const operand of gridExpressionsTree.filteringOperands) {
-            if (operand instanceof FilteringExpressionsTree) {
-                const columnExprTree = operand as FilteringExpressionsTree;
-                if (columnExprTree.fieldName === this.column.field) {
-                    break;
-                }
-            }
-            expressionsTree.filteringOperands.push(operand);
+        if (this.grid.uniqueColumnValuesStrategy) {
+            this.renderColumnValuesRemotely();
+        } else {
+            this.renderColumnValuesFromData();
         }
+    }
+
+    private renderColumnValuesRemotely() {
+        this.excelStyleSearch.isLoading = true;
+        const expressionsTree: FilteringExpressionsTree = this.getColumnFilterExpressionsTree();
+
+        this.grid.uniqueColumnValuesStrategy(this.column, expressionsTree, (colVals: any[]) => {
+            const columnValues = (this.column.dataType === DataType.Date) ?
+                colVals.map(val => val ? val.toDateString() : val) : colVals;
+
+            this.renderValues(columnValues);
+            this.excelStyleSearch.isLoading = false;
+            this.excelStyleSearch.refreshSize();
+        });
+    }
+
+    public renderColumnValuesFromData() {
+        let data = this.column.gridAPI.get_all_data(this.grid.id);
+        const expressionsTree = this.getColumnFilterExpressionsTree();
 
         if (expressionsTree.filteringOperands.length) {
             const state = { expressionsTree: expressionsTree };
             data = DataUtil.filter(cloneArray(data), state);
         }
 
-        if (this.column.dataType === DataType.Date) {
-            this.uniqueValues = Array.from(new Set(data.map(record =>
-                record[this.column.field] ? record[this.column.field].toDateString() : record[this.column.field])));
+        const columnField = this.column.field;
+        const columnValues = (this.column.dataType === DataType.Date) ?
+            data.map(record => record[columnField] ? record[columnField].toDateString() : record[columnField]) :
+            data.map(record => record[columnField]);
+
+        this.renderValues(columnValues);
+    }
+
+    private renderValues(columnValues: any[]) {
+        this.generateUniqueValues(columnValues);
+        this.generateFilterValues(this.column.dataType === DataType.Date);
+        this.generateListData();
+    }
+
+    private generateUniqueValues(columnValues: any[]) {
+        this.uniqueValues = Array.from(new Set(columnValues));
+    }
+
+    private generateFilterValues(isDateColumn: boolean = false) {
+        if (isDateColumn) {
             this.filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
                 if (e.expression.condition.name === 'in') {
                     return [ ...arr, ...Array.from((e.expression.searchVal as Set<any>).values()).map(v =>
@@ -373,7 +401,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
                 return [ ...arr, ...[e.expression.searchVal ? e.expression.searchVal.toDateString() : e.expression.searchVal] ];
             }, []));
         } else {
-            this.uniqueValues = Array.from(new Set(data.map(record => record[this.column.field])));
             this.filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
                 if (e.expression.condition.name === 'in') {
                     return [ ...arr, ...Array.from((e.expression.searchVal as Set<any>).values()) ];
@@ -381,6 +408,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
                 return [ ...arr, ...[e.expression.searchVal] ];
             }, []));
         }
+    }
+
+    private generateListData() {
         this.listData = new Array<FilterListItem>();
 
         const shouldUpdateSelection = this.areExpressionsSelectable() && this.areExpressionsValuesInTheList();
@@ -403,7 +433,26 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
 
         this.addSelectAllItem();
 
-        this.cdr.detectChanges();
+        if (!(this.cdr as any).destroyed) {
+            this.cdr.detectChanges();
+        }
+    }
+
+    private getColumnFilterExpressionsTree() {
+        const gridExpressionsTree: IFilteringExpressionsTree = this.grid.filteringExpressionsTree;
+        const expressionsTree = new FilteringExpressionsTree(gridExpressionsTree.operator, gridExpressionsTree.fieldName);
+
+        for (const operand of gridExpressionsTree.filteringOperands) {
+            if (operand instanceof FilteringExpressionsTree) {
+                const columnExprTree = operand as FilteringExpressionsTree;
+                if (columnExprTree.fieldName === this.column.field) {
+                    break;
+                }
+            }
+            expressionsTree.filteringOperands.push(operand);
+        }
+
+        return expressionsTree;
     }
 
     private addBooleanItems() {
