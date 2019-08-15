@@ -240,7 +240,7 @@ describe('Navigation Drawer', () => {
             fixture.detectChanges();
             asideElem = fixture.debugElement.query(By.css('.igx-nav-drawer__aside'));
 
-            expect(asideElem.styles['width']).toEqual('60px');
+            expect(asideElem.styles['width']).toEqual('68px');
 
             fixture.componentInstance.miniView = false;
             fixture.detectChanges();
@@ -441,9 +441,10 @@ describe('Navigation Drawer', () => {
             fixture = TestBed.createComponent(TestComponentDIComponent);
             fixture.detectChanges();
 
-            fixture.componentInstance.drawerMiniWidth = 60;
+            fixture.componentInstance.drawerMiniWidth = 68;
             fixture.detectChanges();
-            expect(fixture.componentInstance.viewChild.maxEdgeZone).toBe(66);
+            expect(fixture.componentInstance.viewChild.maxEdgeZone)
+                .toBe(fixture.componentInstance.drawerMiniWidth * 1.1);
 
             fixture.componentInstance.drawerMiniWidth = 80;
             fixture.detectChanges();
