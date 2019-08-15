@@ -80,6 +80,7 @@ import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { IgxGridSelectionService, GridSelectionRange, IgxGridCRUDService, IgxRow, IgxCell } from '../core/grid-selection';
 import { DragScrollDirection } from './drag-select.directive';
 import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
+import { IgxExcelStyleLoadingValuesTemplateDirective } from './filtering/excel-style/excel-style-search.component';
 import {
     IgxExcelStyleSortingTemplateDirective,
     IgxExcelStylePinningTemplateDirective,
@@ -1062,6 +1063,27 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
+     * An @Input property that provides a callback for loading unique column values on demand.
+     * If this property is provided, the unique values it generates will be used by the Excel Style Filtering.
+     * ```html
+     * <igx-grid [data]="localData" [filterMode]="'excelStyleFilter'" [uniqueColumnValuesStrategy]="columnValuesStrategy"></igx-grid>
+     * ```
+     *
+     * ```typescript
+     * public columnValuesStrategy = (column: IgxColumnComponent,
+     *                               filteringExpressionsTree: IFilteringExpressionsTree,
+     *                               done: (uniqueValues: any[]) => void) => {
+     *     this.dataService.getColumnData(column, filteringExpressionsTree, uniqueValues => done(uniqueValues));
+     * }
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    @Input()
+    public uniqueColumnValuesStrategy: (column: IgxColumnComponent,
+                                        filteringExpressionsTree: IFilteringExpressionsTree,
+                                        done: (values: any[]) => void) => void;
+
+    /**
      * Emitted when `IgxGridCellComponent` is clicked. Returns the `IgxGridCellComponent`.
      * ```html
      * <igx-grid #grid (onCellClick)="onCellClick($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
@@ -1608,27 +1630,32 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      *@hidden
      */
-    @ContentChild(IgxExcelStyleSortingTemplateDirective, { read: IgxExcelStyleSortingTemplateDirective, static: true })
+    @ContentChild(IgxExcelStyleSortingTemplateDirective, { read: IgxExcelStyleSortingTemplateDirective, static: false })
     public excelStyleSortingTemplateDirective: IgxExcelStyleSortingTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxExcelStyleMovingTemplateDirective, { read: IgxExcelStyleMovingTemplateDirective, static: true })
+    @ContentChild(IgxExcelStyleMovingTemplateDirective, { read: IgxExcelStyleMovingTemplateDirective, static: false })
     public excelStyleMovingTemplateDirective: IgxExcelStyleMovingTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxExcelStyleHidingTemplateDirective, { read: IgxExcelStyleHidingTemplateDirective, static: true })
+    @ContentChild(IgxExcelStyleHidingTemplateDirective, { read: IgxExcelStyleHidingTemplateDirective, static: false })
     public excelStyleHidingTemplateDirective: IgxExcelStyleHidingTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxExcelStylePinningTemplateDirective, { read: IgxExcelStylePinningTemplateDirective, static: true })
+    @ContentChild(IgxExcelStylePinningTemplateDirective, { read: IgxExcelStylePinningTemplateDirective, static: false })
     public excelStylePinningTemplateDirective: IgxExcelStylePinningTemplateDirective;
 
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxExcelStyleLoadingValuesTemplateDirective, { read: IgxExcelStyleLoadingValuesTemplateDirective, static: true })
+    public excelStyleLoadingValuesTemplateDirective: IgxExcelStyleLoadingValuesTemplateDirective;
 
     /**
      * @hidden
@@ -1911,7 +1938,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ContentChild(IgxRowEditTemplateDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxRowEditTemplateDirective, { read: TemplateRef, static: false })
     public rowEditCustom: TemplateRef<any>;
 
     /** @hidden */
@@ -1919,10 +1946,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return this.rowEditCustom ? this.rowEditCustom : this.defaultRowEditTemplate;
     }
     /** @hidden */
-    @ContentChild(IgxRowEditTextDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxRowEditTextDirective, { read: TemplateRef, static: false })
     public rowEditText: TemplateRef<any>;
     /** @hidden */
-    @ContentChild(IgxRowEditActionsDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxRowEditActionsDirective, { read: TemplateRef, static: false })
     public rowEditActions: TemplateRef<any>;
 
     /**
