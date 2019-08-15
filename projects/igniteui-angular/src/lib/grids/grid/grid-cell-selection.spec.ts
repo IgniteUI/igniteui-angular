@@ -2609,7 +2609,7 @@ describe('IgxGrid - Cell selection', () => {
             grid.selectRows([row.rowID]);
             fix.detectChanges();
 
-            expect(row.select).toBeTruthy();
+            expect(row.selected).toBeTruthy();
             HelperUtils.verifySelectedRange(grid, 2, 4, 0, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
@@ -2634,7 +2634,7 @@ describe('IgxGrid - Cell selection', () => {
             UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true, false, false);
             fix.detectChanges();
 
-            expect(grid.getRowByIndex(2).select).toBeTruthy();
+            expect(grid.getRowByIndex(2).selected).toBeTruthy();
             HelperUtils.verifySelectedRange(grid, 2, 4, 0, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
@@ -2659,7 +2659,7 @@ describe('IgxGrid - Cell selection', () => {
             UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true, false, false);
             fix.detectChanges();
 
-            expect(grid.getRowByIndex(2).select).toBeTruthy();
+            expect(grid.getRowByIndex(2).selected).toBeTruthy();
             HelperUtils.verifySelectedRange(grid, 2, 4, 0, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
@@ -2833,7 +2833,7 @@ describe('IgxGrid - Cell selection', () => {
         });
     });
 
-    describe('GridSelectionMode none', () => {
+    describe('None selection', () => {
         let fix;
         let grid: IgxGridComponent;
         let detect;
@@ -2995,7 +2995,7 @@ describe('IgxGrid - Cell selection', () => {
         });
     });
 
-    describe('GridSelectionMode single', () => {
+    describe('Single selection', () => {
         let fix;
         let grid: IgxGridComponent;
         let detect;
