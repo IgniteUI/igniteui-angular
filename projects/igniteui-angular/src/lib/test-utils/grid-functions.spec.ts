@@ -511,6 +511,14 @@ export class GridFunctions {
         applyButton.click();
     }
 
+    public static clickCancelExcelStyleCustomFiltering(fix: ComponentFixture<any>) {
+        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+        const customFilterMenu = gridNativeElement.querySelector('.igx-excel-filter__secondary');
+        const flatButtons = Array.from(customFilterMenu.querySelectorAll('.igx-button--flat'));
+        const cancelButton: any = flatButtons.find((rb: any) => rb.innerText === 'cancel');
+        cancelButton.click();
+    }
+
     public static clickAddFilterExcelStyleCustomFiltering(fix: ComponentFixture<any>) {
         const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
         const customFilterMenu = gridNativeElement.querySelector('.igx-excel-filter__secondary');
@@ -707,7 +715,9 @@ export class GridFunctions {
     public static getExcelFilteringPinContainer(fix: ComponentFixture<any>) {
         const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
         const excelMenu = gridNativeElement.querySelector('.igx-excel-filter__menu');
-        return excelMenu.querySelector('.igx-excel-filter__actions-pin');
+        const pinContainer = excelMenu.querySelector('.igx-excel-filter__actions-pin');
+        const pinContainerDisabled = excelMenu.querySelector('.igx-excel-filter__actions-pin--disabled');
+        return pinContainer ? pinContainer : pinContainerDisabled;
     }
 
     public static getExcelFilteringUnpinContainer(fix: ComponentFixture<any>) {
@@ -732,6 +742,12 @@ export class GridFunctions {
         const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
         const excelMenu = gridNativeElement.querySelector('.igx-excel-filter__menu');
         return excelMenu.querySelector('igx-excel-style-column-moving');
+    }
+
+    public static getExcelFilteringLoadingIndicator(fix: ComponentFixture<any>) {
+        const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+        const loadingIndicator = searchComponent.querySelector('.igx-excel-filter__loading');
+        return loadingIndicator;
     }
 
     public static getColumnCells(fix, columnKey) {

@@ -7,11 +7,11 @@
     <igx-chips-area (onReorder)="chipsOrderChanged($event)" (onMoveEnd)="chipsMovingEnded()">
         <ng-container *ngFor="let expr of chipsGoupingExpressions; let last = last;">
             <igx-chip [id]="expr.fieldName" [attr.title]="getGroupByChipTitle(expr)"
-                [removable]="getColumnByName(expr.fieldName).groupable"
-                [draggable]="getColumnByName(expr.fieldName).groupable" [displayDensity]="displayDensity"
+                [removable]="getColumnGroupable(expr.fieldName)"
+                [draggable]="getColumnGroupable(expr.fieldName)" [displayDensity]="displayDensity"
                 (onKeyDown)="onChipKeyDown($event)" (onRemove)="onChipRemoved($event)"
-                (onClick)="getColumnByName(expr.fieldName).groupable ? onChipClicked($event): null"
-                [disabled]='!getColumnByName(expr.fieldName).groupable'>
+                (onClick)="getColumnGroupable(expr.fieldName) ? onChipClicked($event): null"
+                [disabled]='!getColumnGroupable(expr.fieldName)'>
                 <span>{{ getGroupByChipTitle(expr) }}</span>
                 <igx-icon igxSuffix>{{ expr.dir == 1 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
             </igx-chip>
@@ -96,7 +96,7 @@
 <div igxGridBody (keydown.control.c)="copyHandlerIE()" (copy)="copyHandler($event)" class="igx-grid__tbody">
     <div class="igx-grid__tbody-content" role="rowgroup" (onDragStop)="selectionService.dragMode = $event"
         (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
-        [style.height.px]='calcHeight' [style.width.px]='calcWidth + 1' #tbody (scroll)='scrollHandler($event)'
+        [style.height.px]='calcHeight' [style.width.px]='calcWidth ? calcWidth + 1 : null' #tbody (scroll)='scrollHandler($event)'
         (wheel)="wheelHandler()">
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
             [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left"
@@ -106,6 +106,7 @@
             class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
         | gridTransaction:id:pipeTrigger
+        | visibleColumns:hasVisibleColumns
         | gridFiltering:filteringExpressionsTree:id:pipeTrigger
         | gridSort:sortingExpressions:id:pipeTrigger
         | gridGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger
@@ -116,7 +117,7 @@
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
             #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
             <ng-template #record_template>
-                <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
+                <igx-grid-row  [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
                 </igx-grid-row>
             </ng-template>
             <ng-template #group_template>
@@ -156,7 +157,7 @@
         [style.width.px]="scrollWidth"></div>
 </div>
 
-<div class="igx-grid__scroll" [style.height]="'18px'" #scr [hidden]="unpinnedWidth - totalWidth >= 0">
+<div class="igx-grid__scroll" [style.height]="'18px'" #scr [hidden]="isHorizontalScrollHidden">
     <div class="igx-grid__scroll-start" [style.width.px]='pinnedWidth' [hidden]="pinnedWidth === 0"></div>
     <div class="igx-grid__scroll-main" [style.width.px]='unpinnedWidth'>
         <ng-template igxGridFor [igxGridForOf]='[]' #scrollContainer>
@@ -174,8 +175,7 @@
 </div>
 
 <ng-template #defaultPaginator>
-    <igx-paginator [displayDensity]="displayDensity" [(page)]="page"
-        [totalRecords]="filteredData ? filteredData.length : totalRecords" [(perPage)]="perPage">
+    <igx-paginator [displayDensity]="displayDensity" [(page)]="page" [totalRecords]="totalRecords" [(perPage)]="perPage">
     </igx-paginator>
 </ng-template>
 

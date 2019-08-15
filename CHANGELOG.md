@@ -2,6 +2,41 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 8.2.0
+
+### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - `uniqueColumnValuesStrategy` input is added. This property provides a callback for loading unique column values on demand. If this property is provided, the unique values it generates will be used by the Excel Style Filtering (instead of using the unique values from the data that is bound to the grid).
+    - `igxExcelStyleLoading` directive is added, which can be used to provide a custom loading template for the Excel Style Filtering. If this property is not provided, a default loading template will be used instead.
+### General
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Breaking Change** `igxExcelStyleSortingTemplate` directive is renamed to `igxExcelStyleSorting`.
+    - **Breaking Change** `igxExcelStyleMovingTemplate` directive is renamed to `igxExcelStyleMoving`.
+    - **Breaking Change** `igxExcelStyleHidingTemplate` directive is renamed to `igxExcelStyleHiding`.
+    - **Breaking Change** `igxExcelStylePinningTemplate` directive is renamed to `igxExcelStylePinning`.
+
+## 8.1.3
+- `IgxCombo`
+    - Combo `onSelectionChange` events now emits the item(s) that were added to or removed from the collection:
+    ```html
+    <igx-combo (onSelectionChange)="handleChange($event)">
+    ```
+    ```typescript
+        export class Example {
+            ...
+            handleChange(event: IComboSelectionChangeEventArgs) {
+            console.log("Items added: ", [...event.added]); // the items added to the selection in this change
+            console.log("Items removed: ", [...event.removed]); // the items removed from the selection in this change
+            }
+        }
+    ```
+
+## 8.1.2
+
+### New Features
+- `IgxDatePicker`
+    - `valueChange` event is added.
+
 ## 8.1.0
 
 ### New Features
@@ -15,7 +50,7 @@ All notable changes for each version of this project will be documented in this 
     - **Behavioral Change** - paging now includes the group rows in the page size. You may find more information about the change in the [GroupBy Specification](https://github.com/IgniteUI/igniteui-angular/wiki/Group-By-Specification)
     - `IgxColumnGroup`
         - Re-templating the column group header is now possible using the `headerTemplate` input property or the `igxHeader` directive.
-    - `igx-grid-footer` 
+    - `igx-grid-footer`
         - You can use this to insert a custom footer in the grids.
          ```html
         <igx-grid>
@@ -26,6 +61,14 @@ All notable changes for each version of this project will be documented in this 
         ```
 - `igx-paginator`
     - Replaces the current paginator in all grids. Can be used as a standalone component.
+      <br/>Have in mind that if you have set the `paginationTemplate`, you may have to modify your css to display the pagination correctly. The style should be something similar to:
+      ```
+      .pagination-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+       }
+       ```
 - `IgxCombo`
     - Input `[overlaySettings]` - allows an object of type `OverlaySettings` to be passed. These custom overlay settings control how the drop-down list displays.
 - `IgxForOf` now offers usage of local variables `even`, `odd`, `first` and `last` to help with the distinction of the currently iterated element.
@@ -33,21 +76,21 @@ All notable changes for each version of this project will be documented in this 
 
 ## 8.0.2
 - `igx-list-theme` now have some new parameters for styling.
-    - $item-background-hover - Change The list item hover background 
+    - $item-background-hover - Change The list item hover background
     - $item-text-color-hover - Change The list item hover text color.
-    
+
     - $item-subtitle-color - Change The list item subtitle color.
     - $item-subtitle-color-hover - Change The list item hover subtitle color.
     - $item-subtitle-color-active - Change The active list item subtitle color.
-    
+
     - $item-action-color - Change The list item actions color.
     - $item-action-color-hover - Change The list item hover actions color.
     - $item-action-color-active - Change The active list item actions color.
-    
+
     - $item-thumbnail-color - Change The list item thumbnail color.
     - $item-thumbnail-color-hover - Change The list item hover thumbnail color.
     - $item-thumbnail-color-active - Change The active list item thumbnail color.
-    
+
 - **Behavioral Change** default min column width is changed according the grid display density property:
     - for `DisplayDensity.comfortable` defaultMinWidth is `80px`;
     - for `DisplayDensity.cosy` defaultMinWidth is `64px`;

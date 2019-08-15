@@ -531,11 +531,13 @@ describe('IgxTabs', () => {
     });
 
     describe('Tabs-only Mode With Initial Selection Set on TabItems Tests', () => {
+        let router;
         let fixture;
         let tabsComp;
         let theTabs;
 
         beforeEach(async(() => {
+            router = TestBed.get(Router);
             fixture = TestBed.createComponent(TabsTabsOnlyModeTest1Component);
             tabsComp = fixture.componentInstance.tabs;
             fixture.detectChanges();
@@ -574,6 +576,13 @@ describe('IgxTabs', () => {
 
             expect(theTabs[2].isSelected).toBe(true);
             expect(theTabs[2].nativeTabItem.nativeElement.classList.contains(tabItemSelectedCssClass)).toBe(true);
+        });
+
+        it('should hide the selection indicator when no tab item is selected', () => {
+            expect(tabsComp.selectedIndicator.nativeElement.style.visibility).toBe('visible');
+            theTabs[1].isSelected = false;
+            fixture.detectChanges();
+            expect(tabsComp.selectedIndicator.nativeElement.style.visibility).toBe('hidden');
         });
 
     });

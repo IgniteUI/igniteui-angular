@@ -469,7 +469,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     /**
      * @hidden
      */
-    @ContentChild(IgxGroupByRowTemplateDirective, { read: IgxGroupByRowTemplateDirective, static: true })
+    @ContentChild(IgxGroupByRowTemplateDirective, { read: IgxGroupByRowTemplateDirective, static: false })
     protected groupTemplate: IgxGroupByRowTemplateDirective;
 
     /**
@@ -490,7 +490,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      *  </igx-grid>
      * ```
      */
-    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef, static: false })
     public dragIndicatorIconTemplate: TemplateRef<any> = null;
 
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
@@ -902,7 +902,16 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      * @hidden
      */
     public getGroupByChipTitle(expression: IGroupingExpression): string {
-        return this.getColumnByName(expression.fieldName).header || expression.fieldName;
+        const column = this.getColumnByName(expression.fieldName);
+        return (column && column.header) || expression.fieldName;
+    }
+
+    /**
+     * @hidden
+     */
+    public getColumnGroupable(fieldName: string): boolean {
+        const column = this.getColumnByName(fieldName);
+        return column && column.groupable;
     }
 
     /**
