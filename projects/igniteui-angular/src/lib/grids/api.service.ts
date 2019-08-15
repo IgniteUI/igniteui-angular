@@ -504,12 +504,10 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         //  TODO: should we emit this when cascadeOnDelete is true for each row?!?!
         grid.onRowDeleted.emit({ data: data[index] });
 
-        //  first deselect row then delete it
-        if (grid.selectionService.isRowSelected(rowId)) {
-            grid.selectionService.deselectRow(rowId);
-        }
-
         this.deleteRowFromData(rowId, index);
+
+        if (grid.selectionService.isRowSelected(rowId)) { grid.selectionService.deselectRow(rowId); }
+        grid.selectionService.allRowsSelected = undefined;
         (grid as any)._pipeTrigger++;
         grid.cdr.markForCheck();
         // Data needs to be recalculated if transactions are in place
