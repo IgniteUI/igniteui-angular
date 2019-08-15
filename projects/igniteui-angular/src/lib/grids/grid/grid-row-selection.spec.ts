@@ -27,7 +27,7 @@ import { IgxGridRowEditingTransactionComponent } from './grid.component.spec';
 
 const DEBOUNCETIME = 30;
 
-describe('IgxGrid - Row Selection', () => {
+fdescribe('IgxGrid - Row Selection', () => {
     configureTestSuite();
 
     beforeEach(async(() => {
@@ -40,7 +40,8 @@ describe('IgxGrid - Row Selection', () => {
                 GridWithSelectionFilteringComponent,
                 SummariesComponent,
                 SelectionCancellableComponent,
-                HierarchicalGridRowSelectableIslandComponent
+                SelectionWithScrollsComponent,
+                IgxGridRowEditingTransactionComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -285,7 +286,7 @@ describe('IgxGrid - Row Selection', () => {
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
         });
 
-        it('Should select multiple rows with clicking Space on a cell', () => {
+        it('Should select multiple rows with clicking Space on a cell', (async () => {
             spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
             const firstRow = grid.getRowByIndex(0);
             const secondRow = grid.getRowByIndex(1);
@@ -293,6 +294,7 @@ describe('IgxGrid - Row Selection', () => {
 
             UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
 
             HelperUtils.verifyCellSelected(cell);
             HelperUtils.verifyRowSelected(firstRow, false);
@@ -300,6 +302,7 @@ describe('IgxGrid - Row Selection', () => {
             // Press Space key on the cell
             UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
             HelperUtils.verifyRowSelected(firstRow);
@@ -308,15 +311,16 @@ describe('IgxGrid - Row Selection', () => {
 
             UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true);
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
 
             cell = grid.getCellByColumn(1, 'ProductName');
             HelperUtils.verifyCellSelected(cell);
             HelperUtils.verifyRowSelected(firstRow);
-            HelperUtils.verifyRowSelected(secondRow, false);
 
             // Click Space on the cell
             UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
             HelperUtils.verifyRowSelected(firstRow);
@@ -325,12 +329,12 @@ describe('IgxGrid - Row Selection', () => {
             // Click again Space on the cell
             UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(3);
             HelperUtils.verifyRowSelected(firstRow);
             HelperUtils.verifyRowSelected(secondRow, false);
-        });
-
+        }));
 
         it('Should select multiple rows with Shift + Click', () => {
             spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
@@ -356,25 +360,28 @@ describe('IgxGrid - Row Selection', () => {
 
         it('Should be able to programmatically select all rows and keep the header checkbox intact,  #1298', () => {
             grid.selectAllRows();
+            grid.cdr.detectChanges();
             fix.detectChanges();
 
             HelperUtils.verifyRowsArraySelected(grid.rowList.toArray());
             HelperUtils.verifyHeaderRowCheckboxState(fix, true);
 
             grid.selectAllRows();
+            grid.cdr.detectChanges();
             fix.detectChanges();
 
             HelperUtils.verifyRowsArraySelected(grid.rowList.toArray());
             HelperUtils.verifyHeaderRowCheckboxState(fix, true);
 
             grid.deselectAllRows();
+            grid.cdr.detectChanges();
             fix.detectChanges();
 
             HelperUtils.verifyRowsArraySelected(grid.rowList.toArray(), false);
             HelperUtils.verifyHeaderRowCheckboxState(fix);
         });
 
-        it('Should be able to programmatically get a collection of all selected rows', fakeAsync(/** height/width setter rAF */() => {
+        it('Should be able to programmatically get a collection of all selected rows', () => {
             const firstRow = grid.getRowByIndex(0);
             const thirdRow = grid.getRowByIndex(2);
             const thirdRowCheckbox: HTMLElement = thirdRow.nativeElement.querySelector('.igx-checkbox__input');
@@ -388,7 +395,7 @@ describe('IgxGrid - Row Selection', () => {
 
             expect(firstRow.selected).toBeFalsy();
             expect(thirdRow.selected).toBeTruthy();
-            expect(grid.selectedRows()).toEqual(['0_2']);
+            expect(grid.selectedRows()).toEqual([3]);
 
             thirdRowCheckbox.click();
             fix.detectChanges();
@@ -396,10 +403,10 @@ describe('IgxGrid - Row Selection', () => {
             expect(firstRow.selected).toBeFalsy();
             expect(thirdRow.selected).toBeFalsy();
             expect(grid.selectedRows()).toEqual([]);
-        }));
+        });
 
         it('Should handle the deselection on a selected row properly', (async () => {
-            const firstRow = grid.getRowByKey('0_0');
+            const firstRow = grid.getRowByKey(1);
             HelperUtils.clickRowCheckbox(firstRow);
             await wait();
             fix.detectChanges();
@@ -407,17 +414,17 @@ describe('IgxGrid - Row Selection', () => {
             HelperUtils.verifyRowSelected(firstRow, true, true);
             HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
 
-            grid.deleteRow('0_0');
+            grid.deleteRow(1);
             fix.detectChanges();
 
-            expect(grid.getRowByKey('0_0')).toBeUndefined();
+            expect(grid.getRowByKey(1)).toBeUndefined();
             HelperUtils.verifyHeaderRowCheckboxState(fix);
         }));
 
         // TO DO: Update event
         it('Should be able to select/deselect rows programmatically', fakeAsync(() => {
             let rowsCollection = [];
-            const rowsToCheck = [grid.getRowByKey('0_0'), grid.getRowByKey('0_1'), grid.getRowByKey('0_2')];
+            const rowsToCheck = [grid.getRowByKey(1), grid.getRowByKey(2), grid.getRowByKey(3)];
             // spyOn(grid, 'triggerRowSelectionChange').and.callThrough();
             spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
 
@@ -426,13 +433,13 @@ describe('IgxGrid - Row Selection', () => {
             expect(rowsCollection).toEqual([]);
             HelperUtils.verifyRowsArraySelected(rowsToCheck, false);
 
-            grid.deselectRows(['0_0', '0_1', '0_2']);
+            grid.deselectRows([1, 2, 3]);
             tick();
             fix.detectChanges();
 
             expect(rowsCollection).toEqual([]);
 
-            grid.selectRows(['0_0', '0_1', '0_2'], false);
+            grid.selectRows([1, 2, 3], false);
             tick();
             fix.detectChanges();
 
@@ -441,7 +448,7 @@ describe('IgxGrid - Row Selection', () => {
             rowsCollection = grid.selectedRows();
             expect(rowsCollection.length).toEqual(3);
 
-            grid.deselectRows(['0_0', '0_1', '0_2']);
+            grid.deselectRows([1, 2, 3]);
             tick();
             fix.detectChanges();
 
@@ -450,21 +457,19 @@ describe('IgxGrid - Row Selection', () => {
             rowsCollection = grid.selectedRows();
 
             expect(rowsCollection.length).toEqual(0);
-            // expect(grid.triggerRowSelectionChange).toHaveBeenCalledTimes(3);
-            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(3);
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
         }));
 
         // TO DO: Update event
         it('Should be able to select/deselect ALL rows programmatically', fakeAsync(() => {
+            spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
             let rowsCollection = [];
-            const firstRow = grid.getRowByKey('0_0');
+            const firstRow = grid.getRowByKey(1);
 
             rowsCollection = grid.selectedRows();
 
             expect(rowsCollection).toEqual([]);
             expect(firstRow.selected).toBeFalsy();
-            // spyOn(grid, 'triggerRowSelectionChange').and.callThrough();
-            spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
 
             grid.selectAllRows();
             tick();
@@ -474,7 +479,7 @@ describe('IgxGrid - Row Selection', () => {
 
             rowsCollection = grid.selectedRows();
 
-            expect(rowsCollection.length).toEqual(500);
+            expect(rowsCollection.length).toEqual(19);
 
             grid.deselectAllRows();
             tick();
@@ -485,26 +490,25 @@ describe('IgxGrid - Row Selection', () => {
             rowsCollection = grid.selectedRows();
 
             expect(rowsCollection.length).toEqual(0);
-            // expect(grid.triggerRowSelectionChange).toHaveBeenCalledTimes(2);
-            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
         }));
 
         it('Should have persistent selection through data operations - sorting', fakeAsync(() => {
             const rowsToCheck = [grid.getRowByIndex(0), grid.getRowByIndex(1)];
             HelperUtils.verifyRowsArraySelected(rowsToCheck, false);
 
-            grid.selectRows(['0_0', '0_1'], false);
+            grid.selectRows([1, 2], false);
             tick();
             fix.detectChanges();
 
             HelperUtils.verifyRowsArraySelected(rowsToCheck, true);
 
-            grid.sort({ fieldName: 'Column1', dir: SortingDirection.Desc, ignoreCase: true });
+            grid.sort({ fieldName: 'UnitsInStock', dir: SortingDirection.Desc, ignoreCase: true });
             fix.detectChanges();
 
             HelperUtils.verifyRowsArraySelected(rowsToCheck, false);
 
-            grid.clearSort('Column1');
+            grid.clearSort('UnitsInStock');
             tick();
             fix.detectChanges();
 
@@ -543,26 +547,24 @@ describe('IgxGrid - Row Selection', () => {
         }));
 
         it('Change  RowSelection to multiple ', () => {
-            let headerCheck: HTMLElement = fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-checkbox__input');
-            let rowCheck: HTMLElement = grid.getRowByIndex(0).nativeElement.querySelector('.igx-checkbox__input');
-            expect(headerCheck).toBeDefined();
-            expect(rowCheck).toBeDefined();
+            HelperUtils.verifyHeaderRowHasCheckbox(fix, false, false);
+            HelperUtils.verifyRowHasCheckbox(grid.getRowByIndex(0).nativeElement, false, false);
 
-            grid.columns.forEach(c => c.hidden = true);
+            grid.selectRows([475]);
             fix.detectChanges();
-            headerCheck = fix.nativeElement.querySelector('.igx-checkbox__input');
-            expect(headerCheck).toBeNull();
 
-            grid.columns.forEach(c => c.hidden = false);
+            HelperUtils.verifyRowSelected(grid.getRowByIndex(0), true, false);
+
+            grid.rowSelection = GridSelectionMode.multiple;
             fix.detectChanges();
-            headerCheck = fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-checkbox__input');
-            rowCheck = grid.getRowByIndex(0).nativeElement.querySelector('.igx-checkbox__input');
-            expect(headerCheck).toBeDefined();
-            expect(rowCheck).toBeDefined();
+
+            HelperUtils.verifyHeaderAndRowCheckBoxesAlignment(fix, grid);
+            HelperUtils.verifyRowSelected(grid.getRowByIndex(0), false, false);
+            HelperUtils.verifyHeaderRowCheckboxState(fix);
+            HelperUtils.verifyHeaderRowHasCheckbox(fix);
+            HelperUtils.verifyRowHasCheckbox(grid.getRowByIndex(0).nativeElement);
+
         });
-
-
-
     });
 
     describe('Selection with primaryKey', () => {
@@ -745,32 +747,11 @@ describe('IgxGrid - Row Selection', () => {
     describe('Integration with filtering', () => {
         let fix;
         let grid;
-        let headerCheckbox: HTMLInputElement;
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(GridWithSelectionFilteringComponent);
             fix.detectChanges();
             grid = fix.componentInstance.gridSelection4;
-            headerCheckbox = fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-checkbox__input');
-        }));
-
-        it('Simple row selection', fakeAsync(/** height/width setter rAF */() => {
-            const secondRow = grid.getRowByIndex(1);
-            const targetCheckbox: HTMLElement = secondRow.nativeElement.querySelector('.igx-checkbox__input');
-
-            targetCheckbox.click();
-            fix.detectChanges();
-
-            expect(grid.getRowByIndex(1).selected).toBeTruthy();
-            spyOn(grid.onRowSelectionChange, 'emit').and.callFake((args) => {
-                args.newSelection = args.oldSelection;
-            });
-
-            targetCheckbox.click();
-            fix.detectChanges();
-
-            expect(grid.getRowByIndex(1).selected).toBeTruthy();
-            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
         }));
 
         it('Filtering and row selection', fakeAsync(() => {
@@ -778,8 +759,6 @@ describe('IgxGrid - Row Selection', () => {
 
             const secondRow = grid.getRowByIndex(1);
             expect(secondRow).toBeDefined();
-
-            const targetCheckbox: HTMLElement = secondRow.nativeElement.querySelector('.igx-checkbox__input');
             expect(secondRow.selected).toBeFalsy();
 
             let rowsCollection = [];
@@ -790,99 +769,86 @@ describe('IgxGrid - Row Selection', () => {
             grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
             fix.detectChanges();
 
-            expect(headerCheckbox.checked).toBeFalsy();
-            expect(headerCheckbox.indeterminate).toBeFalsy();
+            HelperUtils.verifyHeaderRowCheckboxState(fix);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
 
             rowsCollection = grid.selectedRows();
 
             expect(rowsCollection).toEqual([]);
-            expect(headerCheckbox.getAttribute('aria-checked')).toMatch('false');
-            expect(headerCheckbox.getAttribute('aria-label')).toMatch('Select all filtered');
+            HelperUtils.verifyHeaderRowCheckboxState(fix);
 
             grid.clearFilter('ProductName');
             fix.detectChanges();
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
-
-            targetCheckbox.click();
-            fix.detectChanges();
+            HelperUtils.clickRowCheckbox(secondRow);
+             fix.detectChanges();
 
             expect(secondRow.selected).toBeTruthy();
-            expect(headerCheckbox.checked).toBeFalsy();
-            expect(headerCheckbox.indeterminate).toBeTruthy();
+
+            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
             expect(secondRow.selected).toBeTruthy();
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
 
             grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
             fix.detectChanges();
 
-            expect(headerCheckbox.checked).toBeFalsy();
-            expect(headerCheckbox.indeterminate).toBeFalsy();
+            HelperUtils.verifyHeaderRowCheckboxState(fix);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
 
-            headerCheckbox.click();
+            HelperUtils.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
-            expect(headerCheckbox.checked).toBeTruthy();
-            expect(headerCheckbox.indeterminate).toBeFalsy();
-            expect(headerCheckbox.getAttribute('aria-checked')).toMatch('true');
-            expect(headerCheckbox.getAttribute('aria-label')).toMatch('Deselect all filtered');
+            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
 
             grid.clearFilter('ProductName');
             fix.detectChanges();
             // expect(headerCheckbox.checked).toBeFalsy();
-            expect(headerCheckbox.indeterminate).toBeTruthy();
+            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
             expect(grid.getRowByIndex(0).selected).toBeTruthy();
             expect(grid.getRowByIndex(1).selected).toBeTruthy();
             expect(grid.getRowByIndex(2).selected).toBeTruthy();
 
             grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
             fix.detectChanges();
+            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
 
-            expect(headerCheckbox.checked).toBeTruthy();
-            expect(headerCheckbox.indeterminate).toBeFalsy();
-
-            headerCheckbox.click();
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
+            HelperUtils.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
-            expect(headerCheckbox.checked).toBeFalsy();
-            expect(headerCheckbox.indeterminate).toBeFalsy();
+            HelperUtils.verifyHeaderRowCheckboxState(fix);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(3);
 
             grid.clearFilter('ProductName');
             fix.detectChanges();
 
-            expect(headerCheckbox.checked).toBeFalsy();
-            expect(headerCheckbox.indeterminate).toBeTruthy();
+            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
             expect(grid.getRowByIndex(0).selected).toBeFalsy();
             expect(grid.getRowByIndex(1).selected).toBeTruthy();
             expect(grid.getRowByIndex(2).selected).toBeFalsy();
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(3);
 
-            grid.getRowByIndex(0).nativeElement.querySelector('.igx-checkbox__input').click();
+            HelperUtils.clickRowCheckbox(grid.getRowByIndex(0));
             fix.detectChanges();
 
-            expect(headerCheckbox.checked).toBeFalsy();
-            expect(headerCheckbox.indeterminate).toBeTruthy();
+            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(4);
 
             grid.filter('ProductName', 'Ignite', IgxStringFilteringOperand.instance().condition('contains'), true);
             fix.detectChanges();
 
-            expect(headerCheckbox.checked).toBeFalsy();
-            expect(headerCheckbox.indeterminate).toBeTruthy();
+            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(4);
 
-            headerCheckbox.click();
+            HelperUtils.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
-            headerCheckbox.click();
+            HelperUtils.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
-            expect(headerCheckbox.checked).toBeFalsy();
-            expect(headerCheckbox.indeterminate).toBeFalsy();
+            HelperUtils.verifyHeaderRowCheckboxState(fix);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(6);
 
             grid.clearFilter('ProductName');
@@ -895,7 +861,7 @@ describe('IgxGrid - Row Selection', () => {
 
         it('ARIA support', fakeAsync(/** height/width setter rAF */() => {
             const firstRow = grid.getRowByIndex(0).nativeElement;
-
+            const headerCheckbox = fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-checkbox__input');
             expect(firstRow.getAttribute('aria-selected')).toMatch('false');
             expect(headerCheckbox.getAttribute('aria-checked')).toMatch('false');
             expect(headerCheckbox.getAttribute('aria-label')).toMatch('Select all');
@@ -916,6 +882,7 @@ describe('IgxGrid - Row Selection', () => {
         }));
 
         it('Should properly check the header checkbox state when filtering, #2469', fakeAsync(() => {
+            const headerCheckbox = fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-checkbox__input');
             grid.primaryKey = 'ID';
             fix.detectChanges();
             tick();
@@ -943,7 +910,7 @@ describe('IgxGrid - Row Selection', () => {
         }));
 
         it('Should not allow selecting rows that are deleted', fakeAsync(() => {
-            grid.rowSelectable = true;
+            grid.RowSelection = GridSelectionMode.multiple;
             grid.detectChanges();
 
             grid.deleteRowById(2);
@@ -994,21 +961,13 @@ describe('IgxGrid - Row Selection', () => {
         expect(secondRow.selected).toBeFalsy();
         expect(thirdRow.selected).toBeFalsy();
     });
-
-    it('Set rowSelectable on HGrid row island', fakeAsync(() => {
-        expect(() => {
-            const fix = TestBed.createComponent(HierarchicalGridRowSelectableIslandComponent);
-            fix.detectChanges();
-        }).not.toThrow();
-    }));
-
 });
 
 
 
 @Component({
     template: `
-        <igx-grid #gridSelection4 [data]="data" height="500px" [rowSelectable]="true">
+        <igx-grid #gridSelection4 [data]="data" height="500px" rowSelection="multiple">
             <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
             <igx-column [field]="'ProductName'" [filterable]="true" dataType="string"></igx-column>
             <igx-column [field]="'Downloads'" [filterable]="true" dataType="number"></igx-column>
@@ -1031,20 +990,4 @@ export class GridWithSelectionFilteringComponent {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 }
 
-@Component({
-    template: `
-    <igx-hierarchical-grid #grid1 [data]="data" [autoGenerate]="false" [height]="'400px'" [width]="'500px'" #hierarchicalGrid>
-    <igx-column field="ID"></igx-column>
-    <igx-column field="ProductName"></igx-column>
-        <igx-row-island [key]="'childData'" [autoGenerate]="false" [height]="height" #rowIsland1 [rowSelectable]="true">
-            <igx-column field="ID"></igx-column>
-            <igx-column field="ProductName"></igx-column>
-        </igx-row-island>
-        <igx-row-island [key]="'childData2'" [autoGenerate]="false" [height]="height" #rowIsland2 [rowSelectable]="true">
-            <igx-column field="Col1"></igx-column>
-            <igx-column field="Col2"></igx-column>
-            <igx-column field="Col3"></igx-column>
-        </igx-row-island>
-    </igx-hierarchical-grid>`
-})
-export class HierarchicalGridRowSelectableIslandComponent extends IgxHierarchicalGridMultiLayoutComponent { }
+
