@@ -133,7 +133,7 @@ export class IgxNavbarComponent {
     /**
      * @hidden
      */
-    @ContentChild(IgxActionIconDirective, { read: IgxActionIconDirective, static: true })
+    @ContentChild(IgxActionIconDirective, { read: IgxActionIconDirective, static: false })
     protected actionIconTemplate: IgxActionIconDirective;
 
     /**
