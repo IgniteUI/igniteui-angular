@@ -2378,7 +2378,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     set rowSelection(value:  GridSelectionMode) {
         this._rowSelectionMode = value;
-        if (this.gridAPI.grid) {
+        if (this.gridAPI.grid && this.columnList) {
             this.selectionService.rowSelection.clear();
             this.calculateGridSizes();
         }

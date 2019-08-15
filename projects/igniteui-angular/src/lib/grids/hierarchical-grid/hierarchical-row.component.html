@@ -30,7 +30,8 @@
         [width]="col.getCellWidth()"
         [visibleColumnIndex]="col.visibleIndex"
         [value]="rowData[col.field]"
-        [cellTemplate]="col.bodyTemplate">
+        [cellTemplate]="col.bodyTemplate"
+        [cellSelectionMode]="grid.cellSelection">
     </igx-hierarchical-grid-cell>
 </ng-container>
 
@@ -50,7 +51,8 @@
         [width]="col.getCellWidth()"
         [visibleColumnIndex]="col.visibleIndex"
         [value]="rowData[col.field]"
-        [cellTemplate]="col.bodyTemplate">
+        [cellTemplate]="col.bodyTemplate"
+        [cellSelectionMode]="grid.cellSelection">
     </igx-hierarchical-grid-cell>
 </ng-template>
 
