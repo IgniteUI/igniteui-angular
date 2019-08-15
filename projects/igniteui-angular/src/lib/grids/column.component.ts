@@ -1102,7 +1102,7 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    @ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective, static: true })
+    @ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective, static: false })
     protected cellTemplate: IgxCellTemplateDirective;
     /**
      *@hidden
@@ -1112,14 +1112,14 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective, static: true })
+    @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective, static: false })
     protected editorTemplate: IgxCellEditorTemplateDirective;
 
     protected _vIndex = NaN;
     /**
      *@hidden
      */
-    @ContentChild(IgxFilterCellTemplateDirective, { read: IgxFilterCellTemplateDirective, static: true })
+    @ContentChild(IgxFilterCellTemplateDirective, { read: IgxFilterCellTemplateDirective, static: false })
     public filterCellTemplateDirective: IgxFilterCellTemplateDirective;
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, public cdr: ChangeDetectorRef) { }
@@ -1392,9 +1392,7 @@ export class IgxColumnComponent implements AfterContentInit {
             return false;
         }
 
-        const width = parseInt(this.width, 10);
-
-        if (!this.parent && (grid.getUnpinnedWidth(true) - width < grid.unpinnedAreaMinWidth)) {
+        if (!this.parent && !this.pinnable) {
             return false;
         }
 
@@ -1683,6 +1681,15 @@ export class IgxColumnComponent implements AfterContentInit {
             this._calcWidth = this.width;
         }
         this.calcPixelWidth = parseInt(this._calcWidth, 10);
+    }
+
+    /**
+     *@hidden
+    */
+    public get pinnable() {
+        const gridUnpinnedWidth = (this.grid as any).getUnpinnedWidth(true);
+        const elementWidth = this.parent ? parseInt(this.topLevelParent.width, 10) : parseInt(this.width, 10);
+        return !((gridUnpinnedWidth - elementWidth) < this.grid.unpinnedAreaMinWidth);
     }
 
     /**
