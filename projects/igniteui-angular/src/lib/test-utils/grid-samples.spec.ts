@@ -11,6 +11,8 @@ import { IgxColumnComponent } from '../grids/column.component';
 import { IgxTransactionService } from '../services';
 import { IgxFilteringOperand } from '../data-operations/filtering-condition';
 import { ExpressionUI } from '../grids/filtering/grid-filtering.service';
+import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
+import { FilteringStrategy } from '../data-operations/filtering-strategy';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -934,6 +936,32 @@ export class IgxGridFilteringComponent extends BasicGridComponent {
 }
 
 @Component({
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true'
+                         [filterMode]="'excelStyleFilter'" [uniqueColumnValuesStrategy]="columnValuesStrategy">
+        <igx-column width="100px" [field]="'ID'"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'Released'" dataType="boolean"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" dataType="date">
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent {
+    private _filteringStrategy = new FilteringStrategy();
+    public data = SampleTestData.excelFilteringData();
+
+    public columnValuesStrategy = (column: IgxColumnComponent,
+                                   columnExprTree: IFilteringExpressionsTree,
+                                   done: (uniqueValues: any[]) => void) => {
+        setTimeout(() => {
+            const filteredData = this._filteringStrategy.filter(this.data, columnExprTree);
+            const columnValues = filteredData.map(record => record[column.field]);
+            done(columnValues);
+        }, 1000);
+    }
+}
+
+@Component({
     template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true' [filterMode]="'excelStyleFilter'">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
             [filterable]="false" [resizable]="resizable" [sortable]="'true'" [movable]="'true'"></igx-column>
@@ -949,10 +977,10 @@ export class IgxGridFilteringComponent extends BasicGridComponent {
         <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
             dataType="string" [filters]="customFilter" [sortable]="'true'" [movable]="'true'">
         </igx-column>
-        <ng-template igxExcelStyleSortingTemplate><div class="esf-custom-sorting">Sorting Template</div></ng-template>
-        <ng-template igxExcelStyleHidingTemplate><div class="esf-custom-hiding">Hiding Template</div></ng-template>
-        <ng-template igxExcelStyleMovingTemplate><div class="esf-custom-moving">Moving Template</div></ng-template>
-        <ng-template igxExcelStylePinningTemplate><div class="esf-custom-pinning">Pinning Template</div></ng-template>
+        <ng-template igxExcelStyleSorting><div class="esf-custom-sorting">Sorting Template</div></ng-template>
+        <ng-template igxExcelStyleHiding><div class="esf-custom-hiding">Hiding Template</div></ng-template>
+        <ng-template igxExcelStyleMoving><div class="esf-custom-moving">Moving Template</div></ng-template>
+        <ng-template igxExcelStylePinning><div class="esf-custom-pinning">Pinning Template</div></ng-template>
     </igx-grid>`
 })
 export class IgxGridFilteringESFTemplatesComponent extends BasicGridComponent {
