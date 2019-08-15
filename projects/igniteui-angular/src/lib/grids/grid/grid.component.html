@@ -92,7 +92,7 @@
 </div>
 
 <div igxGridBody class="igx-grid__tbody">
-    <div class="igx-grid__tbody-content" role="rowgroup" (onDragStop)="selectionService.dragMode = $event" (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode" [style.height.px]='calcHeight' [style.width.px]='calcWidth + 1' #tbody (scroll)='scrollHandler($event)' (wheel)="wheelHandler()">
+    <div class="igx-grid__tbody-content" role="rowgroup" (onDragStop)="selectionService.dragMode = $event" (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode" [style.height.px]='calcHeight' [style.width.px]='calcWidth ? calcWidth + 1 : null' #tbody (scroll)='scrollHandler($event)' (wheel)="wheelHandler()">
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-left"></span>
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left" class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
@@ -139,7 +139,7 @@
     <div class="igx-grid__tfoot-thumb" [hidden]='!hasVerticalSroll()' [style.height.px]='summariesHeight' [style.width.px]="scrollWidth"></div>
 </div>
 
-<div class="igx-grid__scroll" [style.height]="'18px'" #scr [hidden]="unpinnedWidth - totalWidth >= 0">
+<div class="igx-grid__scroll" [style.height]="'18px'" #scr [hidden]="isHorizontalScrollHidden">
     <div class="igx-grid__scroll-start" [style.width.px]='pinnedWidth' [hidden]="pinnedWidth === 0"></div>
     <div class="igx-grid__scroll-main" [style.width.px]='unpinnedWidth'>
         <ng-template igxGridFor [igxGridForOf]='[]' #scrollContainer>

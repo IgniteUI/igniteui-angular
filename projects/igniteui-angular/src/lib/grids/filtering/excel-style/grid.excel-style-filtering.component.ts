@@ -8,7 +8,8 @@ import {
     Directive,
     OnDestroy,
     AfterViewInit,
-    ElementRef
+    ElementRef,
+    OnInit
 } from '@angular/core';
 import {
     HorizontalAlignment,
@@ -87,7 +88,7 @@ export class IgxExcelStylePinningTemplateDirective {
     selector: 'igx-grid-excel-style-filtering',
     templateUrl: './grid.excel-style-filtering.component.html'
 })
-export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterViewInit {
+export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, AfterViewInit {
     private static readonly filterOptimizationThreshold = 2;
 
     private shouldOpenSubMenu = true;
@@ -131,7 +132,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
     public customDialog: IgxExcelStyleCustomDialogComponent;
 
     @ViewChild('excelStyleSearch', { read: IgxExcelStyleSearchComponent })
-    protected excelStyleSearch: IgxExcelStyleSearchComponent;
+    public excelStyleSearch: IgxExcelStyleSearchComponent;
 
     @ViewChild('excelStyleSorting', { read: IgxExcelStyleSortingComponent })
     protected excelStyleSorting: IgxExcelStyleSortingComponent;
@@ -147,6 +148,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
 
     @ViewChild('defaultExcelStylePinningTemplate', { read: TemplateRef })
     protected defaultExcelStylePinningTemplate: TemplateRef<any>;
+
+    public isColumnPinnable: boolean;
 
     get grid(): any {
         return this.filteringService.grid;
@@ -169,7 +172,11 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         }
     }
 
-    constructor(private cdr: ChangeDetectorRef) {}
+    constructor(public cdr: ChangeDetectorRef) {}
+
+    ngOnInit() {
+        this.isColumnPinnable = this.column.pinnable;
+    }
 
     ngOnDestroy(): void {
         this.destroy$.next(true);
@@ -203,6 +210,10 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         }
 
         return 'igx-excel-filter__actions-clear--disabled';
+    }
+
+    public pinClass() {
+        return this.isColumnPinnable ? 'igx-excel-filter__actions-pin' : 'igx-excel-filter__actions-pin--disabled';
     }
 
     public initialize(column: IgxColumnComponent, filteringService: IgxFilteringService, overlayService: IgxOverlayService,
@@ -541,7 +552,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
     }
 
     get applyButtonDisabled() {
-        return this.listData[0] && !this.listData[0].isSelected && !this.listData[0].indeterminate;
+        return  (this.excelStyleSearch.filteredData && this.excelStyleSearch.filteredData.length === 0) ||
+                (this.listData[0] && !this.listData[0].isSelected && !this.listData[0].indeterminate);
     }
 
     public applyFilter() {
