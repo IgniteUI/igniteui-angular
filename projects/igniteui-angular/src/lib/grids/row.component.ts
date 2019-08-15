@@ -120,6 +120,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     set selected(value: boolean) {
         value ? this.selectionService.selectRows([this.rowID]) :
         this.selectionService.deselectRowsWithNoEvent([this.rowID]);
+        this.grid.cdr.markForCheck();
     }
 
     /**

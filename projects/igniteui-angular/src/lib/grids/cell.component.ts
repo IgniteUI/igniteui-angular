@@ -442,6 +442,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     set selected(val: boolean) {
         const node = this.selectionNode;
         val ? this.selectionService.add(node) : this.selectionService.remove(node);
+        this.grid.cdr.markForCheck();
     }
 
     @HostBinding('class.igx-grid__td--edited')
