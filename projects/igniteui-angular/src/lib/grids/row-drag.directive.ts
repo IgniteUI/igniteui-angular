@@ -86,10 +86,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
         const dropArea = this._lastDropArea;
         super.onPointerUp(event);
-        if (!dropArea) {
-            if (this.ghostElement) {
-                this.ghostElement.addEventListener('transitionend', this.transitionEndEvent, false);
-            }
+        if (!dropArea && this.ghostElement) {
+            this.ghostElement.addEventListener('transitionend', this.transitionEndEvent, false);
         }   else {
             this.endDragging();
         }
