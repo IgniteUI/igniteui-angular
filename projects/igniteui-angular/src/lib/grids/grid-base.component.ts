@@ -451,7 +451,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (val === this._page || val < 0 || val > this.totalPages - 1) {
             return;
         }
-
+        this.selectionService.clear(true);
         this.onPagingDone.emit({ previous: this._page, current: val });
         this._page = val;
         this.cdr.markForCheck();
@@ -481,8 +481,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (val < 0) {
             return;
         }
-
-        this.selectionService.clear();
+        this.selectionService.clear(true);
         this._perPage = val;
         this.page = 0;
         this.endEdit(true);
@@ -2723,11 +2722,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.onRowAdded.pipe(destructor).subscribe(args => this.refreshGridState(args));
         this.onRowDeleted.pipe(destructor).subscribe(args => {
-            this.summaryService.deleteOperation = true; // do not consider removed rows
+            this.summaryService.deleteOperation = true;
             this.summaryService.clearSummaryCache(args);
         });
         this.transactions.onStateUpdate.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.allRowsSelected = undefined;
+            this.selectionService.allRowsSelected = undefined;
             this.summaryService.clearSummaryCache();
             this._pipeTrigger++;
             this.markForCheck();

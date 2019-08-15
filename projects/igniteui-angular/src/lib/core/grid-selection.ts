@@ -629,9 +629,9 @@ export class IgxGridSelectionService {
         if (!this.hasData() ) { return false; }
         if (this.allRowsSelected !== undefined) { return this.allRowsSelected; }
 
-        const filteredItemsID = this.grid.isDefined(this.grid.filteredData) ? this.getRowIDs(this.grid.filteredData) : [];
+        const dataItemsID = this.getRowIDs(this.allData);
         return this.allRowsSelected = this.rowSelection.size >= this.allData.length &&
-            new Set(Array.from(this.rowSelection.values()).concat(filteredItemsID)).size === this.rowSelection.size;
+            new Set(Array.from(this.rowSelection.values()).concat(dataItemsID)).size === this.rowSelection.size;
     }
 
     hasSomeRowSelected() {
@@ -647,6 +647,7 @@ export class IgxGridSelectionService {
         const args = {oldSelection: currSelection, newSelection: newSelection,
             added: added, removed: removed, event: event, cancel: false};
         this.grid.onRowSelectionChange.emit(args);
+        if (args.cancel && event.checkbox) { event.checkbox.checked = !event.checkbox.checked; }
         return args.cancel;
     }
 
@@ -661,9 +662,10 @@ export class IgxGridSelectionService {
     }
 
     private get allData() {
+        const gridAPI = this.grid.gridAPI;
         const allData = this.isFilteringApplied() || this.grid.sortingExpressions.length ?
-        this.grid.filteredSortedData : this.grid.gridAPI.get_all_data();
-        return allData.filter(rData => !this.grid.gridAPI.row_deleted_transaction(this.grid.gridAPI.get_row_id(rData)));
+        this.grid.filteredSortedData : gridAPI.get_all_data();
+        return allData.filter(rData => !this.isRowDeleted(gridAPI.get_row_id(rData)));
     }
 
     private isFilteringApplied() {
