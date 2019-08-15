@@ -137,7 +137,7 @@ export class FilteringComponent extends BasicGridComponent {
 @Component({
     template: `
         <igx-grid #gridSelection2 [data]="data" [primaryKey]="'ID'"
-        [autoGenerate]="true" [rowSelectable]="true" [paging]="true" [perPage]="50">
+        [autoGenerate]="true" rowSelection = "multiple" [paging]="true" [perPage]="50">
         </igx-grid>
         <button class="prevPageBtn" (click)="ChangePage(-1)">Prev page</button>
         <button class="nextPageBtn" (click)="ChangePage(1)">Next page</button>
@@ -182,7 +182,7 @@ export class RowSelectionComponent extends BasicGridComponent {
 }
 @Component({
     template: GridTemplateStrings.declareGrid(
-            ` [rowSelectable]="true"`,
+            ` rowSelection = "multiple"`,
             EventSubscriptions.onRowSelectionChange,
             ColumnDefinitions.productBasic)
 })
@@ -203,7 +203,7 @@ export class SelectionCancellableComponent extends BasicGridComponent {
             [width]="'800px'"
             [height]="'600px'"
             [autoGenerate]="true"
-            [rowSelectable]="true"`,
+            rowSelection = "multiple"`,
             EventSubscriptions.onColumnInit, '')
 })
 export class ScrollsComponent extends BasicGridComponent {
@@ -215,7 +215,7 @@ export class ScrollsComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(
-            ` [rowSelectable]="true"`,
+            ` rowSelection = "multiple"`,
             '', ColumnDefinitions.productDefaultSummaries)
 })
 export class SummariesComponent extends BasicGridComponent {
@@ -647,14 +647,14 @@ export class GridIDNameJobTitleComponent extends PagingComponent {
 @Component({
     template: `<div style="margin: 50px;">
             ${GridTemplateStrings.declareGrid(
-                `[height]="height" [width]="width" [rowSelectable]="enableRowSelection" [autoGenerate]="autoGenerate"`,
+                `[height]="height" [width]="width" [rowSelection]="rowSelection" [autoGenerate]="autoGenerate"`,
                 EventSubscriptions.onColumnMovingStart + EventSubscriptions.onColumnMoving + EventSubscriptions.onColumnMovingEnd,
                 ColumnDefinitions.movableColumns)}</div>`
 })
 export class MovableColumnsComponent extends BasicGridComponent {
     data = SampleTestData.personIDNameRegionData();
     autoGenerate = false;
-    enableRowSelection = false;
+    rowSelection = 'multiple';
     isFilterable = false;
     isSortable = false;
     isResizable = false;
