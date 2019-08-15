@@ -18,7 +18,8 @@ const path = require('path');
 const EventEmitter = require('events').EventEmitter;
 const typedocGulp = require('igniteui-typedoc-theme/gulpfile');
 const { series, parallel } = require('gulp');
-const {execSync} = require('child_process');
+const {execSync, spawnSync} = require('child_process');
+const slash = require('slash');
 
 sass.compiler = require('sass');
 
@@ -250,11 +251,18 @@ gulp.task('copy-git-hooks', () => {
 //     ], ['typedoc-build:theme']);
 // });
 
-async function typedocBuildTheme(cb) {
+const typedocBuildTheme = (cb) => {
     console.log('build:theme');
-    await execSync(`typedoc ${TYPEDOC.PROJECT_PATH}`, {stdio: 'inherit'});
+    const test = spawnSync(`typedoc`, [TYPEDOC.PROJECT_PATH], { stdio: 'inherit', shell: true });
+    console.log(test);
     cb();
 }
+
+const typedocClean = (cb) =>  {
+    del(path.join(DOCS_OUTPUT_PATH, 'typescript/**'), {force: true});
+    cb();
+};
+
 
 typedocBuildTheme.displayName = 'typedoc-build:theme';
 
@@ -265,23 +273,26 @@ function typedocServe(cb) {
 
     console.log('typedoc:serve');
 
-    gulp.watch('./dist/igniteui-angular/docs/typescript/**/*')
-        .on('change', browserSync.reload);
+    // gulp.watch('./dist/igniteui-angular/docs/typescript/**/*')
+    //     .on('change', browserSync.reload);
 
     cb();
 }
 
-function typedocWatch(cb) {
-    console.log('typedc:watch');
+function typedocWatchFunc(cb) {
+    // console.log('typedc:watch');
+    // const watcher = typedocGulp.typedocWatch(cb);
+    // watcher.on('change', typedocBuildTheme);
     gulp.watch([
-        `${TYPEDOC_THEME.SRC}/assets/js/src/**/*.{ts,js}`,
-        `${TYPEDOC_THEME.SRC}/assets/css/**/*.{scss,sass}`,
-        `${TYPEDOC_THEME.SRC}/**/*.hbs`,
-        `${TYPEDOC_THEME.SRC}/assets/images/**/*.{png,jpg,gif}`], {}, typedocBuildTheme);
+        slash(path.join(TYPEDOC_THEME.SRC, 'assets', 'js', 'src', '/**/*.{ts,js}')),
+        slash(path.join(TYPEDOC_THEME.SRC, 'assets', 'css', '/**/*.{scss,sass}')),
+        slash(path.join(TYPEDOC_THEME.SRC, '/**/*.hbs')),
+        slash(path.join(TYPEDOC_THEME.SRC, 'assets', 'images', '/**/*.{png,jpg,gif}')),
+      ], typedocBuildTheme).on('error', (err) => { console.log(err); });
 
-    cb();
+      cb();
 }
-typedocWatch.displayName = 'typedoc-watch';
+// typedocWatch.displayName = 'typedoc-watch';
 
 // async function build() {
 //     return await typedocGulp.typedocBuild();
@@ -289,16 +300,21 @@ typedocWatch.displayName = 'typedoc-watch';
 
 // gulp.task('typedoc-build', typedocGulp.typedocBuild);
 // module.exports.testGen = series(buildTheme);
-module.exports.typedocBuildThemeSeries = series(typedocGulp.typedocBuild, typedocBuildTheme);
-module.exports.typedocWatchMod = series(this.typedocBuildThemeSeries, typedocWatch);
-module.exports.typedocServe = series(this.typedocWatchMod, typedocServe);
+module.exports.typedocServe = series(
+    typedocGulp.typedocBuild,
+    typedocBuildTheme,
+    typedocWatchFunc,
+    typedocServe);
+// module.exports.typedocWatchMod = series(this.typedocBuildThemeSeries, typedocWatch);
+// module.exports.typedocServe = series(this.typedocWatchMod, typedocServe);
 
 module.exports.execTypedoc = series(
-    // typedocGulp.typedocBuild,
-    // typedocBuildTheme,
-    typedocWatch,
-    // typedocServe
-    // typedocServe
+//     // typedocGulp.typedocBuild,
+    typedocBuildTheme,
+        // typedocBuildTheme,
+        typedocWatchFunc,
+    typedocServe
+//     // typedocServe
     );
 // module.exports.testdoc = parallel(typedocGulp.typedocBuild, buildTheme, typedocWatch, typedocGulp.typedocBuild, buildTheme);
 
@@ -338,7 +354,7 @@ module.exports.execTypedoc = series(
 //     'sassdoc-js'
 // ])
 
-// const DOCS_OUTPUT_PATH = path.join(__dirname, 'dist', 'igniteui-angular', 'docs');
+const DOCS_OUTPUT_PATH = path.join(__dirname, 'dist', 'igniteui-angular', 'docs');
 
 const TYPEDOC = {
     EXPORT_JSON_PATH: path.join('dist', 'igniteui-angular', 'docs', 'typescript-exported'),
