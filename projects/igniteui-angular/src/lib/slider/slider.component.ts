@@ -137,7 +137,7 @@ export class IgxSliderComponent implements
     /**
      * @hidden
      */
-    @ContentChild(IgxThumbToTemplateDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxThumbToTemplateDirective, { read: TemplateRef, static: false })
     public thumbToTemplateRef: TemplateRef<any>;
 
     /**

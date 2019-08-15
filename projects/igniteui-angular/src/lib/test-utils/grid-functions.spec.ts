@@ -749,6 +749,12 @@ export class GridFunctions {
         return excelMenu.querySelector('igx-excel-style-column-moving');
     }
 
+    public static getExcelFilteringLoadingIndicator(fix: ComponentFixture<any>) {
+        const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+        const loadingIndicator = searchComponent.querySelector('.igx-excel-filter__loading');
+        return loadingIndicator;
+    }
+
     public static getColumnCells(fix, columnKey) {
         const allCells = fix.debugElement.queryAll(By.css('igx-grid-cell'));
         return allCells.filter((cell) => cell.componentInstance.column.field === columnKey);

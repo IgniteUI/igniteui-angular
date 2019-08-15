@@ -1,4 +1,4 @@
-<div (click)="toggle()" class="igx-grid__hierarchical-expander" [tabIndex]="tabindex" *ngIf="hasChildren" #expander>
+<div (click)="toggle($event.stopPropagation())" class="igx-grid__hierarchical-expander" [tabIndex]="tabindex" *ngIf="hasChildren" #expander>
     <igx-icon *ngIf="!expanded" [isActive]='!added' fontSet="material">expand_more</igx-icon>
     <igx-icon *ngIf="expanded" [isActive]='!added' fontSet="material">expand_less</igx-icon>
 </div>
@@ -9,7 +9,7 @@
 </ng-container>
 <ng-container *ngIf="showRowCheckboxes">
         <div class="igx-grid__cbx-selection">
-            <igx-checkbox [checked]="selected" (change)="onCheckboxClick($event)" disableRipple="true" [disableTransitions]="grid.disableTransitions" [aria-label]="rowCheckboxAriaLabel"></igx-checkbox>
+            <igx-checkbox [checked]="selected" (click)="$event.stopPropagation()" (change)="onCheckboxClick($event)" disableRipple="true" [disableTransitions]="grid.disableTransitions" [aria-label]="rowCheckboxAriaLabel"></igx-checkbox>
         </div>
 </ng-container>
 

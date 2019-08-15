@@ -704,19 +704,19 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /**
      *@hidden
      */
-    @ContentChild(IgxDatePickerTemplateDirective, { read: IgxDatePickerTemplateDirective, static: true })
+    @ContentChild(IgxDatePickerTemplateDirective, { read: IgxDatePickerTemplateDirective, static: false })
     protected datePickerTemplateDirective: IgxDatePickerTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxCalendarHeaderTemplateDirective, { read: IgxCalendarHeaderTemplateDirective, static: true })
+    @ContentChild(IgxCalendarHeaderTemplateDirective, { read: IgxCalendarHeaderTemplateDirective, static: false })
     public headerTemplate: IgxCalendarHeaderTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxCalendarSubheaderTemplateDirective, { read: IgxCalendarSubheaderTemplateDirective, static: true })
+    @ContentChild(IgxCalendarSubheaderTemplateDirective, { read: IgxCalendarSubheaderTemplateDirective, static: false })
     public subheaderTemplate: IgxCalendarSubheaderTemplateDirective;
 
     /**

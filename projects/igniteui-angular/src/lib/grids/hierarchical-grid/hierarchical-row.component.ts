@@ -73,7 +73,7 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
      * this.grid1.rowList.first.toggle()
      * ```
      */
-    public toggle() {
+    public toggle(event?) {
         if (this.added) {
             return;
         }
