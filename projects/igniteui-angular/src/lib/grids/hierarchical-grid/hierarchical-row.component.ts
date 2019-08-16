@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowComponent } from '../row.component';
-import { IgxHierarchicalSelectionAPIService } from './selection';
 import { GridBaseAPIService } from '.././api.service';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
 import { IgxGridCRUDService, IgxGridSelectionService } from '../../core/grid-selection';
@@ -107,7 +106,6 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
     constructor(public gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>,
         public crudService: IgxGridCRUDService,
         public selectionService: IgxGridSelectionService,
-        private hselection: IgxHierarchicalSelectionAPIService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef) {
             super(gridAPI, crudService, selectionService, element, cdr);

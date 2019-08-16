@@ -10,7 +10,6 @@ import {
     AfterViewInit,
     SimpleChanges
 } from '@angular/core';
-import { IgxSelectionAPIService } from '../../core/selection';
 import { GridBaseAPIService } from '.././api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 
@@ -132,7 +131,6 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     }
 
     constructor(public gridAPI: GridBaseAPIService<any/* TODO: IgxHierarchicalGridComponent*/>,
-        private selectionAPI: IgxSelectionAPIService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef) {
     }
