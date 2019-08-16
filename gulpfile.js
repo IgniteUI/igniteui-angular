@@ -39,7 +39,7 @@ const STYLES = {
 const TYPEDOC_THEME = {
     // SRC: `${path.join(__dirname, "node_modules", "igniteui_typedoc_theme", "typedoc", "src")}`,
     // SRC: `${path.join(__dirname, 'extras', 'docs', 'themes', 'typedoc', 'src')}`,
-    SRC: './extras/docs/themes/typedoc/src'
+    SRC: slash(path.join(__dirname, 'node_modules', 'igniteui-typedoc-theme', 'typedoc', 'src'))
 
     // DIST: './extras/docs/themes/typedoc/bin/',
     // STYLES: {
@@ -142,126 +142,10 @@ gulp.task('copy-git-hooks', () => {
 //         .pipe(gulp.dest('./dist/igniteui-angular/schematics'));
 // });
 
-// gulp.task('typedoc-styles', ['typedoc:clean-styles'], () => {
-//     const prefixer = postcss([autoprefixer({
-//         browsers: ['last 5 versions', '> 3%'],
-//         cascade: false,
-//         grid: false
-//     })]);
-
-//     return gulp.src(`${TYPEDOC_THEME.SRC}/${TYPEDOC_THEME.STYLES.ENTRY}`)
-//         .pipe(sourcemaps.init())
-//         .pipe(sass.sync(TYPEDOC_THEME.STYLES.CONFIG).on('error', sass.logError))
-//         .pipe(prefixer)
-//         .pipe(sourcemaps.write(TYPEDOC_THEME.STYLES.MAPS))
-//         .pipe(gulp.dest(`${TYPEDOC_THEME.DIST}/${TYPEDOC_THEME.STYLES.OUT}`))
-// });
-
-// gulp.task('typedoc-ts',
-//     shell.task('tsc --project ./extras/docs/themes/typedoc/tsconfig.json')
-// );
-
-// gulp.task('typedoc-js', ['typedoc:clean-js', 'typedoc-ts'], () => {
-//     gulp.src([
-//         `${TYPEDOC_THEME.SRC}/assets/js/lib/jquery-2.1.1.min.js`,
-//         `${TYPEDOC_THEME.SRC}/assets/js/lib/underscore-1.6.0.min.js`,
-//         `${TYPEDOC_THEME.SRC}/assets/js/lib/backbone-1.1.2.min.js`,
-//         `${TYPEDOC_THEME.SRC}/assets/js/lib/lunr.min.js`,
-//         `${TYPEDOC_THEME.SRC}/assets/js/src/navigation/igviewer.common.js`,
-//         `${TYPEDOC_THEME.SRC}/assets/js/src/navigation/igviewer.renderingService.js`,
-//         `${TYPEDOC_THEME.SRC}/assets/js/src/navigation/nav-initializer.js`,
-//         `${TYPEDOC_THEME.SRC}/assets/js/src/versioning/tag-versions.req.js`,
-//         `${TYPEDOC_THEME.SRC}/assets/js/main.js`
-//     ])
-//         .pipe(concat('main.js'))
-//         .pipe(gulp.dest(`${TYPEDOC_THEME.DIST}/assets/js/`));
-// });
-
-// gulp.task('typedoc-theme-ts', () => {
-//     gulp.src([
-//         `${path.join(TYPEDOC_THEME.SRC, "assets", "js", "src", "theme.ts")}`
-//     ])
-//         .pipe(ts({
-//             target: "es2017",
-//             moduleResolution: 'node',
-//             module: 'commonjs'
-//         }))
-//         .pipe(gulp.dest(TYPEDOC_THEME.DIST));
-// });
-
-// gulp.task('typedoc-copy-config', () => {
-//     const themePath = path.join(__dirname, "extras", "docs", "themes", "config.json");
-//     gulp.src([themePath])
-//         .pipe(gulp.dest(TYPEDOC_THEME.DIST));
-// });
-
-// gulp.task('typedoc-images', ['typedoc:clean-images'], () => {
-//     return gulp.src(`${TYPEDOC_THEME.SRC}/assets/images/**/*.{png,gif,jpg,svg}`)
-//         .pipe(gulp.dest(`${TYPEDOC_THEME.DIST}/assets/images`));
-// });
-
-// gulp.task('typedoc-hbs', ['typedoc:clean-hbs'], () => {
-//     return gulp.src([
-//         `${TYPEDOC_THEME.SRC}/layouts/**/*`,
-//         `${TYPEDOC_THEME.SRC}/partials/**/*`,
-//         `${TYPEDOC_THEME.SRC}/templates/**/*`,
-//     ], {
-//             base: `${TYPEDOC_THEME.SRC}`
-//         })
-//         .pipe(gulp.dest(`${TYPEDOC_THEME.DIST}`));
-// });
-
-// gulp.task('typedoc:clean-theme-js', () => {
-//     del.sync(`${TYPEDOC_THEME.DIST}/theme.js`)
-// })
-
-// gulp.task('typedoc:clean-js', ['typedoc:clean-theme-js'], () => {
-//     del.sync(`${TYPEDOC_THEME.DIST}/assets/js`);
-// });
-
-// gulp.task('typedoc:clean-styles', () => {
-//     del.sync(`${TYPEDOC_THEME.DIST}/assets/css`);
-// });
-
-// gulp.task('typedoc:clean-config', () => {
-//     del.sync(`${TYPEDOC_THEME.DIST}/config.json`)
-// })
-
-// gulp.task('typedoc:clean-images', () => {
-//     del.sync(`${TYPEDOC_THEME.DIST}/assets/images`);
-// });
-
-// gulp.task('typedoc:clean-hbs', ['typedoc:clean-config'], () => {
-//     del.sync([
-//         `${TYPEDOC_THEME.DIST}/layouts`,
-//         `${TYPEDOC_THEME.DIST}/partials`,
-//         `${TYPEDOC_THEME.DIST}/templates`
-//     ]);
-// });
-
-// function typedocWatch() {
-
-// }
-// gulp.task('typedoc-watch', ['typedoc-build:theme'], () => {
-//     return gulp.watch([
-//         `${TYPEDOC_THEME.SRC}/assets/js/src/**/*.{ts,js}`,
-//         `${TYPEDOC_THEME.SRC}/assets/css/**/*.{scss,sass}`,
-//         `${TYPEDOC_THEME.SRC}/**/*.hbs`,
-//         `${TYPEDOC_THEME.SRC}/assets/images/**/*.{png,jpg,gif}`,
-//     ], ['typedoc-build:theme']);
-// });
-
 const typedocBuildTheme = (cb) => {
-    console.log('build:theme');
-    const test = spawnSync(`typedoc`, [TYPEDOC.PROJECT_PATH], { stdio: 'inherit', shell: true });
-    console.log(test);
+    spawnSync(`typedoc`, [TYPEDOC.PROJECT_PATH], { stdio: 'inherit', shell: true });
     cb();
 }
-
-const typedocClean = (cb) =>  {
-    del(path.join(DOCS_OUTPUT_PATH, 'typescript/**'), {force: true});
-    cb();
-};
 
 
 typedocBuildTheme.displayName = 'typedoc-build:theme';
@@ -271,8 +155,7 @@ function typedocServe(cb) {
         server: './dist/igniteui-angular/docs/typescript'
     });
 
-    console.log('typedoc:serve');
-
+    // TODO: Decide how to reload the browser when change occurs.
     // gulp.watch('./dist/igniteui-angular/docs/typescript/**/*')
     //     .on('change', browserSync.reload);
 
@@ -280,52 +163,22 @@ function typedocServe(cb) {
 }
 
 function typedocWatchFunc(cb) {
-    // console.log('typedc:watch');
-    // const watcher = typedocGulp.typedocWatch(cb);
-    // watcher.on('change', typedocBuildTheme);
     gulp.watch([
         slash(path.join(TYPEDOC_THEME.SRC, 'assets', 'js', 'src', '/**/*.{ts,js}')),
         slash(path.join(TYPEDOC_THEME.SRC, 'assets', 'css', '/**/*.{scss,sass}')),
         slash(path.join(TYPEDOC_THEME.SRC, '/**/*.hbs')),
         slash(path.join(TYPEDOC_THEME.SRC, 'assets', 'images', '/**/*.{png,jpg,gif}')),
-      ], typedocBuildTheme).on('error', (err) => { console.log(err); });
+      ], series(typedocGulp.typedocBuild, typedocBuildTheme));
 
       cb();
 }
 // typedocWatch.displayName = 'typedoc-watch';
 
-// async function build() {
-//     return await typedocGulp.typedocBuild();
-// }
-
-// gulp.task('typedoc-build', typedocGulp.typedocBuild);
-// module.exports.testGen = series(buildTheme);
 module.exports.typedocServe = series(
     typedocGulp.typedocBuild,
     typedocBuildTheme,
     typedocWatchFunc,
     typedocServe);
-// module.exports.typedocWatchMod = series(this.typedocBuildThemeSeries, typedocWatch);
-// module.exports.typedocServe = series(this.typedocWatchMod, typedocServe);
-
-module.exports.execTypedoc = series(
-//     // typedocGulp.typedocBuild,
-    typedocBuildTheme,
-        // typedocBuildTheme,
-        typedocWatchFunc,
-    typedocServe
-//     // typedocServe
-    );
-// module.exports.testdoc = parallel(typedocGulp.typedocBuild, buildTheme, typedocWatch, typedocGulp.typedocBuild, buildTheme);
-
-// gulp.task('typedoc-build', [
-//     'typedoc-images',
-//     'typedoc-hbs',
-//     'typedoc-styles',
-//     'typedoc-js',
-//     'typedoc-theme-ts',
-//     'typedoc-copy-config'
-// ]);
 
 // const SASSDOC_THEME = {
 //     JS_DIR: path.join(__dirname, 'extras', 'docs', 'themes', 'sassdoc', 'assets', 'js'),
