@@ -120,7 +120,7 @@
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
             #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
             <ng-template #record_template>
-                <igx-grid-row [rowSelected]="rowSelected" [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
+                <igx-grid-row [rowSelected]="rowSelected" [gridID]="id" [index]="getGridRowIndex(rowData, rowIndex)" [rowData]="rowData" #row>
                 </igx-grid-row>
             </ng-template>
             <ng-template #group_template>
