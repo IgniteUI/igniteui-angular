@@ -166,7 +166,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     @ViewChild('inputGroup', { read: IgxInputGroupComponent, static: true }) public inputGroup: IgxInputGroupComponent;
 
     /** @hidden @internal */
-    @ViewChild('comboInput', { read: IgxInputDirective, static: true }) public input: IgxInputDirective;
+    @ViewChild('comboInput', { read: IgxInputDirective, static: true }) public comboInput: IgxInputDirective;
 
     /**
      * @hidden @internal
@@ -179,12 +179,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     @ViewChild('searchInput', { static: false })
     public searchInput: ElementRef<HTMLInputElement> = null;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('comboInput', { static: true })
-    public comboInput: ElementRef<HTMLInputElement> = null;
 
     /**
      * @hidden @internal
@@ -1187,7 +1181,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     protected onStatusChanged = () => {
         if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
             (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
-                this.input.valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+                this.comboInput.valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
         }
         this.manageRequiredAsterisk();
     }
@@ -1206,9 +1200,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public onBlur() {
         if (this.collapsed) {
             if (this.ngControl && !this.ngControl.valid) {
-                this.input.valid = IgxInputState.INVALID;
+                this.comboInput.valid = IgxInputState.INVALID;
            } else {
-                this.input.valid = IgxInputState.INITIAL;
+                this.comboInput.valid = IgxInputState.INITIAL;
            }
         }
     }
