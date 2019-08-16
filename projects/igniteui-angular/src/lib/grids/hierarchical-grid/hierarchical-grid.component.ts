@@ -437,7 +437,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
 
     protected onColumnsChanged(change: QueryList<IgxColumnComponent>) {
         this.updateColumnList();
-        const cols = change.filter(c => c.grid === this);
+        const cols = change.filter(c => c.gridAPI.grid === this);
         if (cols.length > 0) {
             this.columnList.reset(cols);
             super.onColumnsChanged(this.columnList);
