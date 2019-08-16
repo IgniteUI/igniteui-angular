@@ -101,6 +101,10 @@ export class HierarchicalGridSampleComponent {
         this.density = this.displayDensities[event.index].label;
     }
 
+    cellClick($evt) {
+        console.log('Cell Click', $evt);
+    }
+
     public LoadMoreColumns() {
         this.columns = ['Col1', 'Col2', 'Col3'];
         this.childColumns = ['ChildCol1', 'ChildCol2'];
