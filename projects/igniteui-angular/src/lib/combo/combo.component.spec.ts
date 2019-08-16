@@ -5,7 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxComboItemComponent } from './combo-item.component';
-import { IgxComboComponent, IgxComboModule, IgxComboState, IComboSelectionChangeEventArgs } from './combo.component';
+import { IgxComboComponent, IgxComboModule, IComboSelectionChangeEventArgs } from './combo.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { IForOfState } from '../directives/for-of/for_of.directive';
@@ -17,6 +17,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxDropDownItemBase } from '../drop-down/drop-down-item.base';
 import { DisplayDensity, DisplayDensityToken } from '../core/density';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/index';
+import { IgxInputState } from '../directives/input/input.directive';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -40,6 +41,7 @@ const CSS_CLASS_INPUTGROUP = 'igx-input-group';
 const CSS_CLASS_INPUTGROUP_WRAPPER = 'igx-input-group__wrapper';
 const CSS_CLASS_INPUTGROUP_BUNDLE = 'igx-input-group__bundle';
 const CSS_CLASS_INPUTGROUP_MAINBUNDLE = 'igx-input-group__bundle-main';
+const CSS_CLASS_INPUTGROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUTGROUP_BORDER = 'igx-input-group__border';
 const CSS_CLASS_HEADER = 'header-class';
 const CSS_CLASS_FOOTER = 'footer-class';
@@ -76,7 +78,8 @@ describe('igxCombo', () => {
                 IgxComboFormComponent,
                 SimpleBindComboComponent,
                 DensityParentComponent,
-                DensityInputComponent
+                DensityInputComponent,
+                IgxComboInTemplatedFormComponent
             ],
             imports: [
                 IgxComboModule,
@@ -2993,22 +2996,22 @@ describe('igxCombo', () => {
             expect(combo.selectedItems()).toEqual(comboFormReference.value);
             expect(combo.selectedItems().length).toEqual(1);
             expect(combo.selectedItems()[0].field).toEqual('Connecticut');
-            expect(combo.valid).toEqual(IgxComboState.INITIAL);
+            expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
             const clearButton = fix.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON)).nativeElement;
             clearButton.click();
             fix.detectChanges();
-            expect(combo.valid).toEqual(IgxComboState.INVALID);
+            expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
 
             combo.onBlur();
             fix.detectChanges();
-            expect(combo.valid).toEqual(IgxComboState.INVALID);
+            expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
 
             combo.selectItems([combo.dropdown.items[0], combo.dropdown.items[1]]);
-            expect(combo.valid).toEqual(IgxComboState.VALID);
+            expect(combo.comboInput.valid).toEqual(IgxInputState.VALID);
 
             combo.onBlur();
             fix.detectChanges();
-            expect(combo.valid).toEqual(IgxComboState.INITIAL);
+            expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
         }));
 
         it('Should properly initialize when used as a form control - without validators', fakeAsync(() => {
@@ -3023,22 +3026,22 @@ describe('igxCombo', () => {
             expect(combo.selectedItems()).toEqual(comboFormReference.value);
             expect(combo.selectedItems().length).toEqual(1);
             expect(combo.selectedItems()[0].field).toEqual('Connecticut');
-            expect(combo.valid).toEqual(IgxComboState.INITIAL);
+            expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
             const clearButton = fix.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON)).nativeElement;
             clearButton.click();
             fix.detectChanges();
-            expect(combo.valid).toEqual(IgxComboState.INITIAL);
+            expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
 
             combo.onBlur();
             fix.detectChanges();
-            expect(combo.valid).toEqual(IgxComboState.INITIAL);
+            expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
 
             combo.selectItems([combo.dropdown.items[0], combo.dropdown.items[1]]);
-            expect(combo.valid).toEqual(IgxComboState.INITIAL);
+            expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
 
             combo.onBlur();
             fix.detectChanges();
-            expect(combo.valid).toEqual(IgxComboState.INITIAL);
+            expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
         }));
 
         it('Should be possible to be enabled/disabled when used as a form control', () => {
@@ -3129,6 +3132,32 @@ describe('igxCombo', () => {
             combo.selectItems([...data].splice(1, 3), true);
             fixture.detectChanges();
             expect(fixture.componentInstance.comboSelectedItems).toEqual([...data].splice(1, 3));
+        }));
+
+        it('Should properly initialize when used in a Template form control', fakeAsync (() => {
+            const fix = TestBed.createComponent(IgxComboInTemplatedFormComponent);
+            fix.detectChanges();
+            tick();
+
+            const combo = fix.componentInstance.testCombo;
+            expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+            let inputGroupRequired = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_REQUIRED));
+            expect(inputGroupRequired).toBeDefined();
+            combo.onBlur();
+            fix.detectChanges();
+            tick();
+            expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
+
+            combo.selectAllItems();
+            fix.detectChanges();
+            tick();
+            expect(combo.comboInput.valid).toEqual(IgxInputState.VALID);
+
+            const clearButton = fix.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON)).nativeElement;
+            clearButton.click();
+            fix.detectChanges();
+            tick();
+            expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
         }));
     });
 
@@ -3487,6 +3516,54 @@ class IgxComboFormComponent {
     onSubmitTemplateBased() { }
 }
 
+@Component({
+    template: `
+    <form>
+        <igx-combo #testCombo class="input-container" [placeholder]="'Locations'"
+            name="anyName" required [(ngModel)]="values"
+            [data]="items" [filterable]="filterableFlag"
+            [displayKey]="'field'" [valueKey]="'field'"
+            [groupKey]="'field' ? 'region' : ''" [width]="'100%'">
+            <label igxLabel>Combo Label</label>
+        </igx-combo>
+</form>
+`
+})
+class IgxComboInTemplatedFormComponent {
+    @ViewChild('testCombo', { read: IgxComboComponent, static: true }) testCombo: IgxComboComponent;
+    public items: any[] = [];
+    public values: Array<any>;
+
+    constructor() {
+        const division = {
+            'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
+            'New England 02': ['New Hampshire', 'Rhode Island', 'Vermont'],
+            'Mid-Atlantic': ['New Jersey', 'New York', 'Pennsylvania'],
+            'East North Central 02': ['Michigan', 'Ohio', 'Wisconsin'],
+            'East North Central 01': ['Illinois', 'Indiana'],
+            'West North Central 01': ['Missouri', 'Nebraska', 'North Dakota', 'South Dakota'],
+            'West North Central 02': ['Iowa', 'Kansas', 'Minnesota'],
+            'South Atlantic 01': ['Delaware', 'Florida', 'Georgia', 'Maryland'],
+            'South Atlantic 02': ['North Carolina', 'South Carolina', 'Virginia'],
+            'South Atlantic 03': ['District of Columbia', 'West Virginia'],
+            'East South Central 01': ['Alabama', 'Kentucky'],
+            'East South Central 02': ['Mississippi', 'Tennessee'],
+            'West South Central': ['Arkansas', 'Louisiana', 'Oklahome', 'Texas'],
+            'Mountain': ['Arizona', 'Colorado', 'Idaho', 'Montana', 'Nevada', 'New Mexico', 'Utah', 'Wyoming'],
+            'Pacific 01': ['Alaska', 'California'],
+            'Pacific 02': ['Hawaii', 'Oregon', 'Washington']
+        };
+        const keys = Object.keys(division);
+        for (const key of keys) {
+            division[key].map((e) => {
+                this.items.push({
+                    field: e,
+                    region: key.substring(0, key.length - 3)
+                });
+            });
+        }
+    }
+}
 @Injectable()
 export class LocalService {
     public getData() {
