@@ -148,7 +148,7 @@
                         <button igxButton="outlined"
                                 *ngIf="expressionItem !== rootGroup"
                                 [displayDensity]="displayDensity"
-                                [disabled]="editedExpression"
+                                [disabled]="editedExpression || expressionItem.children.length < 2"
                                 (click)="endGroup(expressionItem)">
                             <span>End Group</span>
                         </button>

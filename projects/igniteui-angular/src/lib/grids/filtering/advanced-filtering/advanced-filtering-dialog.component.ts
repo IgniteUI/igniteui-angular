@@ -433,8 +433,14 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     private deleteItem(expressionItem: ExpressionItem) {
         if (!expressionItem.parent) {
             this.rootGroup = null;
+            this.currentGroup = null;
             return;
         }
+
+        if (expressionItem === this.currentGroup) {
+            this.currentGroup = this.currentGroup.parent;
+        }
+
         const children = expressionItem.parent.children;
         const index = children.indexOf(expressionItem);
         children.splice(index, 1);
