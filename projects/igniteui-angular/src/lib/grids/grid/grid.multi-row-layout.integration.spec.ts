@@ -811,6 +811,21 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
 
             verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups);
         });
+
+        it('should render unpin and hide column buttons into the excel style filter', () => {
+            const filterIcons = fixture.debugElement.queryAll(By.css('.igx-excel-filter__icon'));
+            expect(filterIcons.length).not.toBe(0);
+
+            filterIcons[0].nativeElement.click();
+            fixture.detectChanges();
+
+            const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
+            const unpinComponent = excelMenu.querySelector('.igx-excel-filter__actions-unpin');
+            const hideComponent = excelMenu.querySelector('.igx-excel-filter__actions-hide');
+
+            expect(unpinComponent).toBeDefined();
+            expect(hideComponent).toBeDefined();
+        });
     });
 
     describe('GroupBy ', () => {
