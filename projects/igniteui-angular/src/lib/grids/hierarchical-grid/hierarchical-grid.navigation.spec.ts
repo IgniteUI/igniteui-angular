@@ -930,7 +930,8 @@ describe('IgxHierarchicalGrid Multi-layout Navigation', () => {
         hierarchicalGrid = fixture.componentInstance.hgrid;
         setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
     }));
-    it('should allow navigating up/down between sibling child grids.', (async () => {
+
+    it('should allow navigating up between sibling child grids.', (async () => {
         hierarchicalGrid.verticalScrollContainer.scrollTo(2);
         await wait(100);
         fixture.detectChanges();
@@ -938,41 +939,67 @@ describe('IgxHierarchicalGrid Multi-layout Navigation', () => {
         const child2 = hierarchicalGrid.hgridAPI.getChildGrids(false)[4];
 
         const child2Cell = child2.dataRowList.toArray()[0].cells.toArray()[0];
-        child2Cell.nativeElement.focus();
-        await wait(100);
-        fixture.detectChanges();
-
-        let keyboardEvent = new KeyboardEvent('keydown', {
+        const keyboardEvent = new KeyboardEvent('keydown', {
             code: 'ArrowUp',
             key: 'ArrowUp'
         });
         child2Cell.dispatchEvent(keyboardEvent);
+        fixture.detectChanges();
         await wait(100);
         fixture.detectChanges();
         const lastCellPrevRI = child1.dataRowList.toArray()[1].cells.toArray()[0];
 
         expect(lastCellPrevRI.selected).toBe(true);
-        expect(lastCellPrevRI.focused).toBe(true);
         expect(lastCellPrevRI.rowIndex).toBe(9);
+    }));
+    it('should allow navigating down between sibling child grids.', (async () => {
+        hierarchicalGrid.verticalScrollContainer.scrollTo(2);
+        await wait(100);
+        fixture.detectChanges();
+        const child1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+        const child2 = hierarchicalGrid.hgridAPI.getChildGrids(false)[4];
 
-        keyboardEvent = new KeyboardEvent('keydown', {
+        child1.verticalScrollContainer.scrollTo(child1.verticalScrollContainer.igxForOf.length - 1);
+        await wait(100);
+        fixture.detectChanges();
+
+        const keyboardEvent = new KeyboardEvent('keydown', {
             code: 'ArrowDown',
             key: 'ArrowDown'
         });
+        const child2Cell = child2.dataRowList.toArray()[0].cells.toArray()[0];
+        const lastCellPrevRI = child1.dataRowList.toArray()[1].cells.toArray()[0];
         lastCellPrevRI.dispatchEvent(keyboardEvent);
+        fixture.detectChanges();
         await wait(100);
         fixture.detectChanges();
         expect(child2Cell.selected).toBe(true);
     }));
-    it('should allow navigating with Tab/Shift+Tab between sibling child grids.', (async () => {
+
+    it('should allow navigating with Tab between sibling child grids.', (async () => {
+        const child1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+        const child2 = hierarchicalGrid.hgridAPI.getChildGrids(false)[4];
+
+        child1.verticalScrollContainer.scrollTo(child1.verticalScrollContainer.igxForOf.length - 1);
+        await wait(100);
+        fixture.detectChanges();
+        const rowVirt = child1.dataRowList.toArray()[0].virtDirRow;
+        rowVirt.scrollTo(rowVirt.igxForOf.length - 1);
+        await wait(100);
+        fixture.detectChanges();
+        const child1Cell = child1.getCellByColumn(9, 'childData');
+        const child2Cell = child2.dataRowList.toArray()[0].cells.toArray()[0];
+         // Tab from last cell in 1st child
+         child1Cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab'}));
+         await wait(100);
+         fixture.detectChanges();
+         expect(child2Cell.selected).toBe(true);
+    }));
+    it('should allow navigating with Shift+Tab between sibling child grids.', (async () => {
         const child1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         const child2 = hierarchicalGrid.hgridAPI.getChildGrids(false)[4];
 
         const child2Cell = child2.dataRowList.toArray()[0].cells.toArray()[0];
-        child2Cell.nativeElement.focus();
-        await wait(240);
-        fixture.detectChanges();
-
         // Shift + Tab from 2nd child
         child2Cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
         await wait(240);
@@ -983,13 +1010,6 @@ describe('IgxHierarchicalGrid Multi-layout Navigation', () => {
         expect(child1Cell.selected).toBe(true);
         expect(child1Cell.rowIndex).toBe(9);
         expect(child1Cell.columnIndex).toBe(6);
-
-        // Tab from last cell in 1st child
-        child1Cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab'}));
-        await wait(100);
-        fixture.detectChanges();
-
-        expect(child2Cell.selected).toBe(true);
     }));
     it('should navigate up from parent row to the correct child sibling.', (async () => {
         const parentCell = hierarchicalGrid.dataRowList.toArray()[1].cells.toArray()[0];
