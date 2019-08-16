@@ -2609,7 +2609,7 @@ describe('IgxGrid - Cell selection', () => {
             grid.selectRows([row.rowID]);
             fix.detectChanges();
 
-            expect(row.select).toBeTruthy();
+            expect(row.selected).toBeTruthy();
             HelperUtils.verifySelectedRange(grid, 2, 4, 0, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
@@ -2634,7 +2634,7 @@ describe('IgxGrid - Cell selection', () => {
             UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true, false, false);
             fix.detectChanges();
 
-            expect(grid.getRowByIndex(2).select).toBeTruthy();
+            expect(grid.getRowByIndex(2).selected).toBeTruthy();
             HelperUtils.verifySelectedRange(grid, 2, 4, 0, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
@@ -2659,7 +2659,7 @@ describe('IgxGrid - Cell selection', () => {
             UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true, false, false);
             fix.detectChanges();
 
-            expect(grid.getRowByIndex(2).select).toBeTruthy();
+            expect(grid.getRowByIndex(2).selected).toBeTruthy();
             HelperUtils.verifySelectedRange(grid, 2, 4, 0, 3);
             HelperUtils.verifyCellsRegionSelected(grid, 2, 4, 0, 3);
             expect(grid.getSelectedData()).toEqual(selectedData);
@@ -2833,7 +2833,7 @@ describe('IgxGrid - Cell selection', () => {
         });
     });
 
-    describe('GridSelectionMode none', () => {
+    describe('None selection', () => {
         let fix;
         let grid: IgxGridComponent;
         let detect;
@@ -2941,9 +2941,7 @@ describe('IgxGrid - Cell selection', () => {
         });
 
         it('Should select a region from API', () => {
-            const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             const range = { rowStart: 0, rowEnd: 2, columnStart: 'Name', columnEnd: 'ParentID' };
-            const cell = grid.getCellByColumn(1, 'Name');
             const expectedData = [
                 { ParentID: 147, Name: 'Michael Langdon' },
                 { ParentID: 147, Name: 'Thomas Hardy' },
@@ -2995,7 +2993,7 @@ describe('IgxGrid - Cell selection', () => {
         });
     });
 
-    describe('GridSelectionMode single', () => {
+    describe('Single selection', () => {
         let fix;
         let grid: IgxGridComponent;
         let detect;
@@ -3161,7 +3159,7 @@ describe('IgxGrid - Cell selection', () => {
             HelperUtils.verifyCellsRegionSelected(grid, 2, 3, 1, 2);
             expect(grid.selectedCells.length).toBe(4);
             expect(grid.getSelectedData()).toEqual(expectedData);
-            HelperUtils.verifySelectedRange(grid, 2, 3, 1, 3);
+            HelperUtils.verifySelectedRange(grid, 2, 3, 1, 2);
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
         });
 

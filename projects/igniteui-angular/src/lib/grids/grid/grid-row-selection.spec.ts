@@ -10,12 +10,12 @@ import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     GridWithPrimaryKeyComponent,
-    SelectionComponent,
     RowSelectionComponent,
     SelectionAndPagingComponent,
     SummariesComponent,
     SelectionCancellableComponent,
-    SelectionWithScrollsComponent
+    SelectionWithScrollsComponent,
+    SingleRowSelectionComponent
 } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IgxHierarchicalGridModule } from '../hierarchical-grid/hierarchical-grid.module';
@@ -33,13 +33,13 @@ describe('IgxGrid - Row Selection', () => {
             declarations: [
                 GridWithPrimaryKeyComponent,
                 SelectionAndPagingComponent,
-                SelectionComponent,
                 RowSelectionComponent,
                 GridWithSelectionFilteringComponent,
                 SummariesComponent,
                 SelectionCancellableComponent,
                 SelectionWithScrollsComponent,
-                IgxGridRowEditingTransactionComponent
+                IgxGridRowEditingTransactionComponent,
+                SingleRowSelectionComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -52,7 +52,7 @@ describe('IgxGrid - Row Selection', () => {
 
     describe('Base tests', () => {
         let fix;
-        let grid;
+        let grid: IgxGridComponent;
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(RowSelectionComponent);
@@ -61,6 +61,7 @@ describe('IgxGrid - Row Selection', () => {
         }));
 
         it('Should have checkbox on each row', (async () => {
+            HelperUtils.verifyHeaderRowHasCheckbox(fix);
             HelperUtils.verifyHeaderAndRowCheckBoxesAlignment(fix, grid);
 
             for (const row of grid.rowList.toArray()) {
@@ -583,7 +584,7 @@ describe('IgxGrid - Row Selection', () => {
 
     describe('API test', () => {
         let fix;
-        let grid;
+        let grid: IgxGridComponent;
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(RowSelectionComponent);
@@ -698,10 +699,9 @@ describe('IgxGrid - Row Selection', () => {
 
     });
 
-
     describe('RowSelection none', () => {
         let fix;
-        let grid;
+        let grid: IgxGridComponent;
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
@@ -730,9 +730,318 @@ describe('IgxGrid - Row Selection', () => {
         });
     });
 
+    describe('RowSelection single', () => {
+        let fix;
+        let grid: IgxGridComponent;
+
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fix = TestBed.createComponent(SingleRowSelectionComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+        }));
+
+        it('Should have checkbox on each row nd do not have header checkbox', (async () => {
+            HelperUtils.verifyHeaderRowHasCheckbox(fix, false);
+            HelperUtils.verifyHeaderAndRowCheckBoxesAlignment(fix, grid);
+
+            for (const row of grid.rowList.toArray()) {
+                HelperUtils.verifyRowHasCheckbox(row.nativeElement);
+            }
+
+            GridFunctions.setGridScrollTop(grid, 1000);
+            await wait(100);
+            fix.detectChanges();
+
+            HelperUtils.verifyHeaderRowHasCheckbox(fix, false);
+            HelperUtils.verifyHeaderAndRowCheckBoxesAlignment(fix, grid);
+
+            for (const row of grid.rowList.toArray()) {
+                HelperUtils.verifyRowHasCheckbox(row.nativeElement);
+            }
+        }));
+
+        it('Should be able to select only one row when click on a checkbox', () => {
+            const firstRow = grid.getRowByIndex(0);
+            const secondRow = grid.getRowByIndex(1);
+            spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
+
+            HelperUtils.clickRowCheckbox(firstRow);
+            fix.detectChanges();
+
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith({
+                added: [1],
+                cancel: false,
+                event: jasmine.anything(),
+                newSelection: [1],
+                oldSelection: [],
+                removed: []
+            });
+
+            expect(grid.selectedRows()).toEqual([1]);
+            HelperUtils.verifyRowSelected(firstRow);
+            HelperUtils.verifyRowSelected(secondRow, false);
+
+            // Click other row checkbox
+            HelperUtils.clickRowCheckbox(secondRow);
+            fix.detectChanges();
+
+            HelperUtils.verifyRowSelected(firstRow, false);
+            HelperUtils.verifyRowSelected(secondRow);
+            expect(grid.selectedRows()).toEqual([2]);
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith({
+                added: [2],
+                cancel: false,
+                event: jasmine.anything(),
+                newSelection: [2],
+                oldSelection: [1],
+                removed: [1]
+            });
+        });
+
+        it('Should not select multiple rows with clicking and holding Ctrl', () => {
+            spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
+            const firstRow = grid.getRowByIndex(2);
+            const secondRow = grid.getRowByIndex(0);
+
+            UIInteractions.simulateClickEvent(firstRow.nativeElement);
+            fix.detectChanges();
+
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
+            expect(grid.selectedRows()).toEqual([3]);
+            HelperUtils.verifyRowSelected(firstRow);
+
+            // Click on a different row holding Ctrl
+            UIInteractions.simulateClickEvent(secondRow.nativeElement, false, true);
+            fix.detectChanges();
+
+            HelperUtils.verifyRowSelected(firstRow, false);
+            HelperUtils.verifyRowSelected(secondRow);
+            expect(grid.selectedRows()).toEqual([1]);
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
+        });
+
+        it('Should not select multiple rows with clicking Space on a cell', (async () => {
+            spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
+            const firstRow = grid.getRowByIndex(0);
+            const secondRow = grid.getRowByIndex(1);
+            let cell = grid.getCellByColumn(0, 'ProductName');
+
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            fix.detectChanges();
+            await wait(DEBOUNCETIME);
+
+            HelperUtils.verifyCellSelected(cell);
+            HelperUtils.verifyRowSelected(firstRow, false);
+
+            // Press Space key on the cell
+            UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
+            fix.detectChanges();
+            await wait(DEBOUNCETIME);
+
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
+            expect(grid.selectedRows()).toEqual([1]);
+            HelperUtils.verifyRowSelected(firstRow);
+            HelperUtils.verifyRowSelected(secondRow, false);
+
+            UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true);
+            fix.detectChanges();
+            await wait(DEBOUNCETIME);
+
+            // Click Space on the cell
+            cell = grid.getCellByColumn(1, 'ProductName');
+            UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
+            fix.detectChanges();
+            await wait(DEBOUNCETIME);
+
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
+            expect(grid.selectedRows()).toEqual([2]);
+            HelperUtils.verifyRowSelected(firstRow, false);
+            HelperUtils.verifyRowSelected(secondRow);
+
+            // Click again Space on the cell
+            UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
+            fix.detectChanges();
+            await wait(DEBOUNCETIME);
+
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(3);
+            expect(grid.selectedRows()).toEqual([]);
+            HelperUtils.verifyRowSelected(firstRow, false);
+            HelperUtils.verifyRowSelected(secondRow, false);
+        }));
+
+        it('Should not select multiple rows with Shift + Click', () => {
+            spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
+            const firstRow = grid.getRowByIndex(1);
+            const secondRow = grid.getRowByIndex(4);
+            const mockEvent = new MouseEvent('click', {shiftKey: true});
+
+            UIInteractions.simulateClickEvent(firstRow.nativeElement);
+            fix.detectChanges();
+
+            expect(grid.selectedRows()).toEqual([2]);
+            HelperUtils.verifyRowSelected(firstRow);
+
+            // Click on other row holding Shift key
+            secondRow.nativeElement.dispatchEvent(mockEvent);
+            fix.detectChanges();
+
+            expect(grid.selectedRows()).toEqual([5]);
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith({
+                added: [5],
+                cancel: false,
+                event: mockEvent,
+                newSelection: [5],
+                oldSelection: [2],
+                removed: [2]
+            });
+
+            HelperUtils.verifyRowSelected(secondRow);
+            for (let index = 1; index < 4; index++) {
+                const row = grid.getRowByIndex(index);
+                HelperUtils.verifyRowSelected(row, false);
+            }
+        });
+
+        it('Should hide/show checkboxes when change hideRowSelectors', () => {
+            const firstRow = grid.getRowByIndex(1);
+
+            expect(grid.hideRowSelectors).toBe(false);
+
+            UIInteractions.simulateClickEvent(firstRow.nativeElement);
+            fix.detectChanges();
+
+            HelperUtils.verifyRowSelected(firstRow);
+
+            grid.hideRowSelectors = true;
+            fix.detectChanges();
+
+            HelperUtils.verifyRowSelected(firstRow, true, false);
+            HelperUtils.verifyHeaderRowHasCheckbox(fix, false, false);
+            HelperUtils.verifyRowHasCheckbox(firstRow.nativeElement, false, false);
+
+            grid.hideRowSelectors = false;
+            fix.detectChanges();
+
+            HelperUtils.verifyRowSelected(firstRow);
+            HelperUtils.verifyHeaderRowHasCheckbox(fix, false);
+            HelperUtils.verifyRowHasCheckbox(firstRow.nativeElement);
+        });
+
+        it('Should be able to select multiple rows from API', () => {
+            grid.selectRows([1, 3, 5], true);
+            fix.detectChanges();
+
+            HelperUtils.verifyRowsArraySelected([grid.getRowByIndex(0), grid.getRowByIndex(2), grid.getRowByIndex(4)]);
+            expect(grid.selectedRows()).toEqual([1, 3, 5]);
+
+            grid.selectRows([1, 2, 4], false);
+            fix.detectChanges();
+
+            HelperUtils.verifyRowsArraySelected([grid.getRowByIndex(0),
+                grid.getRowByIndex(1), grid.getRowByIndex(2), grid.getRowByIndex(3), grid.getRowByIndex(4)]);
+            expect(grid.selectedRows()).toEqual([1, 2, 3, 4, 5]);
+        });
+
+        it('Should be able to cancel onRowSelectionChange event', () => {
+            const firstRow = grid.getRowByIndex(0);
+            const secondRow = grid.getRowByIndex(1);
+
+            // Click on a row
+            UIInteractions.simulateClickEvent(firstRow.nativeElement);
+            fix.detectChanges();
+            HelperUtils.verifyRowSelected(firstRow);
+            expect(grid.selectedRows()).toEqual([1]);
+
+            // Cancel the event
+            grid.onRowSelectionChange.subscribe((e: IRowSelectionEventArgs) => {
+                e.cancel = true;
+            });
+
+            // Click on a row checkbox
+            HelperUtils.clickRowCheckbox(firstRow);
+            fix.detectChanges();
+            HelperUtils.verifyRowSelected(firstRow);
+            expect(grid.selectedRows()).toEqual([1]);
+
+            // Click on other row checkbox
+            HelperUtils.clickRowCheckbox(secondRow);
+            fix.detectChanges();
+            HelperUtils.verifyRowSelected(firstRow);
+            HelperUtils.verifyRowSelected(secondRow, false);
+            expect(grid.selectedRows()).toEqual([1]);
+
+           // Click on other row
+           UIInteractions.simulateClickEvent(secondRow.nativeElement);
+           fix.detectChanges();
+           HelperUtils.verifyRowSelected(firstRow);
+           HelperUtils.verifyRowSelected(secondRow, false);
+           expect(grid.selectedRows()).toEqual([1]);
+        });
+
+        it('Should be able to change RowSelection to none', () => {
+            const firstRow = grid.getRowByIndex(0);
+            expect(grid.rowSelection).toEqual(GridSelectionMode.single);
+
+            grid.selectRows([1]);
+            fix.detectChanges();
+
+            HelperUtils.verifyRowSelected(firstRow);
+
+            grid.rowSelection = GridSelectionMode.none;
+            fix.detectChanges();
+
+            expect(grid.rowSelection).toEqual(GridSelectionMode.none);
+            HelperUtils.verifyRowSelected(firstRow, false, false);
+            HelperUtils.verifyHeaderRowHasCheckbox(fix, false, false);
+            HelperUtils.verifyRowHasCheckbox(firstRow.nativeElement, false, false);
+
+            // Click on a row
+            UIInteractions.simulateClickEvent(firstRow.nativeElement);
+            fix.detectChanges();
+
+            HelperUtils.verifyRowSelected(firstRow, false, false);
+        });
+
+        it('Should be able to change RowSelection to multiple', () => {
+            const firstRow = grid.getRowByIndex(0);
+            const secondRow = grid.getRowByIndex(2);
+            expect(grid.rowSelection).toEqual(GridSelectionMode.single);
+
+            grid.selectRows([1]);
+            fix.detectChanges();
+
+            HelperUtils.verifyRowSelected(firstRow);
+
+            grid.rowSelection = GridSelectionMode.multiple;
+            fix.detectChanges();
+
+            expect(grid.rowSelection).toEqual(GridSelectionMode.multiple);
+            HelperUtils.verifyRowSelected(firstRow, false);
+            HelperUtils.verifyHeaderRowHasCheckbox(fix);
+            HelperUtils.verifyRowHasCheckbox(firstRow.nativeElement);
+            HelperUtils.verifyHeaderAndRowCheckBoxesAlignment(fix, grid);
+
+            // Click on a row
+            UIInteractions.simulateClickEvent(firstRow.nativeElement);
+            fix.detectChanges();
+
+            HelperUtils.verifyRowSelected(firstRow);
+
+            // Click on another row holding Ctrl
+            UIInteractions.simulateClickEvent(secondRow.nativeElement);
+            fix.detectChanges();
+
+            HelperUtils.verifyRowSelected(secondRow);
+            HelperUtils.verifyRowSelected(firstRow);
+        });
+    });
+
     describe('Selection with primaryKey', () => {
         let fix;
-        let grid;
+        let grid: IgxGridComponent;
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(GridWithPrimaryKeyComponent);
@@ -799,7 +1108,7 @@ describe('IgxGrid - Row Selection', () => {
 
     describe('Integration with paging', () => {
         let fix;
-        let grid;
+        let grid: IgxGridComponent;
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(SelectionAndPagingComponent);
@@ -909,7 +1218,7 @@ describe('IgxGrid - Row Selection', () => {
 
     describe('Integration with filtering', () => {
         let fix;
-        let grid;
+        let grid: IgxGridComponent;
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(GridWithSelectionFilteringComponent);
@@ -1064,7 +1373,7 @@ describe('IgxGrid - Row Selection', () => {
 
     describe('Integration with CRUD', () => {
         let fix;
-        let grid;
+        let grid: IgxGridComponent;
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(RowSelectionComponent);
@@ -1092,7 +1401,7 @@ describe('IgxGrid - Row Selection', () => {
 
     describe('Integration with CRUD and transactions', () => {
         let fix;
-        let grid;
+        let grid: IgxGridComponent;
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
@@ -1101,15 +1410,15 @@ describe('IgxGrid - Row Selection', () => {
         }));
 
         it('Should not allow selecting rows that are deleted', fakeAsync(() => {
-            grid.RowSelection = GridSelectionMode.multiple;
-            grid.detectChanges();
+            grid.rowSelection = GridSelectionMode.multiple;
+            fix.detectChanges();
 
             grid.deleteRowById(2);
             grid.deleteRowById(3);
 
-            grid.detectChanges();
+            fix.detectChanges();
             grid.selectRows([2, 3, 4]);
-            grid.detectChanges();
+            fix.detectChanges();
             expect(grid.selectedRows()).toEqual([4]);
         }));
     });

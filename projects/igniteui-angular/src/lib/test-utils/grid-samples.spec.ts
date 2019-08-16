@@ -173,9 +173,20 @@ export class SelectionComponent extends BasicGridComponent {
 @Component({
     template: GridTemplateStrings.declareGrid(
             ` [width]="width" [height]="height" [rowSelection]="'multiple'" [primaryKey]="'ProductID'"`,
-            '', ColumnDefinitions.productBasic)
+            '', ColumnDefinitions.productBasicNumberID)
 })
 export class RowSelectionComponent extends BasicGridComponent {
+    data = SampleTestData.foodProductDataExtended();
+    public width = '800px';
+    public height = '600px';
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
+            ` [width]="width" [height]="height" [rowSelection]="'single'" [primaryKey]="'ProductID'"`,
+            '', ColumnDefinitions.productBasicNumberID)
+})
+export class SingleRowSelectionComponent extends BasicGridComponent {
     data = SampleTestData.foodProductDataExtended();
     public width = '800px';
     public height = '600px';

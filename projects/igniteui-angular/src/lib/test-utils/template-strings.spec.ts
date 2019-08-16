@@ -231,6 +231,19 @@ export class ColumnDefinitions {
     `;
 
     public static productBasic = `
+        <igx-column field="ProductID" header="Product ID">
+        </igx-column>
+        <igx-column field="ProductName">
+        </igx-column>
+        <igx-column field="InStock" [dataType]="'boolean'">
+        </igx-column>
+        <igx-column field="UnitsInStock" [dataType]="'number'">
+        </igx-column>
+        <igx-column field="OrderDate" width="200px" [dataType]="'date'">
+        </igx-column>
+    `;
+
+    public static productBasicNumberID = `
         <igx-column field="ProductID" header="Product ID" [dataType]="'number'">
         </igx-column>
         <igx-column field="ProductName">
