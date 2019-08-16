@@ -21,6 +21,7 @@ import {
     AbsoluteScrollStrategy
 } from '../services/index';
 import { GridBaseAPIService } from './api.service';
+import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxColumnHidingComponent } from './column-hiding.component';
@@ -104,8 +105,8 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const hidingButton = this.grid.toolbar.columnHidingButton;
      * ```
      */
-    @ViewChild('columnHidingButton')
-    public columnHidingButton;
+    @ViewChild('columnHidingButton', { read: IgxButtonDirective })
+    public columnHidingButton: IgxButtonDirective;
 
     /**
      * Provides a reference to the `IgxDropDownComponent` of the Export button.
@@ -122,8 +123,8 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const exportBtn = this.grid.toolbar.exportButton;
      * ```
      */
-    @ViewChild('btnExport')
-    public exportButton;
+    @ViewChild('btnExport', { read: IgxButtonDirective })
+    public exportButton: IgxButtonDirective;
 
     /**
      * Provides a reference to the `IgxDropDownComponent` of the Column Pinning UI.
@@ -149,8 +150,8 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const pinningButton = this.grid.toolbar.columnPinningButton;
      * ```
      */
-    @ViewChild('columnPinningButton')
-    public columnPinningButton;
+    @ViewChild('columnPinningButton', { read: IgxButtonDirective })
+    public columnPinningButton: IgxButtonDirective;
 
     /**
      * Returns a reference to the `IgxGridComponent` component, hosting the `IgxGridToolbarComponent`.
