@@ -136,7 +136,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
 
         if (this._selectedColumn !== value) {
             this._selectedColumn = value;
-            if (oldValue && this._selectedColumn.dataType !== oldValue.dataType) {
+            if (oldValue && this._selectedColumn && this._selectedColumn.dataType !== oldValue.dataType) {
                 this.selectedCondition = null;
                 this.searchValue = null;
             }
