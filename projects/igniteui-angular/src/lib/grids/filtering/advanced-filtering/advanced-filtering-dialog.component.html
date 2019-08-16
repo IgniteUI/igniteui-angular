@@ -57,8 +57,12 @@
                           (onRemove)="onChipRemove(expressionItem)"
                           style="margin-bottom: 10px">
                     {{ expressionItem.expression.fieldName }}
-                    {{ expressionItem.expression.condition ? expressionItem.expression.condition.name : '' }}
-                    {{ expressionItem.expression.searchVal }}
+                    <igx-icon fontSet="filtering-icons"
+                              [name]="expressionItem.expression.condition.iconName"></igx-icon>
+                    {{ getConditionFriendlyName(expressionItem.expression.condition.name) }}
+                    <span *ngIf="!expressionItem.expression.condition.isUnary">
+                        {{ expressionItem.expression.searchVal }}
+                    </span>
                 </igx-chip>
                 <span *ngIf="expressionItem.selected && selectedExpressions.length === 1">
                     <button igxButton="icon"
@@ -99,7 +103,7 @@
                                 [(ngModel)]="selectedCondition"
                                 [disabled]="!selectedColumn">
                             <igx-select-item *ngFor="let condition of selectedColumn.filters.conditionList()" [value]="condition">
-                                {{condition}}
+                                {{getConditionFriendlyName(condition)}}
                             </igx-select-item>
                     </igx-select>
                 </ng-container>

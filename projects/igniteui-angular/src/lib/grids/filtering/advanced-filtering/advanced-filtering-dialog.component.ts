@@ -571,6 +571,10 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         this.contextualGroup.operator = event.index as FilteringLogic;
     }
 
+    public getConditionFriendlyName(name: string): string {
+        return this.grid.resourceStrings[`igx_grid_filter_${name}`] || name;
+    }
+
     public initialize(filteringService: IgxFilteringService, overlayService: IgxOverlayService,
         overlayComponentId: string) {
         this.filteringService = filteringService;
