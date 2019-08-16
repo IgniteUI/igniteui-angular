@@ -22,7 +22,7 @@ script:
 - npm run build:style
 - if [ -z "${TRAVIS_TAG}" ]; then npm run test:lib; fi
 - if [ -z "${TRAVIS_TAG}" ]; then npm run test:schematics; fi
-# - if [ -z "${TRAVIS_TAG}" ] && [ "${TRAVIS_REPO_SLUG}" == "IgniteUI/igniteui-angular" ]; then cat ./coverage/lcov.info | coveralls; fi
+- if [ -z "${TRAVIS_TAG}" ] && [ "${TRAVIS_REPO_SLUG}" == "IgniteUI/igniteui-angular" ]; then cat ./coverage/lcov.info | coveralls; fi
 
 before_deploy:
 - npm run build:schematics

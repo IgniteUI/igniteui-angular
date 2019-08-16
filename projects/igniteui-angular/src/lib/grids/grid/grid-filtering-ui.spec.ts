@@ -5659,6 +5659,44 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             expect(pinButton.classList.contains('igx-excel-filter__actions-pin--disabled')).toBe(true,
                 'pinButton should be disabled');
         }));
+
+        it('Should pin column next to already pinned group by moving it to the left.', fakeAsync(() => {
+            // Test prerequisites
+            grid.width = '1000px';
+            fix.detectChanges();
+            tick(100);
+            // Adjust column widths, so their group can be pinned.
+            const columnFields = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'AnotherField'];
+            columnFields.forEach((columnField) => {
+                const col = grid.columns.find((c) => c.field === columnField);
+                col.width = '100px';
+            });
+            fix.detectChanges();
+            // Make 'AnotherField' column movable.
+            const column = grid.columns.find((c) => c.field === 'AnotherField');
+            column.movable = true;
+            fix.detectChanges();
+
+            // Pin the 'General Information' group by pinning its child 'ProductName' column.
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            fix.detectChanges();
+            GridFunctions.clickPinIconInExcelStyleFiltering(fix, false);
+            tick(200);
+            fix.detectChanges();
+
+            // Verify 'AnotherField' column is not pinned.
+            GridFunctions.verifyColumnIsPinned(column, false, 7);
+
+            // Try to pin the 'AnotherField' column by moving it to the left.
+            GridFunctions.clickExcelFilterIcon(fix, 'AnotherField');
+            fix.detectChanges();
+            GridFunctions.clickMoveLeftInExcelStyleFiltering(fix);
+            tick(200);
+            fix.detectChanges();
+
+            // Verify 'AnotherField' column is successfully pinned next to the column group.
+            GridFunctions.verifyColumnIsPinned(column, true, 8);
+        }));
     });
 });
 
