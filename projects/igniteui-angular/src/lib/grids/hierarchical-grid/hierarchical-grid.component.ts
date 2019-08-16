@@ -393,6 +393,23 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             this.rowSelectorsTemplate;
     }
 
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public selectAll = () => {
+        this.selectAllRows();
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public deselectAll = () => {
+        this.deselectAllRows();
+    }
+
     private updateSizes() {
         if (!this._destroyed && document.body.contains(this.nativeElement) && this.isPercentWidth) {
             this.reflow();

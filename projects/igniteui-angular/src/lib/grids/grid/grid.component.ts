@@ -30,7 +30,6 @@ import { IgxOverlayService } from '../../services/index';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
-import { IgxRowSelectorDirective, IgxHeadSelectorDirective } from '../igx-selection.module';
 
 let NEXT_ID = 0;
 
@@ -115,7 +114,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      * @internal
      */
     public getGridRowIndex(rowData: any, curIndex: number): number {
-        if (this.groupingResult.length > 0) {
+        if (this.groupingExpressions.length > 0) {
             return this.filteredSortedData.indexOf(rowData);
         }
 
