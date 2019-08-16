@@ -15,6 +15,10 @@ export class HierarchicalGridSampleComponent {
     displayDensities;
     riToggle = true;
 
+
+    public columns;
+    public childColumns;
+
     @ViewChild('layout1')
     layout1: IgxRowIslandComponent;
 
@@ -95,5 +99,10 @@ export class HierarchicalGridSampleComponent {
 
     selectDensity(event) {
         this.density = this.displayDensities[event.index].label;
+    }
+
+    public LoadMoreColumns() {
+        this.columns = ['Col1', 'Col2', 'Col3'];
+        this.childColumns = ['ChildCol1', 'ChildCol2'];
     }
 }
