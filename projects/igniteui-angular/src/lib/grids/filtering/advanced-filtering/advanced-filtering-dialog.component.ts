@@ -76,7 +76,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     public filteringLogics;
 
     public selectedCondition: string;
-    public searchValue: string;
+    public searchValue: any;
 
     public _positionSettings = {
         horizontalStartPoint: HorizontalAlignment.Right,
@@ -573,6 +573,14 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
 
     public getConditionFriendlyName(name: string): string {
         return this.grid.resourceStrings[`igx_grid_filter_${name}`] || name;
+    }
+
+    public isDate(value: any) {
+        return value instanceof Date;
+    }
+
+    public get inputDatePlaceholder(): string {
+        return this.grid.resourceStrings['igx_grid_filter_row_date_placeholder'];
     }
 
     public initialize(filteringService: IgxFilteringService, overlayService: IgxOverlayService,

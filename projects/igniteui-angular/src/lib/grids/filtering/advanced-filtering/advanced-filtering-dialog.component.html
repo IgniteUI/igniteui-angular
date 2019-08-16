@@ -61,7 +61,7 @@
                               [name]="expressionItem.expression.condition.iconName"></igx-icon>
                     {{ getConditionFriendlyName(expressionItem.expression.condition.name) }}
                     <span *ngIf="!expressionItem.expression.condition.isUnary">
-                        {{ expressionItem.expression.searchVal }}
+                        {{ isDate(expressionItem.expression.searchVal) ? (expressionItem.expression.searchVal | igxdate:grid.locale) : expressionItem.expression.searchVal }}
                     </span>
                 </igx-chip>
                 <span *ngIf="expressionItem.selected && selectedExpressions.length === 1">
@@ -108,13 +108,34 @@
                     </igx-select>
                 </ng-container>
 
-                <igx-input-group type="box"
+                <igx-input-group *ngIf="!selectedColumn || selectedColumn.dataType !== 'date'"
+                                 type="box"
                                  [disabled]="!selectedColumn || !selectedCondition || (selectedColumn && selectedColumn.filters.condition(selectedCondition).isUnary)"
                                  [displayDensity]="displayDensity">
                     <input #searchValueInput
                            igxInput
                            [(ngModel)]="searchValue"/>
                 </igx-input-group>
+
+                <igx-date-picker *ngIf="selectedColumn && selectedColumn.dataType === 'date'" 
+                                 mode="dropdown"
+                                 [(ngModel)]="searchValue"
+                                 [locale]="grid.locale"
+                                 [outlet]="grid.outletDirective">
+                    <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value">
+                        <igx-input-group #dropDownTarget type="box" [displayDensity]="displayDensity" [supressInputAutofocus]="true">
+                            <input #input
+                                    igxInput
+                                    tabindex="0"
+                                    (click)="openDialog(dropDownTarget.element.nativeElement)"
+                                    [placeholder]="inputDatePlaceholder"
+                                    autocomplete="off"
+                                    [value]="value | igxdate: grid.locale"
+                                    [readonly]="true"
+                                    [disabled]="!selectedColumn || !selectedCondition || (selectedColumn && selectedColumn.filters.condition(selectedCondition).isUnary)"/>
+                        </igx-input-group>
+                    </ng-template>
+                </igx-date-picker>
 
                 <button igxButton="icon"
                         [displayDensity]="displayDensity"
