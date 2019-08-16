@@ -558,7 +558,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
-
+    @WatchChanges()
     @Input()
     get hideRowSelectors() {
         return this._hideRowSelectors;
@@ -2358,6 +2358,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         separator: '\t'
     };
 
+    @WatchChanges()
     @Input()
     get cellSelection() {
         return this._cellSelectionMode;
@@ -2370,7 +2371,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.cdr.markForCheck();
         }
     }
-
+    @WatchChanges()
     @Input()
     get rowSelection() {
         return this._rowSelectionMode;

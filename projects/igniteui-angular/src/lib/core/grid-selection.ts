@@ -556,14 +556,14 @@ export class IgxGridSelectionService {
         const newSelection = this.getSelectedRows().filter(x => !removedRec.includes(x));
         if (shouldEmitEvent && this.emitRowSelectionEvent(newSelection, [], removedRec, event)) { return; }
 
-        onlyFiltered ? removedRec.forEach(rID => { this.deselectRow(rID); }) :  this.rowSelection.clear();
+        onlyFiltered ? this.deselectRowsWithNoEvent(removedRec) :  this.rowSelection.clear();
     }
 
     selectAllRows(onlyFiltered = true, shouldEmitEvent = true, event?) {
         this.allRowsSelected = true;
         const allData = onlyFiltered ? this.allData : this.grid.gridAPI.get_all_data();
         const allRowIDs = this.getRowIDs(allData);
-        const addedRows = allRowIDs.filter((rID) => !(this.isRowDeleted(rID) || this.isRowSelected(rID)));
+        const addedRows = allRowIDs.filter((rID) => !this.isRowSelected(rID));
 
         if (shouldEmitEvent && this.emitRowSelectionEvent(allRowIDs, addedRows, [], event)) { return; }
         this.selectRows(addedRows);
