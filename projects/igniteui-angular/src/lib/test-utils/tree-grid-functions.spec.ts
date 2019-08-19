@@ -293,7 +293,7 @@ export class TreeGridFunctions {
         expect(checkboxComponent.nativeCheckbox.nativeElement.checked).toBe(expectedSelection, 'Incorrect native checkbox selection state');
 
         // Verify selection of row
-        expect(rowComponent.isSelected).toBe(expectedSelection, 'Incorrect row selection state');
+        expect(rowComponent.selected).toBe(expectedSelection, 'Incorrect row selection state');
         expect((<HTMLElement>rowDOM.nativeElement).classList.contains(TREE_ROW_SELECTION_CSS_CLASS)).toBe(expectedSelection);
 
         // Verify selection of row through treeGrid

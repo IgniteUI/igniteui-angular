@@ -22,13 +22,12 @@
             </ng-container>
             <ng-container *ngIf="showRowSelectors">
                 <div class="igx-grid__cbx-selection" #headerSelectorContainer [ngClass]="{
-                    'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible
-                }">
-            <ng-template #headSelector
-                *ngTemplateOutlet="
-                this.headSelectorTemplate ? this.headSelectorTemplate : headSelectorBaseTemplate;
-                context: { $implicit: { selectedCount: selectedRowsCount, totalCount: this.data ? this.data.length : 0 }}">
-            </ng-template>
+                    'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible }">
+                    <ng-template #headSelector
+                        *ngTemplateOutlet="
+                        this.headSelectorTemplate ? this.headSelectorTemplate : headSelectorBaseTemplate;
+                        context: { $implicit: { selectedCount: selectedRowsCount, totalCount: this.data ? this.data.length : 0 }}">
+                    </ng-template>
                 </div>
             </ng-container>
             <ng-container *ngIf="pinnedColumns.length > 0">
@@ -191,8 +190,15 @@
 </ng-template>
 
 <ng-template #headSelectorBaseTemplate>
-    <igx-checkbox [checked]="allRowsSelected" (change)="onHeadSelectorClick($event, filteredData)"
-        disableRipple="true" [aria-label]="headerCheckboxAriaLabel"></igx-checkbox>
+    <igx-checkbox 
+        #headerCheckbox
+        *ngIf="isMultiRowSelectionEnabled"
+        [checked]="selectionService.areAllRowSelected()"
+        (change)="onHeadSelectorClick($event)"
+        disableRipple="true"
+        [indeterminate]="selectionService.hasSomeRowSelected()"
+        [aria-label]="headerCheckboxAriaLabel">
+    </igx-checkbox>
 </ng-template>
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>

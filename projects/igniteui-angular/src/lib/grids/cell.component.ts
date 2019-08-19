@@ -14,15 +14,15 @@
     OnChanges,
     SimpleChanges
 } from '@angular/core';
-import { IgxSelectionAPIService } from '../core/selection';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { getNodeSizeViaRange, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, NAVIGATION_KEYS, isIE, isLeftClick } from '../core/utils';
 import { State } from '../services/index';
-import { IgxGridBaseComponent, IGridEditEventArgs, IGridDataBindable } from './grid-base.component';
+import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../core/grid-selection';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { GridSelectionMode } from './grid-base.component';
 import { HammerGesturesManager } from '../core/touch';
 
 /**
@@ -293,6 +293,24 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     @Input()
+    get cellSelectionMode() {
+        return this._cellSelection;
+    }
+
+    set cellSelectionMode(value) {
+        if (this._cellSelection === value) { return; }
+         this.zone.runOutsideAngular(() => {
+            value === GridSelectionMode.multiple ?
+            this.addPointerListeners(value) : this.removePointerListeners(this._cellSelection);
+        });
+        this._cellSelection = value;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @Input()
     @HostBinding('class.igx-grid__td--pinned-last')
     lastPinned = false;
 
@@ -424,6 +442,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     set selected(val: boolean) {
         const node = this.selectionNode;
         val ? this.selectionService.add(node) : this.selectionService.remove(node);
+        this.grid.cdr.markForCheck();
     }
 
     @HostBinding('class.igx-grid__td--edited')
@@ -523,18 +542,31 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     protected compositionStartHandler;
     protected compositionEndHandler;
     private _highlight: IgxTextHighlightDirective;
+    private _cellSelection = GridSelectionMode.multiple;
 
 
     constructor(
         protected selectionService: IgxGridSelectionService,
         protected crudService: IgxGridCRUDService,
         public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-        public selection: IgxSelectionAPIService,
         public cdr: ChangeDetectorRef,
         private element: ElementRef,
         protected zone: NgZone,
         private touchManager: HammerGesturesManager) { }
 
+    private addPointerListeners(selection) {
+        if (selection !== GridSelectionMode.multiple) { return; }
+        this.nativeElement.addEventListener('pointerdown', this.pointerdown);
+        this.nativeElement.addEventListener('pointerenter', this.pointerenter);
+        this.nativeElement.addEventListener('pointerup', this.pointerup);
+    }
+
+    private  removePointerListeners(selection) {
+        if (selection !== GridSelectionMode.multiple) { return; }
+        this.nativeElement.removeEventListener('pointerdown', this.pointerdown);
+        this.nativeElement.removeEventListener('pointerenter', this.pointerenter);
+        this.nativeElement.removeEventListener('pointerup', this.pointerup);
+    }
 
     /**
      * @hidden
@@ -542,10 +574,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     ngOnInit() {
         this.zone.runOutsideAngular(() => {
-            this.nativeElement.addEventListener('pointerdown', this.pointerdown);
-            this.nativeElement.addEventListener('pointerenter', this.pointerenter);
-            this.nativeElement.addEventListener('pointerup', this.pointerup);
-
+            this.addPointerListeners(this.cellSelectionMode);
             // IE 11 workarounds
             if (isIE()) {
                 this.compositionStartHandler = () => this.isInCompositionMode = true;
@@ -566,10 +595,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     ngOnDestroy() {
         this.zone.runOutsideAngular(() => {
-            this.nativeElement.removeEventListener('pointerdown', this.pointerdown);
-            this.nativeElement.removeEventListener('pointerenter', this.pointerenter);
-            this.nativeElement.removeEventListener('pointerup', this.pointerup);
-
+            this.removePointerListeners(this.cellSelectionMode);
             if (isIE()) {
                 this.nativeElement.removeEventListener('compositionstart', this.compositionStartHandler);
                 this.nativeElement.removeEventListener('compositionend', this.compositionEndHandler);
@@ -608,6 +634,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
+    // should be derprecated???
     /**
      * Gets whether the cell is selected.
      * ```typescript
@@ -723,10 +750,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     @HostListener('dblclick', ['$event'])
-    public onDoubleClick = (event: MouseEvent| HammerInput) => {
+    public onDoubleClick = (event: MouseEvent | HammerInput) => {
         if (event.type === 'doubletap') {
             // prevent double-tap to zoom on iOS
-            event.preventDefault();
+            (event as HammerInput).preventDefault();
         }
         if (this.editable && !this.editMode && !this.row.deleted) {
             this.crudService.begin(this);
@@ -771,19 +798,18 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (this.focused) {
             return;
         }
-
-        const node = this.selectionNode;
-        const mrl = this.grid.hasColumnLayouts;
         this.focused = true;
         this.row.focused = true;
+        const node = this.selectionNode;
+        const mrl = this.grid.hasColumnLayouts;
 
-        if (!this.selectionService.isActiveNode(node, mrl)) {
+        if (this.isCellSelectable && !this.selectionService.isActiveNode(node, mrl)) {
             this.grid.onSelection.emit({ cell: this, event });
         }
 
         if (this.selectionService.primaryButton) {
             this._updateCRUDStatus();
-            this.selectionService.activeElement = node;
+            this.isCellSelectable ? this.selectionService.activeElement = node : this.selectionService.activeElement = null;
         } else {
             this.selectionService.activeElement = null;
             if (this.crudService.inEditMode && !this.editMode) {
@@ -892,13 +918,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             event.preventDefault();
         }
 
-        // TODO: to be deleted when onFocusChange event is removed #4054
-        const args = { cell: this, groupRow: null, event: event, cancel: false };
-        this.grid._onFocusChange.emit(args);
-        if (args.cancel) {
-            return;
-        }
-
         switch (key) {
             case 'tab':
                 this.handleTab(shift);
@@ -952,8 +971,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             case ' ':
             case 'spacebar':
             case 'space':
-                if (this.row.rowSelectable) {
-                    this.row.checkboxElement.toggle();
+                if (this.grid.rowSelection !== 'none') {
+                    this.row.selected ? this.selectionService.deselectRow(this.row.rowID, event) :
+                    this.selectionService.selectRowbyID(this.row.rowID, false, event);
                 }
                 break;
             default:
@@ -1034,5 +1054,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     private isToggleKey(key: string): boolean {
         return ROW_COLLAPSE_KEYS.has(key) || ROW_EXPAND_KEYS.has(key);
+    }
+
+    private get isCellSelectable() {
+        return this.cellSelectionMode !== GridSelectionMode.none;
     }
 }

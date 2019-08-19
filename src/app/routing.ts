@@ -84,6 +84,7 @@ import { GridFilterTemplateSampleComponent } from './grid-filter-template/grid-f
 import { GridMRLConfigSampleComponent } from './grid-multi-row-layout-config/grid-mrl-config.sample';
 import { GridMRLCustomNavigationSampleComponent } from './grid-mrl-custom-navigation/grid-mrl-custom-navigation';
 import { GridClipboardSampleComponent } from './grid-clipboard/grid-clipboard.sample';
+import { GridEsfLoadOnDemandComponent } from './grid-esf-load-on-demand/grid-esf-load-on-demand.component';
 
 const appRoutes = [
     {
@@ -307,6 +308,10 @@ const appRoutes = [
     {
         path: 'gridFilterTemplate',
         component: GridFilterTemplateSampleComponent
+    },
+    {
+        path: 'gridEsfLoadOnDemand',
+        component: GridEsfLoadOnDemandComponent
     },
     {
         path: 'gridClipboard',

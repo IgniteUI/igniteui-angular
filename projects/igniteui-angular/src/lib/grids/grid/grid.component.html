@@ -40,7 +40,7 @@
             <ng-container *ngIf="groupingExpressions.length > 0">
                 <div class="igx-grid__header-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}"
                     [ngClass]="{
-                    'igx-grid__header-indentation--no-border': rowSelectable || rowDraggable
+                    'igx-grid__header-indentation--no-border': isRowSelectable || rowDraggable
                 }" #headerGroupContainer>
                     <igx-icon *ngIf="groupsExpanded" role="button" class="igx-grid__group-expand-btn"
                         (click)="toggleAllGroupRows()" [ngClass]="{
@@ -54,7 +54,7 @@
             </ng-container>
             <ng-container *ngIf="rowDraggable">
                 <div class="igx-grid__drag-indicator" [ngClass]="{
-                    'igx-grid__drag-indicator--header': !rowSelectable
+                    'igx-grid__drag-indicator--header': !isRowSelectable
                 }" #headerDragContainer>
                     <div style="visibility: hidden;">
                         <ng-container
@@ -120,7 +120,7 @@
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
             #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
             <ng-template #record_template>
-                <igx-grid-row [rowSelected]="rowSelected" [gridID]="id" [index]="getGridRowIndex(rowData, rowIndex)" [rowData]="rowData" #row>
+                <igx-grid-row [rowSelected]="rowSelected" [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
                 </igx-grid-row>
             </ng-template>
             <ng-template #group_template>
@@ -241,12 +241,15 @@
 </ng-template>
 
 <ng-template #headSelectorBaseTemplate>
-    <igx-checkbox
-        [checked]="allRowsSelected"
-        (change)="onHeadSelectorClick($event, filteredData)"
-        disableRipple="true"
-        [aria-label]="headerCheckboxAriaLabel">
-    </igx-checkbox>
+        <igx-checkbox 
+            #headerSelector
+            *ngIf="isMultiRowSelectionEnabled"
+            [checked]="selectionService.areAllRowSelected()"
+            (change)="onHeadSelectorClick($event)"
+            disableRipple="true" 
+            [indeterminate]="selectionService.hasSomeRowSelected()" 
+            [aria-label]="headerCheckboxAriaLabel">
+        </igx-checkbox>
 </ng-template>
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>

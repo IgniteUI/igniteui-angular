@@ -55,6 +55,11 @@ export class GridFunctions {
         hScrollbar.scrollRight = newRight;
     }
 
+    public static setGridScrollTop(grid: IgxGridComponent, newTop: number) {
+        const vScrollbar = grid.verticalScrollContainer.getVerticalScroll();
+        vScrollbar.scrollTop = newTop;
+    }
+
     public static getCurrentCellFromGrid(grid, row, cell) {
         const gridRow = grid.rowList.toArray()[row];
         const gridCell = gridRow.cells.toArray()[cell];
@@ -742,6 +747,12 @@ export class GridFunctions {
         const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
         const excelMenu = gridNativeElement.querySelector('.igx-excel-filter__menu');
         return excelMenu.querySelector('igx-excel-style-column-moving');
+    }
+
+    public static getExcelFilteringLoadingIndicator(fix: ComponentFixture<any>) {
+        const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+        const loadingIndicator = searchComponent.querySelector('.igx-excel-filter__loading');
+        return loadingIndicator;
     }
 
     public static getColumnCells(fix, columnKey) {

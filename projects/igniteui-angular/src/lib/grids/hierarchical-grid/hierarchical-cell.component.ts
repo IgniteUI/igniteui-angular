@@ -29,7 +29,7 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
         protected zone: NgZone,
         touchManager: HammerGesturesManager
         ) {
-            super(selectionService, crudService, gridAPI, selection, cdr, helement, zone, touchManager);
+            super(selectionService, crudService, gridAPI, cdr, helement, zone, touchManager);
             this.hSelection = <IgxHierarchicalSelectionAPIService>selection;
          }
 

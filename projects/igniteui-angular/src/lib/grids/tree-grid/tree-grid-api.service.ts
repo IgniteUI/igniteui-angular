@@ -253,7 +253,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             return;
         }
         for (const child of record.children) {
-            if (grid.selection.is_item_selected(grid.id, child.rowID)) {
+            if (grid.selectionService.isRowSelected(child.rowID)) {
                 selectedRowIDs.push(child.rowID);
             }
             this.get_selected_children(child, selectedRowIDs);

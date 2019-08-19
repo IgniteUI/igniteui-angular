@@ -20,7 +20,7 @@ import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condi
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxHierarchicalTransactionService } from '../../services/transaction/igx-hierarchical-transaction';
 import { IgxGridTransaction } from '../grid-base.component';
-import { IgxGridCellComponent } from '../grid';
+import { IgxGridCellComponent, GridSelectionMode } from '../grid';
 
 const CSS_CLASS_BANNER = 'igx-banner';
 const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';
@@ -1112,7 +1112,7 @@ describe('IgxTreeGrid - Integration ', () => {
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
 
-            treeGrid.rowSelectable = true;
+            treeGrid.rowSelection = GridSelectionMode.multiple;
             tick(16);
             fix.detectChanges();
             /** Select deleted row */
@@ -1140,7 +1140,7 @@ describe('IgxTreeGrid - Integration ', () => {
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
 
-            treeGrid.rowSelectable = true;
+            treeGrid.rowSelection = GridSelectionMode.multiple;
             tick(16);
             fix.detectChanges();
             /** Select deleted row */

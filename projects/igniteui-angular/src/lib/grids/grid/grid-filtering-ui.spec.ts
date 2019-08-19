@@ -5,7 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../../calendar/calendar';
 import { IgxInputDirective } from '../../directives/input/input.directive';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './index';
+import { IgxGridModule, GridSelectionMode } from './index';
 import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -41,8 +41,10 @@ import {
     IgxGridFilteringMCHComponent,
     IgxTestExcelFilteringDatePickerComponent,
     IgxGridFilteringTemplateComponent,
-    IgxGridFilteringESFTemplatesComponent
+    IgxGridFilteringESFTemplatesComponent,
+    IgxGridFilteringESFLoadOnDemandComponent
 } from '../../test-utils/grid-samples.spec';
+import { HelperUtils } from '../../test-utils/helper-utils.spec';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
@@ -2241,7 +2243,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
         // Filtering + Row Selectors
         it('should display the Row Selector header checkbox above the filter row.', fakeAsync(() => {
-            grid.rowSelectable = true;
+            grid.rowSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
             const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
@@ -2253,8 +2255,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
             const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
             const frElem = filteringRow.nativeElement;
-            const chkBox = fix.debugElement.query(By.css('.igx-grid__cbx-selection')).query(By.directive(IgxCheckboxComponent));
-            const chkBoxElem = chkBox.nativeElement;
+            const chkBoxElem = HelperUtils.getRowCheckboxInput(HelperUtils.getHeaderRow(fix));
             expect(frElem.offsetTop).toBeGreaterThanOrEqual(chkBoxElem.offsetTop + chkBoxElem.clientHeight);
         }));
 
@@ -3505,6 +3506,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
                 IgxGridFilteringComponent,
                 IgxTestExcelFilteringDatePickerComponent,
                 IgxGridFilteringESFTemplatesComponent,
+                IgxGridFilteringESFLoadOnDemandComponent,
                 IgxGridFilteringMCHComponent
             ],
             imports: [
@@ -5616,6 +5618,38 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
         }));
     });
 
+    describe('Load values on demand', () => {
+        let fix, grid;
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridFilteringESFLoadOnDemandComponent);
+            grid = fix.componentInstance.grid;
+            fix.detectChanges();
+        }));
+
+        it('Verify unique values are loaded correctly in ESF search component.', fakeAsync(() => {
+            // Open excel style custom filtering dialog and wait a bit.
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            fix.detectChanges();
+            tick(400);
+
+            // Verify items in search have not loaded yet and that the loading indicator is visible.
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            let listItems = searchComponent.querySelectorAll('igx-list-item');
+            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
+            let loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).not.toBeNull('esf loading indicator is not visible');
+
+            // Wait for items to load.
+            tick(650);
+
+            // Verify items in search have loaded and that the loading indicator is not visible.
+            listItems = searchComponent.querySelectorAll('igx-list-item');
+            expect(listItems.length).toBe(6, 'incorrect rendered list items count');
+            loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+          }));
+    });
+
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
@@ -5644,6 +5678,44 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             const pinButton = GridFunctions.getExcelFilteringPinContainer(fix);
             expect(pinButton.classList.contains('igx-excel-filter__actions-pin--disabled')).toBe(true,
                 'pinButton should be disabled');
+        }));
+
+        it('Should pin column next to already pinned group by moving it to the left.', fakeAsync(() => {
+            // Test prerequisites
+            grid.width = '1000px';
+            fix.detectChanges();
+            tick(100);
+            // Adjust column widths, so their group can be pinned.
+            const columnFields = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'AnotherField'];
+            columnFields.forEach((columnField) => {
+                const col = grid.columns.find((c) => c.field === columnField);
+                col.width = '100px';
+            });
+            fix.detectChanges();
+            // Make 'AnotherField' column movable.
+            const column = grid.columns.find((c) => c.field === 'AnotherField');
+            column.movable = true;
+            fix.detectChanges();
+
+            // Pin the 'General Information' group by pinning its child 'ProductName' column.
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            fix.detectChanges();
+            GridFunctions.clickPinIconInExcelStyleFiltering(fix, false);
+            tick(200);
+            fix.detectChanges();
+
+            // Verify 'AnotherField' column is not pinned.
+            GridFunctions.verifyColumnIsPinned(column, false, 7);
+
+            // Try to pin the 'AnotherField' column by moving it to the left.
+            GridFunctions.clickExcelFilterIcon(fix, 'AnotherField');
+            fix.detectChanges();
+            GridFunctions.clickMoveLeftInExcelStyleFiltering(fix);
+            tick(200);
+            fix.detectChanges();
+
+            // Verify 'AnotherField' column is successfully pinned next to the column group.
+            GridFunctions.verifyColumnIsPinned(column, true, 8);
         }));
     });
 });

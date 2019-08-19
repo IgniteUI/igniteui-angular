@@ -11,17 +11,17 @@
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0"
                 [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left"
                 class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
-            <div class="igx-grid__hierarchical-expander igx-grid__hierarchical-expander--header"
-                #headerHierarchyExpander [hidden]='!hasExpandableChildren || !hasVisibleColumns' [ngClass]="{
+                <div #headerHierarchyExpander [hidden]='!hasExpandableChildren || !hasVisibleColumns' [ngClass]="{
+                    'igx-grid__hierarchical-expander igx-grid__hierarchical-expander--header': hasExpandableChildren,
                     'igx-grid__hierarchical-expander--push': filteringService.isFilterRowVisible,
-                    'igx-grid__hierarchical-expander--no-border': rowSelectable || rowDraggable
+                    'igx-grid__hierarchical-expander--no-border': isRowSelectable || rowDraggable
                 }">
                 <igx-icon role="button" fontSet="material"
                     [isActive]='hierarchicalState.length > 0 && hasExpandableChildren' (click)="collapseAllRows()">unfold_less</igx-icon>
             </div>
             <ng-container *ngIf="rowDraggable">
                 <div class="igx-grid__drag-indicator" [ngClass]="{
-                        'igx-grid__drag-indicator--header': !rowSelectable
+                        'igx-grid__drag-indicator--header': !isRowSelectable
                     }" #headerDragContainer>
                     <div style="visibility: hidden;">
                         <ng-container
@@ -210,10 +210,12 @@
     <igx-icon fontSet="material">drag_indicator</igx-icon>
 </ng-template>
 
-<ng-template  #headSelectorBaseTemplate>
-    <igx-checkbox 
+<ng-template #headSelectorBaseTemplate>
+    <igx-checkbox
+        #headerCheckbox
+        *ngIf="isMultiRowSelectionEnabled"
         [checked]="allRowsSelected"
-        (change)="onHeadSelectorClick($event, filteredData)"
+        (change)="onHeadSelectorClick($event)"
         disableRipple="true"
         [aria-label]="headerCheckboxAriaLabel">
     </igx-checkbox>

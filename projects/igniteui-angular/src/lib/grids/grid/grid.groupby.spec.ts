@@ -9,7 +9,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxGroupAreaDropDirective } from './grid.directives';
 import { IgxColumnMovingDragDirective } from '../grid.common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { IgxGridModule, IgxGridCellComponent } from './index';
+import { IgxGridModule, IgxGridCellComponent, GridSelectionMode } from './index';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxChipComponent, IChipClickEventArgs } from '../../chips/chip.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
@@ -965,7 +965,7 @@ describe('IgxGrid - GroupBy', () => {
         tick();
         grid.columnWidth = '200px';
         tick();
-        grid.rowSelectable = true;
+        grid.rowSelection = GridSelectionMode.multiple;
         tick();
         fix.detectChanges();
 
@@ -978,12 +978,10 @@ describe('IgxGrid - GroupBy', () => {
         const grRows = grid.groupsRowList.toArray();
         const dataRows = grid.dataRowList.toArray();
         for (const grRow of grRows) {
-            const checkBoxElement = grRow.element.nativeElement.querySelector('div.igx-grid__cbx-selection');
-            expect(checkBoxElement).toBeNull();
+            expect(HelperUtils.getRowCheckboxDiv(grRow.element.nativeElement)).toBeNull();
         }
         for (const dRow of dataRows) {
-            const checkBoxElement = dRow.element.nativeElement.querySelector('div.igx-grid__cbx-selection');
-            expect(checkBoxElement).toBeDefined();
+            expect(HelperUtils.getRowCheckboxDiv(dRow.element.nativeElement)).toBeDefined();
         }
     }));
 
@@ -995,7 +993,7 @@ describe('IgxGrid - GroupBy', () => {
             tick();
             grid.columnWidth = '200px';
             tick();
-            grid.rowSelectable = true;
+            grid.rowSelection = GridSelectionMode.multiple;
             tick();
             fix.detectChanges();
 
@@ -1025,9 +1023,7 @@ describe('IgxGrid - GroupBy', () => {
             selRows = grid.selectedRows();
             expect(selRows.length).toEqual(0);
 
-            const headerRow: HTMLElement = fix.nativeElement.querySelector('.igx-grid__thead');
-            const headerCheckboxElement: Element = headerRow.querySelector('.igx-checkbox__input');
-            headerCheckboxElement.dispatchEvent(new Event('click'));
+            HelperUtils.clickHeaderRowCheckbox(fix);
             tick();
             fix.detectChanges();
 
@@ -1567,7 +1563,7 @@ describe('IgxGrid - GroupBy', () => {
     it('should allow row selection after grouping, scrolling down to a new virtual frame and attempting to select a row.', (done) => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
-        grid.rowSelectable = true;
+        grid.rowSelection = GridSelectionMode.multiple;
         fix.componentInstance.height = '200px';
         fix.detectChanges();
 
@@ -1586,12 +1582,11 @@ describe('IgxGrid - GroupBy', () => {
         setTimeout(() => {
             const rows = grid.dataRowList.toArray();
             expect(rows.length).toEqual(1);
-            const checkBoxElement = rows[0].element.nativeElement.querySelector('.igx-checkbox__input');
-            checkBoxElement.dispatchEvent(new Event('click'));
-            setTimeout(() => {
+            HelperUtils.clickRowCheckbox(rows[0].element);
+             setTimeout(() => {
                 grid.cdr.detectChanges();
                 expect(grid.selectedRows().length).toEqual(1);
-                expect(rows[0].element.nativeElement.className).toEqual('igx-grid__tr igx-grid__tr--odd igx-grid__tr--selected');
+                HelperUtils.verifyRowSelected(rows[0]);
                 done();
             }, 100);
         }, 100);

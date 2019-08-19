@@ -45,6 +45,11 @@
             "version": "7.3.4",
             "description": "Updates Ignite UI for Angular from v7.2.0 to v7.3.4",
             "factory": "./update-7_3_4"
+        },
+        "migration-10": {
+            "version": "8.2.0",
+            "description": "Updates Ignite UI for Angular from v8.1.x to v8.2.0",
+            "factory": "./update-8_2_0"
         }
     }
 }
