@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxRowIslandComponent, IgxHierarchicalGridComponent, IPathSegment } from 'igniteui-angular';
+import { IgxRowIslandComponent, IgxHierarchicalGridComponent, IPathSegment, IGridCellEventArgs } from 'igniteui-angular';
 
 @Component({
     selector: 'app-hierarchical-grid-sample',
@@ -101,8 +101,9 @@ export class HierarchicalGridSampleComponent {
         this.density = this.displayDensities[event.index].label;
     }
 
-    cellClick($evt) {
+    cellClick($evt: IGridCellEventArgs) {
         console.log('Cell Click', $evt);
+        console.log($evt.owner);
     }
 
     public LoadMoreColumns() {
