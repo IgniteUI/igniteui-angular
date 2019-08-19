@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { IgxDragDropModule, IgxDragDirective, IgxDropDirective, IgxDragLocation } from './drag-drop.directive';
 import { UIInteractions, wait} from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxInsertDropStrategy } from './drag-drop.strategy';
+import { IgxInsertDropStrategy, IgxAppendDropStrategy, IgxPrependDropStrategy } from './drag-drop.strategy';
 
-describe('General igxDrag/igxDrop', () => {
+fdescribe('General igxDrag/igxDrop', () => {
     let fix: ComponentFixture<TestDragDropComponent>;
     let dropArea: IgxDropDirective;
     let dropAreaRects = { top: 0, left: 0, right: 0, bottom: 0};
@@ -681,13 +681,14 @@ describe('General igxDrag/igxDrop', () => {
     }));
 });
 
-describe('Linked igxDrag/igxDrop ', () => {
+fdescribe('Linked igxDrag/igxDrop ', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
                 TestDragDropLinkedSingleComponent,
-                TestDragDropLinkedMixedComponent
+                TestDragDropLinkedMixedComponent,
+                TestDragDropStrategiesComponent
             ],
             imports: [
                 FormsModule,
@@ -827,6 +828,144 @@ describe('Linked igxDrag/igxDrop ', () => {
         expect(fix.componentInstance.container.nativeElement.children.length).toEqual(3);
         expect(dropArea.element.nativeElement.children.length).toEqual(0);
     }));
+
+    it('should allow dragging with IgxAppendDropStrategy.', (async() => {
+        const fix = TestBed.createComponent(TestDragDropStrategiesComponent);
+        fix.componentInstance.dropArea.dropStrategy = IgxAppendDropStrategy;
+        fix.detectChanges();
+
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const dragDirsRects = getDragDirsRects(fix.componentInstance.dragElems);
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+
+        const dropArea = fix.componentInstance.dropArea;
+        const dropAreaRects = getElemRects(dropArea.element.nativeElement);
+
+        spyOn(dropArea.enter, 'emit');
+        spyOn(dropArea.leave, 'emit');
+        spyOn(dropArea.dropped, 'emit');
+
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+
+        expect(fix.componentInstance.container.nativeElement.children.length).toEqual(1);
+        expect(dropArea.element.nativeElement.children.length).toEqual(2);
+
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait(100);
+
+        UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, dropAreaRects.left  + 100, dropAreaRects.top  + 5);
+        await wait(100);
+
+        expect(dropArea.enter.emit).toHaveBeenCalled();
+
+        // We need to trigger the pointerup on the ghostElement because this is the element we move and is under the mouse
+        UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, dropAreaRects.left + 100, dropAreaRects.top + 20 );
+        await wait();
+
+        expect(dropArea.dropped.emit).toHaveBeenCalled();
+        expect(dropArea.leave.emit).toHaveBeenCalled();
+        expect(fix.componentInstance.container.nativeElement.children.length).toEqual(0);
+        expect(dropArea.element.nativeElement.children.length).toEqual(3);
+        // Should be appended at the end
+        expect(dropArea.element.nativeElement.children[2]).toEqual(firstDrag.element.nativeElement);
+    }));
+
+    it('should allow dragging with IgxPrependDropStrategy.', (async() => {
+        const fix = TestBed.createComponent(TestDragDropStrategiesComponent);
+        fix.componentInstance.dropArea.dropStrategy = IgxPrependDropStrategy;
+        fix.detectChanges();
+
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const dragDirsRects = getDragDirsRects(fix.componentInstance.dragElems);
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+
+        const dropArea = fix.componentInstance.dropArea;
+        const dropAreaRects = getElemRects(dropArea.element.nativeElement);
+
+        spyOn(dropArea.enter, 'emit');
+        spyOn(dropArea.leave, 'emit');
+        spyOn(dropArea.dropped, 'emit');
+
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+
+        expect(fix.componentInstance.container.nativeElement.children.length).toEqual(1);
+        expect(dropArea.element.nativeElement.children.length).toEqual(2);
+
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait(100);
+
+        UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, dropAreaRects.left  + 100, dropAreaRects.top  + 5);
+        await wait(100);
+
+        expect(dropArea.enter.emit).toHaveBeenCalled();
+
+        // We need to trigger the pointerup on the ghostElement because this is the element we move and is under the mouse
+        UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, dropAreaRects.left + 100, dropAreaRects.top + 20 );
+        await wait();
+
+        expect(dropArea.dropped.emit).toHaveBeenCalled();
+        expect(dropArea.leave.emit).toHaveBeenCalled();
+        expect(fix.componentInstance.container.nativeElement.children.length).toEqual(0);
+        expect(dropArea.element.nativeElement.children.length).toEqual(3);
+        // Should be appended at the end
+        expect(dropArea.element.nativeElement.children[0]).toEqual(firstDrag.element.nativeElement);
+    }));
+
+    it('should allow dragging with IgxInsertDropStrategy.', (async() => {
+        const fix = TestBed.createComponent(TestDragDropStrategiesComponent);
+        fix.componentInstance.dropArea.dropStrategy = IgxInsertDropStrategy;
+        fix.detectChanges();
+
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const dragDirsRects = getDragDirsRects(fix.componentInstance.dragElems);
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+
+        const dropArea = fix.componentInstance.dropArea;
+        const dropAreaRects = getElemRects(dropArea.element.nativeElement);
+
+        spyOn(dropArea.enter, 'emit');
+        spyOn(dropArea.leave, 'emit');
+        spyOn(dropArea.dropped, 'emit');
+
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+
+        expect(fix.componentInstance.container.nativeElement.children.length).toEqual(1);
+        expect(dropArea.element.nativeElement.children.length).toEqual(2);
+
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait(100);
+
+        UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, dropAreaRects.left  + 150, dropAreaRects.top  + 5);
+        await wait(100);
+
+        expect(dropArea.enter.emit).toHaveBeenCalled();
+
+        // We need to trigger the pointerup on the ghostElement because this is the element we move and is under the mouse
+        UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, dropAreaRects.left + 150, dropAreaRects.top + 20 );
+        await wait();
+
+        expect(dropArea.dropped.emit).toHaveBeenCalled();
+        expect(dropArea.leave.emit).toHaveBeenCalled();
+        expect(fix.componentInstance.container.nativeElement.children.length).toEqual(0);
+        expect(dropArea.element.nativeElement.children.length).toEqual(3);
+        // Should be inserted between other chips
+        expect(dropArea.element.nativeElement.children[1]).toEqual(firstDrag.element.nativeElement);
+    }));
 });
 
 function getDragDirsRects(dragDirs: QueryList<IgxDragDirective>) {
@@ -958,3 +1097,23 @@ class TestDragDropLinkedSingleComponent extends TestDragDropComponent { }
     `
 })
 class TestDragDropLinkedMixedComponent extends TestDragDropComponent { }
+
+@Component({
+    styles: generalStyles,
+    template: `
+        <h3>Draggable elements:</h3>
+        <div #container class="container">
+            <div id="firstDrag" class="dragElem" [igxDrag]="{ key: 1 }" [dragChannel]="1">Drag 1</div>
+            <ng-template #ghostTemplate>
+                <div class="ghostElement">Drag Template</div>
+            </ng-template>
+        </div>
+        <br/>
+        <h3>Drop area:</h3>
+        <div #dropArea class="dropAreaStyle" [igxDrop]="{ key: 333 }" [dropChannel]="1">
+            <div id="secondDrag" class="dragElem" [igxDrag]="{ key: 2 }" [dragChannel]="2">Drag 2</div>
+            <div id="thirdDrag" class="dragElem" [igxDrag]="{ key: 3 }" [dragChannel]="3">Drag 3</div>
+        </div>
+    `
+})
+class TestDragDropStrategiesComponent extends TestDragDropLinkedSingleComponent { }
