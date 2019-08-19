@@ -214,7 +214,7 @@ export class IgxGridSelectionService {
     _ranges: Set<string> = new Set<string>();
     _selectionRange: Range;
     rowSelection: Set<any> = new Set<any>();
-    allRowsSelected: boolean;
+    private allRowsSelected: boolean;
 
     /**
      * Returns the current selected ranges in the grid from both
@@ -565,7 +565,7 @@ export class IgxGridSelectionService {
         const addedRows = this.rowSelection.size ? allRowIDs.filter((rID) => !this.isRowSelected(rID)) : allRowIDs;
 
         if (this.emitRowSelectionEvent(allRowIDs, addedRows, [], event)) { return; }
-        this.selectRows(addedRows);
+        this.selectRowsWithNoEvent(addedRows);
      }
 
     selectRowbyID(rowID, clearPrevSelection?, event?) {
@@ -591,7 +591,7 @@ export class IgxGridSelectionService {
         }
     }
 
-    selectRows(rowIDs: any[], clearPrevSelection?) {
+    selectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?) {
         if (clearPrevSelection) { this.rowSelection.clear(); }
         rowIDs.forEach(rowID => { this.rowSelection.add(rowID); });
         this.allRowsSelected = undefined;
@@ -641,14 +641,20 @@ export class IgxGridSelectionService {
 
     public emitRowSelectionEvent(newSelection, added, removed, event?): boolean {
         const currSelection = this.getSelectedRows();
-        if (currSelection.length === newSelection.length &&
-            new Set(currSelection.concat(newSelection)).size === currSelection.length) { return; }
+        if (this.areEquelCollections(currSelection, newSelection)) { return; }
+        const copy = Array.from(newSelection);
         const args = {oldSelection: currSelection, newSelection: newSelection,
             added: added, removed: removed, event: event, cancel: false};
         this.grid.onRowSelectionChange.emit(args);
         if (args.cancel && event.checkbox) { event.checkbox.checked = !event.checkbox.checked; }
+        if (!this.areEquelCollections(copy, newSelection)) {
+            this.rowSelection.clear();
+            this.selectRowsWithNoEvent(newSelection);
+            return true;
+        }
         return args.cancel;
     }
+
 
     public getRowDataByID(rowID) {
         if (!this.grid.primaryKey) { return rowID; }
@@ -660,11 +666,19 @@ export class IgxGridSelectionService {
         return this.grid.primaryKey && data.length ? data.map(rec => rec[this.grid.primaryKey]) : data;
     }
 
+    public clearHeaderCBState() {
+        this.allRowsSelected = undefined;
+    }
+
     public get allData() {
         const gridAPI = this.grid.gridAPI;
         const allData = this.isFilteringApplied() || this.grid.sortingExpressions.length ?
         this.grid.filteredSortedData : gridAPI.get_all_data();
         return allData.filter(rData => !this.isRowDeleted(gridAPI.get_row_id(rData)));
+    }
+
+    private areEquelCollections(first, second) {
+        return  new Set(first.concat(second)).size !== first.length ? false : true;
     }
 
     private isFilteringApplied() {

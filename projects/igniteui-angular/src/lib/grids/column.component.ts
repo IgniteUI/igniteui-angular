@@ -8,8 +8,7 @@ import {
     Input,
     QueryList,
     TemplateRef,
-    forwardRef,
-    AfterViewInit
+    forwardRef
 } from '@angular/core';
 import { DataType } from '../data-operations/data-util';
 import { GridBaseAPIService } from './api.service';

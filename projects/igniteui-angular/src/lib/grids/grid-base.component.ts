@@ -374,7 +374,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
 
             this.filteringService.refreshExpressions();
-            this.selectionService.allRowsSelected = undefined;
+            this.selectionService.clearHeaderCBState();
             this.summaryService.clearSummaryCache();
             this.markForCheck();
         }
@@ -2727,7 +2727,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.summaryService.clearSummaryCache(args);
         });
         this.transactions.onStateUpdate.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.selectionService.allRowsSelected = undefined;
+            this.selectionService.clearHeaderCBState();
             this.summaryService.clearSummaryCache();
             this._pipeTrigger++;
             this.markForCheck();
@@ -3829,7 +3829,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public refreshGridState(args?) {
-        this.selectionService.allRowsSelected = undefined;
+        this.selectionService.clearHeaderCBState();
         this.endEdit(true);
         this.summaryService.clearSummaryCache(args);
     }
@@ -4734,7 +4734,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @memberof IgxGridBaseComponent
      */
     public selectRows(rowIDs: any[], clearCurrentSelection?: boolean) {
-        this.selectionService.selectRows(rowIDs, clearCurrentSelection);
+        this.selectionService.selectRowsWithNoEvent(rowIDs, clearCurrentSelection);
         this.cdr.detectChanges();
     }
 
@@ -4762,8 +4762,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public selectAllRows(onlyFilterData = true) {
         const data = onlyFilterData && this.filteredData ? this.filteredData : this.gridAPI.get_all_data();
         const rowIDs = this.selectionService.getRowIDs(data).filter(rID => !this.gridAPI.row_deleted_transaction(rID));
-        this.selectionService.selectRows(rowIDs);
-        this.cdr.markForCheck();
+        this.selectRows(rowIDs);
     }
 
     /**
@@ -4776,7 +4775,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public deselectAllRows(onlyFilterData = true) {
         !onlyFilterData ?  this.selectionService.rowSelection.clear() :
             this.selectionService.deselectRow(this.selectionService.getRowIDs(this.selectionService.allData));
-        this.cdr.markForCheck();
+        this.cdr.detectChanges();
     }
 
     clearCellSelection(): void {
@@ -5671,5 +5670,3 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 }
-
-
