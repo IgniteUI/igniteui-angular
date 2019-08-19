@@ -553,7 +553,6 @@ export class IgxGridSelectionService {
         const removedRec = this.isFilteringApplied() ?
             this.getRowIDs(this.allData).filter(rID => this.isRowSelected(rID)) : this.getSelectedRows();
         const newSelection = this.isFilteringApplied() ? this.getSelectedRows().filter(x => !removedRec.includes(x)) : [];
-        debugger;
         if (this.emitRowSelectionEvent(newSelection, [], removedRec, event)) { return; }
 
         this.isFilteringApplied() ? this.deselectRowsWithNoEvent(removedRec) :  this.rowSelection.clear();
