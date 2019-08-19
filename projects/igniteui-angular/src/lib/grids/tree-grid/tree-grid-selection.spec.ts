@@ -602,7 +602,6 @@ describe('IgxTreeGrid - Selection ', () => {
             expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
             expect(treeGrid.selectedCells[0].value).toBe(19);
         });
-
     });
 
     describe('Cell/Row Selection With Row Editing', () => {
