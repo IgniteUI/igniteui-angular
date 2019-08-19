@@ -2,6 +2,9 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 8.1.4
+- `IgxDialog` - @Input `positionSettings` is now available. It provides the ability to get/set both position and animation settings of the Dialog component. 
+
 ## 8.1.3
 - `IgxCombo`
     - Combo `onSelectionChange` events now emits the item(s) that were added to or removed from the collection:
@@ -22,7 +25,7 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxDatePicker`
     - `valueChange` event is added.
-    
+
 ## 8.1.0
 
 ### New Features
