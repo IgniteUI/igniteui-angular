@@ -220,6 +220,10 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         return this.verticalScrollContainer.totalItemCount;
     }
 
+    get shouldOverlayLoading(): boolean {
+        return this.isLoading && this.data && this.data.length > 0;
+    }
+
     private _gridAPI: IgxGridAPIService;
     private _filteredData = null;
 
@@ -766,6 +770,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
         }
 
+        // TODO
         if (this.isLoading && (!this.data || this.dataLength === 0)) {
             return this.loadingGridTemplate ? this.loadingGridTemplate : this.loadingGridDefaultTemplate;
         }

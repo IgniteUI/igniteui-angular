@@ -138,6 +138,10 @@
         <ng-container *ngTemplateOutlet="template"></ng-container>
         <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
     </div>
+    <div *ngIf="shouldOverlayLoading" class="igx-grid__tbody-loading">
+        <igx-circular-bar [indeterminate]="true">
+        </igx-circular-bar>
+    </div>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true"
         id="right" class="igx-grid__scroll-on-drag-right"></span>
     <div [hidden]='!hasVerticalSroll()' class="igx-grid__tbody-scrollbar" [style.width.px]="scrollWidth"
