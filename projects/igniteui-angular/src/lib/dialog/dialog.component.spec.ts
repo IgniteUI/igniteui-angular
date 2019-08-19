@@ -519,7 +519,7 @@ class CustomTemplates2DialogComponent {
         [positionSettings]="positionSettings" >
     </igx-dialog>` })
 class PositionSettingsDialogComponent {
-    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+    @ViewChild('dialog') public dialog: IgxDialogComponent;
 
     public positionSettings: PositionSettings = {
         horizontalDirection: HorizontalAlignment.Left,

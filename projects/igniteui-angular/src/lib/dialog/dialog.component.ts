@@ -219,7 +219,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     /**
      * Get the position and animation settings used by the dialog.
      * ```typescript
-     * @ViewChild('alert', { static: true }) public alert: IgxDialogComponent;
+     * @ViewChild('alert') public alert: IgxDialogComponent;
      * let currentPosition: PositionSettings = this.alert.positionSettings
      * ```
      */
@@ -233,7 +233,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * ```typescript
      * import { slideInLeft, slideOutRight } from 'igniteui-angular';
      * ...
-     * @ViewChild('alert', { static: true }) public alert: IgxDialogComponent;
+     * @ViewChild('alert') public alert: IgxDialogComponent;
      *  public newPositionSettings: PositionSettings = {
      *      openAnimation: useAnimation(slideInTop, { params: { duration: '2000ms' } }),
      *      closeAnimation: useAnimation(slideOutBottom, { params: { duration: '2000ms'} }),
