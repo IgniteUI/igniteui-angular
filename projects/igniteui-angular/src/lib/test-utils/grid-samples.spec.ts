@@ -201,7 +201,7 @@ export class SelectionCancellableComponent extends BasicGridComponent {
     data = SampleTestData.foodProductData();
 
     public rowSelectionChange(evt) {
-        if (evt.row && (evt.row.index + 1) % 2 === 0) {
+        if (evt.added.length > 0  && (evt.added[0].ProductID) % 2 === 0) {
             evt.newSelection = evt.oldSelection || [];
         }
     }

@@ -13,9 +13,9 @@ import {
     RowSelectionComponent,
     SelectionAndPagingComponent,
     SummariesComponent,
-    SelectionCancellableComponent,
     SelectionWithScrollsComponent,
-    SingleRowSelectionComponent
+    SingleRowSelectionComponent,
+    FilteringComponent
 } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IgxHierarchicalGridModule } from '../hierarchical-grid/hierarchical-grid.module';
@@ -34,9 +34,8 @@ describe('IgxGrid - Row Selection', () => {
                 GridWithPrimaryKeyComponent,
                 SelectionAndPagingComponent,
                 RowSelectionComponent,
-                GridWithSelectionFilteringComponent,
+                FilteringComponent,
                 SummariesComponent,
-                SelectionCancellableComponent,
                 SelectionWithScrollsComponent,
                 IgxGridRowEditingTransactionComponent,
                 SingleRowSelectionComponent
@@ -559,6 +558,34 @@ describe('IgxGrid - Row Selection', () => {
             HelperUtils.verifyRowSelected(grid.getRowByIndex(2));
         });
 
+        it('Should be able to programmatically overwrite the selection using onRowSelectionChange event', () => {
+            const firstRow = grid.getRowByIndex(0);
+            const secondRow = grid.getRowByIndex(1);
+            const thirdRow = grid.getRowByIndex(2);
+            grid.onRowSelectionChange.subscribe((e: IRowSelectionEventArgs) => {
+                if (e.added.length > 0  && (e.added[0]) % 2 === 0) {
+                    e.newSelection = e.oldSelection || [];
+                }
+            });
+
+            HelperUtils.verifyRowsArraySelected([firstRow, secondRow, thirdRow], false);
+
+            HelperUtils.clickRowCheckbox(firstRow);
+            fix.detectChanges();
+
+            expect(firstRow.selected).toBeTruthy();
+            expect(secondRow.selected).toBeFalsy();
+            expect(thirdRow.selected).toBeFalsy();
+
+            HelperUtils.clickRowCheckbox(firstRow);
+            HelperUtils.clickRowCheckbox(secondRow);
+            fix.detectChanges();
+
+            expect(firstRow.selected).toBeFalsy();
+            expect(secondRow.selected).toBeFalsy();
+            HelperUtils.verifyRowsArraySelected([firstRow, secondRow, thirdRow], false);
+        });
+
         it('Should have persistent selection through data operations - sorting', fakeAsync(() => {
             const rowsToCheck = [grid.getRowByIndex(0), grid.getRowByIndex(1)];
             HelperUtils.verifyRowsArraySelected(rowsToCheck, false);
@@ -942,7 +969,7 @@ describe('IgxGrid - Row Selection', () => {
 
             HelperUtils.verifyRowsArraySelected([grid.getRowByIndex(0),
                 grid.getRowByIndex(1), grid.getRowByIndex(2), grid.getRowByIndex(3), grid.getRowByIndex(4)]);
-            expect(grid.selectedRows()).toEqual([1, 2, 3, 4, 5]);
+            expect(grid.selectedRows()).toEqual([1, 3, 5, 2, 4]);
         });
 
         it('Should be able to cancel onRowSelectionChange event', () => {
@@ -1031,7 +1058,7 @@ describe('IgxGrid - Row Selection', () => {
             HelperUtils.verifyRowSelected(firstRow);
 
             // Click on another row holding Ctrl
-            UIInteractions.simulateClickEvent(secondRow.nativeElement);
+            UIInteractions.simulateClickEvent(secondRow.nativeElement, false, true);
             fix.detectChanges();
 
             HelperUtils.verifyRowSelected(secondRow);
@@ -1221,9 +1248,11 @@ describe('IgxGrid - Row Selection', () => {
         let grid: IgxGridComponent;
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
-            fix = TestBed.createComponent(GridWithSelectionFilteringComponent);
+            fix = TestBed.createComponent(FilteringComponent);
             fix.detectChanges();
-            grid = fix.componentInstance.gridSelection4;
+            grid = fix.componentInstance.grid;
+            grid.rowSelection = GridSelectionMode.multiple;
+            fix.detectChanges();
         }));
 
         it('Filtering and row selection', fakeAsync(() => {
@@ -1430,62 +1459,7 @@ describe('IgxGrid - Row Selection', () => {
         const grid = fixture.componentInstance.grid;
         expect(grid.summariesMargin).toBe(grid.featureColumnsWidth);
     });
-
-    it('Should be able to programatically overwrite the selection using onRowSelectionChange event', () => {
-        const fixture = TestBed.createComponent(SelectionCancellableComponent);
-        fixture.detectChanges();
-
-        const grid = fixture.componentInstance.grid;
-        const firstRow = grid.getRowByIndex(0);
-        const firstRowCheckbox: HTMLElement = firstRow.nativeElement.querySelector('.igx-checkbox__input');
-        const secondRow = grid.getRowByIndex(1);
-        const secondRowCheckbox: HTMLElement = secondRow.nativeElement.querySelector('.igx-checkbox__input');
-        const thirdRow = grid.getRowByIndex(2);
-
-        expect(firstRow.selected).toBeFalsy();
-        expect(secondRow.selected).toBeFalsy();
-        expect(thirdRow.selected).toBeFalsy();
-
-        firstRowCheckbox.dispatchEvent(new Event('click', {}));
-        fixture.detectChanges();
-
-        expect(firstRow.selected).toBeTruthy();
-        expect(secondRow.selected).toBeFalsy();
-        expect(thirdRow.selected).toBeFalsy();
-
-        firstRowCheckbox.dispatchEvent(new Event('click', {}));
-        secondRowCheckbox.dispatchEvent(new Event('click', {}));
-        fixture.detectChanges();
-
-        expect(firstRow.selected).toBeFalsy();
-        expect(secondRow.selected).toBeFalsy();
-        expect(thirdRow.selected).toBeFalsy();
-    });
 });
 
-@Component({
-    template: `
-        <igx-grid #gridSelection4 [data]="data" height="500px" rowSelection="multiple">
-            <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
-            <igx-column [field]="'ProductName'" [filterable]="true" dataType="string"></igx-column>
-            <igx-column [field]="'Downloads'" [filterable]="true" dataType="number"></igx-column>
-            <igx-column [field]="'Released'" [filterable]="true" dataType="boolean"></igx-column>
-            <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'"
-                        [filterable]="true" dataType="date">
-            </igx-column>
-        </igx-grid>`
-})
-export class GridWithSelectionFilteringComponent {
-
-    public timeGenerator: Calendar = new Calendar();
-    public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
-
-    @ViewChild('gridSelection4', { read: IgxGridComponent, static: true })
-    public gridSelection4: IgxGridComponent;
-
-    public data = SampleTestData.productInfoData();
-
-    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
-}
 
 

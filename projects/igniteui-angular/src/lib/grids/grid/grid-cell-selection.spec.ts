@@ -435,18 +435,19 @@ describe('IgxGrid - Cell selection', () => {
             grid.cellSelection = GridSelectionMode.single;
             fix.detectChanges();
 
+            expect(grid.cellSelection).toEqual(GridSelectionMode.single);
             HelperUtils.verifyCellsRegionSelected(grid, 0, 1, 0, 1, false);
             expect(grid.getSelectedData()).toEqual([]);
             expect(grid.getSelectedRanges()).toEqual([]);
 
             // Try to select a range
-            HelperUtils.selectCellsRangeNoWait(fix, startCell, endCell);
+            HelperUtils.selectCellsRangeNoWait(fix, endCell, startCell);
             detect();
-            HelperUtils.verifyCellsRegionSelected(grid, 1, 1, 0, 1, false);
+            HelperUtils.verifyCellsRegionSelected(grid, 0, 0, 0, 1, false);
             expect(rangeChangeSpy).toHaveBeenCalledTimes(1);
             expect(grid.selectedCells.length).toBe(1);
-            expect(grid.getSelectedData()).toEqual([{ID: 475}]);
-            HelperUtils.verifySelectedRange(grid, 0, 0, 0, 0);
+            expect(grid.getSelectedData()).toEqual([{ParentID: 147}]);
+            HelperUtils.verifySelectedRange(grid, 1, 1, 1, 1);
         });
     });
 
@@ -3061,7 +3062,7 @@ describe('IgxGrid - Cell selection', () => {
             UIInteractions.triggerKeyDownWithBlur('arrowleft', cell.nativeElement, true);
             fix.detectChanges();
 
-            expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
+            expect(selectionChangeSpy).toHaveBeenCalledTimes(3);
             cell = grid.getCellByColumn(2, 'ParentID');
             HelperUtils.verifyCellSelected(cell);
             expect(grid.selectedCells.length).toBe(1);
@@ -3069,7 +3070,7 @@ describe('IgxGrid - Cell selection', () => {
             HelperUtils.verifySelectedRange(grid, 2, 2, 1, 1);
         });
 
-        it('When when navigate with arrow keys nad holding Shift only one cell should be selected', () => {
+        it('When when navigate with arrow keys and holding Shift only one cell should be selected', () => {
             const selectionChangeSpy = spyOn<any>(grid.onSelection, 'emit').and.callThrough();
             const rangeChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             let cell = grid.getCellByColumn(3, 'ParentID');
@@ -3095,7 +3096,7 @@ describe('IgxGrid - Cell selection', () => {
             HelperUtils.verifyCellSelected(cell);
             expect(grid.selectedCells.length).toBe(1);
             expect(grid.getSelectedData()).toEqual([{Name: 'Monica Reyes'}]);
-            HelperUtils.verifySelectedRange(grid, 2, 2, 1, 1);
+            HelperUtils.verifySelectedRange(grid, 2, 2, 2, 2);
         });
 
         it('Should not select select a range with mouse dragging', () => {
