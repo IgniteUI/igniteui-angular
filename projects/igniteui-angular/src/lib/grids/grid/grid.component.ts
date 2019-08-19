@@ -110,18 +110,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     private _dropAreaMessage = null;
 
     /**
-     * @hidden
-     * @internal
-     */
-    public getGridRowIndex(rowData: any, curIndex: number): number {
-        if (this.groupingExpressions.length > 0) {
-            return this.filteredSortedData.indexOf(rowData);
-        }
-
-        return curIndex;
-    }
-
-    /**
      * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
      * ```html
      * <igx-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true"></igx-grid>
@@ -767,6 +755,18 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
             index: rowIndex,
             templateID: this.isGroupByRecord(rowData) ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow'
         };
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public getGridRowIndex(rowData: any, curIndex: number): number {
+        if (this.groupingExpressions.length > 0) {
+            return this.filteredSortedData.indexOf(rowData);
+        }
+
+        return curIndex;
     }
 
     /**
