@@ -548,24 +548,23 @@ export class IgxGridSelectionService {
         return this.rowSelection.size ? Array.from(this.rowSelection.keys()) : [];
     }
 
-    clearRowSelection(onlyFiltered = true, shouldEmitEvent = true, event?) {
+    clearRowSelection(event?) {
         this.allRowsSelected = false;
-        onlyFiltered = this.isFilteringApplied() && onlyFiltered;
+        const removedRec = this.isFilteringApplied() ?
+            this.getRowIDs(this.allData).filter(rID => this.isRowSelected(rID)) : this.getSelectedRows();
+        const newSelection = this.isFilteringApplied() ? this.getSelectedRows().filter(x => !removedRec.includes(x)) : [];
+        if (this.emitRowSelectionEvent(newSelection, [], removedRec, event)) { return; }
 
-        const removedRec = onlyFiltered ? this.getRowIDs(this.allData).filter(rID => this.isRowSelected(rID)) : this.getSelectedRows();
-        const newSelection = this.getSelectedRows().filter(x => !removedRec.includes(x));
-        if (shouldEmitEvent && this.emitRowSelectionEvent(newSelection, [], removedRec, event)) { return; }
-
-        onlyFiltered ? this.deselectRowsWithNoEvent(removedRec) :  this.rowSelection.clear();
+        this.isFilteringApplied() ? this.deselectRowsWithNoEvent(removedRec) :  this.rowSelection.clear();
     }
 
-    selectAllRows(onlyFiltered = true, shouldEmitEvent = true, event?) {
+    selectAllRows(event?) {
         this.allRowsSelected = true;
-        const allData = onlyFiltered ? this.allData : this.grid.gridAPI.get_all_data();
-        const allRowIDs = this.getRowIDs(allData);
-        const addedRows = allRowIDs.filter((rID) => !this.isRowSelected(rID));
 
-        if (shouldEmitEvent && this.emitRowSelectionEvent(allRowIDs, addedRows, [], event)) { return; }
+        const allRowIDs = this.getRowIDs(this.allData);
+        const addedRows = this.rowSelection.size ? allRowIDs.filter((rID) => !this.isRowSelected(rID)) : allRowIDs;
+
+        if (this.emitRowSelectionEvent(allRowIDs, addedRows, [], event)) { return; }
         this.selectRows(addedRows);
      }
 
@@ -661,7 +660,7 @@ export class IgxGridSelectionService {
         return this.grid.primaryKey && data.length ? data.map(rec => rec[this.grid.primaryKey]) : data;
     }
 
-    private get allData() {
+    public get allData() {
         const gridAPI = this.grid.gridAPI;
         const allData = this.isFilteringApplied() || this.grid.sortingExpressions.length ?
         this.grid.filteredSortedData : gridAPI.get_all_data();

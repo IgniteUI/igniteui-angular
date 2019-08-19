@@ -4700,7 +4700,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public onHeaderCheckboxClick(event) {
-        event.checked ? this.selectionService.selectAllRows(true, true, event) : this.selectionService.clearRowSelection(true, true, event);
+        event.checked ? this.selectionService.selectAllRows(event) : this.selectionService.clearRowSelection(event);
     }
 
     /**
@@ -4760,7 +4760,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     public selectAllRows(onlyFilterData = true) {
-        this.selectionService.selectAllRows(onlyFilterData, false);
+        const data = onlyFilterData && this.filteredData ? this.filteredData : this.gridAPI.get_all_data();
+        const rowIDs = this.selectionService.getRowIDs(data).filter(rID => !this.gridAPI.row_deleted_transaction(rID));
+        this.selectionService.selectRows(rowIDs);
+        this.cdr.markForCheck();
     }
 
     /**
@@ -4771,7 +4774,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Note: If filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
      */
     public deselectAllRows(onlyFilterData = true) {
-        this.selectionService.clearRowSelection(onlyFilterData, false);
+        !onlyFilterData ?  this.selectionService.rowSelection.clear() :
+            this.selectionService.deselectRow(this.selectionService.getRowIDs(this.selectionService.allData));
+        this.cdr.markForCheck();
     }
 
     clearCellSelection(): void {
