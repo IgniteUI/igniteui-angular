@@ -1,6 +1,9 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 7.3.15
+- `IgxDialog` new @Input `positionSettings` is now available. It provides the ability to get/set both position and animation settings of the Dialog component. 
+
 ## 7.3.13
  - `IgxDatePicker` changes
     - `valueChange` event is added.
