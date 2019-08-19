@@ -83,13 +83,13 @@ describe('IgxGrid - Row Selection', () => {
 
             HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
             HelperUtils.verifyRowSelected(selectedRow);
-            expect(grid.selectedRows().length).toBe(19);
+            expect(grid.selectedRows()).toEqual([1]);
 
             GridFunctions.setGridScrollTop(grid, 500);
             await wait(100);
             fix.detectChanges();
 
-            expect(grid.selectedRows().length).toBe(19);
+            expect(grid.selectedRows()).toEqual([1]);
             HelperUtils.verifyRowSelected(grid.rowList.first, false);
 
             GridFunctions.setGridScrollTop(grid, 0);
@@ -98,6 +98,7 @@ describe('IgxGrid - Row Selection', () => {
 
             HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
             HelperUtils.verifyRowSelected(selectedRow);
+            expect(grid.selectedRows()).toEqual([1]);
         }));
 
         it('Should have correct checkboxes position when scroll left', (async () => {
