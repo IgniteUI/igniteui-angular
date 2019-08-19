@@ -13,3 +13,8 @@
 igx-input-group+igx-input-group {
     margin-top: 24px;
 }
+
+.alertSection button {
+    width: 140px;
+    margin-right: 5px;
+}
