@@ -5,7 +5,11 @@
             <h4 class="sample-title">Alert</h4>
             <p class="sample-description">Detailed description to be added.</p>
             <br>
-            <button igxButton="raised" igxRipple (click)="alert.open()">Trigger Alert</button>
+            <div class="alertSection">
+                <button igxButton="raised" igxRipple (click)="alert.open()">Open Alert</button>
+                <button igxButton="flat" (click)="togglePosition()">Toggle position</button>
+            </div>
+            
             <igx-dialog #alert title="Notification" message="Your email has been sent successfully!" leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()"
                 [positionSettings]="positionSettings" >
             </igx-dialog>
