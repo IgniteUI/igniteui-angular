@@ -326,7 +326,7 @@ describe('Dialog', () => {
         expect(dialog.isOpen).toEqual(false);
     }));
 
-    fdescribe('Position settings', () => {
+    describe('Position settings', () => {
         let fix;
         let dialog;
         let detect;
