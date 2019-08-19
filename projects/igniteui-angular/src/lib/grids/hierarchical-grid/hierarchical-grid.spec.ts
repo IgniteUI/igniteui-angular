@@ -906,6 +906,30 @@ describe('IgxHierarchicalGrid Template Changing Scenarios', () => {
         expect(child2Headers[2].nativeElement.innerText).toEqual('Col1');
     });
 
+    it('should render correct columns when setting columns for parent and child post init using ngFor', () => {
+        const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+
+        const child1Grids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        const child1Grid = child1Grids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+
+        fixture.componentInstance.parentCols = ['Col1', 'Col2'];
+        fixture.componentInstance.islandCols1 = ['ID', 'ProductName', 'Col1'];
+        fixture.detectChanges();
+        // check parent cols
+        expect(hierarchicalGrid.columns.length).toBe(4);
+        expect(hierarchicalGrid.columns[0].field).toBe('ID');
+        expect(hierarchicalGrid.columns[1].field).toBe('ProductName');
+        expect(hierarchicalGrid.columns[2].field).toBe('Col1');
+        expect(hierarchicalGrid.columns[3].field).toBe('Col2');
+        // check child cols
+        expect(child1Grid.columns.length).toBe(3);
+        expect(hierarchicalGrid.columns[0].field).toBe('ID');
+        expect(hierarchicalGrid.columns[1].field).toBe('ProductName');
+        expect(hierarchicalGrid.columns[2].field).toBe('Col1');
+    });
+
     it('should update columns for expanded child when adding column to row island', () => {
         const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         UIInteractions.clickElement(row.expander);
@@ -1206,6 +1230,7 @@ export class IgxHGridRemoteOnDemandComponent {
     <igx-hierarchical-grid #hierarchicalGrid [data]="data" [autoGenerate]="false" [height]="'500px'" [width]="'800px'" >
         <igx-column field="ID"></igx-column>
         <igx-column field="ProductName"></igx-column>
+        <igx-column *ngFor="let colField of parentCols" [field]="colField"></igx-column>
         <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland [height]="'350px'">
             <igx-column *ngFor="let colField of islandCols1" [field]="colField"></igx-column>
             <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland2 [height]="'200px'">
@@ -1217,6 +1242,7 @@ export class IgxHGridRemoteOnDemandComponent {
 export class IgxHierarchicalGridColumnsUpdateComponent extends IgxHierarchicalGridTestBaseComponent implements AfterViewInit {
     public cols1 = ['ID', 'ProductName', 'Col1', 'Col2', 'Col3'];
     public cols2 =  ['ID', 'ProductName', 'Col1'];
+    public parentCols = [];
     public islandCols1 = [];
     public islandCols2 = [];
     constructor(public cdr: ChangeDetectorRef) {
