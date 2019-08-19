@@ -228,7 +228,7 @@ export class IgxGridSelectionService {
         const ranges = Array.from(this._ranges).map(range => JSON.parse(range));
 
         // No ranges but we have a focused cell -> add it
-        if (!ranges.length && this.activeElement) {
+        if (!ranges.length && this.activeElement && this.grid.cellSelection !== 'none') {
             ranges.push(this.generateRange(this.activeElement));
         }
 
@@ -305,7 +305,7 @@ export class IgxGridSelectionService {
     }
 
     selected(node: ISelectionNode): boolean {
-        return this.isActiveNode(node) || this.isInMap(node);
+        return (this.isActiveNode(node) && this.grid.cellSelection !== 'none' ) || this.isInMap(node);
     }
 
     isActiveNode(node: ISelectionNode, mrl = false): boolean {
@@ -553,6 +553,7 @@ export class IgxGridSelectionService {
         const removedRec = this.isFilteringApplied() ?
             this.getRowIDs(this.allData).filter(rID => this.isRowSelected(rID)) : this.getSelectedRows();
         const newSelection = this.isFilteringApplied() ? this.getSelectedRows().filter(x => !removedRec.includes(x)) : [];
+        debugger;
         if (this.emitRowSelectionEvent(newSelection, [], removedRec, event)) { return; }
 
         this.isFilteringApplied() ? this.deselectRowsWithNoEvent(removedRec) :  this.rowSelection.clear();
@@ -648,8 +649,7 @@ export class IgxGridSelectionService {
         this.grid.onRowSelectionChange.emit(args);
         if (args.cancel && event.checkbox) { event.checkbox.checked = !event.checkbox.checked; }
         if (!this.areEquelCollections(copy, newSelection)) {
-            this.rowSelection.clear();
-            this.selectRowsWithNoEvent(newSelection);
+            this.selectRowsWithNoEvent(newSelection, true);
             return true;
         }
         return args.cancel;
@@ -678,7 +678,7 @@ export class IgxGridSelectionService {
     }
 
     private areEquelCollections(first, second) {
-        return  new Set(first.concat(second)).size !== first.length ? false : true;
+        return  first.length !== second.length || new Set(first.concat(second)).size !== first.length ? false : true;
     }
 
     private isFilteringApplied() {
