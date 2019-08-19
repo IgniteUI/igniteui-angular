@@ -1,14 +1,17 @@
-import { Component, DebugElement, ElementRef, ViewChild } from '@angular/core';
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { Component, ViewChild } from '@angular/core';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IDialogEventArgs, IgxDialogComponent, IgxDialogModule } from './dialog.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { PositionSettings, slideInTop, slideOutBottom, HorizontalAlignment, VerticalAlignment } from 'igniteui-angular';
+import { useAnimation } from '@angular/animations';
 
 const OVERLAY_MAIN_CLASS = 'igx-overlay';
 const OVERLAY_WRAPPER_CLASS = `${OVERLAY_MAIN_CLASS}__wrapper`;
 const OVERLAY_MODAL_WRAPPER_CLASS = `${OVERLAY_WRAPPER_CLASS}--modal`;
+const CLASS_OVERLAY_CONTENT_MODAL = `${OVERLAY_MAIN_CLASS}__content--modal`;
 
 describe('Dialog', () => {
     configureTestSuite();
@@ -21,7 +24,8 @@ describe('Dialog', () => {
                 NestedDialogsComponent,
                 CustomTemplates1DialogComponent,
                 CustomTemplates2DialogComponent,
-                DialogSampleComponent
+                DialogSampleComponent,
+                PositionSettingsDialogComponent
             ],
             imports: [BrowserAnimationsModule, NoopAnimationsModule, IgxDialogModule]
         }).compileComponents();
@@ -322,6 +326,88 @@ describe('Dialog', () => {
         expect(dialog.isOpen).toEqual(false);
     }));
 
+    fdescribe('Position settings', () => {
+        let fix;
+        let dialog;
+        let detect;
+        const positionSettings: PositionSettings = {
+            horizontalDirection: HorizontalAlignment.Center,
+            verticalDirection: VerticalAlignment.Top
+        };
+
+        beforeEach( fakeAsync(() => {
+            fix = TestBed.createComponent(PositionSettingsDialogComponent);
+            fix.detectChanges();
+            dialog = fix.componentInstance.dialog;
+            detect = () => dialog.cdr.detectChanges();
+        }));
+
+        it('Define different position settings ', (async() => {
+            dialog.open();
+            fix.detectChanges();
+            await wait(16);
+
+            expect(dialog.isOpen).toEqual(true);
+            const firstContentRect = document.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0].getBoundingClientRect();
+            const middleDialogPosition = document.documentElement.offsetHeight / 2 - firstContentRect.height / 2;
+            expect(firstContentRect.left).toEqual(0, 'OffsetLeft position check');
+            expect(firstContentRect.top).toBeGreaterThanOrEqual(middleDialogPosition - 2, 'OffsetTop position check');
+            expect(firstContentRect.top).toBeLessThanOrEqual(middleDialogPosition + 2, 'OffsetTop position check');
+
+            dialog.close();
+            fix.detectChanges();
+            await wait(16);
+
+            expect(dialog.isOpen).toEqual(false);
+            dialog.positionSettings = positionSettings;
+            fix.detectChanges();
+            await wait(16);
+
+            dialog.open();
+            fix.detectChanges();
+            await wait(16);
+
+            expect(dialog.isOpen).toEqual(true);
+            const secondContentRect = document.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0].getBoundingClientRect();
+            const topDialogPosition = document.documentElement.offsetWidth / 2 - secondContentRect.width / 2;
+            expect(secondContentRect.top).toEqual(0, 'OffsetTop position check');
+            expect(secondContentRect.left).toBeGreaterThanOrEqual(topDialogPosition - 2, 'OffsetLeft position check');
+            expect(secondContentRect.left).toBeLessThanOrEqual(topDialogPosition + 2, 'OffsetLeft position check');
+
+            dialog.close();
+            fix.detectChanges();
+            await wait(16);
+
+            expect(dialog.isOpen).toEqual(false);
+        }));
+
+        it('Set animation settings', (async() => {
+            const currentElement = fix.componentInstance;
+            dialog.positionSettings = currentElement.animationSettings;
+            fix.detectChanges();
+            await wait(16);
+
+            // Check the new animation settings
+            expect(dialog.positionSettings.openAnimation.animation.type).toEqual(8, 'Animation type is set');
+            expect(dialog.positionSettings.openAnimation.options.params.duration).toEqual('800ms', 'Animation duration is set to 800ms');
+
+            expect(dialog.positionSettings.closeAnimation.animation.type).toEqual(8, 'Animation type is set');
+            expect(dialog.positionSettings.closeAnimation.options.params.duration).toEqual('700ms', 'Animation duration is set to 700ms');
+
+            dialog.open();
+            fix.detectChanges();
+
+            await wait(16);
+            expect(dialog.isOpen).toEqual(true);
+
+            dialog.close();
+            fix.detectChanges();
+            await wait(16);
+
+            expect(dialog.isOpen).toEqual(false);
+        }));
+    });
+
     function dispatchEvent(element: HTMLElement, eventType: string) {
         const event = new Event(eventType);
         element.dispatchEvent(event);
@@ -435,4 +521,25 @@ class CustomTemplates1DialogComponent {
             </igx-dialog>` })
 class CustomTemplates2DialogComponent {
     @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+}
+
+
+@Component({
+    template: `<igx-dialog #dialog title="Notification" message="Your email has been sent successfully!" leftButtonLabel="OK"
+        [positionSettings]="positionSettings" >
+    </igx-dialog>` })
+class PositionSettingsDialogComponent {
+    @ViewChild('dialog', { static: true }) public dialog: IgxDialogComponent;
+
+    public positionSettings: PositionSettings = {
+        horizontalDirection: HorizontalAlignment.Left,
+        verticalDirection: VerticalAlignment.Middle,
+        horizontalStartPoint: HorizontalAlignment.Left,
+        verticalStartPoint: VerticalAlignment.Middle
+    };
+
+    public animationSettings: PositionSettings = {
+        openAnimation: useAnimation(slideInTop, { params: { duration: '800ms' } }),
+        closeAnimation: useAnimation(slideOutBottom, { params: { duration: '700ms'} })
+    };
 }

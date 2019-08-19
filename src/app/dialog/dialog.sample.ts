@@ -22,16 +22,26 @@ export class DialogSampleComponent implements OnInit {
         minSize: { height: 100, width: 100 }
     };
 
-    public positionSettings2: PositionSettings = {
+    public newPositionSettings: PositionSettings = {
+        horizontalDirection: HorizontalAlignment.Center,
+        verticalDirection: VerticalAlignment.Middle,
+    };
+
+    public newAnimationSettings: PositionSettings = {
         openAnimation: useAnimation(slideInTop),
         closeAnimation: useAnimation(slideOutBottom)
     };
 
     public ngOnInit() {
         // Set position settings on ngOnInit
-        // this.alert.positionSettings = this.positionSettings2;
+        // this.alert.positionSettings = this.newAnimationSettings;
 
         console.log(this.alert.positionSettings);
+    }
+
+    togglePosition() {
+        this.alert.positionSettings = this.alert.positionSettings === this.positionSettings ?
+            this.newPositionSettings : this.positionSettings;
     }
 
     onDialogOKSelected(args) {
