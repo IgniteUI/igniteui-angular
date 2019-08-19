@@ -4418,7 +4418,7 @@ describe('IgxGrid Component Tests', () => {
         });
     });
 
-    describe('IgxGrid - Performance tests', () => {
+    describe('IgxGrid - Performance tests #perf', () => {
         const MAX_RAW_RENDER = 1800;
         const MAX_GROUPED_RENDER = 1500;
         const MAX_VER_SCROLL_O = 220;
