@@ -330,10 +330,6 @@ describe('Dialog', () => {
         let fix;
         let dialog;
         let detect;
-        const positionSettings: PositionSettings = {
-            horizontalDirection: HorizontalAlignment.Center,
-            verticalDirection: VerticalAlignment.Top
-        };
 
         beforeEach( fakeAsync(() => {
             fix = TestBed.createComponent(PositionSettingsDialogComponent);
@@ -343,6 +339,7 @@ describe('Dialog', () => {
         }));
 
         it('Define different position settings ', (async() => {
+            const currentElement = fix.componentInstance;
             dialog.open();
             fix.detectChanges();
             await wait(16);
@@ -359,7 +356,7 @@ describe('Dialog', () => {
             await wait(16);
 
             expect(dialog.isOpen).toEqual(false);
-            dialog.positionSettings = positionSettings;
+            dialog.positionSettings = currentElement.newPositionSettings;
             fix.detectChanges();
             await wait(16);
 
@@ -383,28 +380,21 @@ describe('Dialog', () => {
 
         it('Set animation settings', (async() => {
             const currentElement = fix.componentInstance;
+
+            // Check initial animation settings
+            expect(dialog.positionSettings.openAnimation.animation.type).toEqual(8, 'Animation type is set');
+            expect(dialog.positionSettings.openAnimation.options.params.duration).toEqual('200ms', 'Animation duration is set to 200ms');
+
+            expect(dialog.positionSettings.closeAnimation.animation.type).toEqual(8, 'Animation type is set');
+            expect(dialog.positionSettings.closeAnimation.options.params.duration).toEqual('200ms', 'Animation duration is set to 200ms');
+
             dialog.positionSettings = currentElement.animationSettings;
             fix.detectChanges();
             await wait(16);
 
             // Check the new animation settings
-            expect(dialog.positionSettings.openAnimation.animation.type).toEqual(8, 'Animation type is set');
             expect(dialog.positionSettings.openAnimation.options.params.duration).toEqual('800ms', 'Animation duration is set to 800ms');
-
-            expect(dialog.positionSettings.closeAnimation.animation.type).toEqual(8, 'Animation type is set');
             expect(dialog.positionSettings.closeAnimation.options.params.duration).toEqual('700ms', 'Animation duration is set to 700ms');
-
-            dialog.open();
-            fix.detectChanges();
-
-            await wait(16);
-            expect(dialog.isOpen).toEqual(true);
-
-            dialog.close();
-            fix.detectChanges();
-            await wait(16);
-
-            expect(dialog.isOpen).toEqual(false);
         }));
     });
 
@@ -535,11 +525,19 @@ class PositionSettingsDialogComponent {
         horizontalDirection: HorizontalAlignment.Left,
         verticalDirection: VerticalAlignment.Middle,
         horizontalStartPoint: HorizontalAlignment.Left,
-        verticalStartPoint: VerticalAlignment.Middle
+        verticalStartPoint: VerticalAlignment.Middle,
+        openAnimation: useAnimation(slideInTop, { params: { duration: '200ms' } }),
+        closeAnimation: useAnimation(slideOutBottom, { params: { duration: '200ms'} })
+    };
+
+    public newPositionSettings: PositionSettings = {
+        horizontalDirection: HorizontalAlignment.Center,
+        verticalDirection: VerticalAlignment.Top
     };
 
     public animationSettings: PositionSettings = {
         openAnimation: useAnimation(slideInTop, { params: { duration: '800ms' } }),
         closeAnimation: useAnimation(slideOutBottom, { params: { duration: '700ms'} })
     };
+
 }
