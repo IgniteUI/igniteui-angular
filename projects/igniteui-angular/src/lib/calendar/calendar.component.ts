@@ -8,7 +8,9 @@ import {
     Input,
     ViewChild,
     ElementRef,
-    AfterViewInit
+    AfterViewInit,
+    ViewChildren,
+    QueryList
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { fadeIn, scaleInCenter } from '../animations/main';
@@ -21,26 +23,16 @@ import { ICalendarDate, monthRange } from './calendar';
 import { CalendarView, IgxMonthPickerBase } from './month-picker-base';
 import { IgxMonthsViewComponent } from './months-view/months-view.component';
 import { IgxYearsViewComponent } from './years-view/years-view.component';
-import { IgxDaysViewComponent } from './days-view/days-view.component';
-import { DateRangeDescriptor } from '../core/dates';
+import { IgxDaysViewComponent, IViewChangedArgs } from './days-view/days-view.component';
 import { interval } from 'rxjs';
 import { takeUntil, debounce, skipLast, switchMap } from 'rxjs/operators';
 import { ScrollMonth } from './calendar-base';
 
 let NEXT_ID = 0;
 
-export interface IDayView {
-    changeDaysView: boolean;
-    animationAction: string;
-    locale: string;
+export interface IMonthView {
     value: Date | Date[];
     viewDate: Date;
-    weekStart: number;
-    formatOptions: object;
-    formatViews: object;
-    selection: string;
-    disabledDates: DateRangeDescriptor[];
-    specialDates: DateRangeDescriptor[];
 }
 
 /**
@@ -110,30 +102,31 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     public vertical = false;
 
     /**
-     * Sets/gets the number of dayViews duisplayed.
+     * Sets/gets the number of month views displayed.
      * Default value is `1`.
      * ```html
-     * <igx-calendar [vertical] = "true" [daysViewNumber]="2"></igx-calendar>
+     * <igx-calendar [vertical] = "true" [monthsViewNumber]="2"></igx-calendar>
      * ```
      * ```typescript
-     * let daysViewsDisplayed = this.calendar.daysViewNumber;
+     * let monthViewsDisplayed = this.calendar.monthsViewNumber;
      * ```
      */
     @Input()
-    get daysViewNumber() {
-        return this._daysViewNumber;
+    get monthsViewNumber() {
+        return this._monthsViewNumber;
     }
 
-    set daysViewNumber(val: number) {
-        this._daysViewNumber = val;
+    set monthsViewNumber(val: number) {
+        this._monthsViewNumber = val;
 
-        for (let i = 1; i < val; i++) {
-            const dayView = Object.assign({}, this.defaultDayView);
-            dayView.value = null;
-            const nextMonthDate = new Date(dayView.viewDate);
+        for (let i = 0; i < val; i++) {
+            const nextMonthDate = new Date(this.viewDate);
             nextMonthDate.setMonth(nextMonthDate.getMonth() + i);
-            dayView.viewDate = nextMonthDate;
-            this.dayViews.push(dayView);
+            const monthView: IMonthView = {
+                value: null,
+                viewDate: nextMonthDate
+            };
+            this.dayViews.push(monthView);
         }
     }
 
@@ -201,7 +194,10 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
      * @hidden
      */
     @ViewChild('days', { read: IgxDaysViewComponent, static: false })
-    public daysView: IgxDaysViewComponent;
+    public daysView = new IgxDaysViewComponent;
+
+    @ViewChildren('days', { read: IgxDaysViewComponent })
+    public monthViews: QueryList<IgxDaysViewComponent>;
 
     /**
      * @hidden
@@ -335,31 +331,21 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      *@hidden
      */
-    private _daysViewNumber = 1;
-
-    /**
-     *@hidden
-    */
-    private defaultDayView: IDayView = {
-        changeDaysView: true,
-        animationAction: this._monthAction,
-        locale: this.locale,
-        value: this.value,
-        viewDate: this.viewDate,
-        weekStart: this.weekStart,
-        formatOptions: this.formatOptions,
-        formatViews: this.formatViews,
-        selection: this.selection,
-        disabledDates: this.disabledDates,
-        specialDates: this.specialDates
-    };
+    private _monthsViewNumber = 1;
 
     /**
      *@hidden
      */
-    private dayViews: Array<IDayView> = [this.defaultDayView];
+    private dayViews = [];
 
     public ngAfterViewInit() {
+
+        this.monthViews.forEach((item, index) => {
+            const prevMonthView = this.getMonthView(index - 1);
+            const nextMonthView = this.getMonthView(index + 1);
+            item.nextMonthView = nextMonthView;
+            item.prevMonthView = prevMonthView;
+        });
 
         this.startMonthScroll$.pipe(
             takeUntil(this.stopMonthScroll$),
@@ -400,7 +386,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
      */
     public previousMonth(isKeydownTrigger = false) {
         this.viewDate = this.calendarModel.timedelta(this.viewDate, 'month', -1);
-        this.dayViews.forEach((val, index) => {
+        this.dayViews.forEach((val) => {
             val.viewDate = this.calendarModel.timedelta(val.viewDate, 'month', -1);
         });
         this._monthAction = 'prev';
@@ -415,6 +401,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
      */
     public nextMonth(isKeydownTrigger = false) {
         this.viewDate = this.calendarModel.timedelta(this.viewDate, 'month', 1);
+        this.dayViews.forEach((val) => {
+            val.viewDate = this.calendarModel.timedelta(val.viewDate, 'month', 1);
+        });
         this._monthAction = 'next';
 
         if (this.daysView) {
@@ -518,8 +507,14 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      * @hidden
      */
-    public viewChanged(event) {
-        this.viewDate = this.calendarModel.timedelta(event, 'month', 0);
+    public viewChanged(event: IViewChangedArgs) {
+        let date = this.viewDate,
+            delta = event.delta;
+        if (event.moveToFirst) {
+            delta = 0;
+            date = event.date;
+        }
+        this.viewDate = this.calendarModel.timedelta(date, 'month', delta);
     }
 
     /**
@@ -568,6 +563,15 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
 
         this.daysView.selectedDates = this.selectedDates;
         this._onChangeCallback(this.selectedDates);
+    }
+
+    /**
+     * @hidden
+     */
+    public getViewDate(i: number): Date {
+        const nextMonthDate = new Date(this.viewDate);
+        nextMonthDate.setMonth(nextMonthDate.getMonth() + i);
+        return nextMonthDate;
     }
 
     /**
@@ -745,5 +749,17 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
                 ['era', 'year', 'month', 'day', 'weekday'])
         };
         return { $implicit: formatObject };
+    }
+
+    /**
+     * Helper method returning previous/next day views
+     * @hidden
+     */
+    private getMonthView(index): IgxDaysViewComponent {
+        if (index === -1 || index === this.monthViews.length ) {
+            return null;
+        } else {
+            return this.monthViews.toArray()[index];
+        }
     }
 }

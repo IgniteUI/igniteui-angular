@@ -29,6 +29,9 @@ export class IgxDayItemComponent {
     @Input()
     public specialDates: DateRangeDescriptor[];
 
+    @Input()
+    public hideInactiveDates: boolean;
+
     @Output()
     public onDateSelection = new EventEmitter<ICalendarDate>();
 
@@ -71,6 +74,10 @@ export class IgxDayItemComponent {
 
     public get isInactive(): boolean {
         return this.date.isNextMonth || this.date.isPrevMonth;
+    }
+
+    public get isHidden(): boolean {
+        return this.hideInactiveDates && this.isInactive;
     }
 
     public get isToday(): boolean {
@@ -122,6 +129,11 @@ export class IgxDayItemComponent {
     @HostBinding('class.igx-calendar__date--inactive')
     public get isInactiveCSS(): boolean {
         return this.isInactive;
+    }
+
+    @HostBinding('class.igx-calendar__date--hidden')
+    get isHiddenCSS(): boolean {
+        return this.isHidden;
     }
 
     @HostBinding('class.igx-calendar__date--current')

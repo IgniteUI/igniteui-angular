@@ -4,15 +4,15 @@
 </ng-template>
 
 <ng-template let-result #defaultMonth >
-    <ng-container *ngFor="let view of dayViews; let i of index;">
+    <ng-container *ngFor="let view of dayViews; index as i;">
         <div>
             <span tabindex="0" #monthsBtn (keydown)="activeViewYearKB($event)" (click)="activeViewYear()"
                 class="igx-calendar-picker__date">
-                {{ formattedMonth(view.viewDate) }}
+                {{ formattedMonth(getViewDate(i)) }}
             </span>
             <span tabindex="0" #yearsBtn (keydown)="activeViewDecadeKB($event)" (click)="activeViewDecade()"
                 class="igx-calendar-picker__date">
-                {{ formattedYear(view.viewDate) }}
+                {{ formattedYear(getViewDate(i)) }}
             </span>
         </div>
     </ng-container>
@@ -44,17 +44,18 @@
     </div>
 
     <div style="display: flex">
-        <igx-days-view *ngFor="let view of dayViews; let i of index;" [changeDaysView]="true" #days
-                [animationAction]="view.monthAction"
-                [locale]="view.locale"
-                [value]="view.value"
-                [viewDate]="view.viewDate"
-                [weekStart]="view.weekStart"
-                [formatOptions]="view.formatOptions"
-                [formatViews]="view.formatViews"
-                [selection]="view.selection"
-                [disabledDates]="view.disabledDates"
-                [specialDates]="view.specialDates"
+        <igx-days-view *ngFor="let view of dayViews; index as i;" [changeDaysView]="true" #days
+                [animationAction]="monthAction"
+                [locale]="locale"
+                [value]="value"
+                [viewDate]="viewDate"
+                [weekStart]="weekStart"
+                [formatOptions]="formatOptions"
+                [formatViews]="formatViews"
+                [selection]="selection"
+                [disabledDates]="disabledDates"
+                [specialDates]="specialDates"
+                [hideInactiveDates]="hideInactiveDates"
                 (onViewChanged)="viewChanged($event)"
                 (onDateSelection)="childClicked($event)">
         </igx-days-view>

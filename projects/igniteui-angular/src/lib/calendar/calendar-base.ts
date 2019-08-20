@@ -211,6 +211,20 @@ export class IgxCalendarBase implements ControlValueAccessor {
     }
 
     /**
+     * Sets/gets whether the inactive dates (dates that are out of the current month) will be hidden.
+     * Default value is `false`.
+     * ```html
+     * <igx-calendar [hideInactiveDates] = "true"></igx-calendar>
+     * ```
+     * ```typescript
+     * let hideInactiveDates = this.calendar.hideInactiveDates;
+     * ```
+     */
+
+    @Input()
+    public hideInactiveDates: boolean;
+
+    /**
      * Emits an event when a date is selected.
      * Provides reference the `selectedDates` property.
      */

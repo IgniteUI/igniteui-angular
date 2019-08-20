@@ -1,7 +1,7 @@
 import { IgxCalendarBase } from './calendar-base';
 import { ViewChild, ElementRef, HostBinding } from '@angular/core';
 import { KEYS } from '../core/utils';
-import { IDayView } from './calendar.component';
+import { IMonthView } from './calendar.component';
 
 /**
  * Sets the calender view - days, months or years.
@@ -63,7 +63,7 @@ export class IgxMonthPickerBase extends IgxCalendarBase {
     /**
      * @hidden
      */
-    public changeYear(event: Date, dayViews: IDayView[]) {
+    public changeYear(event: Date, dayViews: IMonthView[]) {
         this.viewDate = new Date(event.getFullYear(), this.viewDate.getMonth());
         const yearsDiff = event.getFullYear() - dayViews[0].viewDate.getFullYear();
         dayViews.forEach((val, index) => {
