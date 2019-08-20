@@ -1522,8 +1522,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     protected setSelection(newSelection: Set<any>, event?: Event): void {
         const removed = diffInSets(this.selection.get(this.id), newSelection);
         const added = diffInSets(newSelection, this.selection.get(this.id));
-        const oldSelectionEmit = Array.from(this.selection.get(this.id) || []);
-        const newSelectionEmit = Array.from(newSelection || []);
         const args: IComboSelectionChangeEventArgs = {
             newSelection: Array.from(newSelection),
             oldSelection: Array.from(this.selection.get(this.id) || []),
@@ -1538,15 +1536,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             let value = '';
             if (this.isRemote) {
                 if (args.newSelection.length) {
-                    // use setDiffs when events PR is merged
-                    const items = {
-                        removed: [],
-                        added: []
-                    };
-                    items.removed = args.oldSelection.filter(e => args.newSelection.indexOf(e) < 0);
-                    items.added = args.newSelection.filter(e => args.oldSelection.indexOf(e) < 0);
-                    this.registerRemoteEntries(items.added);
-                    this.registerRemoteEntries(items.removed, false);
+                    const removedItems = args.oldSelection.filter(e => args.newSelection.indexOf(e) < 0);
+                    const addedItems = args.newSelection.filter(e => args.oldSelection.indexOf(e) < 0);
+                    this.registerRemoteEntries(addedItems);
+                    this.registerRemoteEntries(removedItems, false);
                     value = Object.keys(this._remoteSelection).map(e => this._remoteSelection[e]).join(', ');
                 }
             } else {
