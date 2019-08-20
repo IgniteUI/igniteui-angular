@@ -17,13 +17,13 @@ import {
     IgxDragDirective,
     IDragBaseEventArgs,
     IDragStartEventArgs,
-    IgxDropEnterEventArgs,
-    IgxDropEventArgs
+    IDropBaseEventArgs,
+    IDropDroppedEventArgs
 } from '../directives/drag-drop/drag-drop.directive';
 
 
 export interface IBaseChipEventArgs {
-    originalEvent: PointerEvent | MouseEvent | TouchEvent | KeyboardEvent | IgxDropEnterEventArgs;
+    originalEvent: PointerEvent | MouseEvent | TouchEvent | KeyboardEvent | IDropBaseEventArgs;
     owner: IgxChipComponent;
 }
 
@@ -516,7 +516,7 @@ export class IgxChipComponent extends DisplayDensityBase {
      * @hidden
      */
     // -----------------------------
-    // Start chip igxDrag behaviour
+    // Start chip igxDrag behavior
     public onChipDragStart(event: IDragStartEventArgs) {
         this.onMoveStart.emit({
             originalEvent: event.originalEvent,
@@ -564,21 +564,21 @@ export class IgxChipComponent extends DisplayDensityBase {
             this.changeSelection(!this.selected, event.originalEvent);
         }
     }
-    // End chip igxDrag behaviour
+    // End chip igxDrag behavior
 
     /**
      * @hidden
      */
     // -----------------------------
-    // Start chip igxDrop behaviour
-    public onChipDragEnterHandler(event: IgxDropEnterEventArgs) {
-        if (this.dragDirective === event.drag || !event.dragData || !event.dragData.chip) {
+    // Start chip igxDrop behavior
+    public onChipDragEnterHandler(event: IDropBaseEventArgs) {
+        if (this.dragDirective === event.drag || !event.drag.data || !event.drag.data.chip) {
             return;
         }
 
         const eventArgs: IChipEnterDragAreaEventArgs = {
             owner: this,
-            dragChip: event.dragData.chip,
+            dragChip: event.drag.data.chip,
             originalEvent: event
         };
         this.onDragEnter.emit(eventArgs);
@@ -587,9 +587,9 @@ export class IgxChipComponent extends DisplayDensityBase {
     /**
      * @hidden
      */
-    public onChipDrop(event: IgxDropEventArgs) {
+    public onChipDrop(event: IDropDroppedEventArgs) {
         // Cancel the default drop logic
         event.cancel = true;
     }
-    // End chip igxDrop behaviour
+    // End chip igxDrop behavior
 }
