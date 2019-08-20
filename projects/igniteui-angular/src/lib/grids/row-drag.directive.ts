@@ -45,7 +45,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             const args: IRowDragStartEventArgs = {
                 owner: this,
                 dragData: this.row,
-                cancel: false
+                cancel: false,
+                context: this.row.grid
             };
 
             this.row.grid.onRowDragStart.emit(args);
@@ -78,7 +79,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         const args: IRowDragEndEventArgs = {
             owner: this,
             dragData: this.row,
-            animation: false
+            animation: false,
+            context: this.row.grid
         };
         this.zone.run(() => {
             this.row.grid.onRowDragEnd.emit(args);

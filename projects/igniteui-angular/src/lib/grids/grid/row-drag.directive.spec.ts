@@ -1141,7 +1141,8 @@ function verifyRowDragStartEvent(
     expect(grid.onRowDragStart.emit).toHaveBeenCalledWith({
         dragData: dragRow,
         owner: dragDirective,
-        cancel: cancel
+        cancel: cancel,
+        context: grid
     });
 }
 
@@ -1162,6 +1163,7 @@ function verifyRowDragEndEvent(
     expect(grid.onRowDragEnd.emit).toHaveBeenCalledWith({
         owner: dragDirective,
         dragData: dragRow,
-        animation: animations
+        animation: animations,
+        context: grid
     });
 }
