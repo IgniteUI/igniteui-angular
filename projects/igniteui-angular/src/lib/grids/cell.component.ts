@@ -809,7 +809,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
         if (this.selectionService.primaryButton) {
             this._updateCRUDStatus();
-            this.isCellSelectable ? this.selectionService.activeElement = node : this.selectionService.activeElement = null;
+            this.selectionService.activeElement = node;
         } else {
             this.selectionService.activeElement = null;
             if (this.crudService.inEditMode && !this.editMode) {

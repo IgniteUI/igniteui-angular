@@ -135,33 +135,6 @@ export class FilteringComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: `
-        <igx-grid #gridSelection2 [data]="data" [primaryKey]="'ID'"
-        [autoGenerate]="true" rowSelection = "multiple" [paging]="true" [perPage]="50">
-        </igx-grid>
-        <button class="prevPageBtn" (click)="ChangePage(-1)">Prev page</button>
-        <button class="nextPageBtn" (click)="ChangePage(1)">Next page</button>
-    `
-})
-export class SelectionAndPagingComponent extends BasicGridComponent {
-    data = SampleTestData.generateBigValuesData(100);
-
-    public ChangePage(val) {
-        switch (val) {
-            case -1:
-                this.grid.previousPage();
-                break;
-            case 1:
-                this.grid.nextPage();
-                break;
-            default:
-                this.grid.paginate(val);
-                break;
-        }
-    }
-}
-
-@Component({
     template: GridTemplateStrings.declareGrid(
             ` #gridSelection3 [primaryKey]="'ID'" [width]="'800px'" [height]="'600px'" [autoGenerate]="true" [rowSelection]="'multiple'"`,
             '', '')
@@ -188,6 +161,19 @@ export class RowSelectionComponent extends BasicGridComponent {
 })
 export class SingleRowSelectionComponent extends BasicGridComponent {
     data = SampleTestData.foodProductDataExtended();
+    public width = '800px';
+    public height = '600px';
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
+        ` [width]="width" [height]="height" [rowSelection]="'multiple'"`,
+            '',
+            ColumnDefinitions.idFirstLastNameSortable)
+})
+
+export class RowSelectionWithoutPrimaryKeyComponent extends BasicGridComponent {
+    public data = SampleTestData.personIDNameRegionData();
     public width = '800px';
     public height = '600px';
 }

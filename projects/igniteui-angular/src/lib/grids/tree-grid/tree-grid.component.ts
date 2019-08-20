@@ -21,7 +21,6 @@ import {
     AfterContentInit,
     ViewChild
 } from '@angular/core';
-import { IgxSelectionAPIService } from '../../core/selection';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseComponent, IgxGridTransaction, IGridDataBindable } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
@@ -405,7 +404,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-        selection: IgxSelectionAPIService,
         @Inject(IgxGridTransaction) protected _transactions: IgxHierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
         elementRef: ElementRef,
         zone: NgZone,
@@ -459,13 +457,13 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
                     this.cdr.markForCheck();
 
                     requestAnimationFrame(() => {
-                        /* const cellID = this.selection.first_item(`${this.id}-cell`);
+                        const cellID = this.selectionService.activeElement;
                         if (cellID) {
-                            const cell = this._gridAPI.get_cell_by_index(cellID.rowIndex, cellID.columnID);
+                            const cell = this._gridAPI.get_cell_by_index(cellID.row, cellID.column);
                             if (cell) {
                                 cell.nativeElement.focus();
                             }
-                        } */
+                        }
                     });
                 });
             }

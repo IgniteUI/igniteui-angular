@@ -8,12 +8,16 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - `uniqueColumnValuesStrategy` input is added. This property provides a callback for loading unique column values on demand. If this property is provided, the unique values it generates will be used by the Excel Style Filtering (instead of using the unique values from the data that is bound to the grid).
     - `igxExcelStyleLoading` directive is added, which can be used to provide a custom loading template for the Excel Style Filtering. If this property is not provided, a default loading template will be used instead.
+    - introduced new propoerties `cellSelection` and `rowSelection` which accepts GridSelection mode enumeration. Grid selection mode could be none, single or multiple. Also `hideRowSelectors` property is added, which allows you to show and hide row selectors when row selection is enabled.
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Removed deprecated event `OnFocusChange`
     - **Breaking Change** `igxExcelStyleSortingTemplate` directive is renamed to `igxExcelStyleSorting`.
     - **Breaking Change** `igxExcelStyleMovingTemplate` directive is renamed to `igxExcelStyleMoving`.
     - **Breaking Change** `igxExcelStyleHidingTemplate` directive is renamed to `igxExcelStyleHiding`.
     - **Breaking Change** `igxExcelStylePinningTemplate` directive is renamed to `igxExcelStylePinning`.
+## 8.1.4
+- `IgxDialog` new @Input `positionSettings` is now available. It provides the ability to get/set both position and animation settings of the Dialog component.
 
 ## 8.1.3
 - `IgxCombo`

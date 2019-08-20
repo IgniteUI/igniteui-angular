@@ -389,7 +389,7 @@ describe('IgxGrid - Cell selection', () => {
             HelperUtils.verifyCellSelected(thirdCell, false);
         });
 
-        it('Should not be possible to select a range when change GridSelectionMode to none', () => {
+        it('Should not be possible to select a range when change cellSelection to none', () => {
             const rangeChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             const startCell =  grid.getCellByColumn(0, 'Name');
             const endCell =  grid.getCellByColumn(2, 'ParentID');
@@ -419,7 +419,7 @@ describe('IgxGrid - Cell selection', () => {
             expect(grid.getSelectedRanges()).toEqual([]);
         });
 
-        it('Should not be possible to select a range when change GridSelectionMode to single', () => {
+        it('Should not be possible to select a range when change cellSelection to single', () => {
             const rangeChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             const startCell =  grid.getCellByColumn(0, 'ID');
             const endCell =  grid.getCellByColumn(1, 'ParentID');

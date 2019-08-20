@@ -1,6 +1,6 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTreeGridModule } from './index';
+import { IgxTreeGridModule, GridSelectionMode } from './index';
 import {
     IgxTreeGridExpandingComponent,
     IgxTreeGridPrimaryForeignKeyComponent,
@@ -300,7 +300,7 @@ describe('IgxTreeGrid - Expanding / Collapsing ', () => {
             indicatorDivDOM.triggerEventHandler('click', new Event('click'));
         });
 
-        it('should update current page when \'collapseAll\' ', fakeAsync (() => {
+        it('should update current page when \'collapseAll\' ', fakeAsync(() => {
             // Test prerequisites
             treeGrid.paging = true;
             treeGrid.perPage = 4;
@@ -787,7 +787,7 @@ describe('IgxTreeGrid - Expanding / Collapsing ', () => {
             expect(treeGrid.totalPages).toBe(2);
         }));
 
-        it('Should update the paginator when a row of any level is collapsed',  fakeAsync(() => {
+        it('Should update the paginator when a row of any level is collapsed', fakeAsync(() => {
             // Test prerequisites
             treeGrid.paging = true;
             treeGrid.perPage = 5;
@@ -914,6 +914,36 @@ describe('IgxTreeGrid - Expanding / Collapsing ', () => {
                 rows = TreeGridFunctions.getAllRows(fix);
                 TreeGridFunctions.verifyTreeRowIndicator(row, false, false);
                 expect(rows.length).toBe(3);
+            });
+
+            it('check row selection when expand a row', async () => {
+                treeGrid.rowSelection = GridSelectionMode.multiple;
+                fix.detectChanges();
+
+                treeGrid.selectAllRows();
+                fix.detectChanges();
+
+                TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
+                expect(treeGrid.selectedRows()).toEqual([1, 6, 10]);
+
+                let rows = TreeGridFunctions.getAllRows(fix);
+                const row = rows[0];
+                expect(rows.length).toBe(3);
+
+                const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(row);
+                indicatorDiv.triggerEventHandler('click', new Event('click'));
+                await wait(1050);
+                fix.detectChanges();
+
+                rows = TreeGridFunctions.getAllRows(fix);
+                expect(rows.length).toBe(5);
+                TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+                TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, true);
+                TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, false);
+                TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 2, false);
+                TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, true);
+                TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 4, true);
+                expect(treeGrid.selectedRows()).toEqual([1, 6, 10]);
             });
         });
 
