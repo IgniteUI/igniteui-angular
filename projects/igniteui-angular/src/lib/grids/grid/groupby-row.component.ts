@@ -7,6 +7,7 @@ import {
     HostListener,
     Input,
     ViewChild,
+    TemplateRef,
 } from '@angular/core';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { DataType } from '../../data-operations/data-util';
@@ -37,6 +38,18 @@ export class IgxGridGroupByRowComponent {
      * @hidden
      */
     protected paddingIndentationCssClass = 'igx-grid__group-row--padding-level';
+
+    /**
+    * @hidden
+    */
+    @ViewChild('defaultGroupByExpandTemplate', { read: TemplateRef, static: true })
+    protected defaultGroupByExpandTemplate: TemplateRef<any>;
+
+    /**
+    * @hidden
+    */
+    @ViewChild('defaultGroupByCollapseTemplate', { read: TemplateRef, static: true })
+    protected defaultGroupByCollapseTemplate: TemplateRef<any>;
 
     /**
      * @hidden
@@ -174,6 +187,14 @@ export class IgxGridGroupByRowComponent {
             if (groupRow) {
                 groupRow.focus();
             }
+        }
+    }
+
+    public get iconTemplate() {
+        if (this.expanded) {
+            return this.grid.rowExpandIndicatorTemplate || this.defaultGroupByExpandTemplate;
+        } else {
+            return this.grid.rowCollapseIndicatorTemplate || this.defaultGroupByCollapseTemplate;
         }
     }
 

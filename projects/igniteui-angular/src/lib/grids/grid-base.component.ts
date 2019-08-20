@@ -93,6 +93,7 @@ import { IgxDragIndicatorIconDirective } from './row-drag.directive';
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
+import { IgxRowExpandIndicatorDirective, IgxRowCollapseIndicatorDirective } from './grid/grid.directives';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -260,6 +261,21 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected _destroyed = false;
     private overlayIDs = [];
     private _hostWidth;
+
+
+    /**
+    * The custom template, if any, that should be used when rendering a row expand indicator.
+    */
+    @ContentChild(IgxRowExpandIndicatorDirective, { read: TemplateRef, static: false })
+    public rowExpandIndicatorTemplate: TemplateRef<any> = null;
+
+    /**
+    * The custom template, if any, that should be used when rendering a row collapse indicator.
+    */
+    @ContentChild(IgxRowCollapseIndicatorDirective, { read: TemplateRef, static: false })
+    public rowCollapseIndicatorTemplate: TemplateRef<any> = null;
+
+
     /**
      * An accessor that sets the resource strings.
      * By default it uses EN resources.

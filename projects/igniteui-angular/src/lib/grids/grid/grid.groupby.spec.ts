@@ -19,7 +19,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DataParent } from '../../test-utils/sample-test-data.spec';
 import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-samples.spec';
 
-describe('IgxGrid - GroupBy', () => {
+fdescribe('IgxGrid - GroupBy', () => {
     configureTestSuite();
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
@@ -515,7 +515,7 @@ describe('IgxGrid - GroupBy', () => {
             expect(currExpr.groupedColumns[0].field).toEqual('Downloads');
         }));
 
-    it('should allow setting custom template for group row content.', fakeAsync(() => {
+    it('should allow setting custom template for group row content and expand/collapse icons.', fakeAsync(() => {
         const fix = TestBed.createComponent(CustomTemplateGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
@@ -531,7 +531,14 @@ describe('IgxGrid - GroupBy', () => {
             const expectedText = 'Total items with value:' + grVal +
                 ' are ' + grRow.groupRow.records.length;
             expect(elem.innerText.trim(['\n', '\r', ' '])).toEqual(expectedText);
+            const expander = grRow.nativeElement.querySelector('.igx-grid__grouping-indicator');
+            expect(expander.innerText).toBe('EXPANDED');
         }
+
+        groupRows[0].toggle();
+        const expndr = groupRows[0].nativeElement.querySelector('.igx-grid__grouping-indicator');
+        expect(expndr.innerText).toBe('COLLAPSED');
+
     }));
 
     it('should have the correct ARIA attributes on the group rows.', fakeAsync(() => {
@@ -2666,6 +2673,12 @@ export class GroupableGridComponent extends DataParent {
             <igx-column [field]="'Released'" [header]="'Released'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
             <ng-template igxGroupByRow let-groupRow>
                 <span>Total items with value:{{ groupRow.value }} are {{ groupRow.records.length }}</span>
+            </ng-template>
+            <ng-template igxRowExpandIndicator let-groupRow>
+                <span>EXPANDED</span>
+            </ng-template>
+            <ng-template igxRowCollapseIndicator let-groupRow>
+                <span>COLLAPSED</span>
             </ng-template>
         </igx-grid>
     `
