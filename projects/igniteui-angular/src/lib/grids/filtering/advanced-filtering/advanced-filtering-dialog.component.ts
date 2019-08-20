@@ -5,7 +5,7 @@ import { VerticalAlignment, HorizontalAlignment, Point } from '../../../services
 import { ConnectedPositioningStrategy } from '../../../services/overlay/position/connected-positioning-strategy';
 import { IgxFilteringService } from '../grid-filtering.service';
 import { IgxOverlayService } from '../../../services/overlay/overlay';
-import { IgxToggleDirective, CloseScrollStrategy, IButtonGroupEventArgs } from 'igniteui-angular';
+import { IgxToggleDirective, CloseScrollStrategy, IButtonGroupEventArgs, IDragBaseEventArgs } from 'igniteui-angular';
 import { IgxGridBaseComponent, IgxColumnComponent } from '../../grid';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { FilteringLogic, IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
@@ -145,6 +145,27 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
 
     get grid(): IgxGridBaseComponent {
         return this.filteringService.grid;
+    }
+
+    public dragMove(dragArgs: IDragBaseEventArgs) {
+        const gridRect = this.grid.nativeElement.getBoundingClientRect();
+        const dialogRect = dragArgs.owner.element.nativeElement.getBoundingClientRect();
+
+        if (!(dialogRect.left >= gridRect.left && dialogRect.right <= gridRect.right &&
+              dialogRect.top >= gridRect.top && dialogRect.bottom <= gridRect.bottom)) {
+            // dragArgs.cancel = true; // waiting for implementation
+
+            const dragDialog = dragArgs.owner;
+            let newDialogX = dialogRect.left;
+            let newDialogY = dialogRect.top;
+
+            newDialogX = (dialogRect.left < gridRect.left) ? gridRect.left : newDialogX;
+            newDialogX = (dialogRect.right > gridRect.right) ? gridRect.right - dialogRect.width : newDialogX;
+            newDialogY = (dialogRect.top < gridRect.top) ? gridRect.top : newDialogY;
+            newDialogY = (dialogRect.bottom > gridRect.bottom) ? gridRect.bottom - dialogRect.height : newDialogY;
+
+            dragDialog.setLocation({pageX: newDialogX, pageY: newDialogY});
+        }
     }
 
     public addCondition(parent: ExpressionGroupItem, afterExpression?: ExpressionItem) {

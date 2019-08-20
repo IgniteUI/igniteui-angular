@@ -1,4 +1,5 @@
 <article class="igx-excel-filter__secondary"
+         igxDrag [renderGhost]="false" [dragTolerance]="0" (dragMove)="dragMove($event)"
          (keydown)="onKeyDown($event)"
          [ngClass]="{
              'igx-excel-filter__secondary--cosy': grid.displayDensity === 'cosy',
@@ -8,6 +9,17 @@
         <h4 class="igx-typography__h6">
             Adv. Filtering
         </h4>
+        <div style="display: flex; margin-left: auto">
+            <div style="display: flex; margin-right: 25px">
+                <div style="width: 24px; height: 24px; background: lightblue; margin-right: 8px; border-radius: 4px;"></div>
+                and
+            </div>
+            <div style="display: flex; margin-right: 25px">
+                <div style="width: 24px; height: 24px; background: lightcoral; margin-right: 8px; border-radius: 4px;"></div>
+                or
+            </div>
+        </div>
+        <igx-icon igxDragHandle fontSet="material" style="cursor: move; user-select: none;">control_camera</igx-icon>        
     </header>
 
     <article #expressionsContainer class="igx-excel-filter__secondary-main" style="padding: 10px;">
