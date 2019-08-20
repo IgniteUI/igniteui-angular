@@ -119,7 +119,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     set monthsViewNumber(val: number) {
         this._monthsViewNumber = val;
 
-        for (let i = 0; i < val; i++) {
+        for (let i = 1; i < val; i++) {
             const nextMonthDate = new Date(this.viewDate);
             nextMonthDate.setMonth(nextMonthDate.getMonth() + i);
             const monthView: IMonthView = {
