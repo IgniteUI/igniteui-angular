@@ -6,7 +6,7 @@ import { UIInteractions, wait} from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxInsertDropStrategy, IgxAppendDropStrategy, IgxPrependDropStrategy } from './drag-drop.strategy';
 
-fdescribe('General igxDrag/igxDrop', () => {
+describe('General igxDrag/igxDrop', () => {
     let fix: ComponentFixture<TestDragDropComponent>;
     let dropArea: IgxDropDirective;
     let dropAreaRects = { top: 0, left: 0, right: 0, bottom: 0};
@@ -681,7 +681,7 @@ fdescribe('General igxDrag/igxDrop', () => {
     }));
 });
 
-fdescribe('Linked igxDrag/igxDrop ', () => {
+describe('Linked igxDrag/igxDrop ', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
