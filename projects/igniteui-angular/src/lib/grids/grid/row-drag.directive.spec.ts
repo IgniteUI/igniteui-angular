@@ -44,8 +44,7 @@ describe('IgxGrid - Row Drag Tests', () => {
                 IgxGridRowDraggableComponent,
                 IgxGridFeaturesRowDragComponent,
                 IgxHierarchicalGridTestComponent,
-                IgxTreeGridTestComponent,
-                IgxTreeGridDeleteRowTestComponent
+                IgxTreeGridTestComponent
             ],
             imports: [
                 FormsModule,
@@ -897,46 +896,6 @@ describe('IgxGrid - Row Drag Tests', () => {
             verifyRowDragEndEvent(dragGrid, rowToDrag, rowDragDirective, false, 3);
         }));
     });
-    describe('Tree Grid Deleting Tests', () => {
-        let dragGrid: IgxTreeGridComponent;
-        let dragRows: DebugElement[];
-        beforeEach(async(() => {
-            fixture = TestBed.createComponent(IgxTreeGridDeleteRowTestComponent);
-            fixture.detectChanges();
-            dragGrid = fixture.componentInstance.treeGrid;
-            dropAreaElement = fixture.debugElement.query(By.directive(IgxDropDirective)).nativeElement;
-            dragIndicatorElements = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
-            dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
-        }));
-        configureTestSuite();
-        it('should be able to delete the last root', (async () => {
-            const movePoint: Point = UIInteractions.getPointFromElement(dragGrid.getRowByIndex(2).nativeElement);
-            const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
-            let error = '';
-
-            spyOn(dragGrid.onRowDragStart, 'emit').and.callThrough();
-            spyOn(dragGrid.onRowDragEnd, 'emit').and.callThrough();
-
-            // delete the last parent node
-            const dragIndicatorElement = dragIndicatorElements[3].nativeElement;
-            const startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
-
-            await pointerDown(dragIndicatorElement, startPoint, fixture);
-            await pointerMove(dragIndicatorElement, movePoint, fixture);
-            try {
-                await pointerMove(dragIndicatorElement, dropPoint, fixture);
-                await pointerUp(dragIndicatorElement, dropPoint, fixture);
-            } catch (ex) {
-                error = ex.message;
-            }
-
-            expect(error).toBe('');
-            expect(dragGrid.rowList.length).toEqual(2);
-
-            const nameCell = dragGrid.getCellByColumn(1, 'Name');
-            expect(nameCell.value).toEqual('Yang Wang');
-        }));
-    });
 });
 
 
@@ -1116,48 +1075,6 @@ export class IgxTreeGridTestComponent {
     public onRowDrop(args) {
         args.cancel = true;
         this.dropGrid.addRow(args.dragData.rowData);
-    }
-}
-
-@Component({
-    template: `
-    <div #dropDiv class="drop-area" igxDrop (onDrop)="onDropAllowed($event)">
-        <igx-icon>delete</igx-icon>
-        <div>Drag a row here to delete it</div>
-    </div>
-    <igx-tree-grid #treeGrid [data]="data" expansionDepth="0"
-        childDataKey="Employees" width="800px" height="540px" [autoGenerate]="false"
-        [rowDraggable]="true" [paging]="true" [allowFiltering]="true" [columnHiding]="true" [columnPinning]="true"
-        [exportExcel]="true" [exportCsv]="true" exportExcelText="To Excel" [primaryKey]="'ID'" exportCsvText="To CSV"
-        (onRowDragEnd)="onRowDragEnd($event)">
-        <igx-column field="Name" dataType="string" [sortable]="true" [editable]="true" [movable]="true" [resizable]="true">
-        </igx-column>
-        <igx-column field="Title" dataType="string" [sortable]="true" [editable]="true" [movable]="true" [resizable]="true">
-        </igx-column>
-        <igx-column field="HireDate" header="Hire Date" dataType="date" [sortable]="true" [editable]="true" [movable]="true"
-            [resizable]="true" width="150px"></igx-column>
-        <igx-column field="Age" dataType="number" [sortable]="true" [editable]="true" [movable]="true" [resizable]="true"
-            width="100px"></igx-column>
-    </igx-tree-grid>
-    `
-})
-export class IgxTreeGridDeleteRowTestComponent {
-    @ViewChild(IgxTreeGridComponent) public treeGrid: IgxTreeGridComponent;
-
-    public data = SampleTestData.employeeSmallTreeData();
-    newData = [];
-
-    constructor() {
-    }
-
-    public onRowDragEnd(args) {
-        args.animation = true;
-    }
-
-    public onDropAllowed(args) {
-        args.cancel = true;
-        const draggedRow = args.dragData;
-        draggedRow.delete();
     }
 }
 
