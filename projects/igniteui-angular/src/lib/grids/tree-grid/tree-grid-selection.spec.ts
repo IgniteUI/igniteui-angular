@@ -6,7 +6,8 @@ import { IgxTreeGridCellComponent } from './tree-cell.component';
 import {
     IgxTreeGridSimpleComponent,
     IgxTreeGridCellSelectionComponent,
-    IgxTreeGridSelectionRowEditingComponent
+    IgxTreeGridSelectionRowEditingComponent,
+    IgxTreeGridSelectionWithTransactionComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -17,7 +18,7 @@ import {
 } from '../../test-utils/tree-grid-functions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { wait } from '../../test-utils/ui-interactions.spec';
+import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 describe('IgxTreeGrid - Selection ', () => {
     configureTestSuite();
@@ -29,7 +30,8 @@ describe('IgxTreeGrid - Selection ', () => {
             declarations: [
                 IgxTreeGridSimpleComponent,
                 IgxTreeGridCellSelectionComponent,
-                IgxTreeGridSelectionRowEditingComponent
+                IgxTreeGridSelectionRowEditingComponent,
+                IgxTreeGridSelectionWithTransactionComponent
             ],
             imports: [IgxTreeGridModule, NoopAnimationsModule]
         })
@@ -96,7 +98,7 @@ describe('IgxTreeGrid - Selection ', () => {
 
             treeGrid.deleteRowById(treeGrid.selectedRows()[0]);
             fix.detectChanges();
-             // When deleting the last selected row, header checkbox will be unchecked.
+            // When deleting the last selected row, header checkbox will be unchecked.
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
         });
 
@@ -230,7 +232,7 @@ describe('IgxTreeGrid - Selection ', () => {
 
     describe('UI Row Selection', () => {
         // configureTestSuite();
-        beforeEach(async() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
 
@@ -409,6 +411,145 @@ describe('IgxTreeGrid - Selection ', () => {
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, false);
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, false);
         }));
+    });
+
+    describe('Row Selection with transactions', () => {
+        // configureTestSuite();
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxTreeGridSelectionWithTransactionComponent);
+            fix.detectChanges();
+
+            treeGrid = fix.componentInstance.treeGrid;
+            treeGrid.rowSelection = GridSelectionMode.multiple;
+            fix.detectChanges();
+        }));
+
+        it('should deselect row when delete its parent', () => {
+            treeGrid.selectRows([treeGrid.getRowByIndex(3).rowID, treeGrid.getRowByIndex(5).rowID], true);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, true);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 5, true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+            treeGrid.deleteRow(147);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 5, false);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+            expect(treeGrid.selectedRows()).toEqual([]);
+
+            // try to select deleted row
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
+            UIInteractions.simulateClickEvent(treeGrid.getRowByIndex(3).nativeElement);
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 5);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 5, false);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+            expect(treeGrid.selectedRows()).toEqual([]);
+
+            // undo transaction
+            treeGrid.transactions.undo();
+            fix.detectChanges();
+
+            // select rows
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
+            UIInteractions.simulateClickEvent(treeGrid.getRowByIndex(3).nativeElement);
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 5);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, true);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, true);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 5, true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+            expect(treeGrid.selectedRows()).toEqual([147, 317, 998]);
+
+            // redo transaction
+            treeGrid.transactions.redo();
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 5, false);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+            expect(treeGrid.selectedRows()).toEqual([]);
+        });
+
+        it('should have correct header checkbox when delete a row', () => {
+            treeGrid.selectAllRows();
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
+
+            treeGrid.deleteRow(317);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, false);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
+            expect(treeGrid.selectedRows().includes(317)).toEqual(false);
+            expect(treeGrid.selectedRows().includes(711)).toEqual(false);
+            expect(treeGrid.selectedRows().includes(998)).toEqual(false);
+
+            // undo transaction
+            treeGrid.transactions.undo();
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 4, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 5, false);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+
+            // redo transaction
+            treeGrid.transactions.redo();
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 4, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 5, false);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
+        });
+
+        it('should have correct header checkbox when add a row', () => {
+            treeGrid.selectAllRows();
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
+
+            treeGrid.addRow({ ID: 13, Name: 'Michael Cooper', Age: 33, OnPTO: false }, 317);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 6, false);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+            expect(treeGrid.selectedRows().includes(13)).toEqual(false);
+
+            // undo transaction
+            treeGrid.transactions.undo();
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
+        });
+
+        it('should have correct header checkbox when add a row and undo transaction', () => {
+            treeGrid.addRow({ ID: 13, Name: 'Michael Cooper', Age: 33, OnPTO: false }, 317);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 6);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 6, true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+
+            // undo transaction
+            treeGrid.transactions.undo();
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+            expect(treeGrid.selectedRows().includes(13)).toEqual(false);
+        });
     });
 
     describe('Cell Selection', () => {
