@@ -32,6 +32,12 @@
                 <igx-icon fontSet="material">add</igx-icon>
                 <span>"Or" Group</span>
             </button>
+
+            <div style="display: flex; width: 100%;">
+                <span style="display: flex; margin: auto;">
+                    Start with creating a group of conditions linked with "And" or "Or"
+                </span>                
+            </div>
         </ng-container>
 
         <ng-template #addExpressionsTemplate let-expressionItem let-afterExpression="afterExpression">
@@ -96,7 +102,7 @@
                             type="box"
                             [displayDensity]="displayDensity"
                             [(ngModel)]="selectedColumn">
-                    <igx-select-item *ngFor="let column of grid.columns" [value]="column">
+                    <igx-select-item *ngFor="let column of filterableColumns" [value]="column">
                         {{column.header}}
                     </igx-select-item>
                 </igx-select>

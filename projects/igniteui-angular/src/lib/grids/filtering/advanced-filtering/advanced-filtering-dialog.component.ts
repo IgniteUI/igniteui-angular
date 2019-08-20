@@ -147,6 +147,10 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         return this.filteringService.grid;
     }
 
+    get filterableColumns(): IgxColumnComponent[] {
+        return this.grid.columns.filter((col) => col.filterable);
+    }
+
     public dragMove(dragArgs: IDragBaseEventArgs) {
         const gridRect = this.grid.nativeElement.getBoundingClientRect();
         const dialogRect = dragArgs.owner.element.nativeElement.getBoundingClientRect();
