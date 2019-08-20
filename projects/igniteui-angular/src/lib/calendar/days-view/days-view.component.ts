@@ -451,7 +451,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
      * @hidden
      */
     private getFirstMonthView(): IgxDaysViewComponent {
-        let monthView = this.prevMonthView;
+        let monthView = this;
         while (monthView.prevMonthView) {
             monthView = monthView.prevMonthView;
         }
