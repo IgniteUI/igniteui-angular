@@ -849,7 +849,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
         }));
         configureTestSuite();
-        it('should be able to drag row on every hiearchical level', (async () => {
+        it('should be able to drag row on every hierarchical level', (async () => {
             // first level row
             let dragIndicatorElement: Element = dragIndicatorElements[1].nativeElement;
             let rowToDrag = dragGrid.getRowByIndex(0);
