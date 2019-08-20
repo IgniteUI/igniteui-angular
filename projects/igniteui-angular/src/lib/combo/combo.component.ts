@@ -817,7 +817,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     */
     public set valid(valid: IgxComboState) {
         this._valid = valid;
-        this.comboInput.valid = IgxInputState[IgxInputState[valid]];
+        this.comboInput.valid = IgxInputState[IgxComboState[valid]];
     }
 
     /**
@@ -1272,8 +1272,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         if (this.ngControl) {
             this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged);
             this.manageRequiredAsterisk();
+            this.cdr.detectChanges();
         }
-        this.cdr.detectChanges();
     }
 
     /**
