@@ -35,7 +35,6 @@ All notable changes for each version of this project will be documented in this 
         - **Methods** - `selectedItems()`, `selectItems()`, `deselectItems()`, `setSelectedItem()` - Selection is done based on specified `valueKey` property.
         - **Events** - `(onSelectionChange)` - `newSelection` and `oldSelection` arrays contain  the specified `valueKey` properties.
         - **Model Binding** - Binding with `[(ngModel)]` is now correct when using `valueKey`.
-
     - **Breaking Change** When using `[valueKey]`, all selection methods and outputs should be handled with the items' unique values in the property specified in `[valueKey]`:
     ```html
     <igx-combo [data]="myCustomData" valueKey="id" displayKey="text"></igx-combo>
@@ -50,6 +49,9 @@ All notable changes for each version of this project will be documented in this 
     }
     ```
     - When **no** `valueKey` is specified, selection is handled by **equality (===)**. In order to select items by object reference, the `valueKey` property can be removed from the configuration.
+
+## 8.1.4
+- `IgxDialog` new @Input `positionSettings` is now available. It provides the ability to get/set both position and animation settings of the Dialog component. 
 
 ## 8.1.3
 - `IgxCombo`
