@@ -336,7 +336,15 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      *@hidden
      */
-    private dayViews = [];
+    private defaultDayView: IMonthView = {
+        value: this.value,
+        viewDate: this.viewDate,
+    };
+
+    /**
+     *@hidden
+     */
+    private dayViews: Array<IMonthView> = [this.defaultDayView];
 
     public ngAfterViewInit() {
 
