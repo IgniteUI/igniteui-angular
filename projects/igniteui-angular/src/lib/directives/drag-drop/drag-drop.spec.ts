@@ -602,7 +602,7 @@ describe('General igxDrag/igxDrop', () => {
         expect(thirdDrag.dragStart.emit).toHaveBeenCalled();
     }));
 
-    it('should trigger enter, onDrop and leave events when element is dropped inside igxDrop element.', (async() => {
+    it('should trigger enter, dropped and leave events when element is dropped inside igxDrop element.', (async() => {
         fix.componentInstance.dropArea.dropStrategy = IgxInsertDropStrategy;
         fix.detectChanges();
 
@@ -661,6 +661,10 @@ describe('General igxDrag/igxDrop', () => {
             owner: dropArea,
             drag: firstDrag,
             dragData: firstDrag.data,
+            startX: startingX,
+            startY: startingY,
+            pageX:  dropAreaRects.left  + 100,
+            pageY: dropAreaRects.top  + 20,
             offsetX: 100,
             offsetY: 20,
             cancel: false

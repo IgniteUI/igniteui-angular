@@ -252,9 +252,9 @@ export class DragDropSampleComponent {
             event.owner.transitionTo(new IgxDragLocation(
                 originLocation.pageX,
                 originLocation.pageY + prefix * Math.abs(this.newDraggedIndex - this.draggedIndex) * 68
-            ));
+            ), { duration: this.animationDuration.nativeElement.value });
         } else {
-            event.owner.transitionToOrigin();
+            event.owner.transitionToOrigin({ duration: this.animationDuration.nativeElement.value });
         }
     }
 
@@ -278,7 +278,8 @@ export class DragDropSampleComponent {
                 if (!item.data.moved) {
                     const currentLocation = item.location;
                     const previousItemHeight = listNotesDirsArray[this.draggedIndex + index].element.nativeElement.offsetHeight;
-                    item.transitionTo(new IgxDragLocation(currentLocation.pageX, currentLocation.pageY - previousItemHeight));
+                    item.transitionTo(new IgxDragLocation(currentLocation.pageX, currentLocation.pageY - previousItemHeight),
+                        { duration: this.animationDuration.nativeElement.value });
                     item.data.moved = true;
                 }
             });
@@ -286,7 +287,7 @@ export class DragDropSampleComponent {
             const itemsAbove = listNotesDirsArray.slice(0, this.draggedIndex);
             itemsAbove.forEach((item) => {
                 if (item.data.moved) {
-                    item.transitionToOrigin();
+                    item.transitionToOrigin({ duration: this.animationDuration.nativeElement.value });
                     item.data.moved = false;
                 }
             });
@@ -294,7 +295,7 @@ export class DragDropSampleComponent {
             const restBellow = listNotesDirsArray.slice(itemIndex);
             restBellow.forEach((item) => {
                 if (item.data.moved) {
-                    item.transitionToOrigin();
+                    item.transitionToOrigin({ duration: this.animationDuration.nativeElement.value });
                     item.data.moved = false;
                 }
             });
@@ -304,7 +305,8 @@ export class DragDropSampleComponent {
                 if (!item.data.moved) {
                     const currentLocation = item.location;
                     const previousItemHeight = listNotesDirsArray[itemIndex + index].element.nativeElement.offsetHeight;
-                    item.transitionTo(new IgxDragLocation(currentLocation.pageX, currentLocation.pageY + previousItemHeight));
+                    item.transitionTo(new IgxDragLocation(currentLocation.pageX, currentLocation.pageY + previousItemHeight),
+                        { duration: this.animationDuration.nativeElement.value });
                     item.data.moved = true;
                 }
             });
@@ -312,7 +314,7 @@ export class DragDropSampleComponent {
             const itemsBelow = listNotesDirsArray.slice(this.draggedIndex + 1);
             itemsBelow.forEach((item) => {
                 if (item.data.moved) {
-                    item.transitionToOrigin();
+                    item.transitionToOrigin({ duration: this.animationDuration.nativeElement.value });
                     item.data.moved = false;
                 }
             });
@@ -320,7 +322,7 @@ export class DragDropSampleComponent {
             const restAbove = listNotesDirsArray.slice(0, itemIndex + 1);
             restAbove.forEach((item) => {
                 if (item.data.moved) {
-                    item.transitionToOrigin();
+                    item.transitionToOrigin({ duration: this.animationDuration.nativeElement.value });
                     item.data.moved = false;
                 }
             });
@@ -337,7 +339,7 @@ export class DragDropSampleComponent {
 
         if (itemDragDir.data.moved) {
             itemDragDir.data.moved = false;
-            itemDragDir.transitionToOrigin();
+            itemDragDir.transitionToOrigin({ duration: this.animationDuration.nativeElement.value });
         } else {
             const currentLocation = itemDragDir.location;
             let nextLocation;
@@ -346,7 +348,8 @@ export class DragDropSampleComponent {
             } else {
                 nextLocation = this.listNotesDirs.toArray()[itemIndex + 1].element.nativeElement.offsetHeight;
             }
-            itemDragDir.transitionTo(new IgxDragLocation(currentLocation.pageX, currentLocation.pageY + nextLocation));
+            itemDragDir.transitionTo(new IgxDragLocation(currentLocation.pageX, currentLocation.pageY + nextLocation),
+                { duration: this.animationDuration.nativeElement.value });
             itemDragDir.data.moved = true;
         }
     }
