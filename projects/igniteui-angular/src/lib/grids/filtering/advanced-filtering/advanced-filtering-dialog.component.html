@@ -5,11 +5,11 @@
              'igx-excel-filter__secondary--cosy': grid.displayDensity === 'cosy',
              'igx-excel-filter__secondary--compact': grid.displayDensity === 'compact'
          }">
-    <header class="igx-excel-filter__secondary-header">
-        <h4 class="igx-typography__h6">
+    <header class="igx-excel-filter__secondary-header" igxDragHandle  style="user-select: none;">
+        <h4 class="igx-typography__h6" style="pointer-events: none;">
             Adv. Filtering
         </h4>
-        <div style="display: flex; margin-left: auto">
+        <div style="display: flex; margin-left: auto; pointer-events: none;">
             <div style="display: flex; margin-right: 25px">
                 <div style="width: 24px; height: 24px; background: lightblue; margin-right: 8px; border-radius: 4px;"></div>
                 and
@@ -19,7 +19,6 @@
                 or
             </div>
         </div>
-        <igx-icon igxDragHandle fontSet="material" style="cursor: move; user-select: none;">control_camera</igx-icon>        
     </header>
 
     <article #expressionsContainer class="igx-excel-filter__secondary-main" style="padding: 10px;">

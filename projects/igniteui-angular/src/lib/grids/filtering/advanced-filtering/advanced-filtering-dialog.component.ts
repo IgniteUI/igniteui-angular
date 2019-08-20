@@ -152,9 +152,15 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     }
 
     public dragMove(dragArgs: IDragBaseEventArgs) {
-        const gridRect = this.grid.nativeElement.getBoundingClientRect();
-        const dialogRect = dragArgs.owner.element.nativeElement.getBoundingClientRect();
+        const gridRect = (<HTMLElement>this.grid.nativeElement).getBoundingClientRect();
+        const dialogRect = (<HTMLElement>dragArgs.owner.element.nativeElement).getBoundingClientRect();
 
+        // Allow moving the dialog outside the grid if it cannot fit in the grid.
+        if (dialogRect.width > gridRect.width || dialogRect.height > gridRect.height) {
+            return;
+        }
+
+        // Disallow moving the dialog outside the grid if it can fit in the grid.
         if (!(dialogRect.left >= gridRect.left && dialogRect.right <= gridRect.right &&
               dialogRect.top >= gridRect.top && dialogRect.bottom <= gridRect.bottom)) {
             // dragArgs.cancel = true; // waiting for implementation
