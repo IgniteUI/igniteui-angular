@@ -38,7 +38,8 @@ import { IgxOverlayService } from '../../services/index';
 import { takeUntil } from 'rxjs/operators';
 import { IgxColumnComponent } from '../column.component';
 import { IgxRowIslandAPIService } from './row-island-api.service';
-export interface IGridCreatedEventArgs {
+import { IBaseEventArgs } from '../../core/utils';
+export interface IGridCreatedEventArgs extends IBaseEventArgs {
     owner: IgxRowIslandComponent;
     parentID: any;
     grid: IgxHierarchicalGridComponent;

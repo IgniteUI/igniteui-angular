@@ -30,6 +30,7 @@ import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
 import { VirtualHelperComponent } from './virtual.helper.component';
 import { IgxScrollInertiaModule } from './../scroll-inertia/scroll_inertia.directive';
 import { IgxForOfSyncService } from './for_of.sync.service';
+import { IBaseEventArgs } from '../../core/utils';
 
 /**
  *  @publicApi
@@ -1262,12 +1263,12 @@ export function getTypeNameForDebugging(type: any): string {
     return type[name] || typeof type;
 }
 
-export interface IForOfState {
+export interface IForOfState extends IBaseEventArgs {
     startIndex?: number;
     chunkSize?: number;
 }
 
-export interface IForOfDataChangingEventArgs {
+export interface IForOfDataChangingEventArgs extends IBaseEventArgs {
     containerSize: number;
 }
 

@@ -17,7 +17,7 @@ import {
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, CancelableEventArgs, CancelableBrowserEventArgs } from '../core/utils';
+import { cloneArray, CancelableEventArgs, CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { SortingDirection, ISortingExpression } from '../data-operations/sorting-expression.interface';
@@ -84,7 +84,7 @@ export enum IgxComboState {
 }
 
 /** Event emitted when an igx-combo's selection is changing */
-export interface IComboSelectionChangeEventArgs extends CancelableEventArgs {
+export interface IComboSelectionChangeEventArgs extends CancelableEventArgs, IBaseEventArgs {
     /** An array containing the values that are currently selected */
     oldSelection: any[];
     /** An array containing the values that will be selected after this event */
@@ -97,7 +97,7 @@ export interface IComboSelectionChangeEventArgs extends CancelableEventArgs {
     event?: Event;
 }
 
-export interface IComboItemAdditionEvent {
+export interface IComboItemAdditionEvent extends IBaseEventArgs {
     oldCollection: any[];
     addedItem: any;
     newCollection: any[];
@@ -434,7 +434,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Output()
-    public onOpening = new EventEmitter<CancelableEventArgs>();
+    public onOpening = new EventEmitter<CancelableEventArgs & IBaseEventArgs>();
 
     /**
      * Emitted after the dropdown is opened
@@ -454,7 +454,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Output()
-    public onClosing = new EventEmitter<CancelableBrowserEventArgs>();
+    public onClosing = new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>();
 
     /**
      * Emitted after the dropdown is closed

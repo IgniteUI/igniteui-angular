@@ -8,7 +8,7 @@ import { IgxGridBaseComponent, IgxGridTransaction, IFocusChangeEventArgs, IGridD
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridAPIService } from './grid-api.service';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
-import { cloneArray } from '../../core/utils';
+import { cloneArray, IBaseEventArgs } from '../../core/utils';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IgxGroupByRowTemplateDirective } from './grid.directives';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
@@ -37,7 +37,7 @@ let NEXT_ID = 0;
 export interface IGridFocusChangeEventArgs extends IFocusChangeEventArgs {
     groupRow: IgxGridGroupByRowComponent;
 }
-export interface IGroupingDoneEventArgs {
+export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     expressions: Array<ISortingExpression> | ISortingExpression;
     groupedColumns: Array<IgxColumnComponent> | IgxColumnComponent;
     ungroupedColumns: Array<IgxColumnComponent> | IgxColumnComponent;

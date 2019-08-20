@@ -19,7 +19,7 @@ import { OverlaySettings, OverlayEventArgs, ConnectedPositioningStrategy, Absolu
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subscription, Subject, MonoTypeOperatorFunction } from 'rxjs';
 import { OverlayClosingEventArgs } from '../../services/overlay/utilities';
-import { CancelableEventArgs, CancelableBrowserEventArgs } from '../../core/utils';
+import { CancelableEventArgs, CancelableBrowserEventArgs, IBaseEventArgs } from '../../core/utils';
 
 @Directive({
     exportAs: 'toggle',
@@ -72,7 +72,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```
      */
     @Output()
-    public onOpening = new EventEmitter<CancelableEventArgs>();
+    public onOpening = new EventEmitter<CancelableEventArgs & IBaseEventArgs>();
 
     /**
      * Emits an event after the toggle container is closed.
@@ -110,7 +110,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```
      */
     @Output()
-    public onClosing = new EventEmitter<CancelableBrowserEventArgs>();
+    public onClosing = new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>();
 
     private _collapsed = true;
     /**

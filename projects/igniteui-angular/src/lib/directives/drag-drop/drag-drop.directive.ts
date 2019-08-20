@@ -22,6 +22,7 @@ import { animationFrameScheduler, fromEvent, interval, Subject } from 'rxjs';
 import { takeUntil, throttle } from 'rxjs/operators';
 import { IgxDragHandleDirective } from './drag-handle.directive';
 import { DeprecateProperty } from '../../core/deprecateDecorators';
+import { IBaseEventArgs } from '../../core/utils';
 
 export enum RestrictDrag {
     VERTICALLY,
@@ -38,7 +39,7 @@ export interface IgxDragCustomEventDetails {
     originalEvent: any;
 }
 
-export interface IgxDropEnterEventArgs {
+export interface IgxDropEnterEventArgs extends IBaseEventArgs {
         /**
      * Reference to the original event that caused the draggable element to enter the igxDrop element.
      * Can be PointerEvent, TouchEvent or MouseEvent.
@@ -76,7 +77,7 @@ export interface IgxDropEnterEventArgs {
     offsetY: number;
 }
 
-export interface IgxDropLeaveEventArgs {
+export interface IgxDropLeaveEventArgs extends IBaseEventArgs {
     /**
      * Reference to the original event that caused the draggable element to enter the igxDrop element.
      * Can be PointerEvent, TouchEvent or MouseEvent.
@@ -114,7 +115,7 @@ export interface IgxDropLeaveEventArgs {
     offsetY: number;
 }
 
-export interface IgxDropEventArgs {
+export interface IgxDropEventArgs extends IBaseEventArgs {
     /**
      * Reference to the original event that caused the draggable element to enter the igxDrop element.
      * Can be PointerEvent, TouchEvent or MouseEvent.
@@ -144,7 +145,7 @@ export interface IgxDropEventArgs {
     cancel: boolean;
 }
 
-export interface IDragBaseEventArgs {
+export interface IDragBaseEventArgs extends IBaseEventArgs {
     /**
      * Reference to the original event that caused the interaction with the element.
      * Can be PointerEvent, TouchEvent or MouseEvent.
