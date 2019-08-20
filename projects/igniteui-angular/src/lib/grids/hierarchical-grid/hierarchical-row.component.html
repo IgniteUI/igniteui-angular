@@ -1,7 +1,14 @@
 <div (click)="toggle()" class="igx-grid__hierarchical-expander" [tabIndex]="tabindex" *ngIf="hasChildren" #expander>
-    <igx-icon *ngIf="!expanded" [isActive]='!added' fontSet="material">expand_more</igx-icon>
-    <igx-icon *ngIf="expanded" [isActive]='!added' fontSet="material">expand_less</igx-icon>
+        <ng-container *ngTemplateOutlet="template; context: { $implicit: groupRow }">
+        </ng-container>
 </div>
+<ng-template #defaultExpandTemplate>
+        <igx-icon [isActive]='!added' fontSet="material">expand_more</igx-icon>
+    </ng-template>
+
+<ng-template #defaultCollapseTemplate>
+        <igx-icon [isActive]='!added' fontSet="material">chevron_right</igx-icon>
+ </ng-template>
 <ng-container *ngIf="rowDraggable">
     <div [class]="resolveDragIndicatorClasses" [igxRowDrag]="this">
             <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : this.grid.dragIndicatorIconBase"></ng-container>

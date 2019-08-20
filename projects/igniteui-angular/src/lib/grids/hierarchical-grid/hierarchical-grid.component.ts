@@ -383,6 +383,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         this.toolbarCustomContentTemplates = this.parentIsland ?
             this.parentIsland.toolbarCustomContentTemplates :
             this.toolbarCustomContentTemplates;
+        this.rowExpandIndicatorTemplate  = this.rootGrid.rowExpandIndicatorTemplate;
+        this.rowCollapseIndicatorTemplate   = this.rootGrid.rowCollapseIndicatorTemplate ;
     }
 
     private updateSizes() {

@@ -7,7 +7,8 @@ import {
     ChangeDetectorRef,
     ViewChildren,
     QueryList,
-    ViewChild
+    ViewChild,
+    TemplateRef
 } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowComponent } from '../row.component';
@@ -37,6 +38,18 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
 
     @ViewChild('expander', { read: ElementRef, static: false })
     public expander: ElementRef;
+
+    /**
+    * @hidden
+    */
+   @ViewChild('defaultExpandTemplate', { read: TemplateRef, static: true })
+   protected defaultExpandTemplate: TemplateRef<any>;
+
+    /**
+    * @hidden
+    */
+   @ViewChild('defaultCollapseTemplate', { read: TemplateRef, static: true })
+   protected defaultCollapseTemplate: TemplateRef<any>;
 
     /**
      * @hidden
@@ -92,6 +105,14 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
         requestAnimationFrame(() => {
             grid.reflow();
         });
+    }
+
+    public get template() {
+        if (this.expanded) {
+            return this.grid.rowExpandIndicatorTemplate || this.defaultExpandTemplate;
+        } else {
+            return this.grid.rowCollapseIndicatorTemplate || this.defaultCollapseTemplate;
+        }
     }
 
     private endEdit(grid: IgxHierarchicalGridComponent) {
