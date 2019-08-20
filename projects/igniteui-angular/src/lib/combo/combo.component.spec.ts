@@ -5,7 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxComboItemComponent } from './combo-item.component';
-import { IgxComboComponent, IgxComboModule, IComboSelectionChangeEventArgs } from './combo.component';
+import { IgxComboComponent, IgxComboModule, IComboSelectionChangeEventArgs, IgxComboState } from './combo.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { IForOfState } from '../directives/for-of/for_of.directive';
@@ -2985,7 +2985,6 @@ describe('igxCombo', () => {
     });
 
     describe('Form control tests: ', () => {
-
         it('Should properly initialize when used as a form control', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboFormComponent);
             fix.detectChanges();
@@ -2996,21 +2995,26 @@ describe('igxCombo', () => {
             expect(combo.selectedItems()).toEqual(comboFormReference.value);
             expect(combo.selectedItems().length).toEqual(1);
             expect(combo.selectedItems()[0].field).toEqual('Connecticut');
+            expect(combo.valid).toEqual(IgxComboState.INITIAL);
             expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
             const clearButton = fix.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON)).nativeElement;
             clearButton.click();
             fix.detectChanges();
+            expect(combo.valid).toEqual(IgxComboState.INVALID);
             expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
 
             combo.onBlur();
             fix.detectChanges();
+            expect(combo.valid).toEqual(IgxComboState.INVALID);
             expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
 
             combo.selectItems([combo.dropdown.items[0], combo.dropdown.items[1]]);
+            expect(combo.valid).toEqual(IgxComboState.VALID);
             expect(combo.comboInput.valid).toEqual(IgxInputState.VALID);
 
             combo.onBlur();
             fix.detectChanges();
+            expect(combo.valid).toEqual(IgxComboState.INITIAL);
             expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
         }));
 
@@ -3026,21 +3030,26 @@ describe('igxCombo', () => {
             expect(combo.selectedItems()).toEqual(comboFormReference.value);
             expect(combo.selectedItems().length).toEqual(1);
             expect(combo.selectedItems()[0].field).toEqual('Connecticut');
+            expect(combo.valid).toEqual(IgxComboState.INITIAL);
             expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
             const clearButton = fix.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON)).nativeElement;
             clearButton.click();
             fix.detectChanges();
+            expect(combo.valid).toEqual(IgxComboState.INITIAL);
             expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
 
             combo.onBlur();
             fix.detectChanges();
+            expect(combo.valid).toEqual(IgxComboState.INITIAL);
             expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
 
             combo.selectItems([combo.dropdown.items[0], combo.dropdown.items[1]]);
+            expect(combo.valid).toEqual(IgxComboState.INITIAL);
             expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
 
             combo.onBlur();
             fix.detectChanges();
+            expect(combo.valid).toEqual(IgxComboState.INITIAL);
             expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
         }));
 
@@ -3140,23 +3149,27 @@ describe('igxCombo', () => {
             tick();
 
             const combo = fix.componentInstance.testCombo;
+            expect(combo.valid).toEqual(IgxComboState.INITIAL);
             expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
             const inputGroupRequired = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUTGROUP_REQUIRED));
             expect(inputGroupRequired).toBeDefined();
             combo.onBlur();
             fix.detectChanges();
             tick();
+            expect(combo.valid).toEqual(IgxComboState.INVALID);
             expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
 
             combo.selectAllItems();
             fix.detectChanges();
             tick();
+            expect(combo.valid).toEqual(IgxComboState.VALID);
             expect(combo.comboInput.valid).toEqual(IgxInputState.VALID);
 
             const clearButton = fix.debugElement.query(By.css('.' + CSS_CLASS_CLEARBUTTON)).nativeElement;
             clearButton.click();
             fix.detectChanges();
             tick();
+            expect(combo.valid).toEqual(IgxComboState.INVALID);
             expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
         }));
     });

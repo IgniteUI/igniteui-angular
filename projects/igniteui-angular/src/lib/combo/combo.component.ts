@@ -69,6 +69,20 @@ const ItemHeights = {
  */
 const itemsInContainer = 10;
 
+export enum IgxComboState {
+    /**
+     * Combo with initial state.
+     */
+    INITIAL = IgxInputState.INITIAL,
+    /**
+     * Combo with valid state.
+     */
+    VALID = IgxInputState.VALID,
+    /**
+     * Combo with invalid state.
+     */
+    INVALID = IgxInputState.INVALID
+}
 
 export interface IComboSelectionChangeEventArgs extends CancelableEventArgs {
     oldSelection: any[];
@@ -128,6 +142,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         excludePositionTarget: true
     };
     private _value = '';
+    private _valid = IgxComboState.INITIAL;
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
@@ -780,6 +795,30 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     @Input()
     public type = 'box';
 
+    /**
+     * Gets if control is valid, when used in a form
+     *
+     * ```typescript
+     * // get
+     * let valid = this.combo.valid;
+     * ```
+     * */
+     public get valid(): IgxComboState {
+        return this._valid;
+    }
+
+     /**
+     * Sets if control is valid, when used in a form
+     *
+     * ```typescript
+     * // set
+     * this.combo.valid = IgxComboState.INVALID;
+     * ```
+    */
+    public set valid(valid: IgxComboState) {
+        this._valid = valid;
+        this.comboInput.valid = IgxInputState[IgxInputState[valid]];
+    }
 
     /**
      * @hidden @internal
@@ -1181,7 +1220,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     protected onStatusChanged = () => {
         if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
             (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
-                this.comboInput.valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+                this.valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
         }
         this.manageRequiredAsterisk();
     }
@@ -1200,9 +1239,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public onBlur() {
         if (this.collapsed) {
             if (this.ngControl && !this.ngControl.valid) {
-                this.comboInput.valid = IgxInputState.INVALID;
+                this.valid = IgxComboState.INVALID;
            } else {
-                this.comboInput.valid = IgxInputState.INITIAL;
+                this.valid = IgxComboState.INITIAL;
            }
         }
     }
