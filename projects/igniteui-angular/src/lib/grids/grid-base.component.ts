@@ -531,39 +531,32 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
-    /**
-     * Sets whether the `IgxGridRowComponent` selection is enabled.
-     * By default it is set to false.
-     * ```typescript
-     * let rowSelectable = this.grid.rowSelectable;
-     * ```
-	 * @memberof IgxGridBaseComponent
-     */
+    @DeprecateProperty('rowSelectable property is deprecated. Use rowSelection property instead.')
     @WatchChanges()
     @Input()
     get rowSelectable(): boolean {
-        return this._rowSelection;
+        return this.isRowSelectable;
+    }
+
+    set rowSelectable(val: boolean) {
+        this.rowSelection = val ? GridSelectionMode.multiple : GridSelectionMode.none;
     }
 
     /**
-     * Sets whether rows can be selected.
-     * ```html
-     * <igx-grid #grid [showToolbar]="true" [rowSelectable]="true" [columnHiding]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseComponent
+     * Returns if the row selectors are hidden
+     * @memberof IgxGridBaseComponent
      */
-    set rowSelectable(val: boolean) {
-        this._rowSelection = val;
-        if (this.gridAPI.grid && this.columnList) {
-        }
-    }
-
     @WatchChanges()
     @Input()
     get hideRowSelectors() {
         return this._hideRowSelectors;
     }
 
+    /**
+     * Allows you to change the visibility of the row selectors
+     * By default row selectors are shown
+     * @memberof IgxGridBaseComponent
+     */
     set hideRowSelectors(value: boolean) {
         this._hideRowSelectors = value;
         this.calculateGridSizes();
@@ -1116,8 +1109,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * }
      * ```
      * ```html
-     * <igx-grid #grid3 (onCellEditCancel)="editCancel($event)" [data]="remote | async" (onSortingDone)="process($event)"
-     *          [primaryKey]="'ProductID'" [rowSelectable]="true">
+     * <igx-grid #grid3 (onCellEditCancel)="editCancel($event)" [data]="remote | async" [primaryKey]="'ProductID'">
      *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
      *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
      *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
@@ -1150,7 +1142,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
      * ```html
      * <igx-grid #grid3 (onCellEditEnter)="editStart($event)" [data]="remote | async" (onSortingDone)="process($event)"
-     *          [primaryKey]="'ProductID'" [rowSelectable]="true">
+     *          [primaryKey]="'ProductID'">
      *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
      *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
      *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
@@ -1209,7 +1201,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Bind to the event in markup as follows:
      * ```html
      * <igx-grid #grid3 (onRowEditEnter)="editStart($event)" [data]="remote | async" (onSortingDone)="process($event)"
-     *          [primaryKey]="'ProductID'" [rowSelectable]="true" [rowEditable]="true">
+     *          [primaryKey]="'ProductID'" [rowEditable]="true">
      *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
      *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
      *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
@@ -1244,7 +1236,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Bind to the event in markup as follows:
      * ```html
      * <igx-grid #grid3 (onRowEdit)="editDone($event)" [data]="remote | async" (onSortingDone)="process($event)"
-     *          [primaryKey]="'ProductID'" [rowSelectable]="true" [rowEditable]="true">
+     *          [primaryKey]="'ProductID'" [rowEditable]="true">
      *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
      *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
      *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
@@ -1280,7 +1272,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Bind to the event in markup as follows:
      * ```html
      * <igx-grid #grid3 (onRowEditCancel)="editCancel($event)" [data]="remote | async" (onSortingDone)="process($event)"
-     *          [primaryKey]="'ProductID'" [rowSelectable]="true" [rowEditable]="true">
+     *          [primaryKey]="'ProductID'" [rowEditable]="true">
      *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
      *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
      *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
@@ -2358,27 +2350,48 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         separator: '\t'
     };
 
+    /**
+     * Returns the current cell selection state, which can be none, single or multiple
+     * @memberof IgxGridBaseComponent
+     */
     @WatchChanges()
     @Input()
     get cellSelection() {
         return this._cellSelectionMode;
     }
 
-    set cellSelection(value:  GridSelectionMode) {
-        this._cellSelectionMode = value;
+    /**
+     * Allows you to set cell selection mode
+     * By default the cell selection mode is multiple
+     * @param selectionMode: GridSelectionMode
+     * @memberof IgxGridBaseComponent
+     */
+    set cellSelection(selectionMode:  GridSelectionMode) {
+        this._cellSelectionMode = selectionMode;
         if (this.gridAPI.grid) {
             this.selectionService.clear(true);
             this.cdr.markForCheck();
         }
     }
+
+    /**
+     * Returns the current row selection state, which can be none, single or multiple
+     * @memberof IgxGridBaseComponent
+     */
     @WatchChanges()
     @Input()
     get rowSelection() {
         return this._rowSelectionMode;
     }
 
-    set rowSelection(value:  GridSelectionMode) {
-        this._rowSelectionMode = value;
+    /**
+     * Allows you to set row selection mode
+     * By default the row selection mode is none
+     * @param selectionMode: GridSelectionMode
+     * @memberof IgxGridBaseComponent
+     */
+    set rowSelection(selectionMode:  GridSelectionMode) {
+        this._rowSelectionMode = selectionMode;
         if (this.gridAPI.grid && this.columnList) {
             this.selectionService.rowSelection.clear();
             this.calculateGridSizes();
@@ -2488,10 +2501,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     protected _paging = false;
-    /**
-     * @hidden
-     */
-    protected _rowSelection = false;
     /**
      * @hidden
      */
@@ -2922,6 +2931,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.verticalScrollContainer.onDataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
             requestAnimationFrame(() => {
                 if (!this._destroyed) {
+                    this.selectionService.clearHeaderCBState();
                     this.reflow();
                 }
             });
@@ -3829,7 +3839,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public refreshGridState(args?) {
-        this.selectionService.clearHeaderCBState();
         this.endEdit(true);
         this.summaryService.clearSummaryCache(args);
     }
@@ -4735,7 +4744,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public selectRows(rowIDs: any[], clearCurrentSelection?: boolean) {
         this.selectionService.selectRowsWithNoEvent(rowIDs, clearCurrentSelection);
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
     }
 
     /**
@@ -4748,15 +4757,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public deselectRows(rowIDs: any[]) {
         this.selectionService.deselectRowsWithNoEvent(rowIDs);
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
     }
 
     /**
      * Selects all rows
-     * Note: If filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
+     * Note: By default if filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
+     * If you set the parameter onlyFilterData to false that will select all rows in the grid exept deleted rows.
      * ```typescript
      * this.grid.selectAllRows();
+     * this.grid.selectAllRows(false);
      * ```
+     * @param onlyFilterData
 	 * @memberof IgxGridBaseComponent
      */
     public selectAllRows(onlyFilterData = true) {
@@ -4767,15 +4779,21 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /**
      * Deselects all rows
+     * Note: By default if filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
+     * If you set the parameter onlyFilterData to false that will select all rows in the grid exept deleted rows.
      * ```typescript
      * this.grid.deselectAllRows();
      * ```
-     * Note: If filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
+     * @param onlyFilterData
+	 * @memberof IgxGridBaseComponent
      */
     public deselectAllRows(onlyFilterData = true) {
-        !onlyFilterData ?  this.selectionService.rowSelection.clear() :
-            this.selectionService.deselectRow(this.selectionService.getRowIDs(this.selectionService.allData));
-        this.cdr.detectChanges();
+        if (onlyFilterData && this.filteredData && this.filteredData.length > 0) {
+            this.deselectRows(this.selectionService.getRowIDs(this.filteredData));
+        } else {
+            this.selectionService.rowSelection.clear();
+            this.cdr.markForCheck();
+        }
     }
 
     clearCellSelection(): void {

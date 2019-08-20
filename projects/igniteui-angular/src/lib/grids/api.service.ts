@@ -149,11 +149,10 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
 
         this.grid.summaryService.clearSummaryCache(args);
         this.updateData(this.grid, cell.id.rowID, data[index], cell.rowData, { [cell.column.field ]: args.newValue });
-        const newId = this.grid.primaryKey ? args.newValue[this.grid.primaryKey] : args.newValue;
         if (this.grid.primaryKey === cell.column.field) {
              if (this.grid.selectionService.isRowSelected(cell.id.rowID)) {
                 this.grid.selectionService.deselectRow(cell.id.rowID);
-                this.grid.selectionService.selectRowbyID(newId);
+                this.grid.selectionService.selectRowbyID(args.newValue);
             }
             if (this.grid.hasSummarizedColumns) {
                 this.grid.summaryService.removeSummaries(cell.id.rowID);
