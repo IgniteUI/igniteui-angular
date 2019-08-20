@@ -56,7 +56,11 @@ When logging issue you should assign `severity:` label. If you cannot determine 
 
 ### Triaging
 
-Before release a triaging is done. Issues that need to be fixed for the release are marked with `triage: blocking` status.
+Issues that block other issues completion are marked with `triage: blocking` status.
+
+### Priority
+
+Issues that need to be addressed immediately are marked with `priority: high` status.
 
 ## Testing - applicable to pull requests
 1. `status: awaiting-test` this is the initial status of pull requests. If you're performing the pull request, please place this status on it. Pull requests are accepted if and only if all status checks pass, review is performed, and the pull request has been tested and contains `status: verified`.

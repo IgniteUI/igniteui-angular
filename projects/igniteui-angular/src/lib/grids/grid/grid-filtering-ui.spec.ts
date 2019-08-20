@@ -41,7 +41,8 @@ import {
     IgxGridFilteringMCHComponent,
     IgxTestExcelFilteringDatePickerComponent,
     IgxGridFilteringTemplateComponent,
-    IgxGridFilteringESFTemplatesComponent
+    IgxGridFilteringESFTemplatesComponent,
+    IgxGridFilteringESFLoadOnDemandComponent
 } from '../../test-utils/grid-samples.spec';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
@@ -3504,7 +3505,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             declarations: [
                 IgxGridFilteringComponent,
                 IgxTestExcelFilteringDatePickerComponent,
-                IgxGridFilteringESFTemplatesComponent
+                IgxGridFilteringESFTemplatesComponent,
+                IgxGridFilteringESFLoadOnDemandComponent,
+                IgxGridFilteringMCHComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -4256,6 +4259,42 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             listItems = searchComponent.querySelectorAll('igx-list-item');
             expect(listItems.length).toBe(6, 'incorrect rendered list items count');
             tick(100);
+        }));
+
+        it('Should filter, clear and enable/disable the apply button correctly.', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
+            fix.detectChanges();
+
+            // Type string in search box.
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const inputNativeElement = searchComponent.querySelector('.igx-input-group__input');
+            sendInputNativeElement(inputNativeElement, 'hello there', fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Verify there are no filtered-in results and that apply button is disabled.
+            let listItems = searchComponent.querySelectorAll('igx-list-item');
+            let excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            let raisedButtons = Array.from(excelMenu.querySelectorAll('.igx-button--raised'));
+            let applyButton: any = raisedButtons.find((rb: any) => rb.innerText === 'apply');
+            expect(listItems.length).toBe(0, 'ESF search result should be empty');
+            expect(applyButton.classList.contains('igx-button--disabled')).toBe(true);
+
+            // Clear filtering.
+            const icons = Array.from(searchComponent.querySelectorAll('igx-icon'));
+            const clearIcon: any = icons.find((ic: any) => ic.innerText === 'clear');
+            clearIcon.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify there are filtered-in results and that apply button is enabled.
+            listItems = searchComponent.querySelectorAll('igx-list-item');
+            excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            raisedButtons = Array.from(excelMenu.querySelectorAll('.igx-button--raised'));
+            applyButton = raisedButtons.find((rb: any) => rb.innerText === 'apply');
+            expect(listItems.length).toBe(6, 'ESF search result should NOT be empty');
+            expect(applyButton.classList.contains('igx-button--disabled')).toBe(false);
         }));
 
         it('display density is properly applied on the excel style filtering component', fakeAsync(() => {
@@ -5576,6 +5615,107 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             expect(datePicker.componentInstance.mode).toBe('dropdown');
             // templateDropDownTarget is no longer available
             // expect(datePicker.componentInstance.templateDropDownTarget).toBeTruthy();
+        }));
+    });
+
+    describe('Load values on demand', () => {
+        let fix, grid;
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridFilteringESFLoadOnDemandComponent);
+            grid = fix.componentInstance.grid;
+            fix.detectChanges();
+        }));
+
+        it('Verify unique values are loaded correctly in ESF search component.', fakeAsync(() => {
+            // Open excel style custom filtering dialog and wait a bit.
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            fix.detectChanges();
+            tick(400);
+
+            // Verify items in search have not loaded yet and that the loading indicator is visible.
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            let listItems = searchComponent.querySelectorAll('igx-list-item');
+            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
+            let loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).not.toBeNull('esf loading indicator is not visible');
+
+            // Wait for items to load.
+            tick(650);
+
+            // Verify items in search have loaded and that the loading indicator is not visible.
+            listItems = searchComponent.querySelectorAll('igx-list-item');
+            expect(listItems.length).toBe(6, 'incorrect rendered list items count');
+            loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+          }));
+    });
+
+    describe(null, () => {
+        let fix, grid;
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridFilteringMCHComponent);
+            grid = fix.componentInstance.grid;
+            grid.filterMode = FilterMode.excelStyleFilter;
+            fix.detectChanges();
+        }));
+
+        it('Should not pin column when its parent group cannot be pinned.', fakeAsync(() => {
+            // Test prerequisites
+            grid.width = '1000px';
+            fix.detectChanges();
+            tick(100);
+
+            // Pin the 'AnotherField' column.
+            GridFunctions.clickExcelFilterIcon(fix, 'AnotherField');
+            fix.detectChanges();
+            GridFunctions.clickPinIconInExcelStyleFiltering(fix, false);
+            tick(200);
+            fix.detectChanges();
+
+            // Verify that the 'ProductName' pin button is disabled, because its parent column cannot be pinned.
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            fix.detectChanges();
+            const pinButton = GridFunctions.getExcelFilteringPinContainer(fix);
+            expect(pinButton.classList.contains('igx-excel-filter__actions-pin--disabled')).toBe(true,
+                'pinButton should be disabled');
+        }));
+
+        it('Should pin column next to already pinned group by moving it to the left.', fakeAsync(() => {
+            // Test prerequisites
+            grid.width = '1000px';
+            fix.detectChanges();
+            tick(100);
+            // Adjust column widths, so their group can be pinned.
+            const columnFields = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'AnotherField'];
+            columnFields.forEach((columnField) => {
+                const col = grid.columns.find((c) => c.field === columnField);
+                col.width = '100px';
+            });
+            fix.detectChanges();
+            // Make 'AnotherField' column movable.
+            const column = grid.columns.find((c) => c.field === 'AnotherField');
+            column.movable = true;
+            fix.detectChanges();
+
+            // Pin the 'General Information' group by pinning its child 'ProductName' column.
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            fix.detectChanges();
+            GridFunctions.clickPinIconInExcelStyleFiltering(fix, false);
+            tick(200);
+            fix.detectChanges();
+
+            // Verify 'AnotherField' column is not pinned.
+            GridFunctions.verifyColumnIsPinned(column, false, 7);
+
+            // Try to pin the 'AnotherField' column by moving it to the left.
+            GridFunctions.clickExcelFilterIcon(fix, 'AnotherField');
+            fix.detectChanges();
+            GridFunctions.clickMoveLeftInExcelStyleFiltering(fix);
+            tick(200);
+            fix.detectChanges();
+
+            // Verify 'AnotherField' column is successfully pinned next to the column group.
+            GridFunctions.verifyColumnIsPinned(column, true, 8);
         }));
     });
 });

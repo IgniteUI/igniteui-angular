@@ -4,6 +4,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { first } from 'rxjs/operators';
 import { IgxCsvExporterOptions, IgxCsvExporterService, IgxExcelExporterOptions, IgxExcelExporterService } from '../../services/index';
+import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { DisplayDensity } from '../../core/displayDensity';
@@ -580,6 +581,28 @@ describe('IgxGrid - Grid Toolbar Custom Content', () => {
 
         const customContainer = getToolbar(fixture).query(By.css('.igx-grid-toolbar__custom-content'));
         expect(customContainer).not.toBe(null);
+    });
+
+    it('should expose the toolbar buttons with their correct type', () => {
+        fixture = TestBed.createComponent(GridToolbarTestPage1Component);
+        fixture.detectChanges();
+        grid = fixture.componentInstance.grid1;
+
+        grid.showToolbar = true;
+        grid.columnHiding = true;
+        grid.columnPinning = true;
+        grid.exportExcel = true;
+        grid.exportCsv = true;
+        fixture.detectChanges();
+
+        let aButton = grid.toolbar.columnHidingButton;
+        expect(aButton instanceof IgxButtonDirective).toBe(true, 'column hiding button has wrong type');
+
+        aButton = grid.toolbar.columnPinningButton;
+        expect(aButton instanceof IgxButtonDirective).toBe(true, 'column pinning button has wrong type');
+
+        aButton = grid.toolbar.exportButton;
+        expect(aButton instanceof IgxButtonDirective).toBe(true, 'export button has wrong type');
     });
 
 });
