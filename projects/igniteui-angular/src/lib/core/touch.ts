@@ -20,11 +20,11 @@ export class HammerGesturesManager {
         inputClass: Hammer.TouchInput,
         recognizers: [
             [ Hammer.Pan, { threshold: 0 } ],
-            [ Hammer.Pinch, { enable: true } ],
-            [ Hammer.Rotate, { enable: true } ],
             [ Hammer.Swipe, {
                 direction: Hammer.DIRECTION_HORIZONTAL
-            }]
+            }],
+            [Hammer.Tap],
+            [Hammer.Tap, { event: 'doubletap', taps: 2 }, ['tap']]
         ]
     };
 
@@ -44,14 +44,14 @@ export class HammerGesturesManager {
     public addEventListener(element: HTMLElement,
                             eventName: string,
                             eventHandler: (eventObj) => void,
-                            options: object = null): () => void {
+                            options: HammerOptions = null): () => void {
 
         // Creating the manager bind events, must be done outside of angular
         return this._zone.runOutsideAngular(() => {
             let mc: HammerManager = this.getManagerForElement(element);
             if (mc === null) {
                 // new Hammer is a shortcut for Manager with defaults
-                mc = new Hammer(element, this.hammerOptions);
+                mc = new Hammer(element, Object.assign(this.hammerOptions, options));
                 this.addManagerForElement(element, mc);
             }
             const handler = (eventObj) => { this._zone.run(() => { eventHandler(eventObj); }); };
