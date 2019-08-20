@@ -84,9 +84,17 @@ export enum IgxComboState {
     INVALID = IgxInputState.INVALID
 }
 
+/** Event emitted when an igx-combo's selection is changing */
 export interface IComboSelectionChangeEventArgs extends CancelableEventArgs {
+    /** An array containing the values that are currently selected */
     oldSelection: any[];
+    /** An array containing the values that will be selected after this event */
     newSelection: any[];
+    /** An array containing the values that will be added to the selection (if any) */
+    added: any[];
+    /** An array containing the values that will be removed from the selection (if any) */
+    removed: any[];
+    /** The user interaction that triggered the selection change */
     event?: Event;
 }
 
@@ -94,6 +102,20 @@ export interface IComboItemAdditionEvent {
     oldCollection: any[];
     addedItem: any;
     newCollection: any[];
+}
+
+/**
+ * When called with sets A & B, returns A - B (as array);
+ * @hidden
+ */
+function diffInSets(set1: Set<any>, set2: Set<any>): any[] {
+    const results = [];
+    set1.forEach(entry => {
+        if (!set2.has(entry)) {
+            results.push(entry);
+        }
+    });
+    return results;
 }
 
 let NEXT_ID = 0;
@@ -223,7 +245,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboItemDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxComboItemDirective, { read: TemplateRef, static: false })
     public itemTemplate: TemplateRef<any> = null;
 
     /**
@@ -246,7 +268,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboHeaderDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxComboHeaderDirective, { read: TemplateRef, static: false })
     public headerTemplate: TemplateRef<any> = null;
 
     /**
@@ -269,7 +291,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboFooterDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxComboFooterDirective, { read: TemplateRef, static: false })
     public footerTemplate: TemplateRef<any> = null;
 
     /**
@@ -290,7 +312,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboHeaderItemDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxComboHeaderItemDirective, { read: TemplateRef, static: false })
     public headerItemTemplate: TemplateRef<any> = null;
 
     /**
@@ -313,7 +335,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboAddItemDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxComboAddItemDirective, { read: TemplateRef, static: false })
     public addItemTemplate: TemplateRef<any> = null;
 
     /**
@@ -329,14 +351,14 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  <igx-combo #combo>
      *      ...
      *      <ng-template igxComboEmpty>
-     *          <div class="combo--emtpy">
+     *          <div class="combo--empty">
      *              There are no items to display
      *          </div>
      *      </ng-template>
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboEmptyDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxComboEmptyDirective, { read: TemplateRef, static: false })
     public emptyTemplate: TemplateRef<any> = null;
 
     /**
@@ -357,7 +379,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboToggleIconDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxComboToggleIconDirective, { read: TemplateRef, static: false })
     public toggleIconTemplate: TemplateRef<any> = null;
 
     /**
@@ -378,7 +400,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboClearIconDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxComboClearIconDirective, { read: TemplateRef, static: false })
     public clearIconTemplate: TemplateRef<any> = null;
 
     @ViewChild('primitive', { read: TemplateRef, static: true })
@@ -689,7 +711,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * Combo value data source propery.
+     * Combo value data source property.
      *
      * ```typescript
      * // get
@@ -710,7 +732,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     /**
-     * Combo text data source propery.
+     * Combo text data source property.
      *
      * ```typescript
      * // get
@@ -723,7 +745,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *
      * ```html
      * <!--set-->
-     * <igx-combo [displayKey]='mydisplayKey'></igx-combo>
+     * <igx-combo [displayKey]='myDisplayKey'></igx-combo>
      * ```
      */
     get displayKey() {
@@ -1480,7 +1502,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * Selects/Deselects an item using it's valueKey value
      * @param itemID the valueKey of the specified item
-     * @param select If the item should be selected (true) or deselcted (false)
+     * @param select If the item should be selected (true) or deselected (false)
      *
      * ```typescript
      * items: { field: string, region: string}[] = data;
@@ -1504,11 +1526,15 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     protected setSelection(newSelection: Set<any>, event?: Event): void {
+        const removed = diffInSets(this.selection.get(this.id), newSelection);
+        const added = diffInSets(newSelection, this.selection.get(this.id));
         const oldSelectionEmit = Array.from(this.selection.get(this.id) || []);
         const newSelectionEmit = Array.from(newSelection || []);
         const args: IComboSelectionChangeEventArgs = {
             newSelection: newSelectionEmit,
             oldSelection: oldSelectionEmit,
+            added,
+            removed,
             event,
             cancel: false
         };
