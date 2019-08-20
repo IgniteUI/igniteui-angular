@@ -264,9 +264,9 @@ export interface CancelableEventArgs {
 
 export interface IBaseEventArgs {
     /**
-     * Provides reference to the owner component.
+     * Provides reference to the context component.
      */
-    owner?: any;
+    context?: any;
 }
 
 export interface CancelableBrowserEventArgs extends CancelableEventArgs {
