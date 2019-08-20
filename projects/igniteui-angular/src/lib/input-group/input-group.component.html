@@ -6,12 +6,30 @@
 </div>
 <ng-template #bundle>
     <div class="igx-input-group__bundle">
+
         <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
+
         <div class="igx-input-group__bundle-main">
-            <ng-content select="[igxLabel]"></ng-content>
-            <ng-content select="[igxInput]"></ng-content>
+
+            <ng-container *ngIf="isTypeBorder; else isNotTypeBorder">
+                <div class="igx-input-group__border-label">
+                    <div class="igx-input-group__border-label-inner">
+                        <ng-content select="[igxLabel]"></ng-content>
+                        <div class="igx-input-group__border-label-line"></div>
+                    </div>
+                    <ng-content select="[igxInput]"></ng-content>
+                </div>
+            </ng-container>
+
+            <ng-template #isNotTypeBorder>
+                <ng-content select="[igxLabel]"></ng-content>
+                <ng-content select="[igxInput]"></ng-content>
+            </ng-template>
+
         </div>
+
         <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
+
     </div>
     <div class="igx-input-group__border" *ngIf="hasBorder"></div>
 </ng-template>

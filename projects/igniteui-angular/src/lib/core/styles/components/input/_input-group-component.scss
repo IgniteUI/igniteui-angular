@@ -290,6 +290,7 @@
     }
 
     @include m(border) {
+        @extend %input-type-border !optional;
         @extend %form-group-display--no-margin !optional;
 
         @include e(bundle) {
@@ -301,7 +302,7 @@
         }
 
         @include e(bundle-main) {
-            @extend %form-group-bundle-main--box !optional;
+            @extend %form-group-bundle-main--border !optional;
         }
 
         @include e(border) {
@@ -309,11 +310,23 @@
         }
 
         @include e(input) {
-            @extend %form-group-input--box !optional;
+            @extend %form-group-input--border !optional;
         }
 
         @include e(label) {
-            @extend %form-group-label--box !optional;
+            @extend %form-group-label--border !optional;
+        }
+
+        @include e(border-label) {
+            @extend %igx-input-group__border-label !optional;
+        }
+
+        @include e(border-label-inner) {
+            @extend %igx-input-group__border-label-inner !optional;
+        }
+
+        @include e(border-label-line) {
+            @extend %igx-input-group__border-label-line !optional;
         }
 
         @include e(textarea) {
@@ -326,6 +339,8 @@
     }
 
     @include mx(border, cosy) {
+
+        @extend %input-type-border  !optional;
         @extend %form-group-display--no-margin-cosy !optional;
 
         @include e(bundle) {
@@ -342,6 +357,7 @@
     }
 
     @include mx(border, compact) {
+        @extend %input-type-border  !optional;
         @extend %form-group-display--no-margin-compact !optional;
 
         @include e(bundle) {
@@ -361,17 +377,47 @@
         @include e(bundle) {
             @extend %form-group-bundle-border--success !optional;
         }
+
+        @include e(border-label-line) {
+            @extend %igx-input-group__border-label-line--success !optional;
+        }
     }
 
     @include mx(invalid, border) {
         @include e(bundle) {
             @extend %form-group-bundle-border--error !optional;
         }
+
+        @include e(border-label-line) {
+            @extend %igx-input-group__border-label-line--error !optional;
+        }
     }
 
     @include mx(focused, border) {
         @include e(bundle) {
             @extend %form-group-bundle-border--focus !optional;
+        }
+
+        @include e(label) {
+            @extend %form-group-label--focus-border !optional;
+        }
+
+        @include e(border-label-line) {
+            @extend %igx-input-group__border-label-line-focus !optional;
+        }
+
+        @include e(bundle-main) {
+            @extend %form-group-bundle-main--border-focus !optional;
+        }
+    }
+
+    @include mx(filled, border) {
+        @include e(bundle-main) {
+            @extend %form-group-bundle-main--border-filled !optional;
+        }
+
+        @include e(border-label-line) {
+            @extend %igx-input-group__border-label-line--filled !optional;
         }
     }
 
