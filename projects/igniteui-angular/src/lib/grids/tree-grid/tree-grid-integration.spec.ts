@@ -1107,62 +1107,6 @@ describe('IgxTreeGrid - Integration ', () => {
             expect(trans.add).toHaveBeenCalledWith(transPasrams, null);
         }));
 
-        it('Should NOT select deleted rows through API - Hierarchical DS', fakeAsync(() => {
-            fix = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
-            fix.detectChanges();
-            treeGrid = fix.componentInstance.treeGrid;
-
-            treeGrid.rowSelection = GridSelectionMode.multiple;
-            tick(16);
-            fix.detectChanges();
-            /** Select deleted row */
-            treeGrid.deleteRowById(663);
-            tick(16);
-            fix.detectChanges();
-            expect(treeGrid.selectedRows()).toEqual([]);
-            treeGrid.selectRows([663]);
-            tick(16);
-            fix.detectChanges();
-            expect(treeGrid.selectedRows()).toEqual([]);
-            /** Select row with deleted parent */
-            treeGrid.deleteRowById(147);
-            tick(16);
-            fix.detectChanges();
-            // 147 -> 475
-            treeGrid.selectRows([475]);
-            tick(16);
-            fix.detectChanges();
-            expect(treeGrid.selectedRows()).toEqual([]);
-        }));
-
-        it('Should NOT select deleted rows through API - Flat DS', fakeAsync(() => {
-            fix = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
-            fix.detectChanges();
-            treeGrid = fix.componentInstance.treeGrid;
-
-            treeGrid.rowSelection = GridSelectionMode.multiple;
-            tick(16);
-            fix.detectChanges();
-            /** Select deleted row */
-            treeGrid.deleteRowById(6);
-            tick(16);
-            fix.detectChanges();
-            expect(treeGrid.selectedRows()).toEqual([]);
-            treeGrid.selectRows([6]);
-            tick(16);
-            fix.detectChanges();
-            expect(treeGrid.selectedRows()).toEqual([]);
-            /** Select row with deleted parent */
-            treeGrid.deleteRowById(10);
-            tick(16);
-            fix.detectChanges();
-            // 10 -> 9
-            treeGrid.selectRows([9]);
-            tick(16);
-            fix.detectChanges();
-            expect(treeGrid.selectedRows()).toEqual([]);
-        }));
-
         it('Should not add child row to deleted parent row - Hierarchical DS', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
             const grid = fixture.componentInstance.treeGrid;

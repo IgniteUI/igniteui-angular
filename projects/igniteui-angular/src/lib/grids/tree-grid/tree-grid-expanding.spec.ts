@@ -934,6 +934,7 @@ describe('IgxTreeGrid - Expanding / Collapsing ', () => {
                 indicatorDiv.triggerEventHandler('click', new Event('click'));
                 await wait(1050);
                 fix.detectChanges();
+                await wait(50);
 
                 rows = TreeGridFunctions.getAllRows(fix);
                 expect(rows.length).toBe(5);

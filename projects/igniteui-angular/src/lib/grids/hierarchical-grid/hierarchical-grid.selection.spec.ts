@@ -18,6 +18,7 @@ import { IgxHierarchicalTransactionServiceFactory } from './hierarchical-grid-ba
 import { IgxIconModule } from '../../icon';
 import { IgxHierarchicalGridTestBaseComponent,
         IgxHierarchicalGridRowSelectionComponent } from '../../test-utils/hierarhical-grid-components.spec';
+import { HelperUtils } from '../../test-utils/helper-utils.spec';
 
 describe('IgxHierarchicalGrid selection', () => {
     configureTestSuite();
@@ -120,22 +121,15 @@ describe('IgxHierarchicalGrid selection', () => {
         }));
 
         it('should retain selected row when filtering', fakeAsync(() => {
-            hierarchicalGrid.rowSelection = GridSelectionMode.multiple;
-            fix.detectChanges();
-
             const firstRow = hierarchicalGrid.getRowByIndex(0);
-            const targetCheckbox: HTMLElement = firstRow.nativeElement.querySelector('.igx-checkbox__input');
-
-            targetCheckbox.click();
+            HelperUtils.clickRowCheckbox(firstRow);
             fix.detectChanges();
 
             hierarchicalGrid.filter('ID', '0', IgxStringFilteringOperand.instance().condition('contains'), true);
             fix.detectChanges();
 
-            expect(hierarchicalGrid.getRowByIndex(0).isSelected).toBeTruthy();
-            const headerRow: HTMLElement = fix.nativeElement.querySelector('.igx-grid__thead');
-            const headerCheckbox: HTMLInputElement = headerRow.querySelector('.igx-checkbox__input');
-            expect(headerCheckbox.indeterminate).toBeTruthy();
+            HelperUtils.verifyRowSelected( hierarchicalGrid.getRowByIndex(0));
+            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
         }));
 
         it('should be able to change rowSelection per rowIsland', () => {
