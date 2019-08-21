@@ -93,7 +93,8 @@ import { IgxDragIndicatorIconDirective } from './row-drag.directive';
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
-import { IgxRowExpandIndicatorDirective, IgxRowCollapseIndicatorDirective } from './grid/grid.directives';
+import { IgxRowExpandIndicatorDirective, IgxRowCollapseIndicatorDirective,
+     IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective } from './grid/grid.directives';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -274,6 +275,31 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     */
     @ContentChild(IgxRowCollapseIndicatorDirective, { read: TemplateRef, static: false })
     public rowCollapseIndicatorTemplate: TemplateRef<any> = null;
+
+
+    /**
+    * The custom template, if any, that should be used when rendering a header expand indicator.
+    */
+   @ContentChild(IgxHeaderExpandIndicatorDirective, { read: TemplateRef, static: false })
+   public headerExpandIndicatorTemplate: TemplateRef<any> = null;
+
+   /**
+   * The custom template, if any, that should be used when rendering a header collapse indicator.
+   */
+   @ContentChild(IgxHeaderCollapseIndicatorDirective, { read: TemplateRef, static: false })
+   public headerCollapseIndicatorTemplate: TemplateRef<any> = null;
+
+    /**
+    * @hidden
+    */
+   @ViewChild('defaultExpandTemplate', { read: TemplateRef, static: true })
+   protected defaultExpandTemplate: TemplateRef<any>;
+
+/**
+   * @hidden
+   */
+   @ViewChild('defaultCollapseTemplate', { read: TemplateRef, static: true })
+   protected defaultCollapseTemplate: TemplateRef<any>;
 
 
     /**

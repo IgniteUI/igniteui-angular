@@ -35,6 +35,25 @@ export class IgxRowExpandIndicatorDirective {
 export class IgxRowCollapseIndicatorDirective {
 }
 
+
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxHeaderExpandIndicator]'
+})
+export class IgxHeaderExpandIndicatorDirective {
+}
+
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxHeaderCollapseIndicator]'
+})
+export class IgxHeaderCollapseIndicatorDirective {
+}
+
 /**
  * @hidden
  */

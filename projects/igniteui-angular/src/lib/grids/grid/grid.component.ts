@@ -905,6 +905,16 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         const column = this.getColumnByName(expression.fieldName);
         return (column && column.header) || expression.fieldName;
     }
+    /**
+     * @hidden
+     */
+    public get iconTemplate() {
+        if (this.groupsExpanded) {
+            return this.headerExpandIndicatorTemplate || this.defaultExpandTemplate;
+        } else {
+            return this.headerCollapseIndicatorTemplate || this.defaultCollapseTemplate;
+        }
+    }
 
     /**
      * @hidden

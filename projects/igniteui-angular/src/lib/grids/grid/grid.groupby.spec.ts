@@ -539,6 +539,10 @@ describe('IgxGrid - GroupBy', () => {
         const expndr = groupRows[0].nativeElement.querySelector('.igx-grid__grouping-indicator');
         expect(expndr.innerText).toBe('COLLAPSED');
 
+        expect(grid.headerGroupContainer.nativeElement.innerText).toBe('EXPANDED');
+        UIInteractions.clickElement(grid.headerGroupContainer.nativeElement);
+        expect(grid.headerGroupContainer.nativeElement.innerText).toBe('COLLAPSED');
+
     }));
 
     it('should have the correct ARIA attributes on the group rows.', fakeAsync(() => {
@@ -2678,6 +2682,13 @@ export class GroupableGridComponent extends DataParent {
                 <span>EXPANDED</span>
             </ng-template>
             <ng-template igxRowCollapseIndicator let-groupRow>
+                <span>COLLAPSED</span>
+            </ng-template>
+
+            <ng-template igxHeaderExpandIndicator>
+                <span>EXPANDED</span>
+            </ng-template>
+            <ng-template igxHeaderCollapseIndicator>
                 <span>COLLAPSED</span>
             </ng-template>
         </igx-grid>
