@@ -1139,6 +1139,9 @@ describe('IgxHierarchicalGrid custom template', () => {
             const expander =  row.nativeElement.querySelector('.igx-grid__hierarchical-expander');
             expect(expander.innerText).toBe('COLLAPSED');
         }
+
+        expect((hierarchicalGrid as any).headerHierarchyExpander.nativeElement.innerText).toBe('COLLAPSED');
+        expect((childGrid as any).headerHierarchyExpander.nativeElement.innerText).toBe('COLLAPSED');
     });
 });
 
@@ -1363,6 +1366,9 @@ public toggleChildRI = true;
         <ng-template igxRowCollapseIndicator>
                 <span>COLLAPSED</span>
         </ng-template>
+        <ng-template igxHeaderCollapseIndicator>
+        <span>COLLAPSED</span>
+    </ng-template>
     </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridCustomTemplateComponent extends IgxHierarchicalGridTestBaseComponent {}

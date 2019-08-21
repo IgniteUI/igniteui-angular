@@ -16,8 +16,7 @@
                     'igx-grid__hierarchical-expander--push': filteringService.isFilterRowVisible,
                     'igx-grid__hierarchical-expander--no-border': rowSelectable || rowDraggable
                 }">
-                <igx-icon role="button" fontSet="material"
-                    [isActive]='hierarchicalState.length > 0 && hasExpandableChildren' (click)="collapseAllRows()">unfold_less</igx-icon>
+                <ng-container *ngTemplateOutlet="headerCollapseIndicatorTemplate || defaultCollapseTemplate; context: { $implicit: this }"></ng-container>
             </div>
             <ng-container *ngIf="rowDraggable">
                 <div class="igx-grid__drag-indicator" [ngClass]="{
@@ -165,6 +164,11 @@
         <igx-circular-bar [indeterminate]="true">
         </igx-circular-bar>
     </div>
+</ng-template>
+
+<ng-template #defaultCollapseTemplate>
+    <igx-icon role="button" fontSet="material"
+    [isActive]='hierarchicalState.length > 0 && hasExpandableChildren' (click)="collapseAllRows()">unfold_less</igx-icon>
 </ng-template>
 
 
