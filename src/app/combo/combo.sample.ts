@@ -5,6 +5,7 @@ import { IgxComboComponent, IComboSelectionChangeEventArgs,
 } from 'igniteui-angular';
 import { take } from 'rxjs/operators';
 import { cloneDeep } from 'lodash';
+import { FormGroup, Validators, FormControl, FormBuilder } from '@angular/forms';
 
 const primitive = ['1', '2', '3', '4', '5', '6'];
 const complex = [{
@@ -43,6 +44,9 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     public filterableFlag = true;
     public customValuesFlag = true;
     public items: any[] = [];
+    public values1:  Array<any>;
+    public values2:  Array<any>;
+
     public valueKeyVar = 'field';
     public currentDataType = '';
     @ViewChild('customItemTemplate', { read: TemplateRef, static: true })
@@ -53,8 +57,35 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     cosy = DisplayDensity.cosy;
     compact = DisplayDensity.compact;
 
+    public genres = [];
+    public user: FormGroup;
+    constructor(fb: FormBuilder) {
+        this.user = fb.group({
+            date: [''],
+            dateTime: [''],
+            email: ['', Validators.required],
+            fullName: new FormControl('', Validators.required),
+            genres: ['', Validators.required],
+            movie: ['', Validators.required],
+            phone: ['']
+        });
 
-    constructor() {
+        this.genres = [
+            { type: 'Action' , movies: ['The Matrix', 'Kill Bill: Vol.1', 'The Dark Knight Rises']},
+            { type: 'Adventure' , movies: ['Interstellar', 'Inglourious Basterds', 'Inception']},
+            // tslint:disable-next-line:object-literal-sort-keys
+            { type: 'Comedy' , movies: ['Wild Tales', 'In Bruges', 'Three Billboards Outside Ebbing, Missouri',
+                'Untouchable', '3 idiots']},
+            { type: 'Crime' , movies: ['Training Day', 'Heat', 'American Gangster']},
+            { type: 'Drama' , movies: ['Fight Club', 'A Beautiful Mind', 'Good Will Hunting', 'City of God']},
+            { type: 'Biography' , movies: ['Amadeus', 'Bohemian Rhapsody']},
+            { type: 'Mystery' , movies: ['The Prestige', 'Memento', 'Cloud Atlas']},
+            { type: 'Musical' , movies: ['All That Jazz']},
+            { type: 'Romance' , movies: ['Love Actually', 'In The Mood for Love']},
+            { type: 'Sci-Fi' , movies: ['The Fifth Element']},
+            { type: 'Thriller' , movies: ['The Usual Suspects']},
+            { type: 'Western' , movies: ['Django Unchained']}];
+
         const division = {
             'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
             'New England 02': ['New Hampshire', 'Rhode Island', 'Vermont'],
