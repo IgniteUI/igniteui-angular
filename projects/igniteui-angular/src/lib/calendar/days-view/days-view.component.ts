@@ -461,6 +461,17 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
     /**
      * @hidden
      */
+    private getLastMonthView(): IgxDaysViewComponent {
+        let monthView = this;
+        while (monthView.nextMonthView) {
+            monthView = monthView.nextMonthView;
+        }
+        return monthView;
+    }
+
+    /**
+     * @hidden
+     */
     @HostListener('keydown.arrowup', ['$event'])
     public onKeydownArrowUp(event: KeyboardEvent) {
         event.preventDefault();
@@ -510,7 +521,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
         event.preventDefault();
         event.stopPropagation();
 
-        const dates = this.dates.filter(d => d.isCurrentMonth);
+        const dates = this.getFirstMonthView().dates.filter(d => d.isCurrentMonth);
         for (let i = 0; i < dates.length; i++) {
             if (!dates[i].isDisabled) {
                 dates[i].nativeElement.focus();
@@ -527,7 +538,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
         event.preventDefault();
         event.stopPropagation();
 
-        const dates = this.dates.filter(d => d.isCurrentMonth);
+        const dates = this.getLastMonthView().dates.filter(d => d.isCurrentMonth);
         for (let i = dates.length - 1; i >= 0; i--) {
             if (!dates[i].isDisabled) {
                 dates[i].nativeElement.focus();

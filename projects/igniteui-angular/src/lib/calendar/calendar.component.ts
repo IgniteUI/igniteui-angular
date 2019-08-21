@@ -726,7 +726,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     @HostListener('keydown.home', ['$event'])
     public onKeydownHome(event: KeyboardEvent) {
         if (this.daysView) {
-            this.daysView.onKeydownHome(event);
+            this.monthViews.first.onKeydownHome(event);
         }
     }
 
@@ -736,7 +736,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     @HostListener('keydown.end', ['$event'])
     public onKeydownEnd(event: KeyboardEvent) {
         if (this.daysView) {
-            this.daysView.onKeydownEnd(event);
+            this.monthViews.last.onKeydownEnd(event);
         }
     }
 
