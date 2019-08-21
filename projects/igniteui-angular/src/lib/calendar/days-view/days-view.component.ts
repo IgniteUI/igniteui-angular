@@ -260,7 +260,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
 
         // focus item in current month
         for (let i = index; i - 7 > -1; i -= 7) {
-            day = prevView ? node : dates[index - 7];
+            day = prevView ? node : dates[i - 7];
             if (!day.isDisabled  && !day.isHidden && !day.isOutOfRange && day.isCurrentMonth) {
                 day.nativeElement.focus();
                 break;
@@ -351,7 +351,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
         if (!node) { return; }
 
         for (let i = index; i > 0; i--) {
-            day = prevView ? node : dates[index - 1];
+            day = prevView ? node : dates[i - 1];
             if (!day.isDisabled  && !day.isHidden && !day.isOutOfRange && day.isCurrentMonth) {
                 day.nativeElement.focus();
                 break;
