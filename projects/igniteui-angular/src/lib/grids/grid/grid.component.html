@@ -67,8 +67,8 @@
                 <div class="igx-grid__cbx-selection" #headerCheckboxContainer [ngClass]="{
                     'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible
                 }">
-                    <igx-checkbox [checked]="selectionService.areAllRowSelected()" disableRipple="true" (change)="onHeaderCheckboxClick($event)"
-                        [indeterminate]="selectionService.hasSomeRowSelected()" [aria-label]="headerCheckboxAriaLabel" *ngIf="isMultiRowSelectionEnabled" #headerCheckbox></igx-checkbox>
+                    <igx-checkbox [checked]="selectionService.areAllRowSelected()" disableRipple="true" (change)="onHeaderCheckboxClick($event)" [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
+                        [indeterminate]="selectionService.hasSomeRowSelected()" [aria-label]="headerCheckboxAriaLabel"  #headerCheckbox></igx-checkbox>
                 </div>
             </ng-container>
             <ng-container *ngIf="pinnedColumns.length > 0">

@@ -1,7 +1,6 @@
 import { Injectable, EventEmitter, NgZone } from '@angular/core';
 import { IGridEditEventArgs } from '../grids/grid-base.component';
 
-
 export interface GridSelectionRange {
     rowStart: number;
     rowEnd: number;
@@ -560,7 +559,7 @@ export class IgxGridSelectionService {
         const addedRows = this.rowSelection.size ? allRowIDs.filter((rID) => !this.isRowSelected(rID)) : allRowIDs;
 
         this.emitRowSelectionEvent(allRowIDs, addedRows, [], event);
-     }
+    }
 
     selectRowbyID(rowID, clearPrevSelection?, event?) {
         if (this.grid.rowSelection === 'none' || this.isRowDeleted(rowID)) { return; }
@@ -601,8 +600,8 @@ export class IgxGridSelectionService {
             return;
         }
         const gridData = this.allData;
-        const lastSelectedRowID = this.getSelectedRows()[this.rowSelection.size - 1];
-        const currIndex = gridData.indexOf(this.getRowDataByID(lastSelectedRowID));
+        const lastRowID = this.getSelectedRows()[this.rowSelection.size - 1];
+        const currIndex = gridData.indexOf(this.getRowDataByID(lastRowID));
         const newIndex = gridData.indexOf(rowData);
         const rows = gridData.slice(Math.min(currIndex, newIndex), Math.max(currIndex, newIndex) + 1);
 
@@ -623,7 +622,7 @@ export class IgxGridSelectionService {
 
     hasSomeRowSelected() {
         const filteredData = this.isFilteringApplied() ?
-                this.getRowIDs(this.grid.filteredData).some(rID => this.isRowSelected(rID)) : true;
+            this.getRowIDs(this.grid.filteredData).some(rID => this.isRowSelected(rID)) : true;
         return this.rowSelection.size > 0 && filteredData && !this.areAllRowSelected();
     }
 
@@ -631,15 +630,17 @@ export class IgxGridSelectionService {
         const currSelection = this.getSelectedRows();
         if (this.areEquelCollections(currSelection, newSelection)) { return; }
 
-        const args = {oldSelection: currSelection, newSelection: newSelection,
-            added: added, removed: removed, event: event, cancel: false};
+        const args = {
+            oldSelection: currSelection, newSelection: newSelection,
+            added: added, removed: removed, event: event, cancel: false
+        };
         this.grid.onRowSelectionChange.emit(args);
-        if (args.cancel && event.checkbox) { event.checkbox.checked = !event.checkbox.checked; }
-        if (args.cancel) { return; }
-        this.rowSelection.clear();
-        this.selectRowsWithNoEvent(newSelection);
+        if (args.cancel) {
+            if (args.event && args.event.checkbox) { event.checkbox.checked = !event.checkbox.checked; }
+            return;
+        }
+        this.selectRowsWithNoEvent(args.newSelection, true);
     }
-
 
     public getRowDataByID(rowID) {
         if (!this.grid.primaryKey) { return rowID; }
@@ -656,14 +657,13 @@ export class IgxGridSelectionService {
     }
 
     public get allData() {
-        const gridAPI = this.grid.gridAPI;
         const allData = this.isFilteringApplied() || this.grid.sortingExpressions.length ?
-        this.grid.filteredSortedData : gridAPI.get_all_data();
-        return allData.filter(rData => !this.isRowDeleted(gridAPI.get_row_id(rData)));
+            this.grid.filteredSortedData : this.grid.gridAPI.get_all_data();
+        return allData.filter(rData => !this.isRowDeleted(this.grid.gridAPI.get_row_id(rData)));
     }
 
     private areEquelCollections(first, second) {
-        return  first.length !== second.length || new Set(first.concat(second)).size !== first.length ? false : true;
+        return first.length !== second.length || new Set(first.concat(second)).size !== first.length ? false : true;
     }
 
     private isFilteringApplied() {
