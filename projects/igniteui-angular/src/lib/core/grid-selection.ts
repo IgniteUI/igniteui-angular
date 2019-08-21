@@ -565,7 +565,8 @@ export class IgxGridSelectionService {
         if (this.grid.rowSelection === 'none' || this.isRowDeleted(rowID)) { return; }
         clearPrevSelection = this.grid.rowSelection === 'single' || clearPrevSelection;
 
-        const newSelection = clearPrevSelection ? [rowID] : [...this.getSelectedRows(), rowID];
+        const newSelection = clearPrevSelection ? [rowID] : this.getSelectedRows().indexOf(rowID) !== -1 ?
+            this.getSelectedRows() : [...this.getSelectedRows(), rowID];
         const removed = clearPrevSelection ? this.getSelectedRows() : [];
         this.emitRowSelectionEvent(newSelection, [rowID], removed, event);
     }
