@@ -85,6 +85,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
         it('Should not be possible to select a range when change cellSelection to single', () => {
             const rangeChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
             const startCell =  treeGrid.getCellByColumn(0, 'ID');
+            const middleCell =  treeGrid.getCellByColumn(1, 'ID');
             const endCell =  treeGrid.getCellByColumn(2, 'ID');
 
             expect(treeGrid.cellSelection).toEqual(GridSelectionMode.multiple);
@@ -106,7 +107,9 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             // Try to select a range
             HelperUtils.selectCellsRangeNoWait(fix, endCell, startCell);
             detect();
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 1, 2, 0, 0, false);
+            HelperUtils.verifyCellSelected(startCell, false);
+            HelperUtils.verifyCellSelected(middleCell, false);
+            HelperUtils.verifyCellSelected(endCell);
             expect(rangeChangeSpy).toHaveBeenCalledTimes(1);
             expect(treeGrid.selectedCells.length).toBe(1);
             expect(treeGrid.getSelectedData()).toEqual([{ ID: 957 }]);
