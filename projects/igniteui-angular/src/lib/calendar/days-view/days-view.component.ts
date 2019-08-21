@@ -118,12 +118,12 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
     /**
      * @hidden
      */
-    public nextMonthView = null;
+    public nextMonthView: IgxDaysViewComponent;
 
     /**
      * @hidden
      */
-    public prevMonthView = null;
+    public prevMonthView: IgxDaysViewComponent;
 
     /**
      * The default css class applied to the component.
@@ -261,7 +261,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
         // focus item in current month
         for (let i = index; i - 7 > -1; i -= 7) {
             day = prevView ? node : dates[i - 7];
-            if (!day.isDisabled  && !day.isHidden && !day.isOutOfRange && day.isCurrentMonth) {
+            if (this.isDayFocusable(day)) {
                 day.nativeElement.focus();
                 break;
             }
@@ -306,7 +306,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
         // focus item in current month
         for (let i = index; i + 7 < 42; i += 7) {
             day = nextView ? node : dates[i + 7];
-            if (!day.isDisabled  && !day.isHidden && !day.isOutOfRange && day.isCurrentMonth) {
+            if (this.isDayFocusable(day)) {
                 day.nativeElement.focus();
                 break;
             }
@@ -352,7 +352,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
 
         for (let i = index; i > 0; i--) {
             day = prevView ? node : dates[i - 1];
-            if (!day.isDisabled  && !day.isHidden && !day.isOutOfRange && day.isCurrentMonth) {
+            if (this.isDayFocusable(day)) {
                 day.nativeElement.focus();
                 break;
             }
@@ -397,7 +397,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
         // focus item in current month
         for (let i = index; i < dates.length - 1; i++) {
             day = nextView ? node : dates[i + 1];
-            if (!day.isDisabled && !day.isHidden && !day.isOutOfRange && day.isCurrentMonth) {
+            if (this.isDayFocusable(day)) {
                 day.nativeElement.focus();
                 break;
             }
@@ -451,7 +451,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
      * @hidden
      */
     private getFirstMonthView(): IgxDaysViewComponent {
-        let monthView = this;
+        let monthView = this as IgxDaysViewComponent;
         while (monthView.prevMonthView) {
             monthView = monthView.prevMonthView;
         }
@@ -462,11 +462,18 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
      * @hidden
      */
     private getLastMonthView(): IgxDaysViewComponent {
-        let monthView = this;
+        let monthView = this as IgxDaysViewComponent;
         while (monthView.nextMonthView) {
             monthView = monthView.nextMonthView;
         }
         return monthView;
+    }
+
+    /**
+     * @hidden
+     */
+    private isDayFocusable(day: IgxDayItemComponent): boolean {
+        return !!day && day.isCurrentMonth && !day.isHidden && !day.isDisabled && !day.isOutOfRange;
     }
 
     /**

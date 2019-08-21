@@ -202,6 +202,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     @ViewChild('days', { read: IgxDaysViewComponent, static: false })
     public daysView = new IgxDaysViewComponent;
 
+    /**
+     * @hidden
+     */
     @ViewChildren('days', { read: IgxDaysViewComponent })
     public monthViews: QueryList<IgxDaysViewComponent>;
 

@@ -79,6 +79,10 @@
         }
     }
 
+    @include e(date, 'hidden') {
+        @extend %cal-value--hidden !optional;
+    }
+
     @include e(date, 'weekend') {
         @extend %cal-value !optional;
         @extend %cal-value--weekend !optional;

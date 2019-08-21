@@ -498,6 +498,10 @@
     %cal-value--hover {
         background: --var($theme, 'date-hover-background');
     }
+
+    %cal-value--hidden {
+        visibility: hidden;
+    }
 }
 
 /// Adds typography styles for the igx-calendar component.
