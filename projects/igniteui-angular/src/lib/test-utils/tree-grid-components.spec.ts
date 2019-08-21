@@ -729,3 +729,24 @@ export class IgxTreeGridDefaultLoadingComponent implements OnInit {
         }, 1000);
     }
 }
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" width="900px" height="600px">
+        <igx-column [field]="'ID'" dataType="number" [sortable]="true"></igx-column>
+        <igx-column [field]="'Name'" dataType="string" [sortable]="true"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date" [sortable]="true"></igx-column>
+        <igx-column [field]="'Age'" dataType="number" [sortable]="true"></igx-column>
+        <ng-template igxRowExpandIndicator>
+        <span>EXPANDED</span>
+        </ng-template>
+        <ng-template igxRowCollapseIndicator>
+            <span>COLLAPSED</span>
+        </ng-template>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridCustomExpandersTemplateComponent {
+    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeTreeData();
+}

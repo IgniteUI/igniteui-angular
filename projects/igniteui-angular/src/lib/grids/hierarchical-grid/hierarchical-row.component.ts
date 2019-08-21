@@ -107,7 +107,10 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
         });
     }
 
-    public get template() {
+    /**
+    * @hidden
+    */
+    public get iconTemplate() {
         if (this.expanded) {
             return this.grid.rowExpandIndicatorTemplate || this.defaultExpandTemplate;
         } else {

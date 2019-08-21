@@ -1,6 +1,6 @@
 <ng-container #defaultGroupRow>
     <div (click)="toggle()" class="igx-grid__grouping-indicator">
-            <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: groupRow }">
+            <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }">
             </ng-container>
     </div>
 

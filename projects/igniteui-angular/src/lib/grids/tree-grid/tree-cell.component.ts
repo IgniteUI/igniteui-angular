@@ -1,4 +1,5 @@
-import { Component, ChangeDetectorRef, ElementRef, ViewChild, Inject, ChangeDetectionStrategy, NgZone, OnInit, Input } from '@angular/core';
+import { Component, ChangeDetectorRef, ElementRef, ViewChild, Inject,
+     ChangeDetectionStrategy, NgZone, OnInit, Input, TemplateRef } from '@angular/core';
 import { IgxGridCellComponent } from '../cell.component';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
@@ -60,6 +61,18 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
     public defaultContentElement: ElementRef;
 
     /**
+    * @hidden
+    */
+   @ViewChild('defaultExpandTemplate', { read: TemplateRef, static: true })
+   protected defaultExpandTemplate: TemplateRef<any>;
+
+    /**
+    * @hidden
+    */
+   @ViewChild('defaultCollapseTemplate', { read: TemplateRef, static: true })
+   protected defaultCollapseTemplate: TemplateRef<any>;
+
+    /**
      * @hidden
      */
     @Input()
@@ -110,5 +123,16 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
         const largestWidth = Math.max(...Array.from(this.nativeElement.children)
             .map((child) => getNodeSizeViaRange(range, child)));
         return largestWidth + indicatorWidth + indicatorMargin + leftPadding;
+    }
+
+    /**
+     * @hidden
+    */
+    public get iconTemplate() {
+        if (this.expanded) {
+            return this.grid.rowExpandIndicatorTemplate || this.defaultExpandTemplate;
+        } else {
+            return this.grid.rowCollapseIndicatorTemplate || this.defaultCollapseTemplate;
+        }
     }
 }
