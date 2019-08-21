@@ -212,12 +212,13 @@
 
 <ng-template #headSelectorBaseTemplate>
     <igx-checkbox
-        #headerCheckbox
-        *ngIf="isMultiRowSelectionEnabled"
         [checked]="allRowsSelected"
         (change)="onHeadSelectorClick($event)"
         disableRipple="true"
-        [aria-label]="headerCheckboxAriaLabel">
+        [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
+        [indeterminate]="selectionService.hasSomeRowSelected()"
+        [aria-label]="headerCheckboxAriaLabel"
+        #headerCheckbox>
     </igx-checkbox>
 </ng-template>
 

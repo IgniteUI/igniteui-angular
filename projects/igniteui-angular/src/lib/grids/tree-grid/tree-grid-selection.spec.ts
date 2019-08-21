@@ -7,7 +7,8 @@ import {
     IgxTreeGridSimpleComponent,
     IgxTreeGridCellSelectionComponent,
     IgxTreeGridSelectionRowEditingComponent,
-    IgxTreeGridSelectionWithTransactionComponent
+    IgxTreeGridSelectionWithTransactionComponent,
+      IgxTreeGridRowEditingTransactionComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -31,7 +32,8 @@ describe('IgxTreeGrid - Selection ', () => {
                 IgxTreeGridSimpleComponent,
                 IgxTreeGridCellSelectionComponent,
                 IgxTreeGridSelectionRowEditingComponent,
-                IgxTreeGridSelectionWithTransactionComponent
+                IgxTreeGridSelectionWithTransactionComponent,
+                IgxTreeGridRowEditingTransactionComponent
             ],
             imports: [IgxTreeGridModule, NoopAnimationsModule]
         })
@@ -164,7 +166,7 @@ describe('IgxTreeGrid - Selection ', () => {
 
             treeGrid.filter('Age', 40, IgxNumberFilteringOperand.instance().condition('greaterThan'));
             fix.detectChanges();
-            tick(100);
+            tick();
 
             // Verification indices are different since the sorting changes rows' positions.
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 2, 4], true);
@@ -172,10 +174,40 @@ describe('IgxTreeGrid - Selection ', () => {
 
             treeGrid.clearFilter();
             fix.detectChanges();
-            tick(100);
+            tick();
 
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 5, 8], true);
         }));
+
+        it('should be able to select and select only filtered data', () => {
+            treeGrid.selectRows([299, 147]);
+            fix.detectChanges();
+
+            treeGrid.filter('Age', 40, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+            fix.detectChanges();
+
+            expect(treeGrid.selectedRows()).toEqual([299, 147]);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+
+            treeGrid.selectAllRows(true);
+            fix.detectChanges();
+
+            expect(treeGrid.selectedRows()).toEqual([299, 147, 317, 998, 19, 847]);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
+
+            treeGrid.deselectAllRows(true);
+            fix.detectChanges();
+
+            expect(treeGrid.selectedRows()).toEqual([299]);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+
+            treeGrid.clearFilter();
+            fix.detectChanges();
+
+            expect(treeGrid.selectedRows()).toEqual([299]);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [6], true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+        });
 
         it('should persist the selection after expand/collapse', () => {
             treeGrid.selectRows([treeGrid.getRowByIndex(0).rowID, treeGrid.getRowByIndex(3).rowID,
@@ -413,7 +445,7 @@ describe('IgxTreeGrid - Selection ', () => {
         }));
     });
 
-    describe('Row Selection with transactions', () => {
+    describe('Row Selection with transactions - Hierarchical DS', () => {
         // configureTestSuite();
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxTreeGridSelectionWithTransactionComponent);
@@ -549,6 +581,85 @@ describe('IgxTreeGrid - Selection ', () => {
 
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
             expect(treeGrid.selectedRows().includes(13)).toEqual(false);
+        });
+
+        it('Should be able to select deleted rows through API - Hierarchical DS', () => {
+            treeGrid.deleteRowById(663);
+            fix.detectChanges();
+            expect(treeGrid.selectedRows()).toEqual([]);
+            treeGrid.selectRows([663]);
+            fix.detectChanges();
+            expect(treeGrid.selectedRows()).toEqual([663]);
+            /** Select row with deleted parent */
+            treeGrid.deleteRowById(147);
+            fix.detectChanges();
+            // 147 -> 475
+            treeGrid.selectRows([475]);
+            fix.detectChanges();
+            expect(treeGrid.selectedRows()).toEqual([663, 475]);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+        });
+
+        it('Should not be able to select deleted rows through API with selectAllRows - Hierarchical DS', () => {
+            treeGrid.deleteRowById(663);
+            treeGrid.deleteRowById(147);
+            fix.detectChanges();
+            expect(treeGrid.selectedRows()).toEqual([]);
+
+            treeGrid.selectAllRows();
+            fix.detectChanges();
+
+            expect(treeGrid.selectedRows().includes(663)).toBe(false);
+            expect(treeGrid.selectedRows().includes(147)).toBe(false);
+            expect(treeGrid.selectedRows().includes(475)).toBe(false);
+            expect(treeGrid.selectedRows().includes(19)).toBe(true);
+            expect(treeGrid.selectedRows().includes(847)).toBe(true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
+        });
+    });
+
+    describe('Row Selection with transactions - flat DS', () => {
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
+            fix.detectChanges();
+
+            treeGrid = fix.componentInstance.treeGrid;
+            treeGrid.rowSelection = GridSelectionMode.multiple;
+            fix.detectChanges();
+        }));
+
+        it('Should select deleted rows through API', () => {
+            treeGrid.deleteRowById(6);
+            fix.detectChanges();
+            expect(treeGrid.selectedRows()).toEqual([]);
+            treeGrid.selectRows([6]);
+            fix.detectChanges();
+            expect(treeGrid.selectedRows()).toEqual([6]);
+            /** Select row with deleted parent */
+            treeGrid.deleteRowById(10);
+            fix.detectChanges();
+            // 10 -> 9
+            treeGrid.selectRows([9]);
+            fix.detectChanges();
+            expect(treeGrid.selectedRows()).toEqual([6, 9]);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+        });
+
+        it('Should not be able to select deleted rows through API with selectAllRows', () => {
+            treeGrid.deleteRowById(6);
+            treeGrid.deleteRowById(10);
+            fix.detectChanges();
+            expect(treeGrid.selectedRows()).toEqual([]);
+
+            treeGrid.selectAllRows();
+            fix.detectChanges();
+
+            expect(treeGrid.selectedRows().includes(6)).toBe(false);
+            expect(treeGrid.selectedRows().includes(10)).toBe(false);
+            expect(treeGrid.selectedRows().includes(9)).toBe(false);
+            expect(treeGrid.selectedRows().includes(1)).toBe(true);
+            expect(treeGrid.selectedRows().includes(2)).toBe(true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
         });
     });
 

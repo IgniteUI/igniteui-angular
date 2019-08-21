@@ -387,25 +387,6 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(fChildCell.selected).toBe(true);
         }));
 
-        it('should retain selected row when filtering', fakeAsync(() => {
-            hierarchicalGrid.rowSelection = GridSelectionMode.multiple;
-            fixture.detectChanges();
-
-            const firstRow = hierarchicalGrid.getRowByIndex(0);
-            const targetCheckbox: HTMLElement = firstRow.nativeElement.querySelector('.igx-checkbox__input');
-
-            targetCheckbox.click();
-            fixture.detectChanges();
-
-            hierarchicalGrid.filter('ID', '0', IgxStringFilteringOperand.instance().condition('contains'), true);
-            fixture.detectChanges();
-
-            expect(hierarchicalGrid.getRowByIndex(0).isSelected).toBeTruthy();
-            const headerRow: HTMLElement = fixture.nativeElement.querySelector('.igx-grid__thead');
-            const headerCheckbox: HTMLInputElement = headerRow.querySelector('.igx-checkbox__input');
-            expect(headerCheckbox.indeterminate).toBeTruthy();
-        }));
-
         it('should show empty filter message when there are no records matching the filter', fakeAsync(() => {
             fixture.componentInstance.data = [];
             fixture.detectChanges();

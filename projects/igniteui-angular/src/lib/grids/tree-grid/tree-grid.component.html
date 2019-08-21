@@ -190,14 +190,14 @@
 </ng-template>
 
 <ng-template #headSelectorBaseTemplate>
-    <igx-checkbox 
-        #headerCheckbox
-        *ngIf="isMultiRowSelectionEnabled"
+    <igx-checkbox
         [checked]="selectionService.areAllRowSelected()"
-        (change)="onHeadSelectorClick($event)"
+        (change)="onHeaderCheckboxClick($event)"
+        [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
         disableRipple="true"
-        [indeterminate]="selectionService.hasSomeRowSelected()"
-        [aria-label]="headerCheckboxAriaLabel">
+        [indeterminate]="selectionService.hasSomeRowSelected()" 
+        [aria-label]="headerCheckboxAriaLabel"
+        #headerCheckbox>
     </igx-checkbox>
 </ng-template>
 
