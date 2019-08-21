@@ -1,7 +1,6 @@
 import { Injectable, EventEmitter, NgZone } from '@angular/core';
 import { IGridEditEventArgs } from '../grids/grid-base.component';
 
-
 export interface GridSelectionRange {
     rowStart: number;
     rowEnd: number;
@@ -549,24 +548,18 @@ export class IgxGridSelectionService {
     }
 
     clearRowSelection(event?) {
-        this.allRowsSelected = false;
         const removedRec = this.isFilteringApplied() ?
             this.getRowIDs(this.allData).filter(rID => this.isRowSelected(rID)) : this.getSelectedRows();
         const newSelection = this.isFilteringApplied() ? this.getSelectedRows().filter(x => !removedRec.includes(x)) : [];
-        if (this.emitRowSelectionEvent(newSelection, [], removedRec, event)) { return; }
-
-        this.isFilteringApplied() ? this.deselectRowsWithNoEvent(removedRec) :  this.rowSelection.clear();
+        this.emitRowSelectionEvent(newSelection, [], removedRec, event);
     }
 
     selectAllRows(event?) {
-        this.allRowsSelected = true;
-
         const allRowIDs = this.getRowIDs(this.allData);
         const addedRows = this.rowSelection.size ? allRowIDs.filter((rID) => !this.isRowSelected(rID)) : allRowIDs;
 
-        if (this.emitRowSelectionEvent(allRowIDs, addedRows, [], event)) { return; }
-        this.selectRowsWithNoEvent(addedRows);
-     }
+        this.emitRowSelectionEvent(allRowIDs, addedRows, [], event);
+    }
 
     selectRowbyID(rowID, clearPrevSelection?, event?) {
         if (this.grid.rowSelection === 'none' || this.isRowDeleted(rowID)) { return; }
@@ -574,20 +567,14 @@ export class IgxGridSelectionService {
 
         const newSelection = clearPrevSelection ? [rowID] : [...this.getSelectedRows(), rowID];
         const removed = clearPrevSelection ? this.getSelectedRows() : [];
-        if (this.emitRowSelectionEvent(newSelection, [rowID], removed, event)) { return; }
-
-        if (clearPrevSelection) { this.rowSelection.clear(); }
-        this.rowSelection.add(rowID);
-        this.allRowsSelected = undefined;
+        this.emitRowSelectionEvent(newSelection, [rowID], removed, event);
     }
 
     deselectRow(rowID, event?) {
         if (!this.isRowSelected(rowID)) { return; }
         const newSelection = this.getSelectedRows().filter(r => r !== rowID);
         if (this.rowSelection.size && this.rowSelection.has(rowID)) {
-            if (this.emitRowSelectionEvent(newSelection, [], [rowID], event)) { return; }
-            this.rowSelection.delete(rowID);
-            this.allRowsSelected = undefined;
+            this.emitRowSelectionEvent(newSelection, [], [rowID], event);
         }
     }
 
@@ -603,7 +590,7 @@ export class IgxGridSelectionService {
     }
 
     isRowSelected(rowID) {
-        return this.rowSelection.has(rowID);
+        return this.rowSelection.size > 0 && this.rowSelection.has(rowID);
     }
 
     selectMultipleRows(rowID, rowData, event?) {
@@ -613,47 +600,47 @@ export class IgxGridSelectionService {
             return;
         }
         const gridData = this.allData;
-        const lastSelectedRowID = this.getSelectedRows()[this.rowSelection.size - 1];
-        const currIndex = gridData.indexOf(this.getRowDataByID(lastSelectedRowID));
+        const lastRowID = this.getSelectedRows()[this.rowSelection.size - 1];
+        const currIndex = gridData.indexOf(this.getRowDataByID(lastRowID));
         const newIndex = gridData.indexOf(rowData);
         const rows = gridData.slice(Math.min(currIndex, newIndex), Math.max(currIndex, newIndex) + 1);
+
         const added = this.getRowIDs(rows).filter(rID => !this.isRowSelected(rID));
+        const newSelection = this.getSelectedRows().concat(added);
 
-        if (this.emitRowSelectionEvent(this.getSelectedRows().concat(added), added, [], event)) { return; }
-        added.forEach(id => this.rowSelection.add(id));
-
+        this.emitRowSelectionEvent(newSelection, added, [], event);
     }
 
     areAllRowSelected() {
-        if (!this.hasData() ) { return false; }
+        if (!this.grid.data) { return false; }
         if (this.allRowsSelected !== undefined) { return this.allRowsSelected; }
 
         const dataItemsID = this.getRowIDs(this.allData);
-        return this.allRowsSelected = this.rowSelection.size >= this.allData.length &&
+        return this.allRowsSelected = Math.min(this.rowSelection.size, dataItemsID.length) > 0 &&
             new Set(Array.from(this.rowSelection.values()).concat(dataItemsID)).size === this.rowSelection.size;
     }
 
     hasSomeRowSelected() {
         const filteredData = this.isFilteringApplied() ?
-                this.getRowIDs(this.grid.filteredData).some(rID => this.isRowSelected(rID)) : true;
+            this.getRowIDs(this.grid.filteredData).some(rID => this.isRowSelected(rID)) : true;
         return this.rowSelection.size > 0 && filteredData && !this.areAllRowSelected();
     }
 
     public emitRowSelectionEvent(newSelection, added, removed, event?): boolean {
         const currSelection = this.getSelectedRows();
         if (this.areEquelCollections(currSelection, newSelection)) { return; }
-        const copy = Array.from(newSelection);
-        const args = {oldSelection: currSelection, newSelection: newSelection,
-            added: added, removed: removed, event: event, cancel: false};
-        this.grid.onRowSelectionChange.emit(args);
-        if (args.cancel && event.checkbox) { event.checkbox.checked = !event.checkbox.checked; }
-        if (!this.areEquelCollections(copy, newSelection)) {
-            this.selectRowsWithNoEvent(newSelection, true);
-            return true;
-        }
-        return args.cancel;
-    }
 
+        const args = {
+            oldSelection: currSelection, newSelection: newSelection,
+            added: added, removed: removed, event: event, cancel: false
+        };
+        this.grid.onRowSelectionChange.emit(args);
+        if (args.cancel) {
+            if (args.event && args.event.checkbox) { event.checkbox.checked = !event.checkbox.checked; }
+            return;
+        }
+        this.selectRowsWithNoEvent(args.newSelection, true);
+    }
 
     public getRowDataByID(rowID) {
         if (!this.grid.primaryKey) { return rowID; }
@@ -670,22 +657,17 @@ export class IgxGridSelectionService {
     }
 
     public get allData() {
-        const gridAPI = this.grid.gridAPI;
         const allData = this.isFilteringApplied() || this.grid.sortingExpressions.length ?
-        this.grid.filteredSortedData : gridAPI.get_all_data();
-        return allData.filter(rData => !this.isRowDeleted(gridAPI.get_row_id(rData)));
+            this.grid.filteredSortedData : this.grid.gridAPI.get_all_data();
+        return allData.filter(rData => !this.isRowDeleted(this.grid.gridAPI.get_row_id(rData)));
     }
 
     private areEquelCollections(first, second) {
-        return  first.length !== second.length || new Set(first.concat(second)).size !== first.length ? false : true;
+        return first.length !== second.length || new Set(first.concat(second)).size !== first.length ? false : true;
     }
 
     private isFilteringApplied() {
         return this.grid.filteringExpressionsTree.filteringOperands.length > 0;
-    }
-
-    private hasData() {
-        return this.grid.isDefined(this.grid.data) && this.allData.length > 0;
     }
 
     private isRowDeleted(rowID) {
