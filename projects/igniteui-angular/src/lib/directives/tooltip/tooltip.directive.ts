@@ -351,7 +351,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             return;
         }
 
-        event.preventDefault();
         this.showTooltip();
     }
 
