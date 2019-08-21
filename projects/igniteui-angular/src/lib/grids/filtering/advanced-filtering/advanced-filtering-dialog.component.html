@@ -7,16 +7,16 @@
          }">
     <header class="igx-excel-filter__secondary-header" igxDragHandle  style="user-select: none;">
         <h4 class="igx-typography__h6" style="pointer-events: none;">
-            Adv. Filtering
+            {{ grid.resourceStrings.igx_grid_advanced_filter_title }}
         </h4>
         <div style="display: flex; margin-left: auto; pointer-events: none;">
             <div style="display: flex; margin-right: 25px">
                 <div style="width: 24px; height: 24px; background: lightblue; margin-right: 8px; border-radius: 4px;"></div>
-                and
+                {{ grid.resourceStrings.igx_grid_advanced_filter_and_label }}
             </div>
             <div style="display: flex; margin-right: 25px">
                 <div style="width: 24px; height: 24px; background: lightcoral; margin-right: 8px; border-radius: 4px;"></div>
-                or
+                {{ grid.resourceStrings.igx_grid_advanced_filter_or_label }}
             </div>
         </div>
     </header>
@@ -25,16 +25,16 @@
         <ng-container *ngIf="!rootGroup">
             <button igxButton="outlined" [displayDensity]="displayDensity" (click)="addAndGroup()">
                 <igx-icon fontSet="material">add</igx-icon>
-                <span>"And" Group</span>
+                <span>"{{grid.resourceStrings.igx_grid_advanced_filter_and_label}}" {{grid.resourceStrings.igx_grid_advanced_filter_group}}</span>
             </button>
             <button igxButton="outlined" [displayDensity]="displayDensity" (click)="addOrGroup()">
                 <igx-icon fontSet="material">add</igx-icon>
-                <span>"Or" Group</span>
+                <span>"{{grid.resourceStrings.igx_grid_advanced_filter_or_label}}" {{grid.resourceStrings.igx_grid_advanced_filter_group}}</span>
             </button>
 
             <div style="display: flex; width: 100%;">
                 <span style="display: flex; margin: auto;">
-                    Start with creating a group of conditions linked with "And" or "Or"
+                    {{grid.resourceStrings.igx_grid_advanced_filter_initialtext}}
                 </span>                
             </div>
         </ng-container>
@@ -45,21 +45,21 @@
                     [disabled]="editedExpression"
                     (click)="addCondition(expressionItem, afterExpression)">
                 <igx-icon fontSet="material">add</igx-icon>
-                <span>Condition</span>
+                <span>{{grid.resourceStrings.igx_grid_advanced_filter_addcondition}}</span>
             </button>
             <button igxButton="outlined"
                     [displayDensity]="displayDensity"
                     [disabled]="editedExpression"
                     (click)="addAndGroup(expressionItem, afterExpression)">
                 <igx-icon fontSet="material">add</igx-icon>
-                <span>"And" Group</span>
+                <span>"{{grid.resourceStrings.igx_grid_advanced_filter_and_label}}" {{grid.resourceStrings.igx_grid_advanced_filter_group}}</span>
             </button>
             <button igxButton="outlined"
                     [displayDensity]="displayDensity"
                     [disabled]="editedExpression"
                     (click)="addOrGroup(expressionItem, afterExpression)">
                 <igx-icon fontSet="material">add</igx-icon>
-                <span>"Or" Group</span>
+                <span>"{{grid.resourceStrings.igx_grid_advanced_filter_or_label}}" {{grid.resourceStrings.igx_grid_advanced_filter_group}}</span>
             </button>
         </ng-template>
 
@@ -193,7 +193,7 @@
                                 [displayDensity]="displayDensity"
                                 [disabled]="editedExpression || expressionItem.children.length < 2"
                                 (click)="endGroup(expressionItem)">
-                            <span>End Group</span>
+                            <span>"{{grid.resourceStrings.igx_grid_advanced_filter_end_label}}" {{grid.resourceStrings.igx_grid_advanced_filter_group}}</span>
                         </button>
                     </div>
                 </div>
@@ -214,21 +214,21 @@
                 </igx-buttongroup>
 
                 <button igxButton="outlined" [displayDensity]="displayDensity" [disabled]="!contextualGroup.parent" (click)="ungroup()">
-                    Ungroup
+                    {{grid.resourceStrings.igx_grid_advanced_filter_ungroup}}
                 </button>
                 <button igxButton="outlined" [displayDensity]="displayDensity" (click)="deleteGroup()">
-                    Delete
+                    {{grid.resourceStrings.igx_grid_advanced_filter_delete}}
                 </button>
             </ng-container>
             <ng-container *ngIf="!contextualGroup">
                 <button igxButton="outlined" [displayDensity]="displayDensity" (click)="createAndGroup()">
-                    Create "And" Group
+                    {{grid.resourceStrings.igx_grid_advanced_filter_create}} "{{grid.resourceStrings.igx_grid_advanced_filter_and_label}}" {{grid.resourceStrings.igx_grid_advanced_filter_group}}
                 </button>
                 <button igxButton="outlined" [displayDensity]="displayDensity" (click)="createOrGroup()">
-                    Create "Or" Group
+                    {{grid.resourceStrings.igx_grid_advanced_filter_create}} "{{grid.resourceStrings.igx_grid_advanced_filter_or_label}}" {{grid.resourceStrings.igx_grid_advanced_filter_group}}
                 </button>
                 <button igxButton="outlined" [displayDensity]="displayDensity" (click)="deleteFilters()">
-                    Delete Filters
+                    {{grid.resourceStrings.igx_grid_advanced_filter_deletefilters}}
                 </button>
             </ng-container>
         </div>
