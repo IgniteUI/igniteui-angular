@@ -684,6 +684,54 @@ describe('General igxDrag/igxDrop', () => {
         expect(fix.componentInstance.container.nativeElement.children.length).toEqual(2);
         expect(dropArea.element.nativeElement.children.length).toEqual(1);
     }));
+
+    it('should allow positioning the ghost with setRelativeOffset method.', (async() => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+        firstDrag.ghostOffsetX = 0;
+        firstDrag.ghostOffsetY = 0;
+
+        // Step 1.
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait(50);
+
+        // Step 2.
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait(100);
+
+        // Step 3.
+        firstDrag.setRelativeOffset(startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait(100);
+
+        // We compare the base position and the new position + how much the mouse has moved.
+        // We have moved 20px but because the element has 10px margin we have to add it too to the position check.
+        expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(startingX + 30);
+        expect(firstDrag.ghostElement.getBoundingClientRect().top).toEqual(startingY + 30);
+    }));
+
+    it('should allow positioning the drag element when there is no ghost using setRelativeOffset method.', (async() => {
+        fix.componentInstance.dragElems.first.ghost = false;
+        fix.detectChanges();
+
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+
+        firstDrag.setRelativeOffset(startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait(100);
+
+        // We compare the base position and the new position + how much the mouse has moved.
+        // We have moved 20px but because the element has 10px margin we have to add it too to the position check.
+        expect(firstDrag.element.nativeElement.getBoundingClientRect().left).toEqual(startingX + 30);
+        expect(firstDrag.element.nativeElement.getBoundingClientRect().top).toEqual(startingY + 30);
+    }));
 });
 
 describe('Linked igxDrag/igxDrop ', () => {
