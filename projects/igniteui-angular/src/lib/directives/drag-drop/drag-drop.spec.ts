@@ -1,7 +1,7 @@
 import { Component, ViewChildren, QueryList, ViewChild, ElementRef, TemplateRef } from '@angular/core';
 import { async, TestBed, ComponentFixture } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { IgxDragDropModule, IgxDragDirective, IgxDropDirective, IgxDragLocation, IgxDropEventArgs } from './drag-drop.directive';
+import { IgxDragDropModule, IgxDragDirective, IgxDropDirective, IgxDragLocation, IDropDroppedEventArgs } from './drag-drop.directive';
 import { UIInteractions, wait} from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxInsertDropStrategy, IgxAppendDropStrategy, IgxPrependDropStrategy } from './drag-drop.strategy';
@@ -1037,7 +1037,7 @@ describe('Linked igxDrag/igxDrop ', () => {
         spyOn(dropArea.enter, 'emit');
         spyOn(dropArea.leave, 'emit');
 
-        fix.componentInstance.dropArea.dropped.pipe(first()).subscribe(((e: IgxDropEventArgs) => e.cancel = true));
+        fix.componentInstance.dropArea.dropped.pipe(first()).subscribe(((e: IDropDroppedEventArgs) => e.cancel = true));
 
         UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
         fix.detectChanges();
