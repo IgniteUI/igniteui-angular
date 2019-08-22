@@ -20,7 +20,8 @@ import {
     AfterContentInit,
     Optional,
     OnInit,
-    OnDestroy
+    OnDestroy,
+    DoCheck
 } from '@angular/core';
 import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
@@ -64,7 +65,7 @@ export interface HierarchicalStateRecord {
     ]
 })
 export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseComponent
-    implements IGridDataBindable, AfterViewInit, AfterContentInit, OnInit, OnDestroy {
+    implements IGridDataBindable, AfterViewInit, AfterContentInit, OnInit, OnDestroy, DoCheck {
 
     /**
      * Sets the value of the `id` attribute. If not provided it will be automatically generated.
@@ -97,9 +98,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         this.cdr.markForCheck();
         if (this.parent && (this.height === null || this.height.indexOf('%') !== -1)) {
             // If the height will change based on how much data there is, recalculate sizes in igxForOf.
-            requestAnimationFrame(() => {
-                this.updateParentSizes();
-            });
+            this.notifyChanges(true);
         }
     }
 
@@ -135,9 +134,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     public set hierarchicalState(val) {
         this._hierarchicalState = val;
         if (this.parent) {
-            requestAnimationFrame(() => {
-                this.updateParentSizes();
-            });
+            this.notifyChanges(true);
         }
     }
 
@@ -329,6 +326,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         super.ngOnInit();
     }
 
+    public ngDoCheck() {
+        if (this._cdrRequestRepaint && !this._init) {
+            this.updateSizes();
+        }
+        super.ngDoCheck();
+    }
+
     /**
      * @hidden
      */
@@ -358,19 +362,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         if (this.parent) {
             this._displayDensity = this.rootGrid._displayDensity;
             this.rootGrid.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
-                requestAnimationFrame(() => {
-                    this._displayDensity = this.rootGrid._displayDensity;
-                    if (document.body.contains(this.nativeElement)) {
-                        this.reflow();
-                    } else {
-                        this.updateOnRender = true;
-                    }
-                });
-            });
-            this.parent.verticalScrollContainer.onDataChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
-                requestAnimationFrame(() => {
-                        this.updateSizes();
-                });
+                this._displayDensity = this.rootGrid._displayDensity;
+                this.notifyChanges(true);
+                this.cdr.markForCheck();
             });
             this.childLayoutKeys = this.parentIsland.children.map((item) => item.key);
         }
@@ -381,13 +375,20 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     }
 
     private updateSizes() {
-        if (!this._destroyed && document.body.contains(this.nativeElement) && this.isPercentWidth) {
+        if (document.body.contains(this.nativeElement) && this.isPercentWidth) {
             this.reflow();
 
             this.hgridAPI.getChildGrids(false).forEach((grid) => {
                 grid.updateSizes();
             });
         }
+    }
+
+    protected _shouldAutoSize(renderedHeight) {
+        if (this.isPercentHeight && this.parent) {
+            return true;
+        }
+        return super._shouldAutoSize(renderedHeight);
     }
 
     public get outletDirective() {
@@ -675,7 +676,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
                 const relatedGrid = this.hgridAPI.getChildGridByID(layout.key, args.context.$implicit.rowID);
                 if (relatedGrid && relatedGrid.updateOnRender) {
                     // Detect changes if `expandChildren` has changed when the grid wasn't visible. This is for performance reasons.
-                    relatedGrid.reflow();
+                    relatedGrid.notifyChanges(true);
                     relatedGrid.updateOnRender = false;
                 }
             });
@@ -683,7 +684,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             const childGrids = this.getChildGrids(true);
             childGrids.forEach((grid) => {
                 if (grid.isPercentWidth) {
-                    grid.reflow();
+                    grid.notifyChanges(true);
                 }
                 grid.updateScrollPosition();
             });
@@ -716,6 +717,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         });
     }
 
+
     private hg_verticalScrollHandler(event) {
         this.scrollTop = event.target.scrollTop;
     }
@@ -726,24 +728,5 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
 
     private hg_horizontalScrollHandler(event) {
         this.scrollLeft = event.target.scrollLeft;
-    }
-
-    private updateParentSizes() {
-        let currGrid = this.parent;
-        while (currGrid) {
-            const hadScrollbar = currGrid.hasVerticalSroll();
-            const virt = currGrid.verticalScrollContainer;
-            virt.recalcUpdateSizes();
-            const offset = parseInt(virt.dc.instance._viewContainer.element.nativeElement.style.top, 10);
-            const scr = virt.getVerticalScroll();
-            scr.scrollTop = virt.getScrollForIndex(virt.state.startIndex) - offset;
-
-            if (hadScrollbar !== currGrid.hasVerticalSroll()) {
-                // If after recalculations the grid should show vertical scrollbar it should also reflow.
-                currGrid.reflow();
-            }
-
-            currGrid = currGrid.parent;
-        }
     }
 }

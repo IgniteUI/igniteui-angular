@@ -19,10 +19,9 @@ import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
-
 const DEBOUNCETIME = 30;
 
-describe('IgxGrid - Row Selection', () => {
+describe('IgxGrid - Row Selection #grid', () => {
     configureTestSuite();
 
     beforeEach(async(() => {

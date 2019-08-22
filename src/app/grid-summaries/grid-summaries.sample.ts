@@ -9,6 +9,7 @@ import {
 
 class MySummary extends IgxNumberSummaryOperand {
 
+
     constructor() {
         super();
     }
@@ -35,6 +36,16 @@ export class GridSummaryComponent implements OnInit {
     public grid1: IgxGridComponent;
 
     mySummary = MySummary;
+    w = '1200px';
+    h = '500px';
+    cw = '200px';
+    public groupable = false;
+    public filterable = true;
+    public disableHiding = false;
+    public disablePinning = false;
+    public hasSummaryUnit = true;
+    public hasHidden = false;
+
 
     data = [{
         __metadata: {
@@ -358,8 +369,329 @@ export class GridSummaryComponent implements OnInit {
         OrderDate: new Date('2005-03-17')
     }
     ];
-    public hasSummaryUnit = true;
-    public hasHidden = false;
+
+    data2 = [{
+        __metadata: {
+            uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(1)',
+            type: 'NorthwindModel.Product'
+        },
+        ProductID: 91,
+        ProductName: 'Chai',
+        SupplierID: 1,
+        CategoryID: 1,
+        QuantityPerUnit: '10 boxes x 20 bags',
+        UnitPrice: '18.0000',
+        UnitsInStock: 39,
+        UnitsOnOrder: 0,
+        ReorderLevel: 10,
+        Discontinued: false,
+        OrderDate: new Date('2012-02-12')
+    }, {
+        __metadata: {
+            uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(2)',
+            type: 'NorthwindModel.Product'
+        },
+        ProductID: 92,
+        ProductName: 'Chang',
+        SupplierID: 1,
+        CategoryID: 1,
+        QuantityPerUnit: '24 - 12 oz bottles',
+        UnitPrice: '19.0000',
+        UnitsInStock: 17,
+        UnitsOnOrder: 40,
+        ReorderLevel: 25,
+        Discontinued: false,
+        OrderDate: new Date('2003-03-17')
+    }, {
+        __metadata: {
+            uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(3)',
+            type: 'NorthwindModel.Product'
+        },
+        ProductID: 93,
+        ProductName: 'Aniseed Syrup',
+        SupplierID: 1,
+        CategoryID: 2,
+        QuantityPerUnit: '12 - 550 ml bottles',
+        UnitPrice: '10.0000',
+        UnitsInStock: 13,
+        UnitsOnOrder: 70,
+        ReorderLevel: 25,
+        Discontinued: false,
+        OrderDate: new Date('2006-03-17')
+    }, {
+        __metadata: {
+            uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(4)',
+            type: 'NorthwindModel.Product'
+        },
+        ProductID: 94,
+        ProductName: 'Chef Antons Cajun Seasoning',
+        SupplierID: 2,
+        CategoryID: 2,
+        QuantityPerUnit: '48 - 6 oz jars',
+        UnitPrice: '22.0000',
+        UnitsInStock: 53,
+        UnitsOnOrder: 0,
+        ReorderLevel: 0,
+        Discontinued: false,
+        OrderDate: new Date('2020-03-17')
+    }, {
+        __metadata: {
+            uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(5)',
+            type: 'NorthwindModel.Product'
+        },
+        ProductID: 95,
+        ProductName: 'Chef Antons Gumbo Mix',
+        SupplierID: 2,
+        CategoryID: 2,
+        QuantityPerUnit: '36 boxes',
+        UnitPrice: '21.3500',
+        UnitsInStock: 0,
+        UnitsOnOrder: 0,
+        ReorderLevel: 0,
+        Discontinued: true,
+        OrderDate: new Date('2011-11-11')
+    }, {
+        __metadata: {
+            uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(6)',
+            type: 'NorthwindModel.Product'
+        },
+        ProductID: 96,
+        ProductName: 'Grandmas Boysenberry Spread',
+        SupplierID: 3,
+        CategoryID: 2,
+        QuantityPerUnit: '12 - 8 oz jars',
+        UnitPrice: '25.0000',
+        UnitsInStock: 0,
+        UnitsOnOrder: 0,
+        ReorderLevel: 25,
+        Discontinued: false,
+        OrderDate: new Date('2017-12-17')
+    }, {
+        __metadata: {
+            uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(7)',
+            type: 'NorthwindModel.Product'
+        },
+        ProductID: 97,
+        ProductName: 'Uncle Bobs Organic Dried Pears',
+        SupplierID: 3,
+        CategoryID: 7,
+        QuantityPerUnit: '12 - 1 lb pkgs.',
+        UnitPrice: '30.0000',
+        UnitsInStock: 150,
+        UnitsOnOrder: 0,
+        ReorderLevel: 10,
+        Discontinued: false,
+        OrderDate: new Date('2016-07-17')
+    }, {
+        __metadata: {
+            uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(8)',
+            type: 'NorthwindModel.Product'
+        },
+        ProductID: 98,
+        ProductName: 'Northwoods Cranberry Sauce',
+        SupplierID: 3,
+        CategoryID: 2,
+        QuantityPerUnit: '12 - 12 oz jars',
+        UnitPrice: '40.0000',
+        UnitsInStock: 6,
+        UnitsOnOrder: 0,
+        ReorderLevel: 0,
+        Discontinued: false,
+        OrderDate: new Date('2025-01-17')
+    }, {
+        __metadata: {
+            uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(9)',
+            type: 'NorthwindModel.Product'
+        },
+        ProductID: 99,
+        ProductName: 'Mishi Kobe Niku',
+        SupplierID: 4,
+        CategoryID: 6,
+        QuantityPerUnit: '18 - 500 g pkgs.',
+        UnitPrice: '$97.0000',
+        UnitsInStock: 29,
+        UnitsOnOrder: 0,
+        ReorderLevel: 0,
+        Discontinued: true,
+        OrderDate: new Date('2010-02-17')
+    }, {
+        __metadata: {
+            uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(10)',
+            type: 'NorthwindModel.Product'
+        },
+        ProductID: 910,
+        ProductName: 'Ikura',
+        SupplierID: 4,
+        CategoryID: 8,
+        QuantityPerUnit: '12 - 200 ml jars',
+        UnitPrice: '31.0000',
+        UnitsInStock: 31,
+        UnitsOnOrder: 0,
+        ReorderLevel: 0,
+        Discontinued: false,
+        OrderDate: new Date('2008-05-17')
+    }, {
+        __metadata: {
+            uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(11)',
+            type: 'NorthwindModel.Product'
+        },
+        ProductID: 911,
+        ProductName: 'Queso Cabrales',
+        SupplierID: 5,
+        CategoryID: 4,
+        QuantityPerUnit: '1 kg pkg.',
+        UnitPrice: '21.0000',
+        UnitsInStock: 22,
+        UnitsOnOrder: 30,
+        ReorderLevel: 30,
+        Discontinued: false,
+        OrderDate: new Date('2009-01-17')
+    }, {
+        __metadata: {
+            uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(12)',
+            type: 'NorthwindModel.Product'
+        },
+        ProductID: 912,
+        ProductName: 'Queso Manchego La Pastora',
+        SupplierID: 5,
+        CategoryID: 4,
+        QuantityPerUnit: '10 - 500 g pkgs.',
+        UnitPrice: '38.0000',
+        UnitsInStock: 86,
+        UnitsOnOrder: 0,
+        ReorderLevel: 0,
+        Discontinued: false,
+        OrderDate: new Date('2015-11-17')
+    }, {
+        __metadata: {
+            uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(13)',
+            type: 'NorthwindModel.Product'
+        },
+        ProductID: 913,
+        ProductName: 'Konbu',
+        SupplierID: 6,
+        CategoryID: 8,
+        QuantityPerUnit: '2 kg box',
+        UnitPrice: '6.0000',
+        UnitsInStock: 24,
+        UnitsOnOrder: 0,
+        ReorderLevel: 5,
+        Discontinued: false,
+        OrderDate: new Date('2025-03-17')
+    }, {
+        __metadata: {
+            uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(14)',
+            type: 'NorthwindModel.Product'
+        },
+        ProductID: 914,
+        ProductName: 'Tofu',
+        SupplierID: 6,
+        CategoryID: 7,
+        QuantityPerUnit: '40 - 100 g pkgs.',
+        UnitPrice: '23.2500',
+        UnitsInStock: 35,
+        UnitsOnOrder: 0,
+        ReorderLevel: 0,
+        Discontinued: false,
+        OrderDate: new Date('2019-06-17')
+    }, {
+        __metadata: {
+            uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(15)',
+            type: 'NorthwindModel.Product'
+        },
+        ProductID: 915,
+        ProductName: 'Genen Shouyu',
+        SupplierID: 6,
+        CategoryID: 2,
+        QuantityPerUnit: '24 - 250 ml bottles',
+        UnitPrice: '15.5000',
+        UnitsInStock: 39,
+        UnitsOnOrder: 0,
+        ReorderLevel: 5,
+        Discontinued: false,
+        OrderDate: new Date('1995-03-17')
+    }, {
+        __metadata: {
+            uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(16)',
+            type: 'NorthwindModel.Product'
+        },
+        ProductID: 916,
+        ProductName: 'Pavlova',
+        SupplierID: 7,
+        CategoryID: 3,
+        QuantityPerUnit: '32 - 500 g boxes',
+        UnitPrice: '17.4500',
+        UnitsInStock: 29,
+        UnitsOnOrder: 0,
+        ReorderLevel: 10,
+        Discontinued: false,
+        OrderDate: new Date('2018-03-28')
+    }, {
+        __metadata: {
+            uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(17)',
+            type: 'NorthwindModel.Product'
+        },
+        ProductID: 917,
+        ProductName: 'Alice Mutton',
+        SupplierID: 7,
+        CategoryID: 6,
+        QuantityPerUnit: '20 - 1 kg tins',
+        UnitPrice: '39.0000',
+        UnitsInStock: 0,
+        UnitsOnOrder: 0,
+        ReorderLevel: 0,
+        Discontinued: true,
+        OrderDate: new Date('2015-08-17')
+    }, {
+        __metadata: {
+            uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(18)',
+            type: 'NorthwindModel.Product'
+        },
+        ProductID: 918,
+        ProductName: 'Carnarvon Tigers',
+        SupplierID: 7,
+        CategoryID: 8,
+        QuantityPerUnit: '16 kg pkg.',
+        UnitPrice: '62.5000',
+        UnitsInStock: 42,
+        UnitsOnOrder: 0,
+        ReorderLevel: 0,
+        Discontinued: false,
+        OrderDate: new Date('2005-09-27')
+    }, {
+        __metadata: {
+            uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(19)',
+            type: 'NorthwindModel.Product'
+        },
+        ProductID: 919,
+        ProductName: 'Teatime Chocolate Biscuits',
+        SupplierID: 8,
+        CategoryID: 3,
+        QuantityPerUnit: '',
+        UnitPrice: '$9.2000',
+        UnitsInStock: 25,
+        UnitsOnOrder: 0,
+        ReorderLevel: 5,
+        Discontinued: false,
+        OrderDate: new Date('2001-03-17')
+    }, {
+        __metadata: {
+            uri: 'http://services.odata.org/Northwind/Northwind.svc/Products(20)',
+            type: 'NorthwindModel.Product'
+        },
+        ProductID: 920,
+        ProductName: 'Sir Rodneys Marmalade',
+        SupplierID: 8,
+        CategoryID: 3,
+        QuantityPerUnit: undefined,
+        UnitPrice: undefined,
+        UnitsInStock: 40,
+        UnitsOnOrder: 0,
+        ReorderLevel: 0,
+        Discontinued: false,
+        OrderDate: new Date('2005-03-17')
+    }
+    ];
 
     constructor() {
         for (let i = 0; i < 10; i++) {
@@ -374,7 +706,7 @@ export class GridSummaryComponent implements OnInit {
     ngOnInit() { }
 
     updateData() {
-        const d = [].concat(this.data).concat(this.data.slice(0, 15));
+        const d = [].concat(this.data).concat(this.data2);
         this.data = d;
     }
 
@@ -467,6 +799,7 @@ export class GridSummaryComponent implements OnInit {
             this.grid1.getColumnByName('UnitsInStock').hidden = true;
         }
     }
+
     public scrScrollTo(index) {
         this.grid1.verticalScrollContainer.scrollTo(parseInt(index, 10));
     }

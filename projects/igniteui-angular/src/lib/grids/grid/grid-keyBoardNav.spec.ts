@@ -25,7 +25,7 @@ import {
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
 
-describe('IgxGrid - Keyboard navigation', () => {
+describe('IgxGrid - Keyboard navigation #grid', () => {
     configureTestSuite();
 
     beforeEach(async(() => {
@@ -371,6 +371,7 @@ describe('IgxGrid - Keyboard navigation', () => {
 
         grid.getColumnByName('CompanyName').pinned = true;
         grid.getColumnByName('ContactName').pinned = true;
+        fix.detectChanges();
 
         const cells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
         let cell = cells[0];
@@ -463,6 +464,7 @@ describe('IgxGrid - Keyboard navigation', () => {
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             setupGridScrollDetection(fix, grid);
+            fix.detectChanges();
         }));
 
         it('should allow navigating down', async () => {
@@ -501,6 +503,7 @@ describe('IgxGrid - Keyboard navigation', () => {
                 cols.push({ field: 'col' + i });
             }
             fix.componentInstance.columns = cols;
+            fix.detectChanges();
             fix.componentInstance.data = fix.componentInstance.generateData(1000);
             fix.detectChanges();
 
@@ -527,6 +530,7 @@ describe('IgxGrid - Keyboard navigation', () => {
                 cols.push({ field: 'col' + i });
             }
             fix.componentInstance.columns = cols;
+            fix.detectChanges();
             fix.componentInstance.data = fix.componentInstance.generateData(1000);
             fix.detectChanges();
 
@@ -727,9 +731,10 @@ describe('IgxGrid - Keyboard navigation', () => {
 
         it('should scroll into view the not fully visible cells when navigating left', async () => {
             fix.componentInstance.columns = fix.componentInstance.generateCols(100);
-            fix.componentInstance.data = fix.componentInstance.generateData(1000);
-
             fix.detectChanges();
+            fix.componentInstance.data = fix.componentInstance.generateData(1000);
+            fix.detectChanges();
+
             const rows = fix.nativeElement.querySelectorAll('igx-grid-row');
             const rowDisplayContainer = rows[1].querySelector('igx-display-container');
             fix.componentInstance.scrollLeft(50);
@@ -851,6 +856,7 @@ describe('IgxGrid - Keyboard navigation', () => {
 
         it('Custom KB navigation: onGridKeydown should be emitted', async () => {
             fix.componentInstance.columns = fix.componentInstance.generateCols(25);
+            fix.detectChanges();
             fix.componentInstance.data = fix.componentInstance.generateData(25);
             fix.detectChanges();
             const gridKeydown = spyOn<any>(grid.onGridKeydown, 'emit').and.callThrough();
@@ -914,6 +920,7 @@ describe('IgxGrid - Keyboard navigation', () => {
         let grid: IgxGridComponent;
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(DefaultGroupBYGridComponent);
+            fix.detectChanges();
             grid = fix.componentInstance.grid;
             fix.componentInstance.width = '600px';
             fix.componentInstance.height = '600px';
@@ -964,8 +971,8 @@ describe('IgxGrid - Keyboard navigation', () => {
             expect(gRow.expanded).toBe(true);
         }));
 
-        it(`focus should stays over the group row when expand/collapse
-        with ArrowRight/ArrowLeft keys and grid is scrolled to bottom`, (async () => {
+        it(`focus should stay over the group row when expanding/collapsing
+        with keyboard and the grid is scrolled to the bottom`, (async () => {
                 grid.groupBy({
                     fieldName: 'ProductName', dir: SortingDirection.Desc,
                     ignoreCase: false, strategy: DefaultSortingStrategy.instance()
@@ -980,13 +987,11 @@ describe('IgxGrid - Keyboard navigation', () => {
                 let lastGroupRow = groupRows[groupRows.length - 1];
                 const lastGroupRowIndex = parseInt(lastGroupRow.dataset.rowindex, 10);
                 lastGroupRow.dispatchEvent(new FocusEvent('focus'));
-                await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
                 expect(lastGroupRow.classList.contains('igx-grid__group-row--active')).toBeTruthy();
                 lastGroupRow.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', altKey: true }));
 
-                await wait(100);
                 fix.detectChanges();
                 lastGroupRow = grid.nativeElement.querySelector(`igx-grid-groupby-row[data-rowindex="${lastGroupRowIndex}"]`);
                 expect(lastGroupRow).toBeDefined();
