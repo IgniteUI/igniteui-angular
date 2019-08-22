@@ -1,26 +1,17 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './index';
-import { Component, ViewChild } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { IgxRowIslandComponent } from './row-island.component';
-import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
-import { IgxGridGroupByRowComponent, IgxColumnMovingDragDirective, IgxColumnComponent, GridSelectionMode } from '../grid';
+import { wait } from '../../test-utils/ui-interactions.spec';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
-import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { take } from 'rxjs/operators';
-import { IgxHierarchicalTransactionServiceFactory } from './hierarchical-grid-base.component';
 import { IgxIconModule } from '../../icon';
 import { IgxHierarchicalGridTestBaseComponent,
         IgxHierarchicalGridRowSelectionComponent } from '../../test-utils/hierarhical-grid-components.spec';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
 
-describe('IgxHierarchicalGrid selection', () => {
+describe('IgxHierarchicalGrid selection #hGrid', () => {
     configureTestSuite();
     let fix;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -108,7 +99,7 @@ describe('IgxHierarchicalGrid selection', () => {
             }
         });
 
-        it('should retain selected row when filtering', fakeAsync(() => {
+        it('should retain selected row when filtering', () => {
             const firstRow = hierarchicalGrid.getRowByIndex(0);
             HelperUtils.clickRowCheckbox(firstRow);
             fix.detectChanges();
@@ -118,7 +109,7 @@ describe('IgxHierarchicalGrid selection', () => {
 
             HelperUtils.verifyRowSelected( hierarchicalGrid.getRowByIndex(0));
             HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
-        }));
+        });
 
         it('should have correct header checkbox state when selecting rows', () => {
             const firstRow = hierarchicalGrid.getRowByIndex(0);
