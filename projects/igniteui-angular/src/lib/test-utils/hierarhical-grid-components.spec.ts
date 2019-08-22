@@ -89,3 +89,61 @@ export class IgxHierarchicalGridRowSelectionComponent {
         this.data = SampleTestData.generateHGridData(40, 3);
     }
 }
+
+
+@Component({
+    template: `
+    <igx-hierarchical-grid [data]="data" [height]="'600px'" [width]="'700px'" #hGgridCustomSelectors [primaryKey]="'ID'"
+        [rowSelection]="'multiple'">
+        <igx-column field="ID" ></igx-column>
+        <igx-column field="ChildLevels"></igx-column>
+        <igx-column field="ProductName"></igx-column>
+        <igx-row-island [key]="'childData'" #rowIsland1 [primaryKey]="'ID'" [rowSelection]="'single'">
+            <igx-column field="ID"> </igx-column>
+            <igx-column field="ChildLevels"></igx-column>
+            <igx-column field="ProductName"></igx-column>
+            <igx-row-island [key]="'childData'" #rowIsland2 [primaryKey]="'ID'" [rowSelection]="'multiple'">
+                <igx-column field="ID"></igx-column>
+                <igx-column field="ChildLevels"></igx-column>
+                <igx-column field="ProductName"></igx-column>
+            </igx-row-island>
+            <ng-template igxHeadSelector let-headContext>
+                <igx-checkbox (change)="handleHeadSelectorClick($event, headContext)" [checked]="headContext.selected"></igx-checkbox>
+            </ng-template>
+            <ng-template igxRowSelector let-rowContext>
+                <igx-checkbox (change)="handleRowSelectorClick($event, rowContext)" [checked]="rowContext.selected"></igx-checkbox>
+            </ng-template>
+        </igx-row-island>
+        <ng-template igxHeadSelector let-headContext>
+            <igx-checkbox (change)="handleHeadSelectorClick($event, headContext)" [checked]="headContext.selected"></igx-checkbox>
+        </ng-template>
+        <ng-template igxRowSelector let-rowContext>
+            <igx-checkbox (change)="handleRowSelectorClick($event, rowContext)" [checked]="rowContext.selected"></igx-checkbox>
+        </ng-template>
+    </igx-hierarchical-grid>`
+})
+export class IgxHierarchicalGridCustomSelectorsComponent {
+    public data;
+
+    @ViewChild('hGgridCustomSelectors', { read: IgxHierarchicalGridComponent, static: true })
+    public hGrid: IgxHierarchicalGridComponent;
+
+    @ViewChild('rowIsland1', { read: IgxRowIslandComponent, static: true })
+    public firstRowIsland: IgxRowIslandComponent;
+
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true })
+    public secondRowIsland: IgxRowIslandComponent;
+
+    constructor() {
+         // 3 level hierarchy
+        this.data = SampleTestData.generateHGridData(40, 3);
+    }
+
+    public handleHeadSelectorClick(event, headContext) {
+        headContext.totalCount !== headContext.selectedCount ? headContext.selectAll() : headContext.deselectAll();
+    }
+
+    public handleRowSelectorClick(event, rowContext) {
+        rowContext.selected ? rowContext.deselect() : rowContext.select();
+    }
+}

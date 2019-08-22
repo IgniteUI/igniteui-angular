@@ -13,6 +13,7 @@ import { IgxFilteringOperand } from '../data-operations/filtering-condition';
 import { ExpressionUI } from '../grids/filtering/grid-filtering.service';
 import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { FilteringStrategy } from '../data-operations/filtering-strategy';
+import { IgxGridComponent } from '../grids/grid';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -1167,4 +1168,27 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
     data = SampleTestData.contactInfoDataFull();
     width = '800px';
     height = '800px';
+}
+
+@Component({
+    template: `
+        <igx-grid #gridCustomSelectors [data]="data" [autoGenerate]="true">
+            <igx-column width="100px" [field]="'ID'" [header]="'ID'"></igx-column>
+            <igx-column width="100px" [field]="'CompanyName'"></igx-column>
+            <igx-column width="100px" [field]="'ContactName'" dataType="number"></igx-column>
+            <igx-column width="100px" [field]="'ContactTitle'" dataType="boolean"></igx-column>
+            <igx-column width="100px" [field]="'Address'" dataType="date"></igx-column>
+            <ng-template igxRowSelector let-rowContext>
+                <igx-checkbox [checked]="rowContext.selected"></igx-checkbox>
+            </ng-template>
+            <ng-template igxHeadSelector let-headContext>
+                <igx-checkbox [checked]="headContext.totalCount === headContext.selectedCount"></igx-checkbox>
+            </ng-template>
+        </igx-grid>`
+})
+export class GridCustomSelectorsComponent extends BasicGridComponent {
+    data = SampleTestData.contactInfoDataFull();
+
+    @ViewChild('gridCustomSelectors', { read: IgxGridComponent, static: true })
+    public grid: IgxGridComponent;
 }

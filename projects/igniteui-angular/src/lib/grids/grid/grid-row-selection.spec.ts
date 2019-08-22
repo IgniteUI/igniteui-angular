@@ -12,13 +12,15 @@ import {
     SelectionWithScrollsComponent,
     SingleRowSelectionComponent,
     RowSelectionWithoutPrimaryKeyComponent,
-    SelectionWithTransactionsComponent
+    SelectionWithTransactionsComponent,
+    GridCustomSelectorsComponent
 } from '../../test-utils/grid-samples.spec';
 import { IgxHierarchicalGridModule } from '../hierarchical-grid/hierarchical-grid.module';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { helpers } from 'handlebars';
+import { IgxHierarchicalGridCustomSelectorsComponent } from '../../test-utils/hierarhical-grid-components.spec';
 
 const DEBOUNCETIME = 30;
 
@@ -1807,7 +1809,68 @@ describe('IgxGrid - Row Selection', () => {
             HelperUtils.verifyRowSelected(addedRow);
         });
     });
+
+    describe('Custom selectors', () => {
+        let fix;
+        let grid;
+
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(GridCustomSelectorsComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+            grid.rowSelection = GridSelectionMode.multiple;
+            fix.detectChanges();
+        }));
+
+        it('Should be able to select a row by clicking on the custom row selector', () => {
+            // TODO
+        });
+
+        it('Should be able to deselect a selected row by clicking on the custom row selector', () => {
+            // TODO
+        });
+
+        it('Should select/deselect all rows by clicking on the custom header selector', () => {
+            // TODO
+        });
+
+        it('Should have the correct properties in the custom row selector template', () => {
+            // TODO
+        });
+
+        it('Should have the correct properties in the custom row selector header template', () => {
+            // TODO
+        });
+
+        describe('Custom selectors - Hierarchical Grid', () => {
+            let fixture;
+            let hGrid;
+
+            beforeEach(fakeAsync(() => {
+                fixture = TestBed.createComponent(IgxHierarchicalGridCustomSelectorsComponent);
+                fixture.detectChanges();
+                hGrid = fixture.componentInstance.hGrid;
+                hGrid.rowSelection = GridSelectionMode.multiple;
+                fixture.detectChanges();
+            }));
+
+            /** Tests should check root and child grids */
+
+            it('Row context `select` method selects a single row', () => {
+                // TODO
+            });
+
+            it('Row context `deselect` method deselects an already selected row', () => {
+                // TODO
+            });
+
+            it('Header context `selectAll` method selects all rows', () => {
+                // TODO
+            });
+
+            it('Header context `deselectAll` method deselects all rows', () => {
+                // TODO
+            });
+        });
+    });
 });
-
-
-
