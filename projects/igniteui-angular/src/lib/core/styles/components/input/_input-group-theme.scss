@@ -218,7 +218,7 @@
     $field-size: (
         'comfortable': rem(58px),
         'cosy': rem(50px),
-        'compact': rem(42x)
+        'compact': rem(42px)
     );
 
     $hint-padding-top: rem(6px, map-get($base-scale-size, 'comfortable'));
@@ -448,7 +448,7 @@
         [igxPrefix],
         igx-suffix,
         [igxSuffix] {
-            padding: rem(16px, map-get($base-scale-size, 'cosy'));
+            padding: rem(16px, map-get($base-scale-size, 'cosy')) !important;
         }
     }
 
@@ -457,12 +457,13 @@
         [igxPrefix],
         igx-suffix,
         [igxSuffix] {
-            padding: 0 rem(16px, map-get($base-scale-size, 'compact'));
+            padding: 0 rem(16px, map-get($base-scale-size, 'compact')) !important;
         }
     }
 
 
     %form-group-bundle--border {
+        height: map-get($field-size, 'comfortable');
         padding: 0;
         border-color: --var($theme, 'idle-bottom-line-color');
         background: --var($theme, 'border-background');
@@ -480,10 +481,12 @@
     }
 
     %form-group-bundle--border-cosy {
+        height: map-get($field-size, 'cosy');
         padding: 0;
     }
 
     %form-group-bundle--border-compact {
+        height: map-get($field-size, 'compact');
         padding: 0;
     }
 
@@ -568,7 +571,22 @@
     }
 
     %form-group-bundle-main--border {
+        height: map-get($field-size, 'comfortable');
         display: flex;
+        padding: 0;
+    }
+
+    %form-group-bundle-main--border-cosy,
+    %form-group-bundle-main--border-compact{
+        padding: 0;
+    }
+
+    %form-group-bundle-main--border-cosy {
+        height: map-get($field-size, 'cosy');
+    }
+
+    %form-group-bundle-main--border-compact {
+        height: map-get($field-size, 'compact');
     }
 
     %igx-input-group__border-label-focus,
@@ -735,6 +753,15 @@
         border-color: inherit;
     }
 
+    %igx-input-group__border-label--cosy{
+        height: map-get($field-size, 'cosy');
+    }
+
+    %igx-input-group__border-label--compact{
+        height: map-get($field-size, 'compact');
+    }
+
+
     %igx-input-group__border-label-inner {
         flex: 1;
         display: flex;
@@ -746,7 +773,7 @@
 
     %igx-input-group__prefix-placeholder,
     %igx-input-group__suffix-placeholder {
-        height: map-get($field-size, 'comfortable');
+        height: 100%;
         width: rem(16px, map-get($base-scale-size, 'comfortable'));
         border: 1px solid --var($theme, 'idle-bottom-line-color');
     }
@@ -848,11 +875,11 @@
         padding-right: rem(16px, map-get($base-scale-size, 'comfortable'));
     }
 
-    %form-group-textarea--box-cosy {
-        width: calc(100% + #{rem(16px, map-get($base-scale-size, 'cosy')) * 2}); /* add the padding to the width */
-        margin: 0 -#{rem(16px, map-get($base-scale-size, 'cosy'))};
-        padding-left: rem(16px, map-get($base-scale-size, 'cosy'));
-        padding-right: rem(16px, map-get($base-scale-size, 'cosy'));
+    %form-group-textarea--border {
+        width: calc(100% + #{rem(16px, map-get($base-scale-size, 'comfortable')) * 2}); /* add the padding to the width */
+        margin: 0 -#{rem(16px, map-get($base-scale-size, 'comfortable'))};
+        padding-left: rem(16px, map-get($base-scale-size, 'comfortable'));
+        padding-right: rem(16px, map-get($base-scale-size, 'comfortable'));
     }
 
     %form-group-textarea--box-compact {
@@ -860,6 +887,27 @@
         margin: 0 -#{rem(16px, map-get($base-scale-size, 'compact'))};
         padding-left: rem(16px, map-get($base-scale-size, 'compact'));
         padding-right: rem(16px, map-get($base-scale-size, 'compact'));
+    }
+
+    %form-group-textarea--border-compact {
+        width: calc(100% + #{rem(16px, map-get($base-scale-size, 'compact')) * 2}); /* add the padding to the width */
+        margin: 0 -#{rem(16px, map-get($base-scale-size, 'compact'))};
+        padding-left: rem(16px, map-get($base-scale-size, 'compact'));
+        padding-right: rem(16px, map-get($base-scale-size, 'compact'));
+    }
+
+    %form-group-textarea--box-cosy {
+        width: calc(100% + #{rem(16px, map-get($base-scale-size, 'cosy')) * 2}); /* add the padding to the width */
+        margin: 0 -#{rem(16px, map-get($base-scale-size, 'cosy'))};
+        padding-left: rem(16px, map-get($base-scale-size, 'cosy'));
+        padding-right: rem(16px, map-get($base-scale-size, 'cosy'));
+    }
+
+    %form-group-textarea--border-cosy {
+        width: calc(100% + #{rem(16px, map-get($base-scale-size, 'cosy')) * 2}); /* add the padding to the width */
+        margin: 0 -#{rem(16px, map-get($base-scale-size, 'cosy'))};
+        padding-left: rem(16px, map-get($base-scale-size, 'cosy'));
+        padding-right: rem(16px, map-get($base-scale-size, 'cosy'));
     }
 
     %form-group-prefix,
