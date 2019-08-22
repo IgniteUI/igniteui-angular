@@ -74,13 +74,3 @@ export class BottomNavRoutingView2Component {
 export class BottomNavRoutingView3Component {
 }
 
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [BottomNavRoutingView1Component, BottomNavRoutingView2Component, BottomNavRoutingView3Component],
-    exports: [BottomNavRoutingView1Component, BottomNavRoutingView2Component, BottomNavRoutingView3Component],
-    imports: []
-})
-export class BottomNavRoutingViewsModule {
-}

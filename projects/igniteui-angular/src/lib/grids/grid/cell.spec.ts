@@ -12,7 +12,7 @@ import { HammerGesturesManager } from '../../core/touch';
 
 const DEBOUNCETIME = 30;
 
-describe('IgxGrid - Cell component', () => {
+describe('IgxGrid - Cell component #grid', () => {
     configureTestSuite();
 
     const CELL_CSS_CLASS = '.igx-grid__td';
@@ -128,7 +128,6 @@ describe('IgxGrid - Cell component', () => {
         fix.detectChanges();
 
         const cellElem = fix.debugElement.query(By.css(CELL_CSS_CLASS));
-        const firstCell = grid.getCellByColumn(0, 'index');
 
         spyOn(grid.onDoubleClick, 'emit').and.callThrough();
         cellElem.triggerEventHandler('dblclick', new Event('dblclick'));
@@ -275,6 +274,7 @@ describe('IgxGrid - Cell component', () => {
                 fixture = TestBed.createComponent(CellEditingTestComponent);
                 fixture.detectChanges();
                 grid = fixture.componentInstance.grid;
+                grid.ngAfterViewInit();
             }));
 
             it('should be able to enter edit mode on dblclick, enter and f2', () => {
@@ -569,12 +569,12 @@ describe('IgxGrid - Cell component', () => {
             let fixture;
             let grid;
             const CELL_CLASS_IN_EDIT_MODE = 'igx-grid__td--editing';
-            beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            beforeEach(() => {
                 fixture = TestBed.createComponent(CellEditingScrollTestComponent);
                 fixture.detectChanges();
-
                 grid = fixture.componentInstance.grid;
-            }));
+                grid.ngAfterViewInit();
+            });
 
             it('edit mode - leaves edit mode on blur', fakeAsync(/** height/width setter rAF */() => {
                 const rv = fixture.debugElement.query(By.css(CELL_CSS_CLASS));
@@ -609,6 +609,7 @@ describe('IgxGrid - Cell component', () => {
                 fixture.detectChanges();
 
                 grid.pinColumn('firstName');
+                fixture.detectChanges();
                 expect(cell.gridAPI.get_cell_inEditMode()).toBeNull();
                 expect(grid.pinnedColumns.length).toBe(1);
                 cell = grid.getCellByColumn(0, 'firstName');
@@ -620,6 +621,7 @@ describe('IgxGrid - Cell component', () => {
 
                 expect(cell.gridAPI.get_cell_inEditMode()).toBeDefined();
                 grid.unpinColumn('firstName');
+                fixture.detectChanges();
                 cell = grid.getCellByColumn(1, 'firstName');
                 expect(grid.pinnedColumns.length).toBe(0);
                 expect(cell.gridAPI.get_cell_inEditMode()).toBeNull();
@@ -778,7 +780,6 @@ describe('IgxGrid - Cell component', () => {
 
                 let cell = grid.getCellByColumn(1, 'birthday');
                 cell.nativeElement.dispatchEvent(new MouseEvent('dblclick'));
-                await wait();
                 fixture.detectChanges();
 
                 const domDatePicker = fixture.debugElement.query(By.css('igx-date-picker'));
@@ -786,7 +787,6 @@ describe('IgxGrid - Cell component', () => {
                 expect(iconDate).toBeDefined();
 
                 UIInteractions.clickElement(iconDate);
-                await wait(30);
                 fixture.detectChanges();
 
                 // Verify calendar is opened
@@ -860,6 +860,7 @@ describe('IgxGrid - Cell component', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
+        grid.ngAfterViewInit();
         const rows = fix.nativeElement.querySelectorAll('igx-grid-row');
         const firsCell = rows[1].querySelectorAll('igx-grid-cell')[0];
 

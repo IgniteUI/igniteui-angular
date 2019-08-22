@@ -55,6 +55,10 @@ export class GridPerformanceSampleComponent implements OnInit {
         this.grid1.markForCheck();
     }
 
+    toggleVis() {
+        this.grid1.columnList.forEach(c => c.hidden = !c.hidden);
+    }
+
     ToggleRow() {
         if (this.localData[0][1] === 0) {
             this.localData.splice(0, 1);

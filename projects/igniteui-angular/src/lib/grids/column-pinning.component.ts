@@ -1,6 +1,6 @@
 
 import { CommonModule } from '@angular/common';
-import { Directive, Component, EventEmitter, Output, NgModule, ChangeDetectorRef } from '@angular/core';
+import { Directive, Component, NgModule, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { ColumnChooserBase } from './column-chooser-base';
@@ -25,10 +25,7 @@ export class IgxColumnPinningItemDirective extends ColumnChooserItemBase {
      * ```
      */
     get pinnable() {
-        if (this.column.grid.getUnpinnedWidth(true) - this.column.width < this.column.grid.unpinnedAreaMinWidth) {
-            return false;
-        }
-        return true;
+        return this.column.pinnable;
     }
 }
 
