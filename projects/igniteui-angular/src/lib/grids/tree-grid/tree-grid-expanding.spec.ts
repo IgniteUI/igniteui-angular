@@ -15,6 +15,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { IgxGridModule } from '../grid';
+import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     configureTestSuite();
