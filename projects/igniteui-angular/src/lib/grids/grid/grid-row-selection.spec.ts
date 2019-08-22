@@ -983,7 +983,7 @@ describe('IgxGrid - Row Selection', () => {
             const firstRow = grid.getRowByIndex(0);
             const secondRow = grid.getRowByIndex(1);
             const thirdRow = grid.getRowByIndex(2);
-            const forthRow = grid.getRowByIndex(2);
+            const forthRow = grid.getRowByIndex(3);
 
             expect(grid.selectedRows()).toEqual([]);
             HelperUtils.verifyRowsArraySelected(grid.rowList.toArray(), false);
@@ -1015,7 +1015,7 @@ describe('IgxGrid - Row Selection', () => {
             HelperUtils.verifyRowsArraySelected([firstRow, secondRow, thirdRow, forthRow]);
             expect(grid.selectedRows()).toEqual([1, 2, 3, 4]);
 
-            grid.selectRows([1], false);
+            grid.selectRows([1], true);
             fix.detectChanges();
 
             HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
@@ -1373,9 +1373,10 @@ describe('IgxGrid - Row Selection', () => {
             HelperUtils.verifyRowsArraySelected(grid.rowList.toArray());
         }));
 
-        it('CRUD: Should handle the deselection on a selected row properly', () => {
+        it('CRUD: Should handle the deselection on a selected row properly', (async () => {
             let firstRow = grid.getRowByKey(1);
             grid.selectRows([1]);
+
             fix.detectChanges();
 
             HelperUtils.verifyRowSelected(firstRow);
@@ -1383,6 +1384,7 @@ describe('IgxGrid - Row Selection', () => {
 
             grid.deleteRow(1);
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
 
             expect(grid.getRowByKey(1)).toBeUndefined();
             expect(grid.selectedRows().includes(1)).toBe(false);
@@ -1397,6 +1399,7 @@ describe('IgxGrid - Row Selection', () => {
 
             grid.deleteRow(2);
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
 
             expect(grid.getRowByKey(2)).toBeUndefined();
             expect(grid.selectedRows().includes(2)).toBe(false);
@@ -1410,11 +1413,12 @@ describe('IgxGrid - Row Selection', () => {
 
             grid.deleteRow(3);
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
 
             expect(grid.getRowByKey(3)).toBeUndefined();
             expect(grid.selectedRows().includes(3)).toBe(false);
             HelperUtils.verifyHeaderRowCheckboxState(fix, true);
-        });
+        }));
 
         it('CRUD: Should handle the adding new row properly', () => {
             grid.selectAllRows();
@@ -1822,6 +1826,3 @@ describe('IgxGrid - Row Selection', () => {
         });
     });
 });
-
-
-
