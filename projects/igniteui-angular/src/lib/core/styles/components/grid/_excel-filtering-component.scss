@@ -11,6 +11,10 @@
     @include b(igx-excel-filter) {
         @extend %grid-excel-filter !optional;
 
+        @include e(loading) {
+            @extend %igx-excel-filter__loading !optional;
+        }
+
         @include e(menu) {
             @extend %grid-excel-menu !optional;
         }

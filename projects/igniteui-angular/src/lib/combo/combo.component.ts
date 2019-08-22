@@ -2,7 +2,7 @@ import { ConnectedPositioningStrategy } from './../services/overlay/position/con
 import { CommonModule } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, HostListener,
-    Input, NgModule, OnInit, OnDestroy, Output, TemplateRef, ViewChild, Optional, Inject, Injector, forwardRef
+    Input, NgModule, OnInit, OnDestroy, Output, TemplateRef, ViewChild, Optional, Inject, Injector, forwardRef, Type
 } from '@angular/core';
 import {
     IgxComboItemDirective,
@@ -14,7 +14,7 @@ import {
     IgxComboToggleIconDirective,
     IgxComboClearIconDirective
 } from './combo.directives';
-import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, CancelableEventArgs, CancelableBrowserEventArgs } from '../core/utils';
@@ -27,7 +27,7 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxDropDownModule } from '../drop-down/index';
-import { IgxInputGroupModule } from '../input-group/input-group.component';
+import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
 import { IgxComboFilterConditionPipe, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboSortingPipe } from './combo.pipes';
@@ -41,6 +41,7 @@ import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
 import { EditorProvider } from '../core/edit-provider';
 import { take } from 'rxjs/operators';
+import { IgxInputState, IgxInputDirective } from '../directives/input/input.directive';
 
 /**
  * @hidden
@@ -72,15 +73,15 @@ export enum IgxComboState {
     /**
      * Combo with initial state.
      */
-    INITIAL,
+    INITIAL = IgxInputState.INITIAL,
     /**
      * Combo with valid state.
      */
-    VALID,
+    VALID = IgxInputState.VALID,
     /**
      * Combo with invalid state.
      */
-    INVALID
+    INVALID = IgxInputState.INVALID
 }
 
 /** Event emitted when an igx-combo's selection is changing */
@@ -163,13 +164,14 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         excludePositionTarget: true
     };
     private _value = '';
+    private _valid = IgxComboState.INITIAL;
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
         protected selection: IgxSelectionAPIService,
         protected comboAPI: IgxComboAPIService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        @Optional() private injector: Injector) {
+        @Optional() private _injector: Injector) {
         super(_displayDensityOptions);
         this.comboAPI.register(this);
     }
@@ -197,6 +199,12 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     @Input()
     public overlaySettings: OverlaySettings = null;
 
+    /** @hidden @internal */
+    @ViewChild('inputGroup', { read: IgxInputGroupComponent, static: true }) public inputGroup: IgxInputGroupComponent;
+
+    /** @hidden @internal */
+    @ViewChild('comboInput', { read: IgxInputDirective, static: true }) public comboInput: IgxInputDirective;
+
     /**
      * @hidden @internal
      */
@@ -208,12 +216,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     @ViewChild('searchInput', { static: false })
     public searchInput: ElementRef<HTMLInputElement> = null;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('comboInput', { static: true })
-    public comboInput: ElementRef<HTMLInputElement> = null;
 
     /**
      * @hidden @internal
@@ -243,7 +245,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboItemDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxComboItemDirective, { read: TemplateRef, static: false })
     public itemTemplate: TemplateRef<any> = null;
 
     /**
@@ -266,7 +268,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboHeaderDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxComboHeaderDirective, { read: TemplateRef, static: false })
     public headerTemplate: TemplateRef<any> = null;
 
     /**
@@ -289,7 +291,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboFooterDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxComboFooterDirective, { read: TemplateRef, static: false })
     public footerTemplate: TemplateRef<any> = null;
 
     /**
@@ -310,7 +312,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboHeaderItemDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxComboHeaderItemDirective, { read: TemplateRef, static: false })
     public headerItemTemplate: TemplateRef<any> = null;
 
     /**
@@ -333,7 +335,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboAddItemDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxComboAddItemDirective, { read: TemplateRef, static: false })
     public addItemTemplate: TemplateRef<any> = null;
 
     /**
@@ -356,7 +358,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboEmptyDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxComboEmptyDirective, { read: TemplateRef, static: false })
     public emptyTemplate: TemplateRef<any> = null;
 
     /**
@@ -377,7 +379,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboToggleIconDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxComboToggleIconDirective, { read: TemplateRef, static: false })
     public toggleIconTemplate: TemplateRef<any> = null;
 
     /**
@@ -398,7 +400,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboClearIconDirective, { read: TemplateRef, static: true })
+    @ContentChild(IgxComboClearIconDirective, { read: TemplateRef, static: false })
     public clearIconTemplate: TemplateRef<any> = null;
 
     @ViewChild('primitive', { read: TemplateRef, static: true })
@@ -529,22 +531,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     @HostBinding('style.width')
     @Input()
     public width: string;
-
-    /**
-     * @hidden @internal
-     */
-    @HostBinding('class.igx-input-group--valid')
-    public get validClass(): boolean {
-        return this.valid === IgxComboState.VALID;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    @HostBinding('class.igx-input-group--invalid')
-    public get invalidClass(): boolean {
-        return this.valid === IgxComboState.INVALID;
-    }
 
     /**
      * @hidden @internal
@@ -832,18 +818,29 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public type = 'box';
 
     /**
-     * Gets/Sets if control is valid, when used in a form
+     * Gets if control is valid, when used in a form
      *
      * ```typescript
      * // get
      * let valid = this.combo.valid;
      * ```
+     * */
+     public get valid(): IgxComboState {
+        return this._valid;
+    }
+
+     /**
+     * Sets if control is valid, when used in a form
+     *
      * ```typescript
      * // set
      * this.combo.valid = IgxComboState.INVALID;
      * ```
     */
-    public valid: IgxComboState = IgxComboState.INITIAL;
+    public set valid(valid: IgxComboState) {
+        this._valid = valid;
+        this.comboInput.valid = IgxInputState[IgxComboState[valid]];
+    }
 
     /**
      * @hidden @internal
@@ -1245,7 +1242,16 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     protected onStatusChanged = () => {
         if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
             (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
-            this.valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
+                this.valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
+        }
+        this.manageRequiredAsterisk();
+    }
+
+    protected manageRequiredAsterisk(): void {
+        if (this.ngControl && this.ngControl.control.validator) {
+            // Run the validation with empty object to check if required is enabled.
+            const error = this.ngControl.control.validator({} as AbstractControl);
+            this.inputGroup.isRequired = error && error.required;
         }
     }
 
@@ -1256,9 +1262,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         if (this.collapsed) {
             if (this.ngControl && !this.ngControl.valid) {
                 this.valid = IgxComboState.INVALID;
-            } else {
+           } else {
                 this.valid = IgxComboState.INITIAL;
-            }
+           }
         }
     }
 
@@ -1274,7 +1280,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden @internal
      */
     public ngOnInit() {
-        this.ngControl = this.injector.get(NgControl, null);
+        this.ngControl = this._injector.get<NgControl>(NgControl as Type<NgControl>, null);
         this._overlaySettings.positionStrategy.settings.target = this.elementRef.nativeElement;
         this.selection.set(this.id, new Set());
     }
@@ -1287,6 +1293,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
         if (this.ngControl) {
             this.ngControl.statusChanges.pipe(takeUntil(this.destroy$)).subscribe(this.onStatusChanged);
+            this.manageRequiredAsterisk();
+            this.cdr.detectChanges();
         }
     }
 

@@ -1,0 +1,25 @@
+{
+    "$schema": "../../common/schema/selector.schema.json",
+    "changes": [
+        {
+            "type": "directive",
+            "selector": "igxExcelStyleSortingTemplate",
+            "replaceWith": "igxExcelStyleSorting"
+        },
+        {
+            "type": "directive",
+            "selector": "igxExcelStyleMovingTemplate",
+            "replaceWith": "igxExcelStyleMoving"
+        },
+        {
+            "type": "directive",
+            "selector": "igxExcelStyleHidingTemplate",
+            "replaceWith": "igxExcelStyleHiding"
+        },
+        {
+            "type": "directive",
+            "selector": "igxExcelStylePinningTemplate",
+            "replaceWith": "igxExcelStylePinning"
+        }
+    ]
+}

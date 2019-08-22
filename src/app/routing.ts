@@ -84,6 +84,9 @@ import { GridFilterTemplateSampleComponent } from './grid-filter-template/grid-f
 import { GridMRLConfigSampleComponent } from './grid-multi-row-layout-config/grid-mrl-config.sample';
 import { GridMRLCustomNavigationSampleComponent } from './grid-mrl-custom-navigation/grid-mrl-custom-navigation';
 import { GridClipboardSampleComponent } from './grid-clipboard/grid-clipboard.sample';
+import { GridAutoSizeSampleComponent } from './grid-auto-size/grid-auto-size.sample';
+import { GridFlexSampleComponent } from './grid-flex-layout/grid-flex.sample';
+import { GridEsfLoadOnDemandComponent } from './grid-esf-load-on-demand/grid-esf-load-on-demand.component';
 
 const appRoutes = [
     {
@@ -309,6 +312,10 @@ const appRoutes = [
         component: GridFilterTemplateSampleComponent
     },
     {
+        path: 'gridEsfLoadOnDemand',
+        component: GridEsfLoadOnDemandComponent
+    },
+    {
         path: 'gridClipboard',
         component: GridClipboardSampleComponent
     },
@@ -408,6 +415,14 @@ const appRoutes = [
     {
         path: 'gridPercentage',
         component: GridColumnPercentageWidthsSampleComponent
+    },
+    {
+        path: 'gridAutoSize',
+        component: GridAutoSizeSampleComponent
+    },
+    {
+        path: 'gridFlex',
+        component: GridFlexSampleComponent
     },
     {
         path: 'gridSearch',
