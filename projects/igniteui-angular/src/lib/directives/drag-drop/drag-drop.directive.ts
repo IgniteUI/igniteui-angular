@@ -139,8 +139,8 @@ export class IgxDragLocation {
     public pageY: number;
 
     constructor(private _pageX, private _pageY) {
-        this.pageX = parseInt(_pageX, 10);
-        this.pageY = parseInt(_pageY, 10);
+        this.pageX = parseFloat(_pageX);
+        this.pageY = parseFloat(_pageY);
     }
 }
 
@@ -539,11 +539,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     }
 
     protected get baseLeft(): number {
-        return this.element.nativeElement.getBoundingClientRect().left - this._marginLeft -  this.getWindowScrollLeft();
+        return this.element.nativeElement.getBoundingClientRect().left -  this.getWindowScrollLeft();
     }
 
     protected get baseTop(): number {
-        return this.element.nativeElement.getBoundingClientRect().top - this._marginTop - this.getWindowScrollTop();
+        return this.element.nativeElement.getBoundingClientRect().top - this.getWindowScrollTop();
     }
 
     protected get baseOriginLeft(): number {
@@ -557,8 +557,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected set ghostLeft(pageX: number) {
         requestAnimationFrame(() => {
             if (this.ghostElement) {
+                // We need to take into account marginLeft, since top style does not include margin, but pageX includes the margin.
+                const ghostMarginLeft = parseInt(document.defaultView.getComputedStyle(this.ghostElement)['margin-left'], 10);
                 // If ghost host is defined it needs to be taken into account.
-                this.ghostElement.style.left = (pageX - this._ghostHostX) + 'px';
+                this.ghostElement.style.left = (pageX - ghostMarginLeft - this._ghostHostX) + 'px';
             }
         });
     }
@@ -570,8 +572,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected set ghostTop(pageY: number) {
         requestAnimationFrame(() => {
             if (this.ghostElement) {
+                // We need to take into account marginTop, since top style does not include margin, but pageY includes the margin.
+                const ghostMarginTop = parseInt(document.defaultView.getComputedStyle(this.ghostElement)['margin-top'], 10);
                 // If ghost host is defined it needs to be taken into account.
-                this.ghostElement.style.top = (pageY - this._ghostHostY) + 'px';
+                this.ghostElement.style.top = (pageY - ghostMarginTop - this._ghostHostY) + 'px';
             }
         });
     }
@@ -595,8 +599,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      */
     public animInProgress = false;
 
-    protected _marginLeft = 0;
-    protected _marginTop = 0;
+    protected _baseMarginLeft = 0;
+    protected _baseMarginTop = 0;
     protected _baseOriginX;
     protected _baseOriginY;
     protected _baseLeft;
@@ -690,8 +694,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             });
         });
 
-        this._marginLeft = parseInt(document.defaultView.getComputedStyle(this.element.nativeElement)['margin-left'], 10);
-        this._marginTop = parseInt(document.defaultView.getComputedStyle(this.element.nativeElement)['margin-top'], 10);
+        this._baseMarginLeft = parseInt(document.defaultView.getComputedStyle(this.element.nativeElement)['margin-left'], 10);
+        this._baseMarginTop = parseInt(document.defaultView.getComputedStyle(this.element.nativeElement)['margin-top'], 10);
         this._baseOriginX = this.baseLeft;
         this._baseOriginY = this.baseTop;
         this._ghostStartX = this.baseLeft;
@@ -718,6 +722,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @param newLocation New location that should be applied. It is advised to get new location using getBoundingClientRects() + scroll.
      */
     public setLocation(newLocation: IgxDragLocation) {
+        // We do not subtract marginLeft and marginTop here because here we calculate deltas.
         if (this.ghost && this.ghostElement) {
             const offsetHostX = this.ghostHost ? this.ghostHostOffsetLeft(this.ghostHost) : 0;
             const offsetHostY = this.ghostHost ? this.ghostHostOffsetTop(this.ghostHost) : 0;
@@ -757,6 +762,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         }
 
         this.animInProgress = true;
+        // Use setTimeout because we need to be sure that the element is positioned first correctly if there is start location.
         setTimeout(() => {
             if (this.ghost) {
                 this.ghostElement.style.transitionProperty = 'top, left';
@@ -806,6 +812,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         }
 
         this.animInProgress = true;
+        // Use setTimeout because we need to be sure that the element is positioned first correctly if there is start location.
         setTimeout(() => {
             const movedElem = this.ghost ? this.ghostElement : this.element.nativeElement;
             movedElem.style.transitionProperty = this.ghost && this.ghostElement ? 'left, top' : 'transform';
@@ -816,13 +823,13 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             movedElem.style.transitionDelay = customAnimArgs && customAnimArgs.delay ? customAnimArgs.delay + 's' : '';
 
             if (target instanceof IgxDragLocation) {
-                this.setLocation(new IgxDragLocation (target.pageX, target.pageY ));
+                this.setLocation(new IgxDragLocation (target.pageX, target.pageY));
             } else {
                 const targetRects = target.nativeElement.getBoundingClientRect();
-                const marginLeft = parseInt(document.defaultView.getComputedStyle(target.nativeElement)['margin-left'], 10);
-                const marginTop = parseInt(document.defaultView.getComputedStyle(target.nativeElement)['margin-top'], 10);
-                this.setLocation(new IgxDragLocation(targetRects.left - marginLeft -  this.getWindowScrollLeft(),
-                    targetRects.top - marginTop -  this.getWindowScrollTop()));
+                this.setLocation(new IgxDragLocation(
+                    targetRects.left -  this.getWindowScrollLeft(),
+                    targetRects.top - this.getWindowScrollTop()
+                ));
             }
         }, 0);
     }
@@ -1077,6 +1084,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             this.ghostElement = node ? node.cloneNode(true) : this.element.nativeElement.cloneNode(true);
         }
 
+        const ghostMarginLeft = parseInt(document.defaultView.getComputedStyle(this.ghostElement)['margin-left'], 10);
+        const ghostMarginTop = parseInt(document.defaultView.getComputedStyle(this.ghostElement)['margin-top'], 10);
         const totalMovedX = pageX - this._startX;
         const totalMovedY = pageY - this._startY;
         this._ghostHostX = this.ghostHost ? this.ghostHostOffsetLeft(this.ghostHost) : 0;
@@ -1084,8 +1093,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
         this.ghostElement.style.transitionDuration = '0.0s';
         this.ghostElement.style.position = 'absolute';
-        this.ghostElement.style.left = (this._ghostStartX + totalMovedX - this._ghostHostX) + 'px';
-        this.ghostElement.style.top = (this._ghostStartY + totalMovedY - this._ghostHostX) + 'px';
+        this.ghostElement.style.left = (this._ghostStartX - ghostMarginLeft + totalMovedX - this._ghostHostX) + 'px';
+        this.ghostElement.style.top = (this._ghostStartY - ghostMarginTop + totalMovedY - this._ghostHostX) + 'px';
 
         if (this.ghostClass) {
             this.renderer.addClass(this.ghostElement, this.ghostClass);
@@ -1291,6 +1300,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         this.animInProgress = false;
         this._dragStarted = false;
 
+        // Execute transitioned after everything is reset so if the user sets new location on the base now it would work as expected.
         this.zone.run(() => {
             this.transitioned.emit({
                 originalEvent: event,
@@ -1375,10 +1385,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     protected ghostHostOffsetLeft(ghostHost: any) {
         if (ghostHost.computedStyleMap().get('position').value === 'static' &&
-                ghostHost.offsetParent && ghostHost.offsetParent === document.body) {
+        ghostHost.offsetParent && ghostHost.offsetParent === document.body) {
             return 0;
         } else if (ghostHost.computedStyleMap().get('position').value === 'static' && ghostHost.offsetParent) {
-            return ghostHost.offsetParent.getBoundingClientRect().left -  this.getWindowScrollLeft();
+            return ghostHost.offsetParent.getBoundingClientRect().left - this.getWindowScrollLeft();
         }
         return ghostHost.getBoundingClientRect().left - this.getWindowScrollLeft();
     }
@@ -1388,7 +1398,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                 ghostHost.offsetParent && ghostHost.offsetParent === document.body) {
             return 0;
         } else if (ghostHost.computedStyleMap().get('position').value === 'static' && ghostHost.offsetParent) {
-            return ghostHost.offsetParent.getBoundingClientRect().top -  this.getWindowScrollTop();
+            return ghostHost.offsetParent.getBoundingClientRect().top - this.getWindowScrollTop();
         }
         return ghostHost.getBoundingClientRect().top - this.getWindowScrollTop();
     }
