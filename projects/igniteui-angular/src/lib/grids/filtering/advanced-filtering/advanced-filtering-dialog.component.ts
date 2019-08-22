@@ -1,7 +1,7 @@
 import {
     Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, AfterViewInit, OnDestroy
 } from '@angular/core';
-import { VerticalAlignment, HorizontalAlignment, Point } from '../../../services/overlay/utilities';
+import { VerticalAlignment, HorizontalAlignment, Point, OverlaySettings } from '../../../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../../../services/overlay/position/connected-positioning-strategy';
 import { IgxFilteringService } from '../grid-filtering.service';
 import { IgxOverlayService } from '../../../services/overlay/overlay';
@@ -83,7 +83,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         horizontalStartPoint: HorizontalAlignment.Right,
         verticalStartPoint: VerticalAlignment.Top
     };
-    public _overlaySettings = {
+    public _overlaySettings: OverlaySettings = {
         closeOnOutsideClick: false,
         modal: false,
         positionStrategy: new ConnectedPositioningStrategy(this._positionSettings),
@@ -426,6 +426,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
                 const maxRight = chips.reduce((r, c) =>
                     Math.max(r, c.elementRef.nativeElement.getBoundingClientRect().right), 0);
                 this._overlaySettings.positionStrategy.settings.target = new Point(maxRight, minTop);
+                this._overlaySettings.outlet = this.grid.outletDirective;
 
                 if (this.contextMenuToggle.collapsed) {
                     this.contextMenuToggle.open(this._overlaySettings);
