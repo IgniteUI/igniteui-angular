@@ -1071,7 +1071,7 @@ describe('IgxGrid - Row Selection', () => {
             firstRow.selected = false;
             fix.detectChanges();
 
-            expect(grid.selectedRows()).toEqual([1]);
+            expect(grid.selectedRows()).toEqual([]);
             HelperUtils.verifyRowSelected(firstRow, false);
             HelperUtils.verifyHeaderRowCheckboxState(fix);
         }));
@@ -1648,12 +1648,25 @@ describe('IgxGrid - Row Selection', () => {
 
             grid.deleteRowById(firstRow.rowID);
             grid.deleteRowById(secondRow.rowID);
-
             fix.detectChanges();
+
+            grid.selectAllRows();
+            fix.detectChanges();
+
+            expect(grid.selectedRows().includes(firstRow.rowID)).toBe(false);
+            expect(grid.selectedRows().includes(secondRow.rowID)).toBe(false);
+            expect(grid.selectedRows().includes(thirdRow.rowID)).toBe(true);
+
+            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+
             grid.selectRows([firstRow.rowID, secondRow.rowID, thirdRow.rowID]);
-
             fix.detectChanges();
-            expect(grid.selectedRows()).toEqual([thirdRow.rowID]);
+
+            expect(grid.selectedRows().includes(firstRow.rowID)).toBe(true);
+            expect(grid.selectedRows().includes(secondRow.rowID)).toBe(true);
+            HelperUtils.verifyRowSelected(firstRow);
+            HelperUtils.verifyRowSelected(secondRow);
+            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
         });
 
         it('Should have correct header checkbox when delete a row', () => {
