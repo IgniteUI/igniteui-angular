@@ -1346,10 +1346,13 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             await wait(16);
             // check UI
+            const rowSelectorHeader =  fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-grid__cbx-selection');
             const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
             const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
             const header2 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[2];
-            expect(header0.nativeElement.offsetWidth).toEqual(Math.round(0.7 * grid.unpinnedWidth));
+            const expectedWidth = Math.round(0.7 * (grid.unpinnedWidth + rowSelectorHeader.offsetWidth));
+            expect(header0.nativeElement.offsetWidth).toBeGreaterThanOrEqual(expectedWidth - 1);
+            expect(header0.nativeElement.offsetWidth).toBeLessThanOrEqual(expectedWidth + 1);
             expect(header1.nativeElement.offsetWidth).toEqual(136);
             expect(header2.nativeElement.offsetWidth).toEqual(136);
             expect(hScroll.nativeElement.hidden).toBe(false);
