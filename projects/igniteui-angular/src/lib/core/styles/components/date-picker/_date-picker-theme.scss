@@ -10,6 +10,8 @@
 /// @requires igx-elevation
 /// @requires rem
 @mixin igx-date-picker($theme) {
+    $selected-hover-color: text-contrast(map-get($theme, 'date-selected-background'));
+
     %date-picker {
         min-width: 200px;
         max-width: 340px;
@@ -87,7 +89,7 @@
 
         %cal-value--selected {
             color: --var($theme, 'date-selected-text-color');
-            background: --var($theme, 'date-selected-background') !important;
+            // background: --var($theme, 'date-selected-background') !important;
         }
 
         %cal-value--current {
@@ -95,7 +97,13 @@
         }
 
         %cal-value--hover {
-            background: --var($theme, 'date-hover-background');
+            %cal-value-content::after {
+                background: --var($theme, 'date-hover-background');
+            }
+
+            &%cal-value--selected %cal-value-content::after {
+                background: rgba($selected-hover-color, .18);
+            }
         }
     }
 
