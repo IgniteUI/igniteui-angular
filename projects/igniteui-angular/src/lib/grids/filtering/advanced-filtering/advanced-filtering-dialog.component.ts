@@ -167,7 +167,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
             this.recalculateContextMenuTarget();
             this.contextMenuToggle.reposition();
             // 'flex' should be changed '' when styling class is added to contextMenuToggle
-            this.contextMenuToggle.element.style.display = 'flex'; 
+            this.contextMenuToggle.element.style.display = 'flex';
         }
     }
 
@@ -297,7 +297,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         }
 
         this.addCondition(groupItem);
-        this.currentGroup = groupItem;        
+        this.currentGroup = groupItem;
     }
 
     private createExpressionGroupItem(expressionTree: IFilteringExpressionsTree, parent?: ExpressionGroupItem): ExpressionGroupItem {
