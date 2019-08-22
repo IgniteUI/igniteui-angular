@@ -827,16 +827,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         }, 0);
     }
 
-    /** Sets offset to dragged element or the ghost rendered relative to the offset parent. */
-    public setRelativeOffset(offsetX: number, offsetY: number) {
-        if (this.ghost && this.ghostElement) {
-            this.ghostLeft = offsetX;
-            this.ghostTop = offsetY;
-        } else if (!this.ghost) {
-            this.setTransformXY(offsetX, offsetY);
-        }
-    }
-
     /**
      * @hidden
      * Method bound to the PointerDown event of the base element igxDrag is initialized.
