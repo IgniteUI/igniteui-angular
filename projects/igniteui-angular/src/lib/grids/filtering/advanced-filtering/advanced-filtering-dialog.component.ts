@@ -105,6 +105,9 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     @ViewChildren(IgxChipComponent)
     public chips: QueryList<IgxChipComponent>;
 
+    @ViewChild('expressionsContainer', { static: true })
+    protected expressionsContainer: ElementRef;
+
     private destroy$ = new Subject<any>();
     private _selectedColumn: IgxColumnComponent;
     private _clickTimer;
@@ -197,6 +200,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         }
 
         this.enterExpressionEdit(operandItem);
+        this.scrollToBottom();
     }
 
     public addAndGroup(parent?: ExpressionGroupItem, afterExpression?: ExpressionItem) {
@@ -279,7 +283,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         }
 
         this.addCondition(groupItem);
-        this.currentGroup = groupItem;
+        this.currentGroup = groupItem;        
     }
 
     private createExpressionGroupItem(expressionTree: IFilteringExpressionsTree, parent?: ExpressionGroupItem): ExpressionGroupItem {
@@ -570,6 +574,12 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
             }
             this.deselectParentRecursive(parent);
         }
+    }
+
+    private scrollToBottom() {
+        requestAnimationFrame(() => {
+            this.expressionsContainer.nativeElement.scrollTop = this.expressionsContainer.nativeElement.scrollHeight;
+        });
     }
 
     public ungroup() {
