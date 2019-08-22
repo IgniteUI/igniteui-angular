@@ -47,26 +47,6 @@ describe('IgxHierarchicalGrid selection', () => {
             rowIsland2 = fix.componentInstance.rowIsland2;
         }));
 
-        it('should select cells only in current grid with mouse drag.', () => {
-
-        });
-
-        it('should select cells only in current grid keyboard.', () => {
-
-        });
-
-        it('should be able to change cellSelection per rowIsland', () => {
-
-        });
-
-        it('should be able to change cellSelection per rowIsland', () => {
-
-        });
-
-        it('should be able to change cellSelection', () => {
-
-        });
-
         it('should allow only one cell to be selected in the whole hierarchical grid.', (async () => {
             hierarchicalGrid.height = '500px';
             hierarchicalGrid.reflow();
@@ -111,7 +91,6 @@ describe('IgxHierarchicalGrid selection', () => {
     });
 
     describe('Row Selection', () => {
-
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxHierarchicalGridRowSelectionComponent);
             fix.detectChanges();
@@ -134,34 +113,43 @@ describe('IgxHierarchicalGrid selection', () => {
             HelperUtils.clickRowCheckbox(firstRow);
             fix.detectChanges();
 
-            hierarchicalGrid.filter('ID', '0', IgxStringFilteringOperand.instance().condition('contains'), true);
+            hierarchicalGrid.filter('ID', '1', IgxStringFilteringOperand.instance().condition('doesNotContain'), true);
             fix.detectChanges();
 
             HelperUtils.verifyRowSelected( hierarchicalGrid.getRowByIndex(0));
             HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
         }));
 
-        it('should be able to change rowSelection', () => {
-
-        });
-
-        it('should be able to hideRowSelectors ', () => {
-
-        });
-
-
-        it('should be able to select/deselect all rows', () => {
-
-        });
-
         it('should have correct header checkbox state when selecting rows', () => {
+            const firstRow = hierarchicalGrid.getRowByIndex(0);
+            const secondRow = hierarchicalGrid.getRowByIndex(1);
+            HelperUtils.verifyHeaderRowCheckboxState(fix);
 
+            // Select all rows
+            hierarchicalGrid.rowList.toArray().forEach(row => {
+                HelperUtils.clickRowCheckbox(row);
+                fix.detectChanges();
+                HelperUtils.verifyRowSelected(row);
+            });
+
+            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            expect(hierarchicalGrid.selectedRows()).toEqual(['0', '1', '2', '3', '4']);
+
+            // Unselect a row
+            HelperUtils.clickRowCheckbox(firstRow);
+            fix.detectChanges();
+
+            HelperUtils.verifyRowSelected(firstRow, false);
+            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            expect(hierarchicalGrid.selectedRows()).toEqual(['1', '2', '3', '4']);
+
+            // Click on a row
+            secondRow.nativeElement.dispatchEvent(new MouseEvent('click'));
+            fix.detectChanges();
+
+            HelperUtils.verifyRowSelected(secondRow);
+            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            expect(hierarchicalGrid.selectedRows()).toEqual(['1']);
         });
-
-        it('should remain selected rows when change page', () => {
-
-        });
-
-
     });
 });
