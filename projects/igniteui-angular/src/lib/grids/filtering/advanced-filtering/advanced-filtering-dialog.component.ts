@@ -14,6 +14,7 @@ import { IgxChipComponent } from '../../../chips';
 import { IgxSelectComponent } from '../../../select';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { IDragStartEventArgs } from '../../../directives/drag-drop/drag-drop.directive';
 
 class ExpressionItem {
     constructor(parent?: ExpressionGroupItem) {
@@ -155,6 +156,21 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         return this.grid.columns.filter((col) => col.filterable);
     }
 
+    public dragStart(dragArgs: IDragStartEventArgs) {
+        if (!this.contextMenuToggle.collapsed) {
+            this.contextMenuToggle.element.style.display = 'none';
+        }
+    }
+
+    public dragEnd(dragArgs: IDragBaseEventArgs) {
+        if (!this.contextMenuToggle.collapsed) {
+            this.recalculateContextMenuTarget();
+            this.contextMenuToggle.reposition();
+            // 'flex' should be changed '' when styling class is added to contextMenuToggle
+            this.contextMenuToggle.element.style.display = 'flex'; 
+        }
+    }
+
     public dragMove(dragArgs: IDragBaseEventArgs) {
         const gridRect = (<HTMLElement>this.grid.nativeElement).getBoundingClientRect();
         const dialogRect = (<HTMLElement>dragArgs.owner.element.nativeElement).getBoundingClientRect();
@@ -167,8 +183,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         // Disallow moving the dialog outside the grid if it can fit in the grid.
         if (!(dialogRect.left >= gridRect.left && dialogRect.right <= gridRect.right &&
               dialogRect.top >= gridRect.top && dialogRect.bottom <= gridRect.bottom)) {
-            // dragArgs.cancel = true; // waiting for implementation
-
             const dragDialog = dragArgs.owner;
             let newDialogX = dialogRect.left;
             let newDialogY = dialogRect.top;
@@ -574,6 +588,16 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
             }
             this.deselectParentRecursive(parent);
         }
+    }
+
+    private recalculateContextMenuTarget() {
+        const chips = this.chips.filter(c => this.selectedExpressions.includes(c.data));
+        const minTop = chips.reduce((t, c) =>
+            Math.min(t, c.elementRef.nativeElement.getBoundingClientRect().top), Number.MAX_VALUE);
+        const maxRight = chips.reduce((r, c) =>
+            Math.max(r, c.elementRef.nativeElement.getBoundingClientRect().right), 0);
+        this._overlaySettings.positionStrategy.settings.target = new Point(maxRight, minTop);
+        this._overlaySettings.outlet = this.grid.outletDirective;
     }
 
     private scrollToBottom() {

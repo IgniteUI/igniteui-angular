@@ -1,5 +1,6 @@
 <article class="igx-excel-filter__secondary"
-         igxDrag [renderGhost]="false" [dragTolerance]="0" (dragMove)="dragMove($event)"
+         igxDrag [renderGhost]="false" [dragTolerance]="0"
+         (dragStart)="dragStart($event)" (dragMove)="dragMove($event)" (dragEnd)="dragEnd($event)"
          (keydown)="onKeyDown($event)"
          [ngClass]="{
              'igx-excel-filter__secondary--cosy': grid.displayDensity === 'cosy',
