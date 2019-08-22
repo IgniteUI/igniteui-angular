@@ -807,11 +807,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @param startLocation Start location from where the transition should start.
      */
     public transitionTo(target: IgxDragLocation | ElementRef, customAnimArgs?: IDragCustomTransitionArgs, startLocation?: IgxDragLocation) {
-        if (!!startLocation && !this.ghost) {
-            this.setLocation(startLocation);
-        } else if (!!startLocation && this.ghost && !this.ghostElement) {
+        if (!!startLocation && this.ghost && !this.ghostElement) {
             this._startX = startLocation.pageX;
             this._startY = startLocation.pageY;
+        } else if (!!startLocation && (!this.ghost || this.ghostElement)) {
+            this.setLocation(startLocation);
         } else if (this.ghost && !this.ghostElement) {
             this._startX = this.baseLeft;
             this._startY = this.baseTop;
@@ -1096,8 +1096,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             this.ghostElement = node ? node.cloneNode(true) : this.element.nativeElement.cloneNode(true);
         }
 
-        const ghostMarginLeft = parseInt(document.defaultView.getComputedStyle(this.ghostElement)['margin-left'], 10);
-        const ghostMarginTop = parseInt(document.defaultView.getComputedStyle(this.ghostElement)['margin-top'], 10);
         const totalMovedX = pageX - this._startX;
         const totalMovedY = pageY - this._startY;
         this._ghostHostX = this.ghostHost ? this.ghostHostOffsetLeft(this.ghostHost) : 0;
@@ -1105,8 +1103,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
         this.ghostElement.style.transitionDuration = '0.0s';
         this.ghostElement.style.position = 'absolute';
-        this.ghostElement.style.left = (this._ghostStartX - ghostMarginLeft + totalMovedX - this._ghostHostX) + 'px';
-        this.ghostElement.style.top = (this._ghostStartY - ghostMarginTop + totalMovedY - this._ghostHostX) + 'px';
+
 
         if (this.ghostClass) {
             this.renderer.addClass(this.ghostElement, this.ghostClass);
@@ -1131,6 +1128,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         } else {
             document.body.appendChild(this.ghostElement);
         }
+
+        const ghostMarginLeft = parseInt(document.defaultView.getComputedStyle(this.ghostElement)['margin-left'], 10);
+        const ghostMarginTop = parseInt(document.defaultView.getComputedStyle(this.ghostElement)['margin-top'], 10);
+        this.ghostElement.style.left = (this._ghostStartX - ghostMarginLeft + totalMovedX - this._ghostHostX) + 'px';
+        this.ghostElement.style.top = (this._ghostStartY - ghostMarginTop + totalMovedY - this._ghostHostX) + 'px';
 
         if (this.pointerEventsEnabled) {
             // The ghostElement takes control for moving and dragging after it has been rendered.
