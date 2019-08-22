@@ -4,6 +4,26 @@
 <div class="igx-input-group__hint">
     <ng-content select="igx-hint,[igxHint]"></ng-content>
 </div>
+
+<ng-template #withBorder>
+    <div class="igx-input-group__prefix-placeholder"></div>
+
+    <div class="igx-input-group__border-label">
+        <div class="igx-input-group__border-label-inner">
+            <ng-content select="[igxLabel]"></ng-content>
+            <div class="igx-input-group__border-label-line"></div>
+        </div>
+        <ng-content select="[igxInput]"></ng-content>
+    </div>
+
+    <div class="igx-input-group__suffix-placeholder"></div>
+</ng-template>
+
+<ng-template #withoutBorder>
+    <ng-content select="[igxLabel]"></ng-content>
+    <ng-content select="[igxInput]"></ng-content>
+</ng-template>
+
 <ng-template #bundle>
     <div class="igx-input-group__bundle">
 
@@ -11,20 +31,14 @@
 
         <div class="igx-input-group__bundle-main">
 
-            <ng-container *ngIf="isTypeBorder; else isNotTypeBorder">
-                <div class="igx-input-group__border-label">
-                    <div class="igx-input-group__border-label-inner">
-                        <ng-content select="[igxLabel]"></ng-content>
-                        <div class="igx-input-group__border-label-line"></div>
-                    </div>
-                    <ng-content select="[igxInput]"></ng-content>
-                </div>
+            <ng-container *ngIf="isTypeBorder">
+                <ng-container *ngTemplateOutlet="withBorder"></ng-container>
             </ng-container>
 
-            <ng-template #isNotTypeBorder>
-                <ng-content select="[igxLabel]"></ng-content>
-                <ng-content select="[igxInput]"></ng-content>
-            </ng-template>
+            <ng-container *ngIf="!isTypeBorder">
+                <ng-container *ngTemplateOutlet="withoutBorder"></ng-container>
+            </ng-container>
+
 
         </div>
 

@@ -215,12 +215,18 @@
         'compact': 22px
     );
 
+    $field-size: (
+        'comfortable': rem(58px),
+        'cosy': rem(50px),
+        'compact': rem(42x)
+    );
+
     $hint-padding-top: rem(6px, map-get($base-scale-size, 'comfortable'));
     $hint--box-margin: rem(12px, map-get($base-scale-size, 'comfortable'));
 
-    $input-density-size-comfortable: rem(16px, map-get($base-scale-size, 'comfortable'));
-    $input-density-size-cosy: rem(16px, map-get($base-scale-size, 'cosy'));
-    $input-density-size-compact: rem(16px, map-get($base-scale-size, 'compact'));
+    $border-input-comf: rem(16px, map-get($base-scale-size, 'comfortable'));
+    $border-input-cosy: rem(16px, map-get($base-scale-size, 'cosy'));
+    $border-input-compact: rem(16px, map-get($base-scale-size, 'compact'));
 
     %form-group-display {
         position: relative;
@@ -410,14 +416,12 @@
 
 
     %input-type-border {
-        padding: 0 $input-density-size-comfortable;
-
         igx-prefix,
         [igxPrefix],
         igx-suffix,
         [igxSuffix] {
             border: 1px solid;
-            padding: rem(16px, map-get($base-scale-size, 'comfortable'))!important;
+            padding: rem(16px, map-get($base-scale-size, 'comfortable')) !important;
         }
 
         igx-prefix,
@@ -433,15 +437,13 @@
         }
 
 
-        [igx-prefix] + %form-group-bundle-main--border,
-        igx-prefix + %form-group-bundle-main--border {
+        [igx-prefix] + %form-group-label--border,
+        igx-prefix + %form-group-label--border {
             border-left: none
         }
     }
 
     %input-type-border-cosy {
-        padding: 0 $input-density-size-cosy;
-
         igx-prefix,
         [igxPrefix],
         igx-suffix,
@@ -451,8 +453,6 @@
     }
 
     %input-type-border-compact {
-        padding: 0 $input-density-size-compact;
-
         igx-prefix,
         [igxPrefix],
         igx-suffix,
@@ -473,9 +473,10 @@
         }
     }
 
+    %form-group-label--filled-border,
     %form-group-label--focus-border {
         transform: translateY(0) scale(1);
-        margin-top: -10px;
+        top: rem(-28px);
     }
 
     %form-group-bundle--border-cosy {
@@ -494,11 +495,15 @@
         border-color: --var($theme, 'focused-bottom-line-color');
     }
 
-    %form-group-bundle-border--error {
+    %igx-input-group__border-label--error,
+    %igx-input-group__prefix--suffix--error,
+    %igx-input-group__prefix--suffix--error  {
         border-color: --var($theme, 'error-secondary-color');
     }
 
-    %form-group-bundle-border--success {
+    %igx-input-group__border-label--success,
+    %igx-input-group__prefix--suffix--success,
+    %igx-input-group__prefix--suffix--success {
         border-color: --var($theme, 'success-secondary-color');
     }
 
@@ -563,15 +568,16 @@
     }
 
     %form-group-bundle-main--border {
-        padding-top: 0;
-        height: rem(58px);
-        border: 1px solid;
-        border-color: inherit;
+        display: flex;
     }
 
-    %form-group-bundle-main--border-focus,
-    %form-group-bundle-main--border-filled {
+    %igx-input-group__border-label-focus,
+    %igx-input-group__border-label-filled {
         border-top: none;
+    }
+
+    %igx-input-group__border-label-focus {
+        border-color: --var($theme, 'idle-bottom-line-color') !important;
     }
 
     %form-group-bundle-main--box-cosy {
@@ -711,29 +717,59 @@
     }
 
     %form-group-input--border {
-        padding: 0;
+        padding: 0 rem(4px);
         margin: 0;
         border: none;
+        height: auto;
+        flex: 1;
     }
 
     %igx-input-group__border-label {
-        height: 100%;
+        display: flex;
+        position: relative;
+        flex-direction: column;
+        flex: 1;
+        height: map-get($field-size, 'comfortable');
+        border-top: 1px solid;
+        border-bottom: 1px solid;
+        border-color: inherit;
     }
 
     %igx-input-group__border-label-inner {
         flex: 1;
         display: flex;
         align-items: center;
+        position: absolute;
+        top: calc(50% - 10px);
+        width: 100%;
     }
 
-    %igx-input-group__border-label-line {
+    %igx-input-group__prefix-placeholder,
+    %igx-input-group__suffix-placeholder {
+        height: map-get($field-size, 'comfortable');
+        width: rem(16px, map-get($base-scale-size, 'comfortable'));
+        border: 1px solid --var($theme, 'idle-bottom-line-color');
+    }
+
+    %igx-input-group__prefix-placeholder {
+        border-radius: --var($theme, 'border-border-radius') 0 0 --var($theme, 'border-border-radius');
+        border-right: none;
+    }
+
+    %igx-input-group__suffix-placeholder {
+        border-radius: 0 --var($theme, 'border-border-radius') --var($theme, 'border-border-radius') 0;
+        border-left: none;
+    }
+
+    %igx-input-group__border-label-line{
         height: 1px;
-        background: #ddd;
+        background: --var($theme, 'idle-bottom-line-color');
         flex: 1;
         position: relative;
         width: calc(100% + 1px);
         align-self: flex-start;
         display: none;
+        top: rem(-19px)
     }
 
     %igx-input-group__border-label-line-cosy {}
