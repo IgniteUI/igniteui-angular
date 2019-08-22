@@ -22,13 +22,13 @@ import {
     SummariesGroupByWithScrollsComponent,
     SummariesGroupByTransactionsComponent
 } from '../../test-utils/grid-samples.spec';
-import { HelperUtils, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { HelperUtils, setupGridScrollDetection, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand, SortingDirection, IgxChipComponent } from 'igniteui-angular';
 import { ColumnGroupFourLevelTestComponent } from './column-group.spec';
 import { GridSummaryCalculationMode } from '../grid-base.component';
 
-describe('IgxGrid - Summaries', () => {
+describe('IgxGrid - Summaries #grid', () => {
     configureTestSuite();
     const SUMMARY_CLASS = '.igx-grid-summary';
     const ITEM_CLASS = 'igx-grid-summary__item';
@@ -117,6 +117,7 @@ describe('IgxGrid - Summaries', () => {
             grid.getColumnByName('Downloads').hasSummary = true;
             grid.getColumnByName('Released').hasSummary = true;
             grid.getColumnByName('ReleaseDate').hasSummary = true;
+            fixture.detectChanges();
 
             const summaryRow = fixture.debugElement.query(By.css(SUMMARY_ROW));
             HelperUtils.verifyColumnSummaries(summaryRow, 0, [], []);
@@ -207,8 +208,10 @@ describe('IgxGrid - Summaries', () => {
         }));
 
         it('should render correct data after hiding one bigger and then one smaller summary when scrolled to the bottom', (async () => {
+            resizeObserverIgnoreError();
             const fixture = TestBed.createComponent(VirtualSummaryColumnComponent);
             fixture.detectChanges();
+            await wait(100);
 
             const grid = fixture.componentInstance.grid;
             let rowsRendered;
@@ -217,6 +220,7 @@ describe('IgxGrid - Summaries', () => {
             let firstCellsText;
 
             fixture.componentInstance.scrollTop(10000);
+            fixture.detectChanges();
             await wait(100);
             fixture.detectChanges();
 
@@ -226,7 +230,8 @@ describe('IgxGrid - Summaries', () => {
             expect(rowsRendered.length).toEqual(expectedRowLenght);
 
             grid.disableSummaries(['ProductName', 'InStock', 'UnitsInStock']);
-            await wait(50);
+            fixture.detectChanges();
+            await wait(100);
             fixture.detectChanges();
 
             rowsRendered = Array.from(fixture.nativeElement.querySelectorAll('igx-grid-row'));
@@ -244,7 +249,8 @@ describe('IgxGrid - Summaries', () => {
             }
 
             grid.disableSummaries(['OrderDate']);
-            await wait(50);
+            fixture.detectChanges();
+            await wait(100);
             fixture.detectChanges();
 
             rowsRendered = Array.from(fixture.nativeElement.querySelectorAll('igx-grid-row'));
@@ -285,6 +291,7 @@ describe('IgxGrid - Summaries', () => {
             let fix;
             let grid: IgxGridComponent;
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
+                resizeObserverIgnoreError();
                 fix = TestBed.createComponent(SummaryColumnComponent);
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
@@ -1142,6 +1149,7 @@ describe('IgxGrid - Summaries', () => {
         let fix;
         let grid;
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(SummariesGroupByTransactionsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -1861,7 +1869,7 @@ describe('IgxGrid - Summaries', () => {
 
         it('should show/hide summaries when expand/collapse group row', () => {
             grid.disableSummaries([{ fieldName: 'Age' }, { fieldName: 'ParentID' }, { fieldName: 'HireDate' }]);
-            // fix.detectChanges();
+            fix.detectChanges();
             expect(HelperUtils.getAllVisibleSummariesLength(fix)).toEqual(5);
 
             const groupRows = grid.groupsRowList.toArray();
