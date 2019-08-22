@@ -1150,6 +1150,7 @@ describe('IgxHierarchicalGrid custom template', () => {
         hierarchicalGrid.expandChildren = false;
         fixture.detectChanges();
         await wait(100);
+        fixture.detectChanges();
         expect((hierarchicalGrid as any).headerHierarchyExpander.nativeElement.innerText).toBe('COLLAPSED');
     });
 });
