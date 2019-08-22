@@ -5,7 +5,6 @@
     color: black;
     display: flex;
     cursor: move;
-    user-select: none;
     align-items: center;
     justify-content: center;
     transition: box-shadow 200ms cubic-bezier(0, 0, 0.2, 1);
@@ -23,7 +22,6 @@
     color: black;
     display: flex;
     cursor: move;
-    user-select: none;
     align-items: center;
     justify-content: center;
     transition: box-shadow 200ms cubic-bezier(0, 0, 0.2, 1);
@@ -37,7 +35,6 @@
     color: black;
     display: flex;
     cursor: move;
-    user-select: none;
     align-items: center;
     justify-content: center;
     box-shadow: 0px 0px 4px 0px rgb(20, 20, 20);
@@ -68,13 +65,8 @@
 .dialogHandle {
     margin: 10px;
     cursor: move;
-    user-select: none;
     position: absolute;
     right: 0;
-}
-
-.myClass {
-    user-select: none;
 }
 
 .initialArea {
@@ -94,7 +86,6 @@
     line-height: 50px;
     background-color: #1a8cff;
     text-align: center;
-    user-select: none;
     margin: 10px;
     box-shadow: grey 2px 2px 1px;
 }

@@ -449,14 +449,20 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     /**
      * @hidden
      */
-    @HostBinding('style.touchAction')
-    public touch = 'none';
+    @HostBinding('style.visibility')
+    public _visibility = 'visible';
 
     /**
      * @hidden
      */
-    @HostBinding('style.visibility')
-    public _visibility = 'visible';
+    @HostBinding('class.igx-drag')
+    public baseClass = true;
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-drag--select-disabled')
+    public selectDisabled = false;
 
     /**
      * @deprecated Please use native angular ways of hiding it using custom to the base element styling for future versions.
@@ -639,6 +645,12 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @hidden
      */
     public ngAfterContentInit() {
+        if (!this.dragHandles || !this.dragHandles.length ) {
+            // Set user select none to the whole draggable element if no drag handles are defined.
+            this.selectDisabled = true;
+        }
+
+        // Bind events
         this.zone.runOutsideAngular(() => {
             const targetElements = this.dragHandles && this.dragHandles.length ?
                 this.dragHandles.map((item) => item.element.nativeElement) : [this.element.nativeElement];

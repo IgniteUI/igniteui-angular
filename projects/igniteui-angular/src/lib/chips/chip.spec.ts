@@ -81,9 +81,9 @@ class TestChipsLabelAndSuffixComponent {
 }
 
 
-describe('IgxChip', () => {
+fdescribe('IgxChip', () => {
     configureTestSuite();
-    const CHIP_ITEM = 'igx-chip__item';
+    const CHIP_ITEM = 'igx-chip__item igx-drag igx-drag--select-disabled';
     const CHIP_REMOVE_BUTTON = 'igx-chip__remove';
 
     beforeEach(async(() => {
@@ -387,7 +387,7 @@ describe('IgxChip', () => {
         }).then(() => {
             fix.detectChanges();
 
-            expect(thirdChip.dragDirective.ghostElement.className).toEqual('igx-chip__item igx-chip__ghost--compact');
+            expect(thirdChip.dragDirective.ghostElement.className).toEqual(CHIP_ITEM + ' igx-chip__ghost--compact');
 
             return fix.whenStable();
         }).then(() => {
