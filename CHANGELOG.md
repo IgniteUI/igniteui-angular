@@ -5,9 +5,13 @@ All notable changes for each version of this project will be documented in this 
 ## 8.2.0
 
 ### New Features
+- `igx-input-group`
+    - Input group of `type="border"` is now re-designed to follow the latest material spec, the major change is that now the label goes above the top border of the input field.
+
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - `uniqueColumnValuesStrategy` input is added. This property provides a callback for loading unique column values on demand. If this property is provided, the unique values it generates will be used by the Excel Style Filtering (instead of using the unique values from the data that is bound to the grid).
     - `igxExcelStyleLoading` directive is added, which can be used to provide a custom loading template for the Excel Style Filtering. If this property is not provided, a default loading template will be used instead.
+
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Change** `igxExcelStyleSortingTemplate` directive is renamed to `igxExcelStyleSorting`.

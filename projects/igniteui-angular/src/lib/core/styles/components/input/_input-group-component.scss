@@ -138,6 +138,7 @@
     }
 
     @include m(valid) {
+
         @include e(label) {
             @extend %form-group-label--success !optional;
         }
@@ -394,6 +395,8 @@
     }
 
     @include mx(valid, border) {
+        @extend %form-group-display--success !optional;
+
         @include e(prefix-placeholder) {
             @extend %igx-input-group__prefix--suffix--success !optional;
         }
@@ -430,6 +433,8 @@
     }
 
     @include mx(focused, border) {
+        @extend %form-group-display--focus !optional;
+
         @include e(bundle) {
             @extend %form-group-bundle-border--focus !optional;
         }
@@ -502,8 +507,30 @@
     }
 
     @include mx(disabled, border) {
+        @extend %form-group-prefix--disabled !optional;
+
+        @include e(prefix-placeholder) {
+            @extend %igx-input-group__prefix--suffix--disabled !optional;
+        }
+
+        @include e(suffix-placeholder) {
+            @extend %igx-input-group__prefix--suffix--disabled !optional;
+        }
+
         @include e(bundle) {
             @extend %form-group-bundle-border--disabled !optional;
+        }
+
+        @include e(border-label-line) {
+            @extend %igx-input-group__border-label-line--disabled !optional;
+        }
+
+        @include e(border-label) {
+            @extend %igx-input-group__border-label--disabled !optional;
+        }
+
+        @include e(bundle-main) {
+            @extend %form-group-bundle-main--border--dsiabled !optional;
         }
     }
 

@@ -108,13 +108,13 @@
     $theme: apply-palette($input-group-schema, $palette);
 
     $box-border-radius: round-borders(
-        if($box-border-radius, $box-border-radius, map-get($input-group-schema, 'box-border-radius')), 0, 20px
+            if($box-border-radius, $box-border-radius, map-get($input-group-schema, 'box-border-radius')), 0, 20px
     );
     $border-border-radius: round-borders(
-        if($border-border-radius, $border-border-radius, map-get($input-group-schema, 'border-border-radius')), 0, 20px
+            if($border-border-radius, $border-border-radius, map-get($input-group-schema, 'border-border-radius')), 0, 20px
     );
     $search-border-radius: round-borders(
-        if($search-border-radius, $search-border-radius, map-get($input-group-schema, 'search-border-radius')), 0, 20px
+            if($search-border-radius, $search-border-radius, map-get($input-group-schema, 'search-border-radius')), 0, 20px
     );
 
     $search-resting-elevation: map-get($input-group-schema, 'search-resting-elevation');
@@ -144,40 +144,31 @@
     @return extend($theme, (
         palette: $palette,
         name: $name,
-
         idle-text-color: $idle-text-color,
         filled-text-color: $filled-text-color,
         focused-text-color: $focused-text-color,
         disabled-text-color: $disabled-text-color,
-
         box-border-radius: $box-border-radius,
         border-border-radius: $border-border-radius,
         search-border-radius: $search-border-radius,
-
         idle-secondary-color: $idle-secondary-color,
         filled-secondary-color: $filled-secondary-color,
         focused-secondary-color: $focused-secondary-color,
-
         idle-bottom-line-color: $idle-bottom-line-color,
         hover-bottom-line-color: $hover-bottom-line-color,
         focused-bottom-line-color: $focused-bottom-line-color,
         interim-bottom-line-color: $interim-bottom-line-color,
         disabled-bottom-line-color: $disabled-bottom-line-color,
         disabled-border-color: $disabled-border-color,
-
         box-background: $box-background,
         box-disabled-background: $box-disabled-background,
-
         border-background: $border-background,
         border-disabled-background: $border-disabled-background,
-
         search-background: $search-background,
         search-disabled-background: $search-disabled-background,
-
         search-resting-shadow: $search-resting-shadow,
         search-hover-shadow: $search-hover-shadow,
         search-disabled-shadow: $search-disabled-shadow,
-
         success-secondary-color: $success-secondary-color,
         warning-secondary-color: $warning-secondary-color,
         error-secondary-color: $error-secondary-color,
@@ -185,7 +176,6 @@
         disabled-placeholder-color: $disabled-placeholder-color,
     ));
 }
-
 
 
 /// @param {Map} $theme - The theme used to style the component.
@@ -343,6 +333,42 @@
         }
     }
 
+    %form-group-display--success {
+        igx-prefix,
+        [igxPrefix] {
+            @extend %form-group-prefix--success;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %form-group-suffix--success;
+        }
+    }
+
+    %form-group-display--focus {
+        igx-prefix,
+        [igxPrefix] {
+            @extend %form-group-prefix--focus;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %form-group-suffix--focus;
+        }
+    }
+
+    %form-group-display--disabled {
+        igx-prefix,
+        [igxPrefix] {
+            @extend %form-group-prefix--disabled;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %form-group-suffix--disabled;
+        }
+    }
+
     %form-group-box-wrapper {
         border-radius: --var($theme, 'box-border-radius');
         overflow: hidden;
@@ -475,7 +501,7 @@
 
 
     %form-group-bundle--border {
-        height: map-get($field-size, 'comfortable');
+        min-height: map-get($field-size, 'comfortable');
         padding: 0;
         border-color: --var($theme, 'idle-bottom-line-color');
         background: --var($theme, 'border-background');
@@ -492,12 +518,12 @@
     }
 
     %form-group-bundle--border-cosy {
-        height: map-get($field-size, 'cosy');
+        min-height: map-get($field-size, 'cosy');
         padding: 0;
     }
 
     %form-group-bundle--border-compact {
-        height: map-get($field-size, 'compact');
+        min-height: map-get($field-size, 'compact');
         padding: 0;
     }
 
@@ -505,43 +531,23 @@
         border-color: --var($theme, 'focused-bottom-line-color');
     }
 
-    %igx-input-group__border-label--error {
-        border-bottom-color: --var($theme, 'error-secondary-color')!important;
-    }
-
-    %igx-input-group__prefix--suffix--focus  {
-        border-color: --var($theme, 'focused-secondary-color')!important;
-    }
-
-    %igx-input-group__prefix--suffix--filled  {
-        border-color: --var($theme, 'filled-secondary-color')!important;
-    }
-
-    %igx-input-group__border-label--success {
-        border-bottom-color: --var($theme, 'success-secondary-color')!important;
-    }
-
-    %igx-input-group__prefix--suffix--error {
-        border-color: --var($theme, 'error-secondary-color')!important;
-    }
-
-    %igx-input-group__prefix--suffix--success{
-        border-color: --var($theme, 'success-secondary-color')!important;
-    }
-
-    %igx-input-group__prefix--suffix--disabled{
-        border-color: --var($theme, 'border-disabled-background')!important;
-    }
-
     %form-group-bundle-border--disabled {
-        background: --var($theme, 'border-disabled-background');
-        box-shadow: inset 0 0 0 1px --var($theme, 'disabled-border-color');
+        background: transparent;
+        //box-shadow: none;
     }
 
+    %igx-input-group__border-label-line--disabled {
+        background: --var($theme, 'disabled-border-color') !important;
+    }
 
+    %igx-input-group__border-label--disabled {
+        border-color: --var($theme, 'disabled-border-color') !important;
+    }
 
-
-
+    %form-group-bundle-main--border--dsiabled {
+        border-color: --var($theme, 'disabled-border-color') !important;
+        box-shadow: none;
+    }
 
     %form-group-bundle--search {
         padding: 0 rem(16px, map-get($base-scale-size, 'comfortable'));
@@ -594,7 +600,7 @@
     }
 
     %form-group-bundle-main--border {
-        height: map-get($field-size, 'comfortable');
+        min-height: map-get($field-size, 'comfortable');
         display: flex;
         padding: 0;
 
@@ -607,7 +613,7 @@
     }
 
     %form-group-bundle-main--border-cosy,
-    %form-group-bundle-main--border-compact{
+    %form-group-bundle-main--border-compact {
         padding: 0;
     }
 
@@ -621,13 +627,39 @@
 
     %igx-input-group__border-label--focus {
         border-top: none;
+        border-color: --var($theme, 'focused-secondary-color') !important;
     }
 
-    %igx-input-group__border-label--focus {
-        border-bottom-color: --var($theme, 'focused-secondary-color') !important;
+    %igx-input-group__border-label--error {
+        border-color: --var($theme, 'error-secondary-color') !important;
+    }
+
+    %igx-input-group__border-label--success {
+        border-color: --var($theme, 'success-secondary-color') !important;
+    }
+
+    %igx-input-group__prefix--suffix--focus {
+        border-color: --var($theme, 'focused-secondary-color') !important;
+    }
+
+    %igx-input-group__prefix--suffix--filled {
+        border-color: --var($theme, 'filled-secondary-color') !important;
+    }
+
+    %igx-input-group__prefix--suffix--error {
+        border-color: --var($theme, 'error-secondary-color') !important;
+    }
+
+    %igx-input-group__prefix--suffix--success {
+        border-color: --var($theme, 'success-secondary-color') !important;
+    }
+
+    %igx-input-group__prefix--suffix--disabled {
+        border-color: --var($theme, 'border-disabled-background') !important;
     }
 
     %igx-input-group__border-label--filled {
+        border-top: none;
         border-bottom-color: --var($theme, 'idle-bottom-line-color');
     }
 
@@ -649,12 +681,11 @@
         backface-visibility: hidden;
         will-change: transform;
         transform-origin: top left;
-        transition:
-            transform $transition-timing,
-            color $transition-timing,
-            margin $transition-timing,
-            font-size $transition-timing,
-            top $transition-timing;
+        transition: transform $transition-timing,
+        color $transition-timing,
+        margin $transition-timing,
+        font-size $transition-timing,
+        top $transition-timing;
 
         [dir='rtl'] & {
             transform-origin: top right;
@@ -760,7 +791,9 @@
         &:-webkit-autofill,
         &:-webkit-autofill:hover,
         &:-webkit-autofill:focus,
-        &:-webkit-autofill:active { -webkit-transition-delay: 99999s; }
+        &:-webkit-autofill:active {
+            -webkit-transition-delay: 99999s;
+        }
     }
 
     %edge-clear-icon-fix {
@@ -786,13 +819,13 @@
         position: relative;
         flex-direction: column;
         flex: 1;
-        height: map-get($field-size, 'comfortable');
+        min-height: map-get($field-size, 'comfortable');
         border-top: 1px solid;
         border-bottom: 1px solid;
-        border-color: red;
+        border-color: --var($theme, 'idle-bottom-line-color');
 
         &:hover {
-            border-bottom-color: --var($theme, 'hover-bottom-line-color');
+            border-color: --var($theme, 'hover-bottom-line-color');
 
             %igx-input-group__border-label-line {
                 background: --var($theme, 'hover-bottom-line-color');
@@ -800,12 +833,12 @@
         }
     }
 
-    %igx-input-group__border-label--cosy{
-        height: map-get($field-size, 'cosy');
+    %igx-input-group__border-label--cosy {
+        min-height: map-get($field-size, 'cosy');
     }
 
-    %igx-input-group__border-label--compact{
-        height: map-get($field-size, 'compact');
+    %igx-input-group__border-label--compact {
+        min-height: map-get($field-size, 'compact');
     }
 
 
@@ -819,12 +852,12 @@
         width: 100%;
     }
 
-    %igx-input-group__border-label-inner--compact{
+    %igx-input-group__border-label-inner--compact {
         height: calc(#{$label-compact} * 2);
         top: calc(50% - #{$label-compact});
     }
 
-    %igx-input-group__border-label-inner--cosy{
+    %igx-input-group__border-label-inner--cosy {
         height: calc(#{$label-cosy} * 2);
         top: calc(50% - #{$label-cosy});
     }
@@ -833,44 +866,42 @@
         top: -$label-comf;
     }
 
-    %igx-input-group__border-label-inner--focus--cosy{
+    %igx-input-group__border-label-inner--focus--cosy {
         top: -$label-cosy;
     }
 
-    %igx-input-group__border-label-inner--focus--compact{
+    %igx-input-group__border-label-inner--focus--compact {
         top: -$label-compact-focus;
     }
 
-    %igx-input-group__border-label-line{
+    %igx-input-group__border-label-line {
         height: 1px;
         background: --var($theme, 'idle-bottom-line-color');
         flex: 1;
-        align-self: center;
         position: relative;
         width: calc(100% + 1px);
         display: none;
     }
 
+    %igx-input-group__border-label-line--filled,
     %igx-input-group__border-label-line--focus {
         display: block;
-        background: --var($theme, 'focused-secondary-color');
     }
 
-    %igx-input-group__border-label-line--filled {
-        display: block;
+    %igx-input-group__border-label-line--focus {
+        background: --var($theme, 'focused-secondary-color') !important;
     }
 
     %igx-input-group__border-label-line--error {
-        background: --var($theme, 'error-secondary-color');
+        background: --var($theme, 'error-secondary-color') !important;
     }
 
     %igx-input-group__border-label-line--success {
-        background: --var($theme, 'success-secondary-color');
+        background: --var($theme, 'success-secondary-color') !important;
     }
 
     %igx-input-group__prefix-placeholder,
     %igx-input-group__suffix-placeholder {
-        height: 100%;
         width: rem(16px, map-get($base-scale-size, 'comfortable'));
         border: 1px solid --var($theme, 'idle-bottom-line-color');
     }
@@ -986,16 +1017,10 @@
     }
 
     %form-group-prefix {
-        padding: rem(8px, map-get($base-scale-size, 'comfortable'))
-            rem(8px, map-get($base-scale-size, 'comfortable'))
-            rem(8px, map-get($base-scale-size, 'comfortable'))
-            0;
+        padding: rem(8px, map-get($base-scale-size, 'comfortable')) rem(8px, map-get($base-scale-size, 'comfortable')) rem(8px, map-get($base-scale-size, 'comfortable')) 0;
 
         [dir='rtl'] & {
-            padding: rem(8px, map-get($base-scale-size, 'comfortable'))
-                0
-                rem(8px, map-get($base-scale-size, 'comfortable'))
-                rem(8px, map-get($base-scale-size, 'comfortable'));
+            padding: rem(8px, map-get($base-scale-size, 'comfortable')) 0 rem(8px, map-get($base-scale-size, 'comfortable')) rem(8px, map-get($base-scale-size, 'comfortable'));
         }
     }
 
@@ -1015,30 +1040,18 @@
     }
 
     %form-group-prefix--cosy {
-        padding: rem(8px, map-get($base-scale-size, 'cosy'))
-            rem(8px, map-get($base-scale-size, 'cosy'))
-            rem(8px, map-get($base-scale-size, 'cosy'))
-            0;
+        padding: rem(8px, map-get($base-scale-size, 'cosy')) rem(8px, map-get($base-scale-size, 'cosy')) rem(8px, map-get($base-scale-size, 'cosy')) 0;
 
         [dir='rtl'] & {
-            padding: rem(8px, map-get($base-scale-size, 'cosy'))
-                0
-                rem(8px, map-get($base-scale-size, 'cosy'))
-                rem(8px, map-get($base-scale-size, 'cosy'));
+            padding: rem(8px, map-get($base-scale-size, 'cosy')) 0 rem(8px, map-get($base-scale-size, 'cosy')) rem(8px, map-get($base-scale-size, 'cosy'));
         }
     }
 
     %form-group-prefix--compact {
-        padding: rem(8px, map-get($base-scale-size, 'compact'))
-            rem(8px, map-get($base-scale-size, 'compact'))
-            rem(8px, map-get($base-scale-size, 'compact'))
-            0;
+        padding: rem(8px, map-get($base-scale-size, 'compact')) rem(8px, map-get($base-scale-size, 'compact')) rem(8px, map-get($base-scale-size, 'compact')) 0;
 
         [dir='rtl'] & {
-            padding: rem(8px, map-get($base-scale-size, 'compact'))
-                0
-                rem(8px, map-get($base-scale-size, 'compact'))
-                rem(8px, map-get($base-scale-size, 'compact'));
+            padding: rem(8px, map-get($base-scale-size, 'compact')) 0 rem(8px, map-get($base-scale-size, 'compact')) rem(8px, map-get($base-scale-size, 'compact'));
         }
     }
 
@@ -1052,8 +1065,25 @@
 
     %form-group-prefix--error,
     %form-group-suffix--error {
-        color: --var($theme, 'error-secondary-color');
+        color: --var($theme, 'error-secondary-color') !important;
     }
+
+    %form-group-prefix--success,
+    %form-group-suffix--success {
+        color: --var($theme, 'success-secondary-color') !important;
+    }
+
+    %form-group-prefix--focus,
+    %form-group-suffix--focus {
+        color: --var($theme, 'focused-bottom-line-color');
+    }
+
+    %form-group-prefix--disabled,
+    %form-group-suffix--disabled {
+        color: --var($theme, 'disabled-text-color') !important;
+        border-color: --var($theme, 'disabled-border-color') !important;
+    }
+
 
     %form-group-prefix--box,
     %form-group-suffix--box {

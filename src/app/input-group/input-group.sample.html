@@ -1,110 +1,110 @@
 <app-page-header title="Input Group"></app-page-header>
 <div class="samples">
-    <input-group-child-sample></input-group-child-sample>
+<!--    <input-group-child-sample></input-group-child-sample>-->
 
-    <h3 class="sample-title">Line Style Input with required @Input</h3>
-    <form class="form">
-        <igx-input-group>
-            <label igxLabel>Required</label>
-            <input igxInput #myInput="igxInput" [value]="value" [required]="isRequired"/>
-            <igx-hint *ngIf="!myInput.isValid">This is required</igx-hint>
-        </igx-input-group>
-        <button igxButton (click)="toggleRequired()">Toggle required</button>
-    </form>
+<!--    <h3 class="sample-title">Line Style Input with required @Input</h3>-->
+<!--    <form class="form">-->
+<!--        <igx-input-group>-->
+<!--            <label igxLabel>Required</label>-->
+<!--            <input igxInput #myInput="igxInput" [value]="value" [required]="isRequired"/>-->
+<!--            <igx-hint *ngIf="!myInput.isValid">This is required</igx-hint>-->
+<!--        </igx-input-group>-->
+<!--        <button igxButton (click)="toggleRequired()">Toggle required</button>-->
+<!--    </form>-->
 
-    <h3 class="sample-title">Line Style Input</h3>
-    <form class="form">
-        <!-- Basic text field -->
-        <igx-input-group>
-            <input igxInput name="firstName" type="text" [(ngModel)]="user.firstName" required />
-            <label igxLabel for="firstName">Text Field</label>
-        </igx-input-group>
+<!--    <h3 class="sample-title">Line Style Input</h3>-->
+<!--    <form class="form">-->
+<!--        &lt;!&ndash; Basic text field &ndash;&gt;-->
+<!--        <igx-input-group>-->
+<!--            <input igxInput name="firstName" type="text" [(ngModel)]="user.firstName" required />-->
+<!--            <label igxLabel for="firstName">Text Field</label>-->
+<!--        </igx-input-group>-->
 
-        <!-- Basic text field w/ placeholder -->
-        <igx-input-group>
-            <label igxLabel>Label</label>
-            <input igxInput value="read-only" type="text" placeholder="Placeholder" readonly/>
-        </igx-input-group>
+<!--        &lt;!&ndash; Basic text field w/ placeholder &ndash;&gt;-->
+<!--        <igx-input-group>-->
+<!--            <label igxLabel>Label</label>-->
+<!--            <input igxInput value="read-only" type="text" placeholder="Placeholder" readonly/>-->
+<!--        </igx-input-group>-->
 
-        <!-- Text field w/ text prefix -->
-        <igx-input-group displayDensity="compact">
-            <igx-prefix>+359</igx-prefix>
-            <label igxLabel>Phone</label>
-            <input igxInput [igxMask]="'000 000 000'" promptChar="*" type="text" />
-        </igx-input-group>
+<!--        &lt;!&ndash; Text field w/ text prefix &ndash;&gt;-->
+<!--        <igx-input-group displayDensity="compact">-->
+<!--            <igx-prefix>+359</igx-prefix>-->
+<!--            <label igxLabel>Phone</label>-->
+<!--            <input igxInput [igxMask]="'000 000 000'" promptChar="*" type="text" />-->
+<!--        </igx-input-group>-->
 
-        <!-- Text field w/ icon prefix -->
-        <igx-input-group [supressInputAutofocus]="true">
-            <igx-prefix>
-                <igx-icon>email</igx-icon>
-            </igx-prefix>
-            <label igxLabel>Email address</label>
-            <input igxInput type="email" required />
-        </igx-input-group>
+<!--        &lt;!&ndash; Text field w/ icon prefix &ndash;&gt;-->
+<!--        <igx-input-group [supressInputAutofocus]="true">-->
+<!--            <igx-prefix>-->
+<!--                <igx-icon>email</igx-icon>-->
+<!--            </igx-prefix>-->
+<!--            <label igxLabel>Email address</label>-->
+<!--            <input igxInput type="email" required />-->
+<!--        </igx-input-group>-->
 
-        <!-- Text field w/ icon suffix and hint at the beginning  -->
-        <igx-input-group>
-            <label igxLabel>Search Contacts</label>
-            <input igxInput type="text" />
-            <igx-suffix>
-                <igx-icon>person</igx-icon>
-            </igx-suffix>
-            <igx-hint position="start">Search by phone number or name</igx-hint>
-        </igx-input-group>
+<!--        &lt;!&ndash; Text field w/ icon suffix and hint at the beginning  &ndash;&gt;-->
+<!--        <igx-input-group>-->
+<!--            <label igxLabel>Search Contacts</label>-->
+<!--            <input igxInput type="text" />-->
+<!--            <igx-suffix>-->
+<!--                <igx-icon>person</igx-icon>-->
+<!--            </igx-suffix>-->
+<!--            <igx-hint position="start">Search by phone number or name</igx-hint>-->
+<!--        </igx-input-group>-->
 
-        <!-- Textarea group -->
-        <igx-input-group>
-            <label igxLabel>Message</label>
-            <textarea igxInput #textarea maxlength="280"></textarea>
-            <igx-hint position="start">Helper text</igx-hint>
-            <igx-hint position="end">{{textarea.value.length}}/280</igx-hint>
-        </igx-input-group>
+<!--        &lt;!&ndash; Textarea group &ndash;&gt;-->
+<!--        <igx-input-group>-->
+<!--            <label igxLabel>Message</label>-->
+<!--            <textarea igxInput #textarea maxlength="280"></textarea>-->
+<!--            <igx-hint position="start">Helper text</igx-hint>-->
+<!--            <igx-hint position="end">{{textarea.value.length}}/280</igx-hint>-->
+<!--        </igx-input-group>-->
 
-        <!-- Text field w/ text prefix - disabled -->
-        <igx-input-group>
-            <igx-prefix>+359</igx-prefix>
-            <label igxLabel>Phone</label>
-            <input igxInput type="tel" value="12345678" disabled="disabled" />
-            <igx-suffix>
-                <igx-icon>phone</igx-icon>
-            </igx-suffix>
-            <igx-hint position="start">Ex.: +359 888 123 456</igx-hint>
-        </igx-input-group>
-    </form>
+<!--        &lt;!&ndash; Text field w/ text prefix - disabled &ndash;&gt;-->
+<!--        <igx-input-group>-->
+<!--            <igx-prefix>+359</igx-prefix>-->
+<!--            <label igxLabel>Phone</label>-->
+<!--            <input igxInput type="tel" value="12345678" disabled="disabled" />-->
+<!--            <igx-suffix>-->
+<!--                <igx-icon>phone</igx-icon>-->
+<!--            </igx-suffix>-->
+<!--            <igx-hint position="start">Ex.: +359 888 123 456</igx-hint>-->
+<!--        </igx-input-group>-->
+<!--    </form>-->
 
-    <h3 class="sample-title">Box Style Input</h3>
-    <form class="form">
-        <!-- Boxed text field -->
-        <igx-input-group type="box">
-            <label igxLabel>Text Field</label>
-            <input igxInput [(ngModel)]="user.lastName" name="lastName" />
-        </igx-input-group>
+<!--    <h3 class="sample-title">Box Style Input</h3>-->
+<!--    <form class="form">-->
+<!--        &lt;!&ndash; Boxed text field &ndash;&gt;-->
+<!--        <igx-input-group type="box">-->
+<!--            <label igxLabel>Text Field</label>-->
+<!--            <input igxInput [(ngModel)]="user.lastName" name="lastName" />-->
+<!--        </igx-input-group>-->
 
-        <!-- Boxed text field w/ icon suffix -->
-        <igx-input-group type="box">
-            <label igxLabel>Phone</label>
-            <input igxInput type="tel" />
-            <igx-suffix>
-                <igx-icon>phone</igx-icon>
-            </igx-suffix>
-            <igx-hint>Call your mom</igx-hint>
-        </igx-input-group>
+<!--        &lt;!&ndash; Boxed text field w/ icon suffix &ndash;&gt;-->
+<!--        <igx-input-group type="box">-->
+<!--            <label igxLabel>Phone</label>-->
+<!--            <input igxInput type="tel" />-->
+<!--            <igx-suffix>-->
+<!--                <igx-icon>phone</igx-icon>-->
+<!--            </igx-suffix>-->
+<!--            <igx-hint>Call your mom</igx-hint>-->
+<!--        </igx-input-group>-->
 
-        <!-- Boxed textarea field -->
-        <igx-input-group type="box">
-            <label igxLabel>Message</label>
-            <textarea igxInput></textarea>
-        </igx-input-group>
+<!--        &lt;!&ndash; Boxed textarea field &ndash;&gt;-->
+<!--        <igx-input-group type="box">-->
+<!--            <label igxLabel>Message</label>-->
+<!--            <textarea igxInput></textarea>-->
+<!--        </igx-input-group>-->
 
-        <!-- Boxed text field w/ icon suffix - disabled -->
-        <igx-input-group type="box">
-            <label igxLabel>Phone</label>
-            <input igxInput type="tel" value="123456789" disabled="disabled" />
-            <igx-suffix>
-                <igx-icon>phone</igx-icon>
-            </igx-suffix>
-        </igx-input-group>
-    </form>
+<!--        &lt;!&ndash; Boxed text field w/ icon suffix - disabled &ndash;&gt;-->
+<!--        <igx-input-group type="box">-->
+<!--            <label igxLabel>Phone</label>-->
+<!--            <input igxInput type="tel" value="123456789" disabled="disabled" />-->
+<!--            <igx-suffix>-->
+<!--                <igx-icon>phone</igx-icon>-->
+<!--            </igx-suffix>-->
+<!--        </igx-input-group>-->
+<!--    </form>-->
 
     <h3 class="sample-title">Border Style Input</h3>
     <form class="form">
@@ -148,34 +148,34 @@
         </igx-input-group>
     </form>
 
-    <h3 class="sample-title">Search Style Input</h3>
-    <form class="form">
-        <!-- Search text field -->
-        <igx-input-group type="search">
-            <input #input igxInput placeholder="Search" />
-            <igx-prefix>
-                <igx-icon>search</igx-icon>
-            </igx-prefix>
-            <igx-suffix *ngIf="input.value.length > 0" (click)="input.value = input.defaultValue">
-                <igx-icon>clear</igx-icon>
-            </igx-suffix>
-            <igx-suffix>
-                <igx-icon>mic</igx-icon>
-            </igx-suffix>
-        </igx-input-group>
+<!--    <h3 class="sample-title">Search Style Input</h3>-->
+<!--    <form class="form">-->
+<!--        &lt;!&ndash; Search text field &ndash;&gt;-->
+<!--        <igx-input-group type="search">-->
+<!--            <input #input igxInput placeholder="Search" />-->
+<!--            <igx-prefix>-->
+<!--                <igx-icon>search</igx-icon>-->
+<!--            </igx-prefix>-->
+<!--            <igx-suffix *ngIf="input.value.length > 0" (click)="input.value = input.defaultValue">-->
+<!--                <igx-icon>clear</igx-icon>-->
+<!--            </igx-suffix>-->
+<!--            <igx-suffix>-->
+<!--                <igx-icon>mic</igx-icon>-->
+<!--            </igx-suffix>-->
+<!--        </igx-input-group>-->
 
-        <!-- Search text field -->
-        <igx-input-group type="search">
-            <input #input1 igxInput placeholder="Search" disabled="disabled" />
-            <igx-prefix>
-                <igx-icon>search</igx-icon>
-            </igx-prefix>
-            <igx-suffix *ngIf="input1.value.length > 0" (click)="input1.value = ''">
-                <igx-icon>clear</igx-icon>
-            </igx-suffix>
-            <igx-suffix>
-                <igx-icon>mic</igx-icon>
-            </igx-suffix>
-        </igx-input-group>
-    </form>
+<!--        &lt;!&ndash; Search text field &ndash;&gt;-->
+<!--        <igx-input-group type="search">-->
+<!--            <input #input1 igxInput placeholder="Search" disabled="disabled" />-->
+<!--            <igx-prefix>-->
+<!--                <igx-icon>search</igx-icon>-->
+<!--            </igx-prefix>-->
+<!--            <igx-suffix *ngIf="input1.value.length > 0" (click)="input1.value = ''">-->
+<!--                <igx-icon>clear</igx-icon>-->
+<!--            </igx-suffix>-->
+<!--            <igx-suffix>-->
+<!--                <igx-icon>mic</igx-icon>-->
+<!--            </igx-suffix>-->
+<!--        </igx-input-group>-->
+<!--    </form>-->
 </div>
