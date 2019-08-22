@@ -2425,10 +2425,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public draggedColumn: IgxColumnComponent;
 
-    /**
-     * @hidden
-     */
-    public allRowsSelected = false;
 
     /**
      * @hidden
