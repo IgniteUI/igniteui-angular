@@ -3,7 +3,7 @@
         <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : this.grid.dragIndicatorIconBase"></ng-container>
     </div>
 </ng-container>
-<ng-container *ngIf="showRowSelectors">
+<ng-container *ngIf="showRowSelectors" (click)="onRowSelectorClick($event)">
     <div class="igx-grid__cbx-selection">
         <ng-template *ngTemplateOutlet="
             this.grid.rowSelectorTemplate ? this.grid.rowSelectorTemplate : rowSelectorBaseTemplate;
@@ -110,13 +110,12 @@
     <ng-container *ngTemplateOutlet="col.visibleIndex === 0 ? treeCellTemplate : cellTemplate"></ng-container>
 </ng-template>
 <ng-template #rowSelectorBaseTemplate>
-        <igx-checkbox
-            [checked]="selected"
-            [disabled]="deleted"
-            (click)="$event.stopPropagation()"
-            (change)="onRowSelect($event)"
-            disableRipple="true"
-            [disableTransitions]="grid.disableTransitions"
-            [aria-label]="rowCheckboxAriaLabel">
-        </igx-checkbox>
+    <igx-checkbox
+        (click)="$event.preventDefault()"
+        [checked]="selected"
+        [disabled]="deleted"
+        disableRipple="true"
+        [disableTransitions]="grid.disableTransitions"
+        [aria-label]="rowCheckboxAriaLabel">
+    </igx-checkbox>
 </ng-template>

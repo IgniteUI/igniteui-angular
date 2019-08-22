@@ -292,9 +292,14 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     /**
      * @hidden
      */
-    public onRowSelect(event) {
-        event.checked ? this.selectionService.selectRowbyID(this.rowID, false, event) :
-                this.selectionService.deselectRow(this.rowID, event);
+    public onRowSelectorClick(event) {
+        event.stopPropagation();
+        if (event.shiftKey && this.grid.rowSelection === 'multiple') {
+            this.selectionService.selectMultipleRows(this.rowID, this.rowData, event);
+            return;
+        }
+        this.selected ? this.selectionService.deselectRow(this.rowID, event) :
+        this.selectionService.selectRowbyID(this.rowID, false, event);
     }
 
     /**

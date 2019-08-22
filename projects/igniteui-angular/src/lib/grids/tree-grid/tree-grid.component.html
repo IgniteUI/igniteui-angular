@@ -21,7 +21,7 @@
                 </div>
             </ng-container>
             <ng-container *ngIf="showRowSelectors">
-                <div class="igx-grid__cbx-selection" #headerSelectorContainer [ngClass]="{
+                <div class="igx-grid__cbx-selection" (click)="onHeaderSelectorClick($event)" #headerSelectorContainer [ngClass]="{
                     'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible }">
                     <ng-template #headSelector
                         *ngTemplateOutlet="
@@ -192,10 +192,10 @@
 <ng-template #headSelectorBaseTemplate>
     <igx-checkbox
         [checked]="selectionService.areAllRowSelected()"
-        (change)="onHeadSelectorClick($event)"
         [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
+        (click)="$event.preventDefault()"
         disableRipple="true"
-        [indeterminate]="selectionService.hasSomeRowSelected()" 
+        [indeterminate]="selectionService.hasSomeRowSelected()"
         [aria-label]="headerCheckboxAriaLabel"
         #headerCheckbox>
     </igx-checkbox>

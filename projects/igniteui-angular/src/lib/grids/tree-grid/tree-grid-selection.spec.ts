@@ -75,12 +75,13 @@ describe('IgxTreeGrid - Selection ', () => {
             fix.detectChanges();
 
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], true);
+            expect(treeGrid.selectedRows().length).toEqual(10);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
 
             treeGrid.deselectAllRows();
             fix.detectChanges();
 
-            TreeGridFunctions.verifyDataRowsSelection(fix, [], true);
+            expect(treeGrid.selectedRows()).toEqual([]);
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], false);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
         });
@@ -457,6 +458,7 @@ describe('IgxTreeGrid - Selection ', () => {
         }));
 
         it('should deselect row when delete its parent', () => {
+            pending('Related to the bug #5673');
             treeGrid.selectRows([treeGrid.getRowByIndex(3).rowID, treeGrid.getRowByIndex(5).rowID], true);
             fix.detectChanges();
 
@@ -545,6 +547,7 @@ describe('IgxTreeGrid - Selection ', () => {
         });
 
         it('should have correct header checkbox when add a row', () => {
+            pending('Related to the bug #5673');
             treeGrid.selectAllRows();
             fix.detectChanges();
 

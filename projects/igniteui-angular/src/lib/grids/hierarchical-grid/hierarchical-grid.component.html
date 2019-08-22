@@ -31,7 +31,7 @@
                 </div>
             </ng-container>
             <ng-container *ngIf="showRowSelectors">
-                <div class="igx-grid__cbx-selection" #headerSelectorContainer [ngClass]="{
+                <div class="igx-grid__cbx-selection" (click)="onHeaderSelectorClick($event)" #headerSelectorContainer [ngClass]="{
                         'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible
                     }">
                     <ng-template #headSelector
@@ -211,15 +211,15 @@
 </ng-template>
 
 <ng-template #headSelectorBaseTemplate>
-    <igx-checkbox
-        [checked]="allRowsSelected"
-        (change)="onHeadSelectorClick($event)"
-        disableRipple="true"
-        [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
-        [indeterminate]="selectionService.hasSomeRowSelected()"
-        [aria-label]="headerCheckboxAriaLabel"
-        #headerCheckbox>
-    </igx-checkbox>
+        <igx-checkbox
+            [checked]="allRowsSelected"
+            disableRipple="true"
+            [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
+            (click)="$event.preventDefault()"
+            [indeterminate]="selectionService.hasSomeRowSelected()"
+            [aria-label]="headerCheckboxAriaLabel"
+            #headerCheckbox>
+        </igx-checkbox>
 </ng-template>
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>
