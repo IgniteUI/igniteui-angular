@@ -80,7 +80,6 @@
     "gulp-uglify": "^3.0.1",
     "gulp-util": "^3.0.8",
     "hammer-simulator": "0.0.1",
-    "igniteui-sassdoc-theme": "file:../../../Users/AKAmenov/igniteui-sassdoc-theme-0.1.0.tgz",
     "jasmine": "~3.3.1",
     "jasmine-core": "~3.3.0",
     "jasmine-spec-reporter": "~4.2.1",
