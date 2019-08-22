@@ -228,10 +228,8 @@ describe('General igxDrag/igxDrop', () => {
         fix.detectChanges();
         await wait(100);
 
-        // We compare the base position and the new position + how much the mouse has moved.
-        // We have moved 20px but because the element has 10px margin we have to add it too to the position check.
-        expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(startingX + 30);
-        expect(firstDrag.ghostElement.getBoundingClientRect().top).toEqual(startingY + 30);
+        expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(startingX + 20);
+        expect(firstDrag.ghostElement.getBoundingClientRect().top).toEqual(startingY + 20);
 
         // Step 4.
         UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 20, startingY + 20);
@@ -332,8 +330,8 @@ describe('General igxDrag/igxDrop', () => {
 
         // We compare the base position and the new position + how much the mouse has moved.
         // + 10 margin to the final ghost position
-        expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(startingX + 30);
-        expect(firstDrag.ghostElement.getBoundingClientRect().top).toEqual(startingY + 30);
+        expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(startingX + 20);
+        expect(firstDrag.ghostElement.getBoundingClientRect().top).toEqual(startingY + 20);
         expect(firstDrag.ghostElement.innerText).toEqual('Drag Template');
         expect(firstDrag.ghostElement.className).toEqual('ghostElement');
 
@@ -502,8 +500,8 @@ describe('General igxDrag/igxDrop', () => {
         const initialPageY = firstDrag.pageY;
         firstDrag.ghost = false;
 
-        expect(initialPageX).toEqual(dragDirsRects[0].left - 10);
-        expect(initialPageY).toEqual(dragDirsRects[0].top - 10);
+        expect(initialPageX).toEqual(dragDirsRects[0].left);
+        expect(initialPageY).toEqual(dragDirsRects[0].top);
 
         // Step 1.
         UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
@@ -536,12 +534,56 @@ describe('General igxDrag/igxDrop', () => {
         expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 20);
         expect(firstElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top + 20);
 
-        // pageX/pageY from the directive should be equal to the getBoundingClientRect top/left.
-        const startLocation = new IgxDragLocation(initialPageX,  initialPageY);
-        firstDrag.setLocation(startLocation);
+        firstDrag.setLocation(new IgxDragLocation(initialPageX,  initialPageY));
 
         expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
-        expect(firstElement.getBoundingClientRect().top).toEqual(Math.round(dragDirsRects[0].top));
+        expect(firstElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top);
+    }));
+
+    it('should correctly set location using setLocation() method when ghost is rendered.', (async() => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+        const initialPageX = firstDrag.pageX;
+        const initialPageY = firstDrag.pageY;
+
+        expect(initialPageX).toEqual(dragDirsRects[0].left);
+        expect(initialPageY).toEqual(dragDirsRects[0].top);
+
+        // Step 1.
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+
+        // Step 2.
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait(100);
+
+        expect(firstDrag.ghostElement).toBeTruthy();
+        expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 10);
+        expect(firstDrag.ghostElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top + 10);
+
+        // Step 3.
+        UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait(100);
+
+        firstDrag.setLocation(new IgxDragLocation(initialPageX,  initialPageY));
+        fix.detectChanges();
+        await wait(100);
+
+        expect(firstDrag.ghostElement).toBeTruthy();
+        expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
+        expect(firstDrag.ghostElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top);
+
+        // Step 4.
+        UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait();
+
+        expect(firstDrag.ghostElement).not.toBeTruthy();
     }));
 
     it('should correctly drag using drag handle and not the whole element', (async() => {
@@ -683,6 +725,177 @@ describe('General igxDrag/igxDrop', () => {
         });
         expect(fix.componentInstance.container.nativeElement.children.length).toEqual(2);
         expect(dropArea.element.nativeElement.children.length).toEqual(1);
+    }));
+
+    it('should return the base element to its original position when executing transitionToOrigin() after dragging.', (async(done) => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+        firstDrag.ghost = false;
+
+        firstDrag.dragEnd.pipe(first()).subscribe(() => {
+            firstDrag.transitionToOrigin();
+        });
+
+        firstDrag.transitioned.pipe(first()).subscribe(() => {
+            expect(firstDrag.element.nativeElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
+            expect(firstDrag.element.nativeElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top);
+
+            done();
+        });
+
+        expect(firstDrag.element.nativeElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
+        expect(firstDrag.element.nativeElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top);
+
+        // Step 1.
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+
+        // Step 2.
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait(100);
+
+        // Step 3.
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait(100);
+
+        expect(firstDrag.element.nativeElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 20);
+        expect(firstDrag.element.nativeElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top + 20);
+
+        // Step 4.
+        UIInteractions.simulatePointerEvent('pointerup', firstElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait(100);
+
+        const currLeft = firstDrag.element.nativeElement.getBoundingClientRect().left;
+        const currTop = firstDrag.element.nativeElement.getBoundingClientRect().top;
+
+        expect(dragDirsRects[0].left < currLeft && currLeft <= (dragDirsRects[0].left + 20)).toBeTruthy();
+        expect(dragDirsRects[0].top < currTop && currTop <= (dragDirsRects[0].top + 20)).toBeTruthy();
+
+    }));
+
+    it('should return the ghost element to its original position when executing transitionToOrigin() after dragging.', (async(done) => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+
+        firstDrag.dragEnd.pipe(first()).subscribe(() => {
+            firstDrag.transitionToOrigin();
+        });
+
+        firstDrag.transitioned.pipe(first()).subscribe(() => {
+            expect(firstDrag.ghostElement).not.toBeTruthy();
+            done();
+        });
+
+        expect(firstDrag.ghostElement).not.toBeTruthy();
+
+        // Step 1.
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+
+        // Step 2.
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait(100);
+
+        // Step 3.
+        UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait(100);
+
+        expect(firstDrag.ghostElement).toBeTruthy();
+        expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 20);
+        expect(firstDrag.ghostElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top + 20);
+
+        // Step 4.
+        UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait(100);
+
+        expect(firstDrag.ghostElement).toBeTruthy();
+
+        const currLeft = firstDrag.ghostElement.getBoundingClientRect().left;
+        const currTop = firstDrag.ghostElement.getBoundingClientRect().top;
+        expect(dragDirsRects[0].left < currLeft && currLeft <= (dragDirsRects[0].left + 20)).toBeTruthy();
+        expect(dragDirsRects[0].top < currTop && currTop <= (dragDirsRects[0].top + 20)).toBeTruthy();
+    }));
+
+    it('should transition the base element to target location when executing transitionTo().', (async(done) => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        firstDrag.ghost = false;
+
+        firstDrag.transitioned.pipe(first()).subscribe(() => {
+            expect(firstDrag.element.nativeElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 50);
+            expect(firstDrag.element.nativeElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top + 50);
+            done();
+        });
+
+        expect(firstDrag.element.nativeElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
+        expect(firstDrag.element.nativeElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top);
+
+        firstDrag.transitionTo(new IgxDragLocation(dragDirsRects[0].left + 50, dragDirsRects[0].top + 50));
+
+        const currLeft = firstDrag.element.nativeElement.getBoundingClientRect().left;
+        const currTop = firstDrag.element.nativeElement.getBoundingClientRect().top;
+        expect(dragDirsRects[0].left <= currLeft && currLeft < (dragDirsRects[0].left + 50)).toBeTruthy();
+        expect(dragDirsRects[0].top <= currTop && currTop < (dragDirsRects[0].top + 50)).toBeTruthy();
+    }));
+
+    it('should transition the ghost element to target location when executing transitionTo() after dragging.', (async(done) => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+
+        firstDrag.dragEnd.pipe(first()).subscribe(() => {
+            firstDrag.transitionTo(new IgxDragLocation(dragDirsRects[0].left + 50, dragDirsRects[0].top + 50));
+        });
+
+        firstDrag.transitioned.pipe(first()).subscribe(() => {
+            expect(firstDrag.ghostElement).not.toBeTruthy();
+            done();
+        });
+
+        expect(firstDrag.ghostElement).not.toBeTruthy();
+
+        // Step 1.
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+
+        // Step 2.
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait(100);
+
+        // Step 3.
+        UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait(100);
+
+        expect(firstDrag.ghostElement).toBeTruthy();
+        expect(firstDrag.ghostElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left + 20);
+        expect(firstDrag.ghostElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top + 20);
+
+        // Step 4.
+        UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait(100);
+
+        expect(firstDrag.ghostElement).toBeTruthy();
+
+        const currLeft = firstDrag.ghostElement.getBoundingClientRect().left;
+        const currTop = firstDrag.ghostElement.getBoundingClientRect().top;
+        expect((dragDirsRects[0].left + 20) <= currLeft && currLeft < (dragDirsRects[0].left + 50)).toBeTruthy();
+        expect((dragDirsRects[0].top + 20) <= currTop && currTop < (dragDirsRects[0].top + 50)).toBeTruthy();
     }));
 });
 
