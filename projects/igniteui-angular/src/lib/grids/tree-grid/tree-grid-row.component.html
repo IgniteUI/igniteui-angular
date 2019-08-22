@@ -4,8 +4,8 @@
     </div>
 </ng-container>
 <ng-container *ngIf="showRowCheckboxes">
-    <div class="igx-grid__cbx-selection">
-        <igx-checkbox [checked]="selected" [disabled]="deleted" (click)="$event.stopPropagation()" (change)="onCheckboxClick($event)" disableRipple="true" [disableTransitions]="grid.disableTransitions" [aria-label]="rowCheckboxAriaLabel"></igx-checkbox>
+    <div class="igx-grid__cbx-selection" (click)="onRowSelectorClick($event)">
+        <igx-checkbox (click)="$event.preventDefault()" [checked]="selected" [disabled]="deleted" disableRipple="true" [disableTransitions]="grid.disableTransitions" [aria-label]="rowCheckboxAriaLabel"></igx-checkbox>
     </div>
 </ng-container>
 <ng-container *ngIf="pinnedColumns.length > 0">

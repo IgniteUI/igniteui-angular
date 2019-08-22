@@ -4708,8 +4708,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    public onHeaderCheckboxClick(event) {
-        event.checked ? this.selectionService.selectAllRows(event) : this.selectionService.clearRowSelection(event);
+    public onHeaderSelectorClick(event) {
+        this.selectionService.areAllRowSelected() ?
+            this.selectionService.clearRowSelection(event) : this.selectionService.selectAllRows(event);
     }
 
     /**
@@ -4791,7 +4792,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (onlyFilterData && this.filteredData && this.filteredData.length > 0) {
             this.deselectRows(this.selectionService.getRowIDs(this.filteredData));
         } else {
-            this.selectionService.rowSelection.clear();
+            this.selectionService.selectRowsWithNoEvent([], true);
             this.cdr.markForCheck();
         }
     }

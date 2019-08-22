@@ -31,11 +31,11 @@
                 </div>
             </ng-container>
             <ng-container *ngIf="showRowCheckboxes">
-                <div class="igx-grid__cbx-selection" #headerCheckboxContainer [ngClass]="{
+                <div class="igx-grid__cbx-selection" (click)="onHeaderSelectorClick($event)" #headerCheckboxContainer [ngClass]="{
                         'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible
                     }">
-                    <igx-checkbox [checked]="allRowsSelected" (change)="onHeaderCheckboxClick($event)" disableRipple="true" [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
-                        [indeterminate]="selectionService.hasSomeRowSelected()" [aria-label]="headerCheckboxAriaLabel" #headerCheckbox></igx-checkbox>
+                    <igx-checkbox [checked]="allRowsSelected" disableRipple="true" [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
+                        (click)="$event.preventDefault()" [indeterminate]="selectionService.hasSomeRowSelected()" [aria-label]="headerCheckboxAriaLabel" #headerCheckbox></igx-checkbox>
                 </div>
             </ng-container>
             <ng-container *ngIf="pinnedColumns.length > 0">

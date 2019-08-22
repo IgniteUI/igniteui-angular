@@ -556,9 +556,10 @@ export class IgxGridSelectionService {
 
     selectAllRows(event?) {
         const allRowIDs = this.getRowIDs(this.allData);
-        const addedRows = this.rowSelection.size ? allRowIDs.filter((rID) => !this.isRowSelected(rID)) : allRowIDs;
+        const addedRows =  allRowIDs.filter((rID) => !this.isRowSelected(rID));
+        const newSelection = this.rowSelection.size ? allRowIDs.concat(this.getSelectedRows()) : addedRows;
 
-        this.emitRowSelectionEvent(allRowIDs, addedRows, [], event);
+        this.emitRowSelectionEvent(newSelection, addedRows, [], event);
     }
 
     selectRowbyID(rowID, clearPrevSelection?, event?) {
