@@ -9,6 +9,7 @@ import {
     ViewChild,
 } from '@angular/core';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
+import { DataType } from '../../data-operations/data-util';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
 import { IgxGridSelectionService, ISelectionNode } from '../../core/grid-selection';
@@ -217,8 +218,6 @@ export class IgxGridGroupByRowComponent {
         const selection = this.gridSelection;
         selection.keyboardState.shift = event.shiftKey && !(key === 'tab');
 
-        const visibleColumnIndex = selection.activeElement && this.grid.columnList.filter(col => !col.hidden).map(c => c.visibleIndex)
-            .indexOf(selection.activeElement.column) !== -1 ? selection.activeElement.column : 0;
         const activeNode = selection.activeElement ? Object.assign({}, selection.activeElement) : this.selectionNode;
         activeNode.row = this.index;
         switch (key) {
@@ -250,7 +249,8 @@ export class IgxGridGroupByRowComponent {
      * @hidden
      */
     get dataType(): any {
-        return this.grid.getColumnByName(this.groupRow.expression.fieldName).dataType;
+        const column = this.grid.getColumnByName(this.groupRow.expression.fieldName);
+        return (column && column.dataType) || DataType.String;
     }
 
     private handleTabKey(shift: boolean, activeNode: ISelectionNode) {

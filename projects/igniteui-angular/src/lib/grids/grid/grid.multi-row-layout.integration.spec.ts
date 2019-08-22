@@ -1,5 +1,5 @@
 ﻿import { configureTestSuite } from '../../test-utils/configure-suite';
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
@@ -12,7 +12,7 @@ import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 
-describe('IgxGrid - multi-row-layout Integration - ', () => {
+describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     configureTestSuite();
     let fixture;
     let grid: IgxGridComponent;
@@ -32,12 +32,12 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
     }));
 
     describe('Hiding ', () => {
-        beforeEach(async(() => {
+        beforeEach(() => {
             fixture = TestBed.createComponent(ColumnLayouHidingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
             colGroups = fixture.componentInstance.colGroups;
-        }));
+        });
 
         it('should allow setting a whole group as hidden/shown.', () => {
 
@@ -66,6 +66,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             // show group
             fixture.componentInstance.colGroups[0].hidden = false;
             fixture.detectChanges();
+            fixture.detectChanges();
 
             expect(grid.getColumnByName('group1').hidden).toBeFalsy();
             expect(grid.getColumnByName('PostalCode').hidden).toBeFalsy();
@@ -86,6 +87,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
 
             // hide the other group
             fixture.componentInstance.colGroups[1].hidden = true;
+            fixture.detectChanges();
             fixture.detectChanges();
 
             expect(grid.getColumnByName('PostalCode').hidden).toBeFalsy();
@@ -267,7 +269,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             const lastCell = grid.rowList.first.cells.toArray()[9];
             expect(lastCell.column.field).toBe('Address');
             expect(lastCell.column.parent.field).toBe('group4');
-            expect(lastCell.nativeElement.getBoundingClientRect().right + 1)
+            expect(lastCell.nativeElement.getBoundingClientRect().right)
              .toEqual(grid.tbody.nativeElement.getBoundingClientRect().right);
 
         });
@@ -320,6 +322,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups.slice(1));
 
             checkbox.click();
+            fixture.detectChanges();
 
             expect(checkbox.checked).toBe(false);
             expect(column.hidden).toBeFalsy();
@@ -328,6 +331,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups);
 
             checkbox.click();
+            fixture.detectChanges();
 
             expect(checkbox.checked).toBe(true);
             expect(column.hidden).toBeTruthy();
@@ -573,9 +577,11 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             }
             ];
             fixture.componentInstance.colGroups = uniqueGroups;
+            fixture.detectChanges();
             grid.columnWidth = '200px';
             fixture.componentInstance.grid.width = '600px';
             fixture.detectChanges();
+
             // pin group3
             grid.pinColumn('group3');
             fixture.detectChanges();
@@ -619,8 +625,9 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             const lastCell = grid.rowList.first.cells.toArray()[4];
             expect(lastCell.column.field).toBe('Address');
             expect(lastCell.column.parent.field).toBe('group4');
-            expect(Math.round(lastCell.nativeElement.getBoundingClientRect().right) + 1)
-            .toEqual(grid.tbody.nativeElement.getBoundingClientRect().right);
+            expect(Math.round(lastCell.nativeElement.getBoundingClientRect().right) -
+             grid.tbody.nativeElement.getBoundingClientRect().right)
+            .toBeLessThanOrEqual(2);
         });
 
         it('UI - pinned columns count and drop-down items text in pinnig toolbar should be correct when group is pinned. ', () => {
@@ -698,6 +705,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             const toolbar = fixture.debugElement.query(By.css('igx-grid-toolbar'));
             const pinningButton = toolbar.queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnPinning');
             pinningButton.nativeElement.click();
+            fixture.detectChanges();
             const columnChooserElement = fixture.debugElement.query(By.css('igx-column-pinning'));
 
             const verifyCheckbox = HelperUtils.verifyCheckbox;
@@ -708,11 +716,13 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             expect(column.pinned).toBeFalsy();
 
             checkbox.click();
+            fixture.detectChanges();
 
             expect(checkbox.checked).toBe(true);
             expect(column.pinned).toBeTruthy();
 
             checkbox.click();
+            fixture.detectChanges();
 
             expect(checkbox.checked).toBe(false);
             expect(column.pinned).toBeFalsy();
@@ -801,6 +811,21 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
 
             verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups);
         });
+
+        it('should render unpin and hide column buttons into the excel style filter', () => {
+            const filterIcons = fixture.debugElement.queryAll(By.css('.igx-excel-filter__icon'));
+            expect(filterIcons.length).not.toBe(0);
+
+            filterIcons[0].nativeElement.click();
+            fixture.detectChanges();
+
+            const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
+            const unpinComponent = excelMenu.querySelector('.igx-excel-filter__actions-unpin');
+            const hideComponent = excelMenu.querySelector('.igx-excel-filter__actions-hide');
+
+            expect(unpinComponent).toBeDefined();
+            expect(hideComponent).toBeDefined();
+        });
     });
 
     describe('GroupBy ', () => {
@@ -842,8 +867,9 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             expect(lastRowOffset).toEqual(tbody.scrollHeight);
         });
 
-        it('should render rows correctly and collapsing all should render all groups and there should be no scrollbar.', async() => {
+        it('should render rows correctly and collapsing all should render all groups and there should be no scrollbar.', fakeAsync(() => {
             grid.height = '600px';
+            fixture.detectChanges();
             grid.groupBy({
                 dir: SortingDirection.Desc,
                 fieldName: 'Country',
@@ -857,13 +883,15 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
                 grid.verticalScrollContainer.getVerticalScroll().offsetHeight).toBeGreaterThan(0);
 
             grid.toggleAllGroupRows();
-            await wait(100);
+            tick(100);
+            fixture.detectChanges();
+            tick(100);
             fixture.detectChanges();
 
             expect(grid.rowList.length).toEqual(12);
             expect(grid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight -
                 grid.verticalScrollContainer.getVerticalScroll().offsetHeight).toBeLessThanOrEqual(0);
-        });
+        }));
     });
 
     describe('Resizing', () => {
@@ -895,6 +923,8 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
                 ]
             }];
             fixture.detectChanges();
+            await wait(DEBOUNCE_TIME);
+            fixture.detectChanges();
 
             // ContactName
             expect(grid.columns[1].width).toEqual('300px');
@@ -903,8 +933,8 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
             const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
             const headerResArea = headerCells[1].children[1].nativeElement;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 450, 0);
-            await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
+            await wait(DEBOUNCE_TIME);
 
             const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
@@ -932,6 +962,8 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
                     { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7},
                 ]
             }];
+            fixture.detectChanges();
+            await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
 
             // Phone
@@ -971,6 +1003,8 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
                 ]
             }];
             fixture.detectChanges();
+            await wait(DEBOUNCE_TIME);
+            fixture.detectChanges();
 
             // PostalCode
             expect(grid.columns[8].width).toEqual('200px');
@@ -1008,6 +1042,8 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
                     { field: 'Fax', rowStart: 3, colStart: 3, colEnd: 7},
                 ]
             }];
+            fixture.detectChanges();
+            await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
 
             // CompanyName
@@ -1047,6 +1083,8 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
                 ]
             }];
             fixture.detectChanges();
+            await wait(DEBOUNCE_TIME);
+            fixture.detectChanges();
 
             // CompanyName
             expect(grid.columns[7].width).toEqual('200px');
@@ -1072,6 +1110,7 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
 
         it('should correctly resize column that does not have width set, but is intersected by a column with width set', async() => {
             grid.width = 1500 + grid.scrollWidth + 'px';
+            fixture.detectChanges();
             fixture.componentInstance.colGroups = [{
                 group: 'group1',
                 columns: [
@@ -1087,26 +1126,31 @@ describe('IgxGrid - multi-row-layout Integration - ', () => {
                 ]
             }];
             fixture.detectChanges();
+            await wait(DEBOUNCE_TIME);
+            fixture.detectChanges();
 
             // City
             expect(grid.columns[5].cells[0].value).toEqual('Berlin');
 
-            const groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
+            let groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
             expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 700px 100px 100px 200px');
 
             const headerCells = fixture.debugElement.queryAll(By.css(GRID_COL_GROUP_THEAD));
             const headerResArea = headerCells[5].children[1].nativeElement;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 950, 0);
-            await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
+            await wait(DEBOUNCE_TIME);
 
             const resizer = fixture.debugElement.queryAll(By.css(RESIZE_LINE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
             UIInteractions.simulateMouseEvent('mousemove', resizer, 850, 5);
             UIInteractions.simulateMouseEvent('mouseup', resizer, 850, 5);
             fixture.detectChanges();
+            await wait(DEBOUNCE_TIME);
+            fixture.detectChanges();
 
             // Small misalignment in the third column occurs when cols are being intersected.
+            groupRowBlocks = fixture.debugElement.query(By.css('.igx-grid__tbody')).queryAll(By.css('.igx-grid__mrl-block'));
             expect(groupRowBlocks[0].nativeElement.style.gridTemplateColumns).toEqual('200px 200px 650px 50px 100px 200px');
         });
     });

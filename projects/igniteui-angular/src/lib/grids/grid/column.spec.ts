@@ -5,12 +5,13 @@ import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { GridTemplateStrings, ColumnDefinitions } from '../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { ColumnHiddenFromMarkupComponent, ColumnCellFormatterComponent } from '../../test-utils/grid-samples.spec';
+import { ColumnHiddenFromMarkupComponent, ColumnCellFormatterComponent, DynamicColumnsComponent } from '../../test-utils/grid-samples.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular';
 
-describe('IgxGrid - Column properties', () => {
+describe('IgxGrid - Column properties #grid', () => {
     configureTestSuite();
 
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
@@ -24,7 +25,8 @@ describe('IgxGrid - Column properties', () => {
                 TemplatedInputColumnsComponent,
                 ColumnCellFormatterComponent,
                 ColumnHaederClassesComponent,
-                ColumnHiddenFromMarkupComponent
+                ColumnHiddenFromMarkupComponent,
+                DynamicColumnsComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
         })
@@ -45,8 +47,6 @@ describe('IgxGrid - Column properties', () => {
 
         headerSpans.forEach((span) => expect(span.nativeElement.textContent).toMatch('Header text'));
         cellSpans.forEach((span) => expect(span.nativeElement.textContent).toMatch('Cell text'));
-
-        // TODO: Add footer tests
     });
 
     it('should provide a way to change templates dynamically', () => {
@@ -65,8 +65,6 @@ describe('IgxGrid - Column properties', () => {
 
         headerSpans.forEach((span) => expect(span.nativeElement.textContent).toMatch('New header text'));
         cellSpans.forEach((span) => expect(span.nativeElement.textContent).toMatch('New cell text'));
-
-        // TODO: Add footer tests
     });
 
     it('should reflect column hiding correctly in the DOM dynamically', () => {
@@ -227,14 +225,13 @@ describe('IgxGrid - Column properties', () => {
         }, 100);
     }));
 
-    it('column width should be adjusted after a column has been hidden', async () => {
+    it('column width should be adjusted after a column has been hidden', () => {
         const fix = TestBed.createComponent(ColumnsFromIterableComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
         grid.width = '600px';
         fix.detectChanges();
-        await wait();
 
         expect(grid.calcWidth).toBe(600);
         expect(grid.columns[0].width).toBe('300');
@@ -242,9 +239,11 @@ describe('IgxGrid - Column properties', () => {
         expect(grid.columns[1].width).toBe('300');
         expect(!grid.columns[1].widthSetByUser);
         grid.columns[0].hidden = true;
+        fix.detectChanges();
 
         expect(grid.columns[1].width).toBe('600');
         grid.columns[0].hidden = false;
+        fix.detectChanges();
 
         expect(grid.columns[0].width).toBe('300');
         expect(grid.columns[1].width).toBe('300');
@@ -291,7 +290,8 @@ describe('IgxGrid - Column properties', () => {
         col.formatter = (val: string) => {
             return val.toLowerCase();
         };
-        grid.markForCheck();
+        fix.detectChanges();
+
         expect(col.formatter).toBeTruthy();
         expect(col.formatter).toBeDefined();
         for (let i = 0; i < rowCount; i++) {
@@ -300,6 +300,63 @@ describe('IgxGrid - Column properties', () => {
             // Check the cell's value is not changed
             expect(grid.getCellByColumn(i, 'Name').value).toBe(expectedVal[i]);
         }
+    });
+
+    it('should clear filter when a columns is removed dynamically', () => {
+        const fix = TestBed.createComponent(DynamicColumnsComponent);
+        fix.detectChanges();
+
+        const columns = fix.componentInstance.columns;
+        const grid = fix.componentInstance.grid;
+        grid.allowFiltering = true;
+        fix.detectChanges();
+
+        expect(grid.columns.length).toBe(7);
+
+        grid.filter('CompanyName', 'NoItemsFound', IgxStringFilteringOperand.instance().condition('contains'), true);
+        fix.detectChanges();
+
+        expect(grid.rowList.length).toEqual(0);
+
+        expect(() => {
+            fix.componentInstance.columns = columns.slice(2, columns.length - 1);
+            fix.detectChanges();
+        }).not.toThrow();
+
+        expect(grid.rowList.length).toBeGreaterThan(10);
+        expect(grid.columns.length).toBe(4);
+    });
+
+    it('should clear grouping when a columns is removed dynamically', () => {
+        const fix = TestBed.createComponent(DynamicColumnsComponent);
+        fix.detectChanges();
+
+        const columns = fix.componentInstance.columns;
+        const grid = fix.componentInstance.grid;
+        grid.getColumnByName('CompanyName').groupable = true;
+        grid.getColumnByName('Address').groupable = true;
+        grid.getColumnByName('City').groupable = true;
+        fix.detectChanges();
+
+        grid.groupBy({
+            fieldName: 'CompanyName', dir: SortingDirection.Asc, ignoreCase: false
+        });
+
+        fix.detectChanges();
+
+        let groupRows = grid.nativeElement.querySelectorAll('igx-grid-groupby-row');
+
+        expect(groupRows.length).toBeGreaterThan(0);
+
+        expect(() => {
+            fix.componentInstance.columns = columns.slice(2, columns.length - 1);
+            fix.detectChanges();
+        }).not.toThrow();
+
+        groupRows = grid.nativeElement.querySelectorAll('igx-grid-groupby-row');
+
+        expect(groupRows.length).toBe(0);
+        expect(grid.columns.length).toBe(4);
     });
 });
 

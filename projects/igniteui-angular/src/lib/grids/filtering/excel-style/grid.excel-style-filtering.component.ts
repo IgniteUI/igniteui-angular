@@ -8,7 +8,8 @@ import {
     Directive,
     OnDestroy,
     AfterViewInit,
-    ElementRef
+    ElementRef,
+    OnInit
 } from '@angular/core';
 import {
     HorizontalAlignment,
@@ -51,28 +52,28 @@ export class FilterListItem {
 }
 
 @Directive({
-    selector: '[igxExcelStyleSortingTemplate]'
+    selector: '[igxExcelStyleSorting]'
 })
 export class IgxExcelStyleSortingTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
-    selector: '[igxExcelStyleMovingTemplate]'
+    selector: '[igxExcelStyleMoving]'
 })
 export class IgxExcelStyleMovingTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
-    selector: '[igxExcelStyleHidingTemplate]'
+    selector: '[igxExcelStyleHiding]'
 })
 export class IgxExcelStyleHidingTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({
-    selector: '[igxExcelStylePinningTemplate]'
+    selector: '[igxExcelStylePinning]'
 })
 export class IgxExcelStylePinningTemplateDirective {
     constructor(public template: TemplateRef<any>) {}
@@ -87,7 +88,7 @@ export class IgxExcelStylePinningTemplateDirective {
     selector: 'igx-grid-excel-style-filtering',
     templateUrl: './grid.excel-style-filtering.component.html'
 })
-export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterViewInit {
+export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, AfterViewInit {
     private static readonly filterOptimizationThreshold = 2;
 
     private shouldOpenSubMenu = true;
@@ -131,7 +132,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
     public customDialog: IgxExcelStyleCustomDialogComponent;
 
     @ViewChild('excelStyleSearch', { read: IgxExcelStyleSearchComponent, static: true })
-    protected excelStyleSearch: IgxExcelStyleSearchComponent;
+    public excelStyleSearch: IgxExcelStyleSearchComponent;
 
     @ViewChild('excelStyleSorting', { read: IgxExcelStyleSortingComponent, static: false })
     protected excelStyleSorting: IgxExcelStyleSortingComponent;
@@ -147,6 +148,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
 
     @ViewChild('defaultExcelStylePinningTemplate', { read: TemplateRef, static: true })
     protected defaultExcelStylePinningTemplate: TemplateRef<any>;
+
+    public isColumnPinnable: boolean;
 
     get grid(): any {
         return this.filteringService.grid;
@@ -169,7 +172,11 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         }
     }
 
-    constructor(private cdr: ChangeDetectorRef) {}
+    constructor(public cdr: ChangeDetectorRef) {}
+
+    ngOnInit() {
+        this.isColumnPinnable = this.column.pinnable;
+    }
 
     ngOnDestroy(): void {
         this.destroy$.next(true);
@@ -203,6 +210,10 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         }
 
         return 'igx-excel-filter__actions-clear--disabled';
+    }
+
+    public pinClass() {
+        return this.isColumnPinnable ? 'igx-excel-filter__actions-pin' : 'igx-excel-filter__actions-pin--disabled';
     }
 
     public initialize(column: IgxColumnComponent, filteringService: IgxFilteringService, overlayService: IgxOverlayService,
@@ -332,28 +343,56 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
     }
 
     public populateColumnData() {
-        let data = this.column.gridAPI.get_all_data(this.grid.id);
-        const gridExpressionsTree: IFilteringExpressionsTree = this.grid.filteringExpressionsTree;
-        const expressionsTree = new FilteringExpressionsTree(gridExpressionsTree.operator, gridExpressionsTree.fieldName);
-
-        for (const operand of gridExpressionsTree.filteringOperands) {
-            if (operand instanceof FilteringExpressionsTree) {
-                const columnExprTree = operand as FilteringExpressionsTree;
-                if (columnExprTree.fieldName === this.column.field) {
-                    break;
-                }
-            }
-            expressionsTree.filteringOperands.push(operand);
+        if (this.grid.uniqueColumnValuesStrategy) {
+            this.renderColumnValuesRemotely();
+        } else {
+            this.renderColumnValuesFromData();
         }
+    }
+
+    private renderColumnValuesRemotely() {
+        this.excelStyleSearch.isLoading = true;
+        const expressionsTree: FilteringExpressionsTree = this.getColumnFilterExpressionsTree();
+
+        this.grid.uniqueColumnValuesStrategy(this.column, expressionsTree, (colVals: any[]) => {
+            const columnValues = (this.column.dataType === DataType.Date) ?
+                colVals.map(val => val ? val.toDateString() : val) : colVals;
+
+            this.renderValues(columnValues);
+            this.excelStyleSearch.isLoading = false;
+            this.excelStyleSearch.refreshSize();
+        });
+    }
+
+    public renderColumnValuesFromData() {
+        let data = this.column.gridAPI.get_all_data(this.grid.id);
+        const expressionsTree = this.getColumnFilterExpressionsTree();
 
         if (expressionsTree.filteringOperands.length) {
             const state = { expressionsTree: expressionsTree };
             data = DataUtil.filter(cloneArray(data), state);
         }
 
-        if (this.column.dataType === DataType.Date) {
-            this.uniqueValues = Array.from(new Set(data.map(record =>
-                record[this.column.field] ? record[this.column.field].toDateString() : record[this.column.field])));
+        const columnField = this.column.field;
+        const columnValues = (this.column.dataType === DataType.Date) ?
+            data.map(record => record[columnField] ? record[columnField].toDateString() : record[columnField]) :
+            data.map(record => record[columnField]);
+
+        this.renderValues(columnValues);
+    }
+
+    private renderValues(columnValues: any[]) {
+        this.generateUniqueValues(columnValues);
+        this.generateFilterValues(this.column.dataType === DataType.Date);
+        this.generateListData();
+    }
+
+    private generateUniqueValues(columnValues: any[]) {
+        this.uniqueValues = Array.from(new Set(columnValues));
+    }
+
+    private generateFilterValues(isDateColumn: boolean = false) {
+        if (isDateColumn) {
             this.filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
                 if (e.expression.condition.name === 'in') {
                     return [ ...arr, ...Array.from((e.expression.searchVal as Set<any>).values()).map(v =>
@@ -362,7 +401,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
                 return [ ...arr, ...[e.expression.searchVal ? e.expression.searchVal.toDateString() : e.expression.searchVal] ];
             }, []));
         } else {
-            this.uniqueValues = Array.from(new Set(data.map(record => record[this.column.field])));
             this.filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
                 if (e.expression.condition.name === 'in') {
                     return [ ...arr, ...Array.from((e.expression.searchVal as Set<any>).values()) ];
@@ -370,6 +408,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
                 return [ ...arr, ...[e.expression.searchVal] ];
             }, []));
         }
+    }
+
+    private generateListData() {
         this.listData = new Array<FilterListItem>();
 
         const shouldUpdateSelection = this.areExpressionsSelectable() && this.areExpressionsValuesInTheList();
@@ -392,7 +433,26 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
 
         this.addSelectAllItem();
 
-        this.cdr.detectChanges();
+        if (!(this.cdr as any).destroyed) {
+            this.cdr.detectChanges();
+        }
+    }
+
+    private getColumnFilterExpressionsTree() {
+        const gridExpressionsTree: IFilteringExpressionsTree = this.grid.filteringExpressionsTree;
+        const expressionsTree = new FilteringExpressionsTree(gridExpressionsTree.operator, gridExpressionsTree.fieldName);
+
+        for (const operand of gridExpressionsTree.filteringOperands) {
+            if (operand instanceof FilteringExpressionsTree) {
+                const columnExprTree = operand as FilteringExpressionsTree;
+                if (columnExprTree.fieldName === this.column.field) {
+                    break;
+                }
+            }
+            expressionsTree.filteringOperands.push(operand);
+        }
+
+        return expressionsTree;
     }
 
     private addBooleanItems() {
@@ -541,7 +601,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
     }
 
     get applyButtonDisabled() {
-        return this.listData[0] && !this.listData[0].isSelected && !this.listData[0].indeterminate;
+        return  (this.excelStyleSearch.filteredData && this.excelStyleSearch.filteredData.length === 0) ||
+                (this.listData[0] && !this.listData[0].isSelected && !this.listData[0].indeterminate);
     }
 
     public applyFilter() {

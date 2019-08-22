@@ -1,35 +1,64 @@
-<igx-grid #grid1 [data]="data" [autoGenerate]="false" [displayDensity]="'compact'"  width="1200px" height="500px" (onColumnInit)="initColumn($event)" [paging]="false" [allowFiltering]='true'>
-    <igx-column field="Index" header="Index" width="200px">
+<igx-grid #grid1 [data]="data" [autoGenerate]="false" [displayDensity]="'compact'" [width]="w" [height]="h"
+    [paging]="false" [allowFiltering]='true' [filterMode]="'excelStyleFilter'">
+    <igx-column field="Index" header="Index" [width]="cw">
     </igx-column>
-    <igx-column field="ProductID" header="Product ID" width="200px" [headerClasses]="'prodId'">
+    <igx-column field="ProductID" header="Product ID" [width]="cw" [headerClasses]="'prodId'" [groupable]="groupable">
         <ng-template igxCell let-cell="cell" let-val>
-        <button (click)="viewRecord(grid1.data)">{{val}}</button>
+            <button (click)="viewRecord(grid1.data)">{{val}}</button>
         </ng-template>
     </igx-column>
-    <igx-column field="ReorderLevel" width="200px" [sortable]="true" [filterable]="true" editable="true" [dataType]="'number'" >
+    <igx-column field="ReorderLevel" [width]="cw" [sortable]="true" [groupable]="groupable" [filterable]="filterable"
+        editable="true" [dataType]="'number'" [disableHiding]="disableHiding" [disablePinning]="disablePinning">
         <ng-template igxCell let-cell="cell" let-val let-row>
-        {{val}} {{row.gridID}}
+            {{val}} {{row.gridID}}
         </ng-template>
     </igx-column>
-    <igx-column field="QuantityPerUnit" width="200px" header="QuantityPerUnit" [sortable]="true" [dataType]="'string'" [editable]="true">
+    <igx-column field="QuantityPerUnit" [width]="cw" header="QuantityPerUnit" [sortable]="true" [dataType]="'string'"
+        [editable]="true">
     </igx-column>
-    <igx-column field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" [summaries]="mySummary" [hasSummary]="hasSummaryUnit" [hidden]="hasHidden"  editable="true" [sortable]="true">
+    <igx-column field="UnitsInStock" header="UnitsInStock" [width]="cw" [dataType]="'number'" [summaries]="mySummary"
+        [hasSummary]="hasSummaryUnit" [hidden]="hasHidden" editable="true" [sortable]="true">
         <ng-template igxCell let-cell="cell" let-val let-row>
-        ${{val}}
+            ${{val}}
         </ng-template>
     </igx-column>
-    <igx-column field="OrderDate" width="200px" [dataType]="'date'" [hasSummary]="false" [sortable]="true">
+    <igx-column field="OrderDate" [width]="cw" [dataType]="'date'" [hasSummary]="false" [sortable]="true">
         <ng-template igxCell let-cell="cell" let-val let-row>
-        {{val}}
+            {{val}}
         </ng-template>
     </igx-column>
-    <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" width="200px" [hasSummary]="false" editable="true">
+    <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" [width]="cw" [hasSummary]="false"
+        editable="true">
         <ng-template igxCell let-cell="cell" let-val>
-        {{val}}
+            {{val}}
         </ng-template>
     </igx-column>
 </igx-grid>
 
+<div class="properties-input">
+    <label> Grid Width </label>
+    <input [(ngModel)]="w">
+</div>
+<div class="properties-input">
+    <label> Grid Height </label>
+    <input [(ngModel)]="h">
+</div>
+<div class="properties-input">
+    <label> Columns Width </label>
+    <input [(ngModel)]="cw">
+</div>
+
+<igx-switch [(ngModel)]="grid1.paging">Enable Paging</igx-switch>
+<igx-switch [(ngModel)]="grid1.allowFiltering">allowFiltering</igx-switch>
+<igx-switch [(ngModel)]="grid1.columnHiding">columnHiding</igx-switch>
+<igx-switch [(ngModel)]="grid1.columnPinning">columnPinning</igx-switch>
+<igx-switch [(ngModel)]="grid1.showToolbar">showToolbar</igx-switch>
+<igx-switch [(ngModel)]="groupable">ReorderLevel groupable</igx-switch>
+<igx-switch [(ngModel)]="filterable">ReorderLevel filterable</igx-switch>
+<igx-switch [(ngModel)]="disableHiding">ReorderLevel disableHiding</igx-switch>
+<igx-switch [(ngModel)]="disablePinning">ReorderLevel disablePinning</igx-switch>
+<igx-switch [(ngModel)]="hasSummaryUnit">hasSummaryUnit</igx-switch>
+<igx-switch [(ngModel)]="hasHidden">hasHidden</igx-switch>
 
 <button (click)="enableSummary()"> Enable Summary for column ReorderLevel</button>
 <button (click)="disableSummary()">Disable Summary</button>
@@ -40,4 +69,4 @@
 <button (click)="updateRow()">Update Row</button>
 <button (click)="pin()">Pin</button>
 <button (click)="hide()">Hide</button>
-<div><input type='number' #input/><button (click)='scrScrollTo(input.value)'>Go To Index</button></div>
+<div><input type='number' #input /><button (click)='scrScrollTo(input.value)'>Go To Index</button></div>

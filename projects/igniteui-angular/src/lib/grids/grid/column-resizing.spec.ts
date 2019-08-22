@@ -13,8 +13,9 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IColumnResized } from '../../test-utils/grid-interfaces.spec';
 import { MultiColumnHeadersComponent } from '../../test-utils/grid-samples.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
-describe('IgxGrid - Deferred Column Resizing', () => {
+describe('IgxGrid - Deferred Column Resizing #grid', () => {
     configureTestSuite();
     const DEBOUNCE_TIME = 200;
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
@@ -190,6 +191,9 @@ describe('IgxGrid - Deferred Column Resizing', () => {
     it ('should change the defaultMinWidth on density change', async() => {
         const fixture = TestBed.createComponent(ResizableColumnsComponent);
         fixture.detectChanges();
+
+        resizeObserverIgnoreError();
+
         const grid = fixture.componentInstance.grid;
         const column = grid.getColumnByName('ID');
         const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
@@ -687,7 +691,8 @@ describe('IgxGrid - Deferred Column Resizing', () => {
 
         column.autosize();
         fixture.detectChanges();
-        expect(column.width).toEqual('119px');
+        // the exact width is different between chrome and chrome headless so an exact match is erroneous
+        expect(Math.abs(parseInt(column.width, 10) - 120)).toBeLessThan(2);
 
         // height/width setter rAF
         await wait(16);
@@ -729,7 +734,7 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         await wait(16);
     });
 
-    it('should size headers correctly when column width is below the allowed minimum.', async() => {
+    it('should size headers correctly when column width is below the allowed minimum.', () => {
         const fixture = TestBed.createComponent(ColGridComponent);
         fixture.detectChanges();
 
@@ -748,19 +753,17 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(headerGroups[0].nativeElement.getBoundingClientRect().width).toBe(48);
         expect(headerGroups[1].nativeElement.getBoundingClientRect().width).toBe(50);
         expect(headerGroups[2].nativeElement.getBoundingClientRect().width).toBe(48);
-
-        // height/width setter rAF
-        await wait(16);
     });
 
-    it('should size headers correctly when column width is in %.', async() => {
+    it('should size headers correctly when column width is in %.', () => {
         const fixture = TestBed.createComponent(ColPercentageGridComponent);
         fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        grid.ngAfterViewInit();
 
         const headers = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         const headerGroups = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_GROUP_CLASS));
         const filteringCells = fixture.debugElement.queryAll(By.css(COLUMN_FILTER_CELL_SELECTOR));
-        const grid = fixture.componentInstance.grid;
         const expectedWidth = (parseInt(grid.width, 10) - grid.scrollWidth) / 4;
         expect(headers[0].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
         expect(headers[1].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
@@ -776,9 +779,6 @@ describe('IgxGrid - Deferred Column Resizing', () => {
         expect(headerGroups[1].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
         expect(headerGroups[2].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
         expect(headerGroups[3].nativeElement.getBoundingClientRect().width).toBeCloseTo(expectedWidth, 0);
-
-        // height/width setter rAF
-        await wait(16);
     });
 });
 

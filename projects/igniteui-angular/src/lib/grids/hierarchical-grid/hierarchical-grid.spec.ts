@@ -12,7 +12,7 @@ import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { DisplayDensity } from '../../core/displayDensity';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 
-describe('Basic IgxHierarchicalGrid', () => {
+describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -104,6 +104,7 @@ describe('Basic IgxHierarchicalGrid', () => {
         expect(icon.getActive).toBe(false);
         expect(hierarchicalGrid.hierarchicalState.length).toEqual(0);
     }));
+
     it('should allow applying initial expansions state for certain rows through hierarchicalState option', () => {
         // set first row as expanded.
         hierarchicalGrid.hierarchicalState = [{rowID: fixture.componentInstance.data[0]}];
@@ -335,6 +336,55 @@ describe('Basic IgxHierarchicalGrid', () => {
         expect(childGrid.calcWidth - 170).toBeLessThan(3);
     });
 
+    it('should exit edit mode on row expand/collapse through the UI', async() => {
+        hierarchicalGrid.primaryKey = 'ID';
+        hierarchicalGrid.rowEditable = true;
+        fixture.detectChanges();
+        wait();
+
+        const masterGridFirstRow = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        expect(masterGridFirstRow.expanded).toBeFalsy();
+
+        const masterGridSecondCell = masterGridFirstRow.cells.find(c => c.columnIndex === 1);
+        expect(masterGridSecondCell.editMode).toBeFalsy();
+
+        masterGridSecondCell.setEditMode(true);
+        fixture.detectChanges();
+        wait();
+
+        expect(masterGridSecondCell.editMode).toBeTruthy();
+
+        UIInteractions.clickElement(masterGridFirstRow.expander);
+        fixture.detectChanges();
+        wait();
+
+        expect(masterGridFirstRow.expanded).toBeTruthy();
+        expect(masterGridSecondCell.editMode).toBeFalsy();
+
+        const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0] as IgxHierarchicalGridComponent;
+        expect(childGrid).toBeDefined();
+
+        childGrid.columnList.find(c => c.index === 1).editable = true;
+        const childGridSecondRow = childGrid.getRowByIndex(1) as IgxHierarchicalRowComponent;
+        expect(childGridSecondRow.expanded).toBeFalsy();
+
+        const childGridSecondCell = childGridSecondRow.cells.find(c => c.columnIndex === 1);
+        expect(childGridSecondCell.editMode).toBeFalsy();
+
+        childGridSecondCell.setEditMode(true);
+        fixture.detectChanges();
+        wait();
+
+        expect(childGridSecondCell.editMode).toBeTruthy();
+
+        UIInteractions.clickElement(masterGridFirstRow.expander);
+        fixture.detectChanges();
+        wait();
+
+        expect(childGrid.crudService.inEditMode).toBeFalsy();
+        expect(childGridSecondRow.inEditMode).toBeFalsy();
+    });
+
     it('child grid width should be recalculated if parent no longer shows scrollbar.', async () => {
         hierarchicalGrid.height = '1000px';
         fixture.detectChanges();
@@ -354,7 +404,7 @@ describe('Basic IgxHierarchicalGrid', () => {
     });
 });
 
-describe('IgxHierarchicalGrid Row Islands', () => {
+describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -582,7 +632,7 @@ describe('IgxHierarchicalGrid Row Islands', () => {
     }));
 });
 
-describe('IgxHierarchicalGrid Children Sizing', () => {
+describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -722,7 +772,7 @@ describe('IgxHierarchicalGrid Children Sizing', () => {
     }));
 });
 
-describe('IgxHierarchicalGrid Remote Scenarios', () => {
+describe('IgxHierarchicalGrid Remote Scenarios #hGrid', () => {
     configureTestSuite();
     let fixture: ComponentFixture<IgxHGridRemoteOnDemandComponent>;
     const TBODY_CLASS = '.igx-grid__tbody-content';
@@ -798,7 +848,7 @@ describe('IgxHierarchicalGrid Remote Scenarios', () => {
     }));
 });
 
-describe('IgxHierarchicalGrid Template Changing Scenarios', () => {
+describe('IgxHierarchicalGrid Template Changing Scenarios #hGrid', () => {
     configureTestSuite();
     const TBODY_CLASS = '.igx-grid__tbody-content';
     const THEAD_CLASS = '.igx-grid__thead';
@@ -854,6 +904,30 @@ describe('IgxHierarchicalGrid Template Changing Scenarios', () => {
         expect(child2Headers[0].nativeElement.innerText).toEqual('ID');
         expect(child2Headers[1].nativeElement.innerText).toEqual('ProductName');
         expect(child2Headers[2].nativeElement.innerText).toEqual('Col1');
+    });
+
+    it('should render correct columns when setting columns for parent and child post init using ngFor', () => {
+        const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+
+        const child1Grids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        const child1Grid = child1Grids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+
+        fixture.componentInstance.parentCols = ['Col1', 'Col2'];
+        fixture.componentInstance.islandCols1 = ['ID', 'ProductName', 'Col1'];
+        fixture.detectChanges();
+        // check parent cols
+        expect(hierarchicalGrid.columns.length).toBe(4);
+        expect(hierarchicalGrid.columns[0].field).toBe('ID');
+        expect(hierarchicalGrid.columns[1].field).toBe('ProductName');
+        expect(hierarchicalGrid.columns[2].field).toBe('Col1');
+        expect(hierarchicalGrid.columns[3].field).toBe('Col2');
+        // check child cols
+        expect(child1Grid.columns.length).toBe(3);
+        expect(hierarchicalGrid.columns[0].field).toBe('ID');
+        expect(hierarchicalGrid.columns[1].field).toBe('ProductName');
+        expect(hierarchicalGrid.columns[2].field).toBe('Col1');
     });
 
     it('should update columns for expanded child when adding column to row island', () => {
@@ -941,7 +1015,7 @@ describe('IgxHierarchicalGrid Template Changing Scenarios', () => {
     });
 });
 
-describe('IgxHierarchicalGrid Runtime Row Island change Scenarios', () => {
+describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () => {
     configureTestSuite();
     let fixture: ComponentFixture<IgxHierarchicalGridToggleRIComponent>;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -1156,6 +1230,7 @@ export class IgxHGridRemoteOnDemandComponent {
     <igx-hierarchical-grid #hierarchicalGrid [data]="data" [autoGenerate]="false" [height]="'500px'" [width]="'800px'" >
         <igx-column field="ID"></igx-column>
         <igx-column field="ProductName"></igx-column>
+        <igx-column *ngFor="let colField of parentCols" [field]="colField"></igx-column>
         <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland [height]="'350px'">
             <igx-column *ngFor="let colField of islandCols1" [field]="colField"></igx-column>
             <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland2 [height]="'200px'">
@@ -1167,6 +1242,7 @@ export class IgxHGridRemoteOnDemandComponent {
 export class IgxHierarchicalGridColumnsUpdateComponent extends IgxHierarchicalGridTestBaseComponent implements AfterViewInit {
     public cols1 = ['ID', 'ProductName', 'Col1', 'Col2', 'Col3'];
     public cols2 =  ['ID', 'ProductName', 'Col1'];
+    public parentCols = [];
     public islandCols1 = [];
     public islandCols2 = [];
     constructor(public cdr: ChangeDetectorRef) {

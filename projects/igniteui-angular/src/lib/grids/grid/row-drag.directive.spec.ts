@@ -15,12 +15,13 @@ import { IgxColumnComponent } from '../column.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxRowDragDirective } from '../row-drag.directive';
 import { IRowDragStartEventArgs, IgxGridBaseComponent, IRowDragEndEventArgs } from '../grid-base.component';
-import { IgxDropDirective } from '../../directives/dragdrop/dragdrop.directive';
+import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxHierarchicalGridComponent, IgxHierarchicalGridModule, IgxRowComponent } from '../hierarchical-grid';
 import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';
 import { IgxTreeGridComponent, IgxTreeGridModule } from '../tree-grid';
+import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 
 const DEBOUNCE_TIME = 50;
@@ -33,7 +34,7 @@ const CSS_CLASS_SELECTION_CHECKBOX = '.igx-grid__cbx-selection';
 const CSS_CLASS_VIRTUAL_HSCROLLBAR = '.igx-vhelper--horizontal';
 const CSS_CLASS_LAST_PINNED_HEADER = 'igx-grid__th--pinned-last';
 
-describe('IgxGrid - Row Drag Tests', () => {
+describe('IgxGrid - Row Drag Tests #grid', () => {
     let fixture: ComponentFixture<any>;
     let dropAreaElement: Element;
     let dragIndicatorElements: DebugElement[];
@@ -68,6 +69,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         let dragRows: DebugElement[];
         // configureTestSuite();
         beforeEach(async(() => {
+            resizeObserverIgnoreError();
             fixture = TestBed.createComponent(IgxGridRowDraggableComponent);
             grid = fixture.componentInstance.instance;
             dropArea = fixture.componentInstance.dropArea;
@@ -213,6 +215,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         }));
         it('should align horizontal scrollbar with first column when column pinning is disabled', fakeAsync(() => {
             // has no draggable and selectable rows
+            grid.width = '400px';
             grid.rowSelectable = false;
             grid.rowDraggable = false;
             tick();
@@ -240,14 +243,14 @@ describe('IgxGrid - Row Drag Tests', () => {
             grid.rowSelectable = true;
             grid.rowDraggable = true;
             fixture.detectChanges();
-            rowSelectElement = fixture.debugElement.query(By.css(CSS_CLASS_SELECTION_CHECKBOX));
-            dragIndicatorElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
             horizontalScrollbarElement = fixture.debugElement.query(By.css(CSS_CLASS_VIRTUAL_HSCROLLBAR));
-            const rowSelectRect = rowSelectElement.nativeElement.getBoundingClientRect();
             horizontalScrollbarRect = horizontalScrollbarElement.nativeElement.getBoundingClientRect();
-            expect(rowSelectRect.right).toBe(horizontalScrollbarRect.left);
+
+            // The horizontal scrollbar should be visible
+            expect(horizontalScrollbarRect.left).not.toBe(0);
         }));
         it('should align horizontal scrollbar with first non-pinned column when column pinning is enabled', fakeAsync(() => {
+            grid.width = '400px';
             grid.pinColumn('ProductName');
             tick();
             fixture.detectChanges();
@@ -257,7 +260,9 @@ describe('IgxGrid - Row Drag Tests', () => {
             let horizontalScrollbarRect = horizontalScrollbarElement.nativeElement.getBoundingClientRect();
             let pinnedColumnHeaderElement: DebugElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_LAST_PINNED_HEADER));
             let pinnedColumnHeaderRect = pinnedColumnHeaderElement.nativeElement.getBoundingClientRect();
-            expect(pinnedColumnHeaderRect.right).toBe(horizontalScrollbarRect.left);
+
+            // The horizontal scrollbar should be visible
+            expect(horizontalScrollbarRect.left).not.toBe(0);
 
             // selectable rows enabled
             grid.rowSelectable = true;
@@ -398,6 +403,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             }
         }
         beforeEach(async(() => {
+            resizeObserverIgnoreError();
             fixture = TestBed.createComponent(IgxGridFeaturesRowDragComponent);
             dragGrid = fixture.componentInstance.dragGrid;
             dropGrid = fixture.componentInstance.dropGrid;
@@ -459,6 +465,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         }));
         it('should be able to drag grid row when column pinning is enabled', (async () => {
             dragGrid.pinColumn('ProductName');
+            fixture.detectChanges();
 
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
             const row = dragGridRows[1];
@@ -782,6 +789,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         }));
 
         it('should be able to drag row on every hiearchical level', (async () => {
+            resizeObserverIgnoreError();
             // first level row
             let dragIndicatorElement: Element = dragIndicatorElements[1].nativeElement;
             let rowToDrag = dragGrid.getRowByIndex(0);

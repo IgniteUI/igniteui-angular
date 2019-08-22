@@ -3,15 +3,24 @@ import {
     Component,
     ChangeDetectionStrategy,
     Input,
-    ViewChild
+    ViewChild,
+    ChangeDetectorRef,
+    TemplateRef,
+    Directive
 } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
-import { IgxFilterOptions } from '../../../directives/filter/filter.directive';
 import { IChangeCheckboxEventArgs } from '../../../checkbox/checkbox.component';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
 import { DisplayDensity } from '../../../core/density';
 import { IgxForOfDirective } from '../../../directives/for-of/for_of.directive';
 import { FilterListItem } from './grid.excel-style-filtering.component';
+
+@Directive({
+    selector: '[igxExcelStyleLoading]'
+})
+export class IgxExcelStyleLoadingValuesTemplateDirective {
+    constructor(public template: TemplateRef<any>) {}
+}
 
 /**
  * @hidden
@@ -24,10 +33,28 @@ import { FilterListItem } from './grid.excel-style-filtering.component';
 })
 export class IgxExcelStyleSearchComponent implements AfterViewInit {
 
+    private _isLoading;
+
+    public get isLoading() {
+        return this._isLoading;
+    }
+
+    public set isLoading(value: boolean) {
+        this._isLoading = value;
+        if (!(this._cdr as any).destroyed) {
+            this._cdr.detectChanges();
+        }
+    }
+
     public searchValue: any;
 
     @Input()
+    public grid: any;
+
+    @Input()
     public data: FilterListItem[];
+
+    public filteredData: FilterListItem[];
 
     @Input()
     public column: IgxColumnComponent;
@@ -41,9 +68,24 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
     @ViewChild(IgxForOfDirective, { static: true })
     protected virtDir: IgxForOfDirective<any>;
 
-    constructor() { }
+    @ViewChild('defaultExcelStyleLoadingValuesTemplate', { read: TemplateRef, static: true })
+    protected defaultExcelStyleLoadingValuesTemplate: TemplateRef<any>;
+
+    public get valuesLoadingTemplate() {
+        if (this.grid.excelStyleLoadingValuesTemplateDirective) {
+            return this.grid.excelStyleLoadingValuesTemplateDirective.template;
+        } else {
+            return this.defaultExcelStyleLoadingValuesTemplate;
+        }
+    }
+
+    constructor(private _cdr: ChangeDetectorRef) { }
 
     public ngAfterViewInit() {
+        this.refreshSize();
+    }
+
+    public refreshSize() {
         requestAnimationFrame(() => {
             this.virtDir.recalcUpdateSizes();
         });

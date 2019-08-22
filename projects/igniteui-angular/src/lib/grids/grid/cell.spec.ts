@@ -8,10 +8,11 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { HammerGesturesManager } from '../../core/touch';
 
 const DEBOUNCETIME = 30;
 
-describe('IgxGrid - Cell component', () => {
+describe('IgxGrid - Cell component #grid', () => {
     configureTestSuite();
 
     const CELL_CSS_CLASS = '.igx-grid__td';
@@ -127,7 +128,6 @@ describe('IgxGrid - Cell component', () => {
         fix.detectChanges();
 
         const cellElem = fix.debugElement.query(By.css(CELL_CSS_CLASS));
-        const firstCell = grid.getCellByColumn(0, 'index');
 
         spyOn(grid.onDoubleClick, 'emit').and.callThrough();
         cellElem.triggerEventHandler('dblclick', new Event('dblclick'));
@@ -171,6 +171,7 @@ describe('IgxGrid - Cell component', () => {
 
         spyOn(grid.onDoubleClick, 'emit').and.callThrough();
         const event = new Event('dblclick');
+        spyOn(event, 'preventDefault');
         cellElem.nativeElement.dispatchEvent(event);
         const args: IGridCellEventArgs = {
             cell: firstCell,
@@ -179,6 +180,38 @@ describe('IgxGrid - Cell component', () => {
 
         fix.detectChanges();
 
+        expect(event.preventDefault).not.toHaveBeenCalled();
+        expect(grid.onDoubleClick.emit).toHaveBeenCalledWith(args);
+        expect(firstCell).toBe(fix.componentInstance.clickedCell);
+    });
+
+    it('Should handle doubletap, trigger onDoubleClick event', () => {
+        const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        const grid = fix.componentInstance.instance;
+        const cellElem = fix.debugElement.query(By.css(CELL_CSS_CLASS));
+        const firstCell = grid.getCellByColumn(0, 'index');
+
+        // should attach 'doubletap'
+        expect(addListenerSpy.calls.count()).toBeGreaterThan(1);
+        expect(addListenerSpy).toHaveBeenCalledWith(firstCell.nativeElement, 'doubletap', firstCell.onDoubleClick, { cssProps: { } });
+
+        spyOn(grid.onDoubleClick, 'emit').and.callThrough();
+
+        const event = {
+            type: 'doubletap',
+            preventDefault: jasmine.createSpy('preventDefault')
+        };
+        firstCell.onDoubleClick(event as any);
+        const args: IGridCellEventArgs = {
+            cell: firstCell,
+            event
+        } as any;
+
+        fix.detectChanges();
+        expect(event.preventDefault).toHaveBeenCalled();
         expect(grid.onDoubleClick.emit).toHaveBeenCalledWith(args);
         expect(firstCell).toBe(fix.componentInstance.clickedCell);
     });
@@ -241,6 +274,7 @@ describe('IgxGrid - Cell component', () => {
                 fixture = TestBed.createComponent(CellEditingTestComponent);
                 fixture.detectChanges();
                 grid = fixture.componentInstance.grid;
+                grid.ngAfterViewInit();
             }));
 
             it('should be able to enter edit mode on dblclick, enter and f2', () => {
@@ -398,6 +432,53 @@ describe('IgxGrid - Cell component', () => {
                 expect(cell.value.getTime()).toBe(selectedDate.getTime());
             });
 
+            it('should be able to change value form date picker input-- date', () => {
+                const cell = grid.getCellByColumn(0, 'birthday');
+                const cellDomDate = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
+                const selectedDate = new Date('04/12/2017');
+                const editValue = '04/12/2017';
+
+                cellDomDate.triggerEventHandler('dblclick', {});
+                fixture.detectChanges();
+
+                expect(cell.editMode).toBe(true);
+                const datePicker = cellDomDate.query(By.css('igx-date-picker')).componentInstance;
+                expect(datePicker).toBeDefined();
+
+                const editTemplate = cellDomDate.query(By.css('.igx-date-picker__input-date'));
+                UIInteractions.sendInput(editTemplate, editValue);
+                fixture.detectChanges();
+
+                expect(datePicker.value).toEqual(selectedDate);
+                UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomDate.nativeElement, true);
+                fixture.detectChanges();
+
+                expect(cell.editMode).toBe(false);
+                expect(cell.value.getTime()).toEqual(selectedDate.getTime());
+            });
+
+            it('should be able to clear value -- date', () => {
+                const cell = grid.getCellByColumn(0, 'birthday');
+                const cellDomDate = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
+
+                cellDomDate.triggerEventHandler('dblclick', {});
+                fixture.detectChanges();
+
+                expect(cell.editMode).toBe(true);
+                const datePicker = cellDomDate.query(By.css('igx-date-picker')).componentInstance;
+                expect(datePicker).toBeDefined();
+
+                const clear = cellDomDate.queryAll(By.css('.igx-icon'))[1];
+                UIInteractions.clickElement(clear);
+
+                expect(datePicker.value).toBeNull();
+                UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomDate.nativeElement, true);
+                fixture.detectChanges();
+
+                expect(cell.editMode).toBe(false);
+                expect(cell.value).toBeNull();
+            });
+
             it('should exit edit mode on filtering', () => {
                 let cell = grid.getCellByColumn(0, 'fullName');
                 const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
@@ -488,12 +569,12 @@ describe('IgxGrid - Cell component', () => {
             let fixture;
             let grid;
             const CELL_CLASS_IN_EDIT_MODE = 'igx-grid__td--editing';
-            beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            beforeEach(() => {
                 fixture = TestBed.createComponent(CellEditingScrollTestComponent);
                 fixture.detectChanges();
-
                 grid = fixture.componentInstance.grid;
-            }));
+                grid.ngAfterViewInit();
+            });
 
             it('edit mode - leaves edit mode on blur', fakeAsync(/** height/width setter rAF */() => {
                 const rv = fixture.debugElement.query(By.css(CELL_CSS_CLASS));
@@ -528,6 +609,7 @@ describe('IgxGrid - Cell component', () => {
                 fixture.detectChanges();
 
                 grid.pinColumn('firstName');
+                fixture.detectChanges();
                 expect(cell.gridAPI.get_cell_inEditMode()).toBeNull();
                 expect(grid.pinnedColumns.length).toBe(1);
                 cell = grid.getCellByColumn(0, 'firstName');
@@ -539,6 +621,7 @@ describe('IgxGrid - Cell component', () => {
 
                 expect(cell.gridAPI.get_cell_inEditMode()).toBeDefined();
                 grid.unpinColumn('firstName');
+                fixture.detectChanges();
                 cell = grid.getCellByColumn(1, 'firstName');
                 expect(grid.pinnedColumns.length).toBe(0);
                 expect(cell.gridAPI.get_cell_inEditMode()).toBeNull();
@@ -697,7 +780,6 @@ describe('IgxGrid - Cell component', () => {
 
                 let cell = grid.getCellByColumn(1, 'birthday');
                 cell.nativeElement.dispatchEvent(new MouseEvent('dblclick'));
-                await wait();
                 fixture.detectChanges();
 
                 const domDatePicker = fixture.debugElement.query(By.css('igx-date-picker'));
@@ -705,7 +787,6 @@ describe('IgxGrid - Cell component', () => {
                 expect(iconDate).toBeDefined();
 
                 UIInteractions.clickElement(iconDate);
-                await wait(30);
                 fixture.detectChanges();
 
                 // Verify calendar is opened
@@ -779,6 +860,7 @@ describe('IgxGrid - Cell component', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
+        grid.ngAfterViewInit();
         const rows = fix.nativeElement.querySelectorAll('igx-grid-row');
         const firsCell = rows[1].querySelectorAll('igx-grid-cell')[0];
 
