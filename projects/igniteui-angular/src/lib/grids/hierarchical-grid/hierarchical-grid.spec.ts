@@ -12,7 +12,7 @@ import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { DisplayDensity } from '../../core/displayDensity';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 
-describe('Basic IgxHierarchicalGrid', () => {
+describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -405,7 +405,7 @@ describe('Basic IgxHierarchicalGrid', () => {
     });
 });
 
-describe('IgxHierarchicalGrid Row Islands', () => {
+describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -633,7 +633,7 @@ describe('IgxHierarchicalGrid Row Islands', () => {
     }));
 });
 
-describe('IgxHierarchicalGrid Children Sizing', () => {
+describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -773,7 +773,7 @@ describe('IgxHierarchicalGrid Children Sizing', () => {
     }));
 });
 
-describe('IgxHierarchicalGrid Remote Scenarios', () => {
+describe('IgxHierarchicalGrid Remote Scenarios #hGrid', () => {
     configureTestSuite();
     let fixture: ComponentFixture<IgxHGridRemoteOnDemandComponent>;
     const TBODY_CLASS = '.igx-grid__tbody-content';
@@ -849,7 +849,7 @@ describe('IgxHierarchicalGrid Remote Scenarios', () => {
     }));
 });
 
-describe('IgxHierarchicalGrid Template Changing Scenarios', () => {
+describe('IgxHierarchicalGrid Template Changing Scenarios #hGrid', () => {
     configureTestSuite();
     const TBODY_CLASS = '.igx-grid__tbody-content';
     const THEAD_CLASS = '.igx-grid__thead';
@@ -1016,7 +1016,7 @@ describe('IgxHierarchicalGrid Template Changing Scenarios', () => {
     });
 });
 
-describe('IgxHierarchicalGrid Runtime Row Island change Scenarios', () => {
+describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () => {
     configureTestSuite();
     let fixture: ComponentFixture<IgxHierarchicalGridToggleRIComponent>;
     let hierarchicalGrid: IgxHierarchicalGridComponent;

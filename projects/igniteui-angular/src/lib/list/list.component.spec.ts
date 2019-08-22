@@ -701,15 +701,16 @@ describe('List', () => {
     it('should allow setting the index of list items', (async () => {
         const fixture = TestBed.createComponent(ListWithIgxForAndScrollingComponent);
         fixture.detectChanges();
+        await wait(200);
         fixture.componentInstance.igxFor.scrollTo(8);
-        await wait(50);
         fixture.detectChanges();
+        await wait(200);
         const items = fixture.debugElement.queryAll(By.css('igx-list-item'));
         const len = items.length;
         expect(items[0].nativeElement.textContent).toContain('3');
         expect(fixture.componentInstance.forOfList.items[0].index).toEqual(2);
-        expect(items[len - 1].nativeElement.textContent).toContain('9');
-        expect(fixture.componentInstance.forOfList.items[len - 1].index).toEqual(8);
+        expect(items[len - 1].nativeElement.textContent).toContain('11');
+        expect(fixture.componentInstance.forOfList.items[len - 1].index).toEqual(10);
     }));
 
     it('should return items as they appear in the list with virtualization', (async () => {

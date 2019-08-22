@@ -102,9 +102,6 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
             });
         }
         grid.cdr.detectChanges();
-        requestAnimationFrame(() => {
-            grid.reflow();
-        });
     }
 
     /**
