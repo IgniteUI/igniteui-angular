@@ -156,12 +156,8 @@ private resolver;
         this.hGrid.parent = this.parentGrid;
         this.hGrid.parentIsland = this.layout;
         this.hGrid.childRow =  this;
-
         // handler logic that re-emits hgrid events on the row island
         this.setupEventEmitters();
-        if (this.hGrid.isPercentHeight) {
-            this.hGrid._autoSize = true;
-        }
         this.layout.onGridCreated.emit({
             owner: this.layout,
             parentID: this.rowData.rowID,

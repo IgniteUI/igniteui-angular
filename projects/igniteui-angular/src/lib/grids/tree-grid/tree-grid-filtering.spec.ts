@@ -7,7 +7,7 @@ import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from '../../data-operations/filtering-condition';
 
-describe('IgxTreeGrid - Filtering actions ', () => {
+describe('IgxTreeGrid - Filtering actions #tGrid', () => {
     configureTestSuite();
     let fix;
     let grid;
@@ -254,6 +254,7 @@ describe('IgxTreeGrid - Filtering actions ', () => {
 
         // collapse first row
         (<IgxTreeGridComponent>grid).toggleRow((<IgxTreeGridRowComponent>grid.getRowByIndex(0)).rowID);
+        fix.detectChanges();
         rows = TreeGridFunctions.getAllRows(fix);
         expect(rows.length).toBe(7);
     });
