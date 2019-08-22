@@ -589,14 +589,14 @@ describe('IgxGrid - Row Selection', () => {
             expect(headerCheckbox.getAttribute('aria-checked')).toMatch('false');
             expect(headerCheckbox.getAttribute('aria-label')).toMatch('Select all');
 
-            headerCheckbox.click();
+            HelperUtils.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
             expect(firstRow.getAttribute('aria-selected')).toMatch('true');
             expect(headerCheckbox.getAttribute('aria-checked')).toMatch('true');
             expect(headerCheckbox.getAttribute('aria-label')).toMatch('Deselect all');
 
-            headerCheckbox.click();
+            HelperUtils.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
             expect(firstRow.getAttribute('aria-selected')).toMatch('false');
