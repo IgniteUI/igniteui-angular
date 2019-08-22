@@ -7,14 +7,16 @@
 <div *ngFor="let week of getCalendarMonth; last as isLast; index as i; trackBy: rowTracker" class="igx-calendar__body-row"
     [@animateChange]="animationAction"
     (@animateChange.done)="animationDone($event, isLast)">
-    <igx-day-item [date]="day" *ngFor="let day of week; trackBy: dateTracker"
+    <igx-day-item
+        *ngFor="let day of week; trackBy: dateTracker"
+        [date]="day"
         [selection]="selection"
         [value]="value"
         [disabledDates]="disabledDates"
         [specialDates]="specialDates"
         [outOfRangeDates]="outOfRangeDates"
         [hideInactiveDates]="hideInactiveDates"
-        (onDateSelection)="selectDay($event)" >
+        (onDateSelection)="selectDay($event)">
             {{ formattedDate(day.date) }}
     </igx-day-item>
 </div>
