@@ -14,7 +14,7 @@
     {{ item[key] }}
 </ng-template>
 
-<igx-input-group [displayDensity]="displayDensity" [type]="type" (click)="onInputClick($event)">
+<igx-input-group #inputGroup [displayDensity]="displayDensity" [type]="type" (click)="onInputClick($event)">
     <ng-container ngProjectAs="[igxLabel]">
         <ng-content select="[igxLabel]"></ng-content>
     </ng-container>
