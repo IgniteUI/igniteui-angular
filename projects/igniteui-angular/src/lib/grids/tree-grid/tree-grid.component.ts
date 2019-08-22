@@ -42,7 +42,6 @@ import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
-import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from '../igx-selection.module';
 
 let NEXT_ID = 0;
 

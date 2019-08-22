@@ -1738,9 +1738,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return this.toolbarCustomContentTemplates.first;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     @ContentChildren(IgxGridToolbarCustomContentDirective, { read: IgxGridToolbarCustomContentDirective, descendants: false })
     public toolbarCustomContentTemplates: QueryList<IgxGridToolbarCustomContentDirective>;
 
+    /**
+     *  Returns the template which will be used for the header selectors' templating.
+     *
+     * ```typescript
+     * const customHeaderSelectorTemplate = this.grid.headerSelectorTemplate;
+     * ```
+     */
     public get headSelectorTemplate(): TemplateRef<IgxHeadSelectorDirective> {
         if (this.headSelectorsTemplate && this.headSelectorsTemplate.first) {
             return this.headSelectorsTemplate.first.templateRef;
@@ -1749,9 +1760,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return null;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     @ContentChildren(IgxHeadSelectorDirective, { read: IgxHeadSelectorDirective, descendants: false })
     public headSelectorsTemplate: QueryList<IgxHeadSelectorDirective>;
 
+    /**
+     * Returns the template which will be used for the row selectors' templating.
+     *
+     * ```typescript
+     * const customRowSelectorTemplate = this.grid.rowSelectorTemplate;
+     * ```
+     */
     public get rowSelectorTemplate(): TemplateRef<IgxRowSelectorDirective> {
         if (this.rowSelectorsTemplate && this.rowSelectorsTemplate.first) {
             return this.rowSelectorsTemplate.first.templateRef;
