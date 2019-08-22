@@ -260,11 +260,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private overlayIDs = [];
     public rowSelected = false;
 
-    /**
-     * @hidden
-     */
-    public selectedRowsCount = 0;
-
     private _hostWidth;
     /**
      * An accessor that sets the resource strings.

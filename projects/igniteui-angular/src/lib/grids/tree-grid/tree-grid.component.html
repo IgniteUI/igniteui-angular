@@ -26,7 +26,9 @@
                     <ng-template #headSelector
                         *ngTemplateOutlet="
                         this.headSelectorTemplate ? this.headSelectorTemplate : headSelectorBaseTemplate;
-                        context: { $implicit: { selectedCount: selectedRowsCount, totalCount: this.data ? this.data.length : 0 }}">
+                        context: { $implicit: {
+                                        selectedCount: this.selectedRows().length,
+                                        totalCount: this.data ? this.data.length : 0 }}">
                     </ng-template>
                 </div>
             </ng-container>
