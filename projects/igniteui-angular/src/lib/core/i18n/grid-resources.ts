@@ -74,6 +74,17 @@ export interface IGridResourceStrings {
     igx_grid_excel_boolean_filter?: string;
     igx_grid_excel_custom_filter?: string;
     igx_grid_paginator_label?: string;
+    igx_grid_advanced_filter_title?: string;
+    igx_grid_advanced_filter_and_label?: string;
+    igx_grid_advanced_filter_or_label?: string;
+    igx_grid_advanced_filter_addcondition?: string;
+    igx_grid_advanced_filter_group?: string;
+    igx_grid_advanced_filter_end_label?: string;
+    igx_grid_advanced_filter_ungroup?: string;
+    igx_grid_advanced_filter_delete?: string;
+    igx_grid_advanced_filter_create?: string;
+    igx_grid_advanced_filter_deletefilters?: string;
+    igx_grid_advanced_filter_initialtext?: string;
 }
 
 export const GridResourceStringsEN: IGridResourceStrings = {
@@ -151,5 +162,16 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_excel_date_filter: 'Date filter',
     igx_grid_excel_boolean_filter: 'Boolean filter',
     igx_grid_excel_custom_filter: 'Custom filter...',
-    igx_grid_paginator_label: 'Items per page'
+    igx_grid_paginator_label: 'Items per page',
+    igx_grid_advanced_filter_title: 'Adv. Filtering',
+    igx_grid_advanced_filter_and_label: 'and',
+    igx_grid_advanced_filter_or_label: 'or',
+    igx_grid_advanced_filter_addcondition: 'Condition',
+    igx_grid_advanced_filter_group: 'Group',
+    igx_grid_advanced_filter_end_label: 'End',
+    igx_grid_advanced_filter_ungroup: 'Ungroup',
+    igx_grid_advanced_filter_delete: 'Delete',
+    igx_grid_advanced_filter_create: 'Create',
+    igx_grid_advanced_filter_deletefilters: 'Delete filters',
+    igx_grid_advanced_filter_initialtext: 'Start with creating a group of conditions linked with "And" or "Or"'
 };
