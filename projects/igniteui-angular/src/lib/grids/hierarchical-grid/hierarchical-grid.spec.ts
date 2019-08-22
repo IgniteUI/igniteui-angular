@@ -99,6 +99,7 @@ describe('Basic IgxHierarchicalGrid', () => {
         rows.forEach((r) => {
             expect(r.expanded).toBe(false);
         });
+        icon = headerExpanderElem.query(By.css('igx-icon')).componentInstance;
         iconTxt = headerExpanderElem.query(By.css('igx-icon')).nativeElement.textContent.toLowerCase();
         expect(iconTxt).toBe('unfold_less');
         expect(icon.getActive).toBe(false);
@@ -1119,7 +1120,7 @@ describe('IgxHierarchicalGrid custom template', () => {
         hierarchicalGrid = fixture.componentInstance.hgrid;
     }));
 
-    it(' should allow setting custom template for  expand/collapse icons', () => {
+    it(' should allow setting custom template for  expand/collapse icons', async() => {
         let rows = hierarchicalGrid.dataRowList.toArray();
         for (const row of rows) {
             const expander =  row.nativeElement.querySelector('.igx-grid__hierarchical-expander');
@@ -1140,8 +1141,16 @@ describe('IgxHierarchicalGrid custom template', () => {
             expect(expander.innerText).toBe('COLLAPSED');
         }
 
-        expect((hierarchicalGrid as any).headerHierarchyExpander.nativeElement.innerText).toBe('COLLAPSED');
+        expect((hierarchicalGrid as any).headerHierarchyExpander.nativeElement.innerText).toBe('EXPANDED');
         expect((childGrid as any).headerHierarchyExpander.nativeElement.innerText).toBe('COLLAPSED');
+
+        childRows[0].toggle();
+        fixture.detectChanges();
+        expect((childGrid as any).headerHierarchyExpander.nativeElement.innerText).toBe('EXPANDED');
+        hierarchicalGrid.expandChildren = false;
+        fixture.detectChanges();
+        await wait(100);
+        expect((hierarchicalGrid as any).headerHierarchyExpander.nativeElement.innerText).toBe('COLLAPSED');
     });
 });
 
@@ -1367,8 +1376,11 @@ public toggleChildRI = true;
                 <span>COLLAPSED</span>
         </ng-template>
         <ng-template igxHeaderCollapseIndicator>
-        <span>COLLAPSED</span>
-    </ng-template>
+            <span>COLLAPSED</span>
+        </ng-template>
+        <ng-template igxHeaderExpandIndicator>
+            <span>EXPANDED</span>
+        </ng-template>
     </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridCustomTemplateComponent extends IgxHierarchicalGridTestBaseComponent {}

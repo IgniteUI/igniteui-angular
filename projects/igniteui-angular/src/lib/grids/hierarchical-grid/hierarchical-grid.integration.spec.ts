@@ -482,6 +482,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             hierarchicalGrid.rowSelectable = true;
             hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
             fixture.detectChanges();
+            tick(16);
 
             const rootExpander =  (hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent).expander;
             const rootCheckbox =  hierarchicalGrid.headerCheckboxContainer;

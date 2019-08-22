@@ -386,6 +386,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         this.rowExpandIndicatorTemplate  = this.rootGrid.rowExpandIndicatorTemplate;
         this.rowCollapseIndicatorTemplate   = this.rootGrid.rowCollapseIndicatorTemplate;
         this.headerCollapseIndicatorTemplate = this.rootGrid.headerCollapseIndicatorTemplate;
+        this.headerExpandIndicatorTemplate = this.rootGrid.headerExpandIndicatorTemplate;
     }
 
     private updateSizes() {
@@ -612,6 +613,18 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     /**
      * @hidden
     */
+    public get iconTemplate() {
+        const expanded = this.hierarchicalState.length > 0 && this.hasExpandableChildren;
+        if (expanded) {
+            return this.headerExpandIndicatorTemplate || this.defaultExpandTemplate;
+        } else {
+            return this.headerCollapseIndicatorTemplate || this.defaultCollapseTemplate;
+        }
+    }
+
+    /**
+     * @hidden
+    */
     protected initColumns(collection: QueryList<IgxColumnComponent>, cb: Function = null) {
         if (this.hasColumnLayouts) {
             // invalid configuration - hierarchical grid should not allow column layouts
@@ -637,11 +650,31 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         return height;
     }
 
+
     /**
-     * @hidden
-    */
-    public collapseAllRows() {
+     * Collapses all rows of the current hierarchical grid.
+     * ```typescript
+     * this.grid.collapseAll();
+     * ```
+	 * @memberof IgxHierarchicalGridComponent
+     */
+    public collapseAll() {
         this.hierarchicalState = [];
+    }
+
+    /**
+     * Expands all rows of the current hierarchical grid.
+     * ```typescript
+     * this.grid.expandAll();
+     * ```
+	 * @memberof IgxHierarchicalGridComponent
+     */
+    public expandAll() {
+        if (this.data) {
+            this.hierarchicalState = this.data.map((rec) => {
+                return { rowID: this.primaryKey ? rec[this.primaryKey] : rec };
+            });
+        }
     }
 
     /**

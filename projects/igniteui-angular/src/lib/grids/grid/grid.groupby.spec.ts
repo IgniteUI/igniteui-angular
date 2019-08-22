@@ -540,7 +540,7 @@ describe('IgxGrid - GroupBy', () => {
         expect(expndr.innerText).toBe('COLLAPSED');
 
         expect(grid.headerGroupContainer.nativeElement.innerText).toBe('EXPANDED');
-        UIInteractions.clickElement(grid.headerGroupContainer.nativeElement);
+        grid.toggleAllGroupRows();
         expect(grid.headerGroupContainer.nativeElement.innerText).toBe('COLLAPSED');
 
     }));
