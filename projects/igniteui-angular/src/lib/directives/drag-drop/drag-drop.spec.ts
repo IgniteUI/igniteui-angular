@@ -133,6 +133,54 @@ describe('General igxDrag/igxDrop', () => {
         expect(firstDrag.dragEnd.emit).toHaveBeenCalled();
     }));
 
+    it('should trigger dragStart/dragMove/dragEnd events in that order when pointer is lost', (async() => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+
+        spyOn(firstDrag.dragStart, 'emit');
+        spyOn(firstDrag.dragMove, 'emit');
+        spyOn(firstDrag.dragEnd, 'emit');
+
+        // Step 1.
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+
+        expect(firstDrag.dragStart.emit).not.toHaveBeenCalled();
+        expect(firstDrag.dragMove.emit).not.toHaveBeenCalled();
+        expect(firstDrag.dragEnd.emit).not.toHaveBeenCalled();
+
+        // Step 2.
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait(100);
+
+        expect(firstDrag.dragStart.emit).toHaveBeenCalled();
+        expect(firstDrag.dragMove.emit).toHaveBeenCalled();
+        expect(firstDrag.dragEnd.emit).not.toHaveBeenCalled();
+
+        // Step 3.
+        UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait(100);
+
+        expect(firstDrag.dragStart.emit).toHaveBeenCalled();
+        expect(firstDrag.dragMove.emit).toHaveBeenCalled();
+        expect(firstDrag.dragEnd.emit).not.toHaveBeenCalled();
+
+        // Step 4.
+        // We need to trigger the pointerup on the ghostElement because this is the element we move and is under the mouse
+        UIInteractions.simulatePointerEvent('lostpointercapture', firstDrag.ghostElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait();
+
+        expect(firstDrag.dragStart.emit).toHaveBeenCalled();
+        expect(firstDrag.dragMove.emit).toHaveBeenCalled();
+        expect(firstDrag.dragEnd.emit).toHaveBeenCalled();
+    }));
+
     it('should not create drag ghost element when the dragged amount is less than dragTolerance.', (async() => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;
@@ -1071,6 +1119,105 @@ describe('Linked igxDrag/igxDrop ', () => {
         expect(fix.componentInstance.container.nativeElement.children[0]).toEqual(firstDrag.element.nativeElement);
         expect(dropArea.element.nativeElement.children[0]).not.toEqual(firstDrag.element.nativeElement);
         expect(dropArea.element.nativeElement.children[1]).not.toEqual(firstDrag.element.nativeElement);
+    }));
+
+
+    it('Should allow dragging when the dragChannel is array and dropChannel is primitive.', (async() => {
+        const fix = TestBed.createComponent(TestDragDropStrategiesComponent);
+        fix.componentInstance.dropArea.dropStrategy = IgxAppendDropStrategy;
+        fix.detectChanges();
+
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const dragDirsRects = getDragDirsRects(fix.componentInstance.dragElems);
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+
+        firstDrag.dragChannel = [1, 2, 3];
+        fix.detectChanges();
+
+        const dropArea = fix.componentInstance.dropArea;
+        const dropAreaRects = getElemRects(dropArea.element.nativeElement);
+
+        spyOn(dropArea.enter, 'emit');
+        spyOn(dropArea.leave, 'emit');
+        spyOn(dropArea.dropped, 'emit');
+
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+
+        expect(fix.componentInstance.container.nativeElement.children.length).toEqual(1);
+        expect(dropArea.element.nativeElement.children.length).toEqual(2);
+
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait(100);
+
+        UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, dropAreaRects.left  + 100, dropAreaRects.top  + 5);
+        await wait(100);
+
+        expect(dropArea.enter.emit).toHaveBeenCalled();
+
+        // We need to trigger the pointerup on the ghostElement because this is the element we move and is under the mouse
+        UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, dropAreaRects.left + 100, dropAreaRects.top + 20 );
+        await wait();
+
+        expect(dropArea.dropped.emit).toHaveBeenCalled();
+        expect(dropArea.leave.emit).toHaveBeenCalled();
+        expect(fix.componentInstance.container.nativeElement.children.length).toEqual(0);
+        expect(dropArea.element.nativeElement.children.length).toEqual(3);
+        // Should be appended at the end
+        expect(dropArea.element.nativeElement.children[2]).toEqual(firstDrag.element.nativeElement);
+    }));
+
+    it('Should allow dragging when the dragChannel is primitive and dropChannel is array.', (async() => {
+        const fix = TestBed.createComponent(TestDragDropStrategiesComponent);
+        fix.componentInstance.dropArea.dropStrategy = IgxAppendDropStrategy;
+        fix.componentInstance.dropArea.dropChannel = [1, 2, 3];
+        fix.detectChanges();
+
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const dragDirsRects = getDragDirsRects(fix.componentInstance.dragElems);
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+
+        fix.detectChanges();
+
+        const dropArea = fix.componentInstance.dropArea;
+        const dropAreaRects = getElemRects(dropArea.element.nativeElement);
+
+        spyOn(dropArea.enter, 'emit');
+        spyOn(dropArea.leave, 'emit');
+        spyOn(dropArea.dropped, 'emit');
+
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+
+        expect(fix.componentInstance.container.nativeElement.children.length).toEqual(1);
+        expect(dropArea.element.nativeElement.children.length).toEqual(2);
+
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait(100);
+
+        UIInteractions.simulatePointerEvent('pointermove', firstDrag.ghostElement, dropAreaRects.left  + 100, dropAreaRects.top  + 5);
+        await wait(100);
+
+        expect(dropArea.enter.emit).toHaveBeenCalled();
+
+        // We need to trigger the pointerup on the ghostElement because this is the element we move and is under the mouse
+        UIInteractions.simulatePointerEvent('pointerup', firstDrag.ghostElement, dropAreaRects.left + 100, dropAreaRects.top + 20 );
+        await wait();
+
+        expect(dropArea.dropped.emit).toHaveBeenCalled();
+        expect(dropArea.leave.emit).toHaveBeenCalled();
+        expect(fix.componentInstance.container.nativeElement.children.length).toEqual(0);
+        expect(dropArea.element.nativeElement.children.length).toEqual(3);
+        // Should be appended at the end
+        expect(dropArea.element.nativeElement.children[2]).toEqual(firstDrag.element.nativeElement);
     }));
 });
 
