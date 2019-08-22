@@ -1267,6 +1267,7 @@ describe('IgxGrid - Row Selection', () => {
             const middleRow = grid.getRowByIndex(3);
 
             HelperUtils.clickRowCheckbox(secondRow);
+            fix.detectChanges();
             HelperUtils.clickRowCheckbox(middleRow);
             fix.detectChanges();
 

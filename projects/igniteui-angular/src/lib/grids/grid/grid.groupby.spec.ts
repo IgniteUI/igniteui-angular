@@ -1000,41 +1000,31 @@ describe('IgxGrid - GroupBy', () => {
             grid.groupBy({
                 fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
             });
-
+            tick();
             fix.detectChanges();
 
             grid.selectAllRows();
-            tick();
-
             fix.detectChanges();
 
-            let selRows = grid.selectedRows();
-            tick();
-            expect(selRows.length).toEqual(8);
-
+            expect(grid.selectedRows().length).toEqual(8);
             let rows = fix.debugElement.queryAll(By.css('.igx-grid__tr--selected'));
             for (const r of rows) {
                 expect(r.componentInstance instanceof IgxGridRowComponent).toBe(true);
             }
 
             grid.deselectAllRows();
-            tick();
             fix.detectChanges();
-            selRows = grid.selectedRows();
-            expect(selRows.length).toEqual(0);
+            expect(grid.selectedRows().length).toEqual(0);
 
             HelperUtils.clickHeaderRowCheckbox(fix);
-            tick();
             fix.detectChanges();
 
-            selRows = grid.selectedRows();
-            expect(selRows.length).toEqual(8);
+            expect(grid.selectedRows().length).toEqual(8);
 
             rows = fix.debugElement.queryAll(By.css('.igx-grid__tr--selected'));
             for (const r of rows) {
                 expect(r.componentInstance instanceof IgxGridRowComponent).toBe(true);
             }
-
         }));
 
     // GroupBy + Resizing
