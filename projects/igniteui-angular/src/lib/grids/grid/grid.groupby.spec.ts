@@ -17,7 +17,7 @@ import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DataParent } from '../../test-utils/sample-test-data.spec';
 import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-samples.spec';
-import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
+import { resizeObserverIgnoreError, HelperUtils } from '../../test-utils/helper-utils.spec';
 
 describe('IgxGrid - GroupBy #grid', () => {
     configureTestSuite();
