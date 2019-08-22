@@ -9,6 +9,7 @@ import { IgxGridCellComponent } from '../grids/cell.component';
 import { ComponentFixture } from '@angular/core/testing';
 import { IgxGridBaseComponent } from '../grids/index';
 import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid';
+import { IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/grid.excel-style-filtering.component';
 
 const CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';
 const CELL_SELECTED_CSS_CLASS = 'igx-grid__td--selected';
@@ -17,6 +18,7 @@ const ROW_SELECTION_CSS_CLASS = 'igx-grid__tr--selected';
 const HEADER_ROW_CSS_CLASS = '.igx-grid__thead';
 const CHECKBOX_INPUT_CSS_CLASS = '.igx-checkbox__input';
 const SCROLL_START_CSS_CLASS = '.igx-grid__scroll-start';
+const CHECKBOX_ELEMENT = 'igx-checkbox';
 const DEBOUNCETIME = 50;
 
 export function setupGridScrollDetection(fixture: ComponentFixture<any>, grid: IgxGridBaseComponent) {
@@ -448,20 +450,26 @@ export class HelperUtils {
         }
     }
 
-    public static verifyRowHasCheckbox(rowDOM, hasCheckbox = true, hasCheckboxDiv = true) {
-        if (hasCheckbox) {
-            expect(HelperUtils.getRowCheckboxDiv(rowDOM)).toBeDefined();
-            expect(HelperUtils.getRowCheckboxInput(rowDOM)).toBeDefined();
-        } else if (hasCheckboxDiv) {
-            expect(HelperUtils.getRowCheckboxDiv(rowDOM)).toBeDefined();
-            expect(HelperUtils.getRowCheckboxInput(rowDOM)).toBeNull();
-        } else {
+    public static verifyRowHasCheckbox(rowDOM, hasCheckbox = true, hasCheckboxDiv = true, verifyHeader = false) {
+        const checkboxDiv = HelperUtils.getRowCheckboxDiv(rowDOM);
+        if (!hasCheckbox && !hasCheckboxDiv) {
             expect(HelperUtils.getRowCheckboxDiv(rowDOM)).toBeNull();
+        } else {
+            expect(checkboxDiv).toBeDefined();
+            const rowCheckbox: HTMLElement = checkboxDiv.querySelector(CHECKBOX_ELEMENT);
+            expect(rowCheckbox).toBeDefined();
+            if (!hasCheckbox) {
+                expect(rowCheckbox.style.visibility).toEqual('hidden');
+            } else if (verifyHeader) {
+                expect(rowCheckbox.style.visibility).toEqual('visible');
+            } else {
+                expect(rowCheckbox.style.visibility).toEqual('');
+            }
         }
     }
 
     public static verifyHeaderRowHasCheckbox(fix, hasCheckbox = true, hasCheckboxDiv = true) {
-        HelperUtils.verifyRowHasCheckbox(HelperUtils.getHeaderRow(fix), hasCheckbox, hasCheckboxDiv);
+        HelperUtils.verifyRowHasCheckbox(HelperUtils.getHeaderRow(fix), hasCheckbox, hasCheckboxDiv, true);
     }
 
     public static getHeaderRow(fix): HTMLElement {
