@@ -86,7 +86,7 @@ export class IgxHierarchicalGridRowSelectionComponent {
 
     constructor() {
         // 3 level hierarchy
-        this.data = SampleTestData.generateHGridData(40, 3);
+        this.data = SampleTestData.generateHGridData(5, 3);
     }
 }
 

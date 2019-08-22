@@ -10,11 +10,11 @@ import { SelectionWithScrollsComponent,
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { HelperUtils, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { HelperUtils, setupGridScrollDetection, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 import { DefaultSortingStrategy } from 'igniteui-angular';
 
 
-describe('IgxGrid - Cell selection', () => {
+describe('IgxGrid - Cell selection #grid', () => {
     configureTestSuite();
 
     beforeEach(async(() => {
@@ -1593,6 +1593,7 @@ describe('IgxGrid - Cell selection', () => {
         let detect;
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -2256,6 +2257,7 @@ describe('IgxGrid - Cell selection', () => {
             fix.detectChanges();
 
             grid.moveColumn(grid.getColumnByName('ParentID'), grid.getColumnByName('ID'));
+            fix.detectChanges();
             const newSelectedData = [
                 { ID: 317, Name: 'Monica Reyes', HireDate: new Date('Sep 18, 2014')},
                 { ID: 225, Name: 'Laurence Johnson', HireDate: new Date('May 4, 2014')},

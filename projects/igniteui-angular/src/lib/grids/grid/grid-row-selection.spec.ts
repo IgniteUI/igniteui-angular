@@ -19,13 +19,12 @@ import { IgxHierarchicalGridModule } from '../hierarchical-grid/hierarchical-gri
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { helpers } from 'handlebars';
 import { IgxHierarchicalGridCustomSelectorsComponent } from '../../test-utils/hierarhical-grid-components.spec';
 import { IgxSelectorsModule } from '../igx-selection.module';
 
 const DEBOUNCETIME = 30;
 
-describe('IgxGrid - Row Selection', () => {
+describe('IgxGrid - Row Selection #grid', () => {
     configureTestSuite();
 
     beforeEach(async(() => {
@@ -1426,17 +1425,18 @@ describe('IgxGrid - Row Selection', () => {
             HelperUtils.verifyHeaderRowCheckboxState(fix, true);
         }));
 
-        it('CRUD: Should handle the adding new row properly', () => {
+        it('CRUD: Should handle the adding new row properly', (async () => {
             grid.selectAllRows();
             fix.detectChanges();
 
             HelperUtils.verifyHeaderRowCheckboxState(fix, true);
             grid.addRow({ ProductID: 20, ProductName: 'test', InStock: true, UnitsInStock: 1, OrderDate: new Date('2019-03-01') });
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
 
             expect(grid.selectedRows().includes(20)).toBe(false);
             HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
-        });
+        }));
 
         it('CRUD: Should update selected row when update cell', () => {
             let firstRow = grid.getRowByIndex(1);
@@ -1792,36 +1792,26 @@ describe('IgxGrid - Row Selection', () => {
             HelperUtils.verifyHeaderRowCheckboxState(fix, true);
         });
 
-        it('Should have correct header checkbox when add row', () => {
+        it('Should have correct header checkbox when add row', (async () => {
             grid.height = '800px';
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
 
             grid.selectAllRows();
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
 
             HelperUtils.verifyHeaderRowCheckboxState(fix, true);
 
             grid.addRow({ ID: 112, ParentID: 177, Name: 'Ricardo Matias', HireDate: new Date('Dec 27, 2017'), Age: 55, OnPTO: false });
+            await wait(DEBOUNCETIME);
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
 
-            let addedRow = grid.getRowByKey(112);
+            const addedRow = grid.getRowByKey(112);
             HelperUtils.verifyRowSelected(addedRow, false);
             expect(grid.selectedRows().includes(112)).toBe(false);
             HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
-
-            grid.transactions.undo();
-            fix.detectChanges();
-
-            expect(grid.selectedRows().length).toBe(8);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
-
-            grid.transactions.redo();
-            fix.detectChanges();
-
-            addedRow = grid.getRowByKey(112);
-            expect(grid.selectedRows().includes(112)).toBe(false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
-            HelperUtils.verifyRowSelected(addedRow, false);
 
             HelperUtils.clickRowCheckbox(addedRow);
             fix.detectChanges();
@@ -1829,7 +1819,29 @@ describe('IgxGrid - Row Selection', () => {
             expect(grid.selectedRows().includes(112)).toBe(true);
             HelperUtils.verifyHeaderRowCheckboxState(fix, true);
             HelperUtils.verifyRowSelected(addedRow);
-        });
+        }));
+
+        it('Should be able to select added row', (async () => {
+            grid.height = '800px';
+            fix.detectChanges();
+            await wait(DEBOUNCETIME);
+
+            grid.addRow({ ID: 112, ParentID: 177, Name: 'Ricardo Matias', HireDate: new Date('Dec 27, 2017'), Age: 55, OnPTO: false });
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            await wait(DEBOUNCETIME);
+
+            const addedRow = grid.getRowByKey(112);
+            HelperUtils.verifyRowSelected(addedRow, false);
+            HelperUtils.verifyHeaderRowCheckboxState(fix);
+
+            HelperUtils.clickHeaderRowCheckbox(fix);
+            fix.detectChanges();
+
+            expect(grid.selectedRows().includes(112)).toBe(true);
+            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            HelperUtils.verifyRowSelected(addedRow);
+        }));
     });
 
     describe('Custom selectors', () => {

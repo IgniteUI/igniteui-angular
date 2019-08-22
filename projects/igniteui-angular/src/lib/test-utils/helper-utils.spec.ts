@@ -21,6 +21,16 @@ const SCROLL_START_CSS_CLASS = '.igx-grid__scroll-start';
 const CHECKBOX_ELEMENT = 'igx-checkbox';
 const DEBOUNCETIME = 50;
 
+export function resizeObserverIgnoreError() {
+    const spy = spyOn(window, 'onerror').and.callFake((...args) => {
+        if (args[0].toString().match('ResizeObserver loop limit exceeded')) {
+            return;
+        }
+        spy.and.callThrough().withArgs(...args);
+    });
+    return spy;
+}
+
 export function setupGridScrollDetection(fixture: ComponentFixture<any>, grid: IgxGridBaseComponent) {
     grid.verticalScrollContainer.onChunkLoad.subscribe(() => fixture.detectChanges());
     grid.parentVirtDir.onChunkLoad.subscribe(() => fixture.detectChanges());

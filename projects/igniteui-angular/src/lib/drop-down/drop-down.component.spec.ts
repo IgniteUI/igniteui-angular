@@ -7,7 +7,7 @@ import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownComponent, IgxDropDownModule } from './index';
 import { ISelectionEventArgs } from './drop-down.common';
 import { IgxTabsComponent, IgxTabsModule } from '../tabs/tabs.component';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { CancelableEventArgs } from '../core/utils';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { take } from 'rxjs/operators';
@@ -1360,23 +1360,23 @@ describe('IgxDropDown ', () => {
             expect(fixture.componentInstance.dropdownItems.first.element.nativeElement.textContent.trim()).toEqual('Item 1');
             expect(fixture.componentInstance.dropdownItems.last.element.nativeElement.textContent.trim()).toEqual('Item 11');
         }));
-        it('Should properly scroll when virtualized', async(() => {
+        it('Should properly scroll when virtualized', async() => {
             expect(dropdown).toBeDefined();
             dropdown.toggle();
             fixture.detectChanges();
+            await wait(200);
             let firstItemElement = fixture.componentInstance.dropdownItems.first.element.nativeElement;
             let lastItemElement = fixture.componentInstance.dropdownItems.last.element.nativeElement;
             expect(lastItemElement.textContent.trim()).toEqual('Item 11');
             expect(firstItemElement.textContent.trim()).toEqual('Item 1');
             scroll.getVerticalScroll().scrollTop = scroll.getVerticalScroll().scrollHeight;
-            setTimeout(() => {
-                fixture.detectChanges();
-                firstItemElement = fixture.componentInstance.dropdownItems.first.element.nativeElement;
-                lastItemElement = fixture.componentInstance.dropdownItems.last.element.nativeElement;
-                expect(firstItemElement.textContent.trim()).toEqual('Item 1990');
-                expect(lastItemElement.textContent.trim()).toEqual('Item 2000');
-            }, 200);
-        }));
+            fixture.detectChanges();
+            await wait(200);
+            firstItemElement = fixture.componentInstance.dropdownItems.first.element.nativeElement;
+            lastItemElement = fixture.componentInstance.dropdownItems.last.element.nativeElement;
+            expect(firstItemElement.textContent.trim()).toEqual('Item 1989');
+            expect(lastItemElement.textContent.trim()).toEqual('Item 2000');
+        });
         it('Should properly handle keyboard navigation when virtualized', async(() => {
             expect(dropdown).toBeDefined();
             dropdown.toggle();
