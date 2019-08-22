@@ -21,6 +21,7 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { helpers } from 'handlebars';
 import { IgxHierarchicalGridCustomSelectorsComponent } from '../../test-utils/hierarhical-grid-components.spec';
+import { IgxSelectorsModule } from '../igx-selection.module';
 
 const DEBOUNCETIME = 30;
 
@@ -35,12 +36,15 @@ describe('IgxGrid - Row Selection', () => {
                 SelectionWithScrollsComponent,
                 RowSelectionWithoutPrimaryKeyComponent,
                 SingleRowSelectionComponent,
-                SelectionWithTransactionsComponent
+                SelectionWithTransactionsComponent,
+                GridCustomSelectorsComponent,
+                IgxHierarchicalGridCustomSelectorsComponent
             ],
             imports: [
                 NoopAnimationsModule,
                 IgxGridModule,
-                IgxHierarchicalGridModule
+                IgxHierarchicalGridModule,
+                IgxSelectorsModule
             ]
         })
             .compileComponents();
@@ -1810,7 +1814,7 @@ describe('IgxGrid - Row Selection', () => {
         });
     });
 
-    describe('Custom selectors', () => {
+    fdescribe('Custom selectors', () => {
         let fix;
         let grid;
 
