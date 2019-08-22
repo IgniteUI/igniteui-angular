@@ -72,6 +72,8 @@
                           (click)="onChipClick(expressionItem)"
                           (dblclick)="onChipDblClick(expressionItem)"
                           (onRemove)="onChipRemove(expressionItem)"
+                          (mouseenter)="expressionItem.hovered = true"
+                          (mouseleave)="expressionItem.hovered = false"
                           style="margin-bottom: 10px">
                     {{ expressionItem.expression.fieldName }}
                     <igx-icon fontSet="filtering-icons"
@@ -81,7 +83,7 @@
                         {{ isDate(expressionItem.expression.searchVal) ? (expressionItem.expression.searchVal | igxdate:grid.locale) : expressionItem.expression.searchVal }}
                     </span>
                 </igx-chip>
-                <span *ngIf="expressionItem.selected && selectedExpressions.length === 1">
+                <span *ngIf="(expressionItem.selected && selectedExpressions.length === 1) || expressionItem.hovered">
                     <button igxButton="icon"
                             [displayDensity]="displayDensity"
                             (click)="enterExpressionEdit(expressionItem)">

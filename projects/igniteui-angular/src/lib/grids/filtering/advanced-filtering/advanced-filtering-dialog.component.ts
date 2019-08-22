@@ -21,6 +21,7 @@ class ExpressionItem {
     }
     parent: ExpressionGroupItem;
     selected: boolean;
+    hovered: boolean;
 }
 
 class ExpressionGroupItem extends ExpressionItem {
