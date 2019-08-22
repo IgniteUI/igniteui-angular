@@ -56,7 +56,6 @@ steps:
   condition: succeededOrFailed()
   inputs:
     testRunner: 'JUnit'
-    mergeTestResults: true,
     testResultsFiles: '**/TESTS-*.xml'
 
 - task: PublishCodeCoverageResults@1
