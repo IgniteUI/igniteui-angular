@@ -183,7 +183,7 @@ export class IgxNavigationDrawerComponent implements
     @Input() public width = '280px';
 
     /**
-     * Width of the drawer in its mini state. Defaults to 60px.
+     * Width of the drawer in its mini state. Defaults to 68px.
      *
      * ```typescript
      * // get
@@ -195,7 +195,7 @@ export class IgxNavigationDrawerComponent implements
      * <igx-nav-drawer [miniWidth]="'34px'"></igx-nav-drawer>
      * ```
      */
-    @Input() public miniWidth = '60px';
+    @Input() public miniWidth = '68px';
 
     /**
      * Pinned state change output for two-way binding.

@@ -24,6 +24,7 @@ import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 describe('IgxForOf directive -', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
@@ -279,7 +280,8 @@ describe('IgxForOf directive -', () => {
             expect(rowsRendered.length).not.toBe(0);
         });
 
-        it('should always fill available space for last chunk size calculation - vertical virtualization', () => {
+        it('should always fill available space for last chunk size calculation - vertical virtualization', async () => {
+            resizeObserverIgnoreError();
             fix.componentInstance.height = '1900px';
             const virtualContainer = fix.componentInstance.parentVirtDir;
             virtualContainer.igxForSizePropName = 'height';
@@ -295,8 +297,8 @@ describe('IgxForOf directive -', () => {
                 {  '1': '9', height: '150px' },
                 {  '1': '10', height: '150px' }
             ];
-            fix.componentRef.hostView.detectChanges();
             fix.detectChanges();
+            await wait(200);
             let chunkSize = (virtualContainer as any)._calcMaxChunkSize();
             expect(chunkSize).toEqual(9);
 
@@ -313,8 +315,8 @@ describe('IgxForOf directive -', () => {
                 {  '1': '9', height: '150px' },
                 {  '1': '10', height: '150px' }
             ];
-            fix.componentRef.hostView.detectChanges();
             fix.detectChanges();
+            await wait(200);
             chunkSize = (virtualContainer as any)._calcMaxChunkSize();
             expect(chunkSize).toEqual(10);
         });

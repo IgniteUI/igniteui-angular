@@ -12,7 +12,7 @@ import { IgxTreeGridModule } from '.';
 import { HelperUtils, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
-describe('IgxTreeGrid - Multi Cell selection ', () => {
+describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
     configureTestSuite();
 
     beforeEach(async(() => {
@@ -678,6 +678,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
 
             treeGrid.transactions.undo();
+            fix.detectChanges();
             HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
@@ -803,6 +804,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
 
             treeGrid.transactions.undo();
+            fix.detectChanges();
             HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 

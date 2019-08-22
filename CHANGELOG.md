@@ -29,6 +29,8 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** `igxExcelStyleMovingTemplate` directive is renamed to `igxExcelStyleMoving`.
     - **Breaking Change** `igxExcelStyleHidingTemplate` directive is renamed to `igxExcelStyleHiding`.
     - **Breaking Change** `igxExcelStylePinningTemplate` directive is renamed to `igxExcelStylePinning`.
+## 8.1.4
+- `IgxDialog` new @Input `positionSettings` is now available. It provides the ability to get/set both position and animation settings of the Dialog component. 
 
 - `IgxDrag`
     - Deprecated inputs - `hideBaseOnDrag`, `animateOnRelease`, `visible`.

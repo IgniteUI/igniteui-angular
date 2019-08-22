@@ -64,6 +64,7 @@ import { CalendarViewsSampleComponent } from './calendar-views/calendar-views.sa
 import { AutocompleteSampleComponent } from './autocomplete/autocomplete.sample';
 import { SelectSampleComponent } from './select/select.sample';
 import { TreeGridLoadOnDemandSampleComponent } from './tree-grid-load-on-demand/tree-grid-load-on-demand.sample';
+import { GridAutoSizeSampleComponent } from './grid-auto-size/grid-auto-size.sample';
 
 const appRoutes = [
     {
@@ -309,6 +310,10 @@ const appRoutes = [
     {
         path: 'gridPercentage',
         component: GridColumnPercentageWidthsSampleComponent
+    },
+    {
+        path: 'gridAutoSize',
+        component: GridAutoSizeSampleComponent
     }
 ];
 

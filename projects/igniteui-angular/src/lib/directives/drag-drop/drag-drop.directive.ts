@@ -1396,20 +1396,20 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     }
 
     protected ghostHostOffsetLeft(ghostHost: any) {
-        if (ghostHost.computedStyleMap().get('position').value === 'static' &&
-        ghostHost.offsetParent && ghostHost.offsetParent === document.body) {
+        const ghostPosition = document.defaultView.getComputedStyle(ghostHost).getPropertyValue('position');
+        if (ghostPosition === 'static' && ghostHost.offsetParent && ghostHost.offsetParent === document.body) {
             return 0;
-        } else if (ghostHost.computedStyleMap().get('position').value === 'static' && ghostHost.offsetParent) {
+        } else if (ghostPosition === 'static' && ghostHost.offsetParent) {
             return ghostHost.offsetParent.getBoundingClientRect().left - this.getWindowScrollLeft();
         }
         return ghostHost.getBoundingClientRect().left - this.getWindowScrollLeft();
     }
 
     protected ghostHostOffsetTop(ghostHost: any) {
-        if (ghostHost.computedStyleMap().get('position').value === 'static' &&
-                ghostHost.offsetParent && ghostHost.offsetParent === document.body) {
+        const ghostPosition = document.defaultView.getComputedStyle(ghostHost).getPropertyValue('position');
+        if (ghostPosition === 'static' && ghostHost.offsetParent && ghostHost.offsetParent === document.body) {
             return 0;
-        } else if (ghostHost.computedStyleMap().get('position').value === 'static' && ghostHost.offsetParent) {
+        } else if (ghostPosition === 'static' && ghostHost.offsetParent) {
             return ghostHost.offsetParent.getBoundingClientRect().top - this.getWindowScrollTop();
         }
         return ghostHost.getBoundingClientRect().top - this.getWindowScrollTop();

@@ -9,7 +9,7 @@ import { IgxGridClipboardComponent } from '../../test-utils/grid-samples.spec';
 import { CancelableEventArgs } from '../../core/utils';
 import { take } from 'rxjs/operators';
 
-describe('IgxGrid - Clipboard', () => {
+describe('IgxGrid - Clipboard #grid', () => {
     configureTestSuite();
     let fix;
     let grid: IgxGridComponent;

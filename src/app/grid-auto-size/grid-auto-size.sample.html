@@ -1,0 +1,54 @@
+<div class="wrapper">
+    <app-page-header title="Grid Column Moving">
+        Allows movable columns in a grid to be rearranged.
+    </app-page-header>
+
+    <div class="sample-content">
+        <div class="sample-column">
+            <div class="density-chooser">
+                <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)"></igx-buttongroup>
+            </div>
+            <div>
+                <button igxButton="raised" (click)="gridContainerHidden = !gridContainerHidden">Toggle Container Visibility</button>
+                <button igxButton="raised" (click)="containerHeight = '400px'">Set container height px</button>
+                <button igxButton="raised" (click)="containerHeight = '100%'">Set container height %</button>
+                <button igxButton="raised" (click)="containerHeight = null">Set container height null</button>
+                <button igxButton="raised" (click)="height = null">Set height null</button>
+                <button igxButton="raised" (click)="height = '100%'">Set height 100%</button>
+                <button igxButton="raised" (click)="height = '800px'">Set height px</button>
+
+                <button igxButton="raised" (click)="setData()">Set large data</button>
+                <button igxButton="raised" (click)=" setData(5)">Set small data</button>
+                <button igxButton="raised" (click)="setData(0)">Set no data</button>
+            </div>
+            <div [hidden]='gridContainerHidden' [style.height]='containerHeight'>
+            <igx-grid
+                #grid1
+                [data]="data"
+                [displayDensity]="density"
+                [showToolbar]="true" [columnHiding]="true"
+                [allowFiltering]="true"
+                [rowSelectable]="true"
+                [filterMode]="'excelStyleFilter'"
+                [paging]="false"
+                [width]="'800px'"
+                [height]="height"
+                [style.zIndex]="'1'">
+                <igx-column *ngFor="let c of columns" [field]="c.field"
+                                                    [header]="c.field"
+                                                    [movable]="c.movable"
+                                                    [groupable]="c.groupable"
+                                                    [resizable]="c.resizable"
+                                                    [width]="c.width"
+                                                    [sortable]="c.sortable"
+                                                    [filterable]="c.filterable"
+                                                    [editable]="true"
+                                                    [hidden]="c.hidden"
+                                                    [hasSummary]="false"
+                                                    [dataType]="c.type">
+                </igx-column>
+            </igx-grid>
+        </div>
+        </div>
+    </div>
+</div>
