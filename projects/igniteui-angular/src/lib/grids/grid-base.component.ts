@@ -91,6 +91,7 @@ import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.com
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './igx-selection.module';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;

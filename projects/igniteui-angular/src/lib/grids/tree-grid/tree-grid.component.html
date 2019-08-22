@@ -192,7 +192,7 @@
 <ng-template #headSelectorBaseTemplate>
     <igx-checkbox
         [checked]="selectionService.areAllRowSelected()"
-        (change)="onHeaderCheckboxClick($event)"
+        (change)="onHeadSelectorClick($event)"
         [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
         disableRipple="true"
         [indeterminate]="selectionService.hasSomeRowSelected()" 
