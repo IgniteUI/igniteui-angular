@@ -209,13 +209,13 @@ export interface IGridDataBindable {
 }
 
 export interface IRowDragEndEventArgs extends IBaseEventArgs {
-    owner: IgxDragDirective;
+    dragDirective: IgxDragDirective;
     dragData: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
     animation: boolean;
 }
 
 export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventArgs {
-    owner: IgxDragDirective;
+    dragDirective: IgxDragDirective;
     dragData: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
 }
 

@@ -651,7 +651,7 @@ describe('IgxHierarchicalGrid Row Islands', () => {
         const args: IGridCellEventArgs = {
             cell: cell,
             event: event,
-            context: childGrid
+            owner: childGrid
         };
 
         fixture.detectChanges();
