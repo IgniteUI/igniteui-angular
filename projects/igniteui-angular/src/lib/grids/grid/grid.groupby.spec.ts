@@ -543,6 +543,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         expect(grid.headerGroupContainer.nativeElement.innerText).toBe('EXPANDED');
         grid.toggleAllGroupRows();
+        fix.detectChanges();
         expect(grid.headerGroupContainer.nativeElement.innerText).toBe('COLLAPSED');
 
     }));
