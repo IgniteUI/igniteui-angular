@@ -456,7 +456,7 @@ export class HelperUtils {
             expect(HelperUtils.getRowCheckboxDiv(rowDOM)).toBeNull();
         } else {
             expect(checkboxDiv).toBeDefined();
-            const rowCheckbox: HTMLElement = checkboxDiv.querySelector(CHECKBOX_ELEMENT);
+            const rowCheckbox = HelperUtils.getRowCheckbox(rowDOM);
             expect(rowCheckbox).toBeDefined();
             if (!hasCheckbox) {
                 expect(rowCheckbox.style.visibility).toEqual('hidden');
@@ -484,13 +484,17 @@ export class HelperUtils {
         return HelperUtils.getRowCheckboxDiv(rowDOM).querySelector(CHECKBOX_INPUT_CSS_CLASS);
     }
 
+    public static getRowCheckbox(rowDOM): HTMLElement {
+        return HelperUtils.getRowCheckboxDiv(rowDOM).querySelector(CHECKBOX_ELEMENT);
+    }
+
     public static clickRowCheckbox(row) {
-        const checkboxElement = HelperUtils.getRowCheckboxInput(row.nativeElement);
+        const checkboxElement = HelperUtils.getRowCheckboxDiv(row.nativeElement);
         checkboxElement.dispatchEvent(new Event('click', {}));
     }
 
     public static clickHeaderRowCheckbox(fix) {
-        const checkboxElement = HelperUtils.getRowCheckboxInput(HelperUtils.getHeaderRow(fix));
+        const checkboxElement = HelperUtils.getRowCheckboxDiv(HelperUtils.getHeaderRow(fix));
         checkboxElement.dispatchEvent(new Event('click', {}));
     }
 }

@@ -120,6 +120,15 @@ describe('IgxHierarchicalGrid selection', () => {
             rowIsland2 = fix.componentInstance.rowIsland2;
         }));
 
+        it('should have checkboxes on each row', () => {
+            HelperUtils.verifyHeaderRowHasCheckbox(fix);
+            HelperUtils.verifyHeaderAndRowCheckBoxesAlignment(fix, hierarchicalGrid);
+
+            for (const row of hierarchicalGrid.rowList.toArray()) {
+                HelperUtils.verifyRowHasCheckbox(row.nativeElement);
+            }
+        });
+
         it('should retain selected row when filtering', fakeAsync(() => {
             const firstRow = hierarchicalGrid.getRowByIndex(0);
             HelperUtils.clickRowCheckbox(firstRow);
@@ -132,13 +141,14 @@ describe('IgxHierarchicalGrid selection', () => {
             HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
         }));
 
-        it('should be able to change rowSelection per rowIsland', () => {
-
-        });
-
         it('should be able to change rowSelection', () => {
 
         });
+
+        it('should be able to hideRowSelectors ', () => {
+
+        });
+
 
         it('should be able to select/deselect all rows', () => {
 
@@ -152,8 +162,6 @@ describe('IgxHierarchicalGrid selection', () => {
 
         });
 
-        it('should be able to hideRowSelectors ', () => {
 
-        });
     });
 });
