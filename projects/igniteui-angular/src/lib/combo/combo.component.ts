@@ -1478,7 +1478,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     public selectAllItems(ignoreFilter?: boolean, event?: Event) {
-        const allVisible = this.selection.get_all_ids(ignoreFilter ? this.data : this.filteredData);
+        const allVisible = this.selection.get_all_ids(ignoreFilter ? this.data : this.filteredData, this.valueKey);
         const newSelection = this.selection.add_items(this.id, allVisible);
         this.setSelection(newSelection, event);
     }
@@ -1493,7 +1493,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public deselectAllItems(ignoreFilter?: boolean, event?: Event): void {
         let newSelection = this.selection.get_empty();
         if (this.filteredData.length !== this.data.length && !ignoreFilter) {
-            newSelection = this.selection.delete_items(this.id, this.selection.get_all_ids(this.filteredData));
+            newSelection = this.selection.delete_items(this.id, this.selection.get_all_ids(this.filteredData, this.valueKey));
         }
         this.setSelection(newSelection, event);
     }
