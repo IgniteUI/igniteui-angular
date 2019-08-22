@@ -156,8 +156,6 @@
     $desktop-header-padding: 16px;
     $mobile-header-padding: 8px;
 
-    $mobile-break-point: 600px;
-
     $dd-shadow: igx-elevation($elevations, 3);
 
     %igx-drop-down {
@@ -170,6 +168,7 @@
         z-index: 1;
         box-shadow: $dd-shadow;
         background: --var($theme, 'background-color');
+        min-width: rem(128px);
 
         igx-input-group {
             margin-top: -16px !important;
@@ -215,10 +214,6 @@
         color: --var($theme, 'header-text-color');
         pointer-events: none;
         padding: rem(8px) rem($desktop-header-padding);
-
-        @media only screen and (max-width: $mobile-break-point) {
-            padding: rem(8px) rem($mobile-header-padding);
-        }
     }
 
     %igx-drop-down__item--focused {

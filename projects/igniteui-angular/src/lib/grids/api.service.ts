@@ -321,7 +321,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
         const column = grid.columnList.toArray()[columnID];
         const rowIndex = this.get_row_index_in_data(id, rowID);
 
-        if (emittedArgs.oldValue !== undefined && currentGridEditState.rowData !== undefined) {
+        if (currentGridEditState.rowData !== undefined) {
             grid.onCellEdit.emit(emittedArgs);
             if (emittedArgs.cancel) {
                 return;
@@ -333,9 +333,11 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent> {
             }
 
             //  if edit (new) value is same as old value do nothing here
-            if (emittedArgs.oldValue !== undefined
-                && isEqual(emittedArgs.oldValue, emittedArgs.newValue)) { return; }
+            if (isEqual(emittedArgs.oldValue, emittedArgs.newValue)) { return; }
             const rowValue = this.get_all_data(id, grid.transactions.enabled)[rowIndex];
+            if (grid.hasSummarizedColumns) {
+                grid.summaryService.clearSummaryCache(emittedArgs);
+            }
             this.updateData(grid, rowID, rowValue, currentGridEditState.rowData, { [column.field]: emittedArgs.newValue });
             if (grid.primaryKey === column.field) {
                 if (currentGridEditState.isRowSelected) {

@@ -513,6 +513,30 @@ describe('IgxTreeGrid - Summaries', () => {
             verifyTreeBaseSummaries(fix);
         });
 
+        it('CRUD: add child row whick contains null or undefined values', () => {
+            treeGrid.expandAll();
+            fix.detectChanges();
+
+            const newRow = {
+                ID: 777,
+                ParentID: 475,
+                Name: 'New Employee',
+                HireDate: undefined,
+                Age: null
+            };
+            expect(() => {
+            treeGrid.addRow(newRow);
+            fix.detectChanges();
+            }).not.toThrow();
+
+            const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, 3);
+            HelperUtils.verifyColumnSummaries(summaryRow, 1, ['Count'], ['1']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 2, ['Count', 'Earliest', 'Latest'], ['1', '', '']);
+            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['1', '0', '0', '0', '0']);
+
+            verifyTreeBaseSummaries(fix);
+        });
+
         it('CRUD: delete root node', () => {
             treeGrid.expandAll();
             fix.detectChanges();

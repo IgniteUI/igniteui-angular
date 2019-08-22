@@ -345,7 +345,7 @@ describe('IgxDatePicker', () => {
 
         target.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
         fixture.detectChanges();
-        await wait();
+        await wait(16);
 
         const todayDate = datePicker.calendar.dates.find(d => d.isToday);
         expect(document.activeElement).toEqual(todayDate.nativeElement);
