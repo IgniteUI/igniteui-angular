@@ -562,7 +562,7 @@ export class IgxGridSelectionService {
         this.emitRowSelectionEvent(newSelection, addedRows, [], event);
     }
 
-    selectRowbyID(rowID, clearPrevSelection?, event?) {
+    selectRowByID(rowID, clearPrevSelection?, event?) {
         if (this.grid.rowSelection === 'none' || this.isRowDeleted(rowID)) { return; }
         clearPrevSelection = this.grid.rowSelection === 'single' || clearPrevSelection;
 
@@ -598,7 +598,7 @@ export class IgxGridSelectionService {
     selectMultipleRows(rowID, rowData, event?) {
         this.allRowsSelected = undefined;
         if (!this.rowSelection.size || this.isRowDeleted(rowID)) {
-            this.selectRowbyID(rowID);
+            this.selectRowByID(rowID);
             return;
         }
         const gridData = this.allData;

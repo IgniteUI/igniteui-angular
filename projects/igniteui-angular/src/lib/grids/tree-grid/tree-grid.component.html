@@ -77,7 +77,7 @@
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" #verticalScrollContainer
             (onChunkPreload)="dataLoading($event)">
             <ng-template #record_template>
-                <igx-tree-grid-row [rowSelected]="rowSelected" [gridID]="id" [index]="rowIndex" [treeRow]="rowData" #row>
+                <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" #row>
                 </igx-tree-grid-row>
             </ng-template>
             <ng-template #summary_template>

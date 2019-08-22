@@ -69,12 +69,6 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     /**
      * @hidden
      */
-    @Input()
-    public rowSelected = false;
-
-    /**
-     * @hidden
-     */
     @ViewChild('igxDirRef', { read: IgxGridForOfDirective, static: false })
     public virtDirRow: IgxGridForOfDirective<any>;
 
@@ -286,7 +280,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
             this.selectionService.selectMultipleRows(this.rowID, this.rowData, event);
             return;
         }
-        this.selectionService.selectRowbyID(this.rowID, !event.ctrlKey, event);
+        this.selectionService.selectRowByID(this.rowID, !event.ctrlKey, event);
     }
 
     /**
@@ -299,7 +293,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
             return;
         }
         this.selected ? this.selectionService.deselectRow(this.rowID, event) :
-        this.selectionService.selectRowbyID(this.rowID, false, event);
+        this.selectionService.selectRowByID(this.rowID, false, event);
     }
 
     /**
@@ -307,7 +301,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      * This method emits `onEditDone` event.
      *
      * ```typescript
-     * // update the second selected row's value
+    * // update the second selected row's value
      * let newValue = "Apple";
      * this.grid.selectedRows[1].update(newValue);
      * ```
