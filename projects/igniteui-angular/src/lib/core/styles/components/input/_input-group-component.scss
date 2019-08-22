@@ -295,10 +295,6 @@
 
         @include e(bundle) {
             @extend %form-group-bundle--border !optional;
-
-            &:hover {
-                @extend %form-group-bundle-border--hover !optional;
-            }
         }
 
         @include e(prefix-placeholder) {
@@ -363,6 +359,10 @@
             @extend %form-group-bundle-main--border-cosy !optional;
         }
 
+        @include e(border-label-inner) {
+            @extend %igx-input-group__border-label-inner--cosy !optional;
+        }
+
         @include e(textarea) {
             @extend %form-group-textarea--border-cosy !optional;
         }
@@ -384,13 +384,16 @@
             @extend %form-group-bundle-main--border-compact !optional;
         }
 
+        @include e(border-label-inner) {
+            @extend %igx-input-group__border-label-inner--compact !optional;
+        }
+
         @include e(textarea) {
             @extend %form-group-textarea--border-compact !optional;
         }
     }
 
     @include mx(valid, border) {
-
         @include e(prefix-placeholder) {
             @extend %igx-input-group__prefix--suffix--success !optional;
         }
@@ -431,30 +434,70 @@
             @extend %form-group-bundle-border--focus !optional;
         }
 
+        @include e(prefix-placeholder) {
+            @extend %igx-input-group__prefix--suffix--focus !optional;
+        }
+
+        @include e(suffix-placeholder) {
+            @extend %igx-input-group__prefix--suffix--focus !optional;
+        }
+
         @include e(label) {
             @extend %form-group-label--focus-border !optional;
         }
 
         @include e(border-label) {
-            @extend %igx-input-group__border-label-focus !optional;
+            @extend %igx-input-group__border-label--focus !optional;
         }
 
         @include e(border-label-line) {
-            @extend %igx-input-group__border-label-line-focus !optional;
+            @extend %igx-input-group__border-label-line--focus !optional;
+        }
+
+        @include e(border-label-inner) {
+            @extend %igx-input-group__border-label-inner--focus !optional;
+        }
+    }
+
+    @include mx(focused, cosy, border) {
+        @include e(border-label-inner) {
+            @extend %igx-input-group__border-label-inner--focus--cosy !optional;
+        }
+    }
+
+    @include mx(focused, compact, border) {
+        @include e(border-label-inner) {
+            @extend %igx-input-group__border-label-inner--focus--compact !optional;
+        }
+    }
+
+    @include mx(filled, cosy, border) {
+        @include e(border-label-inner) {
+            @extend %igx-input-group__border-label-inner--focus--cosy !optional;
+        }
+    }
+
+    @include mx(filled, compact, border) {
+        @include e(border-label-inner) {
+            @extend %igx-input-group__border-label-inner--focus--compact !optional;
         }
     }
 
     @include mx(filled, border) {
         @include e(label) {
-            @extend %form-group-label--filled-border !optional;
+            @extend %form-group-label--focus-border !optional;
         }
 
         @include e(border-label) {
-            @extend %igx-input-group__border-label-filled !optional;
+            @extend %igx-input-group__border-label--filled !optional;
         }
 
         @include e(border-label-line) {
             @extend %igx-input-group__border-label-line--filled !optional;
+        }
+
+        @include e(border-label-inner) {
+            @extend %igx-input-group__border-label-inner--focus !optional;
         }
     }
 

@@ -10,17 +10,25 @@
 
     <div class="igx-input-group__border-label">
         <div class="igx-input-group__border-label-inner">
-            <ng-content select="[igxLabel]"></ng-content>
+            <ng-container *ngTemplateOutlet="label"></ng-container>
             <div class="igx-input-group__border-label-line"></div>
         </div>
-        <ng-content select="[igxInput]"></ng-content>
+        <ng-container *ngTemplateOutlet="input"></ng-container>
     </div>
 
     <div class="igx-input-group__suffix-placeholder"></div>
 </ng-template>
 
 <ng-template #withoutBorder>
+    <ng-container *ngTemplateOutlet="label"></ng-container>
+    <ng-container *ngTemplateOutlet="input"></ng-container>
+</ng-template>
+
+<ng-template #label>
     <ng-content select="[igxLabel]"></ng-content>
+</ng-template>
+
+<ng-template #input>
     <ng-content select="[igxInput]"></ng-content>
 </ng-template>
 
