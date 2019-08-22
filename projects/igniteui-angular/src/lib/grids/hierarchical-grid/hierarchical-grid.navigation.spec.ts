@@ -8,9 +8,9 @@ import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
 import { By } from '@angular/platform-browser';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
-import { setupHierarchicalGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { setupHierarchicalGridScrollDetection, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
-describe('IgxHierarchicalGrid Basic Navigation', () => {
+describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -201,25 +201,23 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         childGrid.getColumnByName('ID').hasSummary = true;
         fixture.detectChanges();
-        childGrid.cdr.detectChanges();
+        await wait(200);
         hierarchicalGrid.verticalScrollContainer.scrollTo(2);
-        await wait(100);
         fixture.detectChanges();
+        await wait(200);
 
         const parentCell = hierarchicalGrid.getCellByKey(1, 'ID');
-        parentCell.nativeElement.focus();
-
         parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
-        await wait(100);
         fixture.detectChanges();
+        await wait(200);
 
         const summaryCells = fixture.debugElement.queryAll(By.css('igx-grid-summary-cell'));
         const lastSummaryCell = summaryCells[summaryCells.length - 1].nativeElement;
         expect(document.activeElement).toBe(lastSummaryCell);
 
         lastSummaryCell.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
-        await wait(100);
         fixture.detectChanges();
+        await wait(200);
 
         expect(parentCell.selected).toBe(true);
         expect(parentCell.focused).toBe(true);
@@ -297,6 +295,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
     }));
 
     it('should not lose focus when pressing Ctrl+ArrowDown is pressed at the bottom row(expended) in a child grid.', (async () => {
+        resizeObserverIgnoreError();
         hierarchicalGrid.height = '600px';
         hierarchicalGrid.width = '800px';
         fixture.componentInstance.rowIsland.height = '400px';
@@ -355,14 +354,12 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
     }));
 
     it('should scroll top of child grid into view when pressing Ctrl + Arrow Up when cell is selected in it.', (async () => {
-        hierarchicalGrid.verticalScrollContainer.scrollTo(3);
+        hierarchicalGrid.verticalScrollContainer.scrollTo(7);
         await wait(100);
         fixture.detectChanges();
 
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[3];
         const childLastRowCell =  childGrid.dataRowList.toArray()[9].cells.toArray()[0];
-        childLastRowCell.nativeElement.focus();
-        fixture.detectChanges();
         childLastRowCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp', ctrlKey: true }));
         await wait(100);
         fixture.detectChanges();
@@ -378,7 +375,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
     it('when navigating down from parent into child should scroll child grid to top and start navigation from first row.', (async () => {
         const ri = fixture.componentInstance.rowIsland;
         ri.height = '200px';
-        ri.cdr.detectChanges();
+        fixture.detectChanges();
         await wait(100);
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         childGrid.verticalScrollContainer.scrollTo(9);
@@ -781,7 +778,7 @@ describe('IgxHierarchicalGrid Basic Navigation', () => {
 });
 
 
-describe('IgxHierarchicalGrid Complex Navigation', () => {
+describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
         configureTestSuite();
         let fixture;
         let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -910,7 +907,7 @@ describe('IgxHierarchicalGrid Complex Navigation', () => {
         }));
 });
 
-describe('IgxHierarchicalGrid Multi-layout Navigation', () => {
+describe('IgxHierarchicalGrid Multi-layout Navigation #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -1071,7 +1068,7 @@ describe('IgxHierarchicalGrid Multi-layout Navigation', () => {
     }));
 });
 
-describe('IgxHierarchicalGrid Smaller Child Navigation', () => {
+describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
