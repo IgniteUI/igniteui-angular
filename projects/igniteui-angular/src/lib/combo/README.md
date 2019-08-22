@@ -53,6 +53,39 @@ The service, should inform the combo for the total items that are on the server 
 
 ## Features
 
+### Selection
+
+Combo selection depends on the `[valueKey]` input property:
+
+- If a `[valueKey]` is specified, **all** methods and events tied to the selection operate w/ the value key property of the combo's `[data]` items:
+```html
+    <igx-combo [data]="myCustomData" valueKey="id" displayKey="text"></igx-combo>
+```
+```typescript
+export class MyCombo {
+    ...
+    public combo: IgxComboComponent;
+    public myCustomData: { id: number, text: string } = [{ id: 0, name: "One" }, ...];
+    ...
+    ngOnInit() {
+        // Selection is done only by valueKey property value
+        this.combo.selectItems([0, 1]);
+    }
+}
+```
+
+- When **no** `valueKey` is specified, selection is handled by **equality (===)**. To select items by object reference, the `valueKey` property should be removed:
+```html
+    <igx-combo [data]="myCustomData" displayKey="text"></igx-combo>
+```
+```typescript
+export class MyCombo {
+    ngOnInit() {
+        this.combo.selectItems(this.data[0], this.data[1]);
+    }
+}
+```
+
 ### Value Binding
 
 If we want to use a two-way data-binding, we could just use `ngModel` like this:

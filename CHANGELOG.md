@@ -31,24 +31,8 @@ All notable changes for each version of this project will be documented in this 
         }
     }
     ```
-    This affects **all** methods and events tied to the selection:
-        - **Methods** - `selectedItems()`, `selectItems()`, `deselectItems()`, `setSelectedItem()` - Selection is done based on specified `valueKey` property.
-        - **Events** - `(onSelectionChange)` - `newSelection` and `oldSelection` arrays contain  the specified `valueKey` properties.
-        - **Model Binding** - Binding with `[(ngModel)]` is now correct when using `valueKey`.
-    - **Breaking Change** When using `[valueKey]`, all selection methods and outputs should be handled with the items' unique values in the property specified in `[valueKey]`:
-    ```html
-    <igx-combo [data]="myCustomData" valueKey="id" displayKey="text"></igx-combo>
-    ```
-    ```typescript
-    export class MyCombo {
-        ngOnInit() {
-            // THIS IS INVALID!
-            // Since valueKey is specified, the values for "id" should be passed
-            this.combo.selectItems(this.data[0], this.data[1]);
-        }
-    }
-    ```
-    - When **no** `valueKey` is specified, selection is handled by **equality (===)**. In order to select items by object reference, the `valueKey` property can be removed from the configuration.
+   - **Breaking Change** When using `[valueKey]`, combo methods, events and outputs **cannot** be handled with *data item references*.
+   - For more information, visit the component's [readme](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/combo/README.md)
 
 ## 8.1.4
 - `IgxDialog` new @Input `positionSettings` is now available. It provides the ability to get/set both position and animation settings of the Dialog component. 
