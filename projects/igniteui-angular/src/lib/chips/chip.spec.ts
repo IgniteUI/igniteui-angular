@@ -81,7 +81,7 @@ class TestChipsLabelAndSuffixComponent {
 }
 
 
-fdescribe('IgxChip', () => {
+describe('IgxChip', () => {
     configureTestSuite();
     const CHIP_ITEM = 'igx-chip__item igx-drag igx-drag--select-disabled';
     const CHIP_REMOVE_BUTTON = 'igx-chip__remove';
