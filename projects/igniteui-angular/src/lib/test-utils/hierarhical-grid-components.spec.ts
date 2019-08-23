@@ -139,10 +139,10 @@ export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
     public hGrid: IgxHierarchicalGridComponent;
 
     @ViewChild('rowIsland1', { read: IgxRowIslandComponent, static: true })
-    public firstRowIsland: IgxRowIslandComponent;
+    public firstLevelChild: IgxRowIslandComponent;
 
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true })
-    public secondRowIsland: IgxRowIslandComponent;
+    public secondLevelChild: IgxRowIslandComponent;
 
     public ngOnInit(): void {
         // 3 level hierarchy

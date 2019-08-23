@@ -1176,8 +1176,8 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
         <igx-column width="100px" [field]="'ID'" [header]="'ID'"></igx-column>
         <igx-column width="100px" [field]="'CompanyName'"></igx-column>
         <igx-column width="100px" [field]="'ContactName'" dataType="number"></igx-column>
-        <igx-column width="100px" [field]="'ContactTitle'" dataType="boolean"></igx-column>
-        <igx-column width="100px" [field]="'Address'" dataType="date"></igx-column>
+        <igx-column width="100px" [field]="'ContactTitle'" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Address'" dataType="string"></igx-column>
         <ng-template igxRowSelector let-rowContext>
             <igx-checkbox [checked]="rowContext.selected"></igx-checkbox>
         </ng-template>

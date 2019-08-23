@@ -154,16 +154,16 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
     describe('Custom row selectors', () => {
         let hGrid;
-        let firstRowIsland;
-        let secondRowIsland;
+        let firstLevelChild;
+        let secondLevelChild;
 
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxHierarchicalGridCustomSelectorsComponent);
             fix.detectChanges();
             hGrid = fix.componentInstance.hGrid;
             hGrid.rowSelection = GridSelectionMode.multiple;
-            firstRowIsland = hGrid.firstRowIsland;
-            secondRowIsland = hGrid.secondRowIsland;
+            firstLevelChild = hGrid.firstLevelChild;
+            secondLevelChild = hGrid.secondLevelChild;
         }));
 
         /** Tests should check root and child grids */
