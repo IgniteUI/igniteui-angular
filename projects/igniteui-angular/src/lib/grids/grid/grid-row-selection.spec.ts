@@ -37,12 +37,10 @@ describe('IgxGrid - Row Selection #grid', () => {
                 SingleRowSelectionComponent,
                 SelectionWithTransactionsComponent,
                 GridCustomSelectorsComponent,
-                IgxHierarchicalGridCustomSelectorsComponent
             ],
             imports: [
                 NoopAnimationsModule,
                 IgxGridModule,
-                IgxHierarchicalGridModule,
                 IgxSelectorsModule
             ]
         })
@@ -1891,20 +1889,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             grid.rowSelection = GridSelectionMode.multiple;
-            fix.detectChanges();
         }));
-
-        it('Should be able to select a row by clicking on the custom row selector', () => {
-            // TODO
-        });
-
-        it('Should be able to deselect a selected row by clicking on the custom row selector', () => {
-            // TODO
-        });
-
-        it('Should select/deselect all rows by clicking on the custom header selector', () => {
-            // TODO
-        });
 
         it('Should have the correct properties in the custom row selector template', () => {
             // TODO
@@ -1914,35 +1899,8 @@ describe('IgxGrid - Row Selection #grid', () => {
             // TODO
         });
 
-        describe('Custom selectors - Hierarchical Grid', () => {
-            let fixture;
-            let hGrid;
-
-            beforeEach(fakeAsync(() => {
-                fixture = TestBed.createComponent(IgxHierarchicalGridCustomSelectorsComponent);
-                fixture.detectChanges();
-                hGrid = fixture.componentInstance.hGrid;
-                hGrid.rowSelection = GridSelectionMode.multiple;
-                fixture.detectChanges();
-            }));
-
-            /** Tests should check root and child grids */
-
-            it('Row context `select` method selects a single row', () => {
-                // TODO
-            });
-
-            it('Row context `deselect` method deselects an already selected row', () => {
-                // TODO
-            });
-
-            it('Header context `selectAll` method selects all rows', () => {
-                // TODO
-            });
-
-            it('Header context `deselectAll` method deselects all rows', () => {
-                // TODO
-            });
+        it('Should have correct indices on all pages', () => {
+            // TODO
         });
     });
 });

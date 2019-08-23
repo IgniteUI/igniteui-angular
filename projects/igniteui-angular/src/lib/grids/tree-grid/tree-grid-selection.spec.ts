@@ -8,7 +8,8 @@ import {
     IgxTreeGridCellSelectionComponent,
     IgxTreeGridSelectionRowEditingComponent,
     IgxTreeGridSelectionWithTransactionComponent,
-      IgxTreeGridRowEditingTransactionComponent
+    IgxTreeGridRowEditingTransactionComponent,
+    IgxTreeGridCustomRowSelectorsComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -20,6 +21,7 @@ import {
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { IgxSelectorsModule } from '../igx-selection.module';
 
 describe('IgxTreeGrid - Selection #tGrid', () => {
     configureTestSuite();
@@ -33,9 +35,10 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                 IgxTreeGridCellSelectionComponent,
                 IgxTreeGridSelectionRowEditingComponent,
                 IgxTreeGridSelectionWithTransactionComponent,
-                IgxTreeGridRowEditingTransactionComponent
+                IgxTreeGridRowEditingTransactionComponent,
+                IgxTreeGridCustomRowSelectorsComponent
             ],
-            imports: [IgxTreeGridModule, NoopAnimationsModule]
+            imports: [IgxTreeGridModule, NoopAnimationsModule, IgxSelectorsModule]
         })
             .compileComponents();
     }));
@@ -928,7 +931,28 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expect(banner[0]).toBeTruthy();
         }));
     });
+
+    describe('Custom row selectors', () => {
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxTreeGridCustomRowSelectorsComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid;
+        }));
+
+        it('Should have the correct properties in the custom row selector template', () => {
+            // TODO
+        });
+
+        it('Should have the correct properties in the custom row selector header template', () => {
+            // TODO
+        });
+
+        it('Should have correct indices on all pages', () => {
+            // TODO
+        });
+    });
 });
+
 
 function getVisibleSelectedRows(fix) {
     return TreeGridFunctions.getAllRows(fix).filter(

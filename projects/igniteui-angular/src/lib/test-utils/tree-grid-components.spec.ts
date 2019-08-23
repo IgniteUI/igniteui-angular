@@ -729,3 +729,32 @@ export class IgxTreeGridDefaultLoadingComponent implements OnInit {
         }, 1000);
     }
 }
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGridCustomSelectors [data]="data" primaryKey="ID" foreignKey="ParentID" width="900px" height="600px">
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+        <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+        <ng-template igxRowSelector let-rowContext>
+            <igx-checkbox [checked]="rowContext.selected"></igx-checkbox>
+        </ng-template>
+        <ng-template igxHeadSelector let-headContext>
+            <igx-checkbox
+                [checked]="headContext.totalCount === headContext.selectedCount"
+                [indeterminate]="headContext.totalCount !== headContext.selectedCount && headContext.selectedCount !== 0">
+            </igx-checkbox>
+        </ng-template>
+    </igx-tree-grid>`
+})
+export class IgxTreeGridCustomRowSelectorsComponent implements OnInit {
+    @ViewChild(IgxTreeGridComponent, { static: true })
+    public treeGrid: IgxTreeGridComponent;
+    public data = [];
+
+    public ngOnInit(): void {
+        this.data = SampleTestData.employeePrimaryForeignKeyTreeData();
+    }
+}

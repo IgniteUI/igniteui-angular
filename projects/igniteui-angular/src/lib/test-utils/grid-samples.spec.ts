@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild, Input, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, TemplateRef, ViewChild, Input, AfterViewInit, ChangeDetectorRef, OnInit } from '@angular/core';
 import { IgxGridCellComponent } from '../grids/cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/summaries/grid-summary';
 import { IGridCellEventArgs, IGridEditEventArgs, IgxGridTransaction } from '../grids/grid-base.component';
@@ -1172,23 +1172,22 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
 
 @Component({
     template: `
-        <igx-grid #gridCustomSelectors [data]="data" [autoGenerate]="true">
-            <igx-column width="100px" [field]="'ID'" [header]="'ID'"></igx-column>
-            <igx-column width="100px" [field]="'CompanyName'"></igx-column>
-            <igx-column width="100px" [field]="'ContactName'" dataType="number"></igx-column>
-            <igx-column width="100px" [field]="'ContactTitle'" dataType="boolean"></igx-column>
-            <igx-column width="100px" [field]="'Address'" dataType="date"></igx-column>
-            <ng-template igxRowSelector let-rowContext>
-                <igx-checkbox [checked]="rowContext.selected"></igx-checkbox>
-            </ng-template>
-            <ng-template igxHeadSelector let-headContext>
-                <igx-checkbox [checked]="headContext.totalCount === headContext.selectedCount"></igx-checkbox>
-            </ng-template>
-        </igx-grid>`
+    <igx-grid #gridCustomSelectors [data]="data" [autoGenerate]="true">
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column width="100px" [field]="'CompanyName'"></igx-column>
+        <igx-column width="100px" [field]="'ContactName'" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'ContactTitle'" dataType="boolean"></igx-column>
+        <igx-column width="100px" [field]="'Address'" dataType="date"></igx-column>
+        <ng-template igxRowSelector let-rowContext>
+            <igx-checkbox [checked]="rowContext.selected"></igx-checkbox>
+        </ng-template>
+        <ng-template igxHeadSelector let-headContext>
+            <igx-checkbox [checked]="headContext.totalCount === headContext.selectedCount"></igx-checkbox>
+        </ng-template>
+    </igx-grid>`
 })
-export class GridCustomSelectorsComponent extends BasicGridComponent {
-    data = SampleTestData.contactInfoDataFull();
-
-    @ViewChild('gridCustomSelectors', { read: IgxGridComponent, static: true })
-    public grid: IgxGridComponent;
+export class GridCustomSelectorsComponent extends BasicGridComponent implements OnInit {
+    public ngOnInit(): void {
+        this.data = SampleTestData.contactInfoDataFull();
+    }
 }

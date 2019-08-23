@@ -1,15 +1,19 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxHierarchicalGridModule } from './index';
+import { IgxHierarchicalGridModule, GridSelectionMode } from './index';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxIconModule } from '../../icon';
-import { IgxHierarchicalGridTestBaseComponent,
-        IgxHierarchicalGridRowSelectionComponent } from '../../test-utils/hierarhical-grid-components.spec';
+import {
+    IgxHierarchicalGridTestBaseComponent,
+    IgxHierarchicalGridRowSelectionComponent,
+    IgxHierarchicalGridCustomSelectorsComponent
+} from '../../test-utils/hierarhical-grid-components.spec';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
+import { IgxSelectorsModule } from '../igx-selection.module';
 
 describe('IgxHierarchicalGrid selection #hGrid', () => {
     configureTestSuite();
@@ -22,10 +26,14 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent,
-                IgxHierarchicalGridRowSelectionComponent
+                IgxHierarchicalGridRowSelectionComponent,
+                IgxHierarchicalGridCustomSelectorsComponent
             ],
             imports: [
-                NoopAnimationsModule, IgxHierarchicalGridModule, IgxIconModule]
+                NoopAnimationsModule,
+                IgxHierarchicalGridModule,
+                IgxIconModule,
+                IgxSelectorsModule]
         }).compileComponents();
     }));
 
@@ -43,7 +51,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             hierarchicalGrid.reflow();
             fix.detectChanges();
 
-        let firstRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
+            let firstRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
             firstRow.nativeElement.children[0].click();
             fix.detectChanges();
             expect(firstRow.expanded).toBeTruthy();
@@ -57,9 +65,9 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
             expect(fCell.selected).toBeTruthy();
 
-            const childGrid =  hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
             const firstChildRow = childGrid.dataRowList.toArray()[0];
-            const fChildCell =  firstChildRow.cells.toArray()[0];
+            const fChildCell = firstChildRow.cells.toArray()[0];
 
             // select child cell
             fChildCell.nativeElement.focus();
@@ -107,7 +115,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             hierarchicalGrid.filter('ID', '1', IgxStringFilteringOperand.instance().condition('doesNotContain'), true);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected( hierarchicalGrid.getRowByIndex(0));
+            HelperUtils.verifyRowSelected(hierarchicalGrid.getRowByIndex(0));
             HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
         });
 
@@ -141,6 +149,51 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             HelperUtils.verifyRowSelected(secondRow);
             HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
             expect(hierarchicalGrid.selectedRows()).toEqual(['1']);
+        });
+    });
+
+    describe('Custom row selectors', () => {
+        let hGrid;
+        let firstRowIsland;
+        let secondRowIsland;
+
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxHierarchicalGridCustomSelectorsComponent);
+            fix.detectChanges();
+            hGrid = fix.componentInstance.hGrid;
+            hGrid.rowSelection = GridSelectionMode.multiple;
+            firstRowIsland = hGrid.firstRowIsland;
+            secondRowIsland = hGrid.secondRowIsland;
+        }));
+
+        /** Tests should check root and child grids */
+
+        it('Row context `select` method selects a single row', () => {
+            // TODO
+        });
+
+        it('Row context `deselect` method deselects an already selected row', () => {
+            // TODO
+        });
+
+        it('Header context `selectAll` method selects all rows', () => {
+            // TODO
+        });
+
+        it('Header context `deselectAll` method deselects all rows', () => {
+            // TODO
+        });
+
+        it('Should have the correct properties in the custom row selector template', () => {
+            // TODO
+        });
+
+        it('Should have the correct properties in the custom row selector header template', () => {
+            // TODO
+        });
+
+        it('Should have correct indices on all pages', () => {
+            // TODO
         });
     });
 });
