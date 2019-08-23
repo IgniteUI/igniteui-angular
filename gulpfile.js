@@ -155,14 +155,21 @@ const typedocBuildTheme = (cb) => {
 }
 typedocBuildTheme.displayName = 'typedoc-build:theme';
 
-function typedocServe(cb) {
-    browserSync.init({
-        server: './dist/igniteui-angular/docs/typescript'
-    });
+const browserReload = (cb) => {
+    browserSync.reload();
 
-    // TODO: Decide how to reload the browser when change occurs.
-    // gulp.watch('./dist/igniteui-angular/docs/typescript/**/*')
-    //     .on('change', browserSync.reload);
+    cb();
+}
+
+const typedocServe = (cb) => {
+    const config = {
+        server: {
+            baseDir: './dist/igniteui-angular/docs/typescript'
+        },
+        port: 3000
+    }
+
+    browserSync.init(config);
 
     cb();
 }
@@ -173,7 +180,7 @@ function typedocWatchFunc(cb) {
         slash(path.join(TYPEDOC_THEME.SRC, 'assets', 'css', '/**/*.{scss,sass}')),
         slash(path.join(TYPEDOC_THEME.SRC, '/**/*.hbs')),
         slash(path.join(TYPEDOC_THEME.SRC, 'assets', 'images', '/**/*.{png,jpg,gif}')),
-      ], series(typedocGulp.typedocBuild, typedocBuildTheme));
+      ], series(typedocGulp.typedocBuild, typedocBuildTheme, browserReload));
 
       cb();
 }
