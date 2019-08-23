@@ -18,7 +18,8 @@ import {
     Output,
     EventEmitter,
     Optional,
-    OnDestroy
+    OnDestroy,
+    DoCheck
 } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxGridTransaction, IGridDataBindable, IgxGridBaseComponent } from '../grid-base.component';
@@ -51,7 +52,7 @@ export interface IGridCreatedEventArgs {
     providers: [IgxRowIslandAPIService]
 })
 export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
-            implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy {
+            implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy, DoCheck {
     /**
      * Sets the key of the row island by which child data would be taken from the row data if such is provided.
      * ```html
@@ -232,6 +233,12 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
      */
     ngOnInit() {
         this.rootGrid = this.hgridAPI.grid;
+    }
+
+    /**
+     * @hidden
+     */
+    ngDoCheck() {
     }
 
     /**

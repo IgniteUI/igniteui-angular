@@ -19,7 +19,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridComponent } from './grid.component';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
 
-describe('IgxGrid - Column Moving', () => {
+describe('IgxGrid - Column Moving #grid', () => {
     configureTestSuite();
     const CELL_CSS_CLASS = '.igx-grid__td';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
@@ -378,6 +378,7 @@ describe('IgxGrid - Column Moving', () => {
             // step 1 - hide a column
             fixture.componentInstance.isHidden = true;
             fixture.detectChanges();
+            fixture.detectChanges();
 
             // step 2 - move a column
             const header = headers[2].nativeElement;
@@ -395,6 +396,7 @@ describe('IgxGrid - Column Moving', () => {
 
             // step 3 - show hidden columns and verify correct order
             fixture.componentInstance.isHidden = false;
+            fixture.detectChanges();
             fixture.detectChanges();
 
             expect(grid.visibleColumns[0].field).toEqual('ID');

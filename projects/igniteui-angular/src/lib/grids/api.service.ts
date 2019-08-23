@@ -512,7 +512,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
 
         this.deleteRowFromData(rowId, index);
         (grid as any)._pipeTrigger++;
-        grid.cdr.markForCheck();
+        grid.notifyChanges();
         // Data needs to be recalculated if transactions are in place
         // If no transactions, `data` will be a reference to the grid getter, otherwise it will be stale
         const dataAfterDelete = grid.transactions.enabled ? grid.dataWithAddedInTransactionRows : data;

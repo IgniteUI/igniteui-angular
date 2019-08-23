@@ -107,6 +107,8 @@ import { GridMRLConfigSampleComponent } from './grid-multi-row-layout-config/gri
 import { GridMRLCustomNavigationSampleComponent } from './grid-mrl-custom-navigation/grid-mrl-custom-navigation';
 import { InputGroupFluentSampleComponent } from './input-group/input-group-fluent.sample';
 import { GridClipboardSampleComponent } from './grid-clipboard/grid-clipboard.sample';
+import { GridAutoSizeSampleComponent } from './grid-auto-size/grid-auto-size.sample';
+import { GridFlexSampleComponent } from './grid-flex-layout/grid-flex.sample';
 import { GridEsfLoadOnDemandComponent } from './grid-esf-load-on-demand/grid-esf-load-on-demand.component';
 
 
@@ -208,6 +210,8 @@ const components = [
     GridSearchComponent,
     GridFilterTemplateSampleComponent,
     GridClipboardSampleComponent,
+    GridAutoSizeSampleComponent,
+    GridFlexSampleComponent,
     GridEsfLoadOnDemandComponent
 ];
 

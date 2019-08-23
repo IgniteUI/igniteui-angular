@@ -13,17 +13,17 @@ export class CalendarSampleComponent implements OnInit {
     ngOnInit() {
         this.calendar.disabledDates = [{
             type: DateRangeType.Between, dateRange: [
-                new Date(2018, 8, 2),
-                new Date(2018, 8, 8)
+                new Date(2019, 7, 2),
+                new Date(2019, 7, 5)
             ]
         }];
 
         this.calendar.specialDates = [{
             type: DateRangeType.Specific, dateRange: [
-                new Date(2018, 7, 4),
-                new Date(2018, 7, 14),
-                new Date(2018, 7, 15),
-                new Date(2018, 8, 14)
+                new Date(2019, 7, 1),
+                new Date(2019, 7, 4),
+                new Date(2019, 7, 15),
+                new Date(2019, 7, 14)
             ]
         }];
     }
