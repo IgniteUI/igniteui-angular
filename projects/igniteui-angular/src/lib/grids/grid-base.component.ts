@@ -4733,10 +4733,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    get headerCheckboxAriaLabel() {
+    get headSelectorBaseAriaLabel() {
         return this._filteringExpressionsTree.filteringOperands.length > 0 ?
-            this.headerCheckbox && this.selectionService.areAllRowSelected() ? 'Deselect all filtered' : 'Select all filtered' :
-            this.headerCheckbox && this.selectionService.areAllRowSelected() ? 'Deselect all' : 'Select all';
+            this.headSelectorBaseTemplate && this.selectionService.areAllRowSelected() ? 'Deselect all filtered' : 'Select all filtered' :
+            this.headSelectorBaseTemplate && this.selectionService.areAllRowSelected() ? 'Deselect all' : 'Select all';
     }
 
     /**

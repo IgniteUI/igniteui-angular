@@ -249,7 +249,7 @@
         [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
         (click)="$event.preventDefault()"
         [indeterminate]="selectionService.hasSomeRowSelected()"
-        [aria-label]="headerCheckboxAriaLabel"
+        [aria-label]="headSelectorBaseAriaLabel"
         #headerCheckbox>
     </igx-checkbox>
 </ng-template>
