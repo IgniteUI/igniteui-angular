@@ -2,11 +2,11 @@
         <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }">
         </ng-container>
 </div>
-<ng-template #defaultExpandTemplate>
+<ng-template #defaultExpandedTemplate>
         <igx-icon [isActive]='!added' fontSet="material">expand_more</igx-icon>
     </ng-template>
 
-<ng-template #defaultCollapseTemplate>
+<ng-template #defaultCollapsedTemplate>
         <igx-icon [isActive]='!added' fontSet="material">chevron_right</igx-icon>
  </ng-template>
 <ng-container *ngIf="rowDraggable">

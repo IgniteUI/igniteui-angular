@@ -909,9 +909,9 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      */
     public get iconTemplate() {
         if (this.groupsExpanded) {
-            return this.headerExpandIndicatorTemplate || this.defaultExpandTemplate;
+            return this.headerExpandIndicatorTemplate || this.defaultExpandedTemplate;
         } else {
-            return this.headerCollapseIndicatorTemplate || this.defaultCollapseTemplate;
+            return this.headerCollapseIndicatorTemplate || this.defaultCollapsedTemplate;
         }
     }
 

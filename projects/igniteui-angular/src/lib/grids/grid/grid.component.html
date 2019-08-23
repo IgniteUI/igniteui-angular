@@ -194,14 +194,14 @@
     <span class="igx-drop-area__text">{{dropAreaMessage}}</span>
 </ng-template>
 
-<ng-template #defaultExpandTemplate>
+<ng-template #defaultExpandedTemplate>
     <igx-icon role="button" class="igx-grid__group-expand-btn"
    [ngClass]="{
     'igx-grid__group-expand-btn--push': filteringService.isFilterRowVisible
 }">unfold_less</igx-icon>
 </ng-template>
 
- <ng-template #defaultCollapseTemplate>
+ <ng-template #defaultCollapsedTemplate>
     <igx-icon role="button" class="igx-grid__group-expand-btn"
     [ngClass]="{
     'igx-grid__group-expand-btn--push': filteringService.isFilterRowVisible

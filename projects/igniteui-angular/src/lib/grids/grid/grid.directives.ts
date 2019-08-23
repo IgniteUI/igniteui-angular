@@ -23,7 +23,7 @@ export class IgxGroupByRowTemplateDirective {
 @Directive({
     selector: '[igxRowExpandedIndicator]'
 })
-export class IgxRowExpandIndicatorDirective {
+export class IgxRowExpandedIndicatorDirective {
 }
 
 /**
@@ -32,7 +32,7 @@ export class IgxRowExpandIndicatorDirective {
 @Directive({
     selector: '[igxRowCollapsedIndicator]'
 })
-export class IgxRowCollapseIndicatorDirective {
+export class IgxRowCollapsedIndicatorDirective {
 }
 
 

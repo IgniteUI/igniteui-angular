@@ -377,8 +377,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         this.toolbarCustomContentTemplates = this.parentIsland ?
             this.parentIsland.toolbarCustomContentTemplates :
             this.toolbarCustomContentTemplates;
-        this.rowExpandIndicatorTemplate  = this.rootGrid.rowExpandIndicatorTemplate;
-        this.rowCollapseIndicatorTemplate   = this.rootGrid.rowCollapseIndicatorTemplate;
+        this.rowExpandedIndicatorTemplate  = this.rootGrid.rowExpandedIndicatorTemplate;
+        this.rowCollapsedIndicatorTemplate   = this.rootGrid.rowCollapsedIndicatorTemplate;
         this.headerCollapseIndicatorTemplate = this.rootGrid.headerCollapseIndicatorTemplate;
         this.headerExpandIndicatorTemplate = this.rootGrid.headerExpandIndicatorTemplate;
     }
@@ -617,9 +617,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     public get iconTemplate() {
         const expanded = this.hierarchicalState.length > 0 && this.hasExpandableChildren;
         if (expanded) {
-            return this.headerExpandIndicatorTemplate || this.defaultExpandTemplate;
+            return this.headerExpandIndicatorTemplate || this.defaultExpandedTemplate;
         } else {
-            return this.headerCollapseIndicatorTemplate || this.defaultCollapseTemplate;
+            return this.headerCollapseIndicatorTemplate || this.defaultCollapsedTemplate;
         }
     }
 

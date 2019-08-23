@@ -42,14 +42,14 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
     /**
     * @hidden
     */
-   @ViewChild('defaultExpandTemplate', { read: TemplateRef, static: true })
-   protected defaultExpandTemplate: TemplateRef<any>;
+   @ViewChild('defaultExpandedTemplate', { read: TemplateRef, static: true })
+   protected defaultExpandedTemplate: TemplateRef<any>;
 
     /**
     * @hidden
     */
-   @ViewChild('defaultCollapseTemplate', { read: TemplateRef, static: true })
-   protected defaultCollapseTemplate: TemplateRef<any>;
+   @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
+   protected defaultCollapsedTemplate: TemplateRef<any>;
 
     /**
      * @hidden
@@ -109,9 +109,9 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
     */
     public get iconTemplate() {
         if (this.expanded) {
-            return this.grid.rowExpandIndicatorTemplate || this.defaultExpandTemplate;
+            return this.grid.rowExpandedIndicatorTemplate || this.defaultExpandedTemplate;
         } else {
-            return this.grid.rowCollapseIndicatorTemplate || this.defaultCollapseTemplate;
+            return this.grid.rowCollapsedIndicatorTemplate || this.defaultCollapsedTemplate;
         }
     }
 

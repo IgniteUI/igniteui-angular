@@ -42,14 +42,14 @@ export class IgxGridGroupByRowComponent {
     /**
     * @hidden
     */
-    @ViewChild('defaultGroupByExpandTemplate', { read: TemplateRef, static: true })
-    protected defaultGroupByExpandTemplate: TemplateRef<any>;
+    @ViewChild('defaultGroupByExpandedTemplate', { read: TemplateRef, static: true })
+    protected defaultGroupByExpandedTemplate: TemplateRef<any>;
 
     /**
     * @hidden
     */
-    @ViewChild('defaultGroupByCollapseTemplate', { read: TemplateRef, static: true })
-    protected defaultGroupByCollapseTemplate: TemplateRef<any>;
+    @ViewChild('defaultGroupByCollapsedTemplate', { read: TemplateRef, static: true })
+    protected defaultGroupByCollapsedTemplate: TemplateRef<any>;
 
     /**
      * @hidden
@@ -192,9 +192,9 @@ export class IgxGridGroupByRowComponent {
 
     public get iconTemplate() {
         if (this.expanded) {
-            return this.grid.rowExpandIndicatorTemplate || this.defaultGroupByExpandTemplate;
+            return this.grid.rowExpandedIndicatorTemplate || this.defaultGroupByExpandedTemplate;
         } else {
-            return this.grid.rowCollapseIndicatorTemplate || this.defaultGroupByCollapseTemplate;
+            return this.grid.rowCollapsedIndicatorTemplate || this.defaultGroupByCollapsedTemplate;
         }
     }
 

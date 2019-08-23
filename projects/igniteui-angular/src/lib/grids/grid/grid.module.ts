@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 import {
     IgxGroupAreaDropDirective,
     IgxGroupByRowTemplateDirective,
-    IgxRowExpandIndicatorDirective,
-    IgxRowCollapseIndicatorDirective,
+    IgxRowExpandedIndicatorDirective,
+    IgxRowCollapsedIndicatorDirective,
     IgxHeaderExpandIndicatorDirective,
     IgxHeaderCollapseIndicatorDirective
 } from './grid.directives';
@@ -33,8 +33,8 @@ import { IgxSelectModule } from '../../select/index';
     IgxGridRowComponent,
     IgxGridGroupByRowComponent,
     IgxGroupByRowTemplateDirective,
-    IgxRowExpandIndicatorDirective,
-    IgxRowCollapseIndicatorDirective,
+    IgxRowExpandedIndicatorDirective,
+    IgxRowCollapsedIndicatorDirective,
     IgxHeaderExpandIndicatorDirective,
     IgxHeaderCollapseIndicatorDirective,
     IgxGroupAreaDropDirective,
@@ -49,8 +49,8 @@ import { IgxSelectModule } from '../../select/index';
     IgxGridGroupByRowComponent,
     IgxGridRowComponent,
     IgxGroupByRowTemplateDirective,
-    IgxRowExpandIndicatorDirective,
-    IgxRowCollapseIndicatorDirective,
+    IgxRowExpandedIndicatorDirective,
+    IgxRowCollapsedIndicatorDirective,
     IgxHeaderExpandIndicatorDirective,
     IgxHeaderCollapseIndicatorDirective,
     IgxGroupAreaDropDirective,

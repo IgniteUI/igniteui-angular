@@ -92,7 +92,7 @@ import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.com
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
-import { IgxRowExpandIndicatorDirective, IgxRowCollapseIndicatorDirective,
+import { IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,
      IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective } from './grid/grid.directives';
 
 const MINIMUM_COLUMN_WIDTH = 136;
@@ -268,14 +268,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
     * The custom template, if any, that should be used when rendering a row expand indicator.
     */
-    @ContentChild(IgxRowExpandIndicatorDirective, { read: TemplateRef, static: false })
-    public rowExpandIndicatorTemplate: TemplateRef<any> = null;
+    @ContentChild(IgxRowExpandedIndicatorDirective, { read: TemplateRef, static: false })
+    public rowExpandedIndicatorTemplate: TemplateRef<any> = null;
 
     /**
     * The custom template, if any, that should be used when rendering a row collapse indicator.
     */
-    @ContentChild(IgxRowCollapseIndicatorDirective, { read: TemplateRef, static: false })
-    public rowCollapseIndicatorTemplate: TemplateRef<any> = null;
+    @ContentChild(IgxRowCollapsedIndicatorDirective, { read: TemplateRef, static: false })
+    public rowCollapsedIndicatorTemplate: TemplateRef<any> = null;
 
 
     /**
@@ -293,14 +293,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
     * @hidden
     */
-   @ViewChild('defaultExpandTemplate', { read: TemplateRef, static: true })
-   protected defaultExpandTemplate: TemplateRef<any>;
+   @ViewChild('defaultExpandedTemplate', { read: TemplateRef, static: true })
+   protected defaultExpandedTemplate: TemplateRef<any>;
 
 /**
    * @hidden
    */
-   @ViewChild('defaultCollapseTemplate', { read: TemplateRef, static: true })
-   protected defaultCollapseTemplate: TemplateRef<any>;
+   @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
+   protected defaultCollapsedTemplate: TemplateRef<any>;
 
 
     /**
