@@ -8,8 +8,9 @@ import { IExcelFolder } from './excel-interfaces';
 import { IgxBaseExporter } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { WorksheetData } from './worksheet-data';
+import { IBaseEventArgs } from '../../core/utils';
 
-export interface IExcelExportEndedEventArgs {
+export interface IExcelExportEndedEventArgs extends IBaseEventArgs {
     xlsx: JSZip;
 }
 

@@ -44,7 +44,7 @@ import { IgxOverlayOutletDirective, IgxToggleModule, IgxToggleDirective } from '
 import { TimeDisplayFormatPipe, TimeInputFormatPipe } from './time-picker.pipes';
 import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from '../core/i18n/time-picker-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
-import { KEYS, CancelableBrowserEventArgs } from '../core/utils';
+import { KEYS, CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { InteractionMode } from '../core/enums';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 
@@ -63,12 +63,12 @@ export class TimePickerHammerConfig extends HammerGestureConfig {
     };
 }
 
-export interface IgxTimePickerValueChangedEventArgs {
+export interface IgxTimePickerValueChangedEventArgs extends IBaseEventArgs {
     oldValue: Date;
     newValue: Date;
 }
 
-export interface IgxTimePickerValidationFailedEventArgs {
+export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
     timePicker: IgxTimePickerComponent;
     currentValue: Date;
     setThroughUI: boolean;
@@ -476,7 +476,7 @@ export class IgxTimePickerComponent implements
      * Emitted when a timePicker is being closed.
      */
     @Output()
-    public onClosing = new EventEmitter<CancelableBrowserEventArgs>();
+    public onClosing = new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>();
 
     /**
      * @hidden

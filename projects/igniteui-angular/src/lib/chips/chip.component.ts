@@ -20,9 +20,10 @@ import {
     IgxDropEnterEventArgs,
     IgxDropEventArgs
 } from '../directives/drag-drop/drag-drop.directive';
+import { IBaseEventArgs } from '../core/utils';
 
 
-export interface IBaseChipEventArgs {
+export interface IBaseChipEventArgs extends IBaseEventArgs {
     originalEvent: PointerEvent | MouseEvent | TouchEvent | KeyboardEvent | IgxDropEnterEventArgs;
     owner: IgxChipComponent;
 }
