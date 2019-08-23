@@ -561,6 +561,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     }
 
     protected set ghostLeft(pageX: number) {
+        // To Do: Remove requestAnimationFrame when deprecated animations inputs are removed as well.
+        // We use requestAnimationFrame for the old drop animations in combination with updateDragRelativePos.
         requestAnimationFrame(() => {
             if (this.ghostElement) {
                 // We need to take into account marginLeft, since top style does not include margin, but pageX includes the margin.
@@ -576,6 +578,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     }
 
     protected set ghostTop(pageY: number) {
+        // To Do: Remove requestAnimationFrame when deprecated animations inputs are removed as well.
+        // We use requestAnimationFrame for the old drop animations in combination with updateDragRelativePos.
         requestAnimationFrame(() => {
             if (this.ghostElement) {
                 // We need to take into account marginTop, since top style does not include margin, but pageY includes the margin.
