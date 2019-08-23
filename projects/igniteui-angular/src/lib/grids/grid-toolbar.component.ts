@@ -25,6 +25,7 @@ import {
     IgxOverlayService
 } from '../services/index';
 import { GridBaseAPIService } from './api.service';
+import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxColumnHidingComponent } from './column-hiding.component';
@@ -115,8 +116,8 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnIni
      * const hidingButton = this.grid.toolbar.columnHidingButton;
      * ```
      */
-    @ViewChild('columnHidingButton', { static: false })
-    public columnHidingButton;
+    @ViewChild('columnHidingButton', { read: IgxButtonDirective, static: false })
+    public columnHidingButton: IgxButtonDirective;
 
     /**
      * Provides a reference to the `IgxDropDownComponent` of the Export button.
@@ -133,8 +134,8 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnIni
      * const exportBtn = this.grid.toolbar.exportButton;
      * ```
      */
-    @ViewChild('btnExport', { static: false })
-    public exportButton;
+    @ViewChild('btnExport', { read: IgxButtonDirective, static: false })
+    public exportButton: IgxButtonDirective;
 
     /**
      * Provides a reference to the `IgxDropDownComponent` of the Column Pinning UI.
@@ -160,8 +161,8 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnIni
      * const pinningButton = this.grid.toolbar.columnPinningButton;
      * ```
      */
-    @ViewChild('columnPinningButton', { static: false })
-    public columnPinningButton;
+    @ViewChild('columnPinningButton', { read: IgxButtonDirective, static: false })
+    public columnPinningButton: IgxButtonDirective;
 
     /**
      * Returns a reference to the `IgxGridComponent` component, hosting the `IgxGridToolbarComponent`.

@@ -17,7 +17,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
 const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
 
-describe('IgxGrid - Grid Sorting', () => {
+describe('IgxGrid - Grid Sorting #grid', () => {
     configureTestSuite();
     let fixture;
     let grid: IgxGridComponent;
