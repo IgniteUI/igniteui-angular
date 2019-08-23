@@ -1,4 +1,5 @@
 import { Directive } from '@angular/core';
+import { IBaseEventArgs } from '../core/utils';
 
 /**
  * Template directive that allows you to set a custom template representing the lower label value of the {@link IgxSliderComponent}
@@ -53,7 +54,7 @@ export interface IRangeSliderValue {
     upper: number;
 }
 
-export interface ISliderValueChangeEventArgs {
+export interface ISliderValueChangeEventArgs extends IBaseEventArgs {
     oldValue: number | IRangeSliderValue;
     value: number | IRangeSliderValue;
 }

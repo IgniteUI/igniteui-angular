@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { isIE } from '../core/utils';
+import { isIE, IBaseEventArgs } from '../core/utils';
 import { EditorProvider } from '../core/edit-provider';
 
 export enum LabelPosition {
@@ -21,7 +21,7 @@ export enum LabelPosition {
     AFTER = 'after'
 }
 
-export interface IChangeCheckboxEventArgs {
+export interface IChangeCheckboxEventArgs extends IBaseEventArgs {
     checked: boolean;
     checkbox: IgxCheckboxComponent;
 }
