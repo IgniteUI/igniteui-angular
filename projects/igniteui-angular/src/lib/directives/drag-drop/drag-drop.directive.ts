@@ -942,8 +942,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
         const totalMovedX = pageX - this._startX;
         const totalMovedY = pageY - this._startY;
-        this._dragGhostHostX = this.dragGhostHost ? this.getdragGhostHostOffsetLeft(this.dragGhostHost) : 0;
-        this._dragGhostHostY = this.dragGhostHost ? this.getdragGhostHostOffsetTop(this.dragGhostHost) : 0;
+        this._dragGhostHostX = this.dragGhostHost ? this.getDragGhostHostOffsetLeft(this.dragGhostHost) : 0;
+        this._dragGhostHostY = this.dragGhostHost ? this.getDragGhostHostOffsetTop(this.dragGhostHost) : 0;
 
         this.dragGhost.style.transitionDuration = '0.0s';
         this.dragGhost.style.position = 'absolute';
@@ -1220,21 +1220,21 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         return window.scrollX ? window.scrollX : (window.pageXOffset ? window.pageXOffset : 0);
     }
 
-    protected getdragGhostHostOffsetLeft(dragGhostHost: any) {
-        if (dragGhostHost.computedStyleMap().get('position').value === 'static' &&
-                dragGhostHost.offsetParent && dragGhostHost.offsetParent === document.body) {
+    protected getDragGhostHostOffsetLeft(dragGhostHost: any) {
+        const ghostPosition = document.defaultView.getComputedStyle(dragGhostHost).getPropertyValue('position');
+        if (ghostPosition === 'static' && dragGhostHost.offsetParent && dragGhostHost.offsetParent === document.body) {
             return 0;
-        } else if (dragGhostHost.computedStyleMap().get('position').value === 'static' && dragGhostHost.offsetParent) {
+        } else if (ghostPosition === 'static' && dragGhostHost.offsetParent) {
             return dragGhostHost.offsetParent.getBoundingClientRect().left;
         }
         return dragGhostHost.getBoundingClientRect().left;
     }
 
-    protected getdragGhostHostOffsetTop(dragGhostHost: any) {
-        if (dragGhostHost.computedStyleMap().get('position').value === 'static' &&
-                dragGhostHost.offsetParent && dragGhostHost.offsetParent === document.body) {
+    protected getDragGhostHostOffsetTop(dragGhostHost: any) {
+        const ghostPosition = document.defaultView.getComputedStyle(dragGhostHost).getPropertyValue('position');
+        if (ghostPosition === 'static' && dragGhostHost.offsetParent && dragGhostHost.offsetParent === document.body) {
             return 0;
-        } else if (dragGhostHost.computedStyleMap().get('position').value === 'static' && dragGhostHost.offsetParent) {
+        } else if (ghostPosition === 'static' && dragGhostHost.offsetParent) {
             return dragGhostHost.offsetParent.getBoundingClientRect().top;
         }
         return dragGhostHost.getBoundingClientRect().top;
