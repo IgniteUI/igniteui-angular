@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KEYS, MaskHelper } from './mask-helper';
-import { isIE } from '../../core/utils';
+import { isIE, IBaseEventArgs } from '../../core/utils';
 
 const noop = () => { };
 
@@ -375,7 +375,7 @@ export class IgxMaskDirective implements OnInit, ControlValueAccessor {
 /**
  * The IgxMaskModule provides the {@link IgxMaskDirective} inside your application.
  */
-export interface IMaskEventArgs {
+export interface IMaskEventArgs extends IBaseEventArgs {
     rawValue: string;
     formattedValue: string;
 }

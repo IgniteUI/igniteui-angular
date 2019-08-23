@@ -1,4 +1,5 @@
 import { InjectionToken, Input, Output, EventEmitter, DoCheck, OnInit } from '@angular/core';
+import { IBaseEventArgs } from './utils';
 
 
 /**
@@ -17,7 +18,7 @@ export interface IDisplayDensityOptions {
     displayDensity: DisplayDensity;
 }
 
-export interface IDensityChangedEventArgs {
+export interface IDensityChangedEventArgs extends IBaseEventArgs {
     oldDensity: DisplayDensity;
     newDensity: DisplayDensity;
 }

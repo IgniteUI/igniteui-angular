@@ -34,6 +34,7 @@ import { IgxForOfSyncService } from './for_of.sync.service';
 import { Subject } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
 import ResizeObserver from 'resize-observer-polyfill';
+import { IBaseEventArgs } from '../../core/utils';
 
 /**
  *  @publicApi
@@ -1311,12 +1312,12 @@ export function getTypeNameForDebugging(type: any): string {
     return type[name] || typeof type;
 }
 
-export interface IForOfState {
+export interface IForOfState extends IBaseEventArgs {
     startIndex?: number;
     chunkSize?: number;
 }
 
-export interface IForOfDataChangingEventArgs {
+export interface IForOfDataChangingEventArgs extends IBaseEventArgs {
     containerSize: number;
 }
 
