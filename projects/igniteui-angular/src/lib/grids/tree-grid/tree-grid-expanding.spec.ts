@@ -991,7 +991,6 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             });
 
             it('check row selection when expand a row', async () => {
-                pending('need to be fixed');
                 treeGrid.rowSelection = GridSelectionMode.multiple;
                 fix.detectChanges();
 

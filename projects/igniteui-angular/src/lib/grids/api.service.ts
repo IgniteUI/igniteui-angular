@@ -505,7 +505,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
 
         this.deleteRowFromData(rowId, index);
 
-        if (grid.selectionService.isRowSelected(rowId)) { grid.selectionService.deselectRow(rowId); }
+        grid.selectionService.isRowSelected(rowId) ? grid.selectionService.deselectRow(rowId) : grid.selectionService.clearHeaderCBState();
         (grid as any)._pipeTrigger++;
         grid.notifyChanges();
         // Data needs to be recalculated if transactions are in place

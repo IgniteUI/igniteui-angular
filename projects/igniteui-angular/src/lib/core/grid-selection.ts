@@ -646,8 +646,8 @@ export class IgxGridSelectionService {
 
     public getRowDataByID(rowID) {
         if (!this.grid.primaryKey) { return rowID; }
-        const rowIndex = this.getRowIDs(this.grid.gridAPI.get_all_data()).indexOf(rowID);
-        return rowIndex < 0 ? {} : this.grid.gridAPI.get_all_data()[rowIndex];
+        const rowIndex = this.getRowIDs(this.grid.gridAPI.get_all_data(true)).indexOf(rowID);
+        return rowIndex < 0 ? {} : this.grid.gridAPI.get_all_data(true)[rowIndex];
     }
 
     public getRowIDs(data) {
@@ -660,7 +660,7 @@ export class IgxGridSelectionService {
 
     public get allData() {
         const allData = this.isFilteringApplied() || this.grid.sortingExpressions.length ?
-            this.grid.filteredSortedData : this.grid.gridAPI.get_all_data();
+            this.grid.filteredSortedData : this.grid.gridAPI.get_all_data(true);
         return allData.filter(rData => !this.isRowDeleted(this.grid.gridAPI.get_row_id(rData)));
     }
 
