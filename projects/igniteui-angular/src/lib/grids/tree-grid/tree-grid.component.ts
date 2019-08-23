@@ -508,7 +508,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
 
             parentData[this.childDataKey] = children;
         }
-
+        this.selectionService.clearHeaderCBState();
         this._pipeTrigger++;
     }
 

@@ -8,15 +8,35 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - `uniqueColumnValuesStrategy` input is added. This property provides a callback for loading unique column values on demand. If this property is provided, the unique values it generates will be used by the Excel Style Filtering (instead of using the unique values from the data that is bound to the grid).
     - `igxExcelStyleLoading` directive is added, which can be used to provide a custom loading template for the Excel Style Filtering. If this property is not provided, a default loading template will be used instead.
-    - introduced new propoerties `cellSelection` and `rowSelection` which accepts GridSelection mode enumeration. Grid selection mode could be none, single or multiple. Also `hideRowSelectors` property is added, which allows you to show and hide row selectors when row selection is enabled.
+    - introduced new propoerties `cellSelection` and `rowSelection` which accept GridSelection mode enumeration. Grid selection mode could be none, single or multiple. Also `hideRowSelectors` property is added, which allows you to show and hide row selectors when row selection is enabled.
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Removed deprecated event `OnFocusChange`
     - **Breaking Change** `igxExcelStyleSortingTemplate` directive is renamed to `igxExcelStyleSorting`.
     - **Breaking Change** `igxExcelStyleMovingTemplate` directive is renamed to `igxExcelStyleMoving`.
     - **Breaking Change** `igxExcelStyleHidingTemplate` directive is renamed to `igxExcelStyleHiding`.
-    - **Breaking Change** `igxExcelStylePinningTemplate` directive is renamed to `igxExcelStylePinning`
     - **Breaking Change** `onRowSelectionChange` event arguments are changed. The `row` property has been removed and the priperties `added`, `removed` and `cancel` are newly added.
+    - **Breaking Change** `igxExcelStylePinningTemplate` directive is renamed to `igxExcelStylePinning`.
+- `IgxCombo`
+    - Combo selection is now consistent when `valueKey` is defined. When `valueKey` is specified, selection is based on the value keys of the items. For example:
+    ```html
+    <igx-combo [data]="myCustomData" valueKey="id" displayKey="text"></igx-combo>
+    ```
+    ```typescript
+    export class MyCombo {
+        ...
+        public combo: IgxComboComponent;
+        public myCustomData: { id: number, text: string } = [{ id: 0, name: "One" }, ...];
+        ...
+        ngOnInit() {
+            // Selection is done only by valueKey property value
+            this.combo.selectItems([0, 1]);
+        }
+    }
+    ```
+   - **Breaking Change** When using `[valueKey]`, combo methods, events and outputs **cannot** be handled with *data item references*.
+   - For more information, visit the component's [readme](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/combo/README.md)
+
 ## 8.1.4
 - `IgxDialog` new @Input `positionSettings` is now available. It provides the ability to get/set both position and animation settings of the Dialog component.
 

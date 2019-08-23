@@ -1409,7 +1409,6 @@ describe('IgxGrid - Row Selection #grid', () => {
         }));
 
         it('CRUD: Should handle the deselection on a selected row properly', (async () => {
-            pending('need to be fixed');
             let firstRow = grid.getRowByKey(1);
             grid.selectRows([1]);
 
@@ -1827,7 +1826,6 @@ describe('IgxGrid - Row Selection #grid', () => {
         });
 
         it('Should have correct header checkbox when add row', (async () => {
-            pending('need to be fixed');
             grid.height = '800px';
             fix.detectChanges();
             await wait(DEBOUNCETIME);
@@ -1857,7 +1855,6 @@ describe('IgxGrid - Row Selection #grid', () => {
         }));
 
         it('Should be able to select added row', (async () => {
-            pending('need to be fixed');
             grid.height = '800px';
             fix.detectChanges();
             await wait(DEBOUNCETIME);
