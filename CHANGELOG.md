@@ -18,6 +18,26 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** `igxExcelStyleHidingTemplate` directive is renamed to `igxExcelStyleHiding`.
     - **Breaking Change** `igxExcelStylePinningTemplate` directive is renamed to `igxExcelStylePinning`.
     - **Breaking Change** `onRowDragEnd` and `onRowDragStart` event arguments are changed - `owner` now holds reference to the grid component instance, while `dragDirective` hold reference to the drag directive.
+- `IgxCombo`
+    - Combo selection is now consistent when `valueKey` is defined. When `valueKey` is specified, selection is based on the value keys of the items. For example:
+    ```html
+    <igx-combo [data]="myCustomData" valueKey="id" displayKey="text"></igx-combo>
+    ```
+    ```typescript
+    export class MyCombo {
+        ...
+        public combo: IgxComboComponent;
+        public myCustomData: { id: number, text: string } = [{ id: 0, name: "One" }, ...];
+        ...
+        ngOnInit() {
+            // Selection is done only by valueKey property value
+            this.combo.selectItems([0, 1]);
+        }
+    }
+    ```
+   - **Breaking Change** When using `[valueKey]`, combo methods, events and outputs **cannot** be handled with *data item references*.
+   - For more information, visit the component's [readme](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/combo/README.md)
+
 ## 8.1.4
 - `IgxDialog` new @Input `positionSettings` is now available. It provides the ability to get/set both position and animation settings of the Dialog component. 
 
