@@ -771,7 +771,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
         if (!!startLocation && startLocation.pageX !== this.pageX && startLocation.pageY !== this.pageY) {
             if (this.ghost && !this.ghostElement) {
-                this.createGhost(startLocation.pageX, startLocation.pageY);
+                this._startX = startLocation.pageX;
+                this._startY = startLocation.pageY;
+                this._ghostStartX = this._startX;
+                this._ghostStartY = this._startY;
+                this.createGhost(this._startX, this._startY);
             }
 
             this.setLocation(startLocation);

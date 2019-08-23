@@ -918,8 +918,14 @@ describe('General igxDrag/igxDrop', () => {
 
         const currLeft = firstDrag.ghostElement.getBoundingClientRect().left;
         const currTop = firstDrag.ghostElement.getBoundingClientRect().top;
-        expect(dragDirsRects[0].left < currLeft && currLeft <= (dragDirsRects[0].left + 50)).toBeTruthy();
-        expect(dragDirsRects[0].top < currTop && currTop <= (dragDirsRects[0].top + 50)).toBeTruthy();
+
+        // origin left < current left <= start left
+        expect(dragDirsRects[0].left).toBeLessThan(currLeft);
+        expect(currLeft).toBeLessThanOrEqual(dragDirsRects[0].left + 50);
+
+        // origin top < current top <= start top
+        expect(dragDirsRects[0].top).toBeLessThan(currTop);
+        expect(currTop).toBeLessThanOrEqual(dragDirsRects[0].top + 50);
     }));
 
     it('should transition the base element to location with transitionTo().', (async(done) => {
@@ -939,8 +945,14 @@ describe('General igxDrag/igxDrop', () => {
 
         const currLeft = firstDrag.element.nativeElement.getBoundingClientRect().left;
         const currTop = firstDrag.element.nativeElement.getBoundingClientRect().top;
-        expect(dragDirsRects[0].left <= currLeft && currLeft < (dragDirsRects[0].left + 50)).toBeTruthy();
-        expect(dragDirsRects[0].top <= currTop && currTop < (dragDirsRects[0].top + 50)).toBeTruthy();
+
+        // start left <= current left < target left
+        expect(dragDirsRects[0].left).toBeLessThanOrEqual(currLeft);
+        expect(currLeft).toBeLessThan(dragDirsRects[0].left + 50);
+
+        // start top <= current top < target top
+        expect(dragDirsRects[0].top).toBeLessThanOrEqual(currTop);
+        expect(currTop).toBeLessThan(dragDirsRects[0].top + 50);
     }));
 
     it('should transition the base element to location with transitionTo() with starting location.', (async(done) => {
@@ -964,8 +976,14 @@ describe('General igxDrag/igxDrop', () => {
 
         const currLeft = firstDrag.element.nativeElement.getBoundingClientRect().left;
         const currTop = firstDrag.element.nativeElement.getBoundingClientRect().top;
-        expect(dragDirsRects[0].left + 50 < currLeft && currLeft <= (dragDirsRects[0].left + 100)).toBeTruthy();
-        expect(dragDirsRects[0].top + 50 < currTop && currTop <= (dragDirsRects[0].top + 100)).toBeTruthy();
+
+        // target left < current left <= start left
+        expect(dragDirsRects[0].left + 50).toBeLessThan(currLeft);
+        expect(currLeft).toBeLessThanOrEqual(dragDirsRects[0].left + 100);
+
+        // target top < current top <= start top
+        expect(dragDirsRects[0].top + 50).toBeLessThan(currTop);
+        expect(currTop).toBeLessThanOrEqual(dragDirsRects[0].top + 100);
     }));
 
     it('should transition the ghost element to location with transitionTo() after dragging.', (async(done) => {
@@ -1013,8 +1031,14 @@ describe('General igxDrag/igxDrop', () => {
 
         const currLeft = firstDrag.ghostElement.getBoundingClientRect().left;
         const currTop = firstDrag.ghostElement.getBoundingClientRect().top;
-        expect((dragDirsRects[0].left + 20) <= currLeft && currLeft < (dragDirsRects[0].left + 50)).toBeTruthy();
-        expect((dragDirsRects[0].top + 20) <= currTop && currTop < (dragDirsRects[0].top + 50)).toBeTruthy();
+
+        // last left < current left <= target left
+        expect(dragDirsRects[0].left + 20).toBeLessThanOrEqual(currLeft);
+        expect(currLeft).toBeLessThan(dragDirsRects[0].left + 50);
+
+        // last top < current top <= target top
+        expect(dragDirsRects[0].top + 20).toBeLessThanOrEqual(currTop);
+        expect(currTop).toBeLessThan(dragDirsRects[0].top + 50);
     }));
 
     it('should transition the ghost element to location with transitionTo() after dragging with start location.', (async(done) => {
@@ -1066,8 +1090,14 @@ describe('General igxDrag/igxDrop', () => {
 
         const currLeft = firstDrag.ghostElement.getBoundingClientRect().left;
         const currTop = firstDrag.ghostElement.getBoundingClientRect().top;
-        expect((dragDirsRects[0].left + 50) < currLeft && currLeft <= (dragDirsRects[0].left + 100)).toBeTruthy();
-        expect((dragDirsRects[0].top + 50) < currTop && currTop <= (dragDirsRects[0].top + 100)).toBeTruthy();
+
+        // target left < current left <= start left
+        expect(dragDirsRects[0].left + 50).toBeLessThan(currLeft);
+        expect(currLeft).toBeLessThanOrEqual(dragDirsRects[0].left + 100);
+
+        // target top < current top <= start top
+        expect(dragDirsRects[0].top + 50).toBeLessThan(currTop);
+        expect(currTop).toBeLessThanOrEqual(dragDirsRects[0].top + 100);
     }));
 
     it('should create ghost element to location with transitionTo() and start location set.', (async(done) => {
@@ -1091,8 +1121,14 @@ describe('General igxDrag/igxDrop', () => {
 
         const currLeft = firstDrag.ghostElement.getBoundingClientRect().left;
         const currTop = firstDrag.ghostElement.getBoundingClientRect().top;
-        expect((dragDirsRects[0].left + 50) < currLeft && currLeft <= (dragDirsRects[0].left + 100)).toBeTruthy();
-        expect((dragDirsRects[0].top + 50) < currTop && currTop <= (dragDirsRects[0].top + 100)).toBeTruthy();
+
+        // target left < current left <= start left
+        expect(dragDirsRects[0].left + 50).toBeLessThan(currLeft);
+        expect(currLeft).toBeLessThanOrEqual(dragDirsRects[0].left + 100);
+
+        // target left < current left <= start left
+        expect(dragDirsRects[0].top + 50).toBeLessThan(currTop);
+        expect(currTop).toBeLessThanOrEqual(dragDirsRects[0].top + 100);
     }));
 
     it('should keep same base element page position when element is moved in the DOM after executing updateDragRelativePos.', (async() => {
