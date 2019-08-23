@@ -211,15 +211,15 @@
 </ng-template>
 
 <ng-template #headSelectorBaseTemplate>
-        <igx-checkbox
-            [checked]="allRowsSelected"
-            disableRipple="true"
-            [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
-            (click)="$event.preventDefault()"
-            [indeterminate]="selectionService.hasSomeRowSelected()"
-            [aria-label]="headerCheckboxAriaLabel"
-            #headerCheckbox>
-        </igx-checkbox>
+    <igx-checkbox
+        [checked]="selectionService.areAllRowSelected()"
+        disableRipple="true"
+        [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
+        (click)="$event.preventDefault()"
+        [indeterminate]="selectionService.hasSomeRowSelected()"
+        [aria-label]="headerCheckboxAriaLabel"
+        #headerCheckbox>
+    </igx-checkbox>
 </ng-template>
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>

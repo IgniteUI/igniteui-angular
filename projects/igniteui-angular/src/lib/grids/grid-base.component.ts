@@ -2473,10 +2473,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public draggedColumn: IgxColumnComponent;
 
-    /**
-     * @hidden
-     */
-    public allRowsSelected = false;
 
     /**
      * @hidden
@@ -4739,8 +4735,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     get headerCheckboxAriaLabel() {
         return this._filteringExpressionsTree.filteringOperands.length > 0 ?
-            this.headSelectorBaseTemplate && this.headSelectorBaseTemplate.checked ? 'Deselect all filtered' : 'Select all filtered' :
-            this.headSelectorBaseTemplate && this.headSelectorBaseTemplate.checked ? 'Deselect all' : 'Select all';
+            this.headerCheckbox && this.selectionService.areAllRowSelected() ? 'Deselect all filtered' : 'Select all filtered' :
+            this.headerCheckbox && this.selectionService.areAllRowSelected() ? 'Deselect all' : 'Select all';
     }
 
     /**
