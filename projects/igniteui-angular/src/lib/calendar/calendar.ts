@@ -52,6 +52,10 @@ export function isDateInRanges(date: Date, ranges: DateRangeDescriptor[]): boole
     date = new Date(date.getFullYear(), date.getMonth(), date.getDate());
     const dateInMs = date.getTime();
 
+    if (!ranges) {
+        return false;
+    }
+
     for (const descriptor of ranges) {
         const dRanges = descriptor.dateRange ? descriptor.dateRange.map(
             r => new Date(r.getFullYear(), r.getMonth(), r.getDate())) : undefined;
@@ -296,7 +300,7 @@ export class Calendar {
 
             const toType = (partType: string) => {
                 const index = formattedParts.findIndex(({ type }) => type === partType);
-                const o: IFormattedParts = { value: '', literal: '', combined: ''};
+                const o: IFormattedParts = { value: '', literal: '', combined: '' };
 
                 if (partType === 'era' && index > -1) {
                     o.value = formattedParts[index].value;
@@ -316,7 +320,7 @@ export class Calendar {
             }
         } else {
             for (const each of parts) {
-                result[each] = { value: '', literal: '', combined: ''};
+                result[each] = { value: '', literal: '', combined: '' };
             }
         }
         return result;
