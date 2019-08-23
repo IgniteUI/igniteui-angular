@@ -1,6 +1,7 @@
 import { EventEmitter, Input, Output } from '@angular/core';
+import { IBaseEventArgs } from '../core/utils';
 
-export interface IValueChangedEventArgs {
+export interface IValueChangedEventArgs extends IBaseEventArgs {
     oldValue: any;
     newValue: any;
 }

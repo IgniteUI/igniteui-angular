@@ -22,6 +22,7 @@ import { animationFrameScheduler, fromEvent, interval, Subject } from 'rxjs';
 import { takeUntil, throttle } from 'rxjs/operators';
 import { IgxDragHandleDirective } from './drag-handle.directive';
 import { DeprecateProperty } from '../../core/deprecateDecorators';
+import { IBaseEventArgs } from '../../core/utils';
 import { IDropStrategy, IgxDefaultDropStrategy } from './drag-drop.strategy';
 
 export enum RestrictDrag {
@@ -39,8 +40,8 @@ export interface IgxDragCustomEventDetails {
     originalEvent: any;
 }
 
-export interface IDropBaseEventArgs {
-    /**
+export interface IDropBaseEventArgs extends IBaseEventArgs {
+        /**
      * Reference to the original event that caused the draggable element to enter the igxDrop element.
      * Can be PointerEvent, TouchEvent or MouseEvent.
      */
@@ -82,7 +83,7 @@ export interface IDropDroppedEventArgs extends IDropBaseEventArgs {
     cancel: boolean;
 }
 
-export interface IDragBaseEventArgs {
+export interface IDragBaseEventArgs extends IBaseEventArgs {
     /**
      * Reference to the original event that caused the interaction with the element.
      * Can be PointerEvent, TouchEvent or MouseEvent.
@@ -119,7 +120,7 @@ export interface IDragMoveEventArgs extends IDragStartEventArgs {
 }
 
 
-export interface IDragGhostBaseEventArgs {
+export interface IDragGhostBaseEventArgs extends IBaseEventArgs {
     /** The owner igxDrag directive that triggered this event. */
     owner: IgxDragDirective;
     /** Instance to the ghost element that is created when dragging starts. */

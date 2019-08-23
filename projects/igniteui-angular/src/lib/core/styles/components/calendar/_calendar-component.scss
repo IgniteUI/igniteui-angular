@@ -47,21 +47,11 @@
 
     @include e(date) {
         @extend %cal-value !optional;
-
-        &:hover,
-        &:focus {
-            @extend %cal-value--hover !optional;
-        }
     }
 
     @include e(date, 'inactive') {
         @extend %cal-value !optional;
         @extend %cal-value--inactive !optional;
-
-        &:hover,
-        &:focus {
-            @extend %cal-value--hover !optional;
-        }
     }
 
     @include e(date, 'selected') {
@@ -72,21 +62,11 @@
     @include e(date, 'current') {
         @extend %cal-value !optional;
         @extend %cal-value--current !optional;
-
-        &:hover,
-        &:focus {
-            @extend %cal-value--hover !optional;
-        }
     }
 
     @include e(date, 'weekend') {
         @extend %cal-value !optional;
         @extend %cal-value--weekend !optional;
-
-        &:hover,
-        &:focus {
-            @extend %cal-value--hover !optional;
-        }
     }
 
     @include e(date, 'special') {
@@ -99,9 +79,40 @@
         @extend %cal-value--disabled !optional;
     }
 
+    @include e(date, 'single') {
+        @extend %cal-value--single !optional;
+    }
+
+    @include e(date, $mods: ('selected', 'first')) {
+        @extend %cal-value--first !optional;
+    }
+
+    @include e(date, $mods: ('selected', 'last')) {
+        @extend %cal-value--last !optional;
+    }
+
+    @include e(date, $mods: ('selected', 'first', 'last')) {
+        @extend %cal-value--single !optional;
+    }
+
     @include e(date, $mods: ('disabled', 'inactive')) {
         @extend %cal-value !optional;
         @extend %cal-value--disabled !optional;
+    }
+
+    @include e(date, $mods: ('disabled', 'range')) {
+        @extend %cal-value--disabled-range !optional;
+    }
+
+    // This is added due to a bug in JavaScript
+    // where the selected dates collection also includes
+    // disabled dates.
+    @include e(date, $mods: ('selected', 'disabled', 'range')) {
+        @extend %cal-value--disabled-range !optional;
+    }
+
+    @include e(date-content) {
+        @extend %cal-value-content !optional;
     }
 
     @include e(year) {
