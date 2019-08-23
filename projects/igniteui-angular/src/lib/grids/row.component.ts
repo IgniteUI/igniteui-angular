@@ -20,6 +20,7 @@ import { IgxColumnComponent } from './column.component';
 import { TransactionType, State } from '../services';
 import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxGridSelectionService, IgxGridCRUDService, IgxRow } from '../core/grid-selection';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -161,7 +162,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
         return false;
     }
 
-    // TODO: should be deprecated?????
+    @DeprecateProperty('isSelected property is deprecated. Use selected property instead.')
     public get isSelected() {
         return this.selectionService.isRowSelected(this.rowID);
     }
@@ -281,7 +282,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
             this.selectionService.selectMultipleRows(this.rowID, this.rowData, event);
             return;
         }
-        this.selectionService.selectRowbyID(this.rowID, !event.ctrlKey, event);
+        this.selectionService.selectRowById(this.rowID, !event.ctrlKey, event);
     }
 
     /**
@@ -294,7 +295,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
             return;
         }
         this.selected ? this.selectionService.deselectRow(this.rowID, event) :
-        this.selectionService.selectRowbyID(this.rowID, false, event);
+        this.selectionService.selectRowById(this.rowID, false, event);
     }
 
     /**

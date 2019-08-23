@@ -5606,17 +5606,19 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return rowData.summaries && (rowData.summaries instanceof Map);
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden */
     public get isMultiRowSelectionEnabled(): boolean {
         return this.rowSelection === GridSelectionMode.multiple;
     }
-    /**
-     * @hidden
-     */
+
+    /** @hidden */
     public get isRowSelectable(): boolean {
         return this.rowSelection !== GridSelectionMode.none;
+    }
+
+    /** @hidden */
+    public get isCellSelectable() {
+        return this.cellSelection !== GridSelectionMode.none;
     }
 
     /**
