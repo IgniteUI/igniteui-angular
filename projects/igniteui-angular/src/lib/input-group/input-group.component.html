@@ -7,7 +7,6 @@
 
 <ng-template #withBorder>
     <div class="igx-input-group__prefix-placeholder"></div>
-
     <div class="igx-input-group__border-label">
         <div class="igx-input-group__border-label-inner">
             <ng-container *ngTemplateOutlet="label"></ng-container>
@@ -15,7 +14,6 @@
         </div>
         <ng-container *ngTemplateOutlet="input"></ng-container>
     </div>
-
     <div class="igx-input-group__suffix-placeholder"></div>
 </ng-template>
 
@@ -38,7 +36,6 @@
         <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
 
         <div class="igx-input-group__bundle-main">
-
             <ng-container *ngIf="isTypeBorder">
                 <ng-container *ngTemplateOutlet="withBorder"></ng-container>
             </ng-container>
@@ -46,8 +43,6 @@
             <ng-container *ngIf="!isTypeBorder">
                 <ng-container *ngTemplateOutlet="withoutBorder"></ng-container>
             </ng-container>
-
-
         </div>
 
         <ng-content select="igx-suffix,[igxSuffix]"></ng-content>

@@ -189,6 +189,7 @@
     $palette: map-get($theme, 'palette');
 
     $transition-timing: .25s $ease-out-cubic;
+    $transition-timing_2: 1.45s $ease-in-out-cubic;
 
     $required-symbol: '*';
     $required-symbol-margin: 2px;
@@ -206,9 +207,9 @@
     );
 
     $field-size: (
-        'comfortable': rem(58px),
-        'cosy': rem(50px),
-        'compact': rem(42px)
+        'comfortable': rem(50px),
+        'cosy': rem(41px),
+        'compact': rem(36.34px)
     );
 
     $label-height-size: (
@@ -293,9 +294,12 @@
         }
     }
 
-    %form-group-display--no-margin {
+    %form-group-display--no-margin,
+    %form-group-display--no-margin--border {
         margin-top: 0;
+    }
 
+    %form-group-display--no-margin {
         igx-prefix,
         [igxPrefix] {
             @extend %form-group-prefix--box;
@@ -304,6 +308,18 @@
         igx-suffix,
         [igxSuffix] {
             @extend %form-group-suffix--box;
+        }
+    }
+
+    %form-group-display--no-margin--border {
+        igx-prefix,
+        [igxPrefix] {
+            @extend %form-group-prefix--border;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %form-group-suffix--border;
         }
     }
 
@@ -458,8 +474,10 @@
         [igxPrefix],
         igx-suffix,
         [igxSuffix] {
+            min-height: map-get($field-size, 'comfortable');
+            height: auto;
             border: 1px solid;
-            padding: rem(16px, map-get($base-scale-size, 'comfortable')) !important;
+            padding: 0 rem(16px, map-get($base-scale-size, 'comfortable')) !important;
         }
 
         igx-prefix,
@@ -481,20 +499,22 @@
         }
     }
 
-    %input-type-border-cosy {
+    %input-type-border--cosy {
         igx-prefix,
         [igxPrefix],
         igx-suffix,
         [igxSuffix] {
-            padding: rem(16px, map-get($base-scale-size, 'cosy')) !important;
+            min-height: map-get($field-size, 'cosy');
+            padding: 0 rem(16px, map-get($base-scale-size, 'cosy')) !important;
         }
     }
 
-    %input-type-border-compact {
+    %input-type-border--compact {
         igx-prefix,
         [igxPrefix],
         igx-suffix,
         [igxSuffix] {
+            min-height: map-get($field-size, 'compact');
             padding: 0 rem(16px, map-get($base-scale-size, 'compact')) !important;
         }
     }
@@ -502,6 +522,7 @@
 
     %form-group-bundle--border {
         min-height: map-get($field-size, 'comfortable');
+        align-items: stretch;
         padding: 0;
         border-color: --var($theme, 'idle-bottom-line-color');
         background: --var($theme, 'border-background');
@@ -617,12 +638,12 @@
         padding: 0;
     }
 
-    %form-group-bundle-main--border-cosy {
-        height: map-get($field-size, 'cosy');
+    %form-group-bundle-main--border--cosy {
+        min-height: map-get($field-size, 'cosy');
     }
 
-    %form-group-bundle-main--border-compact {
-        height: map-get($field-size, 'compact');
+    %form-group-bundle-main--border--compact {
+        min-height: map-get($field-size, 'compact');
     }
 
     %igx-input-group__border-label--focus {
@@ -685,7 +706,7 @@
         color $transition-timing,
         margin $transition-timing,
         font-size $transition-timing,
-        top $transition-timing;
+        top $transition-timing_2;
 
         [dir='rtl'] & {
             transform-origin: top right;
@@ -972,21 +993,7 @@
         padding-right: rem(16px, map-get($base-scale-size, 'comfortable'));
     }
 
-    %form-group-textarea--border {
-        width: calc(100% + #{rem(16px, map-get($base-scale-size, 'comfortable')) * 2}); /* add the padding to the width */
-        margin: 0 -#{rem(16px, map-get($base-scale-size, 'comfortable'))};
-        padding-left: rem(16px, map-get($base-scale-size, 'comfortable'));
-        padding-right: rem(16px, map-get($base-scale-size, 'comfortable'));
-    }
-
     %form-group-textarea--box-compact {
-        width: calc(100% + #{rem(16px, map-get($base-scale-size, 'compact')) * 2}); /* add the padding to the width */
-        margin: 0 -#{rem(16px, map-get($base-scale-size, 'compact'))};
-        padding-left: rem(16px, map-get($base-scale-size, 'compact'));
-        padding-right: rem(16px, map-get($base-scale-size, 'compact'));
-    }
-
-    %form-group-textarea--border-compact {
         width: calc(100% + #{rem(16px, map-get($base-scale-size, 'compact')) * 2}); /* add the padding to the width */
         margin: 0 -#{rem(16px, map-get($base-scale-size, 'compact'))};
         padding-left: rem(16px, map-get($base-scale-size, 'compact'));
@@ -1000,11 +1007,27 @@
         padding-right: rem(16px, map-get($base-scale-size, 'cosy'));
     }
 
+    %form-group-textarea--border {
+        width: calc(100% + #{rem(16px, map-get($base-scale-size, 'comfortable')) * 2}); /* add the padding to the width */
+        margin: 0 -#{rem(16px, map-get($base-scale-size, 'comfortable'))};
+        padding-left: rem(16px, map-get($base-scale-size, 'comfortable'));
+        padding-right: rem(16px, map-get($base-scale-size, 'comfortable'));
+        padding-top: rem(16px, map-get($base-scale-size, 'comfortable'))
+    }
+
+    %form-group-textarea--border-compact {
+        width: calc(100% + #{rem(16px, map-get($base-scale-size, 'compact')) * 2}); /* add the padding to the width */
+        margin: 0 -#{rem(16px, map-get($base-scale-size, 'compact'))};
+        padding-left: rem(16px, map-get($base-scale-size, 'compact'));
+        padding-top: rem(16px, map-get($base-scale-size, 'compact'));
+    }
+
     %form-group-textarea--border-cosy {
         width: calc(100% + #{rem(16px, map-get($base-scale-size, 'cosy')) * 2}); /* add the padding to the width */
         margin: 0 -#{rem(16px, map-get($base-scale-size, 'cosy'))};
         padding-left: rem(16px, map-get($base-scale-size, 'cosy'));
         padding-right: rem(16px, map-get($base-scale-size, 'cosy'));
+        padding-top: rem(16px, map-get($base-scale-size, 'cosy'));
     }
 
     %form-group-prefix,
@@ -1118,11 +1141,9 @@
         padding: 0;
     }
 
-    ///////////
-
     %form-group-prefix--border,
     %form-group-suffix--border {
-        height: 100%;
+        height: auto;
     }
 
     %form-group-prefix-suffix--border {
@@ -1141,7 +1162,6 @@
         padding: 0;
     }
 
-    ///////////
     %form-group-border {
         height: 2px; /* 2px, when base is 16px */
         margin-top: -2px; /* 2px, when base is 16px */

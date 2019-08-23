@@ -292,7 +292,7 @@
 
     @include m(border) {
         @extend %input-type-border !optional;
-        @extend %form-group-display--no-margin !optional;
+        @extend %form-group-display--no-margin--border !optional;
 
         @include e(bundle) {
             @extend %form-group-bundle--border !optional;
@@ -335,7 +335,7 @@
         }
 
         @include e(textarea) {
-            @extend %form-group-textarea--box !optional;
+            @extend %form-group-textarea--border !optional;
         }
 
         @include e(hint) {
@@ -345,7 +345,7 @@
 
     @include mx(border, cosy) {
 
-        @extend %input-type-border-cosy  !optional;
+        @extend %input-type-border--cosy  !optional;
         @extend %form-group-display--no-margin-cosy !optional;
 
         @include e(bundle) {
@@ -357,7 +357,7 @@
         }
 
         @include e(bundle-main) {
-            @extend %form-group-bundle-main--border-cosy !optional;
+            @extend %form-group-bundle-main--border--cosy !optional;
         }
 
         @include e(border-label-inner) {
@@ -370,7 +370,7 @@
     }
 
     @include mx(border, compact) {
-        @extend %input-type-border-compact  !optional;
+        @extend %input-type-border--compact  !optional;
         @extend %form-group-display--no-margin-compact !optional;
 
         @include e(bundle) {
@@ -382,7 +382,7 @@
         }
 
         @include e(bundle-main) {
-            @extend %form-group-bundle-main--border-compact !optional;
+            @extend %form-group-bundle-main--border--compact !optional;
         }
 
         @include e(border-label-inner) {
