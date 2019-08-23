@@ -134,6 +134,7 @@
                                  [displayDensity]="displayDensity">
                     <input #searchValueInput
                            igxInput
+                           [type]="selectedColumn && selectedColumn.dataType === 'number' ? 'number' : 'text'"
                            [(ngModel)]="searchValue"/>
                 </igx-input-group>
 
