@@ -21,7 +21,7 @@ export class IgxGroupByRowTemplateDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxRowExpandIndicator]'
+    selector: '[igxRowExpandedIndicator]'
 })
 export class IgxRowExpandIndicatorDirective {
 }
@@ -30,7 +30,7 @@ export class IgxRowExpandIndicatorDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxRowCollapseIndicator]'
+    selector: '[igxRowCollapsedIndicator]'
 })
 export class IgxRowCollapseIndicatorDirective {
 }
@@ -40,7 +40,7 @@ export class IgxRowCollapseIndicatorDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxHeaderExpandIndicator]'
+    selector: '[igxHeaderExpandedIndicator]'
 })
 export class IgxHeaderExpandIndicatorDirective {
 }
@@ -49,7 +49,7 @@ export class IgxHeaderExpandIndicatorDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxHeaderCollapseIndicator]'
+    selector: '[igxHeaderCollapsedIndicator]'
 })
 export class IgxHeaderCollapseIndicatorDirective {
 }

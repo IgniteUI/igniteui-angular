@@ -2699,17 +2699,17 @@ export class GroupableGridComponent extends DataParent {
             <ng-template igxGroupByRow let-groupRow>
                 <span>Total items with value:{{ groupRow.value }} are {{ groupRow.records.length }}</span>
             </ng-template>
-            <ng-template igxRowExpandIndicator let-groupRow>
+            <ng-template igxRowExpandedIndicator let-groupRow>
                 <span>EXPANDED</span>
             </ng-template>
-            <ng-template igxRowCollapseIndicator let-groupRow>
+            <ng-template igxRowCollapsedIndicator let-groupRow>
                 <span>COLLAPSED</span>
             </ng-template>
 
-            <ng-template igxHeaderExpandIndicator>
+            <ng-template igxHeaderExpandedIndicator>
                 <span>EXPANDED</span>
             </ng-template>
-            <ng-template igxHeaderCollapseIndicator>
+            <ng-template igxHeaderCollapsedIndicator>
                 <span>COLLAPSED</span>
             </ng-template>
         </igx-grid>

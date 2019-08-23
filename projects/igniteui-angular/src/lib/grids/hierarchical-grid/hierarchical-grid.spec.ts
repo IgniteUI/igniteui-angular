@@ -1370,16 +1370,16 @@ public toggleChildRI = true;
             <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 >
             </igx-row-island>
         </igx-row-island>
-        <ng-template igxRowExpandIndicator>
+        <ng-template igxRowExpandedIndicator>
                 <span>EXPANDED</span>
         </ng-template>
-        <ng-template igxRowCollapseIndicator>
+        <ng-template igxRowCollapsedIndicator>
                 <span>COLLAPSED</span>
         </ng-template>
-        <ng-template igxHeaderCollapseIndicator>
+        <ng-template igxHeaderCollapsedIndicator>
             <span>COLLAPSED</span>
         </ng-template>
-        <ng-template igxHeaderExpandIndicator>
+        <ng-template igxHeaderExpandedIndicator>
             <span>EXPANDED</span>
         </ng-template>
     </igx-hierarchical-grid>`
