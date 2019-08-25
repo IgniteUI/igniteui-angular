@@ -1,0 +1,61 @@
+{
+    "$schema": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "onGhostCreate",
+            "replaceWith": "ghostCreate",
+            "owner": {
+                "selector": "igxDrag",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onGhostDestroy",
+            "replaceWith": "ghostDestroy",
+            "owner": {
+                "selector": "igxDrag",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "returnMoveEnd",
+            "replaceWith": "transitioned",
+            "owner": {
+                "selector": "igxDrag",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "dragClicked",
+            "replaceWith": "click",
+            "owner": {
+                "selector": "igxDrag",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onEnter",
+            "replaceWith": "enter",
+            "owner": {
+                "selector": "igxDrop",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onLeave",
+            "replaceWith": "leave",
+            "owner": {
+                "selector": "igxDrop",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onDrop",
+            "replaceWith": "dropped",
+            "owner": {
+                "selector": "igxDrop",
+                "type": "directive"
+            }
+        }
+    ]
+}
