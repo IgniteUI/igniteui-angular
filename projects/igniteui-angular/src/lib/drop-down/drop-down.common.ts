@@ -1,4 +1,4 @@
-import { CancelableEventArgs, CancelableBrowserEventArgs } from '../core/utils';
+import { CancelableEventArgs, CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { IgxDropDownItemBase } from './drop-down-item.base';
 import { IToggleView } from '../core/navigation/IToggleView';
 import { EventEmitter } from '@angular/core';
@@ -21,7 +21,7 @@ export enum DropDownActionKey {
  * Interface that encapsulates onSelection event arguments - old selection, new selection and cancel selection.
  * @export
  */
-export interface ISelectionEventArgs extends CancelableEventArgs {
+export interface ISelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {
     oldSelection: IgxDropDownItemBase;
     newSelection: IgxDropDownItemBase;
 }

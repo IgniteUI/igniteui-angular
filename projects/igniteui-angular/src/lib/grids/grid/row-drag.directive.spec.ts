@@ -1147,8 +1147,9 @@ function verifyRowDragStartEvent(
     expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(timesCalled);
     expect(grid.onRowDragStart.emit).toHaveBeenCalledWith({
         dragData: dragRow,
-        owner: dragDirective,
-        cancel: cancel
+        dragDirective: dragDirective,
+        cancel: cancel,
+        owner: grid
     });
 }
 
@@ -1167,8 +1168,9 @@ function verifyRowDragEndEvent(
     timesCalled: number = 1) {
     expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(timesCalled);
     expect(grid.onRowDragEnd.emit).toHaveBeenCalledWith({
-        owner: dragDirective,
+        dragDirective: dragDirective,
         dragData: dragRow,
-        animation: animations
+        animation: animations,
+        owner: grid
     });
 }
