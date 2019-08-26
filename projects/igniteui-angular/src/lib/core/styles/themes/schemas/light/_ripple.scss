@@ -12,7 +12,6 @@
 /// @property {map} color [igx-color: ('grays', 800)] - The color of the ripple.
 ///
 /// @see $default-palette
-
 $_light-ripple: extend(
     $_default-shape-ripple,
     (
@@ -21,3 +20,9 @@ $_light-ripple: extend(
         )
     )
 );
+
+/// Generates a fluent ripple schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-ripple
+$_fluent-ripple: extend($_light-ripple);

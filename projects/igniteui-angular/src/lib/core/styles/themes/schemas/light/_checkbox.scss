@@ -13,12 +13,17 @@
 /// @prop {Map} empty-color [igx-color: ('grays', 600)] - The unchecked border color.
 /// @prop {Map} fill-color [igx-color: ('secondary', 500)] - The checked border and fill colors.
 /// @prop {Map} disabled-color [igx-color: ('grays', 400)] - The disabled border and fill colors.
+/// @prop {Map} disabled-color-label [igx-color: ('grays', 400)] - The disabled color of the label.
 /// @prop {Number} border-radius [.2] - The border radius fraction, between 0-10 to be used for checkbox.
-/// @prop {Number} border-radius [1] - The border radius fraction, between 0-24 to be used for checkbox ripple.
+/// @prop {Number} border-radius-ripple [1] - The border radius fraction, between 0-24 to be used for checkbox ripple.
+///
+/// @requires {function} extend
+/// @requires {map} $_default-shape-checkbox
 /// @see $default-palette
 $_light-checkbox: extend(
     $_default-shape-checkbox,
     (
+        variant: 'material',
         tick-color: #fff,
 
         label-color: (
@@ -35,6 +40,41 @@ $_light-checkbox: extend(
 
         disabled-color: (
             igx-color: ('grays', 400)
+        ),
+
+        disabled-color-label: (
+            igx-color: ('grays', 400)
         )
+    )
+);
+
+/// Generates a fluent checkbox schema.
+/// @type {Map}
+/// @prop {Map} empty-color [igx-color: ('grays', 900)] - The unchecked border color.
+/// @prop {Map} fill-color [igx-color: ('primary', 500)] - The checked border and fill colors.
+/// @prop {Map} disabled-color [igx-color: ('grays', 300)] - The disabled border and fill colors.
+/// @prop {Number} border-radius [2px] - The border radius fraction, between 0-10 to be used for checkbox.
+/// @prop {Number} border-radius-ripple [2px] - The border radius fraction, between 0-24 to be used for checkbox ripple.
+///
+/// @requires {function} extend
+/// @requires {map} $_light-checkbox
+/// @requires {map} $_fluent-shape-checkbox
+$_fluent-checkbox: extend(
+    $_light-checkbox,
+    $_fluent-shape-checkbox,
+    (
+        variant: 'fluent',
+
+        empty-color: (
+            igx-color: ('grays', 900)
+        ),
+
+        fill-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        disabled-color: (
+            igx-color: ('grays', 300)
+        ),
     )
 );

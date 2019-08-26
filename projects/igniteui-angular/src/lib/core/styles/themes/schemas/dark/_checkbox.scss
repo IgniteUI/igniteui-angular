@@ -14,3 +14,12 @@
 $_dark-checkbox: extend($_light-checkbox, (
     tick-color: #222
 ));
+
+/// Generates a dark fluent checkbox schema.
+/// @type {Map}
+/// @prop {Color} tick-color [#fff] - The checked mark color.
+/// @requires extend
+/// @requires $_fluent-checkbox
+$_dark-fluent-checkbox: extend($_fluent-checkbox, (
+    tick-color: #fff
+));
