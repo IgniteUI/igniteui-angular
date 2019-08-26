@@ -1,7 +1,7 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxHierarchicalGridModule } from './index';
+import { IgxHierarchicalGridModule, GridSelectionMode } from './index';
 import { ChangeDetectorRef, Component, ViewChild, AfterViewInit } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
@@ -503,14 +503,14 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         UIInteractions.clickElement(row.expander);
         fixture.detectChanges();
         const ri1 = fixture.componentInstance.rowIsland1;
-        ri1.rowSelectable = true;
+        ri1.rowSelection = GridSelectionMode.multiple;
         fixture.detectChanges();
         await wait();
 
         // check rendered grid
         let childGrids = hierarchicalGrid.hgridAPI.getChildGrids(false);
-        expect(childGrids[0].rowSelectable).toBe(true);
-        expect(childGrids[1].rowSelectable).toBe(false);
+        expect(childGrids[0].rowSelection).toBe( GridSelectionMode.multiple);
+        expect(childGrids[1].rowSelection).toBe(GridSelectionMode.none);
 
         // expand new row and check newly generated grid
         const row2 = hierarchicalGrid.getRowByIndex(3) as IgxHierarchicalRowComponent;
@@ -518,10 +518,10 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         fixture.detectChanges();
         await wait();
         childGrids = hierarchicalGrid.hgridAPI.getChildGrids(false);
-        expect(childGrids[0].rowSelectable).toBe(true);
-        expect(childGrids[1].rowSelectable).toBe(true);
-        expect(childGrids[2].rowSelectable).toBe(false);
-        expect(childGrids[3].rowSelectable).toBe(false);
+        expect(childGrids[0].rowSelection).toBe( GridSelectionMode.multiple);
+        expect(childGrids[1].rowSelection).toBe( GridSelectionMode.multiple);
+        expect(childGrids[2].rowSelection).toBe(GridSelectionMode.none);
+        expect(childGrids[3].rowSelection).toBe(GridSelectionMode.none);
     });
     it('should apply column settings applied to the row island to all related child grids.',
     async() => { /** height/width setter rAF + row toggle rAF */
