@@ -181,17 +181,21 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
             return;
         }
 
-        // Disallow moving the dialog outside the grid if it can fit in the grid.
-        if (!(dialogRect.left >= gridRect.left && dialogRect.right <= gridRect.right &&
-              dialogRect.top >= gridRect.top && dialogRect.bottom <= gridRect.bottom)) {
-            const dragDialog = dragArgs.owner;
-            let newDialogX = dialogRect.left;
-            let newDialogY = dialogRect.top;
+        // Variables that indicate how much the pointer has moved on both the X axis and Y axis.
+        const movedX = dragArgs.nextPageX - dragArgs.pageX;
+        const movedY = dragArgs.nextPageY - dragArgs.pageY;
 
-            newDialogX = (dialogRect.left < gridRect.left) ? gridRect.left : newDialogX;
-            newDialogX = (dialogRect.right > gridRect.right) ? gridRect.right - dialogRect.width : newDialogX;
-            newDialogY = (dialogRect.top < gridRect.top) ? gridRect.top : newDialogY;
-            newDialogY = (dialogRect.bottom > gridRect.bottom) ? gridRect.bottom - dialogRect.height : newDialogY;
+        // Disallow moving the dialog outside the grid if it can fit in the grid.
+        if (!(dialogRect.left + movedX >= gridRect.left && dialogRect.right + movedX <= gridRect.right &&
+              dialogRect.top + movedY >= gridRect.top && dialogRect.bottom + movedY <= gridRect.bottom)) {
+            const dragDialog = dragArgs.owner;
+            let newDialogX = dialogRect.left + movedX;
+            let newDialogY = dialogRect.top + movedY;
+
+            newDialogX = (dialogRect.left + movedX  < gridRect.left) ? gridRect.left : newDialogX;
+            newDialogX = (dialogRect.right + movedX > gridRect.right) ? gridRect.right - dialogRect.width : newDialogX;
+            newDialogY = (dialogRect.top + movedY < gridRect.top) ? gridRect.top : newDialogY;
+            newDialogY = (dialogRect.bottom  + movedY > gridRect.bottom) ? gridRect.bottom - dialogRect.height : newDialogY;
 
             dragArgs.cancel = true;
             const newDragLocation = new IgxDragLocation(newDialogX, newDialogY);
