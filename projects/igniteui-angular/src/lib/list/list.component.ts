@@ -29,21 +29,22 @@ import {
     IgxListItemRightPanningTemplateDirective
 } from './list.common';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity } from '../core/density';
+import { IBaseEventArgs } from '../core/utils';
 
 let NEXT_ID = 0;
-export interface IPanStateChangeEventArgs {
+export interface IPanStateChangeEventArgs extends IBaseEventArgs {
     oldState: IgxListPanState;
     newState: IgxListPanState;
     item: IgxListItemComponent;
 }
 
-export interface IListItemClickEventArgs {
+export interface IListItemClickEventArgs extends IBaseEventArgs {
     item: IgxListItemComponent;
     event: Event;
     direction: IgxListPanState;
 }
 
-export interface IListItemPanningEventArgs {
+export interface IListItemPanningEventArgs extends IBaseEventArgs {
     item: IgxListItemComponent;
     direction: IgxListPanState;
     keepItem: boolean;

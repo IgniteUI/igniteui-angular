@@ -50,4 +50,32 @@ describe('Update 8.2.0', () => {
 
         done();
     });
+
+    it('should update igxDrag input bindings', done => {
+        appTree.create(
+            '/testSrc/appPrefix/component/custom.component.html',
+            `<div igxDrag [renderGhost]="true" [ghostImageClass]="'casper'" [dragGhostHost]="host">Drag me</div>`);
+        const tree = schematicRunner.runSchematic('migration-10', {}, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
+            .toEqual(
+            `<div igxDrag [ghost]="true" [ghostClass]="'casper'" [ghostHost]="host">Drag me</div>`);
+        done();
+    });
+
+    it('should update igxDrag and igxDrop outputs bindings', done => {
+        appTree.create(
+            '/testSrc/appPrefix/component/custom.component.html',
+            `<div igxDrag (onGhostCreate)="ghostCreateHandler($event)" (onGhostDestroy)="ghostDestroyHandler($event)" (returnMoveEnd)="moveEndHandler($event)" (dragClicked)="clickHandler($event)">Drag me</div>
+            <div igxDrop (onEnter)="enterHandler($event)" (onLeave)="leaveHandler($event)" (onDrop)="dropHandler($event)">drop area</div>
+            `);
+        const tree = schematicRunner.runSchematic('migration-10', {}, appTree);
+
+        expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
+            .toEqual(
+            `<div igxDrag (ghostCreate)="ghostCreateHandler($event)" (ghostDestroy)="ghostDestroyHandler($event)" (transitioned)="moveEndHandler($event)" (click)="clickHandler($event)">Drag me</div>
+            <div igxDrop (enter)="enterHandler($event)" (leave)="leaveHandler($event)" (dropped)="dropHandler($event)">drop area</div>
+            `);
+        done();
+    });
 });
