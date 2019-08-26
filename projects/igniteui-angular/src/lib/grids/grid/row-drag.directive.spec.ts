@@ -920,7 +920,7 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
             [rowEditable]="true" [rowDraggable]="enableRowDraggable"
             >
         </igx-grid>
-        <div #dropArea class="droppable-area" igxDrop (onDrop)="onRowDrop($event)"
+        <div #dropArea class="droppable-area" igxDrop (dropped)="onRowDrop($event)"
         [ngStyle]="{width:'100px', height:'100px', backgroundColor:'red'}">
         </div>
         <div #nonDroppableArea class="non-droppable-area"
@@ -973,7 +973,7 @@ export class IgxGridRowDraggableComponent extends DataParent {
             [rowEditable]="true" [rowDraggable]="true"
             >
         </igx-grid>
-        <div class="droppable-area" igxDrop (onDrop)="onRowDrop($event)">
+        <div class="droppable-area" igxDrop (dropped)="onRowDrop($event)">
         <igx-grid #dropGrid [data]="newData" [primaryKey]="'ID'"
             [width]="'800px'" [height]="'300px'">
             <igx-column [field]="'Downloads'"></igx-column>
@@ -1011,7 +1011,7 @@ export class IgxGridFeaturesRowDragComponent extends DataParent {
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>
-    <div class="droppable-area" igxDrop (onDrop)="onRowDrop($event)">
+    <div class="droppable-area" igxDrop (dropped)="onRowDrop($event)">
         <igx-hierarchical-grid #hierarchicalDropGrid [data]="newData" [primaryKey]="'ID'"
             [width]="'1500px'" [height]="'500px'">
             <igx-column [field]="'ID'"></igx-column>
@@ -1066,7 +1066,7 @@ export class IgxHierarchicalGridTestComponent {
         <igx-column [field]="'lastName'"></igx-column>
         <igx-column [field]="'Salary'" dataType="number" ></igx-column>
     </igx-tree-grid>
-    <div class="droppable-area" igxDrop (onDrop)="onRowDrop($event)">
+    <div class="droppable-area" igxDrop (dropped)="onRowDrop($event)">
     <igx-grid #dropGrid [data]="newData" [primaryKey]="'employeeID'"
         [width]="'900px'" [height]="'300px'">
         <igx-column [field]="'employeeID'" dataType="number"></igx-column>

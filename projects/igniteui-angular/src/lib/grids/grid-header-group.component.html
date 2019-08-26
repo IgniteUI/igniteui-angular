@@ -11,7 +11,7 @@
                 [column]="child"
                 [gridID]="child.gridID"
                 [igxColumnMovingDrag]="child"
-                [dragGhostHost]="grid.outletDirective.nativeElement"
+                [ghostHost]="grid.outletDirective.nativeElement"
                 [attr.droppable]="true"
                 [igxColumnMovingDrop]="child">
             </igx-grid-header-group>
@@ -27,7 +27,7 @@
     <div class="igx-grid__thead-title"
         [ngClass]="{'igx-grid__th--pinned-last': hasLastPinnedChildColumn}"
         [igxColumnMovingDrag]="column"
-        [dragGhostHost]="grid.outletDirective.nativeElement"
+        [ghostHost]="grid.outletDirective.nativeElement"
         [attr.droppable]="true"
         [igxColumnMovingDrop]="column">
         <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column, column: column}">
@@ -48,7 +48,7 @@
 
 <ng-container *ngIf="!column.columnGroup">
     <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left"></span>
-    <igx-grid-header [igxColumnMovingDrag]="column" [dragGhostHost]="grid.outletDirective.nativeElement" [attr.droppable]="true" [igxColumnMovingDrop]="column" [gridID]="column.grid.id" [column]="column"></igx-grid-header>
+    <igx-grid-header [igxColumnMovingDrag]="column" [ghostHost]="grid.outletDirective.nativeElement" [attr.droppable]="true" [igxColumnMovingDrop]="column" [gridID]="column.grid.id" [column]="column"></igx-grid-header>
     <igx-grid-filtering-cell *ngIf="grid.allowFiltering && grid.filterMode == 'quickFilter'" [column]="column" [attr.draggable]="false"></igx-grid-filtering-cell>
     <span *ngIf="!column.columnGroup && column.resizable" class="igx-grid__th-resize-handle"
           [igxResizeHandle]="column"
