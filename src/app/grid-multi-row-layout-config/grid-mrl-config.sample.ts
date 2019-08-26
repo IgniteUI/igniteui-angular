@@ -1,5 +1,5 @@
 import { Component, ViewChild, AfterViewInit, ElementRef, ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
-import { IgxGridComponent, IgxDropEventArgs, IgxDialogComponent, IgxDropEnterEventArgs, IgxDropLeaveEventArgs } from 'igniteui-angular';
+import { IgxGridComponent, IDropBaseEventArgs, IgxDialogComponent, IDropDroppedEventArgs} from 'igniteui-angular';
 
 class ColumnConfig {
     key: string;
@@ -195,15 +195,15 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
         this.colsWidth = event.target.value;
     }
 
-    public onColEnter(event: IgxDropEnterEventArgs, rowIndex, colIndex) {
+    public onColEnter(event: IDropBaseEventArgs, rowIndex, colIndex) {
         this.collection[rowIndex][colIndex].hovered = true;
     }
 
-    public onColLeave(event: IgxDropLeaveEventArgs, rowIndex, colIndex) {
+    public onColLeave(event: IDropBaseEventArgs, rowIndex, colIndex) {
         this.collection[rowIndex][colIndex].hovered = false;
     }
 
-    public onColDropped(event: IgxDropEventArgs, rowIndex, colIndex) {
+    public onColDropped(event: IDropDroppedEventArgs, rowIndex, colIndex) {
         event.cancel = true;
         this.collection[rowIndex][colIndex].key = event.drag.data.key;
         this.updateCollectionLayout();

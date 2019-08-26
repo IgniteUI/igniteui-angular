@@ -17,7 +17,7 @@
     </igx-grid>
     <igx-grid #grid2 igxDrop [data]="newData" [primaryKey]="'ProductID'"
         [displayDensity]="density" [width]="'500px'" [height]="'600px'" [emptyGridTemplate]="dragHereTemplate"
-        (onEnter)="onEnterAllowed($event)" (onLeave)="onLeaveAllowed($event)" (onDrop)="onDropAllowed($event)">
+        (enter)="onEnterAllowed($event)" (leave)="onLeaveAllowed($event)" (dropped)="onDropAllowed($event)">
         <igx-column [field]="'ProductName'" [width]="'200px'"></igx-column>
         <igx-column [field]="'UnitsInStock'"></igx-column>
         <igx-column [field]="'ProductID'" [editable]="true"></igx-column>
@@ -27,7 +27,7 @@
     </igx-grid>
 </div>
 <div class="dropable-area">
-    <div igxDrop (onEnter)="onEnterBlocked($event)" (onLeave)="onLeaveBlocked($event)" (onDrop)="onDropBlocked($event)">Drag here</div>
+    <div igxDrop (enter)="onEnterBlocked($event)" (leave)="onLeaveBlocked($event)" (dropped)="onDropBlocked($event)">Drag here</div>
 </div>
 <ng-template #dragHereTemplate>Drag Here</ng-template>
 
