@@ -16,7 +16,9 @@
 /// @prop {Color} indicator-border-color [#fff] - The idle indicator border color.
 /// @prop {Color} indicator-active-border-color [#fff] - The active indicator border color.
 /// @prop {Number} border-radius [0] - The border radius fraction, between 0-1 to be used for carousel.
-/// @see $default-palette
+///
+/// @requires {function} extend
+/// @requires {map} $_default-shape-carousel
 $_light-carousel: extend(
     $_default-shape-carousel,
     (
@@ -36,3 +38,10 @@ $_light-carousel: extend(
         indicator-active-border-color: #fff
     )
 );
+
+/// Generates a fluent carousel schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-carousel
+/// @see $default-palette
+$_fluent-carousel: extend($_light-carousel, $_fluent-shape-carousel);

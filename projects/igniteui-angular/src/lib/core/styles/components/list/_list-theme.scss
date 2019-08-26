@@ -592,30 +592,28 @@
     $title: map-get($categories, 'title');
     $subtitle: map-get($categories, 'subtitle');
 
-    @include igx-scope('.igx-typography') {
-        %igx-list-header {
-            @include igx-type-style($type-scale, $header) {
-                margin: 0;
-            }
+    %igx-list-header {
+        @include igx-type-style($type-scale, $header) {
+            margin: 0;
         }
+    }
 
-        %igx-list-item {
-            @include igx-type-style($type-scale, $item) {
-                margin: 0;
-            }
+    %igx-list-item {
+        @include igx-type-style($type-scale, $item) {
+            margin: 0;
         }
+    }
 
-        %igx-list__item-lines,
-        %igx-list__item-line-title {
-            @include igx-type-style($type-scale, $title) {
-                margin: 0;
-            }
+    %igx-list__item-lines,
+    %igx-list__item-line-title {
+        @include igx-type-style($type-scale, $title) {
+            margin: 0;
         }
+    }
 
-        %igx-list__item-line-subtitle {
-            @include igx-type-style($type-scale, $subtitle) {
-                margin: 0;
-            }
+    %igx-list__item-line-subtitle {
+        @include igx-type-style($type-scale, $subtitle) {
+            margin: 0;
         }
     }
 }

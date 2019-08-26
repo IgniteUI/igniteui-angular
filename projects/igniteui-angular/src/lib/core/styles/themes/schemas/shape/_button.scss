@@ -26,3 +26,11 @@ $_square-shape-button: (
     fab-border-radius: 0%,
     icon-border-radius: 0%,
 );
+
+$_fluent-shape-button: (
+    flat-border-radius: 0,
+    raised-border-radius: 2px,
+    outlined-border-radius: 2px,
+    fab-border-radius: 1,
+    icon-border-radius: 0,
+);

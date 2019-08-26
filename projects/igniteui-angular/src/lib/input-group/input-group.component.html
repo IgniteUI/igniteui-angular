@@ -1,14 +1,31 @@
 <div class="igx-input-group__wrapper" *ngIf="isTypeBox; else bundle">
     <ng-container *ngTemplateOutlet="bundle"></ng-container>
 </div>
+
 <div class="igx-input-group__hint">
     <ng-content select="igx-hint,[igxHint]"></ng-content>
 </div>
+
+<ng-template #material>
+    <ng-content select="[igxLabel]"></ng-content>
+</ng-template>
+
 <ng-template #bundle>
+
+<!--    <ng-content *ngIf="isTypeFluent" select="[igxLabel]"></ng-content>-->
+    <ng-container *ngIf="isTypeFluent">
+        <ng-container *ngTemplateOutlet="material"></ng-container>
+    </ng-container>
+
     <div class="igx-input-group__bundle">
         <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
         <div class="igx-input-group__bundle-main">
-            <ng-content select="[igxLabel]"></ng-content>
+
+                <ng-container *ngIf="!isTypeFluent">
+                    <ng-container *ngTemplateOutlet="material"></ng-container>
+                </ng-container>
+<!--            <ng-content *ngIf="!isTypeFluent" select="[igxLabel]"></ng-content>-->
+
             <ng-content select="[igxInput]"></ng-content>
         </div>
         <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
