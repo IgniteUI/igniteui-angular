@@ -14,7 +14,7 @@ import { IgxChipComponent } from '../../../chips';
 import { IgxSelectComponent } from '../../../select';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { IDragStartEventArgs } from '../../../directives/drag-drop/drag-drop.directive';
+import { IDragStartEventArgs, IDragMoveEventArgs, IgxDragLocation } from '../../../directives/drag-drop/drag-drop.directive';
 
 class ExpressionItem {
     constructor(parent?: ExpressionGroupItem) {
@@ -172,7 +172,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         }
     }
 
-    public dragMove(dragArgs: IDragBaseEventArgs) {
+    public dragMove(dragArgs: IDragMoveEventArgs) {
         const gridRect = (<HTMLElement>this.grid.nativeElement).getBoundingClientRect();
         const dialogRect = (<HTMLElement>dragArgs.owner.element.nativeElement).getBoundingClientRect();
 
@@ -193,7 +193,9 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
             newDialogY = (dialogRect.top < gridRect.top) ? gridRect.top : newDialogY;
             newDialogY = (dialogRect.bottom > gridRect.bottom) ? gridRect.bottom - dialogRect.height : newDialogY;
 
-            dragDialog.setLocation({pageX: newDialogX, pageY: newDialogY});
+            dragArgs.cancel = true;
+            const newDragLocation = new IgxDragLocation(newDialogX, newDialogY);
+            dragDialog.setLocation(newDragLocation);
         }
     }
 
