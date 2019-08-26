@@ -1154,7 +1154,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
      * ```html
      * <igx-grid #grid3 (onCellEdit)="editDone($event)" [data]="remote | async" (onSortingDone)="process($event)"
-     *          [primaryKey]="'ProductID'" [rowSelectable]="true">
+     *          [primaryKey]="'ProductID'">
      *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
      *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
      *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
@@ -4475,7 +4475,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public getFeatureColumnsWidth() {
         let width = 0;
 
-        if (this.rowSelectable) {
+        if (this.isRowSelectable) {
             width += this.headerCheckboxContainer ? this.headerCheckboxContainer.nativeElement.getBoundingClientRect().width : 0;
         }
         if (this.rowDraggable) {
