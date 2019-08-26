@@ -32,7 +32,6 @@ import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity } from '../../core/displayDensity';
 import { IGridDataBindable, IgxColumnComponent, } from '../grid/index';
 import { DOCUMENT } from '@angular/common';
-import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
@@ -152,9 +151,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     public set filteredData(value) {
         this._filteredData = value;
 
-        if (this.rowSelectable) {
-            this.updateHeaderCheckboxStatusOnFilter(this._filteredData);
-        }
+
     }
 
     /**
@@ -288,7 +285,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-        selection: IgxHierarchicalSelectionAPIService,
         @Inject(IgxGridTransaction) protected transactionFactory: any,
         elementRef: ElementRef,
         zone: NgZone,
@@ -306,7 +302,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             selectionService,
             crudService,
             gridAPI,
-            selection,
             typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
             elementRef,
             zone,

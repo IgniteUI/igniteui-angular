@@ -1,19 +1,43 @@
 <div class="sample-container">
-    <igx-switch [(ngModel)]="selection" (change)="this.grid1.deselectAllRows()">Toggle Multiple Selection</igx-switch>
+    <igx-switch [(ngModel)]="grid1.hideRowSelectors">Hide row selectors</igx-switch>
+
+    <button igxButton="raised" [igxToggleAction]="dropDownComfortable" [igxDropDownItemNavigation]="dropDownComfortable" displayDensity="comfortable">Cell Selection: {{grid1.cellSelection}}</button>
+        <igx-drop-down #dropDownComfortable (onSelection)="onSelection($event)"  displayDensity="comfortable">
+            <igx-drop-down-item *ngFor="let item of selectionModes">
+                    {{ item }}
+            </igx-drop-down-item>
+        </igx-drop-down>
+    <button igxButton="raised" [igxToggleAction]="dropDownRowSelection" [igxDropDownItemNavigation]="dropDownRowSelection" displayDensity="comfortable">Row Selection: {{grid1.rowSelection}}</button>
+        <igx-drop-down #dropDownRowSelection (onSelection)="onRowSelection($event)"  displayDensity="comfortable">
+            <igx-drop-down-item *ngFor="let item of selectionModes">
+                    {{ item }}
+            </igx-drop-down-item>
+        </igx-drop-down>
     <div class="separator"></div>
-    <igx-grid #grid1 [data]="remote | async" [primaryKey]="'ProductID'"
-            [rowSelectable]="selection" (onSelection)="handleRowSelection($event)"
-            [width]="'800px'" [height]="'600px'">
+    <igx-grid #grid1 [data]="remote | async" [allowFiltering]='true' [primaryKey]="'ProductID'" (onSelection)="handleRowSelection($event)"
+            [width]="'800px'" [height]="'600px'"  (onRowSelectionChange)="log($event)">
         <igx-column [field]="'ProductID'" [editable]="true" [width]="'80%'"></igx-column>
         <igx-column [field]="'ProductName'"></igx-column>
         <igx-column [field]="'UnitsInStock'"></igx-column>
     </igx-grid>
-    <div class="separator"></div>
-    <div><input type='number' #input/><button (click)='scrScrollTo(input.value)'>Go To Index</button></div>
 
-    <ng-container *ngIf="selection">
-        <button igxButton="flat" class="igx-button--flat" (click)="toggle()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" >Toggle rows with ID 1,2,5 </button>
-        <button igxButton="flat" class="igx-button--flat" (click)="toggleAll()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" >Toggle All rows</button>
-        <button igxButton="flat" class="igx-button--flat" (click)="callSelectAll()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" >Select All Rows</button>
-    </ng-container>
+<button (click)="selectRow()">Non Existing row</button>
+<button (click)="deleteSectedRow()">Delete Selected Row</button>
+<button (click)="selectCells()">Select Range throught API</button>
+
+<div><input type='number' #input/><button (click)='scrScrollTo(input.value)'>Go To Index</button></div>
+<button (click)='log(grid1.selectedCells)'>Selected Cells</button>
+<button (click)='log(grid1.getSelectedRanges())'>Selected Ranges</button>
+<button (click)='log(grid1.getSelectedData())'>Selected Data</button>
+<button (click)="grid1.paging = true">Enable Paging</button>
+<button (click)="selectCell()">Select (1.1)</button>
+<button (click)="selectThirdRow()">Select Thrid row</button>
+<button (click)="log(grid1.selectedRows())">Selected RowsS</button>
+
+<ng-container *ngIf="selection">
+    <button igxButton="flat" class="igx-button--flat" (click)="toggle()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" >Toggle rows with ID 1,2,5 </button>
+    <button igxButton="flat" class="igx-button--flat" (click)="toggleAll()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" >Toggle All rows</button>
+    <button igxButton="flat" class="igx-button--flat" (click)="callSelectAll()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C" >Select All Rows</button>
+</ng-container>
+
 </div>
