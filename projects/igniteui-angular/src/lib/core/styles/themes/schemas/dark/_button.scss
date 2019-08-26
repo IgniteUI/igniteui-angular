@@ -5,6 +5,7 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
+
 /// Generates a dark button schema.
 /// @type {Map}
 /// @prop {Map} flat-hover-background [igx-color: ('secondary', 500), rgba: .12 ] - The hover background color of a flat button.
@@ -14,7 +15,6 @@
 /// @requires extend
 /// @requires $_light-button
 /// @see $default-palette
-
 $_dark-button: extend($_light-button, (
     flat-hover-background: (
         igx-color: ('secondary', 500),
@@ -33,4 +33,30 @@ $_dark-button: extend($_light-button, (
     disabled-background: (
         igx-color: ('grays', 200)
     )
+));
+
+/// Generates a dark fluent button schema.
+/// @type {Map}
+/// @prop {Map} flat-icon-color [igx-color: ('primary', 200)] - The icon color of a flat button.
+/// @prop {Map} flat-hover-icon-color [igx-color: ('primary', 200)] - The icon color of a flat button on hover.
+/// @prop {Map} flat-focus-icon-color [igx-color: ('primary', 200)] - The icon color of a flat button on focus.
+/// @prop {Map} flat-hover-text-color [igx-color: ('primary', 200)] - The text color of a flat button on hover.
+/// @requires extend
+/// @requires $_fluent-button
+$_dark-fluent-button: extend($_fluent-button, (
+    flat-icon-color:  (
+        igx-color: ('primary', 200)
+    ),
+
+    flat-hover-icon-color:  (
+        igx-color: ('primary', 200)
+    ),
+
+    flat-focus-icon-color:  (
+        igx-color: ('primary', 200)
+    ),
+
+    flat-hover-text-color: (
+        igx-color: ('primary', 200)
+    ),
 ));

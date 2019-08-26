@@ -39,18 +39,19 @@
     $fill-color: null,
     $tick-color: null,
     $disabled-color: null,
-    $border-radius-ripple:null
+    $disabled-color-label: null,
+    $border-radius-ripple: null
 ) {
     $name: 'igx-checkbox';
     $checkbox-schema: map-get($schema, $name);
     $theme: apply-palette($checkbox-schema, $palette);
 
     $border-radius: round-borders(
-        if($border-radius, $border-radius, map-get($checkbox-schema, 'border-radius')),0 ,10px
+        if($border-radius, $border-radius, map-get($checkbox-schema, 'border-radius')), 0, 10px
     );
 
     $border-radius-ripple: round-borders(
-        if($border-radius-ripple, $border-radius-ripple, map-get($checkbox-schema, 'border-radius-ripple')),0 ,24px
+        if($border-radius-ripple, $border-radius-ripple, map-get($checkbox-schema, 'border-radius-ripple')), 0, 24px
     );
 
 
@@ -62,6 +63,7 @@
         fill-color: $fill-color,
         tick-color: $tick-color,
         disabled-color: $disabled-color,
+        disabled-color-label: $disabled-color-label,
         border-radius: $border-radius,
         border-radius-ripple: $border-radius-ripple
     ));
@@ -85,11 +87,30 @@
 
     $size: em(20px);
     $checkbox-radius: $size / 2;
-    $border-width: 2px;
+
+    $border-width: map-get((
+        material: 2px,
+        fluent: 1px
+    ), map-get($theme, variant));
+
+    $ripple-display: map-get((
+        material: block,
+        fluent: none
+    ), map-get($theme, variant));
+
     $label-margin: em(8px);
     $radius: 2px;
 
-    $mark-stroke: 3;
+    $mark-stroke: map-get((
+        material: 3,
+        fluent: 1
+    ), map-get($theme, variant));
+
+    $mark-offset: map-get((
+        material: 0,
+        fluent: -1px
+    ), map-get($theme, variant));
+
     $mark-length: 24;
     $mark-x-factor: $mark-stroke / $mark-length;
 
@@ -133,7 +154,7 @@
         width: $size;
         height: $size;
         min-width: $size;
-        border-width: $border-width;
+        border-width: rem($border-width);
         border-style: solid;
         border-color: --var($theme, 'empty-color');
         border-radius: --var($theme, 'border-radius');
@@ -191,6 +212,13 @@
         transition: opacity .1s $ease-out-quad;
     }
 
+    %igx-checkbox--indeterminate {
+        %cbx-composite-mark {
+            top: $mark-offset;
+            left: $mark-offset;
+        }
+    }
+
     %cbx-composite-mark--x {
         stroke-dashoffset: 0;
         opacity: 1;
@@ -243,12 +271,13 @@
     }
 
     %cbx-label--disabled {
-        color: --var($theme, 'disabled-color');
+        color: --var($theme, 'disabled-color-label');
     }
 
     %cbx-ripple {
         @include igx-ripple($ripple-theme);
         @include igx-css-vars($ripple-theme);
+        display: $ripple-display;
         position: absolute;
         top: calc(50% - #{$ripple-radius});
         right: calc(100% - #{$ripple-radius} - #{$checkbox-radius});
@@ -323,12 +352,10 @@
 ) {
     $label: map-get($categories, 'label');
 
-    @include igx-scope('.igx-typography') {
-        %cbx-label {
-            @include igx-type-style($type-scale, $label) {
-                margin-top: 0;
-                margin-bottom: 0;
-            }
+    %cbx-label {
+        @include igx-type-style($type-scale, $label) {
+            margin-top: 0;
+            margin-bottom: 0;
         }
     }
 }

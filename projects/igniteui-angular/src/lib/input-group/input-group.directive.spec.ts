@@ -11,7 +11,9 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 const INPUT_GROUP_CSS_CLASS = 'igx-input-group';
 const INPUT_GROUP_BOX_CSS_CLASS = 'igx-input-group--box';
 const INPUT_GROUP_BORDER_CSS_CLASS = 'igx-input-group--border';
+const INPUT_GROUP_FLUENT_CSS_CLASS = 'igx-input-group--fluent';
 const INPUT_GROUP_SEARCH_CSS_CLASS = 'igx-input-group--search';
+const INPUT_GROUP_FLUENT_SEARCH_CSS_CLASS = 'igx-input-group--fluent-search';
 const INPUT_GROUP_COMFORTABLE_DENSITY_CSS_CLASS = 'igx-input-group--comfortable';
 const INPUT_GROUP_COMPACT_DENSITY_CSS_CLASS = 'igx-input-group--compact';
 const INPUT_GROUP_COSY_DENSITY_CSS_CLASS = 'igx-input-group--cosy';
@@ -24,6 +26,7 @@ describe('IgxInputGroup', () => {
                 InputGroupComponent,
                 InputGroupBoxComponent,
                 InputGroupBorderComponent,
+                InputGroupFluentComponent,
                 InputGroupSearchComponent,
                 InputGroupDisabledComponent,
                 InputGroupDisabledByDefaultComponent,
@@ -224,11 +227,22 @@ class InputGroupSearchComponent {
     @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
 }
 
+@Component({
+    template: `<igx-input-group #igxInputGroup type="fluent">
+                    <input igxInput />
+                </igx-input-group>`
+})
+class InputGroupFluentComponent {
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+}
+
 function testInputGroupType(type, component: IgxInputGroupComponent, nativeElement) {
     let isLine = false;
     let isBorder = false;
     let isBox = false;
     let isSearch = false;
+    let isFluent = false;
+    let isFluentSearch = false;
 
     switch (type) {
         case 'line':
@@ -240,6 +254,12 @@ function testInputGroupType(type, component: IgxInputGroupComponent, nativeEleme
         case 'box':
             isBox = true;
             break;
+        case 'fluent':
+            isFluent = true;
+            break;
+        case 'fluentSearch':
+            isFluentSearch = true;
+            break;
         case 'search':
             isSearch = true;
             break;
@@ -248,12 +268,16 @@ function testInputGroupType(type, component: IgxInputGroupComponent, nativeEleme
 
     expect(nativeElement.classList.contains(INPUT_GROUP_BOX_CSS_CLASS)).toBe(isBox);
     expect(nativeElement.classList.contains(INPUT_GROUP_BORDER_CSS_CLASS)).toBe(isBorder);
+    expect(nativeElement.classList.contains(INPUT_GROUP_FLUENT_CSS_CLASS)).toBe(isFluent);
     expect(nativeElement.classList.contains(INPUT_GROUP_SEARCH_CSS_CLASS)).toBe(isSearch);
+    expect(nativeElement.classList.contains(INPUT_GROUP_FLUENT_SEARCH_CSS_CLASS)).toBe(isFluentSearch);
 
     expect(component.isTypeLine).toBe(isLine);
     expect(component.isTypeBorder).toBe(isBorder);
     expect(component.isTypeBox).toBe(isBox);
+    expect(component.isTypeFluent).toBe(isFluent);
     expect(component.isTypeSearch).toBe(isSearch);
+    expect(component.isTypeFluentSearch).toBe(isFluentSearch);
 }
 
 @Component({

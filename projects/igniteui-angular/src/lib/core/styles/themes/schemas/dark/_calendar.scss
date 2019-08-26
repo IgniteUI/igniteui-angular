@@ -18,3 +18,9 @@ $_dark-calendar: extend($_light-calendar, (
         rgba: .38
     ),
 ));
+
+/// Generates a dark fluent calendar schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_fluent-calendar
+$_dark-fluent-calendar: extend($_fluent-calendar);

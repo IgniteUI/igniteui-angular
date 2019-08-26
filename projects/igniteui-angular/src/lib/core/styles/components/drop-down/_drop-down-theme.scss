@@ -366,25 +366,23 @@
     $item: map-get($categories, 'item');
     $select-item: map-get($categories, 'select-item');
 
-    @include igx-scope('.igx-typography') {
-        %igx-drop-down__header,
-        %igx-drop-down__group > label {
-            @include igx-type-style($type-scale, $header) {
-                margin: 0;
-            }
+    %igx-drop-down__header,
+    %igx-drop-down__group > label {
+        @include igx-type-style($type-scale, $header) {
+            margin: 0;
         }
+    }
 
+    %igx-drop-down__item {
+        @include igx-type-style($type-scale, $item) {
+            margin: 0;
+        }
+    }
+
+    %igx-drop-down__list--select {
         %igx-drop-down__item {
-            @include igx-type-style($type-scale, $item) {
-                margin: 0;
-            }
-        }
-
-        %igx-drop-down__list--select {
-            %igx-drop-down__item {
-                @include igx-type-style($type-scale, $select-item);
-                @include ellipsis()
-            }
+            @include igx-type-style($type-scale, $select-item);
+            @include ellipsis()
         }
     }
 }
