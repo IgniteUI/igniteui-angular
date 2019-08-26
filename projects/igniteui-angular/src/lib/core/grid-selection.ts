@@ -566,7 +566,7 @@ export class IgxGridSelectionService {
 
     /** Select the specified row and emit event. */
     selectRowById(rowID, clearPrevSelection?, event?): void {
-        if (this.grid.isRowSelectable || this.isRowDeleted(rowID)) { return; }
+        if (!this.grid.isRowSelectable || this.isRowDeleted(rowID)) { return; }
         clearPrevSelection = !this.grid.isMultiRowSelectionEnabled || clearPrevSelection;
 
         const newSelection = clearPrevSelection ? [rowID] : this.getSelectedRows().indexOf(rowID) !== -1 ?
@@ -644,10 +644,7 @@ export class IgxGridSelectionService {
             added: added, removed: removed, event: event, cancel: false
         };
         this.grid.onRowSelectionChange.emit(args);
-        if (args.cancel) {
-            if (args.event && args.event.checkbox) { event.checkbox.checked = !event.checkbox.checked; }
-            return;
-        }
+        if (args.cancel) { return; }
         this.selectRowsWithNoEvent(args.newSelection, true);
     }
 
