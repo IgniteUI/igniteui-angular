@@ -596,7 +596,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 this.gridAPI.update_cell(editableCell, editableCell.editValue);
             }
             crud.end();
-            this.grid.cdr.markForCheck();
+            this.grid.notifyChanges();
             crud.begin(this);
             return;
         }
@@ -650,7 +650,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         } else {
             this.gridAPI.escape_editMode();
         }
-        this.grid.cdr.markForCheck();
+        this.grid.notifyChanges();
     }
 
     /**
@@ -723,10 +723,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     @HostListener('dblclick', ['$event'])
-    public onDoubleClick = (event: MouseEvent| HammerInput) => {
+    public onDoubleClick = (event: MouseEvent | HammerInput) => {
         if (event.type === 'doubletap') {
             // prevent double-tap to zoom on iOS
-            event.preventDefault();
+            (event as HammerInput).preventDefault();
         }
         if (this.editable && !this.editMode && !this.row.deleted) {
             this.crudService.begin(this);

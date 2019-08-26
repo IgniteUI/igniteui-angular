@@ -11,8 +11,9 @@ import { By } from '@angular/platform-browser';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { DisplayDensity } from '../../core/displayDensity';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { IGridCellEventArgs } from '../grid';
 
-describe('Basic IgxHierarchicalGrid', () => {
+describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -404,7 +405,7 @@ describe('Basic IgxHierarchicalGrid', () => {
     });
 });
 
-describe('IgxHierarchicalGrid Row Islands', () => {
+describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -630,9 +631,36 @@ describe('IgxHierarchicalGrid Row Islands', () => {
         expect(child1._destroyed).toBeTruthy();
         expect(child2._destroyed).toBeTruthy();
     }));
+
+    it(' should emit child grid events with the related child grid instance as an event arg.', async() => {
+        const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+        await wait(100);
+        fixture.detectChanges();
+
+        const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+        const cell = childGrid.getRowByIndex(0).cells.toArray()[0];
+        const ri1 = fixture.componentInstance.rowIsland1;
+
+        spyOn(ri1.onCellClick, 'emit').and.callThrough();
+
+        const event = new Event('click');
+        cell.nativeElement.dispatchEvent(event);
+        const args: IGridCellEventArgs = {
+            cell: cell,
+            event: event,
+            owner: childGrid
+        };
+
+        fixture.detectChanges();
+        expect(ri1.onCellClick.emit).toHaveBeenCalledTimes(1);
+        expect(ri1.onCellClick.emit).toHaveBeenCalledWith(args);
+    });
 });
 
-describe('IgxHierarchicalGrid Children Sizing', () => {
+describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -772,7 +800,7 @@ describe('IgxHierarchicalGrid Children Sizing', () => {
     }));
 });
 
-describe('IgxHierarchicalGrid Remote Scenarios', () => {
+describe('IgxHierarchicalGrid Remote Scenarios #hGrid', () => {
     configureTestSuite();
     let fixture: ComponentFixture<IgxHGridRemoteOnDemandComponent>;
     const TBODY_CLASS = '.igx-grid__tbody-content';
@@ -848,7 +876,7 @@ describe('IgxHierarchicalGrid Remote Scenarios', () => {
     }));
 });
 
-describe('IgxHierarchicalGrid Template Changing Scenarios', () => {
+describe('IgxHierarchicalGrid Template Changing Scenarios #hGrid', () => {
     configureTestSuite();
     const TBODY_CLASS = '.igx-grid__tbody-content';
     const THEAD_CLASS = '.igx-grid__thead';
@@ -904,6 +932,30 @@ describe('IgxHierarchicalGrid Template Changing Scenarios', () => {
         expect(child2Headers[0].nativeElement.innerText).toEqual('ID');
         expect(child2Headers[1].nativeElement.innerText).toEqual('ProductName');
         expect(child2Headers[2].nativeElement.innerText).toEqual('Col1');
+    });
+
+    it('should render correct columns when setting columns for parent and child post init using ngFor', () => {
+        const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+
+        const child1Grids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        const child1Grid = child1Grids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+
+        fixture.componentInstance.parentCols = ['Col1', 'Col2'];
+        fixture.componentInstance.islandCols1 = ['ID', 'ProductName', 'Col1'];
+        fixture.detectChanges();
+        // check parent cols
+        expect(hierarchicalGrid.columns.length).toBe(4);
+        expect(hierarchicalGrid.columns[0].field).toBe('ID');
+        expect(hierarchicalGrid.columns[1].field).toBe('ProductName');
+        expect(hierarchicalGrid.columns[2].field).toBe('Col1');
+        expect(hierarchicalGrid.columns[3].field).toBe('Col2');
+        // check child cols
+        expect(child1Grid.columns.length).toBe(3);
+        expect(hierarchicalGrid.columns[0].field).toBe('ID');
+        expect(hierarchicalGrid.columns[1].field).toBe('ProductName');
+        expect(hierarchicalGrid.columns[2].field).toBe('Col1');
     });
 
     it('should update columns for expanded child when adding column to row island', () => {
@@ -991,7 +1043,7 @@ describe('IgxHierarchicalGrid Template Changing Scenarios', () => {
     });
 });
 
-describe('IgxHierarchicalGrid Runtime Row Island change Scenarios', () => {
+describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () => {
     configureTestSuite();
     let fixture: ComponentFixture<IgxHierarchicalGridToggleRIComponent>;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -1206,6 +1258,7 @@ export class IgxHGridRemoteOnDemandComponent {
     <igx-hierarchical-grid #hierarchicalGrid [data]="data" [autoGenerate]="false" [height]="'500px'" [width]="'800px'" >
         <igx-column field="ID"></igx-column>
         <igx-column field="ProductName"></igx-column>
+        <igx-column *ngFor="let colField of parentCols" [field]="colField"></igx-column>
         <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland [height]="'350px'">
             <igx-column *ngFor="let colField of islandCols1" [field]="colField"></igx-column>
             <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland2 [height]="'200px'">
@@ -1217,6 +1270,7 @@ export class IgxHGridRemoteOnDemandComponent {
 export class IgxHierarchicalGridColumnsUpdateComponent extends IgxHierarchicalGridTestBaseComponent implements AfterViewInit {
     public cols1 = ['ID', 'ProductName', 'Col1', 'Col2', 'Col3'];
     public cols2 =  ['ID', 'ProductName', 'Col1'];
+    public parentCols = [];
     public islandCols1 = [];
     public islandCols2 = [];
     constructor(public cdr: ChangeDetectorRef) {

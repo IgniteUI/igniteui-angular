@@ -21,6 +21,7 @@ import { IgxStringFilteringOperand } from '../../data-operations/filtering-condi
 import { IgxHierarchicalGridComponent, IgxHierarchicalGridModule, IgxRowComponent } from '../hierarchical-grid';
 import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';
 import { IgxTreeGridComponent, IgxTreeGridModule } from '../tree-grid';
+import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 
 const DEBOUNCE_TIME = 50;
@@ -33,7 +34,7 @@ const CSS_CLASS_SELECTION_CHECKBOX = '.igx-grid__cbx-selection';
 const CSS_CLASS_VIRTUAL_HSCROLLBAR = '.igx-vhelper--horizontal';
 const CSS_CLASS_LAST_PINNED_HEADER = 'igx-grid__th--pinned-last';
 
-describe('IgxGrid - Row Drag Tests', () => {
+describe('IgxGrid - Row Drag Tests #grid', () => {
     let fixture: ComponentFixture<any>;
     let dropAreaElement: Element;
     let dragIndicatorElements: DebugElement[];
@@ -68,6 +69,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         let dragRows: DebugElement[];
         // configureTestSuite();
         beforeEach(async(() => {
+            resizeObserverIgnoreError();
             fixture = TestBed.createComponent(IgxGridRowDraggableComponent);
             grid = fixture.componentInstance.instance;
             dropArea = fixture.componentInstance.dropArea;
@@ -213,6 +215,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         }));
         it('should align horizontal scrollbar with first column when column pinning is disabled', fakeAsync(() => {
             // has no draggable and selectable rows
+            grid.width = '400px';
             grid.rowSelectable = false;
             grid.rowDraggable = false;
             tick();
@@ -243,10 +246,11 @@ describe('IgxGrid - Row Drag Tests', () => {
             horizontalScrollbarElement = fixture.debugElement.query(By.css(CSS_CLASS_VIRTUAL_HSCROLLBAR));
             horizontalScrollbarRect = horizontalScrollbarElement.nativeElement.getBoundingClientRect();
 
-            // The horizontal scrollbar should not be visible
-            expect(horizontalScrollbarRect.left).toBe(0);
+            // The horizontal scrollbar should be visible
+            expect(horizontalScrollbarRect.left).not.toBe(0);
         }));
         it('should align horizontal scrollbar with first non-pinned column when column pinning is enabled', fakeAsync(() => {
+            grid.width = '400px';
             grid.pinColumn('ProductName');
             tick();
             fixture.detectChanges();
@@ -257,8 +261,8 @@ describe('IgxGrid - Row Drag Tests', () => {
             let pinnedColumnHeaderElement: DebugElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_LAST_PINNED_HEADER));
             let pinnedColumnHeaderRect = pinnedColumnHeaderElement.nativeElement.getBoundingClientRect();
 
-            // The horizontal scrollbar should not be visible
-            expect(horizontalScrollbarRect.left).toBe(0);
+            // The horizontal scrollbar should be visible
+            expect(horizontalScrollbarRect.left).not.toBe(0);
 
             // selectable rows enabled
             grid.rowSelectable = true;
@@ -399,6 +403,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             }
         }
         beforeEach(async(() => {
+            resizeObserverIgnoreError();
             fixture = TestBed.createComponent(IgxGridFeaturesRowDragComponent);
             dragGrid = fixture.componentInstance.dragGrid;
             dropGrid = fixture.componentInstance.dropGrid;
@@ -460,6 +465,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         }));
         it('should be able to drag grid row when column pinning is enabled', (async () => {
             dragGrid.pinColumn('ProductName');
+            fixture.detectChanges();
 
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
             const row = dragGridRows[1];
@@ -783,6 +789,7 @@ describe('IgxGrid - Row Drag Tests', () => {
         }));
 
         it('should be able to drag row on every hiearchical level', (async () => {
+            resizeObserverIgnoreError();
             // first level row
             let dragIndicatorElement: Element = dragIndicatorElements[1].nativeElement;
             let rowToDrag = dragGrid.getRowByIndex(0);
@@ -913,7 +920,7 @@ describe('IgxGrid - Row Drag Tests', () => {
             [rowEditable]="true" [rowDraggable]="enableRowDraggable"
             >
         </igx-grid>
-        <div #dropArea class="droppable-area" igxDrop (onDrop)="onRowDrop($event)"
+        <div #dropArea class="droppable-area" igxDrop (dropped)="onRowDrop($event)"
         [ngStyle]="{width:'100px', height:'100px', backgroundColor:'red'}">
         </div>
         <div #nonDroppableArea class="non-droppable-area"
@@ -966,7 +973,7 @@ export class IgxGridRowDraggableComponent extends DataParent {
             [rowEditable]="true" [rowDraggable]="true"
             >
         </igx-grid>
-        <div class="droppable-area" igxDrop (onDrop)="onRowDrop($event)">
+        <div class="droppable-area" igxDrop (dropped)="onRowDrop($event)">
         <igx-grid #dropGrid [data]="newData" [primaryKey]="'ID'"
             [width]="'800px'" [height]="'300px'">
             <igx-column [field]="'Downloads'"></igx-column>
@@ -1004,7 +1011,7 @@ export class IgxGridFeaturesRowDragComponent extends DataParent {
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>
-    <div class="droppable-area" igxDrop (onDrop)="onRowDrop($event)">
+    <div class="droppable-area" igxDrop (dropped)="onRowDrop($event)">
         <igx-hierarchical-grid #hierarchicalDropGrid [data]="newData" [primaryKey]="'ID'"
             [width]="'1500px'" [height]="'500px'">
             <igx-column [field]="'ID'"></igx-column>
@@ -1059,7 +1066,7 @@ export class IgxHierarchicalGridTestComponent {
         <igx-column [field]="'lastName'"></igx-column>
         <igx-column [field]="'Salary'" dataType="number" ></igx-column>
     </igx-tree-grid>
-    <div class="droppable-area" igxDrop (onDrop)="onRowDrop($event)">
+    <div class="droppable-area" igxDrop (dropped)="onRowDrop($event)">
     <igx-grid #dropGrid [data]="newData" [primaryKey]="'employeeID'"
         [width]="'900px'" [height]="'300px'">
         <igx-column [field]="'employeeID'" dataType="number"></igx-column>
@@ -1140,8 +1147,9 @@ function verifyRowDragStartEvent(
     expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(timesCalled);
     expect(grid.onRowDragStart.emit).toHaveBeenCalledWith({
         dragData: dragRow,
-        owner: dragDirective,
-        cancel: cancel
+        dragDirective: dragDirective,
+        cancel: cancel,
+        owner: grid
     });
 }
 
@@ -1160,8 +1168,9 @@ function verifyRowDragEndEvent(
     timesCalled: number = 1) {
     expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(timesCalled);
     expect(grid.onRowDragEnd.emit).toHaveBeenCalledWith({
-        owner: dragDirective,
+        dragDirective: dragDirective,
         dragData: dragRow,
-        animation: animations
+        animation: animations,
+        owner: grid
     });
 }

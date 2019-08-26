@@ -93,3 +93,23 @@ or
         <div igxDialogActions>BUTTONS</div>
     </igx-dialog>
 ```
+
+You can now set set the position and animation settings used by the dialog by using `positionSettings` @Input
+
+```typescript
+import { slideInLeft, slideOutRight } from 'igniteui-angular';
+...
+@ViewChild('alert', { static: true }) public alert: IgxDialogComponent;
+ public newPositionSettings: PositionSettings = {
+     openAnimation: useAnimation(slideInTop, { params: { duration: '2000ms' } }),
+     closeAnimation: useAnimation(slideOutBottom, { params: { duration: '2000ms'} }),
+     horizontalDirection: HorizontalAlignment.Left,
+     verticalDirection: VerticalAlignment.Middle,
+     horizontalStartPoint: HorizontalAlignment.Left,
+     verticalStartPoint: VerticalAlignment.Middle,
+     minSize: { height: 100, width: 100 }
+ };
+
+this.alert.positionSettings = this.newPositionSettings;
+```
+

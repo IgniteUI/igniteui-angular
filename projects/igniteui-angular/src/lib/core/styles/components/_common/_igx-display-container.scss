@@ -3,6 +3,7 @@
     position: relative;
     width: 100%;
     overflow: hidden;
+    flex-shrink: 0;
 }
 
 %display-container--inactive {

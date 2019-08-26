@@ -26,6 +26,7 @@ import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle
 import { OverlaySettings, GlobalPositionStrategy, NoOpScrollStrategy, PositionSettings } from '../services';
 import { slideInBottom, slideOutTop } from '../animations/slide/index';
 import { IgxFocusModule } from '../directives/focus/focus.directive';
+import { IBaseEventArgs } from '../core/utils';
 
 let DIALOG_ID = 0;
 /**
@@ -217,6 +218,41 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     }
 
     /**
+     * Get the position and animation settings used by the dialog.
+     * ```typescript
+     * @ViewChild('alert', { static: true }) public alert: IgxDialogComponent;
+     * let currentPosition: PositionSettings = this.alert.positionSettings
+     * ```
+     */
+    @Input()
+    public get positionSettings(): PositionSettings {
+        return this._positionSettings;
+    }
+
+    /**
+     * Set the position and animation settings used by the dialog.
+     * ```typescript
+     * import { slideInLeft, slideOutRight } from 'igniteui-angular';
+     * ...
+     * @ViewChild('alert', { static: true }) public alert: IgxDialogComponent;
+     *  public newPositionSettings: PositionSettings = {
+     *      openAnimation: useAnimation(slideInTop, { params: { duration: '2000ms' } }),
+     *      closeAnimation: useAnimation(slideOutBottom, { params: { duration: '2000ms'} }),
+     *      horizontalDirection: HorizontalAlignment.Left,
+     *      verticalDirection: VerticalAlignment.Middle,
+     *      horizontalStartPoint: HorizontalAlignment.Left,
+     *      verticalStartPoint: VerticalAlignment.Middle,
+     *      minSize: { height: 100, width: 100 }
+     *  };
+     * this.alert.positionSettings = this.newPositionSettings;
+     * ```
+     */
+    public set positionSettings(settings: PositionSettings) {
+        this._positionSettings = settings;
+        this._overlayDefaultSettings.positionStrategy = new GlobalPositionStrategy(this._positionSettings);
+    }
+
+    /**
      * An event that is emitted when the dialog is opened.
      *```html
      *<igx-dialog (onOpen)="onDialogOpenHandler($event)" (onLeftButtonSelect)="dialog.close()" rightButtonLabel="OK">
@@ -258,7 +294,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     @Output()
     public onRightButtonSelect = new EventEmitter<IDialogEventArgs>();
 
-    private _animaitonSettings: PositionSettings = {
+    private _positionSettings: PositionSettings = {
         openAnimation: useAnimation(slideInBottom, { params: { fromPosition: 'translateY(100%)' } }),
         closeAnimation: useAnimation(slideOutTop, { params: { toPosition: 'translateY(-100%)' } })
     };
@@ -365,7 +401,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
         this._titleId = IgxDialogComponent.NEXT_ID++ + '_title';
 
         this._overlayDefaultSettings = {
-            positionStrategy: new GlobalPositionStrategy(this._animaitonSettings),
+            positionStrategy: new GlobalPositionStrategy(this._positionSettings),
             scrollStrategy: new NoOpScrollStrategy(),
             modal: this.isModal,
             closeOnOutsideClick: this.closeOnOutsideSelect
@@ -470,7 +506,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
 
 }
 
-export interface IDialogEventArgs {
+export interface IDialogEventArgs extends IBaseEventArgs {
     dialog: IgxDialogComponent;
     event: Event;
 }
