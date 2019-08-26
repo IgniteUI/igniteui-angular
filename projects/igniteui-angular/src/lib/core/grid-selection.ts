@@ -662,6 +662,12 @@ export class IgxGridSelectionService {
         this.allRowsSelected = undefined;
     }
 
+    /**Clear rowSelection and update checkbox state*/
+    public clearAllSelectedRows(): void {
+        this.rowSelection.clear();
+        this.clearHeaderCBState();
+    }
+
     /** Returns all data in the grid, with applied filtering and sorting and without deleted rows. */
     public get allData(): Array<any> {
         const allData = this.isFilteringApplied() || this.grid.sortingExpressions.length ?

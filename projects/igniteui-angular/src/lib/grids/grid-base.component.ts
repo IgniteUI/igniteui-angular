@@ -2364,7 +2364,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     set rowSelection(selectionMode:  GridSelectionMode) {
         this._rowSelectionMode = selectionMode;
         if (this.gridAPI.grid && this.columnList) {
-            this.selectionService.rowSelection.clear();
+            this.selectionService.clearAllSelectedRows();
             this.notifyChanges(true);
         }
     }
@@ -4714,7 +4714,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public selectRows(rowIDs: any[], clearCurrentSelection?: boolean) {
         this.selectionService.selectRowsWithNoEvent(rowIDs, clearCurrentSelection);
-        this.cdr.markForCheck();
+        this.notifyChanges();
     }
 
     /**
@@ -4727,7 +4727,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public deselectRows(rowIDs: any[]) {
         this.selectionService.deselectRowsWithNoEvent(rowIDs);
-        this.cdr.markForCheck();
+        this.notifyChanges();
     }
 
     /**
@@ -4742,7 +4742,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     public selectAllRows(onlyFilterData = true) {
-        const data = onlyFilterData && this.filteredData ? this.filteredData : this.gridAPI.get_all_data();
+        const data = onlyFilterData && this.filteredData ? this.filteredData : this.gridAPI.get_all_data(true);
         const rowIDs = this.selectionService.getRowIDs(data).filter(rID => !this.gridAPI.row_deleted_transaction(rID));
         this.selectRows(rowIDs);
     }
@@ -4761,7 +4761,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (onlyFilterData && this.filteredData && this.filteredData.length > 0) {
             this.deselectRows(this.selectionService.getRowIDs(this.filteredData));
         } else {
-            this.selectionService.selectRowsWithNoEvent([], true);
+            this.selectionService.clearAllSelectedRows();
             this.notifyChanges();
         }
     }
