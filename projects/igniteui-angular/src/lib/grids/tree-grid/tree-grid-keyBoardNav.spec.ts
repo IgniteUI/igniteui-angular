@@ -1,6 +1,6 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTreeGridModule, IgxTreeGridComponent } from './index';
+import { IgxTreeGridModule, IgxTreeGridComponent, GridSelectionMode } from './index';
 import { IgxTreeGridWithNoScrollsComponent, IgxTreeGridWithScrollsComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
@@ -346,7 +346,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
         });
 
         it('should select row when press Space key on a cell', async () => {
-            treeGrid.rowSelectable = true;
+            treeGrid.rowSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
             // Click Space on a treeGrid cell

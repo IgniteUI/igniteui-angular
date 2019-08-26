@@ -22,7 +22,6 @@ import {
     ViewChild,
     DoCheck
 } from '@angular/core';
-import { IgxSelectionAPIService } from '../../core/selection';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseComponent, IgxGridTransaction, IGridDataBindable } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
@@ -139,9 +138,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     set filteredData(value) {
         this._filteredData = value;
 
-        if (this.rowSelectable) {
-            this.updateHeaderCheckboxStatusOnFilter(this._filteredData);
-        }
+
     }
 
     /**
@@ -406,7 +403,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-        selection: IgxSelectionAPIService,
         @Inject(IgxGridTransaction) protected _transactions: IgxHierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
         elementRef: ElementRef,
         zone: NgZone,
@@ -420,7 +416,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-            super(selectionService, crudService, gridAPI, selection,
+            super(selectionService, crudService, gridAPI,
                 _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
                 filteringService, overlayService, summaryService, _displayDensityOptions);
         this._gridAPI = <IgxTreeGridAPIService>gridAPI;
@@ -464,9 +460,9 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
                     this.notifyChanges();
 
                     requestAnimationFrame(() => {
-                        const cellID = this.selection.first_item(`${this.id}-cell`);
+                        const cellID = this.selectionService.activeElement;
                         if (cellID) {
-                            const cell = this._gridAPI.get_cell_by_index(cellID.rowIndex, cellID.columnID);
+                            const cell = this._gridAPI.get_cell_by_index(cellID.row, cellID.column);
                             if (cell) {
                                 cell.nativeElement.focus();
                             }
@@ -512,7 +508,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
 
             parentData[this.childDataKey] = children;
         }
-
+        this.selectionService.clearHeaderCBState();
         this._pipeTrigger++;
     }
 
