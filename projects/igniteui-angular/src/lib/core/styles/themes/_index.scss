@@ -108,9 +108,6 @@
         @warn unquote('You have excluded the following components from the theme: "#{$excluded}". You can now add your own themes for the excluded components.');
     }
 
-    // @debug 'All registered: #{$components}';
-    // @debug 'All excluded: #{$excluded}';
-
     @if not(index($exclude, 'igx-ripple')) {
         @include igx-ripple(igx-ripple-theme($palette, $schema));
     }
@@ -474,5 +471,69 @@
         $exclude: $exclude,
         $roundness: $roundness,
         $elevation: $elevation,
+    );
+}
+
+/// Creates a global fluent theme that can be used with light backgrounds.
+/// @param {Map} $palette - An igx-palette to be used by the global theme.
+/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
+@mixin igx-fluent-theme(
+    $palette,
+    $exclude: (),
+    $legacy-support: true
+) {
+    $primary: igx-color($palette, 'primary');
+    $secondary: igx-color($palette, 'secondary');
+    $surface: igx-color($palette, 'surface');
+
+    @include igx-typography(
+        $font-family: "'Open Sans', Helvetica, Arial, sans-serif",
+        $type-scale: $fluent-type-scale,
+        $base-color: #323130
+    );
+
+    @include igx-theme(
+        $palette: igx-palette(
+            $primary,
+            $secondary,
+            $surface: if($surface != #fff, $surface, #fff),
+            $grays: #000
+        ),
+        $schema: $light-fluent-schema,
+        $legacy-support: $legacy-support,
+        $exclude: $exclude
+    );
+}
+
+/// Creates a global fluent theme that can be used with dark backgrounds.
+/// @param {Map} $palette - An igx-palette to be used by the global theme.
+/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
+@mixin igx-fluent-dark-theme(
+    $palette,
+    $exclude: (),
+    $legacy-support: true
+) {
+    $primary: igx-color($palette, 'primary');
+    $secondary: igx-color($palette, 'secondary');
+    $surface: igx-color($palette, 'surface');
+
+    @include igx-typography(
+        $font-family: "'Open Sans', Helvetica, Arial, sans-serif",
+        $type-scale: $fluent-type-scale,
+        $base-color: #fff
+    );
+
+    @include igx-theme(
+        $palette: igx-palette(
+            $primary,
+            $secondary,
+            $surface: if($surface != #fff, $surface, #222),
+            $grays: #fff
+        ),
+        $schema: $dark-fluent-schema,
+        $legacy-support: $legacy-support,
+        $exclude: $exclude
     );
 }

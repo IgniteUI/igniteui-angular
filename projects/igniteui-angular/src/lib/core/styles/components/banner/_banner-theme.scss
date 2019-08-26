@@ -142,12 +142,10 @@
 ) {
     $message: map-get($categories, 'message');
 
-    @include igx-scope('.igx-typography') {
-        %igx-banner__text {
-            @include igx-type-style($type-scale, $message) {
-                margin-top: 0;
-                margin-bottom: 0;
-            }
+    %igx-banner__text {
+        @include igx-type-style($type-scale, $message) {
+            margin-top: 0;
+            margin-bottom: 0;
         }
     }
 }

@@ -41,6 +41,7 @@
 /// @param {Color} $date-selected-text-color [null] - The text color for the selected date.
 ///
 /// @param {Color} $date-current-text-color [null] - The text color for the current date.
+/// @param {Color} $date-current-bg-color [null] - The background color for the current date.
 /// @param {Color} $date-hover-background [null] - The hover date background color.
 ///
 /// @param {Color} $date-special-background [null] - The background color used for special dates.
@@ -101,6 +102,7 @@
     $date-selected-text-color: null,
 
     $date-current-text-color: null,
+    $date-current-bg-color: null,
     $date-hover-background: null,
 
     $date-special-background: null,
@@ -179,8 +181,12 @@
         }
     }
 
-    @if not($date-current-text-color) and $header-background {
-        $date-current-text-color: $header-background;
+    @if not($date-current-bg-color) and $header-background {
+        $date-current-bg-color: $header-background;
+    }
+
+    @if not($date-current-text-color) and $date-current-bg-color {
+        $date-current-text-color: $date-current-bg-color;
     }
 
     @if not($date-special-background) and $content-background {
@@ -250,6 +256,7 @@
         date-selected-text-color: $date-selected-text-color,
 
         date-current-text-color: $date-current-text-color,
+        date-current-bg-color: $date-current-bg-color,
         date-hover-background: $date-hover-background,
 
         date-special-text-color: $date-special-text-color,
@@ -515,7 +522,16 @@
 
     %cal-value--current {
         color: --var($theme, 'date-current-text-color');
-        font-weight: $cal-value-fw;
+        background: --var($theme, 'date-current-bg-color')!important;
+        font-weight: $cal-value-fw !important;
+
+        &:hover {
+            background: --var($theme, 'date-current-bg-color')!important;
+        }
+
+        &:focus {
+            background: --var($theme, 'date-current-bg-color')!important;
+        }
     }
 
     %cal-value--special {

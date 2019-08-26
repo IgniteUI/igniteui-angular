@@ -67,7 +67,7 @@
     $item-selected-text-color: null,
     $item-selected-background: null,
     $item-selected-border-color: null,
-    $item-selected-hover-background: null,
+    $item-selected-hover-background: null
 ) {
     $name: 'igx-button-group';
     $button-group-schema: map-get($schema, $name);
@@ -149,19 +149,17 @@
     $group-item-min-width: 24px;
     $group-item-border-thickness: 1px;
     $group-items-margin: rem(10px, 16px);
+    $transition: all 140ms $ease-in-out-quad;
 
     %igx-group-display {
         display: flex;
         box-shadow: --var($theme, 'shadow');
-        transition: all 140ms $ease-in-out-quad;
+        transition: $transition;
         border-radius: --var($theme, 'border-radius')
     }
 
     %igx-group-item {
-        &%igx-button--flat {
-            border-radius: 0;
-        }
-
+        @include ellipsis();
         border: $group-item-border-thickness solid --var($theme, 'item-border-color');
         color: --var($theme, 'item-text-color');
         background: --var($theme, 'item-background');
@@ -175,13 +173,19 @@
         user-select: none;
         position: relative;
         z-index: 0;
-        @include ellipsis();
+        transition: $transition;
+
+        &%igx-button--flat {
+            border-radius: 0;
+        }
+
+        %igx-icon-display {
+            color: currentColor;
+        }
 
         &:not(:nth-child(0)) {
             margin-left: -1px;
         }
-
-
 
         &:first-of-type {
             border-radius: --var($theme, 'border-radius') 0 0 --var($theme, 'border-radius');
@@ -199,6 +203,10 @@
 
         &:hover,
         &:focus {
+            %igx-icon-display {
+                color: currentColor;
+            }
+
             color: --var($theme, 'item-hover-text-color');
             background: --var($theme, 'item-hover-background');
             z-index: 1;

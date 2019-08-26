@@ -8,9 +8,9 @@
 
 /// Generates a light overlay schema.
 /// @type {Map}
-///
 /// @property {map} background-color [igx-color: ('grays', 500)] - The background color used for modal overlays.
-///
+/// @requires {function} extend
+/// @requires $_fluent-overlay
 /// @see $default-palette
 $_light-overlay: extend(
     $_default-shape-overlay,
@@ -18,5 +18,17 @@ $_light-overlay: extend(
         background-color: (
             igx-color: ('grays', 500)
         )
+    )
+);
+
+/// Generates a fluent overlay schema.
+/// @type {Map}
+/// @property {Color} background-color [rgba(255, 255, 255, .4)] - The background color used for modal overlays.
+/// @requires {function} extend
+/// @requires $_light-overlay
+$_fluent-overlay: extend(
+    $_light-overlay,
+    (
+        background-color: rgba(255, 255, 255, .4)
     )
 );

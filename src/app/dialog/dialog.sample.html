@@ -16,6 +16,24 @@
         </article>
 
         <article class="sample-column">
+            <h4 class="sample-title">Fluent</h4>
+            <p class="sample-description">Fluent dialog.</p>
+            <br>
+            <button igxButton="raised" igxRipple (click)="fluent.open()">Trigger Alert</button>
+            <igx-dialog
+                #fluent
+                title="All emails together"
+                message="Your Inbox has changed. No longer does it include favorites, it is a singular destination for your emails."
+                leftButtonLabel="Save"
+                rightButtonLabel="Cancel"
+                leftButtonType='raised'
+                rightButtonType='outlined'
+                (onLeftButtonSelect)="fluent.close()"
+                (onRightButtonSelect)="fluent.close()">
+            </igx-dialog>
+        </article>
+
+        <article class="sample-column">
             <h4 class="sample-title">Generic Dialog</h4>
             <p class="sample-description">Detailed description to be added</p>
             <br>

@@ -20,3 +20,9 @@ $_square-shape-input-group: (
     border-border-radius: 0%,
     search-border-radius: 0%,
 );
+
+$_fluent-shape-input-group: (
+    box-border-radius: 2px,
+    border-border-radius: 2px,
+    search-border-radius: 2px,
+);
