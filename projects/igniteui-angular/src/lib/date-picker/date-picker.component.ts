@@ -51,7 +51,7 @@ import {
 } from './date-picker.utils';
 import { DatePickerDisplayValuePipe, DatePickerInputValuePipe } from './date-picker.pipes';
 import { IDatePicker } from './date-picker.common';
-import { KEYS, CancelableBrowserEventArgs, isIE, isEqual } from '../core/utils';
+import { KEYS, CancelableBrowserEventArgs, isIE, isEqual, IBaseEventArgs } from '../core/utils';
 import { IgxDatePickerTemplateDirective, IgxDatePickerActionsDirective } from './date-picker.directives';
 import { IgxCalendarContainerComponent } from './calendar-container.component';
 import { InteractionMode } from '../core/enums';
@@ -64,7 +64,7 @@ let NEXT_ID = 0;
  * This interface is used to provide information about date picker reference and its current value
  * when onDisabledDate event is fired.
  */
-export interface IDatePickerDisabledDateEventArgs {
+export interface IDatePickerDisabledDateEventArgs extends IBaseEventArgs {
     datePicker: IgxDatePickerComponent;
     currentValue: Date;
 }
@@ -73,7 +73,7 @@ export interface IDatePickerDisabledDateEventArgs {
  * This interface is used to provide information about date picker reference and its previously valid value
  * when onValidationFailed event is fired.
  */
-export interface IDatePickerValidationFailedEventArgs {
+export interface IDatePickerValidationFailedEventArgs extends IBaseEventArgs {
     datePicker: IgxDatePickerComponent;
     prevValue: Date;
 }
@@ -607,7 +607,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      * An event that is emitted when the `IgxDatePickerComponent` is being closed.
      */
     @Output()
-    public onClosing = new EventEmitter<CancelableBrowserEventArgs>();
+    public onClosing = new EventEmitter<CancelableBrowserEventArgs & IBaseEventArgs>();
 
     /**
      *An @Output property that is fired when selection is made in the calendar.

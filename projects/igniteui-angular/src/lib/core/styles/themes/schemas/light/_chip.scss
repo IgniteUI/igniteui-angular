@@ -1,3 +1,4 @@
+@import '../elevation/chip';
 @import '../shape/chip';
 
 ////
@@ -28,6 +29,7 @@
 /// @see $default-palette
 $_light-chip: extend(
     $_default-shape-chip,
+    $_default-elevation-chip,
     (
         text-color: (
             igx-color: ('grays', 700)

@@ -11,6 +11,7 @@ import { By } from '@angular/platform-browser';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { DisplayDensity } from '../../core/displayDensity';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { IGridCellEventArgs } from '../grid';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
@@ -631,6 +632,33 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         expect(child1._destroyed).toBeTruthy();
         expect(child2._destroyed).toBeTruthy();
     }));
+
+    it(' should emit child grid events with the related child grid instance as an event arg.', async() => {
+        const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+        await wait(100);
+        fixture.detectChanges();
+
+        const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+        const cell = childGrid.getRowByIndex(0).cells.toArray()[0];
+        const ri1 = fixture.componentInstance.rowIsland1;
+
+        spyOn(ri1.onCellClick, 'emit').and.callThrough();
+
+        const event = new Event('click');
+        cell.nativeElement.dispatchEvent(event);
+        const args: IGridCellEventArgs = {
+            cell: cell,
+            event: event,
+            owner: childGrid
+        };
+
+        fixture.detectChanges();
+        expect(ri1.onCellClick.emit).toHaveBeenCalledTimes(1);
+        expect(ri1.onCellClick.emit).toHaveBeenCalledWith(args);
+    });
 });
 
 describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
