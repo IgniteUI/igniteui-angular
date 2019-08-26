@@ -8,11 +8,14 @@ import {
     OnInit,
     ViewChild,
     AfterViewInit,
-    SimpleChanges
+    SimpleChanges,
+    ComponentFactoryResolver
 } from '@angular/core';
 import { IgxSelectionAPIService } from '../../core/selection';
 import { GridBaseAPIService } from '.././api.service';
 import { IgxRowIslandComponent } from './row-island.component';
+import { IgxGridComponent } from '../grid';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,7 +24,7 @@ import { IgxRowIslandComponent } from './row-island.component';
     templateUrl: './child-grid-row.component.html'
 })
 export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
-
+private resolver;
 
     /**
  * Returns whether the row is expanded.
@@ -134,7 +137,9 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     constructor(public gridAPI: GridBaseAPIService<any/* TODO: IgxHierarchicalGridComponent*/>,
         private selectionAPI: IgxSelectionAPIService,
         public element: ElementRef,
+        resolver: ComponentFactoryResolver,
         public cdr: ChangeDetectorRef) {
+            this.resolver = resolver;
     }
 
     /**
@@ -151,9 +156,8 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         this.hGrid.parent = this.parentGrid;
         this.hGrid.parentIsland = this.layout;
         this.hGrid.childRow =  this;
-        if (this.hGrid.isPercentHeight) {
-            this.hGrid._autoSize = true;
-        }
+        // handler logic that re-emits hgrid events on the row island
+        this.setupEventEmitters();
         this.layout.onGridCreated.emit({
             owner: this.layout,
             parentID: this.rowData.rowID,
@@ -175,6 +179,21 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         this.layout.rowIslandAPI.registerChildGrid(this.rowData.rowID, this.hGrid);
 
         this.hGrid.cdr.detectChanges();
+    }
+
+    private setupEventEmitters() {
+        const destructor = takeUntil(this.hGrid.destroy$);
+
+        const factory = this.resolver.resolveComponentFactory(IgxGridComponent);
+        const outputs = factory.outputs;
+        outputs.forEach(output => {
+            if (this.hGrid[output.propName]) {
+                this.hGrid[output.propName].pipe(destructor).subscribe((args) => {
+                    args.owner = this.hGrid;
+                    this.layout[output.propName].emit(args);
+                });
+            }
+        });
     }
 
 

@@ -4,7 +4,7 @@ import { IScrollStrategy } from './scroll';
 import { AnimationReferenceMetadata, AnimationPlayer } from '@angular/animations';
 import { ComponentRef, ElementRef, NgZone } from '@angular/core';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
-import { CancelableEventArgs, CancelableBrowserEventArgs, cloneValue } from '../../core/utils';
+import { CancelableEventArgs, CancelableBrowserEventArgs, cloneValue, IBaseEventArgs } from '../../core/utils';
 
 export enum HorizontalAlignment {
     Left = -1,
@@ -59,7 +59,7 @@ export interface OverlaySettings {
     excludePositionTarget?: boolean;
 }
 
-export interface OverlayEventArgs {
+export interface OverlayEventArgs extends IBaseEventArgs {
     /** Id of the overlay generated with `attach()` method */
     id: string;
     /** Available when `Type<T>` is provided to the `attach()` method and allows access to the created Component instance */
@@ -72,7 +72,7 @@ export interface OverlayCancelableEventArgs extends OverlayEventArgs, Cancelable
 export interface OverlayClosingEventArgs extends OverlayEventArgs, CancelableBrowserEventArgs {
 }
 
-export interface OverlayAnimationEventArgs {
+export interface OverlayAnimationEventArgs extends IBaseEventArgs {
     /** Id of the overlay generated with `attach()` method */
     id: string;
     /** Animation player that will play the animation */

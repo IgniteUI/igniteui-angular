@@ -66,6 +66,30 @@
                     <div class="display-value--sub">In Region {{display.region}}</div>
                 </div>
             </ng-template>
+            <div>
+                <h5 class="sample-title">Template Form</h5>
+                <form>
+                    <igx-combo class="input-container" [placeholder]="'Locations'"
+                        name="anyName" required [(ngModel)]="values1"
+                        [data]="items" [filterable]="filterableFlag"
+                        [displayKey]="valueKeyVar" [valueKey]="valueKeyVar"
+                        [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
+                        <igx-hint>Please select the states you've visited</igx-hint>
+                    </igx-combo>
+                </form>
+            </div>
+            <div>
+                <h5 class="sample-title">Reactive Form</h5>
+                <form class="input-group-form" [formGroup]="user">
+                    <div class="container">
+                        <igx-combo #combo1 class="input-container" [itemsMaxHeight]="130" [data]="genres"
+                            [valueKey]="'type'" [displayKey]="'type'" type="line" formControlName="genres"
+                            searchPlaceholder="Search...">
+                            <label igxLabel>States</label>
+                        </igx-combo>
+                    </div>
+                </form>
+            </div>
         </div>
         <div>
             <h4>Display Density</h4>

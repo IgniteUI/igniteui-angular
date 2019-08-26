@@ -14,6 +14,16 @@ const CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';
 const CELL_SELECTED_CSS_CLASS = 'igx-grid__td--selected';
 const DEBOUNCETIME = 50;
 
+export function resizeObserverIgnoreError() {
+    const spy = spyOn(window, 'onerror').and.callFake((...args) => {
+        if (args[0].toString().match('ResizeObserver loop limit exceeded')) {
+            return;
+        }
+        spy.and.callThrough().withArgs(...args);
+    });
+    return spy;
+}
+
 export function setupGridScrollDetection(fixture: ComponentFixture<any>, grid: IgxGridBaseComponent) {
     grid.verticalScrollContainer.onChunkLoad.subscribe(() => fixture.detectChanges());
     grid.parentVirtDir.onChunkLoad.subscribe(() => fixture.detectChanges());

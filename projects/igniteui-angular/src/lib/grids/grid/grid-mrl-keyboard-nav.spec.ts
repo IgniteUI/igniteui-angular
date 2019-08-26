@@ -16,7 +16,7 @@ const CELL_CSS_CLASS = '.igx-grid__td';
 const ROW_CSS_CLASS = '.igx-grid__tr';
 const CELL_BLOCK = '.igx-grid__mrl-block';
 
-describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
+describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
     configureTestSuite();
 
     beforeEach(async(() => {
@@ -1126,7 +1126,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         expect(lastCell.focused).toBe(true);
         expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(600);
         // check if cell right edge is visible
-        const diff = lastCell.nativeElement.getBoundingClientRect().right + 1 - grid.tbody.nativeElement.getBoundingClientRect().right;
+        const diff = lastCell.nativeElement.getBoundingClientRect().right - grid.tbody.nativeElement.getBoundingClientRect().right;
         expect(diff).toBe(0);
      });
 
@@ -1393,7 +1393,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         cell = grid.getCellByColumn(0, 'City');
         expect(cell.focused).toBe(true);
         expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(300);
-        let diff = cell.nativeElement.getBoundingClientRect().right + 1 - grid.tbody.nativeElement.getBoundingClientRect().right;
+        let diff = cell.nativeElement.getBoundingClientRect().right - grid.tbody.nativeElement.getBoundingClientRect().right;
         expect(diff).toBe(0);
 
         // arrow left
@@ -2103,7 +2103,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         const lastCell =  grid.getCellByColumn(0, 'Address');
         expect(lastCell.focused).toBe(true);
         expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(800);
-        let diff = lastCell.nativeElement.getBoundingClientRect().right + 1 - grid.tbody.nativeElement.getBoundingClientRect().right;
+        let diff = lastCell.nativeElement.getBoundingClientRect().right - grid.tbody.nativeElement.getBoundingClientRect().right;
         expect(diff).toBe(0);
 
         // ctrl+arrow left
@@ -3025,6 +3025,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
                 ]
             }
         ];
+        fix.detectChanges();
         const grid = fix.componentInstance.grid;
         grid.width = '500px';
         setupGridScrollDetection(fix, grid);
@@ -3076,7 +3077,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         cell =  grid.getCellByColumn(10, 'City');
         expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(100);
         // check if cell right edge is visible
-        diff = cell.nativeElement.getBoundingClientRect().right + 1 - grid.tbody.nativeElement.getBoundingClientRect().right;
+        diff = cell.nativeElement.getBoundingClientRect().right - grid.tbody.nativeElement.getBoundingClientRect().right;
         expect(diff).toBe(0);
 
         // navigate left to cell in column that is in DOM but is not in view
@@ -3103,7 +3104,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         cell =  grid.getCellByColumn(9, 'ID');
         expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(250);
         // check if cell right right is visible
-        diff = cell.nativeElement.getBoundingClientRect().right + 1 - grid.tbody.nativeElement.getBoundingClientRect().right;
+        diff = cell.nativeElement.getBoundingClientRect().right - grid.tbody.nativeElement.getBoundingClientRect().right;
         expect(diff).toBe(0);
 
     });

@@ -3,7 +3,7 @@ import {
     Output
 } from '@angular/core';
 
-import { cloneValue } from '../../core/utils';
+import { cloneValue, IBaseEventArgs } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 
 import { ExportUtilities } from './export-utilities';
@@ -16,7 +16,7 @@ import { ITreeGridRecord } from '../../grids/tree-grid/tree-grid.interfaces';
  * // set args properties here
  * })
  */
-export interface IRowExportingEventArgs {
+export interface IRowExportingEventArgs extends IBaseEventArgs {
     /**
      * Contains the exporting row data
      */
@@ -41,7 +41,7 @@ export interface IRowExportingEventArgs {
     * });
     * ```
     */
-export interface IColumnExportingEventArgs {
+export interface IColumnExportingEventArgs extends IBaseEventArgs {
     /**
      * Contains the exporting column header
      */

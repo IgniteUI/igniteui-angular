@@ -9,9 +9,9 @@ import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxBannerActionsDirective } from './banner.directives';
 import { CommonModule } from '@angular/common';
-import { CancelableEventArgs } from '../core/utils';
+import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
 
-export interface BannerEventArgs {
+export interface BannerEventArgs extends IBaseEventArgs {
     banner: IgxBannerComponent;
     event?: Event;
 }
@@ -47,13 +47,13 @@ export class IgxBannerComponent implements IToggleView {
     @ViewChild('expansionPanel', { static: true })
     private _expansionPanel: IgxExpansionPanelComponent;
 
-    @ContentChild(IgxBannerActionsDirective, { static: true })
+    @ContentChild(IgxBannerActionsDirective, { static: false })
     private _bannerActionTemplate: IgxBannerActionsDirective;
 
     /**
      * @hidden
      */
-    @ContentChild(IgxIconComponent, { static: true })
+    @ContentChild(IgxIconComponent, { static: false })
     public bannerIcon: IgxIconComponent;
 
     /**

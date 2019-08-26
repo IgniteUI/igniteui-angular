@@ -41,15 +41,17 @@ import {
     IgxGridFilteringMCHComponent,
     IgxTestExcelFilteringDatePickerComponent,
     IgxGridFilteringTemplateComponent,
-    IgxGridFilteringESFTemplatesComponent
+    IgxGridFilteringESFTemplatesComponent,
+    IgxGridFilteringESFLoadOnDemandComponent
 } from '../../test-utils/grid-samples.spec';
+import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 const FILTER_UI_SCROLL_START_CLASS = '.igx-grid__filtering-row-scroll-start';
 const FILTER_UI_SCROLL_END_CLASS = '.igx-grid__filtering-row-scroll-end';
 
-describe('IgxGrid - Filtering actions', () => {
+describe('IgxGrid - Filtering actions #grid', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -66,6 +68,8 @@ describe('IgxGrid - Filtering actions', () => {
 
     let fix, grid;
     beforeEach(fakeAsync(() => {
+        resizeObserverIgnoreError();
+
         fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
         grid = fix.componentInstance.grid;
@@ -1663,7 +1667,7 @@ describe('IgxGrid - Filtering actions', () => {
     });
 });
 
-describe('IgxGrid - Filtering Row UI actions', () => {
+describe('IgxGrid - Filtering Row UI actions #grid', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -1689,6 +1693,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridFilteringComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -2904,7 +2909,6 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         it('Verify condition chips are scrolled into/(out of) view by using arrow buttons.', (async () => {
             grid.width = '700px';
             fix.detectChanges();
-            await wait(100);
 
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
             fix.detectChanges();
@@ -2912,18 +2916,24 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             // Add first chip.
             GridFunctions.typeValueInFilterRowInput('a', fix);
             await wait(16);
+            fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await wait(100);
+            fix.detectChanges();
             // Add second chip.
             GridFunctions.typeValueInFilterRowInput('e', fix);
             await wait(16);
+            fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await wait(100);
+            fix.detectChanges();
             // Add third chip.
             GridFunctions.typeValueInFilterRowInput('i', fix);
             await wait(16);
+            fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await wait(100);
+            fix.detectChanges();
 
             verifyMultipleChipsVisibility(fix, [false, false, true]);
 
@@ -2931,41 +2941,44 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             const leftArrowButton = GridFunctions.getFilterRowLeftArrowButton(fix).nativeElement;
             leftArrowButton.click();
             await wait(300);
-            leftArrowButton.click();
             fix.detectChanges();
+            leftArrowButton.click();
             await wait(300);
+            fix.detectChanges();
             verifyMultipleChipsVisibility(fix, [false, true, false]);
 
             // Click left arrow 2 times.
             leftArrowButton.click();
             await wait(300);
-            leftArrowButton.click();
             fix.detectChanges();
+            leftArrowButton.click();
             await wait(300);
+            fix.detectChanges();
             verifyMultipleChipsVisibility(fix, [true, false, false]);
 
             // Click right arrow 2 times.
             const rightArrowButton = GridFunctions.getFilterRowRightArrowButton(fix).nativeElement;
             rightArrowButton.click();
             await wait(300);
-            rightArrowButton.click();
             fix.detectChanges();
+            rightArrowButton.click();
             await wait(300);
+            fix.detectChanges();
             verifyMultipleChipsVisibility(fix, [false, true, false]);
 
             // Click right arrow 2 times.
             rightArrowButton.click();
             await wait(300);
-            rightArrowButton.click();
             fix.detectChanges();
+            rightArrowButton.click();
             await wait(300);
+            fix.detectChanges();
             verifyMultipleChipsVisibility(fix, [false, false, true]);
         }));
 
         it('Should navigate from left arrow button to first condition chip Tab.', (async () => {
             grid.width = '700px';
             fix.detectChanges();
-            await wait(100);
 
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
             fix.detectChanges();
@@ -2973,18 +2986,24 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             // Add first chip.
             GridFunctions.typeValueInFilterRowInput('a', fix);
             await wait(16);
+            fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await wait(100);
+            fix.detectChanges();
             // Add second chip.
             GridFunctions.typeValueInFilterRowInput('e', fix);
             await wait(16);
+            fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await wait(100);
+            fix.detectChanges();
             // Add third chip.
             GridFunctions.typeValueInFilterRowInput('i', fix);
             await wait(16);
+            fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await wait(100);
+            fix.detectChanges();
 
             // Verify first chip is not in view.
             verifyChipVisibility(fix, 0, false);
@@ -2992,8 +3011,10 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             const leftArrowButton = GridFunctions.getFilterRowLeftArrowButton(fix).nativeElement;
             leftArrowButton.focus();
             await wait(16);
+            fix.detectChanges();
             leftArrowButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
             await wait(300);
+            fix.detectChanges();
 
             // Verify first chip is in view.
             verifyChipVisibility(fix, 0, true);
@@ -3321,6 +3342,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridFilteringMCHComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -3436,6 +3458,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridFilteringScrollComponent);
             grid = fix.componentInstance.grid;
             fix.detectChanges();
@@ -3468,6 +3491,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridFilteringTemplateComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -3497,7 +3521,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
     });
 });
 
-describe('IgxGrid - Filtering actions - Excel style filtering', () => {
+describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -3505,6 +3529,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
                 IgxGridFilteringComponent,
                 IgxTestExcelFilteringDatePickerComponent,
                 IgxGridFilteringESFTemplatesComponent,
+                IgxGridFilteringESFLoadOnDemandComponent,
                 IgxGridFilteringMCHComponent
             ],
             imports: [
@@ -3522,6 +3547,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridFilteringComponent);
             grid = fix.componentInstance.grid;
             grid.filterMode = FilterMode.excelStyleFilter;
@@ -3577,9 +3603,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             fix.detectChanges();
 
             const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
-            const headerResArea = headers[2].children[1].nativeElement;
+            const headerResArea = headers[2];
 
-            const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
+            const filterIcon = headerResArea.query(By.css('.igx-excel-filter__icon')).nativeElement;
             filterIcon.click();
             fix.detectChanges();
 
@@ -5560,6 +5586,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridFilteringESFTemplatesComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -5602,6 +5629,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxTestExcelFilteringDatePickerComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -5614,6 +5642,38 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             // templateDropDownTarget is no longer available
             // expect(datePicker.componentInstance.templateDropDownTarget).toBeTruthy();
         }));
+    });
+
+    describe('Load values on demand', () => {
+        let fix, grid;
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridFilteringESFLoadOnDemandComponent);
+            grid = fix.componentInstance.grid;
+            fix.detectChanges();
+        }));
+
+        it('Verify unique values are loaded correctly in ESF search component.', fakeAsync(() => {
+            // Open excel style custom filtering dialog and wait a bit.
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            fix.detectChanges();
+            tick(400);
+
+            // Verify items in search have not loaded yet and that the loading indicator is visible.
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            let listItems = searchComponent.querySelectorAll('igx-list-item');
+            expect(listItems.length).toBe(0, 'incorrect rendered list items count');
+            let loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).not.toBeNull('esf loading indicator is not visible');
+
+            // Wait for items to load.
+            tick(650);
+
+            // Verify items in search have loaded and that the loading indicator is not visible.
+            listItems = searchComponent.querySelectorAll('igx-list-item');
+            expect(listItems.length).toBe(6, 'incorrect rendered list items count');
+            loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
+            expect(loadingIndicator).toBeNull('esf loading indicator is visible');
+          }));
     });
 
     describe(null, () => {
@@ -5644,6 +5704,44 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             const pinButton = GridFunctions.getExcelFilteringPinContainer(fix);
             expect(pinButton.classList.contains('igx-excel-filter__actions-pin--disabled')).toBe(true,
                 'pinButton should be disabled');
+        }));
+
+        it('Should pin column next to already pinned group by moving it to the left.', fakeAsync(() => {
+            // Test prerequisites
+            grid.width = '1000px';
+            fix.detectChanges();
+            tick(100);
+            // Adjust column widths, so their group can be pinned.
+            const columnFields = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'AnotherField'];
+            columnFields.forEach((columnField) => {
+                const col = grid.columns.find((c) => c.field === columnField);
+                col.width = '100px';
+            });
+            fix.detectChanges();
+            // Make 'AnotherField' column movable.
+            const column = grid.columns.find((c) => c.field === 'AnotherField');
+            column.movable = true;
+            fix.detectChanges();
+
+            // Pin the 'General Information' group by pinning its child 'ProductName' column.
+            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            fix.detectChanges();
+            GridFunctions.clickPinIconInExcelStyleFiltering(fix, false);
+            tick(200);
+            fix.detectChanges();
+
+            // Verify 'AnotherField' column is not pinned.
+            GridFunctions.verifyColumnIsPinned(column, false, 7);
+
+            // Try to pin the 'AnotherField' column by moving it to the left.
+            GridFunctions.clickExcelFilterIcon(fix, 'AnotherField');
+            fix.detectChanges();
+            GridFunctions.clickMoveLeftInExcelStyleFiltering(fix);
+            tick(200);
+            fix.detectChanges();
+
+            // Verify 'AnotherField' column is successfully pinned next to the column group.
+            GridFunctions.verifyColumnIsPinned(column, true, 8);
         }));
     });
 });
