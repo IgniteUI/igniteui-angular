@@ -1,52 +1,68 @@
-<div class="igx-input-group__wrapper" *ngIf="isTypeBox; else bundle">
-    <ng-container *ngTemplateOutlet="bundle"></ng-container>
-</div>
-<div class="igx-input-group__hint">
+<ng-template #hint>
     <ng-content select="igx-hint,[igxHint]"></ng-content>
-</div>
-
-<ng-template #withBorder>
-    <div class="igx-input-group__prefix-placeholder"></div>
-    <div class="igx-input-group__border-label">
-        <div class="igx-input-group__border-label-inner">
-            <ng-container *ngTemplateOutlet="label"></ng-container>
-            <div class="igx-input-group__border-label-line"></div>
-        </div>
-        <ng-container *ngTemplateOutlet="input"></ng-container>
-    </div>
-    <div class="igx-input-group__suffix-placeholder"></div>
-</ng-template>
-
-<ng-template #withoutBorder>
-    <ng-container *ngTemplateOutlet="label"></ng-container>
-    <ng-container *ngTemplateOutlet="input"></ng-container>
 </ng-template>
 
 <ng-template #label>
-    <ng-content select="[igxLabel]"></ng-content>
+    <ng-content select="igx-label,[igxLabel]"></ng-content>
 </ng-template>
 
 <ng-template #input>
-    <ng-content select="[igxInput]"></ng-content>
+    <ng-content select="igx-input,[igxInput]"></ng-content>
 </ng-template>
 
-<ng-template #bundle>
-    <div class="igx-input-group__bundle">
+<ng-template #prefix>
+    <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
+</ng-template>
 
-        <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
+<ng-template #suffix>
+    <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
+</ng-template>
 
-        <div class="igx-input-group__bundle-main">
-            <ng-container *ngIf="isTypeBorder">
-                <ng-container *ngTemplateOutlet="withBorder"></ng-container>
-            </ng-container>
-
-            <ng-container *ngIf="!isTypeBorder">
-                <ng-container *ngTemplateOutlet="withoutBorder"></ng-container>
-            </ng-container>
+<ng-template #withBorder>
+    <div class="igx-input-group__bundle-type-border">
+        <div class="igx-input-group__bundle-prefix">
+            <ng-container *ngTemplateOutlet="prefix"></ng-container>
         </div>
 
-        <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
+        <div class="igx-input-group__bundle-type-border-main">
+            <div class="igx-input-group__bundle-line"></div>
+            <ng-container *ngTemplateOutlet="label"></ng-container>
+            <ng-container *ngTemplateOutlet="input"></ng-container>
+        </div>
 
+        <div class="igx-input-group__bundle-suffix">
+            <ng-container *ngTemplateOutlet="suffix"></ng-container>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #withoutBorder>
+    <div class="igx-input-group__bundle">
+        <ng-container *ngTemplateOutlet="prefix"></ng-container>
+        <div class="igx-input-group__bundle-main">
+            <ng-container *ngTemplateOutlet="label"></ng-container>
+            <ng-container *ngTemplateOutlet="input"></ng-container>
+        </div>
+        <ng-container *ngTemplateOutlet="suffix"></ng-container>
     </div>
     <div class="igx-input-group__border" *ngIf="hasBorder"></div>
 </ng-template>
+
+<ng-template #bundle>
+        <ng-container *ngIf="isTypeBorder">
+            <ng-container *ngTemplateOutlet="withBorder"></ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="!isTypeBorder">
+            <ng-container *ngTemplateOutlet="withoutBorder"></ng-container>
+        </ng-container>
+
+        <div class="igx-input-group__hint">
+            <ng-container *ngTemplateOutlet="hint"></ng-container>
+        </div>
+</ng-template>
+
+<div class="igx-input-group__wrapper" *ngIf="isTypeBox; else bundle">
+    <ng-container *ngTemplateOutlet="bundle"></ng-container>
+</div>
+

@@ -290,249 +290,106 @@
         }
     }
 
+    // INPUT TYPE BORDER -- START --
     @include m(border) {
         @extend %input-type-border !optional;
-        @extend %form-group-display--no-margin--border !optional;
 
-        @include e(bundle) {
-            @extend %form-group-bundle--border !optional;
+        @include e(bundle-type-border) {
+            @extend %igx-input-group__bundle-type-border !optional;
         }
 
-        @include e(prefix-placeholder) {
-            @extend %igx-input-group__prefix-placeholder !optional;
+        @include e(bundle-type-border-main) {
+            @extend %igx-input-group__bundle-type-border-main !optional;
         }
 
-        @include e(suffix-placeholder) {
-            @extend %igx-input-group__suffix-placeholder !optional;
+        @include e(bundle-prefix) {
+            @extend %igx-input-group__bundle-prefix !optional;
         }
 
-        @include e(bundle-main) {
-            @extend %form-group-bundle-main--border !optional;
+        @include e(bundle-suffix) {
+            @extend %igx-input-group__bundle-suffix !optional;
         }
 
-        @include e(border) {
-            @extend %form-group-border--hidden !optional;
+        @include e(bundle-line) {
+            @extend %igx-input-group__bundle-line !optional;
+        }
+
+        //// OVERRIDES
+
+        @include e(label) {
+            @extend %igx-input-group__label-type-border !optional;
         }
 
         @include e(input) {
             @extend %form-group-input--border !optional;
         }
-
-        @include e(label) {
-            @extend %form-group-label--border !optional;
-        }
-
-        @include e(border-label) {
-            @extend %igx-input-group__border-label !optional;
-        }
-
-        @include e(border-label-inner) {
-            @extend %igx-input-group__border-label-inner !optional;
-        }
-
-        @include e(border-label-line) {
-            @extend %igx-input-group__border-label-line !optional;
-        }
-
-        @include e(textarea) {
-            @extend %form-group-textarea--border !optional;
-        }
-
-        @include e(hint) {
-            @extend %form-group-helper--box !optional;
-        }
     }
 
+    // INPUT TYPE BORDER -- DENSITY --
     @include mx(border, cosy) {
 
-        @extend %input-type-border--cosy  !optional;
-        @extend %form-group-display--no-margin-cosy !optional;
-
-        @include e(bundle) {
-            @extend %form-group-bundle--border-cosy !optional;
-        }
-
-        @include e(border-label) {
-            @extend %igx-input-group__border-label--cosy !optional;
-        }
-
-        @include e(bundle-main) {
-            @extend %form-group-bundle-main--border--cosy !optional;
-        }
-
-        @include e(border-label-inner) {
-            @extend %igx-input-group__border-label-inner--cosy !optional;
-        }
-
-        @include e(textarea) {
-            @extend %form-group-textarea--border-cosy !optional;
-        }
     }
 
     @include mx(border, compact) {
-        @extend %input-type-border--compact  !optional;
-        @extend %form-group-display--no-margin-compact !optional;
 
-        @include e(bundle) {
-            @extend %form-group-bundle--border-compact !optional;
-        }
-
-        @include e(border-label) {
-            @extend %igx-input-group__border-label--compact !optional;
-        }
-
-        @include e(bundle-main) {
-            @extend %form-group-bundle-main--border--compact !optional;
-        }
-
-        @include e(border-label-inner) {
-            @extend %igx-input-group__border-label-inner--compact !optional;
-        }
-
-        @include e(textarea) {
-            @extend %form-group-textarea--border-compact !optional;
-        }
     }
 
+    // INPUT TYPE BORDER -- STATES (valid, invalid, focused, fulled, disabled)  --
     @include mx(valid, border) {
         @extend %form-group-display--success !optional;
 
-        @include e(prefix-placeholder) {
-            @extend %igx-input-group__prefix--suffix--success !optional;
-        }
 
-        @include e(suffix-placeholder) {
-            @extend %igx-input-group__prefix--suffix--success !optional;
-        }
-
-        @include e(border-label) {
-            @extend %igx-input-group__border-label--success !optional;
-        }
-
-        @include e(border-label-line) {
-            @extend %igx-input-group__border-label-line--success !optional;
+        @include e(bundle-line) {
+            @extend %igx-input-group__bundle-line--success !optional;
         }
     }
 
     @include mx(invalid, border){
-        @include e(prefix-placeholder) {
-            @extend %igx-input-group__prefix--suffix--error !optional;
-        }
+        @extend %form-group-display--error !optional;
 
-        @include e(suffix-placeholder) {
-            @extend %igx-input-group__prefix--suffix--error !optional;
-        }
-
-        @include e(border-label) {
-            @extend %igx-input-group__border-label--error !optional;
-        }
-
-        @include e(border-label-line) {
-            @extend %igx-input-group__border-label-line--error !optional;
+        @include e(bundle-line) {
+            @extend %igx-input-group__bundle-line--error !optional;
         }
     }
 
     @include mx(focused, border) {
         @extend %form-group-display--focus !optional;
 
-        @include e(bundle) {
-            @extend %form-group-bundle-border--focus !optional;
-        }
-
-        @include e(prefix-placeholder) {
-            @extend %igx-input-group__prefix--suffix--focus !optional;
-        }
-
-        @include e(suffix-placeholder) {
-            @extend %igx-input-group__prefix--suffix--focus !optional;
-        }
-
         @include e(label) {
-            @extend %form-group-label--focus-border !optional;
+            @extend %igx-input-group__label-type-border-focused !optional;
         }
 
-        @include e(border-label) {
-            @extend %igx-input-group__border-label--focus !optional;
+        @include e(bundle-line) {
+            @extend %igx-input-group__bundle-line--focus !optional;
         }
 
-        @include e(border-label-line) {
-            @extend %igx-input-group__border-label-line--focus !optional;
+        @include e(bundle-type-border-main) {
+            @extend %igx-input-group__bundle-type-border-main-focused !optional;
         }
 
-        @include e(border-label-inner) {
-            @extend %igx-input-group__border-label-inner--focus !optional;
-        }
     }
 
-    @include mx(focused, cosy, border) {
-        @include e(border-label-inner) {
-            @extend %igx-input-group__border-label-inner--focus--cosy !optional;
-        }
-    }
-
-    @include mx(focused, compact, border) {
-        @include e(border-label-inner) {
-            @extend %igx-input-group__border-label-inner--focus--compact !optional;
-        }
-    }
-
-    @include mx(filled, cosy, border) {
-        @include e(border-label-inner) {
-            @extend %igx-input-group__border-label-inner--focus--cosy !optional;
-        }
-    }
-
-    @include mx(filled, compact, border) {
-        @include e(border-label-inner) {
-            @extend %igx-input-group__border-label-inner--focus--compact !optional;
-        }
-    }
 
     @include mx(filled, border) {
+
+        @include e(bundle-type-border-main) {
+            @extend %igx-input-group__bundle-type-border-main-focused !optional;
+        }
+
         @include e(label) {
-            @extend %form-group-label--focus-border !optional;
+            @extend %igx-input-group__label-type-border-focused !optional;
         }
 
-        @include e(border-label) {
-            @extend %igx-input-group__border-label--filled !optional;
-        }
-
-        @include e(border-label-line) {
-            @extend %igx-input-group__border-label-line--filled !optional;
-        }
-
-        @include e(border-label-inner) {
-            @extend %igx-input-group__border-label-inner--focus !optional;
+        @include e(bundle-line) {
+            @extend %igx-input-group__bundle-line--filled !optional;
         }
     }
 
     @include mx(disabled, border) {
-        @extend %form-group-prefix--disabled !optional;
 
-        @include e(prefix-placeholder) {
-            @extend %igx-input-group__prefix--suffix--disabled !optional;
-        }
-
-        @include e(suffix-placeholder) {
-            @extend %igx-input-group__prefix--suffix--disabled !optional;
-        }
-
-        @include e(bundle) {
-            @extend %form-group-bundle-border--disabled !optional;
-        }
-
-        @include e(border-label-line) {
-            @extend %igx-input-group__border-label-line--disabled !optional;
-        }
-
-        @include e(border-label) {
-            @extend %igx-input-group__border-label--disabled !optional;
-        }
-
-        @include e(bundle-main) {
-            @extend %form-group-bundle-main--border--dsiabled !optional;
-        }
     }
+
+    // INPUT TYPE BORDER -- END --
 
     @include m(search) {
         @extend %form-group-display--no-margin !optional;
