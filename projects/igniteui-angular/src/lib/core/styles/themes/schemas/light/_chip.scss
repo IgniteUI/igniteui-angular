@@ -29,7 +29,7 @@
 /// @prop {Map} focus-selected-text-color [igx-color: ('grays', 700)] - The selected chip text focus color.
 /// @prop {Map} focus-selected-background [igx-color: ('grays', 400)] - The selected chip focus background color.
 /// @prop {Map} focus-selected-border-color [transparent] - The selected chip focus border color.
-/// @prop {Number} chip-ghost-elevation [8] - The elevation level for the chip's ghost (dragging mode). Between 0-24.
+/// @prop {Number} ghost-elevation [8] - The elevation level for the chip's ghost (dragging mode). Between 0-24.
 ///
 /// @requires {function} extend
 /// @requires {map} $_default-shape-chip
@@ -121,7 +121,7 @@ $_light-chip: extend(
 /// @prop {Map} hover-selected-background [igx-color: ('primary', 500)] - The selected chip hover background color.
 /// @prop {Map} focus-selected-text-color [igx-contrast-color: ('primary', 500)] - The selected chip text focus color.
 /// @prop {Map} focus-selected-background [igx-color: ('primary', 500)] - The selected chip focus background color.
-/// @prop {Number} chip-ghost-elevation [2] - The elevation level for the chip's ghost (dragging mode). Between 0-24.
+/// @prop {Number} ghost-elevation [2] - The elevation level for the chip's ghost (dragging mode). Between 0-24.
 ///
 /// @requires {function} extend
 /// @requires {map} $_light-chip
