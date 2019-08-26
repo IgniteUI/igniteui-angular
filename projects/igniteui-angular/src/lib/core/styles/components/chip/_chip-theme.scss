@@ -42,6 +42,7 @@
 @function igx-chip-theme(
     $palette: $default-palette,
     $schema: $light-schema,
+    $elevations: $elevations,
     $border-radius: null,
 
     $text-color: null,
@@ -69,7 +70,7 @@
     $focus-selected-background: null,
     $focus-selected-border-color: null,
 
-    $chip-ghost-shadow: null
+    $ghost-shadow: null,
 ) {
     $name: 'igx-chip';
     $chip-schema: map-get($schema, $name);
@@ -78,11 +79,6 @@
     $border-radius: round-borders(
         if($border-radius, $border-radius, map-get($chip-schema, 'border-radius')), 0, 16px
     );
-
-    @if not($chip-ghost-shadow) {
-        $chip-ghost-elevation: map-get($chip-schema, 'chip-ghost-elevation');
-        $chip-ghost-shadow: igx-elevation($elevations, $chip-ghost-elevation);
-    }
 
     @if not($text-color) and $background {
         $text-color: text-contrast($background);
@@ -172,6 +168,11 @@
         $focus-selected-border-color: $border-color;
     }
 
+    @if not($ghost-shadow) {
+        $ghost-elevation: map-get($chip-schema, 'ghost-elevation');
+        $ghost-shadow: igx-elevation($elevations, $ghost-elevation);
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -181,7 +182,6 @@
         background: $background,
         border-color: $border-color,
         ghost-background: $ghost-background,
-        chip-ghost-shadow: $chip-ghost-shadow,
 
         hover-text-color: $hover-text-color,
         hover-background: $hover-background,
@@ -201,7 +201,9 @@
 
         focus-selected-text-color: $focus-selected-text-color,
         focus-selected-background: $focus-selected-background,
-        focus-selected-border-color: $focus-selected-border-color
+        focus-selected-border-color: $focus-selected-border-color,
+
+        ghost-shadow: $ghost-shadow,
     ));
 }
 
@@ -220,32 +222,32 @@
         cosy: rem(24px),
         compact: rem(18px)
     );
-    
+
     $chip-height-fluent: (
         comfortable: rem(26px),
         cosy: rem(24px),
         compact: rem(18px)
     );
-    
+
     $chip-height: map-get((
         material: $chip-height-material,
         fluent: $chip-height-fluent
     ), map-get($theme, variant));
-    
+
     $chip-padding: (
         comfortable: 0 rem(8px),
         cosy: 0 rem(4px),
         compact: 0 rem(2px)
     );
-    
+
     $item-padding: 4px;
     $chip-item-padding: 0 rem($item-padding);
-    
+
     $chip-avatar-inset: map-get((
         material: 0,
         fluent: -$item-padding
     ), map-get($theme, variant));
-    
+
     $chip-icon-size: (
         comfortable: rem(18px),
         cosy: rem(18px),
@@ -358,13 +360,13 @@
         + igx-prefix,
         + [igxPrefix] {
             margin-left: rem(4px);
-    
+
             &%igx-avatar-display {
                 max-height: 100%;
                 max-width: 100%;
                 margin-left: $chip-avatar-inset!important;
             }
-            
+
             [dir='rtl'] & {
                 margin-left: 0;
                 margin-right: rem(4px);
@@ -519,7 +521,7 @@
     %igx-chip__ghost {
         position: absolute;
         z-index: 10;
-        box-shadow: --var($theme, 'chip-ghost-shadow');
+        box-shadow: --var($theme, 'ghost-shadow');
         overflow: hidden;
         background: --var($theme, 'ghost-background');
 

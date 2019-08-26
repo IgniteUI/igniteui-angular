@@ -8,6 +8,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - `uniqueColumnValuesStrategy` input is added. This property provides a callback for loading unique column values on demand. If this property is provided, the unique values it generates will be used by the Excel Style Filtering (instead of using the unique values from the data that is bound to the grid).
     - `igxExcelStyleLoading` directive is added, which can be used to provide a custom loading template for the Excel Style Filtering. If this property is not provided, a default loading template will be used instead.
+    - introduced new properties `cellSelection` and `rowSelection` which accept GridSelection mode enumeration. Grid selection mode could be none, single or multiple. Also `hideRowSelectors` property is added, which allows you to show and hide row selectors when row selection is enabled.
 - `IgxHierarchicalGrid`
     - Row Islands now emit child grid events with an additional argument - `owner`, which holds reference to the related child grid component instance.
 - `IgxDrag`
@@ -24,9 +25,13 @@ All notable changes for each version of this project will be documented in this 
 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - `isCellSelected` method has been deprecated. Now you can use `selected` property.
+    - `rowSelectable` property has been deprecated. Now you can use `rowSelection` property to enable row selection and also you can show and hide the row selectors by setting `hideRowSelectors` property to true or false (which is the default value).
+    - Removed deprecated event `OnFocusChange`
     - **Breaking Change** `igxExcelStyleSortingTemplate` directive is renamed to `igxExcelStyleSorting`.
     - **Breaking Change** `igxExcelStyleMovingTemplate` directive is renamed to `igxExcelStyleMoving`.
     - **Breaking Change** `igxExcelStyleHidingTemplate` directive is renamed to `igxExcelStyleHiding`.
+    - **Breaking Change** `onRowSelectionChange` event arguments are changed. The `row` property has been removed and the properties `added`, `removed` and `cancel` are newly added.
     - **Breaking Change** `igxExcelStylePinningTemplate` directive is renamed to `igxExcelStylePinning`.
     - **Breaking Change** `onRowDragEnd` and `onRowDragStart` event arguments are changed - `owner` now holds reference to the grid component instance, while `dragDirective` hold reference to the drag directive.
 - `IgxCombo`
@@ -50,7 +55,7 @@ All notable changes for each version of this project will be documented in this 
    - For more information, visit the component's [readme](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/combo/README.md)
 
 ## 8.1.4
-- `IgxDialog` new @Input `positionSettings` is now available. It provides the ability to get/set both position and animation settings of the Dialog component. 
+- `IgxDialog` new @Input `positionSettings` is now available. It provides the ability to get/set both position and animation settings of the Dialog component.
 
 - `IgxDrag`
     - Deprecated inputs - `hideBaseOnDrag`, `animateOnRelease`, `visible`.

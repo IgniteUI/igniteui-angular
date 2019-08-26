@@ -135,44 +135,51 @@ export class FilteringComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: `
-        <igx-grid #gridSelection2 [data]="data" [primaryKey]="'ID'"
-        [autoGenerate]="true" [rowSelectable]="true" [paging]="true" [perPage]="50">
-        </igx-grid>
-        <button class="prevPageBtn" (click)="ChangePage(-1)">Prev page</button>
-        <button class="nextPageBtn" (click)="ChangePage(1)">Next page</button>
-    `
-})
-export class SelectionAndPagingComponent extends BasicGridComponent {
-    data = SampleTestData.generateBigValuesData(100);
-
-    public ChangePage(val) {
-        switch (val) {
-            case -1:
-                this.grid.previousPage();
-                break;
-            case 1:
-                this.grid.nextPage();
-                break;
-            default:
-                this.grid.paginate(val);
-                break;
-        }
-    }
-}
-
-@Component({
     template: GridTemplateStrings.declareGrid(
-            ` #gridSelection3 [primaryKey]="'ID'" [width]="'800px'" [height]="'600px'" [autoGenerate]="true" [rowSelectable]="true"`,
+            ` #gridSelection3 [primaryKey]="'ID'" [width]="'800px'" [height]="'600px'" [autoGenerate]="true" [rowSelection]="'multiple'"`,
             '', '')
 })
 export class SelectionComponent extends BasicGridComponent {
-    data = SampleTestData.generateBigValuesData(100);
+    data = SampleTestData.generateBigValuesData(20);
 }
 
 @Component({
     template: GridTemplateStrings.declareGrid(
-            ` [rowSelectable]="true"`,
+            ` [width]="width" [height]="height" [rowSelection]="'multiple'" [primaryKey]="'ProductID'"`,
+            '', ColumnDefinitions.productBasicNumberID)
+})
+export class RowSelectionComponent extends BasicGridComponent {
+    data = SampleTestData.foodProductDataExtended();
+    public width = '800px';
+    public height = '600px';
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
+            ` [width]="width" [height]="height" [rowSelection]="'single'" [primaryKey]="'ProductID'"`,
+            '', ColumnDefinitions.productBasicNumberID)
+})
+export class SingleRowSelectionComponent extends BasicGridComponent {
+    data = SampleTestData.foodProductDataExtended();
+    public width = '800px';
+    public height = '600px';
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
+        ` [width]="width" [height]="height" [rowSelection]="'multiple'"`,
+            '',
+            ColumnDefinitions.idFirstLastNameSortable)
+})
+
+export class RowSelectionWithoutPrimaryKeyComponent extends BasicGridComponent {
+    public data = SampleTestData.personIDNameRegionData();
+    public width = '800px';
+    public height = '600px';
+}
+@Component({
+    template: GridTemplateStrings.declareGrid(
+            ` rowSelection = "multiple"`,
             EventSubscriptions.onRowSelectionChange,
             ColumnDefinitions.productBasic)
 })
@@ -180,7 +187,7 @@ export class SelectionCancellableComponent extends BasicGridComponent {
     data = SampleTestData.foodProductData();
 
     public rowSelectionChange(evt) {
-        if (evt.row && (evt.row.index + 1) % 2 === 0) {
+        if (evt.added.length > 0  && (evt.added[0].ProductID) % 2 === 0) {
             evt.newSelection = evt.oldSelection || [];
         }
     }
@@ -193,7 +200,7 @@ export class SelectionCancellableComponent extends BasicGridComponent {
             [width]="'800px'"
             [height]="'600px'"
             [autoGenerate]="true"
-            [rowSelectable]="true"`,
+            rowSelection = "multiple"`,
             EventSubscriptions.onColumnInit, '')
 })
 export class ScrollsComponent extends BasicGridComponent {
@@ -205,7 +212,7 @@ export class ScrollsComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(
-            ` [rowSelectable]="true"`,
+            ` rowSelection = "multiple"`,
             '', ColumnDefinitions.productDefaultSummaries)
 })
 export class SummariesComponent extends BasicGridComponent {
@@ -268,7 +275,6 @@ export class VirtualSummaryColumnComponent extends BasicGridComponent {
         const hScrollbar = this.grid.parentVirtDir.getHorizontalScroll();
         hScrollbar.scrollLeft = newLeft;
     }
-
 }
 
 @Component({
@@ -638,14 +644,14 @@ export class GridIDNameJobTitleComponent extends PagingComponent {
 @Component({
     template: `<div style="margin: 50px;">
             ${GridTemplateStrings.declareGrid(
-                `[height]="height" [width]="width" [rowSelectable]="enableRowSelection" [autoGenerate]="autoGenerate"`,
+                `[height]="height" [width]="width" [rowSelection]="rowSelection" [autoGenerate]="autoGenerate"`,
                 EventSubscriptions.onColumnMovingStart + EventSubscriptions.onColumnMoving + EventSubscriptions.onColumnMovingEnd,
                 ColumnDefinitions.movableColumns)}</div>`
 })
 export class MovableColumnsComponent extends BasicGridComponent {
     data = SampleTestData.personIDNameRegionData();
     autoGenerate = false;
-    enableRowSelection = false;
+    rowSelection = 'none';
     isFilterable = false;
     isSortable = false;
     isResizable = false;
@@ -886,6 +892,21 @@ export class SelectionWithScrollsComponent extends BasicGridComponent {
     public data = SampleTestData.employeeGroupByData();
 }
 
+@Component({
+    template: `${GridTemplateStrings.declareGrid(`height="300px"  width="600px" [primaryKey]="'ID'" cellSelection="none"`, '',
+    ColumnDefinitions.selectionWithScrollsColumns)}`,
+})
+export class CellSelectionNoneComponent extends BasicGridComponent {
+    public data = SampleTestData.employeeGroupByData();
+}
+
+@Component({
+    template: `${GridTemplateStrings.declareGrid(`height="300px"  width="600px" [primaryKey]="'ID'" cellSelection="single"`, '',
+    ColumnDefinitions.selectionWithScrollsColumns)}`,
+})
+export class CellSelectionSingleComponent extends BasicGridComponent {
+    public data = SampleTestData.employeeGroupByData();
+}
 @Component({
     template: `${GridTemplateStrings.declareGrid(`height="300px"  width="600px" [primaryKey]="'ID'"`, '',
     ColumnDefinitions.selectionWithScrollsColumns)}`,

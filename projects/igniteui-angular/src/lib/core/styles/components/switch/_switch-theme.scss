@@ -24,9 +24,9 @@
 /// @param {box-shadow} $hover-shadow [null] - The shadow used for the thumb in hover state of the switch.
 /// @param {box-shadow} $disabled-shadow [null] - The shadow used for the thumb in disable state of the switch.
 ///
-/// @param {border-radius} border-radius-track [null] - The border radius used for switch track.
-/// @param {border-radius} border-radius-thumb [null] - The border radius used for switch thumb.
-/// @param {border-radius} border-radius-ripple [null] - The border radius used for switch ripple.
+/// @param {border-radius} $border-radius-track [null] - The border radius used for switch track.
+/// @param {border-radius} $border-radius-thumb [null] - The border radius used for switch thumb.
+/// @param {border-radius} $border-radius-ripple [null] - The border radius used for switch ripple.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
