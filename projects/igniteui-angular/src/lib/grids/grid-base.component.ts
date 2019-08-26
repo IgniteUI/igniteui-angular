@@ -29,7 +29,7 @@ import {
 import ResizeObserver from 'resize-observer-polyfill';
 import { Subject, combineLatest, pipe } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
-import { cloneArray, isEdge, isNavigationKey, CancelableEventArgs, flatten, mergeObjects, isIE } from '../core/utils';
+import { cloneArray, isEdge, isNavigationKey, CancelableEventArgs, flatten, mergeObjects, isIE, IBaseEventArgs } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
@@ -110,12 +110,12 @@ export interface IGridClipboardEvent {
     cancel: boolean;
 }
 
-export interface IGridCellEventArgs {
+export interface IGridCellEventArgs extends IBaseEventArgs {
     cell: IgxGridCellComponent;
     event: Event;
 }
 
-export interface IGridEditEventArgs extends CancelableEventArgs {
+export interface IGridEditEventArgs extends CancelableEventArgs, IBaseEventArgs {
     rowID: any;
     cellID?: {
         rowID: any,
@@ -127,28 +127,28 @@ export interface IGridEditEventArgs extends CancelableEventArgs {
     event?: Event;
 }
 
-export interface IPinColumnEventArgs {
+export interface IPinColumnEventArgs extends IBaseEventArgs {
     column: IgxColumnComponent;
     insertAtIndex: number;
     isPinned: boolean;
 }
 
-export interface IPageEventArgs {
+export interface IPageEventArgs extends IBaseEventArgs {
     previous: number;
     current: number;
 }
 
-export interface IRowDataEventArgs {
+export interface IRowDataEventArgs extends IBaseEventArgs {
     data: any;
 }
 
-export interface IColumnResizeEventArgs {
+export interface IColumnResizeEventArgs extends IBaseEventArgs {
     column: IgxColumnComponent;
     prevWidth: string;
     newWidth: string;
 }
 
-export interface IRowSelectionEventArgs extends CancelableEventArgs  {
+export interface IRowSelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {
     oldSelection: any[];
     newSelection: any[];
     added: any[];
@@ -164,28 +164,28 @@ export interface ISearchInfo {
     matchInfoCache: any[];
 }
 
-export interface IGridToolbarExportEventArgs {
+export interface IGridToolbarExportEventArgs extends IBaseEventArgs {
     grid: IgxGridBaseComponent;
     exporter: IgxBaseExporter;
     options: IgxExporterOptionsBase;
     cancel: boolean;
 }
 
-export interface IColumnMovingStartEventArgs {
+export interface IColumnMovingStartEventArgs extends IBaseEventArgs {
     source: IgxColumnComponent;
 }
 
-export interface IColumnMovingEventArgs {
+export interface IColumnMovingEventArgs extends IBaseEventArgs {
     source: IgxColumnComponent;
     cancel: boolean;
 }
 
-export interface IColumnMovingEndEventArgs {
+export interface IColumnMovingEndEventArgs extends IBaseEventArgs {
     source: IgxColumnComponent;
     target: IgxColumnComponent;
 }
 
-export interface IGridKeydownEventArgs {
+export interface IGridKeydownEventArgs extends IBaseEventArgs {
     targetType: GridKeydownTargetType;
     target: Object;
     event: Event;
@@ -201,14 +201,14 @@ export interface IGridDataBindable {
     filteredData: any[];
 }
 
-export interface IRowDragEndEventArgs {
-    owner: IgxDragDirective;
+export interface IRowDragEndEventArgs extends IBaseEventArgs {
+    dragDirective: IgxDragDirective;
     dragData: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
     animation: boolean;
 }
 
-export interface IRowDragStartEventArgs extends CancelableEventArgs {
-    owner: IgxDragDirective;
+export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventArgs {
+    dragDirective: IgxDragDirective;
     dragData: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
 }
 
@@ -1157,7 +1157,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
      * ```html
      * <igx-grid #grid3 (onCellEdit)="editDone($event)" [data]="remote | async" (onSortingDone)="process($event)"
-     *          [primaryKey]="'ProductID'" [rowSelectable]="true">
+     *          [primaryKey]="'ProductID'">
      *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
      *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
      *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
@@ -4523,7 +4523,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public getFeatureColumnsWidth() {
         let width = 0;
 
-        if (this.rowSelectable) {
+        if (this.isRowSelectable) {
             width += this.headerSelectorContainer ? this.headerSelectorContainer.nativeElement.getBoundingClientRect().width : 0;
         }
         if (this.rowDraggable) {
@@ -5653,17 +5653,19 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return rowData.summaries && (rowData.summaries instanceof Map);
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden */
     public get isMultiRowSelectionEnabled(): boolean {
         return this.rowSelection === GridSelectionMode.multiple;
     }
-    /**
-     * @hidden
-     */
+
+    /** @hidden */
     public get isRowSelectable(): boolean {
         return this.rowSelection !== GridSelectionMode.none;
+    }
+
+    /** @hidden */
+    public get isCellSelectable() {
+        return this.cellSelection !== GridSelectionMode.none;
     }
 
     /**

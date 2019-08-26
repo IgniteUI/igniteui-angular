@@ -21,7 +21,7 @@ import { getNodeSizeViaRange, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS
 import { State } from '../services/index';
 import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../core/grid-selection';
-import { DeprecateProperty } from '../core/deprecateDecorators';
+import { DeprecateProperty, DeprecateMethod } from '../core/deprecateDecorators';
 import { GridSelectionMode } from './grid-base.component';
 import { HammerGesturesManager } from '../core/touch';
 
@@ -429,7 +429,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @HostBinding('attr.aria-selected')
     @HostBinding('class.igx-grid__td--selected')
     get selected() {
-        return this.isCellSelected();
+        return this.selectionService.selected(this.selectionNode);
     }
 
     /**
@@ -442,7 +442,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     set selected(val: boolean) {
         const node = this.selectionNode;
         val ? this.selectionService.add(node) : this.selectionService.remove(node);
-        this.grid.cdr.markForCheck();
+        this.grid.notifyChanges();
     }
 
     @HostBinding('class.igx-grid__td--edited')
@@ -634,14 +634,15 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    // should be derprecated???
     /**
+     * @deprecated
      * Gets whether the cell is selected.
      * ```typescript
      * let isCellSelected = thid.cell.isCellSelected();
      * ```
      * @memberof IgxGridCellComponent
      */
+    @DeprecateMethod(`'isCellSelected' is deprecated. Use 'selected' property instead.`)
     public isCellSelected() {
         return this.selectionService.selected(this.selectionNode);
     }
@@ -803,7 +804,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         const node = this.selectionNode;
         const mrl = this.grid.hasColumnLayouts;
 
-        if (this.isCellSelectable && !this.selectionService.isActiveNode(node, mrl)) {
+        if (this.grid.isCellSelectable && !this.selectionService.isActiveNode(node, mrl)) {
             this.grid.onSelection.emit({ cell: this, event });
         }
 
@@ -818,7 +819,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         this.selectionService.primaryButton = true;
-        this.selectionService.keyboardStateOnFocus(node, this.grid.onRangeSelection, this.nativeElement);
+        if (this.cellSelectionMode === GridSelectionMode.multiple) {
+            this.selectionService.keyboardStateOnFocus(node, this.grid.onRangeSelection, this.nativeElement);
+        }
     }
 
     /**
@@ -971,9 +974,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             case ' ':
             case 'spacebar':
             case 'space':
-                if (this.grid.rowSelection !== 'none') {
+                if (this.grid.isRowSelectable) {
                     this.row.selected ? this.selectionService.deselectRow(this.row.rowID, event) :
-                    this.selectionService.selectRowByID(this.row.rowID, false, event);
+                    this.selectionService.selectRowById(this.row.rowID, false, event);
                 }
                 break;
             default:
@@ -1054,9 +1057,5 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     private isToggleKey(key: string): boolean {
         return ROW_COLLAPSE_KEYS.has(key) || ROW_EXPAND_KEYS.has(key);
-    }
-
-    private get isCellSelectable() {
-        return this.cellSelectionMode !== GridSelectionMode.none;
     }
 }
