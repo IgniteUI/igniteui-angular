@@ -42,6 +42,7 @@
 @function igx-chip-theme(
     $palette: $default-palette,
     $schema: $light-schema,
+    $elevations: $elevations,
     $border-radius: null,
 
     $text-color: null,
@@ -67,7 +68,9 @@
 
     $focus-selected-text-color: null,
     $focus-selected-background: null,
-    $focus-selected-border-color: null
+    $focus-selected-border-color: null,
+
+    $ghost-shadow: null,
 ) {
     $name: 'igx-chip';
     $chip-schema: map-get($schema, $name);
@@ -165,6 +168,11 @@
         $focus-selected-border-color: $border-color;
     }
 
+    @if not($ghost-shadow) {
+        $ghost-elevation: map-get($chip-schema, 'ghost-elevation');
+        $ghost-shadow: igx-elevation($elevations, $ghost-elevation);
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -193,7 +201,9 @@
 
         focus-selected-text-color: $focus-selected-text-color,
         focus-selected-background: $focus-selected-background,
-        focus-selected-border-color: $focus-selected-border-color
+        focus-selected-border-color: $focus-selected-border-color,
+
+        ghost-shadow: $ghost-shadow,
     ));
 }
 
@@ -486,7 +496,7 @@
     %igx-chip__ghost {
         position: absolute;
         z-index: 10;
-        box-shadow: igx-elevation($elevations, 8);
+        box-shadow: --var($theme, 'ghost-shadow');
         overflow: hidden;
         background: --var($theme, 'ghost-background');
 
