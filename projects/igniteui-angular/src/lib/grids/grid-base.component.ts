@@ -29,7 +29,7 @@ import {
 import ResizeObserver from 'resize-observer-polyfill';
 import { Subject, combineLatest, pipe } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
-import { cloneArray, isEdge, isNavigationKey, CancelableEventArgs, flatten, mergeObjects, isIE } from '../core/utils';
+import { cloneArray, isEdge, isNavigationKey, CancelableEventArgs, flatten, mergeObjects, isIE, IBaseEventArgs } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
@@ -109,12 +109,12 @@ export interface IGridClipboardEvent {
     cancel: boolean;
 }
 
-export interface IGridCellEventArgs {
+export interface IGridCellEventArgs extends IBaseEventArgs {
     cell: IgxGridCellComponent;
     event: Event;
 }
 
-export interface IGridEditEventArgs extends CancelableEventArgs {
+export interface IGridEditEventArgs extends CancelableEventArgs, IBaseEventArgs {
     rowID: any;
     cellID?: {
         rowID: any,
@@ -126,28 +126,28 @@ export interface IGridEditEventArgs extends CancelableEventArgs {
     event?: Event;
 }
 
-export interface IPinColumnEventArgs {
+export interface IPinColumnEventArgs extends IBaseEventArgs {
     column: IgxColumnComponent;
     insertAtIndex: number;
     isPinned: boolean;
 }
 
-export interface IPageEventArgs {
+export interface IPageEventArgs extends IBaseEventArgs {
     previous: number;
     current: number;
 }
 
-export interface IRowDataEventArgs {
+export interface IRowDataEventArgs extends IBaseEventArgs {
     data: any;
 }
 
-export interface IColumnResizeEventArgs {
+export interface IColumnResizeEventArgs extends IBaseEventArgs {
     column: IgxColumnComponent;
     prevWidth: string;
     newWidth: string;
 }
 
-export interface IRowSelectionEventArgs extends CancelableEventArgs  {
+export interface IRowSelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {
     oldSelection: any[];
     newSelection: any[];
     added: any[];
@@ -163,28 +163,28 @@ export interface ISearchInfo {
     matchInfoCache: any[];
 }
 
-export interface IGridToolbarExportEventArgs {
+export interface IGridToolbarExportEventArgs extends IBaseEventArgs {
     grid: IgxGridBaseComponent;
     exporter: IgxBaseExporter;
     options: IgxExporterOptionsBase;
     cancel: boolean;
 }
 
-export interface IColumnMovingStartEventArgs {
+export interface IColumnMovingStartEventArgs extends IBaseEventArgs {
     source: IgxColumnComponent;
 }
 
-export interface IColumnMovingEventArgs {
+export interface IColumnMovingEventArgs extends IBaseEventArgs {
     source: IgxColumnComponent;
     cancel: boolean;
 }
 
-export interface IColumnMovingEndEventArgs {
+export interface IColumnMovingEndEventArgs extends IBaseEventArgs {
     source: IgxColumnComponent;
     target: IgxColumnComponent;
 }
 
-export interface IGridKeydownEventArgs {
+export interface IGridKeydownEventArgs extends IBaseEventArgs {
     targetType: GridKeydownTargetType;
     target: Object;
     event: Event;
@@ -200,14 +200,14 @@ export interface IGridDataBindable {
     filteredData: any[];
 }
 
-export interface IRowDragEndEventArgs {
-    owner: IgxDragDirective;
+export interface IRowDragEndEventArgs extends IBaseEventArgs {
+    dragDirective: IgxDragDirective;
     dragData: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
     animation: boolean;
 }
 
-export interface IRowDragStartEventArgs extends CancelableEventArgs {
-    owner: IgxDragDirective;
+export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventArgs {
+    dragDirective: IgxDragDirective;
     dragData: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
 }
 
