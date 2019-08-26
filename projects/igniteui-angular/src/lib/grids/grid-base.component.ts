@@ -29,7 +29,6 @@ import {
 import ResizeObserver from 'resize-observer-polyfill';
 import { Subject, combineLatest, pipe } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
-import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, isEdge, isNavigationKey, CancelableEventArgs, flatten, mergeObjects, isIE, IBaseEventArgs } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
@@ -150,10 +149,11 @@ export interface IColumnResizeEventArgs extends IBaseEventArgs {
     newWidth: string;
 }
 
-export interface IRowSelectionEventArgs extends IBaseEventArgs {
+export interface IRowSelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {
     oldSelection: any[];
     newSelection: any[];
-    row?: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
+    added: any[];
+    removed: any[];
     event?: Event;
 }
 
@@ -184,13 +184,6 @@ export interface IColumnMovingEventArgs extends IBaseEventArgs {
 export interface IColumnMovingEndEventArgs extends IBaseEventArgs {
     source: IgxColumnComponent;
     target: IgxColumnComponent;
-}
-
-// TODO: to be deleted when onFocusChange event is removed #4054
-export interface IFocusChangeEventArgs extends IBaseEventArgs {
-    cell: IgxGridCellComponent;
-    event: Event;
-    cancel: boolean;
 }
 
 export interface IGridKeydownEventArgs extends IBaseEventArgs {
@@ -241,6 +234,12 @@ export enum GridKeydownTargetType {
     summaryCell = 'summaryCell',
     groupRow = 'groupRow',
     hierarchicalRow = 'hierarchicalRow'
+}
+
+export enum GridSelectionMode {
+    none = 'none',
+    single = 'single',
+    multiple = 'multiple',
 }
 
 export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
@@ -419,6 +418,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
 
             this.filteringService.refreshExpressions();
+            this.selectionService.clearHeaderCBState();
             this.summaryService.clearSummaryCache();
             this.notifyChanges();
         }
@@ -490,7 +490,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (val === this._page || val < 0 || val > this.totalPages - 1) {
             return;
         }
-
+        this.selectionService.clear(true);
         this.onPagingDone.emit({ previous: this._page, current: val });
         this._page = val;
         this.notifyChanges();
@@ -520,8 +520,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (val < 0) {
             return;
         }
-
-        this.selectionService.clear();
+        this.selectionService.clear(true);
         this._perPage = val;
         this.page = 0;
         this.endEdit(true);
@@ -568,36 +567,35 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
-    /**
-     * Sets whether the `IgxGridRowComponent` selection is enabled.
-     * By default it is set to false.
-     * ```typescript
-     * let rowSelectable = this.grid.rowSelectable;
-     * ```
-	 * @memberof IgxGridBaseComponent
-     */
+    @DeprecateProperty('rowSelectable property is deprecated. Use rowSelection property instead.')
     @WatchChanges()
     @Input()
     get rowSelectable(): boolean {
-        return this._rowSelection;
+        return this.isRowSelectable;
+    }
+
+    set rowSelectable(val: boolean) {
+        this.rowSelection = val ? GridSelectionMode.multiple : GridSelectionMode.none;
     }
 
     /**
-     * Sets whether rows can be selected.
-     * ```html
-     * <igx-grid #grid [showToolbar]="true" [rowSelectable]="true" [columnHiding]="true"></igx-grid>
-     * ```
-	 * @memberof IgxGridBaseComponent
+     * Returns if the row selectors are hidden
+     * @memberof IgxGridBaseComponent
      */
-    set rowSelectable(val: boolean) {
-        this._rowSelection = val;
-        if (!this._init) {
+    @WatchChanges()
+    @Input()
+    get hideRowSelectors() {
+        return this._hideRowSelectors;
+    }
 
-            // should selection persist?
-            this.allRowsSelected = false;
-            this.deselectAllRows();
-            this.notifyChanges(true);
-        }
+    /**
+     * Allows you to change the visibility of the row selectors
+     * By default row selectors are shown
+     * @memberof IgxGridBaseComponent
+     */
+    set hideRowSelectors(value: boolean) {
+        this._hideRowSelectors = value;
+        this.notifyChanges(true);
     }
 
     @Input()
@@ -1130,8 +1128,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * }
      * ```
      * ```html
-     * <igx-grid #grid3 (onCellEditCancel)="editCancel($event)" [data]="remote | async" (onSortingDone)="process($event)"
-     *          [primaryKey]="'ProductID'" [rowSelectable]="true">
+     * <igx-grid #grid3 (onCellEditCancel)="editCancel($event)" [data]="remote | async" [primaryKey]="'ProductID'">
      *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
      *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
      *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
@@ -1164,7 +1161,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
      * ```html
      * <igx-grid #grid3 (onCellEditEnter)="editStart($event)" [data]="remote | async" (onSortingDone)="process($event)"
-     *          [primaryKey]="'ProductID'" [rowSelectable]="true">
+     *          [primaryKey]="'ProductID'">
      *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
      *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
      *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
@@ -1199,7 +1196,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
      * ```html
      * <igx-grid #grid3 (onCellEdit)="editDone($event)" [data]="remote | async" (onSortingDone)="process($event)"
-     *          [primaryKey]="'ProductID'" [rowSelectable]="true">
+     *          [primaryKey]="'ProductID'">
      *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
      *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
      *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
@@ -1223,7 +1220,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Bind to the event in markup as follows:
      * ```html
      * <igx-grid #grid3 (onRowEditEnter)="editStart($event)" [data]="remote | async" (onSortingDone)="process($event)"
-     *          [primaryKey]="'ProductID'" [rowSelectable]="true" [rowEditable]="true">
+     *          [primaryKey]="'ProductID'" [rowEditable]="true">
      *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
      *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
      *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
@@ -1258,7 +1255,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Bind to the event in markup as follows:
      * ```html
      * <igx-grid #grid3 (onRowEdit)="editDone($event)" [data]="remote | async" (onSortingDone)="process($event)"
-     *          [primaryKey]="'ProductID'" [rowSelectable]="true" [rowEditable]="true">
+     *          [primaryKey]="'ProductID'" [rowEditable]="true">
      *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
      *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
      *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
@@ -1294,7 +1291,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Bind to the event in markup as follows:
      * ```html
      * <igx-grid #grid3 (onRowEditCancel)="editCancel($event)" [data]="remote | async" (onSortingDone)="process($event)"
-     *          [primaryKey]="'ProductID'" [rowSelectable]="true" [rowEditable]="true">
+     *          [primaryKey]="'ProductID'" [rowEditable]="true">
      *          <igx-column [sortable]="true" [field]="'ProductID'"></igx-column>
      *          <igx-column [editable]="true" [field]="'ProductName'"></igx-column>
      *          <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
@@ -1528,19 +1525,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @Output()
     public onColumnMovingEnd = new EventEmitter<IColumnMovingEndEventArgs>();
-
-    /**
-     * @deprecated you should use onGridKeydown event
-     */
-    @Output()
-    @DeprecateProperty('onFocusChange event is deprecated. Use onGridKeydown event instead.')
-    public get onFocusChange(): EventEmitter<IFocusChangeEventArgs> {
-        return this._onFocusChange;
-    }
-
-    public set onFocusChange(val: EventEmitter<IFocusChangeEventArgs>) {
-        this._onFocusChange = val;
-    }
 
     /**
      * Emitted when keydown is triggered over element inside grid's body.
@@ -2380,6 +2364,54 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     };
 
     /**
+     * Returns the current cell selection state, which can be none, single or multiple
+     * @memberof IgxGridBaseComponent
+     */
+    @WatchChanges()
+    @Input()
+    get cellSelection() {
+        return this._cellSelectionMode;
+    }
+
+    /**
+     * Allows you to set cell selection mode
+     * By default the cell selection mode is multiple
+     * @param selectionMode: GridSelectionMode
+     * @memberof IgxGridBaseComponent
+     */
+    set cellSelection(selectionMode:  GridSelectionMode) {
+        this._cellSelectionMode = selectionMode;
+        if (this.gridAPI.grid) {
+            this.selectionService.clear(true);
+            this.notifyChanges();
+        }
+    }
+
+    /**
+     * Returns the current row selection state, which can be none, single or multiple
+     * @memberof IgxGridBaseComponent
+     */
+    @WatchChanges()
+    @Input()
+    get rowSelection() {
+        return this._rowSelectionMode;
+    }
+
+    /**
+     * Allows you to set row selection mode
+     * By default the row selection mode is none
+     * @param selectionMode: GridSelectionMode
+     * @memberof IgxGridBaseComponent
+     */
+    set rowSelection(selectionMode:  GridSelectionMode) {
+        this._rowSelectionMode = selectionMode;
+        if (this.gridAPI.grid && this.columnList) {
+            this.selectionService.clearAllSelectedRows();
+            this.notifyChanges(true);
+        }
+    }
+
+    /**
      * @hidden
      */
     public rowEditMessage;
@@ -2435,10 +2467,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public draggedColumn: IgxColumnComponent;
 
-    /**
-     * @hidden
-     */
-    public allRowsSelected = false;
 
     /**
      * @hidden
@@ -2484,7 +2512,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected _rowSelection = false;
+    protected _hideRowSelectors = false;
     /**
      * @hidden
      */
@@ -2565,10 +2593,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _columnWidth: string;
 
     protected _defaultTargetRecordNumber = 10;
-    protected _onFocusChange = new EventEmitter<IFocusChangeEventArgs>();
 
     private _summaryPosition = GridSummaryPosition.bottom;
     private _summaryCalculationMode = GridSummaryCalculationMode.rootAndChildLevels;
+    private _cellSelectionMode = GridSelectionMode.multiple;
+    private _rowSelectionMode = GridSelectionMode.none;
 
     private rowEditPositioningStrategy = new ContainerPositioningStrategy({
         horizontalDirection: HorizontalAlignment.Right,
@@ -2654,7 +2683,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         public selectionService: IgxGridSelectionService,
         public crudService: IgxGridCRUDService,
         private gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-        public selection: IgxSelectionAPIService,
         @Inject(IgxGridTransaction) protected _transactions: TransactionService<Transaction, State>,
         private elementRef: ElementRef,
         private zone: NgZone,
@@ -2675,6 +2703,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     _setupServices() {
         this.gridAPI.grid = this;
         this.crudService.grid = this;
+        this.selectionService.grid = this;
         this.navigation.grid = this;
         this.filteringService.grid = this;
         this.summaryService.grid = this;
@@ -2690,6 +2719,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         });
 
         this.transactions.onStateUpdate.pipe(destructor).subscribe(() => {
+            this.selectionService.clearHeaderCBState();
             this.summaryService.clearSummaryCache();
             this._pipeTrigger++;
             this.notifyChanges();
@@ -2706,8 +2736,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
         this.onPagingDone.pipe(destructor).subscribe(() => {
             this.endEdit(true);
-            this.selectionService.clear();
-            this.selectionService.activeElement = null;
+            this.selectionService.clear(true);
         });
 
         this.onColumnMoving.pipe(destructor).subscribe(() => this.endEdit(true));
@@ -3185,7 +3214,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the `IgxColumnComponent` by index.
+     * Returns the `IgxRowComponent` by index.
      * ```typescript
      * const myRow = this.grid1.getRowByIndex(1);
      * ```
@@ -3351,7 +3380,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     get showRowCheckboxes(): boolean {
-        return this.rowSelectable && this.hasVisibleColumns;
+        return this.isRowSelectable  && this.hasVisibleColumns && !this.hideRowSelectors;
     }
 
     get showDragIcons(): boolean {
@@ -3799,6 +3828,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public refreshGridState(args?) {
         this.endEdit(true);
+        this.selectionService.clearHeaderCBState();
         this.summaryService.clearSummaryCache(args);
     }
 
@@ -4487,7 +4517,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public getFeatureColumnsWidth() {
         let width = 0;
 
-        if (this.rowSelectable) {
+        if (this.isRowSelectable) {
             width += this.headerCheckboxContainer ? this.headerCheckboxContainer.nativeElement.getBoundingClientRect().width : 0;
         }
         if (this.rowDraggable) {
@@ -4689,18 +4719,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    public onHeaderCheckboxClick(event, filteredData) {
-        this.allRowsSelected = event.checked;
-        const newSelection =
-            event.checked ?
-                filteredData ?
-                    this.selection.add_items(this.id, this.selection.get_all_ids(filteredData, this.primaryKey)) :
-                    this.selection.get_all_ids(this.gridAPI.get_all_data(true), this.primaryKey) :
-                filteredData ?
-                    this.selection.delete_items(this.id, this.selection.get_all_ids(filteredData, this.primaryKey)) :
-                    this.selection.get_empty();
-        this.triggerRowSelectionChange(newSelection, null, event, event.checked);
-        this.checkHeaderCheckboxStatus(event.checked);
+    public onHeaderSelectorClick(event) {
+        this.selectionService.areAllRowSelected() ?
+            this.selectionService.clearRowSelection(event) : this.selectionService.selectAllRows(event);
     }
 
     /**
@@ -4708,94 +4729,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     get headerCheckboxAriaLabel() {
         return this._filteringExpressionsTree.filteringOperands.length > 0 ?
-            this.headerCheckbox && this.headerCheckbox.checked ? 'Deselect all filtered' : 'Select all filtered' :
-            this.headerCheckbox && this.headerCheckbox.checked ? 'Deselect all' : 'Select all';
-    }
-
-    /**
-     * @hidden
-     */
-    public checkHeaderCheckboxStatus(headerStatus?: boolean) {
-        if (headerStatus === undefined) {
-            const filteredData = this.filteringService.filteredData;
-            const dataLength = filteredData ? filteredData.length : this.dataLength;
-            this.allRowsSelected = this.selection.are_all_selected(this.id, dataLength);
-            if (this.headerCheckbox) {
-                this.headerCheckbox.indeterminate = !this.allRowsSelected && !this.selection.are_none_selected(this.id);
-                if (!this.headerCheckbox.indeterminate) {
-                    this.headerCheckbox.checked =
-                        this.allRowsSelected;
-                }
-            }
-            this.notifyChanges();
-        } else if (this.headerCheckbox) {
-            this.headerCheckbox.checked = headerStatus !== undefined ? headerStatus : false;
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    public filteredItemsStatus(componentID: string, filteredData: any[], primaryKey?) {
-        const currSelection = this.selection.get(componentID);
-        let atLeastOneSelected = false;
-        let notAllSelected = false;
-        if (currSelection) {
-            for (const key of Object.keys(filteredData)) {
-                const dataItem = primaryKey ? filteredData[key][primaryKey] : filteredData[key];
-                if (currSelection.has(dataItem)) {
-                    atLeastOneSelected = true;
-                    if (notAllSelected) {
-                        return 'indeterminate';
-                    }
-                } else {
-                    notAllSelected = true;
-                    if (atLeastOneSelected) {
-                        return 'indeterminate';
-                    }
-                }
-            }
-        }
-        return atLeastOneSelected ? 'allSelected' : 'noneSelected';
-    }
-
-    /**
-     * @hidden
-     */
-    public updateHeaderCheckboxStatusOnFilter(data) {
-        if (!data || !this.hasVisibleColumns || !this.headerCheckbox) {
-            this.checkHeaderCheckboxStatus();
-            return;
-        }
-        switch (this.filteredItemsStatus(this.id, data, this.primaryKey)) {
-            case 'allSelected': {
-                if (!this.allRowsSelected) {
-                    this.allRowsSelected = true;
-                }
-                if (this.headerCheckbox.indeterminate) {
-                    this.headerCheckbox.indeterminate = false;
-                }
-                break;
-            }
-            case 'noneSelected': {
-                if (this.allRowsSelected) {
-                    this.allRowsSelected = false;
-                }
-                if (this.headerCheckbox.indeterminate) {
-                    this.headerCheckbox.indeterminate = false;
-                }
-                break;
-            }
-            default: {
-                if (!this.headerCheckbox.indeterminate) {
-                    this.headerCheckbox.indeterminate = true;
-                }
-                if (this.allRowsSelected) {
-                    this.allRowsSelected = false;
-                }
-                break;
-            }
-        }
+            this.headerCheckbox && this.selectionService.areAllRowSelected() ? 'Deselect all filtered' : 'Select all filtered' :
+            this.headerCheckbox && this.selectionService.areAllRowSelected() ? 'Deselect all' : 'Select all';
     }
 
     /**
@@ -4807,9 +4742,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     public selectedRows(): any[] {
-        let selection: Set<any>;
-        selection = this.selection.get(this.id);
-        return selection ? Array.from(selection) : [];
+        return this.selectionService.getSelectedRows();
     }
 
     /**
@@ -4822,15 +4755,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @memberof IgxGridBaseComponent
      */
     public selectRows(rowIDs: any[], clearCurrentSelection?: boolean) {
-        let newSelection: Set<any>;
-        let selectableRows = [];
-        if (this.transactions.enabled) {
-            selectableRows = rowIDs.filter(e => !this.gridAPI.row_deleted_transaction(e));
-        } else {
-            selectableRows = rowIDs;
-        }
-        newSelection = this.selection.add_items(this.id, selectableRows, clearCurrentSelection);
-        this.triggerRowSelectionChange(newSelection);
+        this.selectionService.selectRowsWithNoEvent(rowIDs, clearCurrentSelection);
+        this.notifyChanges();
     }
 
     /**
@@ -4842,37 +4768,48 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @memberof IgxGridBaseComponent
      */
     public deselectRows(rowIDs: any[]) {
-        let newSelection: Set<any>;
-        newSelection = this.selection.delete_items(this.id, rowIDs);
-        this.triggerRowSelectionChange(newSelection);
+        this.selectionService.deselectRowsWithNoEvent(rowIDs);
+        this.notifyChanges();
     }
 
     /**
      * Selects all rows
-     * Note: If filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
+     * Note: By default if filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
+     * If you set the parameter onlyFilterData to false that will select all rows in the grid exept deleted rows.
      * ```typescript
      * this.grid.selectAllRows();
+     * this.grid.selectAllRows(false);
      * ```
+     * @param onlyFilterData
 	 * @memberof IgxGridBaseComponent
      */
-    public selectAllRows() {
-        this.triggerRowSelectionChange(this.selection.get_all_ids(this.gridAPI.get_all_data(true), this.primaryKey));
+    public selectAllRows(onlyFilterData = true) {
+        const data = onlyFilterData && this.filteredData ? this.filteredData : this.gridAPI.get_all_data(true);
+        const rowIDs = this.selectionService.getRowIDs(data).filter(rID => !this.gridAPI.row_deleted_transaction(rID));
+        this.selectRows(rowIDs);
     }
 
     /**
      * Deselects all rows
+     * Note: By default if filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
+     * If you set the parameter onlyFilterData to false that will select all rows in the grid exept deleted rows.
      * ```typescript
      * this.grid.deselectAllRows();
      * ```
-     * Note: If filtering is in place, selectAllRows() and deselectAllRows() select/deselect all filtered rows.
+     * @param onlyFilterData
+	 * @memberof IgxGridBaseComponent
      */
-    public deselectAllRows() {
-        this.triggerRowSelectionChange(this.selection.get_empty());
+    public deselectAllRows(onlyFilterData = true) {
+        if (onlyFilterData && this.filteredData && this.filteredData.length > 0) {
+            this.deselectRows(this.selectionService.getRowIDs(this.filteredData));
+        } else {
+            this.selectionService.clearAllSelectedRows();
+            this.notifyChanges();
+        }
     }
 
     clearCellSelection(): void {
-        this.selectionService.clear();
-        this.selectionService.activeElement = null;
+        this.selectionService.clear(true);
         this.notifyChanges();
     }
 
@@ -4960,10 +4897,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         let columnsArray: IgxColumnComponent[];
         let record = {};
         const selectedData = [];
+        const activeEl = this.selectionService.activeElement;
 
         const selectionMap = Array.from(this.selectionService.selection)
             .filter((tuple) => tuple[0] < source.length);
 
+        if (this.cellSelection === GridSelectionMode.single && activeEl) {
+            selectionMap.push([activeEl.row, new Set<number>().add(activeEl.column)]);
+        }
 
         for (const [row, set] of selectionMap) {
             if (!source[row]) {
@@ -5014,23 +4955,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return this.extractDataFromSelection(source, formatters, headers);
     }
 
-    /**
-     * @hidden
-     */
-    public triggerRowSelectionChange(newSelectionAsSet: Set<any>, row?: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>,
-        event?: Event, headerStatus?: boolean) {
-        const oldSelectionAsSet = this.selection.get(this.id);
-        const oldSelection = oldSelectionAsSet ? Array.from(oldSelectionAsSet) : [];
-        const newSelection = newSelectionAsSet ? Array.from(newSelectionAsSet) : [];
-        const args: IRowSelectionEventArgs = { oldSelection, newSelection, row, event };
-        this.onRowSelectionChange.emit(args);
-        newSelectionAsSet = this.selection.get_empty();
-        for (let i = 0; i < args.newSelection.length; i++) {
-            newSelectionAsSet.add(args.newSelection[i]);
-        }
-        this.selection.set(this.id, newSelectionAsSet);
-        this.checkHeaderCheckboxStatus(headerStatus);
-    }
 
     /**
      * @hidden
@@ -5724,7 +5648,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return rowData.summaries && (rowData.summaries instanceof Map);
     }
 
+    /** @hidden */
+    public get isMultiRowSelectionEnabled(): boolean {
+        return this.rowSelection === GridSelectionMode.multiple;
+    }
 
+    /** @hidden */
+    public get isRowSelectable(): boolean {
+        return this.rowSelection !== GridSelectionMode.none;
+    }
+
+    /** @hidden */
+    public get isCellSelectable() {
+        return this.cellSelection !== GridSelectionMode.none;
+    }
 
     /**
      * @hidden
@@ -5756,5 +5693,3 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 }
-
-

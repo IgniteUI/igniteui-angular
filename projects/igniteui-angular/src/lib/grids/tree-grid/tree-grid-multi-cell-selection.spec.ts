@@ -8,7 +8,7 @@ import {
     IgxTreeGridFKeySelectionWithTransactionComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IgxTreeGridModule } from '.';
+import { IgxTreeGridModule, GridSelectionMode } from '.';
 import { HelperUtils, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
@@ -50,6 +50,69 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 
         it('Should be able to select a range with mouse dragging', () => {
             verifySelectingRangeWithMouseDrag(fix, treeGrid, detect);
+        });
+
+        it('Should not be possible to select a range when change cellSelection to none', () => {
+            const rangeChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
+            const startCell =  treeGrid.getCellByColumn(0, 'ID');
+            const endCell =  treeGrid.getCellByColumn(2, 'ID');
+
+            expect(treeGrid.cellSelection).toEqual(GridSelectionMode.multiple);
+            HelperUtils.selectCellsRangeNoWait(fix, startCell, endCell);
+            detect();
+
+            expect(rangeChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifyCellsRegionSelected(treeGrid, 0, 2, 0, 0);
+            HelperUtils.verifySelectedRange(treeGrid, 0, 2, 0, 0);
+
+            treeGrid.cellSelection = GridSelectionMode.none;
+            fix.detectChanges();
+
+            HelperUtils.verifyCellsRegionSelected(treeGrid, 0, 2, 0, 0, false);
+            expect(treeGrid.getSelectedData()).toEqual([]);
+            expect(treeGrid.getSelectedRanges()).toEqual([]);
+
+            // Try to select a range
+            HelperUtils.selectCellsRangeNoWait(fix, endCell, startCell);
+            detect();
+            HelperUtils.verifyCellsRegionSelected(treeGrid, 0, 2, 0, 0, false);
+            expect(rangeChangeSpy).toHaveBeenCalledTimes(1);
+            expect(treeGrid.selectedCells.length).toBe(0);
+            expect(treeGrid.getSelectedData()).toEqual([]);
+            expect(treeGrid.getSelectedRanges()).toEqual([]);
+        });
+
+        it('Should not be possible to select a range when change cellSelection to single', () => {
+            const rangeChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
+            const startCell =  treeGrid.getCellByColumn(0, 'ID');
+            const middleCell =  treeGrid.getCellByColumn(1, 'ID');
+            const endCell =  treeGrid.getCellByColumn(2, 'ID');
+
+            expect(treeGrid.cellSelection).toEqual(GridSelectionMode.multiple);
+            HelperUtils.selectCellsRangeNoWait(fix, startCell, endCell);
+            detect();
+
+            expect(rangeChangeSpy).toHaveBeenCalledTimes(1);
+            HelperUtils.verifyCellsRegionSelected(treeGrid, 0, 2, 0, 0);
+            HelperUtils.verifySelectedRange(treeGrid, 0, 2, 0, 0);
+
+            treeGrid.cellSelection = GridSelectionMode.single;
+            fix.detectChanges();
+
+            expect(treeGrid.cellSelection).toEqual(GridSelectionMode.single);
+            HelperUtils.verifyCellsRegionSelected(treeGrid, 0, 2, 0, 0, false);
+            expect(treeGrid.getSelectedData()).toEqual([]);
+            expect(treeGrid.getSelectedRanges()).toEqual([]);
+
+            // Try to select a range
+            HelperUtils.selectCellsRangeNoWait(fix, endCell, startCell);
+            detect();
+            HelperUtils.verifyCellSelected(startCell, false);
+            HelperUtils.verifyCellSelected(middleCell, false);
+            HelperUtils.verifyCellSelected(endCell);
+            expect(rangeChangeSpy).toHaveBeenCalledTimes(1);
+            expect(treeGrid.selectedCells.length).toBe(1);
+            expect(treeGrid.getSelectedData()).toEqual([{ ID: 957 }]);
         });
 
         it('Should not change selection when expand collapse row with keyboard', (async () => {
@@ -856,7 +919,6 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
         });
     });
-
 
     function verifySelectingRegion(fix, treeGrid) {
         const selectionChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();

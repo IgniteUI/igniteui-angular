@@ -96,12 +96,10 @@ export class PagingComponent extends GridWithSizeComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(` [rowSelectable]="rowSelectable"`,
-        '', ColumnDefinitions.productBasic)
+    template: GridTemplateStrings.declareGrid(` rowSelection = "multiple"`,
+        '', ColumnDefinitions.productBasicNumberID)
 })
 export class SelectionComponent extends BasicGridComponent {
-    public rowSelectable = true;
-
     data = SampleTestData.generateBigValuesData(100);
 }
 
