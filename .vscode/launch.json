@@ -14,32 +14,6 @@
                 "./node_modules/jasmine/bin/jasmine.js",
                 "./projects/igniteui-angular/migrations/common/UpdateChanges.spec.ts"
             ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Launch Program1",
-            "program": "${workspaceFolder}/node_modules/typedoc/bin/typedoc",
-            "runtimeArgs": [
-                // "--generate"
-            ],
-            "args": [
-                // "--generate \"exports\"",
-                "${workspaceFolder}\\projects\\igniteui-angular\\src",
-                // "--generate-json",
-                // "exports",
-                // "--tags",
-                // "--params",
-                // "--gen-from-json",
-                // "exports",
-                // "--json",
-                // "test/generated-docs",
-                // "--localize",
-                // "jp",
-                // "--templateStrings",
-                // "./shell-strings.json"
-                // "${workspaceFolder}/test/src/index.ts"
-            ]
-        },
+        }
     ]
 }
