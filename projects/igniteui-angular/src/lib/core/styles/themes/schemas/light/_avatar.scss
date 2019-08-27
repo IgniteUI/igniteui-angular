@@ -36,3 +36,9 @@ $_light-avatar: extend(
         image-background: transparent
     )
 );
+
+/// Generates a fluent avatar schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-avatar
+$_fluent-avatar: extend($_light-avatar);

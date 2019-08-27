@@ -26,14 +26,17 @@
 /// @prop {Map} date-selected-background [igx-color: ('secondary', 500)] - The background color for the selected date.
 /// @prop {Map} date-selected-text-color [igx-contrast-color: ('secondary', 500)] - The text color for the selected date.
 /// @prop {Map} date-current-text-color [igx-color: ('secondary', 500)] - The text color for the current date.
+/// @prop {Map} date-current-bg-color [igx-color: (transparent] - The background color for the current date.
 /// @prop {Map} date-hover-background [igx-color: ('grays', 200)] - The hover date background color.
 /// @prop {Map} date-special-background [igx-color: ('grays', 100)] - The background color used for special dates.
 /// @prop {Map} date-special-text-color [igx-color: ('grays', 900)] - The text color used for special dates.
 /// @prop {Map} date-disabled-text-color [igx-color: ('grays', 500), hexrgba: (), rgba: .6] - The text color for disabled dates.
 /// @prop {Map} date-disabled-background [igx-color: ('grays', 100), hexrgba: ()] - The background color for disabled dates.
-/// @prop {Number} border-radius [1] - The border radius fraction, between 0-1 to be used for calendar.
+/// @prop {Number} border-radius [.2] - The border radius fraction, between 0-1 to be used for calendar.
 /// @prop {Number} date-border-radius [1] - The border radius fraction, between 0-1 to be used for calendar.
 /// @prop {Number} month-border-radius [1] - The border radius fraction, between 0-1 to be used for calendar.
+/// @requires {function} extend
+/// @requires {map} $_default-shape-calendar
 /// @see $default-palette
 $_light-calendar: extend(
     $_default-shape-calendar,
@@ -121,6 +124,10 @@ $_light-calendar: extend(
             igx-color: ('secondary', 500)
         ),
 
+        date-current-bg-color: transparent,
+        date-current-bg-hover-color: transparent,
+        date-current-bg-focus-color: transparent,
+
         date-hover-background: (
             igx-color: ('grays', 200)
         ),
@@ -141,6 +148,42 @@ $_light-calendar: extend(
 
         date-disabled-background: (
             igx-color: ('grays', 100),
-        )
+        ),
+    )
+);
+
+/// Generates a fluent calendar schema.
+/// @type {Map}
+/// @prop {Color} date-current-text-color [#fff] - The text color for the current date.
+/// @prop {Map} date-current-bg-color [igx-color: ('primary', 500)] - The background color for the current date.
+/// @prop {map} date-selected-background [igx-color: ('primary', 100), rgba: .5, hexrgba: #fff] - The background color for the selected date.
+/// @prop {Map} date-selected-text-color [igx-color: ('primary', 100)] - The text color for the selected date.
+///
+/// @prop {Number} border-radius [0%] - The border radius fraction, between 0-1 to be used for calendar.
+/// @prop {Number} date-border-radius [0%] - The border radius fraction, between 0-1 to be used for calendar.
+/// @prop {Number} month-border-radius [0%] - The border radius fraction, between 0-1 to be used for calendar.
+///
+/// @requires {function} extend
+/// @requires {map} $_light-calendar
+/// @requires {map} $_fluent-shape-calendar
+$_fluent-calendar: extend(
+    $_light-calendar,
+    $_fluent-shape-calendar,
+    (
+        date-current-text-color: #fff,
+
+        date-current-bg-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        date-selected-background: (
+            igx-color: ('primary', 100),
+            rgba: .5,
+            hexrgba: #fff
+        ),
+
+        date-selected-text-color: (
+            igx-contrast-color: ('primary', 100)
+        ),
     )
 );
