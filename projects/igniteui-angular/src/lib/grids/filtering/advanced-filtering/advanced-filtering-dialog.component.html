@@ -3,8 +3,7 @@
     igxDrag
     [ghost]="false"
     [dragTolerance]="0"
-    (dragStart)="dragStart($event)"
-    (dragMove)="dragMove($event)"
+    (dragStart)="dragStart($event)"    
     (dragEnd)="dragEnd($event)"
     (keydown)="onKeyDown($event)"
     [ngClass]="{
@@ -77,6 +76,8 @@
         <ng-template #filterOperandTemplate let-expressionItem>
             <div *ngIf="!expressionItem.inEditMode"
                 class="igx-filter-tree__expression-item"
+                (mouseenter)="expressionItem.hovered = true"
+                (mouseleave)="expressionItem.hovered = false"
                 >
                 <igx-chip [data]="expressionItem"
                           [displayDensity]="displayDensity"
@@ -85,8 +86,6 @@
                           (click)="onChipClick(expressionItem)"
                           (dblclick)="onChipDblClick(expressionItem)"
                           (onRemove)="onChipRemove(expressionItem)"
-                          (mouseenter)="expressionItem.hovered = true"
-                          (mouseleave)="expressionItem.hovered = false"
                     >
                     <span igxPrefix class="igx-filter-tree__expression-column">{{ expressionItem.expression.fieldName }}</span>
                     <igx-icon

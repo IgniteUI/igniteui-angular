@@ -14,7 +14,7 @@ import { IgxChipComponent } from '../../../chips';
 import { IgxSelectComponent } from '../../../select';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { IDragStartEventArgs, IDragMoveEventArgs, IgxDragLocation } from '../../../directives/drag-drop/drag-drop.directive';
+import { IDragStartEventArgs } from '../../../directives/drag-drop/drag-drop.directive';
 
 class ExpressionItem {
     constructor(parent?: ExpressionGroupItem) {
@@ -22,7 +22,6 @@ class ExpressionItem {
     }
     parent: ExpressionGroupItem;
     selected: boolean;
-    hovered: boolean;
 }
 
 class ExpressionGroupItem extends ExpressionItem {
@@ -43,6 +42,7 @@ class ExpressionOperandItem extends ExpressionItem {
     expression: IFilteringExpression;
     inEditMode: boolean;
     inAddMode: boolean;
+    hovered: boolean;
 }
 
 @Component({
@@ -118,6 +118,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     constructor(public cdr: ChangeDetectorRef) { }
 
     public ngAfterViewInit(): void {
+        this._overlaySettings.outlet = this.grid.outletDirective;
         this.contextMenuToggle.onClosed.pipe(takeUntil(this.destroy$)).subscribe((args) => {
             this.contextualGroup = null;
         });
@@ -165,41 +166,10 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
 
     public dragEnd(dragArgs: IDragBaseEventArgs) {
         if (!this.contextMenuToggle.collapsed) {
-            this.recalculateContextMenuTarget();
+            this.calculateContextMenuTarget();
             this.contextMenuToggle.reposition();
             // 'flex' should be changed '' when styling class is added to contextMenuToggle
             this.contextMenuToggle.element.style.display = 'flex';
-        }
-    }
-
-    public dragMove(dragArgs: IDragMoveEventArgs) {
-        const gridRect = (<HTMLElement>this.grid.nativeElement).getBoundingClientRect();
-        const dialogRect = (<HTMLElement>dragArgs.owner.element.nativeElement).getBoundingClientRect();
-
-        // Allow moving the dialog outside the grid if it cannot fit in the grid.
-        if (dialogRect.width > gridRect.width || dialogRect.height > gridRect.height) {
-            return;
-        }
-
-        // Variables that indicate how much the pointer has moved on both the X axis and Y axis.
-        const movedX = dragArgs.nextPageX - dragArgs.pageX;
-        const movedY = dragArgs.nextPageY - dragArgs.pageY;
-
-        // Disallow moving the dialog outside the grid if it can fit in the grid.
-        if (!(dialogRect.left + movedX >= gridRect.left && dialogRect.right + movedX <= gridRect.right &&
-              dialogRect.top + movedY >= gridRect.top && dialogRect.bottom + movedY <= gridRect.bottom)) {
-            const dragDialog = dragArgs.owner;
-            let newDialogX = dialogRect.left + movedX;
-            let newDialogY = dialogRect.top + movedY;
-
-            newDialogX = (dialogRect.left + movedX  < gridRect.left) ? gridRect.left : newDialogX;
-            newDialogX = (dialogRect.right + movedX > gridRect.right) ? gridRect.right - dialogRect.width : newDialogX;
-            newDialogY = (dialogRect.top + movedY < gridRect.top) ? gridRect.top : newDialogY;
-            newDialogY = (dialogRect.bottom  + movedY > gridRect.bottom) ? gridRect.bottom - dialogRect.height : newDialogY;
-
-            dragArgs.cancel = true;
-            const newDragLocation = new IgxDragLocation(newDialogX, newDialogY);
-            dragDialog.setLocation(newDragLocation);
         }
     }
 
@@ -445,15 +415,8 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
             }
 
             setTimeout(() => {
-                const chips = this.chips.filter(c => this.selectedExpressions.includes(c.data));
-                const minTop = chips.reduce((t, c) =>
-                    Math.min(t, c.elementRef.nativeElement.getBoundingClientRect().top), Number.MAX_VALUE);
-                const maxRight = chips.reduce((r, c) =>
-                    Math.max(r, c.elementRef.nativeElement.getBoundingClientRect().right), 0);
-                this._overlaySettings.positionStrategy.settings.target = new Point(maxRight, minTop);
-                this._overlaySettings.outlet = this.grid.outletDirective;
-
-                if (this.contextMenuToggle.collapsed) {
+                this.calculateContextMenuTarget();
+               if (this.contextMenuToggle.collapsed) {
                     this.contextMenuToggle.open(this._overlaySettings);
                 } else {
                     this.contextMenuToggle.reposition();
@@ -597,14 +560,13 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         }
     }
 
-    private recalculateContextMenuTarget() {
+    private calculateContextMenuTarget() {
         const chips = this.chips.filter(c => this.selectedExpressions.includes(c.data));
         const minTop = chips.reduce((t, c) =>
             Math.min(t, c.elementRef.nativeElement.getBoundingClientRect().top), Number.MAX_VALUE);
         const maxRight = chips.reduce((r, c) =>
             Math.max(r, c.elementRef.nativeElement.getBoundingClientRect().right), 0);
         this._overlaySettings.positionStrategy.settings.target = new Point(maxRight, minTop);
-        this._overlaySettings.outlet = this.grid.outletDirective;
     }
 
     private scrollToBottom() {
