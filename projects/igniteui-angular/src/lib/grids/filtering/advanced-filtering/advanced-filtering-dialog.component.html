@@ -121,7 +121,7 @@
                             [displayDensity]="'compact'"
                             [(ngModel)]="selectedColumn">
                     <igx-select-item *ngFor="let column of filterableColumns" [value]="column">
-                        {{column.header}}
+                        {{column.header || column.field}}
                     </igx-select-item>
                 </igx-select>
 
