@@ -163,7 +163,7 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_excel_boolean_filter: 'Boolean filter',
     igx_grid_excel_custom_filter: 'Custom filter...',
     igx_grid_paginator_label: 'Items per page',
-    igx_grid_advanced_filter_title: 'Adv. Filtering',
+    igx_grid_advanced_filter_title: 'Advanced Filtering',
     igx_grid_advanced_filter_and_label: 'and',
     igx_grid_advanced_filter_or_label: 'or',
     igx_grid_advanced_filter_addcondition: 'Condition',
