@@ -377,7 +377,9 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     public enterExpressionAdd(expressionItem: ExpressionOperandItem) {
         expressionItem.inAddMode = true;
         this.addModeExpression = expressionItem;
-        this.toggleExpression(expressionItem);
+        if (expressionItem.selected) {
+            this.toggleExpression(expressionItem);
+        }
     }
 
     private onToggleExpression(expressionItem: ExpressionOperandItem) {
