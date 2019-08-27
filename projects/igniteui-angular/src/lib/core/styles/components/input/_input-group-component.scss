@@ -315,6 +315,9 @@
         }
 
         //// OVERRIDES
+        @include e(textarea) {
+            @extend %form-group-textarea--border !optional;
+        }
 
         @include e(label) {
             @extend %igx-input-group__label-type-border !optional;
@@ -330,11 +333,25 @@
         @include e(bundle-type-border-main) {
             @extend %igx-input-group__bundle-type-border-main--cosy !optional;
         }
+
+        @include e(bundle-prefix) {
+            @extend %igx-input-group__bundle-prefix--cosy !optional;
+        }
+
+        //// OVERRIDES
+        @include e(textarea) {
+            @extend %form-group-textarea--border--cosy !optional;
+        }
+
     }
 
     @include mx(border, compact) {
         @include e(bundle-type-border-main) {
             @extend %igx-input-group__bundle-type-border-main--compact !optional;
+        }
+
+        @include e(bundle-prefix) {
+            @extend %igx-input-group__bundle-prefix--compact !optional;
         }
     }
 
@@ -349,6 +366,12 @@
         @include e(bundle-line) {
             @extend %igx-input-group__bundle-line--success !optional;
         }
+
+        //// OVERRIDES
+        @include e(textarea) {
+            @extend %form-group-textarea--border--compact !optional;
+        }
+
     }
 
     @include mx(invalid, border){
@@ -399,7 +422,7 @@
 
     @include mx(filled, border) {
         @include e(bundle-type-border-main) {
-            @extend %igx-input-group__bundle-type-border-main-focused !optional;
+            @extend %igx-input-group__bundle-type-border-main-filled !optional;
         }
 
         @include e(label) {

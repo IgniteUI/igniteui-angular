@@ -216,9 +216,9 @@
     $hint-padding-top: rem(6px, map-get($base-scale-size, 'comfortable'));
     $hint--box-margin: rem(12px, map-get($base-scale-size, 'comfortable'));
 
-    $border-input-comf: rem(16px, map-get($base-scale-size, 'comfortable'));
-    $border-input-cosy: rem(16px, map-get($base-scale-size, 'cosy'));
-    $border-input-compact: rem(16px, map-get($base-scale-size, 'compact'));
+    $border-textarea-comf: rem(16px, map-get($base-scale-size, 'comfortable')) / 2;
+    $border-textarea-cosy: rem(16px, map-get($base-scale-size, 'cosy')) / 2 ;
+    $border-textarea-compact: rem(16px, map-get($base-scale-size, 'compact')) / 2;
 
     %form-group-display {
         position: relative;
@@ -392,16 +392,55 @@
         padding-top: rem(18px, map-get($base-scale-size, 'compact'));
     }
 
+
+    // INPUT GROUP TYPE BORDER
+
+    %input-type-border {
+        display: flex;
+        flex-direction: column;
+    }
+
+    %form-group-textarea--border {
+        width: calc(100% + #{$border-textarea-comf});
+        padding-right: $border-textarea-comf;
+    }
+
+    %form-group-textarea--border--cosy {
+        width: calc(100% + #{$border-textarea-cosy});
+        padding-right: $border-textarea-cosy;
+    }
+
+    %form-group-textarea--border--compact {
+        width: calc(100% + #{$border-textarea-compact});
+        padding-right: $border-textarea-compact;
+    }
+
     %igx-input-group__bundle-type-border {
         display: flex;
         flex-wrap: nowrap;
 
+        %igx-input-group__bundle-type-border-main-filled {
+            box-shadow:
+                0 1px 0 --var($theme, 'idle-bottom-line-color'),
+                0 0 0 transparent;
+        }
+
+        %igx-input-group__bundle-prefix,
+        %igx-input-group__bundle-suffix {
+            color: --var($theme, 'idle-text-color');
+        }
+
         &:hover {
-            %igx-input-group__bundle-type-border-main-focused,
-            %igx-input-group__bundle-type-border-main {
+            %igx-input-group__bundle-type-border-main-filled {
                 box-shadow:
                     0 1px 0 --var($theme, 'hover-bottom-line-color'),
                     0 0 0 transparent;
+            }
+
+            %igx-input-group__bundle-type-border-main {
+                box-shadow:
+                    0 1px 0 --var($theme, 'hover-bottom-line-color'),
+                    0 -1px 0 --var($theme, 'hover-bottom-line-color');
             }
 
             %igx-input-group__bundle-prefix {
@@ -409,7 +448,6 @@
                     inset 1px 0 0 --var($theme, 'hover-bottom-line-color'),
                     0 1px 0 --var($theme, 'hover-bottom-line-color'),
                     0 -1px 0 --var($theme, 'hover-bottom-line-color');
-                color: yellow;
             }
 
             %igx-input-group__bundle-suffix {
@@ -417,7 +455,6 @@
                     1px 0 0 --var($theme, 'hover-bottom-line-color'),
                     0 1px 0 --var($theme, 'hover-bottom-line-color'),
                     0 -1px 0 --var($theme, 'hover-bottom-line-color');
-                color: yellow;
             }
 
             %igx-input-group__bundle-line {
@@ -485,7 +522,15 @@
         border-radius: --var($theme, 'border-border-radius');
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
-        padding-left: rem(8px);
+        padding-left: rem(16px, map-get($base-scale-size, 'comfortable'));
+    }
+
+    %igx-input-group__bundle-prefix--cosy {
+        padding-left: rem(16px, map-get($base-scale-size, 'cosy'));
+    }
+
+    %igx-input-group__bundle-prefix--compact {
+        padding-left: rem(16px, map-get($base-scale-size, 'compact'));
     }
 
     %igx-input-group__bundle-suffix {
@@ -510,6 +555,8 @@
         top: calc(50% - #{$label-height});
         padding: 0 rem(4px);
         margin-top: 0 !important;
+        width: auto;
+        max-width: 100%;
     }
 
     %igx-input-group__label-type-border-focused {
@@ -786,6 +833,10 @@
                 inset 2px 0 0 --var($theme, 'focused-secondary-color'),
                 0 2px 0 --var($theme, 'focused-secondary-color'),
                 0 -2px 0 --var($theme, 'focused-secondary-color');
+            igx-prefix,
+            [igx-prefix] {
+                color: --var($theme, 'idle-text-color');
+            }
         }
 
         %igx-input-group__bundle-suffix {
@@ -793,6 +844,10 @@
                 2px 0 0 --var($theme, 'focused-secondary-color'),
                 0 2px 0 --var($theme, 'focused-secondary-color'),
                 0 -2px 0 --var($theme, 'focused-secondary-color');
+            igx-suffix,
+            [igx-suffix] {
+                color: --var($theme, 'idle-text-color');
+            }
         }
 
         %igx-input-group__bundle-line {
@@ -842,6 +897,10 @@
                 inset 1px 0 0 --var($theme, 'error-secondary-color'),
                 0 1px 0 --var($theme, 'error-secondary-color'),
                 0 -1px 0 --var($theme, 'error-secondary-color');
+            igx-prefix,
+            [igx-prefix] {
+                color: --var($theme, 'idle-text-color') !important;
+            }
         }
 
         %igx-input-group__bundle-suffix {
@@ -849,6 +908,10 @@
                 1px 0 0 --var($theme, 'error-secondary-color'),
                 0 1px 0 --var($theme, 'error-secondary-color'),
                 0 -1px 0 --var($theme, 'error-secondary-color');
+            igx-suffix,
+            [igx-suffix] {
+                color: --var($theme, 'idle-text-color') !important;
+            }
         }
 
         %igx-input-group__bundle-line {
@@ -898,6 +961,11 @@
                 inset 2px 0 0 --var($theme, 'error-secondary-color'),
                 0 2px 0 --var($theme, 'error-secondary-color'),
                 0 -2px 0 --var($theme, 'error-secondary-color');
+            color: --var($theme, 'idle-text-color');
+            igx-prefix,
+            [igx-prefix] {
+                color: --var($theme, 'idle-text-color') !important;
+            }
         }
 
         %igx-input-group__bundle-suffix {
@@ -905,6 +973,11 @@
                 2px 0 0 --var($theme, 'error-secondary-color'),
                 0 2px 0 --var($theme, 'error-secondary-color'),
                 0 -2px 0 --var($theme, 'error-secondary-color');
+            color: --var($theme, 'idle-text-color');
+            igx-suffix,
+            [igx-suffix] {
+                color: --var($theme, 'idle-text-color') !important;
+            }
         }
 
         %igx-input-group__bundle-line {
@@ -953,6 +1026,11 @@
                 inset 1px 0 0 --var($theme, 'success-secondary-color'),
                 0 1px 0 --var($theme, 'success-secondary-color'),
                 0 -1px 0 --var($theme, 'success-secondary-color');
+            color: --var($theme, 'idle-text-color');
+            igx-prefix,
+            [igx-prefix] {
+                color: --var($theme, 'idle-text-color') !important;
+            }
         }
 
         %igx-input-group__bundle-suffix {
@@ -960,6 +1038,11 @@
                 1px 0 0 --var($theme, 'success-secondary-color'),
                 0 1px 0 --var($theme, 'success-secondary-color'),
                 0 -1px 0 --var($theme, 'success-secondary-color');
+            color: --var($theme, 'idle-text-color');
+            igx-suffix,
+            [igx-suffix] {
+                color: --var($theme, 'idle-text-color') !important;
+            }
         }
 
         %igx-input-group__bundle-line {
@@ -1328,14 +1411,6 @@
 
     %form-group-helper-item--end {
         order: 1;
-    }
-
-
-    // INPUT GROUP TYPE BORDER
-
-    %input-type-border {
-        display: flex;
-        flex-direction: column;
     }
 }
 
