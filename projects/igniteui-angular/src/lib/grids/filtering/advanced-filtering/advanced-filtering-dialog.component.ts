@@ -5,16 +5,18 @@ import { VerticalAlignment, HorizontalAlignment, Point, OverlaySettings } from '
 import { ConnectedPositioningStrategy } from '../../../services/overlay/position/connected-positioning-strategy';
 import { IgxFilteringService } from '../grid-filtering.service';
 import { IgxOverlayService } from '../../../services/overlay/overlay';
-import { IgxToggleDirective, CloseScrollStrategy, IButtonGroupEventArgs, IDragBaseEventArgs } from 'igniteui-angular';
 import { IgxGridBaseComponent, IgxColumnComponent } from '../../grid';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { FilteringLogic, IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { IgxStringFilteringOperand } from '../../../data-operations/filtering-condition';
 import { IgxChipComponent } from '../../../chips';
 import { IgxSelectComponent } from '../../../select';
+import { IDragStartEventArgs, IDragBaseEventArgs } from '../../../directives/drag-drop/drag-drop.directive';
+import { CloseScrollStrategy } from '../../../services/overlay/scroll/close-scroll-strategy';
+import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
+import { IButtonGroupEventArgs } from '../../../buttonGroup/buttonGroup.component';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { IDragStartEventArgs } from '../../../directives/drag-drop/drag-drop.directive';
 
 class ExpressionItem {
     constructor(parent?: ExpressionGroupItem) {
