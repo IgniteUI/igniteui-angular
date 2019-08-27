@@ -296,6 +296,10 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     }
 
     private createExpressionsTreeFromGroupItem(groupItem: ExpressionGroupItem): FilteringExpressionsTree {
+        if (!groupItem) {
+            return null;
+        }
+
         const expressionsTree = new FilteringExpressionsTree(groupItem.operator);
 
         for (const item of groupItem.children) {
