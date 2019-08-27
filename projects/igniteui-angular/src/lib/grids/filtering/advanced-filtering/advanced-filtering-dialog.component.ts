@@ -14,7 +14,7 @@ import { IgxChipComponent } from '../../../chips';
 import { IgxSelectComponent } from '../../../select';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { IDragStartEventArgs } from '../../../directives/drag-drop/drag-drop.directive';
+import { IDragStartEventArgs, IDragMoveEventArgs, IgxDragLocation } from '../../../directives/drag-drop/drag-drop.directive';
 
 class ExpressionItem {
     constructor(parent?: ExpressionGroupItem) {
@@ -144,6 +144,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
             if (oldValue && this._selectedColumn && this._selectedColumn.dataType !== oldValue.dataType) {
                 this.selectedCondition = null;
                 this.searchValue = null;
+                this.cdr.detectChanges();
             }
         }
     }
@@ -171,7 +172,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         }
     }
 
-    public dragMove(dragArgs: IDragBaseEventArgs) {
+    public dragMove(dragArgs: IDragMoveEventArgs) {
         const gridRect = (<HTMLElement>this.grid.nativeElement).getBoundingClientRect();
         const dialogRect = (<HTMLElement>dragArgs.owner.element.nativeElement).getBoundingClientRect();
 
@@ -180,19 +181,25 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
             return;
         }
 
+        // Variables that indicate how much the pointer has moved on both the X axis and Y axis.
+        const movedX = dragArgs.nextPageX - dragArgs.pageX;
+        const movedY = dragArgs.nextPageY - dragArgs.pageY;
+
         // Disallow moving the dialog outside the grid if it can fit in the grid.
-        if (!(dialogRect.left >= gridRect.left && dialogRect.right <= gridRect.right &&
-              dialogRect.top >= gridRect.top && dialogRect.bottom <= gridRect.bottom)) {
+        if (!(dialogRect.left + movedX >= gridRect.left && dialogRect.right + movedX <= gridRect.right &&
+              dialogRect.top + movedY >= gridRect.top && dialogRect.bottom + movedY <= gridRect.bottom)) {
             const dragDialog = dragArgs.owner;
-            let newDialogX = dialogRect.left;
-            let newDialogY = dialogRect.top;
+            let newDialogX = dialogRect.left + movedX;
+            let newDialogY = dialogRect.top + movedY;
 
-            newDialogX = (dialogRect.left < gridRect.left) ? gridRect.left : newDialogX;
-            newDialogX = (dialogRect.right > gridRect.right) ? gridRect.right - dialogRect.width : newDialogX;
-            newDialogY = (dialogRect.top < gridRect.top) ? gridRect.top : newDialogY;
-            newDialogY = (dialogRect.bottom > gridRect.bottom) ? gridRect.bottom - dialogRect.height : newDialogY;
+            newDialogX = (dialogRect.left + movedX  < gridRect.left) ? gridRect.left : newDialogX;
+            newDialogX = (dialogRect.right + movedX > gridRect.right) ? gridRect.right - dialogRect.width : newDialogX;
+            newDialogY = (dialogRect.top + movedY < gridRect.top) ? gridRect.top : newDialogY;
+            newDialogY = (dialogRect.bottom  + movedY > gridRect.bottom) ? gridRect.bottom - dialogRect.height : newDialogY;
 
-            dragDialog.setLocation({pageX: newDialogX, pageY: newDialogY});
+            dragArgs.cancel = true;
+            const newDragLocation = new IgxDragLocation(newDialogX, newDialogY);
+            dragDialog.setLocation(newDragLocation);
         }
     }
 

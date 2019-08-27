@@ -22,8 +22,9 @@ import {
 } from '@angular/core';
 import { IgxBadgeModule } from '../badge/badge.component';
 import { IgxIconModule } from '../icon/index';
+import { IBaseEventArgs } from '../core/utils';
 
-export interface ISelectTabEventArgs {
+export interface ISelectTabEventArgs extends IBaseEventArgs {
     tab: IgxTabComponent;
     panel: IgxTabPanelComponent;
 }

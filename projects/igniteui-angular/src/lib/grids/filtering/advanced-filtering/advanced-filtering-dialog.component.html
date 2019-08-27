@@ -1,7 +1,7 @@
 <article
     class="igx-advanced-filter"
     igxDrag
-    [renderGhost]="false"
+    [ghost]="false"
     [dragTolerance]="0"
     (dragStart)="dragStart($event)"
     (dragMove)="dragMove($event)"
@@ -151,6 +151,7 @@
                                  [displayDensity]="'compact'">
                     <input #searchValueInput
                            igxInput
+                           [type]="selectedColumn && selectedColumn.dataType === 'number' ? 'number' : 'text'"
                            [(ngModel)]="searchValue"/>
                 </igx-input-group>
 

@@ -1,0 +1,29 @@
+{
+    "$schema": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "renderGhost",
+            "replaceWith": "ghost",
+            "owner": {
+                "selector": "igxDrag",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "ghostImageClass",
+            "replaceWith": "ghostClass",
+            "owner": {
+                "selector": "igxDrag",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "dragGhostHost",
+            "replaceWith": "ghostHost",
+            "owner": {
+                "selector": "igxDrag",
+                "type": "directive"
+            }
+        }
+    ]
+}
