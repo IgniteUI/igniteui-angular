@@ -4,7 +4,7 @@ All notable changes for each version of this project will be documented in this 
 
 ## 8.2.0
 
-#### New theme
+### New theme
 Ignite UI for angular now have a new theme that mimics Microsoft "Fluent" design system.  
 Depending on your use case you can use one of the following mixins:  
 `igx-fluent-theme` and `igx-fluent-dark-theme`  
