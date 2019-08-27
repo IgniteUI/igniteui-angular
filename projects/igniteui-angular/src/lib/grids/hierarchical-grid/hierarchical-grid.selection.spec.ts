@@ -207,6 +207,85 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             }
         });
 
+        it('should have fire event onRowSelectionChange', () => {
+            hierarchicalGrid.expandChildren = true;
+            fix.detectChanges();
+            const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            const secondChildGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[1];
+            const parentSpy = spyOn<any>(hierarchicalGrid.onRowSelectionChange, 'emit').and.callThrough();
+            const childSpy = spyOn<any>(childGrid.onRowSelectionChange, 'emit').and.callThrough();
+            const secondChildSpy = spyOn<any>(secondChildGrid.onRowSelectionChange, 'emit').and.callThrough();
+            const mockEvent = new MouseEvent('click');
+
+            // Click on a row in child grid
+            let row = childGrid.dataRowList.toArray()[0];
+            row.nativeElement.dispatchEvent(mockEvent);
+            fix.detectChanges();
+
+            expect(secondChildSpy).toHaveBeenCalledTimes(0);
+            expect(parentSpy).toHaveBeenCalledTimes(0);
+            expect(childSpy).toHaveBeenCalledTimes(1);
+            expect(childSpy).toHaveBeenCalledWith({
+                added: ['00'],
+                cancel: false,
+                event: mockEvent,
+                newSelection: ['00'],
+                oldSelection: [],
+                removed: [],
+                owner: childGrid
+            });
+
+            // Click on checkbox on second row
+            HelperUtils.getRowCheckboxDiv(childGrid.dataRowList.toArray()[1].nativeElement).dispatchEvent(mockEvent);
+            fix.detectChanges();
+
+            expect(secondChildSpy).toHaveBeenCalledTimes(0);
+            expect(parentSpy).toHaveBeenCalledTimes(0);
+            expect(childSpy).toHaveBeenCalledTimes(2);
+            expect(childSpy).toHaveBeenCalledWith({
+                added: ['01'],
+                cancel: false,
+                event: mockEvent,
+                newSelection: ['01'],
+                oldSelection: ['00'],
+                removed: ['00'],
+                owner: childGrid
+            });
+
+            // Click on a row in parent grid
+            row = hierarchicalGrid.dataRowList.toArray()[1];
+            row.nativeElement.dispatchEvent(mockEvent);
+            fix.detectChanges();
+
+            expect(secondChildSpy).toHaveBeenCalledTimes(0);
+            expect(childSpy).toHaveBeenCalledTimes(2);
+            expect(parentSpy).toHaveBeenCalledTimes(1);
+            expect(parentSpy).toHaveBeenCalledWith({
+                added: ['1'],
+                cancel: false,
+                event: mockEvent,
+                newSelection: ['1'],
+                oldSelection: [],
+                removed: []
+            });
+
+            // Click on a header checkbox in parent grid
+            HelperUtils.getRowCheckboxDiv(HelperUtils.getHeaderRow(hierarchicalGrid)).dispatchEvent(mockEvent);
+            fix.detectChanges();
+
+            expect(secondChildSpy).toHaveBeenCalledTimes(0);
+            expect(childSpy).toHaveBeenCalledTimes(2);
+            expect(parentSpy).toHaveBeenCalledTimes(2);
+            expect(parentSpy).toHaveBeenCalledWith({
+                added: ['0', '2', '3', '4'],
+                cancel: false,
+                event: mockEvent,
+                newSelection: ['1', '0', '2', '3', '4'],
+                oldSelection: ['1'],
+                removed: []
+            });
+        });
+
         it('should able to select multiple rows with Shift and click', () => {
             // Expand first row
             const firstRow = hierarchicalGrid.dataRowList.toArray()[0];

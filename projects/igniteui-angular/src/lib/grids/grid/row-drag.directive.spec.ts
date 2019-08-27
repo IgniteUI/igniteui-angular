@@ -593,7 +593,7 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
             const row = dragGridRows[1];
             const rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
-            expect(row.isSelected).toBeTruthy();
+            expect(row.selected).toBeTruthy();
 
             const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
             const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[4].nativeElement);
@@ -614,7 +614,7 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
             expect(row.grid.rowDragging).toBeFalsy();
             verifyRowDragEndEvent(dragGrid, row, rowDragDirective, false);
             expect(dropGrid.rowList.length).toEqual(1);
-            expect(row.isSelected).toBeTruthy();
+            expect(row.selected).toBeTruthy();
         }));
         it('should not apply selection class to ghost element when dragging selected grid row', (async () => {
             dragGrid.rowSelection = GridSelectionMode.multiple;
@@ -624,7 +624,7 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
 
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
             const row = dragGridRows[1];
-            expect(row.isSelected).toBeTruthy();
+            expect(row.selected).toBeTruthy();
 
             const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
             const movePoint: Point = UIInteractions.getPointFromElement(dragGridRows[4].nativeElement);

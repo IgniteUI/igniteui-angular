@@ -646,7 +646,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid = fix.componentInstance.grid;
         }));
 
-        it('Change  RowSelection to multiple ', () => {
+        it('Change RowSelection to multiple ', () => {
             HelperUtils.verifyHeaderRowHasCheckbox(fix, false, false);
             HelperUtils.verifyRowHasCheckbox(grid.getRowByIndex(0).nativeElement, false, false);
 
