@@ -55,6 +55,12 @@ igx-chip {
     min-width: 24px;
 }
 
+.fluent-excel-theme .chip-area-avatar,
+.fluent-word-theme .chip-area-avatar,
+.fluent-excel-dark-theme .chip-area-avatar {
+    margin-left: rem(-4px) !important;
+}
+
 .wrapperAreaCc,
 .wrapperAreaTo {
     display: flex;
