@@ -189,13 +189,12 @@
     $palette: map-get($theme, 'palette');
 
     $transition-timing: .25s $ease-out-cubic;
-    $transition-timing_2: 1.45s $ease-in-out-cubic;
 
     $required-symbol: '*';
     $required-symbol-margin: 2px;
 
     $label-height: rem(18px);
-
+    $label-height--focused: rem(13.5px);
 
     // This creates an inverse relationship
     // between the value of the base scale size and
@@ -398,8 +397,11 @@
         flex-wrap: nowrap;
 
         &:hover {
+            %igx-input-group__bundle-type-border-main-focused,
             %igx-input-group__bundle-type-border-main {
-                box-shadow: 0 1px 0 --var($theme, 'hover-bottom-line-color'), 0 -1px 0 --var($theme, 'hover-bottom-line-color');
+                box-shadow:
+                    0 1px 0 --var($theme, 'hover-bottom-line-color'),
+                    0 0 0 transparent;
             }
 
             %igx-input-group__bundle-prefix {
@@ -407,6 +409,7 @@
                     inset 1px 0 0 --var($theme, 'hover-bottom-line-color'),
                     0 1px 0 --var($theme, 'hover-bottom-line-color'),
                     0 -1px 0 --var($theme, 'hover-bottom-line-color');
+                color: yellow;
             }
 
             %igx-input-group__bundle-suffix {
@@ -414,20 +417,37 @@
                     1px 0 0 --var($theme, 'hover-bottom-line-color'),
                     0 1px 0 --var($theme, 'hover-bottom-line-color'),
                     0 -1px 0 --var($theme, 'hover-bottom-line-color');
+                color: yellow;
+            }
+
+            %igx-input-group__bundle-line {
+                background: --var($theme, 'hover-bottom-line-color');
             }
         }
     }
 
     %igx-input-group__bundle-type-border-main {
-        box-shadow: 0 1px 0 --var($theme, 'idle-bottom-line-color'), 0 -1px 0 --var($theme, 'idle-bottom-line-color');
-        padding-top: rem(16px, map-get($base-scale-size, 'comfortable'));
+        box-shadow:
+            0 1px 0 --var($theme, 'idle-bottom-line-color'),
+            0 -1px 0 --var($theme, 'idle-bottom-line-color');
+
         width: 100%;
         position: relative;
         min-height: map-get($type-border-size, 'comfortable');
     }
 
     %igx-input-group__bundle-type-border-main-focused {
-        border-top: none;
+        box-shadow:
+            0 1px 0 --var($theme, 'idle-bottom-line-color'),
+            0 0 0 transparent;
+    }
+
+    %igx-input-group__bundle-type-border-main--cosy {
+        min-height: map-get($type-border-size, 'cosy');
+    }
+
+    %igx-input-group__bundle-type-border-main--compact {
+        min-height: map-get($type-border-size, 'compact');
     }
 
     %igx-input-group__bundle-suffix,
@@ -483,17 +503,18 @@
     %form-group-input--border {
         position: absolute;
         top: 0;
-        height: 100%;
+        height: 100% !important;
     }
 
     %igx-input-group__label-type-border {
-        transform: translateY(calc(50% - (#{$label-height} / 2)));
+        top: calc(50% - #{$label-height});
+        padding: 0 rem(4px);
         margin-top: 0 !important;
     }
 
     %igx-input-group__label-type-border-focused {
-        transform: translateY(calc(-100% - (#{$label-height} / 2)));
-        margin-top: 0 !important;
+        transform: scale(.75);
+        top: calc(0rem - (#{$label-height--focused} / 2));
     }
 
     %form-group-bundle--box {
@@ -617,8 +638,7 @@
         transition: transform $transition-timing,
         color $transition-timing,
         margin $transition-timing,
-        font-size $transition-timing,
-        top $transition-timing_2;
+        top $transition-timing;
 
         [dir='rtl'] & {
             transform-origin: top right;
@@ -729,19 +749,20 @@
     %igx-input-group__bundle-line {
         position: absolute;
         top: rem(-1px);
-        width: calc(100% + 1px);
+        width: calc(100% - 48px);
         height: 1px;
+        right:0;
         flex: 1;
         background: --var($theme, 'idle-bottom-line-color');
         display: none;
     }
 
     %igx-input-group__bundle-line--filled,
-    %igx-input-group__bundle-line--focus {
+    %igx-input-group__bundle-line--focused {
         display: block;
     }
 
-    %igx-input-group__bundle-line--focus {
+    %igx-input-group__bundle-line--focused {
         background: --var($theme, 'focused-secondary-color');
     }
 
@@ -751,6 +772,284 @@
 
     %igx-input-group__bundle-line--success {
         background: --var($theme, 'success-secondary-color');
+    }
+
+    %igx-input-group__bundle-type-border--focused {
+        %igx-input-group__bundle-type-border-main {
+            box-shadow:
+                0 2px 0 --var($theme, 'focused-secondary-color'),
+                0 0 0 transparent;
+        }
+
+        %igx-input-group__bundle-prefix {
+            box-shadow:
+                inset 2px 0 0 --var($theme, 'focused-secondary-color'),
+                0 2px 0 --var($theme, 'focused-secondary-color'),
+                0 -2px 0 --var($theme, 'focused-secondary-color');
+        }
+
+        %igx-input-group__bundle-suffix {
+            box-shadow:
+                2px 0 0 --var($theme, 'focused-secondary-color'),
+                0 2px 0 --var($theme, 'focused-secondary-color'),
+                0 -2px 0 --var($theme, 'focused-secondary-color');
+        }
+
+        %igx-input-group__bundle-line {
+            background: --var($theme, 'focused-secondary-color');
+            height: 2px;
+            top: -2px;
+        }
+
+        &:hover {
+            %igx-input-group__bundle-type-border-main {
+                box-shadow:
+                    0 2px 0 --var($theme, 'focused-secondary-color'),
+                    0 0 0 transparent;
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow:
+                    inset 2px 0 0 --var($theme, 'focused-secondary-color'),
+                    0 2px 0 --var($theme, 'focused-secondary-color'),
+                    0 -2px 0 --var($theme, 'focused-secondary-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow:
+                    2px 0 0 --var($theme, 'focused-secondary-color'),
+                    0 2px 0 --var($theme, 'focused-secondary-color'),
+                    0 -2px 0 --var($theme, 'focused-secondary-color');
+            }
+
+            %igx-input-group__bundle-line {
+                background: --var($theme, 'focused-secondary-color');
+                height: 2px;
+                top: -2px;
+            }
+        }
+    }
+
+    %igx-input-group__bundle-type-border--error {
+        %igx-input-group__bundle-type-border-main {
+            box-shadow:
+                0 1px 0 --var($theme, 'error-secondary-color'),
+                0 -1px 0 --var($theme, 'error-secondary-color');
+        }
+
+        %igx-input-group__bundle-prefix {
+            box-shadow:
+                inset 1px 0 0 --var($theme, 'error-secondary-color'),
+                0 1px 0 --var($theme, 'error-secondary-color'),
+                0 -1px 0 --var($theme, 'error-secondary-color');
+        }
+
+        %igx-input-group__bundle-suffix {
+            box-shadow:
+                1px 0 0 --var($theme, 'error-secondary-color'),
+                0 1px 0 --var($theme, 'error-secondary-color'),
+                0 -1px 0 --var($theme, 'error-secondary-color');
+        }
+
+        %igx-input-group__bundle-line {
+            background: --var($theme, 'error-secondary-color');
+            height: 1px;
+            top: -1px;
+        }
+
+        &:hover {
+            %igx-input-group__bundle-type-border-main {
+                box-shadow:
+                    0 1px 0 --var($theme, 'error-secondary-color'),
+                    0 -1px 0 --var($theme, 'error-secondary-color');
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow:
+                    inset 1px 0 0 --var($theme, 'error-secondary-color'),
+                    0 1px 0 --var($theme, 'error-secondary-color'),
+                    0 -1px 0 --var($theme, 'error-secondary-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow:
+                    1px 0 0 --var($theme, 'error-secondary-color'),
+                    0 1px 0 --var($theme, 'error-secondary-color'),
+                    0 -1px 0 --var($theme, 'error-secondary-color');
+            }
+
+            %igx-input-group__bundle-line {
+                background: --var($theme, 'error-secondary-color');
+                height: 1px;
+                top: -1px;
+            }
+        }
+    }
+
+    %igx-input-group__bundle-type-border--focused--error {
+        %igx-input-group__bundle-type-border-main {
+            box-shadow:
+                0 2px 0 --var($theme, 'error-secondary-color'),
+                0 0 0 transparent;
+        }
+
+        %igx-input-group__bundle-prefix {
+            box-shadow:
+                inset 2px 0 0 --var($theme, 'error-secondary-color'),
+                0 2px 0 --var($theme, 'error-secondary-color'),
+                0 -2px 0 --var($theme, 'error-secondary-color');
+        }
+
+        %igx-input-group__bundle-suffix {
+            box-shadow:
+                2px 0 0 --var($theme, 'error-secondary-color'),
+                0 2px 0 --var($theme, 'error-secondary-color'),
+                0 -2px 0 --var($theme, 'error-secondary-color');
+        }
+
+        %igx-input-group__bundle-line {
+            background: --var($theme, 'error-secondary-color');
+            height: 2px;
+            top: -2px;
+        }
+
+        &:hover {
+            %igx-input-group__bundle-type-border-main {
+                box-shadow: 0 2px 0 --var($theme, 'error-secondary-color'),
+                0 0 0 transparent;
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow:
+                    inset 2px 0 0 --var($theme, 'error-secondary-color'),
+                    0 2px 0 --var($theme, 'error-secondary-color'),
+                    0 -2px 0 --var($theme, 'error-secondary-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow:
+                    2px 0 0 --var($theme, 'error-secondary-color'),
+                    0 2px 0 --var($theme, 'error-secondary-color'),
+                    0 -2px 0 --var($theme, 'error-secondary-color');
+            }
+
+            %igx-input-group__bundle-line {
+                background: --var($theme, 'error-secondary-color');
+                height: 2px;
+                top: -2px;
+            }
+        }
+    }
+
+    %igx-input-group__bundle-type-border--success {
+        %igx-input-group__bundle-type-border-main {
+            box-shadow:
+                0 1px 0 --var($theme, 'success-secondary-color'),
+                0 0 0 transparent;
+        }
+
+        %igx-input-group__bundle-prefix {
+            box-shadow:
+                inset 1px 0 0 --var($theme, 'success-secondary-color'),
+                0 1px 0 --var($theme, 'success-secondary-color'),
+                0 -1px 0 --var($theme, 'success-secondary-color');
+        }
+
+        %igx-input-group__bundle-suffix {
+            box-shadow:
+                1px 0 0 --var($theme, 'success-secondary-color'),
+                0 1px 0 --var($theme, 'success-secondary-color'),
+                0 -1px 0 --var($theme, 'success-secondary-color');
+        }
+
+        %igx-input-group__bundle-line {
+            background: --var($theme, 'success-secondary-color');
+            height: 1px;
+            top: -1px;
+        }
+
+        &:hover {
+            %igx-input-group__bundle-type-border-main {
+                box-shadow:
+                    0 1px 0 --var($theme, 'success-secondary-color'),
+                    0 0 0 transparent;
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow:
+                    inset 1px 0 0 --var($theme, 'success-secondary-color'),
+                    0 1px 0 --var($theme, 'success-secondary-color'),
+                    0 -1px 0 --var($theme, 'success-secondary-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow:
+                    1px 0 0 --var($theme, 'success-secondary-color'),
+                    0 1px 0 --var($theme, 'success-secondary-color'),
+                    0 -1px 0 --var($theme, 'success-secondary-color');
+            }
+
+            %igx-input-group__bundle-line {
+                background: --var($theme, 'success-secondary-color');
+                height: 1px;
+                top: -1px;
+            }
+        }
+    }
+
+    %igx-input-group__bundle-type-border--focused--success {
+        %igx-input-group__bundle-type-border-main {
+            box-shadow:
+                0 2px 0 --var($theme, 'success-secondary-color'),
+                0 0 0 transparent;
+        }
+
+        %igx-input-group__bundle-prefix {
+            box-shadow:
+                inset 2px 0 0 --var($theme, 'success-secondary-color'),
+                0 2px 0 --var($theme, 'success-secondary-color'),
+                0 -2px 0 --var($theme, 'success-secondary-color');
+        }
+
+        %igx-input-group__bundle-suffix {
+            box-shadow:
+                2px 0 0 --var($theme, 'success-secondary-color'),
+                0 2px 0 --var($theme, 'success-secondary-color'),
+                0 -2px 0 --var($theme, 'success-secondary-color');
+        }
+
+        %igx-input-group__bundle-line {
+            background: --var($theme, 'success-secondary-color');
+            height: 2px;
+            top: -2px;
+        }
+
+        &:hover {
+            %igx-input-group__bundle-type-border-main {
+                box-shadow: 0 2px 0 --var($theme, 'success-secondary-color'),
+                0 0 0 transparent;
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow:
+                    inset 2px 0 0 --var($theme, 'success-secondary-color'),
+                    0 2px 0 --var($theme, 'success-secondary-color'),
+                    0 -2px 0 --var($theme, 'success-secondary-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow:
+                    2px 0 0 --var($theme, 'success-secondary-color'),
+                    0 2px 0 --var($theme, 'success-secondary-color'),
+                    0 -2px 0 --var($theme, 'success-secondary-color');
+            }
+
+            %igx-input-group__bundle-line {
+                background: --var($theme, 'success-secondary-color');
+                height: 2px;
+                top: -2px;
+            }
+        }
     }
 
     %form-group-input--hover {

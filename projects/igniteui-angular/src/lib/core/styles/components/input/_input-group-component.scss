@@ -327,17 +327,24 @@
 
     // INPUT TYPE BORDER -- DENSITY --
     @include mx(border, cosy) {
-
+        @include e(bundle-type-border-main) {
+            @extend %igx-input-group__bundle-type-border-main--cosy !optional;
+        }
     }
 
     @include mx(border, compact) {
-
+        @include e(bundle-type-border-main) {
+            @extend %igx-input-group__bundle-type-border-main--compact !optional;
+        }
     }
 
     // INPUT TYPE BORDER -- STATES (valid, invalid, focused, fulled, disabled)  --
     @include mx(valid, border) {
         @extend %form-group-display--success !optional;
 
+        @include e(bundle-type-border) {
+            @extend %igx-input-group__bundle-type-border--success !optional;
+        }
 
         @include e(bundle-line) {
             @extend %igx-input-group__bundle-line--success !optional;
@@ -347,20 +354,29 @@
     @include mx(invalid, border){
         @extend %form-group-display--error !optional;
 
+        @include e(bundle-type-border) {
+            @extend %igx-input-group__bundle-type-border--error !optional;
+        }
+
         @include e(bundle-line) {
             @extend %igx-input-group__bundle-line--error !optional;
         }
+
     }
 
     @include mx(focused, border) {
         @extend %form-group-display--focus !optional;
+
+        @include e(bundle-type-border) {
+            @extend %igx-input-group__bundle-type-border--focused !optional;
+        }
 
         @include e(label) {
             @extend %igx-input-group__label-type-border-focused !optional;
         }
 
         @include e(bundle-line) {
-            @extend %igx-input-group__bundle-line--focus !optional;
+            @extend %igx-input-group__bundle-line--focused !optional;
         }
 
         @include e(bundle-type-border-main) {
@@ -369,9 +385,19 @@
 
     }
 
+    @include mx(focused, valid, border) {
+        @include e(bundle-type-border) {
+            @extend %igx-input-group__bundle-type-border--focused--success !optional;
+        }
+    }
+
+    @include mx(focused, invalid, border) {
+        @include e(bundle-type-border) {
+            @extend %igx-input-group__bundle-type-border--focused--error !optional;
+        }
+    }
 
     @include mx(filled, border) {
-
         @include e(bundle-type-border-main) {
             @extend %igx-input-group__bundle-type-border-main-focused !optional;
         }
