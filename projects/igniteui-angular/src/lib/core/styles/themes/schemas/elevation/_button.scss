@@ -12,3 +12,14 @@ $_default-elevation-button: (
     fab-hover-elevation: 12,
     fab-focus-elevation: 12
 );
+
+$_fluent-elevation-button: (
+    raised-resting-elevation: 0,
+    raised-hover-elevation: 0,
+    raised-focus-elevation: 0,
+
+    fab-resting-elevation: 0,
+    fab-hover-elevation: 0,
+    fab-focus-elevation: 0
+);
+

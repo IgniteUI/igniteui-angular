@@ -372,73 +372,62 @@
 
     %grid-excel-menu {
         %grid-excel-menu__header > h4 {
-            font-size: rem(18px);
-            margin: 0;
-            line-height: 1;
-            font-weight: 700;
+            @include igx-type-style($type-scale, 'h6')
         }
     }
 
-    @include igx-scope('.igx-typography') {
-        %grid-excel-menu {
-            %grid-excel-menu__header > h4 {
-                @include igx-type-style($type-scale, 'h6')
-            }
+    %grid-excel-menu__secondary {
+        %grid-excel-menu__header > h4 {
+            @include igx-type-style($type-scale, 'h6');
         }
+    }
 
-        %grid-excel-menu__secondary {
-            %grid-excel-menu__header > h4 {
-                @include igx-type-style($type-scale, 'h6');
-            }
+    %grid-excel-sort,
+    %grid-excel-move {
+        header {
+            @include igx-type-style($type-scale, 'overline');
+        }
+    }
+
+    %grid-excel-menu--cosy {
+        %grid-excel-menu__header > h4 {
+            @include igx-type-style($type-scale, 'h6')
+        }
+    }
+
+    %grid-excel-menu--compact {
+        %grid-excel-menu__header > h4 {
+            @include igx-type-style($type-scale, 'subtitle-1')
         }
 
         %grid-excel-sort,
         %grid-excel-move {
             header {
-                @include igx-type-style($type-scale, 'overline');
+                @include igx-type-style($type-scale, 'body-2');
+                text-transform: capitalize;
             }
         }
 
-        %grid-excel-menu--cosy {
-            %grid-excel-menu__header > h4 {
-                @include igx-type-style($type-scale, 'h6')
-            }
-        }
-
-        %grid-excel-menu--compact {
-            %grid-excel-menu__header > h4 {
-                @include igx-type-style($type-scale, 'subtitle-1')
-            }
-
-            %grid-excel-sort,
-            %grid-excel-move {
-                header {
-                    @include igx-type-style($type-scale, 'body-2');
-                    text-transform: capitalize;
-                }
-            }
-
-            %grid-excel-actions__action {
-                span {
-                    @include igx-type-style($type-scale, 'body-2');
-                }
-            }
-
-            %cbx-label {
+        %grid-excel-actions__action {
+            span {
                 @include igx-type-style($type-scale, 'body-2');
             }
         }
 
-        %grid-excel-menu__secondary--cosy {
-            %grid-excel-menu__header > h4 {
-                @include igx-type-style($type-scale, 'h6');
-            }
+        %cbx-label {
+            @include igx-type-style($type-scale, 'body-2');
         }
+    }
 
-        %grid-excel-menu__secondary--compact {
-            %grid-excel-menu__header > h4 {
-                @include igx-type-style($type-scale, 'subtitle-1');
-            }
+    %grid-excel-menu__secondary--cosy {
+        %grid-excel-menu__header > h4 {
+            @include igx-type-style($type-scale, 'h6');
+        }
+    }
+
+    %grid-excel-menu__secondary--compact {
+        %grid-excel-menu__header > h4 {
+            @include igx-type-style($type-scale, 'subtitle-1');
         }
     }
 }

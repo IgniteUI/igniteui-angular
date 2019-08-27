@@ -53,10 +53,13 @@
         body-1: 'p'
     );
 
+    $this: bem--selector-to-string(&);
+    $scope: if(is-root(), 'igx-typography', #{str-slice($this, 2, -1)});
+
     // Use the BEM notation to create a link
     // between the igx-typography class selector
     // and all typographic elements.
-    @include b(igx-typography) {
+    @include b($scope) {
         font-family: unquote($font-family);
         font-size: $browser-context;
         line-height: $browser-line-height;
@@ -91,30 +94,30 @@
                 @extend %#{$category};
             }
         }
-    }
 
-    // Call the individual component styles with the type scale
-    @include igx-bottom-nav-typography($type-scale);
-    @include igx-button-typography($type-scale);
-    @include igx-banner-typography($type-scale);
-    @include igx-calendar-typography($type-scale);
-    @include igx-card-typography($type-scale);
-    @include igx-checkbox-typography($type-scale);
-    @include igx-chip-typography($type-scale);
-    @include igx-column-hiding-typography($type-scale);
-    @include igx-dialog-typography($type-scale);
-    @include igx-drop-down-typography($type-scale);
-    @include igx-expansion-panel-typography($type-scale);
-    @include _excel-filtering-typography($type-scale);
-    @include igx-input-group-typography($type-scale);
-    @include igx-navbar-typography($type-scale);
-    @include igx-navdrawer-typography($type-scale);
-    @include igx-list-typography($type-scale);
-    @include igx-radio-typography($type-scale);
-    @include igx-snackbar-typography($type-scale);
-    @include igx-switch-typography($type-scale);
-    @include igx-tabs-typography($type-scale);
-    @include igx-time-picker-typography($type-scale);
-    @include igx-toast-typography($type-scale);
-    @include igx-tooltip-typography($type-scale);
+        // Call the individual component styles with the type scale
+        @include igx-button-typography($type-scale);
+        @include igx-bottom-nav-typography($type-scale);
+        @include igx-banner-typography($type-scale);
+        @include igx-calendar-typography($type-scale);
+        @include igx-card-typography($type-scale);
+        @include igx-checkbox-typography($type-scale);
+        @include igx-chip-typography($type-scale);
+        @include igx-column-hiding-typography($type-scale);
+        @include igx-dialog-typography($type-scale);
+        @include igx-drop-down-typography($type-scale);
+        @include igx-expansion-panel-typography($type-scale);
+        @include _excel-filtering-typography($type-scale);
+        @include igx-input-group-typography($type-scale);
+        @include igx-navbar-typography($type-scale);
+        @include igx-navdrawer-typography($type-scale);
+        @include igx-list-typography($type-scale);
+        @include igx-radio-typography($type-scale);
+        @include igx-snackbar-typography($type-scale);
+        @include igx-switch-typography($type-scale);
+        @include igx-tabs-typography($type-scale);
+        @include igx-time-picker-typography($type-scale);
+        @include igx-toast-typography($type-scale);
+        @include igx-tooltip-typography($type-scale);
+    }
 }

@@ -1,0 +1,4 @@
+@import '../index';
+
+@include igx-core();
+@include igx-fluent-theme($fluent-excel-palette);

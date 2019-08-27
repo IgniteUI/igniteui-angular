@@ -26,61 +26,79 @@
 ///
 /// @see $default-palette
 
-$_light-grid-toolbar: extend(
-    $_default-shape-grid-toolbar,
+$_light-grid-toolbar: (
+    background-color: (
+        igx-color: ('grays', 50)
+    ),
+
+    title-text-color : (
+        igx-color: ('grays', 600)
+    ),
+
+    button-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    button-text-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    button-hover-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    button-hover-text-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    button-focus-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    button-focus-text-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    dropdown-background: #fff,
+
+    item-text-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    item-hover-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    item-hover-text-color: (
+        igx-color: ('grays', 600)
+    ),
+
+    item-focus-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    item-focus-text-color: (
+        igx-color: ('grays', 600)
+    )
+);
+
+/// Generates a fluent grid-toolbar schema.
+/// @type {Map}
+///
+/// @property {map} background-color [igx-color: 'surface'] - The toolbar background color.
+/// @property {map} button-hover-text-color [igx-color: ('primary', 500)] - The toolbar button hover text color.
+///
+/// @requires {function} extend
+/// @requires {map} $_light-grid-toolbar
+$_fluent-grid-toolbar: extend(
+    $_light-grid-toolbar,
     (
         background-color: (
-            igx-color: ('grays', 50)
-        ),
-
-        title-text-color : (
-            igx-color: ('grays', 600)
-        ),
-
-        button-background: (
-            igx-color: ('grays', 100)
-        ),
-
-        button-text-color: (
-            igx-color: ('grays', 600)
-        ),
-
-        button-hover-background: (
-            igx-color: ('grays', 100)
+            igx-color: 'surface'
         ),
 
         button-hover-text-color: (
-            igx-color: ('grays', 600)
+            igx-color: ('primary', 500)
         ),
-
-        button-focus-background: (
-            igx-color: ('grays', 100)
-        ),
-
-        button-focus-text-color: (
-            igx-color: ('grays', 600)
-        ),
-
-        dropdown-background: #fff,
-
-        item-text-color: (
-            igx-color: ('grays', 600)
-        ),
-
-        item-hover-background: (
-            igx-color: ('grays', 100)
-        ),
-
-        item-hover-text-color: (
-            igx-color: ('grays', 600)
-        ),
-
-        item-focus-background: (
-            igx-color: ('grays', 100)
-        ),
-
-        item-focus-text-color: (
-            igx-color: ('grays', 600)
-        )
     )
 );

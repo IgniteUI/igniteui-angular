@@ -8,3 +8,10 @@ $_default-elevation-input-group: (
     search-hover-elevation: 2,
     search-disabled-elevation: 0,
 );
+
+$_fluent-elevation-input-group: (
+    search-resting-elevation: 0,
+    search-hover-elevation: 0,
+    search-disabled-elevation: 0,
+);
+

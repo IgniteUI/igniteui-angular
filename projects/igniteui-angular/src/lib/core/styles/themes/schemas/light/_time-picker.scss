@@ -20,9 +20,10 @@
 /// @prop {Map} background-color [igx-color: 'surface'] - The time-picker panel background color.
 /// @prop {Number} modal-elevation [24] - The elevation level used for the time picker in modal mode.
 /// @prop {Number} dropdown-elevation [8] - The elevation level used for the time picker in dropdown mode.
+/// @prop {Number} border-radius [.2] - The border radius fraction used for the overall shape of the time-picker.
+/// @prop {Number} active-item-border-radius [.75] - The border-radius used for the highlight of the active item in the time-picker.
 ///
 /// @see $default-palette
-
 $_light-time-picker: extend(
     $_default-shape-time-picker,
     $_default-elevation-time-picker,
@@ -64,3 +65,12 @@ $_light-time-picker: extend(
         ),
     )
 );
+
+/// Generates a fluent time-picker schema.
+/// @type {Map}
+/// @prop {Number} border-radius [2px] - The border radius fraction used for the overall shape of the time-picker.
+/// @prop {Number} active-item-border-radius [2px] - The border-radius used for the highlight of the active item in the time-picker.
+/// @requires {function} extend
+/// @requires $_light-time-picker
+/// @requires $_fluent-shape-time-picker
+$_fluent-time-picker: extend($_light-time-picker, $_fluent-shape-time-picker);

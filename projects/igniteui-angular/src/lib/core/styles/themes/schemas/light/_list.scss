@@ -41,7 +41,6 @@
 /// @prop {Number} item-border-radius [0] - The border radius fraction, between 0-1 to be used for list item.
 ///
 /// @see $default-palette
-
 $_light-list: extend(
     $_default-shape-list,
     (
@@ -114,3 +113,9 @@ $_light-list: extend(
         item-thumbnail-color-active: currentColor
     )
 );
+
+/// Generates a fluent schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-list
+$_fluent-list: extend($_light-list);
