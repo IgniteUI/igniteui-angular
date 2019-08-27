@@ -4,6 +4,29 @@ All notable changes for each version of this project will be documented in this 
 
 ## 8.2.0
 
+#### New theme
+Ignite UI for angular now have a new theme that mimics Microsoft "Fluent" design system.  
+In order to use the theme you have to use one of the following mixins:  
+  `igx-fluent-theme` and `igx-fluent-dark-theme`  
+  
+We also added two new pallets that can go with the new theme, `$fluent-word-palette` and `$fluent-excel-palette`. Of Course, you can always create your own palettes and use them with the theme.
+
+This is an example of how you can use the new theme.
+
+```scss
+// Light version
+.fluent-word-theme {
+    @include igx-fluent-theme($fluent-word-palette);
+}
+
+// Dark version
+.fluent-excel-dark-theme {
+    @include igx-fluent-dark-theme($fluent-excel-palette);
+}
+```
+
+For more info about the theming please read our [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/index.html)  
+
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - `uniqueColumnValuesStrategy` input is added. This property provides a callback for loading unique column values on demand. If this property is provided, the unique values it generates will be used by the Excel Style Filtering (instead of using the unique values from the data that is bound to the grid).
@@ -102,28 +125,6 @@ All notable changes for each version of this project will be documented in this 
 ## 8.1.0
 
 ### New Features
-
-##### New theme
-Ignite UI for angular now have a new theme that mimics the Microsoft Fluent design as much as possible.  
-In order to use the theme you have to use one of the following mixins:  
-  `igx-fluent-theme` and `igx-fluent-dark-theme`  
-  
-We also added two new pallets that go with the new theme, `$fluent-word-palette` and `$fluent-excel-palette`.  
-  
-This is an example of how you can use the new theme.
-
-```scss
-// Light version
-.fluent-word-theme {
-    @include igx-fluent-theme($fluent-word-palette);
-}
-
-// Dark version
-.fluent-excel-dark-theme {
-    @include igx-fluent-dark-theme($fluent-excel-palette);
-}
-```
-
 - `IgxBottomNav` now supports an `igx-tab` declaration mode. When in this mode, panels declarations are not accepted and tab items' content is not rendered.
     - You can use this mode to apply directives on the tab items - for example to achieve routing navigation.
     - You are allowed to customize tab items with labels, icons and even templates.
