@@ -631,36 +631,36 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         this.overlayService = overlayService;
         this.overlayComponentId = overlayComponentId;
 
-        if (!this.grid.crossFieldFilteringExpressionsTree) {
-            const tree = new FilteringExpressionsTree(FilteringLogic.And);
-            tree.filteringOperands.push({
-                fieldName: 'ID',
-                condition: IgxStringFilteringOperand.instance().condition('contains'),
-                searchVal: 'a',
-                ignoreCase: true
-            });
-            const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
-            orTree.filteringOperands.push({
-                fieldName: 'ID',
-                condition: IgxStringFilteringOperand.instance().condition('contains'),
-                searchVal: 'b',
-                ignoreCase: true
-            });
-            orTree.filteringOperands.push({
-                fieldName: 'CompanyName',
-                condition: IgxStringFilteringOperand.instance().condition('contains'),
-                searchVal: 'c',
-                ignoreCase: true
-            });
-            tree.filteringOperands.push(orTree);
-            tree.filteringOperands.push({
-                fieldName: 'CompanyName',
-                condition: IgxStringFilteringOperand.instance().condition('contains'),
-                searchVal: 'd',
-                ignoreCase: true
-            });
-            this.grid.crossFieldFilteringExpressionsTree = tree;
-        }
+        // if (!this.grid.crossFieldFilteringExpressionsTree) {
+        //     const tree = new FilteringExpressionsTree(FilteringLogic.And);
+        //     tree.filteringOperands.push({
+        //         fieldName: 'ID',
+        //         condition: IgxStringFilteringOperand.instance().condition('contains'),
+        //         searchVal: 'a',
+        //         ignoreCase: true
+        //     });
+        //     const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
+        //     orTree.filteringOperands.push({
+        //         fieldName: 'ID',
+        //         condition: IgxStringFilteringOperand.instance().condition('contains'),
+        //         searchVal: 'b',
+        //         ignoreCase: true
+        //     });
+        //     orTree.filteringOperands.push({
+        //         fieldName: 'CompanyName',
+        //         condition: IgxStringFilteringOperand.instance().condition('contains'),
+        //         searchVal: 'c',
+        //         ignoreCase: true
+        //     });
+        //     tree.filteringOperands.push(orTree);
+        //     tree.filteringOperands.push({
+        //         fieldName: 'CompanyName',
+        //         condition: IgxStringFilteringOperand.instance().condition('contains'),
+        //         searchVal: 'd',
+        //         ignoreCase: true
+        //     });
+        //     this.grid.crossFieldFilteringExpressionsTree = tree;
+        // }
 
         if (this.grid.crossFieldFilteringExpressionsTree) {
             this.rootGroup = this.createExpressionGroupItem(this.grid.crossFieldFilteringExpressionsTree);
