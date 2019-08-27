@@ -6,12 +6,12 @@ All notable changes for each version of this project will be documented in this 
 
 #### New theme
 Ignite UI for angular now have a new theme that mimics Microsoft "Fluent" design system.  
-In order to use the theme you have to use one of the following mixins:  
-  `igx-fluent-theme` and `igx-fluent-dark-theme`  
+Depending on your use case you can use one of the following mixins:  
+`igx-fluent-theme` and `igx-fluent-dark-theme`  
   
-We also added two new pallets that can go with the new theme, `$fluent-word-palette` and `$fluent-excel-palette`. Of Course, you can always create your own palettes and use them with the theme.
+We also added two new pallets that go with the new theme, `$fluent-word-palette` and `$fluent-excel-palette`.
 
-This is an example of how you can use the new theme.
+Next example shows how you can use the Fluent theme.
 
 ```scss
 // Light version
@@ -25,7 +25,7 @@ This is an example of how you can use the new theme.
 }
 ```
 
-For more info about the theming please read our [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/index.html)  
+For more information about the theming please read our [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/index.html)  
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
