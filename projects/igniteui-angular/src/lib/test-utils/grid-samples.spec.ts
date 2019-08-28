@@ -1,11 +1,11 @@
-import { Component, TemplateRef, ViewChild, Input, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, TemplateRef, ViewChild, Input, AfterViewInit, ChangeDetectorRef, QueryList, ViewChildren } from '@angular/core';
 import { IgxGridCellComponent } from '../grids/cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/summaries/grid-summary';
 import { IGridCellEventArgs, IGridEditEventArgs, IgxGridTransaction } from '../grids/grid-base.component';
 import { BasicGridComponent, BasicGridSearchComponent, GridAutoGenerateComponent,
         GridNxMComponent, GridWithSizeComponent, PagingComponent } from './grid-base-components.spec';
-import { IGridSelection, IEditDone, IGridRowEvents, IGridRowSelectionChange } from './grid-interfaces.spec';
-import { SampleTestData } from './sample-test-data.spec';
+import { IGridSelection } from './grid-interfaces.spec';
+import { SampleTestData, DataParent } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions } from './template-strings.spec';
 import { IgxColumnComponent } from '../grids/column.component';
 import { IgxTransactionService } from '../services';
@@ -13,6 +13,8 @@ import { IgxFilteringOperand } from '../data-operations/filtering-condition';
 import { ExpressionUI } from '../grids/filtering/grid-filtering.service';
 import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { FilteringStrategy } from '../data-operations/filtering-strategy';
+import { IgxGridComponent } from '../grids/grid';
+import { IgxRowEditTabStopDirective } from '../grids/grid.rowEdit.directive';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -1167,4 +1169,187 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
     data = SampleTestData.contactInfoDataFull();
     width = '800px';
     height = '800px';
+}
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'"
+    width="900px" height="600px" [rowEditable]="true" >
+        <igx-column field="ProductID" header="Product ID" [editable]="false" width="200px"></igx-column>
+        <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" editable="true" width="100px">
+        </igx-column>
+        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" editable="true" [sortable]="true" width="200px">
+        </igx-column>
+        <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" editable="true" width="200px"></igx-column>
+    </igx-grid>`
+})
+export class IgxGridRowEditingComponent extends BasicGridComponent {
+    public data = SampleTestData.foodProductData();
+}
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
+        <igx-column>
+            <ng-template igxCell let-cell="cell" let-val>
+                <button>Delete</button>
+            </ng-template>
+        </igx-column>
+        <igx-column field="ProductID" header="Product ID"></igx-column>
+        <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" [editable]="true" width="100px"></igx-column>
+        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="150px"></igx-column>
+        <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="150px" [editable]="false"></igx-column>
+    </igx-grid>`
+})
+export class IgxGridRowEditingWithoutEditableColumnsComponent extends BasicGridComponent {
+    public data = SampleTestData.foodProductData();
+}
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" [primaryKey]="'ID'" width="700px" height="400px" [rowEditable]="true">
+        <igx-column
+        field="Downloads" header="Downloads" [dataType]="'number'" [pinned]="pinnedFlag" [editable]="true">
+        </igx-column>
+        <igx-column field="ID" header="ID" [dataType]="'number'"
+        [editable]="false" [pinned]="pinnedFlag" [hidden]="hiddenFlag" width="60px">
+        </igx-column>
+        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" [editable]="false" [hidden]="hiddenFlag" width="150px">
+        </igx-column>
+        <igx-column field="ReleaseDate" header="Release Date" [dataType]="'date'" [editable]="true" [hidden]="hiddenFlag" width="150px">
+        </igx-column>
+        <igx-column-group [movable]="true" header="Column Group 1" *ngIf="columnGroupingFlag">
+            <igx-column field="Released" header="Released" [dataType]="'boolean'" [pinned]="pinnedFlag" [editable]="true" width="100px">
+            </igx-column>
+            <igx-column field="Category" header="Category" [dataType]="'string'" [editable]="false" [hidden]="hiddenFlag" width="150px">
+            </igx-column>
+        </igx-column-group>
+        <ng-container *ngIf="!columnGroupingFlag">
+            <igx-column field="Released" header="Released" [dataType]="'boolean'" [pinned]="pinnedFlag" [editable]="true" width="100px">
+            </igx-column>
+            <igx-column field="Category" header="Category" [dataType]="'string'" [editable]="true" [hidden]="hiddenFlag" width="150px">
+            </igx-column>
+        </ng-container>
+        <igx-column field="Items" header="Items" [dataType]="'string'" [editable]="true" width="150px">
+        </igx-column>
+        <igx-column field="Test" header="Test" [dataType]="'string'" [editable]="true" [hidden]="hiddenFlag" width="150px">
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridWithEditingAndFeaturesComponent extends BasicGridComponent {
+    /* Data fields: Downloads:number, ID: number, ProductName: string, ReleaseDate: Date,
+                Released: boolean, Category: string, Items: string, Test: string. */
+    public pinnedFlag = false;
+    public hiddenFlag = false;
+    public columnGroupingFlag = false;
+    public data = SampleTestData.generateProductData(11);
+}
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
+        <igx-column field="ProductID" header="Product ID"></igx-column>
+        <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" [editable]="true" width="100px"></igx-column>
+        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="150px"></igx-column>
+        <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="150px" [editable]="false"></igx-column>
+        <ng-template igxRowEdit let-rowChangesCount="rowChangesCount" let-endEdit="endEdit">
+            <div class="igx-banner__message">
+                <span class="igx-banner__text">{{ rowChangesCount }} </span>
+            </div>
+            <div class="igx-banner__actions">
+                <div class="igx-banner__row">
+                    <button igxButton igxRowEditTabStop (click)="endEdit(false)">Cancel</button>
+                    <button igxButton igxRowEditTabStop (click)="endEdit(true)">Done</button>
+                </div>
+            </div>
+        </ng-template>
+    </igx-grid>
+    `
+})
+export class IgxGridCustomOverlayComponent extends BasicGridComponent {
+    public data = SampleTestData.foodProductData();
+    @ViewChildren(IgxRowEditTabStopDirective) public buttons: QueryList<IgxRowEditTabStopDirective>;
+
+    public get gridAPI() {
+        return (<any>this.grid).gridAPI;
+    }
+
+    public get cellInEditMode() {
+        return this.gridAPI.get_cell_inEditMode();
+    }
+
+    public getCurrentEditCell(): IgxGridCellComponent {
+        const grid = this.grid as any;
+        const currentCell = grid.gridAPI.get_cell_inEditMode();
+        return this.grid.getCellByColumn(currentCell.id.rowIndex, currentCell.column.field);
+    }
+
+    public moveNext(shiftKey: boolean): void {
+        this.getCurrentEditCell().dispatchEvent(new KeyboardEvent('keydown', {
+            key: 'tab',
+            code: 'tab',
+            shiftKey
+        }));
+    }
+}
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="900px" height="900px" [rowEditable]="true"
+    [paging]="paging" [perPage]="7">
+        <igx-column field="ProductID" header="Product ID" width="150px"></igx-column>
+        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="200px"></igx-column>
+        <igx-column field="InStock" header="In Stock" [dataType]="'boolean'" width="100px"></igx-column>
+        <igx-column field="UnitsInStock" header="Units in Stock" [dataType]="'number'" width="150px"></igx-column>
+        <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="200px"></igx-column>
+    </igx-grid>`,
+    providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }],
+})
+export class IgxGridRowEditingTransactionComponent extends BasicGridComponent {
+    public data = SampleTestData.foodProductData();
+    public paging = false;
+}
+
+@Component({
+    template: `
+        <igx-grid
+            [width]='width'
+            [height]='height'
+            [data]="data"
+            [autoGenerate]="true" (onColumnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)"
+            [rowEditable]="enableRowEditing">
+        </igx-grid>
+        <ng-template #dropArea>
+            <span> Custom template </span>
+        </ng-template>
+    `
+})
+export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
+    public width = '800px';
+    public height = null;
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public instance: IgxGridComponent;
+
+    @ViewChild('dropArea', { read: TemplateRef, static: true })
+    public dropAreaTemplate: TemplateRef<any>;
+
+    public enableSorting = false;
+    public enableFiltering = false;
+    public enableResizing = false;
+    public enableEditing = true;
+    public enableGrouping = true;
+    public enableRowEditing = true;
+    public currentSortExpressions;
+
+    public columnsCreated(column: IgxColumnComponent) {
+        column.sortable = this.enableSorting;
+        column.filterable = this.enableFiltering;
+        column.resizable = this.enableResizing;
+        column.editable = this.enableEditing;
+        column.groupable = this.enableGrouping;
+    }
+    public onGroupingDoneHandler(sortExpr) {
+        this.currentSortExpressions = sortExpr;
+    }
 }

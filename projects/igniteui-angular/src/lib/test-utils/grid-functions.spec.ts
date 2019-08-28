@@ -17,6 +17,11 @@ const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CONNECTOR = 'igx-filtering-chips__connector';
 const FILTER_UI_INDICATOR = 'igx-grid__filtering-cell-indicator';
+const BANNER_CLASS = '.igx-banner';
+const BANNER_TEXT_CLASS = '.igx-banner__text';
+const BANNER_ROW_CLASS = '.igx-banner__row';
+const EDIT_OVERLAY_CONTENT = '.igx-overlay__content';
+const PAGER_BUTTONS = '.igx-grid-paginator__pager > button';
 
 export class GridFunctions {
 
@@ -363,7 +368,6 @@ export class GridFunctions {
 
         return chkElement;
     }
-
 
     public static getCheckboxInput(name: string, element: DebugElement, fix) {
         const checkboxEl = this.getCheckboxElement(name, element, fix);
@@ -857,5 +861,54 @@ export class GridFunctions {
     public static sortNativeElementsHorizontally(arr) {
         return arr.sort((a, b) =>
             (<HTMLElement>a).getBoundingClientRect().left - (<HTMLElement>b).getBoundingClientRect().left);
+    }
+
+    public static getRowEditingBannerRow(fix): HTMLElement {
+        return fix.nativeElement.querySelector(BANNER_ROW_CLASS);
+    }
+
+    public static getRowEditingBanner(fix): HTMLElement {
+        return fix.nativeElement.querySelector(BANNER_CLASS);
+    }
+
+    public static getRowEditingOverlay(fix): HTMLElement {
+        return fix.nativeElement.querySelector(EDIT_OVERLAY_CONTENT);
+    }
+
+    public static getRowEditingBannerText(fix) {
+        return fix.nativeElement.querySelector(BANNER_TEXT_CLASS).textContent.trim();
+    }
+
+    public static getRowEditingDoneButton(fix): HTMLElement {
+        return GridFunctions.getRowEditingBannerRow(fix).lastElementChild as HTMLElement;
+    }
+
+    public static getRowEditingCancelButton(fix): HTMLElement {
+        return GridFunctions.getRowEditingBannerRow(fix).firstElementChild as HTMLElement;
+    }
+
+    public static getPagingButtons(parent) {
+        return parent.querySelectorAll(PAGER_BUTTONS);
+    }
+
+    public static clickPagingButton(parent, buttonIndex: number) {
+        const pagingButtons = GridFunctions.getPagingButtons(parent);
+        pagingButtons[buttonIndex].dispatchEvent(new Event('click'));
+    }
+
+    public static navigateToFirstPage(parent) {
+        GridFunctions.clickPagingButton(parent, 0);
+    }
+
+    public static navigateToPrevPage(parent) {
+        GridFunctions.clickPagingButton(parent, 1);
+    }
+
+    public static navigateToNextPage(parent) {
+        GridFunctions.clickPagingButton(parent, 2);
+    }
+
+    public static navigateToLastPage(parent) {
+        GridFunctions.clickPagingButton(parent, 3);
     }
 }

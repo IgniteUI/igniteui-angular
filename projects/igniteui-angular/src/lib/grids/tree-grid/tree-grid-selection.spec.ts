@@ -20,6 +20,7 @@ import {
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxTreeGrid - Selection #tGrid', () => {
     configureTestSuite();
@@ -745,10 +746,10 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
 
             // Clicking on the pager buttons triggers a blur event.
 
-            navigateToNextPage(fix);
+            GridFunctions.navigateToNextPage(treeGridCell.nativeElement);
             treeGridCell.nativeElement.dispatchEvent(new Event('blur'));
             fix.detectChanges();
-            navigateToFirstPage(fix);
+            GridFunctions.navigateToFirstPage(treeGridCell.nativeElement);
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(0);
@@ -762,10 +763,10 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
             expect(TreeGridFunctions.verifyGridCellHasSelectedClass(treeGridCell)).toBe(true);
 
-            navigateToLastPage(fix);
+            GridFunctions.navigateToLastPage(treeGridCell.nativeElement);
             treeGridCell.nativeElement.dispatchEvent(new Event('blur'));
             fix.detectChanges();
-            navigateToFirstPage(fix);
+            GridFunctions.navigateToFirstPage(treeGridCell.nativeElement);
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(0);
@@ -933,26 +934,4 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
 function getVisibleSelectedRows(fix) {
     return TreeGridFunctions.getAllRows(fix).filter(
         (row) => row.nativeElement.classList.contains(TREE_ROW_SELECTION_CSS_CLASS));
-}
-
-function navigateToFirstPage(fix) {
-    clickPagerButton(fix, 0);
-}
-
-function navigateToPrevPage(fix) {
-    clickPagerButton(fix, 1);
-}
-
-function navigateToNextPage(fix) {
-    clickPagerButton(fix, 2);
-}
-
-function navigateToLastPage(fix) {
-    clickPagerButton(fix, 3);
-}
-
-function clickPagerButton(fix, button: number) {
-    const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
-    const pagingButtons = gridElement.querySelectorAll('.igx-grid-paginator__pager > button');
-    pagingButtons[button].dispatchEvent(new Event('click'));
 }
