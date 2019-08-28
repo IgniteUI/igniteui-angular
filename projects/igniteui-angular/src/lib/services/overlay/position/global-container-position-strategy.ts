@@ -13,6 +13,7 @@ export class GlobalContainerPositionStrategy extends GlobalPositionStrategy {
         super(settings);
     }
 
+    /** @inheritdoc */
     position(contentElement: HTMLElement, size?: Size, document?: Document, initialCall?: boolean): void {
         contentElement.classList.add('igx-overlay__content--relative');
         contentElement.parentElement.classList.add('igx-overlay__wrapper--flex-container');

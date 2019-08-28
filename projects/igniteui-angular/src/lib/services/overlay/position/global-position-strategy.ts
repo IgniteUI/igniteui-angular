@@ -24,6 +24,7 @@ export class GlobalPositionStrategy implements IPositionStrategy {
         this.settings = Object.assign({}, this._defaultSettings, settings);
     }
 
+    /** @inheritdoc */
     position(contentElement: HTMLElement, size?: Size, document?: Document, initialCall?: boolean): void {
         contentElement.classList.add('igx-overlay__content--relative');
         contentElement.parentElement.classList.add('igx-overlay__wrapper--flex');
