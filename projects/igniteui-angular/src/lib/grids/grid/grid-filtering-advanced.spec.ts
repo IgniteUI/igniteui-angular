@@ -57,8 +57,32 @@ describe('IgxGrid - Advanced Filtering', () => {
             fix.detectChanges();
         }));
 
-        it('Test', fakeAsync(() => {
+        it('Should correctly initialize the Advanced Filtering dialog.',
+        fakeAsync(() => {
+            // Open Advanced Filtering dialog.
+            const advFilterButton = GridFunctions.getAdvancedFilteringButton(fix);
+            advFilterButton.click();
+            fix.detectChanges();
 
+            // Verify AF dialog is opened.
+            let advFilterDialog = GridFunctions.getAdvancedFilteringComponent(fix);
+            expect(advFilterDialog).not.toBeNull();
+
+            // Verify there are not filters present and that the default text is shown.
+            const filterTrees = GridFunctions.getAdvancedFilteringAllFilterTrees(fix);
+            expect(filterTrees.length).toBe(0);
+            expect(grid.crossFieldFilteringExpressionsTree).toBeUndefined();
+            expect(GridFunctions.getAdvancedFilteringEmptyPrompt(fix)).not.toBeNull();
+
+            // Close Advanced Filtering dialog.
+            const cancelButton = GridFunctions.getAdvancedFilteringCancelButton(fix);
+            cancelButton.click();
+            tick(200);
+            fix.detectChanges();
+
+            // Verify AF dialog is closed.
+            advFilterDialog = GridFunctions.getAdvancedFilteringComponent(fix);
+            expect(advFilterDialog).toBeNull();
         }));
     });
 });

@@ -335,8 +335,15 @@ export class GridFunctions {
         return div.classList.contains('igx-overlay') ? div : null;
     }
 
+    public static getAdvancedFilteringButton(fix: ComponentFixture<any>) {
+        const button = GridFunctions.getToolbar(fix).queryAll(By.css('button'))
+        .find((b) => b.nativeElement.name === 'btnAdvancedFiltering');
+        return button ? button.nativeElement : undefined;
+    }
+
     public static getColumnHidingButton(fixture) {
-        const button = GridFunctions.getToolbar(fixture).queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnHiding');
+        const button = GridFunctions.getToolbar(fixture).queryAll(By.css('button'))
+        .find((b) => b.nativeElement.name === 'btnColumnHiding');
         return button ? button.nativeElement : undefined;
     }
 
@@ -823,6 +830,75 @@ export class GridFunctions {
         const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
         return GridFunctions.sortNativeElementsVertically(
             Array.from(customFilterMenu.querySelectorAll('igx-excel-style-date-expression')));
+    }
+
+    public static getAdvancedFilteringComponent(fix: ComponentFixture<any>) {
+        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+        const advFilterDialog = gridNativeElement.querySelector('.igx-advanced-filter');
+        return advFilterDialog;
+    }
+
+    public static getAdvancedFilteringEmptyPrompt(fix: ComponentFixture<any>) {
+        const advFilterDialog = GridFunctions.getAdvancedFilteringComponent(fix);
+        const emptyPrompt = advFilterDialog.querySelector('.igx-filter-empty');
+        return emptyPrompt;
+    }
+
+    public static getAdvancedFilteringHeader(fix: ComponentFixture<any>) {
+        const advFilterDialog = GridFunctions.getAdvancedFilteringComponent(fix);
+        const header = advFilterDialog.querySelector('.igx-advanced-filter__header');
+        return header;
+    }
+
+    public static getAdvancedFilteringHeaderText(fix: ComponentFixture<any>) {
+        const header = GridFunctions.getAdvancedFilteringHeader(fix);
+        const title = header.querySelector('h4');
+        return title.innerText;
+    }
+
+    public static getAdvancedFilteringHeaderLegendItemAnd(fix: ComponentFixture<any>) {
+        const header = GridFunctions.getAdvancedFilteringHeader(fix);
+        const andLegendItem = header.querySelector('.igx-filter-legend__item--and');
+        return andLegendItem;
+    }
+
+    public static getAdvancedFilteringHeaderLegendItemOr(fix: ComponentFixture<any>) {
+        const header = GridFunctions.getAdvancedFilteringHeader(fix);
+        const orLegendItem = header.querySelector('.igx-filter-legend__item--or');
+        return orLegendItem;
+    }
+
+    public static getAdvancedFilteringAllFilterTrees(fix: ComponentFixture<any>): any[] {
+        const advFilterDialog = GridFunctions.getAdvancedFilteringComponent(fix);
+        const filterTrees: any[] = Array.from(advFilterDialog.querySelectorAll('.igx-filter-tree'));
+        return filterTrees;
+    }
+
+    public static getAdvancedFilteringFooter(fix: ComponentFixture<any>) {
+        const advFilterDialog = GridFunctions.getAdvancedFilteringComponent(fix);
+        const footer = advFilterDialog.querySelector('.igx-excel-filter__secondary-footer');
+        return footer;
+    }
+
+    public static getAdvancedFilteringClearFilterButton(fix: ComponentFixture<any>) {
+        const footer = GridFunctions.getAdvancedFilteringFooter(fix);
+        const clearFilterButton: any = Array.from(footer.querySelectorAll('button'))
+                                       .find((b: any) => b.innerText.toLowerCase() === 'clear');
+        return clearFilterButton;
+    }
+
+    public static getAdvancedFilteringCancelButton(fix: ComponentFixture<any>) {
+        const footer = GridFunctions.getAdvancedFilteringFooter(fix);
+        const cancelFilterButton: any = Array.from(footer.querySelectorAll('button'))
+                                        .find((b: any) => b.innerText.toLowerCase() === 'cancel');
+        return cancelFilterButton;
+    }
+
+    public static getAdvancedFilteringApplyButton(fix: ComponentFixture<any>) {
+        const footer = GridFunctions.getAdvancedFilteringFooter(fix);
+        const applyFilterButton: any = Array.from(footer.querySelectorAll('button'))
+                                       .find((b: any) => b.innerText.toLowerCase() === 'apply');
+        return applyFilterButton;
     }
 
     public static setInputValueESF(customMenu, expressionIndex: number, value: any, fix: ComponentFixture<any>) {
