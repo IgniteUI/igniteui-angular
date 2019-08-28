@@ -337,6 +337,7 @@
         justify-content: space-between;
         align-items: center;
         padding-bottom: $cal-picker-padding;
+        position: relative;
     }
 
     %cal-picker-arrow {
@@ -346,7 +347,9 @@
         user-select: none;
         outline: none;
         cursor: pointer;
-        flex-basis: 14.28%; /* equals the width of a single date 100% / 7 (days) */
+        position: absolute;
+        height: 100%;
+        align-items: center;
 
         &:focus,
         &:hover {
