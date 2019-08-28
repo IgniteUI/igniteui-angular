@@ -943,6 +943,71 @@ export class GridFunctions {
         return node;
     }
 
+    /**
+    * Get the operator line of the group that is located on the provided 'path'.
+    */
+    public static getAdvancedFilteringTreeGroupOperatorLine(fix: ComponentFixture<any>, path: number[]) {
+        const group = GridFunctions.getAdvancedFilteringTreeItem(fix, path);
+        const directOperatorLine = group.querySelector(':scope > .igx-filter-tree__line');
+        return directOperatorLine;
+    }
+
+    /**
+    * Get the underlying chip of the expression that is located on the provided 'path'.
+    */
+    public static getAdvancedFilteringTreeExpressionChip(fix: ComponentFixture<any>, path: number[]) {
+        const treeItem = GridFunctions.getAdvancedFilteringTreeItem(fix, path);
+        const chip = treeItem.querySelector('igx-chip');
+        return chip;
+    }
+
+    /**
+    * Get the action icons ('edit' and 'add') of the expression that is located on the provided 'path'.
+    */
+    public static getAdvancedFilteringTreeExpressionActionsContainer(fix: ComponentFixture<any>, path: number[]) {
+        const treeItem = GridFunctions.getAdvancedFilteringTreeItem(fix, path);
+        const actionsContainer = treeItem.querySelector('.igx-filter-tree__expression-actions');
+        return actionsContainer;
+    }
+
+    /**
+    * Get the edit icon of the expression that is located on the provided 'path'.
+    */
+    public static getAdvancedFilteringTreeExpressionEditIcon(fix: ComponentFixture<any>, path: number[]) {
+        const actionsContainer = GridFunctions.getAdvancedFilteringTreeExpressionActionsContainer(fix, path);
+        const icons = Array.from(actionsContainer.querySelectorAll('igx-icon'));
+        const editIcon = icons.find((icon: any) => icon.innerText === 'edit');
+        return editIcon;
+    }
+
+    /**
+    * Get the add icon of the expression that is located on the provided 'path'.
+    */
+    public static getAdvancedFilteringTreeExpressionAddIcon(fix: ComponentFixture<any>, path: number[]) {
+        const actionsContainer = GridFunctions.getAdvancedFilteringTreeExpressionActionsContainer(fix, path);
+        const icons = Array.from(actionsContainer.querySelectorAll('igx-icon'));
+        const addIcon = icons.find((icon: any) => icon.innerText === 'add');
+        return addIcon;
+    }
+
+    public static getAdvancedFilteringContextMenu(fix: ComponentFixture<any>) {
+        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+        const contextMenu = gridNativeElement.querySelector('.igx-filter-contextual-menu');
+        return contextMenu;
+    }
+
+    public static getAdvancedFilteringContextMenuButtons(fix: ComponentFixture<any>) {
+        const contextMenu = GridFunctions.getAdvancedFilteringContextMenu(fix);
+        const buttons = GridFunctions.sortNativeElementsVertically(Array.from(contextMenu.querySelectorAll('button')));
+        return buttons;
+    }
+
+    public static getAdvancedFilteringContextMenuButtonGroup(fix: ComponentFixture<any>) {
+        const contextMenu = GridFunctions.getAdvancedFilteringContextMenu(fix);
+        const buttonGroup = contextMenu.querySelector('igx-buttongroup');
+        return buttonGroup;
+    }
+
     public static getAdvancedFilteringFooter(fix: ComponentFixture<any>) {
         const advFilterDialog = GridFunctions.getAdvancedFilteringComponent(fix);
         const footer = advFilterDialog.querySelector('.igx-excel-filter__secondary-footer');
