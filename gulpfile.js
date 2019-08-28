@@ -37,7 +37,7 @@ const STYLES = {
 const DOCS_OUTPUT_PATH = slash(path.join(__dirname, 'dist', 'igniteui-angular', 'docs'));
 
 const TYPEDOC_THEME = {
-    SRC: slash(path.join(__dirname, 'node_modules', 'igniteui-typedoc-theme', 'typedoc', 'src')),
+    SRC: slash(path.join(__dirname, 'node_modules', 'igniteui-typedoc-theme', 'src')),
     OUTPUT: slash(path.join(DOCS_OUTPUT_PATH, 'typescript'))
 };
 
@@ -299,9 +299,10 @@ module.exports.createDocsOutputDir = createDocsOutputDirFn;
 /**
  * Typedoc build tasks
  */
-module.exports.exportTypedocJson = typedocBuildExportFn;
+module.exports.exportTypedocJson = series(typedocBuildExportFn);
 module.exports.importTypedocJson = series(typedocGulp.typedocBuild, typedocImportJsonFn);
 module.exports.cleanTypedocOutputDir = cleanTypedocOutputDirFn;
+module.exports.typedocBuildTheme = series(typedocBuildTheme);
 module.exports.typedocServe = series(
     typedocBuildTheme,
     typedocWatchFunc,
@@ -323,7 +324,8 @@ module.exports.typedocBuildDocsEN = series(
 /**
  * Sassdoc build tasks
  */
-module.exports.sassdocImportJson = sassdocImportJson;
-module.exports.sassdocBuildJson = sassdocBuildJson;
+module.exports.sassdocImportJson = series(sassdocImportJson);
+module.exports.sassdocBuildJson = series(sassdocBuildJson);
+module.exports.sassdocCleanOutputDir = series(sassdocCleanOutputDir);
 module.exports.sassdocBuildJA = series(sassdocCleanOutputDir, sassdocGulp.sassdocBuild, sassdocBuildJA);
 module.exports.sassdocBuildEN = series(sassdocCleanOutputDir, sassdocGulp.sassdocBuild, sassdocBuildEN);
