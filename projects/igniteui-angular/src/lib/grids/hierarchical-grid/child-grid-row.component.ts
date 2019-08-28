@@ -11,10 +11,9 @@ import {
     SimpleChanges,
     ComponentFactoryResolver
 } from '@angular/core';
-import { IgxSelectionAPIService } from '../../core/selection';
 import { GridBaseAPIService } from '.././api.service';
 import { IgxRowIslandComponent } from './row-island.component';
-import { IgxGridComponent } from '../grid';
+import { IgxGridComponent } from '../grid/grid.component';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -135,7 +134,6 @@ private resolver;
     }
 
     constructor(public gridAPI: GridBaseAPIService<any/* TODO: IgxHierarchicalGridComponent*/>,
-        private selectionAPI: IgxSelectionAPIService,
         public element: ElementRef,
         resolver: ComponentFactoryResolver,
         public cdr: ChangeDetectorRef) {

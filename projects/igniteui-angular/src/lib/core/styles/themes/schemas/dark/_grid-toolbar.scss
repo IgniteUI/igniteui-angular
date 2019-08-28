@@ -5,14 +5,26 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// Generates a dark grid-toolbar schema.
+/// Generates a base dark grid-toolbar schema.
 /// @type {Map}
 /// @prop {map} background-color [#222] - The toolbar background color.
 /// @prop {map} dropdown-background [#222] - The toolbar drop-down background color.
-/// @requires {function} extend
-/// @requires $_light-grid-toolbar
-/// @see $default-palette
-$_dark-grid-toolbar: extend($_light-grid-toolbar, (
+$_base-dark-grid-toolbar: (
     background-color: #222,
     dropdown-background: #222
-));
+);
+
+/// Generates a dark grid-toolbar schema based on a mix of $_light-grid-toolbar and $_base-dark-grid-toolbar.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-grid-toolbar
+/// @requires $_base-dark-grid-toolbar
+/// @see $default-palette
+$_dark-grid-toolbar: extend($_light-grid-toolbar, $_base-dark-grid-toolbar);
+
+/// Generates a dark fluent grid-toolbar schema based on a mix of $_fluent-grid-toolbar and $_base-dark-grid-toolbar..
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-grid-toolbar
+/// @requires $_base-dark-grid-toolbar
+$_dark-fluent-grid-toolbar: extend($_fluent-grid-toolbar, $_base-dark-grid-toolbar);
