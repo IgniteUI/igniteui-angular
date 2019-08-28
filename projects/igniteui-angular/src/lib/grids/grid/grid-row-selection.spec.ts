@@ -20,7 +20,7 @@ import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IgxHierarchicalGridCustomSelectorsComponent } from '../../test-utils/hierarhical-grid-components.spec';
-import { IgxSelectorsModule } from '../igx-selection.module';
+import { IgxRowSelectorsModule } from '../igx-row-selectors.module';
 
 const DEBOUNCETIME = 30;
 
@@ -41,7 +41,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             imports: [
                 NoopAnimationsModule,
                 IgxGridModule,
-                IgxSelectorsModule
+                IgxRowSelectorsModule
             ]
         })
             .compileComponents();

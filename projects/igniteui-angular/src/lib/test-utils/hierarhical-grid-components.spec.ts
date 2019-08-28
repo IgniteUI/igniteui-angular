@@ -1,11 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxTreeGridComponent } from '../grids/tree-grid/tree-grid.component';
 import { SampleTestData } from './sample-test-data.spec';
-import { IgxNumberSummaryOperand, IgxSummaryResult, IgxColumnComponent } from '../grids';
-import { IgxGridTransaction } from '../grids/grid-base.component';
-import { IgxTransactionService } from '../services/transaction/igx-transaction';
-import { IgxHierarchicalTransactionService } from '../services/transaction/igx-hierarchical-transaction';
-import { DisplayDensity } from '../core/displayDensity';
+import { IgxColumnComponent } from '../grids';
 import { IgxHierarchicalTransactionServiceFactory, IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular';
 
 @Component({
