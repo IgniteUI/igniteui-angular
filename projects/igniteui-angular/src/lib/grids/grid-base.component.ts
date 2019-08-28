@@ -1078,7 +1078,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      *  Emitted when `IgxGridRowComponent` is selected.
      * ```html
-     * <igx-grid #grid (onRowSelectionChange)="onRowClickChange($event)" [data]="localData" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid (onRowSelectionChange)="onCellClickChange($event)" [data]="localData" [autoGenerate]="true"></igx-grid>
      * ```
      * ```typescript
      * public onCellClickChange(e){
