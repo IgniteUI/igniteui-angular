@@ -69,7 +69,7 @@ export class IgxHierarchicalGridTestBaseComponent {
             <igx-column field="ID"> </igx-column>
             <igx-column field="ChildLevels"></igx-column>
             <igx-column field="ProductName"></igx-column>
-            <igx-row-island [key]="'childData'" #rowIsland2 [primaryKey]="'ID'" [rowSelection]="'multiple'">
+            <igx-row-island [key]="'childData'" #rowIsland2 [primaryKey]="'ID'" [rowSelection]="'none'">
                 <igx-column field="ID"></igx-column>
                 <igx-column field="ChildLevels"></igx-column>
                 <igx-column field="ProductName"></igx-column>
@@ -79,6 +79,37 @@ export class IgxHierarchicalGridTestBaseComponent {
     providers: [ IgxHierarchicalTransactionServiceFactory ]
 })
 export class IgxHierarchicalGridRowSelectionComponent {
+    public data;
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+
+    constructor() {
+        // 3 level hierarchy
+        this.data = SampleTestData.generateHGridData(5, 3);
+    }
+}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #grid1 [data]="data" [height]="'600px'" [width]="'700px'" #hierarchicalGrid [primaryKey]="'ID'"
+        [rowSelection]="'multiple'">
+        <igx-column field="ID" ></igx-column>
+        <igx-column field="ChildLevels"></igx-column>
+        <igx-column field="ProductName"></igx-column>
+        <igx-row-island [key]="'childData'" #rowIsland [primaryKey]="'ID'" [rowSelection]="'multiple'">
+            <igx-column field="ID"> </igx-column>
+            <igx-column field="ChildLevels"></igx-column>
+            <igx-column field="ProductName"></igx-column>
+            <igx-row-island [key]="'childData'" #rowIsland2 [primaryKey]="'ID'" [rowSelection]="'multiple'">
+                <igx-column field="ID"></igx-column>
+                <igx-column field="ChildLevels"></igx-column>
+                <igx-column field="ProductName"></igx-column>
+            </igx-row-island>
+        </igx-row-island>
+    </igx-hierarchical-grid>`,
+})
+export class IgxHierarchicalGridRowSelectionNoTransactionsComponent {
     public data;
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
     @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
