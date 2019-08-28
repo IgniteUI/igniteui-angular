@@ -41,6 +41,7 @@ import { IgxDatePickerComponent, IgxDatePickerModule } from '../../date-picker/d
 import { IPositionStrategy } from './position/IPositionStrategy';
 import { IgxCalendarContainerComponent } from '../../date-picker/calendar-container.component';
 import { BaseFitPositionStrategy } from './position/base-fit-position-strategy';
+import { GlobalContainerPositionStrategy } from './position';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';
@@ -2405,6 +2406,46 @@ describe('igxOverlay', () => {
             expect(scrollSpy).toHaveBeenCalledTimes(1);
             expect(scrollStrategy.detach).toHaveBeenCalledTimes(0);
             expect(overlay.hide).toHaveBeenCalledTimes(0);
+        }));
+
+        // 1.5 GlobalContainer.
+        it('Should center the shown component in the outlet.', fakeAsync(() => {
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+
+            const outlet = fixture.componentInstance.divElement;
+            const outletElement = outlet.nativeElement;
+            outletElement.style.width = '800px';
+            outletElement.style.height = '600px';
+            outletElement.style.position = 'fixed';
+            outletElement.style.top = '100px';
+            outletElement.style.left = '200px';
+            outletElement.style.overflow = 'hidden';
+
+            fixture.detectChanges();
+            const overlaySettings: OverlaySettings = {
+                outlet: outlet,
+                positionStrategy: new GlobalContainerPositionStrategy()
+            };
+
+            const id = fixture.componentInstance.overlay.attach(SimpleDynamicComponent);
+            fixture.componentInstance.overlay.show(id, overlaySettings);
+            tick();
+
+            const overlayDiv = outletElement.children[0];
+            const overlayDivRect = overlayDiv.getBoundingClientRect();
+            expect(overlayDivRect.width).toEqual(800);
+            expect(overlayDivRect.height).toEqual(600);
+
+            const overlayWrapper = overlayDiv.children[0] as HTMLElement;
+            const componentEl = overlayWrapper.children[0].children[0];
+            const componentRect = componentEl.getBoundingClientRect();
+
+            // left = outletLeft + (outletWidth - componentWidth) / 2
+            // left = 200        + (800         - 100           ) / 2
+            expect(componentRect.left).toEqual(550);
+            // top = outletTop + (outletHeight - componentHeight) / 2
+            // top = 100       + (600          - 100            ) / 2
+            expect(componentRect.top).toEqual(350);
         }));
 
         // 3. Interaction
