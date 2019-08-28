@@ -253,19 +253,6 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnIni
         excludePositionTarget: true
     };
 
-    // private _filterMenuPositionSettings =  {
-    //     verticalStartPoint: VerticalAlignment.Bottom,
-    //     openAnimation: useAnimation(fadeIn, {
-    //         params: {
-    //             duration: '250ms'
-    //         }
-    //     }),
-    //     closeAnimation: useAnimation(fadeOut, {
-    //         params: {
-    //             duration: '200ms'
-    //         }
-    //     })
-    // };
     private _filterMenuPositionSettings: PositionSettings = {
         verticalDirection: VerticalAlignment.Middle,
         horizontalDirection: HorizontalAlignment.Center,
@@ -274,10 +261,10 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnIni
     };
 
     private _filterMenuOverlaySettings: OverlaySettings = {
-        closeOnOutsideClick: true,
-        modal: true,
-        positionStrategy:  new ConnectedPositioningStrategy(this._filterMenuPositionSettings),
-        scrollStrategy: new AbsoluteScrollStrategy()
+        closeOnOutsideClick: false,
+        modal: false,
+        positionStrategy: new ConnectedPositioningStrategy(this._filterMenuPositionSettings),
+        // scrollStrategy: new AbsoluteScrollStrategy()
     };
 
     ngOnInit() {
