@@ -48,7 +48,7 @@ import { fadeIn, fadeOut } from '../animations/main';
     templateUrl: './grid-toolbar.component.html'
 })
 export class IgxGridToolbarComponent extends DisplayDensityBase implements OnInit, OnDestroy {
-    private _componentOverlayId: string;
+    private _advancedFilteringOverlayId: string;
 
     /**
      * @hidden
@@ -165,6 +165,13 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnIni
     public columnPinningButton: IgxButtonDirective;
 
     /**
+     * @hidden @internal
+     */
+    public get advancedFilteringOverlayId () {
+        return this._advancedFilteringOverlayId;
+    }
+
+    /**
      * Returns a reference to the `IgxGridComponent` component, hosting the `IgxGridToolbarComponent`.
      * ```typescript
      * const grid = this.igxGrid1.toolbar.grid;
@@ -269,13 +276,13 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnIni
 
     ngOnInit() {
         this._overlayService.onOpening.pipe(
-            filter((overlay) => overlay.id === this._componentOverlayId),
+            filter((overlay) => overlay.id === this._advancedFilteringOverlayId),
             takeUntil(this._destroy$)).subscribe((eventArgs) => {
                 this.onOverlayOpening(eventArgs);
             });
 
         this._overlayService.onClosed.pipe(
-            filter(overlay => overlay.id === this._componentOverlayId),
+            filter(overlay => overlay.id === this._advancedFilteringOverlayId),
             takeUntil(this._destroy$)).subscribe(() => {
                 this.onOverlayClosed();
             });
@@ -285,8 +292,8 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnIni
         this._destroy$.next(true);
         this._destroy$.complete();
 
-        if (this._componentOverlayId) {
-            this._overlayService.hide(this._componentOverlayId);
+        if (this._advancedFilteringOverlayId) {
+            this._overlayService.hide(this._advancedFilteringOverlayId);
         }
     }
 
@@ -403,15 +410,18 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnIni
         this.columnPinningDropdown.toggle(this._overlaySettings);
     }
 
+    /**
+     * @hidden @internal
+     */
     public showAdvancedFilteringUI() {
-        if (!this._componentOverlayId) {
+        if (!this._advancedFilteringOverlayId) {
             this._filterMenuOverlaySettings.positionStrategy.settings.target =
                 (this.grid as any).rootGrid ? (this.grid as any).rootGrid.nativeElement : this.grid.nativeElement;
             this._filterMenuOverlaySettings.outlet = this.grid.outletDirective;
 
-            this._componentOverlayId =
+            this._advancedFilteringOverlayId =
                 this._overlayService.attach(IgxAdvancedFilteringDialogComponent, this._filterMenuOverlaySettings, this._moduleRef);
-            this._overlayService.show(this._componentOverlayId, this._filterMenuOverlaySettings);
+            this._overlayService.show(this._advancedFilteringOverlayId, this._filterMenuOverlaySettings);
         }
     }
 
@@ -423,7 +433,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase implements OnIni
     }
 
     private onOverlayClosed() {
-        this._componentOverlayId = null;
+        this._advancedFilteringOverlayId = null;
     }
 
     /**
