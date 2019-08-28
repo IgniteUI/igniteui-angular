@@ -868,10 +868,79 @@ export class GridFunctions {
         return orLegendItem;
     }
 
-    public static getAdvancedFilteringAllFilterTrees(fix: ComponentFixture<any>): any[] {
+    public static getAdvancedFilteringAllGroups(fix: ComponentFixture<any>): any[] {
         const advFilterDialog = GridFunctions.getAdvancedFilteringComponent(fix);
-        const filterTrees: any[] = Array.from(advFilterDialog.querySelectorAll('.igx-filter-tree'));
-        return filterTrees;
+        const allGroups = Array.from(GridFunctions.getAdvancedFilteringTreeChildGroups(advFilterDialog, false));
+        return allGroups;
+    }
+
+    /**
+    * Get the expressions container that contains all groups and expressions.
+    */
+    public static getAdvancedFilteringExpressionsContainer(fix: ComponentFixture<any>) {
+        const advFilterDialog = GridFunctions.getAdvancedFilteringComponent(fix);
+        const exprContainer = advFilterDialog.querySelector('.igx-advanced-filter__main');
+        return exprContainer;
+    }
+
+    /**
+    * Get the root group.
+    */
+    public static getAdvancedFilteringTreeRootGroup(fix: ComponentFixture<any>) {
+        const exprContainer = GridFunctions.getAdvancedFilteringExpressionsContainer(fix);
+        const rootGroup = exprContainer.querySelector(':scope > .igx-filter-tree');
+        return rootGroup;
+    }
+
+    /**
+    * Get all child groups of the given 'group' by specifying whether to include its direct child groups only
+    * or all of its child groups in the hierarchy. (NOTE: Expressions do not have children!)
+    */
+    public static getAdvancedFilteringTreeChildGroups(group: HTMLElement, directChildrenOnly: boolean = true) {
+        const pattern = directChildrenOnly ? ':scope > .igx-filter-tree' : '.igx-filter-tree';
+        const childrenContainer = group.querySelector('.igx-filter-tree__expression');
+        const childGroups = GridFunctions.sortNativeElementsVertically(Array.from(childrenContainer.querySelectorAll(pattern)));
+        return childGroups;
+    }
+
+    /**
+    * Get all child expressions of the given 'group' by specifying whether to include its direct child expressions only
+    * or all of its child expressions in the hierarchy.
+    */
+    public static getAdvancedFilteringTreeChildExpressions(group: HTMLElement, directChildrenOnly: boolean = true) {
+        const pattern = directChildrenOnly ? ':scope > .igx-filter-tree__expression-item' : '.igx-filter-tree__expression-item';
+        const childrenContainer = group.querySelector('.igx-filter-tree__expression');
+        const childExpressions = GridFunctions.sortNativeElementsVertically(Array.from(childrenContainer.querySelectorAll(pattern)));
+        return childExpressions;
+    }
+
+    /**
+    * Get all child groups and expressions of the given 'group' by specifying whether to include its
+    * direct child groups and expressions only or all of its child groups and expressions in the hierarchy.
+    */
+    public static getAdvancedFilteringTreeChildItems(group: HTMLElement, directChildrenOnly: boolean = true) {
+        const childGroups = Array.from(GridFunctions.getAdvancedFilteringTreeChildGroups(group, directChildrenOnly));
+        const childExpressions = Array.from(GridFunctions.getAdvancedFilteringTreeChildExpressions(group, directChildrenOnly));
+        return GridFunctions.sortNativeElementsVertically(childGroups.concat(childExpressions));
+    }
+
+    /**
+    * Get a specific item from the tree (could be a group or an expression)
+    * by specifying its hierarchical path (not including the root group).
+    * (Example: [2 ,1] will first get the third item of the root group,
+    *  and then it will get the second item of the root group's third item.)
+    * (NOTE: Only the items that are groups have children.)
+    * The returned element is the one that has been gotten last.
+    */
+    public static getAdvancedFilteringTreeItem(fix: ComponentFixture<any>,
+                                               path: number[]) {
+        let node = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
+        for (let index = 0; index < path.length; index++) {
+            const pos = path[index];
+            const directChildren = GridFunctions.getAdvancedFilteringTreeChildItems(node, true);
+            node = directChildren[pos];
+        }
+        return node;
     }
 
     public static getAdvancedFilteringFooter(fix: ComponentFixture<any>) {
