@@ -92,61 +92,50 @@ export class IgxHierarchicalGridRowSelectionComponent {
 
 @Component({
     template: `
-    <igx-hierarchical-grid [data]="data" [height]="'600px'" [width]="'700px'" #hGridCustomSelectors [primaryKey]="'ID'"
+    <igx-hierarchical-grid [paging]="true" [data]="data" [cellSelection]="false" [height]="'600px'"
+        [width]="'700px'" #hGridCustomSelectors [primaryKey]="'ID'"
         [rowSelection]="'multiple'">
-        <igx-column field="ID" ></igx-column>
         <igx-column field="ChildLevels"></igx-column>
         <igx-column field="ProductName"></igx-column>
         <igx-row-island [key]="'childData'" #rowIsland1 [primaryKey]="'ID'" [rowSelection]="'single'">
-            <igx-column field="ID"> </igx-column>
             <igx-column field="ChildLevels"></igx-column>
             <igx-column field="ProductName"></igx-column>
-            <igx-row-island [key]="'childData'" #rowIsland2 [primaryKey]="'ID'" [rowSelection]="'multiple'">
-                <igx-column field="ID"></igx-column>
-                <igx-column field="ChildLevels"></igx-column>
-                <igx-column field="ProductName"></igx-column>
-            </igx-row-island>
             <ng-template igxHeadSelector let-headContext>
-                <igx-checkbox
-                    (click)="handleHeadSelectorClick($event, headContext)"
+                <igx-checkbox (click)="handleHeadSelectorClick($event, headContext)"
                     [checked]="headContext.selectedCount === headContext.totalCount"
                     [indeterminate]="headContext.selectedCount !== headContext.totalCount && headContext.selectedCount !== 0">
                 </igx-checkbox>
             </ng-template>
             <ng-template igxRowSelector let-rowContext>
-                <igx-checkbox
-                    (click)="handleRowSelectorClick($event, rowContext)"
-                    [checked]="rowContext.selected">
+                <igx-checkbox (click)="handleRowSelectorClick($event, rowContext)" [checked]="rowContext.selected">
                 </igx-checkbox>
             </ng-template>
         </igx-row-island>
         <ng-template igxHeadSelector let-headContext>
-            <igx-checkbox
-                (click)="handleHeadSelectorClick($event, headContext)"
+            <igx-checkbox (click)="handleHeadSelectorClick($event, headContext)"
                 [checked]="headContext.selectedCount === headContext.totalCount"
                 [indeterminate]="headContext.selectedCount !== headContext.totalCount && headContext.selectedCount !== 0">
             </igx-checkbox>
         </ng-template>
         <ng-template igxRowSelector let-rowContext>
-            <igx-checkbox (click)="handleRowSelectorClick($event, rowContext)" [checked]="rowContext.selected"></igx-checkbox>
+            <span class="rowNumber">{{ rowContext.index }}</span>
+            <igx-checkbox (click)="handleRowSelectorClick($event, rowContext)" [checked]="rowContext.selected">
+            </igx-checkbox>
         </ng-template>
     </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
     public data = [];
 
-    @ViewChild('hGgridCustomSelectors', { read: IgxHierarchicalGridComponent, static: true })
+    @ViewChild('hGridCustomSelectors', { read: IgxHierarchicalGridComponent, static: true })
     public hGrid: IgxHierarchicalGridComponent;
 
     @ViewChild('rowIsland1', { read: IgxRowIslandComponent, static: true })
     public firstLevelChild: IgxRowIslandComponent;
 
-    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true })
-    public secondLevelChild: IgxRowIslandComponent;
-
     public ngOnInit(): void {
-        // 3 level hierarchy
-        this.data = SampleTestData.generateHGridData(40, 3);
+        // 2 level hierarchy
+        this.data = SampleTestData.generateHGridData(40, 2);
     }
 
     public handleHeadSelectorClick(event, headContext) {
