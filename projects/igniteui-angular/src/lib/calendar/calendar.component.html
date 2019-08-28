@@ -5,7 +5,7 @@
 
 <ng-template let-result #defaultMonth >
     <ng-container *ngFor="let view of dayViews; index as i;">
-        <div>
+        <div [style.width.%]="100/monthsViewNumber" style="text-align: center">
             <span tabindex="0" #monthsBtn (keydown)="activeViewYearKB($event)" (click)="activeViewYear()"
                 class="igx-calendar-picker__date">
                 {{ formattedMonth(getViewDate(i)) }}
@@ -30,15 +30,21 @@
     (swipeleft)="nextMonth()">
     <div class="igx-calendar-picker">
         <div tabindex="0" class="igx-calendar-picker__prev" #prevMonthBtn
-            igxCalendarScrollMonth [startScroll]="startPrevMonthScroll" [stopScroll]="stopMonthScroll">
+            igxCalendarScrollMonth [startScroll]="startPrevMonthScroll" [stopScroll]="stopMonthScroll"  [ngStyle]="{
+                    'min-width.%': 100/(monthsViewNumber*7),
+                    'left': 0
+                }">
             <igx-icon fontSet="material">keyboard_arrow_left</igx-icon>
         </div>
         <div style="display: contents">
             <ng-container *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultMonth; context: context">
             </ng-container>
         </div>
-        <div tabindex="0" class="igx-calendar-picker__next" #nextMonthBtn
-            igxCalendarScrollMonth [startScroll]="startNextMonthScroll" [stopScroll]="stopMonthScroll">
+        <div tabindex="0" class="igx-calendar-picker__next" #nextMonthBtn 
+            igxCalendarScrollMonth [startScroll]="startNextMonthScroll" [stopScroll]="stopMonthScroll" [ngStyle]="{
+                    'min-width.%': 100/(monthsViewNumber*7),
+                    'right': 0
+                }">
             <igx-icon fontSet="material">keyboard_arrow_right</igx-icon>
         </div>
     </div>
