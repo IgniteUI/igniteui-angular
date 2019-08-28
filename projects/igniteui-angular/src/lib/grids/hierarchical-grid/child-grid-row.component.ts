@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { GridBaseAPIService } from '.././api.service';
 import { IgxRowIslandComponent } from './row-island.component';
-import { IgxGridComponent } from '../grid';
+import { IgxGridComponent } from '../grid/grid.component';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
