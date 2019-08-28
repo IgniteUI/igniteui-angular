@@ -570,7 +570,7 @@
         overflow: hidden;
         box-shadow: $grid-shadow;
         outline-style: none;
-        z-index: 0;
+        z-index: 1;
 
         %cbx-display {
             min-width: rem(20px);
