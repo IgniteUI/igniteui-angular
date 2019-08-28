@@ -10,9 +10,9 @@ import {
     CloseScrollStrategy,
     NoOpScrollStrategy,
     ElasticPositionStrategy,
-    IgxDragDirective
+    IgxDragDirective,
+    GlobalContainerPositionStrategy
 } from 'igniteui-angular';
-import { templateJitUrl } from '@angular/compiler';
 
 @Component({
     // tslint:disable-next-line:component-selector
@@ -54,7 +54,7 @@ export class OverlaySampleComponent implements OnInit {
     verticalStartPoints = ['Top', 'Middle', 'Bottom'];
     verticalStartPoint = 'Top';
 
-    positionStrategies = ['Auto', 'Connected', 'Global', 'Elastic'];
+    positionStrategies = ['Auto', 'Connected', 'Global', 'GlobalContainer', 'Elastic'];
     positionStrategy = 'Global';
 
     scrollStrategies = ['Absolute', 'Block', 'Close', 'NoOp'];
@@ -119,6 +119,18 @@ export class OverlaySampleComponent implements OnInit {
                         document.getElementById('mcd').classList.add('selected');
                         document.getElementById('mcsp').classList.add('selected');
                         break;
+                    case 'GlobalContainer':
+                        this._overlaySettings.positionStrategy = new GlobalContainerPositionStrategy();
+                        this.horizontalDirection = 'Center';
+                        this.verticalDirection = 'Middle';
+                        this.horizontalStartPoint = 'Center';
+                        this.verticalStartPoint = 'Middle';
+                        this.closeOnOutsideClick = true;
+                        this.modal = true;
+                        this.useOutlet = true;
+                        document.getElementById('mcd').classList.add('selected');
+                        document.getElementById('mcsp').classList.add('selected');
+                        break;
                     case 'Elastic':
                         this._overlaySettings = {
                             positionStrategy: new ElasticPositionStrategy({
@@ -173,6 +185,7 @@ export class OverlaySampleComponent implements OnInit {
                 'Auto': new AutoPositionStrategy(),
                 'Connected': new ConnectedPositioningStrategy(),
                 'Global': new GlobalPositionStrategy(),
+                'GlobalContainer': new GlobalContainerPositionStrategy(),
                 'Elastic': new ElasticPositionStrategy({
                     minSize: { width: 150, height: 150 }
                 }),
