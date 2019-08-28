@@ -23,7 +23,7 @@ import { Subject } from 'rxjs';
 })
 export class IgxSliderThumbComponent implements OnInit, OnDestroy {
 
-    private _isActiveLabel = false;
+    private _isActive = false;
     private _isPressed = false;
     private _destroy$ = new Subject<boolean>();
 
@@ -92,12 +92,12 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
 
     @HostBinding('class.igx-slider__thumb-from--active')
     public get thumbFromActiveClass() {
-        return this.type === SliderHandle.FROM && this._isActiveLabel;
+        return this.type === SliderHandle.FROM && this._isActive;
     }
 
     @HostBinding('class.igx-slider__thumb-to--active')
     public get thumbToActiveClass() {
-        return this.type === SliderHandle.TO && this._isActiveLabel;
+        return this.type === SliderHandle.TO && this._isActive;
     }
 
     @HostBinding('class.igx-slider__thumb--pressed')
@@ -218,7 +218,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
         this._isPressed = visible;
 
         if (!this.continuous) {
-            this._isActiveLabel = visible;
+            this._isActive = visible;
         }
     }
 }
