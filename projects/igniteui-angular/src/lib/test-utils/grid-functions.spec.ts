@@ -868,10 +868,144 @@ export class GridFunctions {
         return orLegendItem;
     }
 
-    public static getAdvancedFilteringAllFilterTrees(fix: ComponentFixture<any>): any[] {
+    public static getAdvancedFilteringAllGroups(fix: ComponentFixture<any>): any[] {
         const advFilterDialog = GridFunctions.getAdvancedFilteringComponent(fix);
-        const filterTrees: any[] = Array.from(advFilterDialog.querySelectorAll('.igx-filter-tree'));
-        return filterTrees;
+        const allGroups = Array.from(GridFunctions.getAdvancedFilteringTreeChildGroups(advFilterDialog, false));
+        return allGroups;
+    }
+
+    /**
+    * Get the expressions container that contains all groups and expressions.
+    */
+    public static getAdvancedFilteringExpressionsContainer(fix: ComponentFixture<any>) {
+        const advFilterDialog = GridFunctions.getAdvancedFilteringComponent(fix);
+        const exprContainer = advFilterDialog.querySelector('.igx-advanced-filter__main');
+        return exprContainer;
+    }
+
+    /**
+    * Get the root group.
+    */
+    public static getAdvancedFilteringTreeRootGroup(fix: ComponentFixture<any>) {
+        const exprContainer = GridFunctions.getAdvancedFilteringExpressionsContainer(fix);
+        const rootGroup = exprContainer.querySelector(':scope > .igx-filter-tree');
+        return rootGroup;
+    }
+
+    /**
+    * Get all child groups of the given 'group' by specifying whether to include its direct child groups only
+    * or all of its child groups in the hierarchy. (NOTE: Expressions do not have children!)
+    */
+    public static getAdvancedFilteringTreeChildGroups(group: HTMLElement, directChildrenOnly: boolean = true) {
+        const pattern = directChildrenOnly ? ':scope > .igx-filter-tree' : '.igx-filter-tree';
+        const childrenContainer = group.querySelector('.igx-filter-tree__expression');
+        const childGroups = GridFunctions.sortNativeElementsVertically(Array.from(childrenContainer.querySelectorAll(pattern)));
+        return childGroups;
+    }
+
+    /**
+    * Get all child expressions of the given 'group' by specifying whether to include its direct child expressions only
+    * or all of its child expressions in the hierarchy.
+    */
+    public static getAdvancedFilteringTreeChildExpressions(group: HTMLElement, directChildrenOnly: boolean = true) {
+        const pattern = directChildrenOnly ? ':scope > .igx-filter-tree__expression-item' : '.igx-filter-tree__expression-item';
+        const childrenContainer = group.querySelector('.igx-filter-tree__expression');
+        const childExpressions = GridFunctions.sortNativeElementsVertically(Array.from(childrenContainer.querySelectorAll(pattern)));
+        return childExpressions;
+    }
+
+    /**
+    * Get all child groups and expressions of the given 'group' by specifying whether to include its
+    * direct child groups and expressions only or all of its child groups and expressions in the hierarchy.
+    */
+    public static getAdvancedFilteringTreeChildItems(group: HTMLElement, directChildrenOnly: boolean = true) {
+        const childGroups = Array.from(GridFunctions.getAdvancedFilteringTreeChildGroups(group, directChildrenOnly));
+        const childExpressions = Array.from(GridFunctions.getAdvancedFilteringTreeChildExpressions(group, directChildrenOnly));
+        return GridFunctions.sortNativeElementsVertically(childGroups.concat(childExpressions));
+    }
+
+    /**
+    * Get a specific item from the tree (could be a group or an expression)
+    * by specifying its hierarchical path (not including the root group).
+    * (Example: [2 ,1] will first get the third item of the root group,
+    *  and then it will get the second item of the root group's third item.)
+    * (NOTE: Only the items that are groups have children.)
+    * The returned element is the one that has been gotten last.
+    */
+    public static getAdvancedFilteringTreeItem(fix: ComponentFixture<any>,
+                                               path: number[]) {
+        let node = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
+        for (let index = 0; index < path.length; index++) {
+            const pos = path[index];
+            const directChildren = GridFunctions.getAdvancedFilteringTreeChildItems(node, true);
+            node = directChildren[pos];
+        }
+        return node;
+    }
+
+    /**
+    * Get the operator line of the group that is located on the provided 'path'.
+    */
+    public static getAdvancedFilteringTreeGroupOperatorLine(fix: ComponentFixture<any>, path: number[]) {
+        const group = GridFunctions.getAdvancedFilteringTreeItem(fix, path);
+        const directOperatorLine = group.querySelector(':scope > .igx-filter-tree__line');
+        return directOperatorLine;
+    }
+
+    /**
+    * Get the underlying chip of the expression that is located on the provided 'path'.
+    */
+    public static getAdvancedFilteringTreeExpressionChip(fix: ComponentFixture<any>, path: number[]) {
+        const treeItem = GridFunctions.getAdvancedFilteringTreeItem(fix, path);
+        const chip = treeItem.querySelector('igx-chip');
+        return chip;
+    }
+
+    /**
+    * Get the action icons ('edit' and 'add') of the expression that is located on the provided 'path'.
+    */
+    public static getAdvancedFilteringTreeExpressionActionsContainer(fix: ComponentFixture<any>, path: number[]) {
+        const treeItem = GridFunctions.getAdvancedFilteringTreeItem(fix, path);
+        const actionsContainer = treeItem.querySelector('.igx-filter-tree__expression-actions');
+        return actionsContainer;
+    }
+
+    /**
+    * Get the edit icon of the expression that is located on the provided 'path'.
+    */
+    public static getAdvancedFilteringTreeExpressionEditIcon(fix: ComponentFixture<any>, path: number[]) {
+        const actionsContainer = GridFunctions.getAdvancedFilteringTreeExpressionActionsContainer(fix, path);
+        const icons = Array.from(actionsContainer.querySelectorAll('igx-icon'));
+        const editIcon = icons.find((icon: any) => icon.innerText === 'edit');
+        return editIcon;
+    }
+
+    /**
+    * Get the add icon of the expression that is located on the provided 'path'.
+    */
+    public static getAdvancedFilteringTreeExpressionAddIcon(fix: ComponentFixture<any>, path: number[]) {
+        const actionsContainer = GridFunctions.getAdvancedFilteringTreeExpressionActionsContainer(fix, path);
+        const icons = Array.from(actionsContainer.querySelectorAll('igx-icon'));
+        const addIcon = icons.find((icon: any) => icon.innerText === 'add');
+        return addIcon;
+    }
+
+    public static getAdvancedFilteringContextMenu(fix: ComponentFixture<any>) {
+        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+        const contextMenu = gridNativeElement.querySelector('.igx-filter-contextual-menu');
+        return contextMenu;
+    }
+
+    public static getAdvancedFilteringContextMenuButtons(fix: ComponentFixture<any>) {
+        const contextMenu = GridFunctions.getAdvancedFilteringContextMenu(fix);
+        const buttons = GridFunctions.sortNativeElementsVertically(Array.from(contextMenu.querySelectorAll('button')));
+        return buttons;
+    }
+
+    public static getAdvancedFilteringContextMenuButtonGroup(fix: ComponentFixture<any>) {
+        const contextMenu = GridFunctions.getAdvancedFilteringContextMenu(fix);
+        const buttonGroup = contextMenu.querySelector('igx-buttongroup');
+        return buttonGroup;
     }
 
     public static getAdvancedFilteringFooter(fix: ComponentFixture<any>) {

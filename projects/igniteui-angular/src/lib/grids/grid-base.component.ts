@@ -2761,6 +2761,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.onColumnResized.pipe(destructor).subscribe(() => this.endEdit(true));
 
         this.overlayService.onOpened.pipe(destructor).subscribe((event) => {
+            // do not hide the advanced filtering overlay on scroll
+            if (this.toolbar && this.toolbar.advancedFilteringOverlayId === event.id) {
+                return;
+            }
+
             if (this.overlayService.getOverlayById(event.id).settings.outlet === this.outletDirective &&
                 this.overlayIDs.indexOf(event.id) < 0) {
                 this.overlayIDs.push(event.id);

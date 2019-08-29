@@ -25,7 +25,9 @@
         </div>
     </header>
 
-    <article #expressionsContainer class="igx-advanced-filter__main">
+    <article #expressionsContainer
+             class="igx-advanced-filter__main"
+             (scroll)="onExpressionsScrolled()">
         <ng-container *ngIf="!rootGroup">
 
             <button igxButton="outlined" [displayDensity]="displayDensity" (click)="addAndGroup()">

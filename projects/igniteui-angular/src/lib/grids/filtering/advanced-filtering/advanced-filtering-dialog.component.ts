@@ -569,9 +569,12 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     }
 
     private calculateContextMenuTarget() {
+        const containerRect = this.expressionsContainer.nativeElement.getBoundingClientRect();
         const chips = this.chips.filter(c => this.selectedExpressions.includes(c.data));
-        const minTop = chips.reduce((t, c) =>
+        let minTop = chips.reduce((t, c) =>
             Math.min(t, c.elementRef.nativeElement.getBoundingClientRect().top), Number.MAX_VALUE);
+        minTop = Math.max(containerRect.top, minTop);
+        minTop = Math.min(containerRect.bottom, minTop);
         const maxRight = chips.reduce((r, c) =>
             Math.max(r, c.elementRef.nativeElement.getBoundingClientRect().right), 0);
         this._overlaySettings.positionStrategy.settings.target = new Point(maxRight, minTop);
@@ -625,6 +628,13 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
 
     public get inputDatePlaceholder(): string {
         return this.grid.resourceStrings['igx_grid_filter_row_date_placeholder'];
+    }
+
+    public onExpressionsScrolled() {
+        if (!this.contextMenuToggle.collapsed) {
+            this.calculateContextMenuTarget();
+            this.contextMenuToggle.reposition();
+        }
     }
 
     public initialize(filteringService: IgxFilteringService, overlayService: IgxOverlayService,
