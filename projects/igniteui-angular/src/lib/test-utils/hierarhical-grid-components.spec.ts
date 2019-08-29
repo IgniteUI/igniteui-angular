@@ -123,7 +123,7 @@ export class IgxHierarchicalGridRowSelectionNoTransactionsComponent {
         [rowSelection]="'multiple'">
         <igx-column field="ChildLevels"></igx-column>
         <igx-column field="ProductName"></igx-column>
-        <igx-row-island [key]="'childData'" #rowIsland1 [primaryKey]="'ID'" [rowSelection]="'single'">
+        <igx-row-island [key]="'childData'" #rowIsland1 [paging]="true" [primaryKey]="'ID'" [rowSelection]="'single'">
             <igx-column field="ChildLevels"></igx-column>
             <igx-column field="ProductName"></igx-column>
             <ng-template igxHeadSelector let-headContext>
@@ -133,6 +133,7 @@ export class IgxHierarchicalGridRowSelectionNoTransactionsComponent {
                 </igx-checkbox>
             </ng-template>
             <ng-template igxRowSelector let-rowContext>
+                <span class="rowNumberChild">{{ rowContext.index }}</span>
                 <igx-checkbox (click)="handleRowSelectorClick($event, rowContext)" [checked]="rowContext.selected">
                 </igx-checkbox>
             </ng-template>

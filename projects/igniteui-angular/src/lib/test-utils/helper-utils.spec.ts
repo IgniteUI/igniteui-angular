@@ -518,8 +518,8 @@ export class HelperUtils {
         checkboxElement.click();
     }
 
-    public static headerCheckboxClick(fix) {
-        HelperUtils.rowCheckboxClick(HelperUtils.getHeaderRow(fix));
+    public static headerCheckboxClick(parent) {
+        HelperUtils.rowCheckboxClick(HelperUtils.getHeaderRow(parent));
     }
     //
 

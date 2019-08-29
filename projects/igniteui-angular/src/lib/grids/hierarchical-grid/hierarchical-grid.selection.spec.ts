@@ -749,12 +749,10 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             firstLevelChild = fix.componentInstance.firstLevelChild;
         }));
 
-        /** Tests should check root and child grids */
-
         it('Row context `select` method selects a single row', () => {
             // root grid
             const firstRootRow = hGrid.getRowByIndex(0);
-            firstRootRow.nativeElement.click();
+            HelperUtils.rowCheckboxClick(firstRootRow);
             fix.detectChanges();
             HelperUtils.verifyRowSelected(hGrid.getRowByIndex(0));
             HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
@@ -762,12 +760,14 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             // child grid
             HelperUtils.expandRowIsland(2);
             fix.detectChanges();
-            const firstChildRow = firstLevelChild.getRowByIndex(0);
-            firstChildRow.nativeElement.click();
+
+            const childGrid = hGrid.hgridAPI.getChildGrids(false)[0];
+            const childRow = childGrid.getRowByIndex(0);
+            HelperUtils.rowCheckboxClick(childRow);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstLevelChild.getRowByIndex(0));
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            HelperUtils.verifyRowSelected(childRow);
+            HelperUtils.verifyHeaderRowCheckboxState(childGrid, false, true);
         });
 
         it('Row context `deselect` method deselects an already selected row', () => {
@@ -775,57 +775,83 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             const firstRootRow = hGrid.getRowByIndex(1);
             HelperUtils.rowCheckboxClick(firstRootRow);
             fix.detectChanges();
-
-            HelperUtils.verifyRowSelected(hGrid.getRowByIndex(1));
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            HelperUtils.verifyRowSelected(firstRootRow);
+            HelperUtils.verifyHeaderRowCheckboxState(hGrid, false, true);
 
             HelperUtils.rowCheckboxClick(firstRootRow);
             fix.detectChanges();
-
-            HelperUtils.verifyRowSelected(hGrid.getRowByIndex(1), false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, false);
+            HelperUtils.verifyRowSelected(firstRootRow, false);
+            HelperUtils.verifyHeaderRowCheckboxState(hGrid, false, false);
 
             // child grid
             HelperUtils.expandRowIsland(2);
-            const firstLevelChildRow = firstLevelChild.getRowByIndex(0);
-            HelperUtils.rowCheckboxClick(firstLevelChildRow);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstLevelChildRow);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            const childGrid = hGrid.hgridAPI.getChildGrids(false)[0];
+            const childRow = childGrid.getRowByIndex(0);
 
-            HelperUtils.rowCheckboxClick(firstLevelChildRow);
+            HelperUtils.rowCheckboxClick(childRow);
             fix.detectChanges();
+            HelperUtils.verifyRowSelected(childRow);
+            HelperUtils.verifyHeaderRowCheckboxState(childGrid, false, true);
 
-            HelperUtils.verifyRowSelected(firstLevelChildRow, false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, false);
+            HelperUtils.rowCheckboxClick(childRow);
+            fix.detectChanges();
+            HelperUtils.verifyRowSelected(childRow, false);
+            HelperUtils.verifyHeaderRowCheckboxState(childGrid, false, false);
         });
 
         it('Header context `selectAll` method selects all rows', () => {
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            // root grid
+            HelperUtils.headerCheckboxClick(hGrid);
+            fix.detectChanges();
+            HelperUtils.verifyHeaderRowCheckboxState(hGrid, true, false);
+            expect(hGrid.selectionService.areAllRowSelected()).toBeTruthy();
+
+            // child grid
+            HelperUtils.expandRowIsland(2);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true, false);
-            expect(hGrid.selectionService.areAllRowSelected()).toBeTruthy();
+            const childGrid = hGrid.hgridAPI.getChildGrids(false)[0];
+            HelperUtils.headerCheckboxClick(childGrid);
+            fix.detectChanges();
+
+            expect(childGrid.selectionService.areAllRowSelected()).toBeTruthy();
         });
 
         it('Header context `deselectAll` method deselects all rows', () => {
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            // root grid
+            HelperUtils.headerCheckboxClick(hGrid);
             fix.detectChanges();
-
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true, false);
+            HelperUtils.verifyHeaderRowCheckboxState(hGrid, true, false);
             expect(hGrid.selectionService.areAllRowSelected()).toBeTruthy();
 
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            HelperUtils.clickHeaderRowCheckbox(hGrid);
+            fix.detectChanges();
+            HelperUtils.verifyHeaderRowCheckboxState(hGrid, false, false);
+            expect(hGrid.selectionService.areAllRowSelected()).toBeFalsy();
+
+            // root grid
+            HelperUtils.expandRowIsland(2);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, false);
-            expect(hGrid.selectionService.areAllRowSelected()).toBeFalsy();
+            const childGrid = hGrid.hgridAPI.getChildGrids(false)[0];
+
+            HelperUtils.headerCheckboxClick(childGrid);
+            fix.detectChanges();
+            HelperUtils.verifyHeaderRowCheckboxState(childGrid, true, false);
+            expect(childGrid.selectionService.areAllRowSelected()).toBeTruthy();
+
+            HelperUtils.clickHeaderRowCheckbox(childGrid);
+            fix.detectChanges();
+            HelperUtils.verifyHeaderRowCheckboxState(childGrid, false, false);
+            expect(childGrid.selectionService.areAllRowSelected()).toBeFalsy();
         });
 
-        it('Should have the correct properties in the custom row selector header template', () => {
+        it('Should have the correct properties in the custom row selector header template context', () => {
             spyOn(fix.componentInstance, 'handleHeadSelectorClick').and.callThrough();
-            HelperUtils.headerCheckboxClick(fix);
+
+            HelperUtils.headerCheckboxClick(hGrid);
             fix.detectChanges();
 
             expect(fix.componentInstance.handleHeadSelectorClick).toHaveBeenCalledWith(new MouseEvent('click'), {
@@ -836,11 +862,10 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             });
         });
 
-        it('Should have the correct properties in the custom row selector template', () => {
+        it('Should have the correct properties in the custom row selector template context', () => {
             spyOn(fix.componentInstance, 'handleRowSelectorClick').and.callThrough();
 
-            const firstRootRow = hGrid.getRowByIndex(1);
-            HelperUtils.rowCheckboxClick(firstRootRow);
+            HelperUtils.rowCheckboxClick(hGrid.getRowByIndex(1));
             fix.detectChanges();
 
             expect(fix.componentInstance.handleRowSelectorClick).toHaveBeenCalledWith(new MouseEvent('click'), {
@@ -853,11 +878,20 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
         });
 
         it('Should have correct indices on all pages', () => {
+            // root grid
             hGrid.nextPage();
             fix.detectChanges();
+            expect(hGrid.getRowByIndex(0).nativeElement.querySelector('.rowNumber').textContent).toEqual('15');
 
-            const firstRootRow = hGrid.getRowByIndex(0);
-            expect(firstRootRow.nativeElement.querySelector('.rowNumber').textContent).toEqual('15');
+            // child grid
+            HelperUtils.expandRowIsland(3);
+            fix.detectChanges();
+
+            const childGrid = hGrid.hgridAPI.getChildGrids(false)[0];
+
+            childGrid.nextPage();
+            fix.detectChanges();
+            expect(childGrid.getRowByIndex(2).nativeElement.querySelector('.rowNumberChild').textContent).toEqual('17');
         });
     });
 });
