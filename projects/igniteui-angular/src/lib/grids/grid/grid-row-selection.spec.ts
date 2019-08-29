@@ -21,6 +21,7 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IgxHierarchicalGridCustomSelectorsComponent } from '../../test-utils/hierarhical-grid-components.spec';
 import { IgxSelectorsModule } from '../igx-selection.module';
+import { ROW_EDITING_BANNER_OVERLAY_CLASS } from '../../test-utils/tree-grid-functions.spec';
 
 const DEBOUNCETIME = 30;
 
@@ -1889,14 +1890,48 @@ describe('IgxGrid - Row Selection #grid', () => {
         }));
 
         it('Should have the correct properties in the custom row selector template', () => {
-            // TODO
+            const firstRow = grid.getRowByIndex(0);
+            const firstCheckbox = firstRow.nativeElement.querySelector('.igx-checkbox__composite');
+            const context = { index: 0, rowID: Object({ ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders',
+                ContactTitle: 'Sales Representative', Address: 'Obere Str. 57', City: 'Berlin', Region: null, PostalCode: '12209',
+                Country: 'Germany', Phone: '030-0074321', Fax: '030-0076545' }), selected: false };
+            const contextUnselect = { index: 0, rowID: Object({ ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders',
+                ContactTitle: 'Sales Representative', Address: 'Obere Str. 57', City: 'Berlin', Region: null, PostalCode: '12209',
+                Country: 'Germany', Phone: '030-0074321', Fax: '030-0076545' }), selected: true };
+            spyOn(fix.componentInstance, 'onRowCheckboxClick').and.callThrough();
+            firstCheckbox.click();
+            fix.detectChanges();
+
+            expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledTimes(1);
+            expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), context);
+
+            // Verify correct properties when unselecting a row
+            firstCheckbox.click();
+            fix.detectChanges();
+
+            expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledTimes(2);
+            expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), contextUnselect);
         });
 
         it('Should have the correct properties in the custom row selector header template', () => {
-            // TODO
+            const context = { selectedCount: 0, totalCount: 27 };
+            const contextUnselect = { selectedCount: 27, totalCount: 27 };
+            const headerCheckbox = fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-checkbox__composite');
+            spyOn(fix.componentInstance, 'onHeaderCheckboxClick').and.callThrough();
+            headerCheckbox.click();
+            fix.detectChanges();
+
+            expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledTimes(1);
+            expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), context);
+
+            headerCheckbox.click();
+            fix.detectChanges();
+
+            expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledTimes(2);
+            expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), contextUnselect);
         });
 
-        it('Should have correct indices on all pages', () => {
+        fit('Should have correct indices on all pages', () => {
             // TODO
         });
     });
