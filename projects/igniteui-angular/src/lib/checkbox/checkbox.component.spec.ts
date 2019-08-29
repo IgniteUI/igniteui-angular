@@ -159,7 +159,7 @@ describe('IgxCheckbox', () => {
         expect(testInstance.subscribed).toBe(false);
     });
 
-    fit('Readonly state', () => {
+    it('Readonly state', () => {
         const fixture = TestBed.createComponent(CheckboxReadonlyComponent);
         const testInstance = fixture.componentInstance;
         const checkboxInstance = testInstance.cb;
