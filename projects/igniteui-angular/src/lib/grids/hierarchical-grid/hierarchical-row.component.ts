@@ -92,10 +92,12 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
 
     public select = () => {
         this.grid.selectRows([this.rowID]);
+        this.grid.cdr.markForCheck();
     }
 
     public deselect = () => {
         this.grid.deselectRows([this.rowID]);
+        this.grid.cdr.markForCheck();
     }
 
     private endEdit(grid: IgxHierarchicalGridComponent) {
