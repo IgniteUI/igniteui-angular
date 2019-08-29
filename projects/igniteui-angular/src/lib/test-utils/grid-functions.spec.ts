@@ -1029,7 +1029,6 @@ export class GridFunctions {
         GridFunctions.clickPagingButton(parent, 3);
     }
 }
-
 export class GridSummaryFunctions {
     public static verifyColumnSummariesBySummaryRowIndex(fix, rowIndex: number, summaryIndex: number, summaryLabels, summaryResults) {
         const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
@@ -1121,7 +1120,6 @@ export class GridSummaryFunctions {
             resolve();
         })
 }
-
 export class GridSelectionFunctions {
     public static selectCellsRange =
         (fix, startCell, endCell, ctrl = false, shift = false) => new Promise(async (resolve, reject) => {
