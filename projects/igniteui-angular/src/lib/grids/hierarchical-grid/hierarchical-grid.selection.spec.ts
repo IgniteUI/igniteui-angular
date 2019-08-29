@@ -1,7 +1,7 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxHierarchicalGridModule } from './index';
+import { GridSelectionMode, IgxHierarchicalGridModule } from './index';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
@@ -13,7 +13,6 @@ import {
     IgxHierarchicalGridRowSelectionNoTransactionsComponent
 } from '../../test-utils/hierarhical-grid-components.spec';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
-import { GridSelectionMode } from '../grid';
 
 describe('IgxHierarchicalGrid selection #hGrid', () => {
     configureTestSuite();
