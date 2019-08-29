@@ -1172,22 +1172,38 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
 
 @Component({
     template: `
-    <igx-grid #gridCustomSelectors [data]="data" [autoGenerate]="true">
+    <igx-grid #gridCustomSelectors [data]="data" [paging]="true" [rowSelection]="'multiple'" [autoGenerate]="false">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'"></igx-column>
         <igx-column width="100px" [field]="'CompanyName'"></igx-column>
         <igx-column width="100px" [field]="'ContactName'" dataType="number"></igx-column>
         <igx-column width="100px" [field]="'ContactTitle'" dataType="string"></igx-column>
         <igx-column width="100px" [field]="'Address'" dataType="string"></igx-column>
         <ng-template igxRowSelector let-rowContext>
-            <igx-checkbox [checked]="rowContext.selected"></igx-checkbox>
+            <span class="rowNumber">{{ rowContext.index }}</span>
+            <igx-checkbox [checked]="rowContext.selected" (click)="onRowCheckboxClick($event, rowContext)"></igx-checkbox>
         </ng-template>
         <ng-template igxHeadSelector let-headContext>
-            <igx-checkbox [checked]="headContext.totalCount === headContext.selectedCount"></igx-checkbox>
+            <igx-checkbox [checked]="headContext.totalCount === headContext.selectedCount" 
+                (click)="onHeaderCheckboxClick($event, headContext)"></igx-checkbox>
         </ng-template>
     </igx-grid>`
 })
 export class GridCustomSelectorsComponent extends BasicGridComponent implements OnInit {
+    @ViewChild('gridCustomSelectors', { static: true })
+    public grid: IgxGridComponent;
     public ngOnInit(): void {
         this.data = SampleTestData.contactInfoDataFull();
+    }
+
+    public onRowCheckboxClick(event, rowContext) {
+        event.stopPropagation();
+        event.preventDefault();
+        rowContext.selected ? this.grid.deselectRows([rowContext.rowID]) : this.grid.selectRows([rowContext.rowID]);
+    }
+
+    public onHeaderCheckboxClick(event, headContext) {
+        event.stopPropagation();
+        event.preventDefault();
+        headContext.selected ? this.grid.deselectAllRows() : this.grid.selectAllRows();
     }
 }

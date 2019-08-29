@@ -940,15 +940,49 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         }));
 
         it('Should have the correct properties in the custom row selector template', () => {
-            // TODO
+            const firstRow = treeGrid.getRowByIndex(0);
+            const firstCheckbox = firstRow.nativeElement.querySelector('.igx-checkbox__composite');
+            const context = { index: 0, rowID: 1, selected: false };
+            const contextUnselect = { index: 0, rowID: 1, selected: true };
+            spyOn(fix.componentInstance, 'onRowCheckboxClick').and.callThrough();
+            firstCheckbox.click();
+            fix.detectChanges();
+
+            expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledTimes(1);
+            expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), context);
+
+            // Verify correct properties when unselecting a row
+            firstCheckbox.click();
+            fix.detectChanges();
+
+            expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledTimes(2);
+            expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), contextUnselect);
         });
 
         it('Should have the correct properties in the custom row selector header template', () => {
-            // TODO
+            const context = { selectedCount: 0, totalCount: 8 };
+            const contextUnselect = { selectedCount: 8, totalCount: 8 };
+            const headerCheckbox = fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-checkbox__composite');
+            spyOn(fix.componentInstance, 'onHeaderCheckboxClick').and.callThrough();
+            headerCheckbox.click();
+            fix.detectChanges();
+
+            expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledTimes(1);
+            expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), context);
+
+            headerCheckbox.click();
+            fix.detectChanges();
+
+            expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledTimes(2);
+            expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), contextUnselect);
         });
 
         it('Should have correct indices on all pages', () => {
-            // TODO
+            treeGrid.nextPage();
+            fix.detectChanges();
+
+            const firstRootRow = treeGrid.getRowByIndex(0);
+            expect(firstRootRow.nativeElement.querySelector('.rowNumber').textContent).toEqual('5');
         });
     });
 });
