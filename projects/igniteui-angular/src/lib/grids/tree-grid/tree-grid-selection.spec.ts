@@ -746,10 +746,10 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
 
             // Clicking on the pager buttons triggers a blur event.
 
-            GridFunctions.navigateToNextPage(treeGridCell.nativeElement);
+            GridFunctions.navigateToNextPage(treeGrid.nativeElement);
             treeGridCell.nativeElement.dispatchEvent(new Event('blur'));
             fix.detectChanges();
-            GridFunctions.navigateToFirstPage(treeGridCell.nativeElement);
+            GridFunctions.navigateToFirstPage(treeGrid.nativeElement);
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(0);
@@ -763,10 +763,10 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
             expect(TreeGridFunctions.verifyGridCellHasSelectedClass(treeGridCell)).toBe(true);
 
-            GridFunctions.navigateToLastPage(treeGridCell.nativeElement);
+            GridFunctions.navigateToLastPage(treeGrid.nativeElement);
             treeGridCell.nativeElement.dispatchEvent(new Event('blur'));
             fix.detectChanges();
-            GridFunctions.navigateToFirstPage(treeGridCell.nativeElement);
+            GridFunctions.navigateToFirstPage(treeGrid.nativeElement);
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(0);
