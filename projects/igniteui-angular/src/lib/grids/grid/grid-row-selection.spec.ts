@@ -1929,7 +1929,11 @@ describe('IgxGrid - Row Selection #grid', () => {
         });
 
         fit('Should have correct indices on all pages', () => {
-            // TODO
+            grid.nextPage();
+            fix.detectChanges();
+
+            const firstRootRow = grid.getRowByIndex(0);
+            expect(firstRootRow.nativeElement.querySelector('.rowNumber').textContent).toEqual('15');
         });
     });
 });
