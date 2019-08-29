@@ -11,11 +11,18 @@
 /// @requires rem
 /// @requires --var
 @mixin _advanced-filtering($theme, $palette) {
+    $vertical-space-comfortable: rem(16px);
+    $vertical-space-cosy: rem(12px);
+    $vertical-space-compact: rem(8px);
+    $horizontal-space-comfortable: rem(16px);
+    $horizontal-space-cosy: rem(12px);
+    $horizontal-space-compact: rem(8px);
+
     %advanced-filter {
         width: 660px;
         min-width: 660px;
         max-width: 720px;
-        background: --var($theme, 'filtering-row-background');
+        background-color: --var($theme, 'filtering-row-background');
         box-shadow: igx-elevation($elevations, 12);
         border-radius: rem(4px);
     }
@@ -23,16 +30,18 @@
     %advanced-filter__header {
         display: flex;
         align-items: center;
-        padding: rem(16px);
+        padding: $vertical-space-comfortable;
         color: igx-color($palette, 'grays', 700);
-        background-color: igx-color($palette, 'grays', 100);
+        background-color: igx-color($palette, 'grays', 200);
         user-select: none;
+        cursor: grab;
     }
 
     %advanced-filter__main {
         display: block;
-        padding: rem(24px) rem(16px);
+        padding: rem(16px);
         overflow: auto;
+        max-height: 468px;
 
         [igxButton] + [igxButton] {
             margin-left: 8px;
@@ -42,16 +51,10 @@
     %filter-tree {
         display: flex;
 
-        + %filter-tree {
-            margin-top: 8px;
-        }
-
-        + %filter-tree__expression-item {
-            margin-top: 8px;
-        }
-
+        + %filter-tree,
+        + %filter-tree__expression-item,
         + %filter-tree__inputs {
-            margin-top: 8px;
+            margin-top: $vertical-space-comfortable;
         }
     }
 
@@ -91,16 +94,10 @@
         display: flex;
         align-items: center;
 
+        + %filter-tree,
+        + %filter-tree__inputs,
         + %filter-tree__expression-item {
-            margin-top: 8px;
-        }
-
-        + %filter-tree {
-            margin-top: 8px;
-        }
-
-        + %filter-tree__inputs {
-            margin-top: 8px;
+            margin-top: $vertical-space-comfortable;
         }
     }
 
@@ -130,11 +127,12 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 8px;
+        margin-top: $vertical-space-comfortable;
 
         + %filter-tree,
-        + %filter-tree__expression-item {
-            margin-top: 8px;
+        + %filter-tree__expression-item,
+        + %filter-tree__inputs {
+            margin-top: $vertical-space-comfortable;
         }
     }
 
@@ -150,13 +148,14 @@
 
         + %filter-tree,
         + %filter-tree__expression-item {
-            margin-top: 8px;
+            margin-top: $vertical-space-comfortable;
         }
     }
 
     %filter-tree__inputs-actions {
         display: flex;
         margin: 0 8px;
+        align-items: center;
 
         [igxButton] + [igxButton] {
             margin-left: 8px;
@@ -173,6 +172,7 @@
         position: relative;
         display: inline-flex;
         align-items: center;
+        font-size: rem(12px);
 
         &::before {
             content: '';
@@ -209,18 +209,154 @@
         > [igxButton] + [igxButton],
         igx-buttongroup + [igxButton],
         [igxButton] + igx-buttongroup {
-            margin-top: rem(8px);
+            margin-top: $vertical-space-comfortable;
         }
+
+        [igxButton] > igx-icon {
+            margin-right: rem(8px);
+        }
+
+        igx-buttongroup > * {
+            box-shadow: none;
+        }
+    }
+
+    %filter-con-menu__delete-btn {
+        color: igx-color($palette, 'error');
     }
 
     %filter-empty {
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 200px;
+        height: 196px;
     }
 
     %filter-empty__title {
         color: igx-color($palette, 'grays', 500);
+    }
+
+    %advanced-filter--cosy {
+        %advanced-filter__main {
+            max-height: 394px;
+        }
+
+        %advanced-filter__main,
+        %advanced-filter__header {
+            padding: $vertical-space-cosy rem(16px);
+        }
+
+        %filter-tree__expression-actions igx-icon {
+            font-size: rem(18px);
+            width: rem(18px);
+            height: rem(18px);
+        }
+
+        %filter-tree__line {
+            margin-right: $horizontal-space-cosy;
+        }
+
+        %filter-tree {
+            + %filter-tree,
+            + %filter-tree__expression-item,
+            + %filter-tree__inputs {
+                margin-top: $vertical-space-cosy;
+            }
+        }
+
+        %filter-tree__expression-item {
+            + %filter-tree,
+            + %filter-tree__inputs,
+            + %filter-tree__expression-item {
+                margin-top: $vertical-space-cosy;
+            }
+        }
+
+        %filter-tree__buttons {
+            margin-top: $vertical-space-cosy;
+
+            + %filter-tree,
+            + %filter-tree__expression-item,
+            + %filter-tree__inputs {
+                margin-top: $vertical-space-cosy;
+            }
+        }
+
+        %filter-tree__inputs {
+            + %filter-tree,
+            + %filter-tree__expression-item {
+                margin-top: $vertical-space-cosy;
+            }
+        }
+    }
+
+    %advanced-filter--compact {
+        %advanced-filter__main {
+            max-height: 305px;
+        }
+
+        %advanced-filter__main,
+        %advanced-filter__header {
+            padding: $vertical-space-compact rem(16px);
+        }
+
+        %filter-tree__expression-actions igx-icon {
+            font-size: rem(18px);
+            width: rem(18px);
+            height: rem(18px);
+        }
+
+        %filter-tree__line {
+            margin-right: $horizontal-space-compact;
+        }
+
+        %filter-tree {
+            + %filter-tree,
+            + %filter-tree__expression-item,
+            + %filter-tree__inputs {
+                margin-top: $vertical-space-compact;
+            }
+        }
+
+        %filter-tree__expression-item {
+            + %filter-tree,
+            + %filter-tree__inputs,
+            + %filter-tree__expression-item {
+                margin-top: $vertical-space-compact;
+            }
+        }
+
+        %filter-tree__buttons {
+            margin-top: $vertical-space-compact;
+
+            + %filter-tree,
+            + %filter-tree__expression-item,
+            + %filter-tree__inputs {
+                margin-top: $vertical-space-compact;
+            }
+        }
+
+        %filter-tree__inputs {
+            + %filter-tree,
+            + %filter-tree__expression-item {
+                margin-top: $vertical-space-compact;
+            }
+        }
+    }
+
+    %filter-con-menu--cosy {
+        > [igxButton] + [igxButton],
+        igx-buttongroup + [igxButton],
+        [igxButton] + igx-buttongroup {
+            margin-top: $vertical-space-cosy;
+        }
+    }
+
+    %filter-con-menu--compact {
+        > [igxButton] + [igxButton],
+        igx-buttongroup + [igxButton],
+        [igxButton] + igx-buttongroup {
+            margin-top: $vertical-space-compact;
+        }
     }
 }
