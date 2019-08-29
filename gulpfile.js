@@ -67,7 +67,7 @@ module.exports.buildStyle =  (cb) => {
     cb();
 };
 
-module.exports.copyGitHooks = (cb) => {
+module.exports.copyGitHooks = async (cb) => {
 
     if (process.env.AZURE_PIPELINES || process.env.TRAVIS || process.env.CI || !fs.existsSync('.git')) {
         return;
@@ -116,7 +116,7 @@ module.exports.copyGitHooks = (cb) => {
     fs.copyFileSync('./.hooks/prepare-commit-msg',
         './.git/hooks/prepare-commit-msg');
 
-    cb();
+    return await cb();
 };
 
 module.exports.copyMigrations = (cb) => {
@@ -299,10 +299,10 @@ module.exports.createDocsOutputDir = createDocsOutputDirFn;
 /**
  * Typedoc build tasks
  */
-module.exports.exportTypedocJson = series(typedocBuildExportFn);
-module.exports.importTypedocJson = series(typedocGulp.typedocBuild, typedocImportJsonFn);
+module.exports.exportTypedocJson = typedocBuildExportFn;
 module.exports.cleanTypedocOutputDir = cleanTypedocOutputDirFn;
-module.exports.typedocBuildTheme = series(typedocBuildTheme);
+module.exports.typedocBuildTheme = typedocBuildTheme;
+module.exports.importTypedocJson = series(typedocGulp.typedocBuild, typedocImportJsonFn);
 module.exports.typedocServe = series(
     typedocBuildTheme,
     typedocWatchFunc,
@@ -324,8 +324,8 @@ module.exports.typedocBuildDocsEN = series(
 /**
  * Sassdoc build tasks
  */
-module.exports.sassdocImportJson = series(sassdocImportJson);
-module.exports.sassdocBuildJson = series(sassdocBuildJson);
-module.exports.sassdocCleanOutputDir = series(sassdocCleanOutputDir);
+module.exports.sassdocCleanOutputDir = sassdocCleanOutputDir;
+module.exports.sassdocImportJson = sassdocImportJson;
+module.exports.sassdocBuildJson = sassdocBuildJson;
 module.exports.sassdocBuildJA = series(sassdocCleanOutputDir, sassdocGulp.sassdocBuild, sassdocBuildJA);
 module.exports.sassdocBuildEN = series(sassdocCleanOutputDir, sassdocGulp.sassdocBuild, sassdocBuildEN);
