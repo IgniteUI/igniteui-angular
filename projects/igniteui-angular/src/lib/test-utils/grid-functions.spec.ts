@@ -1216,17 +1216,17 @@ export class GridSelectionFunctions {
         return fix.nativeElement.querySelector(HEADER_ROW_CSS_CLASS);
     }
 
-    public static verifyHeaderRowCheckboxState(fix, checked = false, indeterminate = false) {
-        const header = GridSelectionFunctions.getHeaderRow(fix);
+    public static verifyHeaderRowCheckboxState(parent, checked = false, indeterminate = false) {
+        const header = GridSelectionFunctions.getHeaderRow(parent);
         const headerCheckboxElement = GridSelectionFunctions.getRowCheckboxInput(header);
         expect(headerCheckboxElement.checked).toBe(checked);
         expect(headerCheckboxElement.indeterminate).toBe(indeterminate);
     }
 
-    public static verifyHeaderAndRowCheckBoxesAlignment(fix, grid) {
-        const headerDiv = GridSelectionFunctions.getRowCheckboxDiv(GridSelectionFunctions.getHeaderRow(fix));
+    public static verifyHeaderAndRowCheckBoxesAlignment(grid) {
+        const headerDiv = GridSelectionFunctions.getRowCheckboxDiv(GridSelectionFunctions.getHeaderRow(grid));
         const firstRowDiv = GridSelectionFunctions.getRowCheckboxDiv(grid.rowList.first.nativeElement);
-        const scrollStartElement = fix.nativeElement.querySelector(SCROLL_START_CSS_CLASS);
+        const scrollStartElement = grid.nativeElement.querySelector(SCROLL_START_CSS_CLASS);
         const hScrollbar = grid.parentVirtDir.getHorizontalScroll();
 
         expect(headerDiv.offsetWidth).toEqual(firstRowDiv.offsetWidth);
@@ -1255,8 +1255,8 @@ export class GridSelectionFunctions {
         }
     }
 
-    public static verifyHeaderRowHasCheckbox(fix, hasCheckbox = true, hasCheckboxDiv = true) {
-        GridSelectionFunctions.verifyRowHasCheckbox(GridSelectionFunctions.getHeaderRow(fix), hasCheckbox, hasCheckboxDiv, true);
+    public static verifyHeaderRowHasCheckbox(parent, hasCheckbox = true, hasCheckboxDiv = true) {
+        GridSelectionFunctions.verifyRowHasCheckbox(GridSelectionFunctions.getHeaderRow(parent), hasCheckbox, hasCheckboxDiv, true);
     }
 
     public static getRowCheckboxDiv(rowDOM): HTMLElement {
@@ -1276,8 +1276,8 @@ export class GridSelectionFunctions {
         checkboxElement.dispatchEvent(new Event('click', {}));
     }
 
-    public static clickHeaderRowCheckbox(fix) {
-        const checkboxElement = GridSelectionFunctions.getRowCheckboxDiv(GridSelectionFunctions.getHeaderRow(fix));
+    public static clickHeaderRowCheckbox(parent) {
+        const checkboxElement = GridSelectionFunctions.getRowCheckboxDiv(GridSelectionFunctions.getHeaderRow(parent));
         checkboxElement.dispatchEvent(new Event('click', {}));
     }
 }

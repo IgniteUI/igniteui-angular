@@ -800,7 +800,11 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.endEdit).toHaveBeenCalled();
             expect(grid.endEdit).toHaveBeenCalledWith(false, mockEvent);
 
-            cell.setEditMode(true);
+            cell.nativeElement.dispatchEvent(new Event('focus'));
+            tick(16);
+            fix.detectChanges();
+
+            cell.nativeElement.dispatchEvent(new Event('dblclick'));
             tick(16);
             fix.detectChanges();
             // press Escape on Cancel button

@@ -144,13 +144,12 @@ describe('IgxGrid - Cell selection #grid', () => {
         });
 
         it('Should select correct cells with Ctrl key and mouse drag', () => {
-            pending('Related to the bug 4084');
             const range = { rowStart: 3, rowEnd: 2, columnStart: 'Name', columnEnd: 'ParentID' };
             const firstCell =  grid.getCellByColumn(1, 'ParentID');
             const secondCell =  grid.getCellByColumn(1, 'ID');
             const thirdCell =  grid.getCellByColumn(2, 'ParentID');
             const expectedData = [
-                { ParentID: 147, Name: 'Michael Langdon' },
+                { ParentID: 147, Name: 'Monica Reyes' },
                 { ParentID: 847, Name: 'Laurence Johnson' },
                 { ParentID: 147 }
             ];
