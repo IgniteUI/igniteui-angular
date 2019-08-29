@@ -32,7 +32,8 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
      * @hidden
      */
     public get itemID() {
-        return this.comboAPI.isRemote ? JSON.stringify(this.value) : this.value;
+        const valueKey = this.comboAPI.valueKey;
+        return valueKey !== null ? this.value[valueKey] : this.value;
     }
 
     /**
@@ -95,8 +96,21 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
             }
             return;
         }
-        this.dropDown.navigateItem(this.itemIndex);
+        this.dropDown.navigateItem(this.index);
         this.comboAPI.set_selected_item(this.itemID, event);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     * The event that is prevented is the click on the checkbox label element.
+     * That is the only visible element that a user can interact with.
+     * The click propagates to the host and the preventDefault is to stop it from
+     * switching focus to the input it's base on.
+     * The toggle happens in an internal handler in the drop-down on the next task queue cycle.
+     */
+    disableCheck(event: MouseEvent) {
+        event.preventDefault();
     }
 
     ngDoCheck() {

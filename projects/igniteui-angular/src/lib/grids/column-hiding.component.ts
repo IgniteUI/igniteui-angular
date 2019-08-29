@@ -130,6 +130,9 @@ export class IgxColumnHidingComponent extends ColumnChooserBase implements OnDes
      *@hidden
      */
     protected createColumnItem(container: any, column: any) {
+        if (column.grid.hasColumnLayouts && !column.columnLayout) {
+            return null;
+        }
         const item = new IgxColumnHidingItemDirective();
         item.container = container;
         item.column = column;
@@ -148,7 +151,8 @@ export class IgxColumnHidingComponent extends ColumnChooserBase implements OnDes
      * @memberof IgxColumnHidingComponent
      */
     public showAllColumns() {
-        for (const col of this.hidableColumns) {
+        const collection = this.hidableColumns;
+        for (const col of collection) {
             col.value = false;
         }
     }
@@ -160,7 +164,8 @@ export class IgxColumnHidingComponent extends ColumnChooserBase implements OnDes
      * @memberof IgxColumnHidingComponent
      */
     public hideAllColumns() {
-        for (const col of this.hidableColumns) {
+        const collection = this.hidableColumns;
+        for (const col of collection) {
             col.value = true;
         }
     }

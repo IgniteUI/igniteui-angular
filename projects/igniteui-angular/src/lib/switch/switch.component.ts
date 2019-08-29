@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { isIE } from '../core/utils';
+import { isIE, IBaseEventArgs } from '../core/utils';
 import { EditorProvider } from '../core/edit-provider';
 
 export enum SwitchLabelPosition {
@@ -21,7 +21,7 @@ export enum SwitchLabelPosition {
     AFTER = 'after'
 }
 
-export interface IChangeSwitchEventArgs {
+export interface IChangeSwitchEventArgs extends IBaseEventArgs {
     checked: boolean;
     switch: IgxSwitchComponent;
 }
@@ -58,7 +58,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * ```
      * @memberof IgxSwitchComponent
      */
-    @ViewChild('checkbox') public nativeCheckbox: ElementRef;
+    @ViewChild('checkbox', { static: true }) public nativeCheckbox: ElementRef;
     /**
      * Returns reference to the native label element.
      * ```typescript
@@ -66,7 +66,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * ```
      * @memberof IgxSwitchComponent
      */
-    @ViewChild('label') public nativeLabel;
+    @ViewChild('label', { static: true }) public nativeLabel;
     /**
      * Returns reference to the label placeholder element.
      * ```typescript
@@ -74,7 +74,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * ```
      * @memberof IgxSwitchComponent
      */
-    @ViewChild('placeholderLabel') public placeholderLabel;
+    @ViewChild('placeholderLabel', { static: true }) public placeholderLabel;
 
     /**
      * Sets/gets the `id` of the switch component.

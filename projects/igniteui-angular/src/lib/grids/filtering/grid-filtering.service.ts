@@ -1,5 +1,4 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { GridBaseAPIService } from '../api.service';
 import { IgxIconService } from '../../icon/icon.service';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IgxGridBaseComponent, IColumnResizeEventArgs, IGridDataBindable } from '../grid-base.component';
@@ -8,13 +7,11 @@ import { IFilteringExpression, FilteringLogic } from '../../data-operations/filt
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { IgxGridFilterConditionPipe } from '../grid-common.pipes';
-import { TitleCasePipe, DatePipe } from '@angular/common';
-import { cloneArray } from '../../core/utils';
-import { DataUtil } from '../../data-operations/data-util';
 import { IgxGridSortingPipe } from '../grid/grid.pipes';
 import { IgxDatePipeComponent } from '../grid.common';
-import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component';
+import { IgxColumnComponent } from '../column.component';
+import { IFilteringOperation } from '../../data-operations/filtering-condition';
+import { GridBaseAPIService } from '../api.service';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
@@ -40,8 +37,6 @@ export class IgxFilteringService implements OnDestroy {
     private destroy$ = new Subject<boolean>();
     private isFiltering = false;
     private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
-    private filterPipe = new IgxGridFilterConditionPipe();
-    private titlecasePipe = new TitleCasePipe();
     private _datePipe: IgxDatePipeComponent;
     private columnStartIndex = -1;
 
@@ -52,6 +47,8 @@ export class IgxFilteringService implements OnDestroy {
     public columnToFocus: IgxColumnComponent = null;
     public shouldFocusNext = false;
     public columnToMoreIconHidden = new Map<string, boolean>();
+
+    grid: IgxGridBaseComponent;
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, private iconService: IgxIconService) {}
 
@@ -73,15 +70,11 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     public get unpinnedFilterableColumns() {
-        return this.grid.unpinnedColumns.filter(col => !(col instanceof IgxColumnGroupComponent) && col.filterable);
+        return this.grid.unpinnedColumns.filter(col => !col.columnGroup && col.filterable);
     }
 
     public get unpinnedColumns() {
-        return this.grid.unpinnedColumns.filter(col => !(col instanceof IgxColumnGroupComponent));
-    }
-
-    public get grid(): IgxGridBaseComponent & IGridDataBindable {
-        return this.gridAPI.get(this.gridId);
+        return this.grid.unpinnedColumns.filter(col => !col.columnGroup);
     }
 
     public get datePipe(): IgxDatePipeComponent {
@@ -115,7 +108,7 @@ export class IgxFilteringService implements OnDestroy {
                 }
             });
 
-            this.grid.onColumnMovingEnd.pipe(takeUntil(this.destroy$)).subscribe((event) => {
+            this.grid.onColumnMovingEnd.pipe(takeUntil(this.destroy$)).subscribe(() => {
                 this.grid.filterCellList.forEach((filterCell) => {
                     filterCell.updateFilterCellArea();
                 });
@@ -124,9 +117,9 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     /**
-     * Execute filtering on the grid.
+     * Internal method to create expressionsTree and filter grid used in both filter modes.
      */
-    public filter(field: string, expressions: FilteringExpressionsTree | Array<ExpressionUI> = null): void {
+    public filterInternal(field: string, expressions: FilteringExpressionsTree | Array<ExpressionUI> = null): void {
         this.isFiltering = true;
 
         let expressionsTree;
@@ -137,34 +130,74 @@ export class IgxFilteringService implements OnDestroy {
         }
 
         if (expressionsTree.filteringOperands.length === 0) {
-            this.grid.clearFilter(field);
+            this.clearFilter(field);
         } else {
-            this.grid.filter(field, null, expressionsTree);
+            this.filter(field, null, expressionsTree);
+        }
+
+        this.isFiltering = false;
+    }
+
+    /**
+     * Execute filtering on the grid.
+     */
+    public filter(field: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree,
+        ignoreCase?: boolean) {
+        const col = this.gridAPI.get_column_by_name(field);
+        const filteringIgnoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
+
+        if (conditionOrExpressionTree) {
+            this.gridAPI.filter(field, value, conditionOrExpressionTree, filteringIgnoreCase);
+        } else {
+            const expressionsTreeForColumn = this.grid.filteringExpressionsTree.find(field);
+            if (!expressionsTreeForColumn) {
+                throw new Error('Invalid condition or Expression Tree!');
+            } else if (expressionsTreeForColumn instanceof FilteringExpressionsTree) {
+                this.gridAPI.filter(field, value, expressionsTreeForColumn, filteringIgnoreCase);
+            } else {
+                const expressionForColumn = expressionsTreeForColumn as IFilteringExpression;
+                this.gridAPI.filter(field, value, expressionForColumn.condition, filteringIgnoreCase);
+            }
         }
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
-        requestAnimationFrame(() => this.grid.onFilteringDone.emit(expressionsTree));
-
-        this.isFiltering = false;
+        requestAnimationFrame(() => this.grid.onFilteringDone.emit(col.filteringExpressionsTree));
     }
 
     /**
      * Clear the filter of a given column.
      */
     public clearFilter(field: string): void {
+        if (field) {
+            const column = this.gridAPI.get_column_by_name(field);
+            if (!column) {
+                return;
+            }
+        }
+
         this.isFiltering = true;
 
-        this.grid.clearFilter(field);
-
-        const expr = this.grid.filteringExpressionsTree.find(field);
+        this.gridAPI.clear_filter(field);
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
-        requestAnimationFrame(() => this.grid.onFilteringDone.emit(expr as FilteringExpressionsTree));
+        requestAnimationFrame(() => this.grid.onFilteringDone.emit(null));
 
-        const expressions = this.getExpressions(field);
-        expressions.length = 0;
+        if (field) {
+            const expressions = this.getExpressions(field);
+            expressions.length = 0;
+        }
 
         this.isFiltering = false;
+    }
+
+    /**
+     * Filters all the `IgxColumnComponent` in the `IgxGridComponent` with the same condition.
+     */
+    public filterGlobal(value: any, condition, ignoreCase?) {
+        this.gridAPI.filter_global(value, condition, ignoreCase);
+
+        // Wait for the change detection to update filtered data through the pipes and then emit the event.
+        requestAnimationFrame(() => this.grid.onFilteringDone.emit(this.grid.filteringExpressionsTree));
     }
 
     /**
@@ -185,10 +218,10 @@ export class IgxFilteringService implements OnDestroy {
         if (!this.columnToExpressionsMap.has(columnId)) {
             const column = this.grid.columns.find((col) => col.field === columnId);
             const expressionUIs = new Array<ExpressionUI>();
-
-            this.generateExpressionsList(column.filteringExpressionsTree, this.grid.filteringExpressionsTree.operator, expressionUIs);
-            this.columnToExpressionsMap.set(columnId, expressionUIs);
-
+            if (column) {
+                this.generateExpressionsList(column.filteringExpressionsTree, this.grid.filteringExpressionsTree.operator, expressionUIs);
+                this.columnToExpressionsMap.set(columnId, expressionUIs);
+            }
             return expressionUIs;
         }
 
@@ -289,7 +322,7 @@ export class IgxFilteringService implements OnDestroy {
         }
 
         const column = this.grid.columns.find((col) => col.field === columnId);
-        const isComplex = this.isFilteringTreeComplex(column.filteringExpressionsTree);
+        const isComplex = column && this.isFilteringTreeComplex(column.filteringExpressionsTree);
         if (isComplex) {
             this.columnsWithComplexFilter.add(columnId);
         }
@@ -341,14 +374,15 @@ export class IgxFilteringService implements OnDestroy {
         }
     }
 
-    public get filteredData() {
-        return this.grid.filteredData;
+    /**
+     * Focus the close button in the filtering row.
+     */
+    public focusFilterRowCloseButton() {
+        this.grid.filteringRow.closeButton.nativeElement.focus();
     }
 
-    public get sortedData() {
-        const sortData = new IgxGridSortingPipe(this.gridAPI)
-            .transform(this.grid.data, this.grid.sortingExpressions, this.gridId, 0);
-        return sortData;
+    public get filteredData() {
+        return this.grid.filteredData;
     }
 
     /**
@@ -421,6 +455,17 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     public generateExpressionsList(expressions: IFilteringExpressionsTree | IFilteringExpression,
+        operator: FilteringLogic,
+        expressionsUIs: ExpressionUI[]): void {
+        this.generateExpressionsListRecursive(expressions, operator, expressionsUIs);
+
+        // The beforeOperator of the first expression and the afterOperator of the last expression should be null
+        if (expressionsUIs.length) {
+            expressionsUIs[expressionsUIs.length - 1].afterOperator = null;
+        }
+    }
+
+    private generateExpressionsListRecursive(expressions: IFilteringExpressionsTree | IFilteringExpression,
                                     operator: FilteringLogic,
                                     expressionsUIs: ExpressionUI[]): void {
         if (!expressions) {
@@ -430,21 +475,45 @@ export class IgxFilteringService implements OnDestroy {
         if (expressions instanceof FilteringExpressionsTree) {
             const expressionsTree = expressions as FilteringExpressionsTree;
             for (let i = 0; i < expressionsTree.filteringOperands.length; i++) {
-                this.generateExpressionsList(expressionsTree.filteringOperands[i], expressionsTree.operator, expressionsUIs);
+                this.generateExpressionsListRecursive(expressionsTree.filteringOperands[i], expressionsTree.operator, expressionsUIs);
+            }
+            if (expressionsUIs.length) {
+                expressionsUIs[expressionsUIs.length - 1].afterOperator = operator;
             }
         } else {
             const exprUI = new ExpressionUI();
             exprUI.expression = expressions as IFilteringExpression;
-            if (expressionsUIs.length !== 0) {
-                exprUI.beforeOperator = operator;
-            }
+            exprUI.afterOperator = operator;
 
             const prevExprUI = expressionsUIs[expressionsUIs.length - 1];
             if (prevExprUI) {
-                prevExprUI.afterOperator = operator;
+                exprUI.beforeOperator = prevExprUI.afterOperator;
             }
 
             expressionsUIs.push(exprUI);
         }
+    }
+
+    public isFilteringExpressionsTreeEmpty(): boolean {
+        const expressionTree = this.grid.filteringExpressionsTree;
+        if (!expressionTree.filteringOperands || !expressionTree.filteringOperands.length) {
+            return true;
+        }
+
+        let expr: any;
+
+        for (let i = 0; i < expressionTree.filteringOperands.length; i++) {
+            expr = expressionTree.filteringOperands[i];
+
+            if ((expr instanceof FilteringExpressionsTree)) {
+                const exprTree = expr as FilteringExpressionsTree;
+                if (exprTree.filteringOperands && exprTree.filteringOperands.length) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
 }

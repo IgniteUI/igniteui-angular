@@ -49,24 +49,74 @@
 @mixin igx-grid-paginator($theme) {
     @include igx-root-css-vars($theme);
 
+    $paginator-padding: (
+        comfortable: 0 rem(24px),
+        cosy: 0 rem(16px),
+        compact: 0 rem(12px)
+    );
+
+    $paginator-height: (
+        comfortable: rem(56px),
+        cosy: rem(48px),
+        compact: rem(44px)
+    );
+
     %igx-grid-paginator {
         display: flex;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
         color: --var($theme, 'text-color');
         background: --var($theme, 'background-color');
         grid-row: 7;
-        padding: rem(5px) 0;
         font-size: 12px;
         border-top: 1px solid --var($theme, 'border-color');
         z-index: 1;
-
+        padding: map-get($paginator-padding, 'comfortable');
+        height: map-get($paginator-height, 'comfortable');
+        width: 100%;
+        
         &:empty {
             padding: 0;
         }
+    }
+
+    %igx-grid-paginator--cosy {
+        padding: map-get($paginator-padding, 'cosy');
+        height: map-get($paginator-height, 'cosy');
+    }
+
+    %igx-grid-paginator--compact {
+        padding: map-get($paginator-padding, 'compact');
+        height: map-get($paginator-height, 'compact');
+    }
+
+
+    %igx-grid-paginator__label {
+        margin-right: 8px;
+        @include ellipsis();
+    }
+
+    %igx-grid-paginator__select {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex: 1;
+    }
+
+    %igx-grid-paginator__pager {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex: 1;
 
         > * {
-            margin: 0 rem(5px);
+            margin-left: rem(8px);
         }
+    }
+
+    %igx-grid-paginator__select-input {
+        display: flex;
+        max-width: 90px;
+        min-width: 80px;
     }
 }

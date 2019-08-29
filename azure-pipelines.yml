@@ -7,20 +7,41 @@ steps:
   env:
     AZURE_PIPELINES: "true"
 
-- script: sudo npm install -g @angular/cli
-  displayName: 'Install Angular CLI'
+- script: sudo npm install -g istanbul-combine
+  displayName: 'Install coverage combiner'
+  env:
+    AZURE_PIPELINES: "true"
 
 - script: npm run lint:lib
   displayName: 'Run lint'
 
-- script: ng build igniteui-angular --prod
-  displayName: 'Build source code'
+- script: npm run build:lib
+  displayName: 'Build source code and styles'
 
-- script: npm run build:style
-  displayName: 'Build styles'
+- script: npm run test:lib:azure:others
+  displayName: 'Run non-grid tests'
+  env:
+    NODE_OPTIONS: "--max_old_space_size=4096"
 
-- script: npm run test:lib:azure
-  displayName: 'Run tests'
+- script: npm run test:lib:azure:grid
+  displayName: 'Run grid tests'
+  env:
+    NODE_OPTIONS: "--max_old_space_size=4096"
+
+- script: npm run test:lib:azure:tgrid
+  displayName: 'Run tree grid tests'
+  env:
+    NODE_OPTIONS: "--max_old_space_size=4096"
+
+- script: npm run test:lib:azure:hgrid
+  displayName: 'Run hierarchical grid tests'
+  env:
+    NODE_OPTIONS: "--max_old_space_size=4096"
+
+- script: istanbul-combine -d coverage -p none -r lcov -r cobertura coverage/hierarchical-grid/coverage-final.json coverage/tree-grid/coverage-final.json coverage/non-grid/coverage-final.json coverage/grid/coverage-final.json
+  displayName: 'Combine coverage results'
+  env:
+    AZURE_PIPELINES: "true"
 
 - script: cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
   condition: and(succeeded(), eq(variables['system.teamProject'], 'igniteui-angular'))
@@ -35,10 +56,10 @@ steps:
   condition: succeededOrFailed()
   inputs:
     testRunner: 'JUnit'
-    testResultsFiles: '**/TESTS-*.xml' 
+    testResultsFiles: '**/TESTS-*.xml'
 
 - task: PublishCodeCoverageResults@1
-  inputs: 
+  inputs:
     codeCoverageTool: Cobertura
     summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml'
     reportDirectory: '$(System.DefaultWorkingDirectory)/coverage'

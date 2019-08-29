@@ -1,3 +1,7 @@
+.sample-content {
+    margin-bottom: 500px;
+}
+
 .radio-group {
     display: flex;
     flex-flow: column nowrap;
@@ -30,4 +34,10 @@
     margin: 20px;
     padding: 0 20px 20px 20px;
     background-color: #444444;
+}
+
+.outlet {
+    width: 600px;
+    height: 500px;
+    perspective: 1px;
 }

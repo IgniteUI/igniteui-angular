@@ -166,7 +166,11 @@ describe('IgxAutocomplete', () => {
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeFalsy();
 
-            document.body.click();
+            // Click in center of the body.
+            const bodyRect = document.body.getBoundingClientRect();
+            UIInteractions.simulateMouseEvent('click', document.body,
+                                    bodyRect.left + bodyRect.width / 2,
+                                    bodyRect.top + bodyRect.height / 2);
             tick();
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
@@ -806,6 +810,7 @@ describe('IgxAutocomplete', () => {
             fixture.detectChanges();
             autocomplete = fixture.componentInstance.autocomplete;
             input = fixture.componentInstance.input;
+            group = fixture.componentInstance.group;
             dropDown = fixture.componentInstance.dropDown;
             input.nativeElement.click();
             UIInteractions.sendInput(input, 's', fixture);
@@ -821,12 +826,18 @@ describe('IgxAutocomplete', () => {
             tick();
             expect(dropDown.collapsed).toBeTruthy();
             expect(input.nativeElement.value).toBe('Sofia');
+            expect(group.element.nativeElement.classList.contains('igx-input-group--valid')).toBeTruthy();
+
+            fixture.componentInstance.plainInput.nativeElement.focus();
+            fixture.detectChanges();
+            tick();
+            expect(group.element.nativeElement.classList.contains('igx-input-group--valid')).toBeFalsy();
         }));
     });
 });
 
 @Component({
-    template: `<igx-input-group>
+    template: `<igx-input-group style="width: 300px;">
         <igx-prefix igxRipple><igx-icon fontSet="material">home</igx-icon> </igx-prefix>
         <input igxInput name="towns" type="text" [(ngModel)]="townSelected" required
             [igxAutocomplete]='townsPanel'
@@ -841,10 +852,10 @@ describe('IgxAutocomplete', () => {
     </igx-drop-down>`
 })
 class AutocompleteComponent {
-    @ViewChild(IgxAutocompleteDirective) public autocomplete: IgxAutocompleteDirective;
-    @ViewChild(IgxInputGroupComponent) public group: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective) public input: IgxInputDirective;
-    @ViewChild(IgxDropDownComponent) public dropDown: IgxDropDownComponent;
+    @ViewChild(IgxAutocompleteDirective, { static: true }) public autocomplete: IgxAutocompleteDirective;
+    @ViewChild(IgxInputGroupComponent, { static: true }) public group: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true }) public input: IgxInputDirective;
+    @ViewChild(IgxDropDownComponent, { static: true }) public dropDown: IgxDropDownComponent;
     townSelected;
     public towns;
     settings: AutocompleteOverlaySettings = null;
@@ -878,8 +889,8 @@ class AutocompleteComponent {
     </igx-drop-down>`
 })
 class AutocompleteInputComponent extends AutocompleteComponent {
-    @ViewChild('plainInput') public plainInput: ElementRef<HTMLInputElement>;
-    @ViewChild('textarea') public textarea: ElementRef<HTMLTextAreaElement>;
+    @ViewChild('plainInput', { static: true }) public plainInput: ElementRef<HTMLInputElement>;
+    @ViewChild('textarea', { static: true }) public textarea: ElementRef<HTMLTextAreaElement>;
 }
 
 @Component({
@@ -898,16 +909,18 @@ class AutocompleteInputComponent extends AutocompleteComponent {
             {{town}}
         </igx-drop-down-item>
     </igx-drop-down>
+    <input #plainInput/>
     <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
 </form>
 `
 })
 
 class AutocompleteFormComponent {
-    @ViewChild(IgxAutocompleteDirective) public autocomplete: IgxAutocompleteDirective;
-    @ViewChild(IgxInputGroupComponent) public group: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective) public input: IgxInputDirective;
-    @ViewChild(IgxDropDownComponent) public dropDown: IgxDropDownComponent;
+    @ViewChild(IgxAutocompleteDirective, { static: true }) public autocomplete: IgxAutocompleteDirective;
+    @ViewChild(IgxInputGroupComponent, { static: true }) public group: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true }) public input: IgxInputDirective;
+    @ViewChild(IgxDropDownComponent, { static: true }) public dropDown: IgxDropDownComponent;
+    @ViewChild('plainInput', { static: true }) public plainInput: ElementRef<HTMLInputElement>;
     towns;
 
     reactiveForm: FormGroup;

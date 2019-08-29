@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { IgxExcelStyleLoadingValuesTemplateDirective } from './excel-style-search.component';
 import {
     IgxGridExcelStyleFilteringComponent,
     IgxExcelStyleSortingTemplateDirective,
@@ -28,6 +29,8 @@ import { IgxCheckboxModule } from '../../../checkbox/checkbox.component';
 import { IgxFilterModule } from '../../../directives/filter/filter.directive';
 import { IgxToggleModule } from '../../../directives/toggle/toggle.directive';
 import { IgxListModule } from '../../../list/list.component';
+import { IgxExcelStyleSearchFilterPipe } from './excel-style-search.pipe';
+import { IgxProgressBarModule } from '../../../progressbar/progressbar.component';
 
 /**
  * @hidden
@@ -44,14 +47,18 @@ import { IgxListModule } from '../../../list/list.component';
         IgxExcelStyleSortingTemplateDirective,
         IgxExcelStyleHidingTemplateDirective,
         IgxExcelStyleMovingTemplateDirective,
-        IgxExcelStylePinningTemplateDirective
+        IgxExcelStylePinningTemplateDirective,
+        IgxExcelStyleLoadingValuesTemplateDirective,
+        IgxExcelStyleSearchFilterPipe
     ],
     exports: [
         IgxGridExcelStyleFilteringComponent,
         IgxExcelStyleSortingTemplateDirective,
         IgxExcelStyleHidingTemplateDirective,
         IgxExcelStyleMovingTemplateDirective,
-        IgxExcelStylePinningTemplateDirective
+        IgxExcelStylePinningTemplateDirective,
+        IgxExcelStyleLoadingValuesTemplateDirective,
+        IgxExcelStyleDateExpressionComponent
     ],
     imports: [
         CommonModule,
@@ -68,7 +75,8 @@ import { IgxListModule } from '../../../list/list.component';
         IgxCheckboxModule,
         IgxFilterModule,
         IgxToggleModule,
-        IgxListModule
+        IgxListModule,
+        IgxProgressBarModule
     ],
     entryComponents: [
         IgxGridExcelStyleFilteringComponent

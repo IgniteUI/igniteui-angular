@@ -13,6 +13,9 @@
 /// @param {Color} $focused-text-color [null] - The input text color in the focused state.
 /// @param {Color} $disabled-text-color [null] - The input text color in the disabled state.
 ///
+/// @param {Color} $input-prefix-color [null] - The input prefix color in the idle state.
+/// @param {Color} $input-suffix-color [null] - The input suffix color in the idle state.
+///
 /// @param {Color} $idle-secondary-color [null] - The label color in the idle state.
 /// @param {Color} $filled-secondary-color [null] - The label color in the filled state.
 /// @param {Color} $focused-secondary-color [null] - The label color in the focused state.
@@ -22,7 +25,11 @@
 /// @param {Color} $focused-bottom-line-color [null] - The bottom line and border colors in the focused state.
 /// @param {Color} $interim-bottom-line-color [null] - The bottom line and border colors during the to-focused transition.
 /// @param {Color} $disabled-bottom-line-color [null] - The bottom line and border colors in the disabled state.
-/// @param {Color} $disabled-border-color [null] - The disabled border color for input groups of type border.
+///
+/// @param {Color} $border-color [null] - The border color for input groups of type border and fluent.
+/// @param {Color} $hover-border-color [null] - The hover input border for input groups of type border and fluent.
+/// @param {Color} $focused-border-color [null] - The focused input border color for input groups of type border and fluent.
+/// @param {Color} $disabled-border-color [null] - The disabled border color for input groups of type border and fluent.
 ///
 /// @param {Color} $box-background [null] - The background color of an input group of type box.
 /// @param {Color} $box-disabled-background [null] - The background color of an input group of type box in the disabled state.
@@ -81,6 +88,10 @@
     $focused-bottom-line-color: null,
     $interim-bottom-line-color: null,
     $disabled-bottom-line-color: null,
+
+    $border-color: null,
+    $hover-border-color: null,
+    $focused-border-color: null,
     $disabled-border-color: null,
 
     $box-background: null,
@@ -100,7 +111,12 @@
     $error-secondary-color: null,
 
     $placeholder-color: null,
-    $disabled-placeholder-color: null
+    $disabled-placeholder-color: null,
+
+    $input-prefix-color: null,
+    $input-prefix-background: null,
+    $input-suffix-color: null,
+    $input-suffix-background: null
 ) {
     $name: 'igx-input-group';
     $input-group-schema: map-get($schema, $name);
@@ -162,6 +178,10 @@
         focused-bottom-line-color: $focused-bottom-line-color,
         interim-bottom-line-color: $interim-bottom-line-color,
         disabled-bottom-line-color: $disabled-bottom-line-color,
+
+        border-color: $border-color,
+        hover-border-color: $hover-border-color,
+        focused-border-color: $focused-border-color,
         disabled-border-color: $disabled-border-color,
 
         box-background: $box-background,
@@ -182,6 +202,11 @@
         error-secondary-color: $error-secondary-color,
         placeholder-color: $placeholder-color,
         disabled-placeholder-color: $disabled-placeholder-color,
+
+        input-prefix-color: $input-prefix-color,
+        input-prefix-background: $input-prefix-background,
+        input-suffix-color: $input-suffix-color,
+        input-suffix-background: $input-suffix-background
     ));
 }
 
@@ -212,6 +237,31 @@
         'cosy': 19px,
         'compact': 22px
     );
+
+    $search-border-width: map-get((
+        material: 0,
+        fluent: 1px,
+    ), map-get($theme, variant));
+
+    $prefix-margin: map-get((
+        material: 0,
+        fluent: 8px,
+    ), map-get($theme, variant));
+
+    $prefix-height-cosy: map-get((
+        material: rem(32px, map-get($base-scale-size, 'cosy')),
+        fluent: auto,
+    ), map-get($theme, variant));
+
+    $prefix-height-compact: map-get((
+        material: rem(32px, map-get($base-scale-size, 'compact')),
+        fluent: auto,
+    ), map-get($theme, variant));
+
+    $prefix-height-comfortable: map-get((
+        material: rem(32px, map-get($base-scale-size, 'comfortable')),
+        fluent: auto,
+    ), map-get($theme, variant));
 
     $hint-padding-top: rem(6px, map-get($base-scale-size, 'comfortable'));
     $hint--box-margin: rem(12px, map-get($base-scale-size, 'comfortable'));
@@ -404,7 +454,7 @@
 
     %form-group-bundle--border {
         padding: 0 rem(16px, map-get($base-scale-size, 'comfortable'));
-        box-shadow: inset 0 0 0 1px --var($theme, 'idle-bottom-line-color');
+        box-shadow: inset 0 0 0 1px --var($theme, 'border-color');
         border-radius: --var($theme, 'border-border-radius');
         background: --var($theme, 'border-background');
 
@@ -422,11 +472,11 @@
     }
 
     %form-group-bundle-border--hover {
-        box-shadow: inset 0 0 0 2px --var($theme, 'idle-text-color');
+        box-shadow: inset 0 0 0 2px --var($theme, 'hover-border-color');
     }
 
     %form-group-bundle-border--focus {
-        box-shadow: inset 0 0 0 2px --var($theme, 'focused-bottom-line-color');
+        box-shadow: inset 0 0 0 2px --var($theme, 'focused-border-color');
     }
 
     %form-group-bundle-border--error {
@@ -442,12 +492,241 @@
         box-shadow: inset 0 0 0 1px --var($theme, 'disabled-border-color');
     }
 
+
+    //// FLUENT /////
+    %igx-input-group-fluent {
+        display: flex;
+        flex-direction: column;
+
+        igx-prefix,
+        [igxPrefix] {
+            @extend %form-group-prefix-fluent;
+            outline-style: none;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %form-group-suffix-fluent;
+            outline-style: none;
+        }
+
+        select {
+            width: calc(100% + #{rem(8px)});
+            margin-left: rem(-8px) !important;
+            cursor: pointer !important;
+        }
+    }
+
+    %igx-input-group-fluent-search {
+        display: flex;
+        flex-direction: column;
+
+        igx-prefix,
+        [igxPrefix] {
+            @extend %form-group-prefix-fluent-search;
+            outline-style: none;
+            overflow: hidden;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %form-group-suffix-fluent-search;
+            outline-style: none;
+        }
+    }
+
+    %igx-input-group-fluent-search--focused {
+        igx-prefix,
+        [igxPrefix] {
+            width: 0;
+            padding-right: 0 !important;
+        }
+    }
+
+    %igx-input-group-fluent--cosy {
+        igx-prefix,
+        [igxPrefix] {
+            @extend %form-group-prefix-fluent--cosy;
+            outline-style: none;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %form-group-suffix-fluent--cosy;
+            outline-style: none;
+        }
+    }
+
+    %igx-input-group-fluent-search--cosy {
+        display: flex;
+        flex-direction: column;
+
+        igx-prefix,
+        [igxPrefix] {
+            @extend %form-group-prefix-fluent-search--cosy;
+            outline-style: none;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %form-group-suffix-fluent-search--cosy;
+            outline-style: none;
+        }
+    }
+
+    %igx-input-group-fluent--compact {
+        igx-prefix,
+        [igxPrefix] {
+            @extend %form-group-prefix-fluent--compact;
+            outline-style: none;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %form-group-suffix-fluent--compact;
+            outline-style: none;
+        }
+    }
+
+    %igx-input-group-fluent-search--compact {
+        display: flex;
+        flex-direction: column;
+
+        igx-prefix,
+        [igxPrefix] {
+            @extend %form-group-prefix-fluent-search--compact;
+            outline-style: none;
+        }
+
+        igx-suffix,
+        [igxSuffix] {
+            @extend %form-group-suffix-fluent-search--compact;
+            outline-style: none;
+        }
+    }
+
+    %form-group-bundle-required--fluent {
+        &::after {
+            content: '*';
+            position: absolute;
+            top: rem(-8px);
+            left: calc(100% + #{rem(4px)});
+            color: --var($theme, 'error-secondary-color');
+        }
+    }
+
+    %fluent-label + %form-group-bundle-required--fluent {
+        &::after {
+            display: none;
+        }
+    }
+
+    // Bundle
+    %form-group-bundle--fluent {
+        padding: 0;
+        min-height: 32px;
+        border: 1px solid --var($theme, 'border-color');
+        box-shadow: none;
+        border-radius: --var($theme, 'border-border-radius');
+        background: --var($theme, 'border-background');
+        position: relative;
+    }
+
+    %form-group-bundle--fluent--hover {
+        border-color: --var($theme, 'hover-border-color');
+        box-shadow: none;
+    }
+
+    %form-group-bundle--fluent--focus {
+        border-color: --var($theme, 'focused-border-color');
+        box-shadow: none;
+    }
+
+    %form-group-bundle--fluent--hover-disabled,
+    %form-group-bundle--fluent-disabled {
+        border-color: --var($theme, 'disabled-border-color');
+        background: --var($theme, 'border-disabled-background');
+    }
+
+    %form-group-bundle-error--fluent--hover,
+    %form-group-bundle-error--fluent {
+        border-color: --var($theme, 'error-secondary-color');
+    }
+
+    %form-group-bundle-success--fluent--hover,
+    %form-group-bundle-success--fluent {
+        border-color: --var($theme, 'success-secondary-color');
+    }
+
+    %fluent-input {
+        padding: 0;
+        margin: 0;
+        border: none;
+    }
+
+    %fluent-input-disabled {
+        color: --var($theme, 'disabled-text-color');
+    }
+
+    %form-group-bundle-main--fluent {
+        padding-left: rem(8px);
+    }
+
+    igx-prefix + %form-group-bundle-main--fluent,
+    [igx-prefix] + %form-group-bundle-main--fluent {
+        padding-left: 0;
+    }
+
+    %fluent-placeholder-label {
+        transform: translateY(0) scale(1);
+    }
+
+    %fluent-label {
+        padding: rem(5px) 0;
+        line-height: normal !important;
+        position: static;
+        transform: translateY(0);
+        transform-origin: top left;
+        margin-top: 0 !important;
+        height: auto;
+        color: igx-color(map-get($theme, 'palette'), 'grays', 800);
+
+        [dir='rtl'] & {
+            transform-origin: top right;
+        }
+    }
+
+    %fluent-label-success {
+        color: --var($theme, 'idle-text-color');
+    }
+
+    %fluent-label-error {
+        color: --var($theme, 'idle-text-color');
+    }
+
+    %fluent-label-disabled {
+        color: igx-color(map-get($theme, 'palette'), 'grays', 500);
+    }
+
+    %fluent-label-filled {
+        transform: translateY(0);
+    }
+
+    %fluent-label-focused {
+        color: igx-color(map-get($theme, 'palette'), 'grays', 800);
+        transform: translateY(0) scale(1);
+    }
+
+    %fluent-textarea {
+        padding: 0;
+    }
+
     %form-group-bundle--search {
         padding: 0 rem(16px, map-get($base-scale-size, 'comfortable'));
         border-radius: --var($theme, 'search-border-radius');
-        border-bottom: none;
         background: --var($theme, 'search-background');
         box-shadow: --var($theme, 'search-resting-shadow');
+        border: $search-border-width solid --var($theme, 'border-color');
 
         %form-group-label--box + %form-group-input--box {
             transform: translateY(0);
@@ -464,23 +743,28 @@
 
     %form-group-bundle-search--hover {
         box-shadow: --var($theme, 'search-hover-shadow');
+        border-color: --var($theme, 'hover-border-color');
     }
 
     %form-group-bundle-search--focus {
         box-shadow: --var($theme, 'search-hover-shadow');
+        border-color: --var($theme, 'hover-border-color');
     }
 
     %form-group-bundle-search--error {
         box-shadow: --var($theme, 'search-hover-shadow');
+        border-color: --var($theme, 'search-hover-shadow');
     }
 
     %form-group-bundle-search--success {
         box-shadow: --var($theme, 'search-hover-shadow');
+        border-color: --var($theme, 'search-hover-shadow');
     }
 
     %form-group-bundle-search--disabled {
         background: --var($theme, 'search-disabled-background');
         box-shadow: --var($theme, 'search-disabled-shadow');
+        border-color: --var($theme, 'disabled-border-color');
     }
 
     %form-group-bundle-main {
@@ -505,12 +789,12 @@
         position: absolute;
         width: 100%;
         transform: translateY(50%); /* 8px, base is 16px */
-        line-height: rem(16px, map-get($base-scale-size, 'comfortable')) !important;
-        height: rem(18px, map-get($base-scale-size, 'comfortable'));
+        line-height: 1 !important;
+        height: rem(18px);
         backface-visibility: hidden;
         will-change: transform;
         transform-origin: top left;
-        transition: transform $transition-timing, color $transition-timing;
+        transition: transform $transition-timing, color $transition-timing, margin $transition-timing;
 
         [dir='rtl'] & {
             transform-origin: top right;
@@ -518,13 +802,11 @@
     }
 
     %form-group-label--cosy {
-        line-height: rem(16px, map-get($base-scale-size, 'cosy')) !important;
-        height: rem(18px, map-get($base-scale-size, 'cosy'));
+        margin-top: rem(-2px);
     }
 
     %form-group-label--compact {
-        line-height: rem(16px, map-get($base-scale-size, 'compact')) !important;
-        height: rem(18px, map-get($base-scale-size, 'compact'));
+        margin-top: rem(-4px);
     }
 
     %form-group-label--box {
@@ -532,7 +814,9 @@
     }
 
     %form-group-label--float {
+        overflow: visible;
         transform: translateY(-50%) scale(.75);
+        margin-top: auto;
     }
 
     %form-group-label--fixed {
@@ -565,8 +849,6 @@
         display: block;
         border: none;
         height: rem(32px, map-get($base-scale-size, 'comfortable'));
-        padding: 0 0 rem(8px, map-get($base-scale-size, 'comfortable'));
-        border-top: rem(8px, map-get($base-scale-size, 'comfortable')) solid rgba(0, 0, 0, 0);
         line-height: 0 !important; /* resets typography styles */
         width: 100%;
         min-width: 0;
@@ -575,9 +857,11 @@
         color: --var($theme, 'filled-text-color');
         outline-style: none;
         box-shadow: none;
+        border-top: rem(3px) solid transparent;
+        padding-bottom: rem(3px);
 
         &::-webkit-input-placeholder {
-            padding: 4px 0;
+            line-height: normal;
         }
 
         &::placeholder {
@@ -588,14 +872,11 @@
 
     %form-group-input--cosy {
         height: rem(32px, map-get($base-scale-size, 'cosy'));
-        padding: 0 0 rem(8px, map-get($base-scale-size, 'cosy'));
-        border-top: rem(8px, map-get($base-scale-size, 'cosy')) solid rgba(0, 0, 0, 0);
     }
 
     %form-group-input--compact {
+        font-size: rem(map-get($base-scale-size, 'compact') - 1px, map-get($base-scale-size, 'compact'));
         height: rem(32px, map-get($base-scale-size, 'compact'));
-        padding: 0 0 rem(8px, map-get($base-scale-size, 'compact'));
-        border-top: rem(8px, map-get($base-scale-size, 'compact')) solid rgba(0, 0, 0, 0);
     }
 
     %chrome-autofill-fix {
@@ -690,7 +971,7 @@
         position: relative;
         display: inline-flex;
         align-items: center;
-        height: rem(32px, map-get($base-scale-size, 'comfortable'));
+        height: $prefix-height-comfortable;
         transition: color $transition-timing;
     }
 
@@ -714,11 +995,12 @@
 
     %form-group-prefix--cosy,
     %form-group-suffix--cosy {
-        height: rem(32px, map-get($base-scale-size, 'cosy'));
+        height: $prefix-height-cosy;
     }
 
     %form-group-prefix--compact,
     %form-group-suffix--compact {
+        font-size: rem(map-get($base-scale-size, 'compact') - 1px, map-get($base-scale-size, 'compact'));
         height: rem(32px, map-get($base-scale-size, 'compact'));
     }
 
@@ -757,6 +1039,120 @@
     %form-group-suffix--compact {
         padding: rem(8px, map-get($base-scale-size, 'compact')) 0;
     }
+
+    %form-group-prefix-fluent {
+        color: --var($theme, 'input-prefix-color');
+        background: --var($theme, 'input-prefix-background');
+
+        %igx-icon-display {
+            width: rem(18px);
+            height: rem(18px);
+            font-size: rem(18px);
+        }
+
+        &:last-of-type {
+            margin-right: $prefix-margin;
+        }
+
+        padding: rem(8px, map-get($base-scale-size, 'comfortable'));
+
+        [dir='rtl'] & {
+            padding: rem(8px, map-get($base-scale-size, 'comfortable'))
+        }
+    }
+
+    %form-group-prefix-fluent-search {
+        %igx-icon-display {
+            width: rem(18px);
+            height: rem(18px);
+            font-size: rem(18px);
+        }
+
+        padding: rem(8px, map-get($base-scale-size, 'comfortable'));
+
+        [dir='rtl'] & {
+            padding: rem(8px, map-get($base-scale-size, 'comfortable'))
+        }
+
+        &:last-of-type {
+            margin-right: 0;
+        }
+    }
+
+    %form-group-suffix-fluent {
+        color: --var($theme, 'input-suffix-color');
+        background: --var($theme, 'input-suffix-background');
+
+        %igx-icon-display {
+            width: rem(18px);
+            height: rem(18px);
+            font-size: rem(18px);
+        }
+
+        &:first-of-type {
+            margin-left: $prefix-margin;
+        }
+
+        padding: rem(8px, map-get($base-scale-size, 'comfortable'));
+    }
+
+    %form-group-suffix-fluent-search {
+        %igx-icon-display {
+            width: rem(18px);
+            height: rem(18px);
+            font-size: rem(18px);
+        }
+        padding: rem(8px, map-get($base-scale-size, 'comfortable'));
+
+        &:first-of-type {
+            margin-left: 0;
+        }
+    }
+
+    %form-group-prefix-fluent-search--cosy,
+    %form-group-suffix-fluent-search--cosy,
+    %form-group-prefix-fluent--cosy,
+    %form-group-suffix-fluent--cosy {
+        height: $prefix-height-cosy;
+    }
+
+    %form-group-prefix-fluent-search--compact,
+    %form-group-suffix-fluent-search--compact,
+    %form-group-prefix-fluent--compact,
+    %form-group-suffix-fluent--compact {
+        font-size: rem(map-get($base-scale-size, 'compact') - 1px, map-get($base-scale-size, 'compact'));
+        height: $prefix-height-compact;
+    }
+
+    %form-group-prefix-fluent-search--cosy,
+    %form-group-prefix-fluent--cosy {
+        padding: rem(8px, map-get($base-scale-size, 'cosy'));
+
+        [dir='rtl'] & {
+            padding: rem(8px, map-get($base-scale-size, 'cosy'));
+        }
+    }
+
+    %form-group-prefix-fluent-search--compact,
+    %form-group-prefix-fluent--compact {
+        padding: rem(8px, map-get($base-scale-size, 'compact'));
+
+        [dir='rtl'] & {
+            padding: rem(8px, map-get($base-scale-size, 'compact'));
+        }
+    }
+
+    %form-group-suffix-fluent-search--cosy,
+    %form-group-suffix-fluent--cosy {
+        padding: rem(8px, map-get($base-scale-size, 'cosy'));
+    }
+
+    %form-group-suffix-fluent-search--compact,
+    %form-group-suffix-fluent--compact {
+        padding: rem(8px, map-get($base-scale-size, 'compact'));
+    }
+
+    /// FLUENT END ///
 
     %form-group-prefix--box,
     %form-group-suffix--box {
@@ -888,35 +1284,22 @@
     $input-text: map-get($categories, 'input-text');
     $input-text-props: igx-type-scale-category($type-scale, $input-text);
 
-    @include igx-scope('.igx-typography') {
-        %form-group-label {
-            @include igx-type-style($type-scale, $input-text) {
-                // This is embarrassing but there's no other
-                // way to extract the font-size the user sets
-                // in case they use custom typography :(
-                // We need the padding so that the text doesn't get
-                // cut off.
-                padding-bottom: map-get($input-text-props, 'font-size');
-            }
+    %form-group-input {
+        @include igx-type-style($type-scale, $input-text) {
+            margin: 0;
         }
+    }
 
-        %form-group-input {
-            @include igx-type-style($type-scale, $input-text) {
-                margin: 0;
-            }
+    %form-group-helper {
+        @include igx-type-style($type-scale, $helper-text) {
+            margin: 0;
         }
+    }
 
-        %form-group-helper {
-            @include igx-type-style($type-scale, $helper-text) {
-                margin: 0;
-            }
-        }
-
-        %form-group-prefix,
-        %form-group-suffix {
-            @include igx-type-style($type-scale, $input-text) {
-                margin: 0;
-            }
+    %form-group-prefix,
+    %form-group-suffix {
+        @include igx-type-style($type-scale, $input-text) {
+            margin: 0;
         }
     }
 }

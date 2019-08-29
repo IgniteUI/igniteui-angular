@@ -21,12 +21,12 @@ const CSS_CLASS_BANNER_ACTIONS = 'igx-banner__actions';
 const CSS_CLASS_BANNER_ROW = 'igx-banner__row';
 
 describe('igxBanner', () => {
-    const bannerElement: DebugElement = null;
-    const bannerMessageElement: DebugElement = null;
-    const bannerIllustrationElement: DebugElement = null;
-    const bannerTextElement: DebugElement = null;
-    const bannerActionsElement: DebugElement = null;
-    const bannerRowElement: DebugElement = null;
+    let bannerElement: DebugElement = null;
+    let bannerMessageElement: DebugElement = null;
+    let bannerIllustrationElement: DebugElement = null;
+    let bannerTextElement: DebugElement = null;
+    let bannerActionsElement: DebugElement = null;
+    let bannerRowElement: DebugElement = null;
 
     configureTestSuite();
     beforeEach(async(() => {
@@ -112,12 +112,12 @@ describe('igxBanner', () => {
 
             getBaseClassElements(fixture);
 
-            expect(this.bannerElement).toBeNull();
-            expect(this.bannerMessageElement).toBeNull();
-            expect(this.bannerIllustrationElement).toBeNull();
-            expect(this.bannerTextElement).toBeNull();
-            expect(this.bannerActionsElement).toBeNull();
-            expect(this.bannerRowElement).toBeNull();
+            expect(bannerElement).toBeNull();
+            expect(bannerMessageElement).toBeNull();
+            expect(bannerIllustrationElement).toBeNull();
+            expect(bannerTextElement).toBeNull();
+            expect(bannerActionsElement).toBeNull();
+            expect(bannerRowElement).toBeNull();
 
             const banner = fixture.componentInstance.banner;
             banner.open();
@@ -126,12 +126,12 @@ describe('igxBanner', () => {
 
             getBaseClassElements(fixture);
 
-            expect(this.bannerElement).toBeDefined();
-            expect(this.bannerMessageElement).toBeDefined();
-            expect(this.bannerIllustrationElement).toBeDefined();
-            expect(this.bannerTextElement).toBeDefined();
-            expect(this.bannerActionsElement).toBeDefined();
-            expect(this.bannerRowElement).toBeDefined();
+            expect(bannerElement).toBeDefined();
+            expect(bannerMessageElement).toBeDefined();
+            expect(bannerIllustrationElement).toBeDefined();
+            expect(bannerTextElement).toBeDefined();
+            expect(bannerActionsElement).toBeDefined();
+            expect(bannerRowElement).toBeDefined();
         }));
 
         it('Should initialize banner with at least one and up to two buttons', fakeAsync(() => {
@@ -140,12 +140,12 @@ describe('igxBanner', () => {
 
             getBaseClassElements(fixture);
 
-            expect(this.bannerElement).toBeNull();
-            expect(this.bannerMessageElement).toBeNull();
-            expect(this.bannerIllustrationElement).toBeNull();
-            expect(this.bannerTextElement).toBeNull();
-            expect(this.bannerActionsElement).toBeNull();
-            expect(this.bannerRowElement).toBeNull();
+            expect(bannerElement).toBeNull();
+            expect(bannerMessageElement).toBeNull();
+            expect(bannerIllustrationElement).toBeNull();
+            expect(bannerTextElement).toBeNull();
+            expect(bannerActionsElement).toBeNull();
+            expect(bannerRowElement).toBeNull();
 
             const banner = fixture.componentInstance.banner;
             banner.open();
@@ -154,12 +154,12 @@ describe('igxBanner', () => {
 
             getBaseClassElements(fixture);
 
-            expect(this.bannerElement).not.toBeNull();
-            expect(this.bannerMessageElement).not.toBeNull();
-            expect(this.bannerIllustrationElement).not.toBeNull();
-            expect(this.bannerTextElement).not.toBeNull();
-            expect(this.bannerActionsElement).not.toBeNull();
-            expect(this.bannerRowElement).not.toBeNull();
+            expect(bannerElement).not.toBeNull();
+            expect(bannerMessageElement).not.toBeNull();
+            expect(bannerIllustrationElement).not.toBeNull();
+            expect(bannerTextElement).not.toBeNull();
+            expect(bannerActionsElement).not.toBeNull();
+            expect(bannerRowElement).not.toBeNull();
 
             banner.close();
             tick();
@@ -167,12 +167,12 @@ describe('igxBanner', () => {
 
             getBaseClassElements(fixture);
 
-            expect(this.bannerElement).toBeNull();
-            expect(this.bannerMessageElement).toBeNull();
-            expect(this.bannerIllustrationElement).toBeNull();
-            expect(this.bannerTextElement).toBeNull();
-            expect(this.bannerActionsElement).toBeNull();
-            expect(this.bannerRowElement).toBeNull();
+            expect(bannerElement).toBeNull();
+            expect(bannerMessageElement).toBeNull();
+            expect(bannerIllustrationElement).toBeNull();
+            expect(bannerTextElement).toBeNull();
+            expect(bannerActionsElement).toBeNull();
+            expect(bannerRowElement).toBeNull();
         }));
 
         it('Should position buttons next to the banner content', fakeAsync(() => {
@@ -186,8 +186,8 @@ describe('igxBanner', () => {
 
             getBaseClassElements(fixture);
 
-            const bannerMessageElementTop = this.bannerMessageElement.nativeElement.getClientRects().y;
-            const bannerActionsElementTop = this.bannerActionsElement.nativeElement.getClientRects().y;
+            const bannerMessageElementTop = bannerMessageElement.nativeElement.getClientRects().y;
+            const bannerActionsElementTop = bannerActionsElement.nativeElement.getClientRects().y;
 
             expect(bannerMessageElementTop).toBe(bannerActionsElementTop);
         }));
@@ -268,14 +268,14 @@ describe('igxBanner', () => {
 
             getBaseClassElements(fixture);
 
-            expect(this.bannerMessageElement).not.toBeNull();
-            expect(this.bannerIllustrationElement).not.toBeNull();
-            expect(this.bannerTextElement).not.toBeNull();
-            expect(this.bannerTextElement.nativeElement.innerHTML.trim()).
+            expect(bannerMessageElement).not.toBeNull();
+            expect(bannerIllustrationElement).not.toBeNull();
+            expect(bannerTextElement).not.toBeNull();
+            expect(bannerTextElement.nativeElement.innerHTML.trim()).
                 toEqual('Unfortunately, the credit card did not go through, please try again.');
-            expect(this.bannerActionsElement).not.toBeNull();
+            expect(bannerActionsElement).not.toBeNull();
 
-            const buttons = this.bannerActionsElement.nativeElement.querySelectorAll('button');
+            const buttons = bannerActionsElement.nativeElement.querySelectorAll('button');
             expect(buttons.length).toEqual(2);
             buttons[0].click();
             tick();
@@ -287,8 +287,8 @@ describe('igxBanner', () => {
             expect(banner.onClosed.emit).toHaveBeenCalledTimes(1);
             expect(banner.onExpansionPanelClose).toHaveBeenCalledTimes(1);
             expect(banner.collapsed).toBeTruthy();
-            expect(this.bannerMessageElement).toBeNull();
-            expect(this.bannerActionsElement).toBeNull();
+            expect(bannerMessageElement).toBeNull();
+            expect(bannerActionsElement).toBeNull();
 
             banner.open();
             tick();
@@ -300,12 +300,12 @@ describe('igxBanner', () => {
             expect(banner.onOpened.emit).toHaveBeenCalledTimes(2);
             expect(banner.onExpansionPanelOpen).toHaveBeenCalledTimes(2);
             expect(banner.collapsed).toBeFalsy();
-            expect(this.bannerMessageElement).not.toBeNull();
-            expect(this.bannerIllustrationElement).not.toBeNull();
-            expect(this.bannerTextElement).not.toBeNull();
-            expect(this.bannerTextElement.nativeElement.innerHTML.trim()).
+            expect(bannerMessageElement).not.toBeNull();
+            expect(bannerIllustrationElement).not.toBeNull();
+            expect(bannerTextElement).not.toBeNull();
+            expect(bannerTextElement.nativeElement.innerHTML.trim()).
                 toEqual('Unfortunately, the credit card did not go through, please try again.');
-            expect(this.bannerActionsElement).not.toBeNull();
+            expect(bannerActionsElement).not.toBeNull();
 
             buttons[1].click();
             tick();
@@ -316,8 +316,8 @@ describe('igxBanner', () => {
             expect(banner.onClosed.emit).toHaveBeenCalledTimes(2);
             expect(banner.onExpansionPanelClose).toHaveBeenCalledTimes(2);
             expect(banner.collapsed).toBeTruthy();
-            expect(this.bannerMessageElement).toBeNull();
-            expect(this.bannerActionsElement).toBeNull();
+            expect(bannerMessageElement).toBeNull();
+            expect(bannerActionsElement).toBeNull();
         }));
 
         it('Should not be dismissed on user actions outside the component', () => {
@@ -425,32 +425,32 @@ describe('igxBanner', () => {
             expect(bannerNode.childElementCount).toEqual(1); // collapsed expansion panel
             expect(bannerNode.firstElementChild.childElementCount).toEqual(0); // no content
             getBaseClassElements(fixture);
-            expect(this.bannerElement).toBeNull();
-            expect(this.bannerMessageElement).toBeNull();
-            expect(this.bannerIllustrationElement).toBeNull();
-            expect(this.bannerTextElement).toBeNull();
-            expect(this.bannerActionsElement).toBeNull();
-            expect(this.bannerRowElement).toBeNull();
+            expect(bannerElement).toBeNull();
+            expect(bannerMessageElement).toBeNull();
+            expect(bannerIllustrationElement).toBeNull();
+            expect(bannerTextElement).toBeNull();
+            expect(bannerActionsElement).toBeNull();
+            expect(bannerRowElement).toBeNull();
             banner.toggle();
             tick();
             fixture.detectChanges();
             getBaseClassElements(fixture);
-            expect(this.bannerElement).not.toBeNull();
-            expect(this.bannerMessageElement).not.toBeNull();
-            expect(this.bannerIllustrationElement).not.toBeNull();
-            expect(this.bannerTextElement).not.toBeNull();
-            expect(this.bannerActionsElement).not.toBeNull();
-            expect(this.bannerRowElement).not.toBeNull();
+            expect(bannerElement).not.toBeNull();
+            expect(bannerMessageElement).not.toBeNull();
+            expect(bannerIllustrationElement).not.toBeNull();
+            expect(bannerTextElement).not.toBeNull();
+            expect(bannerActionsElement).not.toBeNull();
+            expect(bannerRowElement).not.toBeNull();
             banner.toggle();
             tick();
             fixture.detectChanges();
             getBaseClassElements(fixture);
-            expect(this.bannerElement).toBeNull();
-            expect(this.bannerMessageElement).toBeNull();
-            expect(this.bannerIllustrationElement).toBeNull();
-            expect(this.bannerTextElement).toBeNull();
-            expect(this.bannerActionsElement).toBeNull();
-            expect(this.bannerRowElement).toBeNull();
+            expect(bannerElement).toBeNull();
+            expect(bannerMessageElement).toBeNull();
+            expect(bannerIllustrationElement).toBeNull();
+            expect(bannerTextElement).toBeNull();
+            expect(bannerActionsElement).toBeNull();
+            expect(bannerRowElement).toBeNull();
         }));
 
         it('Should apply all appropriate classes on initialization_custom template', fakeAsync(() => {
@@ -472,46 +472,6 @@ describe('igxBanner', () => {
             expect(panelBody.attributes.getNamedItem('class').nodeValue).toContain(CSS_CLASS_EXPANSION_PANEL_BODY);
             expect(panelBody.attributes.getNamedItem('role').nodeValue).toEqual('region');
             expect(panelBody.childElementCount).toEqual(1);
-
-            // banner > banner__message > banner__text > ng-content (which is igx-card host) > wrapper div with card class
-            const card = panelBody.querySelector('igx-card').children[0];
-            expect(card.attributes.getNamedItem('class').nodeValue).toContain('igx-card');
-            expect(card.attributes.getNamedItem('role').nodeValue).toEqual('group');
-            expect(card.childElementCount).toEqual(2);
-
-            const cardHeader = card.children[0];
-            expect(cardHeader.childElementCount).toEqual(2);
-
-            const avatar = cardHeader.children[0];
-            expect(avatar.attributes.getNamedItem('class').nodeValue).toContain('igx-avatar');
-            expect(avatar.attributes.getNamedItem('class').nodeValue).toContain('igx-avatar--rounded');
-            expect(avatar.attributes.getNamedItem('class').nodeValue).toContain('igx-avatar--small');
-            expect(avatar.attributes.getNamedItem('role').nodeValue).toEqual('img');
-            expect(avatar.attributes.getNamedItem('aria-label').nodeValue).toEqual('avatar');
-            expect(avatar.childElementCount).toEqual(1);
-
-            const avatarImage = avatar.children[0];
-            expect(avatarImage.attributes.getNamedItem('class').nodeValue).toContain('igx-avatar__image');
-            expect(avatarImage.childElementCount).toEqual(0);
-
-            const headerGroup = cardHeader.children[1];
-            expect(headerGroup.attributes.getNamedItem('class').nodeValue).toContain('igx-card-header__tgroup');
-            expect(headerGroup.childElementCount).toEqual(2);
-
-            const headerTitle = headerGroup.children[0];
-            expect(headerTitle.attributes.getNamedItem('class').nodeValue).toContain('igx-card-header__title--small');
-            expect(headerTitle.innerHTML).toEqual('Brad Stanley');
-            expect(headerTitle.childElementCount).toEqual(0);
-
-            const headerSubtitle = headerGroup.children[1];
-            expect(headerSubtitle.attributes.getNamedItem('class').nodeValue).toContain('igx-card-header__subtitle');
-            expect(headerSubtitle.innerHTML).toEqual('Audi AG');
-            expect(headerSubtitle.childElementCount).toEqual(0);
-
-            const cardContent = card.children[1].firstElementChild;
-            expect(cardContent.attributes.getNamedItem('class').nodeValue).toContain('igx-card-content__text');
-            expect(cardContent.innerHTML).toEqual('Brad Stanley has requested to follow you.');
-            expect(cardContent.childElementCount).toEqual(0);
         }));
 
         it('Should apply the appropriate display style to the banner host', fakeAsync(() => {
@@ -539,12 +499,12 @@ describe('igxBanner', () => {
     });
 
     const getBaseClassElements = <T>(fixture: ComponentFixture<T>) => {
-        this.bannerElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
-        this.bannerMessageElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_BANNER_MESSAGE));
-        this.bannerIllustrationElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_BANNER_ILLUSTRATION));
-        this.bannerTextElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_BANNER_TEXT));
-        this.bannerActionsElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_BANNER_ACTIONS));
-        this.bannerRowElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_BANNER_ROW));
+        bannerElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
+        bannerMessageElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_BANNER_MESSAGE));
+        bannerIllustrationElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_BANNER_ILLUSTRATION));
+        bannerTextElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_BANNER_TEXT));
+        bannerActionsElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_BANNER_ACTIONS));
+        bannerRowElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_BANNER_ROW));
     };
 });
 
@@ -556,7 +516,7 @@ describe('igxBanner', () => {
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`
 })
 export class IgxBannerEmptyComponent {
-    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent })
+    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
     public banner: IgxBannerComponent;
 }
 
@@ -574,7 +534,7 @@ export class IgxBannerEmptyComponent {
     `
 })
 export class IgxBannerOneButtonComponent {
-    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent })
+    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
     public banner: IgxBannerComponent;
 }
 
@@ -594,7 +554,7 @@ export class IgxBannerOneButtonComponent {
     `
 })
 export class IgxBannerSampleComponent {
-    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent })
+    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
     public banner: IgxBannerComponent;
 }
 
@@ -626,7 +586,7 @@ export class IgxBannerSampleComponent {
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`
 })
 export class IgxBannerCustomTemplateComponent {
-    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent })
+    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
     public banner: IgxBannerComponent;
 }
 
@@ -639,7 +599,7 @@ export class IgxBannerCustomTemplateComponent {
 })
 export class SimpleBannerEventsComponent {
     public cancelFlag = false;
-    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent })
+    @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
     public banner: IgxBannerComponent;
 
     public handleOpening(event: any) {

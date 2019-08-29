@@ -19,7 +19,7 @@ import { IgxTabsBase, IgxTabsGroupBase } from './tabs.common';
     templateUrl: 'tabs-group.component.html'
 })
 
-export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit, AfterViewChecked {
+export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterContentInit, AfterViewChecked {
 
     /**
     * An @Input property that allows you to enable/disable the `IgxTabGroupComponent`.
@@ -49,17 +49,36 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
     @Input()
     public label: string;
 
-    public isSelected = false;
+    /**
+     * Sets/gets whether a tab group is selected.
+     * ```typescript
+     * this.tabGroup.isSelected = true;
+     * ```
+     * ```typescript
+     * let isSelected = this.tabGroup.isSelected;
+     * ```
+     * @memberof IgxTabsGroupComponent
+     */
+    public get isSelected(): boolean {
+        return this._isSelected;
+    }
+    public set isSelected(newValue: boolean) {
+        if (!this.disabled && this.isSelected !== newValue) {
+            this._tabs.performSelectionChange(newValue ? this.relatedTab : null);
+        }
+    }
 
     /**
      * @hidden
      */
-    @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective })
+    @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective, static: false })
     protected tabTemplate: IgxTabItemTemplateDirective;
 
     private _tabTemplate: TemplateRef<any>;
+    private _isSelected = false;
 
     constructor(private _tabs: IgxTabsBase, private _element: ElementRef) {
+        super();
     }
 
     /**
@@ -71,15 +90,13 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
     /**
      * @hidden
      */
-    @HostBinding('class')
-    get styleClass(): string {
-        return 'igx-tabs__group';
-    }
+    @HostBinding('class.igx-tabs__group')
+    public styleClass = true;
 
     @HostListener('window:resize', ['$event'])
     public onResize(event) {
         if (this.isSelected) {
-            this.transformContentAnimation(0);
+            this._tabs.transformContentAnimation(this.relatedTab, 0);
         }
     }
 
@@ -113,6 +130,7 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
         if (this._tabs.groups) {
             return this._tabs.groups.toArray().indexOf(this);
         }
+        return -1;
     }
 
     /**
@@ -144,10 +162,6 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
     public ngAfterViewChecked() {
         this._element.nativeElement.setAttribute('aria-labelledby', `igx-tab-item-${this.index}`);
         this._element.nativeElement.setAttribute('id', `igx-tabs__group-${this.index}`);
-
-        if (this.isSelected) {
-            this.transformContentAnimation(0);
-        }
     }
 
     /**
@@ -160,50 +174,18 @@ export class IgxTabsGroupComponent implements IgxTabsGroupBase, AfterContentInit
      *    this.tab.select();
      *}
      *```
-     * @param focusDelay A number representing the expected delay.
      */
-    public select(focusDelay = 200): void {
-        if (this.disabled || this.isSelected) {
-            return;
+    public select(): void {
+        if (!this.disabled && !this.isSelected) {
+            this._tabs.performSelectionChange(this.relatedTab);
         }
-
-        this.isSelected = true;
-        this.relatedTab.tabindex = 0;
-
-        if (focusDelay !== 0) {
-            setTimeout(() => {
-                this.relatedTab.nativeTabItem.nativeElement.focus();
-            }, focusDelay);
-        }
-        this.handleSelection();
-        this._tabs.onTabItemSelected.emit({ tab: this._tabs.tabs.toArray()[this.index], group: this });
     }
 
-    private handleSelection(): void {
-        const tabElement = this.relatedTab.nativeTabItem.nativeElement;
-
-        // Scroll to the left
-        if (tabElement.offsetLeft < this._tabs.offset) {
-            this._tabs.scrollElement(tabElement, false);
-        }
-
-        // Scroll to the right
-        const viewPortOffsetWidth = this._tabs.viewPort.nativeElement.offsetWidth;
-        const delta = (tabElement.offsetLeft + tabElement.offsetWidth) - (viewPortOffsetWidth + this._tabs.offset);
-        // Fix for IE 11, a difference is accumulated from the widths calculations
-        if (delta > 1) {
-            this._tabs.scrollElement(tabElement, true);
-        }
-
-        this.transformContentAnimation(0.2);
-
-        this._tabs.selectedIndicator.nativeElement.style.width = `${tabElement.offsetWidth}px`;
-        this._tabs.selectedIndicator.nativeElement.style.transform = `translate(${tabElement.offsetLeft}px)`;
+    /**
+     * @hidden
+     */
+    public setSelectedInternal(newValue: boolean) {
+        this._isSelected = newValue;
     }
 
-    private transformContentAnimation(duration: number): void {
-        const contentOffset = this._tabs.tabsContainer.nativeElement.offsetWidth * this.index;
-        this._tabs.contentsContainer.nativeElement.style.transitionDuration = `${duration}s`;
-        this._tabs.contentsContainer.nativeElement.style.transform = `translate(${-contentOffset}px)`;
-    }
 }

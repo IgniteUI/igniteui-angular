@@ -42,7 +42,12 @@ let NEXT_ID = 0;
         ])
     ],
     selector: 'igx-toast',
-    templateUrl: 'toast.component.html'
+    templateUrl: 'toast.component.html',
+    styles: [`
+        :host {
+            display: block;
+        }
+    `]
 })
 export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
     private _isVisible = false;

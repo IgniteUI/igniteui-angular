@@ -8,10 +8,26 @@
 /// Generates a dark drop-down schema.
 /// @type {Map}
 /// @requires extend
-/// @prop {Color} background-color [#222] - The drop-down background color.
 /// @requires $_light-drop-down
 /// @requires extend
 /// @see $default-palette
-$_dark-drop-down: extend($_light-drop-down, (
-    background-color: #222
-));
+$_dark-drop-down: extend($_light-drop-down);
+
+/// Generates a dark fluent drop-down schema.
+/// @type {Map}
+/// @prop {color} selected-item-text-color [#fff)] - The drop-down selected item text color.
+/// @prop {color} selected-hover-item-text-color [#fff] - The drop-down selected item hover text color.
+/// @prop {color} selected-focus-item-text-color [#fff] - The drop-down selected item focus text color.
+/// @requires extend
+/// @requires $_fluent-drop-down
+/// @requires extend
+$_dark-fluent-drop-down: extend(
+    $_fluent-drop-down,
+    (
+        selected-item-text-color: #fff,
+
+        selected-hover-item-text-color:  #fff,
+
+        selected-focus-item-text-color: #fff,
+    )
+);

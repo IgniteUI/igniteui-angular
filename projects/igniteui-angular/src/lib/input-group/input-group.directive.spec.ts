@@ -11,7 +11,9 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 const INPUT_GROUP_CSS_CLASS = 'igx-input-group';
 const INPUT_GROUP_BOX_CSS_CLASS = 'igx-input-group--box';
 const INPUT_GROUP_BORDER_CSS_CLASS = 'igx-input-group--border';
+const INPUT_GROUP_FLUENT_CSS_CLASS = 'igx-input-group--fluent';
 const INPUT_GROUP_SEARCH_CSS_CLASS = 'igx-input-group--search';
+const INPUT_GROUP_FLUENT_SEARCH_CSS_CLASS = 'igx-input-group--fluent-search';
 const INPUT_GROUP_COMFORTABLE_DENSITY_CSS_CLASS = 'igx-input-group--comfortable';
 const INPUT_GROUP_COMPACT_DENSITY_CSS_CLASS = 'igx-input-group--compact';
 const INPUT_GROUP_COSY_DENSITY_CSS_CLASS = 'igx-input-group--cosy';
@@ -24,6 +26,7 @@ describe('IgxInputGroup', () => {
                 InputGroupComponent,
                 InputGroupBoxComponent,
                 InputGroupBorderComponent,
+                InputGroupFluentComponent,
                 InputGroupSearchComponent,
                 InputGroupDisabledComponent,
                 InputGroupDisabledByDefaultComponent,
@@ -194,7 +197,7 @@ describe('IgxInputGroup', () => {
                 </igx-input-group>`
 })
 class InputGroupComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
 }
 
 @Component({
@@ -203,7 +206,7 @@ class InputGroupComponent {
                 </igx-input-group>`
 })
 class InputGroupBoxComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
 }
 
 @Component({
@@ -212,7 +215,7 @@ class InputGroupBoxComponent {
                 </igx-input-group>`
 })
 class InputGroupBorderComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
 }
 
 @Component({
@@ -221,7 +224,16 @@ class InputGroupBorderComponent {
                 </igx-input-group>`
 })
 class InputGroupSearchComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+}
+
+@Component({
+    template: `<igx-input-group #igxInputGroup type="fluent">
+                    <input igxInput />
+                </igx-input-group>`
+})
+class InputGroupFluentComponent {
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
 }
 
 function testInputGroupType(type, component: IgxInputGroupComponent, nativeElement) {
@@ -229,6 +241,8 @@ function testInputGroupType(type, component: IgxInputGroupComponent, nativeEleme
     let isBorder = false;
     let isBox = false;
     let isSearch = false;
+    let isFluent = false;
+    let isFluentSearch = false;
 
     switch (type) {
         case 'line':
@@ -240,6 +254,12 @@ function testInputGroupType(type, component: IgxInputGroupComponent, nativeEleme
         case 'box':
             isBox = true;
             break;
+        case 'fluent':
+            isFluent = true;
+            break;
+        case 'fluentSearch':
+            isFluentSearch = true;
+            break;
         case 'search':
             isSearch = true;
             break;
@@ -248,12 +268,16 @@ function testInputGroupType(type, component: IgxInputGroupComponent, nativeEleme
 
     expect(nativeElement.classList.contains(INPUT_GROUP_BOX_CSS_CLASS)).toBe(isBox);
     expect(nativeElement.classList.contains(INPUT_GROUP_BORDER_CSS_CLASS)).toBe(isBorder);
+    expect(nativeElement.classList.contains(INPUT_GROUP_FLUENT_CSS_CLASS)).toBe(isFluent);
     expect(nativeElement.classList.contains(INPUT_GROUP_SEARCH_CSS_CLASS)).toBe(isSearch);
+    expect(nativeElement.classList.contains(INPUT_GROUP_FLUENT_SEARCH_CSS_CLASS)).toBe(isFluentSearch);
 
     expect(component.isTypeLine).toBe(isLine);
     expect(component.isTypeBorder).toBe(isBorder);
     expect(component.isTypeBox).toBe(isBox);
+    expect(component.isTypeFluent).toBe(isFluent);
     expect(component.isTypeSearch).toBe(isSearch);
+    expect(component.isTypeFluentSearch).toBe(isFluentSearch);
 }
 
 @Component({
@@ -262,7 +286,7 @@ function testInputGroupType(type, component: IgxInputGroupComponent, nativeEleme
                 </igx-input-group>`
 })
 class InputGroupDisabledComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
 
     public disabled = false;
 
@@ -277,7 +301,7 @@ class InputGroupDisabledComponent {
                 </igx-input-group>`
 })
 class InputGroupDisabledByDefaultComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
 
     public disabled = true;
 }
@@ -289,7 +313,7 @@ class InputGroupDisabledByDefaultComponent {
     providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.cosy } }]
 })
 class InputGroupCosyDisplayDensityComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
 }
 
 @Component({
@@ -299,7 +323,7 @@ class InputGroupCosyDisplayDensityComponent {
     providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact } }]
 })
 class InputGroupCompactDisplayDensityComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
 }
 
 @Component({
@@ -308,7 +332,7 @@ class InputGroupCompactDisplayDensityComponent {
                 </igx-input-group>`
 })
 class InputGroupInputDisplayDensityComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
 }
 
 @Component({
@@ -318,6 +342,6 @@ class InputGroupInputDisplayDensityComponent {
                 </igx-input-group>`
 })
 class InputGroupSupressInputFocusComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild('igxInput', { read: IgxInputDirective }) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild('igxInput', { read: IgxInputDirective, static: true }) public igxInput: IgxInputDirective;
 }

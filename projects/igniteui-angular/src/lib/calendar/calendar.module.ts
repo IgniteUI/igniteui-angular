@@ -7,7 +7,8 @@ import {
     IgxCalendarHeaderTemplateDirective,
     IgxCalendarMonthDirective,
     IgxCalendarSubheaderTemplateDirective,
-    IgxCalendarYearDirective
+    IgxCalendarYearDirective,
+    IgxCalendarScrollMonthDirective
 } from './calendar.directives';
 import { IgxMonthsViewComponent } from './months-view/months-view.component';
 import { IgxYearsViewComponent } from './years-view/years-view.component';
@@ -27,6 +28,7 @@ import { IgxMonthPickerComponent } from './month-picker/month-picker.component';
         IgxCalendarMonthDirective,
         IgxCalendarYearDirective,
         IgxCalendarSubheaderTemplateDirective,
+        IgxCalendarScrollMonthDirective,
         IgxMonthsViewComponent,
         IgxYearsViewComponent,
         IgxMonthPickerComponent

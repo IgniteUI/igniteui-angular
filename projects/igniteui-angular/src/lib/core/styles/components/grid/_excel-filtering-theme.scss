@@ -13,6 +13,13 @@
 @mixin _excel-filtering($theme, $palette) {
     %grid-excel-filter {
         height: rem(15px);
+        display: block;
+    }
+
+    %igx-excel-filter__loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     %grid-excel-icon {
@@ -53,8 +60,19 @@
     }
 
     %grid-excel-menu__header {
+        display: flex;
+        align-items: center;
         padding: rem(16px);
         color: igx-color($palette, 'grays', 700);
+    }
+
+    %grid-excel-menu__header-actions {
+        display: flex;
+        margin-left: auto;
+
+        [igxButton] + [igxButton] {
+            margin-left: rem(4px);
+        }
     }
 
     %grid-excel-menu__footer {
@@ -88,6 +106,16 @@
         }
     }
 
+    %grid-excel-action--compact {
+        display: flex;
+        align-items: center;
+
+        header {
+            color: igx-color($palette, 'grays', 700);
+            margin-right: auto;
+        }
+    }
+
     %grid-excel-actions {
         padding: rem(8px) rem(16px);
     }
@@ -107,10 +135,7 @@
 
         [igxButton] {
             flex-grow: 1;
-
-            + [igxButton] {
-                margin-left: rem(8px);
-            }
+            width: rem(104px);
         }
 
         igx-icon {
@@ -157,12 +182,125 @@
         }
     }
 
+    %grid-excel-menu--cosy {
+        %grid-excel-menu__header {
+            padding: rem(8px);
+        }
+
+        %grid-excel-sort {
+            padding: rem(8px);
+        }
+
+        %grid-excel-actions {
+            padding: rem(8px);
+        }
+
+        %grid-excel-actions__action {
+            padding: rem(8px);
+            margin: 0 -#{rem(8px)};
+        }
+
+        %grid-excel-main {
+            padding: 0 rem(8px);
+        }
+
+        igx-list {
+            margin: rem(8px) -#{rem(8px)} 0;
+        }
+
+        %grid-excel-menu__footer {
+            padding: rem(8px);
+        }
+    }
+
+    %grid-excel-menu--compact {
+        %grid-excel-menu__header {
+            padding: rem(4px);
+        }
+
+        %grid-excel-sort {
+            padding: rem(4px);
+
+            @extend %grid-excel-action--compact;
+
+            igx-buttongroup {
+                width: rem(208px);
+
+                [igxButton] > igx-icon + span {
+                    margin-left: rem(8px);
+                }
+            }
+        }
+
+        %grid-excel-move {
+            @extend %grid-excel-action--compact;
+            margin-bottom: 0;
+        }
+
+        %grid-excel-actions {
+            padding: rem(4px);
+        }
+
+        %grid-excel-actions__action {
+            padding: rem(4px);
+            margin: 0 -#{rem(4px)};
+        }
+
+        %grid-excel-main {
+            padding: 0 rem(4px);
+        }
+
+        igx-list {
+            margin: rem(8px) -#{rem(4px)} 0;
+        }
+
+        %grid-excel-menu__footer {
+            padding: rem(8px) rem(4px);
+        }
+    }
+
     %grid-excel-menu__secondary {
         width: 520px;
         min-width: 520px;
         background: --var($theme, 'filtering-row-background');
         box-shadow: igx-elevation($elevations, 12);
         border-radius: rem(4px);
+    }
+
+    %grid-excel-menu__secondary--cosy {
+        %grid-excel-menu__header {
+            padding: rem(8px);
+        }
+
+        %grid-excel-menu__condition {
+            padding: 0 rem(8px);
+        }
+
+        %grid-excel-menu__add-filter {
+            margin: 0 rem(8px) rem(8px);
+        }
+
+        %grid-excel-menu__footer {
+            padding: rem(8px);
+        }
+    }
+
+    %grid-excel-menu__secondary--compact {
+        %grid-excel-menu__header {
+            padding: rem(4px);
+        }
+
+        %grid-excel-menu__condition {
+            padding: 0 rem(4px);
+        }
+
+        %grid-excel-menu__add-filter {
+            margin: 0 rem(4px) rem(4px);
+        }
+
+        %grid-excel-menu__footer {
+            padding: rem(8px) rem(4px);
+        }
     }
 
     %grid-excel-menu__secondary-header {
@@ -212,6 +350,84 @@
             height: rem(18px);
             font-size: rem(18px);
             margin-right: rem(8px);
+        }
+    }
+}
+
+/// Adds typography styles for the excel-style-filtering component.
+/// Uses the 'body-1', 'caption'
+/// category from the typographic scale.
+/// @group typography
+/// @access private
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(helper-text: 'caption', input-text: 'subtitle-1')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin _excel-filtering-typography($type-scale, $categories: (
+    header-comfortable: 'overline',
+    header-compact: 'subtitle-1')
+) {
+    $header-comfortable: map-get($categories, 'header-comfortable');
+    $header-compact: map-get($categories, 'header-compact');
+
+
+    %grid-excel-menu {
+        %grid-excel-menu__header > h4 {
+            @include igx-type-style($type-scale, 'h6')
+        }
+    }
+
+    %grid-excel-menu__secondary {
+        %grid-excel-menu__header > h4 {
+            @include igx-type-style($type-scale, 'h6');
+        }
+    }
+
+    %grid-excel-sort,
+    %grid-excel-move {
+        header {
+            @include igx-type-style($type-scale, 'overline');
+        }
+    }
+
+    %grid-excel-menu--cosy {
+        %grid-excel-menu__header > h4 {
+            @include igx-type-style($type-scale, 'h6')
+        }
+    }
+
+    %grid-excel-menu--compact {
+        %grid-excel-menu__header > h4 {
+            @include igx-type-style($type-scale, 'subtitle-1')
+        }
+
+        %grid-excel-sort,
+        %grid-excel-move {
+            header {
+                @include igx-type-style($type-scale, 'body-2');
+                text-transform: capitalize;
+            }
+        }
+
+        %grid-excel-actions__action {
+            span {
+                @include igx-type-style($type-scale, 'body-2');
+            }
+        }
+
+        %cbx-label {
+            @include igx-type-style($type-scale, 'body-2');
+        }
+    }
+
+    %grid-excel-menu__secondary--cosy {
+        %grid-excel-menu__header > h4 {
+            @include igx-type-style($type-scale, 'h6');
+        }
+    }
+
+    %grid-excel-menu__secondary--compact {
+        %grid-excel-menu__header > h4 {
+            @include igx-type-style($type-scale, 'subtitle-1');
         }
     }
 }

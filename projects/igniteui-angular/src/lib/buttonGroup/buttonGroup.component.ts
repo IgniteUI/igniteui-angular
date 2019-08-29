@@ -1,14 +1,17 @@
 import { CommonModule } from '@angular/common';
 import {
+    AfterContentInit,
     AfterViewInit,
     Component,
     ContentChildren,
     ChangeDetectorRef,
     EventEmitter,
     HostBinding,
+    Inject,
     Input,
     NgModule,
     Output,
+    Optional,
     QueryList,
     Renderer2,
     ViewChildren,
@@ -19,6 +22,8 @@ import { IgxButtonDirective, IgxButtonModule } from '../directives/button/button
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxIconModule } from '../icon/index';
 import { takeUntil } from 'rxjs/operators';
+import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions, DisplayDensity } from '../core/density';
+import { IBaseEventArgs } from '../core/utils';
 
 export enum ButtonGroupAlignment { horizontal, vertical }
 let NEXT_ID = 0;
@@ -48,7 +53,8 @@ let NEXT_ID = 0;
     templateUrl: 'buttongroup-content.component.html'
 })
 
-export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
+export class IgxButtonGroupComponent extends DisplayDensityBase implements AfterContentInit, AfterViewInit, OnDestroy {
+
     private _disabled = false;
     protected buttonClickNotifier$ = new Subject<boolean>();
     protected queryListNotifier$ = new Subject<boolean>();
@@ -244,7 +250,9 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     private _isVertical: boolean;
     private _itemContentCssClass: string;
 
-    constructor(private _cdr: ChangeDetectorRef, private _renderer: Renderer2) {
+    constructor(private _cdr: ChangeDetectorRef, private _renderer: Renderer2,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+            super(_displayDensityOptions);
     }
 
     /**
@@ -352,6 +360,17 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
+    public ngAfterContentInit() {
+        this.templateButtons.forEach( (button) => {
+            if (!button.initialDensity) {
+                button.displayDensity = this.displayDensity;
+            }
+        });
+    }
+
+    /**
+     * @hidden
+     */
     public ngAfterViewInit() {
         const initButtons = () => {
             // Cancel any existing buttonClick subscriptions
@@ -406,7 +425,7 @@ export class IgxButtonGroupComponent implements AfterViewInit, OnDestroy {
     }
 }
 
-export interface IButtonGroupEventArgs {
+export interface IButtonGroupEventArgs extends IBaseEventArgs {
     button: IgxButtonDirective;
     index: number;
 }

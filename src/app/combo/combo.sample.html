@@ -16,7 +16,7 @@
                 </igx-input-group>
             </div>
             <div class="input-row">
-                <igx-combo class="input-container" [placeholder]="'Locations'"
+                <igx-combo #combo class="input-container" [placeholder]="'Locations'"
                             (onAddition)="handleAddition($event)"
                             (onSelectionChange)="handleSelectionChange($event)"
                             [data]="items"
@@ -66,6 +66,30 @@
                     <div class="display-value--sub">In Region {{display.region}}</div>
                 </div>
             </ng-template>
+            <div>
+                <h5 class="sample-title">Template Form</h5>
+                <form>
+                    <igx-combo class="input-container" [placeholder]="'Locations'"
+                        name="anyName" required [(ngModel)]="values1"
+                        [data]="items" [filterable]="filterableFlag"
+                        [displayKey]="valueKeyVar" [valueKey]="valueKeyVar"
+                        [groupKey]="valueKeyVar ? 'region' : ''" [width]="'100%'">
+                        <igx-hint>Please select the states you've visited</igx-hint>
+                    </igx-combo>
+                </form>
+            </div>
+            <div>
+                <h5 class="sample-title">Reactive Form</h5>
+                <form class="input-group-form" [formGroup]="user">
+                    <div class="container">
+                        <igx-combo #combo1 class="input-container" [itemsMaxHeight]="130" [data]="genres"
+                            [valueKey]="'type'" [displayKey]="'type'" type="line" formControlName="genres"
+                            searchPlaceholder="Search...">
+                            <label igxLabel>States</label>
+                        </igx-combo>
+                    </div>
+                </form>
+            </div>
         </div>
         <div>
             <h4>Display Density</h4>
@@ -77,6 +101,21 @@
             <h4>Search Input</h4>
             <igx-switch [(ngModel)]="filterableFlag">Filterable</igx-switch><br/>
             <igx-switch [(ngModel)]="customValuesFlag">Custom Values</igx-switch>
+        </div>
+        <div>
+            <h4>Overlay Settings</h4>
+            <button igxButton="raised" (click)="changeOverlaySettings(1)">Elastic Top</button>
+            <button igxButton="raised" (click)="changeOverlaySettings(2)">Global with Animations</button>
+            <button igxButton="raised" (click)="changeOverlaySettings(0)">Initial</button>
+        </div>
+        <div>
+            <h4>Item Height</h4>
+            <button igxButton="raised" [disabled]="combo.itemHeight === 56" (click)="combo.itemHeight = 56">
+                Set ItemHeight to 56
+            </button>
+            <button igxButton="raised" [disabled]="combo.itemHeight === null" (click)="combo.itemHeight = null">
+                Reset ItemHeight
+            </button>
         </div>
     </section>
     </div>

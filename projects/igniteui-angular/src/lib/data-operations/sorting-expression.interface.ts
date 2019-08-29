@@ -1,4 +1,5 @@
 import { ISortingStrategy } from './sorting-strategy';
+import { IBaseEventArgs } from '../core/utils';
 
 /**
  * Represents sorting expressions.
@@ -9,7 +10,7 @@ export enum SortingDirection {
     Desc = 2
 }
 
-export interface ISortingExpression {
+export interface ISortingExpression extends IBaseEventArgs {
    fieldName: string;
    dir: SortingDirection;
    ignoreCase?: boolean;

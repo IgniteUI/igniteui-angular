@@ -1,0 +1,27 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+$_default-shape-switch: (
+    border-radius-track: 1,
+    border-radius-thumb: 1,
+    border-radius-ripple: 1
+);
+
+$_round-shape-switch: (
+    border-radius-track: 1,
+    border-radius-thumb: 1,
+    border-radius-ripple: 1
+);
+
+$_square-shape-switch: (
+    border-radius-track: 0%,
+    border-radius-thumb: 0%,
+    border-radius-ripple: 0%
+);
+
+$_fluent-shape-switch: (
+    border-radius-track: 10px,
+);
+

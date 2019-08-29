@@ -22,6 +22,8 @@
 /// @param {Color} $background-color [null] - The time-picker panel background color.
 /// @param {box-shadow} $modal-shadow [null] - The custom shadow to be used for the time picker in modal mode.
 /// @param {box-shadow} $dropdown-shadow [null] - The custom shadow to be used for the time picker in dropdown mode.
+/// @param {border-radius} $border-radius [null] - The border radius used for the outline of the picker.
+/// @param {border-radius} $active-item-border-radius [null] - The border radius used for the outline of the currently active item (hours, minutes, AM/PM).
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -43,6 +45,9 @@
     $schema: $light-schema,
     $elevations: $elevations,
 
+    $border-radius: null,
+    $active-item-border-radius: null,
+
     $text-color: null,
     $hover-text-color: null,
     $selected-text-color: null,
@@ -58,6 +63,14 @@
     $time-picker-schema: map-get($schema, $name);
 
     $theme: apply-palette($time-picker-schema, $palette);
+
+    $border-radius: round-borders(
+        if($border-radius, $border-radius, map-get($time-picker-schema, 'border-radius')), 0, 20px
+    );
+
+    $active-item-border-radius: round-borders(
+        if($active-item-border-radius, $active-item-border-radius, map-get($time-picker-schema, 'active-item-border-radius')), 0, 20px
+    );
 
     @if not($text-color) and $background-color {
         $text-color: text-contrast($background-color);
@@ -106,6 +119,8 @@
         background-color: $background-color,
         modal-shadow: $modal-shadow,
         dropdown-shadow: $dropdown-shadow,
+        border-radius: $border-radius,
+        active-item-border-radius: $active-item-border-radius,
     ));
 }
 
@@ -121,16 +136,16 @@
     %time-picker-display {
         display: flex;
         flex-flow: column nowrap;
-        max-width: 340px;
-        min-width: 320px;
-        border-radius: rem(4px);
+        max-width: rem(340px);
+        min-width: rem(320px);
+        border-radius: --var($theme, 'border-radius');
         box-shadow: --var($theme, 'modal-shadow');
         overflow: hidden;
     }
 
     %time-picker-display--vertical {
         flex-flow: row nowrap;
-        min-width: 540px;
+        min-width: rem(540px);
     }
 
     %time-picker__main {
@@ -139,13 +154,13 @@
     }
 
     %time-picker--dropdown {
-        min-width: 200px;
+        min-width: rem(200px);
         box-shadow: --var($theme, 'dropdown-shadow');
     }
 
     %time-picker__body {
         display: flex;
-        padding: 10px 0;
+        padding: rem(10px) 0;
         justify-content: center;
     }
 
@@ -175,12 +190,12 @@
     %time-picker__ampmList {
         display: flex;
         flex-direction: column;
-        padding-top: 48px;
+        padding-top: rem(48px);
     }
 
     %time-picker__column {
-        max-width: 64px;
-        height: 325px;
+        max-width: rem(64px);
+        height: rem(325px);
         padding: 0;
         cursor: pointer;
         display: flex;
@@ -197,10 +212,10 @@
     }
 
     %time-picker__item {
-        width: 54px;
-        padding: 5px 10px;
-        border-radius: 15px;
-        height: 48px;
+        width: rem(54px);
+        padding: rem(5px) rem(10px);
+        border-radius: --var($theme, 'active-item-border-radius');
+        height: rem(48px);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -275,20 +290,18 @@
     $header-hour: map-get($categories, 'header-hour');
     $content: map-get($categories, 'content');
 
-    @include igx-scope('.igx-typography') {
-        %time-picker__header-ampm {
-            @include igx-type-style($type-scale, $time-period);
-        }
+    %time-picker__header-ampm {
+        @include igx-type-style($type-scale, $time-period);
+    }
 
-        %time-picker__header-hour {
-            @include igx-type-style($type-scale, $header-hour);
-        }
+    %time-picker__header-hour {
+        @include igx-type-style($type-scale, $header-hour);
+    }
 
-        %time-picker__column {
-            @include igx-type-style($type-scale, $content) {
-                margin-top: 0;
-                margin-bottom: 0;
-            }
+    %time-picker__column {
+        @include igx-type-style($type-scale, $content) {
+            margin-top: 0;
+            margin-bottom: 0;
         }
     }
 }

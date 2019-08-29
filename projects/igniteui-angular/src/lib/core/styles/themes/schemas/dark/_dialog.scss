@@ -7,10 +7,13 @@
 
 /// Generates a dark dialog schema.
 /// @type {Map}
-/// @prop {Color} background [#222] - The dialog background color.
 /// @requires extend
 /// @requires $_light-dialog
 /// @see $default-palette
-$_dark-dialog: extend($_light-dialog, (
-    background: #222
-));
+$_dark-dialog: extend($_light-dialog);
+
+/// Generates a dark fluent dialog schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_fluent-dialog
+$_dark-fluent-dialog: extend($_fluent-dialog);

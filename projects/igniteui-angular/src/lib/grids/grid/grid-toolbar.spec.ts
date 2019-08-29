@@ -1,17 +1,18 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, DebugElement, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, async, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { first } from 'rxjs/operators';
 import { IgxCsvExporterOptions, IgxCsvExporterService, IgxExcelExporterOptions, IgxExcelExporterService } from '../../services/index';
+import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { DisplayDensity } from '../../core/displayDensity';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
-describe('IgxGrid - Grid Toolbar', () => {
+describe('IgxGrid - Grid Toolbar #grid', () => {
     configureTestSuite();
     let fixture;
     let grid;
@@ -33,11 +34,11 @@ describe('IgxGrid - Grid Toolbar', () => {
         .compileComponents();
     }));
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fixture = TestBed.createComponent(GridToolbarTestPage1Component);
         fixture.detectChanges();
         grid = fixture.componentInstance.grid1;
-    });
+    }));
 
     afterEach(() => {
         UIInteractions.clearOverlay();
@@ -427,23 +428,27 @@ describe('IgxGrid - Grid Toolbar', () => {
         const toolbar = getToolbar(fixture).nativeElement;
         expect(grid.toolbar.displayDensity).toEqual(DisplayDensity.comfortable);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar');
-        expect(parseFloat(toolbar.offsetHeight) > 55).toBe(true);
+
+        expect(parseFloat(toolbar.offsetHeight)).toBe(58);
+        verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.comfortable);
 
         grid.displayDensity = DisplayDensity.compact;
+        tick(16);
         fixture.detectChanges();
-        tick(100);
 
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.compact);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar--compact');
-        expect(parseFloat(toolbar.offsetHeight) < 50).toBe(true);
+        expect(parseFloat(toolbar.offsetHeight)).toBe(44);
+        verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.compact);
 
         grid.displayDensity = DisplayDensity.cosy;
+        tick(16);
         fixture.detectChanges();
-        tick(100);
 
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.cosy);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar--cosy');
-        expect(parseFloat(toolbar.offsetHeight) < 50).toBe(true);
+        expect(parseFloat(toolbar.offsetHeight)).toBe(52);
+        verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.cosy);
     }));
 
     it('display density is properly applied through the grid.', fakeAsync(() => {
@@ -454,26 +459,30 @@ describe('IgxGrid - Grid Toolbar', () => {
         const toolbar = getToolbar(fixture).nativeElement;
         expect(grid.toolbar.displayDensity).toEqual(DisplayDensity.comfortable);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar');
+        verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.comfortable);
 
         grid.displayDensity = DisplayDensity.compact;
+        tick(16);
         fixture.detectChanges();
-        tick(100);
 
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.compact);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar--compact');
+        verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.compact);
 
         grid.displayDensity = DisplayDensity.cosy;
+        tick(16);
         fixture.detectChanges();
-        tick(100);
 
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.cosy);
         expect(toolbar.classList[0]).toBe('igx-grid-toolbar--cosy');
+        verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.cosy);
 
         grid.displayDensity = DisplayDensity.comfortable;
+        tick(16);
         fixture.detectChanges();
-        tick(100);
 
         expect(grid.toolbar.displayDensity).toBe(DisplayDensity.comfortable);
+        verifyButtonsDisplayDensity(getToolbar(fixture), DisplayDensity.comfortable);
     }));
 
     it('test \'filterColumnsPrompt\' property.', () => {
@@ -518,7 +527,7 @@ describe('IgxGrid - Grid Toolbar', () => {
 
 });
 
-describe('IgxGrid - Grid Toolbar Custom Content', () => {
+describe('IgxGrid - Grid Toolbar Custom Content #grid', () => {
     configureTestSuite();
     let fixture;
     let grid;
@@ -571,6 +580,28 @@ describe('IgxGrid - Grid Toolbar Custom Content', () => {
         expect(customContainer).not.toBe(null);
     });
 
+    it('should expose the toolbar buttons with their correct type', () => {
+        fixture = TestBed.createComponent(GridToolbarTestPage1Component);
+        fixture.detectChanges();
+        grid = fixture.componentInstance.grid1;
+
+        grid.showToolbar = true;
+        grid.columnHiding = true;
+        grid.columnPinning = true;
+        grid.exportExcel = true;
+        grid.exportCsv = true;
+        fixture.detectChanges();
+
+        let aButton = grid.toolbar.columnHidingButton;
+        expect(aButton instanceof IgxButtonDirective).toBe(true, 'column hiding button has wrong type');
+
+        aButton = grid.toolbar.columnPinningButton;
+        expect(aButton instanceof IgxButtonDirective).toBe(true, 'column pinning button has wrong type');
+
+        aButton = grid.toolbar.exportButton;
+        expect(aButton instanceof IgxButtonDirective).toBe(true, 'export button has wrong type');
+    });
+
 });
 
 function getToolbar(fixture) {
@@ -600,6 +631,30 @@ function getExportOptions(fixture) {
     return (div) ? div.querySelectorAll('li') : null;
 }
 
+function verifyButtonsDisplayDensity(parentDebugEl: DebugElement, expectedDisplayDensity: DisplayDensity) {
+    const flatButtons = parentDebugEl.queryAll(By.css('.igx-button--flat'));
+    const raisedButtons = parentDebugEl.queryAll(By.css('.igx-button--raised'));
+    const fabButtons = parentDebugEl.queryAll(By.css('.igx-button--fab'));
+    const buttons = Array.from(flatButtons).concat(Array.from(raisedButtons)).concat(Array.from(fabButtons));
+
+    let expectedDensityClass;
+    switch (expectedDisplayDensity) {
+        case DisplayDensity.compact: expectedDensityClass = 'igx-button--compact'; break;
+        case DisplayDensity.cosy: expectedDensityClass = 'igx-button--cosy'; break;
+        default: expectedDensityClass = ''; break;
+    }
+
+    buttons.forEach((button: DebugElement) => {
+        if (expectedDisplayDensity === DisplayDensity.comfortable) {
+            // If expected display density is comfortable, then button should not have 'compact' and 'cosy' classes.
+            expect(button.nativeElement.classList.contains('igx-button--compact')).toBe(false, 'incorrect button density');
+            expect(button.nativeElement.classList.contains('igx-button--cosy')).toBe(false, 'incorrect button density');
+        } else {
+            expect(button.nativeElement.classList.contains(expectedDensityClass)).toBe(true, 'incorrect button density');
+        }
+    });
+}
+
 @Component({
     template: `
         <igx-grid #grid1 [data]='data' [autoGenerate]='true'>
@@ -621,7 +676,7 @@ export class GridToolbarTestPage1Component {
         { ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: new Date('2018-03-01') }
     ];
 
-    @ViewChild('grid1', { read: IgxGridComponent })
+    @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public grid1: IgxGridComponent;
 
 }
@@ -657,7 +712,7 @@ export class GridToolbarTestPage2Component {
         { ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: new Date('2018-03-01') }
     ];
 
-    @ViewChild('grid1', { read: IgxGridComponent })
+    @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public grid1: IgxGridComponent;
 
 }

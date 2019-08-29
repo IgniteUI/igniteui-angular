@@ -8,14 +8,26 @@ export class VirtualHelperComponent implements OnDestroy {
     @HostBinding('scrollTop')
     public scrollTop;
 
-    @ViewChild('container', { read: ViewContainerRef }) public _vcr;
+    @ViewChild('container', { read: ViewContainerRef, static: true }) public _vcr;
     @Input() public itemsLength: number;
-    public height: number;
+
+    public set height(value) {
+        if (this.destroyed) {
+            return;
+        }
+        this._height = value;
+        this.cdr.detectChanges();
+    }
+
+    public get height() {
+        return this._height;
+    }
 
     @HostBinding('class')
     public cssClasses = 'igx-vhelper--vertical';
 
     public destroyed;
+    private _height: number;
 
     constructor(public elementRef: ElementRef, public cdr: ChangeDetectorRef) { }
 

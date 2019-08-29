@@ -174,6 +174,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`filteringLogic`| FilteringLogic | The filtering logic of the grid. Defaults to _AND_. |
 |`filteringExpressionsTree`| IFilteringExpressionsTree | The filtering state of the grid. |
 |`emptyFilteredGridMessage`| string | The message displayed when there are no records and the grid is filtered.|
+|`uniqueColumnValuesStrategy`| void | Property that provides a callback for loading unique column values on demand. If this property is provided, the unique values it generates will be used by the Excel Style Filtering. |
 |`sortingExpressions`|Array|The sorting state of the grid.|
 |`rowSelectable`|boolean|Enables multiple row selection, default is _false_.|
 |`height`|string|The height of the grid element. You can pass values such as `1000px`, `75%`, etc.|
@@ -207,6 +208,7 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`exportCsvText`| string | Returns the textual content for the CSV export button.|
 |`locale`| string | Determines the locale of the grid. Default value is `en`. |
 | `isLoading` | bool | Sets if the grid is waiting for data - default value false. |
+| `rowDraggable` | bool | Sets if the grid rows can be dragged |
 
 ### Outputs
 
@@ -235,13 +237,15 @@ A list of the events emitted by the **igx-grid**:
 |`onRowAdded`|Emitted when a row is being added to the grid through the API. Returns the data for the new row object.|
 |`onRowDeleted`|Emitted when a row is deleted through the grid API. Returns the row object being removed.|
 |`onDataPreLoad`| Emitted when a new chunk of data is loaded from virtualization. |
-|`onColumnPinning`|Emitted when a column is pinned through the grid API. The index that the column is inserted at may be changed through the `insertAtIndex` property.|
+|`onColumnPinning`|Emitted when a column is pinned or unpinned through the grid API. The index that the column is inserted at may be changed through the `insertAtIndex` property. Use `isPinned` to check whether the column is pinned or unpinned.|
 |`onColumnResized`|Emitted when a column is resized. Returns the column object, previous and new column width.|
 |`onContextMenu`|Emitted when a cell is right clicked. Returns the cell object.|
 |`onDoubleClick`|Emitted when a cell is double clicked. Returns the cell object.|
 |`onColumnVisibilityChanged`| Emitted when `IgxColumnComponent` visibility is changed. Args: { column: any, newValue: boolean } |
 |`onGroupingDone`|Emitted when the grouping state changes as a result of grouping columns, ungrouping columns or a combination of both. Provides an array of `ISortingExpression`, an array of the **newly** grouped columns as `IgxColumnComponent` references and an array of the **newly** ungrouped columns as `IgxColumnComponent` references.|
 |`onToolbarExporting`| Emitted when an export process is initiated by the user.|
+| `onRowDragStart` | Emitted when the user starts dragging a row. |
+| `onRowDragEnd` | Emitted when the user drops a row or cancel the drag. |
 
 
 Defining handlers for these event emitters is done using declarative event binding:
@@ -332,6 +336,10 @@ Inputs available on the **IgxGridColumnComponent** to define columns:
 |`groupable`|boolean| Determines whether the column may be grouped via the UI.|
 |`disableHiding`|boolean| Enables/disables hiding for the column, default value is `false`.|
 |`disablePinning`|boolean| Enables/disables pinning for the column, default value is `false`.|
+|`rowStart`|number|Row index from which the field is starting. Only applies when the columns are within `IgxColumnLayoutComponent`.|
+|`colStart`|number|Column index from which the field is starting. Only applies when the columns are within `IgxColumnLayoutComponent`.|
+|`rowEnd`|string|Row index where the current field should end. The amount of rows between rowStart and rowEnd will determine the amount of spanning rows to that field. Only applies when the columns are within `IgxColumnLayoutComponent`.|
+|`colEnd`|string|Column index where the current field should end. The amount of columns between colStart and colEnd will determine the amount of spanning columns to that field. Only applies when the columns are within `IgxColumnLayoutComponent`.|
 
 
 ### Methods
@@ -351,6 +359,7 @@ Here is a list of all public methods exposed by **IgxGridColumnComponent**:
 |`headerTemplate`|TemplateRef|Yes|Yes|Get/Set a reference to a template which will be applied to the column header.|
 |`footerTemplate`|TemplateRef|Yes|Yes|Get/Set a reference to a template which will be applied to the column footer.|
 |`inlineEditorTemplate`|TemplateRef|Yes|Yes|Get/Set a reference to a template which will be applied as a cell enters edit mode.|
+|`filterCellTemplate`|TemplateRef|Yes|Yes|Get/Set a reference to a template which will be applied to the filter cell of the column.|
 
 
 ## Filtering Conditions

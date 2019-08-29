@@ -153,6 +153,7 @@ The chips can be focused using the `Tab` key or by clicking on them. Chips can b
 | `disabled` | `boolean` | Sets if the chip is disabled. |
 | `displayDensity`| `DisplayDensity | string` | Sets the chip theme. Available options are `compact`, `cosy`, `comfortable`. |
 | `color` | `string` | Sets the chip background color. |
+| `hideBaseOnDrag` | `boolean` | Sets if the chip base should be hidden when the chip is dragged. |
 
 ### Outputs
 | Name | Argument Type | Description |

@@ -1,4 +1,15 @@
-import { Directive, NgModule, Input, QueryList, Output, EventEmitter, AfterContentInit, ContentChildren, OnDestroy } from '@angular/core';
+import {
+    Directive,
+    NgModule,
+    Input,
+    QueryList,
+    Output,
+    EventEmitter,
+    AfterContentInit,
+    ContentChildren,
+    OnDestroy,
+    HostBinding
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxRadioComponent, RadioLabelPosition, IChangeRadioEventArgs } from '../../radio/radio.component';
 import { IgxRippleModule } from '../ripple/ripple.directive';
@@ -10,7 +21,7 @@ let nextId = 0;
 
 /**
  * **Ignite UI for Angular Radio Group** -
- * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/radio_group.html)
+ * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/radio_button.html)
  *
  * The Ignite UI Radio Group allows the user to select a single option from an available set of options that are listed side by side.
  *
@@ -155,6 +166,12 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      */
     @Output()
     readonly change: EventEmitter<IChangeRadioEventArgs> = new EventEmitter<IChangeRadioEventArgs>();
+
+    /**
+     *@hidden
+     */
+    @HostBinding('class.igx-radio-group')
+    public cssClass = 'igx-radio-group';
 
     /**
      *@hidden

@@ -104,10 +104,50 @@
 /// @param {number|string} $variant [500] - The target color shade from the color palette.
 /// @returns {Color} White if no palette, color, and variant matches found.
 @function igx-color($palette, $color, $variant: 500) {
-    @if map-exists($palette) and map-key-exists($palette, $color) and map-key-exists($color, $variant) {
+    @if type-of($palette) == 'map' and map-has-key($palette, $color) {
         @return map-get(map-get($palette, $color), $variant);
     }
+
     @return #fff;
+}
+
+/// Converts a rgba color to a hexidecimal color.
+/// @access public
+/// @requires {function} to-string
+/// @param {Color} $rgba - The rgba color to convert.
+/// @param {Color} $background - The background color to convert against.
+/// @return {Color} - The hexidecimal representation of the rgba value.
+@function hexrgba($rgba, $background: #fff) {
+    @if type-of($rgba) == color {
+        $red: red($rgba);
+        $green: green($rgba);
+        $blue: blue($rgba);
+        $a: alpha($rgba);
+        $r: floor($a * $red + (1 - $a) * red($background));
+        $g: floor($a * $green + (1 - $a) * green($background));
+        $b: floor($a * $blue + (1 - $a) * blue($background));
+        @return rgb($r, $g, $b);
+    }
+    @return $rgba;
+}
+
+/// Returns a contrast color for a passed color.
+/// @access public
+/// @group Palettes
+/// @param {Color} $color - The color used to return a contrast color for.
+/// @returns {Color} - Returns either white or black depending on the luminance of the input color.
+@function text-contrast($color) {
+    @if type-of($color) == 'color' {
+        $lightContrast: contrast($color, white);
+        $darkContrast: contrast($color, black);
+        
+        @if ($lightContrast > $darkContrast) {
+            @return white;
+        } @else {
+            @return black;
+        }
+    }
+    @return $color;
 }
 
 /// Retrieves a contrast text color for a given color from a color palette.
@@ -126,25 +166,6 @@
         @return text-contrast(hexrgba($_color));
     }
     @return #fff;
-}
-
-/// Returns a contrast color for a passed color.
-/// @access public
-/// @group Palettes
-/// @param {Color} $color - The color used to return a contrast color for.
-/// @returns {Color} - Returns either white or black depending on the luminance of the input color.
-@function text-contrast($color) {
-    @if type-of($color) == 'color' {
-        $lightContrast: contrast($color, white);
-        $darkContrast: contrast($color, black);
-
-        @if ($lightContrast > $darkContrast) {
-            @return white;
-        } @else {
-            @return black;
-        }
-    }
-    @return $color;
 }
 
 /// Test if `$value` is a valid direction.
@@ -197,45 +218,35 @@
     @return $sign + $result;
 }
 
-/// Converts a rgba color to a hexidecimal color.
-/// @access public
-/// @requires {function} to-string
-/// @param {Color} $rgba - The rgba color to convert.
-/// @param {Color} $background - The background color to convert against.
-/// @return {Color} - The hexidecimal representation of the rgba value.
-@function hexrgba($rgba, $background: #fff) {
-    @if type-of($rgba) == color {
-        $red: red($rgba);
-        $green: green($rgba);
-        $blue: blue($rgba);
-        $a: alpha($rgba);
-        $r: floor($a * $red + (1 - $a) * red($background));
-        $g: floor($a * $green + (1 - $a) * green($background));
-        $b: floor($a * $blue + (1 - $a) * blue($background));
-        @return rgb($r, $g, $b);
-    }
-    @return $rgba;
-}
-
-/// Extends a Map object with the properties of another Map object.
+/// Removes all null key-value pairs from the map
 /// @access private
-/// @param {Map} $map1 - The source map to get extended.
-/// @param {Map} $map2 - The map extending the source map.
-/// @returns {Map} - Returns the original map extended with the properties of the second map.
-@function extend($map1, $map2) {
+/// @param {Map} $map - The target map to be cleaned.
+/// @returns {Map} - Returns a clean map.
+@function map-clean($map) {
     $result: ();
-    @each $key, $value in $map2 {
-        @if not($value) {
-            $result: map-merge($result, (
-                #{$key}: map-get($map1, $key)
-            ));
-        } @else {
+    
+    @each $key, $value in $map {
+        @if($value) != null {
             $result: map-merge($result, (
                 #{$key}: $value
             ));
         }
     }
-    $result: map-merge($map1, $result);
+    
+    @return $result;
+}
+
+/// Extends a Map object with the properties of another Map object.
+/// @access private
+/// @param {Map...} $maps - The source map to get extended.
+/// @returns {Map} - Returns the merged maps.
+@function extend($maps...) {
+    $result: ();
+
+    @each $map in $maps {
+        $result: map-merge($result, map-clean($map));
+    }
+
     @return $result;
 }
 
@@ -244,7 +255,6 @@
 /// @group Palettes
 /// @requires {function} gen-color
 /// @requires {function} text-contrast
-/// @requires {function} extend
 /// @param {Color} $color - The base color used to generate the palette.
 /// @param {List} $saturations - The saturation list of color variants.
 //// Based on the Material color system.
@@ -263,7 +273,6 @@
 /// @access private
 /// @group Palettes
 /// @requires {function} text-contrast
-/// @requires {function} extend
 /// @param {Color} $color - The base color used to generate the palette.
 /// @param {Map} $shades - A map of variations as keys and opacities as values.
 /// Based on the Material color system.
@@ -289,6 +298,7 @@
 /// @param {Color} $warn [#fbb13c] - The warning color used throughout the application.
 /// @param {Color} $error [#ff134a] - The error color used throughout the application.
 /// @param {Color} $grays [#000] - The color used for generating the grayscale palette.
+/// @param {Color} $surface [#fff] - The color used as a background in components, such as cards, sheets, and menus.
 /// @returns {Map} - A map consisting of 74 color variations, including the `primary`, `secondary`, `grays`,
 /// `info`, `success`, `warn`, and `error` colors.
 @function igx-palette(
@@ -298,7 +308,8 @@
     $success: #4eb862,
     $warn: #fbb13c,
     $error: #ff134a,
-    $grays: #000
+    $grays: #000,
+    $surface: #fff
 ) {
     $saturations: (50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 'A100', 'A200', 'A400', 'A700');
     $shades: (50: .02, 100: .04, 200: .08, 300: .12, 400: .26, 500: .38, 600: .54, 700: .62, 800: .74, 900: .87);
@@ -318,29 +329,9 @@
         info: (500: $info),
         success: (500: $success),
         warn: (500: $warn),
-        error: (500: $error)
+        error: (500: $error),
+        surface: (500: $surface)
     );
-}
-
-/// Returns a string from the elements of a list.
-/// Works recursively so the elements can be lists themselves.
-/// @param {List} $list [null] - A list of elements to be turned into a string.
-/// @param {String} $glue [''] - A string symbol to join the elements by.
-@function implode($list, $glue: '') {
-    $result: null;
-    @for $i from 1 through length($list) {
-        $e: nth($list, $i);
-        @if type-of($e) == list {
-            $result: $result#{implode($e, $glue)};
-        } @else {
-            $result: if(
-                $i != length($list),
-                $result#{$e}#{$glue},
-                $result#{$e}
-            );
-        }
-    }
-    @return $result;
 }
 
 /// Returns a CSS property value. It could return either css '--var' or
@@ -358,12 +349,15 @@
 ///   // }
 ///   // otherwise, it will return the value for key 'icon-color' in the '$avatar-theme';
 /// @returns {String} - The value of the key in the passed map, or the name of key concatenated with the key name.
-@function --var($map, $key) {
+@function --var($map, $key, $fallback: null) {
     $igx-legacy-support: if(global-variable-exists('igx-legacy-support'), $igx-legacy-support, true);
 
     @if map-has-key($map, $key) {
         @if $igx-legacy-support == false {
-            @return unquote('var(--#{map-get($map, 'name')}-#{$key})');
+            @if not($fallback) {
+                @return unquote('var(--#{map-get($map, 'name')}-#{$key})')
+            }
+            @return unquote('var(--#{map-get($map, 'name')}-#{$key}, #{$fallback})')
         } @else {
             @return map-get($map, $key);
         }
@@ -433,6 +427,7 @@
 /// @access private
 /// @param {Map} $schema - A theme schema.
 /// @param {Map} $palette - An igx-palette map.
+/// @requires {function} extend
 /// @requires {function} resolve-value
 /// @example scss Apply an `igx-palette` to theme schema
 ///   $custom-palette: igx-palette($primary: red, $secondary: blue);
@@ -451,7 +446,7 @@
         @if type-of($value) == 'map' {
             $result: extend($result, (#{$key}: resolve-value($value, $palette)));
         } @else {
-            $result: extend($result, (#{$key}: $value));
+            $result: extend($result, (#{$key}: #{$value}));
         }
     }
     @return $result;

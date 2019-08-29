@@ -14,10 +14,11 @@ export function WatchChanges(): PropertyDecorator {
         const originalSetter = propDesc.set || (function (this: any, val: any) { this[privateKey] = val; });
 
         propDesc.set = function (this: any, val: any) {
+            const init = this._init;
             const oldValue = this[key];
             if (val !== oldValue || (typeof val === 'object' && val === oldValue)) {
                 originalSetter.call(this, val);
-                if (this.ngOnChanges) {
+                if (this.ngOnChanges && !init) {
                     // in case wacthed prop changes trigger ngOnChanges manually
                     const changes: SimpleChanges = {
                         [key]: new SimpleChange(oldValue, val, false)
@@ -27,5 +28,38 @@ export function WatchChanges(): PropertyDecorator {
             }
         };
         return propDesc;
+    };
+}
+
+export function notifyChanges(repaint = false) {
+    return (_: any, key: string, propDesc?: PropertyDescriptor) => {
+
+        const privateKey = `__${key}`;
+
+        propDesc = propDesc || {
+            enumerable: true,
+            configurable: true
+        };
+
+
+        const originalSetter = propDesc ? propDesc.set : null;
+
+        propDesc.get = propDesc.get || (function(this) { return this[privateKey]; });
+
+        propDesc.set = function(this, newValue) {
+            if (originalSetter) {
+                originalSetter.call(this, newValue);
+                if (this.grid) {
+                    this.grid.notifyChanges(repaint);
+                }
+            } else {
+                if (newValue === this[key]) { return; }
+                this[privateKey] = newValue;
+                if (this.grid) {
+                    this.grid.notifyChanges(repaint);
+                }
+            }
+        };
+        return propDesc as any;
     };
 }

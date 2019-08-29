@@ -3,6 +3,29 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
+/// Help debug sass maps.
+/// @access privet
+/// @example scss - Sample usage
+///   input[type="checkbox"] {
+///     @include hide-default();
+///   }
+
+//@mixin debug-map($map) {
+//    @at-root {
+//        @debug-map {
+//            __toString__: inspect($map);
+//            __length__: length($map);
+//            __keys__: map-keys($map);
+//
+//            __properties__ {
+//                @each $key, $value in $map {
+//                    #{$key}: inspect($value);
+//                }
+//            }
+//        }
+//    }
+//}
+
 /// Hides the element from the DOM.
 /// @access public
 /// @example scss - Sample usage
@@ -164,19 +187,16 @@
 /// Generates CSS variables for a given palette.
 /// @access public
 /// @param {Map} $palette - The igx palette to use to generate css variables for.
-/// @param {string} $scope [null] - The scope of the generated css variables.
 ///
 /// @example scss Generate css variables for the `$default-palette`.
-///   @include css-vars-from-palette($default-palette, ':root');
+///   @include css-vars-from-palette($default-palette);
 ///
 /// @requires {mixin} css-vars-from-palette
-@mixin igx-palette-vars($palette, $scope: null) {
-    @if $scope == null {
+@mixin igx-palette-vars($palette) {
+    $scope: if(is-root(), ':root', '&');
+
+    #{$scope} {
         @include css-vars-from-palette($palette);
-    } @else {
-        #{$scope} {
-            @include css-vars-from-palette($palette);
-        }
     }
 }
 
@@ -212,7 +232,7 @@
     $prefix: map-get($theme, 'name');
 
     @each $key, $value in $theme {
-        @if $key != 'name' and $key != 'palette' {
+        @if $key != 'name' and $key != 'palette' and type-of($value) != 'map' {
             --#{$prefix}-#{$key}: #{$value};
         }
     }

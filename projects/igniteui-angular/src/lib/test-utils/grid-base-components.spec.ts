@@ -15,7 +15,7 @@ import { IgxGridComponent } from '../grids/grid/grid.component';
 export class BasicGridComponent {
     public data = [];
 
-    @ViewChild(IgxGridComponent)
+    @ViewChild(IgxGridComponent, { static: true })
     public grid: IgxGridComponent;
 }
 
@@ -96,12 +96,10 @@ export class PagingComponent extends GridWithSizeComponent {
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(` [rowSelectable]="rowSelectable"`,
-        '', ColumnDefinitions.productBasic)
+    template: GridTemplateStrings.declareGrid(` rowSelection = "multiple"`,
+        '', ColumnDefinitions.productBasicNumberID)
 })
 export class SelectionComponent extends BasicGridComponent {
-    public rowSelectable = true;
-
     data = SampleTestData.generateBigValuesData(100);
 }
 
@@ -127,7 +125,7 @@ export class GridWithToolbarComponent extends GridWithSizeComponent {
     </div>`
 })
 export class ColumnHidingTestComponent extends GridWithSizeComponent implements OnInit, AfterViewInit {
-    @ViewChild(IgxColumnHidingComponent) public chooser: IgxColumnHidingComponent;
+    @ViewChild(IgxColumnHidingComponent, { static: false }) public chooser: IgxColumnHidingComponent;
     width = '500px';
     height = '500px';
     showInline = true;
@@ -152,7 +150,7 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
     </div>`
 })
 export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
-    @ViewChild(IgxGridComponent) grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: true }) grid: IgxGridComponent;
     constructor(cdr: ChangeDetectorRef) { super(cdr); }
     data = SampleTestData.contactInfoDataFull();
 }
@@ -164,7 +162,7 @@ export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
     </div>`
 })
 export class ColumnPinningTestComponent extends GridWithSizeComponent implements AfterViewInit, OnInit {
-    @ViewChild(IgxColumnPinningComponent) public chooser: IgxColumnPinningComponent;
+    @ViewChild(IgxColumnPinningComponent, { static: false }) public chooser: IgxColumnPinningComponent;
 
     height = '500px';
     width = '500px';

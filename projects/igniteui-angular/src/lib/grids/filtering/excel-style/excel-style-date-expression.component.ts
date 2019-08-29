@@ -1,10 +1,12 @@
 import {
     Component,
     ChangeDetectionStrategy,
-    ViewChild
+    ViewChild,
+    Input
 } from '@angular/core';
 import { IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { IgxDatePickerComponent } from '../../../date-picker/date-picker.component';
+import { DisplayDensity } from '../../../core/density';
 
 /**
  * @hidden
@@ -17,18 +19,17 @@ import { IgxDatePickerComponent } from '../../../date-picker/date-picker.compone
 })
 export class IgxExcelStyleDateExpressionComponent extends IgxExcelStyleDefaultExpressionComponent {
 
-    @ViewChild('datePicker', { read: IgxDatePickerComponent })
+    @ViewChild('datePicker', { read: IgxDatePickerComponent, static: true })
     private datePicker: IgxDatePickerComponent;
 
     protected get inputValuesElement() {
         return this.datePicker.getEditElement();
     }
 
+    @Input()
+    public displayDensity: DisplayDensity;
+
     get inputDatePlaceholder(): string {
         return this.grid.resourceStrings['igx_grid_filter_row_date_placeholder'];
-    }
-
-    public openDatePicker(openDialog: Function) {
-        openDialog();
     }
 }

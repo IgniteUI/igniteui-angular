@@ -110,10 +110,10 @@
 /// @param {Color} $l3-color - The ambient color.
 /// @returns {String} - A string to be used as box-shadow value.
 @function _elevation($elevation, $l1-color, $l2-color, $l3-color) {
-    @return unquote(
-        '#{map-get(_l1-shadows($l1-color), $elevation)},
-        #{map-get(_l2-shadows($l2-color), $elevation)},
-        #{map-get(_l3-shadows($l3-color), $elevation)}'
+    @return unquote(#{
+        map-get(_l1-shadows($l1-color), $elevation),
+        map-get(_l2-shadows($l2-color), $elevation),
+        map-get(_l3-shadows($l3-color), $elevation)}
     );
 }
 

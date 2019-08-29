@@ -9,7 +9,37 @@
     font-size: 24px;
 }
 
-.igx-input-group+.igx-input-group,
-.form+.form {
+.igx-input-group + .igx-input-group,
+.form + .form {
     margin-top: 24px;
+}
+
+igx-date-picker {
+    display: block;
+    margin-bottom: 24px;
+}
+
+.fluent-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.fluent-card-holder {
+    padding: 30px;
+    max-width: 500px;
+    margin: 0 auto 50px;
+}
+
+.fluent-form-btn-label {
+    margin-bottom: 24px;
+}
+
+.fluent-form button {
+    margin-right: 16px;
+}
+
+.fluent-form__buttons {
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
 }

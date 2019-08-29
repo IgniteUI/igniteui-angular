@@ -2,6 +2,7 @@
     #dropdownConditions
     [maxHeight]="'200px'"
     [width]="getInputWidth()"
+    [displayDensity]="displayDensity"
     (onSelection)="onConditionsChanged($event)">
     <igx-drop-down-item *ngFor="let condition of conditions" [value]="condition" [selected]="isConditionSelected(condition)">
         <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
@@ -13,7 +14,7 @@
     #inputGroupConditions
     (click)="toggleCustomDialogDropDown()"
     type="box"
-    [displayDensity]="'compact'"
+    [displayDensity]="displayDensity"
     [supressInputAutofocus]="true">
 
     <igx-prefix>
@@ -33,7 +34,7 @@
     />
 </igx-input-group>
 
-<igx-input-group #inputGroupValues type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
+<igx-input-group #inputGroupValues type="box" [displayDensity]="displayDensity" [supressInputAutofocus]="true">
     <input
         #inputValues
         igxInput
@@ -47,14 +48,14 @@
     />
 </igx-input-group>
 
-<button (click)="onRemoveButtonClick()" igxButton="icon" *ngIf="!isSingle">
+<button (click)="onRemoveButtonClick()" igxButton="icon" [displayDensity]="displayDensity" *ngIf="!isSingle">
     <igx-icon>cancel</igx-icon>
 </button>
 
 <igx-buttongroup #logicOperatorButtonGroup
     *ngIf="!isLast"
     [multiSelection]="false">
-    <span igxButton
+    <span igxButton [displayDensity]="displayDensity"
         tabindex="0"
         #andButton
         (keydown)="onLogicOperatorKeyDown($event, 0)"
@@ -64,7 +65,7 @@
         {{ grid.resourceStrings.igx_grid_filter_operator_and }}
     </span>
 
-    <span igxButton
+    <span igxButton [displayDensity]="displayDensity"
         tabindex="0"
         #orButton
         (keydown)="onLogicOperatorKeyDown($event, 1)"

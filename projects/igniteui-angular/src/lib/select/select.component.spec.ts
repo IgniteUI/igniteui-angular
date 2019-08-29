@@ -1,18 +1,20 @@
+import { IgxInputState } from './../directives/input/input.directive';
 import { Component, ViewChild, DebugElement, OnInit } from '@angular/core';
 import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, FormGroup, FormBuilder, FormControl, Validators, ReactiveFormsModule, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxDropDownModule } from '../drop-down/index';
 import { IgxIconModule } from '../icon/index';
 import { IgxInputGroupModule } from '../input-group/index';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxSelectComponent } from './select.component';
+import { IgxSelectComponent} from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { ISelectionEventArgs } from '../drop-down/drop-down.common';
 import { IgxToggleModule, IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../services';
 import { IgxSelectModule } from './select.module';
+import { wait } from '../test-utils/ui-interactions.spec';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
@@ -23,6 +25,7 @@ const CSS_CLASS_SELECTED_ITEM = 'igx-drop-down__item--selected';
 const CSS_CLASS_DISABLED_ITEM = 'igx-drop-down__item--disabled';
 const CSS_CLASS_FOCUSED_ITEM = 'igx-drop-down__item--focused';
 const CSS_CLASS_INPUT_GROUP_BOX = 'igx-input-group--box';
+const CSS_CLASS_INPUT_GROUP_REQUIRED = 'igx-input-group--required';
 const CSS_CLASS_INPUT_GROUP_BORDER = 'igx-input-group--border';
 const CSS_CLASS_INPUT_GROUP_COMFORTABLE = 'igx-input-group--comfortable';
 const CSS_CLASS_INPUT_GROUP_COSY = 'igx-input-group--cosy';
@@ -37,6 +40,8 @@ const escapeKeyEvent = new KeyboardEvent('keydown', { key: 'Escape' });
 const enterKeyEvent = new KeyboardEvent('keydown', { key: 'Enter' });
 const endKeyEvent = new KeyboardEvent('keydown', { key: 'End' });
 const homeKeyEvent = new KeyboardEvent('keydown', { key: 'Home' });
+const tabKeyEvent = new KeyboardEvent('keydown', { key: 'Tab' });
+const shiftTabKeysEvent = new KeyboardEvent('keydown', { 'key': 'Tab', shiftKey: true });
 
 describe('igxSelect', () => {
     let fixture;
@@ -81,25 +86,29 @@ describe('igxSelect', () => {
                 IgxSelectMiddleComponent,
                 IgxSelectTopComponent,
                 IgxSelectBottomComponent,
-                IgxSelectAffixComponent
+                IgxSelectAffixComponent,
+                IgxSelectReactiveFormComponent,
+                IgxSelectTemplateFormComponent
             ],
             imports: [
                 FormsModule,
+                ReactiveFormsModule,
                 IgxDropDownModule,
                 IgxIconModule,
                 IgxInputGroupModule,
                 IgxSelectModule,
                 IgxToggleModule,
-                NoopAnimationsModule,
+                NoopAnimationsModule
             ]
         }).compileComponents();
     }));
 
     describe('General tests: ', () => {
-        beforeEach(async(() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(IgxSelectSimpleComponent);
             select = fixture.componentInstance.select;
             fixture.detectChanges();
+            tick();
             inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
             selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
         }));
@@ -260,17 +269,6 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
-        it('should close on click outside of the component', fakeAsync(() => {
-            expect(select.collapsed).toBeTruthy();
-            select.toggle();
-            tick();
-            expect(select.collapsed).toBeFalsy();
-
-            document.documentElement.dispatchEvent(new Event('click'));
-            tick();
-            fixture.detectChanges();
-            expect(select.collapsed).toBeTruthy();
-        }));
         it('should not display dropdown list when no select items', fakeAsync(() => {
             fixture.componentInstance.items = [];
             fixture.detectChanges();
@@ -354,7 +352,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             verifyOpenCloseEvents(1, 1, 2);
         }));
-        it('should emit closing events on click outside of the component', fakeAsync(() => {
+        it('should emit closing events on input blur', fakeAsync(() => {
             spyOn(select.onClosing, 'emit');
             spyOn(select.onClosed, 'emit');
 
@@ -364,7 +362,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeFalsy();
 
-            document.documentElement.dispatchEvent(new Event('click'));
+            inputElement.nativeElement.dispatchEvent(new Event('blur'));
             tick();
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
@@ -434,6 +432,178 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(inputGroup.nativeElement.classList.contains(CSS_CLASS_INPUT_GROUP_COMPACT)).toBeTruthy();
         });
+        it('should close dropdown on blur', fakeAsync(() => {
+            expect(select.collapsed).toBeTruthy();
+
+            select.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeFalsy();
+
+            inputElement.nativeElement.dispatchEvent(new Event('blur'));
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeTruthy();
+        }));
+    });
+    describe('Form tests: ', () => {
+        it('Should properly initialize when used as a reactive form control - with validators', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxSelectReactiveFormComponent);
+            const inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+            fix.detectChanges();
+            const selectComp = fix.componentInstance.select;
+            const selectFormReference = fix.componentInstance.reactiveForm.controls.optionsSelect;
+            expect(selectFormReference).toBeDefined();
+            expect(selectComp).toBeDefined();
+            expect(selectComp.selectedItem).toBeUndefined();
+            expect(selectComp.value).toEqual('');
+            expect(inputGroupWithRequiredAsterisk).toBeDefined();
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
+
+            selectComp.toggle();
+            expect(selectComp.collapsed).toEqual(false);
+
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
+
+            selectComp.onBlur();
+
+            expect(selectComp.input.valid).toEqual(IgxInputState.INVALID);
+
+            selectComp.selectItem(selectComp.items[4]);
+            expect(selectComp.value).toEqual('Option 5');
+
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
+
+            selectComp.onBlur();
+
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
+
+            selectComp.value = 'Option 1';
+
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
+        }));
+
+        it('Should properly initialize when used as a reactive form control - without initial validators', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxSelectReactiveFormComponent);
+
+            let inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+            fix.detectChanges();
+            const selectComp = fix.componentInstance.select;
+            const formGroup: FormGroup = fix.componentInstance.reactiveForm;
+            fix.componentInstance.removeValidators(formGroup);
+            const selectFormReference = fix.componentInstance.reactiveForm.controls.optionsSelect;
+            expect(selectFormReference).toBeDefined();
+            expect(selectComp).toBeDefined();
+            expect(selectComp.selectedItem).toBeUndefined();
+            expect(selectComp.value).toEqual('');
+            expect(inputGroupWithRequiredAsterisk).toBeNull();
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
+
+            selectComp.onBlur();
+
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
+
+            selectComp.selectItem(selectComp.items[4]);
+
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
+
+            document.documentElement.dispatchEvent(new Event('click'));
+            expect(selectComp.collapsed).toEqual(true);
+
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
+
+            selectComp.onBlur();
+
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
+
+            fix.componentInstance.addValidators(formGroup);
+            fix.detectChanges();
+            inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+            expect(inputGroupWithRequiredAsterisk).toBeDefined();
+
+        }));
+
+
+        it('Should properly initialize when used as a form control - with initial validators', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxSelectTemplateFormComponent);
+
+            let inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+            fix.detectChanges();
+            const selectComp = fix.componentInstance.select;
+            const selectFormReference = fix.componentInstance.ngForm.form;
+            expect(selectFormReference).toBeDefined();
+            expect(selectComp).toBeDefined();
+            tick();
+            fix.detectChanges();
+            expect(selectComp.selectedItem).toBeUndefined();
+            expect(selectComp.value).toBeNull();
+            expect(inputGroupWithRequiredAsterisk).toBeDefined();
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
+
+            selectComp.toggle();
+            expect(selectComp.collapsed).toEqual(false);
+
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
+
+            selectComp.onBlur();
+
+            expect(selectComp.input.valid).toEqual(IgxInputState.INVALID);
+
+            selectComp.selectItem(selectComp.items[4]);
+            expect(selectComp.value).toEqual('Option 5');
+
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
+
+            selectComp.onBlur();
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
+
+            selectComp.value = 'Option 1';
+
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
+
+            fix.componentInstance.isRequired = false;
+            fix.detectChanges();
+            inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+            expect(inputGroupWithRequiredAsterisk).toBeNull();
+        }));
+
+        it('Should properly initialize when used as a form control - without initial validators', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxSelectTemplateFormComponent);
+
+            let inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+            fix.detectChanges();
+            const selectComp = fix.componentInstance.select;
+            const selectFormReference = fix.componentInstance.ngForm.form;
+            selectFormReference.clearValidators();
+            expect(selectFormReference).toBeDefined();
+            expect(selectComp).toBeDefined();
+            expect(selectComp.selectedItem).toBeUndefined();
+            expect(selectComp.value).toBeUndefined();
+            expect(inputGroupWithRequiredAsterisk).toBeNull();
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
+
+            selectComp.onBlur();
+
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
+
+            selectComp.selectItem(selectComp.items[4]);
+
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
+
+            document.documentElement.dispatchEvent(new Event('click'));
+            expect(selectComp.collapsed).toEqual(true);
+
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
+
+            selectComp.onBlur();
+
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
+
+            fix.componentInstance.isRequired = true;
+            fix.detectChanges();
+            inputGroupWithRequiredAsterisk = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP_REQUIRED));
+            expect(inputGroupWithRequiredAsterisk).toBeDefined();
+        }));
     });
     describe('Selection tests: ', () => {
         beforeEach(async(() => {
@@ -1079,7 +1249,7 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
         }));
-        it('should close dropdown on pressing ESC key', fakeAsync(() => {
+        it('should close dropdown on pressing ESC/TAB/SHIFT+TAB key', fakeAsync(() => {
             expect(select.collapsed).toBeTruthy();
 
             select.toggle();
@@ -1088,6 +1258,26 @@ describe('igxSelect', () => {
             expect(select.collapsed).toBeFalsy();
 
             inputElement.triggerEventHandler('keydown', escapeKeyEvent);
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeTruthy();
+
+            select.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeFalsy();
+            inputElement.triggerEventHandler('keydown', tabKeyEvent);
+            inputElement.nativeElement.dispatchEvent(new Event('blur'));
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeTruthy();
+
+            select.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(select.collapsed).toBeFalsy();
+            inputElement.triggerEventHandler('keydown', shiftTabKeysEvent);
+            inputElement.nativeElement.dispatchEvent(new Event('blur'));
             tick();
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
@@ -1658,11 +1848,12 @@ describe('igxSelect', () => {
         }));
     });
     describe('Positioning tests: ', () => {
-        const defaultWindowToListOffset = 5;
-        const defaultItemLeftPadding = 16;
-        const defaultItemTopPadding = 8;
-        const defaultItemBottomPadding = 8;
+        const defaultWindowToListOffset = 16;
+        const defaultItemLeftPadding = 24;
+        const defaultItemTopPadding = 0;
+        const defaultItemBottomPadding = 0;
         const defaultIconWidth = 24;
+        const inputGroupHeight = 50;
         const defaultTextIdent = 8;
         let visibleItems = 5;
         let hasScroll = true;
@@ -1670,6 +1861,7 @@ describe('igxSelect', () => {
         let listRect: DOMRect;
         let inputRect: DOMRect;
         let selectedItemRect: DOMRect;
+        let inputItemDiff: number;
         let listTop: number;
         let listBottom: number;
 
@@ -1677,16 +1869,17 @@ describe('igxSelect', () => {
             listRect = selectList.nativeElement.getBoundingClientRect();
             inputRect = inputElement.nativeElement.getBoundingClientRect();
             selectedItemRect = select.items[selectedItemIndex].element.nativeElement.getBoundingClientRect();
+            inputItemDiff = selectedItemRect.height - inputRect.height;
         };
         // Verifies that the selected item bounding rectangle is positioned over the input bounding rectangle
         const verifySelectedItemPositioning = function (reversed = false) {
             expect(selectedItemRect.left).toBeCloseTo(inputRect.left - defaultItemLeftPadding, 0);
             const expectedItemTop = reversed ? document.body.getBoundingClientRect().bottom - defaultWindowToListOffset -
                 selectedItemRect.height :
-                inputRect.top - defaultItemTopPadding;
+                inputRect.top - defaultItemTopPadding - inputItemDiff / 2;
             expect(selectedItemRect.top).toBeCloseTo(expectedItemTop, 0);
             const expectedItemBottom = reversed ? document.body.getBoundingClientRect().bottom - defaultWindowToListOffset :
-                inputRect.bottom + defaultItemBottomPadding;
+                inputRect.bottom + defaultItemBottomPadding + inputItemDiff / 2;
             expect(selectedItemRect.bottom).toBeCloseTo(expectedItemBottom, 0);
             expect(selectedItemRect.width).toEqual(selectList.nativeElement.scrollWidth);
         };
@@ -1694,10 +1887,6 @@ describe('igxSelect', () => {
             expect(listRect.left).toBeCloseTo(inputRect.left - defaultItemLeftPadding, 0);
             expect(listRect.top).toEqual(listTop);
             expect(listRect.bottom).toEqual(listBottom);
-            expect(listRect.width).toBeCloseTo(inputRect.width + defaultIconWidth + defaultItemLeftPadding * 2, 0);
-            const listHeight = hasScroll ? selectedItemRect.height * visibleItems + defaultItemTopPadding + defaultItemBottomPadding :
-                selectedItemRect.height * visibleItems;
-            expect(listRect.height).toEqual(listHeight);
         };
 
         describe('Ample space to open positioning tests: ', () => {
@@ -1774,9 +1963,6 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
-                listTop = selectedItemRect.top - selectedItemRect.height * 2 - defaultItemTopPadding;
-                listBottom = selectedItemRect.bottom + selectedItemRect.height * 2 + defaultItemBottomPadding;
-                verifyListPositioning();
 
                 selectedItemIndex = 6;
                 select.toggle();
@@ -1789,9 +1975,6 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
-                listTop = selectedItemRect.top - selectedItemRect.height * 4 - defaultItemBottomPadding - defaultItemTopPadding;
-                listBottom = selectedItemRect.bottom;
-                verifyListPositioning();
 
                 selectedItemIndex = 0;
                 select.toggle();
@@ -1804,9 +1987,6 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 getBoundingRectangles();
                 verifySelectedItemPositioning();
-                listTop = selectedItemRect.top;
-                listBottom = selectedItemRect.bottom + selectedItemRect.height * 4 + defaultItemTopPadding + defaultItemBottomPadding;
-                verifyListPositioning();
             }));
         });
         describe('Not enough space above to open positioning tests: ', () => {
@@ -1829,23 +2009,20 @@ describe('igxSelect', () => {
                     fixture.detectChanges();
                     getBoundingRectangles();
                     verifySelectedItemPositioning();
-                    listTop = selectedItemRect.top;
-                    listBottom = selectedItemRect.bottom + selectedItemRect.height * 4 + defaultItemTopPadding + defaultItemBottomPadding;
-                    verifyListPositioning();
                 }));
             it('should display selected item over input and possible items above and below when item in the middle of the list is selected',
                 fakeAsync(() => {
                     selectedItemIndex = 1;
                     select.items[selectedItemIndex].selected = true;
+                    (select.element as HTMLElement).style.marginTop = '10px';
                     fixture.detectChanges();
                     select.toggle();
                     tick();
                     fixture.detectChanges();
                     getBoundingRectangles();
                     verifySelectedItemPositioning();
-                    listTop = document.body.getBoundingClientRect().top + defaultWindowToListOffset;
-                    listBottom = document.body.getBoundingClientRect().top + defaultWindowToListOffset + listRect.height;
-                    verifyListPositioning();
+                    (select.element as HTMLElement).parentElement.style.marginTop = '10px';
+                    fixture.detectChanges();
                 }));
             it('should display selected item and all possible items above when last item is selected',
                 fakeAsync(() => {
@@ -1856,9 +2033,6 @@ describe('igxSelect', () => {
                     tick();
                     fixture.detectChanges();
                     getBoundingRectangles();
-                    listTop = selectedItemRect.top - selectedItemRect.height * 4 - defaultItemBottomPadding - defaultItemTopPadding;
-                    listBottom = selectedItemRect.bottom;
-                    verifyListPositioning();
                 }));
         });
         describe('Not enough space below to open positioning tests: ', () => {
@@ -1880,9 +2054,6 @@ describe('igxSelect', () => {
                     tick();
                     fixture.detectChanges();
                     getBoundingRectangles();
-                    listTop = inputRect.bottom - selectedItemRect.height * 5 - defaultItemTopPadding - defaultItemBottomPadding;
-                    listBottom = inputRect.bottom;
-                    verifyListPositioning();
                 }));
             it('should display selected item and all possible items above and below when item in the middle of the list is selected',
                 fakeAsync(() => {
@@ -1893,10 +2064,6 @@ describe('igxSelect', () => {
                     tick();
                     fixture.detectChanges();
                     getBoundingRectangles();
-                    listTop = document.body.getBoundingClientRect().bottom - defaultWindowToListOffset -
-                        selectedItemRect.height * 5 - defaultItemBottomPadding - defaultItemTopPadding;
-                    listBottom = document.body.getBoundingClientRect().bottom - defaultWindowToListOffset;
-                    verifyListPositioning();
                 }));
             // tslint:disable-next-line:max-line-length
             it('should display list with selected item and all items before it and position selected item over input when last item is selected',
@@ -1949,10 +2116,11 @@ describe('igxSelect', () => {
                 }));
         });
         describe('Document bigger than the visible viewport tests: ', () => {
-            beforeEach(async(() => {
+            beforeEach(fakeAsync(() => {
                 fixture = TestBed.createComponent(IgxSelectMiddleComponent);
                 select = fixture.componentInstance.select;
                 fixture.detectChanges();
+                tick();
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
                 selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
             }));
@@ -2067,9 +2235,10 @@ describe('igxSelect', () => {
         });
     });
     describe('EditorProvider', () => {
-        beforeEach(async(() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(IgxSelectSimpleComponent);
             fixture.detectChanges();
+            tick();
         }));
         it('Should return correct edit element', () => {
             inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT)).nativeElement;
@@ -2089,7 +2258,7 @@ describe('igxSelect', () => {
 `
 })
 class IgxSelectSimpleComponent {
-    @ViewChild('select', { read: IgxSelectComponent })
+    @ViewChild('select', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
     public items: string[] = [
         'New York',
@@ -2128,7 +2297,7 @@ class IgxSelectSimpleComponent {
 `
 })
 class IgxSelectGroupsComponent {
-    @ViewChild('select', { read: IgxSelectComponent })
+    @ViewChild('select', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
     public locations: {
         continent: string,
@@ -2153,7 +2322,7 @@ class IgxSelectGroupsComponent {
     styles: [':host-context { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }']
 })
 class IgxSelectMiddleComponent {
-    @ViewChild('select', { read: IgxSelectComponent })
+    @ViewChild('select', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
     public items: string[] = [
         'Option 1',
@@ -2170,7 +2339,7 @@ class IgxSelectMiddleComponent {
 `
 })
 class IgxSelectTopComponent {
-    @ViewChild('select', { read: IgxSelectComponent })
+    @ViewChild('select', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
     public items: string[] = [
         'Option 1',
@@ -2191,7 +2360,7 @@ class IgxSelectTopComponent {
 `
 })
 class IgxSelectBottomComponent {
-    @ViewChild('select', { read: IgxSelectComponent })
+    @ViewChild('select', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
     public items: string[] = [
         'Option 1',
@@ -2220,7 +2389,7 @@ class IgxSelectBottomComponent {
 `
 })
 class IgxSelectAffixComponent {
-    @ViewChild('select', { read: IgxSelectComponent })
+    @ViewChild('select', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
     public items: string[] = [
         'Option 1',
@@ -2231,3 +2400,122 @@ class IgxSelectAffixComponent {
         'Option 6',
         'Option 7'];
 }
+
+
+@Component({
+    template: `
+    <form [formGroup]="reactiveForm" (ngSubmit)="onSubmitReactive()">
+    <p>
+    <label>First Name:</label>
+    <input type="text" formControlName="firstName">
+    </p>
+    <p>
+    <label>Password:</label>
+    <input type="password" formControlName="password">
+    </p>
+    <p>
+    <igx-select formControlName="optionsSelect" #selectReactive>
+        <label igxLabel>Sample Label</label>
+        <igx-prefix igxPrefix>
+            <igx-icon fontSet="material">alarm</igx-icon>
+        </igx-prefix>
+        <igx-select-item *ngFor="let item of items; let inx=index" [value]="item">
+            {{ item }}
+        </igx-select-item>
+    </igx-select>
+    </p>
+    <p>
+    <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
+    </p>
+</form>
+`
+})
+class IgxSelectReactiveFormComponent {
+    @ViewChild('selectReactive', { read: IgxSelectComponent, static: true })
+    public select: IgxSelectComponent;
+    reactiveForm: FormGroup;
+    public items: string[] = [
+        'Option 1',
+        'Option 2',
+        'Option 3',
+        'Option 4',
+        'Option 5',
+        'Option 6',
+        'Option 7'
+    ];
+
+    public validationType = {
+        'firstName': new FormControl(Validators.required, Validators.pattern('^[\\w\\s/-/(/)]{3,50}$')),
+        'password': [Validators.required, Validators.maxLength(12)],
+        'optionsSelect': [Validators.required]
+    };
+
+    constructor(fb: FormBuilder) {
+        this.reactiveForm = fb.group({
+            'firstName': new FormControl('', Validators.required),
+            'password': ['', Validators.required],
+            'optionsSelect': ['', Validators.required]
+        });
+    }
+    onSubmitReactive() { }
+
+    public removeValidators(form: FormGroup) {
+        // tslint:disable-next-line:forin
+        for (const key in form.controls) {
+            form.get(key).clearValidators();
+            form.get(key).updateValueAndValidity();
+        }
+    }
+
+    public addValidators(form: FormGroup) {
+        // tslint:disable-next-line:forin
+        for (const key in form.controls) {
+            form.get(key).setValidators(this.validationType[key]);
+            form.get(key).updateValueAndValidity();
+        }
+    }
+}
+
+@Component({
+    template: `
+    <form #form="ngForm" (ngSubmit)="onSubmit()">
+    <p>
+
+    <igx-select #selectInForm [(ngModel)]="model.option" [required]="isRequired" name="option">
+        <label igxLabel>Sample Label</label>
+        <igx-prefix igxPrefix>
+            <igx-icon fontSet="material">alarm</igx-icon>
+        </igx-prefix>
+        <igx-select-item *ngFor="let item of items; let inx=index" [value]="item">
+            {{ item }}
+        </igx-select-item>
+    </igx-select>
+    </p>
+    <p>
+    <button type="submit" [disabled]="!form.valid">Submit</button>
+    </p>
+</form>
+`
+})
+class IgxSelectTemplateFormComponent {
+    @ViewChild('selectInForm', { read: IgxSelectComponent, static: true })
+    public select: IgxSelectComponent;
+
+    @ViewChild(NgForm, { static: true }) ngForm: NgForm;
+    public isRequired = true;
+    model = {
+        option: null
+    };
+    public items: string[] = [
+        'Option 1',
+        'Option 2',
+        'Option 3',
+        'Option 4',
+        'Option 5',
+        'Option 6',
+        'Option 7'
+    ];
+
+    onSubmit() { }
+}
+

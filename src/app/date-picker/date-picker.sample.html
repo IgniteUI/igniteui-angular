@@ -2,31 +2,32 @@
     <app-page-header title="Date Picker">Informs and requires a response from the user.</app-page-header>
     <section class="sample-content">
         <article class="datepicker-column">
-            <h4 class="sample-title">Default Date Picker.</h4>
-            <p class="sample-description">Detailed description to be added.</p>
+            <h4 class="sample-title">Default Date Picker - dialog mode</h4>
+            <p class="sample-description">Added buttons - today and cancel</p>
             <div class="preview">
+                <button (click)="d()">DDD</button>
                 <igx-date-picker #datePicker cancelButtonLabel="cancel" todayButtonLabel="today">
                 </igx-date-picker>
                 <button igxButton igxRipple type="raised" (click)="deselect(datePicker)">Deselect date</button>
             </div>
         </article>
         <article class="datepicker-column">
-            <h4 class="sample-title">Date Picker with passed date.</h4>
-            <p class="sample-description">Detailed description to be added.</p>
+            <h4 class="sample-title">Default Date Picker</h4>
+            <p class="sample-description">Date Picker with passed date</p>
             <div class="preview">
                 <igx-date-picker [value]="date"></igx-date-picker>
             </div>
         </article>
         <article class="datepicker-column">
-            <h4 class="sample-title">Date Picker with passed date and custom formatter.</h4>
-            <p class="sample-description">Detailed description to be added.</p>
+            <h4 class="sample-title">Default Date Picker</h4>
+            <p class="sample-description">Custom formatter applied</p>
             <div class="preview">
                 <igx-date-picker [value]="date" [vertical]="true" [formatter]="formatter"></igx-date-picker>
             </div>
         </article>
         <article class="datepicker-column">
-            <h4 class="sample-title">Date Picker with retemplated input group.</h4>
-            <p class="sample-description">Detailed description to be added.</p>
+            <h4 class="sample-title">Default Date Picker</h4>
+            <p class="sample-description">Retemplated input group</p>
             <div class="preview">
                 <igx-date-picker [value]="date" [formatter]="formatter">
                     <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value"
@@ -41,25 +42,55 @@
         </article>
 
         <article class="datepicker-column">
-            <h4 class="sample-title">Editable Drop Down Date Picker</h4>
-            <label>Date: {{ editableDatePicker1.value | date:'longDate'}}</label>
-            <label>Format: {{ editableDatePicker1.format }}</label>
-            <label>mask: {{ editableDatePicker1.mask }}</label>
-            <div class="preview" style="width: 500px">
-                <igx-date-picker #editableDatePicker1 mode="dropdown" [value]="testDate" format="dd.MM.y" mask="M/d/y">
+            <h4 class="sample-title" #TEST>DropDown Date Picker</h4>
+            <p class="sample-description">Retemplated Date Picker using #dropDownTarget </p>
+            <div class="preview">
+                <igx-date-picker [locale]="'ja'" [value]="date" mode="dropdown" #retemplated>
+                    <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value"
+                        let-displayData="displayData">
+                        <igx-input-group>
+                            <input #dropDownTarget class="igx-date-picker__input-date" igxInput [value]="displayData"
+                                (blur)="changeDate($event)" />
+                            <igx-suffix (click)="openDialog(TEST)">
+                                <igx-icon>alarm</igx-icon>
+                            </igx-suffix>
+                        </igx-input-group>
+                    </ng-template>
+                    <ng-template igxDatePickerActions>
+                        <div class="action-buttons">
+                            <button igxButton="flat" (click)="selectToday(retemplated)">Today</button>
+                        </div>
+                    </ng-template>
                 </igx-date-picker>
+                <label>Date: {{ retemplated.value | date:'longDate'}}</label>
             </div>
         </article>
 
         <article class="datepicker-column">
-            <h4 class="sample-title">Editable Date Picker bind with ngModel</h4>
-            <label>Date: {{ editableDatePicker.value }}</label>
-            <label>Format: {{ editableDatePicker.format }}</label>
-            <div class="preview" style="width: 500px">
-                <igx-date-picker #editableDatePicker mode="dropdown" [weekStart]="1" [(ngModel)]="date1"
-                    [isSpinLoop]="false">
+            <h4 class="sample-title">DropDown Date Picker</h4>
+            <p class="sample-description">Format: dd.MM.y / mask: M/d/y</p>
+            <div class="preview">
+                <igx-date-picker #editableDatePicker1 mode="dropdown" [value]="testDate" format="dd.MM.y" mask="M/d/y">
                 </igx-date-picker>
-                <button igxButton igxRipple type="raised" (click)="deselect(editableDatePicker)">Deselect date</button>
+                <label>Date: {{ editableDatePicker1.value | date:'longDate'}}</label>
+            </div>
+        </article>
+
+        <article class="datepicker-column">
+            <h4 class="sample-title">DropDown Date Picker bind with ngModel</h4>
+            <p class="sample-description">isSpinLoop set to false</p>
+            <div class="preview">
+                <igx-date-picker #editableDatePicker
+                                mode="dropdown"
+                                cancelButtonLabel="close"
+                                todayButtonLabel="today"
+                                [weekStart]="1"
+                                [(ngModel)]="date1"
+                                [isSpinLoop]="false">
+                </igx-date-picker>
+                <button igxButton igxRipple type="raised" (click)="deselect(editableDatePicker)">
+                    Deselect date
+                </button>
             </div>
         </article>
     </section>

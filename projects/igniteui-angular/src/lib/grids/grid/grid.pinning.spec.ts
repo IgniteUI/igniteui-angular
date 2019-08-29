@@ -5,18 +5,15 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../../calendar/index';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxColumnComponent } from '../column.component';
-import { IgxGridHeaderComponent } from '../grid-header.component';
 import { IgxGridComponent } from './grid.component';
 import { IGridCellEventArgs } from '../grid-base.component';
 import { IgxGridModule } from './index';
 import { IgxGridRowComponent } from './grid-row.component';
-import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridHeaderGroupComponent } from '../grid-header-group.component';
 
-describe('IgxGrid - Column Pinning ', () => {
+describe('IgxGrid - Column Pinning #grid ', () => {
     configureTestSuite();
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const CELL_CSS_CLASS = '.igx-grid__td';
@@ -205,7 +202,7 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(headers[1].context.column.field).toEqual('ID');
     }));
 
-    it('should allow filter pinned columns', () => {
+    it('should allow filter pinned columns', fakeAsync(() => {
         const fix = TestBed.createComponent(GridFeaturesComponent);
         fix.detectChanges();
 
@@ -224,7 +221,7 @@ describe('IgxGrid - Column Pinning ', () => {
         expect(grid.rowList.length).toEqual(2);
         expect(grid.getCellByColumn(0, 'ID').value).toEqual(1);
         expect(grid.getCellByColumn(1, 'ID').value).toEqual(3);
-    });
+    }));
 
     it('should allow sorting pinned columns', () => {
         const fix = TestBed.createComponent(GridFeaturesComponent);
@@ -654,7 +651,7 @@ export class DefaultGridComponent {
 
     public data = companyData;
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
     public initColumns(column: IgxColumnComponent) {
@@ -711,7 +708,7 @@ export class GridPinningComponent {
         { field: 'Fax', width: 150 }
     ];
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
     public columnPinningHandler($event) {
@@ -797,7 +794,7 @@ export class GridFeaturesComponent {
         }
     ];
 
-    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
+    @ViewChild(IgxGridComponent, { static: true })public grid: IgxGridComponent;
 }
 
 @Component({
@@ -810,7 +807,7 @@ export class GridFeaturesComponent {
     `
 })
 export class OverPinnedGridComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
     public selectedCell;
@@ -858,7 +855,7 @@ export class OverPinnedGridComponent {
     `
 })
 export class PinnedGroupsGridComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
     public selectedCell;
@@ -893,7 +890,7 @@ export class PinnedGroupsGridComponent {
     `
 })
 export class InnerPinnedGroupsGridComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
     public selectedCell;
@@ -935,6 +932,6 @@ export class GridInitialPinningComponent {
         { field: 'ContactName', width: 200 },
     ];
 
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 }

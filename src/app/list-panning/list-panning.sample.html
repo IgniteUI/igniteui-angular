@@ -5,7 +5,7 @@
         <article class="sample-column">
             <h4 class="sample-title">Swipe left or right to perform action</h4>
             <div class="list-sample">
-                <igx-list [allowLeftPanning]="true" [allowRightPanning]="true" height="300" #mainList
+                <igx-list [allowLeftPanning]="true" [allowRightPanning]="true" #mainList
                     (onLeftPan)="onLeftPanHandler($event)" (onRightPan)="onRightPanHandler($event)">
                     <ng-template igxListItemLeftPanning>
                         <div class="listItemLeftPanningStyle">SMS</div>
@@ -15,14 +15,10 @@
                     </ng-template>
                     <igx-list-item [isHeader]="true">Contacts</igx-list-item>
                     <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item-content" *ngFor="let item of navItems">
-                        <div class="item">
-                            <igx-avatar [src]="item.avatar" roundShape="true"></igx-avatar>
-                            <div class="person">
-                                <p class="name">{{item.text}}</p>
-                                <span class="phone">{{item.phone}}</span>
-                            </div>
-                            <igx-icon [class.favorite]="item.favorite" (click)="toggleFavorite(item)">star</igx-icon>
-                        </div>
+                            <igx-avatar igxListThumbnail [src]="item.avatar" roundShape="true"></igx-avatar>
+                                <p igxListLineTitle>{{item.text}}</p>
+                                <span igxListLineSubTitle>{{item.phone}}</span>
+                            <igx-icon igxListAction [class.favorite]="item.favorite" (click)="toggleFavorite(item)">star</igx-icon>
                     </igx-list-item>
                 </igx-list>
                 <igx-toast #toast></igx-toast>
@@ -32,7 +28,7 @@
         <article class="sample-column">
             <h4 class="sample-title">Swipe left or right to perform action</h4>
             <div class="list-sample">
-                <igx-list [allowLeftPanning]="true" [allowRightPanning]="true" height="300" #mainList2
+                <igx-list [allowLeftPanning]="true" [allowRightPanning]="true" #mainList2
                     (onLeftPan)="onLeftPanHandler2($event)" (onRightPan)="onRightPanHandler2($event)">
                     <ng-template igxListItemLeftPanning>
                         <div class="listItemLeftPanningStyle2">Edit</div>
@@ -42,19 +38,15 @@
                     </ng-template>
                     <igx-list-item [isHeader]="true">Contacts</igx-list-item>
                     <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item-content" *ngFor="let item of navItems2">
-                        <div class="item">
-                            <igx-avatar [src]="item.avatar" roundShape="true"></igx-avatar>
-                            <div class="person">
-                                <p class="name">{{item.text}}</p>
-                                <span class="phone">{{item.phone}}</span>
-                            </div>
-                            <igx-icon [class.favorite]="item.favorite" (click)="toggleFavorite(item)">star</igx-icon>
-                        </div>
+                            <igx-avatar igxListThumbnail [src]="item.avatar" roundShape="true"></igx-avatar>
+                                <p igxListLineTitle>{{item.text}}</p>
+                                <span igxListLineSubTitle>{{item.phone}}</span>
+                            <igx-icon igxListAction [class.favorite]="item.favorite" (click)="toggleFavorite(item)">star</igx-icon>
                     </igx-list-item>
                 </igx-list>
-                <button (click)="repopulateHandler()">Repopulate List</button>
                 <igx-toast #toast></igx-toast>
             </div>
+            <button igxButton="raised" (clsick)="repopulateHandler()">Repopulate List</button>
         </article>
 
     </section>

@@ -1,3 +1,6 @@
+@import '../shape/time-picker';
+@import '../elevation/time-picker';
+
 ////
 /// @group schemas
 /// @access private
@@ -7,52 +10,67 @@
 /// Generates a light time-picker schema.
 /// @type {Map}
 ///
-/// @prop {map} text-color [igx-color: ('grays', 500)] - The text color of a open time picker.
-/// @prop {map} hover-text-color [igx-color: ('secondary', 500)] - The hover text color of a open time picker.
-/// @prop {map} selected-text-color [igx-color: ('secondary', 500)] -  The text color of a selected item in time picker.
-/// @prop {map} active-item-background [igx-color: ('grays', 100)] - The background color for current item in focused column inside the time picker.
-/// @prop {map} header-background [igx-color: ('secondary', 500)] - The header background color of a time picker.
-/// @prop {map} header-hour-text-color [igx-contrast-color: ('secondary', 500)] - The header hour text color of a time picker.
-/// @prop {map} header-time-period-color [igx-contrast-color: ('secondary', 500), rgba: .8] - The header AM/PM text color of a time picker.
-/// @prop {Color} background-color [#fff] - The time-picker panel background color.
-/// @prop {number} modal-elevation [24] - The elevation level used for the time picker in modal mode.
-/// @prop {number} dropdown-elevation [24] - The elevation level used for the time picker in dropdown mode.
+/// @prop {Map} text-color [igx-color: 'surface', hexrgba: (), text-contrast: (), rgba: .38] - The text color of a open time picker.
+/// @prop {Map} hover-text-color [igx-color: ('secondary', 500)] - The hover text color of a open time picker.
+/// @prop {Map} selected-text-color [igx-color: ('secondary', 500)] -  The text color of a selected item in time picker.
+/// @prop {Map} active-item-background [igx-color: ('grays', 100)] - The background color for current item in focused column inside the time picker.
+/// @prop {Map} header-background [igx-color: ('secondary', 500)] - The header background color of a time picker.
+/// @prop {Map} header-hour-text-color [igx-contrast-color: ('secondary', 500)] - The header hour text color of a time picker.
+/// @prop {Map} header-time-period-color [igx-contrast-color: ('secondary', 500), rgba: .8] - The header AM/PM text color of a time picker.
+/// @prop {Map} background-color [igx-color: 'surface'] - The time-picker panel background color.
+/// @prop {Number} modal-elevation [24] - The elevation level used for the time picker in modal mode.
+/// @prop {Number} dropdown-elevation [8] - The elevation level used for the time picker in dropdown mode.
+/// @prop {Number} border-radius [.2] - The border radius fraction used for the overall shape of the time-picker.
+/// @prop {Number} active-item-border-radius [.75] - The border-radius used for the highlight of the active item in the time-picker.
 ///
 /// @see $default-palette
+$_light-time-picker: extend(
+    $_default-shape-time-picker,
+    $_default-elevation-time-picker,
+    (
+        text-color: (
+            igx-color: 'surface',
+            hexrgba: (),
+            text-contrast: (),
+            rgba: .38
+        ),
 
-$_light-time-picker: (
-    text-color: (
-        igx-color: ('grays', 500)
-    ),
+        hover-text-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    hover-text-color: (
-        igx-color: ('secondary', 500)
-    ),
+        selected-text-color: (
+            igx-color: ('secondary', 500)
+        ),
 
-    selected-text-color: (
-        igx-color: ('secondary', 500)
-    ),
+        active-item-background: (
+            igx-color: ('grays', 100)
+        ),
 
-    active-item-background: (
-        igx-color: ('grays', 100)
-    ),
+        header-background: (
+            igx-color: ('secondary', 500)
+        ),
 
-    header-background: (
-        igx-color: ('secondary', 500)
-    ),
+        header-hour-text-color: (
+            igx-contrast-color: ('secondary', 500)
+        ),
 
-    header-hour-text-color: (
-        igx-contrast-color: ('secondary', 500)
-    ),
+        header-time-period-color: (
+            igx-contrast-color: ('secondary', 500),
+            rgba: .8
+        ),
 
-    header-time-period-color: (
-        igx-contrast-color: ('secondary', 500),
-        rgba: .8
-    ),
-
-    background-color: #fff,
-
-    modal-elevation: 24,
-
-    dropdown-elevation: 8
+        background-color: (
+            igx-color: 'surface'
+        ),
+    )
 );
+
+/// Generates a fluent time-picker schema.
+/// @type {Map}
+/// @prop {Number} border-radius [2px] - The border radius fraction used for the overall shape of the time-picker.
+/// @prop {Number} active-item-border-radius [2px] - The border-radius used for the highlight of the active item in the time-picker.
+/// @requires {function} extend
+/// @requires $_light-time-picker
+/// @requires $_fluent-shape-time-picker
+$_fluent-time-picker: extend($_light-time-picker, $_fluent-shape-time-picker);

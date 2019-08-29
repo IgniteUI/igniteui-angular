@@ -1,0 +1,14 @@
+<div class="igx-card-header__thumbnail">
+    <ng-content select="igx-avatar, igx-card-media, [igxCardThumbnail]"></ng-content>
+</div>
+
+<div class="igx-card-header__titles">
+    <ng-content select="
+        [igxCardHeaderTitle],
+        [igxCardHeaderSubtitle],
+        .igx-card-header__title,
+        .igx-card-header__subtitle">
+    </ng-content>
+</div>
+
+<ng-content></ng-content>

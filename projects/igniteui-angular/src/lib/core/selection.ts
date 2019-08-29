@@ -232,7 +232,8 @@ export class IgxSelectionAPIService {
      * @returns Array of identifiers, either primary key values or the entire data array.
      */
     public get_all_ids(data, primaryKey?) {
-        return primaryKey ? data.map((x) => x[primaryKey]) : data;
+        // If primaryKey is 0, this should still map to the property
+        return primaryKey !== undefined && primaryKey !== null ? data.map((x) => x[primaryKey]) : data;
     }
 
     /**

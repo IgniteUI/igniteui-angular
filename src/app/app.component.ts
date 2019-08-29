@@ -10,7 +10,7 @@ import { IgxNavigationDrawerComponent, IgxIconService } from 'igniteui-angular';
 })
 export class AppComponent implements OnInit {
 
-    @ViewChild('navdrawer', { read: IgxNavigationDrawerComponent })
+    @ViewChild('navdrawer', { read: IgxNavigationDrawerComponent, static: true })
     navdrawer;
 
     @HostBinding('attr.id')
@@ -52,6 +52,11 @@ export class AppComponent implements OnInit {
             link: '/bottom-navigation',
             icon: 'tab',
             name: 'Bottom Navigation'
+        },
+        {
+            link: '/bottom-navigation-routing',
+            icon: 'tab',
+            name: 'Bottom Navigation Routing'
         },
         {
             link: '/buttonGroup',
@@ -109,6 +114,16 @@ export class AppComponent implements OnInit {
             name: 'DropDown'
         },
         {
+            link: '/virtual-dropdown',
+            icon: 'horizontal_split',
+            name: 'DropDown - Virtual'
+        },
+        {
+            link: '/dropDown-density',
+            icon: 'horizontal_split',
+            name: 'DropDown - Density'
+        },
+        {
             link: '/expansionPanel',
             icon: 'expand_more',
             name: 'ExpansionPanel'
@@ -129,9 +144,39 @@ export class AppComponent implements OnInit {
             name: 'Grid Cell Editing'
         },
         {
+            link: '/gridClipboard',
+            icon: 'insert_comment',
+            name: 'Grid Clipboard Interaction'
+        },
+        {
             link: '/gridColumnGroups',
             icon: 'view_column',
             name: 'Grid Column Groups'
+        },
+        {
+            link: '/gridMRL',
+            icon: 'view_column',
+            name: 'Grid MRL'
+        },
+        {
+            link: '/gridMRLConfig',
+            icon: 'view_column',
+            name: 'Grid MRL Config'
+        },
+        {
+            link: '/gridMRLCustomNav',
+            icon: 'view_column',
+            name: 'Grid MRL Custom Navigation'
+        },
+        {
+            link: '/gridFilterTemplate',
+            icon: 'view_column',
+            name: 'Grid Filter Template'
+        },
+        {
+            link: '/gridEsfLoadOnDemand',
+            icon: 'view_column',
+            name: 'Grid ESF Load On Demand'
         },
         {
             link: '/gridColumnMoving',
@@ -164,6 +209,16 @@ export class AppComponent implements OnInit {
             name: 'Grid Percentage'
         },
         {
+            link: '/gridAutoSize',
+            icon: 'view_column',
+            name: 'Grid Auto Size'
+        },
+        {
+            link: '/gridFlex',
+            icon: 'view_column',
+            name: 'Grid Flex'
+        },
+        {
             link: '/gridPerformance',
             icon: 'view_column',
             name: 'Grid Performance'
@@ -182,6 +237,11 @@ export class AppComponent implements OnInit {
             link: '/gridSelection',
             icon: 'view_column',
             name: 'Grid Selection'
+        },
+        {
+            link: '/gridRowDrag',
+            icon: 'view_column',
+            name: 'Grid Row Drag'
         },
         {
             link: '/gridSummary',
@@ -274,6 +334,11 @@ export class AppComponent implements OnInit {
             name: 'Tabs'
         },
         {
+            link: '/tabs-routing',
+            icon: 'tab',
+            name: 'Tabs Routing'
+        },
+        {
             link: '/timePicker',
             icon: 'date_range',
             name: 'TimePicker'
@@ -304,8 +369,13 @@ export class AppComponent implements OnInit {
             link: '/treeGridFlatData',
             icon: 'view_column',
             name: 'Tree Grid Flat Data'
+        },
+        {
+            link: '/treeGridLoadOnDemand',
+            icon: 'view_column',
+            name: 'Tree Grid Load On Demand'
         }
-    ];
+    ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 
     directiveLinks = [
         {
@@ -343,7 +413,7 @@ export class AppComponent implements OnInit {
             icon: 'view_column',
             name: 'Virtual-For Directive'
         }
-    ];
+    ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 
     styleLinks = [
         {
@@ -361,7 +431,7 @@ export class AppComponent implements OnInit {
             icon: 'font_download',
             name: 'Typography'
         }
-    ];
+    ].sort((componentLink1, componentLink2) => componentLink1.name > componentLink2.name ? 1 : -1);
 
     constructor(private router: Router, private iconService: IgxIconService) {
         iconService.registerFontSetAlias('fa-solid', 'fa');
@@ -377,5 +447,10 @@ export class AppComponent implements OnInit {
                     this.navdrawer.close();
                 }
             });
+
+        // register custom SVG icons
+        this.iconService.addSvgIcon('rain', '../assets/images/card/icons/rain.svg', 'weather-icons');
+        this.iconService.addSvgIcon('breeze', '../assets/images/card/icons/breeze.svg', 'weather-icons');
+
     }
 }

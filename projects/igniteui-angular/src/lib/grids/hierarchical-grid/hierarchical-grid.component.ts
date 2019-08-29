@@ -20,8 +20,10 @@ import {
     AfterContentInit,
     Optional,
     OnInit,
-    Output,
-    EventEmitter
+    OnDestroy,
+    DoCheck,
+    EventEmitter,
+    Output
 } from '@angular/core';
 import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
@@ -29,17 +31,18 @@ import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
-import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
-import { IgxColumnComponent, IGridDataBindable, } from '../grid';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity } from '../../core/displayDensity';
+import { IGridDataBindable, IgxColumnComponent, } from '../grid/index';
 import { DOCUMENT } from '@angular/common';
-import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
-import { takeUntil, filter } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 import { IgxOverlayService } from '../../services/index';
 import { IgxColumnResizingService } from '../grid-column-resizing.service';
+import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
 
 let NEXT_ID = 0;
 
@@ -53,16 +56,19 @@ export interface HierarchicalStateRecord {
     selector: 'igx-hierarchical-grid',
     templateUrl: 'hierarchical-grid.component.html',
     providers: [
+        IgxGridSelectionService,
+        IgxGridCRUDService,
         { provide: GridBaseAPIService, useClass: IgxHierarchicalGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxHierarchicalGridComponent) },
         IgxGridSummaryService,
         IgxFilteringService,
-        IgxHierarchicalGridNavigationService
+        IgxHierarchicalGridNavigationService,
+        IgxForOfSyncService
     ]
 })
 export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseComponent
-    implements IGridDataBindable, AfterViewInit, AfterContentInit, OnInit {
-    private _overlayIDs = [];
+    implements IGridDataBindable, AfterViewInit, AfterContentInit, OnInit, OnDestroy, DoCheck {
+
     /**
      * Sets the value of the `id` attribute. If not provided it will be automatically generated.
      * ```html
@@ -92,6 +98,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             this.reflow();
         }
         this.cdr.markForCheck();
+        if (this.parent && (this.height === null || this.height.indexOf('%') !== -1)) {
+            // If the height will change based on how much data there is, recalculate sizes in igxForOf.
+            this.notifyChanges(true);
+        }
     }
 
     /**
@@ -127,9 +137,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         this._hierarchicalState = val;
         this.hierarchicalStateChange.emit(this._hierarchicalState);
         if (this.parent) {
-            requestAnimationFrame(() => {
-                this.updateParentSizes();
-            });
+            this.notifyChanges(true);
         }
     }
 
@@ -149,9 +157,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     public set filteredData(value) {
         this._filteredData = value;
 
-        if (this.rowSelectable) {
-            this.updateHeaderCheckboxStatusOnFilter(this._filteredData);
-        }
+
     }
 
     /**
@@ -224,13 +230,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: true })
     public allLayoutList: QueryList<IgxRowIslandComponent>;
 
-    @ViewChild('hierarchical_record_template', { read: TemplateRef })
+    @ViewChild('hierarchical_record_template', { read: TemplateRef, static: true })
     protected hierarchicalRecordTemplate: TemplateRef<any>;
 
-    @ViewChild('child_record_template', { read: TemplateRef })
+    @ViewChild('child_record_template', { read: TemplateRef, static: true })
     protected childTemplate: TemplateRef<any>;
 
-    @ViewChild('headerHierarchyExpander', { read: ElementRef })
+    @ViewChild('headerHierarchyExpander', { read: ElementRef, static: true })
     protected headerHierarchyExpander: ElementRef;
 
     /**
@@ -281,9 +287,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     private scrollLeft = 0;
 
     constructor(
+        public selectionService: IgxGridSelectionService,
+        crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-        selection: IgxHierarchicalSelectionAPIService,
         @Inject(IgxGridTransaction) protected transactionFactory: any,
         elementRef: ElementRef,
         zone: NgZone,
@@ -298,8 +305,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(
+            selectionService,
+            crudService,
             gridAPI,
-            selection,
             typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
             elementRef,
             zone,
@@ -320,20 +328,15 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      * @hidden
      */
     ngOnInit() {
-        this.hgridAPI.register(this);
         this._transactions = this.parentIsland ? this.parentIsland.transactions : this._transactions;
         super.ngOnInit();
-        this.overlayService.onOpened.pipe(takeUntil(this.destroy$)).subscribe((event) => {
-            if (this.overlayService.getOverlayById(event.id).settings.outlet === this.outletDirective) {
-                this._overlayIDs.push(event.id);
-            }
-        });
-        this.overlayService.onClosed.pipe(takeUntil(this.destroy$)).subscribe((event) => {
-            const ind = this._overlayIDs.indexOf(event.id);
-            if (ind !== -1) {
-                this._overlayIDs.splice(ind, 1);
-            }
-        });
+    }
+
+    public ngDoCheck() {
+        if (this._cdrRequestRepaint && !this._init) {
+            this.updateSizes();
+        }
+        super.ngDoCheck();
     }
 
     /**
@@ -348,6 +351,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             this.hierarchicalState = this.data.map((rec) => {
                 return { rowID: this.primaryKey ? rec[this.primaryKey] : rec };
             });
+            this.cdr.detectChanges();
         }
 
         this.verticalScrollContainer.onBeforeViewDestroyed.pipe(takeUntil(this.destroy$)).subscribe((view) => {
@@ -364,24 +368,33 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         if (this.parent) {
             this._displayDensity = this.rootGrid._displayDensity;
             this.rootGrid.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
-                requestAnimationFrame(() => {
-                    this._displayDensity = this.rootGrid._displayDensity;
-                    if (document.body.contains(this.nativeElement)) {
-                        this.reflow();
-                    } else {
-                        this.updateOnRender = true;
-                    }
-                });
+                this._displayDensity = this.rootGrid._displayDensity;
+                this.notifyChanges(true);
+                this.cdr.markForCheck();
             });
             this.childLayoutKeys = this.parentIsland.children.map((item) => item.key);
-        } else {
-            this.childLayoutKeys = this.childLayoutList.map((item) => item.key);
-            this.cdr.detectChanges();
         }
 
         this.toolbarCustomContentTemplates = this.parentIsland ?
             this.parentIsland.toolbarCustomContentTemplates :
             this.toolbarCustomContentTemplates;
+    }
+
+    private updateSizes() {
+        if (document.body.contains(this.nativeElement) && this.isPercentWidth) {
+            this.reflow();
+
+            this.hgridAPI.getChildGrids(false).forEach((grid) => {
+                grid.updateSizes();
+            });
+        }
+    }
+
+    protected _shouldAutoSize(renderedHeight) {
+        if (this.isPercentHeight && this.parent) {
+            return true;
+        }
+        return super._shouldAutoSize(renderedHeight);
     }
 
     public get outletDirective() {
@@ -391,19 +404,88 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     /**
      * @hidden
      */
+    public get parentRowOutletDirective() {
+        return this === this.rootGrid ? null : this.rootGrid.rowEditingOutletDirective;
+    }
+
+    /**
+     * @hidden
+     */
     ngAfterContentInit() {
-        const nestedColumns = this.allLayoutList.map((layout) => {
-            layout.rootGrid = this;
+        this.updateColumnList(false);
+        this.childLayoutKeys = this.parent ?
+        this.parentIsland.children.map((item) => item.key) :
+        this.childLayoutKeys = this.childLayoutList.map((item) => item.key);
+        this.childLayoutList.notifyOnChanges();
+        this.childLayoutList.changes.pipe(takeUntil(this.destroy$))
+        .subscribe(() => this.onRowIslandChange());
+        super.ngAfterContentInit();
+    }
+
+    /**
+    * @hidden
+    */
+    public onRowIslandChange() {
+        if (this.parent) {
+            this.childLayoutKeys = this.parentIsland.children.filter(item => !(item as any)._destroyed).map((item) => item.key);
+        } else {
+            this.childLayoutKeys = this.childLayoutList.filter(item => !(item as any)._destroyed).map((item) => item.key);
+        }
+        if (!(this.cdr as any).destroyed) {
+            this.cdr.detectChanges();
+        }
+    }
+
+    protected onColumnsChanged(change: QueryList<IgxColumnComponent>) {
+        this.updateColumnList();
+        const cols = change.filter(c => c.gridAPI.grid === this);
+        if (cols.length > 0) {
+            this.columnList.reset(cols);
+            super.onColumnsChanged(this.columnList);
+        }
+    }
+
+    private updateColumnList(recalcColSizes = true) {
+        const childLayouts = this.parent ? this.childLayoutList : this.allLayoutList;
+        const nestedColumns = childLayouts.map((layout) => {
             return layout.columnList.toArray();
         });
         const colsArray = [].concat.apply([], nestedColumns);
+        const colLength = this.columnList.length;
         if (colsArray.length > 0) {
             const topCols = this.columnList.filter((item) => {
                 return colsArray.indexOf(item) === -1;
             });
             this.columnList.reset(topCols);
+            if (recalcColSizes && this.columnList.length !== colLength) {
+                this.calculateGridSizes();
+            }
         }
-        super.ngAfterContentInit();
+    }
+
+    ngOnDestroy() {
+        if (!this.parent) {
+            this.hgridAPI.getChildGrids(true).forEach((grid) => {
+                if (!grid.childRow.cdr.destroyed) {
+                    grid.childRow.cdr.destroy();
+                }
+            });
+        }
+        if (this.parent && this.selectionService.activeElement) {
+            // in case selection is in destroyed child grid, selection should be cleared.
+            this._clearSeletionHighlights();
+        }
+        super.ngOnDestroy();
+    }
+
+    private _clearSeletionHighlights() {
+        [this.rootGrid, ...this.rootGrid.getChildGrids(true)].forEach(grid => {
+            grid.selectionService.clear();
+            grid.selectionService.activeElement = null;
+            grid.nativeElement.classList.remove('igx-grid__tr--highlighted');
+            grid.highlightedRowID = null;
+            grid.cdr.markForCheck();
+        });
     }
 
     /**
@@ -424,15 +506,29 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     }
 
     /**
-     * Gets calculated width of the pinned area.
-     * ```typescript
-     * const pinnedWidth = this.grid.getPinnedWidth();
-     * ```
-     * @param takeHidden If we should take into account the hidden columns in the pinned area.
-     * @memberof IgxHierarchicalGridComponent
+     * @hidden
+     * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
+     * TODO: Remove for Angular 8. Calling parent class getter using super is not supported for now.
      */
-    public getPinnedWidth(takeHidden = false) {
-        return super.getPinnedWidth(takeHidden) + this.headerHierarchyExpander.nativeElement.clientWidth;
+    public getFeatureColumnsWidth() {
+        let width = super.getFeatureColumnsWidth();
+
+        if (this.hasExpandableChildren) {
+            width += this.headerHierarchyExpander.nativeElement.offsetWidth || this.getDefaultExpanderWidth();
+        }
+
+        return width;
+    }
+
+     private getDefaultExpanderWidth(): number {
+        switch (this.displayDensity) {
+            case DisplayDensity.cosy:
+                return 57;
+            case DisplayDensity.compact:
+                return 49;
+            default:
+                return 72;
+        }
     }
 
     /**
@@ -514,6 +610,19 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
 
     /**
      * @hidden
+    */
+    protected initColumns(collection: QueryList<IgxColumnComponent>, cb: Function = null) {
+        if (this.hasColumnLayouts) {
+            // invalid configuration - hierarchical grid should not allow column layouts
+            // remove column layouts
+            const nonColumnLayoutColumns = this.columnList.filter((col) => !col.columnLayout && !col.columnLayoutChild);
+            this.columnList.reset(nonColumnLayoutColumns);
+        }
+        super.initColumns(collection, cb);
+    }
+
+    /**
+     * @hidden
      * Gets the visible content height that includes header + tbody + footer.
      * For hierarchical child grid it may be scrolled and not fully visible.
      */
@@ -569,17 +678,20 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             const cachedData = this.childGridTemplates.get(key);
             cachedData.owner = args.owner;
 
-            this.childLayoutKeys.forEach((layoutKey) => {
-                const relatedGrid = this.hgridAPI.getChildGridByID(layoutKey, args.context.$implicit.rowID);
+            this.childLayoutList.forEach((layout) => {
+                const relatedGrid = this.hgridAPI.getChildGridByID(layout.key, args.context.$implicit.rowID);
                 if (relatedGrid && relatedGrid.updateOnRender) {
                     // Detect changes if `expandChildren` has changed when the grid wasn't visible. This is for performance reasons.
-                    relatedGrid.reflow();
+                    relatedGrid.notifyChanges(true);
                     relatedGrid.updateOnRender = false;
                 }
             });
 
             const childGrids = this.getChildGrids(true);
             childGrids.forEach((grid) => {
+                if (grid.isPercentWidth) {
+                    grid.notifyChanges(true);
+                }
                 grid.updateScrollPosition();
             });
         }
@@ -599,16 +711,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         }
     }
 
-    /**
-     * @hidden
-     */
-    public getPossibleColumnWidth() {
-        let computedWidth = this.calcWidth || parseInt(
-            this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
-        computedWidth -= this.headerHierarchyExpander.nativeElement.clientWidth;
-        return super.getPossibleColumnWidth(computedWidth);
-    }
-
     protected getChildGrids(inDeph?: boolean) {
         return this.hgridAPI.getChildGrids(inDeph);
     }
@@ -621,9 +723,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         });
     }
 
+
     private hg_verticalScrollHandler(event) {
         this.scrollTop = event.target.scrollTop;
-        this.hideOverlays();
     }
 
     public onContainerScroll() {
@@ -632,30 +734,5 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
 
     private hg_horizontalScrollHandler(event) {
         this.scrollLeft = event.target.scrollLeft;
-        this.hideOverlays();
-    }
-
-    private hideOverlays() {
-        this._overlayIDs.forEach(overlayID => {
-            this.overlayService.hide(overlayID);
-            // blur in case some editor somewhere decides to move focus back
-            this.overlayService.onClosed.pipe(
-                filter(o => o.id === overlayID),
-                takeUntil(this.destroy$)).subscribe(() => {
-                    this.nativeElement.focus();
-                });
-        });
-    }
-
-    private updateParentSizes() {
-        let currGrid = this.parent;
-        while (currGrid) {
-            const virt = currGrid.verticalScrollContainer;
-            virt.recalcUpdateSizes();
-            const offset = parseInt(virt.dc.instance._viewContainer.element.nativeElement.style.top, 10);
-            const scr = virt.getVerticalScroll();
-            scr.scrollTop = virt.getScrollForIndex(virt.state.startIndex) - offset;
-            currGrid = currGrid.parent;
-        }
     }
 }

@@ -1,0 +1,24 @@
+.sample-container {
+    display: flex;
+    align-items: flex-start;
+    margin: 24px;
+}
+
+igx-grid {
+    margin: 20px;
+}
+
+.dropable-area {
+    display: flex;
+}
+
+.dropable-area > div {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    height: 200px;
+    width: 200px;
+    background-color: #354e32;
+    margin: 20px;
+}

@@ -1,0 +1,14 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+$_default-elevation-grid: (
+    grid-elevation: 2,
+    drag-elevation: 5,
+);
+
+$_fluent-elevation-grid: (
+    grid-elevation: 0,
+    drag-elevation: 1,
+);

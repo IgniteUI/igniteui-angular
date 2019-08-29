@@ -1,0 +1,25 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+$_default-elevation-button: (
+    raised-resting-elevation: 2,
+    raised-hover-elevation: 4,
+    raised-focus-elevation: 8,
+
+    fab-resting-elevation: 6,
+    fab-hover-elevation: 12,
+    fab-focus-elevation: 12
+);
+
+$_fluent-elevation-button: (
+    raised-resting-elevation: 0,
+    raised-hover-elevation: 0,
+    raised-focus-elevation: 0,
+
+    fab-resting-elevation: 0,
+    fab-hover-elevation: 0,
+    fab-focus-elevation: 0
+);
+

@@ -12,6 +12,10 @@
     @extend %radio-display !optional;
 
     &:hover {
+        @include e(composite) {
+            @extend %igx-radio-hover__composite !optional;
+        }
+
         @include e(ripple) {
             @extend %radio-ripple--hover !optional;
             @extend %radio-ripple--hover-unchecked !optional;
@@ -19,6 +23,10 @@
     }
 
     &:active {
+        @include e(composite) {
+            @extend %igx-radio-hover__composite !optional;
+        }
+
         @include e(ripple) {
             @extend %radio-ripple--hover !optional;
             @extend %radio-ripple--hover-unchecked !optional;
@@ -60,6 +68,10 @@
         }
 
         &:hover {
+            @include e(composite) {
+                @extend %igx-radio--checked-active__composite !optional;
+            }
+
             @include e(ripple) {
                 @extend %radio-ripple--hover !optional;
                 @extend %radio-ripple--hover-checked !optional;
@@ -67,6 +79,10 @@
         }
 
         &:active {
+            @include e(composite) {
+                @extend %igx-radio--checked-active__composite !optional;
+            }
+
             @include e(ripple) {
                 @extend %radio-ripple--hover !optional;
                 @extend %radio-ripple--hover-checked !optional;
@@ -95,4 +111,8 @@
             @extend %radio-composite--x--disabled !optional;
         }
     }
+}
+
+@include b(igx-radio-group) {
+    display: block;
 }

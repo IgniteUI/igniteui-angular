@@ -1,6 +1,4 @@
 import {
-    QueryList,
-    ContentChildren,
     ElementRef,
     NgZone,
     ChangeDetectorRef,
@@ -9,7 +7,9 @@ import {
     Inject,
     ComponentFactoryResolver,
     Optional,
-    Input
+    Input,
+    ViewChild,
+    TemplateRef
 } from '@angular/core';
 import { IgxGridBaseComponent, IgxGridTransaction, IGridDataBindable } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
@@ -21,9 +21,10 @@ import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component
 import { IgxSummaryOperand } from '../summaries/grid-summary';
 import { IgxHierarchicalTransactionService, IgxOverlayService } from '../../services/index';
 import { DOCUMENT } from '@angular/common';
-import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+import { IgxChildGridRowComponent } from './child-grid-row.component';
 
 export const IgxHierarchicalTransactionServiceFactory = {
     provide: IgxGridTransaction,
@@ -48,14 +49,10 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
     /**
      * @hidden
      */
-    @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent, descendants: false })
-    public childColumns = new QueryList<IgxColumnComponent>();
-
-    /**
-     * @hidden
-     */
     get maxLevelHeaderDepth() {
-        this._maxLevelHeaderDepth = this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
+        if (this._maxLevelHeaderDepth === null) {
+            this._maxLevelHeaderDepth = this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
+        }
         return this._maxLevelHeaderDepth;
     }
 
@@ -76,11 +73,24 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
      */
     public parentIsland: IgxRowIslandComponent;
 
+    /**
+     * @hidden
+    */
+    public childRow: IgxChildGridRowComponent;
+
     protected _expandChildren = false;
 
+    /**
+     * @hidden
+     * @internal
+     */
+    @ViewChild('dragIndicatorIconBase', { read: TemplateRef, static: true })
+    public dragIndicatorIconBase: TemplateRef<any>;
+
     constructor(
+        public selectionService: IgxGridSelectionService,
+        crudService: IgxGridCRUDService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-        selection: IgxHierarchicalSelectionAPIService,
         @Inject(IgxGridTransaction) protected transactionFactory: any,
         elementRef: ElementRef,
         zone: NgZone,
@@ -95,8 +105,9 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(
+            selectionService,
+            crudService,
             gridAPI,
-            selection,
             typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
             elementRef,
             zone,
@@ -112,6 +123,26 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
             _displayDensityOptions);
         this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
     }
+
+    /**
+     * The custom template, if any, that should be used when rendering the row drag indicator icon
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.dragIndicatorIconTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-grid #grid>
+     *      ...
+     *      <ng-template igxDragIndicatorIcon>
+     *          <igx-icon fontSet="material">info</igx-icon>
+     *      </ng-template>
+     *  </igx-grid>
+     * ```
+     */
+    public dragIndicatorIconTemplate: TemplateRef<any> = null;
 
     /**
      * @hidden
@@ -157,7 +188,7 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
             (<IgxColumnGroupComponent>ref.instance).children.reset(newChildren);
             (<IgxColumnGroupComponent>ref.instance).children.notifyOnChanges();
         }
-        (<IgxColumnGroupComponent>ref.instance).gridID = this.id;
+        // (<IgxColumnGroupComponent>ref.instance).grid = this;
         return ref;
     }
 
@@ -172,12 +203,12 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
                 (<any>ref.instance)[propName] = col[propName].constructor;
             }
         });
-        (<IgxColumnComponent>ref.instance).gridID = this.id;
+        // (<IgxColumnComponent>ref.instance).grid = this;
         return ref;
     }
 
-    protected getGridsForIsland(islandKey: string) {
-        return this.hgridAPI.getChildGridsForRowIsland(islandKey);
+    protected getGridsForIsland(rowIslandID: string) {
+        return this.hgridAPI.getChildGridsForRowIsland(rowIslandID);
     }
 
     protected getChildGrid(path: Array<IPathSegment>) {

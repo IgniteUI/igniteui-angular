@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxTreeGridModule } from './index';
 import { TreeGridFunctions, CELL_VALUE_DIV_CSS_CLASS } from '../../test-utils/tree-grid-functions.spec';
@@ -11,11 +11,12 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { wait } from '../../test-utils/ui-interactions.spec';
+import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 const HIGHLIGHT_CLASS = 'igx-highlight';
 const ACTIVE_CLASS = 'igx-highlight__active';
 
-describe('IgxTreeGrid - search API', () => {
+describe('IgxTreeGrid - search API #tGrid', () => {
     configureTestSuite();
     let fix;
     let fixNativeElement;
@@ -33,14 +34,17 @@ describe('IgxTreeGrid - search API', () => {
     }));
 
     describe('Child Collection', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSearchComponent);
             fix.detectChanges();
+            tick(16);
             fixNativeElement = fix.debugElement.nativeElement;
             treeGrid = fix.componentInstance.treeGrid;
 
             treeGrid.getColumnByName('JobTitle').autosize();
-        });
+            fix.detectChanges();
+            tick(16);
+        }));
 
         it('Search highlights should work within tree cell', () => {
             let actualCount = treeGrid.findNext('ev');
@@ -109,12 +113,13 @@ describe('IgxTreeGrid - search API', () => {
     });
 
     describe('Primary/Foreign key', () => {
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
+            tick(16);
             fixNativeElement = fix.debugElement.nativeElement;
             treeGrid = fix.componentInstance.treeGrid;
-        });
+        }));
 
         it('Search highlights should work for tree cells', () => {
             treeGrid.findNext('1');
@@ -148,7 +153,7 @@ describe('IgxTreeGrid - search API', () => {
             verifySearchResult(fixNativeElement, 7, 1, actualCount);
         });
 
-        it('Should update search highlights when filtering', () => {
+        it('Should update search highlights when filtering', fakeAsync(() => {
             treeGrid.findNext('Software Developer');
 
             verifySearchResult(fixNativeElement, 3, 0);
@@ -158,9 +163,9 @@ describe('IgxTreeGrid - search API', () => {
             fix.detectChanges();
 
             verifySearchResult(fixNativeElement, 2, 0);
-        });
+        }));
 
-        it('Should update search highlights when clearing filter', () => {
+        it('Should update search highlights when clearing filter', fakeAsync(() => {
             // Apply filter
             treeGrid.filter('JobTitle', 'Associate', IgxStringFilteringOperand.instance().condition('contains'));
             fix.detectChanges();
@@ -174,7 +179,7 @@ describe('IgxTreeGrid - search API', () => {
             fix.detectChanges();
 
             verifySearchResult(fixNativeElement, 3, 0);
-        });
+        }));
 
         it('Should update search highlights when sorting', () => {
             treeGrid.findNext('er');
@@ -216,6 +221,7 @@ describe('IgxTreeGrid - search API', () => {
 
         it('Should update search highlights when a column is pinned/unpinned', () => {
             treeGrid.findNext('casey');
+            fix.detectChanges();
 
             // Verify a 'Name' cell is unpinned and has active search result in it.
             let treeCell = TreeGridFunctions.getTreeCell(TreeGridFunctions.getAllRows(fix)[0]);
@@ -226,6 +232,7 @@ describe('IgxTreeGrid - search API', () => {
             // Pin column
             const column = treeGrid.columns.filter(c => c.field === 'Name')[0];
             column.pinned = true;
+            fix.detectChanges();
 
             // Verify a 'Name' cell is pinned tree cell and has active search result in it.
             treeCell = TreeGridFunctions.getTreeCell(TreeGridFunctions.getAllRows(fix)[0]);
@@ -235,6 +242,7 @@ describe('IgxTreeGrid - search API', () => {
 
             // Unpin column
             column.pinned = false;
+            fix.detectChanges();
 
             // Verify a 'Name' cell is unpinned and has active search result in it.
             treeCell = TreeGridFunctions.getTreeCell(TreeGridFunctions.getAllRows(fix)[0]);
@@ -252,12 +260,14 @@ describe('IgxTreeGrid - search API', () => {
             // Hide 'Age' column
             const column = treeGrid.columns.filter(c => c.field === 'Age')[0];
             column.hidden = true;
+            fix.detectChanges();
 
             cell = TreeGridFunctions.getCell(fix, 0, 'Name');
             verifySearchResult(cell.nativeElement, 1, 0);
 
             // Show 'Age' column
             column.hidden = false;
+            fix.detectChanges();
 
             cell = TreeGridFunctions.getCell(fix, 0, 'Name');
             verifySearchResult(cell.nativeElement, 1, 0);
@@ -272,11 +282,13 @@ describe('IgxTreeGrid - search API', () => {
             // Hide 'Name' column
             const column = treeGrid.columns.filter(c => c.field === 'Name')[0];
             column.hidden = true;
+            fix.detectChanges();
 
             verifySearchResult(fixNativeElement, 0, -1);
 
             // Show 'Name' column
             column.hidden = false;
+            fix.detectChanges();
 
             cell = TreeGridFunctions.getCell(fix, 0, 'Name');
             verifySearchResult(cell.nativeElement, 1, 0);
@@ -286,21 +298,26 @@ describe('IgxTreeGrid - search API', () => {
 
         it('Search highlights should work for case sensitive and exact match searches', () => {
             let actualCount = treeGrid.findNext('er');
+            fix.detectChanges();
             verifySearchResult(fixNativeElement, 6, 0, actualCount);
 
             actualCount = treeGrid.findNext('er', true, false);
+            fix.detectChanges();
             verifySearchResult(fixNativeElement, 5, 0, actualCount);
 
             actualCount = treeGrid.findNext('Software Developer');
+            fix.detectChanges();
             verifySearchResult(fixNativeElement, 3, 0, actualCount);
 
             actualCount = treeGrid.findNext('Software Developer', false, true);
+            fix.detectChanges();
             verifySearchResult(fixNativeElement, 1, 0, actualCount);
         });
     });
 
     describe('Scrollable TreeGrid', () => {
         beforeEach(async() => {
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxTreeGridSummariesScrollingComponent);
             fix.detectChanges();
             fixNativeElement = fix.debugElement.nativeElement;
@@ -309,7 +326,6 @@ describe('IgxTreeGrid - search API', () => {
             treeGrid.height = '400px';
             treeGrid.columns[3].hasSummary = false;
             fix.detectChanges();
-            await wait(16);
         });
 
         const expectedValues = ['Andrew', 'Janet', 'Anne', 'Danielle', 'Callahan', 'Jonathan',
@@ -319,8 +335,8 @@ describe('IgxTreeGrid - search API', () => {
             for (let i = 0; i < 14; i++) {
                 const expectedValue = expectedValues[i % expectedValues.length];
                 const actualCount = treeGrid.findNext('an');
-                fix.detectChanges();
                 await wait(16);
+                fix.detectChanges();
                 expect(actualCount).toBe(expectedValues.length);
                 verifyActiveCellValue(fixNativeElement, expectedValue);
             }
@@ -330,8 +346,8 @@ describe('IgxTreeGrid - search API', () => {
             for (let i = 13; i >= 0; i--) {
                 const expectedValue = expectedValues[i % expectedValues.length];
                 const actualCount = treeGrid.findPrev('an');
-                fix.detectChanges();
                 await wait(16);
+                fix.detectChanges();
                 expect(actualCount).toBe(expectedValues.length);
                 verifyActiveCellValue(fixNativeElement, expectedValue);
             }
@@ -341,8 +357,8 @@ describe('IgxTreeGrid - search API', () => {
             treeGrid.expansionDepth = Infinity;
             treeGrid.perPage = 5;
             treeGrid.paging = true;
-            fix.detectChanges();
             await wait(16);
+            fix.detectChanges();
 
             const expectedPages = [0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3];
 
@@ -350,8 +366,8 @@ describe('IgxTreeGrid - search API', () => {
                 const index = i % expectedValues.length;
                 const expectedValue = expectedValues[index];
                 const actualCount = treeGrid.findNext('an');
-                fix.detectChanges();
                 await wait(16);
+                fix.detectChanges();
 
                 expect(treeGrid.page).toBe(expectedPages[index]);
                 expect(actualCount).toBe(expectedValues.length);
@@ -362,8 +378,8 @@ describe('IgxTreeGrid - search API', () => {
         it('findNext should navigate search highlights with paging and collapsed rows', async() => {
             treeGrid.perPage = 5;
             treeGrid.paging = true;
-            fix.detectChanges();
             await wait(16);
+            fix.detectChanges();
 
             const expectedPages = [0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3];
             const expectedPageCounts = [1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 5];
@@ -372,8 +388,8 @@ describe('IgxTreeGrid - search API', () => {
                 const index = i % expectedValues.length;
                 const expectedValue = expectedValues[index];
                 const actualCount = treeGrid.findNext('an');
-                fix.detectChanges();
                 await wait(16);
+                fix.detectChanges();
 
                 expect(treeGrid.page).toBe(expectedPages[index]);
                 expect(treeGrid.totalPages).toBe(expectedPageCounts[index]);

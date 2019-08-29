@@ -1,3 +1,5 @@
+@import '../shape/tooltip';
+
 ////
 /// @group schemas
 /// @access private
@@ -12,22 +14,39 @@
 /// @prop {Number} border-radius [.1] - The border radius fraction, between 0-1 to be used for the tooltip component.
 ///
 /// @see $default-palette
+$_light-tooltip: extend(
+    $_default-shape-tooltip,
+    (
+        background: (
+            igx-color: ('grays', 700),
+            hexrgba: (),
+            rgba: .9
+        ),
 
-$_light-tooltip: (
-    border-radius: .25,
+        text-color: (
+            igx-color: ('grays', 700),
+            hexrgba: (),
+            rgba: .9,
+            text-contrast: ()
+        ),
 
-    background: (
-        igx-color: ('grays', 700),
-        hexrgba: (),
-        rgba: .9
-    ),
+        roundness: rem(4px)
+    )
+);
 
-    text-color: (
-        igx-color: ('grays', 700),
-        hexrgba: (),
-        rgba: .9,
-        text-contrast: ()
-    ),
-
-    roundness: rem(4px)
+/// Generates a light fluent tooltip schema.
+/// @type {Map}
+/// @property {map} background [igx-color: 'surface'] - The background color of the tooltip.
+/// @prop {Number} border-radius [2px] - The border radius fraction, between 0-1 to be used for the tooltip component.
+/// @requires {function} extend
+/// @requires $_light-tooltip
+/// @requires $_fluent-shape-tooltip
+$_fluent-tooltip: extend(
+    $_light-tooltip,
+    $_fluent-shape-tooltip,
+    (
+        background: (
+            igx-color: 'surface'
+        )
+    )
 );

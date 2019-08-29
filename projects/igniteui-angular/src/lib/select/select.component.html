@@ -7,7 +7,7 @@
     </ng-container>
         <input #input class="input" type="text" igxInput [igxSelectItemNavigation]="this"
             readonly="true"
-            [placeholder]="this.placeholder"
+            [attr.placeholder]="this.placeholder"
             [value]="this.selectionValue"
             role="combobox"
             aria-haspopup="listbox"
@@ -15,6 +15,7 @@
             [attr.aria-expanded]="!this.collapsed"
             [attr.aria-owns]="this.listId"
             [attr.aria-activedescendant]="!this.collapsed ? this.focusedItem?.id : null"
+            (blur)="onBlur()"
             />
         <ng-container ngProjectAs="igx-suffix">
                 <ng-content select="igx-suffix,[igxSuffix]"></ng-content>

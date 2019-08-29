@@ -1,3 +1,5 @@
+@import '../shape/progress';
+
 ////
 /// @group schemas
 /// @access private
@@ -17,38 +19,46 @@
 /// @property {map} text-color [igx-color: ('grays', 700)] - The track value text color.
 ///
 /// @see $default-palette
+$_light-progress-linear: extend(
+    $_default-shape-progress,
+    (
+        track-color: (
+            igx-color: ('grays', 300)
+        ),
 
-$_light-progress-linear: (
-    track-color: (
-        igx-color: ('grays', 300)
-    ),
+        fill-color-default: (
+            igx-color: ('primary', 500)
+        ),
 
-    fill-color-default: (
-        igx-color: ('primary', 500)
-    ),
+        fill-color-danger: (
+            igx-color: ('error')
+        ),
 
-    fill-color-danger: (
-        igx-color: ('error')
-    ),
+        fill-color-warning: (
+            igx-color: ('warn')
+        ),
 
-    fill-color-warning: (
-        igx-color: ('warn')
-    ),
+        fill-color-info: (
+            igx-color: ('info')
+        ),
 
-    fill-color-info: (
-        igx-color: ('info')
-    ),
+        fill-color-success: (
+            igx-color: ('success')
+        ),
 
-    fill-color-success: (
-        igx-color: ('success')
-    ),
+        stripes-color: rgba(#fff, .7),
 
-    stripes-color: rgba(#fff, .7),
-
-    text-color: (
-        igx-color: ('grays', 700)
+        text-color: (
+            igx-color: ('grays', 700)
+        )
     )
 );
+
+/// Generates a fluent progress-linear schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-progress-linear
+$_fluent-progress-linear: extend($_light-progress-linear);
 
 /// Generates a light progress-circular schema.
 /// @type {Map}
@@ -56,19 +66,25 @@ $_light-progress-linear: (
 /// @property {map} base-circle-color [igx-color: ('grays', 300)] - The base circle fill color.
 /// @property {map} progress-circle-color [igx-color: ('primary', 500)] - The progress circle fill color.
 /// @property {map} text-color [igx-color: ('grays', 700)] - The value text color.
-///
-/// @see $default-palette
+$_light-progress-circular: extend(
+    $_default-shape-progress,
+    (
+        base-circle-color: (
+            igx-color: ('grays', 300)
+        ),
 
-$_light-progress-circular: (
-    base-circle-color: (
-        igx-color: ('grays', 300)
-    ),
+        progress-circle-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    progress-circle-color: (
-        igx-color: ('primary', 500)
-    ),
-
-    text-color: (
-        igx-color: ('grays', 700)
+        text-color: (
+            igx-color: ('grays', 700)
+        )
     )
 );
+
+/// Generates a fluent progress-circular schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-progress-circular
+$_fluent-progress-circular: extend($_light-progress-circular);

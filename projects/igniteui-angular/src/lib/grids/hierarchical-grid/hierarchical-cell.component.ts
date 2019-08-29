@@ -1,33 +1,40 @@
 import { IgxGridCellComponent } from '../cell.component';
 import { GridBaseAPIService } from '../api.service';
-import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { ChangeDetectorRef, ElementRef, ChangeDetectionStrategy, Component,
-     OnInit, AfterViewInit, forwardRef, HostListener } from '@angular/core';
+     OnInit, HostListener, NgZone } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { IgxHierarchicalSelectionAPIService } from './selection';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+import { HammerGesturesManager } from '../../core/touch';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.Default,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-hierarchical-grid-cell',
-    templateUrl: './../cell.component.html'
+    templateUrl: './../cell.component.html',
+    providers: [HammerGesturesManager]
 })
 export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent implements OnInit {
+
     protected hSelection;
     protected _rootGrid;
+
     constructor(
+        protected selectionService: IgxGridSelectionService,
+        protected crudService: IgxGridCRUDService,
         public gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>,
-        public selection: IgxHierarchicalSelectionAPIService,
         public cdr: ChangeDetectorRef,
-        private helement: ElementRef) {
-            super(gridAPI, selection, cdr, helement);
-            this.hSelection = <IgxHierarchicalSelectionAPIService>selection;
+        private helement: ElementRef,
+        protected zone: NgZone,
+        touchManager: HammerGesturesManager
+        ) {
+            super(selectionService, crudService, gridAPI, cdr, helement, zone, touchManager);
          }
 
     ngOnInit() {
         super.ngOnInit();
         this._rootGrid = this._getRootGrid();
     }
+
     private _getRootGrid() {
         let currGrid = this.grid;
         while (currGrid.parent) {
@@ -35,42 +42,55 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
         }
         return currGrid;
     }
-    protected _saveCellSelection(newSelection?: Set<any>) {
-        super._saveCellSelection(newSelection);
-        if (!newSelection) {
-            this.hSelection.add_sub_item(this._rootGrid.id, this.grid.id, this);
 
-            const currentElement = this.grid.nativeElement;
-            let parentGrid = this.grid;
-            let childGrid;
-            // add highligh to the current grid
-            if (this._rootGrid.id !== currentElement.id) {
-                currentElement.classList.add('igx-grid__tr--highlighted');
-            }
+    // TODO: Extend the new selection service to avoid complete traversal
+    _clearAllHighlights() {
+        [this._rootGrid, ...this._rootGrid.getChildGrids(true)].forEach(grid => {
+            grid.selectionService.clear();
+            grid.selectionService.activeElement = null;
+            grid.nativeElement.classList.remove('igx-grid__tr--highlighted');
+            grid.highlightedRowID = null;
+            grid.cdr.markForCheck();
+        });
+    }
 
-            // add highligh to the current grid
-            while (this._rootGrid.id !== parentGrid.id) {
-                childGrid = parentGrid;
-                parentGrid = parentGrid.parent;
-
-                const parentRowID = parentGrid.hgridAPI.getParentRowId(childGrid);
-                parentGrid.highlightedRowID = parentRowID;
-            }
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('focus', ['$event'])
+    onFocus(event) {
+        this._clearAllHighlights();
+        const currentElement = this.grid.nativeElement;
+        let parentGrid = this.grid;
+        let childGrid;
+        // add highligh to the current grid
+        if (this._rootGrid.id !== currentElement.id) {
+            currentElement.classList.add('igx-grid__tr--highlighted');
         }
+
+        // add highligh to the current grid
+        while (this._rootGrid.id !== parentGrid.id) {
+            childGrid = parentGrid;
+            parentGrid = parentGrid.parent;
+
+            const parentRowID = parentGrid.hgridAPI.getParentRowId(childGrid);
+            parentGrid.highlightedRowID = parentRowID;
+        }
+        super.onFocus(event);
     }
 
-    public isCellSelected() {
-        const selection = this.hSelection.get_sub_item(this._rootGrid.id);
-        const isSelected = selection ? selection.gridID === this.grid.id : false;
-        return  super.isCellSelected() && isSelected;
-    }
-
+    // TODO: Refactor
+    /**
+     * @hidden
+     * @internal
+     */
     @HostListener('keydown', ['$event'])
     dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
-        if (event.altKey) {
-            const grid = this.gridAPI.get(this.grid.id);
-            const state = this.gridAPI.get(this.grid.id).hierarchicalState;
+        if (event.altKey && !this.row.added) {
+            const grid = this.gridAPI.grid;
+            const state = this.gridAPI.grid.hierarchicalState;
             const collapse = this.row.expanded && (key === 'left' || key === 'arrowleft' || key === 'up' || key === 'arrowup');
             const expand = !this.row.expanded && (key === 'right' || key === 'arrowright' || key === 'down' || key === 'arrowdown');
             if (collapse) {
@@ -81,30 +101,23 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
                 state.push({ rowID: this.row.rowID });
                 grid.hierarchicalState = [...state];
             }
+            if (expand || collapse) {
+                const rowID = this.cellID.rowID;
+                grid.cdr.detectChanges();
+                this.persistFocusedCell(rowID);
+            }
             return;
         }
         super.dispatchEvent(event);
     }
 
-    protected _clearCellSelection() {
-        super._clearCellSelection();
-        const sel = this.hSelection.get_sub_item(this._rootGrid.id);
-        if (sel) {
-            let selectedGrid = sel.cell.grid;
-            const currentElement = selectedGrid.nativeElement;
-            // remove highligh from the current grid
-            if (this._rootGrid.id !== currentElement.id) {
-                currentElement.classList.remove('igx-grid__tr--highlighted');
+    protected persistFocusedCell(rowID) {
+        requestAnimationFrame(() => {
+            // TODO: Test it out
+            const cell = this.gridAPI.get_cell_by_key(rowID, this.column.field);
+            if (cell) {
+                cell.nativeElement.focus();
             }
-
-            // remove highligh from all the parent rows
-            while (this._rootGrid.id !== selectedGrid.id) {
-                selectedGrid = selectedGrid.parent;
-                selectedGrid.highlightedRowID = null;
-            }
-
-            this.hSelection.clear_sub_item(this._rootGrid.id);
-            sel.cell.cdr.markForCheck();
-        }
+        });
     }
 }

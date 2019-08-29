@@ -1,10 +1,11 @@
-import { InjectionToken, Input, Output, EventEmitter, DoCheck } from '@angular/core';
+import { InjectionToken, Input, Output, EventEmitter, DoCheck, OnInit } from '@angular/core';
+import { IBaseEventArgs } from './utils';
 
 
 /**
  * Defines the posible values of the components' display density.
  */
-export const enum DisplayDensity {
+export enum DisplayDensity {
     comfortable = 'comfortable',
     cosy = 'cosy',
     compact = 'compact'
@@ -17,7 +18,7 @@ export interface IDisplayDensityOptions {
     displayDensity: DisplayDensity;
 }
 
-export interface IDensityChangedEventArgs {
+export interface IDensityChangedEventArgs extends IBaseEventArgs {
     oldDensity: DisplayDensity;
     newDensity: DisplayDensity;
 }
@@ -30,8 +31,13 @@ export const DisplayDensityToken = new InjectionToken<IDisplayDensityOptions>('D
 /**
  * Base class containing all logic required for implementing DisplayDensity.
  */
-export class DisplayDensityBase implements DoCheck {
+export class DisplayDensityBase implements DoCheck, OnInit {
     protected _displayDensity: DisplayDensity;
+
+     /**
+     * @hidden
+     */
+    public initialDensity: DisplayDensity;
 
     /**
      * Returns the theme of the component.
@@ -72,6 +78,13 @@ export class DisplayDensityBase implements DoCheck {
 
     constructor(protected displayDensityOptions: IDisplayDensityOptions) {
         Object.assign(this.oldDisplayDensityOptions, displayDensityOptions);
+    }
+
+    /**
+     * @hidden
+     */
+    public ngOnInit(): void {
+        this.initialDensity = this._displayDensity;
     }
 
     public ngDoCheck() {

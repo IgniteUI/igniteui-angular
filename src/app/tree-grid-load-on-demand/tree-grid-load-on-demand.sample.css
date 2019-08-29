@@ -1,0 +1,15 @@
+.topMargin {
+    margin-top: 20px;
+}
+
+.toggle-group {
+    padding: 16px;
+    width: 25%;
+    border-radius: 8px;
+}
+
+.switch-group {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}

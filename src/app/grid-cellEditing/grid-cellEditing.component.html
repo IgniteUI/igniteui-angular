@@ -4,7 +4,7 @@
     <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
 </div>
 <igx-grid #grid1 [data]="data" [primaryKey]="'ProductID'" [autoGenerate]="false" [displayDensity]="density" width="800px" height="550px" [paging]="true" [rowSelectable]="true"
-(onFocusChange)="changeFocus($event)">
+(onGridKeydown)="customKeydown($event)">
     <igx-column [pinned]="true">
         <ng-template igxCell let-cell="cell" let-val >
             <button (click)="deleteRow($event, cell.cellID.rowID)">Delete</button>
@@ -15,7 +15,7 @@
     </igx-column>
     <igx-column field="ReorderLevel" width="200px" [sortable]="true" [filterable]="true" editable="true" [dataType]="'number'" [hasSummary]="false" [movable]="true" >
     </igx-column>
-    <igx-column field="ProductName" width="200px" header="ProductName" [sortable]="true" [dataType]="'string'" editable="true" [resizable]="true" [movable]="true">
+    <igx-column field="ProductName" width="200px" [groupable]="kk" [header]="pname" [sortable]="true" [dataType]="'string'" editable="true" [resizable]="true" [movable]="true">
     </igx-column>
     <igx-column field="UnitsInStock" header="UnitsInStock" width="200px" [dataType]="'number'" editable="true" [sortable]="true" [hasSummary]="false" [movable]="true">
         <ng-template igxCellEditor let-cell="cell">
@@ -34,6 +34,8 @@
 <button (click)="hideColumn()">Hide/Show OrderDate</button>
 <button (click)="updateSpecificRow()">Update Row by ID</button>
 <button (click)="enDisSummaries()">Enable/DisableSummaries</button>
+<button (click)="kk = !kk">groupable</button>
+<input type="text" [(ngModel)]="pname" >
 
 <h3>Grid without PK</h3>
 <igx-grid #grid [data]="dataWithoutPK" [displayDensity]="'compact'" width="800px" height="550px" [paging]="true" [rowSelectable]="true">

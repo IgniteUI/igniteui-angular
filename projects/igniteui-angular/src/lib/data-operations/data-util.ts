@@ -1,7 +1,8 @@
 import { IFilteringState } from './filtering-state.interface';
 
 import { IgxSorting, IgxDataRecordSorting } from './sorting-strategy';
-import { IGroupByResult, IgxGrouping } from './grouping-strategy';
+import { IgxGrouping } from './grouping-strategy';
+import { IGroupByResult } from './grouping-result.interface';
 
 import { IPagingState, PagingError } from './paging-state.interface';
 
@@ -63,59 +64,11 @@ export class DataUtil {
         return rec;
     }
 
-    public static group<T>(data: T[], state: IGroupingState): IGroupByResult {
+    public static group<T>(data: T[], state: IGroupingState, grid: any = null,
+        groupsRecords: any[] = [], fullResult: IGroupByResult = { data: [], metadata: [] }): IGroupByResult {
         const grouping = new IgxGrouping();
-        return grouping.groupBy(data, state.expressions);
-    }
-    public static restoreGroups(groupData: IGroupByResult, state: IGroupingState, groupsRecords: any[] = []): any[] {
-        if (state.expressions.length === 0) {
-            return groupData.data;
-        }
-        return this.restoreGroupsRecursive(groupData, 1, state.expressions.length, state.expansion, state.defaultExpanded, groupsRecords);
-    }
-    private static restoreGroupsRecursive(
-        groupData: IGroupByResult, level: number, depth: number,
-        expansion: IGroupByExpandState[], defaultExpanded: boolean, groupsRecords): any[] {
-        let i = 0;
-        let j: number;
-        let result = [];
-        // empty the array without changing reference
         groupsRecords.splice(0, groupsRecords.length);
-        if (level !== depth) {
-            groupData.data = this.restoreGroupsRecursive(groupData, level + 1, depth, expansion, defaultExpanded, groupsRecords);
-        }
-        while (i < groupData.data.length) {
-            const g = level === depth ? groupData.metadata[i] :
-                groupData.data[i].groupParent;
-            for (j = i + 1; j < groupData.data.length; j++) {
-                const h = level === depth ? groupData.metadata[j] :
-                    groupData.data[j].groupParent;
-                if (h && g !== h && g.level === h.level) {
-                    break;
-                }
-            }
-            const hierarchy = this.getHierarchy(g);
-            const expandState: IGroupByExpandState = expansion.find((state) =>
-                this.isHierarchyMatch(state.hierarchy || [{ fieldName: g.expression.fieldName, value: g.value }], hierarchy));
-            const expanded = expandState ? expandState.expanded : defaultExpanded;
-            result.push(g);
-            groupsRecords.push(g);
-
-            g['groups'] = groupData.data.slice(i, j).filter((e) =>
-                e.records && e.records.length && e.level === g.level + 1);
-            while (groupsRecords.length) {
-                if (groupsRecords[0].level + 1 > level) {
-                    groupsRecords.shift();
-                } else {
-                    break;
-                }
-            }
-            if (expanded) {
-                result = result.concat(groupData.data.slice(i, j));
-            }
-            i = j;
-        }
-        return result;
+        return grouping.groupBy(data, state, grid, groupsRecords, fullResult);
     }
     public static page<T>(data: T[], state: IPagingState): T[] {
         if (!state) {
@@ -154,12 +107,18 @@ export class DataUtil {
         }
         return state.strategy.filter(data, state.expressionsTree);
     }
-
     public static treeGridFilter(data: ITreeGridRecord[], state: IFilteringState): ITreeGridRecord[] {
         if (!state.strategy) {
             state.strategy = new TreeGridFilteringStrategy();
         }
         return state.strategy.filter(data, state.expressionsTree);
+    }
+
+    public static correctPagingState(state: IPagingState, length: number) {
+        const maxPage = Math.ceil(length / state.recordsPerPage) - 1;
+        if (!isNaN(maxPage) && state.index > maxPage) {
+            state.index = maxPage;
+        }
     }
 
     public static getHierarchy(gRow: IGroupByRecord): Array<IGroupByKey> {
@@ -233,7 +192,6 @@ export class DataUtil {
         childDataKey: any,
         primaryKey?: any,
         deleteRows: boolean = false): any[] {
-
         for (const transaction of transactions) {
             if (transaction.path) {
                 const parent = this.findParentFromPath(data, primaryKey, childDataKey, transaction.path);

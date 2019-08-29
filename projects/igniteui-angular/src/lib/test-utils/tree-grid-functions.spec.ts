@@ -13,6 +13,7 @@ export const TREE_CELL_SELECTION_CSS_CLASS = 'igx-grid__td--selected';
 export const TREE_HEADER_ROW_CSS_CLASS = '.igx-grid__thead';
 export const CHECKBOX_INPUT_CSS_CLASS = '.igx-checkbox__input';
 export const TREE_CELL_INDICATOR_CSS_CLASS = '.igx-grid__tree-grouping-indicator';
+export const TREE_CELL_LOADING_CSS_CLASS = '.igx-grid__tree-loading-indicator';
 export const NUMBER_CELL_CSS_CLASS = 'igx-grid__td--number';
 export const CELL_VALUE_DIV_CSS_CLASS = '.igx-grid__td-text';
 export const ROW_EDITING_BANNER_OVERLAY_CLASS = 'igx-overlay__content';
@@ -70,6 +71,11 @@ export class TreeGridFunctions {
         return treeGridCell.query(By.css(TREE_CELL_INDICATOR_CSS_CLASS));
     }
 
+    public static getLoadingIndicatorDiv(rowDOM) {
+        const treeGridCell = TreeGridFunctions.getTreeCell(rowDOM);
+        return treeGridCell.query(By.css(TREE_CELL_LOADING_CSS_CLASS));
+    }
+
     public static getHeaderCell(fix, columnKey) {
         const headerCells = fix.debugElement.queryAll(By.css('igx-grid-header'));
         const headerCell = headerCells.filter((cell) => cell.nativeElement.textContent.indexOf(columnKey) !== -1)[0];
@@ -83,8 +89,12 @@ export class TreeGridFunctions {
     }
 
     public static getRowCheckbox(rowDOM) {
-        const checkboxDiv = rowDOM.query(By.css(TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS));
+        const checkboxDiv = TreeGridFunctions.getRowCheckboxDiv(rowDOM);
         return checkboxDiv.query(By.css(CHECKBOX_INPUT_CSS_CLASS));
+    }
+
+    public static getRowCheckboxDiv(rowDOM) {
+        return rowDOM.query(By.css(TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS));
     }
 
     public static clickHeaderCell(fix, columnKey) {
@@ -94,13 +104,13 @@ export class TreeGridFunctions {
 
     public static clickRowSelectionCheckbox(fix, rowIndex) {
         const rowDOM = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix))[rowIndex];
-        const checkbox = TreeGridFunctions.getRowCheckbox(rowDOM);
+        const checkbox = TreeGridFunctions.getRowCheckboxDiv(rowDOM);
         checkbox.nativeElement.dispatchEvent(new Event('click'));
     }
 
     public static clickHeaderRowSelectionCheckbox(fix) {
         const headerRow = TreeGridFunctions.getHeaderRow(fix);
-        const checkbox = TreeGridFunctions.getRowCheckbox(headerRow);
+        const checkbox = TreeGridFunctions.getRowCheckboxDiv(headerRow);
         checkbox.nativeElement.dispatchEvent(new Event('click'));
     }
 
@@ -239,6 +249,11 @@ export class TreeGridFunctions {
         expect(igxIcon.nativeElement.textContent).toEqual('expand_less');
     }
 
+    public static verifyTreeRowExpandIndicatorVisibility(treeRowDOM, visibility = 'visible') {
+        const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(treeRowDOM);
+        expect(indicatorDiv.nativeElement.style.visibility).toBe(visibility);
+    }
+
     public static verifyTreeRowIconPosition(treeRowDOM, indentationLevel) {
         const treeCell = TreeGridFunctions.getTreeCell(treeRowDOM);
         const treeCellPaddingLeft = parseInt(window.getComputedStyle(<HTMLElement>treeCell.nativeElement).paddingLeft, 10);
@@ -282,7 +297,7 @@ export class TreeGridFunctions {
         expect(checkboxComponent.nativeCheckbox.nativeElement.checked).toBe(expectedSelection, 'Incorrect native checkbox selection state');
 
         // Verify selection of row
-        expect(rowComponent.isSelected).toBe(expectedSelection, 'Incorrect row selection state');
+        expect(rowComponent.selected).toBe(expectedSelection, 'Incorrect row selection state');
         expect((<HTMLElement>rowDOM.nativeElement).classList.contains(TREE_ROW_SELECTION_CSS_CLASS)).toBe(expectedSelection);
 
         // Verify selection of row through treeGrid
@@ -354,6 +369,20 @@ export class TreeGridFunctions {
         }
     }
 
+    public static verifyTreeRowIndicator(row, isLoading: boolean, isExpandVisible = true) {
+        const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(row);
+        const loadingDiv = TreeGridFunctions.getLoadingIndicatorDiv(row);
+
+        if (isLoading) {
+            expect(loadingDiv).toBeDefined();
+            expect(indicatorDiv).toBeNull();
+        } else {
+            expect(loadingDiv).toBeNull();
+            expect(indicatorDiv).toBeDefined();
+            expect(indicatorDiv.nativeElement.style.visibility).toBe(isExpandVisible ? 'visible' : 'hidden');
+        }
+    }
+
     public static moveCellUpDown =
         (fix, treeGrid: IgxTreeGridComponent,
             rowIndex: number,
@@ -363,7 +392,7 @@ export class TreeGridFunctions {
                 const newRowIndex = moveDown ? rowIndex + 1 : rowIndex - 1;
                 const keyboardEventKey = moveDown ? 'ArrowDown' : 'ArrowUp';
 
-                UIInteractions.triggerKeyDownEvtUponElem(keyboardEventKey, cell.nativeElement, true);
+                UIInteractions.triggerKeyDownWithBlur(keyboardEventKey, cell.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
@@ -387,7 +416,7 @@ export class TreeGridFunctions {
                 let cell = treeGrid.getCellByColumn(rowIndex, firstColumnName);
                 const keyboardEventKey = moveRight ? 'ArrowRight' : 'ArrowLeft';
 
-                UIInteractions.triggerKeyDownEvtUponElem(keyboardEventKey, cell.nativeElement, true);
+                UIInteractions.triggerKeyDownWithBlur(keyboardEventKey, cell.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
                 cell = treeGrid.getCellByColumn(rowIndex, firstColumnName);
@@ -409,7 +438,7 @@ export class TreeGridFunctions {
                 let cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
                 let newCell;
 
-                UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
+                UIInteractions.triggerKeyDownWithBlur('Tab', cell.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
@@ -464,20 +493,20 @@ export class TreeGridFunctions {
                 let cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
                 let newCell;
 
-                UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
+                UIInteractions.triggerKeyDownWithBlur('Tab', cell.nativeElement, true);
                 await wait(50);
                 fix.detectChanges();
 
                 cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
                 if (cell !== undefined && cell !== null) {
-                    expect(cell.inEditMode).toBe(false);
+                    expect(cell.editMode).toBe(false);
                 }
                 if (columnIndex === columns.length - 1) {
                     newCell = treeGrid.getCellByColumn(rowIndex + 1, columns[0]);
                 } else {
                     newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex + 1]);
                 }
-                expect(newCell.inEditMode).toBe(true);
+                expect(newCell.editMode).toBe(true);
                 resolve();
             })
 
@@ -489,26 +518,26 @@ export class TreeGridFunctions {
                 let cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
                 let newCell;
 
-                cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+                UIInteractions.triggerKeyDownWithBlur('tab', cell.nativeElement, true, false, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
                 cell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex]);
                 if (cell !== undefined && cell !== null) {
-                    expect(cell.inEditMode).toBe(false);
+                    expect(cell.editMode).toBe(false);
                 }
                 if (columnIndex === 0) {
                     newCell = treeGrid.getCellByColumn(rowIndex - 1, columns[columns.length - 1]);
                 } else {
                     newCell = treeGrid.getCellByColumn(rowIndex, columns[columnIndex - 1]);
                 }
-                expect(newCell.inEditMode).toBe(true);
+                expect(newCell.editMode).toBe(true);
                 resolve();
             })
 
     public static moveGridCellWithTab =
         (fix, cell: IgxGridCellComponent) => new Promise(async (resolve, reject) => {
-                UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
+                UIInteractions.triggerKeyDownWithBlur('Tab', cell.nativeElement, true);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
                 resolve();

@@ -12,7 +12,9 @@ import {
     Output,
     QueryList,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    Optional,
+    Inject, Directive
 } from '@angular/core';
 
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
@@ -24,22 +26,25 @@ import {
     IgxEmptyListTemplateDirective,
     IgxListPanState,
     IgxListItemLeftPanningTemplateDirective,
-    IgxListItemRightPanningTemplateDirective} from './list.common';
+    IgxListItemRightPanningTemplateDirective
+} from './list.common';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity } from '../core/density';
+import { IBaseEventArgs } from '../core/utils';
 
 let NEXT_ID = 0;
-export interface IPanStateChangeEventArgs {
+export interface IPanStateChangeEventArgs extends IBaseEventArgs {
     oldState: IgxListPanState;
     newState: IgxListPanState;
     item: IgxListItemComponent;
 }
 
-export interface IListItemClickEventArgs {
+export interface IListItemClickEventArgs extends IBaseEventArgs {
     item: IgxListItemComponent;
     event: Event;
     direction: IgxListPanState;
 }
 
-export interface IListItemPanningEventArgs {
+export interface IListItemPanningEventArgs extends IBaseEventArgs {
     item: IgxListItemComponent;
     direction: IgxListPanState;
     keepItem: boolean;
@@ -63,14 +68,78 @@ export interface IListItemPanningEventArgs {
  * </igx-list>
  * ```
  */
+
+/**
+ * igxListThumbnail is container for the List media
+ * Use it to wrap anything you want to be used as a thumbnail.
+ */
+@Directive({
+    // tslint:disable-next-line:directive-selector
+    selector: '[igxListThumbnail]'
+})
+
+export class IgxListThumbnailDirective {}
+
+/**
+ * igxListAction is container for the List action
+ * Use it to wrap anything you want to be used as a list action: icon, checkbox...
+ */
+@Directive({
+    // tslint:disable-next-line:directive-selector
+    selector: '[igxListAction]'
+})
+
+export class IgxListActionDirective {}
+
+/**
+ * igxListLine is container for the List text content
+ * Use it to wrap anything you want to be used as a plane text.
+ */
+@Directive({
+    // tslint:disable-next-line:directive-selector
+    selector: '[igxListLine]'
+})
+
+export class IgxListLineDirective {}
+
+/**
+ * igxListLineTitle is a directive that add class to the target element
+ * Use it to make anything to look like list Title.
+ */
+@Directive({
+    // tslint:disable-next-line:directive-selector
+    selector: '[igxListLineTitle]'
+})
+
+export class IgxListLineTitleDirective {
+    @HostBinding('class.igx-list__item-line-title')
+    public cssClass = 'igx-list__item-line-title';
+}
+
+/**
+ * igxListLineSubTitle is a directive that add class to the target element
+ * Use it to make anything to look like list Subtitle.
+ */
+@Directive({
+    // tslint:disable-next-line:directive-selector
+    selector: '[igxListLineSubTitle]'
+})
+
+export class IgxListLineSubTitleDirective {
+    @HostBinding('class.igx-list__item-line-subtitle')
+    public cssClass = 'igx-list__item-line-subtitle';
+}
+
 @Component({
     selector: 'igx-list',
     templateUrl: 'list.component.html',
     providers: [{ provide: IgxListBase, useExisting: IgxListComponent }]
 })
-export class IgxListComponent implements IgxListBase {
+export class IgxListComponent extends IgxListBase {
 
-    constructor(public element: ElementRef) {
+    constructor(public element: ElementRef,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        super(_displayDensityOptions);
     }
 
     /**
@@ -84,13 +153,27 @@ export class IgxListComponent implements IgxListBase {
     public children: QueryList<IgxListItemComponent>;
 
     /**
+     * @hidden
+     * @internal
+     */
+    protected get sortedChildren(): IgxListItemComponent[] {
+        if (this.children !== undefined) {
+            return this.children.toArray()
+                .sort((a: IgxListItemComponent, b: IgxListItemComponent) => {
+                    return a.index - b.index;
+                });
+        }
+        return null;
+    }
+
+    /**
      * Returns the template which will be used by the IgxList in case there are no list items defined and `isLoading` is set to `false`.
      * ```typescript
      * let emptyTemplate = this.list.emptyListTemplate;
      * ```
      * @memberof IgxListComponent
      */
-    @ContentChild(IgxEmptyListTemplateDirective, { read: IgxEmptyListTemplateDirective })
+    @ContentChild(IgxEmptyListTemplateDirective, { read: IgxEmptyListTemplateDirective, static: false })
     public emptyListTemplate: IgxEmptyListTemplateDirective;
 
     /**
@@ -100,7 +183,7 @@ export class IgxListComponent implements IgxListBase {
      * ```
      * @memberof IgxListComponent
      */
-    @ContentChild(IgxDataLoadingTemplateDirective, { read: IgxDataLoadingTemplateDirective })
+    @ContentChild(IgxDataLoadingTemplateDirective, { read: IgxDataLoadingTemplateDirective, static: false })
     public dataLoadingTemplate: IgxDataLoadingTemplateDirective;
 
     /**
@@ -114,7 +197,7 @@ export class IgxListComponent implements IgxListBase {
      * ```
      * @memberof IgxListComponent
      */
-    @ContentChild(IgxListItemLeftPanningTemplateDirective, { read: IgxListItemLeftPanningTemplateDirective })
+    @ContentChild(IgxListItemLeftPanningTemplateDirective, { read: IgxListItemLeftPanningTemplateDirective, static: false })
     public listItemLeftPanningTemplate: IgxListItemLeftPanningTemplateDirective;
 
     /**
@@ -128,7 +211,7 @@ export class IgxListComponent implements IgxListBase {
      * ```
      * @memberof IgxListComponent
      */
-    @ContentChild(IgxListItemRightPanningTemplateDirective, { read: IgxListItemRightPanningTemplateDirective })
+    @ContentChild(IgxListItemRightPanningTemplateDirective, { read: IgxListItemRightPanningTemplateDirective, static: false })
     public listItemRightPanningTemplate: IgxListItemRightPanningTemplateDirective;
 
     /**
@@ -142,11 +225,11 @@ export class IgxListComponent implements IgxListBase {
     public panEndTriggeringThreshold = 0.5;
 
     /**@hidden*/
-    @ViewChild('defaultEmptyList', { read: TemplateRef })
+    @ViewChild('defaultEmptyList', { read: TemplateRef, static: true })
     protected defaultEmptyListTemplate: TemplateRef<any>;
 
     /**@hidden*/
-    @ViewChild('defaultDataLoading', { read: TemplateRef })
+    @ViewChild('defaultDataLoading', { read: TemplateRef, static: true })
     protected defaultDataLoadingTemplate: TemplateRef<any>;
 
     /**
@@ -276,15 +359,27 @@ export class IgxListComponent implements IgxListBase {
     }
 
     /**
-     * Returns boolean indicating if the list has a `cssClass` attribute.
-     * ```typescript
-     * let hasCssClass =  this.list.cssClass;
-     * ```
-     * @memberof IgxListComponent
+     * @hidden
      */
     @HostBinding('class.igx-list')
     public get cssClass(): boolean {
-        return this.children && this.children.length > 0;
+        return !this.isListEmpty && this.displayDensity === DisplayDensity.comfortable;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-list--compact')
+    public get cssClassCompact(): boolean {
+        return !this.isListEmpty && this.displayDensity === DisplayDensity.compact;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-list--cosy')
+    public get cssClassCosy(): boolean {
+        return !this.isListEmpty && this.displayDensity === DisplayDensity.cosy;
     }
 
     /**
@@ -297,7 +392,7 @@ export class IgxListComponent implements IgxListBase {
     public get items(): IgxListItemComponent[] {
         const items: IgxListItemComponent[] = [];
         if (this.children !== undefined) {
-            for (const child of this.children.toArray()) {
+            for (const child of this.sortedChildren) {
                 if (!child.isHeader) {
                     items.push(child);
                 }
@@ -358,13 +453,36 @@ export class IgxListComponent implements IgxListBase {
  * @hidden
  */
 @NgModule({
-    declarations: [IgxListComponent, IgxListItemComponent,
-        IgxDataLoadingTemplateDirective, IgxEmptyListTemplateDirective,
-        IgxListItemLeftPanningTemplateDirective, IgxListItemRightPanningTemplateDirective],
-    exports: [IgxListComponent, IgxListItemComponent,
-        IgxDataLoadingTemplateDirective, IgxEmptyListTemplateDirective,
-        IgxListItemLeftPanningTemplateDirective, IgxListItemRightPanningTemplateDirective],
-    imports: [CommonModule, IgxRippleModule]
+    declarations: [
+        IgxListComponent,
+        IgxListItemComponent,
+        IgxListThumbnailDirective,
+        IgxListActionDirective,
+        IgxListLineDirective,
+        IgxListLineTitleDirective,
+        IgxListLineSubTitleDirective,
+        IgxDataLoadingTemplateDirective,
+        IgxEmptyListTemplateDirective,
+        IgxListItemLeftPanningTemplateDirective,
+        IgxListItemRightPanningTemplateDirective
+    ],
+    exports: [
+        IgxListComponent,
+        IgxListItemComponent,
+        IgxListThumbnailDirective,
+        IgxListActionDirective,
+        IgxListLineDirective,
+        IgxListLineTitleDirective,
+        IgxListLineSubTitleDirective,
+        IgxDataLoadingTemplateDirective,
+        IgxEmptyListTemplateDirective,
+        IgxListItemLeftPanningTemplateDirective,
+        IgxListItemRightPanningTemplateDirective
+    ],
+    imports: [
+        CommonModule,
+        IgxRippleModule
+    ]
 })
 export class IgxListModule {
 }

@@ -7,6 +7,36 @@ _Components_
 _Igx-List represents a list of identical items._  
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/list.html)
 
+- `IgxList` - since v7.3.4 The list component has been refactored. It now includes several new supporting directives:
+    - `igxListThumbnail` - Use it to mark the target as list thumbnail which will be automatically positioned as a first item in the list item;
+    - `igxListAction` - Use it to mark the target as list action which will be automatically positioned as a last item in the list item;
+    - `igxListLine` - Use it to mark the target as list content which will be automatically positioned between the thumbnail and action;
+    - `igxListLineTitle` - Use it to mark the target as list title which will be automatically formatted as a list-item title;
+    - `igxListLineSubTitle` - Use it to mark the target as list subtitle which will be automatically formatted as a list-item subtitle;
+
+Example using the new directives:
+
+    ```html
+        <igx-list>
+            <igx-list-item [isHeader]="true">List items</igx-list-item>
+            <igx-list-item>
+              <igx-avatar igxListThumbnail></igx-avatar>
+              <h1 igxListLineTitle>List item title</h1>
+              <h3 igxListLineSubTitle>List item subtitle</h3>
+              <igx-icon igxListAction>info</igx-icon>
+            </igx-list-item>
+        </igx-list>
+        
+        <igx-list>
+          <igx-list-item [isHeader]="true">List items</igx-list-item>
+          <igx-list-item>
+            <igx-avatar igxListThumbnail></igx-avatar>
+            <span igxListLine>Some content</span>
+            <igx-icon igxListAction>info</igx-icon>
+          </igx-list-item>
+        </igx-list>
+    ```
+    
 ## Usage
 ```html
 <igx-list>
@@ -79,6 +109,32 @@ public rightPanPerformed(args) {
 }
 ```
 
+### Display Density
+
+The list provides the ability to choose a display density from a predefined set of options: **compact**, **cosy** and **comfortable** (default one). We can set it by using the `displayDensity` input of the list.
+
+```html
+<igx-list #list [displayDensity]="'compact'">
+    <igx-list-item [isHeader]="true">
+        Work Contacts
+    </igx-list-item>
+    <igx-list-item>Terrance Orta</igx-list-item>
+    <igx-list-item>Richard Mahoney</igx-list-item>
+	  <igx-list-item>Donna Price</igx-list-item>
+    <igx-list-item [isHeader]="true">
+        Family Contacts
+    </igx-list-item>
+    <igx-list-item>John Smith</igx-list-item>
+    <igx-list-item>Mary Smith</igx-list-item>
+</igx-list>
+```
+
+Or
+
+```typescript
+this.list.displayDensity = "compact";
+```
+
 ## API
 
 ### Inputs
@@ -91,7 +147,7 @@ public rightPanPerformed(args) {
 | emptyListTemplate | Sets a reference to a custom empty list template, otherwise default template is used |
 | dataLoadingTemplate | Sets a reference to a custom data loading template, otherwise default template is used |
 | panEndTriggeringThreshold | Number | Specifies the threshold after which a panning event is emitted. By default this property has a value of 0.5 which means 50% of list item's width. |
-
+| displayDensity  | Determines the display density of the list.  |
 
 ### Properties
 
@@ -152,15 +208,25 @@ All list items implement `IListChild`.
 
 | Name | Description |
 | :--- | :--- |
+| index  | The index of item in children collection  |
 | hidden  | Determines whether the item should be displayed  |
 | isHeader  | Determines whether the item should be displayed as a header, default value is _false_  |
+
+### Directives
+
+| name | description
+| :--- | :---|
+| igxListThumbnail | Use it to mark the target as list thumbnail which will be automatically positioned as a first item in the list item;
+| igxListAction | Use it to mark the target as list action which will be automatically positioned as a last item in the list item;
+| igxListLine | Use it to mark the target as list content which will be automatically positioned between the thumbnail and action;
+| igxListLineTitle | Use it to mark the target as list title which will be automatically formatted as a list-item title;
+| igxListLineSubTitle | Use it to mark the target as list subtitle which will be automatically formatted as a list-item subtitle;
 
 
 ### Properties
 
 | Name | Description |
 | :--- | :--- |
-| index  | The index of item in children collection  |
 | panState  | Gets the item's pan state  |
 | list  | Gets the list that is associated with the item  |
 | role  | Gets the role of the item within its respective list - _separator_ if isHeader is true and _listitem_ otherwise   |

@@ -22,6 +22,9 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     protected _selected = false;
     protected _index = null;
     protected _disabled = false;
+    protected get hasIndex(): boolean {
+        return this._index !== null && this._index !== undefined;
+    }
 
     /**
      * Sets/gets the `id` of the item.
@@ -97,6 +100,22 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     }
 
     /**
+     * @hidden @internal
+     */
+    @HostBinding('class.igx-drop-down__item--cosy')
+    public get itemStyleCosy() {
+        return this.dropDown.displayDensity === 'cosy' && !this.isHeader;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('class.igx-drop-down__item--compact')
+    public get itemStyleCompact() {
+        return this.dropDown.displayDensity === 'compact' && !this.isHeader;
+    }
+
+    /**
      * Sets/Gets if the item is the currently selected one in the dropdown
      *
      * ```typescript
@@ -143,7 +162,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      * Sets/gets if the given item is focused
      * ```typescript
      *  let mySelectedItem = this.dropdown.selectedItem;
-     *  let isMyItemFocused = mySelectedItem.isFocused;
+     *  let isMyItemFocused = mySelectedItem.focused;
      * ```
      */
     @HostBinding('class.igx-drop-down__item--focused')
@@ -153,7 +172,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
 
     /**
      * ```html
-     *  <igx-drop-down-item *ngFor="let item of items" isFocused={{!item.isFocused}}>
+     *  <igx-drop-down-item *ngFor="let item of items" focused={{!item.focused}}>
      *      <div>
      *          {{item.field}}
      *      </div>
@@ -199,6 +218,22 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     @Input()
     @HostBinding('class.igx-drop-down__header')
     public isHeader: boolean;
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('class.igx-drop-down__header--cosy')
+    public get headerClassCosy() {
+        return this.isHeader && this.dropDown.displayDensity === 'cosy';
+    }
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('class.igx-drop-down__header--compact')
+    public get headerClassCompact() {
+        return this.isHeader && this.dropDown.displayDensity === 'compact';
+    }
 
     /**
      * Sets/gets if the given item is disabled
@@ -279,9 +314,13 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     }
 
     ngDoCheck(): void {
-        if (this.selected) {
-            const dropDownSelectedItem = this.selection.first_item(this.dropDown.id);
-            if (!dropDownSelectedItem || this !== dropDownSelectedItem) {
+        if (this._selected) {
+            const dropDownSelectedItem = this.dropDown.selectedItem;
+            if (!dropDownSelectedItem) {
+                this.dropDown.selectItem(this);
+            } else if (this.hasIndex
+                ? this._index !== dropDownSelectedItem.index || this.value !== dropDownSelectedItem.value :
+                this !== dropDownSelectedItem) {
                 this.dropDown.selectItem(this);
             }
         }

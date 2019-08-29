@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { IgxColumnComponent, IgxColumnGroupComponent } from '../../column.component';
 import { IgxGridBaseComponent } from '../../grid-base.component';
+import { DisplayDensity } from '../../../core/density';
 
 /**
  * @hidden
@@ -19,6 +20,12 @@ export class IgxExcelStyleColumnMovingComponent {
     @Input()
     public grid: IgxGridBaseComponent;
 
+    @Input()
+    public displayDensity: DisplayDensity;
+
+    @Input()
+    public isColumnPinnable: boolean;
+
     constructor() {}
 
     private get visibleColumns() {
@@ -26,16 +33,15 @@ export class IgxExcelStyleColumnMovingComponent {
     }
 
     get canNotMoveLeft() {
-        const prevIndex = this.grid.columns.indexOf(this.column) - 1;
         return this.column.visibleIndex === 0 ||
             (this.grid.unpinnedColumns.indexOf(this.column) === 0 && this.column.disablePinning) ||
-            (this.column.level !== 0 && this.grid.columns[prevIndex] && this.grid.columns[prevIndex].level !== this.column.level);
+            (this.grid.unpinnedColumns.indexOf(this.column) === 0 && !this.isColumnPinnable) ||
+            (this.column.level !== 0 && !this.findColumn(0, this.visibleColumns));
     }
 
     get canNotMoveRight() {
-        const nextIndex = this.grid.columns.indexOf(this.column) + 1;
         return this.column.visibleIndex === this.visibleColumns.length - 1 ||
-            (this.column.level !== 0 && this.grid.columns[nextIndex] && this.grid.columns[nextIndex].level !== this.column.level);
+            (this.column.level !== 0 && !this.findColumn(1, this.visibleColumns));
     }
 
     public onMoveButtonClicked(moveDirection) {
@@ -49,6 +55,9 @@ export class IgxExcelStyleColumnMovingComponent {
             }
         } else if (this.grid.unpinnedColumns.indexOf(this.column) === 0 && moveDirection === 0) {
             targetColumn = this.grid.pinnedColumns[this.grid.pinnedColumns.length - 1];
+            if (targetColumn.parent) {
+                targetColumn = targetColumn.topLevelParent;
+            }
             moveDirection = 1;
         } else {
             targetColumn = this.findColumn(moveDirection, this.grid.unpinnedColumns);
@@ -66,7 +75,12 @@ export class IgxExcelStyleColumnMovingComponent {
                 }
             }
         } else {
-            return columns[index + 1];
+            while (index < columns.length - 1) {
+                index++;
+                if (columns[index].level === this.column.level && columns[index].parent === this.column.parent) {
+                    return columns[index];
+                }
+            }
         }
     }
 }

@@ -56,6 +56,7 @@
         background: --var($theme, 'background-color');
         width: 100%;
         flex: 1 1 auto;
+        min-width: rem(180px);
     }
 
     %column-hiding-title {
@@ -98,11 +99,9 @@
 @mixin igx-column-hiding-typography($type-scale, $categories: (title: 'subtitle-1')) {
     $title: map-get($categories, 'title');
 
-    @include igx-scope('.igx-typography') {
-        %column-hiding-title {
-            @include igx-type-style($type-scale, $title) {
-                margin: 0;
-            }
+    %column-hiding-title {
+        @include igx-type-style($type-scale, $title) {
+            margin: 0;
         }
     }
 }

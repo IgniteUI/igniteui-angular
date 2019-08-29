@@ -12,6 +12,7 @@ import {
     Output
 } from '@angular/core';
 import { IgxIconModule } from '../icon/index';
+import { IBaseEventArgs } from '../core/utils';
 
 let NEXT_ID = 0;
 
@@ -43,7 +44,8 @@ export enum Direction { NONE, NEXT, PREV }
     templateUrl: 'carousel.component.html',
     styles: [`
     :host {
-        outline-style: none
+        display: block;
+        outline-style: none;
     }`]
 })
 
@@ -447,7 +449,6 @@ export class IgxCarouselComponent implements OnDestroy {
 
         this.onSlideChanged.emit({ carousel: this, slide });
         this._restartInterval();
-        requestAnimationFrame(() => this.nativeElement.focus());
     }
     /**
      *@hidden
@@ -481,6 +482,7 @@ export class IgxCarouselComponent implements OnDestroy {
     @HostListener('keydown.arrowright')
     public onKeydownArrowRight() {
         this.next();
+        requestAnimationFrame(() => this.nativeElement.focus());
     }
     /**
      *@hidden
@@ -488,6 +490,7 @@ export class IgxCarouselComponent implements OnDestroy {
     @HostListener('keydown.arrowleft')
     public onKeydownArrowLeft() {
         this.prev();
+        requestAnimationFrame(() => this.nativeElement.focus());
     }
 }
 
@@ -566,7 +569,7 @@ export class IgxSlideComponent implements OnInit, OnDestroy {
     }
 }
 
-export interface ISlideEventArgs {
+export interface ISlideEventArgs extends IBaseEventArgs {
     carousel: IgxCarouselComponent;
     slide: IgxSlideComponent;
 }

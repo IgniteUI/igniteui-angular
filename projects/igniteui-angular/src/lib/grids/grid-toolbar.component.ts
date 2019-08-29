@@ -21,6 +21,7 @@ import {
     AbsoluteScrollStrategy
 } from '../services/index';
 import { GridBaseAPIService } from './api.service';
+import { IgxButtonDirective } from '../directives/button/button.directive';
 import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxColumnHidingComponent } from './column-hiding.component';
@@ -86,7 +87,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const dropdownHiding = this.grid.toolbar.columnHidingDropdown;
      * ```
      */
-    @ViewChild('columnHidingDropdown', { read: IgxDropDownComponent })
+    @ViewChild('columnHidingDropdown', { read: IgxDropDownComponent, static: false })
     public columnHidingDropdown: IgxDropDownComponent;
 
     /**
@@ -95,7 +96,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const hidingUI = this.grid.toolbar.columnHidingUI;
      * ```
      */
-    @ViewChild(IgxColumnHidingComponent)
+    @ViewChild(IgxColumnHidingComponent, { static: false })
     public columnHidingUI: IgxColumnHidingComponent;
 
     /**
@@ -104,8 +105,8 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const hidingButton = this.grid.toolbar.columnHidingButton;
      * ```
      */
-    @ViewChild('columnHidingButton')
-    public columnHidingButton;
+    @ViewChild('columnHidingButton', { read: IgxButtonDirective, static: false })
+    public columnHidingButton: IgxButtonDirective;
 
     /**
      * Provides a reference to the `IgxDropDownComponent` of the Export button.
@@ -113,7 +114,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const exportDropdown = this.grid.toolbar.exportDropdown;
      * ```
      */
-    @ViewChild('exportDropdown', { read: IgxDropDownComponent })
+    @ViewChild('exportDropdown', { read: IgxDropDownComponent, static: false })
     public exportDropdown: IgxDropDownComponent;
 
     /**
@@ -122,8 +123,8 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const exportBtn = this.grid.toolbar.exportButton;
      * ```
      */
-    @ViewChild('btnExport')
-    public exportButton;
+    @ViewChild('btnExport', { read: IgxButtonDirective, static: false })
+    public exportButton: IgxButtonDirective;
 
     /**
      * Provides a reference to the `IgxDropDownComponent` of the Column Pinning UI.
@@ -131,7 +132,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const dropdownPinning = this.grid.toolbar.columnPinningDropdown;
      * ```
      */
-    @ViewChild('columnPinningDropdown', { read: IgxDropDownComponent })
+    @ViewChild('columnPinningDropdown', { read: IgxDropDownComponent, static: false })
     public columnPinningDropdown: IgxDropDownComponent;
 
     /**
@@ -140,7 +141,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const pinningUI = this.grid.toolbar.columnPinningDropdown;
      * ```
      */
-    @ViewChild(IgxColumnPinningComponent)
+    @ViewChild(IgxColumnPinningComponent, { static: false })
     public columnPinningUI: IgxColumnPinningComponent;
 
     /**
@@ -149,8 +150,8 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const pinningButton = this.grid.toolbar.columnPinningButton;
      * ```
      */
-    @ViewChild('columnPinningButton')
-    public columnPinningButton;
+    @ViewChild('columnPinningButton', { read: IgxButtonDirective, static: false })
+    public columnPinningButton: IgxButtonDirective;
 
     /**
      * Returns a reference to the `IgxGridComponent` component, hosting the `IgxGridToolbarComponent`.
@@ -159,7 +160,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * ```
      */
     public get grid(): IgxGridBaseComponent {
-        return this.gridAPI.get(this.gridID);
+        return this.gridAPI.grid;
     }
 
     /**
@@ -199,7 +200,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * ```
      */
     public get pinnedColumnsCount() {
-        return this.grid.pinnedColumns.length;
+        return this.grid.pinnedColumns.filter(col => !col.columnLayout).length;
     }
 
     /**

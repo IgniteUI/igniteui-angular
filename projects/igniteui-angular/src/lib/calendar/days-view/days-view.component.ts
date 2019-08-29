@@ -15,7 +15,7 @@ import { slideInLeft, slideInRight } from '../../animations/main';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxDayItemComponent } from './day-item.component';
 import { DateRangeDescriptor, DateRangeType } from '../../core/dates';
-import { IgxCalendarBase } from '../calendar-base';
+import { IgxCalendarBase, ScrollMonth } from '../calendar-base';
 
 let NEXT_ID = 0;
 
@@ -118,14 +118,6 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
     public styleClass = true;
 
     /**
-     * The default `tabindex` attribute for the component.
-     *
-     * @hidden
-     */
-    @HostBinding('attr.tabindex')
-    public tabindex = 0;
-
-    /**
      * @hidden
      */
     public get getCalendarMonth(): ICalendarDate[][] {
@@ -224,6 +216,10 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
      */
     public animationDone(event, isLast: boolean) {
         if (isLast) {
+            if (this.monthScrollDirection !== ScrollMonth.NONE) {
+                this.scrollMonth$.next();
+            }
+
             const date = this.dates.find((d) => d.selected);
             if (date && !this.isKeydownTrigger) {
                 setTimeout(() => {
@@ -330,8 +326,12 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
         }
 
         if (this.changeDaysView && dates.indexOf(node) === 0) {
-            const dayItem = dates[dates.indexOf(node)];
-            this.nextDate = new Date(dayItem.date.date);
+            const dayItem = dates[0];
+            if (dayItem.isCurrentMonth) {
+                this.nextDate = this.calendarModel.timedelta(dayItem.date.date, 'day', -1);
+            } else {
+                this.nextDate = new Date(dayItem.date.date);
+            }
 
             this.isKeydownTrigger = true;
             this.animationAction = 'prev';
@@ -367,7 +367,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
         }
 
         if (this.changeDaysView && dates.indexOf(node) === this.dates.length - 1) {
-            const dayItem = dates[dates.indexOf(node)];
+            const dayItem = dates[this.dates.length - 1];
             this.nextDate = new Date(dayItem.date.date);
 
             this.isKeydownTrigger = true;

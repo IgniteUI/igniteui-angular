@@ -1,3 +1,6 @@
+@import '../shape/navbar';
+@import '../elevation/navbar';
+
 ////
 /// @group schemas
 /// @access private
@@ -14,23 +17,30 @@
 /// @prop {Number} $elevation [4] - The navbar elevation shadow level.
 ///
 /// @see $default-palette
+$_light-navbar: extend(
+    $_default-shape-navbar,
+    $_default-elevation-navbar,
+    (
+        background: (
+            igx-color: ('primary', 500)
+        ),
 
-$_light-navbar: (
-    background: (
-        igx-color: ('primary', 500)
-    ),
+        text-color: (
+            igx-contrast-color: ('primary', 500)
+        ),
 
-    text-color: (
-        igx-contrast-color: ('primary', 500)
-    ),
+        idle-icon-color: (
+            igx-contrast-color: ('primary', 500)
+        ),
 
-    idle-icon-color: (
-        igx-contrast-color: ('primary', 500)
-    ),
-
-    hover-icon-color: (
-        igx-contrast-color: ('primary', 500)
-    ),
-
-    elevation: 4
+        hover-icon-color: (
+            igx-contrast-color: ('primary', 500)
+        ),
+    )
 );
+
+/// Generates a fluent navbar schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-navbar
+$_fluent-navbar: extend($_light-navbar);

@@ -1,6 +1,17 @@
 <app-page-header title="Input Group"></app-page-header>
 <div class="samples">
+    <input-group-fluent-sample></input-group-fluent-sample>
     <input-group-child-sample></input-group-child-sample>
+
+    <h3 class="sample-title">Line Style Input with required @Input</h3>
+    <form class="form">
+        <igx-input-group>
+            <label igxLabel>Required</label>
+            <input igxInput #myInput="igxInput" [value]="value" [required]="isRequired"/>
+            <igx-hint *ngIf="!myInput.isValid">This is required</igx-hint>
+        </igx-input-group>
+        <button igxButton (click)="toggleRequired()">Toggle required</button>
+    </form>
 
     <h3 class="sample-title">Line Style Input</h3>
     <form class="form">

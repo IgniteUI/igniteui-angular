@@ -1,18 +1,46 @@
 <article #dropdown
     class="igx-excel-filter__menu"
+    [ngClass]="{
+        'igx-excel-filter__menu--cosy': grid.displayDensity === 'cosy',
+        'igx-excel-filter__menu--compact': grid.displayDensity === 'compact'
+    }"
     [id]="overlayComponentId"
     (keydown)="onKeyDown($event)">
 
     <header class="igx-excel-filter__menu-header">
-        <h4 class="igx-typography__h6">{{ column.header || column.field }}</h4>
+        <h4>{{ column.header || column.field }}</h4>
+        <div *ngIf="grid.displayDensity!=='comfortable'" class="igx-excel-filter__menu-header-actions">
+            <button *ngIf="!column.disablePinning && !column.pinned"
+                igxButton="icon"
+                [displayDensity]="grid.displayDensity"
+                (click)="onPin()"
+                [disabled]="!isColumnPinnable"
+                tabindex="0">
+                <igx-icon fontSet="filtering-icons" name="pin"></igx-icon>
+            </button>
+            <button *ngIf="!column.disablePinning && column.pinned"
+                igxButton="icon"
+                [displayDensity]="grid.displayDensity"
+                (click)="onPin()"
+                tabindex="0">
+                <igx-icon fontSet="filtering-icons" name="unpin"></igx-icon>
+            </button>
+            <button *ngIf="!column.disableHiding"
+                igxButton="icon"
+                [displayDensity]="grid.displayDensity"
+                tabindex="0"
+                (click)="onHide()">
+                <igx-icon>visibility_off</igx-icon>
+            </button>
+        </div>
     </header>
 
     <ng-template #defaultExcelStyleSortingTemplate>
-        <igx-excel-style-sorting
-            #excelStyleSorting
+        <igx-excel-style-sorting #excelStyleSorting
             class="igx-excel-filter__sort"
             [column]="column"
-            [grid]="grid">
+            [grid]="grid"
+            [displayDensity]="grid.displayDensity">
         </igx-excel-style-sorting>
     </ng-template>
 
@@ -26,7 +54,9 @@
             <igx-excel-style-column-moving
                 class="igx-excel-filter__move"
                 [column]="column"
-                [grid]="grid">
+                [grid]="grid"
+                [isColumnPinnable]="isColumnPinnable"
+                [displayDensity]="grid.displayDensity">
             </igx-excel-style-column-moving>
         </ng-template>
 
@@ -35,7 +65,7 @@
         </div>
 
         <ng-template #defaultExcelStylePinningTemplate>
-            <div class="igx-excel-filter__actions-pin"
+            <div [ngClass]="pinClass()"
                 (click)="onPin()"
                 tabindex="0"
                 *ngIf="!column.pinned">
@@ -52,7 +82,7 @@
             </div>
         </ng-template>
 
-        <div *ngIf="!column.disablePinning">
+        <div *ngIf="!column.disablePinning && grid.displayDensity==='comfortable'">
             <ng-container *ngTemplateOutlet="pinningTemplate"></ng-container>
         </div>
 
@@ -65,7 +95,7 @@
             </div>
         </ng-template>
 
-        <div *ngIf="!column.disableHiding">
+        <div *ngIf="!column.disableHiding && grid.displayDensity==='comfortable'">
             <ng-container *ngTemplateOutlet="hidingTemplate"></ng-container>
         </div>
 
@@ -74,7 +104,7 @@
             [ngClass]="clearFilterClass()"
             (keydown)="onClearFilterKeyDown($event)"
             (click)="clearFilter()">
-            <span>{{ grid.resourceStrings.igx_grid_excel_custom_dialog_clear }}</span>
+            <span>{{ grid.resourceStrings.igx_grid_excel_filter_clear }}</span>
             <igx-icon>clear</igx-icon>
         </div>
 
@@ -93,16 +123,18 @@
         class="igx-excel-filter__menu-main"
         #excelStyleSearch
         [column]="column"
-        [data]="listData">
+        [data]="listData"
+        [grid]="grid"
+        [displayDensity]="grid.displayDensity">
     </igx-excel-style-search>
 
     <footer class="igx-excel-filter__menu-footer">
-        <button igxButton (click)="closeDropdown()">{{ grid.resourceStrings.igx_grid_excel_cancel }}</button>
-        <button igxButton="raised" [disabled]="applyButtonDisabled" (click)="applyFilter()">{{ grid.resourceStrings.igx_grid_excel_apply }}</button>
+        <button igxButton [displayDensity]="grid.displayDensity" (click)="closeDropdown()">{{ grid.resourceStrings.igx_grid_excel_cancel }}</button>
+        <button igxButton="raised" [displayDensity]="grid.displayDensity" [disabled]="applyButtonDisabled" (click)="applyFilter()">{{ grid.resourceStrings.igx_grid_excel_apply }}</button>
     </footer>
 </article>
 
-<igx-drop-down [maxHeight]="'397px'" #subMenu (onSelection)="onSubMenuSelection($event)" (onClosed)="onSubMenuClosed()">
+<igx-drop-down [maxHeight]="'397px'" [displayDensity]="grid.displayDensity" #subMenu (onSelection)="onSubMenuSelection($event)" (onClosed)="onSubMenuClosed()">
     <div>
         <igx-drop-down-item
             *ngFor="let condition of conditions"
@@ -110,7 +142,7 @@
             <igx-icon fontSet="filtering-icons" [name]="getCondition(condition).iconName"></igx-icon>
             <span style="margin-left: 16px">{{ translateCondition(condition) }}</span>
         </igx-drop-down-item>
-        <igx-drop-down-item *ngIf="column.filteringExpressionsTree">
+        <igx-drop-down-item *ngIf="showCustomFilterItem()">
             <igx-icon>filter_list</igx-icon>
             <span style="margin-left: 16px">{{ grid.resourceStrings.igx_grid_excel_custom_filter }}</span>
         </igx-drop-down-item>
@@ -122,5 +154,6 @@
     [column]="column"
     [filteringService]="filteringService"
     [overlayComponentId]="overlayComponentId"
-    [overlayService]="overlayService">
+    [overlayService]="overlayService"
+    [displayDensity]="grid.displayDensity">
 </igx-excel-style-custom-dialog>

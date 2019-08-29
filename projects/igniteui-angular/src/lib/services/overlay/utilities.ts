@@ -2,9 +2,9 @@ import { IPositionStrategy } from './position/IPositionStrategy';
 
 import { IScrollStrategy } from './scroll';
 import { AnimationReferenceMetadata, AnimationPlayer } from '@angular/animations';
-import { ComponentRef, ElementRef } from '@angular/core';
+import { ComponentRef, ElementRef, NgZone } from '@angular/core';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
-import { CancelableEventArgs, CancelableBrowserEventArgs, cloneValue } from '../../core/utils';
+import { CancelableEventArgs, CancelableBrowserEventArgs, cloneValue, IBaseEventArgs } from '../../core/utils';
 
 export enum HorizontalAlignment {
     Left = -1,
@@ -59,7 +59,7 @@ export interface OverlaySettings {
     excludePositionTarget?: boolean;
 }
 
-export interface OverlayEventArgs {
+export interface OverlayEventArgs extends IBaseEventArgs {
     /** Id of the overlay generated with `attach()` method */
     id: string;
     /** Available when `Type<T>` is provided to the `attach()` method and allows access to the created Component instance */
@@ -72,7 +72,7 @@ export interface OverlayCancelableEventArgs extends OverlayEventArgs, Cancelable
 export interface OverlayClosingEventArgs extends OverlayEventArgs, CancelableBrowserEventArgs {
 }
 
-export interface OverlayAnimationEventArgs {
+export interface OverlayAnimationEventArgs extends IBaseEventArgs {
     /** Id of the overlay generated with `attach()` method */
     id: string;
     /** Animation player that will play the animation */
@@ -90,21 +90,6 @@ export interface Size {
 }
 
 /** @hidden */
-export function getPointFromPositionsSettings(settings: PositionSettings, overlayWrapper: HTMLElement): Point {
-    let result: Point = new Point(0, 0);
-
-    if (settings.target instanceof HTMLElement) {
-        const rect = (<HTMLElement>settings.target).getBoundingClientRect();
-        result.x = rect.right + rect.width * settings.horizontalStartPoint;
-        result.y = rect.bottom + rect.height * settings.verticalStartPoint;
-    } else if (settings.target instanceof Point) {
-        result = settings.target;
-    }
-
-    return result;
-}
-
-/** @hidden */
 export interface OverlayInfo {
     id?: string;
     elementRef?: ElementRef;
@@ -116,38 +101,76 @@ export interface OverlayInfo {
     closeAnimationPlayer?: AnimationPlayer;
     openAnimationInnerPlayer?: any;
     closeAnimationInnerPlayer?: any;
+    ngZone: NgZone;
 }
 
-/** @hidden @internal */
-export function getViewportRect(document: Document): ClientRect {
-    const width = document.documentElement.clientWidth;
-    const height = document.documentElement.clientHeight;
-    const scrollPosition = getViewportScrollPosition();
+/** @hidden */
+export class Util {
+    /**
+     * @hidden
+     * Calculates the rectangle of target for provided overlay settings. Defaults to 0,0,0,0,0,0 rectangle
+     * if no target is provided
+     * @param settings Overlay settings for which to calculate target rectangle
+     */
+    static getTargetRect(settings: PositionSettings): ClientRect {
+        let targetRect: ClientRect = {
+            bottom: 0,
+            height: 0,
+            left: 0,
+            right: 0,
+            top: 0,
+            width: 0
+        };
 
-    return {
-        top: scrollPosition.y,
-        left: scrollPosition.x,
-        right: scrollPosition.x + width,
-        bottom: scrollPosition.y + height,
-        width: width,
-        height: height,
-    };
-}
+        if (settings.target instanceof HTMLElement) {
+            targetRect = (settings.target as HTMLElement).getBoundingClientRect();
+        } else if (settings.target instanceof Point) {
+            const targetPoint = settings.target as Point;
+            targetRect = {
+                bottom: targetPoint.y,
+                height: 0,
+                left: targetPoint.x,
+                right: targetPoint.x,
+                top: targetPoint.y,
+                width: 0
+            };
+        }
 
-/** @hidden @internal */
-export function getViewportScrollPosition(): Point {
-    const documentElement = document.documentElement;
-    const documentRect = documentElement.getBoundingClientRect();
+        return targetRect;
+    }
 
-    const horizontalScrollPosition = -documentRect.left || document.body.scrollLeft || window.scrollX || documentElement.scrollLeft || 0;
-    const verticalScrollPosition = -documentRect.top || document.body.scrollTop || window.scrollY || documentElement.scrollTop || 0;
+    /** @hidden @internal */
+    static getViewportRect(document: Document): ClientRect {
+        const width = document.documentElement.clientWidth;
+        const height = document.documentElement.clientHeight;
+        const scrollPosition = Util.getViewportScrollPosition(document);
 
-    return new Point(horizontalScrollPosition, verticalScrollPosition);
-  }
+        return {
+            top: scrollPosition.y,
+            left: scrollPosition.x,
+            right: scrollPosition.x + width,
+            bottom: scrollPosition.y + height,
+            width: width,
+            height: height,
+        };
+    }
 
-  /** @hidden @internal*/
-export function cloneInstance(object) {
-    const clonedObj = Object.assign(Object.create(Object.getPrototypeOf(object)), object);
-    clonedObj.settings = cloneValue(clonedObj.settings);
-    return clonedObj;
+    /** @hidden @internal */
+    static getViewportScrollPosition(document: Document): Point {
+        const documentElement = document.documentElement;
+        const documentRect = documentElement.getBoundingClientRect();
+
+        const horizontalScrollPosition =
+            -documentRect.left || document.body.scrollLeft || window.scrollX || documentElement.scrollLeft || 0;
+        const verticalScrollPosition = -documentRect.top || document.body.scrollTop || window.scrollY || documentElement.scrollTop || 0;
+
+        return new Point(horizontalScrollPosition, verticalScrollPosition);
+    }
+
+    /** @hidden @internal*/
+    static cloneInstance(object) {
+        const clonedObj = Object.assign(Object.create(Object.getPrototypeOf(object)), object);
+        clonedObj.settings = cloneValue(clonedObj.settings);
+        return clonedObj;
+    }
 }

@@ -6,9 +6,109 @@ import { IgxGridGroupByRowComponent } from '../grids/grid/groupby-row.component'
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxGridComponent } from '../grids/grid/grid.component';
 import { IgxGridCellComponent } from '../grids/cell.component';
+import { ComponentFixture } from '@angular/core/testing';
+import { IgxGridBaseComponent } from '../grids/index';
+import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid';
+import { IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/grid.excel-style-filtering.component';
 
 const CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';
+const CELL_SELECTED_CSS_CLASS = 'igx-grid__td--selected';
+const ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS = '.igx-grid__cbx-selection';
+const ROW_SELECTION_CSS_CLASS = 'igx-grid__tr--selected';
+const HEADER_ROW_CSS_CLASS = '.igx-grid__thead';
+const CHECKBOX_INPUT_CSS_CLASS = '.igx-checkbox__input';
+const SCROLL_START_CSS_CLASS = '.igx-grid__scroll-start';
+const CHECKBOX_ELEMENT = 'igx-checkbox';
 const DEBOUNCETIME = 50;
+
+export function resizeObserverIgnoreError() {
+    const spy = spyOn(window, 'onerror').and.callFake((...args) => {
+        if (args[0].toString().match('ResizeObserver loop limit exceeded')) {
+            return;
+        }
+        spy.and.callThrough().withArgs(...args);
+    });
+    return spy;
+}
+
+export function setupGridScrollDetection(fixture: ComponentFixture<any>, grid: IgxGridBaseComponent) {
+    grid.verticalScrollContainer.onChunkLoad.subscribe(() => fixture.detectChanges());
+    grid.parentVirtDir.onChunkLoad.subscribe(() => fixture.detectChanges());
+}
+
+export function setupHierarchicalGridScrollDetection(fixture: ComponentFixture<any>, hierarchicalGrid: IgxHierarchicalGridComponent) {
+    setupGridScrollDetection(fixture, hierarchicalGrid);
+
+    const existingChildren = hierarchicalGrid.hgridAPI.getChildGrids(true);
+    existingChildren.forEach(child => setupGridScrollDetection(fixture, child));
+
+    const layouts = hierarchicalGrid.allLayoutList.toArray();
+    layouts.forEach((layout) => {
+        layout.onGridCreated.subscribe(evt => {
+            setupGridScrollDetection(fixture, evt.grid);
+        });
+    });
+}
+
+export function verifyLayoutHeadersAreAligned(headerCells, rowCells) {
+    for (let i; i < headerCells.length; i++) {
+        expect(headerCells[i].headerCell.elementRef.nativeElement.offsetWidth)
+            .toBe(rowCells[i].nativeElement.offsetWidth);
+        expect(headerCells[i].headerCell.elementRef.nativeElement.offsetHeight)
+            .toBe(rowCells[i].nativeElement.offsetHeight);
+    }
+}
+
+export function verifyDOMMatchesLayoutSettings(row, colSettings) {
+    const firstRowCells = row.cells.toArray();
+    const rowElem = row.nativeElement;
+    const mrlBlocks = rowElem.querySelectorAll('.igx-grid__mrl-block');
+
+    colSettings.forEach((groupSetting, index) => {
+        // check group has rendered block
+        const groupBlock = mrlBlocks[index];
+        const cellsFromBlock = firstRowCells.filter((cell) => cell.nativeElement.parentNode === groupBlock);
+        expect(groupBlock).not.toBeNull();
+        groupSetting.columns.forEach((col, colIndex) => {
+            const cell = cellsFromBlock[colIndex];
+            const cellElem = cell.nativeElement;
+            // check correct attributes are applied
+            expect(parseInt(cellElem.style['gridRowStart'], 10)).toBe(parseInt(col.rowStart, 10));
+            expect(parseInt(cellElem.style['gridColumnStart'], 10)).toBe(parseInt(col.colStart, 10));
+            expect(cellElem.style['gridColumnEnd']).toBe(col.colEnd ? col.colEnd.toString() : '');
+            expect(cellElem.style['gridRowEnd']).toBe(col.rowEnd ? col.rowEnd.toString() : '');
+
+            // check width
+            let sum = 0;
+            if (cell.gridColumnSpan > 1) {
+                for (let i = col.colStart; i < col.colStart + cell.column.gridColumnSpan; i++) {
+                    const colData = groupSetting.columns.find((currCol) => currCol.colStart === i && currCol.field !== col.field);
+                    const col2 = row.grid.getColumnByName(colData ? colData.field : '');
+                    sum += col2 ? parseFloat(col2.calcWidth) : 0;
+                }
+            }
+            const expectedWidth = Math.max(parseFloat(cell.column.calcWidth) * cell.column.gridColumnSpan, sum);
+            expect(cellElem.clientWidth - expectedWidth).toBeLessThan(1);
+            // check height
+            const expectedHeight = cell.grid.rowHeight * cell.gridRowSpan;
+            expect(cellElem.offsetHeight).toBe(expectedHeight);
+
+            // check offset left
+            const acc = (accum, c) => {
+                if (c.column.colStart < col.colStart && c.column.rowStart === col.rowStart) {
+                    return accum += parseFloat(c.column.calcWidth) * c.column.gridColumnSpan;
+                } else {
+                    return accum;
+                }
+            };
+            const expectedLeft = cellsFromBlock.reduce(acc, 0);
+            expect(cellElem.offsetLeft - groupBlock.offsetLeft - expectedLeft).toBeLessThan(1);
+            // check offsetTop
+            const expectedTop = (col.rowStart - 1) * cell.grid.rowHeight;
+            expect(cellElem.offsetTop).toBe(expectedTop);
+        });
+    });
+}
 
 export class HelperUtils {
     public static getCheckboxElement(name: string, element: DebugElement, fix) {
@@ -56,70 +156,71 @@ export class HelperUtils {
         grid: IgxGridComponent,
         rowStartIndex: number,
         rowEndIndex: number,
-        colIndex?: number) => new Promise(async (resolve, reject) => {
+        colIndex?: number,
+        shift = false) => new Promise(async (resolve, reject) => {
             const dir = rowStartIndex > rowEndIndex ? 'ArrowUp' : 'ArrowDown';
             const row = grid.getRowByIndex(rowStartIndex);
             const cIndx = colIndex || 0;
             const colKey = grid.columnList.toArray()[cIndx].field;
-            let nextRow = dir === 'ArrowUp' ? grid.getRowByIndex(rowStartIndex - 1) : grid.getRowByIndex(rowStartIndex + 1);
-            const elem = row instanceof IgxGridGroupByRowComponent ?
-                row : grid.getCellByColumn(row.index, colKey);
+            const nextIndex = dir === 'ArrowUp' ? rowStartIndex - 1 : rowStartIndex + 1;
+            let elem;
+            if (row) {
+                elem = row instanceof IgxGridGroupByRowComponent ?
+                    row : grid.getCellByColumn(row.index, colKey);
+            } else {
+                const summariRow = grid.summariesRowList.find(s => s.index === rowStartIndex);
+                if (summariRow) {
+                    elem = summariRow.summaryCells.find(cell => cell.visibleColumnIndex === cIndx);
+                }
+            }
+
             if (rowStartIndex === rowEndIndex) {
                 resolve();
                 return;
             }
 
-            UIInteractions.triggerKeyDownEvtUponElem(dir, elem.nativeElement, true);
+            UIInteractions.triggerKeyDownWithBlur(dir, elem.nativeElement, true, false, shift);
 
-            if (nextRow) {
-                await wait(20);
-                HelperUtils.navigateVerticallyToIndex(grid, nextRow.index, rowEndIndex, colIndex)
-                    .then(() => { resolve(); });
-            } else {
-                // else wait for chunk to load.
-                grid.verticalScrollContainer.onChunkLoad.pipe(take(1)).subscribe({
-                    next: async () => {
-                        nextRow = dir === 'ArrowUp' ? grid.getRowByIndex(rowStartIndex - 1) : grid.getRowByIndex(rowStartIndex + 1);
-                        HelperUtils.navigateVerticallyToIndex(grid, nextRow.index, rowEndIndex, colIndex)
-                            .then(() => { resolve(); });
-                    }
-                });
-            }
+            await wait(40);
+            HelperUtils.navigateVerticallyToIndex(grid, nextIndex, rowEndIndex, colIndex, shift)
+                .then(() => { resolve(); });
         })
 
     public static navigateHorizontallyToIndex = (
         grid: IgxGridComponent,
         cell: IgxGridCellComponent,
-        index: number) => new Promise(async (resolve) => {
+        index: number,
+        shift = false) => new Promise(async (resolve) => {
             // grid - the grid in which to navigate.
             // cell - current cell from which the navigation will start.
             // index - the index to which to navigate
+            // shift - if the Shift key should be pressed on keydown event
 
             const currIndex = cell.visibleColumnIndex;
             const dir = currIndex < index ? 'ArrowRight' : 'ArrowLeft';
             const nextIndex = dir === 'ArrowRight' ? currIndex + 1 : currIndex - 1;
             const visibleColumns = grid.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
             const nextCol = visibleColumns[nextIndex];
-            let nextCell = nextCol ? grid.getCellByColumn(0, nextCol.field) : null;
+            let nextCell = nextCol ? grid.getCellByColumn(cell.rowIndex, nextCol.field) : null;
 
             // if index reached return
             if (currIndex === index) { resolve(); return; }
             // else call arrow up/down
-            UIInteractions.triggerKeyDownEvtUponElem(dir, cell.nativeElement, true);
+            UIInteractions.triggerKeyDownWithBlur(dir, cell.nativeElement, true, false, shift);
 
             grid.cdr.detectChanges();
             // if next row exists navigate next
             if (nextCell) {
                 await wait(10);
                 grid.cdr.detectChanges();
-                HelperUtils.navigateHorizontallyToIndex(grid, nextCell, index).then(() => { resolve(); });
+                HelperUtils.navigateHorizontallyToIndex(grid, nextCell, index, shift).then(() => { resolve(); });
             } else {
                 // else wait for chunk to load.
                 grid.parentVirtDir.onChunkLoad.pipe(take(1)).subscribe({
                     next: () => {
                         grid.cdr.detectChanges();
-                        nextCell = nextCol ? grid.getCellByColumn(0, nextCol.field) : null;
-                        HelperUtils.navigateHorizontallyToIndex(grid, nextCell, index).then(() => { resolve(); });
+                        nextCell = nextCol ? grid.getCellByColumn(cell.rowIndex, nextCol.field) : null;
+                        HelperUtils.navigateHorizontallyToIndex(grid, nextCell, index, shift).then(() => { resolve(); });
                     }
                 });
             }
@@ -213,7 +314,7 @@ export class HelperUtils {
         return fix.debugElement.queryAll(By.css('igx-grid-summary-row'));
     }
 
-    public static verifyVisibleSummariesHeight(fix, summariesRows, rowHeight = 50) {
+    public static verifyVisibleSummariesHeight(fix, summariesRows, rowHeight = 36) {
         const visibleSummaries = HelperUtils.getAllVisibleSummaries(fix);
         visibleSummaries.forEach(summary => {
             expect(summary.nativeElement.getBoundingClientRect().height).toBeGreaterThanOrEqual(summariesRows * rowHeight - 1);
@@ -232,7 +333,7 @@ export class HelperUtils {
         (fix, rowIndex, cellIndex, key, shift = false, ctrl = false) => new Promise(async (resolve, reject) => {
             const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, rowIndex);
             const summaryCell = HelperUtils.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
-            summaryCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: key, shiftKey: shift, ctrlKey: ctrl }));
+            UIInteractions.triggerKeyDownEvtUponElem(key, summaryCell.nativeElement, true, false, shift, ctrl);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             resolve();
@@ -247,4 +348,163 @@ export class HelperUtils {
             await wait(DEBOUNCETIME);
             resolve();
         })
+
+    public static selectCellsRange =
+        (fix, startCell, endCell, ctrl = false, shift = false) => new Promise(async (resolve, reject) => {
+            UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement, shift, ctrl);
+            startCell.nativeElement.dispatchEvent(new Event('focus'));
+            fix.detectChanges();
+            await wait();
+            fix.detectChanges();
+
+            UIInteractions.simulatePointerOverCellEvent('pointerenter', endCell.nativeElement, shift, ctrl);
+            UIInteractions.simulatePointerOverCellEvent('pointerup', endCell.nativeElement, shift, ctrl);
+            await wait();
+            fix.detectChanges();
+            resolve();
+        })
+
+    public static selectCellsRangeNoWait(fix, startCell, endCell, ctrl = false, shift = false) {
+        UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement, shift, ctrl);
+        startCell.nativeElement.dispatchEvent(new Event('focus'));
+        fix.detectChanges();
+
+        UIInteractions.simulatePointerOverCellEvent('pointerenter', endCell.nativeElement, shift, ctrl);
+        UIInteractions.simulatePointerOverCellEvent('pointerup', endCell.nativeElement, shift, ctrl);
+        fix.detectChanges();
+    }
+
+    public static selectCellsRangeWithShiftKey =
+        (fix, startCell, endCell) => new Promise(async (resolve, reject) => {
+            UIInteractions.simulateClickAndSelectCellEvent(startCell);
+            await wait();
+            fix.detectChanges();
+
+            UIInteractions.simulateClickAndSelectCellEvent(endCell, true);
+            await wait();
+            fix.detectChanges();
+            resolve();
+        })
+
+    public static selectCellsRangeWithShiftKeyNoWait(fix, startCell, endCell) {
+        UIInteractions.simulateClickAndSelectCellEvent(startCell);
+        fix.detectChanges();
+
+        UIInteractions.simulateClickAndSelectCellEvent(endCell, true);
+        fix.detectChanges();
+    }
+
+    public static verifyCellsRegionSelected(grid, startRowIndex, endRowIndex, startColumnIndex, endColumnIndex, selected = true) {
+        const startRow = startRowIndex < endRowIndex ? startRowIndex : endRowIndex;
+        const endRow = startRowIndex < endRowIndex ? endRowIndex : startRowIndex;
+        const startCol = startColumnIndex < endColumnIndex ? startColumnIndex : endColumnIndex;
+        const endCol = startColumnIndex < endColumnIndex ? endColumnIndex : startColumnIndex;
+        for (let i = startCol; i <= endCol; i++) {
+            for (let j = startRow; j <= endRow; j++) {
+                const cell = grid.getCellByColumn(j, grid.columnList.find(col => col.visibleIndex === i).field);
+                if (cell) {
+                    HelperUtils.verifyCellSelected(cell, selected);
+                }
+            }
+        }
+    }
+
+    public static verifySelectedRange(grid, rowStart, rowEnd, columnStart, columnEnd, rangeIndex = 0, selectedRanges = 1) {
+        const range = grid.getSelectedRanges();
+        expect(range).toBeDefined();
+        expect(range.length).toBe(selectedRanges);
+        expect(range[rangeIndex].columnStart).toBe(columnStart);
+        expect(range[rangeIndex].columnEnd).toBe(columnEnd);
+        expect(range[rangeIndex].rowStart).toBe(rowStart);
+        expect(range[rangeIndex].rowEnd).toBe(rowEnd);
+    }
+
+    public static verifyCellSelected(cell, selected = true) {
+        expect(cell.selected).toBe(selected);
+        expect(cell.nativeElement.classList.contains(CELL_SELECTED_CSS_CLASS)).toBe(selected);
+    }
+
+    public static verifyRowSelected(row, selected = true, hasCheckbox = true) {
+        expect(row.selected).toBe(selected);
+        expect(row.nativeElement.classList.contains(ROW_SELECTION_CSS_CLASS)).toBe(selected);
+        if (hasCheckbox) {
+            HelperUtils.verifyRowHasCheckbox(row.nativeElement);
+            expect(HelperUtils.getRowCheckboxInput(row.nativeElement).checked).toBe(selected);
+        }
+    }
+
+    public static verifyRowsArraySelected(rows, selected = true, hasCheckbox = true) {
+        rows.forEach(row => {
+            HelperUtils.verifyRowSelected(row, selected, hasCheckbox);
+        });
+    }
+
+    public static verifyHeaderRowCheckboxState(parent, checked = false, indeterminate = false) {
+        const header = HelperUtils.getHeaderRow(parent);
+        const headerCheckboxElement = HelperUtils.getRowCheckboxInput(header);
+        expect(headerCheckboxElement.checked).toBe(checked);
+        expect(headerCheckboxElement.indeterminate).toBe(indeterminate);
+    }
+
+    public static verifyHeaderAndRowCheckBoxesAlignment(grid) {
+        const headerDiv = HelperUtils.getRowCheckboxDiv(HelperUtils.getHeaderRow(grid));
+        const firstRowDiv = HelperUtils.getRowCheckboxDiv(grid.rowList.first.nativeElement);
+        const scrollStartElement = grid.nativeElement.querySelector(SCROLL_START_CSS_CLASS);
+        const hScrollbar = grid.parentVirtDir.getHorizontalScroll();
+
+        expect(headerDiv.offsetWidth).toEqual(firstRowDiv.offsetWidth);
+        expect(headerDiv.offsetLeft).toEqual(firstRowDiv.offsetLeft);
+        if (hScrollbar.scrollWidth) {
+            expect(scrollStartElement.offsetWidth).toEqual(firstRowDiv.offsetWidth);
+            expect(hScrollbar.offsetLeft).toEqual(firstRowDiv.offsetWidth);
+        }
+    }
+
+    public static verifyRowHasCheckbox(rowDOM, hasCheckbox = true, hasCheckboxDiv = true, verifyHeader = false) {
+        const checkboxDiv = HelperUtils.getRowCheckboxDiv(rowDOM);
+        if (!hasCheckbox && !hasCheckboxDiv) {
+            expect(HelperUtils.getRowCheckboxDiv(rowDOM)).toBeNull();
+        } else {
+            expect(checkboxDiv).toBeDefined();
+            const rowCheckbox = HelperUtils.getRowCheckbox(rowDOM);
+            expect(rowCheckbox).toBeDefined();
+            if (!hasCheckbox) {
+                expect(rowCheckbox.style.visibility).toEqual('hidden');
+            } else if (verifyHeader) {
+                expect(rowCheckbox.style.visibility).toEqual('visible');
+            } else {
+                expect(rowCheckbox.style.visibility).toEqual('');
+            }
+        }
+    }
+
+    public static verifyHeaderRowHasCheckbox(parent, hasCheckbox = true, hasCheckboxDiv = true) {
+        HelperUtils.verifyRowHasCheckbox(HelperUtils.getHeaderRow(parent), hasCheckbox, hasCheckboxDiv, true);
+    }
+
+    public static getHeaderRow(parent): HTMLElement {
+        return parent.nativeElement.querySelector(HEADER_ROW_CSS_CLASS);
+    }
+
+    public static getRowCheckboxDiv(rowDOM): HTMLElement {
+        return rowDOM.querySelector(ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS);
+    }
+
+    public static getRowCheckboxInput(rowDOM): HTMLInputElement {
+        return HelperUtils.getRowCheckboxDiv(rowDOM).querySelector(CHECKBOX_INPUT_CSS_CLASS);
+    }
+
+    public static getRowCheckbox(rowDOM): HTMLElement {
+        return HelperUtils.getRowCheckboxDiv(rowDOM).querySelector(CHECKBOX_ELEMENT);
+    }
+
+    public static clickRowCheckbox(row) {
+        const checkboxElement = HelperUtils.getRowCheckboxDiv(row.nativeElement);
+        checkboxElement.dispatchEvent(new Event('click', {}));
+    }
+
+    public static clickHeaderRowCheckbox(parent) {
+        const checkboxElement = HelperUtils.getRowCheckboxDiv(HelperUtils.getHeaderRow(parent));
+        checkboxElement.dispatchEvent(new Event('click', {}));
+    }
 }

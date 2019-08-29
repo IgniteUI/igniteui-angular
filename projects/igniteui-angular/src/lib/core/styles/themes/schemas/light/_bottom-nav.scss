@@ -1,3 +1,6 @@
+@import '../shape/bottom-nav';
+@import '../elevation/bottom-nav';
+
 ////
 /// @group schemas
 /// @access private
@@ -10,18 +13,29 @@
 /// @prop {Color} idle-item-color [igx-color: ('grays', 700)] - The text-color used for the idle color.
 /// @prop {Color} active-item-color [igx-color: ('primary', 500)] - The text-color used for the active color.
 /// @prop {number} elevation [8] - The elevation level of the bar.
+/// @requires {function} extend
+/// @requires {map} $_default-shape-bottom-nav
+/// @requires {map} $_default-elevation-bottom-nav
 /// @see $default-palette
+$_light-bottom-nav: extend(
+    $_default-shape-bottom-nav,
+    $_default-elevation-bottom-nav,
+    (
+        background: #fff,
 
-$_light-bottom-nav: (
-    background: #fff,
+        idle-item-color: (
+            igx-color: ('grays', 700)
+        ),
 
-    idle-item-color: (
-        igx-color: ('grays', 700)
-    ),
-
-    active-item-color: (
-        igx-color: ('primary', 500)
-    ),
-
-    elevation: 8
+        active-item-color: (
+            igx-color: ('primary', 500)
+        ),
+    )
 );
+
+/// Generates a fluent bottom navigation schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-bottom-nav
+/// @requires {map} $_fluent-elevation-bottom-nav
+$_fluent-bottom-nav: extend($_light-bottom-nav, $_fluent-elevation-bottom-nav);

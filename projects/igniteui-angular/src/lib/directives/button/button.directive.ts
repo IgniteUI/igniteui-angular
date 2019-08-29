@@ -1,31 +1,57 @@
-import { Directive, ElementRef, EventEmitter, HostBinding, Input, Output, NgModule, Renderer2, HostListener } from '@angular/core';
+import {
+    Directive,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    Input,
+    Output,
+    NgModule,
+    Renderer2,
+    HostListener,
+    Optional,
+    Inject
+} from '@angular/core';
+import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions, DisplayDensity } from '../../core/density';
 
 @Directive({
     selector: '[igxButton]'
 })
-export class IgxButtonDirective {
+export class IgxButtonDirective extends DisplayDensityBase {
+
     /**
      *@hidden
      */
-    private _type = 'flat';
+    private _type: string;
+
     /**
      *@hidden
      */
-    private _cssClass = 'igx-button';
+    private _defaultType = 'flat';
+
+    /**
+     *@hidden
+     */
+    private _cssClassPrefix = 'igx-button';
+
     /**
      *@hidden
      */
     private _color: string;
+
     /**
      *@hidden
      */
     private _label: string;
+
     /**
      *@hidden
      */
     private _backgroundColor: string;
 
-    constructor(public element: ElementRef, private _renderer: Renderer2) { }
+    constructor(public element: ElementRef, private _renderer: Renderer2,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        super(_displayDensityOptions);
+    }
 
     /**
      * Returns the underlying DOM element
@@ -50,7 +76,9 @@ export class IgxButtonDirective {
      * ```
      * @memberof IgxButtonDirective
      */
-    @HostBinding('attr.role') public role = 'button';
+    @HostBinding('attr.role')
+    public role = 'button';
+
     /**
      * Sets the type of the button.
      * ```html
@@ -58,10 +86,16 @@ export class IgxButtonDirective {
      * ```
      * @memberof IgxButtonDirective
      */
-    @Input('igxButton') set type(value: string) {
-        this._type = value || this._type;
-        this._renderer.addClass(this.nativeElement, `${this._cssClass}--${this._type}`);
+    @Input('igxButton')
+    set type(value: string) {
+        const newValue = value ? value : this._defaultType;
+        if (this._type !== newValue) {
+            this._renderer.removeClass(this.nativeElement, `${this._cssClassPrefix}--${this._type}`);
+            this._type = newValue;
+            this._renderer.addClass(this.nativeElement, `${this._cssClassPrefix}--${this._type}`);
+        }
     }
+
     /**
      * Sets the button text color.
      * ```html
@@ -73,6 +107,7 @@ export class IgxButtonDirective {
         this._color = value || this.nativeElement.style.color;
         this._renderer.setStyle(this.nativeElement, 'color', this._color);
     }
+
     /**
      * Sets the background color of the button.
      * ```html
@@ -84,6 +119,7 @@ export class IgxButtonDirective {
         this._backgroundColor = value || this._backgroundColor;
         this._renderer.setStyle(this.nativeElement, 'background', this._backgroundColor);
     }
+
     /**
      * Sets the `aria-label` attribute.
      * ```html
@@ -95,6 +131,7 @@ export class IgxButtonDirective {
         this._label = value || this._label;
         this._renderer.setAttribute(this.nativeElement, `aria-label`, this._label);
     }
+
     /**
      * Enables/disables the button.
      *  ```html
@@ -105,10 +142,44 @@ export class IgxButtonDirective {
     @Input() set disabled(val) {
         val = !!val;
         if (val) {
-            this._renderer.addClass(this.nativeElement, `${this._cssClass}--disabled`);
+            this._renderer.addClass(this.nativeElement, `${this._cssClassPrefix}--disabled`);
         } else {
-            this._renderer.removeClass(this.nativeElement, `${this._cssClass}--disabled`);
+            this._renderer.removeClass(this.nativeElement, `${this._cssClassPrefix}--disabled`);
         }
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-button--cosy')
+    public get cssClassCosy(): boolean {
+        return (this._type === 'flat' || this._type === 'raised' || this._type === 'outlined') &&
+            this.displayDensity === DisplayDensity.cosy;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-button--compact')
+    public get cssClassCompact(): boolean {
+        return (this._type === 'flat' || this._type === 'raised' || this._type === 'outlined') &&
+            this.displayDensity === DisplayDensity.compact;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-button--fab-cosy')
+    public get cssClassCosyFab(): boolean {
+        return this._type === 'fab' && this.displayDensity === DisplayDensity.cosy;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-button--fab-compact')
+    public get cssClassCompactFab(): boolean {
+        return this._type === 'fab' && this.displayDensity === DisplayDensity.compact;
     }
 
     /**

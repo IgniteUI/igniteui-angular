@@ -9,7 +9,7 @@
 
 <div class="igx-grid-toolbar__actions">
     <div *ngIf="grid.columnHiding">
-        <button igxButton="flat" #columnHidingButton name="btnColumnHiding" igxButton igxRipple
+        <button igxButton="flat" [displayDensity]="grid.displayDensity" #columnHidingButton name="btnColumnHiding" igxButton igxRipple
             (click)="toggleColumnHidingUI()">
             <div  class="igx-grid-toolbar__button-space">
                 <igx-icon *ngIf="grid.hiddenColumnsCount > 0">visibility_off</igx-icon>
@@ -29,7 +29,7 @@
         </igx-drop-down>
     </div>
     <div *ngIf="grid.columnPinning">
-        <button igxButton="flat" #columnPinningButton name="btnColumnPinning" igxButton igxRipple
+        <button igxButton="flat" [displayDensity]="grid.displayDensity" #columnPinningButton name="btnColumnPinning" igxButton igxRipple
             (click)="toggleColumnPinningUI()">
             <div  class="igx-grid-toolbar__button-space">
                 <igx-icon *ngIf="pinnedColumnsCount > 0">lock</igx-icon>
@@ -50,7 +50,7 @@
 
 
     <div class="igx-grid-toolbar__dropdown" *ngIf="shouldShowExportButton" id="btnExport">
-        <button igxButton="flat" igxRipple #btnExport
+        <button igxButton="flat" [displayDensity]="grid.displayDensity" igxRipple #btnExport
                 (click)="exportClicked()">
             <span class="igx-grid-toolbar__button-space">
                 <igx-icon fontSet="material">import_export</igx-icon>

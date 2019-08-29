@@ -1,3 +1,6 @@
+@import '../shape/input-group';
+@import '../elevation/input-group';
+
 ////
 /// @group schemas
 /// @access private
@@ -16,12 +19,18 @@
 /// @prop {map} filled-secondary-color [igx-color: ('grays', 600)] - The label color in the filled state.
 /// @prop {map} focused-secondary-color [ igx-color: ('primary', 500)] - The label color in the focused state.
 ///
+/// @prop {map} border-color [igx-color: ('grays', 600)] - The border color for inputs with border.
+
 /// @prop {map} idle-bottom-line-color [igx-color: ('grays', 600)] - The bottom line and border colors in the idle state.
 /// @prop {map} hover-bottom-line-color [igx-color: ('grays', 900)] - The bottom line and border colors in the hover state.
 /// @prop {map} focused-bottom-line-color [igx-color: ('primary', 500)] - The bottom line and border colors in the focused state.
 /// @prop {map} interim-bottom-line-color [igx-color: ('primary', 500), rgba: .12] - The bottom line and border colors during the to-focused transition.
 /// @prop {map} disabled-bottom-line-color [igx-color: ('grays', 500)] - The bottom line and border colors in the disabled state.
-/// @prop {map} disabled-border-color [igx-color: ('grays', 500), rgba: .06] - The disabled border color for input groups of type border.
+///
+/// @prop {map} border-color [igx-color: ('grays', 600)] - The border color for input groups of type border and fluent.
+/// @prop {map} hover-border-color [igx-color: ('grays', 600)] - The hover input border for input groups of type border and fluent.
+/// @prop {map} focused-border-color [igx-color: ('primary', 500)] - The focused input border color for input groups of type border and fluent.
+/// @prop {map} disabled-border-color [igx-color: ('grays', 500), rgba: .06] - The disabled border color for input groups of type border and fluent.
 ///
 /// @prop {map} box-background [igx-color: ('grays', 200)] - The background color of an input group of type box.
 /// @prop {map} box-disabled-background [igx-color: ('grays', 100)] - The background color of an input group of type box in the disabled state.
@@ -44,112 +53,202 @@
 /// @prop {Number} border-border-radius [.2] - The border radius fraction, between 0-1 to be used for border input .
 /// @prop {Number} search-border-radius [.2] - The border radius fraction, between 0-1 to be used for search input .
 ///
+/// @requires {function} extend
+/// @requires {map} $_default-shape-input-group
+/// @requires {map} $_default-elevation-input-group
 /// @see $default-palette
+$_light-input-group: extend(
+    $_default-shape-input-group,
+    $_default-elevation-input-group,
+    (
+        variant: 'material',
 
+        input-prefix-color: (
+            igx-color: ('grays', 600)
+        ),
 
-$_light-input-group: (
+        input-prefix-background: transparent,
 
-    box-border-radius: .2 .2 0 0,
-    border-border-radius: .2,
-    search-border-radius: .2,
+        input-suffix-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    idle-text-color: (
-        igx-color: ('grays', 600)
-    ),
+        input-suffix-background: transparent,
 
-    filled-text-color: (
-        igx-color: ('grays', 900)
-    ),
+        idle-text-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    focused-text-color: (
-        igx-color: ('grays', 900)
-    ),
+        border-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    disabled-text-color: (
-        igx-color: ('grays', 500)
-    ),
+        hover-border-color: (
+            igx-color: ('grays', 900)
+        ),
 
-    idle-secondary-color: (
-        igx-color: ('grays', 600)
-    ),
+        focused-border-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    filled-secondary-color: (
-        igx-color: ('grays', 600)
-    ),
+        filled-text-color: (
+            igx-color: ('grays', 900)
+        ),
 
-    focused-secondary-color: (
-        igx-color: ('primary', 500)
-    ),
+        focused-text-color: (
+            igx-color: ('grays', 900)
+        ),
 
-    idle-bottom-line-color: (
-        igx-color: ('grays', 600)
-    ),
+        disabled-text-color: (
+            igx-color: ('grays', 500)
+        ),
 
-    hover-bottom-line-color: (
-        igx-color: ('grays', 900)
-    ),
+        idle-secondary-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    focused-bottom-line-color: (
-        igx-color: ('primary', 500)
-    ),
+        filled-secondary-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    interim-bottom-line-color: (
-        igx-color: ('primary', 500),
-        rgba: .12
-    ),
+        focused-secondary-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    disabled-bottom-line-color: (
-        igx-color: ('grays', 500)
-    ),
+        idle-bottom-line-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    disabled-border-color: (
-        igx-color: ('grays', 500),
-        rgba: .06
-    ),
+        hover-bottom-line-color: (
+            igx-color: ('grays', 900)
+        ),
 
-    box-background: (
-        igx-color: ('grays', 200)
-    ),
+        focused-bottom-line-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    box-disabled-background: (
-        igx-color: ('grays', 100)
-    ),
+        interim-bottom-line-color: (
+            igx-color: ('primary', 500),
+            rgba: .12
+        ),
 
-    border-background: transparent,
+        disabled-bottom-line-color: (
+            igx-color: ('grays', 500)
+        ),
 
-    border-disabled-background: (
-        igx-color: ('grays', 100)
-    ),
+        disabled-border-color: (
+            igx-color: ('grays', 500),
+            rgba: .06
+        ),
 
-    search-background: #fff,
+        box-background: (
+            igx-color: ('grays', 200)
+        ),
 
-    search-disabled-background: (
-        igx-color: ('grays', 100)
-    ),
+        box-disabled-background: (
+            igx-color: ('grays', 100)
+        ),
 
-    search-resting-elevation: 1,
+        border-background: transparent,
 
-    search-hover-elevation: 2,
+        border-disabled-background: (
+            igx-color: ('grays', 100)
+        ),
 
-    search-disabled-elevation: 0,
+        search-background: #fff,
 
-    success-secondary-color: (
-        igx-color: ('success')
-    ),
+        search-disabled-background: (
+            igx-color: ('grays', 100)
+        ),
 
-    warning-secondary-color: (
-        igx-color: ('warn')
-    ),
+        success-secondary-color: (
+            igx-color: ('success')
+        ),
 
-    error-secondary-color: (
-        igx-color: ('error')
-    ),
+        warning-secondary-color: (
+            igx-color: ('warn')
+        ),
 
-    placeholder-color: (
-        igx-color: ('grays', 500)
-    ),
+        error-secondary-color: (
+            igx-color: ('error')
+        ),
 
-    disabled-placeholder-color: (
-        igx-color: ('grays', 400)
+        placeholder-color: (
+            igx-color: ('grays', 500)
+        ),
+
+        disabled-placeholder-color: (
+            igx-color: ('grays', 400)
+        ),
+    )
+);
+
+/// Generates a fluent input-group schema.
+/// @type {Map}
+///
+/// @prop {map} border-color [igx-color: ('grays', 500)] - The border color for input groups of type border and fluent.
+/// @prop {map} hover-border-color [igx-color: ('grays', 800)] - The hover input border for input groups of type border and fluent.
+/// @prop {map} focused-border-color [igx-color: ('grays', 500)] - The focused input border color for input groups of type border and fluent.
+/// @prop {map} disabled-border-color [igx-color: ('grays', 500)] - The disabled border color for input groups of type border and fluent.
+///
+/// @prop {map} border-disabled-background [igx-color: ('grays', 100)] - The background color of an input group of type border in the disabled state.
+///
+/// @prop {Color} search-disabled-background [igx-color: ('grays', 100)] - The background color of an input group of type search in the disabled state.
+///
+/// @prop {Color} input-prefix-background [igx-color: ('grays', 100), hexrgba: #fff] - The background color of an input prefix of type line, box, border and fluent.
+/// @prop {Color} input-suffix-background [ igx-color: ('grays', 100), hexrgba: #fff] - The background color of an input suffix of type line, box, border and fluent.
+///
+/// @prop {Number} search-resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state of the search input.
+/// @prop {Number} search-hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state of the search input.
+/// @prop {Number} search-disabled-elevation [0] - The elevation level, between 0-24, to be used for the disabled state of the search input.
+///
+/// @prop {Number} box-border-radius [2px] - The border radius fraction, between 0-1 to be used for box input .
+/// @prop {Number} border-border-radius [2px] - The border radius fraction, between 0-1 to be used for border input .
+/// @prop {Number} search-border-radius [2px] - The border radius fraction, between 0-1 to be used for search input .
+///
+/// @requires {function} extend
+/// @requires {map} $_light-input-group
+/// @requires {map} $_fluent-shape-input-group
+/// @requires {map} $_fluent-elevation-input-group
+$_fluent-input-group: extend(
+    $_light-input-group,
+    $_fluent-shape-input-group,
+    $_fluent-elevation-input-group,
+    (
+        variant: 'fluent',
+
+        border-color: (
+            igx-color: ('grays', 500)
+        ),
+
+        hover-border-color: (
+            igx-color: ('grays', 800)
+        ),
+
+        focused-border-color: (
+            igx-color: ('grays', 500)
+        ),
+
+        disabled-border-color: (
+            igx-color: ('grays', 500)
+        ),
+
+        border-disabled-background: (
+            igx-color: ('grays', 100),
+        ),
+
+        search-disabled-background: (
+            igx-color: ('grays', 100)
+        ),
+
+        input-prefix-background: (
+            igx-color: ('grays', 100),
+            hexrgba: #fff
+        ),
+
+        input-suffix-background: (
+            igx-color: ('grays', 100),
+            hexrgba: #fff
+        ),
     )
 );

@@ -21,14 +21,12 @@ import {
     IChipEnterDragAreaEventArgs,
     IBaseChipEventArgs
 } from './chip.component';
-import {
-    IgxDropEnterEventArgs
-} from '../directives/dragdrop/dragdrop.directive';
+import { IDropBaseEventArgs } from '../directives/drag-drop/drag-drop.directive';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs/internal/Subject';
 
 export interface IBaseChipsAreaEventArgs {
-    originalEvent: PointerEvent | MouseEvent | TouchEvent | KeyboardEvent | IgxDropEnterEventArgs;
+    originalEvent: PointerEvent | MouseEvent | TouchEvent | KeyboardEvent | IDropBaseEventArgs;
     owner: IgxChipsAreaComponent;
 }
 

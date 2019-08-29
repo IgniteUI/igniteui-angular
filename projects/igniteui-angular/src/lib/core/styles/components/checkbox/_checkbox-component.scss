@@ -40,6 +40,10 @@
         @extend %cbx-label-pos--before !optional;
     }
 
+    @include e(composite-wrapper) {
+        @extend %cbx-composite-wrapper !optional;
+    }
+
     @include e(composite) {
         @extend %cbx-composite !optional;
     }
@@ -59,6 +63,8 @@
     }
 
     @include m(indeterminate) {
+        @extend %igx-checkbox--indeterminate !optional;
+
         @include  e(composite) {
             @extend %cbx-composite--x !optional;
         }

@@ -1,11 +1,12 @@
 import {
-    Input, HostBinding, ElementRef, QueryList, Output, EventEmitter, ChangeDetectorRef
+    Input, HostBinding, ElementRef, QueryList, Output, EventEmitter, ChangeDetectorRef, Optional, Inject
 } from '@angular/core';
 
 import { Navigate, ISelectionEventArgs } from './drop-down.common';
 import { IDropDownList } from './drop-down.common';
 import { DropDownActionKey } from './drop-down.common';
 import { IgxDropDownItemBase } from './drop-down-item.base';
+import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 
 let NEXT_ID = 0;
 
@@ -16,7 +17,7 @@ let NEXT_ID = 0;
  * Properties and methods for navigating (highlighting/focusing) items from the collection
  * Properties and methods for selecting items from the collection
  */
-export abstract class IgxDropDownBase implements IDropDownList {
+export abstract class IgxDropDownBase extends DisplayDensityBase implements IDropDownList {
     protected _width;
     protected _height;
     protected _focusedItem: any = null;
@@ -170,7 +171,10 @@ export abstract class IgxDropDownBase implements IDropDownList {
 
     constructor(
         protected elementRef: ElementRef,
-        protected cdr: ChangeDetectorRef) { }
+        protected cdr: ChangeDetectorRef,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+            super(_displayDensityOptions);
+        }
 
     /** Keydown Handler */
     public onItemActionKey(key: DropDownActionKey, event?: Event) {
@@ -214,7 +218,7 @@ export abstract class IgxDropDownBase implements IDropDownList {
     protected navigate(direction: Navigate, currentIndex?: number) {
         let index = -1;
         if (this._focusedItem) {
-            index = currentIndex ? currentIndex : this._focusedItem.itemIndex;
+            index = currentIndex ? currentIndex : this.focusedItem.itemIndex;
         }
         const newIndex = this.getNearestSiblingFocusableItemIndex(index, direction);
         this.navigateItem(newIndex);
@@ -246,9 +250,9 @@ export abstract class IgxDropDownBase implements IDropDownList {
             if (oldItem) {
                 oldItem.focused = false;
             }
-            this._focusedItem = newItem;
+            this.focusedItem = newItem;
             this.scrollToHiddenItem(newItem);
-            this._focusedItem.focused = true;
+            this.focusedItem.focused = true;
         }
     }
 

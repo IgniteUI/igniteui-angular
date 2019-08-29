@@ -9,7 +9,6 @@ import {
     BlockScrollStrategy,
     CloseScrollStrategy,
     NoOpScrollStrategy,
-    IgxInputGroupModule,
     ElasticPositionStrategy,
     IgxDragDirective
 } from 'igniteui-angular';
@@ -34,12 +33,14 @@ export class OverlaySampleComponent implements OnInit {
     constructor(
         private cdr: ChangeDetectorRef
     ) {
-        for (let item = 0; item < 100; item++) {
+        for (let item = 0; item < this.itemsCount; item++) {
             this.items.push(`Item ${item}`);
         }
     }
 
     items = [];
+    itemsCount = 10;
+    dropDownWidth = 200;
 
     horizontalDirections = ['Left', 'Center', 'Right'];
     horizontalDirection = 'Center';
@@ -61,11 +62,13 @@ export class OverlaySampleComponent implements OnInit {
 
     closeOnOutsideClick = true;
     modal = true;
+    useOutlet = false;
 
-    @ViewChild(IgxDropDownComponent) public igxDropDown: IgxDropDownComponent;
-    @ViewChild('button') public button: ElementRef;
-    @ViewChild('container') public container: ElementRef;
-    @ViewChild(IgxDragDirective) public igxDrag: IgxDragDirective;
+    @ViewChild(IgxDropDownComponent, { static: true }) public igxDropDown: IgxDropDownComponent;
+    @ViewChild('button', { static: true }) public button: ElementRef;
+    @ViewChild('container', { static: true }) public container: ElementRef;
+    @ViewChild(IgxDragDirective, { static: true }) public igxDrag: IgxDragDirective;
+    @ViewChild('outlet', { static: true }) public outletElement: ElementRef;
 
     onChange(ev) {
         switch (ev.radio.name) {
@@ -210,6 +213,7 @@ export class OverlaySampleComponent implements OnInit {
             stringMapping['HorizontalDirection'][this.horizontalDirection];
         this._overlaySettings.positionStrategy.settings.horizontalStartPoint =
             stringMapping['HorizontalStartPoint'][this.horizontalStartPoint];
+        this._overlaySettings.outlet = this.useOutlet ? this.outletElement : null;
     }
 
     onSwitchChange(ev) {
@@ -219,6 +223,9 @@ export class OverlaySampleComponent implements OnInit {
                 break;
             case 'modal':
                 this._overlaySettings.modal = ev.checked;
+                break;
+            case 'outlet':
+                this._overlaySettings.outlet = ev.checked ? this.outletElement : null;
                 break;
         }
     }
@@ -327,7 +334,7 @@ export class OverlaySampleComponent implements OnInit {
     public toggleDropDown() {
         if (this.igxDropDown.collapsed) {
             this.items = [];
-            for (let item = 0; item < 12; item++) {
+            for (let item = 0; item < this.itemsCount; item++) {
                 this.items.push(`Item ${item}`);
             }
             this.cdr.detectChanges();

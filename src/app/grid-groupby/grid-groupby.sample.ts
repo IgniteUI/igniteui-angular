@@ -3,7 +3,6 @@ import { Component, ViewChild, OnInit, Inject } from '@angular/core';
 import { IgxGridComponent,
     SortingDirection,
     ISortingExpression,
-    IGridFocusChangeEventArgs,
     DefaultSortingStrategy } from 'igniteui-angular';
 import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken } from 'projects/igniteui-angular/src/lib/core/density';
 @Component({
@@ -13,7 +12,7 @@ import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken } from 'pro
     templateUrl: 'grid-groupby.sample.html'
 })
 export class GridGroupBySampleComponent implements OnInit {
-    @ViewChild('grid1') public grid1: IgxGridComponent;
+    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
     public data: Array<any>;
     public hideGroupedColumns = false;
     public columns: Array<any>;
@@ -130,10 +129,6 @@ export class GridGroupBySampleComponent implements OnInit {
             {fieldName: "Address", dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
         ];
         this.grid1.groupingExpressions = expr;
-    }
-
-    changeFocus(event: IGridFocusChangeEventArgs) {
-        console.log(event);
     }
 
     public selectSummaryMode(event) {

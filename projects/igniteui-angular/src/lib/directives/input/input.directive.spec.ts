@@ -33,7 +33,8 @@ describe('IgxInput', () => {
                 RequiredTwoWayDataBoundInputComponent,
                 DataBoundDisabledInputComponent,
                 ReactiveFormComponent,
-                InputsWithSameNameAttributesComponent
+                InputsWithSameNameAttributesComponent,
+                ToggleRequiredWithNgModelInputComponent
             ],
             imports: [
                 IgxInputGroupModule,
@@ -247,6 +248,7 @@ describe('IgxInput', () => {
     });
 
     it('When updating two inputs with same attribute names through ngModel, label should responds', fakeAsync(() => {
+
         const fix = TestBed.createComponent(InputsWithSameNameAttributesComponent);
         fix.detectChanges();
 
@@ -319,6 +321,116 @@ describe('IgxInput', () => {
         fix.detectChanges();
         expect(firstInputGroup.nativeElement.classList.contains('igx-input-group--invalid')).toBe(true);
     }));
+
+    it('Should style input when required is toggled dynamically.', () => {
+        const fixture = TestBed.createComponent(ToggleRequiredWithNgModelInputComponent);
+        fixture.detectChanges();
+
+        const instance = fixture.componentInstance;
+        const input = instance.igxInputs.toArray()[1];
+        const inputGroup = instance.igxInputGroups.toArray()[1];
+
+        expect(input.required).toBe(false);
+        expect(inputGroup.isRequired).toBeFalsy();
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(false);
+
+        dispatchInputEvent('focus', input.nativeElement, fixture);
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+
+        input.value = '123';
+        dispatchInputEvent('input', input.nativeElement, fixture);
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(false);
+
+        dispatchInputEvent('blur', input.nativeElement, fixture);
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(false);
+
+        instance.isRequired = true;
+        fixture.detectChanges();
+
+        expect(input.required).toBe(true);
+
+        expect(inputGroup.isRequired).toBeTruthy();
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(true);
+
+        dispatchInputEvent('focus', input.nativeElement, fixture);
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+
+        input.value = '';
+        dispatchInputEvent('input', input.nativeElement, fixture);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+
+        dispatchInputEvent('blur', input.nativeElement, fixture);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+
+        input.value = '123';
+        dispatchInputEvent('input', input.nativeElement, fixture);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(true);
+
+        dispatchInputEvent('blur', input.nativeElement, fixture);
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(false);
+    });
+
+    it('Should style input with ngModel when required is toggled dynamically.', () => {
+        const fixture = TestBed.createComponent(ToggleRequiredWithNgModelInputComponent);
+        fixture.detectChanges();
+
+        const instance = fixture.componentInstance;
+        const input = instance.igxInputs.toArray()[0];
+        const inputGroup = instance.igxInputGroups.toArray()[0];
+
+        expect(input.required).toBe(false);
+        expect(inputGroup.isRequired).toBeFalsy();
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(false);
+
+        dispatchInputEvent('focus', input.nativeElement, fixture);
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+
+        input.value = '123';
+        dispatchInputEvent('input', input.nativeElement, fixture);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(true);
+
+        dispatchInputEvent('blur', input.nativeElement, fixture);
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(false);
+
+        instance.isRequired = true;
+        fixture.detectChanges();
+
+        expect(input.required).toBe(true);
+
+        expect(inputGroup.isRequired).toBeTruthy();
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_REQUIRED_CSS_CLASS)).toBe(true);
+
+        dispatchInputEvent('focus', input.nativeElement, fixture);
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+
+        input.value = '';
+        dispatchInputEvent('input', input.nativeElement, fixture);
+        dispatchInputEvent('blur', input.nativeElement, fixture);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+
+        dispatchInputEvent('focus', input.nativeElement, fixture);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+
+        input.value = '123';
+        dispatchInputEvent('input', input.nativeElement, fixture);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(true);
+
+        dispatchInputEvent('blur', input.nativeElement, fixture);
+        expect(input.valid).toBe(IgxInputState.INITIAL);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(false);
+    });
 });
 
 @Component({ template: `
@@ -334,7 +446,7 @@ describe('IgxInput', () => {
                     </form>` })
 class InputsWithSameNameAttributesComponent {
     @ViewChildren('igxInputGroup') public igxInputGroup: QueryList<DebugElement>;
-    @ViewChild(IgxInputDirective) public igxInput: IgxInputDirective;
+    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
 
     model = {
         firstName: null
@@ -347,8 +459,8 @@ class InputsWithSameNameAttributesComponent {
                             <input name="test" #igxInput type="text" igxInput />
                         </igx-input-group>` })
 class InputComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
 }
 
 @Component({ template: `<igx-input-group>
@@ -363,7 +475,7 @@ class TextareaComponent {
                             <input name="test" placeholder="Test" #igxInput type="text" igxInput />
                         </igx-input-group>` })
 class InputWithPlaceholderComponent {
-    @ViewChild(IgxInputDirective) public igxInput: IgxInputDirective;
+    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
 }
 
 @Component({ template: `<igx-input-group #igxInputGroup>
@@ -371,8 +483,8 @@ class InputWithPlaceholderComponent {
                             <input name="test" #igxInput type="text" igxInput value="Test" />
                         </igx-input-group>` })
 class FilledInputComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
 }
 
 @Component({ template: `<igx-input-group #igxInputGroup>
@@ -380,8 +492,8 @@ class FilledInputComponent {
                             <input name="test" #igxInput type="text" igxInput value="Test" disabled="disabled" />
                         </igx-input-group>` })
 class DisabledInputComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
 }
 
 @Component({ template: `<igx-input-group #igxInputGroup>
@@ -389,8 +501,8 @@ class DisabledInputComponent {
                             <input name="test" #igxInput type="text" igxInput required="required" />
                         </igx-input-group>` })
 class RequiredInputComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
 }
 
 @Component({ template: `<igx-input-group #igxInputGroup>
@@ -398,8 +510,8 @@ class RequiredInputComponent {
                             <input name="test" #igxInput type="text" igxInput [(ngModel)]="user.firstName" required="required" />
                         </igx-input-group>` })
 class RequiredTwoWayDataBoundInputComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
 
     public user = {
         firstName: ''
@@ -447,15 +559,15 @@ class RequiredTwoWayDataBoundInputComponent {
                         </igx-input-group>
                         `})
 class InitiallyFilledInputComponent {
-    @ViewChild('igxInputGroupNotFilledUndefined') public igxInputGroupNotFilledUndefined: IgxInputGroupComponent;
-    @ViewChild('igxInputGroupNotFilledNull') public igxInputGroupNotFilledNull: IgxInputGroupComponent;
-    @ViewChild('igxInputGroupNotFilledEmpty') public igxInputGroupNotFilledEmpty: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupNotFilledUndefined', { static: true }) public igxInputGroupNotFilledUndefined: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupNotFilledNull', { static: true }) public igxInputGroupNotFilledNull: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupNotFilledEmpty', { static: true }) public igxInputGroupNotFilledEmpty: IgxInputGroupComponent;
 
-    @ViewChild('igxInputGroupFilledString') public igxInputGroupFilledString: IgxInputGroupComponent;
-    @ViewChild('igxInputGroupFilledNumber') public igxInputGroupFilledNumber: IgxInputGroupComponent;
-    @ViewChild('igxInputGroupFilledBoolFalse') public igxInputGroupFilledBoolFalse: IgxInputGroupComponent;
-    @ViewChild('igxInputGroupFilledBoolTrue') public igxInputGroupFilledBoolTrue: IgxInputGroupComponent;
-    @ViewChild('igxInputGroupFilledDate') public igxInputGroupFilledDate: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupFilledString', { static: true }) public igxInputGroupFilledString: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupFilledNumber', { static: true }) public igxInputGroupFilledNumber: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupFilledBoolFalse', { static: true }) public igxInputGroupFilledBoolFalse: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupFilledBoolTrue', { static: true }) public igxInputGroupFilledBoolTrue: IgxInputGroupComponent;
+    @ViewChild('igxInputGroupFilledDate', { static: true }) public igxInputGroupFilledDate: IgxInputGroupComponent;
 
     public notFilledUndefined = undefined;
     public notFilledNull = null;
@@ -474,8 +586,8 @@ class InitiallyFilledInputComponent {
                             <input name="test" #igxInput type="text" igxInput [disabled]="disabled" />
                         </igx-input-group>` })
 class DataBoundDisabledInputComponent {
-    @ViewChild('igxInputGroup') public igxInputGroup: IgxInputGroupComponent;
-    @ViewChild(IgxInputDirective) public igxInput: IgxInputDirective;
+    @ViewChild('igxInputGroup', { static: true }) public igxInputGroup: IgxInputGroupComponent;
+    @ViewChild(IgxInputDirective, { static: true }) public igxInput: IgxInputDirective;
 
     public disabled = false;
 }
@@ -527,6 +639,26 @@ class ReactiveFormComponent {
             }
         }
     }
+}
+
+@Component({ template: `<igx-input-group>
+                            <label for="test" igxLabel>Test</label>
+                            <input name="test" type="text" igxInput [(ngModel)]="data" [required]="isRequired"/>
+                        </igx-input-group>
+                        <igx-input-group>
+                            <label for="test" igxLabel>Test</label>
+                            <input name="test" type="text" igxInput [value]="data1" [required]="isRequired"/>
+                        </igx-input-group>` })
+class ToggleRequiredWithNgModelInputComponent {
+    @ViewChildren(IgxInputDirective)
+    public igxInputs: QueryList<IgxInputDirective>;
+
+    @ViewChildren(IgxInputGroupComponent)
+    public igxInputGroups: QueryList<IgxInputGroupComponent>;
+
+    public data = '';
+    public data1 = '';
+    public isRequired = false;
 }
 
 function testRequiredValidation(inputElement, fixture) {

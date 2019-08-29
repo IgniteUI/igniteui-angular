@@ -1,0 +1,20 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+$_default-shape-tooltip: (
+    border-radius: .25,
+);
+
+$_round-shape-tooltip: (
+    border-radius: 1,
+);
+
+$_square-shape-tooltip: (
+    border-radius: 0%,
+);
+
+$_fluent-shape-tooltip: (
+    border-radius: 2px,
+);

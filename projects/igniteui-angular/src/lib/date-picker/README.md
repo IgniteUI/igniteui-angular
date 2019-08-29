@@ -65,7 +65,7 @@ The DatePicker has `dropdown` mode as well. Custom display format and editor mas
 </igx-date-picker>
 ```
 
-The DatePicker input group could be retemplated.
+The default DatePicker input group could be retemplated.
 ```html
 <igx-date-picker>
     <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value" let-displayData="displayData">
@@ -75,6 +75,33 @@ The DatePicker input group could be retemplated.
         </igx-input-group>
     </ng-template>
 </igx-date-picker>
+```
+
+In order to re-template a date picker in `dropdown` mode, you should pass the drop down target element to the `openDialog` method in order to position the drop down container accordingly:
+```html
+<igx-date-picker>
+    <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value" let-displayData="displayData">
+        <igx-input-group (click)="openDialog(dropDownTarget)" #dropDownTarget>
+            <label igxLabel>Date</label>
+            <input igxInput [value]="displayData"/>
+        </igx-input-group>
+    </ng-template>
+</igx-date-picker>
+```
+The DatePicker action buttons could be retemplated.
+```html
+<igx-date-picker #picker>
+    <ng-template igxDatePickerActions>
+        <div class="action-buttons">
+            <button igxButton="flat" (click)="selectToday(picker)">Today</button>
+        </div>
+    </ng-template>
+</igx-date-picker>
+```
+```typescript
+    public selectToday(picker: IgxDatePickerComponent) {
+        picker.calendar.value = picker.calendar.viewDate = new Date(Date.now());
+    }
 ```
 
 # API
@@ -106,10 +133,12 @@ The DatePicker input group could be retemplated.
 | Name | Return Type | Description |
 |:--:|:---|:---|
 | `onSelection` | `Date` | Fired when selection is made in the calendar. The event contains the selected value(s) based on the type of selection the component is set to |
-| `onOpen`  | `datePicker` | Emitted when a datePicker calendar is being opened. |
-| `onClose`  | `datePicker` | Emitted when a datePicker calendar is being closed. |
+| `onOpened`  | `datePicker` | Emitted when a datePicker calendar is opened. |
+| `onClosed`  | `datePicker` | Emitted when a datePicker calendar is closed. |
+| `onClosing`  | `CancelableBrowserEventArgs` | Emitted when a datePicker calendar is being closed. |
 | `onDisabledDate`  | `IDatePickerDisabledDateEventArgs` | Emitted when a disabled date is entered in `dropdown` mode. |
 | `onValidationFailed`  | `IDatePickerValidationFailedEventArgs` | Emitted when an invalid date is entered in `dropdown` mode. |
+| `valueChange` | `Date` | Fired when date picker value is changed |
 
 ### Methods
 | Name   | Arguments | Return Type | Description |
@@ -117,3 +146,4 @@ The DatePicker input group could be retemplated.
 | `selectDate` | `date: Date` | `void` | Change the calendar selection. Calling this method will emit the `onSelection` event. |
 | `deselectDate` | `void` | Deselects the calendar date and clear input field value. |
 | `triggerTodaySelection` | `void` | Selects today's date in calendar and change the input field value. |
+| `openDialog` | `target?: HTMLElement` | `void` | Opens the dialog or drop down, depending on the mode. |

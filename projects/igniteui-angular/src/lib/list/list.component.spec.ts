@@ -3,16 +3,40 @@ import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxListItemComponent } from './list-item.component';
 import { IgxListPanState } from './list.common';
-import { IgxListComponent, IgxListModule } from './list.component';
 import {
-    ListWithHeaderComponent, ListWithPanningComponent,
-    EmptyListComponent, CustomEmptyListComponent,
-    ListLoadingComponent, ListWithPanningTemplatesComponent,
+    IgxListActionDirective,
+    IgxListComponent,
+    IgxListLineDirective,
+    IgxListLineSubTitleDirective,
+    IgxListLineTitleDirective,
+    IgxListModule,
+    IgxListThumbnailDirective
+} from './list.component';
+
+import {
+    ListWithHeaderComponent,
+    ListWithPanningComponent,
+    EmptyListComponent,
+    CustomEmptyListComponent,
+    ListLoadingComponent,
+    ListWithPanningTemplatesComponent,
     ListCustomLoadingComponent,
-    TwoHeadersListComponent, TwoHeadersListNoPanningComponent } from '../test-utils/list-components.spec';
+    ListWithIgxForAndScrollingComponent,
+    TwoHeadersListComponent,
+    TwoHeadersListNoPanningComponent,
+    ListDirectivesComponent
+} from '../test-utils/list-components.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { DisplayDensity, IDensityChangedEventArgs } from '../core/density';
+import { IgxForOfModule } from '../directives/for-of/for_of.directive';
+import { IgxIconModule } from '../icon/index';
+import { wait } from '../test-utils/ui-interactions.spec';
 
 declare var Simulator: any;
+
+const LIST_CSS_CLASS = 'igx-list';
+const LIST_COMPACT_DENSITY_CSS_CLASS = 'igx-list--compact';
+const LIST_COSY_DENSITY_CSS_CLASS = 'igx-list--cosy';
 
 describe('List', () => {
     configureTestSuite();
@@ -27,9 +51,11 @@ describe('List', () => {
                 ListWithPanningComponent,
                 TwoHeadersListComponent,
                 TwoHeadersListNoPanningComponent,
-                ListWithPanningTemplatesComponent
+                ListWithPanningTemplatesComponent,
+                ListWithIgxForAndScrollingComponent,
+                ListDirectivesComponent,
             ],
-            imports: [IgxListModule]
+            imports: [IgxListModule, IgxForOfModule, IgxIconModule]
         }).compileComponents();
     }));
 
@@ -85,7 +111,7 @@ describe('List', () => {
         expect(item.maxLeft).toBe(-testWidth);
         expect(item.maxRight).toBe(testWidth);
         expect(item.element.offsetLeft).toBe(testLeft);
-     });
+    });
 
     it('should calculate properly item index', () => {
         const fixture = TestBed.createComponent(ListWithHeaderComponent);
@@ -250,8 +276,8 @@ describe('List', () => {
         expect(list.cssClass).toBeFalsy();
         expect(list.isListEmpty).toBeTruthy();
 
-        const noItemsParagraphEl = fixture.debugElement.query(By.css('p'));
-        expect(noItemsParagraphEl.nativeElement.textContent.trim()).toBe(listNoItemsMessage);
+        const noItemsMessage = fixture.debugElement.query(By.css('.message'));
+        expect(noItemsMessage.nativeElement.textContent.trim()).toBe(listNoItemsMessage);
     });
 
     it('Should have custom no items template.', () => {
@@ -280,8 +306,8 @@ describe('List', () => {
         expect(list.cssClass).toBeFalsy();
         expect(list.isListEmpty).toBeTruthy();
 
-        const noItemsParagraphEl = fixture.debugElement.query(By.css('p'));
-        expect(noItemsParagraphEl.nativeElement.textContent.trim()).toBe(listLoadingItemsMessage);
+        const noItemsMessage = fixture.debugElement.query(By.css('.message'));
+        expect(noItemsMessage.nativeElement.textContent.trim()).toBe(listLoadingItemsMessage);
     });
 
     it('Should show loading template when isLoading=\'true\' even when there are children.', () => {
@@ -294,8 +320,8 @@ describe('List', () => {
 
         verifyItemsCount(list, 3);
 
-        const noItemsParagraphEl = fixture.debugElement.query(By.css('p'));
-        expect(noItemsParagraphEl.nativeElement.textContent.trim()).toBe(listLoadingItemsMessage);
+        const noItemsMessage = fixture.debugElement.query(By.css('.message'));
+        expect(noItemsMessage.nativeElement.textContent.trim()).toBe(listLoadingItemsMessage);
 
         list.isLoading = false;
         fixture.detectChanges();
@@ -623,6 +649,147 @@ describe('List', () => {
         expect(firstItem.panState).toBe(IgxListPanState.NONE);
     });
 
+    it('display density is properly applied', () => {
+        const fixture = TestBed.createComponent(TwoHeadersListComponent);
+        fixture.detectChanges();
+
+        const list = fixture.componentInstance.list as IgxListComponent;
+        const domList = fixture.debugElement.query(By.css('igx-list'));
+        verifyDisplayDensity(list, domList, DisplayDensity.comfortable);
+
+        list.displayDensity = DisplayDensity.compact;
+        fixture.detectChanges();
+        verifyDisplayDensity(list, domList, DisplayDensity.compact);
+
+        list.displayDensity = DisplayDensity.cosy;
+        fixture.detectChanges();
+        verifyDisplayDensity(list, domList, DisplayDensity.cosy);
+
+        list.displayDensity = DisplayDensity.comfortable;
+        fixture.detectChanges();
+        verifyDisplayDensity(list, domList, DisplayDensity.comfortable);
+    });
+
+    it('should emit onDensityChanged with proper event arguments', () => {
+        const fixture = TestBed.createComponent(TwoHeadersListComponent);
+        fixture.detectChanges();
+
+        let oldDensity: DisplayDensity;
+        let newDensity: DisplayDensity;
+        const list = fixture.componentInstance.list as IgxListComponent;
+
+        list.onDensityChanged.subscribe((args: IDensityChangedEventArgs) => {
+            oldDensity = args.oldDensity;
+            newDensity = args.newDensity;
+        });
+
+        list.displayDensity = DisplayDensity.compact;
+        expect(oldDensity).toBeUndefined();
+        expect(newDensity).toBe(DisplayDensity.compact);
+
+        list.displayDensity = DisplayDensity.cosy;
+        expect(oldDensity).toBe(DisplayDensity.compact);
+        expect(newDensity).toBe(DisplayDensity.cosy);
+
+        list.displayDensity = DisplayDensity.comfortable;
+        expect(oldDensity).toBe(DisplayDensity.cosy);
+        expect(newDensity).toBe(DisplayDensity.comfortable);
+
+        unsubscribeEvents(list);
+    });
+
+    it('should allow setting the index of list items', (async () => {
+        const fixture = TestBed.createComponent(ListWithIgxForAndScrollingComponent);
+        fixture.detectChanges();
+        await wait(200);
+        fixture.componentInstance.igxFor.scrollTo(8);
+        fixture.detectChanges();
+        await wait(200);
+        const items = fixture.debugElement.queryAll(By.css('igx-list-item'));
+        const len = items.length;
+        expect(items[0].nativeElement.textContent).toContain('3');
+        expect(fixture.componentInstance.forOfList.items[0].index).toEqual(2);
+        expect(items[len - 1].nativeElement.textContent).toContain('11');
+        expect(fixture.componentInstance.forOfList.items[len - 1].index).toEqual(10);
+    }));
+
+    it('should return items as they appear in the list with virtualization', (async () => {
+        const fixture = TestBed.createComponent(ListWithIgxForAndScrollingComponent);
+        fixture.detectChanges();
+        fixture.componentInstance.igxFor.scrollTo(6);
+        await wait(50);
+        fixture.detectChanges();
+        const dItems = fixture.debugElement.queryAll(By.css('igx-list-item'));
+        const pItems = fixture.componentInstance.forOfList.items;
+        const len = dItems.length;
+        for (let i = 0; i < len; i++) {
+            expect(dItems[i].nativeElement).toEqual(pItems[i].element);
+        }
+    }));
+    it('Initializes igxListThumbnail directive', () => {
+        const fixture = TestBed.createComponent(ListDirectivesComponent);
+        fixture.detectChanges();
+        const thumbnail = fixture.debugElement.query(By.directive(IgxListThumbnailDirective));
+
+        expect(thumbnail).toBeDefined();
+        // Check if the directive removes the classes from the target element
+        expect(thumbnail.nativeElement).toHaveClass('igx-icon');
+        // Check if the directive wraps the target element and sets the correct class on the parent element
+        expect(thumbnail.parent.nativeElement).toHaveClass('igx-list__item-thumbnail');
+    });
+
+    it('Initializes igxListLine directive', () => {
+        const fixture = TestBed.createComponent(ListDirectivesComponent);
+        fixture.detectChanges();
+        const listLine = fixture.debugElement.query(By.directive(IgxListLineDirective));
+
+        expect(listLine).toBeDefined();
+        // Check if the directive removes the classes from the target element
+        expect(listLine.nativeElement).toHaveClass('text-line');
+        // Check if the directive wraps the target element and sets the correct class on the parent element
+        expect(listLine.parent.nativeElement).toHaveClass('igx-list__item-lines');
+    });
+
+    it('Initializes igxListAction directive', () => {
+        const fixture = TestBed.createComponent(ListDirectivesComponent);
+        fixture.detectChanges();
+        const listLine = fixture.debugElement.query(By.directive(IgxListActionDirective));
+
+        expect(listLine).toBeDefined();
+        // Check if the directive removes the classes from the target element
+        expect(listLine.nativeElement).toHaveClass('action-icon');
+        // Check if the directive wraps the target element and sets the correct class on the parent element
+        expect(listLine.parent.nativeElement).toHaveClass('igx-list__item-actions');
+    });
+
+    it('Initializes igxListLineTitle directive', () => {
+        const fixture = TestBed.createComponent(ListDirectivesComponent);
+        fixture.detectChanges();
+        const listLine = fixture.debugElement.query(By.directive(IgxListLineTitleDirective));
+
+        expect(listLine).toBeDefined();
+        // Check if the directive removes the custom classes from the target element
+        expect(listLine.nativeElement).toHaveClass('custom');
+        // Check if the directive add the correct class on the target element
+        expect(listLine.nativeElement).toHaveClass('igx-list__item-line-title');
+        // Check if the directive wraps the target element and sets the correct class on the parent element
+        expect(listLine.parent.nativeElement).toHaveClass('igx-list__item-lines');
+    });
+
+    it('Initializes igxListLineSubTitle directive', () => {
+        const fixture = TestBed.createComponent(ListDirectivesComponent);
+        fixture.detectChanges();
+        const listLine = fixture.debugElement.query(By.directive(IgxListLineSubTitleDirective));
+
+        expect(listLine).toBeDefined();
+        // Check if the directive removes the custom classes from the target element
+        expect(listLine.nativeElement).toHaveClass('custom');
+        // Check if the directive add the correct class on the target element
+        expect(listLine.nativeElement).toHaveClass('igx-list__item-line-subtitle');
+        // Check if the directive wraps the target element and sets the correct class on the parent element
+        expect(listLine.parent.nativeElement).toHaveClass('igx-list__item-lines');
+    });
+
     function panRight(item, itemHeight, itemWidth, duration) {
         const panOptions = {
             deltaX: itemWidth * 0.6,
@@ -660,10 +827,10 @@ describe('List', () => {
         const itemWidth = elementRefObject.nativeElement.offsetWidth;
 
         elementRefObject.triggerEventHandler('panstart', {
-            deltaX : factorX < 0 ? -10 : 10
+            deltaX: factorX < 0 ? -10 : 10
         });
         elementRefObject.triggerEventHandler('panmove', {
-            deltaX : factorX * itemWidth, duration : 200
+            deltaX: factorX * itemWidth, duration: 200
         });
         elementRefObject.triggerEventHandler('panend', null);
         return new Promise((resolve, reject) => {
@@ -680,10 +847,10 @@ describe('List', () => {
         const itemWidth = itemNativeElement.nativeElement.offsetWidth;
 
         itemNativeElement.triggerEventHandler('panstart', {
-            deltaX : factorX < 0 ? -10 : 10
+            deltaX: factorX < 0 ? -10 : 10
         });
         itemNativeElement.triggerEventHandler('panmove', {
-            deltaX : factorX * itemWidth, duration : 200
+            deltaX: factorX * itemWidth, duration: 200
         });
     }
 
@@ -706,5 +873,41 @@ describe('List', () => {
         list.onPanStateChange.unsubscribe();
         list.onRightPan.unsubscribe();
         list.onItemClicked.unsubscribe();
+        list.onDensityChanged.unsubscribe();
+    }
+
+    /**
+     * Verifies the display density of the IgxList by providing the IgxListComponent,
+     * the list DebugElement and the expected DisplayDensity enumeration value.
+    */
+    function verifyDisplayDensity(listComp, listDebugEl, expectedDisplayDensity: DisplayDensity) {
+        let expectedListDensityClass;
+
+        switch (expectedDisplayDensity) {
+            case DisplayDensity.compact: expectedListDensityClass = LIST_COMPACT_DENSITY_CSS_CLASS; break;
+            case DisplayDensity.cosy: expectedListDensityClass = LIST_COSY_DENSITY_CSS_CLASS; break;
+            default: expectedListDensityClass = LIST_CSS_CLASS; break;
+        }
+
+        // Verify list display density.
+        expect(listDebugEl.nativeElement.classList[0]).toBe(expectedListDensityClass);
+        expect(listComp.displayDensity).toBe(expectedDisplayDensity);
+        switch (expectedDisplayDensity) {
+            case DisplayDensity.compact: {
+                expect(listComp.cssClass).toBe(false);
+                expect(listComp.cssClassCompact).toBe(true);
+                expect(listComp.cssClassCosy).toBe(false);
+            } break;
+            case DisplayDensity.cosy: {
+                expect(listComp.cssClass).toBe(false);
+                expect(listComp.cssClassCompact).toBe(false);
+                expect(listComp.cssClassCosy).toBe(true);
+            } break;
+            default: {
+                expect(listComp.cssClass).toBe(true);
+                expect(listComp.cssClassCompact).toBe(false);
+                expect(listComp.cssClassCosy).toBe(false);
+            } break;
+        }
     }
 });

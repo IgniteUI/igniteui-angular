@@ -1,0 +1,20 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+$_default-shape-carousel: (
+    border-radius: 0,
+);
+
+$_round-shape-carousel: (
+    border-radius: 1,
+);
+
+$_square-shape-carousel: (
+    border-radius: 0%,
+);
+
+$_fluent-shape-carousel: (
+    border-radius: 0%
+);

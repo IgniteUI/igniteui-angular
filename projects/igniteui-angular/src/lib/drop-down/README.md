@@ -70,10 +70,51 @@ The ***igx-drop-down-item-group*** component can be used inside of the ***igx-dr
 
 ***NOTE:*** The ***igx-drop-down-item-group*** tag can be used for grouping of ***igx-drop-down-item*** only an will forfeit any other content passed to it. 
 
-### API Summary
+## Virtualized item list
+The `igx-drop-down` supports the use of `IgxForOf` directive for displaying very large lists of data. To use a virtualized list of items in the drop-down, follow the steps below:
+
+### Import IgxForOfModule
+```typescript
+    import { ..., IgxForOfModule } from 'igniteui-angular';
+    ...
+    @NgModule({
+        imports: [..., IgxForOfModule]
+    })
+```
+
+### Properly configure the template
+Configure the drop-down to use `*igxFor` instead of `ngFor`. Some additional configuration must be passed:
+ - scrollOrientation - should be `'vertical'`
+ - containerSize - should be set to the height that the items container will have, as `number`. E.g. `public itemsMaxHeight = 480;`
+ - itemSize - should be set to the height of the **smallest** item that the list will have, as `number`. E.g. `public itemHeight = 32;`
+```html
+    <igx-drop-down>
+        <div class="wrapping-div">
+            <igx-drop-down-item *igxFor="let item of localItems; index as index; scrollOrientation: 'vertical'; containerSize: itemsMaxHeight; itemSize: itemHeight;"
+            [value]="item" [index]="index"
+            >
+                {{ item.data }}
+            </igx-drop-down-item>
+        </div>
+    </igx-drop-down>
+```
+Furthermore, when using `*igxFor` in the drop-down template, items must have `value` and `index` bound. The `value` property should be unique for each item.
+
+### Styling the container
+In order for the drop-down list to properly display, the drop-down items must be wrapped in a container element (e.g. `<div>`).
+The container element must have the following styles:
+ - `overflow: hidden;`
+ - `height` property set to the same as `itemsMaxHeight` in the template, in `px`. E.g. `height: 480px`
+
+## Display Density
+**igx-drop-down** supports setting of different display densities.
+Display density is received through Angular's DI engine or can be set through the `[displayDensity]` input. The possilbe display densities are `compact`, `cosy` and `comfortable` (default).
+Setting `[displayDensity]` affects the control's items' css properties, most notably heights, padding, font-size.
+
+# API Summary
 The following table summarizes some of the useful **igx-drop-down** component inputs, outputs and methods.
 
-#### Inputs
+## Inputs
 The following inputs are available in the **igx-drop-down** component:
 
 | Name | Type | Description |
@@ -86,7 +127,7 @@ The following inputs are available in the **igx-drop-down** component:
 
 <div class="divider--half"></div>
 
-#### Outputs
+## Outputs
 The following outputs are available in the **igx-drop-down** component:
 
 | Name | Cancelable | Description | Parameters
@@ -97,7 +138,9 @@ The following outputs are available in the **igx-drop-down** component:
 | `onClosing` | true | Emitted before the dropdown is closed. |
 | `onClosed` | false | Emitted when a dropdown is being closed. |
 
-#### Methods
+***NOTE:*** The using `*igxFor` to virtualize `igx-drop-down-item`s, `onSelection` will emit `newSeleciton` and `oldSelection` as type `{ value: any, index: number }`. 
+
+## Methods
 The following methods are available in the **igx-drop-down** component:
 
 | Signature | Description |
@@ -107,7 +150,7 @@ The following methods are available in the **igx-drop-down** component:
 | `open()` | Opens the dropdown. |
 | `close()` | Closes the dropdown. |
 
-#### Getters
+## Getters
 The following getters are available on the **igx-drop-down** component:
 
 | Name | Type | Description |
@@ -119,9 +162,11 @@ The following getters are available on the **igx-drop-down** component:
 | `element`| `ElementRef` | Get dropdown html element. |
 | `scrollContainer`| `ElementRef` | Get drop down's html element of its scroll container. |
 
+***NOTE:*** The using `*igxFor` to virtualize `igx-drop-down-item`s, `selectedItem` will return type `{ value: any, index: number }`, where `value` is the item's bound `value` property and `index` is the item's index property in the data set. 
+
 The following table summarizes some of the useful **igx-drop-down-item** component inputs, outputs and methods.
 
-#### Inputs
+## Inputs
 The following inputs are available in the **igx-drop-down-item** component:
 
 | Name | Type | Description |
@@ -133,7 +178,7 @@ The following inputs are available in the **igx-drop-down-item** component:
 | `focused` | boolean| Defines if the given item is focused. |
 | `value` | any | The value of the drop-down item. |
 
-#### Getters
+## Getters
 The following getters are available on the **igx-drop-down-item** component:
 
 | Name | Type | Description |

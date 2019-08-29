@@ -145,9 +145,7 @@
 @mixin igx-navbar-typography($type-scale, $categories: (title: 'h6')) {
     $title: map-get($categories, 'title');
 
-    @include igx-scope('.igx-typography') {
-        %igx-navbar-title {
-            @include igx-type-style($type-scale, $title);
-        }
+    %igx-navbar-title {
+        @include igx-type-style($type-scale, $title);
     }
 }

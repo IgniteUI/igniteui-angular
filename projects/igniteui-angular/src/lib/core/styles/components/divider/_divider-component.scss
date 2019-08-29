@@ -1,0 +1,27 @@
+////
+/// @group components
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+
+@include b(igx-divider) {
+    // Register the component in the component registry
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @extend %igx-divider-display !optional;
+
+    @include m(dashed) {
+        @extend %igx-divider--dashed !optional;
+    }
+
+    @include m(vertical) {
+        @extend %igx-divider--vertical !optional;
+    }
+
+    @include mx(vertical, dashed) {
+        @extend %igx-divider--vertical-dashed !optional;
+    }
+}

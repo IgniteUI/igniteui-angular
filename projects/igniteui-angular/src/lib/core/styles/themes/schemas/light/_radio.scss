@@ -1,3 +1,5 @@
+@import '../shape/radio';
+
 ////
 /// @group schemas
 /// @access private
@@ -7,29 +9,67 @@
 /// Generates a light radio schema.
 /// @type {Map}
 ///
+/// @property {map} hover-color [igx-color: ('grays', 900)] - The text color used for the label text.
+/// @property {map} fill-hover-border-color [igx-color: ('grays', 900)] - The text color used for the label text.
 /// @property {map} label-color [igx-color: ('grays', 900)] - The text color used for the label text.
 /// @property {map} empty-color [igx-color: ('grays', 600)] - The unchecked border color.
 /// @property {map} fill-color [igx-color: ('secondary', 500)] - The checked border and dot colors.
 /// @property {map} disabled-color [igx-color: ('grays', 400)] - The disabled border and dot colors.
-///
 /// @see $default-palette
+$_light-radio: extend(
+    $_default-shape-radio,
+    (
+        variant: 'material',
+        name: 'igx-radio',
 
-$_light-radio: (
-    name: 'igx-radio',
+        hover-color: transparent,
 
-    label-color: (
-        igx-color: ('grays', 900)
+        fill-hover-border-color:(
+            igx-color: ('secondary', 500)
+        ),
+
+        label-color: (
+            igx-color: ('grays', 900)
+        ),
+
+        empty-color: (
+            igx-color: ('grays', 600)
+        ),
+
+        fill-color: (
+            igx-color: ('secondary', 500)
+        ),
+
+        disabled-color: (
+            igx-color: ('grays', 400)
+        )
+    )
+);
+
+/// Generates a fluent radio radio schema.
+/// @type {Map}
+///
+/// @property {map} hover-color [igx-color: ('grays', 800)] - The text color used for the label text.
+/// @property {map} fill-hover-border-color [igx-color: ('secondary', 600)] - The text color used for the label text.
+/// @property {map} empty-color [igx-color: ('grays', 800)] - The unchecked border color.
+/// @property {map} fill-color [igx-color: ('secondary', 300)] - The checked border and dot colors.
+$_fluent-radio: extend($_light-radio,(
+    variant: 'fluent',
+
+    hover-color: (
+        igx-color: ('grays', 800)
+    ),
+
+    fill-hover-border-color: (
+        igx-color: ('secondary', 600)
     ),
 
     empty-color: (
-        igx-color: ('grays', 600)
+        igx-color: ('grays', 800)
     ),
 
     fill-color: (
-        igx-color: ('secondary', 500)
+        igx-color: ('secondary', 300)
     ),
+));
 
-    disabled-color: (
-        igx-color: ('grays', 400)
-    )
-);

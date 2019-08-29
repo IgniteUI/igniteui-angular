@@ -1,5 +1,5 @@
 import { Directive, ElementRef, Renderer2, NgZone, HostBinding, TemplateRef } from '@angular/core';
-import { IgxDropDirective } from '../../directives/dragdrop/dragdrop.directive';
+import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { IgxColumnMovingDragDirective } from '../grid.common';
 import { IgxColumnComponent } from '../column.component';
 import { IgxGridComponent } from './grid.component';
@@ -71,7 +71,7 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
             const isGrouped = grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1;
             if (column.groupable && !isGrouped && !column.columnGroup) {
                 grid.groupBy({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase,
-                    strategy: column.sortStrategy });
+                    strategy: column.sortStrategy, groupingComparer: column.groupingComparer });
             }
         }
     }

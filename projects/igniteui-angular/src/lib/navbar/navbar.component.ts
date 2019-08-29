@@ -41,7 +41,13 @@ let NEXT_ID = 0;
 
 @Component({
     selector: 'igx-navbar',
-    templateUrl: 'navbar.component.html'
+    templateUrl: 'navbar.component.html',
+    styles: [`
+        :host {
+            display: block;
+        }
+    `
+    ]
 })
 
 export class IgxNavbarComponent {
@@ -127,7 +133,7 @@ export class IgxNavbarComponent {
     /**
      * @hidden
      */
-    @ContentChild(IgxActionIconDirective, { read: IgxActionIconDirective })
+    @ContentChild(IgxActionIconDirective, { read: IgxActionIconDirective, static: false })
     protected actionIconTemplate: IgxActionIconDirective;
 
     /**

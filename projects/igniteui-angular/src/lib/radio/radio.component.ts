@@ -8,10 +8,10 @@ import {
     ElementRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { isIE } from '../core/utils';
+import { isIE, IBaseEventArgs } from '../core/utils';
 import { EditorProvider } from '../core/edit-provider';
 
-export interface IChangeRadioEventArgs {
+export interface IChangeRadioEventArgs extends IBaseEventArgs {
     value: any;
     radio: IgxRadioComponent;
 }
@@ -50,7 +50,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * ```
      * @memberof IgxSwitchComponent
      */
-    @ViewChild('radio') public nativeRadio: ElementRef;
+    @ViewChild('radio', { static: true }) public nativeRadio: ElementRef;
     /**
      * Returns reference to native label element.
      * ```typescript
@@ -58,7 +58,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * ```
      * @memberof IgxSwitchComponent
      */
-    @ViewChild('nativeLabel') public nativeLabel;
+    @ViewChild('nativeLabel', { static: true }) public nativeLabel;
     /**
      * Returns reference to the label placeholder element.
      * ```typescript
@@ -66,7 +66,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * ```
      * @memberof IgxSwitchComponent
      */
-    @ViewChild('placeholderLabel') public placeholderLabel;
+    @ViewChild('placeholderLabel', { static: true }) public placeholderLabel;
 
     /**
      * Sets/gets the `id` of the radio component.

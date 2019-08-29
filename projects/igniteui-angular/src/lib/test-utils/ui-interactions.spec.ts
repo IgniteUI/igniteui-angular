@@ -1,3 +1,5 @@
+import { HorizontalAlignment, VerticalAlignment, Point } from '../services';
+
 export function wait(ms = 0) {
     return new Promise((resolve, reject) => setTimeout(resolve, ms));
 }
@@ -20,13 +22,20 @@ export class UIInteractions {
         elem.dispatchEvent(new KeyboardEvent(evtName, evtArgs));
     }
 
-    public static triggerKeyDownEvtUponElem(keyPressed, elem, bubbles, altKey = false) {
+    public static triggerKeyDownEvtUponElem(keyPressed, elem, bubbles, altKey = false, shift = false, ctrl = false) {
         const keyboardEvent = new KeyboardEvent('keydown', {
             key: keyPressed,
-            bubbles,
-            altKey
+            bubbles: bubbles,
+            shiftKey: shift,
+            ctrlKey: ctrl,
+            altKey: altKey
         });
         elem.dispatchEvent(keyboardEvent);
+    }
+
+    public static triggerKeyDownWithBlur(keyPressed, elem, bubbles, altKey = false, shift = false, ctrl = false) {
+        UIInteractions.triggerKeyDownEvtUponElem(keyPressed, elem, bubbles, altKey, shift, ctrl);
+        elem.dispatchEvent(new Event('blur'));
     }
 
     public static findCellByInputElem(elem, focusedElem) {
@@ -45,8 +54,17 @@ export class UIInteractions {
         return row.triggerEventHandler('click', new Event('click'));
     }
 
+    /**
+     * Clicks an element - native or debug, by dispatching pointerdown, focus, pointerup and click events.
+     * @param element - Native or debug element.
+     */
     public static clickElement(element) {
-        element.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
+        const nativeElement = element.nativeElement ? element.nativeElement : element;
+        const elementRect = nativeElement.getBoundingClientRect();
+        UIInteractions.simulatePointerEvent('pointerdown', nativeElement, elementRect.left, elementRect.top);
+        nativeElement.dispatchEvent(new Event('focus'));
+        UIInteractions.simulatePointerEvent('pointerup', nativeElement, elementRect.left, elementRect.top);
+        nativeElement.dispatchEvent(new Event('click', { bubbles: true}));
     }
 
     public static simulateMouseEvent(eventName: string, element, x, y) {
@@ -89,6 +107,57 @@ export class UIInteractions {
         Object.defineProperty(pointerEvent, 'pageX', { value: x, enumerable: true });
         Object.defineProperty(pointerEvent, 'pageY', { value: y, enumerable: true });
         element.dispatchEvent(pointerEvent);
+        return pointerEvent;
+    }
+
+    public static simulatePointerOverCellEvent(eventName: string, element, shift = false, ctrl = false) {
+        const options: PointerEventInit = {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            pointerId: 1,
+            buttons: 1,
+            button: eventName === 'pointerenter' ? -1 : 0,
+            shiftKey: shift,
+            ctrlKey: ctrl
+        };
+        element.dispatchEvent(new PointerEvent(eventName, options));
+    }
+
+    public static simulateClickEvent(element, shift = false, ctrl = false) {
+        const event = new MouseEvent('click', {
+            bubbles: true,
+            shiftKey: shift,
+            ctrlKey: ctrl
+        });
+        element.dispatchEvent(event);
+    }
+
+    public static simulateDragScrollOverCellEvent(eventName: string, element, clientX, clientY, shift = false, ctrl = false) {
+        const options: PointerEventInit = {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            pointerId: 1,
+            buttons: 1,
+            shiftKey: shift,
+            ctrlKey: ctrl,
+            clientX: clientX,
+            clientY: clientY
+        };
+        element.dispatchEvent(new PointerEvent(eventName, options));
+    }
+
+    public static simulateClickAndSelectCellEvent(element, shift = false, ctrl = false) {
+        UIInteractions.simulatePointerOverCellEvent('pointerdown', element.nativeElement, shift, ctrl);
+        element.nativeElement.dispatchEvent(new Event('focus'));
+        UIInteractions.simulatePointerOverCellEvent('pointerup', element.nativeElement);
+    }
+
+    public static simulateNonPrimaryClick(cell) {
+        cell.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { button: 2 }));
+        cell.nativeElement.dispatchEvent(new Event('focus'));
+        cell.nativeElement.dispatchEvent(new PointerEvent('pointerup', { button: 2 }));
     }
 
     public static clearOverlay() {
@@ -101,6 +170,9 @@ export class UIInteractions {
     }
     public static simulateWheelEvent(element, deltaX, deltaY) {
         const event = new WheelEvent('wheel', { deltaX: deltaX, deltaY: deltaY });
+        Object.defineProperty(event, 'wheelDeltaX', {value: deltaX});
+        Object.defineProperty(event, 'wheelDeltaY', {value: deltaY});
+
         return new Promise((resolve, reject) => {
             element.dispatchEvent(event);
             resolve();
@@ -149,5 +221,22 @@ export class UIInteractions {
             element.dispatchEvent(touchEventObject);
             resolve();
         });
+    }
+
+    /**
+     * Calculate point within element
+     * @param element Element to calculate point for
+     * @param hAlign The horizontal position of the point within the element (defaults to center)
+     * @param vAlign The vertical position of the point within the element (defaults to middle)
+     */
+    public static getPointFromElement(
+        element: Element,
+        hAlign: HorizontalAlignment = HorizontalAlignment.Center,
+        vAlign: VerticalAlignment = VerticalAlignment.Middle): Point {
+            const elementRect = element.getBoundingClientRect();
+            return {
+                x: elementRect.right + hAlign * elementRect.width,
+                y: elementRect.bottom + vAlign * elementRect.height
+            };
     }
 }

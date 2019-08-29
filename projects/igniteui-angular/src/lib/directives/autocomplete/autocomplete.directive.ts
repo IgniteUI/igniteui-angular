@@ -5,7 +5,7 @@ import { NgModel, FormControlName } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
-import { CancelableEventArgs } from '../../core/utils';
+import { CancelableEventArgs, IBaseEventArgs } from '../../core/utils';
 import { OverlaySettings, AbsoluteScrollStrategy, IScrollStrategy, IPositionStrategy, AutoPositionStrategy } from '../../services/index';
 import { IgxDropDownModule, IgxDropDownComponent, ISelectionEventArgs, IgxDropDownItemNavigationDirective } from '../../drop-down/index';
 import { IgxInputGroupComponent } from '../../input-group/index';
@@ -15,7 +15,7 @@ import { IgxOverlayOutletDirective } from '../toggle/toggle.directive';
  * Interface that encapsulates onItemSelection event arguments - new value and cancel selection.
  * @export
  */
-export interface AutocompleteItemSelectionEventArgs extends CancelableEventArgs {
+export interface AutocompleteItemSelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {
     /**
      * New value selected from the drop down
      */
@@ -299,9 +299,12 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         if (args.cancel) {
             return;
         }
-        this.model ? this.model.control.setValue(newValue) : this.nativeElement.value = newValue;
         this.close();
         this.nativeElement.focus();
+
+        // Update model after the input is re-focused, in order to have proper valid styling.
+        // Otherwise when item is selected using mouse (and input is blurred), then valid style will be removed.
+        this.model ? this.model.control.setValue(newValue) : this.nativeElement.value = newValue;
     }
 
     private highlightFirstItem = () => {

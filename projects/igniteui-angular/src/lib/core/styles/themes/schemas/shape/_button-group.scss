@@ -1,0 +1,21 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+$_default-shape-button-group: (
+    border-radius: .2,
+);
+
+$_round-shape-button-group: (
+    border-radius: 1,
+);
+
+$_square-shape-button-group: (
+    border-radius: 0%,
+);
+
+$_fluent-shape-button-group: (
+    border-radius: 2px,
+);
+

@@ -7,18 +7,31 @@ import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownComponent, IgxDropDownModule } from './index';
 import { ISelectionEventArgs } from './drop-down.common';
 import { IgxTabsComponent, IgxTabsModule } from '../tabs/tabs.component';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { CancelableEventArgs } from '../core/utils';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { take } from 'rxjs/operators';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
+import { IgxForOfDirective, IgxForOfModule } from '../directives/for-of/for_of.directive';
+import { IgxDropDownItemBase } from './drop-down-item.base';
+import { DisplayDensityToken, DisplayDensity } from '../core/density';
 
 const CSS_CLASS_FOCUSED = 'igx-drop-down__item--focused';
 const CSS_CLASS_SELECTED = 'igx-drop-down__item--selected';
 const CSS_CLASS_DISABLED = 'igx-drop-down__item--disabled';
 const CSS_CLASS_HEADER = 'igx-drop-down__header';
+const CSS_CLASS_HEADER_COSY = 'igx-drop-down__header--cosy';
+const CSS_CLASS_HEADER_COMPACT = 'igx-drop-down__header--compact';
 const CSS_CLASS_DROP_DOWN_BASE = 'igx-drop-down';
 const CSS_CLASS_TOGGLE = 'igx-toggle';
+const CSS_CLASS_ITEM = 'igx-drop-down__item';
+const CSS_CLASS_ITEM_COSY = 'igx-drop-down__item--cosy';
+const CSS_CLASS_ITEM_COMPACT = 'igx-drop-down__item--compact';
+
+const fiftyItems = Array.apply(null, { length: 50 }).map((e, i) => ({
+    value: i,
+    name: `Item ${i + 1}`
+}));
 
 describe('IgxDropDown ', () => {
     configureTestSuite();
@@ -40,20 +53,24 @@ describe('IgxDropDown ', () => {
                 IgxDropDownSelectComponent,
                 DropDownWithMaxHeightComponent,
                 DropDownWithUnusedMaxHeightComponent,
-                GroupDropDownComponent
+                GroupDropDownComponent,
+                VirtualizedDropDownComponent,
+                DensityInputComponent,
+                DensityParentComponent
             ],
             imports: [
                 IgxDropDownModule,
                 NoopAnimationsModule,
                 IgxToggleModule,
-                IgxTabsModule
+                IgxTabsModule,
+                IgxForOfModule
             ]
         })
             .compileComponents();
     }));
 
     describe('igxDropDown integration tests', () => {
-        configureTestSuite();
+        // configureTestSuite();
         it('should select item by SPACE/ENTER and click', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxDropDownTestComponent);
             fixture.detectChanges();
@@ -63,8 +80,8 @@ describe('IgxDropDown ', () => {
             const mockObj = {
                 key: '',
                 code: '',
-                stopPropagation: () => {},
-                preventDefault: () => {}
+                stopPropagation: () => { },
+                preventDefault: () => { }
             };
             spyOn(mockObj, 'preventDefault');
             spyOn(mockObj, 'stopPropagation');
@@ -143,8 +160,8 @@ describe('IgxDropDown ', () => {
             const mockObj = {
                 key: '',
                 code: '',
-                stopPropagation: () => {},
-                preventDefault: () => {}
+                stopPropagation: () => { },
+                preventDefault: () => { }
             };
             spyOn(mockObj, 'preventDefault');
             spyOn(mockObj, 'stopPropagation');
@@ -207,8 +224,8 @@ describe('IgxDropDown ', () => {
             const mockObj = {
                 key: '',
                 code: '',
-                stopPropagation: () => {},
-                preventDefault: () => {}
+                stopPropagation: () => { },
+                preventDefault: () => { }
             };
             button.click();
             tick();
@@ -529,8 +546,8 @@ describe('IgxDropDown ', () => {
             const mockObj = {
                 key: 'arrowdown',
                 code: 'arrowdown',
-                stopPropagation: () => {},
-                preventDefault: () => {}
+                stopPropagation: () => { },
+                preventDefault: () => { }
             };
             spyOn(mockObj, 'preventDefault');
             spyOn(mockObj, 'stopPropagation');
@@ -632,8 +649,8 @@ describe('IgxDropDown ', () => {
             currentItem.triggerEventHandler('keydown', {
                 key: 'Home',
                 code: 'Home',
-                stopPropagation: () => {},
-                preventDefault: () => {}
+                stopPropagation: () => { },
+                preventDefault: () => { }
             });
             tick();
 
@@ -652,8 +669,8 @@ describe('IgxDropDown ', () => {
             const mockObj = {
                 key: 'end',
                 code: 'end',
-                stopPropagation: () => {},
-                preventDefault: () => {}
+                stopPropagation: () => { },
+                preventDefault: () => { }
             };
             spyOn(mockObj, 'stopPropagation');
             spyOn(mockObj, 'preventDefault');
@@ -692,8 +709,8 @@ describe('IgxDropDown ', () => {
             const mockObj = {
                 key: 'ArrowDown',
                 code: 'ArrowDown',
-                stopPropagation: () => {},
-                preventDefault: () => {}
+                stopPropagation: () => { },
+                preventDefault: () => { }
             };
             spyOn(mockObj, 'stopPropagation');
             spyOn(mockObj, 'preventDefault');
@@ -780,8 +797,8 @@ describe('IgxDropDown ', () => {
             const mockObj = {
                 key: '',
                 code: '',
-                stopPropagation: () => {},
-                preventDefault: () => {}
+                stopPropagation: () => { },
+                preventDefault: () => { }
             };
             spyOn(mockObj, 'stopPropagation');
             spyOn(mockObj, 'preventDefault');
@@ -821,8 +838,8 @@ describe('IgxDropDown ', () => {
             const mockObj = {
                 key: 'enter',
                 code: 'enter',
-                stopPropagation: () => {},
-                preventDefault: () => {}
+                stopPropagation: () => { },
+                preventDefault: () => { }
             };
             spyOn(mockObj, 'preventDefault');
             const igxDropDown = fixture.componentInstance.dropdownScroll;
@@ -919,7 +936,7 @@ describe('IgxDropDown ', () => {
     });
 
     describe('igxDropDown Unit tests', () => {
-        configureTestSuite();
+        // configureTestSuite();
         it('Should fire events', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxDropDownTestComponent);
             const componentInstance = fixture.componentInstance;
@@ -1100,19 +1117,6 @@ describe('IgxDropDown ', () => {
             expect(igxDropDown.collapsed).toEqual(true);
         }));
 
-        it('#1663 drop down flickers on open', fakeAsync(() => {
-            const fixture = TestBed.createComponent(IgxDropDownWithScrollComponent);
-            fixture.detectChanges();
-            const button = fixture.debugElement.query(By.css('button')).nativeElement;
-            const igxDropDown = fixture.componentInstance.dropdownScroll;
-            button.click();
-            igxDropDown.open();
-            tick();
-            fixture.detectChanges();
-
-            expect((<any>igxDropDown).toggleDirective.element.scrollTop).toEqual(116);
-        }));
-
         it('Should set isSelected via igxDropDownIteComponent', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxDropDownTestComponent);
             const componentInstance = fixture.componentInstance;
@@ -1268,7 +1272,7 @@ describe('IgxDropDown ', () => {
     });
 
     describe('DropDownGroup Tests', () => {
-        configureTestSuite();
+        // configureTestSuite();
         it('Should properly render item groups aria attributes - label, role, labelledby', fakeAsync(() => {
             const fixture = TestBed.createComponent(GroupDropDownComponent);
             fixture.detectChanges();
@@ -1334,6 +1338,176 @@ describe('IgxDropDown ', () => {
             }
         }));
     });
+
+    describe('Virtualized DropDown tests', () => {
+        // configureTestSuite();
+        let fixture, button, dropdown: IgxDropDownComponent, scroll, items;
+        beforeEach(() => {
+            fixture = TestBed.createComponent(VirtualizedDropDownComponent);
+            fixture.detectChanges();
+            dropdown = fixture.componentInstance.dropdown;
+            button = fixture.componentInstance.toggleButton;
+            scroll = fixture.componentInstance.virtualScroll;
+            items = fixture.componentInstance.dropdownItems;
+        });
+        it('Should properly display items when virtualized', fakeAsync(() => {
+            expect(dropdown).toBeDefined();
+            expect(fixture.componentInstance.dropdownItems.length).toEqual(11);
+            expect(fixture.componentInstance.items.length).toEqual(2000);
+            dropdown.toggle();
+            tick();
+            expect(fixture.componentInstance.dropdownItems.length).toEqual(11);
+            expect(fixture.componentInstance.dropdownItems.first.element.nativeElement.textContent.trim()).toEqual('Item 1');
+            expect(fixture.componentInstance.dropdownItems.last.element.nativeElement.textContent.trim()).toEqual('Item 11');
+        }));
+        it('Should properly scroll when virtualized', async() => {
+            expect(dropdown).toBeDefined();
+            dropdown.toggle();
+            fixture.detectChanges();
+            await wait(200);
+            let firstItemElement = fixture.componentInstance.dropdownItems.first.element.nativeElement;
+            let lastItemElement = fixture.componentInstance.dropdownItems.last.element.nativeElement;
+            expect(lastItemElement.textContent.trim()).toEqual('Item 11');
+            expect(firstItemElement.textContent.trim()).toEqual('Item 1');
+            scroll.getVerticalScroll().scrollTop = scroll.getVerticalScroll().scrollHeight;
+            fixture.detectChanges();
+            await wait(200);
+            firstItemElement = fixture.componentInstance.dropdownItems.first.element.nativeElement;
+            lastItemElement = fixture.componentInstance.dropdownItems.last.element.nativeElement;
+            expect(firstItemElement.textContent.trim()).toEqual('Item 1989');
+            expect(lastItemElement.textContent.trim()).toEqual('Item 2000');
+        });
+        it('Should properly handle keyboard navigation when virtualized', async(() => {
+            expect(dropdown).toBeDefined();
+            dropdown.toggle();
+            fixture.detectChanges();
+            dropdown.navigateFirst();
+            expect(scroll.state.startIndex).toEqual(0);
+            expect(items.first.focused).toEqual(true);
+            dropdown.navigateLast();
+            setTimeout(() => {
+                expect(scroll.state.startIndex).toEqual(2000 - scroll.state.chunkSize);
+                expect(items.last.focused).toEqual(true);
+                button.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+                expect(scroll.state.startIndex).toEqual(2000 - scroll.state.chunkSize);
+                expect(items.toArray()[items.toArray().length - 2].focused).toEqual(true);
+                dropdown.focusedItem = items.toArray()[2];
+                button.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+            }, 200);
+        }));
+        it('Should properly preserve selection when scrolled', (done) => {
+            dropdown.toggle();
+            expect(dropdown.selectedItem).toBe(null);
+            dropdown.selectItem({ value: fixture.componentInstance.items[5], index: 5 } as IgxDropDownItemBase);
+            fixture.detectChanges();
+            expect(dropdown.selectedItem as any).toEqual({ value: fixture.componentInstance.items[5], index: 5 });
+            expect(items.toArray()[5].selected).toEqual(true);
+            scroll.scrollTo(412);
+            setTimeout(() => {
+                fixture.detectChanges();
+                expect(items.toArray()[5].selected).toEqual(false);
+                expect(document.getElementsByClassName(CSS_CLASS_SELECTED).length).toEqual(0);
+                scroll.scrollTo(0);
+                setTimeout(() => {
+                    fixture.detectChanges();
+                    expect(items.toArray()[5].selected).toEqual(true);
+                    expect(document.getElementsByClassName(CSS_CLASS_SELECTED).length).toEqual(1);
+                    done();
+                }, 200);
+            }, 200);
+        });
+        it('Should properly select items both inside and outside of the virtual view', (done) => {
+            dropdown.toggle();
+            expect(dropdown.selectedItem).toBe(null);
+            let selectedItem = { value: fixture.componentInstance.items[5], index: 5 } as IgxDropDownItemBase;
+            dropdown.selectItem(selectedItem);
+            fixture.detectChanges();
+            expect(dropdown.selectedItem as any).toEqual(selectedItem);
+            expect(items.toArray()[5].selected).toEqual(true);
+            selectedItem = { value: fixture.componentInstance.items[412], index: 412 } as IgxDropDownItemBase;
+            dropdown.selectItem(selectedItem);
+            fixture.detectChanges();
+            expect(dropdown.selectedItem as any).toEqual(selectedItem);
+            expect(items.toArray()[5].selected).toEqual(false);
+            scroll.scrollTo(412);
+            setTimeout(() => {
+                fixture.detectChanges();
+                const selectedEntry = items.find(e => e.value === selectedItem.value && e.index === selectedItem.index);
+                expect(selectedEntry).toBeTruthy();
+                expect(selectedEntry.selected).toBeTruthy();
+                done();
+            }, 200);
+        });
+        it('Should properly scroll selected item into view when virtualized', (done) => {
+            dropdown.toggle();
+            expect(dropdown.selectedItem).toBe(null);
+            const virtualScroll = fixture.componentInstance.virtualScroll;
+            const selectedItem = { value: fixture.componentInstance.items[1000], index: 1000 } as IgxDropDownItemBase;
+            dropdown.selectItem(selectedItem);
+            fixture.detectChanges();
+            dropdown.toggle();
+            setTimeout(() => {
+                dropdown.toggle();
+                setTimeout(() => {
+                    const itemsInView = virtualScroll.igxForContainerSize / virtualScroll.igxForItemSize;
+                    const expectedScroll = virtualScroll.getScrollForIndex(selectedItem.index)
+                        - (itemsInView / 2 - 1) * virtualScroll.igxForItemSize;
+                    const acceptableDelta = virtualScroll.igxForItemSize;
+                    const scrollTop = virtualScroll.getVerticalScroll().scrollTop;
+                    expect(expectedScroll - acceptableDelta < scrollTop && expectedScroll + acceptableDelta > scrollTop).toBe(true);
+                    done();
+                }, 100);
+            }, 100);
+        });
+    });
+
+    describe('DropDown - Display Density', () => {
+        it('Should be able to set Display Density as input', fakeAsync(() => {
+            const fixutre = TestBed.createComponent(DensityInputComponent);
+            tick();
+            fixutre.detectChanges();
+            const dropdown = fixutre.componentInstance.dropdown;
+            expect(dropdown.displayDensity).toEqual(DisplayDensity.cosy);
+            fixutre.componentInstance.density = DisplayDensity.compact;
+            tick();
+            fixutre.detectChanges();
+            expect(dropdown.displayDensity).toEqual(DisplayDensity.compact);
+            fixutre.componentInstance.density = DisplayDensity.comfortable;
+            tick();
+            fixutre.detectChanges();
+            expect(dropdown.displayDensity).toEqual(DisplayDensity.comfortable);
+        }));
+        it('Should be able to get Display Density from DI engine', fakeAsync(() => {
+            const fixutre = TestBed.createComponent(DensityInputComponent);
+            tick();
+            fixutre.detectChanges();
+            const dropdown = fixutre.componentInstance.dropdown;
+            expect(dropdown.displayDensity).toEqual(DisplayDensity.cosy);
+        }));
+        it('Should apply correct styles to items when Display Density is set', fakeAsync(() => {
+            const fixutre = TestBed.createComponent(DensityInputComponent);
+            tick();
+            fixutre.detectChanges();
+            const dropdown = fixutre.componentInstance.dropdown;
+            dropdown.toggle();
+            tick();
+            fixutre.detectChanges();
+            expect(dropdown.items.length).toEqual(document.getElementsByClassName(CSS_CLASS_ITEM_COSY).length);
+            expect(dropdown.headers.length).toEqual(document.getElementsByClassName(CSS_CLASS_HEADER_COSY).length);
+            fixutre.componentInstance.density = DisplayDensity.compact;
+            tick();
+            fixutre.detectChanges();
+            expect(dropdown.items.length).toEqual(document.getElementsByClassName(CSS_CLASS_ITEM_COMPACT).length);
+            expect(dropdown.headers.length).toEqual(document.getElementsByClassName(CSS_CLASS_HEADER_COMPACT).length);
+            fixutre.componentInstance.density = DisplayDensity.comfortable;
+            tick();
+            fixutre.detectChanges();
+            expect(dropdown.items.length).toEqual(document.getElementsByClassName(CSS_CLASS_ITEM).length);
+            expect(dropdown.headers.length).toEqual(document.getElementsByClassName(CSS_CLASS_HEADER).length);
+            expect(document.getElementsByClassName(CSS_CLASS_ITEM_COMPACT).length).toEqual(0);
+            expect(document.getElementsByClassName(CSS_CLASS_ITEM_COSY).length).toEqual(0);
+        }));
+    });
 });
 
 @Component({
@@ -1349,7 +1523,7 @@ describe('IgxDropDown ', () => {
 })
 class IgxDropDownTestComponent {
 
-    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropdown: IgxDropDownComponent;
 
     public items: any[] = [
@@ -1387,7 +1561,7 @@ class IgxDropDownTestComponent {
 })
 class IgxDropDownTestScrollComponent {
 
-    @ViewChild('scrollDropDown', { read: IgxDropDownComponent })
+    @ViewChild('scrollDropDown', { read: IgxDropDownComponent, static: true })
     public dropdownScroll: IgxDropDownComponent;
 
     public items: any[] = [
@@ -1430,7 +1604,7 @@ class IgxDropDownTestScrollComponent {
 })
 class IgxDropDownTestDisabledAnyComponent {
 
-    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropdownDisabledAny: IgxDropDownComponent;
 
     public items: any[] = [
@@ -1474,7 +1648,7 @@ class IgxDropDownTestDisabledAnyComponent {
 })
 class IgxDropDownTestDisabledComponent {
 
-    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropdownDisabled: IgxDropDownComponent;
 
     public items: any[] = [
@@ -1516,7 +1690,7 @@ class IgxDropDownTestDisabledComponent {
 })
 class IgxDropDownTestEmptyListComponent {
 
-    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropdownEmpty: IgxDropDownComponent;
 
     public items: any[] = [];
@@ -1537,7 +1711,7 @@ class IgxDropDownTestEmptyListComponent {
 })
 class IgxDropDownWithScrollComponent implements OnInit {
 
-    @ViewChild('scrollDropDown', { read: IgxDropDownComponent })
+    @ViewChild('scrollDropDown', { read: IgxDropDownComponent, static: true })
     public dropdownScroll: IgxDropDownComponent;
 
     public items: any[] = [];
@@ -1575,10 +1749,10 @@ class IgxDropDownWithScrollComponent implements OnInit {
 })
 class DoubleIgxDropDownComponent implements OnInit {
 
-    @ViewChild('dropdown1', { read: IgxDropDownComponent })
+    @ViewChild('dropdown1', { read: IgxDropDownComponent, static: true })
     public dropdown1: IgxDropDownComponent;
 
-    @ViewChild('dropdown2', { read: IgxDropDownComponent })
+    @ViewChild('dropdown2', { read: IgxDropDownComponent, static: true })
     public dropdown2: IgxDropDownComponent;
 
     public items: any[] = [];
@@ -1603,7 +1777,7 @@ class DoubleIgxDropDownComponent implements OnInit {
 })
 class IgxDropDownInputTestComponent {
 
-    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropdown: IgxDropDownComponent;
 
     public items: any[] = [
@@ -1641,7 +1815,7 @@ class IgxDropDownInputTestComponent {
 })
 class IgxDropDownImageTestComponent {
 
-    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropdown: IgxDropDownComponent;
 
     public items: any[] = [
@@ -1698,9 +1872,9 @@ class IgxDropDownImageTestComponent {
 })
 class IgxDropDownTabsTestComponent {
 
-    @ViewChild(IgxTabsComponent)
+    @ViewChild(IgxTabsComponent, { static: true })
     public tabs: IgxTabsComponent;
-    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropdown: IgxDropDownComponent;
 
     public items: any[] = [
@@ -1737,7 +1911,7 @@ class IgxDropDownTabsTestComponent {
     `
 })
 class IgxDropDownSelectComponent {
-    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropdown: IgxDropDownComponent;
 
     public items: any[] = [
@@ -1764,10 +1938,10 @@ class IgxDropDownSelectComponent {
     </igx-drop-down>`
 })
 class InputWithDropDownDirectiveComponent {
-    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropdown: IgxDropDownComponent;
 
-    @ViewChild(`inputElement`)
+    @ViewChild(`inputElement`, { static: true })
     public inputElement: ElementRef;
 
     public items: any[] = [
@@ -1787,7 +1961,7 @@ class InputWithDropDownDirectiveComponent {
     </igx-drop-down>`
 })
 class DropDownWithValuesComponent {
-    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropdown: IgxDropDownComponent;
 
     public items: any[] = [
@@ -1806,7 +1980,7 @@ class DropDownWithValuesComponent {
         </igx-drop-down-item>
     </igx-drop-down>`
 })
-class DropDownWithMaxHeightComponent extends DropDownWithValuesComponent {}
+class DropDownWithMaxHeightComponent extends DropDownWithValuesComponent { }
 
 @Component({
     template: `
@@ -1816,7 +1990,7 @@ class DropDownWithMaxHeightComponent extends DropDownWithValuesComponent {}
         </igx-drop-down-item>
     </igx-drop-down>`
 })
-class DropDownWithUnusedMaxHeightComponent extends DropDownWithValuesComponent {}
+class DropDownWithUnusedMaxHeightComponent extends DropDownWithValuesComponent { }
 
 @Component({
     template: `
@@ -1829,7 +2003,7 @@ class DropDownWithUnusedMaxHeightComponent extends DropDownWithValuesComponent {
     </igx-drop-down>`
 })
 class GroupDropDownComponent {
-    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent })
+    @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropDown: IgxDropDownComponent;
     @ViewChildren(IgxDropDownGroupComponent, { read: IgxDropDownGroupComponent })
     public groups: QueryList<IgxDropDownGroupComponent>;
@@ -1850,4 +2024,81 @@ class GroupDropDownComponent {
             }
         }
     }
+}
+
+@Component({
+    template: `
+        <button igxButton #toggleButton [igxToggleAction]="dropdown" [igxDropDownItemNavigation]="dropdown">Toggle Virtual</button>
+        <igx-drop-down #dropdown>
+            <div class="wrapping-div">
+                <igx-drop-down-item
+                *igxFor="let item of items; index as index;
+                scrollOrientation: 'vertical'; containerSize: itemsMaxHeight; itemSize: itemHeight;"
+                [value]="item" role="option"
+                [disabled]="index > 53 && index < 57"
+                [index]="index">
+                    {{ item.name }}
+                </igx-drop-down-item>
+            </div>
+        </igx-drop-down>
+    `,
+    styles: [`
+    .wrapping-div {
+        overflow: hidden;
+        height: 420px;
+    }
+    `]
+})
+class VirtualizedDropDownComponent {
+    @ViewChild('toggleButton', { read: ElementRef, static: true })
+    public toggleButton: ElementRef;
+    @ViewChild(IgxDropDownComponent, { static: true })
+    public dropdown: IgxDropDownComponent;
+    @ViewChild(IgxForOfDirective, { read: IgxForOfDirective, static: true })
+    public virtualScroll: IgxForOfDirective<any>;
+    @ViewChildren(IgxDropDownItemComponent)
+    public dropdownItems: QueryList<IgxDropDownItemComponent>;
+    public items = [];
+    constructor() {
+        this.items = Array.apply(null, { length: 2000 }).map((e, i) => ({
+            name: `Item ${i + 1}`,
+            id: i
+        }));
+    }
+    public itemsMaxHeight = 420;
+    public itemHeight = 42;
+}
+
+@Component({
+    template: `
+        <igx-drop-down #dropdown [displayDensity]="density">
+            <igx-drop-down-item *ngFor="let item of items" [value]="item.value" [isHeader]="item.value % 5 === 0">
+                {{ item.name }}
+            </igx-drop-down-item>
+        </igx-drop-down>
+    `
+})
+class DensityInputComponent {
+    public density = DisplayDensity.cosy;
+    @ViewChild('dropdown', { read: IgxDropDownComponent, static: true })
+    public dropdown: IgxDropDownComponent;
+    public items = fiftyItems;
+}
+
+@Component({
+    template: `
+        <igx-drop-down #dropdown>
+            <igx-drop-down-item *ngFor="let item of items" [value]="item.value" [isHeader]="item.value % 5 === 0">
+                {{ item.name }}
+            </igx-drop-down-item>
+        </igx-drop-down>
+    `,
+    providers: [{
+        provide: DisplayDensityToken, useValue: DisplayDensity.cosy
+    }]
+})
+class DensityParentComponent {
+    @ViewChild('dropdown', { read: IgxDropDownComponent, static: true })
+    public dropdown: IgxDropDownComponent;
+    public items = fiftyItems;
 }

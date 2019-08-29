@@ -11,8 +11,20 @@
     @include b(igx-excel-filter) {
         @extend %grid-excel-filter !optional;
 
+        @include e(loading) {
+            @extend %igx-excel-filter__loading !optional;
+        }
+
         @include e(menu) {
             @extend %grid-excel-menu !optional;
+        }
+
+        @include e(menu, $m: 'cosy') {
+            @extend %grid-excel-menu--cosy !optional;
+        }
+
+        @include e(menu, $m: 'compact') {
+            @extend %grid-excel-menu--compact !optional;
         }
 
         @include e(icon) {
@@ -26,6 +38,10 @@
 
         @include e(menu-header) {
             @extend %grid-excel-menu__header !optional;
+        }
+
+        @include e(menu-header-actions) {
+            @extend %grid-excel-menu__header-actions !optional;
         }
 
         @include e(menu-main) {
@@ -56,6 +72,11 @@
             @extend %grid-excel-actions__action !optional;
         }
 
+        @include e(actions-pin, $m: disabled) {
+            @extend %grid-excel-actions__action !optional;
+            @extend %grid-excel-actions__action--disabled !optional;
+        }
+
         @include e(actions-unpin) {
             @extend %grid-excel-actions__action !optional;
         }
@@ -79,6 +100,14 @@
 
         @include e(secondary) {
             @extend %grid-excel-menu__secondary !optional;
+        }
+
+        @include e(secondary, $m: 'cosy') {
+            @extend %grid-excel-menu__secondary--cosy !optional;
+        }
+
+        @include e(secondary, $m: 'compact') {
+            @extend %grid-excel-menu__secondary--compact !optional;
         }
 
         @include e(secondary-header) {

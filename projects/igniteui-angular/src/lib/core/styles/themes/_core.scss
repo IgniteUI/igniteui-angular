@@ -13,6 +13,7 @@
 // Common component modules
 @import '../components/_common/igx-control';
 @import '../components/_common/igx-display-container';
+@import '../components/_common/igx-drag';
 @import '../components/_common/igx-vhelper';
 
 // Ensure the ripple is loaded before other component themes
@@ -23,6 +24,7 @@
 @import '../components/badge/badge-component';
 @import '../components/bottom-nav/bottom-nav-component';
 @import '../components/button/button-component';
+@import '../components/divider/divider-component';
 @import '../components/button-group/button-group-component';
 @import '../components/banner/banner-component';
 @import '../components/calendar/calendar-component';
@@ -55,6 +57,7 @@
 @import '../components/toast/toast-component';
 @import '../components/tooltip/tooltip-component';
 @import '../components/time-picker/time-picker-component';
+@import '../print/index';
 
 /// Includes the base for each theme.
 
@@ -67,6 +70,10 @@
     }
 }
 
-@mixin igx-core() {
+@mixin igx-core($print-layout:true) {
     @include igx-typography();
+
+    @if $print-layout == true {
+        @include igx-print-layout();
+    }
 }

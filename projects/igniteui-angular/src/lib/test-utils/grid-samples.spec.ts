@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild, Input } from '@angular/core';
+import { Component, TemplateRef, ViewChild, Input, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { IgxGridCellComponent } from '../grids/cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/summaries/grid-summary';
 import { IGridCellEventArgs, IGridEditEventArgs, IgxGridTransaction } from '../grids/grid-base.component';
@@ -9,6 +9,10 @@ import { SampleTestData } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions } from './template-strings.spec';
 import { IgxColumnComponent } from '../grids/column.component';
 import { IgxTransactionService } from '../services';
+import { IgxFilteringOperand } from '../data-operations/filtering-condition';
+import { ExpressionUI } from '../grids/filtering/grid-filtering.service';
+import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
+import { FilteringStrategy } from '../data-operations/filtering-strategy';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -95,10 +99,10 @@ export class ColumnsFromIterableComponent extends BasicGridComponent {
 export class TemplatedColumnsComponent extends BasicGridComponent {
     data = SampleTestData.personIDNameData();
 
-    @ViewChild('newHeader', { read: TemplateRef })
+    @ViewChild('newHeader', { read: TemplateRef, static: true })
     public newHeaderTemplate: TemplateRef<any>;
 
-    @ViewChild('newCell', { read: TemplateRef })
+    @ViewChild('newCell', { read: TemplateRef, static: true })
     public newCellTemplate: TemplateRef<any>;
 }
 
@@ -131,44 +135,51 @@ export class FilteringComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: `
-        <igx-grid #gridSelection2 [data]="data" [primaryKey]="'ID'"
-        [autoGenerate]="true" [rowSelectable]="true" [paging]="true" [perPage]="50">
-        </igx-grid>
-        <button class="prevPageBtn" (click)="ChangePage(-1)">Prev page</button>
-        <button class="nextPageBtn" (click)="ChangePage(1)">Next page</button>
-    `
-})
-export class SelectionAndPagingComponent extends BasicGridComponent {
-    data = SampleTestData.generateBigValuesData(100);
-
-    public ChangePage(val) {
-        switch (val) {
-            case -1:
-                this.grid.previousPage();
-                break;
-            case 1:
-                this.grid.nextPage();
-                break;
-            default:
-                this.grid.paginate(val);
-                break;
-        }
-    }
-}
-
-@Component({
     template: GridTemplateStrings.declareGrid(
-            ` #gridSelection3 [primaryKey]="'ID'" [width]="'800px'" [height]="'600px'" [autoGenerate]="true" [rowSelectable]="true"`,
+            ` #gridSelection3 [primaryKey]="'ID'" [width]="'800px'" [height]="'600px'" [autoGenerate]="true" [rowSelection]="'multiple'"`,
             '', '')
 })
 export class SelectionComponent extends BasicGridComponent {
-    data = SampleTestData.generateBigValuesData(100);
+    data = SampleTestData.generateBigValuesData(20);
 }
 
 @Component({
     template: GridTemplateStrings.declareGrid(
-            ` [rowSelectable]="true"`,
+            ` [width]="width" [height]="height" [rowSelection]="'multiple'" [primaryKey]="'ProductID'"`,
+            '', ColumnDefinitions.productBasicNumberID)
+})
+export class RowSelectionComponent extends BasicGridComponent {
+    data = SampleTestData.foodProductDataExtended();
+    public width = '800px';
+    public height = '600px';
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
+            ` [width]="width" [height]="height" [rowSelection]="'single'" [primaryKey]="'ProductID'"`,
+            '', ColumnDefinitions.productBasicNumberID)
+})
+export class SingleRowSelectionComponent extends BasicGridComponent {
+    data = SampleTestData.foodProductDataExtended();
+    public width = '800px';
+    public height = '600px';
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
+        ` [width]="width" [height]="height" [rowSelection]="'multiple'"`,
+            '',
+            ColumnDefinitions.idFirstLastNameSortable)
+})
+
+export class RowSelectionWithoutPrimaryKeyComponent extends BasicGridComponent {
+    public data = SampleTestData.personIDNameRegionData();
+    public width = '800px';
+    public height = '600px';
+}
+@Component({
+    template: GridTemplateStrings.declareGrid(
+            ` rowSelection = "multiple"`,
             EventSubscriptions.onRowSelectionChange,
             ColumnDefinitions.productBasic)
 })
@@ -176,7 +187,7 @@ export class SelectionCancellableComponent extends BasicGridComponent {
     data = SampleTestData.foodProductData();
 
     public rowSelectionChange(evt) {
-        if (evt.row && (evt.row.index + 1) % 2 === 0) {
+        if (evt.added.length > 0  && (evt.added[0].ProductID) % 2 === 0) {
             evt.newSelection = evt.oldSelection || [];
         }
     }
@@ -189,7 +200,7 @@ export class SelectionCancellableComponent extends BasicGridComponent {
             [width]="'800px'"
             [height]="'600px'"
             [autoGenerate]="true"
-            [rowSelectable]="true"`,
+            rowSelection = "multiple"`,
             EventSubscriptions.onColumnInit, '')
 })
 export class ScrollsComponent extends BasicGridComponent {
@@ -201,7 +212,7 @@ export class ScrollsComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(
-            ` [rowSelectable]="true"`,
+            ` rowSelection = "multiple"`,
             '', ColumnDefinitions.productDefaultSummaries)
 })
 export class SummariesComponent extends BasicGridComponent {
@@ -229,7 +240,7 @@ class DealsSummaryMinMax extends IgxNumberSummaryOperand {
 }
 @Component({
     template: GridTemplateStrings.declareGrid(
-            `  [primaryKey]="'ProductID'" [allowFiltering]="true"`,
+            `  [primaryKey]="'ProductID'" [height]="null" [allowFiltering]="true"`,
             '', ColumnDefinitions.productDefaultSummaries)
 })
 export class SummaryColumnComponent extends BasicGridComponent {
@@ -264,7 +275,6 @@ export class VirtualSummaryColumnComponent extends BasicGridComponent {
         const hScrollbar = this.grid.parentVirtDir.getHorizontalScroll();
         hScrollbar.scrollLeft = newLeft;
     }
-
 }
 
 @Component({
@@ -517,7 +527,7 @@ export class GridSearchHiddenColumnsComponent extends BasicGridSearchComponent {
 export class GridDeclaredColumnsComponent extends BasicGridComponent {
     data = SampleTestData.personIDNameRegionData();
 
-    @ViewChild('nameColumn') public nameColumn;
+    @ViewChild('nameColumn', { static: true }) public nameColumn;
 }
 
 @Component({
@@ -597,7 +607,7 @@ export class ScrollableGridSearchComponent extends BasicGridSearchComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(
-        ` columnWidth="200" `,
+        ` columnWidth="200" [height]="null" `,
         '', ColumnDefinitions.idNameJobTitleCompany)
 })
 export class GroupableGridSearchComponent extends ScrollableGridSearchComponent {
@@ -634,14 +644,14 @@ export class GridIDNameJobTitleComponent extends PagingComponent {
 @Component({
     template: `<div style="margin: 50px;">
             ${GridTemplateStrings.declareGrid(
-                `[height]="height" [width]="width" [rowSelectable]="enableRowSelection" [autoGenerate]="autoGenerate"`,
+                `[height]="height" [width]="width" [rowSelection]="rowSelection" [autoGenerate]="autoGenerate"`,
                 EventSubscriptions.onColumnMovingStart + EventSubscriptions.onColumnMoving + EventSubscriptions.onColumnMovingEnd,
                 ColumnDefinitions.movableColumns)}</div>`
 })
 export class MovableColumnsComponent extends BasicGridComponent {
     data = SampleTestData.personIDNameRegionData();
     autoGenerate = false;
-    enableRowSelection = false;
+    rowSelection = 'none';
     isFilterable = false;
     isSortable = false;
     isResizable = false;
@@ -833,12 +843,12 @@ export class VirtualGridComponent extends BasicGridComponent {
         super();
         this.data = this.generateData(1000);
     }
-     public generateCols(numCols: number, defaultColWidth = null) {
+     public generateCols(numCols: number, defaultColWidth: number = null) {
         const cols = [];
         for (let j = 0; j < numCols; j++) {
             cols.push({
                 field: j.toString(),
-                width: defaultColWidth !== null ? defaultColWidth : j % 8 < 2 ? 100 : (j % 6) * 125
+                width: defaultColWidth || j % 8 < 2 ? 100 : (j % 6) * 125
             });
         }
         return cols;
@@ -872,4 +882,289 @@ export class VirtualGridComponent extends BasicGridComponent {
 })
 export class GridWithPrimaryKeyComponent extends BasicGridSearchComponent {
     data = SampleTestData.personJobDataFull();
+}
+
+@Component({
+    template: `${GridTemplateStrings.declareGrid(`height="300px"  width="600px" [primaryKey]="'ID'"`, '',
+    ColumnDefinitions.selectionWithScrollsColumns)}`,
+})
+export class SelectionWithScrollsComponent extends BasicGridComponent {
+    public data = SampleTestData.employeeGroupByData();
+}
+
+@Component({
+    template: `${GridTemplateStrings.declareGrid(`height="300px"  width="600px" [primaryKey]="'ID'" cellSelection="none"`, '',
+    ColumnDefinitions.selectionWithScrollsColumns)}`,
+})
+export class CellSelectionNoneComponent extends BasicGridComponent {
+    public data = SampleTestData.employeeGroupByData();
+}
+
+@Component({
+    template: `${GridTemplateStrings.declareGrid(`height="300px"  width="600px" [primaryKey]="'ID'" cellSelection="single"`, '',
+    ColumnDefinitions.selectionWithScrollsColumns)}`,
+})
+export class CellSelectionSingleComponent extends BasicGridComponent {
+    public data = SampleTestData.employeeGroupByData();
+}
+@Component({
+    template: `${GridTemplateStrings.declareGrid(`height="300px"  width="600px" [primaryKey]="'ID'"`, '',
+    ColumnDefinitions.selectionWithScrollsColumns)}`,
+    providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }]
+})
+export class SelectionWithTransactionsComponent extends BasicGridComponent {
+    public data = SampleTestData.employeeGroupByData();
+}
+
+export class CustomFilter extends IgxFilteringOperand {
+    private constructor () {
+        super();
+        this.operations = [{
+            name: 'custom',
+            isUnary: false,
+            logic: (target: string): boolean => {
+                return target === 'custom';
+            },
+            iconName: 'custom'
+        }];
+    }
+}
+@Component({
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true'>
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
+            [filterable]="false" [resizable]="resizable"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [filterable]="filterable" [resizable]="resizable" dataType="boolean"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+            [filterable]="filterable" [resizable]="resizable" dataType="date">
+        </igx-column>
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Anogther Field'" [filterable]="filterable"
+            dataType="string" [filters]="customFilter">
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridFilteringComponent extends BasicGridComponent {
+    public customFilter = CustomFilter.instance();
+    public resizable = false;
+    public filterable = true;
+
+    public data = SampleTestData.excelFilteringData();
+    public activateFiltering(activate: boolean) {
+        this.grid.allowFiltering = activate;
+        this.grid.cdr.markForCheck();
+    }
+}
+
+@Component({
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true'
+                         [filterMode]="'excelStyleFilter'" [uniqueColumnValuesStrategy]="columnValuesStrategy">
+        <igx-column width="100px" [field]="'ID'"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'Released'" dataType="boolean"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" dataType="date">
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent {
+    private _filteringStrategy = new FilteringStrategy();
+    public data = SampleTestData.excelFilteringData();
+
+    public columnValuesStrategy = (column: IgxColumnComponent,
+                                   columnExprTree: IFilteringExpressionsTree,
+                                   done: (uniqueValues: any[]) => void) => {
+        setTimeout(() => {
+            const filteredData = this._filteringStrategy.filter(this.data, columnExprTree);
+            const columnValues = filteredData.map(record => record[column.field]);
+            done(columnValues);
+        }, 1000);
+    }
+}
+
+@Component({
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true' [filterMode]="'excelStyleFilter'">
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
+            [filterable]="false" [resizable]="resizable" [sortable]="'true'" [movable]="'true'"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"
+            [sortable]="'true'" [movable]="'true'"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"
+            [sortable]="'true'" [movable]="'true'"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [filterable]="filterable" [resizable]="resizable" dataType="boolean"
+            [sortable]="'true'" [movable]="'true'"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+            [filterable]="filterable" [resizable]="resizable" dataType="date" [sortable]="'true'" [movable]="'true'">
+        </igx-column>
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
+            dataType="string" [filters]="customFilter" [sortable]="'true'" [movable]="'true'">
+        </igx-column>
+        <ng-template igxExcelStyleSorting><div class="esf-custom-sorting">Sorting Template</div></ng-template>
+        <ng-template igxExcelStyleHiding><div class="esf-custom-hiding">Hiding Template</div></ng-template>
+        <ng-template igxExcelStyleMoving><div class="esf-custom-moving">Moving Template</div></ng-template>
+        <ng-template igxExcelStylePinning><div class="esf-custom-pinning">Pinning Template</div></ng-template>
+    </igx-grid>`
+})
+export class IgxGridFilteringESFTemplatesComponent extends BasicGridComponent {
+    public customFilter = CustomFilter.instance();
+    public resizable = false;
+    public filterable = true;
+    public data = SampleTestData.excelFilteringData();
+}
+
+@Component({
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true'>
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
+            [filterable]="false" [resizable]="resizable"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"
+                    [filterCellTemplate]="filterTemplate"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"
+                    [filterCellTemplate]="filterTemplate"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [filterable]="filterable" [resizable]="resizable" dataType="boolean"
+                    [filterCellTemplate]="filterTemplate"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+                    [filterable]="filterable" [resizable]="resizable" dataType="date" [filterCellTemplate]="filterTemplate">
+        </igx-column>
+    </igx-grid>
+    <ng-template #filterTemplate igxFilterCellTemplate let-column="column">
+        <div class="custom-filter" style="flex-grow: 1;">
+            <igx-input-group class="filter-input" type="box">
+                <igx-prefix>
+                    <igx-icon>search</igx-icon>
+                </igx-prefix>
+                <input #input igxInput tabindex="0" placeholder="Filter..." />
+                <igx-suffix tabindex="0">
+                    <igx-icon>clear</igx-icon>
+                </igx-suffix>
+            </igx-input-group>
+        </div>
+    </ng-template>
+    `
+})
+export class IgxGridFilteringTemplateComponent extends BasicGridComponent {
+    public resizable = false;
+    public filterable = true;
+
+    public data = SampleTestData.excelFilteringData();
+}
+
+@Component({
+    template: `<igx-grid [data]="data" height="500px" width="500px" [allowFiltering]="true">
+        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column [field]="'ProductName'" dataType="string"></igx-column>
+        <igx-column [field]="'Downloads'" dataType="number" [filterable]="false"></igx-column>
+        <igx-column [field]="'Released'" dataType="boolean"></igx-column>
+        <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+            dataType="date">
+        </igx-column>
+        <igx-column [field]="'AnotherField'" [header]="'Another Field'"
+            dataType="string" [filters]="customFilter">
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridFilteringScrollComponent extends IgxGridFilteringComponent { }
+
+@Component({
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]="true">
+    <igx-column-group header="General Information" field='General'>
+        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column [field]="'ProductName'" dataType="string"></igx-column>
+        <igx-column-group header="Details" field='Details'>
+            <igx-column [field]="'Downloads'" dataType="number" [filterable]="false"></igx-column>
+            <igx-column [field]="'Released'" dataType="boolean"></igx-column>
+            <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+                dataType="date">
+            </igx-column>
+        </igx-column-group>
+    </igx-column-group>
+        <igx-column [field]="'AnotherField'" [header]="'Another Field'"
+            dataType="string" [filters]="customFilter">
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridFilteringMCHComponent extends IgxGridFilteringComponent {}
+
+@Component({
+    template:
+    `
+    <igx-grid #grid1 [data]="data" height="500px" width="500px" [allowFiltering]="true">
+        <igx-column [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column [field]="'ProductName'" dataType="string"></igx-column>
+        <igx-column [field]="'Downloads'" dataType="number" [filterable]="false"></igx-column>
+        <igx-column [field]="'Released'" dataType="boolean"></igx-column>
+        <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+            dataType="date">
+        </igx-column>
+        <igx-column [field]="'AnotherField'" [header]="'Another Field'"
+            dataType="string" [filters]="customFilter">
+        </igx-column>
+    </igx-grid>
+    <igx-excel-style-date-expression *ngIf="grid1.columns.length > 0"
+                                     [column]="grid1.columns[4]"
+                                     [grid]="grid1"
+                                     [expressionUI]="exprUI"
+                                     [expressionsList]="exprList">
+    </igx-excel-style-date-expression>`
+})
+export class IgxTestExcelFilteringDatePickerComponent extends IgxGridFilteringComponent implements AfterViewInit {
+    exprUI: ExpressionUI;
+    exprList: Array<ExpressionUI>;
+
+    constructor(private cd: ChangeDetectorRef) {
+        super();
+
+        this.exprUI = new ExpressionUI();
+        this.exprUI.expression = {
+            fieldName: 'ReleaseDate',
+            condition: {
+                name: 'equals',
+                isUnary: false,
+                iconName: 'equals',
+                logic: (target: Date, searchVal: Date) => {
+                    return true;
+                }
+            },
+        };
+
+        this.exprList = [ this.exprUI ];
+    }
+
+    ngAfterViewInit() {
+        this.cd.detectChanges();
+    }
+}
+
+@Component({
+    template: `
+    <igx-grid [data]="data" height="500px" width="500px">
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" [editable]="true" [header]="'ProductNameHeader'"
+            [formatter]="formatter"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" [editable]="true" dataType="number" [header]="'Downloads'"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [editable]="true" dataType="boolean" [header]="'Released'"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" dataType="date"></igx-column>
+    </igx-grid>`
+})
+export class IgxGridClipboardComponent extends BasicGridComponent {
+    public data = SampleTestData.excelFilteringData();
+    formatter = (value: any) => `** ${value} **`;
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(` [height]="height" [width]="width"`, ``,
+                ColumnDefinitions.generatedWithDataType)
+})
+export class DynamicColumnsComponent extends GridWithSizeComponent {
+    public columns = [
+        { field: 'ID', width: 100 , dataType: 'number'},
+        { field: 'CompanyName', width: 300 , dataType: 'string'},
+        { field: 'ContactName', width: 200 , dataType: 'string'},
+        { field: 'ContactTitle', width: 200 , dataType: 'string'},
+        { field: 'Address', width: 300 , dataType: 'string'},
+        { field: 'City', width: 100 , dataType: 'string'},
+        { field: 'Region', width: 100 , dataType: 'string'}
+    ];
+
+    data = SampleTestData.contactInfoDataFull();
+    width = '800px';
+    height = '800px';
 }

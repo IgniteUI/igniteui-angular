@@ -16,7 +16,7 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
     }
 
     private filterImpl(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree, parent: ITreeGridRecord): ITreeGridRecord[] {
-        let i;
+        let i: number;
         let rec: ITreeGridRecord;
         const len = data.length;
         const res: ITreeGridRecord[] = [];
@@ -61,7 +61,7 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
 
     public transform(hierarchyData: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
         id: string, pipeTrigger: number): ITreeGridRecord[] {
-        const grid: IgxTreeGridComponent = this.gridAPI.get(id);
+        const grid: IgxTreeGridComponent = this.gridAPI.grid;
         const state = {
             expressionsTree: expressionsTree,
             strategy: new TreeGridFilteringStrategy()

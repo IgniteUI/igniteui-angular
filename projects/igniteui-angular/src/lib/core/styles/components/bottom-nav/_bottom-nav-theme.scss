@@ -35,7 +35,7 @@
     $background: null,
     $idle-item-color: null,
     $active-item-color: null,
-    $shadow: null,
+    $shadow: null
 ) {
     $name: 'igx-bottom-nav';
     $bottom-nav-schema: map-get($schema, $name);
@@ -74,8 +74,6 @@
 /// @requires --var
 @mixin igx-bottom-nav($theme) {
     @include igx-root-css-vars($theme);
-
-    // @debug $theme;
 
     $menu-height: 56px;
     $item-min-width: 80px;
@@ -131,6 +129,7 @@
         overflow: hidden;
         padding: $item-padding;
         -webkit-tap-highlight-color: transparent;
+        outline: 0;
     }
 
     %igx-bottom-nav-menu-item--disabled {
@@ -192,11 +191,9 @@
 @mixin igx-bottom-nav-typography($type-scale, $categories: (label: 'caption')) {
     $label: map-get($categories, 'label');
 
-    @include igx-scope('.igx-typography') {
-        %igx-tab-label {
-            @include igx-type-style($type-scale, $label) {
-                margin: 0
-            }
+    %igx-tab-label {
+        @include igx-type-style($type-scale, $label) {
+            margin: 0
         }
     }
 }

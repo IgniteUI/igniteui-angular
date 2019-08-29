@@ -1,0 +1,53 @@
+<div class="wrapper">
+    <app-page-header title="Grid Filter Template">
+        Retemplated filter cell.
+    </app-page-header>
+
+    <div class="sample-content">
+        <div class="sample-column">
+            <igx-grid
+                #grid1
+                [data]="data"
+                [allowFiltering]="true"
+                [rowSelectable]="true"
+                [paging]="false"
+                [width]="'900px'"
+                [height]="'800px'">
+                <igx-column *ngFor="let c of columns" [field]="c.field"
+                                                    [header]="c.field"
+                                                    [movable]="c.movable"
+                                                    [groupable]="c.groupable"
+                                                    [resizable]="c.resizable"
+                                                    [width]="c.width"
+                                                    [sortable]="c.sortable"
+                                                    [filterable]="c.filterable"
+                                                    [editable]="true"
+                                                    [hidden]="c.hidden"
+                                                    [hasSummary]="c.summary"
+                                                    [minWidth]="c.minWidth"
+                                                    [maxWidth]="c.maxWidth"
+                                                    [dataType]="c.type"
+                                                    [filterCellTemplate]="filterTemplate">
+
+                </igx-column>
+            </igx-grid>
+            <ng-template #filterTemplate igxFilterCellTemplate let-column="column">
+                <igx-input-group class="filter-input" type="box" [displayDensity]="'compact'">
+                    <igx-prefix>
+                        <igx-icon>search</igx-icon>
+                    </igx-prefix>
+                    <input
+                        #input
+                        igxInput
+                        tabindex="0"
+                        placeholder="Filter..."
+                        autocomplete="off"
+                        (input)="onInput(input, column)"/>
+                    <igx-suffix *ngIf="input.value || input.value === 0" (click)="clearInput(input, column)" tabindex="0">
+                        <igx-icon>clear</igx-icon>
+                    </igx-suffix>
+                </igx-input-group>
+            </ng-template>
+        </div>
+    </div>
+</div>

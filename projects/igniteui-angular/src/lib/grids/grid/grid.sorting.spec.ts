@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
@@ -17,7 +17,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
 const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
 
-describe('IgxGrid - Grid Sorting', () => {
+describe('IgxGrid - Grid Sorting #grid', () => {
     configureTestSuite();
     let fixture;
     let grid: IgxGridComponent;
@@ -320,7 +320,7 @@ describe('IgxGrid - Grid Sorting', () => {
         expect(sortingIcon.nativeElement.textContent.trim()).toEqual(SORTING_ICON_ASC_CONTENT);
     });
 
-    it('Should sort grid by clicking on sorting icon when FilterRow is visible.', () => {
+    it('Should sort grid by clicking on sorting icon when FilterRow is visible.', fakeAsync(/** Filtering showHideArrowButtons RAF */() => {
         grid.allowFiltering = true;
         fixture.detectChanges();
 
@@ -351,7 +351,7 @@ describe('IgxGrid - Grid Sorting', () => {
         fixture.detectChanges();
 
         expect(grid.headerGroups.toArray()[1].isFiltered).toBeTruthy();
-    });
+    }));
 
 
     it(`Should allow sorting using a custom Sorting Strategy.`, () => {
@@ -390,8 +390,8 @@ export class GridDeclaredColumnsComponent extends BasicGridComponent {
 
     public data = SampleTestData.personIDNameRegionData();
 
-    @ViewChild(IgxGridComponent) public grid: IgxGridComponent;
-    @ViewChild('nameColumn') public nameColumn;
+    @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
+    @ViewChild('nameColumn', { static: true }) public nameColumn;
     public width = '800px';
 }
 

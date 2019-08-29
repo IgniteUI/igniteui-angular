@@ -1,3 +1,5 @@
+@import '../shape/column-hiding';
+
 ////
 /// @group schemas
 /// @access private
@@ -15,3 +17,9 @@ $_light-column-hiding: (
         igx-color: ('primary', 500)
     )
 );
+
+/// Generates a fluent column hiding schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-column-hiding
+$_fluent-column-hiding: extend($_light-column-hiding);

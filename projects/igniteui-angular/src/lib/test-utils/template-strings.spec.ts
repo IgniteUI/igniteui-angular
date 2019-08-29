@@ -243,6 +243,19 @@ export class ColumnDefinitions {
         </igx-column>
     `;
 
+    public static productBasicNumberID = `
+        <igx-column field="ProductID" header="Product ID" [dataType]="'number'">
+        </igx-column>
+        <igx-column field="ProductName">
+        </igx-column>
+        <igx-column field="InStock" [dataType]="'boolean'">
+        </igx-column>
+        <igx-column field="UnitsInStock" [dataType]="'number'">
+        </igx-column>
+        <igx-column field="OrderDate" width="200px" [dataType]="'date'">
+        </igx-column>
+    `;
+
     public static productSummariesAndFilter = `
         <igx-column field="ProductID" header="Product ID">
         </igx-column>
@@ -410,6 +423,15 @@ export class ColumnDefinitions {
     <igx-column [field]="'Age'" width="150px" dataType="number" [hasSummary]="true"
         [groupable]='true' [summaries]="ageSummaryMinMax"></igx-column>
     <igx-column [field]="'OnPTO'" width="150px" dataType="boolean" [hasSummary]="true" [groupable]='true'></igx-column>
+    `;
+
+    public static selectionWithScrollsColumns = `
+    <igx-column [field]="'ID'" dataType="number" width="150px" ></igx-column>
+    <igx-column [field]="'ParentID'" width="150px" dataType="number" ></igx-column>
+    <igx-column [field]="'Name'" width="150px" dataType="string"></igx-column>
+    <igx-column [field]="'HireDate'" width="150px" dataType="date"></igx-column>
+    <igx-column [field]="'Age'" width="150px" dataType="number"></igx-column>
+    <igx-column [field]="'OnPTO'" width="150px" dataType="boolean"></igx-column>
     `;
 }
 

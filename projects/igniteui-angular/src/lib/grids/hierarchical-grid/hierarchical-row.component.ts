@@ -11,16 +11,16 @@ import {
 } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowComponent } from '../row.component';
-import { IgxHierarchicalSelectionAPIService } from './selection';
 import { GridBaseAPIService } from '.././api.service';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
+import { IgxGridCRUDService, IgxGridSelectionService } from '../../core/grid-selection';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-hierarchical-grid-row',
     templateUrl: './hierarchical-row.component.html',
-    providers: [{ provide: IgxRowComponent, useExisting: forwardRef(() => IgxHierarchicalRowComponent) } ]
+    providers: [{ provide: IgxRowComponent, useExisting: forwardRef(() => IgxHierarchicalRowComponent) }]
 })
 export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchicalGridComponent> {
     /**
@@ -34,7 +34,7 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
     @ViewChildren(forwardRef(() => IgxHierarchicalGridCellComponent), { read: IgxHierarchicalGridCellComponent })
     public cells: QueryList<IgxHierarchicalGridCellComponent>;
 
-    @ViewChild('expander', { read: ElementRef })
+    @ViewChild('expander', { read: ElementRef, static: false })
     public expander: ElementRef;
 
     /**
@@ -72,12 +72,13 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
      * this.grid1.rowList.first.toggle()
      * ```
      */
-    public toggle() {
+    public toggle(event?) {
         if (this.added) {
             return;
         }
-        const grid = this.gridAPI.get(this.grid.id);
-        const state = this.gridAPI.get(this.grid.id).hierarchicalState;
+        const grid = this.gridAPI.grid;
+        this.endEdit(grid.rootGrid);
+        const state = this.gridAPI.grid.hierarchicalState;
         if (!this.expanded) {
             state.push({ rowID: this.rowID });
             grid.hierarchicalState = [...state];
@@ -87,15 +88,23 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
             });
         }
         grid.cdr.detectChanges();
-        requestAnimationFrame(() => {
-            grid.reflow();
-        });
+    }
+
+    private endEdit(grid: IgxHierarchicalGridComponent) {
+        if (grid.crudService.inEditMode) {
+            grid.endEdit();
+        }
+        grid.hgridAPI.getChildGrids(true).forEach(g => {
+            if (g.crudService.inEditMode) {
+            g.endEdit();
+        }});
     }
 
     constructor(public gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>,
-        private hselection: IgxHierarchicalSelectionAPIService,
+        public crudService: IgxGridCRUDService,
+        public selectionService: IgxGridSelectionService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef) {
-            super(gridAPI, hselection, element, cdr);
+            super(gridAPI, crudService, selectionService, element, cdr);
         }
 }

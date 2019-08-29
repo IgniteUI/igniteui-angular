@@ -47,7 +47,13 @@ let NEXT_ID = 0;
 @Component({
     providers: [HammerGesturesManager],
     selector: 'igx-nav-drawer',
-    templateUrl: 'navigation-drawer.component.html'
+    templateUrl: 'navigation-drawer.component.html',
+    styles: [`
+        :host {
+            display: block;
+            height: 100%;
+        }
+    `]
 })
 export class IgxNavigationDrawerComponent implements
     IToggleView,
@@ -185,7 +191,7 @@ export class IgxNavigationDrawerComponent implements
     @Input() public width = '280px';
 
     /**
-     * Width of the drawer in its mini state. Defaults to 60px.
+     * Width of the drawer in its mini state. Defaults to 68px.
      *
      * ```typescript
      * // get
@@ -197,7 +203,7 @@ export class IgxNavigationDrawerComponent implements
      * <igx-nav-drawer [miniWidth]="'34px'"></igx-nav-drawer>
      * ```
      */
-    @Input() public miniWidth = '60px';
+    @Input() public miniWidth = '68px';
 
     /**
      * Pinned state change output for two-way binding.
@@ -262,7 +268,7 @@ export class IgxNavigationDrawerComponent implements
     /**
      * @hidden
      */
-    @ContentChild(IgxNavDrawerMiniTemplateDirective, { read: IgxNavDrawerMiniTemplateDirective })
+    @ContentChild(IgxNavDrawerMiniTemplateDirective, { read: IgxNavDrawerMiniTemplateDirective, static: false })
     public set miniTemplate(v: IgxNavDrawerMiniTemplateDirective) {
         if (!this.isOpen) {
             this.setDrawerWidth(v ? this.miniWidth : '');
@@ -273,7 +279,7 @@ export class IgxNavigationDrawerComponent implements
     /**
      * @hidden
      */
-    @ContentChild(IgxNavDrawerTemplateDirective, { read: IgxNavDrawerTemplateDirective })
+    @ContentChild(IgxNavDrawerTemplateDirective, { read: IgxNavDrawerTemplateDirective, static: false })
     protected contentTemplate: IgxNavDrawerTemplateDirective;
 
     /**
@@ -297,7 +303,7 @@ export class IgxNavigationDrawerComponent implements
     /** @hidden */
     @HostBinding('style.order')
     get isPinnedRight() {
-        return this.pin && this.position === 'right' ?  '1' : '0';
+        return this.pin && this.position === 'right' ? '1' : '0';
     }
 
     private _gesturesAttached = false;
@@ -310,13 +316,13 @@ export class IgxNavigationDrawerComponent implements
         styleDummy: 'igx-nav-drawer__style-dummy'
     };
 
-    @ViewChild('aside') private _drawer: ElementRef;
-    @ViewChild('overlay') private _overlay: ElementRef;
-    @ViewChild('dummy') private _styleDummy: ElementRef;
+    @ViewChild('aside', { static: true }) private _drawer: ElementRef;
+    @ViewChild('overlay', { static: true }) private _overlay: ElementRef;
+    @ViewChild('dummy', { static: true }) private _styleDummy: ElementRef;
 
-   /**
-     * @hidden
-     */
+    /**
+      * @hidden
+      */
     get drawer() {
         return this._drawer.nativeElement;
     }
@@ -604,7 +610,7 @@ export class IgxNavigationDrawerComponent implements
      * Sets the drawer width.
      */
     private setDrawerWidth(width: string) {
-        window.requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
             if (this.drawer) {
                 this.renderer.setElementStyle(this.drawer, 'width', width);
             }

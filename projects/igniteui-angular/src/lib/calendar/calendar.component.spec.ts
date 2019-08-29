@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { async, TestBed, } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -1632,6 +1632,7 @@ describe('IgxCalendar', () => {
             expect(prev.nativeElement).toBe(document.activeElement);
 
             UIInteractions.simulateKeyDownEvent(prev.nativeElement, 'Enter');
+            await wait(200);
             fixture.detectChanges();
 
             expect(calendar.viewDate.getMonth()).toEqual(4);
@@ -1642,7 +1643,9 @@ describe('IgxCalendar', () => {
             expect(next.nativeElement).toBe(document.activeElement);
 
             UIInteractions.simulateKeyDownEvent(next.nativeElement, 'Enter');
+            await wait(200);
             UIInteractions.simulateKeyDownEvent(next.nativeElement, 'Enter');
+            await wait(200);
             fixture.detectChanges();
 
             expect(calendar.viewDate.getMonth()).toEqual(6);
@@ -1952,6 +1955,59 @@ describe('IgxCalendar', () => {
             expect(date.nativeElement).toBe(document.activeElement);
         });
     });
+
+    describe('Continuous month increment/decrement', () => {
+        // configureTestSuite();
+
+        let fixture;
+        let dom;
+        let calendar;
+        let prevMonthBtn;
+        let nextMonthBtn;
+
+        beforeEach(async(() => {
+            fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+            fixture.detectChanges();
+
+            dom = fixture.debugElement;
+            calendar = fixture.componentInstance.calendar;
+            prevMonthBtn = dom.queryAll(By.css('.igx-calendar-picker__prev'))[0].nativeElement;
+            nextMonthBtn = dom.queryAll(By.css('.igx-calendar-picker__next'))[0].nativeElement;
+
+        }));
+
+        it('Should increment/decrement months continuously on mousedown.', async () => {
+            expect(calendar.viewDate.getMonth()).toEqual(5);
+
+            UIInteractions.simulateMouseEvent('mousedown', prevMonthBtn, 0, 0);
+            await wait(900);
+            UIInteractions.simulateMouseEvent('mouseup', prevMonthBtn, 0, 0);
+            fixture.detectChanges();
+            expect(calendar.viewDate.getMonth()).toEqual(4);
+
+            UIInteractions.simulateMouseEvent('mousedown', nextMonthBtn, 0, 0);
+            await wait(900);
+            UIInteractions.simulateMouseEvent('mouseup', nextMonthBtn, 0, 0);
+            fixture.detectChanges();
+            expect(calendar.viewDate.getMonth()).toEqual(6);
+        });
+
+        it('Should increment/decrement months continuously on enter keydwon.', async () => {
+            expect(calendar.viewDate.getMonth()).toEqual(5);
+
+            prevMonthBtn.focus();
+            UIInteractions.simulateKeyDownEvent(prevMonthBtn, 'Enter');
+            await wait(800);
+            fixture.detectChanges();
+            expect(calendar.viewDate.getMonth()).toEqual(4);
+
+            nextMonthBtn.focus();
+            UIInteractions.simulateKeyDownEvent(nextMonthBtn, 'Enter');
+            await wait(800);
+            fixture.detectChanges();
+            expect(calendar.viewDate.getMonth()).toEqual(5);
+        });
+    });
 });
 
 @Component({
@@ -1962,7 +2018,7 @@ describe('IgxCalendar', () => {
 export class IgxCalendarSampleComponent {
     public model: Date | Date[] = new Date(2017, 5, 13);
     public viewDate = new Date(2017, 5, 13);
-    @ViewChild(IgxCalendarComponent) public calendar: IgxCalendarComponent;
+    @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
 }
 
 @Component({
@@ -1972,7 +2028,7 @@ export class IgxCalendarSampleComponent {
 })
 export class IgxCalendaRangeComponent {
     public viewDate = new Date(2017, 5, 13);
-    @ViewChild(IgxCalendarComponent) public calendar: IgxCalendarComponent;
+    @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
 }
 
 @Component({
@@ -1986,7 +2042,7 @@ export class IgxCalendarDisabledSpecialDatesComponent {
     public viewDate = new Date(2017, 5, 13);
     public specialDates = [{type: DateRangeType.Between, dateRange: [new Date(2017, 5, 1), new Date(2017, 5, 6)]}];
     public disabledDates = [{type: DateRangeType.Between, dateRange: [new Date(2017, 5, 23), new Date(2017, 5, 29)]}];
-    @ViewChild(IgxCalendarComponent) public calendar: IgxCalendarComponent;
+    @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
 }
 
 class DateTester {

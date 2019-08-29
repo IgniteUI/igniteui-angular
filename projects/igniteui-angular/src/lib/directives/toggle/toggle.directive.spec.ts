@@ -420,8 +420,38 @@ describe('IgxToggle', () => {
         expect(toggle.onClosed.emit).toHaveBeenCalledTimes(1);
     }));
 
+    it('fix for #4222 - Should emit closed when closed second time', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxToggleTestComponent);
+        fixture.detectChanges();
+
+        const toggle = fixture.componentInstance.toggle;
+        toggle.onClosed.subscribe(() => {
+            toggle.open();
+        });
+
+        spyOn(toggle.onOpening, 'emit');
+        spyOn(toggle.onClosed, 'emit').and.callThrough();
+
+        toggle.open();
+        tick();
+        fixture.detectChanges();
+        expect(toggle.onOpening.emit).toHaveBeenCalledTimes(1);
+
+        toggle.close();
+        tick();
+        fixture.detectChanges();
+        expect(toggle.onClosed.emit).toHaveBeenCalledTimes(1);
+        expect(toggle.onOpening.emit).toHaveBeenCalledTimes(2);
+
+        toggle.close();
+        tick();
+        fixture.detectChanges();
+        expect(toggle.onClosed.emit).toHaveBeenCalledTimes(2);
+        expect(toggle.onOpening.emit).toHaveBeenCalledTimes(3);
+    }));
+
     describe('overlay settings', () => {
-        configureTestSuite();
+        // configureTestSuite();
         it('should pass correct defaults from IgxToggleActionDirective and respect outsideClickClose', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
             fixture.detectChanges();
@@ -573,12 +603,13 @@ describe('IgxToggle', () => {
     `
 })
 export class IgxToggleTestComponent {
-    @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
+    @ViewChild(IgxToggleDirective, { static: true }) public toggle: IgxToggleDirective;
     public open() { }
     public close() { }
 }
 @Component({
     template: `
+    <p>Test</p>
     <button [igxToggleAction]="toggleRef" [overlaySettings]="settings">Open/Close Toggle</button>
     <div igxToggle #toggleRef="toggle">
       <ul>
@@ -588,13 +619,12 @@ export class IgxToggleTestComponent {
         <li>4</li>
       </ul>
     </div>
-    <p>Test</p>
     `
 })
 export class IgxToggleActionTestComponent {
     public settings: OverlaySettings = {};
-    @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
-    @ViewChild(IgxToggleActionDirective) public toggleAction: IgxToggleActionDirective;
+    @ViewChild(IgxToggleDirective, { static: true }) public toggle: IgxToggleDirective;
+    @ViewChild(IgxToggleActionDirective, { static: true }) public toggleAction: IgxToggleActionDirective;
     constructor() {
         this.settings.closeOnOutsideClick = true;
     }
@@ -618,8 +648,8 @@ export class IgxToggleOutletComponent extends IgxToggleActionTestComponent { }
     `
 })
 export class IgxToggleServiceInjectComponent {
-    @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
-    @ViewChild(IgxToggleActionDirective) public toggleAction: IgxToggleActionDirective;
+    @ViewChild(IgxToggleDirective, { static: true }) public toggle: IgxToggleDirective;
+    @ViewChild(IgxToggleActionDirective, { static: true }) public toggleAction: IgxToggleActionDirective;
 }
 
 @Component({
@@ -634,8 +664,8 @@ export class IgxToggleServiceInjectComponent {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IgxOverlayServiceComponent {
-    @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
-    @ViewChild(`other`) public other: ElementRef;
+    @ViewChild(IgxToggleDirective, { static: true }) public toggle: IgxToggleDirective;
+    @ViewChild(`other`, { static: true }) public other: ElementRef;
     /**
      *
      */
@@ -652,7 +682,7 @@ export class IgxOverlayServiceComponent {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestWithOnPushComponent {
-    @ViewChild(IgxToggleDirective) public toggle: IgxToggleDirective;
+    @ViewChild(IgxToggleDirective, { static: true }) public toggle: IgxToggleDirective;
 }
 
 @Component({
@@ -680,9 +710,9 @@ export class TestWithOnPushComponent {
     `
 })
 export class TestWithThreeToggleActionsComponent implements OnInit {
-    @ViewChild('button1') public button1: ElementRef;
-    @ViewChild('button2') public button2: ElementRef;
-    @ViewChild('button3') public button3: ElementRef;
+    @ViewChild('button1', { static: true }) public button1: ElementRef;
+    @ViewChild('button2', { static: true }) public button2: ElementRef;
+    @ViewChild('button3', { static: true }) public button3: ElementRef;
 
     overlaySettings: OverlaySettings = {};
 

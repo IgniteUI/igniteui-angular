@@ -2,9 +2,6 @@ import { Directive, HostBinding, Input } from '@angular/core';
 
 let NEXT_ID = 0;
 
-/**
- * @hidden
- */
 @Directive({
     selector: '[igxLabel]'
 })

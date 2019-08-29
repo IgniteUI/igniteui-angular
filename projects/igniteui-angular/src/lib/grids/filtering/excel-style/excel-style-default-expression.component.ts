@@ -16,13 +16,14 @@ import { IgxInputGroupComponent, IgxInputDirective } from '../../../input-group/
 import { DataType } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
 import { OverlaySettings, ConnectedPositioningStrategy, CloseScrollStrategy } from '../../../services/index';
-import { KEYS } from '../../../core/utils';
+import { KEYS, IBaseEventArgs } from '../../../core/utils';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
+import { DisplayDensity } from '../../../core/density';
 
 /**
  * @hidden
  */
-export interface ILogicOperatorChangedArgs {
+export interface ILogicOperatorChangedArgs extends IBaseEventArgs {
     target: ExpressionUI;
     newValue: FilteringLogic;
 }
@@ -57,22 +58,25 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     @Input()
     public grid: any;
 
+    @Input()
+    public displayDensity: DisplayDensity;
+
     @Output()
     public onExpressionRemoved = new EventEmitter<ExpressionUI>();
 
     @Output()
     public onLogicOperatorChanged = new EventEmitter<ILogicOperatorChangedArgs>();
 
-    @ViewChild('inputGroupConditions', { read: IgxInputGroupComponent })
+    @ViewChild('inputGroupConditions', { read: IgxInputGroupComponent, static: true })
     protected inputGroupConditions: IgxInputGroupComponent;
 
-    @ViewChild('inputValues', { read: IgxInputDirective })
+    @ViewChild('inputValues', { read: IgxInputDirective, static: true })
     protected inputValuesDirective: IgxInputDirective;
 
-    @ViewChild('dropdownConditions', { read: IgxDropDownComponent })
+    @ViewChild('dropdownConditions', { read: IgxDropDownComponent, static: true })
     protected dropdownConditions: IgxDropDownComponent;
 
-    @ViewChild('logicOperatorButtonGroup', { read: IgxButtonGroupComponent })
+    @ViewChild('logicOperatorButtonGroup', { read: IgxButtonGroupComponent, static: false })
     protected logicOperatorButtonGroup: IgxButtonGroupComponent;
 
     protected get inputValuesElement() {
@@ -122,7 +126,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     }
 
     public getConditionName(condition: IFilteringOperation) {
-        return condition ? condition.name : null;
+        return condition ? this.translateCondition(condition.name) : null;
     }
 
     public getInputWidth() {
@@ -160,14 +164,6 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         this.expressionUI.expression.condition = this.getCondition(value);
 
         this.focus();
-    }
-
-    public isValueSelected(value: string): boolean {
-        if (this.expressionUI.expression.searchVal) {
-            return this.expressionUI.expression.searchVal === value;
-        } else {
-            return false;
-        }
     }
 
     public onValuesInput(eventArgs) {

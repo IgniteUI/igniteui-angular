@@ -1,16 +1,175 @@
 <div class="sample-wrapper">
-    <app-page-header title="Drag and Drop directives" description="description for drag and drop directives"></app-page-header>
-    <section class="sample-content">
-        <div [style.width]="'70%'">
-            <h4>Drag a suspect inside or outside the cage:</h4>
-            <div igxDrop class="initialArea">
-                <div igxDrag [hideBaseOnDrag]="true" [animateOnRelease]="true" *ngFor="let elem of draggableElems" class="draggableElem" (dragStart)="onDragStart()" (dragEnd)="onDragEnd()">
-                    <span [style.margin]="'auto'">{{elem}}</span>
+        <app-page-header title="Drag and Drop directives" description="description for drag and drop directives"></app-page-header>
+        <section class="sample-content">
+            <article class="sample-column">
+                <h4 class="sample-title">No ghost dragging:</h4>
+                <div [style.height.px]="100">
+                    <div [igxDrag]="{ dragged: false }" [ghost]="false" class="dialog" [dragChannel]="['Suspect']"
+                        (dragStart)="draggedElem = true" (dragEnd)="draggedElem = false" (click)="dragClick($event)">
+                        <span *ngIf="!draggedElem">Drag me</span>
+                        <span *ngIf="draggedElem">Weeeee</span>
+                    </div>
                 </div>
-            </div>
+                <br>
+                <h4 class="sample-title">Ghost and base templating:</h4>
+                <div #ghostHost [style.height.px]="100">
+                    <div [igxDrag]="{ id: 'customGhost'}" [dragChannel]="'Suspect'"  [ghostTemplate]="dragGhost"
+                        [ngClass]="customDragged ? 'dragWithGhostPlaceholder' : 'dragWithGhostDefault'"
+                        (dragStart)="customDragged = true" (dragEnd)="customDragged = false"  (click)="dragClick($event)">
+                        <span *ngIf="!customDragged">Drag me</span>
+                        <ng-template #dragGhost>
+                            <div class="customGhost">
+                                <span *ngIf="!ghostInDropArea">Weeeee</span>
+                                <span *ngIf="ghostInDropArea && friendlyArea">It's ok here</span>
+                                <span *ngIf="ghostInDropArea && !friendlyArea">Pls no</span>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+    
+                <br>
+                <h4 class="sample-title">Drag Handle:</h4>
+                <button igxButton="raised" igxRipple (click)="openDialog()" [style.width.px]="150">Open dialog</button>
+                <div igxToggle #toggleForm="toggle" class="igx-dialog" [style.width.px]="280" 
+                     igxDrag [ghost]="false" [dragTolerance]="0" [dragChannel]="'dialog'">
+                    <div class="igx-dialog__window">
+                        <div class="login-form">
+                            <div class="dialogHeader">
+                                <span [style.margin.px]="10">Sign In</span>
+                                <igx-icon igxDragHandle fontSet="material" class="dialogHandle">control_camera</igx-icon>
+                            </div>
+                            <igx-input-group>
+                                <igx-prefix>
+                                    <igx-icon>person</igx-icon>
+                                </igx-prefix>
+                                <input type="text" igxInput />
+                                <label igxLabel>Username</label>
+                            </igx-input-group>
+                            <igx-input-group>
+                                <igx-prefix>
+                                    <igx-icon>lock</igx-icon>
+                                </igx-prefix>
+                                <label igxLabel>Password</label>
+                                <input type="password" igxInput />
+                            </igx-input-group>
+                        </div>
+                        <div class="igx-dialog__window-actions">
+                            <button igxButton="flat" type="button" igxRipple (click)="toggleForm.close()"> Cancel </button>
+                            <button igxButton="flat" type="button" igxRipple (click)="signIn($event)"> Sign In </button>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </section>
+        <hr [style.width]="'100%'">
+        <section class="sample-content">
+            <article class="sample-column">
+                <h4 class="sample-title">Transitions:</h4>
+                <p>Custom settings:</p>
+                <div>
+                    <input #animationDuration type="number" placeholder="Duration seconds" [style.margin.px]="5" [style.width.px]="150">
+                    <input #animationDelay type="number" placeholder="Delay seconds" [style.margin.px]="5" [style.width.px]="150">
+                    <input #animationFunction type="string" placeholder="Timing function" [style.margin.px]="5">
+                </div>
+                <div [style.display]="'flex'">
+                    <div>
+                        <p>Start location:</p>
+                        <div>
+                            <input #startX type="number" placeholder="pageX " [style.margin.px]="5" [style.width.px]="100">
+                            <input #startY type="number" placeholder="pageY" [style.margin.px]="5" [style.width.px]="100">
+                        </div>
+                    </div>
+                    <div>
+                        <p>End location:</p>
+                        <div>
+                            <input #endX type="number" placeholder="pageX " value="500" [style.margin.px]="5" [style.width.px]="100">
+                            <input #endY type="number" placeholder="pageY" value="500" [style.margin.px]="5" [style.width.px]="100">
+                        </div>
+                    </div>
+                </div>
 
-            <div class="cageArea" igxDrop (igxDragEnter)="onDragCageEnter()" (igxDragLeave)="onDragCageLeave()">
-            </div>
-        </div>
-    </section>
-</div>
+                <h4 class="sample-title" style="margin-top: 25px;">Playground:</h4>
+                <p>No ghost dragging:</p>
+                <div [style.height.px]="100">
+                    <div #dragNoGhostAnim [igxDrag]="{ dragged: false }" [ghost]="false" class="dialog" [dragChannel]="['Suspect']" (dragStart)="draggedElem = true" (dragEnd)="draggedElem = false">
+                        <span *ngIf="!draggedElem">Drag me</span>
+                        <span *ngIf="draggedElem">Weeeee</span>
+                    </div>
+                </div>
+                <div>
+                    <button igxButton="raised" igxRipple (click)="toOriginNoGhost()" [style.width.px]="100" [style.margin.px]="5">To Origin</button>
+                    <button igxButton="raised" igxRipple (click)="toLocationNoGhost()" [style.width.px]="100" [style.margin.px]="5">To Location</button>
+                </div>
+
+                <ng-template #dragGhostAnimTemplate>
+                    <div class="customGhost">
+                        <span *ngIf="!ghostInDropArea">Weeeee</span>
+                        <span *ngIf="ghostInDropArea && friendlyArea">It's ok here</span>
+                        <span *ngIf="ghostInDropArea && !friendlyArea">Pls no</span>
+                    </div>
+                </ng-template>
+
+                <p>Ghost dragging - transition to origin:</p>
+                <div [style.height.px]="100">
+                        <div [igxDrag]="{ id: 'customGhostAnim'}" [dragChannel]="'Suspect'"  [ghostTemplate]="dragGhostAnimTemplate"
+                        [ngClass]="customDraggedAnim ? 'dragWithGhostPlaceholder' : 'dragWithGhostDefault'"
+                        (dragStart)="customDraggedAnim = true" (dragEnd)="dragGhostAnimOrigin($event)" (transitioned)="customDraggedAnim = false">
+                        <span *ngIf="!customDraggedAnim">Drag me</span>
+                    </div>
+                </div>
+
+                <p>Ghost dragging - transition to location:</p>
+                <div [style.height.px]="100">
+                    <div #dragGhostAnim [igxDrag]="{ id: 'customGhostAnimXY'}" [dragChannel]="'Suspect'"  [ghostTemplate]="dragGhostAnimTemplate"
+                        [ngClass]="customDraggedAnimXY ? 'dragWithGhostPlaceholder' : 'dragWithGhostDefault'"
+                        (dragStart)="customDraggedAnimXY = true" (dragEnd)="dragGhostAnimXY($event)" (transitioned)="customDraggedAnimXY = false">
+                        <span *ngIf="!customDraggedAnimXY">Drag me</span>
+                    </div>
+                </div>
+                <div>
+                    <button igxButton="raised" igxRipple (click)="toOriginGhost()" [style.width.px]="100" [style.margin.px]="5">To Origin</button>
+                    <button igxButton="raised" igxRipple (click)="toLocationGhost()" [style.width.px]="100" [style.margin.px]="5">To Location</button>
+                </div>
+            </article>
+        </section>
+        <hr [style.width]="'100%'">
+        <section class="sample-content">
+            <article class="sample-column">
+                <h4 class="sample-title">Wishlist reorder with transitions:</h4>
+
+                <div #listArea class="listArea">
+                    <div #listItem *ngFor="let item of listNotes; index as itemIndex" class="listItem"
+                        [ngStyle]="{ 'box-shadow': item.dragged ? '0px 5px 15px 3px rgb(20, 20, 20)': '', 'border-radius': item.dragged ? '4px' : '0px', 'z-index': item.dragged ? '2' : '1' }"
+                        [igxDrag]="{ id: item.text, moved: false }" [ghost]="false" (dragStart)="listItemDragStart($event, item, itemIndex)" (dragEnd)="listItemDragEnd($event, item)" (transitioned)="litsItemTransitioned($event, item, itemIndex)" 
+                        igxDrop (enter)="listItemEnter($event, itemIndex)" (over)="listItemOver($event, itemIndex)">
+                        {{item.text}}
+                    </div>
+                </div>
+            </article>
+        </section>
+        <hr [style.width]="'100%'">
+        <section class="sample-content">
+            <article class="sample-column">
+                <div [style.width]="'70%'" >
+                    <h4>Drag a suspect inside or outside the cage:</h4>
+                    <div igxDrop class="initialArea" [dropChannel]="['Pedestrian', 'Suspect']" [dropStrategy]="dropStrategy"
+                        (enter)="enterCustomOutside($event)" (leave)="leaveCustom($event)">
+                        <div igxDrag *ngFor="let elem of draggableElems" class="draggableElem" [hideBaseOnDrag]="true"
+                            [dragChannel]="['Joe', 'Suspect']"
+                            (dragStart)="onDragStart()" (dragEnd)="onDragEnd($event)">
+                            <span [style.margin]="'auto'">{{elem}}</span>
+                        </div>
+                    </div>
+    
+                    <div class="cageArea" igxDrop [dropChannel]="['Suspect']" [dropStrategy]="dropStrategy"
+                        [style.backgroundImage]="'url(assets/images/drag-drop/jailBars.png)'"
+                        (igxDragEnter)="onDragCageEnter()"
+                        (igxDragLeave)="onDragCageLeave()"
+                        (enter)="enterCustomCage($event)"
+                        (leave)="leaveCustom($event)">
+                    </div>
+                </div>
+            </article>
+        </section>
+    </div>
+    

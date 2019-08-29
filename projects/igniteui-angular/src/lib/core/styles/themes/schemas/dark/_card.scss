@@ -7,10 +7,13 @@
 
 /// Generates a dark card schema.
 /// @type {Map}
-/// @prop {Color} background [#222]- The card background color.
 /// @requires extend
 /// @requires $_light-card
 /// @see $default-palette
-$_dark-card: extend($_light-card, (
-    background: #222
-));
+$_dark-card: extend($_light-card);
+
+/// Generates a dark fluent card schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_fluent-card
+$_dark-fluent-card: extend($_fluent-card);

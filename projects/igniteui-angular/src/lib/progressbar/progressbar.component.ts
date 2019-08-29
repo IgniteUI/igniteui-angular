@@ -12,6 +12,7 @@ import {
     ContentChild
 } from '@angular/core';
 import { IgxProcessBarTextTemplateDirective } from './progressbar.common';
+import { IBaseEventArgs } from '../core/utils';
 
 const ONE_PERCENT = 0.01;
 const MIN_VALUE = 0;
@@ -29,7 +30,7 @@ export enum IgxProgressType {
     SUCCESS = 'success'
 }
 
-export interface IChangeProgressEventArgs {
+export interface IChangeProgressEventArgs extends IBaseEventArgs {
     previousValue: number;
     currentValue: number;
 }
@@ -537,7 +538,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress {
     @Input()
     public text: string;
 
-    @ContentChild(IgxProcessBarTextTemplateDirective, { read: IgxProcessBarTextTemplateDirective })
+    @ContentChild(IgxProcessBarTextTemplateDirective, { read: IgxProcessBarTextTemplateDirective, static: false })
     public textTemplate: IgxProcessBarTextTemplateDirective;
 
     /**
@@ -688,7 +689,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress {
     private _circleRadius = 46;
     private _circumference = 2 * Math.PI * this._circleRadius;
 
-    @ViewChild('circle') private _svgCircle: ElementRef;
+    @ViewChild('circle', { static: true }) private _svgCircle: ElementRef;
 
     constructor(private renderer: Renderer2) {
         super();

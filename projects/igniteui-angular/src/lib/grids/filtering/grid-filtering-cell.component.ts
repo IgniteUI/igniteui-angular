@@ -12,13 +12,12 @@ import {
     ChangeDetectionStrategy,
     DoCheck
 } from '@angular/core';
-import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component';
+import { IgxColumnComponent } from '../column.component';
 import { IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../../chips';
 import { IgxFilteringService, ExpressionUI } from './grid-filtering.service';
 import { KEYS } from '../../core/utils';
 import { IgxGridNavigationService } from '../grid-navigation.service';
-import { IgxGridGroupByRowComponent } from '../grid/groupby-row.component';
 
 /**
  * @hidden
@@ -40,25 +39,25 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     @Input()
     public column: IgxColumnComponent;
 
-    @ViewChild('emptyFilter', { read: TemplateRef })
+    @ViewChild('emptyFilter', { read: TemplateRef, static: true })
     protected emptyFilter: TemplateRef<any>;
 
-    @ViewChild('defaultFilter', { read: TemplateRef })
+    @ViewChild('defaultFilter', { read: TemplateRef, static: true })
     protected defaultFilter: TemplateRef<any>;
 
-    @ViewChild('complexFilter', { read: TemplateRef })
+    @ViewChild('complexFilter', { read: TemplateRef, static: true })
     protected complexFilter: TemplateRef<any>;
 
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent })
+    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: false })
     protected chipsArea: IgxChipsAreaComponent;
 
-    @ViewChild('moreIcon', { read: ElementRef })
+    @ViewChild('moreIcon', { read: ElementRef, static: false })
     protected moreIcon: ElementRef;
 
-    @ViewChild('ghostChip', { read: IgxChipComponent })
+    @ViewChild('ghostChip', { read: IgxChipComponent, static: false })
     protected ghostChip: IgxChipComponent;
 
-    @ViewChild('complexChip', { read: IgxChipComponent })
+    @ViewChild('complexChip', { read: IgxChipComponent, static: false })
     protected complexChip: IgxChipComponent;
 
     @HostBinding('class.igx-grid__filtering-cell')
@@ -82,29 +81,9 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
 
     @HostListener('keydown.tab', ['$event'])
     public onTabKeyDown(eventArgs) {
-        const nextIndex = this.filteringService.unpinnedFilterableColumns.indexOf(this.column) + 1;
 
         if (this.isLastElementFocused()) {
-            if (this.column === this.getLastPinnedFilterableColumn() &&
-                (!this.isColumnLeftVisible(nextIndex) || !this.isColumnRightVisible(nextIndex))) {
-                this.filteringService.scrollToFilterCell(this.filteringService.unpinnedFilterableColumns[nextIndex], false);
-                eventArgs.stopPropagation();
-                return;
-            }
-
-            if (nextIndex >= this.filteringService.unpinnedFilterableColumns.length) {
-                if (!this.filteringService.grid.filteredData || this.filteringService.grid.filteredData.length > 0) {
-                    if (this.filteringService.grid.rowList.filter(row => row instanceof IgxGridGroupByRowComponent).length > 0) {
-                        eventArgs.stopPropagation();
-                        return;
-                    }
-                    this.navService.goToFirstCell();
-                }
-                eventArgs.preventDefault();
-            } else if (!this.column.pinned && !this.isColumnRightVisible(nextIndex)) {
-                eventArgs.preventDefault();
-                this.filteringService.scrollToFilterCell(this.filteringService.unpinnedFilterableColumns[nextIndex], true);
-            }
+            this.filteringService.grid.navigation.navigateNextFilterCell(this.column, eventArgs);
         }
         eventArgs.stopPropagation();
     }
@@ -112,16 +91,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     @HostListener('keydown.shift.tab', ['$event'])
     public onShiftTabKeyDown(eventArgs) {
         if (this.isFirstElementFocused()) {
-            const prevIndex = this.filteringService.unpinnedFilterableColumns.indexOf(this.column) - 1;
-
-            if (prevIndex >= 0 && this.column.visibleIndex > 0 && !this.isColumnLeftVisible(prevIndex) && !this.column.pinned) {
-                eventArgs.preventDefault();
-                this.filteringService.scrollToFilterCell(this.filteringService.unpinnedFilterableColumns[prevIndex], false);
-            } else if (this.column.visibleIndex === 0 ||
-                        (prevIndex < 0 && !this.getFirstPinnedFilterableColumn()) ||
-                        this.column === this.getFirstPinnedFilterableColumn()) {
-                eventArgs.preventDefault();
-            }
+            this.filteringService.grid.navigation.navigatePrevFilterCell(this.column, eventArgs);
         }
         eventArgs.stopPropagation();
     }
@@ -148,6 +118,11 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
             return null;
         }
 
+        if (this.column.filterCellTemplate) {
+            this.currentTemplate = this.column.filterCellTemplate;
+            return this.column.filterCellTemplate;
+        }
+
         const expressionTree = this.column.filteringExpressionsTree;
         if (!expressionTree || expressionTree.filteringOperands.length === 0) {
             this.currentTemplate = this.emptyFilter;
@@ -161,6 +136,16 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
 
         this.currentTemplate = this.defaultFilter;
         return this.defaultFilter;
+    }
+
+    /**
+     * Gets the context passed to the filter template.
+     * @memberof IgxGridFilteringCellComponent
+     */
+    get context() {
+        return {
+            column: this.column
+        };
     }
 
     /**
@@ -253,7 +238,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
         this.filteringService.removeExpression(this.column.field, indexToRemove);
 
         this.updateVisibleFilters();
-        this.filteringService.filter(this.column.field);
+        this.filteringService.filterInternal(this.column.field);
     }
 
     private isMoreIconHidden(): boolean {
@@ -343,16 +328,6 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
                 this.chipsArea.chipsList.last.elementRef.nativeElement.querySelector(`.igx-chip__remove`).focus();
             }
         }
-    }
-
-    private getLastPinnedFilterableColumn(): IgxColumnComponent {
-        const pinnedFilterableColums =
-            this.filteringService.grid.pinnedColumns.filter(col => !(col instanceof IgxColumnGroupComponent) && col.filterable);
-        return pinnedFilterableColums[pinnedFilterableColums.length - 1];
-    }
-
-    private getFirstPinnedFilterableColumn(): IgxColumnComponent {
-        return this.filteringService.grid.pinnedColumns.filter(col => !(col instanceof IgxColumnGroupComponent) && col.filterable)[0];
     }
 
     private isColumnRightVisible(columnIndex: number): boolean {

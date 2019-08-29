@@ -2,7 +2,7 @@ import { Input, Output, EventEmitter } from '@angular/core';
 import { WEEKDAYS, Calendar, isDateInRanges, IFormattingOptions, IFormattingViews } from './calendar';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
-
+import { Subject } from 'rxjs';
 
 /**
  * Sets the selction type - single, multi or range.
@@ -11,6 +11,12 @@ export enum CalendarSelection {
     SINGLE = 'single',
     MULTI = 'multi',
     RANGE = 'range'
+}
+
+export enum ScrollMonth {
+    PREV = 'prev',
+    NEXT = 'next',
+    NONE = 'none'
 }
 
 export class IgxCalendarBase implements ControlValueAccessor {
@@ -289,6 +295,26 @@ export class IgxCalendarBase implements ControlValueAccessor {
      *@hidden
      */
     public calendarModel: Calendar;
+
+    /**
+     * @hidden
+     */
+    public monthScrollDirection = ScrollMonth.NONE;
+
+    /**
+     *@hidden
+     */
+    public scrollMonth$ = new Subject();
+
+    /**
+     *@hidden
+     */
+    public stopMonthScroll$ = new Subject<boolean>();
+
+    /**
+     *@hidden
+     */
+    public startMonthScroll$ = new Subject();
 
     /**
      *@hidden

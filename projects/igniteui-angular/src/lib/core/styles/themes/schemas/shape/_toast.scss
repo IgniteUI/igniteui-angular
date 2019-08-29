@@ -1,0 +1,20 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+$_default-shape-toast: (
+    border-radius: 1,
+);
+
+$_round-shape-toast: (
+    border-radius: 1,
+);
+
+$_square-shape-toast: (
+    border-radius: 0%,
+);
+
+$_fluent-shape-toast: (
+    border-radius: 2px
+);

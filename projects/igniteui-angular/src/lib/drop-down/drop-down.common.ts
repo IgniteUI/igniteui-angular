@@ -1,7 +1,8 @@
-import { CancelableEventArgs, CancelableBrowserEventArgs } from '../core/utils';
+import { CancelableEventArgs, CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { IgxDropDownItemBase } from './drop-down-item.base';
 import { IToggleView } from '../core/navigation/IToggleView';
-import { OnInit, EventEmitter } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { DisplayDensityBase } from '../core/density';
 
 /** @hidden */
 export enum Navigate {
@@ -20,7 +21,7 @@ export enum DropDownActionKey {
  * Interface that encapsulates onSelection event arguments - old selection, new selection and cancel selection.
  * @export
  */
-export interface ISelectionEventArgs extends CancelableEventArgs {
+export interface ISelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {
     oldSelection: IgxDropDownItemBase;
     newSelection: IgxDropDownItemBase;
 }
@@ -43,15 +44,13 @@ export const IGX_DROPDOWN_BASE = 'IgxDropDownBaseToken';
 /**
  * @hidden
  */
-export interface IDropDownList {
+export interface IDropDownList extends DisplayDensityBase {
     onSelection: EventEmitter<ISelectionEventArgs>;
     width: string;
     height: string;
     id: string;
     maxHeight: string;
-
     collapsed: boolean;
-
     items: IgxDropDownItemBase[];
     headers: IgxDropDownItemBase[];
     focusedItem: IgxDropDownItemBase;
@@ -67,12 +66,11 @@ export interface IDropDownList {
  * @hidden
  */
 export interface IDropDownBase extends IDropDownList, IToggleView {
+    selectedItem: any;
     onOpening: EventEmitter<CancelableEventArgs>;
     onOpened: EventEmitter<void>;
     onClosing: EventEmitter<CancelableBrowserEventArgs>;
     onClosed: EventEmitter<void>;
-
-    selectedItem: any;
     allowItemsFocus?: boolean;
     setSelectedItem(index: number): void;
     selectItem(item: IgxDropDownItemBase, event?: Event): void;

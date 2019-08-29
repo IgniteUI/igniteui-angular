@@ -18,6 +18,7 @@
 @import './column-hiding';
 @import './combo';
 @import './dialog';
+@import './divider';
 @import './drop-down';
 @import './expansion-panel';
 @import './grid';
@@ -58,6 +59,7 @@
 /// @property {Map} igx-column-hiding [$_light-column-hiding]
 /// @property {Map} igx-combo [$_light-combo]
 /// @property {Map} igx-dialog [$_light-dialog]
+/// @property {Map} igx-divider [$_light-divider]
 /// @property {Map} igx-drop-down [$_light-drop-down]
 /// @property {Map} igx-expansion-panel [$_light-expansion-panel]
 /// @property {Map} igx-grid [$_light-grid]
@@ -83,6 +85,8 @@
 /// @property {Map} igx-toast [$_light-toast]
 /// @property {Map} igx-tooltip [$_light-tooltip]
 
+
+/// The default light schema for all components.
 $light-schema: (
     igx-avatar: $_light-avatar,
     igx-badge: $_light-badge,
@@ -98,6 +102,7 @@ $light-schema: (
     igx-column-hiding: $_light-column-hiding,
     igx-combo: $_light-combo,
     igx-dialog: $_light-dialog,
+    igx-divider: $_light-divider,
     igx-drop-down: $_light-drop-down,
     igx-expansion-panel: $_light-expansion-panel,
     igx-grid: $_light-grid,
@@ -122,4 +127,47 @@ $light-schema: (
     igx-time-picker: $_light-time-picker,
     igx-toast: $_light-toast,
     igx-tooltip: $_light-tooltip
+);
+
+
+$light-fluent-schema: (
+    igx-avatar: $_fluent-avatar,
+    igx-badge: $_fluent-badge,
+    igx-banner: $_fluent-banner,
+    igx-bottom-nav: $_fluent-bottom-nav,
+    igx-button: $_fluent-button,
+    igx-button-group: $_fluent-button-group,
+    igx-calendar: $_fluent-calendar,
+    igx-card: $_fluent-card,
+    igx-carousel: $_fluent-carousel,
+    igx-checkbox: $_fluent-checkbox,
+    igx-chip: $_fluent-chip,
+    igx-column-hiding: $_fluent-column-hiding,
+    igx-combo: $_fluent-combo,
+    igx-dialog: $_fluent-dialog,
+    igx-divider: $_fluent-divider,
+    igx-drop-down: $_fluent-drop-down,
+    igx-expansion-panel: $_fluent-expansion-panel,
+    igx-grid: $_fluent-grid,
+    igx-grid-filtering: $_fluent-grid-filtering,
+    igx-grid-paginator: $_fluent-grid-pagination,
+    igx-grid-summary: $_fluent-grid-summary,
+    igx-grid-toolbar: $_fluent-grid-toolbar,
+    igx-icon: $_fluent-icon,
+    igx-input-group: $_fluent-input-group,
+    igx-list: $_fluent-list,
+    igx-navbar: $_fluent-navbar,
+    igx-navdrawer: $_fluent-navdrawer,
+    igx-overlay: $_fluent-overlay,
+    igx-linear-bar: $_fluent-progress-linear,
+    igx-circular-bar: $_fluent-progress-circular,
+    igx-radio: $_fluent-radio,
+    igx-ripple: $_fluent-ripple,
+    igx-slider: $_fluent-slider,
+    igx-snackbar: $_fluent-snackbar,
+    igx-switch: $_fluent-switch,
+    igx-tabs: $_fluent-tabs,
+    igx-time-picker: $_fluent-time-picker,
+    igx-toast: $_fluent-toast,
+    igx-tooltip: $_fluent-tooltip
 );

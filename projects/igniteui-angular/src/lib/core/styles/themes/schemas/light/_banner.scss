@@ -1,3 +1,4 @@
+@import '../shape/banner';
 ////
 /// @group schemas
 /// @access private
@@ -6,25 +7,39 @@
 
 /// Generates a light banner schema.
 /// @type {Map}
-/// @property {Color} banner-background [#fff]- The background color used banner background.
-/// @property {Color} banner-message-color [igx-color: ('grays', 900)]- The color used for banner label.
-/// @property {Color} banner-border-color [igx-color: ('grays', 400)] - The border color used banner border.
-/// @property {Color} banner-illustration-background [igx-color: ('grays', 100)] - The background color used for banner illustration.
-/// @property {Color} banner-illustration-color [igx-color: ('grays', 900)] - The color used banner illustration.
+/// @property {Map} banner-background [igx-color: 'surface']- The background color used banner background.
+/// @property {Map} banner-message-color [igx-color: 'surface', text-contrast: (), rgba: .87]- The color used for banner label.
+/// @property {Map} banner-border-color [igx-color: ('grays', 400)] - The border color used banner border.
+/// @property {Map} banner-illustration-background [igx-color: ('grays', 100)] - The background color used for banner illustration.
+/// @property {Map} banner-illustration-color [igx-color: 'surface', text-contrast: (), rgba: .87] - The color used banner illustration.
 /// @see $default-palette
+$_light-banner: extend(
+    $_default-shape-banner,
+    (
+        banner-background: (
+            igx-color: 'surface'
+        ),
 
-$_light-banner: (
-    banner-background: #fff,
+        banner-message-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .87
+        ),
 
-    banner-message-color: (
-        igx-color: ('grays', 900)
-    ),
+        banner-border-color: (
+            igx-color: ('grays', 400)
+        ),
 
-    banner-border-color: (
-        igx-color: ('grays', 400)
-    ),
-
-    banner-illustration-color: (
-        igx-color: ('grays', 900)
+        banner-illustration-color: (
+            igx-color: 'surface',
+            text-contrast: (),
+            rgba: .87
+        )
     )
 );
+
+/// Generates a fluent banner schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-banner
+$_fluent-banner: extend($_light-banner);

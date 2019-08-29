@@ -1,6 +1,11 @@
-import { Component, ViewChild, OnInit, TemplateRef } from '@angular/core';
-import { IgxComboComponent, IComboSelectionChangeEventArgs, DisplayDensity } from 'igniteui-angular';
+import { Component, ViewChild, OnInit, TemplateRef, AfterViewInit, ElementRef } from '@angular/core';
+import { IgxComboComponent, IComboSelectionChangeEventArgs,
+    DisplayDensity, OverlaySettings, AutoPositionStrategy, VerticalAlignment, HorizontalAlignment, GlobalPositionStrategy,
+    scaleInCenter, scaleOutCenter, ElasticPositionStrategy
+} from 'igniteui-angular';
 import { take } from 'rxjs/operators';
+import { cloneDeep } from 'lodash';
+import { FormGroup, Validators, FormControl, FormBuilder } from '@angular/forms';
 
 const primitive = ['1', '2', '3', '4', '5', '6'];
 const complex = [{
@@ -28,18 +33,23 @@ const complex = [{
     templateUrl: './combo.sample.html',
     styleUrls: ['combo.sample.css']
 })
-export class ComboSampleComponent implements OnInit {
+export class ComboSampleComponent implements OnInit, AfterViewInit {
+    private overlaySettings: OverlaySettings[] = [null, null, null];
     private width = '160px';
-    @ViewChild(IgxComboComponent) public igxCombo: IgxComboComponent;
-    @ViewChild('comboTemplate', { read: IgxComboComponent }) public comboTemplate: IgxComboComponent;
+    @ViewChild(IgxComboComponent, { static: true }) public igxCombo: IgxComboComponent;
+    @ViewChild('comboTemplate', { read: IgxComboComponent, static: false }) public comboTemplate: IgxComboComponent;
+    @ViewChild(IgxComboComponent, { read: ElementRef, static: true }) private comboRef: ElementRef;
     public toggleItemState = false;
     private initData: any[] = [];
     public filterableFlag = true;
     public customValuesFlag = true;
     public items: any[] = [];
+    public values1:  Array<any>;
+    public values2:  Array<any>;
+
     public valueKeyVar = 'field';
     public currentDataType = '';
-    @ViewChild('customItemTemplate', {read: TemplateRef})
+    @ViewChild('customItemTemplate', { read: TemplateRef, static: true })
     private customItemTemplate;
     private initialItemTemplate: TemplateRef<any> = null;
 
@@ -47,8 +57,35 @@ export class ComboSampleComponent implements OnInit {
     cosy = DisplayDensity.cosy;
     compact = DisplayDensity.compact;
 
+    public genres = [];
+    public user: FormGroup;
+    constructor(fb: FormBuilder) {
+        this.user = fb.group({
+            date: [''],
+            dateTime: [''],
+            email: ['', Validators.required],
+            fullName: new FormControl('', Validators.required),
+            genres: ['', Validators.required],
+            movie: ['', Validators.required],
+            phone: ['']
+        });
 
-    constructor() {
+        this.genres = [
+            { type: 'Action' , movies: ['The Matrix', 'Kill Bill: Vol.1', 'The Dark Knight Rises']},
+            { type: 'Adventure' , movies: ['Interstellar', 'Inglourious Basterds', 'Inception']},
+            // tslint:disable-next-line:object-literal-sort-keys
+            { type: 'Comedy' , movies: ['Wild Tales', 'In Bruges', 'Three Billboards Outside Ebbing, Missouri',
+                'Untouchable', '3 idiots']},
+            { type: 'Crime' , movies: ['Training Day', 'Heat', 'American Gangster']},
+            { type: 'Drama' , movies: ['Fight Club', 'A Beautiful Mind', 'Good Will Hunting', 'City of God']},
+            { type: 'Biography' , movies: ['Amadeus', 'Bohemian Rhapsody']},
+            { type: 'Mystery' , movies: ['The Prestige', 'Memento', 'Cloud Atlas']},
+            { type: 'Musical' , movies: ['All That Jazz']},
+            { type: 'Romance' , movies: ['Love Actually', 'In The Mood for Love']},
+            { type: 'Sci-Fi' , movies: ['The Fifth Element']},
+            { type: 'Thriller' , movies: ['The Usual Suspects']},
+            { type: 'Western' , movies: ['Django Unchained']}];
+
         const division = {
             'New England 01': ['Connecticut', 'Maine', 'Massachusetts'],
             'New England 02': ['New Hampshire', 'Rhode Island', 'Vermont'],
@@ -121,6 +158,26 @@ export class ComboSampleComponent implements OnInit {
         this.igxCombo.onSearchInput.subscribe((e) => {
             console.log(e);
         });
+    }
+
+    ngAfterViewInit() {
+        this.overlaySettings[0] = cloneDeep(this.igxCombo.overlaySettings);
+        this.overlaySettings[1] = {
+            positionStrategy: new ElasticPositionStrategy({ target: this.comboRef.nativeElement,
+                verticalDirection: VerticalAlignment.Top, verticalStartPoint: VerticalAlignment.Bottom,
+                horizontalDirection: HorizontalAlignment.Left, horizontalStartPoint: HorizontalAlignment.Right }),
+            modal: false,
+            closeOnOutsideClick: true,
+        };
+        this.overlaySettings[2] = {
+            positionStrategy: new GlobalPositionStrategy({ openAnimation: scaleInCenter, closeAnimation: scaleOutCenter }),
+            modal: true,
+            closeOnOutsideClick: true,
+        };
+    }
+
+    changeOverlaySettings(index: number) {
+        this.igxCombo.overlaySettings = this.overlaySettings[index];
     }
 
     changeItemTemplate() {

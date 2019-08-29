@@ -24,6 +24,10 @@
 /// @param {box-shadow} $hover-shadow [null] - The shadow used for the thumb in hover state of the switch.
 /// @param {box-shadow} $disabled-shadow [null] - The shadow used for the thumb in disable state of the switch.
 ///
+/// @param {border-radius} $border-radius-track [null] - The border radius used for switch track.
+/// @param {border-radius} $border-radius-thumb [null] - The border radius used for switch thumb.
+/// @param {border-radius} $border-radius-ripple [null] - The border radius used for switch ripple.
+///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
@@ -53,12 +57,32 @@
 
     $resting-shadow: null,
     $hover-shadow: null,
-    $disabled-shadow: null
+    $disabled-shadow: null,
+
+    $border-radius-track: null,
+    $border-radius-thumb: null,
+    $border-radius-ripple: null,
+    $border-color: null,
+    $border-hover-color: null,
+    $border-disabled-color: null,
+    $border-on-color: null,
+    $border-on-hover-color: null
 ) {
     $name: 'igx-switch';
     $switch-schema: map-get($schema, $name);
-
     $theme: apply-palette($switch-schema, $palette);
+
+    $border-radius-track: round-borders(
+        if($border-radius-track, $border-radius-track, map-get($switch-schema, 'border-radius-track')), 0, 7px
+    );
+
+    $border-radius-thumb: round-borders(
+        if($border-radius-thumb, $border-radius-thumb, map-get($switch-schema, 'border-radius-thumb')), 0, 10px
+    );
+
+    $border-radius-ripple: round-borders(
+        if($border-radius-ripple, $border-radius-ripple, map-get($switch-schema, 'border-radius-ripple')), 0, 24px
+    );
 
     @if not($resting-shadow) {
         $resting-elevation: map-get($switch-schema, 'resting-elevation');
@@ -94,6 +118,15 @@
         resting-shadow: $resting-shadow,
         hover-shadow: $hover-shadow,
         disabled-shadow: $disabled-shadow,
+
+        border-radius-track: $border-radius-track,
+        border-radius-thumb: $border-radius-thumb,
+        border-radius-ripple: $border-radius-ripple,
+        border-color: $border-color,
+        border-hover-color: $border-hover-color,
+        border-disabled-color: $border-disabled-color,
+        border-on-color: $border-on-color,
+        border-on-hover-color: $border-on-hover-color,
     ));
 }
 
@@ -110,16 +143,53 @@
 /// @requires --var
 @mixin igx-switch($theme) {
     @include igx-root-css-vars($theme);
-
     @include scale-in-out($start-scale: .9);
 
-    // @debug $theme;
+    $switch-width: map-get((
+        material: 36px,
+        fluent: 40px,
+    ), map-get($theme, variant));
 
-    $switch-width: 36px ;
-    $switch-height: 14px ;
-    $switch-radius: 100px ;
+    $switch-height: map-get((
+        material: 14px,
+        fluent: 20px
+    ), map-get($theme, variant));
 
-    $switch-thumb-width: 20px ;
+    $switch-thumb-width: map-get((
+        material: 20px,
+        fluent: 12px
+    ), map-get($theme, variant));
+
+    $switch-on-offset: map-get((
+        material: 1px,
+        fluent: $switch-thumb-width / 2
+    ), map-get($theme, variant));
+
+    $switch-off-offset: map-get((
+        material: -1px,
+        fluent: $switch-thumb-width / 3
+    ), map-get($theme, variant));
+
+    $ripple-display: map-get((
+        material: block,
+        fluent: none
+    ), map-get($theme, variant));
+
+    $thumb-resting-shadow: map-get((
+        material: --var($theme, 'resting-shadow'),
+        fluent: none
+    ), map-get($theme, variant));
+
+    $thumb-hover-shadow: map-get((
+        material: --var($theme, 'hover-shadow'),
+        fluent: none
+    ), map-get($theme, variant));
+
+    $thumb-disabled-shadow: map-get((
+        material: --var($theme, 'disabled-shadow'),
+        fluent: none
+    ), map-get($theme, variant));
+
     $switch-thumb-height: $switch-thumb-width ;
 
     $ripple-size: em(48px);
@@ -153,65 +223,80 @@
     %switch-composite {
         display: flex;
         align-items: center;
-        width: $switch-width;
-        height: $switch-height;
-        border-radius: $switch-radius;
+        width: rem($switch-width);
+        height: rem($switch-height);
+        border: 1px solid --var($theme, 'border-color');
+        border-radius: --var($theme, 'border-radius-track');
         background: --var($theme, 'track-off-color');
         cursor: pointer;
         user-select: none;
         transition: $input-transition;
+
+        &:hover,
+        &:focus {
+            border-color: --var($theme, 'border-hover-color');
+        }
     }
 
     %switch-composite--x {
         background: --var($theme, 'track-on-color');
+        border-color: --var($theme, 'border-on-color');
+
+        &:hover,
+        &:focus {
+            border-color: --var($theme, 'border-on-hover-color');
+        }
     }
 
     %switch-composite--disabled {
         background: --var($theme, 'track-disabled-color');
+        border-color: --var($theme, 'border-disabled-color');
     }
 
     %switch-composite-thumb {
         position: relative;
         display: block;
-        width: $switch-thumb-width;
+        width: rem($switch-thumb-width);
         height: $switch-thumb-height;
-        min-width: $switch-thumb-width;
-        border-radius: 50%;
+        min-width: rem($switch-thumb-width);
+        border-radius: --var($theme, 'border-radius-thumb');
         background: --var($theme, 'thumb-off-color');
-        box-shadow: --var($theme, 'resting-shadow');
+        box-shadow: $thumb-resting-shadow;
         transition: $input-transition;
+        transform: translateX(rem($switch-off-offset));
 
         &:hover {
-            box-shadow: --var($theme, 'hover-shadow');
+            box-shadow: $thumb-hover-shadow;
         }
     }
 
     %switch-composite-thumb--x {
-        transform: translateX(#{$switch-width - $switch-thumb-width});
+        transform: translateX(#{rem($switch-width) - rem($switch-thumb-width) - rem($switch-on-offset)});
         background: --var($theme, 'thumb-on-color');
 
         [dir='rtl'] & {
-            transform: translateX(-#{$switch-width - $switch-thumb-width});
+            transform: translateX(-#{rem($switch-width) - rem($switch-thumb-width) - rem($switch-on-offset)});
         }
     }
 
     %switch-composite-thumb--disabled {
         background: --var($theme, 'thumb-disabled-color');
-        box-shadow: --var($theme, 'disabled-shadow');
+        box-shadow: $thumb-disabled-shadow;
     }
 
     %switch-ripple {
         @include igx-ripple($ripple-theme);
         @include igx-css-vars($ripple-theme);
+        display: $ripple-display;
         position: absolute;
         top: calc(50% - #{$ripple-radius});
         left: calc(50% - #{$ripple-radius});
         width: $ripple-size;
         height: $ripple-size;
-        border-radius: $ripple-radius;
         overflow: hidden;
         pointer-events: none;
         filter: opacity(1);
+        border-radius: --var($theme, 'border-radius-ripple');
     }
 
     %switch-ripple--focused {
@@ -311,12 +396,10 @@
 ) {
     $label: map-get($categories, 'label');
 
-    @include igx-scope('.igx-typography') {
-        %switch-label {
-            @include igx-type-style($type-scale, $label) {
-                margin-top: 0;
-                margin-bottom: 0;
-            }
+    %switch-label {
+        @include igx-type-style($type-scale, $label) {
+            margin-top: 0;
+            margin-bottom: 0;
         }
     }
 }

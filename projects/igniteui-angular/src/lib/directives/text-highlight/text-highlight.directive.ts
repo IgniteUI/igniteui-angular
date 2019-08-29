@@ -7,11 +7,9 @@ import {
     NgModule,
     OnChanges,
     OnDestroy,
-    Output,
     Renderer2,
     SimpleChanges,
-    AfterViewChecked,
-    SimpleChange
+    AfterViewChecked
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -250,7 +248,6 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
             if (this._activeElementIndex !== -1) {
                 this.deactivate();
             }
-
             this.activateIfNecessary();
         }
     }

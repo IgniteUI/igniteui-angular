@@ -8,10 +8,13 @@
 
 /// Generates a dark combo schema.
 /// @type {Map}
-/// @prop {Color} empty-list-background [#222] - The combo list background color.
 /// @requires extend
 /// @requires $_light-combo
 /// @see $default-palette
-$_dark-combo: extend($_light-combo, (
-    empty-list-background: #222,
-));
+$_dark-combo: extend($_light-combo);
+
+/// Generates a dark fluent combo schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_fluent-combo
+$_dark-fluent-combo: extend($_fluent-combo);

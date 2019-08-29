@@ -72,4 +72,38 @@ $elevations: igx-elevations(
 /// Green palette
 /// @type {Map}
 /// @group palettes
-$green-palette: igx-palette($primary: #09f, $secondary: #72da67) !default;
+$green-palette: igx-palette(
+    $primary: #09f,
+    $secondary: #72da67
+) !default;
+
+/// Red palette
+/// @type {Map}
+/// @group palettes
+$purple-palette: igx-palette(
+    $primary: #00b4d6,
+    $secondary: #514590
+) !default;
+
+
+/// Fluent Excel palette
+/// @type {Map}
+/// @group palettes
+$fluent-excel-palette: igx-palette(
+    $primary: #217346,
+    $secondary: #217346,
+    $success: #107c10,
+    $warn: #797673,
+    $error: #a80000
+) !default;
+
+/// Fluent Word palette
+/// @type {Map}
+/// @group palettes
+$fluent-word-palette: igx-palette(
+    $primary: #2b579a,
+    $secondary: #2b579a,
+    $success: #107c10,
+    $warn: #797673,
+    $error: #a80000
+) !default;

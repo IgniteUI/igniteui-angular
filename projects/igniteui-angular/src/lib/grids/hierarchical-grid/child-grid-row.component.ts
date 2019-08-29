@@ -8,11 +8,13 @@ import {
     OnInit,
     ViewChild,
     AfterViewInit,
-    SimpleChanges
+    SimpleChanges,
+    ComponentFactoryResolver
 } from '@angular/core';
-import { IgxSelectionAPIService } from '../../core/selection';
 import { GridBaseAPIService } from '.././api.service';
 import { IgxRowIslandComponent } from './row-island.component';
+import { IgxGridComponent } from '../grid/grid.component';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,7 +23,7 @@ import { IgxRowIslandComponent } from './row-island.component';
     templateUrl: './child-grid-row.component.html'
 })
 export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
-
+private resolver;
 
     /**
  * Returns whether the row is expanded.
@@ -77,7 +79,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     @Input()
     public index: number;
 
-    @ViewChild('hgrid')
+    @ViewChild('hgrid', { static: true })
     private hGrid: any/* TODO: IgxHierarchicalGridComponent*/;
 
     /**
@@ -109,8 +111,9 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
      *  </igx-grid>
      * ```
      */
+    // TODO: Refactor
     get parentGrid(): any/* TODO: IgxHierarchicalGridComponent*/ {
-        return this.gridAPI.get(this.parentGridID);
+        return this.gridAPI.grid;
     }
 
     @HostBinding('attr.data-level')
@@ -131,18 +134,16 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     }
 
     constructor(public gridAPI: GridBaseAPIService<any/* TODO: IgxHierarchicalGridComponent*/>,
-        private selectionAPI: IgxSelectionAPIService,
         public element: ElementRef,
+        resolver: ComponentFactoryResolver,
         public cdr: ChangeDetectorRef) {
+            this.resolver = resolver;
     }
 
     /**
      * @hidden
      */
     ngOnInit() {
-        // setting child data only once on init
-        // due to context change issues when moving cached views containing hierarchical child grids
-        this.hGrid.data = this.rowData.childGridsData[this.layout.key];
         this.layout.onLayoutChange.subscribe((ch) => {
             this._handleLayoutChanges(ch);
         });
@@ -152,6 +153,14 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         });
         this.hGrid.parent = this.parentGrid;
         this.hGrid.parentIsland = this.layout;
+        this.hGrid.childRow =  this;
+        // handler logic that re-emits hgrid events on the row island
+        this.setupEventEmitters();
+        this.layout.onGridCreated.emit({
+            owner: this.layout,
+            parentID: this.rowData.rowID,
+            grid: this.hGrid
+        });
     }
 
     /**
@@ -163,24 +172,28 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
             this.hGrid.createColumnsList(this.layout.childColumns.toArray());
         }
         const layouts = this.hGrid.childLayoutList.toArray();
-        layouts.forEach((l) => this.hGrid.hgridAPI.registerLayout(l));
+        layouts.forEach((l) => this.hGrid.hgridAPI.registerChildRowIsland(l));
         this.parentGrid.hgridAPI.registerChildGrid(this.rowData.rowID, this.layout.key, this.hGrid);
-
-        this.layout.onGridCreated.emit({
-            owner: this.layout,
-            parentID: this.rowData.rowID,
-            grid: this.hGrid
-        });
+        this.layout.rowIslandAPI.registerChildGrid(this.rowData.rowID, this.hGrid);
 
         this.hGrid.cdr.detectChanges();
     }
 
-    /**
-     * @hidden
-     */
-    public notGroups(arr) {
-        return arr.filter(c => !c.columnGroup);
+    private setupEventEmitters() {
+        const destructor = takeUntil(this.hGrid.destroy$);
+
+        const factory = this.resolver.resolveComponentFactory(IgxGridComponent);
+        const outputs = factory.outputs;
+        outputs.forEach(output => {
+            if (this.hGrid[output.propName]) {
+                this.hGrid[output.propName].pipe(destructor).subscribe((args) => {
+                    args.owner = this.hGrid;
+                    this.layout[output.propName].emit(args);
+                });
+            }
+        });
     }
+
 
     private _handleLayoutChanges(changes: SimpleChanges) {
         for (const change in changes) {

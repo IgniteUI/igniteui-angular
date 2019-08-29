@@ -3,8 +3,9 @@ import { IgxBaseExporter } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { CharSeparatedValueData } from './char-separated-value-data';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
+import { IBaseEventArgs } from '../../core/utils';
 
-export interface ICsvExportEndedEventArgs {
+export interface ICsvExportEndedEventArgs extends IBaseEventArgs {
     csvData: string;
 }
 
@@ -47,6 +48,7 @@ export class IgxCsvExporterService extends IgxBaseExporter {
     public onExportEnded = new EventEmitter<ICsvExportEndedEventArgs>();
 
     protected exportDataImplementation(data: any[], options: IgxCsvExporterOptions) {
+        data = data.map((item) => item.rowData);
         const csvData = new CharSeparatedValueData(data, options.valueDelimiter);
         this._stringData = csvData.prepareData();
 

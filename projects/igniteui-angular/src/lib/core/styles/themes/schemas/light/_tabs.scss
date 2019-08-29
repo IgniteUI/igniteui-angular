@@ -1,3 +1,5 @@
+@import '../shape/tabs';
+
 ////
 /// @group schemas
 /// @access private
@@ -26,58 +28,65 @@
 /// @property {map} button-ripple-color [igx-color: ('grays', 100)] - The color used for the button background on hover.
 ///
 /// @see $default-palette
+$_light-tabs: extend(
+    $_default-shape-tabs,
+    (
+        item-text-color: (
+            igx-color: ('grays', 700)
+        ),
 
+        item-background: #fff,
 
-$_light-tabs: (
-    item-text-color: (
-        igx-color: ('grays', 700)
-    ),
+        item-hover-background: (
+            igx-color: ('grays', 200)
+        ),
 
-    item-background: #fff,
+        item-hover-color: (
+            igx-color: ('grays', 700)
+        ),
 
-    item-hover-background: (
-        igx-color: ('grays', 200)
-    ),
+        item-active-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    item-hover-color: (
-        igx-color: ('grays', 700)
-    ),
+        item-active-icon-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    item-active-color: (
-        igx-color: ('primary', 500)
-    ),
+        item-active-background: (
+            igx-color: ('grays', 200)
+        ),
 
-    item-active-icon-color: (
-        igx-color: ('primary', 500)
-    ),
+        indicator-color: (
+            igx-color: ('primary', 500)
+        ),
 
-    item-active-background: (
-        igx-color: ('grays', 200)
-    ),
+        button-color: (
+            igx-color: ('grays', 500)
+        ),
 
-    indicator-color: (
-        igx-color: ('primary', 500)
-    ),
+        button-background: #fff,
 
-    button-color: (
-        igx-color: ('grays', 500)
-    ),
+        button-hover-background: (
+            igx-color: ('grays', 100)
+        ),
 
-    button-background: #fff,
+        button-hover-color: (
+            igx-color: ('grays', 600)
+        ),
 
-    button-hover-background: (
-        igx-color: ('grays', 100)
-    ),
+        tab-ripple-color: (
+            igx-color: ('grays', 100)
+        ),
 
-    button-hover-color: (
-        igx-color: ('grays', 600)
-    ),
-
-    tab-ripple-color: (
-        igx-color: ('grays', 100)
-    ),
-
-    button-ripple-color: (
-        igx-color: ('grays', 100)
+        button-ripple-color: (
+            igx-color: ('grays', 100)
+        )
     )
 );
+
+/// Generates a fluent tabs schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-tabs
+$_fluent-tabs: extend($_light-tabs);

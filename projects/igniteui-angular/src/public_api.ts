@@ -15,7 +15,9 @@ export * from './lib/animations/main';
 export * from './lib/core/navigation';
 export * from './lib/directives/autocomplete/autocomplete.directive';
 export * from './lib/directives/button/button.directive';
-export * from './lib/directives/dragdrop/dragdrop.directive';
+export * from './lib/directives/divider/divider.directive';
+export * from './lib/directives/drag-drop/drag-drop.strategy';
+export * from './lib/directives/drag-drop/drag-drop.directive';
 export * from './lib/directives/filter/filter.directive';
 export * from './lib/directives/focus/focus.directive';
 export * from './lib/directives/for-of/for_of.directive';
@@ -73,7 +75,7 @@ export * from './lib/navbar/navbar.component';
 export * from './lib/navigation-drawer/index';
 export * from './lib/progressbar/progressbar.component';
 export * from './lib/radio/radio.component';
-export * from './lib/slider/slider.component';
+export * from './lib/slider/index';
 export * from './lib/snackbar/snackbar.component';
 export * from './lib/switch/switch.component';
 export * from './lib/tabbar/tabbar.component';
@@ -93,6 +95,5 @@ export { CancelableEventArgs, CancelableBrowserEventArgs } from './lib/core/util
 export { changei18n, getCurrentResourceStrings, IResourceStrings } from './lib/core/i18n/resources';
 export { IGridResourceStrings } from './lib/core/i18n/grid-resources';
 export { ITimePickerResourceStrings } from './lib/core/i18n/time-picker-resources';
-export * from './lib/date-picker/date-picker.utils';
 export { InteractionMode } from './lib/core/enums';
 

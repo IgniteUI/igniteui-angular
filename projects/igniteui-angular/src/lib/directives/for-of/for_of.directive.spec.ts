@@ -6,7 +6,6 @@ import {
     ComponentFactoryResolver,
     Directive,
     Injectable,
-    IterableChanges,
     IterableDiffers,
     NgZone,
     OnInit,
@@ -17,7 +16,7 @@ import {
     ViewContainerRef,
     DebugElement
 } from '@angular/core';
-import { async, TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
+import { async, TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { IForOfState, IgxForOfDirective, IgxForOfModule } from './for_of.directive';
@@ -25,6 +24,7 @@ import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 describe('IgxForOf directive -', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
@@ -108,7 +108,7 @@ describe('IgxForOf directive -', () => {
             }
         });
 
-        it('should always fill available space for last chunk size calculation', () => {
+        it('should always fill available space for last chunk size calculation - horizontal virtualization', () => {
             fix.componentInstance.width = '1900px';
             fix.componentInstance.cols = [
                 { field: '1', width: 100 },
@@ -241,6 +241,21 @@ describe('IgxForOf directive -', () => {
             fix.detectChanges();
         });
 
+        it('should apply the changes when itemSize is changed.', () => {
+            const firstRecChildren = displayContainer.children[0].children;
+            for (let i = 0; i < firstRecChildren.length; i++) {
+                expect(firstRecChildren[i].clientHeight)
+                    .toBe(parseInt(fix.componentInstance.parentVirtDir.igxForItemSize, 10));
+            }
+
+            fix.componentInstance.itemSize = '100px';
+            fix.detectChanges();
+            for (let i = 0; i < firstRecChildren.length; i++) {
+                expect(firstRecChildren[i].clientHeight)
+                    .toBe(parseInt(fix.componentInstance.parentVirtDir.igxForItemSize, 10));
+            }
+        });
+
         it('should allow initially undefined value for igxForOf and then detect changes correctly once the value is updated', async () => {
             fix = TestBed.createComponent(VerticalVirtualNoDataComponent);
             expect(() => {
@@ -263,6 +278,47 @@ describe('IgxForOf directive -', () => {
             await wait();
             rowsRendered = displayContainer.querySelectorAll('div');
             expect(rowsRendered.length).not.toBe(0);
+        });
+
+        it('should always fill available space for last chunk size calculation - vertical virtualization', async () => {
+            resizeObserverIgnoreError();
+            fix.componentInstance.height = '1900px';
+            const virtualContainer = fix.componentInstance.parentVirtDir;
+            virtualContainer.igxForSizePropName = 'height';
+            fix.componentInstance.data = [
+                { '1': '1', height: '100px' },
+                {  '1': '2', height: '1800px' },
+                {  '1': '3', height: '200px' },
+                {  '1': '4', height: '200px' },
+                {  '1': '5', height: '300px' },
+                {  '1': '6', height: '100px' },
+                {  '1': '7', height: '100px' },
+                {  '1': '8', height: '100px' },
+                {  '1': '9', height: '150px' },
+                {  '1': '10', height: '150px' }
+            ];
+            fix.detectChanges();
+            await wait(200);
+            let chunkSize = (virtualContainer as any)._calcMaxChunkSize();
+            expect(chunkSize).toEqual(9);
+
+            fix.componentInstance.height = '1900px';
+            fix.componentInstance.data = [
+                {  '1': '1', height: '1800px' },
+                {  '1': '2', height: '100px' },
+                {  '1': '3', height: '200px' },
+                {  '1': '4', height: '200px' },
+                {  '1': '5', height: '300px' },
+                {  '1': '6', height: '100px' },
+                {  '1': '7', height: '100px' },
+                {  '1': '8', height: '100px' },
+                {  '1': '9', height: '150px' },
+                {  '1': '10', height: '150px' }
+            ];
+            fix.detectChanges();
+            await wait(200);
+            chunkSize = (virtualContainer as any)._calcMaxChunkSize();
+            expect(chunkSize).toEqual(10);
         });
     });
 
@@ -347,7 +403,7 @@ describe('IgxForOf directive -', () => {
 
         it('should scroll to wheel event correctly', async() => {
             /* 120 is default mousewheel on Chrome, scroll 2 records down */
-            await UIInteractions.simulateWheelEvent(displayContainer, 0, 2 * 120);
+            await UIInteractions.simulateWheelEvent(displayContainer, 0, - 1 * 2 * 120);
             await wait();
 
             const firstInnerDisplayContainer = displayContainer.children[0].querySelector('igx-display-container');
@@ -686,7 +742,7 @@ describe('IgxForOf directive -', () => {
             }
         });
 
-        it('should apply inertia when swiping via touch interaction.', async() => {
+        xit('should apply inertia when swiping via touch interaction.', async() => {
             const dcElem =  fix.componentInstance.parentVirtDir.dc.instance._viewContainer.element.nativeElement;
             // spyOn(fix.componentInstance.parentVirtDir, 'onScroll');
             await UIInteractions.simulateTouchStartEvent(
@@ -1032,6 +1088,46 @@ describe('IgxForOf directive -', () => {
             expect(children.length).toEqual(expectedElementsLength);
         });
     });
+    describe('even odd first last functions', () => {
+        configureTestSuite();
+        let fix: ComponentFixture<LocalVariablesComponent>;
+
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    TestIgxForOfDirective,
+                    LocalVariablesComponent
+                ],
+                imports: [IgxForOfModule]
+            }).compileComponents();
+        }));
+
+        beforeEach(() => {
+            fix = TestBed.createComponent(LocalVariablesComponent);
+            fix.detectChanges();
+        });
+
+        it('should differentiate even odd items', () => {
+            const allItems: DebugElement[] = fix.debugElement.queryAll(By.css('igx-display-container'))[0].children;
+            expect(allItems.length).toEqual(100);
+            for (let i = 0; i < allItems.length; i++) {
+                if (i === 0) {
+                    expect(allItems[i].classes['first']).toBe(true);
+                }
+                if (i === allItems.length - 1) {
+                    expect(allItems[i].classes['last']).toBe(true);
+                }
+                if (i % 2 === 0) {
+                    expect(allItems[i].classes['even']).toBe(true);
+                } else {
+                    expect(allItems[i].classes['odd']).toBe(true);
+                }
+            }
+        });
+
+
+    });
+
 });
 
 class DataGenerator {
@@ -1064,7 +1160,7 @@ class DataGenerator {
         for (let j = 0; j < numCols; j++) {
             cols.push({
                 field: j.toString(),
-                width: j % 8 < 2 ? 100 : (j % 6 + 0.25) * 125
+                width: j % 8 < 2 ? 100 : Math.floor((j % 6 + 0.25) * 125)
             });
         }
 
@@ -1176,7 +1272,7 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
 export class EmptyVirtualComponent {
     public data = [];
 
-    @ViewChild('container') public container;
+    @ViewChild('container', { static: true })public container;
 }
 
 /** Only vertically virtualized component */
@@ -1186,8 +1282,8 @@ export class EmptyVirtualComponent {
             <ng-template #scrollContainer igxForTest let-rowData [igxForOf]="data"
                 [igxForScrollOrientation]="'vertical'"
                 [igxForContainerSize]='height'
-                [igxForItemSize]='"50px"'>
-                <div [style.display]="'flex'" [style.height]="'50px'">
+                [igxForItemSize]='itemSize'>
+                <div [style.display]="'flex'" [style.height]="rowData.height || itemSize || '50px'">
                     <div [style.min-width]=cols[0].width>{{rowData['1']}}</div>
                     <div [style.min-width]=cols[1].width>{{rowData['2']}}</div>
                     <div [style.min-width]=cols[2].width>{{rowData['3']}}</div>
@@ -1210,10 +1306,12 @@ export class VerticalVirtualComponent {
         { field: '5', width: '100px' }
     ];
     public data = [];
+    public itemSize = '50px';
 
-    @ViewChild('container') public container;
+    @ViewChild('container', { static: true })
+    public container;
 
-    @ViewChild('scrollContainer', { read: TestIgxForOfDirective })
+    @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: true })
     public parentVirtDir: TestIgxForOfDirective<any>;
 
     public scrollTop(newScrollTop) {
@@ -1254,7 +1352,7 @@ export class HorizontalVirtualComponent implements OnInit {
     public data = [];
     public scrollContainer = { _viewContainer: null };
 
-    @ViewChild('container', { read: ViewContainerRef })
+    @ViewChild('container', { read: ViewContainerRef, static: true })
     public container: ViewContainerRef;
 
     @ViewChildren('childContainer', { read: TestIgxForOfDirective })
@@ -1302,10 +1400,10 @@ export class VirtualComponent {
     public cols = [];
     public data = [];
 
-    @ViewChild('container', { read: ViewContainerRef })
+    @ViewChild('container', { read: ViewContainerRef, static: true })
     public container: ViewContainerRef;
 
-    @ViewChild('scrollContainer', { read: TestIgxForOfDirective })
+    @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: true })
     public parentVirtDir: TestIgxForOfDirective<any>;
 
     @ViewChildren('childContainer', { read: TestIgxForOfDirective })
@@ -1367,9 +1465,10 @@ export class VirtualVariableSizeComponent {
     public height = '0px';
     public data = [];
 
-    @ViewChild('container') public container;
+    @ViewChild('container', { static: true })
+    public container;
 
-    @ViewChild('scrollContainer', { read: TestIgxForOfDirective })
+    @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: true })
     public parentVirtDir: TestIgxForOfDirective<any>;
 
     public generateData(count) {
@@ -1452,10 +1551,10 @@ export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
     public height = '500px';
     public data;
 
-    @ViewChild('scrollContainer', { read: TestIgxForOfDirective })
+    @ViewChild('scrollContainer', { read: TestIgxForOfDirective, static: true })
     public parentVirtDir: TestIgxForOfDirective<any>;
 
-    @ViewChild('container', { read: ViewContainerRef })
+    @ViewChild('container', { read: ViewContainerRef, static: true })
     public container: ViewContainerRef;
 
     constructor(private localService: LocalService) { }
@@ -1482,7 +1581,6 @@ export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
         <ng-template igxForTest
             let-item [igxForOf]="items"
             [igxForScrollOrientation]="'horizontal'"
-            [igxForScrollContainer]="parentVirtDir"
             [igxForContainerSize]='width'
             [igxForItemSize]='itemSize'>
                 <div class="forOfElement" #child>{{item.text}}</div>
@@ -1515,6 +1613,43 @@ export class NoWidthAndHeightComponent {
     constructor() {
         for (let i = 0; i < 100; i++) {
             this.items.push({text: i + ''});
+        }
+    }
+}
+
+@Component({
+    template: `
+    <div class='container'>
+        <ng-template igxFor let-item [igxForOf]="data" #virtDirVertical
+            [igxForScrollOrientation]="'vertical'"
+            [igxForContainerSize]='"500px"'
+            [igxForItemSize]='itemSize'
+            let-rowIndex="index"
+            let-odd="odd"
+            let-even="even"
+            let-first="first"
+            let-last="last">
+
+            <div #markupItem
+                [ngClass]="{
+                    first: first,
+                    last: last,
+                    even: even,
+                    odd: odd
+                }"
+                [style.height]='itemSize'>
+                    {{rowIndex}} : {{item.text}}
+            </div>
+        </ng-template>
+    </div>
+    `,
+})
+export class LocalVariablesComponent {
+    public data = [];
+
+    constructor() {
+        for (let i = 0; i < 100; i++) {
+            this.data.push({text: i + ''});
         }
     }
 }

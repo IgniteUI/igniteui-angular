@@ -5,10 +5,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import {
     IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
-    IgxGridTransaction, IgxTransactionService, IgxTreeGridModule,  IgxHierarchicalGridModule} from 'igniteui-angular';
+    IgxGridTransaction, IgxTransactionService, IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule, IgxIconService} from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
-import { IgxDragDropModule } from '../../projects/igniteui-angular/src/lib/directives/dragdrop/dragdrop.directive';
+import { IgxDragDropModule } from '../../projects/igniteui-angular/src/lib/directives/drag-drop/drag-drop.directive';
+import { IgxDividerModule } from '../../projects/igniteui-angular/src/lib/directives/divider/divider.directive';
 
 import { routing } from './routing';
 import { AppComponent } from './app.component';
@@ -23,7 +24,7 @@ import { ChipsSampleComponent } from './chips/chips.sample';
 import { DatePickerSampleComponent } from './date-picker/date-picker.sample';
 import { DialogSampleComponent } from './dialog/dialog.sample';
 import { DragDropSampleComponent } from './drag-drop/drag-drop.sample';
-import { MaskSampleComponent } from './mask/mask.sample';
+import { MaskSampleComponent, DisplayFormatPipe, InputFormatPipe } from './mask/mask.sample';
 import { IconSampleComponent } from './icon/icon.sample';
 import { InputSampleComponent } from './input/input.sample';
 import { InputGroupSampleComponent } from './input-group/input-group.sample';
@@ -42,7 +43,17 @@ import { ColorsSampleComponent } from './styleguide/colors/color.sample';
 import { ShadowsSampleComponent } from './styleguide/shadows/shadows.sample';
 import { TypographySampleComponent } from './styleguide/typography/typography.sample';
 import { BottomNavSampleComponent, CustomContentComponent } from './bottomnav/bottomnav.sample';
+import { BottomNavRoutingSampleComponent } from './bottomnav-routing/bottomnav-routing.sample';
+import {
+    BottomNavRoutingView1Component,
+    BottomNavRoutingView2Component,
+    BottomNavRoutingView3Component } from './bottomnav-routing/bottomnav-routing-views.sample';
 import { TabsSampleComponent } from './tabs/tabs.sample';
+import { TabsRoutingSampleComponent } from './tabs-routing/tabs-routing.sample';
+import {
+    TabsRoutingView1Component,
+    TabsRoutingView2Component,
+    TabsRoutingView3Component } from './tabs-routing/tabs-routing-views.sample';
 import { TimePickerSampleComponent } from './time-picker/time-picker.sample';
 import { ToastSampleComponent } from './toast/toast.sample';
 import { RemoteService } from './shared/remote.service';
@@ -56,6 +67,7 @@ import { GridColumnResizingSampleComponent } from './grid-column-resizing/grid-c
 import { GridSummaryComponent } from './grid-summaries/grid-summaries.sample';
 import { GridPerformanceSampleComponent } from './grid-performance/grid-performance.sample';
 import { GridSelectionComponent } from './grid-selection/grid-selection.sample';
+import { GridRowDraggableComponent } from './grid-row-draggable/grid-row-draggable.sample';
 import { GridToolbarSampleComponent } from './grid-toolbar/grid-toolbar.sample';
 import { GridToolbarCustomSampleComponent } from './grid-toolbar/grid-toolbar-custom.sample';
 import { GridVirtualizationSampleComponent } from './grid-remote-virtualization/grid-remote-virtualization.sample';
@@ -64,6 +76,8 @@ import { GridColumnGroupsSampleComponent } from './grid-column-groups/grid-colum
 import { GridCellStylingSampleComponent } from './gird-cell-styling/grid-cell-styling.sample';
 import { GridGroupBySampleComponent } from './grid-groupby/grid-groupby.sample';
 import { DropDownSampleComponent } from './drop-down/drop-down.sample';
+import { DisplayDensityDropDownComponent } from './drop-down/display-density/display-density.sample';
+import { DropDownVirtualComponent } from './drop-down/drop-down-virtual/drop-down-virtual.component';
 import { ComboSampleComponent } from './combo/combo.sample';
 import { OverlaySampleComponent } from './overlay/overlay.sample';
 import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sample';
@@ -79,7 +93,6 @@ import { HierarchicalGridSampleComponent } from './hierarchical-grid/hierarchica
 import { HierarchicalGridRemoteSampleComponent } from './hierarchical-grid-remote/hierarchical-grid-remote.sample';
 import { HierarchicalGridUpdatingSampleComponent } from './hierarchical-grid-updating/hierarchical-grid-updating.sample';
 import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
-import { DisplayFormatPipe, InputFormatPipe } from './mask/mask.sample';
 import { BannerSampleComponent } from './banner/banner.sample';
 import { TreeGridWithTransactionsComponent } from './tree-grid/tree-grid-with-transactions.component';
 import { CalendarViewsSampleComponent } from './calendar-views/calendar-views.sample';
@@ -87,6 +100,17 @@ import { SelectSampleComponent } from './select/select.sample';
 import { GridSearchBoxComponent } from './grid-search-box/grid-search-box.component';
 import { GridSearchComponent } from './grid-search/grid-search.sample';
 import { AutocompleteSampleComponent, AutocompletePipeContains, AutocompleteGroupPipeContains } from './autocomplete/autocomplete.sample';
+import { GridMRLSampleComponent } from './grid-multi-row-layout/grid-mrl.sample';
+import { TreeGridLoadOnDemandSampleComponent } from './tree-grid-load-on-demand/tree-grid-load-on-demand.sample';
+import { GridFilterTemplateSampleComponent } from './grid-filter-template/grid-filter-template.sample';
+import { GridMRLConfigSampleComponent } from './grid-multi-row-layout-config/grid-mrl-config.sample';
+import { GridMRLCustomNavigationSampleComponent } from './grid-mrl-custom-navigation/grid-mrl-custom-navigation';
+import { InputGroupFluentSampleComponent } from './input-group/input-group-fluent.sample';
+import { GridClipboardSampleComponent } from './grid-clipboard/grid-clipboard.sample';
+import { GridAutoSizeSampleComponent } from './grid-auto-size/grid-auto-size.sample';
+import { GridFlexSampleComponent } from './grid-flex-layout/grid-flex.sample';
+import { GridEsfLoadOnDemandComponent } from './grid-esf-load-on-demand/grid-esf-load-on-demand.component';
+
 
 
 
@@ -107,12 +131,15 @@ const components = [
     DialogSampleComponent,
     DatePickerSampleComponent,
     DropDownSampleComponent,
+    DisplayDensityDropDownComponent,
+    DropDownVirtualComponent,
     DragDropSampleComponent,
     ComboSampleComponent,
     IconSampleComponent,
     InputSampleComponent,
     InputGroupSampleComponent,
     InputGroupChildSampleComponent,
+    InputGroupFluentSampleComponent,
     LayoutSampleComponent,
     ListSampleComponent,
     ListPanningSampleComponent,
@@ -129,7 +156,15 @@ const components = [
     SliderSampleComponent,
     SnackbarSampleComponent,
     BottomNavSampleComponent,
+    BottomNavRoutingSampleComponent,
+    BottomNavRoutingView1Component,
+    BottomNavRoutingView2Component,
+    BottomNavRoutingView3Component,
     TabsSampleComponent,
+    TabsRoutingSampleComponent,
+    TabsRoutingView1Component,
+    TabsRoutingView2Component,
+    TabsRoutingView3Component,
     TimePickerSampleComponent,
     ToastSampleComponent,
     VirtualForSampleComponent,
@@ -143,16 +178,21 @@ const components = [
     GridSummaryComponent,
     GridPerformanceSampleComponent,
     GridSelectionComponent,
+    GridRowDraggableComponent,
     GridToolbarSampleComponent,
     GridToolbarCustomSampleComponent,
     GridVirtualizationSampleComponent,
     GridColumnGroupsSampleComponent,
+    GridMRLSampleComponent,
+    GridMRLConfigSampleComponent,
+    GridMRLCustomNavigationSampleComponent,
     GridCellStylingSampleComponent,
     GridRowEditSampleComponent,
     GridWithTransactionsComponent,
     TreeGridSampleComponent,
     TreeGridFlatDataSampleComponent,
     TreeGridWithTransactionsComponent,
+    TreeGridLoadOnDemandSampleComponent,
     CustomContentComponent,
     ColorsSampleComponent,
     ShadowsSampleComponent,
@@ -167,7 +207,12 @@ const components = [
     GridColumnPercentageWidthsSampleComponent,
     CalendarViewsSampleComponent,
     GridSearchBoxComponent,
-    GridSearchComponent
+    GridSearchComponent,
+    GridFilterTemplateSampleComponent,
+    GridClipboardSampleComponent,
+    GridAutoSizeSampleComponent,
+    GridFlexSampleComponent,
+    GridEsfLoadOnDemandComponent
 ];
 
 @NgModule({
@@ -179,11 +224,13 @@ const components = [
         ReactiveFormsModule,
         HttpClientModule,
         IgxIconModule,
+        IgxInputGroupModule,
         IgxGridModule,
         IgxTreeGridModule,
         IgxHierarchicalGridModule,
         IgxColumnHidingModule,
         IgxDragDropModule,
+        IgxDividerModule,
         SharedModule,
         routing
     ],
@@ -191,6 +238,7 @@ const components = [
         LocalService,
         RemoteService,
         IgxExcelExporterService,
+        IgxIconService,
         IgxCsvExporterService,
         IgxOverlayService,
         { provide: DisplayDensityToken, useFactory: () => ({ displayDensity: DisplayDensity.comfortable }) }

@@ -6,18 +6,34 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// Generates a dark list schema.
+/// Generates a base dark list schema.
 /// @type {Map}
-/// @property {Color} background [#222] - The list background color.
-/// @property {Color} header-background [#222] - The list header background color.
-/// @property {Color} item-background [#222] - The list item background color.
-/// @property {Color} item-background-active [lighten(#222, 10%)] - The active list item background color.
+/// @property {Map} item-background-hover [igx-color: ('grays', 400),  hexrgba: (#000)] - The list item hover background.
+/// @property {Map} item-background-active [igx-color: ('grays', 400),  hexrgba: (#000)] - The active list item background color.
+$_base-dark-list: (
+    item-background-hover: (
+        igx-color: ('grays', 400),
+        hexrgba: (#000)
+    ),
+
+    item-background-active: (
+        igx-color: ('grays', 400),
+        hexrgba: (#000)
+    ),
+);
+
+/// Generates a base dark list schema based on a mix of $_light-list and $_base-dark-list.
+/// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-list
+/// @requires $_base-dark-list
 /// @see $default-palette
-$_dark-list: extend($_light-list, (
-    background: #222,
-    header-background: #222,
-    item-background: #222,
-    item-background-active: lighten(#222, 10%)
-));
+$_dark-list: extend($_light-list, $_base-dark-list);
+
+/// Generates a base dark fluent list schema based on a mix of $_fluent-list and $_base-dark-list..
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-list
+/// @requires $_base-dark-list
+$_dark-fluent-list: extend($_fluent-list, $_base-dark-list);
+

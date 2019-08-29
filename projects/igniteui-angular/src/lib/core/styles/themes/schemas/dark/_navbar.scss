@@ -11,5 +11,11 @@
 /// @requires {function} extend
 /// @requires $_light-navbar
 /// @see $default-palette
+$_dark-navbar: extend($_light-navbar);
 
-$_dark-navbar: extend($_light-navbar, ());
+/// Generates a dark fluent navbar schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-navbar
+$_dark-fluent-navbar: extend($_fluent-navbar);
+

@@ -1,7 +1,7 @@
 /**
  *@hidden
  */
-export function cloneArray(array, deep?: boolean) {
+export function cloneArray(array: any[], deep?: boolean) {
     const arr = [];
     if (!array) {
         return arr;
@@ -170,7 +170,7 @@ export const enum KEYS {
  */
 export function getNodeSizeViaRange(range: Range, node: any): number {
     let overflow = null;
-    if (isIE() || isEdge()) {
+    if (!isFirefox()) {
         overflow = node.style.overflow;
         // we need that hack - otherwise content won't be measured correctly in IE/Edge
         node.style.overflow = 'visible';
@@ -179,7 +179,7 @@ export function getNodeSizeViaRange(range: Range, node: any): number {
     range.selectNodeContents(node);
     const width = range.getBoundingClientRect().width;
 
-    if (isIE() || isEdge()) {
+    if (!isFirefox()) {
         // we need that hack - otherwise content won't be measured correctly in IE/Edge
         node.style.overflow = overflow;
     }
@@ -226,6 +226,13 @@ export function isFirefox(): boolean {
     return firefoxBrowser;
 }
 
+/**
+ * @hidden
+ */
+export function isLeftClick(event: PointerEvent) {
+    return event.button === 0;
+}
+
 /** @hidden */
 export function isNavigationKey(key: string): boolean {
     return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
@@ -255,7 +262,20 @@ export interface CancelableEventArgs {
     cancel: boolean;
 }
 
+export interface IBaseEventArgs {
+    /**
+     * Provides reference to the owner component.
+     */
+    owner?: any;
+}
+
 export interface CancelableBrowserEventArgs extends CancelableEventArgs {
     /** Browser event */
     event?: Event;
 }
+
+export const NAVIGATION_KEYS = new Set(['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
+                                'home', 'end', 'space', 'spacebar', ' ']);
+export const ROW_EXPAND_KEYS = new Set('right down arrowright arrowdown'.split(' '));
+export const ROW_COLLAPSE_KEYS = new Set('left up arrowleft arrowup'.split(' '));
+export const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'tab', 'enter', 'f2', 'escape', 'esc']);

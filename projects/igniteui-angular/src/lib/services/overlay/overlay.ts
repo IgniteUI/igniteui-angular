@@ -22,7 +22,8 @@ import {
     Injector,
     Type,
     OnDestroy,
-    NgModuleRef
+    NgModuleRef,
+    NgZone
 } from '@angular/core';
 import { AnimationBuilder, AnimationReferenceMetadata, AnimationMetadataType, AnimationAnimateRefMetadata } from '@angular/animations';
 import { fromEvent, Subject } from 'rxjs';
@@ -106,7 +107,8 @@ export class IgxOverlayService implements OnDestroy {
         private _appRef: ApplicationRef,
         private _injector: Injector,
         private builder: AnimationBuilder,
-        @Inject(DOCUMENT) private document: any) {
+        @Inject(DOCUMENT) private document: any,
+        private _zone: NgZone) {
         this._document = <Document>this.document;
     }
 
@@ -116,7 +118,7 @@ export class IgxOverlayService implements OnDestroy {
      * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
      * @returns Id of the created overlay. Valid until `onClosed` is emitted.
      */
-    attach(element: ElementRef , settings?: OverlaySettings): string;
+    attach(element: ElementRef, settings?: OverlaySettings): string;
     /**
      * Generates Id. Provide this Id when call `show(id, settings?)` method
      * @param component Component Type to show in overlay
@@ -329,7 +331,7 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private getOverlayInfo(component: any, moduleRef?: NgModuleRef<any>): OverlayInfo {
-        const info: OverlayInfo = {};
+        const info: OverlayInfo = { ngZone: this._zone };
         if (component instanceof ElementRef) {
             info.elementRef = <ElementRef>component;
         } else {
@@ -618,13 +620,16 @@ export class IgxOverlayService implements OnDestroy {
                 return;
             }
             if (info.settings.closeOnOutsideClick) {
+                const target = ev.target as any;
                 //  if the click is on the element do not close this overlay
-                if (!info.elementRef.nativeElement.contains(ev.target)) {
+                if (!info.elementRef.nativeElement.contains(target)) {
                     // if we should exclude position target check if the click is over it. If so do not close overlay
                     const positionTarget = info.settings.positionStrategy.settings.target as HTMLElement;
-                    const clickOnPositionTarget = positionTarget && positionTarget.contains
-                        ? (positionTarget as any).contains(ev.target)
-                        : false;
+                    let clickOnPositionTarget = false;
+                    if (positionTarget) {
+                        clickOnPositionTarget = positionTarget.contains(target);
+                    }
+
                     if (!(info.settings.excludePositionTarget && clickOnPositionTarget)) {
                         //  if the click is outside click, but close animation has started do nothing
                         if (!(info.closeAnimationPlayer && info.closeAnimationPlayer.hasStarted())) {

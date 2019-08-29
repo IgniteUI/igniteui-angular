@@ -53,20 +53,68 @@ The service, should inform the combo for the total items that are on the server 
 
 ## Features
 
+### Selection
+
+Combo selection depends on the `[valueKey]` input property:
+
+- If a `[valueKey]` is specified, **all** methods and events tied to the selection operate w/ the value key property of the combo's `[data]` items:
+```html
+    <igx-combo [data]="myCustomData" valueKey="id" displayKey="text"></igx-combo>
+```
+```typescript
+export class MyCombo {
+    ...
+    public combo: IgxComboComponent;
+    public myCustomData: { id: number, text: string } = [{ id: 0, name: "One" }, ...];
+    ...
+    ngOnInit() {
+        // Selection is done only by valueKey property value
+        this.combo.selectItems([0, 1]);
+    }
+}
+```
+
+- When **no** `valueKey` is specified, selection is handled by **equality (===)**. To select items by object reference, the `valueKey` property should be removed:
+```html
+    <igx-combo [data]="myCustomData" displayKey="text"></igx-combo>
+```
+```typescript
+export class MyCombo {
+    ngOnInit() {
+        this.combo.selectItems(this.data[0], this.data[1]);
+    }
+}
+```
+
 ### Value Binding
 
 If we want to use a two-way data-binding, we could just use `ngModel` like this:
 
 ```html
-<igx-combo #combo [data]="data" [(ngModel)]="values"></igx-combo>
+<igx-combo #combo [data]="data" valueKey="id" displayKey="text" [(ngModel)]="values"></igx-combo>
 ```
-
 ```typescript
 export class MyExampleComponent {
     ...
-    public data: ExampleType[] = ...;
+    public data: {text: string, id: number, ... }[] = ...;
     ...
-    public values: ExampleType[] = ...;
+    public values: number[] = ...;
+}
+```
+
+When the `data` input is made up of complex types (i.e. objects), it is advised to bind the selected data via `valueKey` (as in the above code snippet). Specify a property that is unique for each data entry and pass an array with values for those properties, corresponding to the items you want selected.
+
+If you want to bind the selected data by reference, **do not** specify a `valueKey`:
+
+```html
+<igx-combo #combo [data]="data" displayKey="text" [(ngModel)]="values"></igx-combo>
+```
+```typescript
+export class MyExampleComponent {
+    ...
+    public data: {text: string, id: number, ... }[] = ...;
+    ...
+    public values: {text: string, id: number, ...} [] = [this.items[0], this.items[5]];
 }
 ```
 
@@ -233,6 +281,10 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 
 - `ArrowUp` focus will be moved back to the last list item or if list is empty will be moved to the search input.
 
+## Display Density
+**igx-combo** supports setting of different display densities.
+Display density is received through Angular's DI engine or can be set through the `[displayDensity]` input. The possilbe display densities are `compact`, `cosy` and `comfortable` (default).
+Setting `[displayDensity]` affects the control's items' and inputs' css properties, most notably heights, padding, font-size.
 
 ## API
 
@@ -261,6 +313,7 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 |  `ariaLabelledBy`        | defines label ID related to combo                 | boolean                     |
 |  `type`                  | Combo style. - "line", "box", "border", "search"                                        | string                      |
 |  `valid`                 | gets if control is valid, when used in a form     | boolean                     |
+|  `overlaySettings`       | gets/sets the custom overlay settings that control how the drop-down list displays | OverlaySettings         |
 
 ### Getters
 | Name                     | Description                                       | Type                        |
@@ -271,14 +324,14 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 
 | Name                | Description                                                             | Cancelable   | Parameters                              |
 |------------------   |-------------------------------------------------------------------------|------------- |-----------------------------------------|
-| `onSelectionChange` | Emitted when item selection is changing, before the selection completes | true         | { oldSelection: `Array<any>`, newSelection: `Array<any>`, event: Event } |
+| `onSelectionChange` | Emitted when item selection is changing, before the selection completes | true         | [`IComboSelectionChangeEventArgs`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/interfaces/icomboselectionchangeeventargs.html) |
 | `onSearchInput`     | Emitted when an the search input's input event is triggered             | false        | { searchValue: `string` }               |
-| `onAddition`        | Emitted when an item is being added to the data collection              | false        | { oldCollection: `Array<any>`, addedItem: `<any>`, newCollection: `Array<any>` }|
-| `onDataPreLoad`     | Emitted when new chunk of data is loaded from the virtualization        | false        | { event: Event }                        |
-| `onOpening`   | Emitted before the dropdown is opened                                   | false        | { event: Event }                        |
-| `onOpened`    | Emitted after the dropdown is opened                                    | false        | { event: Event }                        |
-| `onClosing`   | Emitted before the dropdown is closed                                   | false        | { event: Event }                        |
-| `onClosed`    | Emitted after the dropdown is closed                                    | false        | { event: Event }                        |
+| `onAddition`        | Emitted when an item is being added to the data collection              | false        | { oldCollection: `any[]`, addedItem: `<any>`, newCollection: `any[]` }|
+| `onDataPreLoad`     | Emitted when new chunk of data is loaded from the virtualization        | false        | { event: `Event` }                        |
+| `onOpening`   | Emitted before the dropdown is opened                                   | false        | { event: `Event` }                        |
+| `onOpened`    | Emitted after the dropdown is opened                                    | false        | { event: `Event` }                        |
+| `onClosing`   | Emitted before the dropdown is closed                                   | false        | { event: `Event` }                        |
+| `onClosed`    | Emitted after the dropdown is closed                                    | false        | { event: `Event` }                        |
 
 ### Methods
 
@@ -287,9 +340,9 @@ When igxCombo is opened, allow custom values are enabled and add item button is 
 | `open`           | Opens drop down             | `void`               | `None`                      |
 | `close`          | Closes drop down            | `void`               | `None`                      |
 | `toggle`         | Toggles drop down           | `void`               | `None`                      |
-| `selectedItems`  | Get current selection state | `Array<any>`         | `None`                      |
-| `selectItems`    | Select defined items        | `void`               | items: `Array<any>`, clearCurrentSelection: `boolean` |
-| `deselectItems`  | Deselect defined items      | `void`               | items: `Array<any>`         |
+| `selectedItems`  | Get current selection state | `any[]`         | `None`                      |
+| `selectItems`    | Select defined items        | `void`               | items: `any[]`, clearCurrentSelection: `boolean` |
+| `deselectItems`  | Deselect defined items      | `void`               | items: `any[]`         |
 | `selectAllItems` | Select all (filtered) items | `void`               | ignoreFilter?: `boolean` - if `true` selects **all** values |
 | `deselectAllItems` | Deselect (filtered) all items | `void`           | ignoreFilter?: `boolean` - if `true` deselects **all** values |
 | `setSelectedItem` | Toggles (select/deselect) an item by key | `void` | itemID: any, select = true, event?: Event |

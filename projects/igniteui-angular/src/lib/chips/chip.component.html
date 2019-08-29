@@ -2,16 +2,15 @@
     [attr.tabindex]="chipTabindex"
     (keydown)="onChipKeyDown($event)"
     [igxDrag]="{chip: this}"
-    [hideBaseOnDrag]="true"
-    [animateOnRelease]="true"
-    [ghostImageClass]="ghostClass"
+    [hideBaseOnDrag]="hideBaseOnDrag"
+    [ghostClass]="ghostClass"
     (dragStart)="onChipDragStart($event)"
     (dragEnd)="onChipDragEnd()"
-    (returnMoveEnd)="onChipMoveEnd($event)"
-    (dragClicked)="onChipDragClicked($event)"
+    (transitioned)="onChipMoveEnd($event)"
+    (click)="onChipDragClicked($event)"
     igxDrop
-    (onEnter)="onChipDragEnterHandler($event)"
-    (onDrop)="onChipDrop($event)">
+    (enter)="onChipDragEnterHandler($event)"
+    (dropped)="onChipDrop($event)">
 
     <div [ngClass]="selectClass(selected)">
         <ng-container *ngTemplateOutlet="selectIconTemplate"></ng-container>
