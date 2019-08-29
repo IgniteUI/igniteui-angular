@@ -268,7 +268,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * Sets/gets whether the checkbox is readonly.
      * Default value is `false`.
      * ```html
-     * <igx-checkbox [readonly] = "true"></igx-checkbox>
+     * <igx-checkbox [readonly]="true"></igx-checkbox>
      * ```
      * ```typescript
      * let readonly = this.checkbox.readonly;
