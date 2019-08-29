@@ -8,6 +8,11 @@
 ////
 @mixin _advanced-filtering-partial {
     @include b(igx-advanced-filter) {
+        @include _advanced-filtering-legend();
+        @include _advanced-filtering-tree();
+        @include _advanced-filtering-con-menu();
+        @include _advanced-filtering-empty();
+
         @extend %advanced-filter !optional;
 
         @include e(header) {
@@ -18,10 +23,13 @@
             @extend %advanced-filter__main !optional;
         }
 
-        @include _advanced-filtering-legend();
-        @include _advanced-filtering-tree();
-        @include _advanced-filtering-con-menu();
-        @include _advanced-filtering-empty();
+        @include m('cosy') {
+            @extend %advanced-filter--cosy !optional;
+        }
+
+        @include m('compact') {
+            @extend %advanced-filter--compact !optional;
+        }
     }
 }
 
@@ -102,6 +110,18 @@
 @mixin _advanced-filtering-con-menu {
     @include b(igx-filter-contextual-menu) {
         @extend %filter-con-menu !optional;
+
+        @include e(delete-btn) {
+            @extend %filter-con-menu__delete-btn !optional;
+        }
+
+        @include m('cosy') {
+            @extend %filter-con-menu--cosy !optional;
+        }
+
+        @include m('compact') {
+            @extend %filter-con-menu--compact !optional;
+        }
     }
 }
 

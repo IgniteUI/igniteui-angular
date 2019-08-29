@@ -3,7 +3,7 @@
     igxDrag
     [ghost]="false"
     [dragTolerance]="0"
-    (dragStart)="dragStart($event)"    
+    (dragStart)="dragStart($event)"
     (dragEnd)="dragEnd($event)"
     (keydown)="onKeyDown($event)"
     [ngClass]="{
@@ -25,7 +25,9 @@
         </div>
     </header>
 
-    <article #expressionsContainer class="igx-advanced-filter__main">
+    <article #expressionsContainer
+             class="igx-advanced-filter__main"
+             (scroll)="onExpressionsScrolled()">
         <ng-container *ngIf="!rootGroup">
 
             <button igxButton="outlined" [displayDensity]="displayDensity" (click)="addAndGroup()">
@@ -80,7 +82,7 @@
                 (mouseleave)="expressionItem.hovered = false"
                 >
                 <igx-chip [data]="expressionItem"
-                          [displayDensity]="displayDensity"
+                          [displayDensity]="displayDensity === 'compact' ? 'cosy' : displayDensity"
                           [removable]="true"
                           [selected]="expressionItem.selected"
                           (click)="onChipClick(expressionItem)"
@@ -237,21 +239,38 @@
             <ng-container *ngTemplateOutlet="expressionTreeTemplate; context: context(rootGroup)"></ng-container>
         </ng-container>
 
-        <div igxToggle class="igx-filter-contextual-menu">
+        <div igxToggle
+            class="igx-filter-contextual-menu"
+            [ngClass]="{
+                'igx-filter-contextual-menu--cosy': displayDensity === 'cosy',
+                'igx-filter-contextual-menu--compact': displayDensity === 'compact'
+            }"
+        >
             <ng-container *ngIf="contextualGroup">
                 <igx-buttongroup [displayDensity]="displayDensity"
                                  [multiSelection]="false"
                                  [values]="filteringLogics"
+                                 type="outline"
                                  (onSelect)="selectFilteringLogic($event)">
                 </igx-buttongroup>
 
-                <button igxButton="outlined" [displayDensity]="displayDensity" [disabled]="!contextualGroup.parent" (click)="ungroup()">
-                    <igx-icon fontSet="material">group_work</igx-icon>
-                    {{grid.resourceStrings.igx_grid_advanced_filter_ungroup}}
+                <button
+                    igxButton="outlined"
+                    [displayDensity]="displayDensity"
+                    [disabled]="!contextualGroup.parent"
+                    (click)="ungroup()"
+                >
+                    <igx-icon fontSet="filtering-icons" name="ungroup"></igx-icon>
+                    <span>{{grid.resourceStrings.igx_grid_advanced_filter_ungroup}}</span>
                 </button>
-                <button igxButton="outlined" [displayDensity]="displayDensity" (click)="deleteGroup()">
-                    <igx-icon fontSet="material">delete</igx-icon>
-                    {{grid.resourceStrings.igx_grid_advanced_filter_delete}}
+                <button
+                    igxButton="outlined"
+                    [displayDensity]="displayDensity"
+                    (click)="deleteGroup()"
+                    class="igx-filter-contextual-menu__delete-btn"
+                >
+                    <igx-icon>delete</igx-icon>
+                    <span>{{grid.resourceStrings.igx_grid_advanced_filter_delete}}</span>
                 </button>
             </ng-container>
             <ng-container *ngIf="!contextualGroup">
