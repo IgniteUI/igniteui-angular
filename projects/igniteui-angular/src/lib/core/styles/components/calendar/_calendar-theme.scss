@@ -41,12 +41,14 @@
 /// @param {Color} $date-selected-text-color [null] - The text color for the selected date.
 ///
 /// @param {Color} $date-current-text-color [null] - The text color for the current date.
+/// @param {Color} $date-current-bg-color [null] - The background color for the current date.
 /// @param {Color} $date-hover-background [null] - The hover date background color.
 ///
 /// @param {Color} $date-special-background [null] - The background color used for special dates.
 /// @param {Color} $date-special-text-color [null] - The text color used for special dates.
 ///
 /// @param {Color} $date-disabled-text-color [null] - The text color for disabled dates.
+/// @param {Color} $date-disabled-background [null] - The background color for disabled dates in a range.
 ///
 /// @param {border-radius} $border-radius [null] - The border radius used for the outline of the calendar.
 /// @param {border-radius} $date-border-radius [null] - The border radius used for the outline outline of the date.
@@ -100,12 +102,14 @@
     $date-selected-text-color: null,
 
     $date-current-text-color: null,
+    $date-current-bg-color: null,
     $date-hover-background: null,
 
     $date-special-background: null,
     $date-special-text-color: null,
 
-    $date-disabled-text-color: null
+    $date-disabled-text-color: null,
+    $date-disabled-background: null,
 ) {
     $name: 'igx-calendar';
     $calendar-schema: map-get($schema, $name);
@@ -177,8 +181,12 @@
         }
     }
 
-    @if not($date-current-text-color) and $header-background {
-        $date-current-text-color: $header-background;
+    @if not($date-current-bg-color) and $header-background {
+        $date-current-bg-color: $header-background;
+    }
+
+    @if not($date-current-text-color) and $date-current-bg-color {
+        $date-current-text-color: $date-current-bg-color;
     }
 
     @if not($date-special-background) and $content-background {
@@ -209,6 +217,10 @@
         @if $header-background == 'color' {
             $month-current-text-color: $header-background;
         }
+    }
+
+    @if not($date-disabled-text-color) and $date-disabled-background {
+        $date-disabled-color: rgba(text-contrast($date-disabled-background), .38);
     }
 
     @return extend($theme, (
@@ -244,16 +256,19 @@
         date-selected-text-color: $date-selected-text-color,
 
         date-current-text-color: $date-current-text-color,
+        date-current-bg-color: $date-current-bg-color,
         date-hover-background: $date-hover-background,
 
         date-special-text-color: $date-special-text-color,
         date-special-background: $date-special-background,
 
-        date-disabled-text-color: $date-disabled-text-color
+        date-disabled-text-color: $date-disabled-text-color,
+        date-disabled-background: $date-disabled-background,
     ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
+/// @requires {function} text-contrast
 /// @requires {mixin} igx-root-css-vars
 /// @requires em
 /// @requires rem
@@ -271,13 +286,14 @@
     $cal-value-w: em(40px);
     $cal-value-h: $cal-value-w;
     $cal-value-br: $cal-value-w / 2;
-    $cal-value-margin: em(2px);
     $cal-value-fw: 600;
 
     $cal-value-month-margin: 0 em(12px);
     $cal-value-month-height: em(91px);
 
-    $cal-row-padding: 0 em(16px);
+    $cal-row-padding: 0;
+    $cal-row-margin: em(2px) 0;
+    $selected-hover-color: text-contrast(map-get($theme, 'date-selected-background'));
 
     %cal-display {
         display: flex;
@@ -328,16 +344,16 @@
         justify-content: space-between;
         align-items: center;
         padding-bottom: $cal-picker-padding;
-        padding-left: $cal-picker-padding;
-        padding-right: $cal-picker-padding;
     }
 
     %cal-picker-arrow {
         display: inline-flex;
+        justify-content: center;
         color: --var($theme, 'picker-arrow-color');
         user-select: none;
         outline: none;
         cursor: pointer;
+        flex-basis: 14.28%; /* equals the width of a single date 100% / 7 (days) */
 
         &:focus,
         &:hover {
@@ -371,7 +387,18 @@
     %cal-row-display {
         display: flex;
         justify-content: space-between;
+        margin: $cal-row-margin;
         padding: $cal-row-padding;
+
+        %cal-value {
+            &:first-of-type {
+                padding-left: em(8px);
+            }
+
+            &:last-of-type {
+                padding-right: em(8px);
+            }
+        }
     }
 
     %cal-row-display--wrap {
@@ -390,16 +417,38 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: $cal-value-w;
-        height: $cal-value-h;
-        min-width: 2ch;
-        margin: $cal-value-margin;
-        // border-radius: $cal-value-br;
-        border-radius: --var($theme, 'date-border-radius');
+        flex-grow: 1;
         color: --var($theme, 'content-text-color');
         cursor: pointer;
         outline: none;
-        transition: background .15s ease-out;
+        // transition: background .15s ease-out;
+
+        &:hover,
+        &:focus {
+            @extend %cal-value--hover;
+        }
+    }
+
+    %cal-value-content {
+        position: relative;
+        width: $cal-value-w;
+        height: $cal-value-h;
+        min-width: 2ch;
+        line-height: $cal-value-h;
+        text-align: center;
+        border-radius: --var($theme, 'date-border-radius');
+        z-index: 0;
+        // transition: background .15s ease-out;
+
+        &::after {
+            position: absolute; content: '';
+            width: calc(100% - 4px);
+            height: calc(100% - 4px);
+            top: 2px;
+            left: 2px;
+            border-radius: inherit;
+            z-index: -1;
+        }
     }
 
     %cal-value--label {
@@ -410,18 +459,6 @@
 
     %cal-value--weekend {
         color: --var($theme, 'weekend-text-color');
-    }
-
-    %cal-value--special {
-        color: --var($theme, 'date-special-text-color');
-        background: --var($theme, 'date-special-background');
-        font-weight: $cal-value-fw;
-    }
-
-    %cal-value--disabled {
-        pointer-events: none;
-        color: --var($theme, 'date-disabled-text-color');
-        cursor: not-allowed;
     }
 
     %cal-value--year {
@@ -475,7 +512,7 @@
     }
 
     %cal-value--month-current {
-        color: --var($theme, 'month-current-text-color') !important;
+        color: --var($theme, 'month-current-text-color') ;
     }
 
     %cal-value--inactive {
@@ -483,20 +520,104 @@
         color: --var($theme, 'inactive-text-color');
     }
 
-    %cal-value--selected {
-        position: relative;
-        color: --var($theme, 'date-selected-text-color');
-        background: --var($theme, 'date-selected-background') !important;
-        font-weight: $cal-value-fw !important;
-    }
-
     %cal-value--current {
         color: --var($theme, 'date-current-text-color');
+        background: --var($theme, 'date-current-bg-color')!important;
         font-weight: $cal-value-fw !important;
+
+        &:hover {
+            background: --var($theme, 'date-current-bg-color')!important;
+        }
+
+        &:focus {
+            background: --var($theme, 'date-current-bg-color')!important;
+        }
+    }
+
+    %cal-value--special {
+        %cal-value-content {
+            background: --var($theme, 'date-special-background');
+            color: --var($theme, 'date-special-text-color');
+            font-weight: 900;
+        }
+    }
+
+    %cal-value--selected {
+        position: relative;
+        background: --var($theme, 'date-selected-background');
+
+        %cal-value-content {
+            color: --var($theme, 'date-selected-text-color');
+            background: --var($theme, 'date-selected-background') ;
+        }
+    }
+
+    %cal-value--disabled {
+        pointer-events: none;
+        cursor: not-allowed;
+        color: --var($theme, 'date-disabled-text-color');
     }
 
     %cal-value--hover {
-        background: --var($theme, 'date-hover-background');
+        %cal-value-content::after {
+            background: --var($theme, 'date-hover-background');
+        }
+
+        &%cal-value--selected %cal-value-content::after {
+            background: rgba($selected-hover-color, .18);
+        }
+    }
+
+    %cal-value--single {
+        background: transparent;
+
+        &::before,
+        &::after {
+            background: transparent;
+        }
+    }
+
+    %cal-value--disabled-range {
+        background: --var($theme, 'date-disabled-background') !important;
+
+        %cal-value-content {
+            color: --var($theme, 'date-disabled-text-color');
+            background: transparent !important;
+        }
+    }
+
+    %cal-value--first {
+        position: relative;
+        background: transparent;
+        z-index: 0;
+
+        &::after {
+            position: absolute;
+            content: '';
+            width: 50%;
+            top: 0;
+            left: 50%;
+            bottom: 0;
+            background: --var($theme, 'date-selected-background');
+            z-index: -1;
+        }
+    }
+
+    %cal-value--last {
+        position: relative;
+        background: transparent;
+        z-index: 0;
+
+        &::before {
+            position: absolute;
+            content: '';
+            width: 50%;
+            top: 0;
+            right: 50%;
+            bottom: 0;
+            background: --var($theme, 'date-selected-background');
+            z-index: -1;
+        }
     }
 }
 

@@ -12,6 +12,7 @@ import {
     Output
 } from '@angular/core';
 import { IgxIconModule } from '../icon/index';
+import { IBaseEventArgs } from '../core/utils';
 
 let NEXT_ID = 0;
 
@@ -560,7 +561,7 @@ export class IgxSlideComponent implements OnInit, OnDestroy {
     }
 }
 
-export interface ISlideEventArgs {
+export interface ISlideEventArgs extends IBaseEventArgs {
     carousel: IgxCarouselComponent;
     slide: IgxSlideComponent;
 }

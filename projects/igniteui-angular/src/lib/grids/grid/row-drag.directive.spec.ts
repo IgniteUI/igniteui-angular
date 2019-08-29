@@ -14,7 +14,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../column.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxRowDragDirective } from '../row-drag.directive';
-import { IRowDragStartEventArgs, IgxGridBaseComponent, IRowDragEndEventArgs } from '../grid-base.component';
+import { IRowDragStartEventArgs, IgxGridBaseComponent, IRowDragEndEventArgs, GridSelectionMode } from '../grid-base.component';
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -216,7 +216,7 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
         it('should align horizontal scrollbar with first column when column pinning is disabled', fakeAsync(() => {
             // has no draggable and selectable rows
             grid.width = '400px';
-            grid.rowSelectable = false;
+            grid.rowSelection = GridSelectionMode.none;
             grid.rowDraggable = false;
             tick();
             fixture.detectChanges();
@@ -227,7 +227,7 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
             expect(dragIndicatorElement).toBeNull();
 
             // has draggable rows and has no selectable rows
-            grid.rowSelectable = false;
+            grid.rowSelection = GridSelectionMode.none;
             grid.rowDraggable = true;
             tick();
             fixture.detectChanges();
@@ -240,7 +240,7 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
             expect(dragIndicatorRect.right).toBe(horizontalScrollbarRect.left);
 
             // has draggable and selectable rows
-            grid.rowSelectable = true;
+            grid.rowSelection = GridSelectionMode.multiple;
             grid.rowDraggable = true;
             fixture.detectChanges();
             horizontalScrollbarElement = fixture.debugElement.query(By.css(CSS_CLASS_VIRTUAL_HSCROLLBAR));
@@ -265,7 +265,7 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
             expect(horizontalScrollbarRect.left).not.toBe(0);
 
             // selectable rows enabled
-            grid.rowSelectable = true;
+            grid.rowSelection = GridSelectionMode.multiple;
             fixture.detectChanges();
             horizontalScrollbarElement = fixture.debugElement.query(By.css(CSS_CLASS_VIRTUAL_HSCROLLBAR));
             horizontalScrollbarRect = horizontalScrollbarElement.nativeElement.getBoundingClientRect();
@@ -585,7 +585,7 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
             verifyDragAndDropRowCellValues(1, 0);
         }));
         it('should be able to drag selected grid row', (async () => {
-            dragGrid.rowSelectable = true;
+            dragGrid.rowSelection = GridSelectionMode.multiple;
             fixture.detectChanges();
             dragGrid.selectRows([2], false);
             fixture.detectChanges();
@@ -617,7 +617,7 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
             expect(row.isSelected).toBeTruthy();
         }));
         it('should not apply selection class to ghost element when dragging selected grid row', (async () => {
-            dragGrid.rowSelectable = true;
+            dragGrid.rowSelection = GridSelectionMode.multiple;
             fixture.detectChanges();
             dragGrid.selectRows([2], false);
             fixture.detectChanges();
@@ -920,7 +920,7 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
             [rowEditable]="true" [rowDraggable]="enableRowDraggable"
             >
         </igx-grid>
-        <div #dropArea class="droppable-area" igxDrop (onDrop)="onRowDrop($event)"
+        <div #dropArea class="droppable-area" igxDrop (dropped)="onRowDrop($event)"
         [ngStyle]="{width:'100px', height:'100px', backgroundColor:'red'}">
         </div>
         <div #nonDroppableArea class="non-droppable-area"
@@ -973,7 +973,7 @@ export class IgxGridRowDraggableComponent extends DataParent {
             [rowEditable]="true" [rowDraggable]="true"
             >
         </igx-grid>
-        <div class="droppable-area" igxDrop (onDrop)="onRowDrop($event)">
+        <div class="droppable-area" igxDrop (dropped)="onRowDrop($event)">
         <igx-grid #dropGrid [data]="newData" [primaryKey]="'ID'"
             [width]="'800px'" [height]="'300px'">
             <igx-column [field]="'Downloads'"></igx-column>
@@ -1011,7 +1011,7 @@ export class IgxGridFeaturesRowDragComponent extends DataParent {
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>
-    <div class="droppable-area" igxDrop (onDrop)="onRowDrop($event)">
+    <div class="droppable-area" igxDrop (dropped)="onRowDrop($event)">
         <igx-hierarchical-grid #hierarchicalDropGrid [data]="newData" [primaryKey]="'ID'"
             [width]="'1500px'" [height]="'500px'">
             <igx-column [field]="'ID'"></igx-column>
@@ -1066,7 +1066,7 @@ export class IgxHierarchicalGridTestComponent {
         <igx-column [field]="'lastName'"></igx-column>
         <igx-column [field]="'Salary'" dataType="number" ></igx-column>
     </igx-tree-grid>
-    <div class="droppable-area" igxDrop (onDrop)="onRowDrop($event)">
+    <div class="droppable-area" igxDrop (dropped)="onRowDrop($event)">
     <igx-grid #dropGrid [data]="newData" [primaryKey]="'employeeID'"
         [width]="'900px'" [height]="'300px'">
         <igx-column [field]="'employeeID'" dataType="number"></igx-column>
@@ -1147,8 +1147,9 @@ function verifyRowDragStartEvent(
     expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(timesCalled);
     expect(grid.onRowDragStart.emit).toHaveBeenCalledWith({
         dragData: dragRow,
-        owner: dragDirective,
-        cancel: cancel
+        dragDirective: dragDirective,
+        cancel: cancel,
+        owner: grid
     });
 }
 
@@ -1167,8 +1168,9 @@ function verifyRowDragEndEvent(
     timesCalled: number = 1) {
     expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(timesCalled);
     expect(grid.onRowDragEnd.emit).toHaveBeenCalledWith({
-        owner: dragDirective,
+        dragDirective: dragDirective,
         dragData: dragRow,
-        animation: animations
+        animation: animations,
+        owner: grid
     });
 }

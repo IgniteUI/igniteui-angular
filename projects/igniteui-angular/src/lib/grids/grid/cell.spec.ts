@@ -1189,7 +1189,7 @@ export class CellEditingScrollTestComponent {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" [width]="'900px'" [height]="'500px'" [rowSelectable]="true">
+    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" [width]="'900px'" [height]="'500px'" rowSelection = "multiple">
         <igx-column *ngFor="let c of columns" [field]="c.field"
                                               [header]="c.field"
                                               [width]="c.width"

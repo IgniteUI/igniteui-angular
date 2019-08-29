@@ -3,21 +3,21 @@
         </ng-container>
 </div>
 <ng-template #defaultExpandedTemplate>
-        <igx-icon  #expander (click)="toggle()" [isActive]='!added' fontSet="material">expand_more</igx-icon>
+        <igx-icon  #expander (click)="toggle($event.stopPropagation())" [isActive]='!added' fontSet="material">expand_more</igx-icon>
     </ng-template>
 
 <ng-template #defaultCollapsedTemplate>
-        <igx-icon #expander (click)="toggle()" [isActive]='!added' fontSet="material">chevron_right</igx-icon>
+        <igx-icon #expander (click)="toggle($event.stopPropagation())" [isActive]='!added' fontSet="material">chevron_right</igx-icon>
  </ng-template>
 <ng-container *ngIf="rowDraggable">
-    <div [class]="resolveDragIndicatorClasses" [igxRowDrag]="this">
+    <div [class]="resolveDragIndicatorClasses" [igxRowDrag]="this" (click)="$event.stopPropagation()">
             <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : this.grid.dragIndicatorIconBase"></ng-container>
     </div>
 </ng-container>
-<ng-container *ngIf="rowSelectable">
-        <div class="igx-grid__cbx-selection">
-            <igx-checkbox [checked]="isSelected" (change)="onCheckboxClick($event)" disableRipple="true" [disableTransitions]="grid.disableTransitions" [aria-label]="rowCheckboxAriaLabel"></igx-checkbox>
-        </div>
+<ng-container *ngIf="showRowCheckboxes">
+    <div class="igx-grid__cbx-selection" (click)="onRowSelectorClick($event)">
+        <igx-checkbox (click)="$event.preventDefault()" [checked]="selected" disableRipple="true" [disabled]="deleted" [disableTransitions]="grid.disableTransitions" [aria-label]="rowCheckboxAriaLabel"></igx-checkbox>
+    </div>
 </ng-container>
 
 <ng-container *ngIf="pinnedColumns.length > 0">
@@ -37,7 +37,8 @@
         [width]="col.getCellWidth()"
         [visibleColumnIndex]="col.visibleIndex"
         [value]="rowData[col.field]"
-        [cellTemplate]="col.bodyTemplate">
+        [cellTemplate]="col.bodyTemplate"
+        [cellSelectionMode]="grid.cellSelection">
     </igx-hierarchical-grid-cell>
 </ng-container>
 
@@ -57,7 +58,8 @@
         [width]="col.getCellWidth()"
         [visibleColumnIndex]="col.visibleIndex"
         [value]="rowData[col.field]"
-        [cellTemplate]="col.bodyTemplate">
+        [cellTemplate]="col.bodyTemplate"
+        [cellSelectionMode]="grid.cellSelection">
     </igx-hierarchical-grid-cell>
 </ng-template>
 

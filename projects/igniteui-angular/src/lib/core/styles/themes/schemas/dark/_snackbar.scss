@@ -11,4 +11,10 @@
 /// @requires {function} extend
 /// @requires $_light-snackbar
 /// @see $default-palette
-$_dark-snackbar: extend($_light-snackbar, ());
+$_dark-snackbar: extend($_light-snackbar);
+
+/// Generates a dark fluent snackbar schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-snackbar
+$_dark-fluent-snackbar: extend($_fluent-snackbar);
