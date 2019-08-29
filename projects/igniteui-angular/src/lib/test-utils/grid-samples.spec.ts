@@ -1353,3 +1353,49 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
         this.currentSortExpressions = sortExpr;
     }
 }
+
+@Component({
+    template: `
+        <igx-grid [data]="data">
+            <igx-column [editable]="true" field="fullName"></igx-column>
+            <igx-column field="age" [editable]="true" [dataType]="'number'"></igx-column>
+            <igx-column field="isActive" [editable]="true" [dataType]="'boolean'"></igx-column>
+            <igx-column field="birthday" [editable]="true" [dataType]="'date'"></igx-column>
+            <igx-column [editable]="true" field="personNumber" [dataType]="'number'"></igx-column>
+        </igx-grid>
+    `
+})
+export class CellEditingTestComponent extends BasicGridComponent {
+    public data = [
+        { personNumber: 0, fullName: 'John Brown', age: 20, isActive: true, birthday: new Date('08/08/2001') },
+        { personNumber: 1, fullName: 'Ben Affleck', age: 30, isActive: false, birthday: new Date('08/08/1991') },
+        { personNumber: 2, fullName: 'Tom Riddle', age: 50, isActive: true, birthday: new Date('08/08/1961') }
+    ];
+}
+
+@Component({
+    template: `
+        <igx-grid [data]="data" width="300px" height="250px">
+            <igx-column [editable]="true" field="firstName"></igx-column>
+            <igx-column [editable]="true" field="lastName"></igx-column>
+            <igx-column field="age" [editable]="true" [dataType]="'number'"></igx-column>
+            <igx-column field="isActive" [editable]="true" [dataType]="'boolean'"></igx-column>
+            <igx-column field="birthday" [editable]="true" [dataType]="'date'"></igx-column>
+            <igx-column field="fullName" [editable]="true"></igx-column>
+        </igx-grid>
+        <button class="btnTest">Test</button>
+    `
+})
+export class CellEditingScrollTestComponent extends BasicGridComponent {
+    public data = [
+        { firstName: 'John', lastName: 'Brown', age: 20, isActive: true, birthday: new Date('08/08/2001'), fullName: 'John Brown' },
+        { firstName: 'Ben', lastName: 'Hudson', age: 30, isActive: false, birthday: new Date('08/08/1991'), fullName: 'Ben Hudson' },
+        { firstName: 'Tom', lastName: 'Riddle', age: 50, isActive: true, birthday: new Date('08/08/1967'), fullName: 'Tom Riddle' },
+        { firstName: 'John', lastName: 'David', age: 27, isActive: true, birthday: new Date('08/08/1990'), fullName: 'John David' },
+        { firstName: 'David', lastName: 'Affleck', age: 36, isActive: false, birthday: new Date('08/08/1982'), fullName: 'David Affleck' },
+        { firstName: 'Jimmy', lastName: 'Johnson', age: 57, isActive: true, birthday: new Date('08/08/1961'), fullName: 'Jimmy Johnson' },
+        { firstName: 'Martin', lastName: 'Brown', age: 31, isActive: true, birthday: new Date('08/08/1987'), fullName: 'Martin Brown' },
+        { firstName: 'Tomas', lastName: 'Smith', age: 81, isActive: false, birthday: new Date('08/08/1931'), fullName: 'Tomas Smith' },
+        { firstName: 'Michael', lastName: 'Parker', age: 48, isActive: true, birthday: new Date('08/08/1970'), fullName: 'Michael Parker' }
+    ];
+}

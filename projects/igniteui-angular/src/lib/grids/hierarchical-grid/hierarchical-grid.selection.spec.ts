@@ -9,7 +9,7 @@ import { IgxStringFilteringOperand } from '../../data-operations/filtering-condi
 import { IgxIconModule } from '../../icon';
 import { IgxHierarchicalGridTestBaseComponent,
         IgxHierarchicalGridRowSelectionComponent } from '../../test-utils/hierarhical-grid-components.spec';
-import { HelperUtils } from '../../test-utils/helper-utils.spec';
+import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxHierarchicalGrid selection #hGrid', () => {
     configureTestSuite();
@@ -91,55 +91,55 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
         }));
 
         it('should have checkboxes on each row', () => {
-            HelperUtils.verifyHeaderRowHasCheckbox(fix);
-            HelperUtils.verifyHeaderAndRowCheckBoxesAlignment(fix, hierarchicalGrid);
+            GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix);
+            GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(fix, hierarchicalGrid);
 
             for (const row of hierarchicalGrid.rowList.toArray()) {
-                HelperUtils.verifyRowHasCheckbox(row.nativeElement);
+                GridSelectionFunctions.verifyRowHasCheckbox(row.nativeElement);
             }
         });
 
         it('should retain selected row when filtering', () => {
             const firstRow = hierarchicalGrid.getRowByIndex(0);
-            HelperUtils.clickRowCheckbox(firstRow);
+            GridSelectionFunctions.clickRowCheckbox(firstRow);
             fix.detectChanges();
 
             hierarchicalGrid.filter('ID', '1', IgxStringFilteringOperand.instance().condition('doesNotContain'), true);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected( hierarchicalGrid.getRowByIndex(0));
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected( hierarchicalGrid.getRowByIndex(0));
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
         });
 
         it('should have correct header checkbox state when selecting rows', () => {
             const firstRow = hierarchicalGrid.getRowByIndex(0);
             const secondRow = hierarchicalGrid.getRowByIndex(1);
-            HelperUtils.verifyHeaderRowCheckboxState(fix);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix);
 
             // Select all rows
             hierarchicalGrid.rowList.toArray().forEach(row => {
-                HelperUtils.clickRowCheckbox(row);
+                GridSelectionFunctions.clickRowCheckbox(row);
                 fix.detectChanges();
-                HelperUtils.verifyRowSelected(row);
+                GridSelectionFunctions.verifyRowSelected(row);
             });
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
             expect(hierarchicalGrid.selectedRows()).toEqual(['0', '1', '2', '3', '4']);
 
             // Unselect a row
-            HelperUtils.clickRowCheckbox(firstRow);
+            GridSelectionFunctions.clickRowCheckbox(firstRow);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
             expect(hierarchicalGrid.selectedRows()).toEqual(['1', '2', '3', '4']);
 
             // Click on a row
             secondRow.nativeElement.dispatchEvent(new MouseEvent('click'));
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(secondRow);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
             expect(hierarchicalGrid.selectedRows()).toEqual(['1']);
         });
     });

@@ -15,8 +15,8 @@ import { IgxGridCellComponent } from '../cell.component';
 import { TransactionType, Transaction } from '../../services';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
-import { setupGridScrollDetection, HelperUtils } from '../../test-utils/helper-utils.spec';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import {
     IgxGridRowEditingComponent,
     IgxGridRowEditingTransactionComponent,
@@ -34,7 +34,7 @@ const SUMMARY_ROW = 'igx-grid-summary-row';
 const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
 const DEBOUNCETIME = 30;
 
-fdescribe('IgxGrid - Row Editing', () => {
+describe('IgxGrid - Row Editing #grid', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -716,9 +716,11 @@ fdescribe('IgxGrid - Row Editing', () => {
 
         it(`Should focus last edited cell after click on editable buttons`, (async () => {
             const targetCell = grid.getCellByColumn(0, 'Downloads');
+            targetCell.nativeElement.focus();
             fix.detectChanges();
-            UIInteractions.triggerKeyDownEvtUponElem('f2', targetCell.nativeElement, true);
+            targetCell.onKeydownEnterEditMode();
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
 
             // Scroll the grid
             GridFunctions.scrollLeft(grid, 750);
@@ -735,7 +737,7 @@ fdescribe('IgxGrid - Row Editing', () => {
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
-            expect(targetCell.focused).toBeTruthy();
+            expect(document.activeElement).toEqual(targetCell.nativeElement);
         }));
     });
 
@@ -1327,7 +1329,8 @@ fdescribe('IgxGrid - Row Editing', () => {
             fix.detectChanges();
 
             let summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
-            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
+                ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
 
             let cell = grid.getCellByColumn(0, 'OrderDate');
             cell.setEditMode(true);
@@ -1344,14 +1347,16 @@ fdescribe('IgxGrid - Row Editing', () => {
             cell = grid.getCellByColumn(0, 'ProductName');
             expect(cell.editMode).toBeTruthy();
             summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
-            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
+                ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
 
             UIInteractions.triggerKeyDownEvtUponElem('enter', cell.nativeElement, true);
             tick(16);
             fix.detectChanges();
 
             summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
-            HelperUtils.verifyColumnSummaries(summaryRow, 3, ['Count', 'Earliest', 'Latest'], ['10', 'Jan 1, 1901', 'Dec 25, 2025']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
+                ['Count', 'Earliest', 'Latest'], ['10', 'Jan 1, 1901', 'Dec 25, 2025']);
         }));
 
         it(`Moving: Should exit edit mode when moving a column`, fakeAsync(() => {

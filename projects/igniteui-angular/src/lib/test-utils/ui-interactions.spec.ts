@@ -168,6 +168,7 @@ export class UIInteractions {
         document.documentElement.scrollTop = 0;
         document.documentElement.scrollLeft = 0;
     }
+
     public static simulateWheelEvent(element, deltaX, deltaY) {
         const event = new WheelEvent('wheel', { deltaX: deltaX, deltaY: deltaY });
         Object.defineProperty(event, 'wheelDeltaX', {value: deltaX});

@@ -1,6 +1,7 @@
 
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { take } from 'rxjs/operators';
 import { ComponentFixture, tick } from '@angular/core/testing';
 import { IgxInputDirective } from '../input-group';
 import { IgxGridHeaderComponent } from '../grids/grid-header.component';
@@ -10,9 +11,11 @@ import { IgxColumnGroupComponent } from '../grids/column.component';
 import { IgxGridHeaderGroupComponent } from '../grids/grid-header-group.component';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
-import { UIInteractions } from './ui-interactions.spec';
+import { UIInteractions, wait } from './ui-interactions.spec';
+import { IgxGridGroupByRowComponent, IgxGridCellComponent } from '../grids/grid';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
+const CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CONNECTOR = 'igx-filtering-chips__connector';
@@ -22,6 +25,15 @@ const BANNER_TEXT_CLASS = '.igx-banner__text';
 const BANNER_ROW_CLASS = '.igx-banner__row';
 const EDIT_OVERLAY_CONTENT = '.igx-overlay__content';
 const PAGER_BUTTONS = '.igx-grid-paginator__pager > button';
+const ACTIVE_GROUP_ROW_CLASS = 'igx-grid__group-row--active';
+const CELL_SELECTED_CSS_CLASS = 'igx-grid__td--selected';
+const ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS = '.igx-grid__cbx-selection';
+const ROW_SELECTION_CSS_CLASS = 'igx-grid__tr--selected';
+const HEADER_ROW_CSS_CLASS = '.igx-grid__thead';
+const CHECKBOX_INPUT_CSS_CLASS = '.igx-checkbox__input';
+const SCROLL_START_CSS_CLASS = '.igx-grid__scroll-start';
+const CHECKBOX_ELEMENT = 'igx-checkbox';
+const DEBOUNCETIME = 50;
 
 export class GridFunctions {
 
@@ -60,10 +72,115 @@ export class GridFunctions {
         hScrollbar.scrollRight = newRight;
     }
 
-    public static setGridScrollTop(grid: IgxGridComponent, newTop: number) {
+    public static scrollTop(grid: IgxGridComponent, newTop: number) {
         const vScrollbar = grid.verticalScrollContainer.getVerticalScroll();
         vScrollbar.scrollTop = newTop;
     }
+
+    public static navigateVerticallyToIndex = (
+        grid: IgxGridComponent,
+        rowStartIndex: number,
+        rowEndIndex: number,
+        colIndex?: number,
+        shift = false) => new Promise(async (resolve, reject) => {
+            const dir = rowStartIndex > rowEndIndex ? 'ArrowUp' : 'ArrowDown';
+            const row = grid.getRowByIndex(rowStartIndex);
+            const cIndx = colIndex || 0;
+            const colKey = grid.columnList.toArray()[cIndx].field;
+            const nextIndex = dir === 'ArrowUp' ? rowStartIndex - 1 : rowStartIndex + 1;
+            let elem;
+            if (row) {
+                elem = row instanceof IgxGridGroupByRowComponent ?
+                    row : grid.getCellByColumn(row.index, colKey);
+            } else {
+                const summariRow = grid.summariesRowList.find(s => s.index === rowStartIndex);
+                if (summariRow) {
+                    elem = summariRow.summaryCells.find(cell => cell.visibleColumnIndex === cIndx);
+                }
+            }
+
+            if (rowStartIndex === rowEndIndex) {
+                resolve();
+                return;
+            }
+
+            UIInteractions.triggerKeyDownWithBlur(dir, elem.nativeElement, true, false, shift);
+            await wait(40);
+
+            GridFunctions.navigateVerticallyToIndex(grid, nextIndex, rowEndIndex, colIndex, shift)
+                .then(() => { resolve(); });
+        })
+
+    public static navigateHorizontallyToIndex = (
+        grid: IgxGridComponent,
+        cell: IgxGridCellComponent,
+        index: number,
+        shift = false) => new Promise(async (resolve) => {
+            // grid - the grid in which to navigate.
+            // cell - current cell from which the navigation will start.
+            // index - the index to which to navigate
+            // shift - if the Shift key should be pressed on keydown event
+
+            const currIndex = cell.visibleColumnIndex;
+            const dir = currIndex < index ? 'ArrowRight' : 'ArrowLeft';
+            const nextIndex = dir === 'ArrowRight' ? currIndex + 1 : currIndex - 1;
+            const visibleColumns = grid.visibleColumns.sort((c1, c2) => c1.visibleIndex - c2.visibleIndex);
+            const nextCol = visibleColumns[nextIndex];
+            let nextCell = nextCol ? grid.getCellByColumn(cell.rowIndex, nextCol.field) : null;
+
+            // if index reached return
+            if (currIndex === index) { resolve(); return; }
+            // else call arrow up/down
+            UIInteractions.triggerKeyDownWithBlur(dir, cell.nativeElement, true, false, shift);
+
+            grid.cdr.detectChanges();
+            // if next row exists navigate next
+            if (nextCell) {
+                await wait(10);
+                grid.cdr.detectChanges();
+                GridFunctions.navigateHorizontallyToIndex(grid, nextCell, index, shift).then(() => { resolve(); });
+            } else {
+                // else wait for chunk to load.
+                grid.parentVirtDir.onChunkLoad.pipe(take(1)).subscribe({
+                    next: () => {
+                        grid.cdr.detectChanges();
+                        nextCell = nextCol ? grid.getCellByColumn(cell.rowIndex, nextCol.field) : null;
+                        GridFunctions.navigateHorizontallyToIndex(grid, nextCell, index, shift).then(() => { resolve(); });
+                    }
+                });
+            }
+        })
+
+    public static expandCollapceGroupRow =
+        (fix, groupRow: IgxGridGroupByRowComponent,
+            cell: IgxGridCellComponent) => new Promise(async (resolve, reject) => {
+                expect(groupRow.focused).toBe(true);
+                expect(groupRow.nativeElement.classList.contains(ACTIVE_GROUP_ROW_CLASS)).toBe(true);
+                if (cell != null) {
+                    expect(cell.selected).toBe(true);
+                }
+                UIInteractions.triggerKeyDownEvtUponElem('arrowleft', groupRow.nativeElement, true, true);
+                await wait(300);
+                fix.detectChanges();
+
+                expect(groupRow.expanded).toBe(false);
+                expect(groupRow.focused).toBe(true);
+                expect(groupRow.nativeElement.classList.contains(ACTIVE_GROUP_ROW_CLASS)).toBe(true);
+                if (cell != null) {
+                    expect(cell.selected).toBe(true);
+                }
+                UIInteractions.triggerKeyDownEvtUponElem('arrowright', groupRow.nativeElement, true, true);
+                await wait(100);
+                fix.detectChanges();
+
+                expect(groupRow.expanded).toBe(true);
+                expect(groupRow.focused).toBe(true);
+                expect(groupRow.nativeElement.classList.contains(ACTIVE_GROUP_ROW_CLASS)).toBe(true);
+                if (cell != null) {
+                    expect(cell.selected).toBe(true);
+                }
+                resolve();
+            })
 
     public static getCurrentCellFromGrid(grid, row, cell) {
         const gridRow = grid.rowList.toArray()[row];
@@ -83,7 +200,7 @@ export class GridFunctions {
         expect(visibleColumns.findIndex((col) => col === column) > -1).toBe(!isHidden, 'Unexpected result for visibleColumns collection!');
     }
 
-    public static  verifyColumnIsPinned(column, isPinned: boolean, pinnedColumnsCount: number) {
+    public static verifyColumnIsPinned(column, isPinned: boolean, pinnedColumnsCount: number) {
         expect(column.pinned).toBe(isPinned, 'Pinned is not ' + isPinned);
 
         const pinnedColumns = column.grid.pinnedColumns;
@@ -94,7 +211,7 @@ export class GridFunctions {
     /* Filtering-related methods */
     public static verifyFilterUIPosition(filterUIContainer, grid) {
         const filterUiRightBorder = filterUIContainer.nativeElement.offsetParent.offsetLeft +
-        filterUIContainer.nativeElement.offsetLeft + filterUIContainer.nativeElement.offsetWidth;
+            filterUIContainer.nativeElement.offsetLeft + filterUIContainer.nativeElement.offsetWidth;
         expect(filterUiRightBorder).toBeLessThanOrEqual(grid.nativeElement.offsetWidth);
     }
 
@@ -347,7 +464,7 @@ export class GridFunctions {
 
     public static getColumnPinningButton(fixture) {
         const button = GridFunctions.getToolbar(fixture).queryAll(By.css('button'))
-                                    .find((b) => b.nativeElement.name === 'btnColumnPinning');
+            .find((b) => b.nativeElement.name === 'btnColumnPinning');
         return button ? button.nativeElement : undefined;
     }
 
@@ -364,7 +481,7 @@ export class GridFunctions {
     public static getCheckboxElement(name: string, element: DebugElement, fix) {
         const checkboxElements = element.queryAll(By.css('igx-checkbox'));
         const chkElement = checkboxElements.find((el) =>
-        (el.context as IgxCheckboxComponent).placeholderLabel.nativeElement.innerText === name);
+            (el.context as IgxCheckboxComponent).placeholderLabel.nativeElement.innerText === name);
 
         return chkElement;
     }
@@ -403,7 +520,7 @@ export class GridFunctions {
     public static selectFilteringCondition(cond: string, ddList) {
         const ddItems = ddList.nativeElement.children;
         let i;
-        for ( i = 0; i < ddItems.length; i++) {
+        for (i = 0; i < ddItems.length; i++) {
             if (ddItems[i].textContent === cond) {
                 ddItems[i].click();
                 tick(100);
@@ -450,7 +567,7 @@ export class GridFunctions {
         fix.detectChanges();
     }
 
-    public static resetFilterRow(fix: ComponentFixture<any> ) {
+    public static resetFilterRow(fix: ComponentFixture<any>) {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const editingBtns = filterUIRow.query(By.css('.igx-grid__filtering-row-editing-buttons'));
         const reset = editingBtns.queryAll(By.css('button'))[0];
@@ -694,7 +811,7 @@ export class GridFunctions {
 
     public static getColumnHeaderByIndex(fix: ComponentFixture<any>, index: number) {
         const nativeHeaders = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent))
-                                .map((header) => header.nativeElement);
+            .map((header) => header.nativeElement);
         const sortedNativeHeaders = GridFunctions.sortNativeElementsHorizontally(nativeHeaders);
         return sortedNativeHeaders[index].querySelector('.igx-grid__th-title');
     }
@@ -792,7 +909,7 @@ export class GridFunctions {
         const inputGroup = filterUIRow.query(By.css('igx-input-group'));
         const suffix = inputGroup.query(By.css('igx-suffix'));
         const commitIcon: any = Array.from(suffix.queryAll(By.css('igx-icon')))
-                                .find((icon: any) => icon.nativeElement.innerText === 'done');
+            .find((icon: any) => icon.nativeElement.innerText === 'done');
         return commitIcon;
     }
 
@@ -801,7 +918,7 @@ export class GridFunctions {
         const inputGroup = filterUIRow.query(By.css('igx-input-group'));
         const suffix = inputGroup.query(By.css('igx-suffix'));
         const clearIcon: any = Array.from(suffix.queryAll(By.css('igx-icon')))
-                                .find((icon: any) => icon.nativeElement.innerText === 'clear');
+            .find((icon: any) => icon.nativeElement.innerText === 'clear');
         return clearIcon;
     }
 
@@ -910,5 +1027,259 @@ export class GridFunctions {
 
     public static navigateToLastPage(parent) {
         GridFunctions.clickPagingButton(parent, 3);
+    }
+}
+
+export class GridSummaryFunctions {
+    public static verifyColumnSummariesBySummaryRowIndex(fix, rowIndex: number, summaryIndex: number, summaryLabels, summaryResults) {
+        const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
+        GridSummaryFunctions.verifyColumnSummaries(summaryRow, summaryIndex, summaryLabels, summaryResults);
+    }
+
+    public static verifyColumnSummaries(summaryRow: DebugElement, summaryIndex: number, summaryLabels, summaryResults) {
+        // const summary = summaryRow.query(By.css('igx-grid-summary-cell[data-visibleindex="' + summaryIndex + '"]'));
+        const summary = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, summaryIndex);
+        expect(summary).toBeDefined();
+        const summaryItems = summary.queryAll(By.css('.igx-grid-summary__item'));
+        if (summaryLabels.length === 0) {
+            expect(summary.nativeElement.classList.contains('igx-grid-summary--empty')).toBeTruthy();
+            expect(summaryItems.length).toBe(0);
+        } else {
+            expect(summary.nativeElement.classList.contains('igx-grid-summary--empty')).toBeFalsy();
+            expect(summaryItems.length).toEqual(summaryLabels.length);
+            if (summaryItems.length === summaryLabels.length) {
+                for (let i = 0; i < summaryLabels.length; i++) {
+                    const summaryItem = summaryItems[i];
+                    const summaryLabel = summaryItem.query(By.css('.igx-grid-summary__label'));
+                    expect(summaryLabels[i]).toEqual(summaryLabel.nativeElement.textContent.trim());
+                    if (summaryResults.length > 0) {
+                        const summaryResult = summaryItem.query(By.css('.igx-grid-summary__result'));
+                        expect(summaryResults[i]).toEqual(summaryResult.nativeElement.textContent.trim());
+                    }
+                }
+            }
+        }
+    }
+
+    public static getSummaryRowByDataRowIndex(fix, rowIndex: number) {
+        return fix.debugElement.query(By.css('igx-grid-summary-row[data-rowindex="' + rowIndex + '"]'));
+    }
+
+    public static getSummaryCellByVisibleIndex(summaryRow: DebugElement, summaryIndex: number) {
+        return summaryRow.query(By.css('igx-grid-summary-cell[data-visibleindex="' + summaryIndex + '"]'));
+    }
+
+    public static getAllVisibleSummariesLength(fix) {
+        return GridSummaryFunctions.getAllVisibleSummaries(fix).length;
+    }
+
+    public static getAllVisibleSummariesRowIndexes(fix) {
+        const summaries = GridSummaryFunctions.getAllVisibleSummaries(fix);
+        const rowIndexes = [];
+        summaries.forEach(summary => {
+            rowIndexes.push(Number(summary.attributes['data-rowIndex']));
+        });
+        return rowIndexes.sort((a: number, b: number) => a - b);
+    }
+
+    public static getAllVisibleSummaries(fix) {
+        return fix.debugElement.queryAll(By.css('igx-grid-summary-row'));
+    }
+
+    public static verifyVisibleSummariesHeight(fix, summariesRows, rowHeight = 36) {
+        const visibleSummaries = GridSummaryFunctions.getAllVisibleSummaries(fix);
+        visibleSummaries.forEach(summary => {
+            expect(summary.nativeElement.getBoundingClientRect().height).toBeGreaterThanOrEqual(summariesRows * rowHeight - 1);
+            expect(summary.nativeElement.getBoundingClientRect().height).toBeLessThanOrEqual(summariesRows * rowHeight + 1);
+        });
+    }
+
+    public static verifySummaryCellActive(fix, rowIndex, cellIndex, active: boolean = true) {
+        const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
+        const summ = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
+        const hasClass = summ.nativeElement.classList.contains(CELL_ACTIVE_CSS_CLASS);
+        expect(hasClass === active).toBeTruthy();
+    }
+
+    public static moveSummaryCell =
+        (fix, rowIndex, cellIndex, key, shift = false, ctrl = false) => new Promise(async (resolve, reject) => {
+            const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
+            const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
+            UIInteractions.triggerKeyDownEvtUponElem(key, summaryCell.nativeElement, true, false, shift, ctrl);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            resolve();
+        })
+
+    public static focusSummaryCell =
+        (fix, rowIndex, cellIndex) => new Promise(async (resolve, reject) => {
+            const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex);
+            const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, cellIndex);
+            summaryCell.nativeElement.dispatchEvent(new Event('focus'));
+            fix.detectChanges();
+            await wait(DEBOUNCETIME);
+            resolve();
+        })
+}
+
+export class GridSelectionFunctions {
+    public static selectCellsRange =
+        (fix, startCell, endCell, ctrl = false, shift = false) => new Promise(async (resolve, reject) => {
+            UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement, shift, ctrl);
+            startCell.nativeElement.dispatchEvent(new Event('focus'));
+            fix.detectChanges();
+            await wait();
+            fix.detectChanges();
+
+            UIInteractions.simulatePointerOverCellEvent('pointerenter', endCell.nativeElement, shift, ctrl);
+            UIInteractions.simulatePointerOverCellEvent('pointerup', endCell.nativeElement, shift, ctrl);
+            await wait();
+            fix.detectChanges();
+            resolve();
+        })
+
+    public static selectCellsRangeNoWait(fix, startCell, endCell, ctrl = false, shift = false) {
+        UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement, shift, ctrl);
+        startCell.nativeElement.dispatchEvent(new Event('focus'));
+        fix.detectChanges();
+
+        UIInteractions.simulatePointerOverCellEvent('pointerenter', endCell.nativeElement, shift, ctrl);
+        UIInteractions.simulatePointerOverCellEvent('pointerup', endCell.nativeElement, shift, ctrl);
+        fix.detectChanges();
+    }
+
+    public static selectCellsRangeWithShiftKey =
+        (fix, startCell, endCell) => new Promise(async (resolve, reject) => {
+            UIInteractions.simulateClickAndSelectCellEvent(startCell);
+            await wait();
+            fix.detectChanges();
+
+            UIInteractions.simulateClickAndSelectCellEvent(endCell, true);
+            await wait();
+            fix.detectChanges();
+            resolve();
+            resolve();
+        })
+
+    public static selectCellsRangeWithShiftKeyNoWait(fix, startCell, endCell) {
+        UIInteractions.simulateClickAndSelectCellEvent(startCell);
+        fix.detectChanges();
+
+        UIInteractions.simulateClickAndSelectCellEvent(endCell, true);
+        fix.detectChanges();
+    }
+
+    public static verifyCellsRegionSelected(grid, startRowIndex, endRowIndex, startColumnIndex, endColumnIndex, selected = true) {
+        const startRow = startRowIndex < endRowIndex ? startRowIndex : endRowIndex;
+        const endRow = startRowIndex < endRowIndex ? endRowIndex : startRowIndex;
+        const startCol = startColumnIndex < endColumnIndex ? startColumnIndex : endColumnIndex;
+        const endCol = startColumnIndex < endColumnIndex ? endColumnIndex : startColumnIndex;
+        for (let i = startCol; i <= endCol; i++) {
+            for (let j = startRow; j <= endRow; j++) {
+                const cell = grid.getCellByColumn(j, grid.columnList.find(col => col.visibleIndex === i).field);
+                if (cell) {
+                    GridSelectionFunctions.verifyCellSelected(cell, selected);
+                }
+            }
+        }
+    }
+
+    public static verifySelectedRange(grid, rowStart, rowEnd, columnStart, columnEnd, rangeIndex = 0, selectedRanges = 1) {
+        const range = grid.getSelectedRanges();
+        expect(range).toBeDefined();
+        expect(range.length).toBe(selectedRanges);
+        expect(range[rangeIndex].columnStart).toBe(columnStart);
+        expect(range[rangeIndex].columnEnd).toBe(columnEnd);
+        expect(range[rangeIndex].rowStart).toBe(rowStart);
+        expect(range[rangeIndex].rowEnd).toBe(rowEnd);
+    }
+
+    public static verifyCellSelected(cell, selected = true) {
+        expect(cell.selected).toBe(selected);
+        expect(cell.nativeElement.classList.contains(CELL_SELECTED_CSS_CLASS)).toBe(selected);
+    }
+
+    public static verifyRowSelected(row, selected = true, hasCheckbox = true) {
+        expect(row.selected).toBe(selected);
+        expect(row.nativeElement.classList.contains(ROW_SELECTION_CSS_CLASS)).toBe(selected);
+        if (hasCheckbox) {
+            GridSelectionFunctions.verifyRowHasCheckbox(row.nativeElement);
+            expect(GridSelectionFunctions.getRowCheckboxInput(row.nativeElement).checked).toBe(selected);
+        }
+    }
+
+    public static verifyRowsArraySelected(rows, selected = true, hasCheckbox = true) {
+        rows.forEach(row => {
+            GridSelectionFunctions.verifyRowSelected(row, selected, hasCheckbox);
+        });
+    }
+
+    public static getHeaderRow(fix): HTMLElement {
+        return fix.nativeElement.querySelector(HEADER_ROW_CSS_CLASS);
+    }
+
+    public static verifyHeaderRowCheckboxState(fix, checked = false, indeterminate = false) {
+        const header = GridSelectionFunctions.getHeaderRow(fix);
+        const headerCheckboxElement = GridSelectionFunctions.getRowCheckboxInput(header);
+        expect(headerCheckboxElement.checked).toBe(checked);
+        expect(headerCheckboxElement.indeterminate).toBe(indeterminate);
+    }
+
+    public static verifyHeaderAndRowCheckBoxesAlignment(fix, grid) {
+        const headerDiv = GridSelectionFunctions.getRowCheckboxDiv(GridSelectionFunctions.getHeaderRow(fix));
+        const firstRowDiv = GridSelectionFunctions.getRowCheckboxDiv(grid.rowList.first.nativeElement);
+        const scrollStartElement = fix.nativeElement.querySelector(SCROLL_START_CSS_CLASS);
+        const hScrollbar = grid.parentVirtDir.getHorizontalScroll();
+
+        expect(headerDiv.offsetWidth).toEqual(firstRowDiv.offsetWidth);
+        expect(headerDiv.offsetLeft).toEqual(firstRowDiv.offsetLeft);
+        if (hScrollbar.scrollWidth) {
+            expect(scrollStartElement.offsetWidth).toEqual(firstRowDiv.offsetWidth);
+            expect(hScrollbar.offsetLeft).toEqual(firstRowDiv.offsetWidth);
+        }
+    }
+
+    public static verifyRowHasCheckbox(rowDOM, hasCheckbox = true, hasCheckboxDiv = true, verifyHeader = false) {
+        const checkboxDiv = GridSelectionFunctions.getRowCheckboxDiv(rowDOM);
+        if (!hasCheckbox && !hasCheckboxDiv) {
+            expect(GridSelectionFunctions.getRowCheckboxDiv(rowDOM)).toBeNull();
+        } else {
+            expect(checkboxDiv).toBeDefined();
+            const rowCheckbox = GridSelectionFunctions.getRowCheckbox(rowDOM);
+            expect(rowCheckbox).toBeDefined();
+            if (!hasCheckbox) {
+                expect(rowCheckbox.style.visibility).toEqual('hidden');
+            } else if (verifyHeader) {
+                expect(rowCheckbox.style.visibility).toEqual('visible');
+            } else {
+                expect(rowCheckbox.style.visibility).toEqual('');
+            }
+        }
+    }
+
+    public static verifyHeaderRowHasCheckbox(fix, hasCheckbox = true, hasCheckboxDiv = true) {
+        GridSelectionFunctions.verifyRowHasCheckbox(GridSelectionFunctions.getHeaderRow(fix), hasCheckbox, hasCheckboxDiv, true);
+    }
+
+    public static getRowCheckboxDiv(rowDOM): HTMLElement {
+        return rowDOM.querySelector(ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS);
+    }
+
+    public static getRowCheckboxInput(rowDOM): HTMLInputElement {
+        return GridSelectionFunctions.getRowCheckboxDiv(rowDOM).querySelector(CHECKBOX_INPUT_CSS_CLASS);
+    }
+
+    public static getRowCheckbox(rowDOM): HTMLElement {
+        return GridSelectionFunctions.getRowCheckboxDiv(rowDOM).querySelector(CHECKBOX_ELEMENT);
+    }
+
+    public static clickRowCheckbox(row) {
+        const checkboxElement = GridSelectionFunctions.getRowCheckboxDiv(row.nativeElement);
+        checkboxElement.dispatchEvent(new Event('click', {}));
+    }
+
+    public static clickHeaderRowCheckbox(fix) {
+        const checkboxElement = GridSelectionFunctions.getRowCheckboxDiv(GridSelectionFunctions.getHeaderRow(fix));
+        checkboxElement.dispatchEvent(new Event('click', {}));
     }
 }
