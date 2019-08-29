@@ -1566,7 +1566,7 @@ export class SampleTestData {
         for (let i = 0; i < count; i++) {
             const rowID = parendID ? parendID + i : i.toString();
            if (level > 0 ) {
-                children = this.generateData(count / 2 , currLevel - 1, rowID);
+                children = this.generateHGridData(count / 2 , currLevel - 1, rowID);
            }
            prods.push({
             ID: rowID, ChildLevels: currLevel,  ProductName: 'Product: A' + i, 'Col1': i,
