@@ -136,7 +136,6 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         displayContainer.dispatchEvent(event);
         await wait(300);
 
-        expect(firstCell.isSelected).toBeFalsy();
         expect(firstCell.selected).toBeFalsy();
         expect(firstCell.focused).toBeFalsy();
     }));
@@ -163,7 +162,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         fix.detectChanges();
 
         expect(cell.selected).toBeTruthy();
-        expect(secondRow.isSelected).toBeTruthy();
+        expect(secondRow.selected).toBeTruthy();
         expect(secondRowCheckbox.classList.contains('igx-checkbox--checked')).toBeTruthy();
 
         UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
@@ -171,7 +170,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         fix.detectChanges();
 
         expect(cell.selected).toBeTruthy();
-        expect(secondRow.isSelected).toBeFalsy();
+        expect(secondRow.selected).toBeFalsy();
         expect(secondRowCheckbox.classList.contains('igx-checkbox--checked')).toBeFalsy();
 
         cell = grid.getCellByColumn(1, 'ID');
@@ -189,7 +188,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         await wait(DEBOUNCETIME);
         fix.detectChanges();
 
-        expect(firstRow.isSelected).toBeTruthy();
+        expect(firstRow.selected).toBeTruthy();
         expect(firstRowCheckbox.classList.contains('igx-checkbox--checked')).toBeTruthy();
 
         UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
@@ -197,7 +196,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         fix.detectChanges();
 
         expect(cell.selected).toBeTruthy();
-        expect(firstRow.isSelected).toBeFalsy();
+        expect(firstRow.selected).toBeFalsy();
         expect(firstRowCheckbox.classList.contains('igx-checkbox--checked')).toBeFalsy();
 
         UIInteractions.triggerKeyDownWithBlur('tab', cell.nativeElement, true);
