@@ -90,7 +90,7 @@ import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
-import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './igx-selection.module';
+import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './igx-row-selectors.module';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 
 const MINIMUM_COLUMN_WIDTH = 136;
@@ -260,7 +260,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _locale = null;
     public _destroyed = false;
     private overlayIDs = [];
-    public rowSelected = false;
 
     private _hostWidth;
     /**
@@ -1039,7 +1038,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      *  Emitted when `IgxGridRowComponent` is selected.
      * ```html
-     * <igx-grid #grid (onRowSelectionChange)="onRowClickChange($event)" [data]="localData" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid (onRowSelectionChange)="onCellClickChange($event)" [data]="localData" [autoGenerate]="true"></igx-grid>
      * ```
      * ```typescript
      * public onCellClickChange(e){
@@ -1754,6 +1753,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return null;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     @ContentChildren(IgxRowSelectorDirective, { read: IgxRowSelectorDirective, descendants: false })
     public rowSelectorsTemplate: QueryList<IgxRowSelectorDirective>;
 

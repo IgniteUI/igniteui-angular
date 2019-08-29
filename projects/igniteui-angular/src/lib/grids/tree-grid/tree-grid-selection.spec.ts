@@ -21,7 +21,7 @@ import {
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { IgxSelectorsModule } from '../igx-selection.module';
+import { IgxRowSelectorsModule } from '../igx-row-selectors.module';
 
 describe('IgxTreeGrid - Selection #tGrid', () => {
     configureTestSuite();
@@ -38,7 +38,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                 IgxTreeGridRowEditingTransactionComponent,
                 IgxTreeGridCustomRowSelectorsComponent
             ],
-            imports: [IgxTreeGridModule, NoopAnimationsModule, IgxSelectorsModule]
+            imports: [IgxTreeGridModule, NoopAnimationsModule, IgxRowSelectorsModule]
         })
             .compileComponents();
     }));

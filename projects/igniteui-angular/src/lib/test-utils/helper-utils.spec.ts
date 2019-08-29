@@ -19,6 +19,8 @@ const HEADER_ROW_CSS_CLASS = '.igx-grid__thead';
 const CHECKBOX_INPUT_CSS_CLASS = '.igx-checkbox__input';
 const SCROLL_START_CSS_CLASS = '.igx-grid__scroll-start';
 const CHECKBOX_ELEMENT = 'igx-checkbox';
+const ICON_CSS_CLASS = 'material-icons igx-icon';
+const CHECKBOX_LBL_CSS_CLASS = '.igx-checkbox__composite';
 const DEBOUNCETIME = 50;
 
 export function resizeObserverIgnoreError() {
@@ -439,17 +441,17 @@ export class HelperUtils {
         });
     }
 
-    public static verifyHeaderRowCheckboxState(fix, checked = false, indeterminate = false) {
-        const header = HelperUtils.getHeaderRow(fix);
+    public static verifyHeaderRowCheckboxState(parent, checked = false, indeterminate = false) {
+        const header = HelperUtils.getHeaderRow(parent);
         const headerCheckboxElement = HelperUtils.getRowCheckboxInput(header);
         expect(headerCheckboxElement.checked).toBe(checked);
         expect(headerCheckboxElement.indeterminate).toBe(indeterminate);
     }
 
-    public static verifyHeaderAndRowCheckBoxesAlignment(fix, grid) {
-        const headerDiv = HelperUtils.getRowCheckboxDiv(HelperUtils.getHeaderRow(fix));
+    public static verifyHeaderAndRowCheckBoxesAlignment(grid) {
+        const headerDiv = HelperUtils.getRowCheckboxDiv(HelperUtils.getHeaderRow(grid));
         const firstRowDiv = HelperUtils.getRowCheckboxDiv(grid.rowList.first.nativeElement);
-        const scrollStartElement = fix.nativeElement.querySelector(SCROLL_START_CSS_CLASS);
+        const scrollStartElement = grid.nativeElement.querySelector(SCROLL_START_CSS_CLASS);
         const hScrollbar = grid.parentVirtDir.getHorizontalScroll();
 
         expect(headerDiv.offsetWidth).toEqual(firstRowDiv.offsetWidth);
@@ -478,12 +480,12 @@ export class HelperUtils {
         }
     }
 
-    public static verifyHeaderRowHasCheckbox(fix, hasCheckbox = true, hasCheckboxDiv = true) {
-        HelperUtils.verifyRowHasCheckbox(HelperUtils.getHeaderRow(fix), hasCheckbox, hasCheckboxDiv, true);
+    public static verifyHeaderRowHasCheckbox(parent, hasCheckbox = true, hasCheckboxDiv = true) {
+        HelperUtils.verifyRowHasCheckbox(HelperUtils.getHeaderRow(parent), hasCheckbox, hasCheckboxDiv, true);
     }
 
-    public static getHeaderRow(fix): HTMLElement {
-        return fix.nativeElement.querySelector(HEADER_ROW_CSS_CLASS);
+    public static getHeaderRow(parent): HTMLElement {
+        return parent.nativeElement.querySelector(HEADER_ROW_CSS_CLASS);
     }
 
     public static getRowCheckboxDiv(rowDOM): HTMLElement {
@@ -503,8 +505,25 @@ export class HelperUtils {
         checkboxElement.dispatchEvent(new Event('click', {}));
     }
 
-    public static clickHeaderRowCheckbox(fix) {
-        const checkboxElement = HelperUtils.getRowCheckboxDiv(HelperUtils.getHeaderRow(fix));
+    public static clickHeaderRowCheckbox(parent) {
+        const checkboxElement = HelperUtils.getRowCheckboxDiv(HelperUtils.getHeaderRow(parent));
         checkboxElement.dispatchEvent(new Event('click', {}));
+    }
+
+    // select - deselect a checkbox without a handler
+    public static rowCheckboxClick(row) {
+        const checkboxElement = row.nativeElement ?
+            row.nativeElement.querySelector(CHECKBOX_LBL_CSS_CLASS) :
+            row.querySelector(CHECKBOX_LBL_CSS_CLASS);
+        checkboxElement.click();
+    }
+
+    public static headerCheckboxClick(fix) {
+        HelperUtils.rowCheckboxClick(HelperUtils.getHeaderRow(fix));
+    }
+    //
+
+    public static expandRowIsland(rowNumber = 1) {
+        (<any>document.getElementsByClassName(ICON_CSS_CLASS)[rowNumber]).click();
     }
 }

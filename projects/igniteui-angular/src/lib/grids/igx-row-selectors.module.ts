@@ -18,5 +18,5 @@ export class IgxHeadSelectorDirective {
     declarations: [IgxRowSelectorDirective, IgxHeadSelectorDirective],
     exports: [IgxRowSelectorDirective, IgxHeadSelectorDirective]
 })
-export class IgxSelectorsModule {
+export class IgxRowSelectorsModule {
 }
