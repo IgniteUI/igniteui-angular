@@ -732,7 +732,9 @@ export class IgxTreeGridDefaultLoadingComponent implements OnInit {
 
 @Component({
     template: `
-    <igx-tree-grid #treeGridCustomSelectors [data]="data" primaryKey="ID" foreignKey="ParentID" [paging]="true" [perPage]="5" [rowSelection]="'multiple'" width="900px" height="600px">
+    <igx-tree-grid #treeGridCustomSelectors
+        [data]="data" primaryKey="ID" foreignKey="ParentID"
+        [paging]="true" [perPage]="5" [rowSelection]="'multiple'" width="900px" height="600px">
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string"></igx-column>
         <igx-column [field]="'Age'" dataType="number"></igx-column>

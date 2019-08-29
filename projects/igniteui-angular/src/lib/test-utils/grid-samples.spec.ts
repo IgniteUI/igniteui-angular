@@ -1183,7 +1183,7 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
             <igx-checkbox [checked]="rowContext.selected" (click)="onRowCheckboxClick($event, rowContext)"></igx-checkbox>
         </ng-template>
         <ng-template igxHeadSelector let-headContext>
-            <igx-checkbox [checked]="headContext.totalCount === headContext.selectedCount" 
+            <igx-checkbox [checked]="headContext.totalCount === headContext.selectedCount"
                 (click)="onHeaderCheckboxClick($event, headContext)"></igx-checkbox>
         </ng-template>
     </igx-grid>`
