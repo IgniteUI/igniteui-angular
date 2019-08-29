@@ -9,7 +9,7 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
-import { IgxGridGroupByRowComponent, IgxColumnMovingDragDirective, IgxColumnComponent } from '../grid';
+import { IgxGridGroupByRowComponent, IgxColumnMovingDragDirective, IgxColumnComponent, GridSelectionMode } from '../grid';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -394,25 +394,6 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(fChildCell.selected).toBe(true);
         }));
 
-        it('should retain selected row when filtering', fakeAsync(() => {
-            hierarchicalGrid.rowSelectable = true;
-            fixture.detectChanges();
-
-            const firstRow = hierarchicalGrid.getRowByIndex(0);
-            const targetCheckbox: HTMLElement = firstRow.nativeElement.querySelector('.igx-checkbox__input');
-
-            targetCheckbox.click();
-            fixture.detectChanges();
-
-            hierarchicalGrid.filter('ID', '0', IgxStringFilteringOperand.instance().condition('contains'), true);
-            fixture.detectChanges();
-
-            expect(hierarchicalGrid.getRowByIndex(0).isSelected).toBeTruthy();
-            const headerRow: HTMLElement = fixture.nativeElement.querySelector('.igx-grid__thead');
-            const headerCheckbox: HTMLInputElement = headerRow.querySelector('.igx-checkbox__input');
-            expect(headerCheckbox.indeterminate).toBeTruthy();
-        }));
-
         it('should show empty filter message when there are no records matching the filter', fakeAsync(() => {
             fixture.componentInstance.data = [];
             fixture.detectChanges();
@@ -429,7 +410,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
 
         it('should apply classes to the header when filter row is visible', fakeAsync(/** filter showHideArrowButtons rAF */() => {
-            hierarchicalGrid.rowSelectable = true;
+            hierarchicalGrid.rowSelection = GridSelectionMode.multiple;
             fixture.detectChanges();
             const headerExpander: HTMLElement = fixture.nativeElement.querySelector('.igx-grid__hierarchical-expander');
             const headerCheckbox: HTMLElement = fixture.nativeElement.querySelector('.igx-grid__cbx-selection');
@@ -486,7 +467,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
 
         it('should size summaries with row selectors for parent and children grids correctly.', fakeAsync(/** row toggle rAF */() => {
-            hierarchicalGrid.rowSelectable = true;
+            hierarchicalGrid.rowSelection = GridSelectionMode.multiple;
             hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
             fixture.detectChanges();
 
@@ -775,7 +756,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
 
         it('no rows, headers, paging or rowSelectors should be displayed when hideAll columns', fakeAsync(() => {
-            hierarchicalGrid.rowSelectable = true;
+            hierarchicalGrid.rowSelection = GridSelectionMode.multiple;
             hierarchicalGrid.rowDraggable = true;
             hierarchicalGrid.paging = true;
             tick(30);
@@ -914,7 +895,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             // The moving indicator shouldn't show that a column can be moved.
             const childGroupHeader = childGrids[0].query(By.css('igx-grid-header')).injector.get(IgxColumnMovingDragDirective);
-            const dragElem = childGroupHeader['dragGhost'];
+            const dragElem = childGroupHeader.ghostElement;
             const dragIcon = dragElem.querySelector('i');
             expect(dragElem).toBeDefined();
             expect(dragIcon.innerText.trim()).toEqual('block');

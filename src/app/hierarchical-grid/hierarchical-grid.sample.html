@@ -11,7 +11,7 @@
             <igx-column field="ProductName" hasSummary='true'></igx-column>
         </igx-column-group>
 
-        <igx-row-island [key]="'childData'" [autoGenerate]="false" [allowFiltering]='false' [rowSelectable]='isRowSelectable' [expandChildren]="firstLevelExpanded" #layout1 >
+        <igx-row-island [key]="'childData'" [autoGenerate]="false" (onCellClick)='cellClick($event);' [allowFiltering]='false' [rowSelectable]='isRowSelectable' [expandChildren]="firstLevelExpanded" #layout1 >
                 <igx-column field="ID" [hasSummary]='true' [dataType]="'number'"></igx-column>
                 <igx-column-group header="Information2">
                     <igx-column field="ChildLevels" [resizable]="true" [groupable]='true'></igx-column>

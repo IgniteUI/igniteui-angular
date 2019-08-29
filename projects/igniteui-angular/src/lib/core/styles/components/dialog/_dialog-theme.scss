@@ -80,12 +80,26 @@
 /// @requires --var
 @mixin igx-dialog($theme) {
     @include igx-root-css-vars($theme);
-
-    $dialog-min-width: rem(280px);
-    $dialog-title-padding: rem(24px) rem(24px) rem(12px) rem(24px);
-    $dialog-message-padding: rem(12px) rem(24px);
-    $dialog-actions-padding: rem(8px);
-
+    $dialog-min-width: map-get((
+        material: rem(280px),
+        fluent: rem(288px)
+    ), map-get($theme, variant));
+    
+    $dialog-title-padding: map-get((
+        material: rem(24px) rem(24px) rem(12px) rem(24px),
+        fluent: rem(16px) rem(46px) rem(24px) rem(24px)
+    ), map-get($theme, variant));
+    
+    $dialog-message-padding: map-get((
+        material: rem(12px) rem(24px),
+        fluent: 0 rem(24px) rem(20px) rem(24px)
+    ), map-get($theme, variant));
+    
+    $dialog-actions-padding: map-get((
+        material: rem(8px),
+        fluent: 0 rem(24px) rem(24px) rem(24px)
+    ), map-get($theme, variant));
+    
     %igx-dialog-display {
         outline-style: none;
     }
@@ -147,17 +161,15 @@
     $title: map-get($categories, 'title');
     $content: map-get($categories, 'content');
 
-    @include igx-scope('.igx-typography') {
-        %igx-dialog-title {
-            @include igx-type-style($type-scale, $title) {
-                margin: 0;
-            }
+    %igx-dialog-title {
+        @include igx-type-style($type-scale, $title) {
+            margin: 0;
         }
+    }
 
-        %igx-dialog-content {
-            @include igx-type-style($type-scale, $content) {
-                margin: 0;
-            }
+    %igx-dialog-content {
+        @include igx-type-style($type-scale, $content) {
+            margin: 0;
         }
     }
 }

@@ -31,7 +31,6 @@ import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayD
 import { TransactionService, Transaction, State } from '../../services';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
-import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 
@@ -39,7 +38,8 @@ import { IgxOverlayService } from '../../services/index';
 import { takeUntil } from 'rxjs/operators';
 import { IgxColumnComponent } from '../column.component';
 import { IgxRowIslandAPIService } from './row-island-api.service';
-export interface IGridCreatedEventArgs {
+import { IBaseEventArgs } from '../../core/utils';
+export interface IGridCreatedEventArgs extends IBaseEventArgs {
     owner: IgxRowIslandComponent;
     parentID: any;
     grid: IgxHierarchicalGridComponent;
@@ -191,7 +191,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
         public selectionService: IgxGridSelectionService,
         crudService: IgxGridCRUDService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-        selection: IgxHierarchicalSelectionAPIService,
         @Inject(IgxGridTransaction) protected transactionFactory: any,
         elementRef: ElementRef,
         zone: NgZone,
@@ -210,7 +209,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
             selectionService,
             crudService,
             gridAPI,
-            selection,
             typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
             elementRef,
             zone,

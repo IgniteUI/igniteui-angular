@@ -142,7 +142,7 @@
                         <span>{{chip.text}}</span>
                     </igx-chip>
                     <div class="dropAreaTo" igxDrop #dropTo
-                        (onDrop)="onDropTo($event)"
+                        (dropped)="onDropTo($event)"
                         (igxDragEnter)="onDragEnterCc()"
                         (igxDragLeave)="onDragLeaveCc()">
                     </div>
@@ -164,7 +164,7 @@
                         <span>{{chip.text}}</span>
                     </igx-chip>
                     <div igxDrop #dropCc
-                        (onDrop)="onDropCc($event)"
+                        (dropped)="onDropCc($event)"
                         (igxDragEnter)="onDragEnterCc()"
                         (igxDragLeave)="onDragLeaveCc()"
                         class="dropAreaCc">
