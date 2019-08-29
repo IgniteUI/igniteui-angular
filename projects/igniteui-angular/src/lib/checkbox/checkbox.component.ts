@@ -258,12 +258,24 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * <igx-checkbox [disabled] = "true"></igx-checkbox>
      * ```
      * ```typescript
-     * let isDesabled = this.checkbox.disabled;
+     * let isDisabled = this.checkbox.disabled;
      * ```
      * @memberof IgxCheckboxComponent
      */
     @HostBinding('class.igx-checkbox--disabled')
     @Input() public disabled = false;
+    /**
+     * Sets/gets whether the checkbox is readonly.
+     * Default value is `false`.
+     * ```html
+     * <igx-checkbox [readonly] = "true"></igx-checkbox>
+     * ```
+     * ```typescript
+     * let readonly = this.checkbox.readonly;
+     * ```
+     * @memberof IgxCheckboxComponent
+     */
+    @Input() public readonly = false;
     /**
      * Sets/gets whether the checkbox should disable all css transitions.
      * Default value is `false`.
@@ -297,7 +309,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * @memberof IgxCheckboxComponent
      */
     public toggle() {
-        if (this.disabled) {
+        if (this.disabled || this.readonly) {
             return;
         }
 
