@@ -1928,7 +1928,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), contextUnselect);
         });
 
-        fit('Should have correct indices on all pages', () => {
+        it('Should have correct indices on all pages', () => {
             grid.nextPage();
             fix.detectChanges();
 
