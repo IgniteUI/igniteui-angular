@@ -246,9 +246,11 @@
                 </igx-buttongroup>
 
                 <button igxButton="outlined" [displayDensity]="displayDensity" [disabled]="!contextualGroup.parent" (click)="ungroup()">
+                    <igx-icon fontSet="material">group_work</igx-icon>
                     {{grid.resourceStrings.igx_grid_advanced_filter_ungroup}}
                 </button>
                 <button igxButton="outlined" [displayDensity]="displayDensity" (click)="deleteGroup()">
+                    <igx-icon fontSet="material">delete</igx-icon>
                     {{grid.resourceStrings.igx_grid_advanced_filter_delete}}
                 </button>
             </ng-container>
