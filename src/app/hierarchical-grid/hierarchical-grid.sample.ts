@@ -44,6 +44,7 @@ export class HierarchicalGridSampleComponent {
             { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
         ];
         this.localData = this.generateDataUneven(100, 3);
+        this.localData[0].childData = null;
     }
 
     generateData(count: number, level: number) {
@@ -99,6 +100,17 @@ export class HierarchicalGridSampleComponent {
 
     selectDensity(event) {
         this.density = this.displayDensities[event.index].label;
+    }
+
+    isRecordExpandable(rowData) {
+       return !!rowData.childData;
+    }
+
+    expandAll(hgrid) {
+        hgrid.hierarchicalState = hgrid.data.filter(x => this.isRecordExpandable(x))
+        .map((rec) => {
+            return { rowID: hgrid.primaryKey ? rec[hgrid.primaryKey] : rec };
+        });
     }
 
     public LoadMoreColumns() {

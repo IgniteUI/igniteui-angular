@@ -35,7 +35,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         resizeObserverIgnoreError();
         const firstRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
         // first child of the row should expand indicator
-        firstRow.nativeElement.children[0].click();
+        UIInteractions.clickElement(firstRow.expander);
         fixture.detectChanges();
         expect(firstRow.expanded).toBeTruthy();
         const verticalScroll = fixture.componentInstance.hgrid.verticalScrollContainer;
@@ -58,9 +58,9 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     });
 
     it('Should retain child scroll position when expanding and collapsing through rows', async () => {
-        const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
+        const firstRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;;
         // first child of the row should expand indicator
-        firstRow.nativeElement.children[0].click();
+        UIInteractions.clickElement(firstRow.expander);
         fixture.detectChanges();
 
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
@@ -88,9 +88,9 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
     it('Should retain child grid states (scroll position, selection, filtering, paging etc.) when scrolling', async () => {
         setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
-        const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
+        const firstRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
         // first child of the row should expand indicator
-        firstRow.nativeElement.children[0].click();
+        UIInteractions.clickElement(firstRow.expander);
         fixture.detectChanges();
 
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
@@ -127,12 +127,12 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     });
 
     it('should render correct data for child grid after scrolling and start index changes.', async() => {
-        const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
+        const firstRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
         // first child of the row should expand indicator
-        firstRow.nativeElement.children[0].click();
+        UIInteractions.clickElement(firstRow.expander);
         fixture.detectChanges();
-        const secondRow = hierarchicalGrid.dataRowList.toArray()[1];
-        secondRow.nativeElement.children[0].click();
+        const secondRow = hierarchicalGrid.dataRowList.toArray()[1] as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(secondRow.expander);
         fixture.detectChanges();
 
         const childGrid1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
@@ -267,8 +267,8 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
     it('should update scroll height after expanding/collapsing rows.', async() => {
         const scrHeight = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight;
-        const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
-            UIInteractions.clickElement(firstRow.nativeElement.children[0]);
+        const firstRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
+            UIInteractions.clickElement(firstRow.expander);
             fixture.detectChanges();
             await wait(200);
             const childGrid1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
@@ -297,7 +297,7 @@ it('should update scroll height after expanding/collapsing row in a nested child
         let scrHeight = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight;
         expect(scrHeight).toBe(0);
 
-        hierarchicalGrid.dataRowList.toArray()[2].nativeElement.children[0].click();
+        UIInteractions.clickElement((hierarchicalGrid.dataRowList.toArray()[2] as IgxHierarchicalRowComponent).expander);
         await wait(100);
         fixture.detectChanges();
         hierarchicalGrid.verticalScrollContainer.scrollNext();
@@ -309,14 +309,14 @@ it('should update scroll height after expanding/collapsing row in a nested child
         expect(scrHeight).toBe(3 * 51 + childGrid1.nativeElement.closest('.igx-grid__tr-container').offsetHeight - 1);
 
         // expand
-        childGrid1.dataRowList.toArray()[0].nativeElement.children[0].click();
+        UIInteractions.clickElement(childGrid1.dataRowList.toArray()[0].expander);
         await wait(100);
         fixture.detectChanges();
         scrHeight = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight;
         expect(scrHeight).toBe(3 * 51 + childGrid1.nativeElement.closest('.igx-grid__tr-container').offsetHeight - 1);
 
         // collapse
-        childGrid1.dataRowList.toArray()[0].nativeElement.children[0].click();
+        UIInteractions.clickElement(childGrid1.dataRowList.toArray()[0].expander);
         await wait(100);
         fixture.detectChanges();
         scrHeight = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight;
@@ -326,8 +326,8 @@ it('should update scroll height after expanding/collapsing row in a nested child
     it('should update context information correctly for child grid container after scrolling',  async() => {
         resizeObserverIgnoreError();
         // expand 3rd row
-        const row = hierarchicalGrid.dataRowList.toArray()[3];
-        row.nativeElement.children[0].click();
+        const row = hierarchicalGrid.dataRowList.toArray()[3] as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
         fixture.detectChanges();
 
         // verify index and rowData
@@ -362,8 +362,8 @@ it('should update scroll height after expanding/collapsing row in a nested child
         expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight).toEqual(510);
 
         // expand 1st row
-        const row = hierarchicalGrid.dataRowList.toArray()[0];
-        row.nativeElement.children[0].click();
+        const row = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
         fixture.detectChanges();
 
         expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight).toEqual(561);
@@ -395,8 +395,8 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
         expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().parentElement.hidden).toBeTruthy();
 
         // expand 1st row
-        const row = hierarchicalGrid.dataRowList.toArray()[0];
-        row.nativeElement.children[0].click();
+        const row = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row.expander);
         fixture.detectChanges();
         await wait(200);
 

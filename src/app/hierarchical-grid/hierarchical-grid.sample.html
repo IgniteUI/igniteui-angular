@@ -11,16 +11,16 @@
             <igx-column field="ProductName" hasSummary='true'></igx-column>
         </igx-column-group>
         <ng-template igxHeaderCollapsedIndicator let-hgrid>
-            <igx-icon role="button" fontSet="material" (click)="hgrid.expandAll()">add</igx-icon>
+            <igx-icon role="button" fontSet="material" (click)="expandAll(hgrid)">add</igx-icon>
         </ng-template>
         <ng-template igxHeaderExpandedIndicator let-hgrid>
             <igx-icon role="button" fontSet="material" (click)="hgrid.collapseAll()">remove</igx-icon>
         </ng-template>
         <ng-template igxRowExpandedIndicator let-row>
-            <igx-icon role="button" fontSet="material">remove</igx-icon>
+            <igx-icon (click)='row.toggle()' role="button" fontSet="material">remove</igx-icon>
         </ng-template>
         <ng-template igxRowCollapsedIndicator let-row>
-            <igx-icon role="button" fontSet="material">add</igx-icon>
+            <igx-icon [style.visibility]='isRecordExpandable(row.rowData) ? "visible" : "hidden"' (click)='row.toggle()' role="button" fontSet="material">add</igx-icon>
         </ng-template>
         <igx-row-island [key]="'childData'" [autoGenerate]="false" [allowFiltering]='false' [rowSelectable]='isRowSelectable' [expandChildren]="firstLevelExpanded" #layout1 >
                 <igx-column field="ID" [hasSummary]='true' [dataType]="'number'"></igx-column>
