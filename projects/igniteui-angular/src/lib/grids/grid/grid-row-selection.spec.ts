@@ -1889,12 +1889,8 @@ describe('IgxGrid - Row Selection #grid', () => {
         it('Should have the correct properties in the custom row selector template', () => {
             const firstRow = grid.getRowByIndex(0);
             const firstCheckbox = firstRow.nativeElement.querySelector('.igx-checkbox__composite');
-            const context = { index: 0, rowID: Object({ ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders',
-                ContactTitle: 'Sales Representative', Address: 'Obere Str. 57', City: 'Berlin', Region: null, PostalCode: '12209',
-                Country: 'Germany', Phone: '030-0074321', Fax: '030-0076545' }), selected: false };
-            const contextUnselect = { index: 0, rowID: Object({ ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders',
-                ContactTitle: 'Sales Representative', Address: 'Obere Str. 57', City: 'Berlin', Region: null, PostalCode: '12209',
-                Country: 'Germany', Phone: '030-0074321', Fax: '030-0076545' }), selected: true };
+            const context = { index: 0, rowID: 'ALFKI', selected: false };
+            const contextUnselect = { index: 0, rowID: 'ALFKI', selected: true };
             spyOn(fix.componentInstance, 'onRowCheckboxClick').and.callThrough();
             firstCheckbox.click();
             fix.detectChanges();
