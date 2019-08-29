@@ -58,7 +58,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     });
 
     it('Should retain child scroll position when expanding and collapsing through rows', async () => {
-        const firstRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;;
+        const firstRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
         // first child of the row should expand indicator
         UIInteractions.clickElement(firstRow.expander);
         fixture.detectChanges();
