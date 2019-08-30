@@ -1051,7 +1051,7 @@ export class IgxTimePickerComponent implements
             return format.replace('hh', formattedHour).replace('h', formattedHour)
                 .replace('HH', formattedHour).replace('H', formattedHour)
                 .replace('mm', formattedMinute).replace('m', formattedMinute)
-                .replace('ss', formattedSecond).replace('m', formattedSecond)
+                .replace('ss', formattedSecond).replace('s', formattedSecond)
                 .replace('tt', amPM);
         }
     }

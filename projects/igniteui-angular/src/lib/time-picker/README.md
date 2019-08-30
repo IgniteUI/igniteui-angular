@@ -120,6 +120,8 @@ List of time-flags:
 "HH": hours field in 24-hours format with leading zero
 "m": minutes field without leading zero
 "mm": minutes field with leading zero
+"s": seconds field without leading zero
+"ss": seconds field with leading zero
 "tt": 2 characters of string which represents AM/PM field |
 | `isSpinLoop` | boolean | Determines the spin behavior. By default `isSpinLoop` is set to true. |
 | `mode` | InteractionMode | Determines the interaction mode - a dialog picker or a dropdown with editable masked input. Default is dialog picker.|
