@@ -946,27 +946,27 @@ describe('IgxGrid Component Tests #grid', () => {
         }));
 
         it(`should render 10 records if height is 100% and parent container's height is unset and
-            display density is changed`, async() => {
-            resizeObserverIgnoreError();
-            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
-            fix.detectChanges();
+            display density is changed`, async () => {
+                resizeObserverIgnoreError();
+                const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+                fix.detectChanges();
 
-            fix.componentInstance.grid.height = '100%';
-            fix.componentInstance.data = fix.componentInstance.fullData.slice(0, 11);
-            fix.detectChanges();
-            await wait(100);
+                fix.componentInstance.grid.height = '100%';
+                fix.componentInstance.data = fix.componentInstance.fullData.slice(0, 11);
+                fix.detectChanges();
+                await wait(100);
 
-            fix.componentInstance.density = DisplayDensity.compact;
-            fix.detectChanges();
-            await wait(100);
+                fix.componentInstance.density = DisplayDensity.compact;
+                fix.detectChanges();
+                await wait(100);
 
-            const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            const defaultHeightNum = parseInt(defaultHeight, 10);
-            expect(defaultHeight).not.toBeNull();
-            expect(defaultHeightNum).toBe(330);
-            expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
-            expect(fix.componentInstance.grid.rowList.length).toEqual(11);
-        });
+                const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+                const defaultHeightNum = parseInt(defaultHeight, 10);
+                expect(defaultHeight).not.toBeNull();
+                expect(defaultHeightNum).toBe(330);
+                expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
+                expect(fix.componentInstance.grid.rowList.length).toEqual(11);
+            });
 
         it(`should render grid with correct height when parent container's height is set
             and the total row height is smaller than parent height #1861`, fakeAsync(() => {
@@ -1030,22 +1030,22 @@ describe('IgxGrid Component Tests #grid', () => {
 
         it(`should not render with calcHeight null at any point when loading data and
             auto-sizing is required and initial data is empty`, () => {
-            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
-            fix.detectChanges();
+                const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+                fix.detectChanges();
 
-            let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            expect(defaultHeight).toBeNull(); // initially body height is null in auto-sizing scenarios with empty data
-            expect(fix.componentInstance.grid.calcHeight).toBeNull();
+                let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+                expect(defaultHeight).toBeNull(); // initially body height is null in auto-sizing scenarios with empty data
+                expect(fix.componentInstance.grid.calcHeight).toBeNull();
 
-            fix.componentInstance.data = Array.from({ length: 100000 }, (_, i) => ({ 'ID': i, 'CompanyName': 'CN' + i }));
-            fix.detectChanges();
+                fix.componentInstance.data = Array.from({ length: 100000 }, (_, i) => ({ 'ID': i, 'CompanyName': 'CN' + i }));
+                fix.detectChanges();
 
-            defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            const defaultHeightNum = parseInt(defaultHeight, 10);
-            expect(defaultHeight).not.toBeNull();
-            expect(defaultHeightNum).toBe(510);
-            expect(fix.componentInstance.grid.calcHeight).toBe(510);
-        });
+                defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+                const defaultHeightNum = parseInt(defaultHeight, 10);
+                expect(defaultHeight).not.toBeNull();
+                expect(defaultHeightNum).toBe(510);
+                expect(fix.componentInstance.grid.calcHeight).toBe(510);
+            });
 
         it('should keep auto-sizing if initial data is set to small array that is then filled', () => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
@@ -1333,7 +1333,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             await wait(16);
             // check UI
-            const rowSelectorHeader =  fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-grid__cbx-selection');
+            const rowSelectorHeader = fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-grid__cbx-selection');
             const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
             const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
             const header2 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[2];
@@ -1388,7 +1388,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             await wait(16);
 
-             // grid should render all columns and all should be visible.
+            // grid should render all columns and all should be visible.
             const cells = grid.getRowByIndex(0).cells;
             expect(cells.length).toBe(30);
             expect(parseInt(grid.hostWidth, 10)).toBe(30 * 136);
@@ -1659,6 +1659,214 @@ describe('IgxGrid Component Tests #grid', () => {
             const paginationText = paginationContent.textContent.trim();
 
             expect(paginationText).toEqual(totalRecords);
+        });
+    });
+
+    describe('IgxGrid - Performance tests #perf', () => {
+        const MAX_RAW_RENDER = 1967; // two average diffs from 7.3 rendering performance
+        const MAX_GROUPED_RENDER = 1500;
+        const MAX_VER_SCROLL_O = 220;
+        const MAX_HOR_SCROLL_O = 220;
+        const MAX_VER_SCROLL_U = 380;
+        const MAX_HOR_SCROLL_U = 380;
+        const MAX_FOCUS = 120;
+        let observer: MutationObserver;
+
+        configureTestSuite();
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxGridPerformanceComponent
+                ],
+                imports: [
+                    NoopAnimationsModule,
+                    IgxGridModule,
+                    IgxTabsModule
+                ]
+            }).compileComponents();
+        }));
+        afterEach(() => {
+            if (observer) {
+                observer.disconnect();
+            }
+        });
+
+        it('should render the grid in a certain amount of time', async () => {
+            const fix = TestBed.createComponent(IgxGridPerformanceComponent);
+            fix.detectChanges();
+            expect(fix.componentInstance.delta)
+                .withContext('Rendering took: ' + fix.componentInstance.delta +
+                    'ms but should have taken at most: ' + MAX_RAW_RENDER + 'ms')
+                .toBeLessThan(MAX_RAW_RENDER);
+        });
+
+        it('should render grouped grid in a certain amount of time', async () => {
+            const fix = TestBed.createComponent(IgxGridPerformanceComponent);
+            fix.componentInstance.groupingExpressions.push({
+                fieldName: 'field0',
+                dir: SortingDirection.Asc
+            });
+            fix.detectChanges();
+            expect(fix.componentInstance.delta)
+                .withContext('Rendering took: ' + fix.componentInstance.delta +
+                    'ms but should have taken at most: ' + MAX_GROUPED_RENDER + 'ms')
+                .toBeLessThan(MAX_GROUPED_RENDER);
+        });
+
+        xit('should scroll (optimized delta) the grid vertically in a certain amount of time', async (done) => {
+            const fix = TestBed.createComponent(IgxGridPerformanceComponent);
+            fix.detectChanges();
+            await wait(16);
+            const startTime = new Date().getTime();
+            const config: MutationObserverInit = {
+                attributes: true,
+                attributeOldValue: true,
+                attributeFilter: ['ng-reflect-value']
+            };
+            const callback = () => {
+                let ready = true;
+                const rows = fix.componentInstance.grid.rowList.toArray();
+                for (let i = 0; i < 4; i++) {
+                    if (rows[i].cells.first.nativeElement.attributes['ng-reflect-value'].nodeValue !== String(i + 3)) {
+                        ready = false;
+                        break;
+                    }
+                }
+                if (ready) {
+                    const delta = new Date().getTime() - startTime;
+                    expect(delta)
+                        .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_VER_SCROLL_O + 'ms')
+                        .toBeLessThan(MAX_VER_SCROLL_O);
+                    observer.disconnect();
+                    done();
+                }
+
+            };
+            observer = new MutationObserver(callback);
+            observer.observe(fix.componentInstance.grid.rowList.first.cells.first.nativeElement, config);
+            fix.componentInstance.verticalScroll.scrollTop = 120;
+            await wait(100);
+            fix.detectChanges();
+        });
+
+        xit('should scroll (unoptimized delta) the grid vertically in a certain amount of time', async (done) => {
+            const fix = TestBed.createComponent(IgxGridPerformanceComponent);
+            fix.detectChanges();
+            await wait(16);
+            const startTime = new Date().getTime();
+            const config: MutationObserverInit = {
+                attributes: true,
+                attributeOldValue: true,
+                attributeFilter: ['ng-reflect-value']
+            };
+            const callback = (mutationsList) => {
+                const cellMutated = mutationsList.filter((mutation) => {
+                    return mutation.oldValue === '60' && mutation.target.attributes['ng-reflect-value'].nodeValue === '84';
+                }).length === 1;
+                if (cellMutated) {
+                    const delta = new Date().getTime() - startTime;
+                    expect(delta)
+                        .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_VER_SCROLL_U + 'ms')
+                        .toBeLessThan(MAX_VER_SCROLL_U);
+                    observer.disconnect();
+                    done();
+                }
+            };
+            observer = new MutationObserver(callback);
+            observer.observe(fix.componentInstance.grid.rowList.last.cells.first.nativeElement, config);
+            fix.componentInstance.verticalScroll.scrollTop = 800;
+            await wait(100);
+            fix.detectChanges();
+        });
+
+        xit('should scroll (optimized delta) the grid horizontally in a certain amount of time', async (done) => {
+            const fix = TestBed.createComponent(IgxGridPerformanceComponent);
+            fix.detectChanges();
+            await wait(16);
+            const startTime = new Date().getTime();
+            const config: MutationObserverInit = {
+                attributes: true,
+                attributeOldValue: true,
+                attributeFilter: ['ng-reflect-value']
+            };
+            const callback = (mutationsList) => {
+                const cellMutated = mutationsList.filter((mutation) => {
+                    return mutation.oldValue === '1' && mutation.target.attributes['ng-reflect-value'].nodeValue === '22';
+                }).length === 1;
+                if (cellMutated) {
+                    const delta = new Date().getTime() - startTime;
+                    expect(delta)
+                        .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_HOR_SCROLL_O + 'ms')
+                        .toBeLessThan(MAX_HOR_SCROLL_O);
+                    observer.disconnect();
+                    done();
+                }
+            };
+            observer = new MutationObserver(callback);
+            observer.observe(fix.componentInstance.grid.rowList.last.cells.toArray()[1].nativeElement, config);
+            fix.componentInstance.horizontalScroll.scrollLeft = 250;
+            await wait(100);
+            fix.detectChanges();
+        });
+
+        xit('should scroll (unoptimized delta) the grid horizontally in a certain amount of time', async (done) => {
+            const fix = TestBed.createComponent(IgxGridPerformanceComponent);
+            fix.detectChanges();
+            await wait(16);
+            const startTime = new Date().getTime();
+            const config: MutationObserverInit = {
+                attributes: true,
+                attributeOldValue: true,
+                attributeFilter: ['ng-reflect-value']
+            };
+            const callback = (mutationsList) => {
+                const cellMutated = mutationsList.filter((mutation) => {
+                    return mutation.oldValue === '60' && mutation.target.attributes['ng-reflect-value'].nodeValue === '8';
+                }).length === 1;
+                if (cellMutated) {
+                    const delta = new Date().getTime() - startTime;
+                    expect(delta)
+                        .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_HOR_SCROLL_U + 'ms')
+                        .toBeLessThan(MAX_HOR_SCROLL_U);
+                    observer.disconnect();
+                    done();
+                }
+            };
+            observer = new MutationObserver(callback);
+            observer.observe(fix.componentInstance.grid.rowList.last.cells.first.nativeElement, config);
+            fix.componentInstance.horizontalScroll.scrollLeft = 800;
+            await wait(100);
+            fix.detectChanges();
+        });
+
+        xit('should focus a cell in a certain amount of time', async (done) => {
+            const fix = TestBed.createComponent(IgxGridPerformanceComponent);
+            fix.detectChanges();
+            await wait(16);
+            const startTime = new Date().getTime();
+            const config: MutationObserverInit = {
+                attributes: true,
+                attributeOldValue: true,
+                attributeFilter: ['aria-selected']
+            };
+            const callback = (mutationsList) => {
+                const cellMutated = mutationsList.filter((mutation) => {
+                    return mutation.oldValue === 'false' && mutation.target.attributes['aria-selected'].nodeValue === 'true';
+                }).length === 1;
+                if (cellMutated) {
+                    const delta = new Date().getTime() - startTime;
+                    expect(delta)
+                        .withContext('Focusing took: ' + delta + 'ms but should have taken at most: ' + MAX_FOCUS + 'ms')
+                        .toBeLessThan(MAX_FOCUS);
+                    observer.disconnect();
+                    done();
+                }
+            };
+            observer = new MutationObserver(callback);
+            observer.observe(fix.componentInstance.grid.rowList.first.cells.first.nativeElement, config);
+            // UIInteractions.clickElement(fix.componentInstance.grid.rowList.first.cells.first.nativeElement);
+            await wait(16);
+            fix.detectChanges();
         });
     });
 });
