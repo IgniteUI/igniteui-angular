@@ -14,6 +14,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     configureTestSuite();
@@ -473,14 +474,13 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
 
             const tGrid: HTMLElement = treeGrid.nativeElement;
-            const paginator = tGrid.querySelectorAll('.igx-grid-paginator__pager > button');
-            paginator[2].dispatchEvent(new Event('click'));
+            GridFunctions.navigateToNextPage(tGrid);
             fix.detectChanges();
             // Verify current page
             verifyGridPager(fix, 1, '101', '2 of 2', [false, false, true, true]);
             expect(treeGrid.totalPages).toBe(2);
 
-            paginator[0].dispatchEvent(new Event('click'));
+            GridFunctions.navigateToFirstPage(tGrid);
             fix.detectChanges();
             // Verify current page
             verifyGridPager(fix, 10, '147', '1 of 2', [true, true, false, false]);
@@ -913,15 +913,14 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             expect(treeGrid.totalPages).toBe(2);
 
             const tGrid: HTMLElement = treeGrid.nativeElement;
-            const paginator = tGrid.querySelectorAll('.igx-grid-paginator__pager > button');
-            paginator[3].dispatchEvent(new Event('click'));
+            GridFunctions.navigateToLastPage(tGrid);
             fix.detectChanges();
             tick(16);
             // Verify current page
             verifyGridPager(fix, 1, '9', '2 of 2', [false, false, true, true]);
             expect(treeGrid.totalPages).toBe(2);
 
-            paginator[1].dispatchEvent(new Event('click'));
+            GridFunctions.navigateToPrevPage(tGrid);
             fix.detectChanges();
             tick(16);
             // Verify current page
@@ -1387,7 +1386,7 @@ function verifyGridPager(fix, rowsCount, firstCellValue, pagerText, buttonsVisib
         expect(gridElement.querySelector('.igx-grid-paginator__pager > span').textContent).toMatch(pagerText);
     }
     if (buttonsVisibility != null && buttonsVisibility.length === 4) {
-        const pagingButtons = gridElement.querySelectorAll('.igx-grid-paginator__pager > button');
+        const pagingButtons = GridFunctions.getPagingButtons(gridElement);
         expect(pagingButtons.length).toEqual(4);
         expect(pagingButtons[0].className.includes(disabled)).toBe(buttonsVisibility[0]);
         expect(pagingButtons[1].className.includes(disabled)).toBe(buttonsVisibility[1]);
