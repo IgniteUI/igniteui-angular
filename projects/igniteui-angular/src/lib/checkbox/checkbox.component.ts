@@ -338,6 +338,14 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
         // as it gets triggered on label click
         event.stopPropagation();
 
+        // When igx-checkbox is readonly it prevents the component from changing state (see toggle() method).
+        // However if the hidden native checkbox gets a focus, while navigating with Tab key,
+        // then it will be possible to change its state using the Space key.
+        // The code below prevents that from happening.
+        if (this.readonly) {
+            event.preventDefault();
+        }
+
         if (isIE()) {
             this.nativeCheckbox.nativeElement.blur();
         }
