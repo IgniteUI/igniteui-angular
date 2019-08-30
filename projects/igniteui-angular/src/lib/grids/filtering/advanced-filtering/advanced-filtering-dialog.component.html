@@ -163,7 +163,7 @@
                                  [outlet]="grid.outletDirective">
                     <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value">
                         <igx-input-group #dropDownTarget type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
-                            <input #input
+                            <input #searchValueInput
                                     igxInput
                                     tabindex="0"
                                     (click)="openDialog(dropDownTarget.element.nativeElement)"
