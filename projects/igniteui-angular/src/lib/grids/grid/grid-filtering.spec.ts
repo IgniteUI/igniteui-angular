@@ -7,14 +7,13 @@ import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxChipComponent } from '../../chips';
-import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { IgxStringFilteringOperand,
     IgxNumberFilteringOperand,
     IgxBooleanFilteringOperand,
     IgxDateFilteringOperand } from '../../data-operations/filtering-condition';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridFilteringComponent, CustomFilter } from '../../test-utils/grid-samples.spec';
 import { ExpressionUI } from '../filtering/grid-filtering.service';
 
@@ -529,7 +528,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         expect(grid.rowList.length).toEqual(1);
 
         const summaryRow = fix.debugElement.query(By.css('igx-grid-summary-row'));
-        HelperUtils.verifyColumnSummaries(summaryRow, 0, ['Count'], ['1']);
+        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, ['Count'], ['1']);
     }));
 
     it('Should return true for areAllColumnsInView of filteringService.', fakeAsync(() => {

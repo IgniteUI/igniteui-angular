@@ -1,15 +1,12 @@
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
-import { take } from 'rxjs/operators';
-import { IgxGridGroupByRowComponent } from '../grids/grid/groupby-row.component';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
-import { IgxGridComponent } from '../grids/grid/grid.component';
-import { IgxGridCellComponent } from '../grids/cell.component';
 import { ComponentFixture } from '@angular/core/testing';
-import { IgxGridBaseComponent } from '../grids/index';
+import { IgxGridBaseComponent, IgxGridCellComponent } from '../grids/index';
 import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid';
-import { IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/grid.excel-style-filtering.component';
+import { UIInteractions, wait } from './ui-interactions.spec';
+import { take } from 'rxjs/operators';
+import { IgxGridComponent, IgxGridGroupByRowComponent } from '../grids/grid';
 
 const CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';
 const CELL_SELECTED_CSS_CLASS = 'igx-grid__td--selected';
@@ -111,7 +108,6 @@ export function verifyDOMMatchesLayoutSettings(row, colSettings) {
         });
     });
 }
-
 export class HelperUtils {
     public static getCheckboxElement(name: string, element: DebugElement, fix) {
         const checkboxElements = element.queryAll(By.css('igx-checkbox'));
