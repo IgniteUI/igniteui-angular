@@ -3,8 +3,8 @@
         <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : this.grid.dragIndicatorIconBase"></ng-container>
     </div>
 </ng-container>
-<ng-container *ngIf="showRowSelectors" (click)="onRowSelectorClick($event)">
-    <div class="igx-grid__cbx-selection">
+<ng-container *ngIf="showRowSelectors">
+    <div class="igx-grid__cbx-selection" (click)="onRowSelectorClick($event)">
         <ng-template *ngTemplateOutlet="
             this.grid.rowSelectorTemplate ? this.grid.rowSelectorTemplate : rowSelectorBaseTemplate;
             context: { $implicit: {index: this.index + this.grid.page * this.grid.perPage, rowID: rowID, selected: selected }}">
