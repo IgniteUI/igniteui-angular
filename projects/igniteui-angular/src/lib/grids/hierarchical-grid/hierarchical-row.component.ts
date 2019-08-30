@@ -90,11 +90,19 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
         grid.cdr.detectChanges();
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     public select = () => {
         this.grid.selectRows([this.rowID]);
         this.grid.cdr.markForCheck();
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     public deselect = () => {
         this.grid.deselectRows([this.rowID]);
         this.grid.cdr.markForCheck();
