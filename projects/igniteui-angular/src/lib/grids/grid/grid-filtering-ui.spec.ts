@@ -19,7 +19,7 @@ import { IgxDatePickerComponent } from '../../date-picker/date-picker.component'
 import { IgxGridFilteringCellComponent } from '../filtering/grid-filtering-cell.component';
 import { IgxGridHeaderComponent } from '../grid-header.component';
 import { IgxGridFilteringRowComponent } from '../filtering/grid-filtering-row.component';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxBadgeComponent } from '../../badge/badge.component';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
@@ -2258,7 +2258,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
             const frElem = filteringRow.nativeElement;
-            const chkBoxElem = HelperUtils.getRowCheckboxInput(HelperUtils.getHeaderRow(fix));
+            const chkBoxElem = GridSelectionFunctions.getRowCheckboxInput(GridSelectionFunctions.getHeaderRow(fix));
             expect(frElem.offsetTop).toBeGreaterThanOrEqual(chkBoxElem.offsetTop + chkBoxElem.clientHeight);
         }));
 
