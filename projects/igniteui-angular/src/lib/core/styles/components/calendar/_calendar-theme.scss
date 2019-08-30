@@ -624,7 +624,9 @@
     }
 
     %cal-value--hidden {
-        visibility: hidden;
+        %cal-value-content {
+            visibility: hidden;
+        }
     }
 }
 
