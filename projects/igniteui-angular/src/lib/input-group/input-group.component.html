@@ -1,7 +1,3 @@
-<div class="igx-input-group__wrapper" *ngIf="isTypeBox; else bundle">
-    <ng-container *ngTemplateOutlet="bundle"></ng-container>
-</div>
-
 <ng-template #hint>
     <ng-content select="igx-hint,[igxHint]"></ng-content>
 </ng-template>
@@ -41,19 +37,28 @@
 </ng-template>
 
 <ng-template #withoutBorder>
-    <ng-container *ngIf="isTypeFluent">
-        <ng-container *ngTemplateOutlet="label"></ng-container>
-    </ng-container>
     <div class="igx-input-group__bundle">
         <ng-container *ngTemplateOutlet="prefix"></ng-container>
         <div class="igx-input-group__bundle-main">
-            <ng-container *ngIf="!isTypeFluent">
-                <ng-container *ngTemplateOutlet="label"></ng-container>
-            </ng-container>
+            <ng-container *ngTemplateOutlet="label"></ng-container>
             <ng-container *ngTemplateOutlet="input"></ng-container>
         </div>
         <ng-container *ngTemplateOutlet="suffix"></ng-container>
     </div>
+    <div class="igx-input-group__border" *ngIf="hasBorder"></div>
+</ng-template>
+
+<ng-template #fluentGroup>
+    <ng-container *ngTemplateOutlet="label"></ng-container>
+
+    <div class="igx-input-group__bundle">
+        <ng-container *ngTemplateOutlet="prefix"></ng-container>
+        <div class="igx-input-group__bundle-main">
+            <ng-container *ngTemplateOutlet="input"></ng-container>
+        </div>
+        <ng-container *ngTemplateOutlet="suffix"></ng-container>
+    </div>
+
     <div class="igx-input-group__border" *ngIf="hasBorder"></div>
 </ng-template>
 
@@ -62,8 +67,12 @@
             <ng-container *ngTemplateOutlet="withBorder"></ng-container>
         </ng-container>
 
-        <ng-container *ngIf="!isTypeBorder">
+        <ng-container *ngIf="!isTypeBorder && !isTypeFluent">
             <ng-container *ngTemplateOutlet="withoutBorder"></ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="isTypeFluent">
+            <ng-container *ngTemplateOutlet="fluentGroup"></ng-container>
         </ng-container>
 
         <div class="igx-input-group__hint">
