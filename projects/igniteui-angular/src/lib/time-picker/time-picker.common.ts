@@ -8,9 +8,11 @@ export const IGX_TIME_PICKER_COMPONENT = 'IgxTimePickerComponentToken';
 export interface IgxTimePickerBase {
     hourList: ElementRef;
     minuteList: ElementRef;
+    secondList: ElementRef;
     ampmList: ElementRef;
     selectedHour: string;
     selectedMinute: string;
+    selectedSecond: string;
     selectedAmPm: string;
     format: string;
     promptChar: string;
@@ -18,11 +20,14 @@ export interface IgxTimePickerBase {
     mode: InteractionMode;
     showHoursList: boolean;
     showMinutesList: boolean;
+    showSecondsList: boolean;
     showAmPmList: boolean;
     nextHour();
     prevHour();
     nextMinute();
     prevMinute();
+    nextSecond();
+    prevSecond();
     nextAmPm();
     prevAmPm();
     okButtonClick(): boolean;

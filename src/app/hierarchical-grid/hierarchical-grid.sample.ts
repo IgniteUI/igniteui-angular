@@ -103,7 +103,7 @@ export class HierarchicalGridSampleComponent {
 
     cellClick($evt: IGridCellEventArgs) {
         console.log('Cell Click', $evt);
-        console.log($evt.context);
+        console.log($evt);
     }
 
     public LoadMoreColumns() {

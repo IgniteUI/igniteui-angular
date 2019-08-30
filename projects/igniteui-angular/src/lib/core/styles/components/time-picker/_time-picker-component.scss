@@ -47,6 +47,11 @@
         @extend %time-picker__minuteList !optional;
     }
 
+    // SECOND
+    @include e(secondList) {
+        @extend %time-picker__secondList !optional;
+    }
+
     // AM PM
     @include e(ampmList) {
         @extend %time-picker__ampmList !optional;
