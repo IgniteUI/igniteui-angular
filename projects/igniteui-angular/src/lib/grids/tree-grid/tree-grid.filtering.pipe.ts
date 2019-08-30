@@ -12,30 +12,30 @@ import { IgxGridBaseComponent, IGridDataBindable } from '../grid';
 /** @hidden */
 export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
     public filter(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
-        crossFieldExpressionsTree?: IFilteringExpressionsTree): ITreeGridRecord[] {
-        return this.filterImpl(data, expressionsTree, crossFieldExpressionsTree, undefined);
+        advancedExpressionsTree?: IFilteringExpressionsTree): ITreeGridRecord[] {
+        return this.filterImpl(data, expressionsTree, advancedExpressionsTree, undefined);
     }
 
     private filterImpl(data: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
-        crossFieldExpressionsTree: IFilteringExpressionsTree, parent: ITreeGridRecord): ITreeGridRecord[] {
+        advancedExpressionsTree: IFilteringExpressionsTree, parent: ITreeGridRecord): ITreeGridRecord[] {
         let i: number;
         let rec: ITreeGridRecord;
         const len = data.length;
         const res: ITreeGridRecord[] = [];
         if (((!expressionsTree || !expressionsTree.filteringOperands || expressionsTree.filteringOperands.length === 0) &&
-            (!crossFieldExpressionsTree || !crossFieldExpressionsTree.filteringOperands ||
-                crossFieldExpressionsTree.filteringOperands.length === 0)) || !len) {
+            (!advancedExpressionsTree || !advancedExpressionsTree.filteringOperands ||
+                advancedExpressionsTree.filteringOperands.length === 0)) || !len) {
             return data;
         }
         for (i = 0; i < len; i++) {
             rec = DataUtil.cloneTreeGridRecord(data[i]);
             rec.parent = parent;
             if (rec.children) {
-                const filteredChildren = this.filterImpl(rec.children, expressionsTree, crossFieldExpressionsTree, rec);
+                const filteredChildren = this.filterImpl(rec.children, expressionsTree, advancedExpressionsTree, rec);
                 rec.children = filteredChildren.length > 0 ? filteredChildren : null;
             }
 
-            if (this.matchRecord(rec, expressionsTree) && this.matchRecord(rec, crossFieldExpressionsTree)) {
+            if (this.matchRecord(rec, expressionsTree) && this.matchRecord(rec, advancedExpressionsTree)) {
                 res.push(rec);
             } else if (rec.children && rec.children.length > 0) {
                 rec.isFilteredOutParent = true;
@@ -64,11 +64,11 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
      }
 
     public transform(hierarchyData: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
-        crossFieldFilteringExpressionsTree: IFilteringExpressionsTree, id: string, pipeTrigger: number): ITreeGridRecord[] {
+        advancedFilteringExpressionsTree: IFilteringExpressionsTree, id: string, pipeTrigger: number): ITreeGridRecord[] {
         const grid: IgxTreeGridComponent = this.gridAPI.grid;
         const state = {
             expressionsTree: expressionsTree,
-            crossFieldExpressionsTree: crossFieldFilteringExpressionsTree,
+            advancedExpressionsTree: advancedFilteringExpressionsTree,
             strategy: new TreeGridFilteringStrategy()
         };
 
@@ -77,9 +77,9 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
         if ((!state.expressionsTree ||
             !state.expressionsTree.filteringOperands ||
             state.expressionsTree.filteringOperands.length === 0)
-            && (!state.crossFieldExpressionsTree ||
-            !state.crossFieldExpressionsTree.filteringOperands ||
-            state.crossFieldExpressionsTree.filteringOperands.length === 0)) {
+            && (!state.advancedExpressionsTree ||
+            !state.advancedExpressionsTree.filteringOperands ||
+            state.advancedExpressionsTree.filteringOperands.length === 0)) {
             grid.filteredData = null;
             return hierarchyData;
         }
@@ -119,6 +119,6 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
     }
 
     private filter(data: ITreeGridRecord[], state: IFilteringState): ITreeGridRecord[] {
-        return state.strategy.filter(data, state.expressionsTree, state.crossFieldExpressionsTree);
+        return state.strategy.filter(data, state.expressionsTree, state.advancedExpressionsTree);
     }
 }

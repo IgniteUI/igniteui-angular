@@ -105,13 +105,13 @@ export class DataUtil {
         if (!state.strategy) {
             state.strategy = new FilteringStrategy();
         }
-        return state.strategy.filter(data, state.expressionsTree, state.crossFieldExpressionsTree);
+        return state.strategy.filter(data, state.expressionsTree, state.advancedExpressionsTree);
     }
     public static treeGridFilter(data: ITreeGridRecord[], state: IFilteringState): ITreeGridRecord[] {
         if (!state.strategy) {
             state.strategy = new TreeGridFilteringStrategy();
         }
-        return state.strategy.filter(data, state.expressionsTree, state.crossFieldExpressionsTree);
+        return state.strategy.filter(data, state.expressionsTree, state.advancedExpressionsTree);
     }
 
     public static correctPagingState(state: IPagingState, length: number) {

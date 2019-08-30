@@ -663,7 +663,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
             }
         });
 
-        // if (!this.grid.crossFieldFilteringExpressionsTree) {
+        // if (!this.grid.advancedFilteringExpressionsTree) {
         //     const tree = new FilteringExpressionsTree(FilteringLogic.And);
         //     tree.filteringOperands.push({
         //         fieldName: 'ID',
@@ -691,11 +691,11 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         //         searchVal: 'd',
         //         ignoreCase: true
         //     });
-        //     this.grid.crossFieldFilteringExpressionsTree = tree;
+        //     this.grid.advancedFilteringExpressionsTree = tree;
         // }
 
-        if (this.grid.crossFieldFilteringExpressionsTree) {
-            this.rootGroup = this.createExpressionGroupItem(this.grid.crossFieldFilteringExpressionsTree);
+        if (this.grid.advancedFilteringExpressionsTree) {
+            this.rootGroup = this.createExpressionGroupItem(this.grid.advancedFilteringExpressionsTree);
             this.currentGroup = this.rootGroup;
         }
     }
@@ -714,7 +714,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         this.selectedGroups = [];
         this.currentGroup = null;
         this.rootGroup = null;
-        this.grid.crossFieldFilteringExpressionsTree = null;
+        this.grid.advancedFilteringExpressionsTree = null;
     }
 
     public closeDialog() {
@@ -725,7 +725,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
 
     public onApplyButtonClick() {
         this.exitOperandEdit();
-        this.grid.crossFieldFilteringExpressionsTree = this.createExpressionsTreeFromGroupItem(this.rootGroup);
+        this.grid.advancedFilteringExpressionsTree = this.createExpressionsTreeFromGroupItem(this.rootGroup);
         this.closeDialog();
     }
 }

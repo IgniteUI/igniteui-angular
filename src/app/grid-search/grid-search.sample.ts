@@ -47,7 +47,7 @@ export class GridSearchComponent implements OnInit, AfterViewInit {
             ignoreCase: true
         });
 
-        this.grid1.crossFieldFilteringExpressionsTree = tree;
+        this.grid1.advancedFilteringExpressionsTree = tree;
     }
 
     public ngOnInit(): void {

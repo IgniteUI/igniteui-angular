@@ -130,19 +130,19 @@ export class IgxGridFilteringPipe implements PipeTransform {
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) { }
 
     public transform(collection: any[], expressionsTree: IFilteringExpressionsTree,
-        crossFieldExpressionsTree: IFilteringExpressionsTree, id: string, pipeTrigger: number) {
+        advancedExpressionsTree: IFilteringExpressionsTree, id: string, pipeTrigger: number) {
         const grid = this.gridAPI.grid;
         const state = {
             expressionsTree: expressionsTree,
-            crossFieldExpressionsTree: crossFieldExpressionsTree
+            advancedExpressionsTree: advancedExpressionsTree
         };
 
         if ((!state.expressionsTree ||
             !state.expressionsTree.filteringOperands ||
             state.expressionsTree.filteringOperands.length === 0)
-            && (!state.crossFieldExpressionsTree ||
-            !state.crossFieldExpressionsTree.filteringOperands ||
-            state.crossFieldExpressionsTree.filteringOperands.length === 0)) {
+            && (!state.advancedExpressionsTree ||
+            !state.advancedExpressionsTree.filteringOperands ||
+            state.advancedExpressionsTree.filteringOperands.length === 0)) {
             return collection;
         }
 

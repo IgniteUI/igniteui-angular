@@ -7,6 +7,6 @@ export const filteringStateDefaults = {
 
 export declare interface IFilteringState {
     expressionsTree: IFilteringExpressionsTree;
-    crossFieldExpressionsTree?: IFilteringExpressionsTree;
+    advancedExpressionsTree?: IFilteringExpressionsTree;
     strategy?: IFilteringStrategy;
 }

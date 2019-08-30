@@ -69,7 +69,7 @@ describe('IgxGrid - Advanced Filtering', () => {
             expect(advFilterDialog).not.toBeNull();
 
             // Verify there are not filters present and that the default text is shown.
-            expect(grid.crossFieldFilteringExpressionsTree).toBeUndefined();
+            expect(grid.advancedFilteringExpressionsTree).toBeUndefined();
             expect(GridFunctions.getAdvancedFilteringTreeRootGroup(fix)).toBeNull();
             expect(GridFunctions.getAdvancedFilteringEmptyPrompt(fix)).not.toBeNull();
 

@@ -385,14 +385,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * Returns the cross-field filtering state of `IgxGridComponent`.
      * ```typescript
-     * let crossFieldFilteringExpressionsTree = this.grid.crossFieldFilteringExpressionsTree;
+     * let advancedFilteringExpressionsTree = this.grid.advancedFilteringExpressionsTree;
      * ```
 	 * @memberof IgxGridBaseComponent
      */
     @WatchChanges()
     @Input()
-    get crossFieldFilteringExpressionsTree() {
-        return this._crossFieldFilteringExpressionsTree;
+    get advancedFilteringExpressionsTree() {
+        return this._advancedFilteringExpressionsTree;
     }
 
     /**
@@ -406,11 +406,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      *          searchVal: 1
      *     }
      * ];
-     * this.grid.crossFieldFilteringExpressionsTree = logic;
+     * this.grid.advancedFilteringExpressionsTree = logic;
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    set crossFieldFilteringExpressionsTree(value) {
+    set advancedFilteringExpressionsTree(value) {
         if (value && value instanceof FilteringExpressionsTree) {
             // const val = (value as FilteringExpressionsTree);
             // for (let index = 0; index < val.filteringOperands.length; index++) {
@@ -424,9 +424,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             // clone the filtering expression tree in order to trigger the filtering pipe
             const filteringExpressionTreeClone = new FilteringExpressionsTree(value.operator, value.fieldName);
             filteringExpressionTreeClone.filteringOperands = value.filteringOperands;
-            this._crossFieldFilteringExpressionsTree = filteringExpressionTreeClone;
+            this._advancedFilteringExpressionsTree = filteringExpressionTreeClone;
         } else {
-            this._crossFieldFilteringExpressionsTree = null;
+            this._advancedFilteringExpressionsTree = null;
         }
 
         // TODO
@@ -2558,7 +2558,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected _crossFieldFilteringExpressionsTree: IFilteringExpressionsTree;
+    protected _advancedFilteringExpressionsTree: IFilteringExpressionsTree;
     /**
      * @hidden
      */
