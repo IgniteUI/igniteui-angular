@@ -41,6 +41,7 @@
         display: block;
         padding: rem(16px);
         overflow: auto;
+        min-height: 214px;
         max-height: 468px;
 
         [igxButton] + [igxButton] {
@@ -229,7 +230,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 196px;
+        height: 144px;
     }
 
     %filter-empty__title {
@@ -238,7 +239,12 @@
 
     %advanced-filter--cosy {
         %advanced-filter__main {
+            min-height: 164px;
             max-height: 394px;
+        }
+
+        %filter-empty {
+            height: 107px;
         }
 
         %advanced-filter__main,
@@ -292,7 +298,12 @@
 
     %advanced-filter--compact {
         %advanced-filter__main {
+            min-height: 138px;
             max-height: 305px;
+        }
+
+        %filter-empty {
+            height: 92px;
         }
 
         %advanced-filter__main,
