@@ -1,5 +1,5 @@
 import {
-    Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, AfterViewInit, OnDestroy
+    Component, Input, ViewChild, ChangeDetectorRef, ViewChildren, QueryList, ElementRef, AfterViewInit, OnDestroy, HostBinding
 } from '@angular/core';
 import { VerticalAlignment, HorizontalAlignment, Point, OverlaySettings } from '../../../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../../../services/overlay/position/connected-positioning-strategy';
@@ -15,7 +15,7 @@ import { IDragStartEventArgs, IDragBaseEventArgs } from '../../../directives/dra
 import { CloseScrollStrategy } from '../../../services/overlay/scroll/close-scroll-strategy';
 import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
 import { IButtonGroupEventArgs } from '../../../buttonGroup/buttonGroup.component';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, first } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 class ExpressionItem {
@@ -111,13 +111,16 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     @ViewChild('expressionsContainer', { static: true })
     protected expressionsContainer: ElementRef;
 
+    @HostBinding('style.pointer-events')
+    pointerEvents = 'all';
+
     private destroy$ = new Subject<any>();
     private _selectedColumn: IgxColumnComponent;
     private _clickTimer;
     private _dblClickDelay = 200;
     private _preventChipClick = false;
 
-    constructor(public cdr: ChangeDetectorRef) { }
+    constructor(private element: ElementRef, public cdr: ChangeDetectorRef) { }
 
     public ngAfterViewInit(): void {
         this._overlaySettings.outlet = this.grid.outletDirective;
@@ -642,6 +645,13 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         this.filteringService = filteringService;
         this.overlayService = overlayService;
         this.overlayComponentId = overlayComponentId;
+
+        // Set pointer-events to none of the overlay content element which blocks the grid interaction after dragging
+        this.overlayService.onOpened.pipe(first()).subscribe(() => {
+            if (this.element.nativeElement.parentElement) {
+                this.element.nativeElement.parentElement.style['pointer-events'] = 'none';
+            }
+        });
 
         // if (!this.grid.crossFieldFilteringExpressionsTree) {
         //     const tree = new FilteringExpressionsTree(FilteringLogic.And);
