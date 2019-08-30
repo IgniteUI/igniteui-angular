@@ -940,7 +940,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Sets if the filtering is enabled.
      * By default it's disabled.
      * ```html
-     * <igx-grid #grid [data]="localData" [allowFiltering]="'true" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid [data]="localData" [allowFiltering]="true" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
 	 * @memberof IgxGridBaseComponent
      */
@@ -957,6 +957,37 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.filteringService.filteredColumn = null;
 
             this.notifyChanges(true);
+        }
+    }
+
+    /**
+     * Returns a value indicating whether the advanced filtering is enabled.
+     * ```typescript
+     *  let filtering = this.grid.allowAdvancedFiltering;
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    @Input()
+    get allowAdvancedFiltering() {
+        return this._allowAdvancedFiltering;
+    }
+
+    /**
+     * Sets a value indicating whether the advanced filtering is enabled.
+     * By default it's disabled.
+     * ```html
+     * <igx-grid #grid [data]="localData" [allowAdvancedFiltering]="true" [showToolbar]="true" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    set allowAdvancedFiltering(value) {
+        if (this._allowAdvancedFiltering !== value) {
+            this._allowAdvancedFiltering = value;
+            this.filteringService.registerSVGIcons();
+
+            if (!this._init) {
+                this.notifyChanges(true);
+            }
         }
     }
 
@@ -2582,6 +2613,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected _hasVisibleColumns;
     protected _allowFiltering = false;
+    protected _allowAdvancedFiltering = false;
     protected _filterMode = FilterMode.quickFilter;
 
     protected observer: ResizeObserver;
