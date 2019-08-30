@@ -18,6 +18,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DataParent } from '../../test-utils/sample-test-data.spec';
 import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-samples.spec';
 import { resizeObserverIgnoreError, HelperUtils } from '../../test-utils/helper-utils.spec';
+import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - GroupBy #grid', () => {
     configureTestSuite();
@@ -996,10 +997,10 @@ describe('IgxGrid - GroupBy #grid', () => {
         const grRows = grid.groupsRowList.toArray();
         const dataRows = grid.dataRowList.toArray();
         for (const grRow of grRows) {
-            expect(HelperUtils.getRowCheckboxDiv(grRow.element.nativeElement)).toBeNull();
+            expect(GridSelectionFunctions.getRowCheckboxDiv(grRow.element.nativeElement)).toBeNull();
         }
         for (const dRow of dataRows) {
-            expect(HelperUtils.getRowCheckboxDiv(dRow.element.nativeElement)).toBeDefined();
+            expect(GridSelectionFunctions.getRowCheckboxDiv(dRow.element.nativeElement)).toBeDefined();
         }
     }));
 
@@ -1034,7 +1035,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             fix.detectChanges();
             expect(grid.selectedRows().length).toEqual(0);
 
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
             expect(grid.selectedRows().length).toEqual(8);
@@ -1601,11 +1602,11 @@ describe('IgxGrid - GroupBy #grid', () => {
         setTimeout(() => {
             const rows = grid.dataRowList.toArray();
             expect(rows.length).toEqual(1);
-            HelperUtils.clickRowCheckbox(rows[0].element);
+            GridSelectionFunctions.clickRowCheckbox(rows[0].element);
              setTimeout(() => {
                 grid.cdr.detectChanges();
                 expect(grid.selectedRows().length).toEqual(1);
-                HelperUtils.verifyRowSelected(rows[0]);
+                GridSelectionFunctions.verifyRowSelected(rows[0]);
                 done();
             }, 100);
         }, 100);
