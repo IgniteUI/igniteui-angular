@@ -1,5 +1,5 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxGridComponent } from 'igniteui-angular';
+import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { IgxGridComponent, FilteringExpressionsTree, IgxStringFilteringOperand, FilteringLogic } from 'igniteui-angular';
 
 @Component({
     providers: [],
@@ -8,7 +8,8 @@ import { IgxGridComponent } from 'igniteui-angular';
     templateUrl: 'grid-search.sample.html'
 })
 
-export class GridSearchComponent implements OnInit {
+export class GridSearchComponent implements OnInit, AfterViewInit {
+
 
     public data: Array<any>;
     public columns: Array<any>;
@@ -16,6 +17,38 @@ export class GridSearchComponent implements OnInit {
     public density = 'comfortable';
 
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
+
+    ngAfterViewInit(): void {
+        const tree = new FilteringExpressionsTree(FilteringLogic.And);
+        tree.filteringOperands.push({
+            fieldName: 'ID',
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
+            searchVal: 'a',
+            ignoreCase: true
+        });
+        const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
+        orTree.filteringOperands.push({
+            fieldName: 'ID',
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
+            searchVal: 'b',
+            ignoreCase: true
+        });
+        orTree.filteringOperands.push({
+            fieldName: 'CompanyName',
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
+            searchVal: 'c',
+            ignoreCase: true
+        });
+        tree.filteringOperands.push(orTree);
+        tree.filteringOperands.push({
+            fieldName: 'CompanyName',
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
+            searchVal: 'd',
+            ignoreCase: true
+        });
+
+        this.grid1.crossFieldFilteringExpressionsTree = tree;
+    }
 
     public ngOnInit(): void {
         this.displayDensities = [

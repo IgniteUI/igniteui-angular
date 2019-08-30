@@ -430,9 +430,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
 
         // TODO
-        if (this.filteringService.isFilteringExpressionsTreeEmpty()) {
-            this.filteredData = null;
-        }
+        // if (this.filteringService.isFilteringExpressionsTreeEmpty()) {
+        //     this.filteredData = null;
+        // }
 
         this.summaryService.clearSummaryCache();
         this.markForCheck();
