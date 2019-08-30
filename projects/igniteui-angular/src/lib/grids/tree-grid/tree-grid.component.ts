@@ -19,9 +19,9 @@ import {
     QueryList,
     ContentChild,
     AfterContentInit,
-    ViewChild
+    ViewChild,
+    DoCheck
 } from '@angular/core';
-import { IgxSelectionAPIService } from '../../core/selection';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseComponent, IgxGridTransaction, IGridDataBindable } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
@@ -72,7 +72,7 @@ let NEXT_ID = 0;
         { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) }, IgxFilteringService, IgxForOfSyncService]
 })
-export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit, AfterContentInit {
+export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit, DoCheck, AfterContentInit {
     private _id = `igx-tree-grid-${NEXT_ID++}`;
     private _data;
     private _rowLoadingIndicatorTemplate: TemplateRef<any>;
@@ -110,9 +110,8 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
             this.setupColumns();
-            this.reflow();
         }
-        this.cdr.markForCheck();
+        this.notifyChanges(true);
     }
 
     /**
@@ -139,9 +138,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     set filteredData(value) {
         this._filteredData = value;
 
-        if (this.rowSelectable) {
-            this.updateHeaderCheckboxStatusOnFilter(this._filteredData);
-        }
+
     }
 
     /**
@@ -266,7 +263,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
 
     public set expansionDepth(value: number) {
         this._expansionDepth = value;
-        this.cdr.markForCheck();
+        this.notifyChanges();
     }
 
     private _expansionStates: Map<any, boolean> = new Map<any, boolean>();
@@ -345,7 +342,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
 
     public set rowLoadingIndicatorTemplate(value: TemplateRef<any>) {
         this._rowLoadingIndicatorTemplate = value;
-        this.cdr.markForCheck();
+        this.notifyChanges();
     }
 
     /**
@@ -406,7 +403,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-        selection: IgxSelectionAPIService,
         @Inject(IgxGridTransaction) protected _transactions: IgxHierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
         elementRef: ElementRef,
         zone: NgZone,
@@ -420,7 +416,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-            super(selectionService, crudService, gridAPI, selection,
+            super(selectionService, crudService, gridAPI,
                 _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
                 filteringService, overlayService, summaryService, _displayDensityOptions);
         this._gridAPI = <IgxTreeGridAPIService>gridAPI;
@@ -435,6 +431,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         this.onRowToggle.pipe(takeUntil(this.destroy$)).subscribe((args) => {
             this.loadChildrenOnRowExpansion(args);
         });
+    }
+
+    ngDoCheck() {
+        super.ngDoCheck();
     }
 
     /**
@@ -457,12 +457,12 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
                 this.loadChildrenOnDemand(parentID, children => {
                     this.loadingRows.delete(parentID);
                     this.addChildRows(children, parentID);
-                    this.cdr.markForCheck();
+                    this.notifyChanges();
 
                     requestAnimationFrame(() => {
-                        const cellID = this.selection.first_item(`${this.id}-cell`);
+                        const cellID = this.selectionService.activeElement;
                         if (cellID) {
-                            const cell = this._gridAPI.get_cell_by_index(cellID.rowIndex, cellID.columnID);
+                            const cell = this._gridAPI.get_cell_by_index(cellID.row, cellID.column);
                             if (cell) {
                                 cell.nativeElement.focus();
                             }
@@ -508,7 +508,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
 
             parentData[this.childDataKey] = children;
         }
-
+        this.selectionService.clearHeaderCBState();
         this._pipeTrigger++;
     }
 
@@ -640,7 +640,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
                 }
                 this.onRowAdded.emit({ data });
                 this._pipeTrigger++;
-                this.cdr.markForCheck();
+                this.notifyChanges();
             }
         } else {
             if (this.primaryKey && this.foreignKey) {

@@ -1,3 +1,7 @@
+<div class="igx-input-group__wrapper" *ngIf="isTypeBox; else bundle">
+    <ng-container *ngTemplateOutlet="bundle"></ng-container>
+</div>
+
 <ng-template #hint>
     <ng-content select="igx-hint,[igxHint]"></ng-content>
 </ng-template>
@@ -37,10 +41,15 @@
 </ng-template>
 
 <ng-template #withoutBorder>
+    <ng-container *ngIf="isTypeFluent">
+        <ng-container *ngTemplateOutlet="label"></ng-container>
+    </ng-container>
     <div class="igx-input-group__bundle">
         <ng-container *ngTemplateOutlet="prefix"></ng-container>
         <div class="igx-input-group__bundle-main">
-            <ng-container *ngTemplateOutlet="label"></ng-container>
+            <ng-container *ngIf="!isTypeFluent">
+                <ng-container *ngTemplateOutlet="label"></ng-container>
+            </ng-container>
             <ng-container *ngTemplateOutlet="input"></ng-container>
         </div>
         <ng-container *ngTemplateOutlet="suffix"></ng-container>

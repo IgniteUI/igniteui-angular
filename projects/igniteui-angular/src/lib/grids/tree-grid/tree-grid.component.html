@@ -3,8 +3,8 @@
 </igx-grid-toolbar>
 
 <div class="igx-grid__thead">
-    <div class="igx-grid__thead-wrapper" role="rowgroup" [style.width.px]='calcWidth + 1' #theadRow>
-        <div class="igx-grid__tr" [style.width.px]='calcWidth + 1' role="row">
+    <div class="igx-grid__thead-wrapper" role="rowgroup" [style.width.px]='calcWidth' #theadRow>
+        <div class="igx-grid__tr" [style.width.px]='calcWidth' role="row">
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
                 [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left"
                 class="igx-grid__scroll-on-drag-left" [style.left.px]="featureColumnsWidth"></span>
@@ -21,11 +21,11 @@
                 </div>
             </ng-container>
             <ng-container *ngIf="showRowCheckboxes">
-                <div class="igx-grid__cbx-selection" #headerCheckboxContainer [ngClass]="{
+                <div class="igx-grid__cbx-selection" (click)="onHeaderSelectorClick($event)" #headerCheckboxContainer [ngClass]="{
                     'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible
                 }">
-                    <igx-checkbox [checked]="allRowsSelected" (change)="onHeaderCheckboxClick($event, filteredData)"
-                        disableRipple="true" [aria-label]="headerCheckboxAriaLabel" #headerCheckbox></igx-checkbox>
+                    <igx-checkbox [checked]="selectionService.areAllRowSelected()" [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
+                        (click)="$event.preventDefault()" disableRipple="true" [indeterminate]="selectionService.hasSomeRowSelected()" [aria-label]="headerCheckboxAriaLabel" #headerCheckbox></igx-checkbox>
                 </div>
             </ng-container>
             <ng-container *ngIf="pinnedColumns.length > 0">

@@ -1,3 +1,4 @@
+import { IBaseEventArgs } from '../../core/utils';
 
 export interface ITreeGridRecord {
     rowID: any;
@@ -9,7 +10,7 @@ export interface ITreeGridRecord {
     expanded?: boolean;
 }
 
-export interface IRowToggleEventArgs {
+export interface IRowToggleEventArgs extends IBaseEventArgs {
     rowID: any;
     expanded: boolean;
     event?: Event;

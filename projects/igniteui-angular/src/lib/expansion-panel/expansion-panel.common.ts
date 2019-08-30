@@ -1,5 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { AnimationReferenceMetadata } from '@angular/animations';
+import { IBaseEventArgs } from '../core/utils';
 
 export interface IgxExpansionPanelBase {
     id: string;
@@ -18,7 +19,7 @@ export interface IgxExpansionPanelBase {
 /** @hidden */
 export const IGX_EXPANSION_PANEL_COMPONENT = 'IgxExpansionPanelToken';
 
-export interface IExpansionPanelEventArgs {
+export interface IExpansionPanelEventArgs extends IBaseEventArgs {
     event: Event;
     panel: IgxExpansionPanelBase;
 }

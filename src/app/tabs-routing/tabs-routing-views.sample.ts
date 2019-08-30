@@ -72,13 +72,3 @@ export class TabsRoutingView2Component {
 export class TabsRoutingView3Component {
 }
 
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [TabsRoutingView1Component, TabsRoutingView2Component, TabsRoutingView3Component],
-    exports: [TabsRoutingView1Component, TabsRoutingView2Component, TabsRoutingView3Component],
-    imports: []
-})
-export class TabsRoutingViewsModule {
-}

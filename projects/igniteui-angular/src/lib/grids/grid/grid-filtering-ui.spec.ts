@@ -5,7 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../../calendar/calendar';
 import { IgxInputDirective } from '../../directives/input/input.directive';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule } from './index';
+import { IgxGridModule, GridSelectionMode } from './index';
 import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -19,7 +19,7 @@ import { IgxDatePickerComponent } from '../../date-picker/date-picker.component'
 import { IgxGridFilteringCellComponent } from '../filtering/grid-filtering-cell.component';
 import { IgxGridHeaderComponent } from '../grid-header.component';
 import { IgxGridFilteringRowComponent } from '../filtering/grid-filtering-row.component';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxBadgeComponent } from '../../badge/badge.component';
 import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
@@ -44,13 +44,14 @@ import {
     IgxGridFilteringESFTemplatesComponent,
     IgxGridFilteringESFLoadOnDemandComponent
 } from '../../test-utils/grid-samples.spec';
+import { HelperUtils, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 const FILTER_UI_SCROLL_START_CLASS = '.igx-grid__filtering-row-scroll-start';
 const FILTER_UI_SCROLL_END_CLASS = '.igx-grid__filtering-row-scroll-end';
 
-describe('IgxGrid - Filtering actions', () => {
+describe('IgxGrid - Filtering actions #grid', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -67,6 +68,8 @@ describe('IgxGrid - Filtering actions', () => {
 
     let fix, grid;
     beforeEach(fakeAsync(() => {
+        resizeObserverIgnoreError();
+
         fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
         grid = fix.componentInstance.grid;
@@ -1664,7 +1667,7 @@ describe('IgxGrid - Filtering actions', () => {
     });
 });
 
-describe('IgxGrid - Filtering Row UI actions', () => {
+describe('IgxGrid - Filtering Row UI actions #grid', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -1690,6 +1693,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridFilteringComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -2242,7 +2246,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
         // Filtering + Row Selectors
         it('should display the Row Selector header checkbox above the filter row.', fakeAsync(() => {
-            grid.rowSelectable = true;
+            grid.rowSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
             const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
@@ -2254,8 +2258,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
             const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
             const frElem = filteringRow.nativeElement;
-            const chkBox = fix.debugElement.query(By.css('.igx-grid__cbx-selection')).query(By.directive(IgxCheckboxComponent));
-            const chkBoxElem = chkBox.nativeElement;
+            const chkBoxElem = GridSelectionFunctions.getRowCheckboxInput(GridSelectionFunctions.getHeaderRow(fix));
             expect(frElem.offsetTop).toBeGreaterThanOrEqual(chkBoxElem.offsetTop + chkBoxElem.clientHeight);
         }));
 
@@ -2905,7 +2908,6 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         it('Verify condition chips are scrolled into/(out of) view by using arrow buttons.', (async () => {
             grid.width = '700px';
             fix.detectChanges();
-            await wait(100);
 
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
             fix.detectChanges();
@@ -2913,18 +2915,24 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             // Add first chip.
             GridFunctions.typeValueInFilterRowInput('a', fix);
             await wait(16);
+            fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await wait(100);
+            fix.detectChanges();
             // Add second chip.
             GridFunctions.typeValueInFilterRowInput('e', fix);
             await wait(16);
+            fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await wait(100);
+            fix.detectChanges();
             // Add third chip.
             GridFunctions.typeValueInFilterRowInput('i', fix);
             await wait(16);
+            fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await wait(100);
+            fix.detectChanges();
 
             verifyMultipleChipsVisibility(fix, [false, false, true]);
 
@@ -2932,41 +2940,44 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             const leftArrowButton = GridFunctions.getFilterRowLeftArrowButton(fix).nativeElement;
             leftArrowButton.click();
             await wait(300);
-            leftArrowButton.click();
             fix.detectChanges();
+            leftArrowButton.click();
             await wait(300);
+            fix.detectChanges();
             verifyMultipleChipsVisibility(fix, [false, true, false]);
 
             // Click left arrow 2 times.
             leftArrowButton.click();
             await wait(300);
-            leftArrowButton.click();
             fix.detectChanges();
+            leftArrowButton.click();
             await wait(300);
+            fix.detectChanges();
             verifyMultipleChipsVisibility(fix, [true, false, false]);
 
             // Click right arrow 2 times.
             const rightArrowButton = GridFunctions.getFilterRowRightArrowButton(fix).nativeElement;
             rightArrowButton.click();
             await wait(300);
-            rightArrowButton.click();
             fix.detectChanges();
+            rightArrowButton.click();
             await wait(300);
+            fix.detectChanges();
             verifyMultipleChipsVisibility(fix, [false, true, false]);
 
             // Click right arrow 2 times.
             rightArrowButton.click();
             await wait(300);
-            rightArrowButton.click();
             fix.detectChanges();
+            rightArrowButton.click();
             await wait(300);
+            fix.detectChanges();
             verifyMultipleChipsVisibility(fix, [false, false, true]);
         }));
 
         it('Should navigate from left arrow button to first condition chip Tab.', (async () => {
             grid.width = '700px';
             fix.detectChanges();
-            await wait(100);
 
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
             fix.detectChanges();
@@ -2974,18 +2985,24 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             // Add first chip.
             GridFunctions.typeValueInFilterRowInput('a', fix);
             await wait(16);
+            fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await wait(100);
+            fix.detectChanges();
             // Add second chip.
             GridFunctions.typeValueInFilterRowInput('e', fix);
             await wait(16);
+            fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await wait(100);
+            fix.detectChanges();
             // Add third chip.
             GridFunctions.typeValueInFilterRowInput('i', fix);
             await wait(16);
+            fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await wait(100);
+            fix.detectChanges();
 
             // Verify first chip is not in view.
             verifyChipVisibility(fix, 0, false);
@@ -2993,8 +3010,10 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             const leftArrowButton = GridFunctions.getFilterRowLeftArrowButton(fix).nativeElement;
             leftArrowButton.focus();
             await wait(16);
+            fix.detectChanges();
             leftArrowButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
             await wait(300);
+            fix.detectChanges();
 
             // Verify first chip is in view.
             verifyChipVisibility(fix, 0, true);
@@ -3322,6 +3341,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridFilteringMCHComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -3437,6 +3457,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridFilteringScrollComponent);
             grid = fix.componentInstance.grid;
             fix.detectChanges();
@@ -3469,6 +3490,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridFilteringTemplateComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -3498,7 +3520,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
     });
 });
 
-describe('IgxGrid - Filtering actions - Excel style filtering', () => {
+describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -3524,6 +3546,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridFilteringComponent);
             grid = fix.componentInstance.grid;
             grid.filterMode = FilterMode.excelStyleFilter;
@@ -3579,9 +3602,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             fix.detectChanges();
 
             const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
-            const headerResArea = headers[2].children[1].nativeElement;
+            const headerResArea = headers[2];
 
-            const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
+            const filterIcon = headerResArea.query(By.css('.igx-excel-filter__icon')).nativeElement;
             filterIcon.click();
             fix.detectChanges();
 
@@ -5562,6 +5585,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridFilteringESFTemplatesComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -5604,6 +5628,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxTestExcelFilteringDatePickerComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;

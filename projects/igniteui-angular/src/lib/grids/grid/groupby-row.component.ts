@@ -210,16 +210,10 @@ export class IgxGridGroupByRowComponent {
             }
             return;
         }
-        // TODO: to be deleted when onFocusChange event is removed #4054
-        const args = { cell: this, groupRow: null, event: event, cancel: false };
-        this.grid._onFocusChange.emit(args);
-        if (args.cancel) { return; }
 
         const selection = this.gridSelection;
         selection.keyboardState.shift = event.shiftKey && !(key === 'tab');
 
-        const visibleColumnIndex = selection.activeElement && this.grid.columnList.filter(col => !col.hidden).map(c => c.visibleIndex)
-            .indexOf(selection.activeElement.column) !== -1 ? selection.activeElement.column : 0;
         const activeNode = selection.activeElement ? Object.assign({}, selection.activeElement) : this.selectionNode;
         activeNode.row = this.index;
         switch (key) {

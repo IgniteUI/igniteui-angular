@@ -59,19 +59,19 @@ export class GridRowDraggableComponent implements AfterViewInit {
     }
 
     public onEnterAllowed(args) {
-        this.changeGhostIcon(args.drag.dragGhost, DragIcon.ALLOW);
+        this.changeGhostIcon(args.drag.ghostElement, DragIcon.ALLOW);
     }
 
     public onLeaveAllowed(args) {
-        this.changeGhostIcon(args.drag.dragGhost, DragIcon.DEFAULT);
+        this.changeGhostIcon(args.drag.ghostElement, DragIcon.DEFAULT);
     }
 
     public onEnterBlocked(args) {
-        this.changeGhostIcon(args.drag.dragGhost, DragIcon.BLOCK);
+        this.changeGhostIcon(args.drag.ghostElement, DragIcon.BLOCK);
     }
 
     public onLeaveBlocked(args) {
-        this.changeGhostIcon(args.drag.dragGhost, DragIcon.DEFAULT);
+        this.changeGhostIcon(args.drag.ghostElement, DragIcon.DEFAULT);
     }
 
     public onDropBlocked(args) {

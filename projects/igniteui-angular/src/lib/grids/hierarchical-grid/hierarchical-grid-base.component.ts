@@ -1,6 +1,4 @@
 import {
-    QueryList,
-    ContentChildren,
     ElementRef,
     NgZone,
     ChangeDetectorRef,
@@ -23,7 +21,6 @@ import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component
 import { IgxSummaryOperand } from '../summaries/grid-summary';
 import { IgxHierarchicalTransactionService, IgxOverlayService } from '../../services/index';
 import { DOCUMENT } from '@angular/common';
-import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
@@ -94,7 +91,6 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
         public selectionService: IgxGridSelectionService,
         crudService: IgxGridCRUDService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-        selection: IgxHierarchicalSelectionAPIService,
         @Inject(IgxGridTransaction) protected transactionFactory: any,
         elementRef: ElementRef,
         zone: NgZone,
@@ -112,7 +108,6 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
             selectionService,
             crudService,
             gridAPI,
-            selection,
             typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
             elementRef,
             zone,
@@ -193,7 +188,7 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
             (<IgxColumnGroupComponent>ref.instance).children.reset(newChildren);
             (<IgxColumnGroupComponent>ref.instance).children.notifyOnChanges();
         }
-        (<IgxColumnGroupComponent>ref.instance).grid = this;
+        // (<IgxColumnGroupComponent>ref.instance).grid = this;
         return ref;
     }
 
@@ -208,7 +203,7 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
                 (<any>ref.instance)[propName] = col[propName].constructor;
             }
         });
-        (<IgxColumnComponent>ref.instance).grid = this;
+        // (<IgxColumnComponent>ref.instance).grid = this;
         return ref;
     }
 

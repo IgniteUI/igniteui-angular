@@ -1557,6 +1557,23 @@ export class SampleTestData {
             return undefined;
         }
     }
+
+    /* Generates hierahical data  */
+    public static generateHGridData(count: number, level: number, parendID?) {
+        const prods = [];
+        const currLevel = level;
+        let children;
+        for (let i = 0; i < count; i++) {
+            const rowID = parendID ? parendID + i : i.toString();
+           if (level > 0 ) {
+                children = this.generateHGridData(count / 2 , currLevel - 1, rowID);
+           }
+           prods.push({
+            ID: rowID, ChildLevels: currLevel,  ProductName: 'Product: A' + i, 'Col1': i,
+            'Col2': i, 'Col3': i, childData: children, childData2: children });
+        }
+        return prods;
+    }
 }
 
 // tslint:enable:quotemark
