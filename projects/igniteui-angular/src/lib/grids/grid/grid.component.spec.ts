@@ -31,7 +31,7 @@ describe('IgxGrid Component Tests #grid', () => {
     const TBODY_CLASS = '.igx-grid__tbody-content';
     const THEAD_CLASS = '.igx-grid__thead';
 
-    describe('IgxGrid - input properties', () => {
+    fdescribe('IgxGrid - input properties', () => {
         configureTestSuite();
         beforeEach(async(() => {
             TestBed.configureTestingModule({
@@ -65,7 +65,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.id = 'customGridId';
             fix.detectChanges();
 
-            expect(grid.id).toBe('customGridId');
+            expect(grid.id).toBe('somethingElse');
             expect(domGrid.id).toBe('customGridId');
             expect(fix.componentInstance.columnEventCount).toEqual(2);
         }));

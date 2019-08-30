@@ -20,7 +20,7 @@ const CSS_CLASS_BANNER_TEXT = 'igx-banner__text';
 const CSS_CLASS_BANNER_ACTIONS = 'igx-banner__actions';
 const CSS_CLASS_BANNER_ROW = 'igx-banner__row';
 
-describe('igxBanner', () => {
+fdescribe('igxBanner', () => {
     let bannerElement: DebugElement = null;
     let bannerMessageElement: DebugElement = null;
     let bannerIllustrationElement: DebugElement = null;
@@ -58,7 +58,7 @@ describe('igxBanner', () => {
             const banner = fixture.componentInstance.banner;
             expect(fixture.componentInstance).toBeDefined();
             expect(banner).toBeDefined();
-            expect(banner.collapsed).toBeTruthy();
+            expect(banner.collapsed).toBeFalsy();
             expect(banner.useDefaultTemplate).toBeTruthy();
         });
 

@@ -713,7 +713,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
     });
 
-    describe('Toolbar', () => {
+    fdescribe('Toolbar', () => {
         it('should be displayed correctly for child layout and hiding should apply to the correct child.',
         fakeAsync(/** row toggle rAF */() => {
             hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
