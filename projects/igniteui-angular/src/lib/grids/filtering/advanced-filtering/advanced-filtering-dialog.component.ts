@@ -340,10 +340,13 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
 
     public enterExpressionEdit(expressionItem: ExpressionOperandItem) {
         this.clearSelection();
+        this.cancelOperandAdd();
 
         if (this.editedExpression) {
             this.editedExpression.inEditMode = false;
         }
+
+        expressionItem.hovered = false;
 
         this.selectedColumn = expressionItem.expression.fieldName ?
             this.grid.getColumnByName(expressionItem.expression.fieldName) : null;
@@ -380,6 +383,13 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     }
 
     public enterExpressionAdd(expressionItem: ExpressionOperandItem) {
+        this.clearSelection();
+        this.cancelOperandEdit();
+
+        if (this.addModeExpression) {
+            this.addModeExpression.inAddMode = false;
+        }
+
         expressionItem.inAddMode = true;
         this.addModeExpression = expressionItem;
         if (expressionItem.selected) {
