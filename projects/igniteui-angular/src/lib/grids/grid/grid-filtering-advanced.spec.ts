@@ -109,6 +109,7 @@ describe('IgxGrid - Advanced Filtering', () => {
 
             // Close dialog through API.
             grid.closeAdvancedFilteringDialog(false);
+            tick(100);
             fix.detectChanges();
 
             // Verify AF dialog is closed.
