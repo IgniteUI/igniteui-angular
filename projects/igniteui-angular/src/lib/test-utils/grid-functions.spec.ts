@@ -1246,6 +1246,16 @@ export class GridFunctions {
         return buttons;
     }
 
+    /**
+    * Get the initial group adding buttons when the dialog does not contain any filters.
+    */
+    public static getAdvancedFilteringInitialAddGroupButtons(fix: ComponentFixture<any>) {
+        const exprContainer = GridFunctions.getAdvancedFilteringExpressionsContainer(fix);
+        const initialButtons = GridFunctions.sortNativeElementsHorizontally(
+            Array.from(exprContainer.querySelectorAll(':scope > button')));
+        return initialButtons;
+    }
+
     public static getAdvancedFilteringContextMenu(fix: ComponentFixture<any>) {
         const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
         const contextMenu = gridNativeElement.querySelector('.igx-filter-contextual-menu');

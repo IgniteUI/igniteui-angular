@@ -79,13 +79,11 @@ describe('IgxGrid - Advanced Filtering', () => {
 
         it('Should correctly initialize the Advanced Filtering dialog.', fakeAsync(() => {
             // Open Advanced Filtering dialog.
-            const advFilterButton = GridFunctions.getAdvancedFilteringButton(fix);
-            advFilterButton.click();
+            GridFunctions.clickAdvancedFilteringButton(fix);
             fix.detectChanges();
 
             // Verify AF dialog is opened.
-            let advFilterDialog = GridFunctions.getAdvancedFilteringComponent(fix);
-            expect(advFilterDialog).not.toBeNull();
+            expect(GridFunctions.getAdvancedFilteringComponent(fix)).not.toBeNull();
 
             // Verify there are not filters present and that the default text is shown.
             expect(grid.advancedFilteringExpressionsTree).toBeUndefined();
@@ -93,14 +91,43 @@ describe('IgxGrid - Advanced Filtering', () => {
             expect(GridFunctions.getAdvancedFilteringEmptyPrompt(fix)).not.toBeNull();
 
             // Close Advanced Filtering dialog.
-            const cancelButton = GridFunctions.getAdvancedFilteringCancelButton(fix);
-            cancelButton.click();
+            GridFunctions.clickAdvancedFilteringCancelButton(fix);
             tick(200);
             fix.detectChanges();
 
             // Verify AF dialog is closed.
-            advFilterDialog = GridFunctions.getAdvancedFilteringComponent(fix);
-            expect(advFilterDialog).toBeNull();
+            expect(GridFunctions.getAdvancedFilteringComponent(fix)).toBeNull();
+        }));
+
+        it('Should show/hide initial adding buttons depending on the existence of groups.', fakeAsync(() => {
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Verify that the initial buttons are visible.
+            expect(GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix).length).toBe(2);
+
+            // Click the initial 'Add And Group' button.
+            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            addAndGroupButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify that the initial buttons are not visible.
+            expect(GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix).length).toBe(0);
+
+            // Discard the new group and verify that the initial buttons are visible.
+            GridFunctions.clickAdvancedFilteringExpressionCloseButton(fix);
+            expect(GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix).length).toBe(2);
+
+            // Click the initial 'Add Or Group' button.
+            const addOrGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[1];
+            addOrGroupButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify that the initial buttons are not visible.
+            expect(GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix).length).toBe(0);
         }));
     });
 });
