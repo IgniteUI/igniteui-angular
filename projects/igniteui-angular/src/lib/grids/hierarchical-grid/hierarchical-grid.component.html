@@ -38,10 +38,10 @@
                         *ngTemplateOutlet="
                         this.headSelectorTemplate ? this.headSelectorTemplate : headSelectorBaseTemplate;
                         context: { $implicit: {
-                                        selectedCount: this.selectedRows().length,
-                                        totalCount: this.data ? this.data.length : 0,
-                                        selectAll: selectAll,
-                                        deselectAll: deselectAll }}">
+                                        selectedCount: this.selectionService.filteredAndSelectedData.length,
+                                        totalCount: this.filteredData ? this.filteredData.length : this.data.length,
+                                        selectAll: selectAllRows,
+                                        deselectAll: deselectAllRows }}">
                     </ng-template>
                 </div>
             </ng-container>
@@ -210,13 +210,13 @@
     <igx-icon fontSet="material">drag_indicator</igx-icon>
 </ng-template>
 
-<ng-template #headSelectorBaseTemplate>
-    <igx-checkbox
-        [checked]="selectionService.areAllRowSelected()"
+<ng-template #headSelectorBaseTemplate igxHeadSelector let-context>
+    <igx-checkbox 
+        [readonly]="true"
+        [checked]="context.totalCount === context.selectedCount"
         disableRipple="true"
         [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
-        (click)="$event.preventDefault()"
-        [indeterminate]="selectionService.hasSomeRowSelected()"
+        [indeterminate]="context.selectedCount && context.selectedCount !== context.totalCount"
         [aria-label]="headSelectorBaseAriaLabel"
         #headerCheckbox>
     </igx-checkbox>

@@ -3382,10 +3382,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return totalWidth;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     get showRowSelectors(): boolean {
         return this.isRowSelectable  && this.hasVisibleColumns && !this.hideRowSelectors;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     get showDragIcons(): boolean {
         return this.rowDraggable && this.columns.length > this.hiddenColumnsCount;
     }

@@ -635,6 +635,12 @@ export class IgxGridSelectionService {
         return this.rowSelection.size > 0 && filteredData && !this.areAllRowSelected();
     }
 
+    public get filteredAndSelectedData(): any[] {
+        return this.isFilteringApplied() ?
+            this.getRowIDs(this.allData).filter(rID => this.isRowSelected(rID)) :
+            this.getSelectedRows();
+    }
+
     public emitRowSelectionEvent(newSelection, added, removed, event?): boolean {
         const currSelection = this.getSelectedRows();
         if (this.areEqualCollections(currSelection, newSelection)) { return; }

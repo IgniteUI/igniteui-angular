@@ -302,7 +302,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      * This method emits `onEditDone` event.
      *
      * ```typescript
-    * // update the second selected row's value
+    *  // update the second selected row's value
      * let newValue = "Apple";
      * this.grid.selectedRows[1].update(newValue);
      * ```

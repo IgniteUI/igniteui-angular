@@ -111,7 +111,7 @@
 </ng-template>
 <ng-template #rowSelectorBaseTemplate>
     <igx-checkbox
-        (click)="$event.preventDefault()"
+        [readonly]="true"
         [checked]="selected"
         [disabled]="deleted"
         disableRipple="true"

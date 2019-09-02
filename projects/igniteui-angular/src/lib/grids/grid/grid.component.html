@@ -71,8 +71,8 @@
                         *ngTemplateOutlet="
                         this.headSelectorTemplate ? this.headSelectorTemplate : headSelectorBaseTemplate;
                         context: { $implicit: {
-                                        selectedCount: this.selectedRows().length,
-                                        totalCount: this.data ? this.data.length : 0 }}">
+                                        selectedCount: this.selectionService.filteredAndSelectedData.length,
+                                        totalCount: this.filteredData ? this.filteredData.length : this.data.length }}">
                     </ng-template>
                 </div>
             </ng-container>
@@ -122,7 +122,7 @@
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
             #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
             <ng-template #record_template>
-                <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
+                <igx-grid-row [gridID]="id" [index]="getGridRowIndex(rowData, rowIndex)" [rowData]="rowData" #row>
                 </igx-grid-row>
             </ng-template>
             <ng-template #group_template>
@@ -242,13 +242,13 @@
     <igx-icon fontSet="material">drag_indicator</igx-icon>
 </ng-template>
 
-<ng-template #headSelectorBaseTemplate>
+<ng-template #headSelectorBaseTemplate igxHeadSelector let-context>
     <igx-checkbox 
-        [checked]="selectionService.areAllRowSelected()"
+        [readonly]="true"
+        [checked]="context.totalCount === context.selectedCount"
         disableRipple="true"
         [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
-        (click)="$event.preventDefault()"
-        [indeterminate]="selectionService.hasSomeRowSelected()"
+        [indeterminate]="context.selectedCount && context.selectedCount !== context.totalCount"
         [aria-label]="headSelectorBaseAriaLabel"
         #headerCheckbox>
     </igx-checkbox>
