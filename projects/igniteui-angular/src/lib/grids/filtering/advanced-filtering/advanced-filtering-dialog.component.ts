@@ -692,9 +692,13 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         }
     }
 
-    public onApplyButtonClick() {
+    public applyChanges() {
         this.exitOperandEdit();
         this.grid.advancedFilteringExpressionsTree = this.createExpressionsTreeFromGroupItem(this.rootGroup);
+    }
+
+    public onApplyButtonClick() {
+        this.applyChanges();
         this.closeDialog();
     }
 }
