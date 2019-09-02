@@ -389,7 +389,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             filteringExpressionTreeClone.filteringOperands = value.filteringOperands;
             this._filteringExpressionsTree = filteringExpressionTreeClone;
 
-            if (this.filteringService.isFilteringExpressionsTreeEmpty()) {
+            if (this.filteringService.isFilteringExpressionsTreeEmpty() && !this.advancedFilteringExpressionsTree) {
                 this.filteredData = null;
             }
 
@@ -429,16 +429,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     set advancedFilteringExpressionsTree(value) {
-        if (value && value instanceof FilteringExpressionsTree) {
-            // const val = (value as FilteringExpressionsTree);
-            // for (let index = 0; index < val.filteringOperands.length; index++) {
-            //     if (!(val.filteringOperands[index] instanceof FilteringExpressionsTree)) {
-            //         const newExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, val.filteringOperands[index].fieldName);
-            //         newExpressionsTree.filteringOperands.push(val.filteringOperands[index] as IFilteringExpression);
-            //         val.filteringOperands[index] = newExpressionsTree;
-            //     }
-            // }
-
+        if (value) {
             // clone the filtering expression tree in order to trigger the filtering pipe
             const filteringExpressionTreeClone = new FilteringExpressionsTree(value.operator, value.fieldName);
             filteringExpressionTreeClone.filteringOperands = value.filteringOperands;
@@ -447,13 +438,17 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this._advancedFilteringExpressionsTree = null;
         }
 
-        // TODO
-        // if (this.filteringService.isFilteringExpressionsTreeEmpty()) {
-        //     this.filteredData = null;
-        // }
+        if (this.filteringService.isFilteringExpressionsTreeEmpty() && !this.advancedFilteringExpressionsTree) {
+            this.filteredData = null;
+        }
 
+        this.selectionService.clearHeaderCBState();
         this.summaryService.clearSummaryCache();
         this.markForCheck();
+
+        // TODO Add type to the expression tree in order to distinguish the regular and advanced filtering events.
+        // Wait for the change detection to update filtered data through the pipes and then emit the event.
+        requestAnimationFrame(() => this.onFilteringDone.emit(this._advancedFilteringExpressionsTree));
     }
 
     /**
