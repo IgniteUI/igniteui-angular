@@ -99,6 +99,82 @@ describe('IgxGrid - Advanced Filtering', () => {
             expect(GridFunctions.getAdvancedFilteringComponent(fix)).toBeNull();
         }));
 
+        it('Should open/close Advanced Filtering dialog through API.', fakeAsync(() => {
+            // Open dialog through API.
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            // Verify AF dialog is opened.
+            expect(GridFunctions.getAdvancedFilteringComponent(fix)).not.toBeNull();
+
+            // Close dialog through API.
+            grid.closeAdvancedFilteringDialog(false);
+            fix.detectChanges();
+
+            // Verify AF dialog is closed.
+            expect(GridFunctions.getAdvancedFilteringComponent(fix)).toBeNull();
+        }));
+
+        it('Should close Advanced Filtering dialog through API by respecting \'applyChanges\' argument.', fakeAsync(() => {
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            // Click the initial 'Add And Group' button.
+            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            addAndGroupButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Populate edit inputs.
+            selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            selectOperatorInEditModeExpression(fix, 2); // Select 'Starts With' operator.
+            let input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            sendInputNativeElement(fix, input, 'ign'); // Type filter value.
+
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Close dialog through API.
+            grid.closeAdvancedFilteringDialog(true);
+            tick(100);
+            fix.detectChanges();
+
+            // Verify AF dialog is closed.
+            expect(GridFunctions.getAdvancedFilteringComponent(fix)).toBeNull();
+            // Verify the filter changes are applied.
+            expect(grid.filteredData.length).toEqual(2);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Ignite UI for Angular');
+
+            // Open the dialog again.
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            // Double-click the existing chip to enter edit mode.
+            GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0], true);
+            tick(50);
+            fix.detectChanges();
+            // Edit the filter value.
+            input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            sendInputNativeElement(fix, input, 'some non-existing value'); // Type filter value.
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Close dialog through API.
+            grid.closeAdvancedFilteringDialog(false);
+            tick(100);
+            fix.detectChanges();
+
+            // Verify AF dialog is closed.
+            expect(GridFunctions.getAdvancedFilteringComponent(fix)).toBeNull();
+            // Verify the filter changes are NOT applied.
+            expect(grid.filteredData.length).toEqual(2);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Ignite UI for Angular');
+        }));
+
         it('Should show/hide initial adding buttons depending on the existence of groups.', fakeAsync(() => {
             // Open Advanced Filtering dialog.
             GridFunctions.clickAdvancedFilteringButton(fix);
