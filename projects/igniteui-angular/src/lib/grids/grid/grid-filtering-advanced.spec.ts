@@ -57,8 +57,27 @@ describe('IgxGrid - Advanced Filtering', () => {
             fix.detectChanges();
         }));
 
-        it('Should correctly initialize the Advanced Filtering dialog.',
-        fakeAsync(() => {
+        it('Should show/hide Advanced Filtering button in toolbar based on respective input.', fakeAsync(() => {
+            // Verify Advanced Filtering button in toolbar is visible.
+            let advFilterButton = GridFunctions.getAdvancedFilteringButton(fix);
+            expect(advFilterButton !== null && advFilterButton !== undefined).toBe(true, 'Adv.Filter button is not visible.');
+
+            grid.allowAdvancedFiltering = false;
+            fix.detectChanges();
+
+            // Verify Advanced Filtering button in toolbar is not visible.
+            advFilterButton = GridFunctions.getAdvancedFilteringButton(fix);
+            expect(advFilterButton !== null && advFilterButton !== undefined).toBe(false, 'Adv.Filter button is visible.');
+
+            grid.allowAdvancedFiltering = true;
+            fix.detectChanges();
+
+            // Verify Advanced Filtering button in toolbar is visible.
+            advFilterButton = GridFunctions.getAdvancedFilteringButton(fix);
+            expect(advFilterButton !== null && advFilterButton !== undefined).toBe(true, 'Adv.Filter button is not visible.');
+        }));
+
+        it('Should correctly initialize the Advanced Filtering dialog.', fakeAsync(() => {
             // Open Advanced Filtering dialog.
             const advFilterButton = GridFunctions.getAdvancedFilteringButton(fix);
             advFilterButton.click();
