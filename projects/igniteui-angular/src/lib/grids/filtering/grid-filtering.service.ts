@@ -12,6 +12,7 @@ import { IgxDatePipeComponent } from '../grid.common';
 import { IgxColumnComponent } from '../column.component';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { GridBaseAPIService } from '../api.service';
+import { IColumnVisibilityChangedEventArgs } from '../grid';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
@@ -112,6 +113,12 @@ export class IgxFilteringService implements OnDestroy {
                 this.grid.filterCellList.forEach((filterCell) => {
                     filterCell.updateFilterCellArea();
                 });
+            });
+            this.grid.onColumnVisibilityChanged.pipe(takeUntil(this.destroy$)).subscribe((eventArgs: IColumnVisibilityChangedEventArgs) => {
+                if (this.grid.filteringRow && this.grid.filteringRow.column === eventArgs.column ) {
+                    this.grid.filteringRow.close();
+
+                }
             });
         }
     }
