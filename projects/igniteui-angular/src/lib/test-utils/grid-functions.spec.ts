@@ -1256,6 +1256,21 @@ export class GridFunctions {
     }
 
     /**
+    * Get the adding buttons and the cancel button of the root group by specifying the
+    * index position of the buttons container.
+    * (NOTE: The buttons are returned in an array and are sorted in ascending order based on 'X' value.)
+    */
+    public static getAdvancedFilteringTreeRootGroupButtons(fix: ComponentFixture<any>, buttonsIndex: number) {
+        const group = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
+        const childrenContainer = group.querySelector('.igx-filter-tree__expression');
+        const buttonsContainers = GridFunctions.sortNativeElementsVertically(
+            Array.from(childrenContainer.querySelectorAll(':scope > .igx-filter-tree__buttons')));
+        const buttonsContainer: any = buttonsContainers[buttonsIndex];
+        const buttons = GridFunctions.sortNativeElementsHorizontally(Array.from(buttonsContainer.querySelectorAll('button')));
+        return buttons;
+    }
+
+    /**
     * Get the initial group adding buttons when the dialog does not contain any filters.
     */
     public static getAdvancedFilteringInitialAddGroupButtons(fix: ComponentFixture<any>) {

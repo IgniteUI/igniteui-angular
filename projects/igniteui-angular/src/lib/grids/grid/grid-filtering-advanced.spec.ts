@@ -207,7 +207,7 @@ describe('IgxGrid - Advanced Filtering', () => {
             expect(GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix).length).toBe(0);
         }));
 
-        it('Should add a new group through initial adding button and filter by it.', fakeAsync(() => {
+        it('Should correctly initialize a newly added \'And\' group.', fakeAsync(() => {
             // Open Advanced Filtering dialog.
             GridFunctions.clickAdvancedFilteringButton(fix);
             fix.detectChanges();
@@ -219,9 +219,82 @@ describe('IgxGrid - Advanced Filtering', () => {
             fix.detectChanges();
 
             // Verify there is a new root group, which is empty.
-            let group = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
+            const group = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
             expect(group).not.toBeNull('There is no root group.');
             expect(GridFunctions.getAdvancedFilteringTreeChildItems(group).length).toBe(0, 'The group has children.');
+
+            // Verify the operator line of the root group is an 'And' line.
+            const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
+            expect(rootOperatorLine.classList.contains('igx-filter-tree__line--and')).toBe(true, 'incorrect operator line');
+
+            // Verify the enabled/disabled state of each input of the expression in edit mode.
+            verifyEditModeExpressionInputStates(fix, true, false, false);
+
+            // Verify commit expression button is disabled.
+            const commitButton = GridFunctions.getAdvancedFilteringExpressionCommitButton(fix);
+            expect(commitButton.classList.contains('igx-button--disabled')).toBe(true);
+            // Verify close expression button is enabled.
+            const closeButton = GridFunctions.getAdvancedFilteringExpressionCloseButton(fix);
+            expect(closeButton.classList.contains('igx-button--disabled')).toBe(false);
+
+            // Verify adding buttons are disabled.
+            const buttons = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0);
+            for (const button of buttons) {
+                expect(button.classList.contains('igx-button--disabled')).toBe(true);
+            }
+        }));
+
+        it('Should correctly initialize a newly added \'Or\' group.', fakeAsync(() => {
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Click the initial 'Add Or Group' button.
+            const addOrGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[1];
+            addOrGroupButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify there is a new root group, which is empty.
+            const group = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
+            expect(group).not.toBeNull('There is no root group.');
+            expect(GridFunctions.getAdvancedFilteringTreeChildItems(group).length).toBe(0, 'The group has children.');
+
+            // Verify the operator line of the root group is an 'Or' line.
+            const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
+            expect(rootOperatorLine.classList.contains('igx-filter-tree__line--or')).toBe(true, 'incorrect operator line');
+
+            // Verify the enabled/disabled state of each input of the expression in edit mode.
+            verifyEditModeExpressionInputStates(fix, true, false, false);
+
+            // Verify commit expression button is disabled.
+            const commitButton = GridFunctions.getAdvancedFilteringExpressionCommitButton(fix);
+            expect(commitButton.classList.contains('igx-button--disabled')).toBe(true);
+            // Verify close expression button is enabled.
+            const closeButton = GridFunctions.getAdvancedFilteringExpressionCloseButton(fix);
+            expect(closeButton.classList.contains('igx-button--disabled')).toBe(false);
+
+            // Verify adding buttons are disabled.
+            const buttons = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0);
+            for (const button of buttons) {
+                expect(button.classList.contains('igx-button--disabled')).toBe(true);
+            }
+        }));
+
+        it('Should add a new group through initial adding button and filter by it.', fakeAsync(() => {
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Click the initial 'Add And Group' button.
+            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            addAndGroupButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify commit button is disabled.
+            let commitButton = GridFunctions.getAdvancedFilteringExpressionCommitButton(fix);
+            expect(commitButton.classList.contains('igx-button--disabled')).toBe(true);
 
             // Verify the enabled/disabled state of each input of the expression in edit mode.
             verifyEditModeExpressionInputStates(fix, true, false, false);
@@ -235,12 +308,16 @@ describe('IgxGrid - Advanced Filtering', () => {
             const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
             sendInputNativeElement(fix, input, 'ign'); // Type filter value.
 
+            // Verify commit button is now enabled.
+            commitButton = GridFunctions.getAdvancedFilteringExpressionCommitButton(fix);
+            expect(commitButton.classList.contains('igx-button--disabled')).toBe(false);
+
             // Commit the populated expression.
             GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
             fix.detectChanges();
 
             // Verify the new expression has been added to the group.
-            group = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
+            const group = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
             expect(GridFunctions.getAdvancedFilteringTreeChildExpressions(group).length).toBe(1, 'The group has no children.');
 
             // Apply the filters.
