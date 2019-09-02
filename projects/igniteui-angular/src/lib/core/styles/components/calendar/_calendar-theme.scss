@@ -295,6 +295,17 @@
     $cal-row-margin: em(2px) 0;
     $selected-hover-color: text-contrast(map-get($theme, 'date-selected-background'));
 
+    $current-color-variant: map-get((
+        material: --var($theme, 'date-selected-background'),
+        fluent:--var($theme, 'date-current-bg-color')
+    ), map-get($theme, variant));
+
+    $current-text-color-variant: map-get((
+        material: --var($theme, 'date-selected-text-color'),
+        fluent:--var($theme, 'date-current-text-color')
+    ), map-get($theme, variant));
+
+
     %cal-display {
         display: flex;
         flex-flow: column nowrap;
@@ -361,7 +372,7 @@
         }
 
         [dir='rtl'] & {
-            transform: scaleX(-1);
+            transform: scaleX(-1)
         }
     }
 
@@ -418,10 +429,10 @@
         justify-content: center;
         align-items: center;
         flex-grow: 1;
+        flex-basis: 14.28%;
         color: --var($theme, 'content-text-color');
         cursor: pointer;
         outline: none;
-        flex-basis: 14.28%;
         // transition: background .15s ease-out;
 
         &:hover,
@@ -518,20 +529,6 @@
         color: --var($theme, 'inactive-text-color');
     }
 
-    %cal-value--current {
-        color: --var($theme, 'date-current-text-color');
-        background: --var($theme, 'date-current-bg-color')!important;
-        font-weight: $cal-value-fw !important;
-
-        &:hover {
-            background: --var($theme, 'date-current-bg-color')!important;
-        }
-
-        &:focus {
-            background: --var($theme, 'date-current-bg-color')!important;
-        }
-    }
-
     %cal-value--special {
         %cal-value-content {
             background: --var($theme, 'date-special-background');
@@ -547,6 +544,37 @@
         %cal-value-content {
             color: --var($theme, 'date-selected-text-color');
             background: --var($theme, 'date-selected-background') ;
+        }
+    }
+
+    %cal-value--current {
+        %cal-value-content {
+            color: --var($theme, 'date-current-text-color');
+            font-weight: $cal-value-fw ;
+            background: --var($theme, 'date-current-bg-color');
+
+            &:hover {
+                background: --var($theme, 'date-current-bg-color');
+            }
+
+            &:focus {
+                background: --var($theme, 'date-current-bg-color');
+            }
+        }
+    }
+
+    %cal-value--current--selected {
+        %cal-value-content {
+            color: $current-text-color-variant;
+            background: $current-color-variant;
+
+            &:hover {
+                background: $current-color-variant;
+            }
+
+            &:focus {
+                background: $current-color-variant;
+            }
         }
     }
 
