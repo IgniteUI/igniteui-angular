@@ -78,10 +78,6 @@ For more information about the theming please read our [documentation](https://w
     ```
    - **Breaking Change** When using `[valueKey]`, combo methods, events and outputs **cannot** be handled with *data item references*.
    - For more information, visit the component's [readme](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/combo/README.md)
-
-## 8.1.4
-- `IgxDialog` new @Input `positionSettings` is now available. It provides the ability to get/set both position and animation settings of the Dialog component.
-
 - `IgxDrag`
     - Deprecated inputs - `hideBaseOnDrag`, `animateOnRelease`, `visible`.
     - Deprecated methods - `dropFinished`.
@@ -97,10 +93,13 @@ For more information about the theming please read our [documentation](https://w
     - **Breaking Change** `onOver` output is renamed to `over`.
     - **Breaking Change** `onLeave` output is renamed to `leave`.
     - **Breaking Change** `onDrop` output is renamed to `dropped`.
-    - **Breaking Change** Interfaces `IgxDropEnterEventArgs`, `IgxDropLeaveEventArgs` are both now called `IDragBaseEventArgs`.
+    - **Breaking Change** Interfaces `IgxDropEnterEventArgs`, `IgxDropLeaveEventArgs` are both now called `IDropBaseEventArgs`.
     - **Breaking Change** Interfaces `IgxDropEventArgs` is renamed to `IDropDroppedEventArgs`.
     - **Breaking Change** Outputs `enter`, `over`, `leave`(former `onEnter`, `onOver`, `onLeave`) now have arguments of type `IDropBaseEventArgs`
     - **Breaking Change** Output `dropped` (former `onDrop`) now have arguments of type `IDropDroppedEventArgs`
+    
+## 8.1.4
+- `IgxDialog` new @Input `positionSettings` is now available. It provides the ability to get/set both position and animation settings of the Dialog component.
 
 ## 8.1.3
 - `IgxCombo`
