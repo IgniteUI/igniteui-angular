@@ -75,16 +75,19 @@ export interface IGridResourceStrings {
     igx_grid_excel_custom_filter?: string;
     igx_grid_paginator_label?: string;
     igx_grid_advanced_filter_title?: string;
+    igx_grid_advanced_filter_and_group?: string;
+    igx_grid_advanced_filter_or_group?: string;
+    igx_grid_advanced_filter_end_group?: string;
+    igx_grid_advanced_filter_create_and_group?: string;
+    igx_grid_advanced_filter_create_or_group?: string;
     igx_grid_advanced_filter_and_label?: string;
     igx_grid_advanced_filter_or_label?: string;
-    igx_grid_advanced_filter_addcondition?: string;
-    igx_grid_advanced_filter_group?: string;
+    igx_grid_advanced_filter_add_condition?: string;
     igx_grid_advanced_filter_end_label?: string;
     igx_grid_advanced_filter_ungroup?: string;
     igx_grid_advanced_filter_delete?: string;
-    igx_grid_advanced_filter_create?: string;
-    igx_grid_advanced_filter_deletefilters?: string;
-    igx_grid_advanced_filter_initialtext?: string;
+    igx_grid_advanced_filter_delete_filters?: string;
+    igx_grid_advanced_filter_initial_text?: string;
 }
 
 export const GridResourceStringsEN: IGridResourceStrings = {
@@ -164,14 +167,17 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_excel_custom_filter: 'Custom filter...',
     igx_grid_paginator_label: 'Items per page',
     igx_grid_advanced_filter_title: 'Advanced Filtering',
+    igx_grid_advanced_filter_and_group: '"And" Group',
+    igx_grid_advanced_filter_or_group: '"Or" Group',
+    igx_grid_advanced_filter_end_group: 'End Group',
+    igx_grid_advanced_filter_create_and_group: 'Create "And" Group',
+    igx_grid_advanced_filter_create_or_group: 'Create "Or" Group',
     igx_grid_advanced_filter_and_label: 'and',
     igx_grid_advanced_filter_or_label: 'or',
-    igx_grid_advanced_filter_addcondition: 'Condition',
-    igx_grid_advanced_filter_group: 'Group',
+    igx_grid_advanced_filter_add_condition: 'Condition',
     igx_grid_advanced_filter_end_label: 'End',
     igx_grid_advanced_filter_ungroup: 'Ungroup',
     igx_grid_advanced_filter_delete: 'Delete',
-    igx_grid_advanced_filter_create: 'Create',
-    igx_grid_advanced_filter_deletefilters: 'Delete filters',
-    igx_grid_advanced_filter_initialtext: 'Start with creating a group of conditions linked with "And" or "Or"'
+    igx_grid_advanced_filter_delete_filters: 'Delete filters',
+    igx_grid_advanced_filter_initial_text: 'Start with creating a group of conditions linked with "And" or "Or"'
 };

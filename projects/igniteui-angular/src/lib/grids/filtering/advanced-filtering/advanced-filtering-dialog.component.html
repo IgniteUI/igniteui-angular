@@ -32,17 +32,17 @@
 
             <button igxButton="outlined" [displayDensity]="displayDensity" (click)="addAndGroup()">
                 <igx-icon fontSet="material">add</igx-icon>
-                <span>"{{grid.resourceStrings.igx_grid_advanced_filter_and_label}}" {{grid.resourceStrings.igx_grid_advanced_filter_group}}</span>
+                <span>{{grid.resourceStrings.igx_grid_advanced_filter_and_group}}</span>
             </button>
 
             <button igxButton="outlined" [displayDensity]="displayDensity" (click)="addOrGroup()">
                 <igx-icon fontSet="material">add</igx-icon>
-                <span>"{{grid.resourceStrings.igx_grid_advanced_filter_or_label}}" {{grid.resourceStrings.igx_grid_advanced_filter_group}}</span>
+                <span>{{grid.resourceStrings.igx_grid_advanced_filter_or_group}}</span>
             </button>
 
             <div class="igx-filter-empty">
                 <h6 class="igx-filter-empty__title">
-                    {{grid.resourceStrings.igx_grid_advanced_filter_initialtext}}
+                    {{grid.resourceStrings.igx_grid_advanced_filter_initial_text}}
                 </h6>
             </div>
         </ng-container>
@@ -54,7 +54,7 @@
                     (click)="addCondition(expressionItem, afterExpression)"
             >
                 <igx-icon fontSet="material">add</igx-icon>
-                <span>{{grid.resourceStrings.igx_grid_advanced_filter_addcondition}}</span>
+                <span>{{grid.resourceStrings.igx_grid_advanced_filter_add_condition}}</span>
             </button>
 
             <button igxButton="outlined"
@@ -62,7 +62,7 @@
                     [disabled]="editedExpression"
                     (click)="addAndGroup(expressionItem, afterExpression)">
                 <igx-icon fontSet="material">add</igx-icon>
-                <span>"{{grid.resourceStrings.igx_grid_advanced_filter_and_label}}" {{grid.resourceStrings.igx_grid_advanced_filter_group}}</span>
+                <span>{{grid.resourceStrings.igx_grid_advanced_filter_and_group}}</span>
             </button>
 
             <button igxButton="outlined"
@@ -70,7 +70,7 @@
                     [disabled]="editedExpression"
                     (click)="addOrGroup(expressionItem, afterExpression)">
                 <igx-icon fontSet="material">add</igx-icon>
-                <span>"{{grid.resourceStrings.igx_grid_advanced_filter_or_label}}" {{grid.resourceStrings.igx_grid_advanced_filter_group}}</span>
+                <span>{{grid.resourceStrings.igx_grid_advanced_filter_or_group}}</span>
             </button>
 
         </ng-template>
@@ -227,7 +227,7 @@
                                 [displayDensity]="displayDensity"
                                 [disabled]="editedExpression || expressionItem.children.length < 2"
                                 (click)="endGroup(expressionItem)">
-                            <span>"{{grid.resourceStrings.igx_grid_advanced_filter_end_label}}" {{grid.resourceStrings.igx_grid_advanced_filter_group}}</span>
+                            <span>{{grid.resourceStrings.igx_grid_advanced_filter_end_group}}</span>
                         </button>
                     </div>
                 </div>
@@ -275,13 +275,13 @@
             </ng-container>
             <ng-container *ngIf="!contextualGroup">
                 <button igxButton="outlined" [displayDensity]="displayDensity" (click)="createAndGroup()">
-                    {{grid.resourceStrings.igx_grid_advanced_filter_create}} "{{grid.resourceStrings.igx_grid_advanced_filter_and_label}}" {{grid.resourceStrings.igx_grid_advanced_filter_group}}
+                    {{grid.resourceStrings.igx_grid_advanced_filter_create_and_group}}
                 </button>
                 <button igxButton="outlined" [displayDensity]="displayDensity" (click)="createOrGroup()">
-                    {{grid.resourceStrings.igx_grid_advanced_filter_create}} "{{grid.resourceStrings.igx_grid_advanced_filter_or_label}}" {{grid.resourceStrings.igx_grid_advanced_filter_group}}
+                    {{grid.resourceStrings.igx_grid_advanced_filter_create_or_group}}
                 </button>
                 <button igxButton="outlined" [displayDensity]="displayDensity" (click)="deleteFilters()">
-                    {{grid.resourceStrings.igx_grid_advanced_filter_deletefilters}}
+                    {{grid.resourceStrings.igx_grid_advanced_filter_delete_filters}}
                 </button>
             </ng-container>
         </div>
