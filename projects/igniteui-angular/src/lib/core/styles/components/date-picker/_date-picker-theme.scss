@@ -48,6 +48,7 @@
 
         %cal-value {
             color: --var($theme, 'content-text-color');
+            flex-basis: 14.28%;
         }
 
         %cal-value--label {
