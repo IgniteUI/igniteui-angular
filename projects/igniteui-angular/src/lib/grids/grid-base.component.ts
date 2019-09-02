@@ -1721,8 +1721,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @internal
      */
     public get headSelectorTemplate(): TemplateRef<IgxHeadSelectorDirective> {
-        if (this.headSelectorsTemplate && this.headSelectorsTemplate.first) {
-            return this.headSelectorsTemplate.first.templateRef;
+        if (this.headSelectorsTemplates && this.headSelectorsTemplates.first) {
+            return this.headSelectorsTemplates.first.templateRef;
         }
 
         return null;
@@ -1733,15 +1733,15 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @internal
      */
     @ContentChildren(IgxHeadSelectorDirective, { read: IgxHeadSelectorDirective, descendants: false })
-    public headSelectorsTemplate: QueryList<IgxHeadSelectorDirective>;
+    public headSelectorsTemplates: QueryList<IgxHeadSelectorDirective>;
 
     /**
      * @hidden
      * @internal
      */
     public get rowSelectorTemplate(): TemplateRef<IgxRowSelectorDirective> {
-        if (this.rowSelectorsTemplate && this.rowSelectorsTemplate.first) {
-            return this.rowSelectorsTemplate.first.templateRef;
+        if (this.rowSelectorsTemplates && this.rowSelectorsTemplates.first) {
+            return this.rowSelectorsTemplates.first.templateRef;
         }
 
         return null;
@@ -1752,7 +1752,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @internal
      */
     @ContentChildren(IgxRowSelectorDirective, { read: IgxRowSelectorDirective, descendants: false })
-    public rowSelectorsTemplate: QueryList<IgxRowSelectorDirective>;
+    public rowSelectorsTemplates: QueryList<IgxRowSelectorDirective>;
 
     /**
      * @hidden

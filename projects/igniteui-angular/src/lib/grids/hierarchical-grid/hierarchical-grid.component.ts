@@ -373,13 +373,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             this.parentIsland.toolbarCustomContentTemplates :
             this.toolbarCustomContentTemplates;
 
-        this.headSelectorsTemplate = this.parentIsland ?
-            this.parentIsland.headSelectorsTemplate :
-            this.headSelectorsTemplate;
+        this.headSelectorsTemplates = this.parentIsland ?
+            this.parentIsland.headSelectorsTemplates :
+            this.headSelectorsTemplates;
 
-        this.rowSelectorsTemplate = this.parentIsland ?
-            this.parentIsland.rowSelectorsTemplate :
-            this.rowSelectorsTemplate;
+        this.rowSelectorsTemplates = this.parentIsland ?
+            this.parentIsland.rowSelectorsTemplates :
+            this.rowSelectorsTemplates;
     }
 
 
