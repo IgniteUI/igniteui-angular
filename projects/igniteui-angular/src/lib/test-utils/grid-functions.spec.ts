@@ -1185,6 +1185,15 @@ export class GridFunctions {
     }
 
     /**
+    * Get the operator line of the root group.
+    */
+    public static getAdvancedFilteringTreeRootGroupOperatorLine(fix: ComponentFixture<any>) {
+        const rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
+        const directOperatorLine = rootGroup.querySelector(':scope > .igx-filter-tree__line');
+        return directOperatorLine;
+    }
+
+    /**
     * Get the operator line of the group that is located on the provided 'path'.
     */
     public static getAdvancedFilteringTreeGroupOperatorLine(fix: ComponentFixture<any>, path: number[]) {

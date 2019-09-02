@@ -129,5 +129,97 @@ describe('IgxGrid - Advanced Filtering', () => {
             // Verify that the initial buttons are not visible.
             expect(GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix).length).toBe(0);
         }));
+
+        it('Should add a new group through initial adding button and filter by it.', fakeAsync(() => {
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Click the initial 'Add And Group' button.
+            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            addAndGroupButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Verify there is a new root group, which is empty.
+            let group = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
+            expect(group).not.toBeNull('There is no root group.');
+            expect(GridFunctions.getAdvancedFilteringTreeChildItems(group).length).toBe(0, 'The group has children.');
+
+            // Verify the enabled/disabled state of each input of the expression in edit mode.
+            verifyEditModeExpressionInputStates(fix, true, false, false);
+
+            selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            verifyEditModeExpressionInputStates(fix, true, true, false);
+
+            selectOperatorInEditModeExpression(fix, 2); // Select 'Starts With' operator.
+            verifyEditModeExpressionInputStates(fix, true, true, true);
+
+            const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            sendInputNativeElement(fix, input, 'ign'); // Type filter value.
+
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Verify the new expression has been added to the group.
+            group = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
+            expect(GridFunctions.getAdvancedFilteringTreeChildExpressions(group).length).toBe(1, 'The group has no children.');
+
+            // Apply the filters.
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            fix.detectChanges();
+
+            // Verify the filter results.
+            expect(grid.filteredData.length).toEqual(2);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Ignite UI for Angular');
+        }));
     });
 });
+
+function selectColumnInEditModeExpression(fix, dropdownItemIndex: number) {
+    GridFunctions.clickAdvancedFilteringColumnSelect(fix);
+    fix.detectChanges();
+    GridFunctions.clickAdvancedFilteringSelectDropdownItem(fix, dropdownItemIndex);
+    tick();
+    fix.detectChanges();
+}
+
+function selectOperatorInEditModeExpression(fix, dropdownItemIndex: number) {
+    GridFunctions.clickAdvancedFilteringOperatorSelect(fix);
+    fix.detectChanges();
+    GridFunctions.clickAdvancedFilteringSelectDropdownItem(fix, dropdownItemIndex);
+    tick();
+    fix.detectChanges();
+}
+
+function sendInputNativeElement(fix, nativeElement, text) {
+    nativeElement.value = text;
+    nativeElement.dispatchEvent(new Event('keydown'));
+    nativeElement.dispatchEvent(new Event('input'));
+    nativeElement.dispatchEvent(new Event('keyup'));
+    fix.detectChanges();
+}
+
+function verifyEditModeExpressionInputStates(fix,
+                                             columnSelectEnabled: boolean,
+                                             operatorSelectEnabled: boolean,
+                                             valueInputEnabled: boolean) {
+    // Verify the column select is enabled.
+    const columnInputGroup = GridFunctions.getAdvancedFilteringColumnSelect(fix).querySelector('igx-input-group');
+    expect(!columnInputGroup.classList.contains('igx-input-group--disabled')).toBe(columnSelectEnabled,
+        'incorrect column select state');
+
+    // Verify the operator select is disabled.
+    const operatorInputGroup = GridFunctions.getAdvancedFilteringOperatorSelect(fix).querySelector('igx-input-group');
+    expect(!operatorInputGroup.classList.contains('igx-input-group--disabled')).toBe(operatorSelectEnabled,
+        'incorrect operator select state');
+
+    // Verify the value input is disabled.
+    const editModeContainer = GridFunctions.getAdvancedFilteringEditModeContainer(fix);
+    const valueInputGroup = GridFunctions.sortNativeElementsHorizontally(
+        Array.from(editModeContainer.querySelectorAll('igx-input-group')))[2];
+    expect(!valueInputGroup.classList.contains('igx-input-group--disabled')).toBe(valueInputEnabled,
+        'incorrect value input state');
+}
