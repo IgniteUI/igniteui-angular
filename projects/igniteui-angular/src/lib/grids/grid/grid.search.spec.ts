@@ -528,7 +528,6 @@ describe('IgxGrid - search API #grid', () => {
         });
 
         it('Highlight should be updated when a column is hidden and there are other hidden columns', () => {
-            pending('Related to the bug 3691');
             grid.columns[1].hidden = true;
             fix.detectChanges();
 
