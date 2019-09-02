@@ -5799,4 +5799,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.overlayService.show(this._advancedFilteringOverlayId, this._advancedFilteringOverlaySettings);
         }
     }
+
+    /**
+     * Closes the advanced filtering dialog.
+     * @param applyChanges indicates whether the changes should be applied
+     */
+    public closeAdvancedFilteringDialog(applyChanges: boolean) {
+        if (this._advancedFilteringOverlayId) {
+            const advancedFilteringOverlay = this.overlayService.getOverlayById(this._advancedFilteringOverlayId);
+            const advancedFilteringDialog = advancedFilteringOverlay.componentRef.instance as IgxAdvancedFilteringDialogComponent;
+
+            if (applyChanges) {
+                advancedFilteringDialog.applyChanges();
+            }
+            advancedFilteringDialog.closeDialog();
+        }
+    }
 }
