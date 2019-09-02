@@ -1,29 +1,10 @@
-import {
-    ElementRef,
-    NgZone,
-    ChangeDetectorRef,
-    IterableDiffers,
-    ViewContainerRef,
-    Inject,
-    ComponentFactoryResolver,
-    Optional,
-    Input,
-    ViewChild,
-    TemplateRef
-} from '@angular/core';
-import { IgxGridBaseComponent, IgxGridTransaction, IGridDataBindable } from '../grid-base.component';
-import { GridBaseAPIService } from '../api.service';
+import { Input, ViewChild, TemplateRef } from '@angular/core';
+import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
-import { IgxFilteringService } from '../filtering/grid-filtering.service';
-import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component';
 import { IgxSummaryOperand } from '../summaries/grid-summary';
-import { IgxHierarchicalTransactionService, IgxOverlayService } from '../../services/index';
-import { DOCUMENT } from '@angular/common';
-import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
-import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+import { IgxHierarchicalTransactionService } from '../../services/index';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 
 export const IgxHierarchicalTransactionServiceFactory = {
@@ -66,7 +47,9 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
     /**
      * @hidden
      */
-    public hgridAPI: IgxHierarchicalGridAPIService;
+    public get hgridAPI(): IgxHierarchicalGridAPIService {
+        return this.gridAPI as IgxHierarchicalGridAPIService;
+    }
 
     /**
      * @hidden
@@ -87,42 +70,6 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
     @ViewChild('dragIndicatorIconBase', { read: TemplateRef, static: true })
     public dragIndicatorIconBase: TemplateRef<any>;
 
-    constructor(
-        public selectionService: IgxGridSelectionService,
-        crudService: IgxGridCRUDService,
-        gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-        @Inject(IgxGridTransaction) protected transactionFactory: any,
-        elementRef: ElementRef,
-        zone: NgZone,
-        @Inject(DOCUMENT) public document,
-        cdr: ChangeDetectorRef,
-        resolver: ComponentFactoryResolver,
-        differs: IterableDiffers,
-        viewRef: ViewContainerRef,
-        navigation: IgxHierarchicalGridNavigationService,
-        filteringService: IgxFilteringService,
-        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        public summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-        super(
-            selectionService,
-            crudService,
-            gridAPI,
-            typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
-            elementRef,
-            zone,
-            document,
-            cdr,
-            resolver,
-            differs,
-            viewRef,
-            navigation,
-            filteringService,
-            overlayService,
-            summaryService,
-            _displayDensityOptions);
-        this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
-    }
 
     /**
      * The custom template, if any, that should be used when rendering the row drag indicator icon

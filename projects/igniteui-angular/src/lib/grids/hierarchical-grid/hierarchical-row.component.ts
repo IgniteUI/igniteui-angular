@@ -4,16 +4,13 @@ import {
     HostBinding,
     forwardRef,
     ElementRef,
-    ChangeDetectorRef,
     ViewChildren,
     QueryList,
     ViewChild
 } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowComponent } from '../row.component';
-import { GridBaseAPIService } from '.././api.service';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
-import { IgxGridCRUDService, IgxGridSelectionService } from '../../core/grid-selection';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -99,12 +96,4 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
             g.endEdit();
         }});
     }
-
-    constructor(public gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>,
-        public crudService: IgxGridCRUDService,
-        public selectionService: IgxGridSelectionService,
-        public element: ElementRef,
-        public cdr: ChangeDetectorRef) {
-            super(gridAPI, crudService, selectionService, element, cdr);
-        }
 }

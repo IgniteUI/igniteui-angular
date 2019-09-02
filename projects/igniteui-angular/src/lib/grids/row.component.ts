@@ -1,7 +1,5 @@
 import {
-    ChangeDetectionStrategy,
     ChangeDetectorRef,
-    Component,
     DoCheck,
     ElementRef,
     forwardRef,
@@ -10,25 +8,21 @@ import {
     Input,
     QueryList,
     ViewChild,
-    ViewChildren
+    ViewChildren,
+    Injectable
 } from '@angular/core';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
-import { TransactionType, State } from '../services';
+import { TransactionType } from '../services';
 import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxGridSelectionService, IgxGridCRUDService, IgxRow } from '../core/grid-selection';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 
-@Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
-    selector: 'igx-row',
-    templateUrl: './grid/grid-row.component.html'
-})
-export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable> implements DoCheck {
+@Injectable()
+export abstract class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable> implements DoCheck {
 
     private _rowData: any;
     /**
@@ -154,7 +148,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
 
     /** @hidden */
     public get dirty(): boolean {
-        const row: State = this.grid.transactions.getState(this.rowID);
+        const row = this.grid.transactions.getState(this.rowID);
         if (row) {
             return row.type === TransactionType.ADD || row.type === TransactionType.UPDATE;
         }
@@ -176,7 +170,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
 
     /** @hidden */
     public get added(): boolean {
-        const row: State = this.grid.transactions.getState(this.rowID);
+        const row = this.grid.transactions.getState(this.rowID);
         if (row) {
             return row.type === TransactionType.ADD;
         }
@@ -264,11 +258,12 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     public defaultCssClass = 'igx-grid__tr';
 
 
-    constructor(public gridAPI: GridBaseAPIService<T>,
+    constructor(
+        public gridAPI: GridBaseAPIService<T>,
         public crudService: IgxGridCRUDService,
         public selectionService: IgxGridSelectionService,
         public element: ElementRef,
-        public cdr: ChangeDetectorRef) { }
+        public cdr: ChangeDetectorRef) {}
 
 
     /**

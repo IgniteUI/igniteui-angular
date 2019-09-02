@@ -9,7 +9,7 @@ import { IgxGridHierarchicalPipe, IgxGridHierarchicalPagingPipe } from './hierar
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
-import { IgxHierarchicalSelectionAPIService } from './selection';
+// import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IgxSelectModule } from '../../select/index';
 import { IgxGridComponent } from '../grid/grid.component';
@@ -44,7 +44,7 @@ import { IgxGridComponent } from '../grid/grid.component';
   ],
   providers: [
     IgxRowIslandAPIService,
-    IgxHierarchicalSelectionAPIService
+    // IgxHierarchicalSelectionAPIService
   ],
   entryComponents: [
     IgxGridComponent

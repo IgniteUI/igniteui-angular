@@ -1,7 +1,7 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxGridModule, IgxGridGroupByRowComponent, IgxGridComponent, GridSelectionMode } from './index';
+import { IgxGridModule, IgxGridGroupByRowComponent, IgxGridComponent } from './index';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { SelectionWithScrollsComponent,
         SelectionWithTransactionsComponent,
@@ -12,6 +12,7 @@ import { IgxStringFilteringOperand } from '../../data-operations/filtering-condi
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { HelperUtils, setupGridScrollDetection, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 import { DefaultSortingStrategy } from 'igniteui-angular';
+import { GridSelectionMode } from '../types';
 
 
 describe('IgxGrid - Cell selection #grid', () => {

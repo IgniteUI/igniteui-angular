@@ -10,37 +10,30 @@ import {
     QueryList,
     ContentChildren,
     ElementRef,
-    NgZone,
-    ChangeDetectorRef,
-    IterableDiffers,
-    ViewContainerRef,
-    Inject,
-    ComponentFactoryResolver,
     AfterViewInit,
     AfterContentInit,
-    Optional,
     OnInit,
     OnDestroy,
     DoCheck
 } from '@angular/core';
-import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
+import { IgxGridBaseComponent } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity } from '../../core/displayDensity';
+import { DisplayDensity } from '../../core/displayDensity';
 import { IGridDataBindable, IgxColumnComponent, } from '../grid/index';
-import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
+import { IgxHierarchicalGridBaseComponent, IgxHierarchicalTransactionServiceFactory } from './hierarchical-grid-base.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
-import { IgxOverlayService } from '../../services/index';
-import { IgxColumnResizingService } from '../grid-column-resizing.service';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
+import { IgxGridNavigationService } from '../grid-navigation.service';
+import { IgxHierarchicalTransactionService } from '../../services/transaction/igx-hierarchical-transaction';
+import { HierarchicalTransaction, HierarchicalState } from '../../services';
 
 let NEXT_ID = 0;
 
@@ -54,13 +47,13 @@ export interface HierarchicalStateRecord {
     selector: 'igx-hierarchical-grid',
     templateUrl: 'hierarchical-grid.component.html',
     providers: [
-        IgxGridSelectionService,
-        IgxGridCRUDService,
         { provide: GridBaseAPIService, useClass: IgxHierarchicalGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxHierarchicalGridComponent) },
+        { provide: IgxGridNavigationService, useClass: IgxHierarchicalGridNavigationService },
+        IgxGridSelectionService,
+        IgxGridCRUDService,
         IgxGridSummaryService,
         IgxFilteringService,
-        IgxHierarchicalGridNavigationService,
         IgxForOfSyncService
     ]
 })
@@ -280,49 +273,21 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     private scrollTop = 0;
     private scrollLeft = 0;
 
-    constructor(
-        public selectionService: IgxGridSelectionService,
-        crudService: IgxGridCRUDService,
-        public colResizingService: IgxColumnResizingService,
-        gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-        @Inject(IgxGridTransaction) protected transactionFactory: any,
-        elementRef: ElementRef,
-        zone: NgZone,
-        @Inject(DOCUMENT) public document,
-        cdr: ChangeDetectorRef,
-        resolver: ComponentFactoryResolver,
-        differs: IterableDiffers,
-        viewRef: ViewContainerRef,
-        navigation: IgxHierarchicalGridNavigationService,
-        filteringService: IgxFilteringService,
-        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        public summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-        super(
-            selectionService,
-            crudService,
-            gridAPI,
-            typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
-            elementRef,
-            zone,
-            document,
-            cdr,
-            resolver,
-            differs,
-            viewRef,
-            navigation,
-            filteringService,
-            overlayService,
-            summaryService,
-            _displayDensityOptions);
-        this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
+    protected _transactions: any;
+
+    get transactions() {
+        if (!this._transactions) {
+            this._transactions = this.parentIsland ? this.parentIsland.transactions :
+                this.injector.get(IgxHierarchicalTransactionService, null);
+        }
+        return this._transactions;
     }
+
 
     /**
      * @hidden
      */
     ngOnInit() {
-        this._transactions = this.parentIsland ? this.parentIsland.transactions : this._transactions;
         super.ngOnInit();
     }
 
