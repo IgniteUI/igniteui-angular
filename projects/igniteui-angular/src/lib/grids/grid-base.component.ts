@@ -1717,11 +1717,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public toolbarCustomContentTemplates: QueryList<IgxGridToolbarCustomContentDirective>;
 
     /**
-     *  Returns the template which will be used for the header selectors' templating.
-     *
-     * ```typescript
-     * const customHeaderSelectorTemplate = this.grid.headerSelectorTemplate;
-     * ```
+     * @hidden
+     * @internal
      */
     public get headSelectorTemplate(): TemplateRef<IgxHeadSelectorDirective> {
         if (this.headSelectorsTemplate && this.headSelectorsTemplate.first) {
@@ -1739,11 +1736,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public headSelectorsTemplate: QueryList<IgxHeadSelectorDirective>;
 
     /**
-     * Returns the template which will be used for the row selectors' templating.
-     *
-     * ```typescript
-     * const customRowSelectorTemplate = this.grid.rowSelectorTemplate;
-     * ```
+     * @hidden
+     * @internal
      */
     public get rowSelectorTemplate(): TemplateRef<IgxRowSelectorDirective> {
         if (this.rowSelectorsTemplate && this.rowSelectorsTemplate.first) {

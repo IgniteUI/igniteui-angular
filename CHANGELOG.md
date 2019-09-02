@@ -59,6 +59,8 @@ For more information about the theming please read our [documentation](https://w
 - `IgxDrop`
     - Linking of drag and drop elements. This can be achieved by using the new provided `dropChannel` input, specifying each drop area to which channel it corresponds.
     - Drop strategies. Three new drop strategies have been provided - Append, Prepend and Insert.  Also an input `dropStrategy` to the `igxDrop` which specify which strategy should be used when dropping an element inside the drop area. Custom one can be specified as well.
+- `IgxCheckbox`
+    - introduced a new `readonly` property that doesn't allow user interaction to change the state, but keeps the default active style. Intended for integration in complex controls that handle the interaction and control the checkbox instead through binding.
 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
