@@ -42,7 +42,10 @@ import {
     AbsoluteScrollStrategy,
     HorizontalAlignment,
     VerticalAlignment,
-    IgxOverlayService
+    IgxOverlayService,
+    OverlaySettings,
+    PositionSettings,
+    ConnectedPositioningStrategy
 } from '../services/index';
 import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { GridBaseAPIService } from './api.service';
@@ -91,6 +94,7 @@ import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.com
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
+import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -260,6 +264,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public _destroyed = false;
     private overlayIDs = [];
     private _hostWidth;
+    private _advancedFilteringOverlayId: string;
+    private _advancedFilteringPositionSettings: PositionSettings = {
+        verticalDirection: VerticalAlignment.Middle,
+        horizontalDirection: HorizontalAlignment.Center,
+        horizontalStartPoint: HorizontalAlignment.Center,
+        verticalStartPoint: VerticalAlignment.Middle
+    };
+
+    private _advancedFilteringOverlaySettings: OverlaySettings = {
+        closeOnOutsideClick: false,
+        modal: false,
+        positionStrategy: new ConnectedPositioningStrategy(this._advancedFilteringPositionSettings),
+    };
+
     /**
      * An accessor that sets the resource strings.
      * By default it uses EN resources.
@@ -2792,9 +2810,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.onColumnMoving.pipe(destructor).subscribe(() => this.endEdit(true));
         this.onColumnResized.pipe(destructor).subscribe(() => this.endEdit(true));
 
+        this.overlayService.onOpening.pipe(destructor).subscribe((event) => {
+            if (this._advancedFilteringOverlayId === event.id) {
+                const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
+                if (instance) {
+                    instance.initialize(this.filteringService, this.overlayService, event.id);
+                }
+            }
+        });
+
         this.overlayService.onOpened.pipe(destructor).subscribe((event) => {
             // do not hide the advanced filtering overlay on scroll
-            if (this.toolbar && this.toolbar.advancedFilteringOverlayId === event.id) {
+            if (this._advancedFilteringOverlayId === event.id) {
                 return;
             }
 
@@ -2805,6 +2832,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         });
 
         this.overlayService.onClosed.pipe(destructor, filter(() => !this._init)).subscribe((event) => {
+            if (this._advancedFilteringOverlayId === event.id) {
+                this._advancedFilteringOverlayId = null;
+                return;
+            }
+
             const ind = this.overlayIDs.indexOf(event.id);
             if (ind !== -1) {
                 this.overlayIDs.splice(ind, 1);
@@ -3003,6 +3035,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.destroy$.next(true);
         this.destroy$.complete();
         this._destroyed = true;
+
+        if (this._advancedFilteringOverlayId) {
+            this.overlayService.hide(this._advancedFilteringOverlayId);
+        }
 
         this.zone.runOutsideAngular(() => {
             this.observer.disconnect();
@@ -5745,6 +5781,22 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             } else if (summaryRow) {
                 this._restoreVirtState(summaryRow);
             }
+        }
+    }
+
+    /**
+     * Opens the advanced filtering dialog.
+     */
+    public openAdvancedFilteringDialog() {
+        if (!this._advancedFilteringOverlayId) {
+            this._advancedFilteringOverlaySettings.positionStrategy.settings.target =
+                (this as any).rootGrid ? (this as any).rootGrid.nativeElement : this.nativeElement;
+            this._advancedFilteringOverlaySettings.outlet = this.outletDirective;
+
+            this._advancedFilteringOverlayId =
+                this.overlayService.attach(IgxAdvancedFilteringDialogComponent, this._advancedFilteringOverlaySettings);
+                // , this._moduleRef);
+            this.overlayService.show(this._advancedFilteringOverlayId, this._advancedFilteringOverlaySettings);
         }
     }
 }
