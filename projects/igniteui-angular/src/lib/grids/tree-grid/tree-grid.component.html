@@ -28,7 +28,7 @@
                         this.headSelectorTemplate ? this.headSelectorTemplate : headSelectorBaseTemplate;
                         context: { $implicit: {
                                         selectedCount: this.selectionService.filteredSelectedRowIds.length,
-                                        totalCount: this.filteredData ? this.filteredData.length : this.data.length }}">
+                                        totalCount: totalRowsCountAfterFilter }}">
                     </ng-template>
                 </div>
             </ng-container>
@@ -193,7 +193,7 @@
 
 <ng-template #headSelectorBaseTemplate igxHeadSelector let-context>
     <igx-checkbox
-        [checked]="context.totalCount === context.selectedCount"
+        [checked]="context.selectedCount && context.totalCount === context.selectedCount"
         [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
         [readonly]="true"
         disableRipple="true"

@@ -730,6 +730,18 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    public get totalRowsCountAfterFilter() {
+        if (this.records) {
+            return this.filteredData ? this.filteredData.length : this.records.size;
+        }
+
+        return 0;
+    }
+
+    /**
      * @inheritdoc
      */
     getSelectedData(formatters = false, headers = false): any[] {

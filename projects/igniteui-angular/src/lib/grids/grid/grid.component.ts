@@ -749,18 +749,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     }
 
     /**
-     * @hidden
-     * @internal
-     */
-    public getGridRowIndex(rowData: any, curIndex: number): number {
-        if (this.groupingExpressions.length > 0) {
-            return this.filteredSortedData.indexOf(rowData);
-        }
-
-        return curIndex;
-    }
-
-    /**
     * @hidden
     */
     public get template(): TemplateRef<any> {
@@ -898,6 +886,18 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         } else {
             return this.defaultDropAreaTemplate;
         }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get totalRowsCountAfterFilter() {
+        if (this.data) {
+            return this.filteredData ? this.filteredData.length : this.data.length;
+        }
+
+        return 0;
     }
 
     /**

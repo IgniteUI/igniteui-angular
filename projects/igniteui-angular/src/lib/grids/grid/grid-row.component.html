@@ -6,11 +6,14 @@
         <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : this.grid.dragIndicatorIconBase"></ng-container>
     </div>
 </ng-container>
-<ng-container *ngIf="showRowSelectors">
+<ng-container *ngIf="this.showRowSelectors">
     <div class="igx-grid__cbx-selection" (click)="onRowSelectorClick($event)">
          <ng-template *ngTemplateOutlet="
             this.grid.rowSelectorTemplate ? this.grid.rowSelectorTemplate : rowSelectorBaseTemplate;
-            context: { $implicit: { index: this.index + this.grid.page * this.grid.perPage, rowID: rowID, selected: selected }}">
+            context: { $implicit: {
+                            index: (this.grid.groupingExpressions ? this.grid.filteredSortedData.indexOf(this.rowData) : this.index) +
+                             this.grid.page * this.grid.perPage,
+                            rowID: rowID, selected: selected }}">
         </ng-template>
     </div>
 </ng-container>

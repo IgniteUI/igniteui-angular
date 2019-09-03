@@ -44,7 +44,6 @@ import {
     VerticalAlignment,
     IgxOverlayService
 } from '../services/index';
-import { IgxCheckboxComponent } from './../checkbox/checkbox.component';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
@@ -1801,12 +1800,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @ViewChild('headerGroupContainer', { static: false })
     public headerGroupContainer: ElementRef;
-
-    /**
-     * @hidden
-     */
-    @ViewChild(IgxCheckboxComponent, { read: IgxCheckboxComponent, static: false })
-    public headSelectorBaseTemplate: IgxCheckboxComponent;
 
     /**
      * @hidden
@@ -4739,9 +4732,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     get headSelectorBaseAriaLabel() {
-        return this._filteringExpressionsTree.filteringOperands.length > 0 ?
-            this.headSelectorBaseTemplate && this.selectionService.areAllRowSelected() ? 'Deselect all filtered' : 'Select all filtered' :
-            this.headSelectorBaseTemplate && this.selectionService.areAllRowSelected() ? 'Deselect all' : 'Select all';
+        if (this._filteringExpressionsTree.filteringOperands.length > 0) {
+            return this.selectionService.areAllRowSelected() ? 'Deselect all filtered' : 'Select all filtered';
+        }
+
+        return this.selectionService.areAllRowSelected() ? 'Deselect all' : 'Select all';
     }
 
     /**
