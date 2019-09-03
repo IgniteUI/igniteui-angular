@@ -47,6 +47,12 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
     /**
     * @hidden
     */
+   @ViewChild('defaultEmptyTemplate', { read: TemplateRef, static: true })
+   protected defaultEmptyTemplate: TemplateRef<any>;
+
+    /**
+    * @hidden
+    */
    @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
    protected defaultCollapsedTemplate: TemplateRef<any>;
 
@@ -107,6 +113,13 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
     * @hidden
     */
     public get iconTemplate() {
+        let expandable = true;
+        if (this.grid.hasChildrenKey) {
+            expandable = this.rowData[this.grid.hasChildrenKey];
+        }
+        if(!expandable) {
+            return this.defaultEmptyTemplate;
+        }
         if (this.expanded) {
             return this.grid.rowExpandedIndicatorTemplate || this.defaultExpandedTemplate;
         } else {

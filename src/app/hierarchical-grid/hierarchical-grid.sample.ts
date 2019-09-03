@@ -44,6 +44,10 @@ export class HierarchicalGridSampleComponent {
             { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
         ];
         this.localData = this.generateDataUneven(100, 3);
+        this.localData[0].hasChild = false;
+        this.localData[1].hasChild = false;
+        this.localData[2].childData[0].hasChild = false;
+        this.localData[2].childData[1].hasChild = false;
     }
 
     generateData(count: number, level: number) {
@@ -56,7 +60,7 @@ export class HierarchicalGridSampleComponent {
            }
            prods.push({
             ID: i, ChildLevels: currLevel,  ProductName: 'Product: A' + i, 'Col1': i,
-            'Col2': i, 'Col3': i, childData: children, childData2: children });
+            'Col2': i, 'Col3': i, childData: children, childData2: children, hasChild: true });
         }
         return prods;
     }
@@ -73,7 +77,7 @@ export class HierarchicalGridSampleComponent {
             }
             prods.push({
                 ID: rowID, ChildLevels: currLevel,  ProductName: 'Product: A' + i, 'Col1': i,
-                'Col2': i, 'Col3': i, childData: children, childData2: children });
+                'Col2': i, 'Col3': i, childData: children, childData2: children, hasChild: true });
         }
         return prods;
     }

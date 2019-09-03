@@ -46,6 +46,9 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
     @Input()
     public expandChildren: boolean;
 
+    @Input()
+    public hasChildrenKey: string;
+
     /**
      * @hidden
      */

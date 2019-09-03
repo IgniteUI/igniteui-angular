@@ -9,6 +9,11 @@
 <ng-template #defaultCollapsedTemplate>
         <igx-icon [isActive]='!added' fontSet="material">chevron_right</igx-icon>
  </ng-template>
+ 
+ <ng-template #defaultEmptyTemplate>
+    <igx-icon fontSet="material"></igx-icon>
+</ng-template>
+
 <ng-container *ngIf="rowDraggable">
     <div [class]="resolveDragIndicatorClasses" [igxRowDrag]="this" (click)="$event.stopPropagation()">
             <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : this.grid.dragIndicatorIconBase"></ng-container>
