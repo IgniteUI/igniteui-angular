@@ -143,6 +143,7 @@
 
         igx-select + igx-select,
         igx-select + igx-input-group,
+        igx-select + igx-date-picker,
         igx-input-group + igx-select {
             margin-left: rem(8px);
         }
@@ -203,7 +204,7 @@
         flex-flow: column;
         width: 196px;
         background-color: --var($theme, 'filtering-row-background');
-        padding: rem(16px) rem(8px);
+        padding: rem(16px);
         margin-left: rem(16px);
         border-radius: rem(4px);
         border: 1px solid igx-color($palette, 'grays', 200);
@@ -214,7 +215,8 @@
             margin-top: $vertical-space-comfortable;
         }
 
-        > [igxButton]%filter-con-menu__close-btn + [igxButton] {
+        > [igxButton]%filter-con-menu__close-btn + [igxButton],
+        [igxButton]%filter-con-menu__close-btn + igx-buttongroup {
             margin-top: 0;
         }
 
@@ -229,6 +231,11 @@
 
     %filter-con-menu__delete-btn {
         color: igx-color($palette, 'error');
+
+        &:hover,
+        &:focus {
+            color: igx-color($palette, 'error');
+        }
     }
 
     %filter-con-menu__close-btn {
@@ -237,6 +244,11 @@
         right: rem(-18px);
         background-color: --var($theme, 'filtering-row-background');
         border: 1px solid igx-color($palette, 'grays', 200);
+
+        &:hover,
+        &:focus {
+            background-color: --var($theme, 'filtering-row-background');
+        }
     }
 
     %filter-empty {
