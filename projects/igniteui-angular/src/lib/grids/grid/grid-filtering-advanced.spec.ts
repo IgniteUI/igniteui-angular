@@ -527,6 +527,255 @@ describe('IgxGrid - Advanced Filtering', () => {
             expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
             expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('NetAdvantage');
         }));
+
+        it('Should correctly change resource strings for Advanced Filtering dialog.', fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
+            grid = fix.componentInstance.grid;
+            grid.resourceStrings = Object.assign({}, grid.resourceStrings, {
+                igx_grid_filter_operator_and: 'My and',
+                igx_grid_filter_operator_or: 'My or',
+                igx_grid_advanced_filter_title: 'My advanced filter',
+                igx_grid_advanced_filter_and_group: 'My and group',
+                igx_grid_advanced_filter_or_group: 'My or group',
+                igx_grid_advanced_filter_end_group: 'My end group',
+                igx_grid_advanced_filter_create_and_group: 'My create and group',
+                igx_grid_advanced_filter_create_or_group: 'My create or group',
+                igx_grid_advanced_filter_and_label: 'My and',
+                igx_grid_advanced_filter_or_label: 'My or',
+                igx_grid_advanced_filter_add_condition: 'My condition',
+                igx_grid_advanced_filter_ungroup: 'My ungroup',
+                igx_grid_advanced_filter_delete: 'My delete',
+                igx_grid_advanced_filter_delete_filters: 'My delete filters',
+                igx_grid_advanced_filter_initial_text: 'My initial text'
+            });
+            fix.detectChanges();
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            expect(GridFunctions.getAdvancedFilteringHeaderText(fix)).toBe('My advanced filter');
+            expect(GridFunctions.getAdvancedFilteringHeaderLegendItemAnd(fix).innerText).toBe('My and');
+            expect(GridFunctions.getAdvancedFilteringHeaderLegendItemOr(fix).innerText).toBe('My or');
+            expect(GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0].querySelector('span').innerText).toBe('My and group');
+            expect(GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[1].querySelector('span').innerText).toBe('My or group');
+            expect(GridFunctions.getAdvancedFilteringEmptyPrompt(fix).innerText).toBe('My initial text');
+
+            const initialAddAndGroupBtn = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            initialAddAndGroupBtn.click();
+            tick(100);
+            fix.detectChanges();
+
+            expect(GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[0].querySelector('span').innerText)
+                .toBe('My condition');
+            expect(GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[1].querySelector('span').innerText)
+                .toBe('My and group');
+            expect(GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[2].querySelector('span').innerText)
+                .toBe('My or group');
+
+            // Populate edit inputs.
+            selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            let input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            sendInputNativeElement(fix, input, 'angular'); // Type filter value.
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
+            rootOperatorLine.click();
+            tick(200);
+            fix.detectChanges();
+
+            const buttonGroupItems = GridFunctions.sortNativeElementsHorizontally(
+                Array.from(GridFunctions.getAdvancedFilteringContextMenuButtonGroup(fix)
+                                        .querySelectorAll('.igx-button-group__item-content')));
+            expect(buttonGroupItems[0].textContent).toBe('My and');
+            expect(buttonGroupItems[1].textContent).toBe('My or');
+            expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[1].querySelector('span').innerText)
+                .toBe('My ungroup');
+            expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[2].querySelector('span').innerText)
+                .toBe('My delete');
+
+            // Close context menu.
+            GridFunctions.clickAdvancedFilteringContextMenuCloseButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Add another expression to root group.
+            let btn = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[0];
+            btn.click();
+            tick(100);
+            fix.detectChanges();
+            // Populate edit inputs.
+            selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            sendInputNativeElement(fix, input, 'script'); // Type filter value.
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Select two chips.
+            GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0]);
+            tick(500);
+            fix.detectChanges();
+            GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [1]);
+            tick(500);
+            fix.detectChanges();
+
+            expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[1].innerText).toBe('My create and group');
+            expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[2].innerText).toBe('My create or group');
+            expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[3].innerText).toBe('My delete filters');
+
+            // Close context menu.
+            GridFunctions.clickAdvancedFilteringContextMenuCloseButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Add an 'or' group to root group.
+            btn = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[2];
+            btn.click();
+            tick(100);
+            fix.detectChanges();
+
+            const endGroupButton = GridFunctions.getAdvancedFilteringTreeGroupButtons(fix, [2], 0)[3];
+            expect(endGroupButton.querySelector('span').innerText).toBe('My end group');
+        }));
+
+        it('Should correctly change resource strings for Advanced Filtering dialog by using Changei18n.', fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
+            grid = fix.componentInstance.grid;
+            const strings = getCurrentResourceStrings();
+            strings.igx_grid_filter_operator_and = 'My and';
+            strings.igx_grid_filter_operator_or = 'My or';
+            strings.igx_grid_advanced_filter_title = 'My advanced filter';
+            strings.igx_grid_advanced_filter_and_group = 'My and group';
+            strings.igx_grid_advanced_filter_or_group = 'My or group';
+            strings.igx_grid_advanced_filter_end_group = 'My end group';
+            strings.igx_grid_advanced_filter_create_and_group = 'My create and group';
+            strings.igx_grid_advanced_filter_create_or_group = 'My create or group';
+            strings.igx_grid_advanced_filter_and_label = 'My and';
+            strings.igx_grid_advanced_filter_or_label = 'My or';
+            strings.igx_grid_advanced_filter_add_condition = 'My condition';
+            strings.igx_grid_advanced_filter_ungroup = 'My ungroup';
+            strings.igx_grid_advanced_filter_delete = 'My delete';
+            strings.igx_grid_advanced_filter_delete_filters = 'My delete filters';
+            strings.igx_grid_advanced_filter_initial_text = 'My initial text';
+            changei18n(strings);
+            fix.detectChanges();
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            expect(GridFunctions.getAdvancedFilteringHeaderText(fix)).toBe('My advanced filter');
+            expect(GridFunctions.getAdvancedFilteringHeaderLegendItemAnd(fix).innerText).toBe('My and');
+            expect(GridFunctions.getAdvancedFilteringHeaderLegendItemOr(fix).innerText).toBe('My or');
+            expect(GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0].querySelector('span').innerText).toBe('My and group');
+            expect(GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[1].querySelector('span').innerText).toBe('My or group');
+            expect(GridFunctions.getAdvancedFilteringEmptyPrompt(fix).innerText).toBe('My initial text');
+
+            const initialAddAndGroupBtn = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            initialAddAndGroupBtn.click();
+            tick(100);
+            fix.detectChanges();
+
+            expect(GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[0].querySelector('span').innerText)
+                .toBe('My condition');
+            expect(GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[1].querySelector('span').innerText)
+                .toBe('My and group');
+            expect(GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[2].querySelector('span').innerText)
+                .toBe('My or group');
+
+            // Populate edit inputs.
+            selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            let input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            sendInputNativeElement(fix, input, 'angular'); // Type filter value.
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
+            rootOperatorLine.click();
+            tick(200);
+            fix.detectChanges();
+
+            const buttonGroupItems = GridFunctions.sortNativeElementsHorizontally(
+                Array.from(GridFunctions.getAdvancedFilteringContextMenuButtonGroup(fix)
+                                        .querySelectorAll('.igx-button-group__item-content')));
+            expect(buttonGroupItems[0].textContent).toBe('My and');
+            expect(buttonGroupItems[1].textContent).toBe('My or');
+            expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[1].querySelector('span').innerText)
+                .toBe('My ungroup');
+            expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[2].querySelector('span').innerText)
+                .toBe('My delete');
+
+            // Close context menu.
+            GridFunctions.clickAdvancedFilteringContextMenuCloseButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Add another expression to root group.
+            let btn = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[0];
+            btn.click();
+            tick(100);
+            fix.detectChanges();
+            // Populate edit inputs.
+            selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            sendInputNativeElement(fix, input, 'script'); // Type filter value.
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Select two chips.
+            GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0]);
+            tick(500);
+            fix.detectChanges();
+            GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [1]);
+            tick(500);
+            fix.detectChanges();
+
+            expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[1].innerText).toBe('My create and group');
+            expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[2].innerText).toBe('My create or group');
+            expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[3].innerText).toBe('My delete filters');
+
+            // Close context menu.
+            GridFunctions.clickAdvancedFilteringContextMenuCloseButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Add an 'or' group to root group.
+            btn = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[2];
+            btn.click();
+            tick(100);
+            fix.detectChanges();
+
+            const endGroupButton = GridFunctions.getAdvancedFilteringTreeGroupButtons(fix, [2], 0)[3];
+            expect(endGroupButton.querySelector('span').innerText).toBe('My end group');
+
+            // Revert strings.
+            changei18n({
+                igx_grid_filter_operator_and: 'And',
+                igx_grid_filter_operator_or: 'Or',
+                igx_grid_advanced_filter_title: 'Advanced Filtering',
+                igx_grid_advanced_filter_and_group: '"And" Group',
+                igx_grid_advanced_filter_or_group: '"Or" Group',
+                igx_grid_advanced_filter_end_group: 'End Group',
+                igx_grid_advanced_filter_create_and_group: 'Create "And" Group',
+                igx_grid_advanced_filter_create_or_group: 'Create "Or" Group',
+                igx_grid_advanced_filter_and_label: 'and',
+                igx_grid_advanced_filter_or_label: 'or',
+                igx_grid_advanced_filter_add_condition: 'Condition',
+                igx_grid_advanced_filter_ungroup: 'Ungroup',
+                igx_grid_advanced_filter_delete: 'Delete',
+                igx_grid_advanced_filter_delete_filters: 'Delete filters',
+                igx_grid_advanced_filter_initial_text: 'Start with creating a group of conditions linked with "And" or "Or"'
+            });
+        }));
     });
 });
 

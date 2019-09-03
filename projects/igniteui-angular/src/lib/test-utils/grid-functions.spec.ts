@@ -1073,6 +1073,11 @@ export class GridFunctions {
         closeButton.click();
     }
 
+    public static clickAdvancedFilteringContextMenuCloseButton(fix: ComponentFixture<any>) {
+        const contextMenuCloseButton = GridFunctions.getAdvancedFilteringContextMenuCloseButton(fix);
+        contextMenuCloseButton.click();
+    }
+
     public static getAdvancedFilteringComponent(fix: ComponentFixture<any>) {
         const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
         const advFilterDialog = gridNativeElement.querySelector('.igx-advanced-filter');
@@ -1290,6 +1295,13 @@ export class GridFunctions {
         const contextMenu = GridFunctions.getAdvancedFilteringContextMenu(fix);
         const buttons = GridFunctions.sortNativeElementsVertically(Array.from(contextMenu.querySelectorAll('button')));
         return buttons;
+    }
+
+    public static getAdvancedFilteringContextMenuCloseButton(fix: ComponentFixture<any>) {
+        const contextMenu = GridFunctions.getAdvancedFilteringContextMenu(fix);
+        const buttons = GridFunctions.sortNativeElementsVertically(Array.from(contextMenu.querySelectorAll('button')));
+        const closeButton: any = buttons.find((b: any) => b.innerText.toLowerCase() === 'close');
+        return closeButton;
     }
 
     public static getAdvancedFilteringContextMenuButtonGroup(fix: ComponentFixture<any>) {
