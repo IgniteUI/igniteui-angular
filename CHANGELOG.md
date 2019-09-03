@@ -40,7 +40,7 @@ For more information about the theming please read our [documentation](https://w
 - `IgxDrag`
     - Dragging without ghost. Now it is possible to drag the base element `igxDrag` is instanced on by setting the new input `ghost` to false.
     - Ghost template. A custom ghost template reference can be provided on the new `ghostTemplate` input.
-    - Dragging using a single or multiple handles. New `igxDragHandle` directive is exposed to specify a handle by which and element can be interacted with instead of the whole element `igxDrag` is instanced on.
+    - Dragging using a single or multiple handles. New `igxDragHandle` directive is exposed to specify a handle by which an element can be interacted with instead of the whole element `igxDrag` is instanced on.
     - Linking of drag and drop elements. This can be achieved by using the new provided `dragChannel` input, specifying each element to which channel it corresponds.
     - Drag animation improvements. Three new methods have been exposed in place of the old `animateToOrigin` input in order to provide more flexibility when wanting to have transition animation to specific position when dropping. `setLocation`, `transitionToOrigin` and `transitionTo` are all methods that provide a various way to animate a transition to a specific location for the dragged element.
     - New getters - `location` and `originLocation` to aid in applying transition animations.
@@ -81,10 +81,6 @@ For more information about the theming please read our [documentation](https://w
     ```
    - **Breaking Change** When using `[valueKey]`, combo methods, events and outputs **cannot** be handled with *data item references*.
    - For more information, visit the component's [readme](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/combo/README.md)
-
-## 8.1.4
-- `IgxDialog` new @Input `positionSettings` is now available. It provides the ability to get/set both position and animation settings of the Dialog component.
-
 - `IgxDrag`
     - Deprecated inputs - `hideBaseOnDrag`, `animateOnRelease`, `visible`.
     - Deprecated methods - `dropFinished`.
@@ -100,10 +96,13 @@ For more information about the theming please read our [documentation](https://w
     - **Breaking Change** `onOver` output is renamed to `over`.
     - **Breaking Change** `onLeave` output is renamed to `leave`.
     - **Breaking Change** `onDrop` output is renamed to `dropped`.
-    - **Breaking Change** Interfaces `IgxDropEnterEventArgs`, `IgxDropLeaveEventArgs` are both now called `IDragBaseEventArgs`.
+    - **Breaking Change** Interfaces `IgxDropEnterEventArgs`, `IgxDropLeaveEventArgs` are both now called `IDropBaseEventArgs`.
     - **Breaking Change** Interfaces `IgxDropEventArgs` is renamed to `IDropDroppedEventArgs`.
     - **Breaking Change** Outputs `enter`, `over`, `leave`(former `onEnter`, `onOver`, `onLeave`) now have arguments of type `IDropBaseEventArgs`
     - **Breaking Change** Output `dropped` (former `onDrop`) now have arguments of type `IDropDroppedEventArgs`
+    
+## 8.1.4
+- `IgxDialog` new @Input `positionSettings` is now available. It provides the ability to get/set both position and animation settings of the Dialog component.
 
 ## 8.1.3
 - `IgxCombo`
