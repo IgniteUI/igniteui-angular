@@ -246,6 +246,10 @@
                 'igx-filter-contextual-menu--compact': displayDensity === 'compact'
             }"
         >
+            <button igxButton="icon"
+                    (click)="clearSelection()">
+                <igx-icon>close</igx-icon>
+            </button>
             <ng-container *ngIf="contextualGroup">
                 <igx-buttongroup [displayDensity]="displayDensity"
                                  [multiSelection]="false"

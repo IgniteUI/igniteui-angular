@@ -368,7 +368,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         });
     }
 
-    private clearSelection() {
+    public clearSelection() {
         for (const group of this.selectedGroups) {
             group.selected = false;
         }
