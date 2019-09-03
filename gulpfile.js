@@ -4,18 +4,20 @@ const autoprefixer = require('autoprefixer');
 const browserSync = require('browser-sync').create();
 const del = require('del');
 const gulp = require('gulp');
-const concat = require('gulp-concat');
 const sass = require('gulp-sass');
-const shell = require('gulp-shell');
 const sourcemaps = require('gulp-sourcemaps');
 const postcss = require('gulp-postcss');
 const process = require('process');
 const fs = require('fs');
 const argv = require('yargs').argv;
 const sassdoc = require('sassdoc');
-const ts = require('gulp-typescript');
 const path = require('path');
 const EventEmitter = require('events').EventEmitter;
+const typedocGulp = require('igniteui-typedoc-theme/gulpfile');
+const sassdocGulp = require('igniteui-sassdoc-theme/gulpfile');
+const { series } = require('gulp');
+const {spawnSync} = require('child_process');
+const slash = require('slash');
 
 sass.compiler = require('sass');
 
@@ -32,20 +34,14 @@ const STYLES = {
     }
 };
 
-const TYPEDOC_THEME = {
-    SRC: `${path.join(__dirname, "extras", "docs", "themes", "typedoc", "src")}`,
-    DIST: './extras/docs/themes/typedoc/bin/',
-    STYLES: {
-        ENTRY: './assets/css/main.sass',
-        OUT: './assets/css',
-        MAPS: './',
-        CONFIG: {
-            outputStyle: 'compressed'
-        }
-    }
-}
+const DOCS_OUTPUT_PATH = slash(path.join(__dirname, 'dist', 'igniteui-angular', 'docs'));
 
-gulp.task('build-style', () => {
+const TYPEDOC_THEME = {
+    SRC: slash(path.join(__dirname, 'node_modules', 'igniteui-typedoc-theme', 'src')),
+    OUTPUT: slash(path.join(DOCS_OUTPUT_PATH, 'typescript'))
+};
+
+module.exports.buildStyle =  (cb) => {
     const prefixer = postcss([autoprefixer({
         browsers: ['last 5 versions', '> 3%'],
         cascade: false,
@@ -57,7 +53,7 @@ gulp.task('build-style', () => {
 
     const myEventEmitter = new EventEmitter();
 
-    return gulp.src(STYLES.SRC)
+    gulp.src(STYLES.SRC)
         .pipe(sourcemaps.init())
         .pipe(sass.sync(STYLES.CONFIG).on('error', err => {
             sass.logError.bind(myEventEmitter)(err);
@@ -66,10 +62,12 @@ gulp.task('build-style', () => {
         }))
         .pipe(prefixer)
         .pipe(sourcemaps.write(STYLES.MAPS))
-        .pipe(gulp.dest(STYLES.DIST))
-});
+        .pipe(gulp.dest(STYLES.DIST));
 
-gulp.task('copy-git-hooks', () => {
+    cb();
+};
+
+module.exports.copyGitHooks = async (cb) => {
 
     if (process.env.AZURE_PIPELINES || process.env.TRAVIS || process.env.CI || !fs.existsSync('.git')) {
         return;
@@ -117,254 +115,217 @@ gulp.task('copy-git-hooks', () => {
 
     fs.copyFileSync('./.hooks/prepare-commit-msg',
         './.git/hooks/prepare-commit-msg');
-});
 
-gulp.task('copy-migrations', () => {
-    return gulp.src([
+    return await cb();
+};
+
+module.exports.copyMigrations = (cb) => {
+    gulp.src([
         './projects/igniteui-angular/migrations/**/*.json',
         '!**/tsconfig.json'
-    ])
-        .pipe(gulp.dest('./dist/igniteui-angular/migrations'));
-});
+    ]).pipe(gulp.dest('./dist/igniteui-angular/migrations'));
 
-gulp.task('copy-schematics', () => {
-    return gulp.src([
+    cb();
+};
+
+module.exports.copySchematics = (cb) => {
+    gulp.src([
         './projects/igniteui-angular/schematics/**/*.json',
         '!**/tsconfig.json'
-    ])
-        .pipe(gulp.dest('./dist/igniteui-angular/schematics'));
+    ]).pipe(gulp.dest('./dist/igniteui-angular/schematics'));
+
+    cb();
+};
+
+const typedocBuildTheme = series(typedocGulp.typedocBuild, (cb) => {
+    spawnSync(`typedoc`, [TYPEDOC.PROJECT_PATH], { stdio: 'inherit', shell: true });
+    cb();
 });
+typedocBuildTheme.displayName = 'typedoc-build:theme';
 
-gulp.task('typedoc-styles', ['typedoc:clean-styles'], () => {
-    const prefixer = postcss([autoprefixer({
-        browsers: ['last 5 versions', '> 3%'],
-        cascade: false,
-        grid: false
-    })]);
+const browserReload = (cb) => {
+    browserSync.reload();
 
-    return gulp.src(`${TYPEDOC_THEME.SRC}/${TYPEDOC_THEME.STYLES.ENTRY}`)
-        .pipe(sourcemaps.init())
-        .pipe(sass.sync(TYPEDOC_THEME.STYLES.CONFIG).on('error', sass.logError))
-        .pipe(prefixer)
-        .pipe(sourcemaps.write(TYPEDOC_THEME.STYLES.MAPS))
-        .pipe(gulp.dest(`${TYPEDOC_THEME.DIST}/${TYPEDOC_THEME.STYLES.OUT}`))
-});
+    cb();
+};
 
-gulp.task('typedoc-ts',
-    shell.task('tsc --project ./extras/docs/themes/typedoc/tsconfig.json')
-);
+const typedocServe = (cb) => {
+    const config = {
+        server: {
+            baseDir: TYPEDOC_THEME.OUTPUT
+        },
+        port: 3000
+    }
 
-gulp.task('typedoc-js', ['typedoc:clean-js', 'typedoc-ts'], () => {
-    gulp.src([
-        `${TYPEDOC_THEME.SRC}/assets/js/lib/jquery-2.1.1.min.js`,
-        `${TYPEDOC_THEME.SRC}/assets/js/lib/underscore-1.6.0.min.js`,
-        `${TYPEDOC_THEME.SRC}/assets/js/lib/backbone-1.1.2.min.js`,
-        `${TYPEDOC_THEME.SRC}/assets/js/lib/lunr.min.js`,
-        `${TYPEDOC_THEME.SRC}/assets/js/src/navigation/igviewer.common.js`,
-        `${TYPEDOC_THEME.SRC}/assets/js/src/navigation/igviewer.renderingService.js`,
-        `${TYPEDOC_THEME.SRC}/assets/js/src/navigation/nav-initializer.js`,
-        `${TYPEDOC_THEME.SRC}/assets/js/src/versioning/tag-versions.req.js`,
-        `${TYPEDOC_THEME.SRC}/assets/js/main.js`
-    ])
-        .pipe(concat('main.js'))
-        .pipe(gulp.dest(`${TYPEDOC_THEME.DIST}/assets/js/`));
-});
+    browserSync.init(config);
 
-gulp.task('typedoc-theme-ts', () => {
-    gulp.src([
-        `${path.join(TYPEDOC_THEME.SRC, "assets", "js", "src", "theme.ts")}`
-    ])
-        .pipe(ts({
-            target: "es2017",
-            moduleResolution: 'node',
-            module: 'commonjs'
-        }))
-        .pipe(gulp.dest(TYPEDOC_THEME.DIST));
-});
+    cb();
+};
 
-gulp.task('typedoc-copy-config', () => {
-    const themePath = path.join(__dirname, "extras", "docs", "themes", "config.json");
-    gulp.src([themePath])
-        .pipe(gulp.dest(TYPEDOC_THEME.DIST));
-});
-
-gulp.task('typedoc-images', ['typedoc:clean-images'], () => {
-    return gulp.src(`${TYPEDOC_THEME.SRC}/assets/images/**/*.{png,gif,jpg,svg}`)
-        .pipe(gulp.dest(`${TYPEDOC_THEME.DIST}/assets/images`));
-});
-
-gulp.task('typedoc-hbs', ['typedoc:clean-hbs'], () => {
-    return gulp.src([
-        `${TYPEDOC_THEME.SRC}/layouts/**/*`,
-        `${TYPEDOC_THEME.SRC}/partials/**/*`,
-        `${TYPEDOC_THEME.SRC}/templates/**/*`,
-    ], {
-            base: `${TYPEDOC_THEME.SRC}`
-        })
-        .pipe(gulp.dest(`${TYPEDOC_THEME.DIST}`));
-});
-
-gulp.task('typedoc:clean-theme-js', () => {
-    del.sync(`${TYPEDOC_THEME.DIST}/theme.js`)
-})
-
-gulp.task('typedoc:clean-js', ['typedoc:clean-theme-js'], () => {
-    del.sync(`${TYPEDOC_THEME.DIST}/assets/js`);
-});
-
-gulp.task('typedoc:clean-styles', () => {
-    del.sync(`${TYPEDOC_THEME.DIST}/assets/css`);
-});
-
-gulp.task('typedoc:clean-config', () => {
-    del.sync(`${TYPEDOC_THEME.DIST}/config.json`)
-})
-
-gulp.task('typedoc:clean-images', () => {
-    del.sync(`${TYPEDOC_THEME.DIST}/assets/images`);
-});
-
-gulp.task('typedoc:clean-hbs', ['typedoc:clean-config'], () => {
-    del.sync([
-        `${TYPEDOC_THEME.DIST}/layouts`,
-        `${TYPEDOC_THEME.DIST}/partials`,
-        `${TYPEDOC_THEME.DIST}/templates`
-    ]);
-});
-
-gulp.task('typedoc-watch', ['typedoc-build:theme'], () => {
+function typedocWatchFunc(cb) {
     gulp.watch([
-        `${TYPEDOC_THEME.SRC}/assets/js/src/**/*.{ts,js}`,
-        `${TYPEDOC_THEME.SRC}/assets/css/**/*.{scss,sass}`,
-        `${TYPEDOC_THEME.SRC}/**/*.hbs`,
-        `${TYPEDOC_THEME.SRC}/assets/images/**/*.{png,jpg,gif}`,
-    ], ['typedoc-build:theme']);
-});
+        slash(path.join(TYPEDOC_THEME.SRC, 'assets', 'js', 'src', '/**/*.{ts,js}')),
+        slash(path.join(TYPEDOC_THEME.SRC, 'assets', 'css', '/**/*.{scss,sass}')),
+        slash(path.join(TYPEDOC_THEME.SRC, '/**/*.hbs')),
+        slash(path.join(TYPEDOC_THEME.SRC, 'assets', 'images', '/**/*.{png,jpg,gif}')),
+      ], series(typedocGulp.typedocBuild, typedocBuildTheme, browserReload));
 
-gulp.task('typedoc-build', [
-    'typedoc-images',
-    'typedoc-hbs',
-    'typedoc-styles',
-    'typedoc-js',
-    'typedoc-theme-ts',
-    'typedoc-copy-config'
-]);
-
-const SASSDOC_THEME = {
-    JS_DIR: path.join(__dirname, 'extras', 'docs', 'themes', 'sassdoc', 'assets', 'js'),
-    TYPESCRIPT_DIR: path.join(__dirname, 'extras', 'docs', 'themes', 'sassdoc', 'typescript')
+      cb();
 }
 
-gulp.task('sassdoc-clear-main', () => {
-    del.sync(`${SASSDOC_THEME.JS_DIR}/main.js`)
-    del.sync(`${SASSDOC_THEME.JS_DIR}/main.d.ts`)
-})
-
-gulp.task('sassdoc-ts',
-    shell.task('tsc --project ./extras/docs/themes/sassdoc/tsconfig.json')
-);
-
-gulp.task('sassdoc-js', ['sassdoc-ts'], () => {
-    gulp.src([
-        `${SASSDOC_THEME.JS_DIR}/**/!(tag-versions.req)*.js`,
-    ])
-        .pipe(concat('main.js'))
-        .pipe(gulp.dest(SASSDOC_THEME.JS_DIR));
-})
-
-gulp.task('sassdoc-build', [
-    'sassdoc-clear-main',
-    'sassdoc-js'
-])
-
-const DOCS_OUTPUT_PATH = path.join(__dirname, 'dist', 'igniteui-angular', 'docs');
 
 const TYPEDOC = {
-    EXPORT_JSON_PATH: path.join('dist', 'igniteui-angular', 'docs', 'typescript-exported'),
-    PROJECT_PATH: path.join(__dirname, 'projects', 'igniteui-angular', 'src'),
-    TEMPLATE_STRINGS_PATH: path.join(__dirname, 'extras', 'template', 'strings', 'shell-strings.json')
+    EXPORT_JSON_PATH: slash(path.join(DOCS_OUTPUT_PATH, 'typescript-exported')),
+    PROJECT_PATH: slash(path.join(__dirname, 'projects', 'igniteui-angular', 'src')),
+    TEMPLATE_STRINGS_PATH: slash(path.join(__dirname, 'extras', 'template', 'strings', 'shell-strings.json'))
+};
+
+function typedocBuildExportFn(cb) {
+    spawnSync('typedoc', [TYPEDOC.PROJECT_PATH, "--generate-json", TYPEDOC.EXPORT_JSON_PATH, "--tags", "--params"],
+        { stdio: 'inherit', shell: true });
+    cb();
 }
 
-gulp.task('typedoc-build:theme', ['typedoc-build'],
-    shell.task(`typedoc ${TYPEDOC.PROJECT_PATH}`)
-);
+function typedocImportJsonFn(cb) {
+    spawnSync('typedoc', [TYPEDOC.PROJECT_PATH, "--generate-from-json", TYPEDOC.EXPORT_JSON_PATH],
+        { stdio: 'inherit', shell: true});
+    cb();
+}
 
-gulp.task('typedoc-build:export',
-    shell.task(`typedoc ${TYPEDOC.PROJECT_PATH} --generate-json ${TYPEDOC.EXPORT_JSON_PATH} --tags --params`)
-);
-
-gulp.task('typedoc-build:import', ['typedoc-build'],
-    shell.task(`typedoc ${TYPEDOC.PROJECT_PATH} --generate-from-json ${TYPEDOC.EXPORT_JSON_PATH}`)
-);
-
-gulp.task('create:docs-output-path', () => {
+function createDocsOutputDirFn(cb) {
     !fs.existsSync(DOCS_OUTPUT_PATH) && fs.mkdirSync(DOCS_OUTPUT_PATH);
-});
+    cb();
+}
 
-gulp.task('typedoc:clean-docs-dir', () => {
-    del.sync(`${DOCS_OUTPUT_PATH}typescript`)
-});
+function cleanTypedocOutputDirFn(cb) {
+    del.sync(slash(path.join(DOCS_OUTPUT_PATH, 'typescript')));
+    cb();
+}
 
-gulp.task('typedoc-build:doc:ja:localization', ['typedoc-build', 'create:docs-output-path', 'typedoc:clean-docs-dir'],
-    shell.task(`typedoc ${TYPEDOC.PROJECT_PATH} --generate-from-json ${path.join(__dirname, 'i18nRepo', 'typedoc', 'ja')} --templateStrings ${TYPEDOC.TEMPLATE_STRINGS_PATH} --localize jp`)
-);
+function typedocBuildDocsJA (cb) {
+        spawnSync('typedoc',[
+            TYPEDOC.PROJECT_PATH,
+            '--generate-from-json',
+            slash(path.join(__dirname, 'i18nRepo', 'typedoc', 'ja')),
+            '--templateStrings',
+            TYPEDOC.TEMPLATE_STRINGS_PATH,
+            '--localize',
+            'jp'], { stdio: 'inherit', shell: true });
 
-gulp.task('typedoc-build:doc:en:localization', ['typedoc-build', 'create:docs-output-path', 'typedoc:clean-docs-dir'],
-    shell.task(`typedoc ${TYPEDOC.PROJECT_PATH} --localize en`)
-);
+        cb();
+}
+
+function typedocBuildDocsEN (cb) {
+        spawnSync('typedoc', [
+            TYPEDOC.PROJECT_PATH,
+            '--localize',
+            'en'], { stdio: 'inherit', shell: true});
+
+        cb();
+}
 
 const SASSDOC = {
     PROJECT_PATH: path.join(__dirname, 'projects', 'igniteui-angular', 'src', 'lib', 'core', 'styles'),
-    DEST: path.join(__dirname, 'dist', 'igniteui-angular', 'docs', 'sass'),
+    DEST: path.join(DOCS_OUTPUT_PATH, 'sass'),
     OPTIONS: path.join(__dirname, '.sassdocrc'),
+};
+
+const sassdocCleanOutputDir = (cb) => {
+    del.sync(SASSDOC.DEST);
+    cb();
 }
 
-gulp.task('sassdoc:clean-docs-dir', () => {
-    del.sync(SASSDOC.DEST);
-});
+module.exports.sassdocDevMode = sassdocGulp.develop;
 
-gulp.task('sassdoc-build:export', () => {
+function sassdocBuildJson(cb) {
     const options = JSON.parse(fs.readFileSync(SASSDOC.OPTIONS, 'utf8'));
-    options.convert = argv.convert;
 
-    return gulp.src(`${SASSDOC.PROJECT_PATH}/**/*.scss`)
+    const { convert, exportDir } = argv;
+
+    options.convert = convert;
+    options.exportDir = exportDir;
+
+    gulp.src(`${SASSDOC.PROJECT_PATH}/**/*.scss`)
         .pipe(sassdoc(options));
-});
 
-gulp.task('sassdoc-build:import', () => {
+    cb();
+
+}
+
+function sassdocImportJson(cb) {
     const options = JSON.parse(fs.readFileSync(SASSDOC.OPTIONS, 'utf8'));
-    options.render = argv.render;
 
-    return gulp.src(`${SASSDOC.PROJECT_PATH}/**/*.scss`)
-        .pipe(sassdoc(options))
-});
+    const {render, importDir} = argv;
 
-gulp.task('sassdoc-build:doc:ja:localizaiton', ['sassdoc-build', 'sassdoc:clean-docs-dir'], () => {
+    options.render = render;
+    options.json_dir = importDir;
+    options.shellStringsPath = path.join(__dirname, 'extras', 'template', 'strings', 'shell-strings.json');
+
+    gulp.src(`${SASSDOC.PROJECT_PATH}/**/*.scss`)
+        .pipe(sassdoc(options));
+
+    cb();
+}
+
+function sassdocBuildJA (cb) {
     const pathTranslations = path.join(__dirname, 'i18nRepo', 'sassdoc', 'ja');
     const options = JSON.parse(fs.readFileSync(SASSDOC.OPTIONS, 'utf8'));
 
     options.lang = 'jp';
     options.render = argv.render;
     options.json_dir = pathTranslations;
+    options.shellStringsPath = path.join(__dirname, 'extras', 'template', 'strings', 'shell-strings.json');
 
-    return gulp.src(`${SASSDOC.PROJECT_PATH}/**/*.scss`)
+    gulp.src(`${SASSDOC.PROJECT_PATH}/**/*.scss`)
         .pipe(sassdoc(options));
-});
 
-gulp.task('sassdoc-build:doc:en:localizaiton', ['sassdoc-build', 'sassdoc:clean-docs-dir'], () => {
+    cb();
+}
+
+function sassdocBuildEN (cb) {
     const options = JSON.parse(fs.readFileSync(SASSDOC.OPTIONS, 'utf8'));
 
     options.lang = 'en';
+    options.shellStringsPath = path.join(__dirname, 'extras', 'template', 'strings', 'shell-strings.json');
 
-    return gulp.src(`${SASSDOC.PROJECT_PATH}/**/*.scss`)
+    gulp.src(`${SASSDOC.PROJECT_PATH}/**/*.scss`)
         .pipe(sassdoc(options));
-});
 
-gulp.task('typedoc-serve', ['typedoc-watch'], () => {
-    browserSync.init({
-        server: './dist/igniteui-angular/docs/typescript'
-    });
+    cb();
+}
 
-    gulp.watch('./dist/igniteui-angular/docs/typescript/**/*')
-        .on('change', browserSync.reload);
-});
+module.exports.createDocsOutputDir = createDocsOutputDirFn;
+
+/**
+ * Typedoc build tasks
+ */
+module.exports.exportTypedocJson = typedocBuildExportFn;
+module.exports.cleanTypedocOutputDir = cleanTypedocOutputDirFn;
+module.exports.typedocBuildTheme = typedocBuildTheme;
+module.exports.importTypedocJson = series(typedocGulp.typedocBuild, typedocImportJsonFn);
+module.exports.typedocServe = series(
+    typedocBuildTheme,
+    typedocWatchFunc,
+    typedocServe
+);
+module.exports.typedocBuildDocsJA = series(
+    typedocGulp.typedocBuild,
+    this.createDocsOutputDir,
+    this.cleanTypedocOutputDir,
+    typedocBuildDocsJA
+);
+module.exports.typedocBuildDocsEN = series(
+    typedocGulp.typedocBuild,
+    this.createDocsOutputDir,
+    this.cleanTypedocOutputDir,
+    typedocBuildDocsEN
+);
+
+/**
+ * Sassdoc build tasks
+ */
+module.exports.sassdocCleanOutputDir = sassdocCleanOutputDir;
+module.exports.sassdocImportJson = sassdocImportJson;
+module.exports.sassdocBuildJson = sassdocBuildJson;
+module.exports.sassdocBuildJA = series(sassdocCleanOutputDir, sassdocGulp.sassdocBuild, sassdocBuildJA);
+module.exports.sassdocBuildEN = series(sassdocCleanOutputDir, sassdocGulp.sassdocBuild, sassdocBuildEN);

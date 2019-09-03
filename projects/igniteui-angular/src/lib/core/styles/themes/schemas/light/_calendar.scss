@@ -41,6 +41,7 @@
 $_light-calendar: extend(
     $_default-shape-calendar,
     (
+        variant: 'material',
         content-background: (
             igx-color: 'surface'
         ),
@@ -125,8 +126,13 @@ $_light-calendar: extend(
         ),
 
         date-current-bg-color: transparent,
-        date-current-bg-hover-color: transparent,
-        date-current-bg-focus-color: transparent,
+
+        date-current-bg-hover-color: (
+            igx-contrast-color: ('secondary', 500)
+        ),
+        date-current-bg-focus-color: (
+            igx-contrast-color: ('secondary', 500)
+        ),
 
         date-hover-background: (
             igx-color: ('grays', 200)
@@ -170,6 +176,7 @@ $_fluent-calendar: extend(
     $_light-calendar,
     $_fluent-shape-calendar,
     (
+        variant: 'fluent',
         date-current-text-color: #fff,
 
         date-current-bg-color: (
