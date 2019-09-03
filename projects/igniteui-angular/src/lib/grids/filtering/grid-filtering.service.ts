@@ -114,6 +114,7 @@ export class IgxFilteringService implements OnDestroy {
                     filterCell.updateFilterCellArea();
                 });
             });
+
             this.grid.onColumnVisibilityChanged.pipe(takeUntil(this.destroy$)).subscribe((eventArgs: IColumnVisibilityChangedEventArgs) => {
                 if (this.grid.filteringRow && this.grid.filteringRow.column === eventArgs.column ) {
                     this.grid.filteringRow.close();
