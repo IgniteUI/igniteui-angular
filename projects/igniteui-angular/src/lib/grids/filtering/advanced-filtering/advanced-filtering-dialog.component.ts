@@ -114,6 +114,9 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     @HostBinding('style.pointer-events')
     pointerEvents = 'all';
 
+    @HostBinding('style.display')
+    display = 'block';
+
     private destroy$ = new Subject<any>();
     private _selectedColumn: IgxColumnComponent;
     private _clickTimer;
