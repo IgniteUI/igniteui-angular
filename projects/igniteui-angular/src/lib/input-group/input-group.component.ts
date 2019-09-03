@@ -10,12 +10,17 @@ import {
     NgModule,
     QueryList,
     Inject,
-    Optional
+    Optional,
+    AfterViewInit,
+    AfterContentChecked,
+    ViewChild,
+    Renderer2,
+    ChangeDetectorRef
 } from '@angular/core';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
-import { IgxPrefixDirective, IgxPrefixModule} from '../directives/prefix/prefix.directive';
+import { IgxPrefixDirective, IgxPrefixModule } from '../directives/prefix/prefix.directive';
 import { IgxSuffixDirective, IgxSuffixModule } from '../directives/suffix/suffix.directive';
 import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
 import { IgxInputGroupBase } from './input-group.common';
@@ -36,14 +41,20 @@ enum IgxInputGroupType {
     templateUrl: 'input-group.component.html',
     providers: [{ provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent }]
 })
-export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInputGroupBase {
+export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInputGroupBase, AfterViewInit, AfterContentChecked {
     private _type = IgxInputGroupType.LINE;
     private _filled = false;
     private _supressInputAutofocus = false;
+    private _labelWidth = 0;
+    public lineWidth = 0;
+
+    @ContentChild(IgxLabelDirective, { static: false }) label: IgxLabelDirective;
+    @ViewChild('line', { static: false }) line: ElementRef;
 
     /**
      * An ElementRef property of the `IgxInputGroupComponent`.
      */
+
     public element: ElementRef;
 
     /**
@@ -86,7 +97,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      * @hidden
      */
     @HostBinding('class.igx-input-group--focused')
-    public isFocused = false;
+    public isFocused = true;
 
 
     /**
@@ -277,9 +288,13 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     }
 
     constructor(private _element: ElementRef,
-        @Optional() @Inject(DisplayDensityToken) private _displayDensityOptions: IDisplayDensityOptions) {
+        @Optional() @Inject(DisplayDensityToken) private _displayDensityOptions: IDisplayDensityOptions,
+        private renderer: Renderer2,
+        private cdr: ChangeDetectorRef) {
         super(_displayDensityOptions);
         this.element = _element;
+
+        this.cdr.detach();
     }
 
     /**
@@ -322,7 +337,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      * ```
      */
     public get isTypeLine(): boolean {
-        return  this._type === IgxInputGroupType.LINE;
+        return this._type === IgxInputGroupType.LINE;
     }
 
     /**
@@ -378,7 +393,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      * ```
      */
     get isTypeSearch() {
-        return  this._type === IgxInputGroupType.SEARCH;
+        return this._type === IgxInputGroupType.SEARCH;
     }
 
     /**
@@ -392,7 +407,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      * ```
      */
     get isTypeFluentSearch() {
-        return  this._type === IgxInputGroupType.FLUENT_SEARCH;
+        return this._type === IgxInputGroupType.FLUENT_SEARCH;
     }
 
     get filled() {
@@ -402,6 +417,22 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     set filled(val) {
         this._filled = val;
     }
+
+    ngAfterViewInit() {
+        this.cdr.detectChanges();
+        if (this.label && this.label.elementRef) {
+            const labelEl = this.label.elementRef.nativeElement.getBoundingClientRect();
+            this._labelWidth = labelEl.width;
+        }
+        this.isFocused = false;
+        this.cdr.reattach();
+    }
+
+    ngAfterContentChecked() {
+        if (this.line && this.line.nativeElement) {
+            this.renderer.setStyle(this.line.nativeElement, 'width', `calc(100% - ${this._labelWidth}px)`);
+        }
+    }
 }
 
 /**
@@ -409,7 +440,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
  */
 @NgModule({
     declarations: [IgxInputGroupComponent, IgxHintDirective, IgxInputDirective, IgxLabelDirective],
-    exports: [IgxInputGroupComponent,  IgxHintDirective, IgxInputDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective],
+    exports: [IgxInputGroupComponent, IgxHintDirective, IgxInputDirective, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective],
     imports: [CommonModule, IgxPrefixModule, IgxSuffixModule]
 })
 export class IgxInputGroupModule { }

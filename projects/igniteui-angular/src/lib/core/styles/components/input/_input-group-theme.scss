@@ -569,7 +569,6 @@
         [igx-suffix] {
             padding-right: 0;
         }
-
     }
 
     %igx-input-group__bundle-prefix {
@@ -1016,9 +1015,9 @@
         will-change: transform;
         transform-origin: top left;
         transition: transform $transition-timing,
-        color $transition-timing,
-        margin $transition-timing,
-        top $transition-timing;
+            color $transition-timing,
+            margin $transition-timing,
+            top $transition-timing;
 
         [dir='rtl'] & {
             transform-origin: top right;
@@ -1129,17 +1128,18 @@
     %igx-input-group__bundle-line {
         position: absolute;
         top: rem(-1px);
-        width: calc(100% - 48px);
         height: 1px;
-        right:0;
+        right: 0;
         flex: 1;
         background: --var($theme, 'idle-bottom-line-color');
-        display: none;
+        visibility: hidden;
+        width: 100%;
+        transition: width $transition-timing;
     }
 
     %igx-input-group__bundle-line--filled,
     %igx-input-group__bundle-line--focused {
-        display: block;
+        visibility: visible;
     }
 
     %igx-input-group__bundle-line--focused {
@@ -1360,6 +1360,7 @@
                 0 1px 0 --var($theme, 'success-secondary-color'),
                 0 -1px 0 --var($theme, 'success-secondary-color');
             color: --var($theme, 'idle-text-color');
+
             igx-prefix,
             [igx-prefix] {
                 color: --var($theme, 'idle-text-color') !important;
@@ -1372,6 +1373,7 @@
                 0 1px 0 --var($theme, 'success-secondary-color'),
                 0 -1px 0 --var($theme, 'success-secondary-color');
             color: --var($theme, 'idle-text-color');
+
             igx-suffix,
             [igx-suffix] {
                 color: --var($theme, 'idle-text-color') !important;
@@ -1386,14 +1388,12 @@
 
         &:hover {
             %igx-input-group__bundle-type-border-main {
-                box-shadow:
-                    0 1px 0 --var($theme, 'success-secondary-color'),
+                box-shadow: 0 1px 0 --var($theme, 'success-secondary-color'),
                     0 0 0 transparent;
             }
 
             %igx-input-group__bundle-prefix {
-                box-shadow:
-                    inset 1px 0 0 --var($theme, 'success-secondary-color'),
+                box-shadow: inset 1px 0 0 --var($theme, 'success-secondary-color'),
                     0 1px 0 --var($theme, 'success-secondary-color'),
                     0 -1px 0 --var($theme, 'success-secondary-color');
             }

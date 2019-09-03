@@ -1,4 +1,4 @@
-import { Directive, HostBinding, Input } from '@angular/core';
+import { Directive, HostBinding, Input, ElementRef } from '@angular/core';
 
 let NEXT_ID = 0;
 
@@ -9,10 +9,12 @@ export class IgxLabelDirective {
     @HostBinding('class.igx-input-group__label')
     public defaultClass = true;
 
-/**
- * @hidden
- */
+    /**
+     * @hidden
+     */
     @HostBinding('attr.id')
     @Input()
     public id = `igx-label-${NEXT_ID++}`;
+
+    constructor(public elementRef: ElementRef) { }
 }
