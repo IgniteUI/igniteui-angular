@@ -13,7 +13,7 @@ import { IgxChipComponent } from '../../../chips/chip.component';
 import { IgxSelectComponent } from '../../../select/select.component';
 import { IDragStartEventArgs, IDragBaseEventArgs } from '../../../directives/drag-drop/drag-drop.directive';
 import { CloseScrollStrategy } from '../../../services/overlay/scroll/close-scroll-strategy';
-import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
+import { IgxToggleDirective, IgxOverlayOutletDirective } from '../../../directives/toggle/toggle.directive';
 import { IButtonGroupEventArgs } from '../../../buttonGroup/buttonGroup.component';
 import { takeUntil, first } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -111,6 +111,9 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     @ViewChild('expressionsContainer', { static: true })
     protected expressionsContainer: ElementRef;
 
+    @ViewChild('overlayOutlet', { read: IgxOverlayOutletDirective, static: true })
+    public overlayOutlet: IgxOverlayOutletDirective;
+
     @HostBinding('style.display')
     display = 'block';
 
@@ -123,7 +126,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     constructor(private element: ElementRef, public cdr: ChangeDetectorRef) { }
 
     public ngAfterViewInit(): void {
-        this._overlaySettings.outlet = this.grid.outletDirective;
+        this._overlaySettings.outlet = this.overlayOutlet;
         this.contextMenuToggle.onClosed.pipe(takeUntil(this.destroy$)).subscribe((args) => {
             this.contextualGroup = null;
         });
