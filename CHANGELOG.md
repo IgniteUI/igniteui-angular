@@ -37,7 +37,7 @@ For more information about the theming please read our [documentation](https://w
 - `IgxDrag`
     - Dragging without ghost. Now it is possible to drag the base element `igxDrag` is instanced on by setting the new input `ghost` to false.
     - Ghost template. A custom ghost template reference can be provided on the new `ghostTemplate` input.
-    - Dragging using a single or multiple handles. New `igxDragHandle` directive is exposed to specify a handle by which and element can be interacted with instead of the whole element `igxDrag` is instanced on.
+    - Dragging using a single or multiple handles. New `igxDragHandle` directive is exposed to specify a handle by which an element can be interacted with instead of the whole element `igxDrag` is instanced on.
     - Linking of drag and drop elements. This can be achieved by using the new provided `dragChannel` input, specifying each element to which channel it corresponds.
     - Drag animation improvements. Three new methods have been exposed in place of the old `animateToOrigin` input in order to provide more flexibility when wanting to have transition animation to specific position when dropping. `setLocation`, `transitionToOrigin` and `transitionTo` are all methods that provide a various way to animate a transition to a specific location for the dragged element.
     - New getters - `location` and `originLocation` to aid in applying transition animations.
