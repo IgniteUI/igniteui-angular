@@ -440,7 +440,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
 
             setTimeout(() => {
                 this.calculateContextMenuTarget();
-               if (this.contextMenuToggle.collapsed) {
+                if (this.contextMenuToggle.collapsed) {
                     this.contextMenuToggle.open(this._overlaySettings);
                 } else {
                     this.contextMenuToggle.reposition();
@@ -591,8 +591,10 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
             Math.min(t, c.elementRef.nativeElement.getBoundingClientRect().top), Number.MAX_VALUE);
         minTop = Math.max(containerRect.top, minTop);
         minTop = Math.min(containerRect.bottom, minTop);
-        const maxRight = chips.reduce((r, c) =>
+        let maxRight = chips.reduce((r, c) =>
             Math.max(r, c.elementRef.nativeElement.getBoundingClientRect().right), 0);
+        maxRight = Math.max(maxRight, containerRect.left);
+        maxRight = Math.min(maxRight, containerRect.right);
         this._overlaySettings.positionStrategy.settings.target = new Point(maxRight, minTop);
     }
 
