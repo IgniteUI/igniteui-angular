@@ -99,7 +99,7 @@
                     <span>
                         {{ getConditionFriendlyName(expressionItem.expression.condition.name) }}
                     </span>
-                    <span *ngIf="!expressionItem.expression.condition.isUnary">
+                    <span igxSuffix *ngIf="!expressionItem.expression.condition.isUnary">
                         {{ isDate(expressionItem.expression.searchVal) ? (expressionItem.expression.searchVal | igxdate:grid.locale) : expressionItem.expression.searchVal }}
                     </span>
                 </igx-chip>
@@ -281,13 +281,26 @@
                 </button>
             </ng-container>
             <ng-container *ngIf="!contextualGroup">
-                <button igxButton="outlined" [displayDensity]="displayDensity" (click)="createAndGroup()">
+                <button
+                    igxButton="outlined"
+                    [displayDensity]="displayDensity"
+                    (click)="createAndGroup()"
+                >
                     {{grid.resourceStrings.igx_grid_advanced_filter_create_and_group}}
                 </button>
-                <button igxButton="outlined" [displayDensity]="displayDensity" (click)="createOrGroup()">
+                <button
+                    igxButton="outlined"
+                    [displayDensity]="displayDensity"
+                    (click)="createOrGroup()"
+                >
                     {{grid.resourceStrings.igx_grid_advanced_filter_create_or_group}}
                 </button>
-                <button igxButton="outlined" [displayDensity]="displayDensity" (click)="deleteFilters()">
+                <button
+                    igxButton="outlined"
+                    [displayDensity]="displayDensity"
+                    (click)="deleteFilters()"
+                    class="igx-filter-contextual-menu__delete-btn"
+                >
                     {{grid.resourceStrings.igx_grid_advanced_filter_delete_filters}}
                 </button>
             </ng-container>
