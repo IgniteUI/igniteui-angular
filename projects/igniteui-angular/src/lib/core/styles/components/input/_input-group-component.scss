@@ -369,7 +369,6 @@
         @include e(textarea) {
             @extend %form-group-textarea--border--compact !optional;
         }
-
     }
 
     @include mx(invalid, border){
@@ -382,7 +381,6 @@
         @include e(bundle-line) {
             @extend %igx-input-group__bundle-line--error !optional;
         }
-
     }
 
     @include mx(focused, border) {
@@ -403,7 +401,6 @@
         @include e(bundle-type-border-main) {
             @extend %igx-input-group__bundle-type-border-main-focused !optional;
         }
-
     }
 
     @include mx(focused, valid, border) {
@@ -432,9 +429,7 @@
         }
     }
 
-    @include mx(disabled, border) {
-
-    }
+    // @include mx(disabled, border) {}
 
     // INPUT TYPE BORDER -- END --
 
