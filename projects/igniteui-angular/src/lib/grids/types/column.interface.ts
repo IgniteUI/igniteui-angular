@@ -1,14 +1,14 @@
 import { TemplateRef } from '@angular/core';
 import { DataType } from '../../data-operations/data-util';
 
+/**
+ * @hidden
+ * @internal
+ */
 export interface ColumnType {
     field: string;
     index: number;
     dataType: DataType;
-    /**
-     * @hidden
-     * @internal
-     */
     inlineEditorTemplate: TemplateRef<any>;
     visibleIndex: number;
     editable: boolean;
@@ -17,6 +17,9 @@ export interface ColumnType {
     columnGroup: boolean;
     movable: boolean;
     groupable: boolean;
+    sortable: boolean;
+    filterable: boolean;
+    hidden: boolean;
     disablePinning: boolean;
     pinned: boolean;
     level: number;

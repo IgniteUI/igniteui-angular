@@ -2,7 +2,7 @@ import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule, GridSelectionMode, IRowSelectionEventArgs } from './index';
+import { IgxGridModule, IRowSelectionEventArgs } from './index';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -17,6 +17,7 @@ import {
 import { IgxHierarchicalGridModule } from '../hierarchical-grid/hierarchical-grid.module';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { GridSelectionMode } from '../types';
 
 const DEBOUNCETIME = 30;
 
