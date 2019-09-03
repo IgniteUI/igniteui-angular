@@ -198,11 +198,12 @@
     }
 
     %filter-con-menu {
+        position: relative;
         display: flex;
         flex-flow: column;
         width: 196px;
         background-color: --var($theme, 'filtering-row-background');
-        padding: rem(8px);
+        padding: rem(16px) rem(8px);
         margin-left: rem(16px);
         border-radius: rem(4px);
         border: 1px solid igx-color($palette, 'grays', 200);
@@ -213,8 +214,12 @@
             margin-top: $vertical-space-comfortable;
         }
 
-        [igxButton] > igx-icon {
-            margin-right: rem(8px);
+        > [igxButton]%filter-con-menu__close-btn + [igxButton] {
+            margin-top: 0;
+        }
+
+        [igxButton] > igx-icon + * {
+            margin-left: 8px;
         }
 
         igx-buttongroup > * {
@@ -224,6 +229,14 @@
 
     %filter-con-menu__delete-btn {
         color: igx-color($palette, 'error');
+    }
+
+    %filter-con-menu__close-btn {
+        position: absolute;
+        top: rem(-18px);
+        right: rem(-18px);
+        background-color: --var($theme, 'filtering-row-background');
+        border: 1px solid igx-color($palette, 'grays', 200);
     }
 
     %filter-empty {

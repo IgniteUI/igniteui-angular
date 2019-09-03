@@ -111,6 +111,10 @@
     @include b(igx-filter-contextual-menu) {
         @extend %filter-con-menu !optional;
 
+        @include e(close-btn) {
+            @extend %filter-con-menu__close-btn !optional;
+        }
+
         @include e(delete-btn) {
             @extend %filter-con-menu__delete-btn !optional;
         }

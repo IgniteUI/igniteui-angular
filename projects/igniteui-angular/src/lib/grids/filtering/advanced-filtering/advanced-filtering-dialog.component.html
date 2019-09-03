@@ -247,9 +247,12 @@
             }"
         >
             <button igxButton="icon"
-                    (click)="clearSelection()">
+                    class="igx-filter-contextual-menu__close-btn"
+                    (click)="clearSelection()"
+            >
                 <igx-icon>close</igx-icon>
             </button>
+
             <ng-container *ngIf="contextualGroup">
                 <igx-buttongroup [displayDensity]="displayDensity"
                                  [multiSelection]="false"
