@@ -29,7 +29,8 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { HelperUtils, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
-/* const strings go here */
+const ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
+const ADVANCED_FILTERING_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
 
 describe('IgxGrid - Advanced Filtering', () => {
     configureTestSuite();
@@ -224,8 +225,7 @@ describe('IgxGrid - Advanced Filtering', () => {
             expect(GridFunctions.getAdvancedFilteringTreeChildItems(group).length).toBe(0, 'The group has children.');
 
             // Verify the operator line of the root group is an 'And' line.
-            const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
-            expect(rootOperatorLine.classList.contains('igx-filter-tree__line--and')).toBe(true, 'incorrect operator line');
+            verifyOperatorLine(GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix), 'and');
 
             // Verify the enabled/disabled state of each input of the expression in edit mode.
             verifyEditModeExpressionInputStates(fix, true, false, false);
@@ -261,8 +261,7 @@ describe('IgxGrid - Advanced Filtering', () => {
             expect(GridFunctions.getAdvancedFilteringTreeChildItems(group).length).toBe(0, 'The group has children.');
 
             // Verify the operator line of the root group is an 'Or' line.
-            const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
-            expect(rootOperatorLine.classList.contains('igx-filter-tree__line--or')).toBe(true, 'incorrect operator line');
+            verifyOperatorLine(GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix), 'or');
 
             // Verify the enabled/disabled state of each input of the expression in edit mode.
             verifyEditModeExpressionInputStates(fix, true, false, false);
@@ -318,7 +317,7 @@ describe('IgxGrid - Advanced Filtering', () => {
 
             // Verify the new expression has been added to the group.
             const group = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
-            expect(GridFunctions.getAdvancedFilteringTreeChildExpressions(group).length).toBe(1, 'The group has no children.');
+            expect(GridFunctions.getAdvancedFilteringTreeChildExpressions(group).length).toBe(1, 'Incorrect children count.');
 
             // Apply the filters.
             GridFunctions.clickAdvancedFilteringApplyButton(fix);
@@ -360,6 +359,64 @@ describe('IgxGrid - Advanced Filtering', () => {
 
             expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(grid.advancedFilteringExpressionsTree);
         }));
+
+        it('Applying filter through the API should correctly update the UI.', fakeAsync(() => {
+            // Test prerequisites
+            grid.height = '800px';
+            fix.detectChanges();
+            tick(50);
+
+            // Verify the initial state of the grid and that no filters are present.
+            expect(grid.filteredData).toBeNull();
+            expect(grid.rowList.length).toBe(8);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('NetAdvantage');
+
+            // Apply advanced filter through API.
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands.push({
+                fieldName: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan')
+            });
+            const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
+            orTree.filteringOperands.push({
+                fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            orTree.filteringOperands.push({
+                fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            tree.filteringOperands.push(orTree);
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            // Verify the state of the grid after filtering.
+            expect(grid.filteredData.length).toBe(2);
+            expect(grid.rowList.length).toBe(2);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Some other item with Script');
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Verfiy there is a root group with 'And' operator line and 2 children.
+            const rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
+            expect(rootGroup).not.toBeNull();
+            verifyOperatorLine(GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix), 'and');
+            expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup).length).toBe(2);
+
+            // Verify the contnet of the first child (expression) of the root group.
+            verifyExpressionChipContent(fix, [0], 'Downloads', 'Greater Than', '100');
+
+            // Verify the content of the second child (group) of the root group.
+            const group = GridFunctions.getAdvancedFilteringTreeItem(fix, [1]);
+            expect(GridFunctions.getAdvancedFilteringTreeChildItems(group, false).length).toBe(2);
+            verifyExpressionChipContent(fix, [1, 0], 'ProductName', 'Contains', 'angular');
+            verifyExpressionChipContent(fix, [1, 1], 'ProductName', 'Contains', 'script');
+            // Verify the operator line of the child group.
+            verifyOperatorLine(GridFunctions.getAdvancedFilteringTreeGroupOperatorLine(fix, [1]), 'or');
+        }));
     });
 });
 
@@ -387,21 +444,49 @@ function sendInputNativeElement(fix, nativeElement, text) {
     fix.detectChanges();
 }
 
+/**
+* Verifies the type of the operator line ('and' or 'or').
+* (NOTE: The 'operator' argument must be a string with a value that is either 'and' or 'or'.)
+*/
+function verifyOperatorLine(operatorLine: HTMLElement, operator: string) {
+    expect(operator === 'and' || operator === 'or').toBe(true, 'operator must be \'and\' or \'or\'');
+
+    if (operator === 'and') {
+        expect(operatorLine.classList.contains(ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS)).toBe(true, 'incorrect operator line');
+        expect(operatorLine.classList.contains(ADVANCED_FILTERING_OPERATOR_LINE_OR_CSS_CLASS)).toBe(false, 'incorrect operator line');
+    } else {
+        expect(operatorLine.classList.contains(ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS)).toBe(false, 'incorrect operator line');
+        expect(operatorLine.classList.contains(ADVANCED_FILTERING_OPERATOR_LINE_OR_CSS_CLASS)).toBe(true, 'incorrect operator line');
+    }
+}
+
+function verifyExpressionChipContent(fix, path: number[], columnText: string, operatorText: string, valueText: string) {
+    const chip = GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, path);
+    // const columnNameContainer = chip.querySelector('.igx-filter-tree__expression-column');
+    const chipSpans = GridFunctions.sortNativeElementsHorizontally(Array.from(chip.querySelectorAll('span')));
+    const columnSpan = chipSpans[0];
+    const operatorSpan = chipSpans[1];
+    const valueSpan = chipSpans[2];
+    expect(columnSpan.innerText.toLowerCase().trim()).toBe(columnText.toLowerCase(), 'incorrect chip column');
+    expect(operatorSpan.innerText.toLowerCase().trim()).toBe(operatorText.toLowerCase(), 'incorrect chip operator');
+    expect(valueSpan.innerText.toLowerCase().trim()).toBe(valueText.toLowerCase(), 'incorrect chip filter value');
+}
+
 function verifyEditModeExpressionInputStates(fix,
                                              columnSelectEnabled: boolean,
                                              operatorSelectEnabled: boolean,
                                              valueInputEnabled: boolean) {
-    // Verify the column select is enabled.
+    // Verify the column select state.
     const columnInputGroup = GridFunctions.getAdvancedFilteringColumnSelect(fix).querySelector('igx-input-group');
     expect(!columnInputGroup.classList.contains('igx-input-group--disabled')).toBe(columnSelectEnabled,
         'incorrect column select state');
 
-    // Verify the operator select is disabled.
+    // Verify the operator select state.
     const operatorInputGroup = GridFunctions.getAdvancedFilteringOperatorSelect(fix).querySelector('igx-input-group');
     expect(!operatorInputGroup.classList.contains('igx-input-group--disabled')).toBe(operatorSelectEnabled,
         'incorrect operator select state');
 
-    // Verify the value input is disabled.
+    // Verify the value input state.
     const editModeContainer = GridFunctions.getAdvancedFilteringEditModeContainer(fix);
     const valueInputGroup = GridFunctions.sortNativeElementsHorizontally(
         Array.from(editModeContainer.querySelectorAll('igx-input-group')))[2];
