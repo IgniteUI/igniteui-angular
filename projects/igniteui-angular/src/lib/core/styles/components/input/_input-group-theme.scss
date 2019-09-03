@@ -503,7 +503,7 @@
             }
 
             %igx-input-group__bundle-suffix {
-                box-shadow: 1px 0 0 --var($theme, 'hover-bottom-line-color'),
+                box-shadow: inset -1px 0 0 --var($theme, 'hover-bottom-line-color'),
                     0 1px 0 --var($theme, 'hover-bottom-line-color'),
                     0 -1px 0 --var($theme, 'hover-bottom-line-color');
             }
@@ -581,7 +581,7 @@
     }
 
     %igx-input-group__bundle-suffix {
-        box-shadow: 1px 0 0 --var($theme, 'idle-bottom-line-color'),
+        box-shadow: inset -1px 0 0 --var($theme, 'idle-bottom-line-color'),
             0 1px 0 --var($theme, 'idle-bottom-line-color'),
             0 -1px 0 --var($theme, 'idle-bottom-line-color');
 
@@ -1160,7 +1160,7 @@
         }
 
         %igx-input-group__bundle-suffix {
-            box-shadow: 2px 0 0 --var($theme, 'focused-secondary-color'),
+            box-shadow: inset -2px 0 0 --var($theme, 'focused-secondary-color'),
                 0 2px 0 --var($theme, 'focused-secondary-color'),
                 0 -2px 0 --var($theme, 'focused-secondary-color');
 
@@ -1189,7 +1189,7 @@
             }
 
             %igx-input-group__bundle-suffix {
-                box-shadow: 2px 0 0 --var($theme, 'focused-secondary-color'),
+                box-shadow: inset -2px 0 0 --var($theme, 'focused-secondary-color'),
                     0 2px 0 --var($theme, 'focused-secondary-color'),
                     0 -2px 0 --var($theme, 'focused-secondary-color');
             }
@@ -1220,7 +1220,7 @@
         }
 
         %igx-input-group__bundle-suffix {
-            box-shadow: 1px 0 0 --var($theme, 'error-secondary-color'),
+            box-shadow: inset -1px 0 0 --var($theme, 'error-secondary-color'),
                 0 1px 0 --var($theme, 'error-secondary-color'),
                 0 -1px 0 --var($theme, 'error-secondary-color');
 
@@ -1249,7 +1249,7 @@
             }
 
             %igx-input-group__bundle-suffix {
-                box-shadow: 1px 0 0 --var($theme, 'error-secondary-color'),
+                box-shadow: inset -1px 0 0 --var($theme, 'error-secondary-color'),
                     0 1px 0 --var($theme, 'error-secondary-color'),
                     0 -1px 0 --var($theme, 'error-secondary-color');
             }
@@ -1281,7 +1281,7 @@
         }
 
         %igx-input-group__bundle-suffix {
-            box-shadow: 2px 0 0 --var($theme, 'error-secondary-color'),
+            box-shadow: inset -2px 0 0 --var($theme, 'error-secondary-color'),
                 0 2px 0 --var($theme, 'error-secondary-color'),
                 0 -2px 0 --var($theme, 'error-secondary-color');
             color: --var($theme, 'idle-text-color');
@@ -1311,7 +1311,7 @@
             }
 
             %igx-input-group__bundle-suffix {
-                box-shadow: 2px 0 0 --var($theme, 'error-secondary-color'),
+                box-shadow: inset -2px 0 0 --var($theme, 'error-secondary-color'),
                     0 2px 0 --var($theme, 'error-secondary-color'),
                     0 -2px 0 --var($theme, 'error-secondary-color');
             }
@@ -1343,7 +1343,7 @@
         }
 
         %igx-input-group__bundle-suffix {
-            box-shadow: 1px 0 0 --var($theme, 'success-secondary-color'),
+            box-shadow: inset -1px 0 0 --var($theme, 'success-secondary-color'),
                 0 1px 0 --var($theme, 'success-secondary-color'),
                 0 -1px 0 --var($theme, 'success-secondary-color');
             color: --var($theme, 'idle-text-color');
@@ -1373,7 +1373,7 @@
             }
 
             %igx-input-group__bundle-suffix {
-                box-shadow: 1px 0 0 --var($theme, 'success-secondary-color'),
+                box-shadow: inset -1px 0 0 --var($theme, 'success-secondary-color'),
                     0 1px 0 --var($theme, 'success-secondary-color'),
                     0 -1px 0 --var($theme, 'success-secondary-color');
             }
@@ -1399,7 +1399,7 @@
         }
 
         %igx-input-group__bundle-suffix {
-            box-shadow: 2px 0 0 --var($theme, 'success-secondary-color'),
+            box-shadow: inset -2px 0 0 --var($theme, 'success-secondary-color'),
                 0 2px 0 --var($theme, 'success-secondary-color'),
                 0 -2px 0 --var($theme, 'success-secondary-color');
         }
@@ -1423,7 +1423,7 @@
             }
 
             %igx-input-group__bundle-suffix {
-                box-shadow: 2px 0 0 --var($theme, 'success-secondary-color'),
+                box-shadow: inset -2px 0 0 --var($theme, 'success-secondary-color'),
                     0 2px 0 --var($theme, 'success-secondary-color'),
                     0 -2px 0 --var($theme, 'success-secondary-color');
             }
