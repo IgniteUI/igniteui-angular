@@ -23,22 +23,22 @@ export class IgxThumbLabelComponent {
     @Input()
     public continuous: boolean;
 
-    @HostBinding('class.igx-slider__thumb-from')
+    @HostBinding('class.igx-slider__label-from')
     public get thumbFromClass() {
         return this.type === SliderHandle.FROM;
     }
 
-    @HostBinding('class.igx-slider__thumb-to')
+    @HostBinding('class.igx-slider__label-to')
     public get thumbToClass() {
         return this.type === SliderHandle.TO;
     }
 
-    @HostBinding('class.igx-slider__thumb-from--active')
+    @HostBinding('class.igx-slider__label-from--active')
     public get thumbFromActiveClass() {
         return this.type === SliderHandle.FROM && this.active;
     }
 
-    @HostBinding('class.igx-slider__thumb-to--active')
+    @HostBinding('class.igx-slider__label-to--active')
     public get thumbToActiveClass() {
         return this.type === SliderHandle.TO && this.active;
     }
