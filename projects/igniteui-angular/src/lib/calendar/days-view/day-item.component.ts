@@ -146,7 +146,12 @@ export class IgxDayItemComponent {
 
     @HostBinding('class.igx-calendar__date--selected')
     public get isSelectedCSS(): boolean {
-        return this.selected;
+        return this.selected && this.isCurrentMonth;
+    }
+
+    @HostBinding('class.igx-calendar__date--selected-dimmed')
+    public get isSelectedDimmedCSS(): boolean {
+        return this.isSingleSelection && this.selected && !this.isCurrentMonth;
     }
 
     @HostBinding('class.igx-calendar__date--weekend')
@@ -156,7 +161,7 @@ export class IgxDayItemComponent {
 
     @HostBinding('class.igx-calendar__date--disabled')
     public get isDisabledCSS(): boolean {
-        return this.isDisabled || this.isOutOfRange;
+      return this.isDisabled || this.isOutOfRange || this.isHidden;
     }
 
     @HostBinding('class.igx-calendar__date--range')
@@ -204,10 +209,34 @@ export class IgxDayItemComponent {
         return (this.value as Date[]).length === this._index;
     }
 
+    @HostBinding('class.igx-calendar__date--lastday')
+    public get isLastInMonth(): boolean {
+        const checkLast = true;
+        return this.isFirstLastInMonth(checkLast);
+    }
+
+    @HostBinding('class.igx-calendar__date--firstday')
+    public get isFirstInMonth(): boolean {
+        const checkLast = false;
+        return this.isFirstLastInMonth(checkLast);
+    }
+
     private _index: Number;
     private _selected = false;
 
     constructor(private elementRef: ElementRef) { }
+
+    private isFirstLastInMonth(checkLast: boolean): boolean {
+        const inc = checkLast ? 1 : -1;
+        if (!this.isSingleSelection && this.isCurrentMonth && this.isWithinRange) {
+            const nextDay = new Date(this.date.date);
+            nextDay.setDate(nextDay.getDate() + inc);
+            if (this.date.date.getMonth() + inc === nextDay.getMonth()) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     @HostListener('click')
     @HostListener('keydown.enter')

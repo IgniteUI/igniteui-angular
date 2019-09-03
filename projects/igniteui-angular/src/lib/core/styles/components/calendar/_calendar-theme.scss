@@ -555,6 +555,15 @@
         }
     }
 
+    %cal-value--selected-dimmed {
+        
+        %cal-value-content {
+            color: --var($theme, 'date-selected-text-color');
+            background: --var($theme, 'date-selected-background') ;
+            opacity: 0.60;
+        }
+    }
+
     %cal-value--disabled {
         pointer-events: none;
         cursor: not-allowed;
@@ -587,6 +596,10 @@
             color: --var($theme, 'date-disabled-text-color');
             background: transparent !important;
         }
+    }
+
+    %cal-value--hidden%cal-value--disabled-range {
+        background: transparent !important;
     }
 
     %cal-value--first {
