@@ -47,6 +47,8 @@ For more information about the theming please read our [documentation](https://w
     - Drop strategies. Three new drop strategies have been provided - Append, Prepend and Insert.  Also an input `dropStrategy` to the `igxDrop` which specify which strategy should be used when dropping an element inside the drop area. Custom one can be specified as well.
 - `IgxCheckbox`
     - introduced a new `readonly` property that doesn't allow user interaction to change the state, but keeps the default active style. Intended for integration in complex controls that handle the interaction and control the checkbox instead through binding.
+- `IgxOverlay`
+    - introduced a new `ContainerPositionStrategy`. The new strategy positions the element inside the containing outlet based on the directions passed in trough PositionSettings.
 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
