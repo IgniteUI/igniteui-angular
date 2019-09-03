@@ -114,7 +114,7 @@
 <ng-template #rowSelectorBaseTemplate>
     <igx-checkbox
         [checked]="selected"
-        (click)="$event.preventDefault()" 
+        [readonly]="true"
         [disabled]="deleted"
         disableRipple="true"
         [disableTransitions]="grid.disableTransitions"

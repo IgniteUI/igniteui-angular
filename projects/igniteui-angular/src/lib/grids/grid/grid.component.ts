@@ -890,18 +890,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
 
     /**
      * @hidden
-     * @internal
-     */
-    public get totalRowsCountAfterFilter() {
-        if (this.data) {
-            return this.filteredData ? this.filteredData.length : this.data.length;
-        }
-
-        return 0;
-    }
-
-    /**
-     * @hidden
      */
     public getGroupByChipTitle(expression: IGroupingExpression): string {
         const column = this.getColumnByName(expression.fieldName);

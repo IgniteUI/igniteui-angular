@@ -1928,7 +1928,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             fix.detectChanges();
 
             const firstRootRow = grid.getRowByIndex(0);
-            expect(firstRootRow.nativeElement.querySelector('.rowNumber').textContent).toEqual('15');
+            expect(firstRootRow.nativeElement.querySelector('.rowNumber').textContent).toEqual('30');
         });
     });
 });

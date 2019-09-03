@@ -807,7 +807,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
         it('Header context `selectAll` method selects all rows', () => {
             // root grid
-            HelperUtils.headerCheckboxClick(hGrid);
+            HelperUtils.clickHeaderRowCheckbox(hGrid);
             fix.detectChanges();
             HelperUtils.verifyHeaderRowCheckboxState(hGrid, true, false);
             expect(hGrid.selectionService.areAllRowSelected()).toBeTruthy();
@@ -817,7 +817,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.detectChanges();
 
             const childGrid = hGrid.hgridAPI.getChildGrids(false)[0];
-            HelperUtils.headerCheckboxClick(childGrid);
+            HelperUtils.clickHeaderRowCheckbox(childGrid);
             fix.detectChanges();
 
             expect(childGrid.selectionService.areAllRowSelected()).toBeTruthy();
@@ -825,7 +825,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
         it('Header context `deselectAll` method deselects all rows', () => {
             // root grid
-            HelperUtils.headerCheckboxClick(hGrid);
+            HelperUtils.clickHeaderRowCheckbox(hGrid);
             fix.detectChanges();
             HelperUtils.verifyHeaderRowCheckboxState(hGrid, true, false);
             expect(hGrid.selectionService.areAllRowSelected()).toBeTruthy();
@@ -835,13 +835,13 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             HelperUtils.verifyHeaderRowCheckboxState(hGrid, false, false);
             expect(hGrid.selectionService.areAllRowSelected()).toBeFalsy();
 
-            // root grid
+            // child grid
             HelperUtils.expandRowIsland(2);
             fix.detectChanges();
 
             const childGrid = hGrid.hgridAPI.getChildGrids(false)[0];
 
-            HelperUtils.headerCheckboxClick(childGrid);
+            HelperUtils.clickHeaderRowCheckbox(childGrid);
             fix.detectChanges();
             HelperUtils.verifyHeaderRowCheckboxState(childGrid, true, false);
             expect(childGrid.selectionService.areAllRowSelected()).toBeTruthy();

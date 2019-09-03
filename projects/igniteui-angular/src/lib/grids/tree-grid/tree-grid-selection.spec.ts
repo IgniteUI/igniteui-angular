@@ -612,7 +612,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             treeGrid.selectRows([475]);
             fix.detectChanges();
             expect(treeGrid.selectedRows()).toEqual([663, 475]);
-            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
         });
 
         it('Should not be able to select deleted rows through API with selectAllRows - Hierarchical DS', () => {
@@ -657,7 +657,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             treeGrid.selectRows([9]);
             fix.detectChanges();
             expect(treeGrid.selectedRows()).toEqual([6, 9]);
-            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
         });
 
         it('Should not be able to select deleted rows through API with selectAllRows', () => {

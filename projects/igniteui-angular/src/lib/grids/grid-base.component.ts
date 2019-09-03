@@ -4740,6 +4740,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    public get totalRowsCountAfterFilter() {
+        if (this.data) {
+            return this.selectionService.allData.length;
+        }
+
+        return 0;
+    }
+
+    /**
      * Get current selection state.
      * Returns an array with selected rows' IDs (primaryKey or rowData)
      * ```typescript

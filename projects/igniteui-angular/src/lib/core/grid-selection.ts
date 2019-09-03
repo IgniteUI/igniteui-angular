@@ -637,8 +637,8 @@ export class IgxGridSelectionService {
 
     public get filteredSelectedRowIds(): any[] {
         return this.isFilteringApplied() ?
-            this.getRowIDs(this.allData).filter(rID => this.isRowSelected(rID)) :
-            this.getSelectedRows();
+            this.getRowIDs(this.allData).filter(rowID => this.isRowSelected(rowID)) :
+            this.getSelectedRows().filter(rowID => !this.isRowDeleted(rowID));
     }
 
     public emitRowSelectionEvent(newSelection, added, removed, event?): boolean {

@@ -213,10 +213,10 @@
 <ng-template #headSelectorBaseTemplate igxHeadSelector let-context>
     <igx-checkbox 
         [readonly]="true"
-        [checked]="context.selectedCount && context.totalCount === context.selectedCount"
+        [checked]="context.selectedCount > 0 && context.totalCount === context.selectedCount"
         disableRipple="true"
         [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
-        [indeterminate]="context.selectedCount && context.selectedCount !== context.totalCount"
+        [indeterminate]="context.selectedCount > 0 && context.selectedCount !== context.totalCount"
         [aria-label]="headSelectorBaseAriaLabel"
         #headerCheckbox>
     </igx-checkbox>
