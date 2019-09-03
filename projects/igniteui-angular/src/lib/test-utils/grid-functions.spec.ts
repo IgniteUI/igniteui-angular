@@ -1307,7 +1307,7 @@ export class GridFunctions {
     public static getAdvancedFilteringClearFilterButton(fix: ComponentFixture<any>) {
         const footer = GridFunctions.getAdvancedFilteringFooter(fix);
         const clearFilterButton: any = Array.from(footer.querySelectorAll('button'))
-                                       .find((b: any) => b.innerText.toLowerCase() === 'clear');
+                                       .find((b: any) => b.innerText.toLowerCase() === 'clear filter');
         return clearFilterButton;
     }
 

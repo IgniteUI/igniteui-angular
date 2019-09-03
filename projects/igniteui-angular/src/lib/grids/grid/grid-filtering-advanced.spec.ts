@@ -360,7 +360,7 @@ describe('IgxGrid - Advanced Filtering', () => {
             expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(grid.advancedFilteringExpressionsTree);
         }));
 
-        it('Applying filter through the API should correctly update the UI.', fakeAsync(() => {
+        it('Applying/Clearing filter through the API should correctly update the UI.', fakeAsync(() => {
             // Test prerequisites
             grid.height = '800px';
             fix.detectChanges();
@@ -416,6 +416,116 @@ describe('IgxGrid - Advanced Filtering', () => {
             verifyExpressionChipContent(fix, [1, 1], 'ProductName', 'Contains', 'script');
             // Verify the operator line of the child group.
             verifyOperatorLine(GridFunctions.getAdvancedFilteringTreeGroupOperatorLine(fix, [1]), 'or');
+
+            // Close Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringCancelButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Clear filters through API.
+            grid.advancedFilteringExpressionsTree = null;
+            fix.detectChanges();
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Verify there are not filters present and that the default text is shown.
+            expect(grid.advancedFilteringExpressionsTree).toBeNull();
+            expect(GridFunctions.getAdvancedFilteringTreeRootGroup(fix)).toBeNull();
+            expect(GridFunctions.getAdvancedFilteringEmptyPrompt(fix)).not.toBeNull();
+        }));
+
+        it('Applying/Clearing filter through the UI should correctly update the API.', fakeAsync(() => {
+            // Test prerequisites
+            grid.height = '800px';
+            fix.detectChanges();
+            tick(50);
+
+            // Verify the initial state of the grid and that no filters are present.
+            expect(grid.advancedFilteringExpressionsTree).toBeUndefined();
+            expect(grid.filteredData).toBeNull();
+            expect(grid.rowList.length).toBe(8);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('NetAdvantage');
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Add a root 'and' group.
+            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            addAndGroupButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Populate edit inputs.
+            selectColumnInEditModeExpression(fix, 2); // Select 'Downloads' column.
+            selectOperatorInEditModeExpression(fix, 2); // Select 'Greater Than' operator.
+            let input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            sendInputNativeElement(fix, input, '100'); // Type filter value.
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Add a child 'or' group.
+            const addOrGroupBtn = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[2];
+            addOrGroupBtn.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Populate edit inputs.
+            selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            sendInputNativeElement(fix, input, 'angular'); // Type filter value.
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Add new expression to the child group.
+            const addExpressionBtn = GridFunctions.getAdvancedFilteringTreeGroupButtons(fix, [1], 0)[0];
+            addExpressionBtn.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Populate edit inputs.
+            selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            sendInputNativeElement(fix, input, 'script'); // Type filter value.
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Apply the filters.
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Verify the state of the grid after the filtering.
+            expect(grid.advancedFilteringExpressionsTree !== null && grid.advancedFilteringExpressionsTree !== undefined).toBe(true);
+            expect(grid.filteredData.length).toBe(2);
+            expect(grid.rowList.length).toBe(2);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Some other item with Script');
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Clear the filters.
+            GridFunctions.clickAdvancedFilteringClearFilterButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Verify that no filters are present.
+            expect(grid.advancedFilteringExpressionsTree).toBeNull();
+            expect(grid.filteredData).toBeNull();
+            expect(grid.rowList.length).toBe(8);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('NetAdvantage');
         }));
     });
 });

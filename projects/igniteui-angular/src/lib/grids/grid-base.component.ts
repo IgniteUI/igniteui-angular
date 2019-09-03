@@ -53,7 +53,7 @@ import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
 import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
 import { ISummaryExpression } from './summaries/grid-summary';
-import { DropPosition, ContainerPositioningStrategy, IgxDecimalPipeComponent, IgxDatePipeComponent } from './grid.common';
+import { DropPosition, RowEditPositionStrategy, IgxDecimalPipeComponent, IgxDatePipeComponent } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxRowComponent } from './row.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
@@ -2662,7 +2662,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _cellSelectionMode = GridSelectionMode.multiple;
     private _rowSelectionMode = GridSelectionMode.none;
 
-    private rowEditPositioningStrategy = new ContainerPositioningStrategy({
+    private rowEditPositioningStrategy = new RowEditPositionStrategy({
         horizontalDirection: HorizontalAlignment.Right,
         verticalDirection: VerticalAlignment.Bottom,
         horizontalStartPoint: HorizontalAlignment.Left,
