@@ -70,6 +70,11 @@
         display: flex;
     }
 
+    %overlay-wrapper--flex-container {
+        display: flex;
+        position: absolute;
+    }
+
     %overlay-content {
         position: absolute;
         pointer-events: all;

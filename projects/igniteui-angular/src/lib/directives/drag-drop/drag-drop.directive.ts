@@ -1459,6 +1459,31 @@ export class IgxDropDirective implements OnInit, OnDestroy {
     @Input()
     public dropChannel: number | string | number[] | string[];
 
+    /**
+     * An @Input property that specifies a drop strategy type that will be executed when an `IgxDrag` element is released inside
+     *  the current drop area. The provided strategies are:
+     *  - IgxDefaultDropStrategy - This is the default base strategy and it doesn't perform any actions.
+     *  - IgxAppendDropStrategy - Appends the dropped element to last position as a direct child to the `igxDrop`.
+     *  - IgxPrependDropStrategy - Prepends the dropped element to first position as a direct child to the `igxDrop`.
+     *  - IgxInsertDropStrategy - If the dropped element is released above a child element of the `igxDrop`, it will be inserted
+     *      at that position. Otherwise the dropped element will be appended if released outside any child of the `igxDrop`.
+     * ```html
+     * <div igxDrag>
+     *      <span>DragMe</span>
+     * </div>
+     * <div igxDrop [dropStrategy]="myDropStrategy">
+     *         <span>Numbers drop area!</span>
+     * </div>
+     * ```
+     * ```typescript
+     * import { IgxAppendDropStrategy } from 'igniteui-angular';
+     *
+     * export class App {
+     *      public myDropStrategy = IgxAppendDropStrategy;
+     * }
+     * ```
+     * @memberof IgxDropDirective
+     */
     @Input()
     public set dropStrategy(classRef: any) {
         this._dropStrategy = new classRef(this._renderer);

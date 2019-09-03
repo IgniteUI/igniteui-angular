@@ -25,6 +25,11 @@
         @extend %overlay-wrapper--flex !optional;
     }
 
+    @include e(wrapper, $m: flex-container) {
+        @extend %overlay-wrapper !optional;
+        @extend %overlay-wrapper--flex-container !optional;
+    }
+
     @include e(content) {
         @extend %overlay-content !optional;
     }
