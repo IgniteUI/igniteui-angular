@@ -2216,6 +2216,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        cursor: pointer;
         z-index: 3;
         color: --var($theme, 'expand-icon-color');
         border-right: 1px solid transparent;
@@ -2235,7 +2236,6 @@
         }
 
         igx-icon {
-            cursor: pointer;
             color: --var($theme, 'expand-icon-color');
             max-width: $hierarchical-action-icon;
             min-width: $hierarchical-action-icon;
