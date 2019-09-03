@@ -1,5 +1,5 @@
 import { IPositionStrategy } from './IPositionStrategy';
-import { PositionSettings, HorizontalAlignment, VerticalAlignment, Size, Util } from './../utilities';
+import { PositionSettings, HorizontalAlignment, VerticalAlignment, Size, Util, OverlaySettings } from './../utilities';
 import { fadeIn, fadeOut } from '../../../animations/main';
 
 /**
@@ -7,7 +7,7 @@ import { fadeIn, fadeOut } from '../../../animations/main';
  * These are Top/Middle/Bottom for verticalDirection and Left/Center/Right for horizontalDirection
  */
 export class GlobalPositionStrategy implements IPositionStrategy {
-    private _defaultSettings: PositionSettings = {
+    protected _defaultSettings: PositionSettings = {
         horizontalDirection: HorizontalAlignment.Center,
         verticalDirection: VerticalAlignment.Middle,
         horizontalStartPoint: HorizontalAlignment.Center,
@@ -24,9 +24,14 @@ export class GlobalPositionStrategy implements IPositionStrategy {
         this.settings = Object.assign({}, this._defaultSettings, settings);
     }
 
+    /** @inheritdoc */
     position(contentElement: HTMLElement, size?: Size, document?: Document, initialCall?: boolean): void {
         contentElement.classList.add('igx-overlay__content--relative');
         contentElement.parentElement.classList.add('igx-overlay__wrapper--flex');
+        this.setPosition(contentElement, this.settings);
+    }
+
+    protected setPosition(contentElement: HTMLElement, settings: PositionSettings) {
         switch (this.settings.horizontalDirection) {
             case HorizontalAlignment.Left:
                 contentElement.parentElement.style.justifyContent = 'flex-start';
