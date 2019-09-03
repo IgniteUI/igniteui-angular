@@ -355,6 +355,7 @@ describe('IgxGrid - Advanced Filtering', () => {
 
             // Apply the filters.
             GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            tick(100);
             fix.detectChanges();
 
             expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(grid.advancedFilteringExpressionsTree);
