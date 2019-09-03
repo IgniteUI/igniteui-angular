@@ -682,10 +682,9 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     }
 
     public onClearButtonClick() {
+        this.clearSelection();
         this.cancelOperandAdd();
         this.cancelOperandEdit();
-        this.selectedExpressions = [];
-        this.selectedGroups = [];
         this.currentGroup = null;
         this.rootGroup = null;
         this.grid.advancedFilteringExpressionsTree = null;
