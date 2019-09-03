@@ -41,7 +41,7 @@ import { IgxDatePickerComponent, IgxDatePickerModule } from '../../date-picker/d
 import { IPositionStrategy } from './position/IPositionStrategy';
 import { IgxCalendarContainerComponent } from '../../date-picker/calendar-container.component';
 import { BaseFitPositionStrategy } from './position/base-fit-position-strategy';
-import { GlobalContainerPositionStrategy } from './position';
+import { ContainerPositionStrategy } from './position';
 
 const CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CLASS_OVERLAY_CONTENT_MODAL = 'igx-overlay__content--modal';
@@ -2424,7 +2424,7 @@ describe('igxOverlay', () => {
             fixture.detectChanges();
             const overlaySettings: OverlaySettings = {
                 outlet: outlet,
-                positionStrategy: new GlobalContainerPositionStrategy()
+                positionStrategy: new ContainerPositionStrategy()
             };
 
             const id = fixture.componentInstance.overlay.attach(SimpleDynamicComponent);

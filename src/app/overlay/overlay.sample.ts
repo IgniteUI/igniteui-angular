@@ -11,7 +11,7 @@ import {
     NoOpScrollStrategy,
     ElasticPositionStrategy,
     IgxDragDirective,
-    GlobalContainerPositionStrategy
+    ContainerPositionStrategy
 } from 'igniteui-angular';
 
 @Component({
@@ -54,7 +54,7 @@ export class OverlaySampleComponent implements OnInit {
     verticalStartPoints = ['Top', 'Middle', 'Bottom'];
     verticalStartPoint = 'Top';
 
-    positionStrategies = ['Auto', 'Connected', 'Global', 'GlobalContainer', 'Elastic'];
+    positionStrategies = ['Auto', 'Connected', 'Global', 'Container', 'Elastic'];
     positionStrategy = 'Global';
 
     scrollStrategies = ['Absolute', 'Block', 'Close', 'NoOp'];
@@ -119,8 +119,8 @@ export class OverlaySampleComponent implements OnInit {
                         document.getElementById('mcd').classList.add('selected');
                         document.getElementById('mcsp').classList.add('selected');
                         break;
-                    case 'GlobalContainer':
-                        this._overlaySettings.positionStrategy = new GlobalContainerPositionStrategy();
+                    case 'Container':
+                        this._overlaySettings.positionStrategy = new ContainerPositionStrategy();
                         this.horizontalDirection = 'Center';
                         this.verticalDirection = 'Middle';
                         this.horizontalStartPoint = 'Center';
@@ -185,7 +185,7 @@ export class OverlaySampleComponent implements OnInit {
                 'Auto': new AutoPositionStrategy(),
                 'Connected': new ConnectedPositioningStrategy(),
                 'Global': new GlobalPositionStrategy(),
-                'GlobalContainer': new GlobalContainerPositionStrategy(),
+                'Container': new ContainerPositionStrategy(),
                 'Elastic': new ElasticPositionStrategy({
                     minSize: { width: 150, height: 150 }
                 }),
