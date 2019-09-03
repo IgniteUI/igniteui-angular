@@ -27,7 +27,7 @@
                         *ngTemplateOutlet="
                         this.headSelectorTemplate ? this.headSelectorTemplate : headSelectorBaseTemplate;
                         context: { $implicit: {
-                                        selectedCount: this.selectionService.filteredAndSelectedData.length,
+                                        selectedCount: this.selectionService.filteredSelectedRowIds.length,
                                         totalCount: this.filteredData ? this.filteredData.length : this.data.length }}">
                     </ng-template>
                 </div>

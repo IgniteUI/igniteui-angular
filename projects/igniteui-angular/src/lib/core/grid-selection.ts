@@ -635,7 +635,7 @@ export class IgxGridSelectionService {
         return this.rowSelection.size > 0 && filteredData && !this.areAllRowSelected();
     }
 
-    public get filteredAndSelectedData(): any[] {
+    public get filteredSelectedRowIds(): any[] {
         return this.isFilteringApplied() ?
             this.getRowIDs(this.allData).filter(rID => this.isRowSelected(rID)) :
             this.getSelectedRows();
