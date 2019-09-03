@@ -22,6 +22,7 @@ script:
 - npm run lint:lib
 - ng build igniteui-angular --prod
 - npm run build:style
+- if [ -z "${TRAVIS_TAG}" ]; then npm run test:lib:perf; fi
 - if [ -z "${TRAVIS_TAG}" ]; then npm run test:lib:others; fi
 - if [ -z "${TRAVIS_TAG}" ]; then npm run test:lib:grid; fi
 - if [ -z "${TRAVIS_TAG}" ]; then npm run test:lib:tgrid; fi

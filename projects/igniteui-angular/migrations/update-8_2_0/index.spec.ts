@@ -66,16 +66,52 @@ describe('Update 8.2.0', () => {
     it('should update igxDrag and igxDrop outputs bindings', done => {
         appTree.create(
             '/testSrc/appPrefix/component/custom.component.html',
-            `<div igxDrag (onGhostCreate)="ghostCreateHandler($event)" (onGhostDestroy)="ghostDestroyHandler($event)" (returnMoveEnd)="moveEndHandler($event)" (dragClicked)="clickHandler($event)">Drag me</div>
+            `<div igxDrag (onGhostCreate)="ghostCreateHandler($event)"
+                (onGhostDestroy)="ghostDestroyHandler($event)"
+                (returnMoveEnd)="moveEndHandler($event)"
+                (dragClicked)="clickHandler($event)">
+                Drag me
+            </div>
             <div igxDrop (onEnter)="enterHandler($event)" (onLeave)="leaveHandler($event)" (onDrop)="dropHandler($event)">drop area</div>
             `);
-        const tree = schematicRunner.runSchematic('migration-10', {}, appTree);
 
+        const tree = schematicRunner.runSchematic('migration-10', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(
-            `<div igxDrag (ghostCreate)="ghostCreateHandler($event)" (ghostDestroy)="ghostDestroyHandler($event)" (transitioned)="moveEndHandler($event)" (click)="clickHandler($event)">Drag me</div>
+            `<div igxDrag (ghostCreate)="ghostCreateHandler($event)"
+                (ghostDestroy)="ghostDestroyHandler($event)"
+                (transitioned)="moveEndHandler($event)"
+                (click)="clickHandler($event)">
+                Drag me
+            </div>
             <div igxDrop (enter)="enterHandler($event)" (leave)="leaveHandler($event)" (dropped)="dropHandler($event)">drop area</div>
             `);
+        done();
+    });
+
+    it('should update igxDrag and igxDrop event argument interfaces', done => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.ts',
+            `import { IgxDragDirective, IgxDropDirective, IgxDropEnterEventArgs,
+                IgxDropLeaveEventArgs, IgxDropEventArgs } from 'igniteui-angular';
+
+            export class DragDropSampleComponent {
+                public onEnterHandler(event: IgxDropEnterEventArgs) {}
+                public onLeaveHandler(event: IgxDropLeaveEventArgs) {}
+                public onDropHandler(event: IgxDropEventArgs) {}
+            }`);
+
+        const tree = schematicRunner.runSchematic('migration-10', {}, appTree);
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
+            .toEqual(
+            `import { IgxDragDirective, IgxDropDirective, IDropBaseEventArgs,
+                IDropBaseEventArgs, IDropDroppedEventArgs } from 'igniteui-angular';
+
+            export class DragDropSampleComponent {
+                public onEnterHandler(event: IDropBaseEventArgs) {}
+                public onLeaveHandler(event: IDropBaseEventArgs) {}
+                public onDropHandler(event: IDropDroppedEventArgs) {}
+            }`);
         done();
     });
 });

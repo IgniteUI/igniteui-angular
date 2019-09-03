@@ -295,6 +295,17 @@
     $cal-row-margin: em(2px) 0;
     $selected-hover-color: text-contrast(map-get($theme, 'date-selected-background'));
 
+    $current-color-variant: map-get((
+        material: --var($theme, 'date-selected-background'),
+        fluent:--var($theme, 'date-current-bg-color')
+    ), map-get($theme, variant));
+
+    $current-text-color-variant: map-get((
+        material: --var($theme, 'date-selected-text-color'),
+        fluent:--var($theme, 'date-current-text-color')
+    ), map-get($theme, variant));
+
+
     %cal-display {
         display: flex;
         flex-flow: column nowrap;
@@ -364,7 +375,7 @@
         }
 
         [dir='rtl'] & {
-            transform: scaleX(-1);
+            transform: scaleX(-1)
         }
     }
 
@@ -421,6 +432,7 @@
         justify-content: center;
         align-items: center;
         flex-grow: 1;
+        flex-basis: 14.28%;
         color: --var($theme, 'content-text-color');
         cursor: pointer;
         outline: none;
@@ -465,12 +477,9 @@
     }
 
     %cal-value--year {
-        display: flex;
         margin: 0;
-        justify-content: center;
-        align-items: center;
         min-width: 8ch;
-        height: rem(52px);
+        line-height: rem(52px);
     }
 
     %cal-value--year-current {
@@ -523,20 +532,6 @@
         color: --var($theme, 'inactive-text-color');
     }
 
-    %cal-value--current {
-        color: --var($theme, 'date-current-text-color');
-        background: --var($theme, 'date-current-bg-color')!important;
-        font-weight: $cal-value-fw !important;
-
-        &:hover {
-            background: --var($theme, 'date-current-bg-color')!important;
-        }
-
-        &:focus {
-            background: --var($theme, 'date-current-bg-color')!important;
-        }
-    }
-
     %cal-value--special {
         %cal-value-content {
             background: --var($theme, 'date-special-background');
@@ -561,6 +556,37 @@
             color: --var($theme, 'date-selected-text-color');
             background: --var($theme, 'date-selected-background') ;
             opacity: 0.60;
+        }
+    }
+
+    %cal-value--current {
+        %cal-value-content {
+            color: --var($theme, 'date-current-text-color');
+            font-weight: $cal-value-fw ;
+            background: --var($theme, 'date-current-bg-color');
+
+            &:hover {
+                background: --var($theme, 'date-current-bg-color');
+            }
+
+            &:focus {
+                background: --var($theme, 'date-current-bg-color');
+            }
+        }
+    }
+
+    %cal-value--current--selected {
+        %cal-value-content {
+            color: $current-text-color-variant;
+            background: $current-color-variant;
+
+            &:hover {
+                background: $current-color-variant;
+            }
+
+            &:focus {
+                background: $current-color-variant;
+            }
         }
     }
 
@@ -661,37 +687,35 @@
     $picker-date: map-get($categories, 'picker-date');
     $content: map-get($categories, 'content');
 
-    @include igx-scope('.igx-typography') {
-        %cal-header-year {
-            @include igx-type-style($type-scale, $header-year) {
-                margin: 0;
-            }
+    %cal-header-year {
+        @include igx-type-style($type-scale, $header-year) {
+            margin: 0;
         }
+    }
 
-        %cal-header-date {
-            @include igx-type-style($type-scale, $header-date) {
-                line-height: rem(42px);
-                margin: 0;
-            }
+    %cal-header-date {
+        @include igx-type-style($type-scale, $header-date) {
+            line-height: rem(42px);
+            margin: 0;
         }
+    }
 
-        %cal-picker-date {
-            @include igx-type-style($type-scale, $picker-date) {
-                margin: 0;
-            }
+    %cal-picker-date {
+        @include igx-type-style($type-scale, $picker-date) {
+            margin: 0;
         }
+    }
 
-        %cal-value {
-            @include igx-type-style($type-scale, $content) {
-                margin: 0;
-            }
+    %cal-value {
+        @include igx-type-style($type-scale, $content) {
+            margin: 0;
         }
+    }
 
-        %cal-value--year-current {
-            @include igx-type-style($type-scale, $content) {
-                font-size: rem(24px);
-                margin: 0;
-            }
+    %cal-value--year-current {
+        @include igx-type-style($type-scale, $content) {
+            font-size: rem(24px);
+            margin: 0;
         }
     }
 }
