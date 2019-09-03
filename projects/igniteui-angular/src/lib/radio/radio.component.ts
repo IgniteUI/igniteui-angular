@@ -8,10 +8,10 @@ import {
     ElementRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { isIE } from '../core/utils';
+import { isIE, IBaseEventArgs } from '../core/utils';
 import { EditorProvider } from '../core/edit-provider';
 
-export interface IChangeRadioEventArgs {
+export interface IChangeRadioEventArgs extends IBaseEventArgs {
     value: any;
     radio: IgxRadioComponent;
 }

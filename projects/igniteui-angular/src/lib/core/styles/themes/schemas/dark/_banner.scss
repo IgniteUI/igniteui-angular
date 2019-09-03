@@ -10,5 +10,10 @@
 /// @requires extend
 /// @requires $_light-banner
 /// @see $default-palette
+$_dark-banner: extend($_light-banner);
 
-$_dark-banner: extend($_light-banner, ());
+/// Generates a dark fluent banner schema.
+/// @type {Map}
+/// @requires extend
+/// @requires $_fluent-banner
+$_dark-fluent-banner: extend($_fluent-banner);

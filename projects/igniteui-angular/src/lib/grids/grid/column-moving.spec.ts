@@ -18,8 +18,9 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxGridComponent } from './grid.component';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
+import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 
-describe('IgxGrid - Column Moving', () => {
+describe('IgxGrid - Column Moving #grid', () => {
     configureTestSuite();
     const CELL_CSS_CLASS = '.igx-grid__td';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
@@ -378,6 +379,7 @@ describe('IgxGrid - Column Moving', () => {
             // step 1 - hide a column
             fixture.componentInstance.isHidden = true;
             fixture.detectChanges();
+            fixture.detectChanges();
 
             // step 2 - move a column
             const header = headers[2].nativeElement;
@@ -395,6 +397,7 @@ describe('IgxGrid - Column Moving', () => {
 
             // step 3 - show hidden columns and verify correct order
             fixture.componentInstance.isHidden = false;
+            fixture.detectChanges();
             fixture.detectChanges();
 
             expect(grid.visibleColumns[0].field).toEqual('ID');
@@ -684,7 +687,7 @@ describe('IgxGrid - Column Moving', () => {
             fixture.detectChanges();
             expect(cell.selected).toBeTruthy();
 
-            HelperUtils.verifySelectedRange(grid, 0, 0, 0, 0);
+            GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 0, 0);
 
             // step 2 - reorder that column among columns that are currently out of view
             // and verify selection is preserved
@@ -703,7 +706,7 @@ describe('IgxGrid - Column Moving', () => {
             await wait();
             fixture.detectChanges();
 
-            HelperUtils.verifySelectedRange(grid, 0, 0, 0, 0);
+            GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 0, 0);
         }));
 
         it('Should preserve cell selection after columns are reordered - vertical scrolling.', (async() => {
@@ -723,7 +726,7 @@ describe('IgxGrid - Column Moving', () => {
             fixture.detectChanges();
 
             expect(cell.selected).toBeTruthy();
-            HelperUtils.verifySelectedRange(grid, 25, 25, 9, 9);
+            GridSelectionFunctions.verifySelectedRange(grid, 25, 25, 9, 9);
             expect(grid.getSelectedData()).toEqual(selectedData);
 
             // step 3 - scroll up vertically so that the selected cell becomes out of view
@@ -753,7 +756,7 @@ describe('IgxGrid - Column Moving', () => {
             fixture.detectChanges();
 
             const newSelectedData = [{Country: 'France'}];
-            HelperUtils.verifySelectedRange(grid, 25, 25, 9, 9);
+            GridSelectionFunctions.verifySelectedRange(grid, 25, 25, 9, 9);
             expect(grid.getSelectedData()).toEqual(newSelectedData);
         }));
 
@@ -1294,7 +1297,7 @@ describe('IgxGrid - Column Moving', () => {
             UIInteractions.simulateClickAndSelectCellEvent(cell);
             fixture.detectChanges();
 
-            HelperUtils.verifySelectedRange(grid, 0, 0, 2, 2);
+            GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 2, 2);
 
             // step 2 - reorder the parent column and verify selection is preserved
             const header = fixture.debugElement.queryAll(By.css(COLUMN_GROUP_HEADER_CLASS))[0].nativeElement;
@@ -1308,7 +1311,7 @@ describe('IgxGrid - Column Moving', () => {
             await wait();
             fixture.detectChanges();
 
-            HelperUtils.verifySelectedRange(grid, 0, 0, 2, 2);
+            GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 2, 2);
             expect(grid.getSelectedData()).toEqual([{CompanyName: 'Alfreds Futterkiste' }]);
 
             // step 3 - navigate right and verify cell selection is updated
@@ -1317,7 +1320,7 @@ describe('IgxGrid - Column Moving', () => {
             await wait(50);
             fixture.detectChanges();
 
-            HelperUtils.verifySelectedRange(grid, 0, 0, 3, 3);
+            GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 3, 3);
             expect(grid.getSelectedData()).toEqual([{ContactName: 'Maria Anders' }]);
         }));
 

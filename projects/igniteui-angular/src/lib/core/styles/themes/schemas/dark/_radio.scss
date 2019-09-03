@@ -11,5 +11,10 @@
 /// @requires {function} extend
 /// @requires $_light-ripple
 /// @see $default-palette
+$_dark-radio: extend($_light-radio);
 
-$_dark-radio: extend($_light-radio, ());
+/// Generates a dark fluent radio schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-radio
+$_dark-fluent-radio: extend($_fluent-radio);

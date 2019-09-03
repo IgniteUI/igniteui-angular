@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, HostBinding, ElementRef, HostListener } from '@angular/core';
-import { ICalendarDate, isDateInRanges } from '../calendar';
-import { DateRangeDescriptor } from '../../core/dates';
+import { ICalendarDate, isDateInRanges, Calendar } from '../calendar';
+import { DateRangeDescriptor, DateRangeType } from '../../core/dates';
 import { CalendarSelection } from '../calendar-base';
 
 /**
@@ -40,10 +40,13 @@ export class IgxDayItemComponent {
         }
 
         if (this.selection === CalendarSelection.SINGLE) {
-        this._selected = (this.value as Date).getTime() === date.getTime();
+            this._selected = (this.value as Date).getTime() === date.getTime();
         } else {
-        this._selected = (this.value as Date[])
-            .some((each) => each.getTime() === date.getTime());
+            const selectedDates = (this.value as Date[]);
+            const currentDate = selectedDates.find(element => element.getTime() === date.getTime());
+
+            this._index = selectedDates.indexOf(currentDate) + 1;
+            this._selected = !!this._index;
         }
 
         return this._selected;
@@ -126,7 +129,7 @@ export class IgxDayItemComponent {
 
     @HostBinding('class.igx-calendar__date--current')
     public get isTodayCSS(): boolean {
-        return this.isToday && !this.selected;
+        return this.isToday;
     }
 
     @HostBinding('class.igx-calendar__date--selected')
@@ -144,11 +147,52 @@ export class IgxDayItemComponent {
         return this.isDisabled || this.isOutOfRange;
     }
 
+    @HostBinding('class.igx-calendar__date--range')
+    public get isWithinRange() {
+        if (Array.isArray(this.value) && this.value.length > 1) {
+
+            return isDateInRanges(this.date.date,
+                [
+                    {
+                        type: DateRangeType.Between,
+                        dateRange: [this.value[0], this.value[this.value.length - 1]]
+                    }
+                ]
+            );
+        }
+
+        return false;
+    }
+
     @HostBinding('class.igx-calendar__date--special')
     public get isSpecialCSS(): boolean {
         return this.isSpecial;
     }
 
+    @HostBinding('class.igx-calendar__date--single')
+    public get isSingleSelection(): boolean {
+        return this.selection !== CalendarSelection.RANGE;
+    }
+
+    @HostBinding('class.igx-calendar__date--first')
+    public get isFirstInRange(): boolean {
+        if (this.isSingleSelection) {
+            return false;
+        }
+
+        return this._index === 1;
+    }
+
+    @HostBinding('class.igx-calendar__date--last')
+    public get isLastInRange(): boolean {
+        if (this.isSingleSelection) {
+            return false;
+        }
+
+        return (this.value as Date[]).length === this._index;
+    }
+
+    private _index: Number;
     private _selected = false;
 
     constructor(private elementRef: ElementRef) { }

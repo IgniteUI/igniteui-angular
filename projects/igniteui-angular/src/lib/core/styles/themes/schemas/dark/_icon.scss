@@ -11,6 +11,21 @@
 /// @requires {function} extend
 /// @requires $_light-icon
 /// @see $default-palette
+$_dark-icon: extend($_light-icon);
 
+/// Generates a dark icon schema.
+/// @type {Map}
+/// @property {Color} color [#fff] - The icon color.
+/// @property {map} disabled-color [igx-color: ('grays' 500)] - The icon color.
+/// @requires {function} extend
+/// @requires $_light-icon
+$_dark-fluent-icon: extend(
+    $_fluent-icon,
+    (
+        color: #fff,
 
-$_dark-icon: extend($_light-icon, ());
+        disabled-color: (
+            igx-color: ('grays' 500)
+        )
+    )
+);

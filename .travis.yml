@@ -17,11 +17,17 @@ before_script:
 # more heap mem per https://github.com/angular/angular-cli/issues/12645, https://github.com/npm/npm/issues/12238#issuecomment-367147962
 - export NODE_OPTIONS="--max_old_space_size=4096"
 - npm install -g gulp
+- npm install -g istanbul-combine
 script:
 - npm run lint:lib
 - ng build igniteui-angular --prod
 - npm run build:style
-- if [ -z "${TRAVIS_TAG}" ]; then npm run test:lib; fi
+- if [ -z "${TRAVIS_TAG}" ]; then npm run test:lib:perf; fi
+- if [ -z "${TRAVIS_TAG}" ]; then npm run test:lib:others; fi
+- if [ -z "${TRAVIS_TAG}" ]; then npm run test:lib:grid; fi
+- if [ -z "${TRAVIS_TAG}" ]; then npm run test:lib:tgrid; fi
+- if [ -z "${TRAVIS_TAG}" ]; then npm run test:lib:hgrid; fi
+- if [ -z "${TRAVIS_TAG}" ]; then istanbul-combine -d coverage -p none -r lcov -r html coverage/hierarchical-grid/coverage-final.json coverage/tree-grid/coverage-final.json coverage/non-grid/coverage-final.json coverage/grid/coverage-final.json; fi
 - if [ -z "${TRAVIS_TAG}" ]; then npm run test:schematics; fi
 - if [ -z "${TRAVIS_TAG}" ] && [ "${TRAVIS_REPO_SLUG}" == "IgniteUI/igniteui-angular" ]; then cat ./coverage/lcov.info | coveralls; fi
 

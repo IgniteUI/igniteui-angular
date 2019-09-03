@@ -11,13 +11,23 @@
 /// @requires {function} extend
 /// @requires $_light-progress-linear
 /// @see $default-palette
+$_dark-progress-linear: extend($_light-progress-linear);
 
-$_dark-progress-linear: extend($_light-progress-linear, ());
+/// Generates a dark fluent progress-linear schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-progress-linear
+/// @see $default-palette
+$_dark-fluent-progress-linear: extend($_fluent-progress-linear);
 
 /// Generates a dark progress-circular schema.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-progress-circular
-/// @see $default-palette
+$_dark-progress-circular: extend($_light-progress-circular);
 
-$_dark-progress-circular: extend($_light-progress-circular, ());
+/// Generates a dark fluent progress-circular schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-progress-circular
+$_dark-fluent-progress-circular: extend($_fluent-progress-circular);

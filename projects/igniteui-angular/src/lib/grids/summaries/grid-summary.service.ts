@@ -17,8 +17,7 @@ export class IgxGridSummaryService {
 
     public recalculateSummaries() {
         this.resetSummaryHeight();
-        this.grid.calculateGridHeight();
-        this.grid.cdr.detectChanges();
+        this.grid.notifyChanges(true);
     }
 
     public clearSummaryCache(args?) {

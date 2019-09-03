@@ -287,14 +287,10 @@
                     <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
                         <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item"
                             *ngFor="let contact of contacts">
-                            <div class="item">
-                                <igx-avatar [src]="contact.avatar" roundShape="true"></igx-avatar>
-                                <div class="person">
-                                    <p class="name">{{contact.text}}</p>
-                                    <span class="phone">{{contact.phone}}</span>
-                                </div>
-                                <igx-icon>phone</igx-icon>
-                            </div>
+                                <igx-avatar igxListThumbnail [src]="contact.avatar" roundShape="true"></igx-avatar>
+                                <p igxListLineTitle>{{contact.text}}</p>
+                                <span igxListLineSubTitle>{{contact.phone}}</span>
+                                <igx-icon igxListAction>phone</igx-icon>
                         </igx-list-item>
                     </igx-list>
                 </igx-tabs-group>
@@ -302,14 +298,10 @@
                     <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
                         <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item"
                             *ngFor="let contact of contacts">
-                            <div class="item">
-                                <igx-avatar [src]="contact.avatar" roundShape="true"></igx-avatar>
-                                <div class="person">
-                                    <p class="name">{{contact.text}}</p>
-                                    <span class="phone">{{contact.phone}}</span>
-                                </div>
-                                <igx-icon>phone</igx-icon>
-                            </div>
+                            <igx-avatar igxListThumbnail [src]="contact.avatar" roundShape="true"></igx-avatar>
+                            <p igxListLineTitle>{{contact.text}}</p>
+                            <span igxListLineSubTitle>{{contact.phone}}</span>
+                            <igx-icon igxListAction>phone</igx-icon>
                         </igx-list-item>
                     </igx-list>
                 </igx-tabs-group>
@@ -317,14 +309,10 @@
                     <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
                         <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item"
                             *ngFor="let contact of contacts">
-                            <div class="item">
-                                <igx-avatar [src]="contact.avatar" roundShape="true"></igx-avatar>
-                                <div class="person">
-                                    <p class="name">{{contact.text}}</p>
-                                    <span class="phone">{{contact.phone}}</span>
-                                </div>
-                                <igx-icon>phone</igx-icon>
-                            </div>
+                            <igx-avatar igxListThumbnail [src]="contact.avatar" roundShape="true"></igx-avatar>
+                            <p igxListLineTitle>{{contact.text}}</p>
+                            <span igxListLineSubTitle>{{contact.phone}}</span>
+                            <igx-icon igxListAction>phone</igx-icon>
                         </igx-list-item>
                     </igx-list>
                 </igx-tabs-group>

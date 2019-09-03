@@ -1,12 +1,14 @@
-import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
+import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { IgxTreeGridModule, IgxGridCellComponent } from './index';
+import { IgxTreeGridModule, IgxGridCellComponent, GridSelectionMode } from './index';
 import { IgxTreeGridCellComponent } from './tree-cell.component';
 import {
     IgxTreeGridSimpleComponent,
     IgxTreeGridCellSelectionComponent,
-    IgxTreeGridSelectionRowEditingComponent
+    IgxTreeGridSelectionRowEditingComponent,
+    IgxTreeGridSelectionWithTransactionComponent,
+      IgxTreeGridRowEditingTransactionComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -17,9 +19,10 @@ import {
 } from '../../test-utils/tree-grid-functions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { wait } from '../../test-utils/ui-interactions.spec';
+import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
-describe('IgxTreeGrid - Selection ', () => {
+describe('IgxTreeGrid - Selection #tGrid', () => {
     configureTestSuite();
     let fix;
     let treeGrid: IgxTreeGridComponent;
@@ -29,7 +32,9 @@ describe('IgxTreeGrid - Selection ', () => {
             declarations: [
                 IgxTreeGridSimpleComponent,
                 IgxTreeGridCellSelectionComponent,
-                IgxTreeGridSelectionRowEditingComponent
+                IgxTreeGridSelectionRowEditingComponent,
+                IgxTreeGridSelectionWithTransactionComponent,
+                IgxTreeGridRowEditingTransactionComponent
             ],
             imports: [IgxTreeGridModule, NoopAnimationsModule]
         })
@@ -43,7 +48,7 @@ describe('IgxTreeGrid - Selection ', () => {
             fix.detectChanges();
 
             treeGrid = fix.componentInstance.treeGrid;
-            treeGrid.rowSelectable = true;
+            treeGrid.rowSelection = GridSelectionMode.multiple;
             await wait();
             fix.detectChanges();
         });
@@ -57,7 +62,8 @@ describe('IgxTreeGrid - Selection ', () => {
                 expect(checkBoxElement).not.toBeNull();
             });
 
-            treeGrid.rowSelectable = false;
+            treeGrid.rowSelection = GridSelectionMode.none;
+            fix.detectChanges();
 
             expect(rows.length).toBe(10);
             rows.forEach((row) => {
@@ -71,12 +77,13 @@ describe('IgxTreeGrid - Selection ', () => {
             fix.detectChanges();
 
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], true);
+            expect(treeGrid.selectedRows().length).toEqual(10);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
 
             treeGrid.deselectAllRows();
             fix.detectChanges();
 
-            TreeGridFunctions.verifyDataRowsSelection(fix, [], true);
+            expect(treeGrid.selectedRows()).toEqual([]);
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], false);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
         });
@@ -96,7 +103,7 @@ describe('IgxTreeGrid - Selection ', () => {
 
             treeGrid.deleteRowById(treeGrid.selectedRows()[0]);
             fix.detectChanges();
-             // When deleting the last selected row, header checkbox will be unchecked.
+            // When deleting the last selected row, header checkbox will be unchecked.
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
         });
 
@@ -162,7 +169,7 @@ describe('IgxTreeGrid - Selection ', () => {
 
             treeGrid.filter('Age', 40, IgxNumberFilteringOperand.instance().condition('greaterThan'));
             fix.detectChanges();
-            tick(100);
+            tick();
 
             // Verification indices are different since the sorting changes rows' positions.
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 2, 4], true);
@@ -170,10 +177,40 @@ describe('IgxTreeGrid - Selection ', () => {
 
             treeGrid.clearFilter();
             fix.detectChanges();
-            tick(100);
+            tick();
 
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 5, 8], true);
         }));
+
+        it('should be able to select and select only filtered data', () => {
+            treeGrid.selectRows([299, 147]);
+            fix.detectChanges();
+
+            treeGrid.filter('Age', 40, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+            fix.detectChanges();
+
+            expect(treeGrid.selectedRows()).toEqual([299, 147]);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+
+            treeGrid.selectAllRows(true);
+            fix.detectChanges();
+
+            expect(treeGrid.selectedRows()).toEqual([299, 147, 317, 998, 19, 847]);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
+
+            treeGrid.deselectAllRows(true);
+            fix.detectChanges();
+
+            expect(treeGrid.selectedRows()).toEqual([299]);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+
+            treeGrid.clearFilter();
+            fix.detectChanges();
+
+            expect(treeGrid.selectedRows()).toEqual([299]);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [6], true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+        });
 
         it('should persist the selection after expand/collapse', () => {
             treeGrid.selectRows([treeGrid.getRowByIndex(0).rowID, treeGrid.getRowByIndex(3).rowID,
@@ -184,10 +221,12 @@ describe('IgxTreeGrid - Selection ', () => {
 
             // Collapse row and verify visible selected rows
             treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+            fix.detectChanges();
             expect(getVisibleSelectedRows(fix).length).toBe(1);
 
             // Expand same row and verify visible selected rows
             treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+            fix.detectChanges();
             expect(getVisibleSelectedRows(fix).length).toBe(3);
 
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 3, 5], true);
@@ -230,12 +269,12 @@ describe('IgxTreeGrid - Selection ', () => {
 
     describe('UI Row Selection', () => {
         // configureTestSuite();
-        beforeEach(async() => {
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
 
             treeGrid = fix.componentInstance.treeGrid;
-            treeGrid.rowSelectable = true;
+            treeGrid.rowSelection = GridSelectionMode.multiple;
             await wait();
             fix.detectChanges();
         });
@@ -342,7 +381,6 @@ describe('IgxTreeGrid - Selection ', () => {
         }));
 
         it('should update header checkbox when reselecting all filtered-in rows', fakeAsync(() => {
-            pending('General Grid Issue #2793');
             treeGrid.filter('Age', 30, IgxNumberFilteringOperand.instance().condition('lessThan'));
             tick(100);
 
@@ -368,10 +406,12 @@ describe('IgxTreeGrid - Selection ', () => {
 
             // Collapse row and verify visible selected rows
             TreeGridFunctions.clickRowIndicator(fix, 0);
+            fix.detectChanges();
             expect(getVisibleSelectedRows(fix).length).toBe(1);
 
             // Expand same row and verify visible selected rows
             TreeGridFunctions.clickRowIndicator(fix, 0);
+            fix.detectChanges();
             expect(getVisibleSelectedRows(fix).length).toBe(3);
 
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 3, 5], true);
@@ -410,6 +450,229 @@ describe('IgxTreeGrid - Selection ', () => {
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, false);
             TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 1, false);
         }));
+    });
+
+    describe('Row Selection with transactions - Hierarchical DS', () => {
+        // configureTestSuite();
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxTreeGridSelectionWithTransactionComponent);
+            fix.detectChanges();
+
+            treeGrid = fix.componentInstance.treeGrid;
+            treeGrid.rowSelection = GridSelectionMode.multiple;
+            fix.detectChanges();
+        }));
+
+        it('should deselect row when delete its parent', () => {
+            pending('Related to the bug #5673');
+            treeGrid.selectRows([treeGrid.getRowByIndex(3).rowID, treeGrid.getRowByIndex(5).rowID], true);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, true);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 5, true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+            treeGrid.deleteRow(147);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 5, false);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+            expect(treeGrid.selectedRows()).toEqual([]);
+
+            // try to select deleted row
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
+            UIInteractions.simulateClickEvent(treeGrid.getRowByIndex(3).nativeElement);
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 5);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 5, false);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+            expect(treeGrid.selectedRows()).toEqual([]);
+
+            // undo transaction
+            treeGrid.transactions.undo();
+            fix.detectChanges();
+
+            // select rows
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
+            UIInteractions.simulateClickEvent(treeGrid.getRowByIndex(3).nativeElement);
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 5);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, true);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, true);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 5, true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+            expect(treeGrid.selectedRows()).toEqual([147, 317, 998]);
+
+            // redo transaction
+            treeGrid.transactions.redo();
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 0, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 5, false);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+            expect(treeGrid.selectedRows()).toEqual([]);
+        });
+
+        it('should have correct header checkbox when delete a row', () => {
+            treeGrid.selectAllRows();
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
+
+            treeGrid.deleteRow(317);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, false);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
+            expect(treeGrid.selectedRows().includes(317)).toEqual(false);
+            expect(treeGrid.selectedRows().includes(711)).toEqual(false);
+            expect(treeGrid.selectedRows().includes(998)).toEqual(false);
+
+            // undo transaction
+            treeGrid.transactions.undo();
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 4, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 5, false);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+
+            // redo transaction
+            treeGrid.transactions.redo();
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 3, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 4, false);
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 5, false);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
+        });
+
+        it('should have correct header checkbox when add a row', () => {
+            pending('Related to the bug #5673');
+            treeGrid.selectAllRows();
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
+
+            treeGrid.addRow({ ID: 13, Name: 'Michael Cooper', Age: 33, OnPTO: false }, 317);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 6, false);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+            expect(treeGrid.selectedRows().includes(13)).toEqual(false);
+
+            // undo transaction
+            treeGrid.transactions.undo();
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
+        });
+
+        it('should have correct header checkbox when add a row and undo transaction', fakeAsync(() => {
+            pending('Related to the bug #5673');
+            treeGrid.addRow({ ID: 13, Name: 'Michael Cooper', Age: 33, OnPTO: false }, 317);
+            tick();
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+            TreeGridFunctions.clickRowSelectionCheckbox(fix, 6);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 6, true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+
+            // undo transaction
+            treeGrid.transactions.undo();
+            tick();
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+            expect(treeGrid.selectedRows().includes(13)).toEqual(false);
+        }));
+
+        it('Should be able to select deleted rows through API - Hierarchical DS', () => {
+            treeGrid.deleteRowById(663);
+            fix.detectChanges();
+            expect(treeGrid.selectedRows()).toEqual([]);
+            treeGrid.selectRows([663]);
+            fix.detectChanges();
+            expect(treeGrid.selectedRows()).toEqual([663]);
+            /** Select row with deleted parent */
+            treeGrid.deleteRowById(147);
+            fix.detectChanges();
+            // 147 -> 475
+            treeGrid.selectRows([475]);
+            fix.detectChanges();
+            expect(treeGrid.selectedRows()).toEqual([663, 475]);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+        });
+
+        it('Should not be able to select deleted rows through API with selectAllRows - Hierarchical DS', () => {
+            treeGrid.deleteRowById(663);
+            treeGrid.deleteRowById(147);
+            fix.detectChanges();
+            expect(treeGrid.selectedRows()).toEqual([]);
+
+            treeGrid.selectAllRows();
+            fix.detectChanges();
+
+            expect(treeGrid.selectedRows().includes(663)).toBe(false);
+            expect(treeGrid.selectedRows().includes(147)).toBe(false);
+            expect(treeGrid.selectedRows().includes(475)).toBe(false);
+            expect(treeGrid.selectedRows().includes(19)).toBe(true);
+            expect(treeGrid.selectedRows().includes(847)).toBe(true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
+        });
+    });
+
+    describe('Row Selection with transactions - flat DS', () => {
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxTreeGridRowEditingTransactionComponent);
+            fix.detectChanges();
+
+            treeGrid = fix.componentInstance.treeGrid;
+            treeGrid.rowSelection = GridSelectionMode.multiple;
+            fix.detectChanges();
+        }));
+
+        it('Should select deleted rows through API', () => {
+            treeGrid.deleteRowById(6);
+            fix.detectChanges();
+            expect(treeGrid.selectedRows()).toEqual([]);
+            treeGrid.selectRows([6]);
+            fix.detectChanges();
+            expect(treeGrid.selectedRows()).toEqual([6]);
+            /** Select row with deleted parent */
+            treeGrid.deleteRowById(10);
+            fix.detectChanges();
+            // 10 -> 9
+            treeGrid.selectRows([9]);
+            fix.detectChanges();
+            expect(treeGrid.selectedRows()).toEqual([6, 9]);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+        });
+
+        it('Should not be able to select deleted rows through API with selectAllRows', () => {
+            treeGrid.deleteRowById(6);
+            treeGrid.deleteRowById(10);
+            fix.detectChanges();
+            expect(treeGrid.selectedRows()).toEqual([]);
+
+            treeGrid.selectAllRows();
+            fix.detectChanges();
+
+            expect(treeGrid.selectedRows().includes(6)).toBe(false);
+            expect(treeGrid.selectedRows().includes(10)).toBe(false);
+            expect(treeGrid.selectedRows().includes(9)).toBe(false);
+            expect(treeGrid.selectedRows().includes(1)).toBe(true);
+            expect(treeGrid.selectedRows().includes(2)).toBe(true);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, true);
+        });
     });
 
     describe('Cell Selection', () => {
@@ -483,10 +746,10 @@ describe('IgxTreeGrid - Selection ', () => {
 
             // Clicking on the pager buttons triggers a blur event.
 
-            navigateToNextPage(fix);
+            GridFunctions.navigateToNextPage(treeGrid.nativeElement);
             treeGridCell.nativeElement.dispatchEvent(new Event('blur'));
             fix.detectChanges();
-            navigateToFirstPage(fix);
+            GridFunctions.navigateToFirstPage(treeGrid.nativeElement);
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(0);
@@ -500,10 +763,10 @@ describe('IgxTreeGrid - Selection ', () => {
             expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
             expect(TreeGridFunctions.verifyGridCellHasSelectedClass(treeGridCell)).toBe(true);
 
-            navigateToLastPage(fix);
+            GridFunctions.navigateToLastPage(treeGrid.nativeElement);
             treeGridCell.nativeElement.dispatchEvent(new Event('blur'));
             fix.detectChanges();
-            navigateToFirstPage(fix);
+            GridFunctions.navigateToFirstPage(treeGrid.nativeElement);
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(0);
@@ -603,7 +866,6 @@ describe('IgxTreeGrid - Selection ', () => {
             expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
             expect(treeGrid.selectedCells[0].value).toBe(19);
         });
-
     });
 
     describe('Cell/Row Selection With Row Editing', () => {
@@ -619,7 +881,7 @@ describe('IgxTreeGrid - Selection ', () => {
 
         it('should display the banner correctly on row selection', fakeAsync(() => {
             const targetCell = treeGrid.getCellByColumn(1, 'Name');
-            treeGrid.rowSelectable = true;
+            treeGrid.rowSelection = GridSelectionMode.multiple;
             treeGrid.rowEditable = true;
 
             // select the second row
@@ -672,26 +934,4 @@ describe('IgxTreeGrid - Selection ', () => {
 function getVisibleSelectedRows(fix) {
     return TreeGridFunctions.getAllRows(fix).filter(
         (row) => row.nativeElement.classList.contains(TREE_ROW_SELECTION_CSS_CLASS));
-}
-
-function navigateToFirstPage(fix) {
-    clickPagerButton(fix, 0);
-}
-
-function navigateToPrevPage(fix) {
-    clickPagerButton(fix, 1);
-}
-
-function navigateToNextPage(fix) {
-    clickPagerButton(fix, 2);
-}
-
-function navigateToLastPage(fix) {
-    clickPagerButton(fix, 3);
-}
-
-function clickPagerButton(fix, button: number) {
-    const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
-    const pagingButtons = gridElement.querySelectorAll('.igx-grid-paginator__pager > button');
-    pagingButtons[button].dispatchEvent(new Event('click'));
 }

@@ -138,9 +138,7 @@
 @mixin igx-snackbar-typography($type-scale, $categories: (text: 'body-2')) {
     $text: map-get($categories, 'text');
 
-    @include igx-scope('.igx-typography') {
-        %igx-snackbar-message {
-            @include igx-type-style($type-scale, $text);
-        }
+    %igx-snackbar-message {
+        @include igx-type-style($type-scale, $text);
     }
 }

@@ -11,26 +11,30 @@
 /// @prop {Map} empty-list-background [igx-color: 'surface'] - The combo list background color.
 /// @prop {Map} search-separator-border-color [igx-color: 'surface', hexrgba: (), text-contrast: (), rgba: .12] - The combo search box separator color.
 /// @prop {Map} empty-list-placeholder-color [igx-color: 'surface', hexrgba: (), text-contrast: (), rgba: .26] - The combo placeholder text color.
-/// @see $default-palette
-$_light-combo: extend(
-    $_default-shape-combo,
-    (
-        empty-list-background: (
-            igx-color: 'surface'
-        ),
+$_light-combo: (
+    empty-list-background: (
+        igx-color: 'surface'
+    ),
 
-        search-separator-border-color: (
-            igx-color: 'surface',
-            hexrgba: (),
-            text-contrast: (),
-            rgba: .12
-        ),
+    search-separator-border-color: (
+        igx-color: 'surface',
+        hexrgba: (),
+        text-contrast: (),
+        rgba: .12
+    ),
 
-        empty-list-placeholder-color: (
-            igx-color: 'surface',
-            hexrgba: (),
-            text-contrast: (),
-            rgba: .26
-        )
+    empty-list-placeholder-color: (
+        igx-color: 'surface',
+        hexrgba: (),
+        text-contrast: (),
+        rgba: .26
     )
 );
+
+/// Generates a fluent combo schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-combo
+/// @see $default-palette
+$_fluent-combo: extend($_light-combo);
+

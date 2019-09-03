@@ -262,6 +262,13 @@ export interface CancelableEventArgs {
     cancel: boolean;
 }
 
+export interface IBaseEventArgs {
+    /**
+     * Provides reference to the owner component.
+     */
+    owner?: any;
+}
+
 export interface CancelableBrowserEventArgs extends CancelableEventArgs {
     /** Browser event */
     event?: Event;

@@ -21,8 +21,8 @@
 /// @param {Color} $item-hover-text-color [null] - The item's hover text color.
 /// @param {Color} $item-hover-icon-color [null] - The item's hover icon color.
 /// @param {Color} $shadow [null] - Sets a custom shadow to be used by the drawer.
-/// @param {border-radius} border-radius [null] - The border radius used for the navdrawer.
-/// @param {border-radius} item-border-radius [null] - The border radius used for the navdrawer item.
+/// @param {border-radius} $border-radius [null] - The border radius used for the navdrawer.
+/// @param {border-radius} $item-border-radius [null] - The border radius used for the navdrawer item.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -346,15 +346,13 @@
     $item: map-get($categories, 'item');
     $header: map-get($categories, 'header');
 
-    @include igx-scope('.igx-typography') {
-        %item {
-            @include igx-type-style($type-scale, $item);
-        }
+    %item {
+        @include igx-type-style($type-scale, $item);
+    }
 
-        %item--header {
-            @include igx-type-style($type-scale, $header) {
-                margin: 0;
-            }
+    %item--header {
+        @include igx-type-style($type-scale, $header) {
+            margin: 0;
         }
     }
 }
