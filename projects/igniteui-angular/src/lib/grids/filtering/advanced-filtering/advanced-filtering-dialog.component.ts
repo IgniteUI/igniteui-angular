@@ -111,9 +111,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     @ViewChild('expressionsContainer', { static: true })
     protected expressionsContainer: ElementRef;
 
-    @HostBinding('style.pointer-events')
-    pointerEvents = 'all';
-
     @HostBinding('style.display')
     display = 'block';
 
