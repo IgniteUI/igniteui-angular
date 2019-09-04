@@ -83,7 +83,6 @@ export interface IGridResourceStrings {
     igx_grid_advanced_filter_and_label?: string;
     igx_grid_advanced_filter_or_label?: string;
     igx_grid_advanced_filter_add_condition?: string;
-    igx_grid_advanced_filter_end_label?: string;
     igx_grid_advanced_filter_ungroup?: string;
     igx_grid_advanced_filter_delete?: string;
     igx_grid_advanced_filter_delete_filters?: string;
@@ -175,7 +174,6 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_advanced_filter_and_label: 'and',
     igx_grid_advanced_filter_or_label: 'or',
     igx_grid_advanced_filter_add_condition: 'Condition',
-    igx_grid_advanced_filter_end_label: 'End',
     igx_grid_advanced_filter_ungroup: 'Ungroup',
     igx_grid_advanced_filter_delete: 'Delete',
     igx_grid_advanced_filter_delete_filters: 'Delete filters',
