@@ -17,6 +17,7 @@ import { IgxToggleDirective, IgxOverlayOutletDirective } from '../../../directiv
 import { IButtonGroupEventArgs } from '../../../buttonGroup/buttonGroup.component';
 import { takeUntil, first } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { KEYS } from '../../../core/utils';
 
 class ExpressionItem {
     constructor(parent?: ExpressionGroupItem) {
@@ -709,6 +710,13 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         if (!this.contextMenuToggle.collapsed) {
             this.calculateContextMenuTarget();
             this.contextMenuToggle.reposition();
+        }
+    }
+
+    public invokeClick(eventArgs: KeyboardEvent) {
+        if (eventArgs.key === KEYS.ENTER || eventArgs.key === KEYS.SPACE || eventArgs.key === KEYS.SPACE_IE) {
+            eventArgs.preventDefault();
+            (eventArgs.currentTarget as HTMLElement).click();
         }
     }
 

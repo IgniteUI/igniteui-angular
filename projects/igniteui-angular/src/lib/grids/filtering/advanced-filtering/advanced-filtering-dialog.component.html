@@ -85,6 +85,7 @@
                           [displayDensity]="displayDensity === 'compact' ? 'cosy' : displayDensity"
                           [removable]="true"
                           [selected]="expressionItem.selected"
+                          (keydown)="invokeClick($event)"
                           (click)="onChipClick(expressionItem)"
                           (dblclick)="onChipDblClick(expressionItem)"
                           (onRemove)="onChipRemove(expressionItem)"
@@ -105,8 +106,15 @@
                 </igx-chip>
                 <div class="igx-filter-tree__expression-actions"
                 *ngIf="(expressionItem.selected && selectedExpressions.length === 1) || expressionItem.hovered">
-                    <igx-icon (click)="enterExpressionEdit(expressionItem)">edit</igx-icon>
+                    <igx-icon 
+                        tabindex="0"
+                        (keydown)="invokeClick($event)"
+                        (click)="enterExpressionEdit(expressionItem)">
+                        edit
+                    </igx-icon>
                     <igx-icon
+                        tabindex="0"
+                        (keydown)="invokeClick($event)"
                         (click)="enterExpressionAdd(expressionItem)"
                         *ngIf="expressionItem.parent !== currentGroup || expressionItem !== currentGroup.children[currentGroup.children.length - 1]"
                     >
@@ -167,6 +175,7 @@
                             <input #searchValueInput
                                     igxInput
                                     tabindex="0"
+                                    (keydown)="invokeClick($event)"
                                     (click)="openDialog(dropDownTarget.element.nativeElement)"
                                     [placeholder]="inputDatePlaceholder"
                                     autocomplete="off"
@@ -215,6 +224,7 @@
                          'igx-filter-tree__line--or': expressionItem.operator === 1,
                          'igx-filter-tree__line--selected': expressionItem.selected
                      }"
+                     (keydown)="invokeClick($event)"
                      (click)="onGroupClick(expressionItem)"
                 ></div>
 
