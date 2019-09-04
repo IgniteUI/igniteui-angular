@@ -222,7 +222,7 @@ export class IgxCalendarBase implements ControlValueAccessor {
      */
 
     @Input()
-    public hideInactiveDates: boolean;
+    public hideInactiveDates = false;
 
     /**
      * Emits an event when a date is selected.
@@ -393,7 +393,14 @@ export class IgxCalendarBase implements ControlValueAccessor {
      */
     private selectMultiple(value: Date | Date[]) {
         if (Array.isArray(value)) {
-            this.selectedDates = this.selectedDates.concat(value.map(v => this.getDateOnly(v)));
+            const newDates = value.map(v => this.getDateOnly(v).getTime());
+            const selDates = this.selectedDates.map(v => this.getDateOnly(v).getTime());
+
+            if (JSON.stringify(newDates) === JSON.stringify(selDates)) {
+                return;
+            }
+
+            this.selectedDates = Array.from(new Set([...newDates, ...selDates])).map(v => new Date(v));
         } else {
             const valueDateOnly = this.getDateOnly(value);
             const newSelection = [];
