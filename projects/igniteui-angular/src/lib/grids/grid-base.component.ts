@@ -58,7 +58,7 @@ import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxRowComponent } from './row.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
+import { FilteringExpressionsTree, IFilteringExpressionsTree, FilteringExpressionsTreeType } from '../data-operations/filtering-expressions-tree';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { Transaction, TransactionType, TransactionService, State } from '../services/index';
 import {
@@ -386,6 +386,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
             // clone the filtering expression tree in order to trigger the filtering pipe
             const filteringExpressionTreeClone = new FilteringExpressionsTree(value.operator, value.fieldName);
+            filteringExpressionTreeClone.type = FilteringExpressionsTreeType.Regular;
             filteringExpressionTreeClone.filteringOperands = value.filteringOperands;
             this._filteringExpressionsTree = filteringExpressionTreeClone;
 
@@ -429,9 +430,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     set advancedFilteringExpressionsTree(value) {
-        if (value) {
+        if (value && value instanceof FilteringExpressionsTree) {
             // clone the filtering expression tree in order to trigger the filtering pipe
             const filteringExpressionTreeClone = new FilteringExpressionsTree(value.operator, value.fieldName);
+            filteringExpressionTreeClone.type = FilteringExpressionsTreeType.Advanced;
             filteringExpressionTreeClone.filteringOperands = value.filteringOperands;
             this._advancedFilteringExpressionsTree = filteringExpressionTreeClone;
         } else {
@@ -446,7 +448,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.summaryService.clearSummaryCache();
         this.markForCheck();
 
-        // TODO Add type to the expression tree in order to distinguish the regular and advanced filtering events.
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
         requestAnimationFrame(() => this.onFilteringDone.emit(this._advancedFilteringExpressionsTree));
     }
