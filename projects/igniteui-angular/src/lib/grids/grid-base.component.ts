@@ -57,7 +57,9 @@ import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxRowComponent } from './row.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { FilteringExpressionsTree, IFilteringExpressionsTree, FilteringExpressionsTreeType } from '../data-operations/filtering-expressions-tree';
+import {
+    FilteringExpressionsTree, IFilteringExpressionsTree, FilteringExpressionsTreeType
+} from '../data-operations/filtering-expressions-tree';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { Transaction, TransactionType, TransactionService, State } from '../services/index';
 import {
