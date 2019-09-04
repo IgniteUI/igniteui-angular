@@ -3,9 +3,12 @@
         <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : this.grid.dragIndicatorIconBase"></ng-container>
     </div>
 </ng-container>
-<ng-container *ngIf="showRowCheckboxes">
+<ng-container *ngIf="showRowSelectors">
     <div class="igx-grid__cbx-selection" (click)="onRowSelectorClick($event)">
-        <igx-checkbox (click)="$event.preventDefault()" [checked]="selected" [disabled]="deleted" disableRipple="true" [disableTransitions]="grid.disableTransitions" [aria-label]="rowCheckboxAriaLabel"></igx-checkbox>
+        <ng-template *ngTemplateOutlet="
+            this.grid.rowSelectorTemplate ? this.grid.rowSelectorTemplate : rowSelectorBaseTemplate;
+            context: { $implicit: {index: this.index + this.grid.page * this.grid.perPage, rowID: rowID, selected: selected }}">
+        </ng-template>
     </div>
 </ng-container>
 <ng-container *ngIf="pinnedColumns.length > 0">
@@ -105,4 +108,14 @@
         </igx-tree-grid-cell>
     </ng-template>
     <ng-container *ngTemplateOutlet="col.visibleIndex === 0 ? treeCellTemplate : cellTemplate"></ng-container>
+</ng-template>
+<ng-template #rowSelectorBaseTemplate>
+    <igx-checkbox
+        [readonly]="true"
+        [checked]="selected"
+        [disabled]="deleted"
+        disableRipple="true"
+        [disableTransitions]="grid.disableTransitions"
+        [aria-label]="rowCheckboxAriaLabel">
+    </igx-checkbox>
 </ng-template>

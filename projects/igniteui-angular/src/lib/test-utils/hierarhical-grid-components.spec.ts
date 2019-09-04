@@ -1,11 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxTreeGridComponent } from '../grids/tree-grid/tree-grid.component';
 import { SampleTestData } from './sample-test-data.spec';
-import { IgxNumberSummaryOperand, IgxSummaryResult, IgxColumnComponent } from '../grids';
-import { IgxGridTransaction } from '../grids/grid-base.component';
-import { IgxTransactionService } from '../services/transaction/igx-transaction';
-import { IgxHierarchicalTransactionService } from '../services/transaction/igx-hierarchical-transaction';
-import { DisplayDensity } from '../core/displayDensity';
+import { IgxColumnComponent } from '../grids';
 import { IgxHierarchicalTransactionServiceFactory, IgxHierarchicalGridComponent, IgxRowIslandComponent } from 'igniteui-angular';
 
 @Component({
@@ -90,7 +85,6 @@ export class IgxHierarchicalGridRowSelectionComponent {
     }
 }
 
-
 @Component({
     template: `
     <igx-hierarchical-grid #grid1 [data]="data" [height]="'600px'" [width]="'700px'" #hierarchicalGrid [primaryKey]="'ID'"
@@ -119,5 +113,67 @@ export class IgxHierarchicalGridRowSelectionNoTransactionsComponent {
     constructor() {
         // 3 level hierarchy
         this.data = SampleTestData.generateHGridData(5, 3);
+    }
+}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid [paging]="true" [data]="data" [cellSelection]="false" [height]="'600px'"
+        [width]="'700px'" #hGridCustomSelectors [primaryKey]="'ID'"
+        [rowSelection]="'multiple'">
+        <igx-column field="ChildLevels"></igx-column>
+        <igx-column field="ProductName"></igx-column>
+        <igx-row-island [key]="'childData'" #rowIsland1 [paging]="true" [primaryKey]="'ID'" [rowSelection]="'single'">
+            <igx-column field="ChildLevels"></igx-column>
+            <igx-column field="ProductName"></igx-column>
+            <ng-template igxHeadSelector let-headContext>
+                <igx-checkbox (click)="handleHeadSelectorClick($event, headContext)"
+                    [checked]="headContext.selectedCount === headContext.totalCount"
+                    [indeterminate]="headContext.selectedCount !== headContext.totalCount && headContext.selectedCount !== 0">
+                </igx-checkbox>
+            </ng-template>
+            <ng-template igxRowSelector let-rowContext>
+                <span class="rowNumberChild">{{ rowContext.index }}</span>
+                <igx-checkbox (click)="handleRowSelectorClick($event, rowContext)" [checked]="rowContext.selected">
+                </igx-checkbox>
+            </ng-template>
+        </igx-row-island>
+        <ng-template igxHeadSelector let-headContext>
+            <igx-checkbox (click)="handleHeadSelectorClick($event, headContext)"
+                [checked]="headContext.selectedCount === headContext.totalCount"
+                [indeterminate]="headContext.selectedCount !== headContext.totalCount && headContext.selectedCount !== 0">
+            </igx-checkbox>
+        </ng-template>
+        <ng-template igxRowSelector let-rowContext>
+            <span class="rowNumber">{{ rowContext.index }}</span>
+            <igx-checkbox (click)="handleRowSelectorClick($event, rowContext)" [checked]="rowContext.selected">
+            </igx-checkbox>
+        </ng-template>
+    </igx-hierarchical-grid>`
+})
+export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
+    public data = [];
+
+    @ViewChild('hGridCustomSelectors', { read: IgxHierarchicalGridComponent, static: true })
+    public hGrid: IgxHierarchicalGridComponent;
+
+    @ViewChild('rowIsland1', { read: IgxRowIslandComponent, static: true })
+    public firstLevelChild: IgxRowIslandComponent;
+
+    public ngOnInit(): void {
+        // 2 level hierarchy
+        this.data = SampleTestData.generateHGridData(40, 2);
+    }
+
+    public handleHeadSelectorClick(event, headContext) {
+        event.stopPropagation();
+        event.preventDefault();
+        headContext.totalCount !== headContext.selectedCount ? headContext.selectAll() : headContext.deselectAll();
+    }
+
+    public handleRowSelectorClick(event, rowContext) {
+        event.stopPropagation();
+        event.preventDefault();
+        rowContext.selected ? rowContext.deselect() : rowContext.select();
     }
 }
