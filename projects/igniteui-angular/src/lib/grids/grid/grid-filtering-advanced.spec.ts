@@ -564,6 +564,108 @@ describe('IgxGrid - Advanced Filtering', () => {
             expect(GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix).length).toBe(2);
         }));
 
+        it('Column dropdown should contain only filterable columns.', fakeAsync(() => {
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Make the 'Downloads', 'Released' and 'ReleaseDate' columns non-filterable.
+            grid.getColumnByName('Downloads').filterable = false;
+            grid.getColumnByName('Released').filterable = false;
+            grid.getColumnByName('ReleaseDate').filterable = false;
+            grid.cdr.detectChanges();
+            tick(100);
+
+            // Click the initial 'Add and Group' button.
+            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            addAndGroupButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Open column dropdown and verify that only filterable columns are present.
+            GridFunctions.clickAdvancedFilteringColumnSelect(fix);
+            fix.detectChanges();
+            const dropdownItems = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix);
+            expect(dropdownItems.length).toBe(3);
+            expect(dropdownItems[0].innerText).toBe('ID');
+            expect(dropdownItems[1].innerText).toBe('ProductName');
+            expect(dropdownItems[2].innerText).toBe('Another Field');
+        }));
+
+        it('Operator dropdown should contain operators based on the column\'s datatype (\'string\' or \'number\').', fakeAsync(() => {
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Add a new group.
+            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            addAndGroupButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Select 'string' type column ('ProductName').
+            selectColumnInEditModeExpression(fix, 1);
+            // Open the operator dropdown and verify they are 'string' specific.
+            GridFunctions.clickAdvancedFilteringOperatorSelect(fix);
+            fix.detectChanges();
+            let dropdownValues: string[] = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix).map((x: any) => x.innerText);
+            let expectedValues = ['Contains', 'Does Not Contain', 'Starts With', 'Ends With', 'Equals',
+                                  'Does Not Equal', 'Empty', 'Not Empty', 'Null', 'Not Null'];
+            verifyEqualArrays(dropdownValues, expectedValues);
+
+            // Close current dropdown by a random select.
+            GridFunctions.clickAdvancedFilteringSelectDropdownItem(fix, 0);
+            tick();
+            fix.detectChanges();
+
+            // Select 'number' type column ('Downloads').
+            selectColumnInEditModeExpression(fix, 2);
+            // Open the operator dropdown and verify they are 'number' specific.
+            GridFunctions.clickAdvancedFilteringOperatorSelect(fix);
+            fix.detectChanges();
+            dropdownValues = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix).map((x: any) => x.innerText);
+            expectedValues = ['Equals', 'Does Not Equal', 'Greater Than', 'Less Than', 'Greater Than Or Equal To',
+                              'Less Than Or Equal To', 'Empty', 'Not Empty', 'Null', 'Not Null'];
+            verifyEqualArrays(dropdownValues, expectedValues);
+        }));
+
+        it('Operator dropdown should contain operators based on the column\'s datatype (\'date\' or \'boolean\').', fakeAsync(() => {
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Add a new group.
+            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            addAndGroupButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Select 'date' type column ('ReleaseDate').
+            selectColumnInEditModeExpression(fix, 4);
+            // Open the operator dropdown and verify they are 'date' specific.
+            GridFunctions.clickAdvancedFilteringOperatorSelect(fix);
+            fix.detectChanges();
+            let dropdownValues: string[] = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix).map((x: any) => x.innerText);
+            let expectedValues = ['Equals', 'Does Not Equal', 'Before', 'After', 'Today', 'Yesterday',
+                                  'This Month', 'Last Month', 'Next Month', 'This Year', 'Last Year',
+                                  'Next Year', 'Empty', 'Not Empty', 'Null', 'Not Null'];
+            verifyEqualArrays(dropdownValues, expectedValues);
+
+            // Close current dropdown by a random select.
+            GridFunctions.clickAdvancedFilteringSelectDropdownItem(fix, 0);
+            tick();
+            fix.detectChanges();
+
+            // Select 'boolean' type column ('Released').
+            selectColumnInEditModeExpression(fix, 3);
+            // Open the operator dropdown and verify they are 'boolean' specific.
+            GridFunctions.clickAdvancedFilteringOperatorSelect(fix);
+            fix.detectChanges();
+            dropdownValues = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix).map((x: any) => x.innerText);
+            expectedValues = ['All', 'True', 'False', 'Empty', 'Not Empty', 'Null', 'Not Null'];
+            verifyEqualArrays(dropdownValues, expectedValues);
+        }));
+
         describe('Localization', () => {
             it('Should correctly change resource strings for Advanced Filtering dialog.', fakeAsync(() => {
                 fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
@@ -906,4 +1008,15 @@ function verifyEditModeExpressionInputValues(fix,
     expect(columnInput.value).toBe(columnText);
     expect(operatorInput.value).toBe(operatorText);
     expect(valueInput.value).toBe(valueText);
+}
+
+function verifyEqualArrays(firstArr: any[], secondArr: any[]) {
+    expect(firstArr.length).toEqual(secondArr.length, 'Array lengths mismatch.');
+    firstArr = firstArr.sort();
+    secondArr = secondArr.sort();
+    // Verify sorted arrays have equal respective elements.
+    const len = firstArr.length;
+    for (let index = 0; index < len; index++) {
+        expect(firstArr[index]).toBe(secondArr[index], 'Array element mismatch.');
+    }
 }

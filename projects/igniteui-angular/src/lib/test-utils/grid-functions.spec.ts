@@ -1389,7 +1389,8 @@ export class GridFunctions {
 
     public static getAdvancedFilteringSelectDropdownItems(fix: ComponentFixture<any>) {
         const selectDropdown = GridFunctions.getAdvancedFilteringSelectDropdown(fix);
-        const items = selectDropdown.querySelectorAll('.igx-drop-down__item');
+        const items = GridFunctions.sortNativeElementsVertically(
+            Array.from(selectDropdown.querySelectorAll('.igx-drop-down__item')));
         return items;
     }
 
