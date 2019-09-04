@@ -393,6 +393,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
 
     public enterExpressionEdit(expressionItem: ExpressionOperandItem) {
         this.clearSelection();
+        this.exitOperandEdit();
         this.cancelOperandAdd();
 
         if (this.editedExpression) {
@@ -437,7 +438,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
 
     public enterExpressionAdd(expressionItem: ExpressionOperandItem) {
         this.clearSelection();
-        this.cancelOperandEdit();
+        this.exitOperandEdit();
 
         if (this.addModeExpression) {
             this.addModeExpression.inAddMode = false;
