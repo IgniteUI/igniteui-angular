@@ -53,17 +53,22 @@
                 }" #headerDragContainer>
                     <div style="visibility: hidden;">
                         <ng-container
-                            *ngTemplateOutlet="this.dragIndicatorIconTemplate ? this.dragIndicatorIconTemplate : this.dragIndicatorIconBase">
+                            *ngTemplateOutlet="this.dragIndicatorIconTemplate ? this.dragIndicatorIconTemplate : dragIndicatorIconBase">
                         </ng-container>
                     </div>
                 </div>
             </ng-container>
-            <ng-container *ngIf="showRowCheckboxes">
-                <div class="igx-grid__cbx-selection" (click)="onHeaderSelectorClick($event)"  #headerCheckboxContainer [ngClass]="{
+            <ng-container *ngIf="showRowSelectors">
+                <div class="igx-grid__cbx-selection" (click)="onHeaderSelectorClick($event)" #headerSelectorContainer [ngClass]="{
                     'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible
                 }">
-                    <igx-checkbox [checked]="selectionService.areAllRowSelected()" disableRipple="true" [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
-                    (click)="$event.preventDefault()" [indeterminate]="selectionService.hasSomeRowSelected()" [aria-label]="headerCheckboxAriaLabel"  #headerCheckbox></igx-checkbox>
+                    <ng-template #headSelector
+                        *ngTemplateOutlet="
+                        this.headSelectorTemplate ? this.headSelectorTemplate : headSelectorBaseTemplate;
+                        context: { $implicit: {
+                                        selectedCount: this.selectionService.filteredSelectedRowIds.length,
+                                        totalCount: this.totalRowsCountAfterFilter }}">
+                    </ng-template>
                 </div>
             </ng-container>
             <ng-container *ngIf="pinnedColumns.length > 0">
@@ -244,6 +249,18 @@
 
 <ng-template #dragIndicatorIconBase>
     <igx-icon fontSet="material">drag_indicator</igx-icon>
+</ng-template>
+
+<ng-template #headSelectorBaseTemplate igxHeadSelector let-context>
+    <igx-checkbox
+        [readonly]="true"
+        [checked]="context.selectedCount > 0 && context.totalCount === context.selectedCount"
+        disableRipple="true"
+        [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
+        [indeterminate]="context.selectedCount > 0 && context.selectedCount !== context.totalCount"
+        [aria-label]="headSelectorBaseAriaLabel"
+        #headerCheckbox>
+    </igx-checkbox>
 </ng-template>
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>

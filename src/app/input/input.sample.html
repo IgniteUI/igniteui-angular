@@ -81,8 +81,14 @@
 
                     <igx-list-item>
                         <igx-avatar igxListThumbnail src="assets/images/avatar/17.jpg" roundShape="true"></igx-avatar>
-                        <span igxListLineTitle>Brian Vaughan</span>
+                        <span igxListLineTitle>Brian Vaughan (disabled)</span>
                         <igx-checkbox igxListAction [(ngModel)]="user.registered" [disabled]="true">Value</igx-checkbox>
+                    </igx-list-item>
+
+                    <igx-list-item>
+                        <igx-avatar igxListThumbnail src="assets/images/avatar/17.jpg" roundShape="true"></igx-avatar>
+                        <span igxListLineTitle>Brian Vaughan (readonly)</span>
+                        <igx-checkbox igxListAction [(ngModel)]="user.registered" [readonly]="true">Value</igx-checkbox>
                     </igx-list-item>
 
                     <igx-list-item>

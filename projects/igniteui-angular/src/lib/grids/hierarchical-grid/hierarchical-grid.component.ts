@@ -134,7 +134,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     public set hierarchicalState(val) {
         if (this.hasChildrenKey) {
             val = val.filter(item => {
-                const rec = this.primaryKey ? this.data.find(x => x[this.primaryKey]=== item.rowID) : item.rowID;
+                const rec = this.primaryKey ? this.data.find(x => x[this.primaryKey] === item.rowID) : item.rowID;
                 return rec[this.hasChildrenKey];
             });
         }
@@ -378,6 +378,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         this.toolbarCustomContentTemplates = this.parentIsland ?
             this.parentIsland.toolbarCustomContentTemplates :
             this.toolbarCustomContentTemplates;
+
+        this.headSelectorsTemplates = this.parentIsland ?
+            this.parentIsland.headSelectorsTemplates :
+            this.headSelectorsTemplates;
+
+        this.rowSelectorsTemplates = this.parentIsland ?
+            this.parentIsland.rowSelectorsTemplates :
+            this.rowSelectorsTemplates;
         this.rowExpandedIndicatorTemplate  = this.rootGrid.rowExpandedIndicatorTemplate;
         this.rowCollapsedIndicatorTemplate   = this.rootGrid.rowCollapsedIndicatorTemplate;
         this.headerCollapseIndicatorTemplate = this.rootGrid.headerCollapseIndicatorTemplate;

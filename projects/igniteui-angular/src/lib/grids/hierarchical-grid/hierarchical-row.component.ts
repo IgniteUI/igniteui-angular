@@ -110,6 +110,22 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    public select = () => {
+        this.grid.selectRows([this.rowID]);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public deselect = () => {
+        this.grid.deselectRows([this.rowID]);
+    }
+
+    /**
     * @hidden
     */
     public get iconTemplate() {
@@ -117,7 +133,7 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
         if (this.grid.hasChildrenKey) {
             expandable = this.rowData[this.grid.hasChildrenKey];
         }
-        if(!expandable) {
+        if (!expandable) {
             return this.defaultEmptyTemplate;
         }
         if (this.expanded) {
