@@ -68,6 +68,7 @@ import {
     IgxCellTemplateDirective,
     IgxFilterCellTemplateDirective
 } from './types';
+import { IgxRowSelectorsModule } from './igx-row-selectors.module';
 /**
  * @hidden
  */
@@ -163,7 +164,8 @@ import {
         IgxFilterCellTemplateDirective,
         IgxRowDragModule,
         IgxPaginatorModule,
-        IgxGridFooterComponent
+        IgxGridFooterComponent,
+        IgxRowSelectorsModule
     ],
     imports: [
         CommonModule,
@@ -192,7 +194,8 @@ import {
         IgxGridPipesModule,
         IgxGridExcelStyleFilteringModule,
         IgxRowDragModule,
-        IgxPaginatorModule
+        IgxPaginatorModule,
+        IgxRowSelectorsModule
     ],
     providers: [
         IgxGridSelectionService,

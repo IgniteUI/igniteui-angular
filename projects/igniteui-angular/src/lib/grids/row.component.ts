@@ -142,8 +142,8 @@ export abstract class IgxRowComponent<T extends IgxGridBaseComponent & IGridData
     /**
      * @hidden
      */
-    public get showRowCheckboxes(): boolean {
-        return this.grid.showRowCheckboxes;
+    public get showRowSelectors(): boolean {
+        return this.grid.showRowSelectors;
     }
 
     /** @hidden */
@@ -264,7 +264,6 @@ export abstract class IgxRowComponent<T extends IgxGridBaseComponent & IGridData
         public selectionService: IgxGridSelectionService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef) {}
-
 
     /**
      * @hidden

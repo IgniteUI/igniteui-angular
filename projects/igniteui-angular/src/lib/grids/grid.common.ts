@@ -671,17 +671,17 @@ export class IgxDecimalPipeComponent extends DecimalPipe implements PipeTransfor
 /**
  * @hidden
  */
-export interface ContainerPositionSettings extends PositionSettings {
+export interface RowEditPositionSettings extends PositionSettings {
     container?: HTMLElement;
 }
 
 /**
  * @hidden
  */
-export class ContainerPositioningStrategy extends ConnectedPositioningStrategy {
+export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
     isTop = false;
     isTopInitialPosition = null;
-    public settings: ContainerPositionSettings;
+    public settings: RowEditPositionSettings;
     position(contentElement: HTMLElement, size: { width: number, height: number }, document?: Document, initialCall?: boolean): void {
         const container = this.settings.container; // grid.tbody
         const target = <HTMLElement>this.settings.target; // current grid.row

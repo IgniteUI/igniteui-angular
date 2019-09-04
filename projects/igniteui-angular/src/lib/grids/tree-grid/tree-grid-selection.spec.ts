@@ -8,7 +8,8 @@ import {
     IgxTreeGridCellSelectionComponent,
     IgxTreeGridSelectionRowEditingComponent,
     IgxTreeGridSelectionWithTransactionComponent,
-      IgxTreeGridRowEditingTransactionComponent
+    IgxTreeGridRowEditingTransactionComponent,
+    IgxTreeGridCustomRowSelectorsComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -20,6 +21,7 @@ import {
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { IgxRowSelectorsModule } from '../igx-row-selectors.module';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../types';
 
@@ -35,9 +37,10 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                 IgxTreeGridCellSelectionComponent,
                 IgxTreeGridSelectionRowEditingComponent,
                 IgxTreeGridSelectionWithTransactionComponent,
-                IgxTreeGridRowEditingTransactionComponent
+                IgxTreeGridRowEditingTransactionComponent,
+                IgxTreeGridCustomRowSelectorsComponent
             ],
-            imports: [IgxTreeGridModule, NoopAnimationsModule]
+            imports: [IgxTreeGridModule, NoopAnimationsModule, IgxRowSelectorsModule]
         })
             .compileComponents();
     }));
@@ -610,7 +613,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             treeGrid.selectRows([475]);
             fix.detectChanges();
             expect(treeGrid.selectedRows()).toEqual([663, 475]);
-            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
         });
 
         it('Should not be able to select deleted rows through API with selectAllRows - Hierarchical DS', () => {
@@ -655,7 +658,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             treeGrid.selectRows([9]);
             fix.detectChanges();
             expect(treeGrid.selectedRows()).toEqual([6, 9]);
-            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, null);
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
         });
 
         it('Should not be able to select deleted rows through API with selectAllRows', () => {
@@ -930,7 +933,62 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             expect(banner[0]).toBeTruthy();
         }));
     });
+
+    describe('Custom row selectors', () => {
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxTreeGridCustomRowSelectorsComponent);
+            fix.detectChanges();
+            treeGrid = fix.componentInstance.treeGrid;
+        }));
+
+        it('Should have the correct properties in the custom row selector template', () => {
+            const firstRow = treeGrid.getRowByIndex(0);
+            const firstCheckbox = firstRow.nativeElement.querySelector('.igx-checkbox__composite');
+            const context = { index: 0, rowID: 1, selected: false };
+            const contextUnselect = { index: 0, rowID: 1, selected: true };
+            spyOn(fix.componentInstance, 'onRowCheckboxClick').and.callThrough();
+            firstCheckbox.click();
+            fix.detectChanges();
+
+            expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledTimes(1);
+            expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), context);
+
+            // Verify correct properties when unselecting a row
+            firstCheckbox.click();
+            fix.detectChanges();
+
+            expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledTimes(2);
+            expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), contextUnselect);
+        });
+
+        it('Should have the correct properties in the custom row selector header template', () => {
+            const context = { selectedCount: 0, totalCount: 8 };
+            const contextUnselect = { selectedCount: 8, totalCount: 8 };
+            const headerCheckbox = fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-checkbox__composite');
+            spyOn(fix.componentInstance, 'onHeaderCheckboxClick').and.callThrough();
+            headerCheckbox.click();
+            fix.detectChanges();
+
+            expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledTimes(1);
+            expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), context);
+
+            headerCheckbox.click();
+            fix.detectChanges();
+
+            expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledTimes(2);
+            expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), contextUnselect);
+        });
+
+        it('Should have correct indices on all pages', () => {
+            treeGrid.nextPage();
+            fix.detectChanges();
+
+            const firstRootRow = treeGrid.getRowByIndex(0);
+            expect(firstRootRow.nativeElement.querySelector('.rowNumber').textContent).toEqual('5');
+        });
+    });
 });
+
 
 function getVisibleSelectedRows(fix) {
     return TreeGridFunctions.getAllRows(fix).filter(
