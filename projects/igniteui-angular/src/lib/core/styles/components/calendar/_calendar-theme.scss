@@ -316,6 +316,10 @@
         border-radius: --var($theme, 'border-radius');
     }
 
+    %cal-display + %cal-display {
+        margin-left: 1rem;
+    }
+
     %cal-display--vertical {
         flex-flow: row nowrap;
 
@@ -470,6 +474,7 @@
         color: --var($theme, 'inactive-text-color');
         cursor: default;
         border-radius: 0;
+        flex-basis: 14.28%; // 100 divided by the number of weekdays
     }
 
     %cal-value--weekend {

@@ -28,6 +28,14 @@ export class CalendarSampleComponent implements OnInit {
         }];
     }
 
+    public showHide() {
+        this.calendar1.hideInactiveDates = !this.calendar1.hideInactiveDates;
+    }
+
+    public setMonthsViewNumber(args: HTMLInputElement) {
+        this.calendar1.monthsViewNumber = parseInt(args.value, 10);
+    }
+
     public select() {
         // Working with range selection type
         // this.calendar1.selectDate([new Date('2018-09-20'), new Date('2018-09-26'), new Date('2018-09-28')]);
