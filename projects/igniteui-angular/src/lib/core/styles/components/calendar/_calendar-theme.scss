@@ -474,7 +474,8 @@
         color: --var($theme, 'inactive-text-color');
         cursor: default;
         border-radius: 0;
-        flex-basis: 14.28%; // 100 divided by the number of weekdays
+        flex-basis: 14.28%;
+        // 100 divided by the number of weekdays
     }
 
     %cal-value--weekend {
@@ -556,11 +557,10 @@
     }
 
     %cal-value--selected-dimmed {
-        
         %cal-value-content {
             color: --var($theme, 'date-selected-text-color');
             background: --var($theme, 'date-selected-background') ;
-            opacity: 0.60;
+            opacity: .6;
         }
     }
 
