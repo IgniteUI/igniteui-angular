@@ -69,6 +69,7 @@ import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 import { IgxRowDragModule } from './row-drag.directive';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import { IgxSelectModule } from '../select/select.module';
+import { IgxRowSelectorsModule } from './igx-row-selectors.module';
 /**
  * @hidden
  */
@@ -169,7 +170,8 @@ import { IgxSelectModule } from '../select/select.module';
         IgxRowDragModule,
         IgxPaginatorModule,
         IgxGridFooterComponent,
-        IgxAdvancedFilteringDialogComponent
+        IgxAdvancedFilteringDialogComponent,
+        IgxRowSelectorsModule
     ],
     imports: [
         CommonModule,
@@ -199,7 +201,8 @@ import { IgxSelectModule } from '../select/select.module';
         IgxGridExcelStyleFilteringModule,
         IgxRowDragModule,
         IgxSelectModule,
-        IgxPaginatorModule
+        IgxPaginatorModule,
+        IgxRowSelectorsModule
     ],
     providers: [
         IgxGridSelectionService,
