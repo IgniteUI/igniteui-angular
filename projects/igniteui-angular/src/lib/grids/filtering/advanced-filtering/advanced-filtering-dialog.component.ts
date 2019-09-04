@@ -199,7 +199,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         }
 
         this.enterExpressionEdit(operandItem);
-        this.scrollToBottom();
+        // this.scrollToBottom(); // This should potentially be replaced with a scrollTo logic for a specific element.
     }
 
     public addAndGroup(parent?: ExpressionGroupItem, afterExpression?: ExpressionItem) {

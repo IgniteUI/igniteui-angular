@@ -666,6 +666,69 @@ describe('IgxGrid - Advanced Filtering', () => {
             verifyEqualArrays(dropdownValues, expectedValues);
         }));
 
+        it('Should scroll the adding buttons into view when the add icon of a chip is clicked.', (async () => {
+            // Apply advanced filter through API.
+            const tree = new FilteringExpressionsTree(FilteringLogic.Or);
+            for (let index = 0; index < 30; index++) {
+                tree.filteringOperands.push({
+                    fieldName: 'Downloads', searchVal: index, condition: IgxNumberFilteringOperand.instance().condition('equals')
+                });
+            }
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            await wait(50);
+            fix.detectChanges();
+
+            // Select the last visible expression chip.
+            GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [9]);
+            await wait(200);
+            fix.detectChanges();
+            // Click the add icon to display the adding buttons.
+            GridFunctions.clickAdvancedFilteringTreeExpressionChipAddIcon(fix, [9]);
+            fix.detectChanges();
+
+            // Verify the adding buttons are in view.
+            const addingButtons = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0);
+            for (const addingButton of addingButtons) {
+                verifyElementIsInExpressionsContainerView(fix, addingButton);
+            }
+        }));
+
+        it('Should scroll the newly added expression into view when the respective add button is clicked.', (async () => {
+            // Apply advanced filter through API.
+            const tree = new FilteringExpressionsTree(FilteringLogic.Or);
+            for (let index = 0; index < 30; index++) {
+                tree.filteringOperands.push({
+                    fieldName: 'Downloads', searchVal: index, condition: IgxNumberFilteringOperand.instance().condition('equals')
+                });
+            }
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            await wait(50);
+            fix.detectChanges();
+
+            // Select the previous to last visible expression chip.
+            GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [8]);
+            await wait(200);
+            fix.detectChanges();
+            // Click the add icon to display the adding buttons.
+            GridFunctions.clickAdvancedFilteringTreeExpressionChipAddIcon(fix, [8]);
+            fix.detectChanges();
+            // Click the 'add condition' button.
+            const addCondButton = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[0];
+            addCondButton.click();
+            fix.detectChanges();
+
+            // Verify the edit mode container (the one with the editing inputs) is in view.
+            verifyElementIsInExpressionsContainerView(fix, GridFunctions.getAdvancedFilteringEditModeContainer(fix));
+        }));
+
         describe('Localization', () => {
             it('Should correctly change resource strings for Advanced Filtering dialog.', fakeAsync(() => {
                 fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
@@ -1008,6 +1071,16 @@ function verifyEditModeExpressionInputValues(fix,
     expect(columnInput.value).toBe(columnText);
     expect(operatorInput.value).toBe(operatorText);
     expect(valueInput.value).toBe(valueText);
+}
+
+function verifyElementIsInExpressionsContainerView(fix, element: HTMLElement) {
+    const elementRect = element.getBoundingClientRect();
+    const exprContainer: HTMLElement = GridFunctions.getAdvancedFilteringExpressionsContainer(fix);
+    const exprContainerRect = exprContainer.getBoundingClientRect();
+    expect(elementRect.top >= exprContainerRect.top).toBe(true, 'top is not in view');
+    expect(elementRect.bottom <= exprContainerRect.bottom).toBe(true, 'bottom is not in view');
+    expect(elementRect.left >= exprContainerRect.left).toBe(true, 'left is not in view');
+    expect(elementRect.right <= exprContainerRect.right).toBe(true, 'right is not in view');
 }
 
 function verifyEqualArrays(firstArr: any[], secondArr: any[]) {
