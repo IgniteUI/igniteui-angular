@@ -102,6 +102,54 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     @ViewChild('searchValueInput', { read: ElementRef, static: false })
     public searchValueInput: ElementRef;
 
+    @ViewChild('editingInputsContainer', { read: ElementRef, static: false })
+    public set editingInputsContainer(value: ElementRef) {
+        if ((value && !this._editingInputsContainer) ||
+            (value && this._editingInputsContainer && this._editingInputsContainer.nativeElement !== value.nativeElement)) {
+            requestAnimationFrame(() => {
+                this.scrollElementIntoView(value.nativeElement);
+            });
+        }
+
+        this._editingInputsContainer = value;
+    }
+
+    public get editingInputsContainer(): ElementRef {
+        return this._editingInputsContainer;
+    }
+
+    @ViewChild('addModeContainer', { read: ElementRef, static: false })
+    public set addModeContainer(value: ElementRef) {
+        if ((value && !this._addModeContainer) ||
+            (value && this._addModeContainer && this._addModeContainer.nativeElement !== value.nativeElement)) {
+            requestAnimationFrame(() => {
+                this.scrollElementIntoView(value.nativeElement);
+            });
+        }
+
+        this._addModeContainer = value;
+    }
+
+    public get addModeContainer(): ElementRef {
+        return this._addModeContainer;
+    }
+
+    @ViewChild('currentGroupButtonsContainer', { read: ElementRef, static: false })
+    public set currentGroupButtonsContainer(value: ElementRef) {
+        if ((value && !this._currentGroupButtonsContainer) ||
+            (value && this._currentGroupButtonsContainer && this._currentGroupButtonsContainer.nativeElement !== value.nativeElement)) {
+            requestAnimationFrame(() => {
+                this.scrollElementIntoView(value.nativeElement);
+            });
+        }
+
+        this._currentGroupButtonsContainer = value;
+    }
+
+    public get currentGroupButtonsContainer(): ElementRef {
+        return this._currentGroupButtonsContainer;
+    }
+
     @ViewChild(IgxToggleDirective, { static: true })
     public contextMenuToggle: IgxToggleDirective;
 
@@ -122,6 +170,9 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     private _clickTimer;
     private _dblClickDelay = 200;
     private _preventChipClick = false;
+    private _editingInputsContainer: ElementRef;
+    private _addModeContainer: ElementRef;
+    private _currentGroupButtonsContainer: ElementRef;
 
     constructor(private element: ElementRef, public cdr: ChangeDetectorRef) { }
 
@@ -199,7 +250,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         }
 
         this.enterExpressionEdit(operandItem);
-        // this.scrollToBottom(); // This should potentially be replaced with a scrollTo logic for a specific element.
     }
 
     public addAndGroup(parent?: ExpressionGroupItem, afterExpression?: ExpressionItem) {
@@ -598,10 +648,16 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         this._overlaySettings.positionStrategy.settings.target = new Point(maxRight, minTop);
     }
 
-    private scrollToBottom() {
-        requestAnimationFrame(() => {
-            this.expressionsContainer.nativeElement.scrollTop = this.expressionsContainer.nativeElement.scrollHeight;
-        });
+    private scrollElementIntoView(target: HTMLElement) {
+        const container = this.expressionsContainer.nativeElement;
+        const targetOffset = target.offsetTop - container.offsetTop;
+        const delta = 10;
+
+        if (container.scrollTop + delta > targetOffset) {
+            container.scrollTop = targetOffset - delta;
+        } else if (container.scrollTop + container.clientHeight < targetOffset + target.offsetHeight + delta) {
+            container.scrollTop = targetOffset + target.offsetHeight + delta - container.clientHeight;
+        }
     }
 
     public ungroup() {

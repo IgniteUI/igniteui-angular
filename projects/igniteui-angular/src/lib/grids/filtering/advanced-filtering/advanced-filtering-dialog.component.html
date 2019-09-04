@@ -116,6 +116,7 @@
             </div>
 
             <div *ngIf="expressionItem.inEditMode"
+                #editingInputsContainer
                 class="igx-filter-tree__inputs"
             >
                 <igx-select #columnSelect
@@ -192,6 +193,7 @@
             </div>
 
             <div *ngIf="expressionItem.inAddMode"
+                #addModeContainer
                 class="igx-filter-tree__buttons"
             >
                 <ng-container *ngTemplateOutlet="addExpressionsTemplate; context: context(expressionItem.parent, expressionItem)"></ng-container>
@@ -220,7 +222,9 @@
                     <ng-container *ngFor="let expr of expressionItem.children">
                         <ng-container *ngTemplateOutlet="isExpressionGroup(expr) ? expressionTreeTemplate : filterOperandTemplate; context: context(expr)"></ng-container>
                     </ng-container>
-                    <div *ngIf="currentGroup === expressionItem" class="igx-filter-tree__buttons">
+                    <div *ngIf="currentGroup === expressionItem"
+                        #currentGroupButtonsContainer
+                        class="igx-filter-tree__buttons">
                         <ng-container *ngTemplateOutlet="addExpressionsTemplate; context: context(expressionItem)"></ng-container>
                         <button igxButton="outlined"
                                 *ngIf="expressionItem !== rootGroup"
