@@ -43,6 +43,7 @@ import {
     IgxGridFilteringTemplateComponent,
     IgxGridFilteringESFTemplatesComponent
 } from '../../test-utils/grid-samples.spec';
+import { HelperUtils } from '../../test-utils/helper-utils.spec';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
