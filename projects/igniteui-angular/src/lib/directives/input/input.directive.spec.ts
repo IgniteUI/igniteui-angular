@@ -63,7 +63,7 @@ describe('IgxInput', () => {
         expect(inputElement.classList.contains(TEXTAREA_CSS_CLASS)).toBe(true);
     });
 
-    it('Should apply focused style.', () => {
+    it('should apply focused style.', () => {
         const fixture = TestBed.createComponent(InputComponent);
         fixture.detectChanges();
 
@@ -83,7 +83,7 @@ describe('IgxInput', () => {
         expect(igxInput.focused).toBe(false);
     });
 
-    it('Should have a placeholder style. Placeholder API.', () => {
+    it('should have a placeholder style. Placeholder API.', () => {
         const fixture = TestBed.createComponent(InputWithPlaceholderComponent);
         fixture.detectChanges();
 
@@ -95,7 +95,7 @@ describe('IgxInput', () => {
         expect(igxInput.placeholder).toBe('Test');
     });
 
-    it('Should have an initial filled style when data bound.', fakeAsync(() => {
+    it('should have an initial filled style when data bound.', fakeAsync(() => {
         const fixture = TestBed.createComponent(InitiallyFilledInputComponent);
         fixture.detectChanges();
 
@@ -127,7 +127,7 @@ describe('IgxInput', () => {
         expect(filledDate.classList.contains(INPUT_GROUP_FILLED_CSS_CLASS)).toBe(true);
     }));
 
-    it('Should have a filled style. Value API.', () => {
+    it('should have a filled style. Value API.', () => {
         const fixture = TestBed.createComponent(FilledInputComponent);
         fixture.detectChanges();
 
@@ -148,7 +148,7 @@ describe('IgxInput', () => {
         expect(igxInput.value).toBe('test');
     });
 
-    it('Should have a disabled style. Disabled API.', () => {
+    it('should have a disabled style. Disabled API.', () => {
         const fixture = TestBed.createComponent(DisabledInputComponent);
         fixture.detectChanges();
 
@@ -167,7 +167,7 @@ describe('IgxInput', () => {
         expect(igxInput.disabled).toBe(false);
     });
 
-    it('Should have a disabled style via binding', () => {
+    it('should have a disabled style via binding', () => {
         const fixture = TestBed.createComponent(DataBoundDisabledInputComponent);
         fixture.detectChanges();
 
@@ -186,7 +186,7 @@ describe('IgxInput', () => {
         expect(igxInput.disabled).toBe(true);
     });
 
-    it('Should style required input correctly.', () => {
+    it('should style required input correctly.', () => {
         const fixture = TestBed.createComponent(RequiredInputComponent);
         fixture.detectChanges();
 
@@ -194,7 +194,7 @@ describe('IgxInput', () => {
         testRequiredValidation(inputElement, fixture);
     });
 
-    it('Should update style when required input\'s value is set.', () => {
+    it('should update style when required input\'s value is set.', () => {
         const fixture = TestBed.createComponent(RequiredInputComponent);
         fixture.detectChanges();
 
@@ -225,7 +225,7 @@ describe('IgxInput', () => {
         expect(igxInput.valid).toBe(IgxInputState.INVALID);
     });
 
-    it('Should style required input with two-way databinding correctly.', () => {
+    it('should style required input with two-way databinding correctly.', () => {
         const fixture = TestBed.createComponent(RequiredTwoWayDataBoundInputComponent);
         fixture.detectChanges();
 
@@ -233,7 +233,7 @@ describe('IgxInput', () => {
         testRequiredValidation(inputElement, fixture);
     });
 
-    it('Should work properly with reactive forms validation.', () => {
+    it('should work properly with reactive forms validation.', () => {
         const fixture = TestBed.createComponent(ReactiveFormComponent);
         fixture.detectChanges();
 
@@ -271,7 +271,7 @@ describe('IgxInput', () => {
         });
     }));
 
-    it('When value is changed only via ngModel', fakeAsync(() => {
+    it('should not draw input as invalid when updated through ngModel and input is pristine and untouched', fakeAsync(() => {
         const fix = TestBed.createComponent(RequiredTwoWayDataBoundInputComponent);
         fix.detectChanges();
 
@@ -293,10 +293,10 @@ describe('IgxInput', () => {
         fix.detectChanges();
         tick();
         fix.detectChanges();
-        expect(inputGroup.nativeElement.classList.contains('igx-input-group--invalid')).toBe(true);
+        expect(inputGroup.nativeElement.classList.contains('igx-input-group--invalid')).toBe(false);
     }));
 
-    it('When value is changed via reactive form', fakeAsync(() => {
+    it('should not draw input as invalid when value is changed via reactive form and input is pristine and untouched', () => {
         const fix = TestBed.createComponent(ReactiveFormComponent);
         fix.detectChanges();
 
@@ -305,24 +305,196 @@ describe('IgxInput', () => {
 
         fix.componentInstance.form.patchValue({ str: 'test' });
         fix.detectChanges();
-        tick();
-        fix.detectChanges();
         expect(firstInputGroup.nativeElement.classList.contains('igx-input-group--filled')).toBe(true);
 
         fix.componentInstance.form.patchValue({ str: undefined });
-        fix.detectChanges();
-        tick();
         fix.detectChanges();
         expect(firstInputGroup.nativeElement.classList.contains('igx-input-group--invalid')).toBe(false);
 
         fix.componentInstance.form.patchValue({ str: '' });
         fix.detectChanges();
-        tick();
-        fix.detectChanges();
-        expect(firstInputGroup.nativeElement.classList.contains('igx-input-group--invalid')).toBe(true);
+        expect(firstInputGroup.nativeElement.classList.contains('igx-input-group--invalid')).toBe(false);
+    });
+
+    it('should correctly update state of input without model when updated trough code', fakeAsync(() => {
+        const fixture = TestBed.createComponent(RequiredInputComponent);
+        fixture.detectChanges();
+
+        const igxInput = fixture.componentInstance.igxInput;
+
+        const inputGroupElement = fixture.debugElement.query(By.css('igx-input-group')).nativeElement;
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+
+        igxInput.value = 'test';
+        fixture.detectChanges();
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(igxInput.valid).toBe(IgxInputState.VALID);
+
+
+        igxInput.value = '';
+        fixture.detectChanges();
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
     }));
 
-    it('Should style input when required is toggled dynamically.', () => {
+    it('should correctly update state of input when updated through ngModel, no user interactions', fakeAsync(() => {
+        const fixture = TestBed.createComponent(RequiredTwoWayDataBoundInputComponent);
+        fixture.detectChanges();
+
+        const inputGroupElement = fixture.componentInstance.igxInputGroup.element.nativeElement;
+        const igxInput = fixture.componentInstance.igxInput;
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+
+        fixture.componentInstance.user.firstName = 'Bobby';
+
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+
+        igxInput.value = '';
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+
+        igxInput.value = undefined;
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+    }));
+
+    it('should correctly update state of input when value is changed via reactive, no user interactions', fakeAsync(() => {
+        const fixture = TestBed.createComponent(ReactiveFormComponent);
+        fixture.detectChanges();
+
+        const igxInputGroups = fixture.debugElement.queryAll(By.css('igx-input-group'));
+        const inputGroupElement = igxInputGroups[0].nativeElement;
+        const igxInput = fixture.componentInstance.strIgxInput;
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+
+        fixture.componentInstance.form.patchValue({ str: 'Bobby' });
+        fixture.detectChanges();
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+
+        fixture.componentInstance.form.patchValue({ str: '' });
+        fixture.detectChanges();
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+
+        fixture.componentInstance.form.patchValue({ str: undefined });
+        fixture.detectChanges();
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+
+        fixture.componentInstance.form.reset();
+        fixture.detectChanges();
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+    }));
+
+    it('should correctly update state of input when updated through ngModel, with user interactions', fakeAsync(() => {
+        const fixture = TestBed.createComponent(RequiredTwoWayDataBoundInputComponent);
+        fixture.detectChanges();
+
+        const inputGroupElement = fixture.componentInstance.igxInputGroup.element.nativeElement;
+        const igxInput = fixture.componentInstance.igxInput;
+        const inputElement = igxInput.nativeElement;
+
+        dispatchInputEvent('focus', inputElement, fixture);
+        dispatchInputEvent('blur', inputElement, fixture);
+
+        tick();
+        fixture.detectChanges();
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+
+        fixture.componentInstance.user.firstName = 'Bobby';
+
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+
+        fixture.componentInstance.user.firstName = '';
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+
+        fixture.componentInstance.user.firstName = undefined;
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+    }));
+
+    it('should correctly update state of input when value is changed via reactive, with user interactions', fakeAsync(() => {
+        const fixture = TestBed.createComponent(ReactiveFormComponent);
+        fixture.detectChanges();
+
+        const igxInputGroups = fixture.debugElement.queryAll(By.css('igx-input-group'));
+        const inputGroupElement = igxInputGroups[0].nativeElement;
+        const igxInput = fixture.componentInstance.strIgxInput;
+        const input = igxInput.nativeElement;
+
+        dispatchInputEvent('focus', input, fixture);
+        dispatchInputEvent('blur', input, fixture);
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+
+        fixture.componentInstance.form.patchValue({ str: 'Bobby' });
+        fixture.detectChanges();
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+
+        fixture.componentInstance.form.patchValue({ str: '' });
+        fixture.detectChanges();
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+
+        fixture.componentInstance.form.patchValue({ str: undefined });
+        fixture.detectChanges();
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(true);
+        expect(igxInput.valid).toBe(IgxInputState.INVALID);
+
+        fixture.componentInstance.form.reset();
+        fixture.detectChanges();
+
+        expect(inputGroupElement.classList.contains(INPUT_GROUP_INVALID_CSS_CLASS)).toBe(false);
+        expect(igxInput.valid).toBe(IgxInputState.INITIAL);
+    }));
+
+    it('should style input when required is toggled dynamically.', () => {
         const fixture = TestBed.createComponent(ToggleRequiredWithNgModelInputComponent);
         fixture.detectChanges();
 
@@ -377,7 +549,7 @@ describe('IgxInput', () => {
         expect(inputGroup.element.nativeElement.classList.contains(INPUT_GROUP_VALID_CSS_CLASS)).toBe(false);
     });
 
-    it('Should style input with ngModel when required is toggled dynamically.', () => {
+    it('should style input with ngModel when required is toggled dynamically.', () => {
         const fixture = TestBed.createComponent(ToggleRequiredWithNgModelInputComponent);
         fixture.detectChanges();
 
@@ -620,6 +792,8 @@ class DataBoundDisabledInputComponent {
     </form>`
 })
 class ReactiveFormComponent {
+    @ViewChild(IgxInputDirective) public strIgxInput: IgxInputDirective;
+
     form = this.fb.group({
         str: ['', Validators.required],
         textarea: ['', Validators.required],
