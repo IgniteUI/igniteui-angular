@@ -792,7 +792,7 @@ class DataBoundDisabledInputComponent {
     </form>`
 })
 class ReactiveFormComponent {
-    @ViewChild(IgxInputDirective, { static: true }) public strIgxInput: IgxInputDirective;
+    @ViewChild(IgxInputDirective) public strIgxInput: IgxInputDirective;
 
     form = this.fb.group({
         str: ['', Validators.required],
