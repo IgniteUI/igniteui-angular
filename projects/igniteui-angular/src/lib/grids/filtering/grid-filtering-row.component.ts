@@ -437,11 +437,14 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Event handler for focusout on the input group.
      */
     public onInputGroupFocusout() {
-        if (!this.value && this.value !== 0) {
+        if (!this.value && this.value !== 0 && !this.expression.condition.isUnary) {
             return;
         }
         requestAnimationFrame(() => {
             const focusedElement = document.activeElement;
+            if (focusedElement.className === 'igx-chip__remove') {
+                return;
+            }
             if (!(focusedElement && this.inputGroup.nativeElement.contains(focusedElement))
                 && this.dropDownConditions.collapsed) {
                 this.commitInput();
