@@ -258,14 +258,14 @@ export abstract class IgxBaseExporter {
         if (grid.filteringExpressionsTree &&
             grid.filteringExpressionsTree.filteringOperands.length > 0 &&
             !options.ignoreFiltering) {
-            const filteringState = {
+            const filteringState: any = {
                 expressionsTree: grid.filteringExpressionsTree,
-                strategy: new TreeGridFilteringStrategy(),
                 logic: grid.filteringLogic
             };
 
             if (this._isTreeGrid) {
                 this.flatRecords = [];
+                filteringState.strategy = new TreeGridFilteringStrategy();
                 rootRecords = filteringState.strategy.filter(rootRecords, filteringState.expressionsTree);
                 this.prepareHierarchicalData(rootRecords);
                 data = this.flatRecords;
