@@ -4820,6 +4820,34 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
                 new Set(['Ignite UI for Angular', 'Ignite UI for JavaScript', 'NetAdvantage']));
         }));
 
+        it('Should not throw error when selecting more than two values and column dataType is date.', fakeAsync(() => {
+            fix.detectChanges();
+
+            const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+            const headerResArea = headers[4].children[0].nativeElement;
+
+            const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
+            filterIcon.click();
+            fix.detectChanges();
+
+            const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
+            const checkbox = excelMenu.querySelectorAll('.igx-checkbox__input');
+            const applyButton = excelMenu.querySelector('.igx-button--raised');
+
+            checkbox[0].click(); // Select All
+            tick();
+            fix.detectChanges();
+
+            checkbox[2].click();
+            checkbox[3].click();
+            checkbox[4].click();
+            checkbox[6].click();
+            tick();
+            fix.detectChanges();
+
+            expect(() => { applyButton.click(); }).not.toThrowError();
+        }));
+
         it('Should generate "in" and "empty" conditions when selecting more than two values including (Blanks).', fakeAsync(() => {
             fix.detectChanges();
 
