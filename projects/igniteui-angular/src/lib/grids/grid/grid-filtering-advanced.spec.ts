@@ -894,6 +894,22 @@ describe('IgxGrid - Advanced Filtering', () => {
             verifyExpressionChipContent(fix, [1, 0], 'ProductName', 'Contains', 'angular');
         }));
 
+        it('Should not close the AF dialog when clicking outside of it.', fakeAsync(() => {
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Verify that the Advanced Filtering dialog is opened.
+            expect(GridFunctions.getAdvancedFilteringComponent(fix)).not.toBeNull('Advanced Filtering dialog is not opened.');
+
+            grid.nativeElement.click();
+            tick(200);
+            fix.detectChanges();
+
+            // Verify that the Advanced Filtering dialog remains opened.
+            expect(GridFunctions.getAdvancedFilteringComponent(fix)).not.toBeNull('Advanced Filtering dialog is not opened.');
+        }));
+
         describe('Localization', () => {
             it('Should correctly change resource strings for Advanced Filtering dialog.', fakeAsync(() => {
                 fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
