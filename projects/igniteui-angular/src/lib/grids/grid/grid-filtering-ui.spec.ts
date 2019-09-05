@@ -3336,6 +3336,44 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(chips.length).toBe(2);
             expect(grid.rowList.length).toBe(3);
         }));
+
+        it('Should close filter row when hide the current column', (async () => {
+            grid.height = '700px';
+            grid.showToolbar = true;
+            grid.columnHiding = true;
+            fix.detectChanges();
+            await wait(16);
+
+            const prodNameCol = grid.columns.find((col) => col.field === 'ProductName');
+            GridFunctions.verifyColumnIsHidden(prodNameCol, false, 6);
+
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            fix.detectChanges();
+
+            // Check that the filterRow is opened
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            expect(filterUIRow).not.toBeNull();
+
+            // Add first chip.
+            GridFunctions.typeValueInFilterRowInput('a', fix);
+            await wait(16);
+
+            const hideButton = GridFunctions.getColumnHidingButton(fix);
+            hideButton.focus();
+            await wait(100);
+            hideButton.click();
+            await wait(100);
+            fix.detectChanges();
+
+            const dropDown = fix.debugElement.query(By.css('igx-column-hiding'));
+            HelperUtils.getCheckboxInput('ProductName', dropDown,  fix).click();
+            await wait(100);
+            fix.detectChanges();
+
+            // Check that the filterRow is closed
+            expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
+            GridFunctions.verifyColumnIsHidden(prodNameCol, true , 5);
+        }));
     });
 
     describe(null, () => {
