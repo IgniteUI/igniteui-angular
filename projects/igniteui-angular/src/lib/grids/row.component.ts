@@ -148,8 +148,8 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     /**
      * @hidden
      */
-    public get showRowCheckboxes(): boolean {
-        return this.grid.showRowCheckboxes;
+    public get showRowSelectors(): boolean {
+        return this.grid.showRowSelectors;
     }
 
     /** @hidden */
@@ -269,7 +269,6 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
         public selectionService: IgxGridSelectionService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef) { }
-
 
     /**
      * @hidden

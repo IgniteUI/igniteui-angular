@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild, Input, AfterViewInit, ChangeDetectorRef, QueryList, ViewChildren } from '@angular/core';
+import { Component, TemplateRef, ViewChild, Input, AfterViewInit, ChangeDetectorRef, QueryList, ViewChildren, OnInit } from '@angular/core';
 import { IgxGridCellComponent } from '../grids/cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/summaries/grid-summary';
 import { IGridCellEventArgs, IGridEditEventArgs, IgxGridTransaction } from '../grids/grid-base.component';
@@ -1169,6 +1169,44 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
     data = SampleTestData.contactInfoDataFull();
     width = '800px';
     height = '800px';
+}
+
+@Component({
+    template: `
+    <igx-grid #gridCustomSelectors [primaryKey]="'ID'" [data]="data" [paging]="true" [rowSelection]="'multiple'" [autoGenerate]="false">
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column width="100px" [field]="'CompanyName'"></igx-column>
+        <igx-column width="100px" [field]="'ContactName'" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'ContactTitle'" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Address'" dataType="string"></igx-column>
+        <ng-template igxRowSelector let-rowContext>
+            <span class="rowNumber">{{ rowContext.index }}</span>
+            <igx-checkbox [checked]="rowContext.selected" (click)="onRowCheckboxClick($event, rowContext)"></igx-checkbox>
+        </ng-template>
+        <ng-template igxHeadSelector let-headContext>
+            <igx-checkbox [checked]="headContext.totalCount === headContext.selectedCount"
+                (click)="onHeaderCheckboxClick($event, headContext)"></igx-checkbox>
+        </ng-template>
+    </igx-grid>`
+})
+export class GridCustomSelectorsComponent extends BasicGridComponent implements OnInit {
+    @ViewChild('gridCustomSelectors', { static: true })
+    public grid: IgxGridComponent;
+    public ngOnInit(): void {
+        this.data = SampleTestData.contactInfoDataFull();
+    }
+
+    public onRowCheckboxClick(event, rowContext) {
+        event.stopPropagation();
+        event.preventDefault();
+        rowContext.selected ? this.grid.deselectRows([rowContext.rowID]) : this.grid.selectRows([rowContext.rowID]);
+    }
+
+    public onHeaderCheckboxClick(event, headContext) {
+        event.stopPropagation();
+        event.preventDefault();
+        headContext.selected ? this.grid.deselectAllRows() : this.grid.selectAllRows();
+    }
 }
 
 @Component({
