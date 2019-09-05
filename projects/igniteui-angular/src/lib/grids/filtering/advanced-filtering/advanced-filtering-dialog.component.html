@@ -30,7 +30,11 @@
              (scroll)="onExpressionsScrolled()">
         <ng-container *ngIf="!rootGroup">
 
-            <button igxButton="outlined" [displayDensity]="displayDensity" (click)="addAndGroup()">
+            <button #addRootAndGroupButton
+                igxButton="outlined"
+                [displayDensity]="displayDensity"
+                (click)="addAndGroup()"
+            >
                 <igx-icon fontSet="material">add</igx-icon>
                 <span>{{grid.resourceStrings.igx_grid_advanced_filter_and_group}}</span>
             </button>
@@ -48,7 +52,8 @@
         </ng-container>
 
         <ng-template #addExpressionsTemplate let-expressionItem let-afterExpression="afterExpression">
-            <button igxButton="outlined"
+            <button #addConditionButton
+                    igxButton="outlined"
                     [displayDensity]="displayDensity"
                     [disabled]="editedExpression"
                     (click)="addCondition(expressionItem, afterExpression)"
@@ -255,6 +260,7 @@
 
         <div igxToggle
             class="igx-filter-contextual-menu"
+            (keydown)="onKeyDown($event)"
             [ngClass]="{
                 'igx-filter-contextual-menu--cosy': displayDensity === 'cosy',
                 'igx-filter-contextual-menu--compact': displayDensity === 'compact'

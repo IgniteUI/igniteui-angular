@@ -103,6 +103,12 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     @ViewChild('searchValueInput', { read: ElementRef, static: false })
     public searchValueInput: ElementRef;
 
+    @ViewChild('addRootAndGroupButton', { read: ElementRef, static: false })
+    public addRootAndGroupButton: ElementRef;
+
+    @ViewChild('addConditionButton', { read: ElementRef, static: false })
+    public addConditionButton: ElementRef;
+
     @ViewChild('editingInputsContainer', { read: ElementRef, static: false })
     public set editingInputsContainer(value: ElementRef) {
         if ((value && !this._editingInputsContainer) ||
@@ -178,6 +184,12 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     constructor(private element: ElementRef, public cdr: ChangeDetectorRef) { }
 
     public ngAfterViewInit(): void {
+        if (this.addRootAndGroupButton) {
+            this.addRootAndGroupButton.nativeElement.focus();
+        } else if (this.addConditionButton) {
+            this.addConditionButton.nativeElement.focus();
+        }
+
         this._overlaySettings.outlet = this.overlayOutlet;
         this.contextMenuToggle.onClosed.pipe(takeUntil(this.destroy$)).subscribe((args) => {
             this.contextualGroup = null;
