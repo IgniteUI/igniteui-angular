@@ -42,7 +42,7 @@ import {
     IgxGridFilteringESFTemplatesComponent,
     IgxGridFilteringESFLoadOnDemandComponent
 } from '../../test-utils/grid-samples.spec';
-import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
+import { HelperUtils, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 import { GridSelectionMode, FilterMode } from '../types';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
