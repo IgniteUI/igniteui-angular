@@ -2,6 +2,10 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 8.2.x
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - `[filterStrategy] - input that allows you to override the default filtering strategy`
+
 ## 8.2.0
 
 ### New theme
