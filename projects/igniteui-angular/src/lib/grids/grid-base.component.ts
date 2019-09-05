@@ -265,30 +265,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _hostWidth;
 
 
-    /**
-    * The custom template, if any, that should be used when rendering a row expand indicator.
-    */
-    @ContentChild(IgxRowExpandedIndicatorDirective, { read: TemplateRef, static: false })
-    public rowExpandedIndicatorTemplate: TemplateRef<any> = null;
-
-    /**
-    * The custom template, if any, that should be used when rendering a row collapse indicator.
-    */
-    @ContentChild(IgxRowCollapsedIndicatorDirective, { read: TemplateRef, static: false })
-    public rowCollapsedIndicatorTemplate: TemplateRef<any> = null;
 
 
-    /**
-    * The custom template, if any, that should be used when rendering a header expand indicator.
-    */
-   @ContentChild(IgxHeaderExpandIndicatorDirective, { read: TemplateRef, static: false })
-   public headerExpandIndicatorTemplate: TemplateRef<any> = null;
-
-   /**
-   * The custom template, if any, that should be used when rendering a header collapse indicator.
-   */
-   @ContentChild(IgxHeaderCollapseIndicatorDirective, { read: TemplateRef, static: false })
-   public headerCollapseIndicatorTemplate: TemplateRef<any> = null;
 
     /**
     * @hidden
@@ -1938,6 +1916,31 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /** @hidden */
     @ContentChild(IgxRowEditActionsDirective, { read: TemplateRef, static: false })
     public rowEditActions: TemplateRef<any>;
+
+
+    /**
+    * The custom template, if any, that should be used when rendering a row expand indicator.
+    */
+   @ContentChild(IgxRowExpandedIndicatorDirective, { read: TemplateRef, static: false })
+   public rowExpandedIndicatorTemplate: TemplateRef<any> = null;
+
+   /**
+   * The custom template, if any, that should be used when rendering a row collapse indicator.
+   */
+   @ContentChild(IgxRowCollapsedIndicatorDirective, { read: TemplateRef, static: false })
+   public rowCollapsedIndicatorTemplate: TemplateRef<any> = null;
+
+    /**
+    * The custom template, if any, that should be used when rendering a header expand indicator.
+    */
+   @ContentChild(IgxHeaderExpandIndicatorDirective, { read: TemplateRef, static: false })
+   public headerExpandIndicatorTemplate: TemplateRef<any> = null;
+
+   /**
+   * The custom template, if any, that should be used when rendering a header collapse indicator.
+   */
+   @ContentChild(IgxHeaderCollapseIndicatorDirective, { read: TemplateRef, static: false })
+   public headerCollapseIndicatorTemplate: TemplateRef<any> = null;
 
     /**
      * @hidden
