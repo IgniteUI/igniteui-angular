@@ -248,17 +248,18 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     protected onStatusChanged() {
         if (this.ngControl.control.validator || this.ngControl.control.asyncValidator) {
             if (this.ngControl.control.touched || this.ngControl.control.dirty) {
+                //  TODO: check the logic when control is touched or dirty
                 if (this.inputGroup.isFocused) {
                     // the user is still typing in the control
                     this._valid = this.ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
                 } else {
-                    // the user had touched the control previosly but now the value is changing due to changes in the form
+                    // the user had touched the control previously but now the value is changing due to changes in the form
                     this._valid = this.ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
                 }
-            } else if (this._valid !== IgxInputState.INITIAL) {
-                this._valid = this.ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
-            } else if (this._valid === IgxInputState.INITIAL && this.ngControl.value !== undefined && this.ngControl.invalid) {
-                this._valid = IgxInputState.INVALID;
+            } else {
+                //  if control is untouched and pristine its state is initial. This is when user did not interact
+                //  with the input or when form/control is reset
+                this._valid = IgxInputState.INITIAL;
             }
         }
     }
