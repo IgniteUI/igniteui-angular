@@ -559,7 +559,7 @@ export class IgxGridSelectionService {
     selectAllRows(event?) {
         const allRowIDs = this.getRowIDs(this.allData);
         const addedRows =  allRowIDs.filter((rID) => !this.isRowSelected(rID));
-        const newSelection = this.rowSelection.size ? allRowIDs.concat(this.getSelectedRows()) : addedRows;
+        const newSelection = this.rowSelection.size ? this.getSelectedRows().concat(addedRows) : addedRows;
 
         this.emitRowSelectionEvent(newSelection, addedRows, [], event);
     }
@@ -633,6 +633,12 @@ export class IgxGridSelectionService {
         const filteredData = this.isFilteringApplied() ?
             this.getRowIDs(this.grid.filteredData).some(rID => this.isRowSelected(rID)) : true;
         return this.rowSelection.size > 0 && filteredData && !this.areAllRowSelected();
+    }
+
+    public get filteredSelectedRowIds(): any[] {
+        return this.isFilteringApplied() ?
+            this.getRowIDs(this.allData).filter(rowID => this.isRowSelected(rowID)) :
+            this.getSelectedRows().filter(rowID => !this.isRowDeleted(rowID));
     }
 
     public emitRowSelectionEvent(newSelection, added, removed, event?): boolean {

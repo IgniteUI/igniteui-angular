@@ -64,6 +64,10 @@
         @extend %cal-value--current !optional;
     }
 
+    @include e(date, $mods: ('selected', 'current')) {
+        @extend %cal-value--current--selected !optional;
+    }
+
     @include e(date, 'weekend') {
         @extend %cal-value !optional;
         @extend %cal-value--weekend !optional;

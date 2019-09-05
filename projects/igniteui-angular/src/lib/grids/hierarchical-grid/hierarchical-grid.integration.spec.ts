@@ -18,6 +18,7 @@ import { IgxHierarchicalTransactionServiceFactory } from './hierarchical-grid-ba
 import { IgxIconModule } from '../../icon';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
 import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxHierarchicalGrid Integration #hGrid', () => {
     configureTestSuite();
@@ -472,7 +473,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
 
             const rootExpander =  (hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent).expander;
-            const rootCheckbox =  hierarchicalGrid.headerCheckboxContainer;
+            const rootCheckbox =  hierarchicalGrid.headerSelectorContainer;
             const rootSummaryRow = hierarchicalGrid.summariesRowList.first.nativeElement;
             const rootSummaryIndentation = rootSummaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
 
@@ -554,8 +555,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(childGrid.dataRowList.first.cells.first.value).toEqual('00');
 
             // Go to next page
-            const pagingButtons = hierarchicalGrid.nativeElement.querySelectorAll('.igx-grid-paginator__pager > button');
-            pagingButtons[2].dispatchEvent(new Event('click'));
+            GridFunctions.navigateToNextPage(hierarchicalGrid.nativeElement);
             fixture.detectChanges();
 
             expect(hierarchicalGrid.dataRowList.toArray()[0].cells.first.value).toEqual('15');
@@ -567,7 +567,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(childGrids.length).toEqual(0);
 
             // Return to previous page
-            pagingButtons[1].dispatchEvent(new Event('click'));
+            GridFunctions.navigateToPrevPage(hierarchicalGrid.nativeElement);
             fixture.detectChanges();
 
             expect(hierarchicalGrid.dataRowList.toArray()[0].cells.first.value).toEqual('0');
