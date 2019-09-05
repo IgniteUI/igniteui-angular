@@ -393,6 +393,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         this.hasChildrenKey = this.parentIsland ?
          this.parentIsland.hasChildrenKey || this.rootGrid.hasChildrenKey :
          this.rootGrid.hasChildrenKey;
+         this.showExpandAll = this.parentIsland ?
+         this.parentIsland.showExpandAll : this.rootGrid.showExpandAll;
     }
 
     private updateSizes() {
@@ -628,10 +630,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     */
     public get iconTemplate() {
         const expanded = this.hierarchicalState.length > 0 && this.hasExpandableChildren;
-        if (expanded) {
-            return this.headerExpandIndicatorTemplate || this.defaultExpandedTemplate;
-        } else {
+        if (!expanded && this.showExpandAll) {
             return this.headerCollapseIndicatorTemplate || this.defaultCollapsedTemplate;
+        } else {
+            return this.headerExpandIndicatorTemplate || this.defaultExpandedTemplate;
         }
     }
 
@@ -663,6 +665,17 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         return height;
     }
 
+    /**
+     * @hidden
+    */
+   toggleAll() {
+    const expanded = this.hierarchicalState.length > 0 && this.hasExpandableChildren;
+    if (!expanded && this.showExpandAll) {
+        this.expandAll();
+    } else {
+        this.collapseAll();
+    }
+   }
 
     /**
      * Collapses all rows of the current hierarchical grid.

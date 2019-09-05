@@ -1388,11 +1388,11 @@ public toggleChildRI = true;
 
 @Component({
     template: `
-    <igx-hierarchical-grid #grid1 [data]="data"
+    <igx-hierarchical-grid #grid1 [data]="data" [showExpandAll]='true'
      [autoGenerate]="false" [height]="'400px'" [width]="width" #hierarchicalGrid>
      <igx-column field="ID"></igx-column>
      <igx-column field="ProductName"></igx-column>
-        <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland>
+        <igx-row-island [showExpandAll]='true' [key]="'childData'" [autoGenerate]="false" #rowIsland>
             <igx-column field="ID"></igx-column>
             <igx-column field="ProductName"></igx-column>
             <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 >
