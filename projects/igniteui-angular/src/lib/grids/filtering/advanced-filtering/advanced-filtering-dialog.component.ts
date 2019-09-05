@@ -345,7 +345,14 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
                 if (expr instanceof FilteringExpressionsTree) {
                     groupItem.children.push(this.createExpressionGroupItem(expr, groupItem));
                 } else {
-                    const operandItem = new ExpressionOperandItem(expr as IFilteringExpression, groupItem);
+                    const filteringExpr = expr as IFilteringExpression;
+                    const exprCopy: IFilteringExpression = {
+                        fieldName: filteringExpr.fieldName,
+                        condition: filteringExpr.condition,
+                        searchVal: filteringExpr.searchVal,
+                        ignoreCase: filteringExpr.ignoreCase
+                    };
+                    const operandItem = new ExpressionOperandItem(exprCopy, groupItem);
                     groupItem.children.push(operandItem);
                 }
             }
