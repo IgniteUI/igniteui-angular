@@ -335,6 +335,225 @@ describe('IgxGrid - Advanced Filtering', () => {
             expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Ignite UI for Angular');
         }));
 
+        it('Should correctly filter by a \'string\' column through UI.', fakeAsync(() => {
+            // Test prerequisites
+            grid.height = '800px';
+            fix.detectChanges();
+            tick(50);
+
+            // Verify no filters are present.
+            expect(grid.filteredData).toBeNull();
+            expect(grid.rowList.length).toBe(8);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('NetAdvantage');
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Click the initial 'Add And Group' button.
+            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            addAndGroupButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            selectOperatorInEditModeExpression(fix, 2); // Select 'Starts With' operator.
+            const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            sendInputNativeElement(fix, input, 'ign'); // Type filter value.
+
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Apply the filters.
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            fix.detectChanges();
+
+            // Verify the filter results.
+            expect(grid.filteredData.length).toEqual(2);
+            expect(grid.rowList.length).toBe(2);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Ignite UI for Angular');
+        }));
+
+        it('Should correctly filter by a \'number\' column through UI.', fakeAsync(() => {
+            // Test prerequisites
+            grid.height = '800px';
+            fix.detectChanges();
+            tick(50);
+
+            // Verify no filters are present.
+            expect(grid.filteredData).toBeNull();
+            expect(grid.rowList.length).toBe(8);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('NetAdvantage');
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Click the initial 'Add And Group' button.
+            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            addAndGroupButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            selectColumnInEditModeExpression(fix, 2); // Select 'Downloads' column.
+            selectOperatorInEditModeExpression(fix, 2); // Select 'Greater Than' operator.
+            const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            sendInputNativeElement(fix, input, '20'); // Type filter value.
+
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Apply the filters.
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            fix.detectChanges();
+
+            // Verify the filter results.
+            expect(grid.filteredData.length).toEqual(5);
+            expect(grid.rowList.length).toBe(5);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('NetAdvantage');
+        }));
+
+        it('Should correctly filter by a \'boolean\' column through UI.', fakeAsync(() => {
+            // Test prerequisites
+            grid.height = '800px';
+            fix.detectChanges();
+            tick(50);
+
+            // Verify no filters are present.
+            expect(grid.filteredData).toBeNull();
+            expect(grid.rowList.length).toBe(8);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('NetAdvantage');
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Click the initial 'Add And Group' button.
+            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            addAndGroupButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            selectColumnInEditModeExpression(fix, 3); // Select 'Released' column.
+            selectOperatorInEditModeExpression(fix, 1); // Select 'True' operator.
+            verifyEditModeExpressionInputStates(fix, true, true, false); // Third input should be disabled for unary operators.
+
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Apply the filters.
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            fix.detectChanges();
+
+            // Verify the filter results.
+            expect(grid.filteredData.length).toEqual(3);
+            expect(grid.rowList.length).toBe(3);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('NetAdvantage');
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe(null);
+        }));
+
+        it('Should correctly filter by a \'date\' column through UI with unary operator.', fakeAsync(() => {
+            // Test prerequisites
+            grid.height = '800px';
+            fix.detectChanges();
+            tick(50);
+
+            // Verify no filters are present.
+            expect(grid.filteredData).toBeNull();
+            expect(grid.rowList.length).toBe(8);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('NetAdvantage');
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Click the initial 'Add And Group' button.
+            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            addAndGroupButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            selectColumnInEditModeExpression(fix, 4); // Select 'ReleaseDate' column.
+            selectOperatorInEditModeExpression(fix, 9); // Select 'This Year' operator.
+            verifyEditModeExpressionInputStates(fix, true, true, false); // Third input should be disabled for unary operators.
+            const input = GridFunctions.getAdvancedFilteringValueInput(fix, true);
+            input.click();
+            fix.detectChanges();
+
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Apply the filters.
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            fix.detectChanges();
+
+            // Verify the filter results.
+            expect(grid.filteredData.length).toEqual(6);
+            expect(grid.rowList.length).toBe(6);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('NetAdvantage');
+        }));
+
+        it('Should correctly filter by a \'date\' column through UI with value from calendar.', fakeAsync(() => {
+            // Test prerequisites
+            grid.height = '800px';
+            fix.detectChanges();
+            tick(50);
+
+            // Verify no filters are present.
+            expect(grid.filteredData).toBeNull();
+            expect(grid.rowList.length).toBe(8);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('NetAdvantage');
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Click the initial 'Add And Group' button.
+            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            addAndGroupButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            selectColumnInEditModeExpression(fix, 4); // Select 'ReleaseDate' column.
+            selectOperatorInEditModeExpression(fix, 0); // Select 'Equals' operator.
+            verifyEditModeExpressionInputStates(fix, true, true, true);
+            const input = GridFunctions.getAdvancedFilteringValueInput(fix, true);
+            input.click();
+            fix.detectChanges();
+
+            // Click on 'today' item in calendar.
+            const calendar = GridFunctions.getAdvancedFilteringCalendar(fix);
+            const todayItem = calendar.querySelector('.igx-calendar__date--current');
+            todayItem.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Apply the filters.
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            fix.detectChanges();
+
+            // Verify the filter results.
+            expect(grid.filteredData.length).toEqual(1);
+            expect(grid.rowList.length).toBe(1);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 0).value.toString()).toBe('8');
+        }));
+
         it('Should emit the onFilteringDone event when applying filters.', fakeAsync(() => {
             spyOn(grid.onFilteringDone, 'emit');
 
