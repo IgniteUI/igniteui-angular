@@ -901,6 +901,12 @@ describe('IgxGrid - Advanced Filtering', () => {
             await wait(50);
             fix.detectChanges();
 
+            // Scroll to the top.
+            const exprContainer = GridFunctions.getAdvancedFilteringExpressionsContainer(fix);
+            exprContainer.scrollTop = 0;
+            fix.detectChanges();
+            await wait(50);
+
             // Select the last visible expression chip.
             GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [9]);
             await wait(200);
@@ -933,6 +939,12 @@ describe('IgxGrid - Advanced Filtering', () => {
             await wait(50);
             fix.detectChanges();
 
+            // Scroll to the top.
+            const exprContainer = GridFunctions.getAdvancedFilteringExpressionsContainer(fix);
+            exprContainer.scrollTop = 0;
+            fix.detectChanges();
+            await wait(50);
+
             // Select the previous to last visible expression chip.
             GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [8]);
             await wait(200);
@@ -944,6 +956,41 @@ describe('IgxGrid - Advanced Filtering', () => {
             // Click the 'add condition' button.
             const addCondButton = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[0];
             addCondButton.click();
+            fix.detectChanges();
+
+            // Verify the edit mode container (the one with the editing inputs) is in view.
+            verifyElementIsInExpressionsContainerView(fix, GridFunctions.getAdvancedFilteringEditModeContainer(fix));
+        }));
+
+        it('Should scroll to the expression when entering its edit mode.', (async () => {
+            // Apply advanced filter through API.
+            const tree = new FilteringExpressionsTree(FilteringLogic.Or);
+            for (let index = 0; index < 30; index++) {
+                tree.filteringOperands.push({
+                    fieldName: 'Downloads', searchVal: index, condition: IgxNumberFilteringOperand.instance().condition('equals')
+                });
+            }
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            await wait(50);
+            fix.detectChanges();
+
+            // Scroll to the top.
+            const exprContainer = GridFunctions.getAdvancedFilteringExpressionsContainer(fix);
+            exprContainer.scrollTop = 0;
+            fix.detectChanges();
+            await wait(50);
+
+            // Select the last visible expression chip.
+            GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [9]);
+            await wait(200);
+            fix.detectChanges();
+            // Click the edit icon to enter edit mode of the expression.
+            GridFunctions.clickAdvancedFilteringTreeExpressionChipEditIcon(fix, [9]);
+            await wait(50);
             fix.detectChanges();
 
             // Verify the edit mode container (the one with the editing inputs) is in view.
