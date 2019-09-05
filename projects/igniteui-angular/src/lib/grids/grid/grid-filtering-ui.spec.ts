@@ -4955,8 +4955,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
 
             // Click 'sort asc' button in ESF.
             GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
-            await wait(100);
             fix.detectChanges();
+            await wait(400);
             GridFunctions.clickSortAscInExcelStyleFiltering(fix);
             await wait(100);
             fix.detectChanges();
@@ -4993,8 +4993,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
 
             // Click 'sort desc' button in ESF.
             GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
-            await wait(100);
             fix.detectChanges();
+            await wait(400);
             GridFunctions.clickSortDescInExcelStyleFiltering(fix);
             await wait(100);
             fix.detectChanges();
