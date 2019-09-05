@@ -32,12 +32,26 @@ For more information about the theming please read our [documentation](https://w
     - `uniqueColumnValuesStrategy` input is added. This property provides a callback for loading unique column values on demand. If this property is provided, the unique values it generates will be used by the Excel Style Filtering (instead of using the unique values from the data that is bound to the grid).
     - `igxExcelStyleLoading` directive is added, which can be used to provide a custom loading template for the Excel Style Filtering. If this property is not provided, a default loading template will be used instead.
     - introduced new properties `cellSelection` and `rowSelection` which accept GridSelection mode enumeration. Grid selection mode could be none, single or multiple. Also `hideRowSelectors` property is added, which allows you to show and hide row selectors when row selection is enabled.
+    - introduced functionality for templating row and header selectors - [spec](https://github.com/IgniteUI/igniteui-angular/wiki/Row-Selection-Templating-(Grid-feature))
+    ```html
+    <igx-grid [data]="data", [rowSelection]="'multiple'" primaryKey="ID">
+        <igx-column field="Name"></igx-column>
+        <igx-column field="Age"></igx-column>
+
+        <ng-template igxHeadSelector let-headSelector>
+            <igx-icon>done_all</igx-icon>
+        </ng-template>
+        <ng-template igxRowSelector let-rowContext>
+            <igx-switch [checked]="rowContext.selected"></igx-switch>
+        </ng-template>
+    </igx-grid>
+    ```
 - `IgxHierarchicalGrid`
     - Row Islands now emit child grid events with an additional argument - `owner`, which holds reference to the related child grid component instance.
 - `IgxDrag`
     - Dragging without ghost. Now it is possible to drag the base element `igxDrag` is instanced on by setting the new input `ghost` to false.
     - Ghost template. A custom ghost template reference can be provided on the new `ghostTemplate` input.
-    - Dragging using a single or multiple handles. New `igxDragHandle` directive is exposed to specify a handle by which and element can be interacted with instead of the whole element `igxDrag` is instanced on.
+    - Dragging using a single or multiple handles. New `igxDragHandle` directive is exposed to specify a handle by which an element can be interacted with instead of the whole element `igxDrag` is instanced on.
     - Linking of drag and drop elements. This can be achieved by using the new provided `dragChannel` input, specifying each element to which channel it corresponds.
     - Drag animation improvements. Three new methods have been exposed in place of the old `animateToOrigin` input in order to provide more flexibility when wanting to have transition animation to specific position when dropping. `setLocation`, `transitionToOrigin` and `transitionTo` are all methods that provide a various way to animate a transition to a specific location for the dragged element.
     - New getters - `location` and `originLocation` to aid in applying transition animations.
@@ -47,6 +61,8 @@ For more information about the theming please read our [documentation](https://w
     - Drop strategies. Three new drop strategies have been provided - Append, Prepend and Insert.  Also an input `dropStrategy` to the `igxDrop` which specify which strategy should be used when dropping an element inside the drop area. Custom one can be specified as well.
 - `IgxCheckbox`
     - introduced a new `readonly` property that doesn't allow user interaction to change the state, but keeps the default active style. Intended for integration in complex controls that handle the interaction and control the checkbox instead through binding.
+- `IgxOverlay`
+    - introduced a new `ContainerPositionStrategy`. The new strategy positions the element inside the containing outlet based on the directions passed in trough PositionSettings.
 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
@@ -78,10 +94,6 @@ For more information about the theming please read our [documentation](https://w
     ```
    - **Breaking Change** When using `[valueKey]`, combo methods, events and outputs **cannot** be handled with *data item references*.
    - For more information, visit the component's [readme](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/combo/README.md)
-
-## 8.1.4
-- `IgxDialog` new @Input `positionSettings` is now available. It provides the ability to get/set both position and animation settings of the Dialog component.
-
 - `IgxDrag`
     - Deprecated inputs - `hideBaseOnDrag`, `animateOnRelease`, `visible`.
     - Deprecated methods - `dropFinished`.
@@ -97,10 +109,13 @@ For more information about the theming please read our [documentation](https://w
     - **Breaking Change** `onOver` output is renamed to `over`.
     - **Breaking Change** `onLeave` output is renamed to `leave`.
     - **Breaking Change** `onDrop` output is renamed to `dropped`.
-    - **Breaking Change** Interfaces `IgxDropEnterEventArgs`, `IgxDropLeaveEventArgs` are both now called `IDragBaseEventArgs`.
+    - **Breaking Change** Interfaces `IgxDropEnterEventArgs`, `IgxDropLeaveEventArgs` are both now called `IDropBaseEventArgs`.
     - **Breaking Change** Interfaces `IgxDropEventArgs` is renamed to `IDropDroppedEventArgs`.
     - **Breaking Change** Outputs `enter`, `over`, `leave`(former `onEnter`, `onOver`, `onLeave`) now have arguments of type `IDropBaseEventArgs`
     - **Breaking Change** Output `dropped` (former `onDrop`) now have arguments of type `IDropDroppedEventArgs`
+    
+## 8.1.4
+- `IgxDialog` new @Input `positionSettings` is now available. It provides the ability to get/set both position and animation settings of the Dialog component.
 
 ## 8.1.3
 - `IgxCombo`

@@ -272,11 +272,11 @@ export class IgxGridSelectionService {
      * Adds a single node.
      * Single clicks | Ctrl + single clicks on cells is the usual case.
      */
-    add(node: ISelectionNode): void {
+    add(node: ISelectionNode, addToRange = true): void {
         this.selection.has(node.row) ? this.selection.get(node.row).add(node.column) :
             this.selection.set(node.row, new Set<number>()).get(node.row).add(node.column);
 
-        this._ranges.add(JSON.stringify(this.generateRange(node)));
+        if (addToRange) { this._ranges.add(JSON.stringify(this.generateRange(node))); }
     }
 
     /**
@@ -307,10 +307,10 @@ export class IgxGridSelectionService {
         return (this.isActiveNode(node) && this.grid.isCellSelectable) || this.isInMap(node);
     }
 
-    isActiveNode(node: ISelectionNode, mrl = false): boolean {
+    isActiveNode(node: ISelectionNode): boolean {
         if (this.activeElement) {
             const isActive = this.activeElement.column === node.column && this.activeElement.row === node.row;
-            if (mrl) {
+            if (this.grid.hasColumnLayouts) {
                 const layout = this.activeElement.layout;
                 return isActive && this.isActiveLayout(layout, node.layout);
             }
@@ -633,6 +633,12 @@ export class IgxGridSelectionService {
         const filteredData = this.isFilteringApplied() ?
             this.getRowIDs(this.grid.filteredData).some(rID => this.isRowSelected(rID)) : true;
         return this.rowSelection.size > 0 && filteredData && !this.areAllRowSelected();
+    }
+
+    public get filteredSelectedRowIds(): any[] {
+        return this.isFilteringApplied() ?
+            this.getRowIDs(this.allData).filter(rowID => this.isRowSelected(rowID)) :
+            this.getSelectedRows().filter(rowID => !this.isRowDeleted(rowID));
     }
 
     public emitRowSelectionEvent(newSelection, added, removed, event?): boolean {
