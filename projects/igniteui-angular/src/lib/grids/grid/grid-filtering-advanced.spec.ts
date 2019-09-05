@@ -885,6 +885,41 @@ describe('IgxGrid - Advanced Filtering', () => {
             verifyEqualArrays(dropdownValues, expectedValues);
         }));
 
+        it('Should not commit and close currently edited condition when the \'close\' button is clicked.', fakeAsync(() => {
+            // Apply advanced filter through API.
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands.push({
+                fieldName: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan')
+            });
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            verifyExpressionChipContent(fix, [0], 'Downloads', 'Greater Than', '100');
+
+            // Edit the first expression in the inner 'or' group.
+            GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0], true); // Double-click the chip
+            tick(200);
+            fix.detectChanges();
+            const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            sendInputNativeElement(fix, input, '500'); // Type filter value.
+
+            // Verify the edit mode container is visible.
+            expect(GridFunctions.getAdvancedFilteringEditModeContainer(fix)).not.toBeNull();
+
+            // Close the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCloseButton(fix);
+            fix.detectChanges();
+
+            // Verify the edit mode container is no longer visible.
+            expect(GridFunctions.getAdvancedFilteringEditModeContainer(fix)).toBeNull();
+
+            verifyExpressionChipContent(fix, [0], 'Downloads', 'Greater Than', '100');
+        }));
+
         it('Should scroll the adding buttons into view when the add icon of a chip is clicked.', (async () => {
             // Apply advanced filter through API.
             const tree = new FilteringExpressionsTree(FilteringLogic.Or);
