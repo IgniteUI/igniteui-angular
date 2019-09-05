@@ -15,7 +15,7 @@
                     <button igxButton="flat" igxRipple (click)="setMonthsViewNumber(monthsviewnumber)">Set months number</button>
                 </div>
                 <igx-card>
-                    <igx-calendar #calendar weekStart="1" selection="range" [hideInactiveDates]="true" [monthsViewNumber]="3"></igx-calendar>
+                    <igx-calendar #calendar weekStart="1" selection="range" [hideOutsideDays]="true" [monthsViewNumber]="3"></igx-calendar>
                 </igx-card>
             </div>
 

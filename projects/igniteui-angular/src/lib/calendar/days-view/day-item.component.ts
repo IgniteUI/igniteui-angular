@@ -30,7 +30,7 @@ export class IgxDayItemComponent {
     public specialDates: DateRangeDescriptor[];
 
     @Input()
-    public hideInactiveDates = false;
+    public hideOutsideDays = false;
 
     @Output()
     public onDateSelection = new EventEmitter<ICalendarDate>();
@@ -80,7 +80,7 @@ export class IgxDayItemComponent {
     }
 
     public get isHidden(): boolean {
-        return this.hideInactiveDates && this.isInactive;
+        return this.hideOutsideDays && this.isInactive;
     }
 
     public get isToday(): boolean {

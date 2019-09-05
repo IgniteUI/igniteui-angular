@@ -29,7 +29,7 @@ export class CalendarSampleComponent implements OnInit {
     }
 
     public showHide() {
-        this.calendar1.hideInactiveDates = !this.calendar1.hideInactiveDates;
+        this.calendar1.hideOutsideDays = !this.calendar1.hideOutsideDays;
     }
 
     public setMonthsViewNumber(args: HTMLInputElement) {

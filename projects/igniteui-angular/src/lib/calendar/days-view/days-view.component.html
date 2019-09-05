@@ -15,7 +15,7 @@
         [disabledDates]="disabledDates"
         [specialDates]="specialDates"
         [outOfRangeDates]="outOfRangeDates"
-        [hideInactiveDates]="hideInactiveDates"
+        [hideOutsideDays]="hideOutsideDays"
         (onDateSelection)="selectDay($event)">
             {{ formattedDate(day.date) }}
     </igx-day-item>

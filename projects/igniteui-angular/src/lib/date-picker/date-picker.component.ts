@@ -193,14 +193,14 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      * Sets/gets whether the inactive dates (dates that are out of the current month) will be hidden.
      * Default value is `false`.
      * ```html
-     * <igx-date-picker [hideInactiveDates]="true"></igx-date-picker>
+     * <igx-date-picker [hideOutsideDays]="true"></igx-date-picker>
      * ```
      * ```typescript
-     * let hideInactiveDates = this.datePicker.hideInactiveDates;
+     * let hideOutsideDays = this.datePicker.hideOutsideDays;
      * ```
      */
     @Input()
-    public hideInactiveDates: boolean;
+    public hideOutsideDays: boolean;
 
     /**
      * Sets/gets the number of month views displayed.
@@ -1285,7 +1285,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this.calendar.disabledDates = this.disabledDates;
         this.calendar.headerTemplate = this.headerTemplate;
         this.calendar.subheaderTemplate = this.subheaderTemplate;
-        this.calendar.hideInactiveDates = this.hideInactiveDates;
+        this.calendar.hideOutsideDays = this.hideOutsideDays;
         this.calendar.monthsViewNumber = this.monthsViewNumber;
         this.calendar.onSelection.pipe(takeUntil(this._destroy$)).subscribe((ev: Date) => this.handleSelection(ev));
 
