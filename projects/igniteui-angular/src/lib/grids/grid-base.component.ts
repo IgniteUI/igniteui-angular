@@ -91,6 +91,7 @@ import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './igx-row-selectors.module';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { FilteringStrategy, IFilteringStrategy } from '../data-operations/filtering-strategy';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -259,6 +260,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _locale = null;
     public _destroyed = false;
     private overlayIDs = [];
+    private _filteringStrategy: IFilteringStrategy;
 
     private _hostWidth;
     /**
@@ -981,6 +983,27 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.summaryService.resetSummaryHeight();
             this.notifyChanges(true);
         }
+    }
+
+    /**
+     * Gets the filtering strategy of the grid.
+     * ```typescript
+     *  let filterStrategy = this.grid.filterStrategy
+     * ```
+     */
+    @Input()
+    get filterStrategy(): IFilteringStrategy {
+        return this._filteringStrategy;
+    }
+
+    /**
+     * Sets the filtering strategy of the grid.
+     * ```html
+     *  <igx-grid #grid [data]="localData" [filterStrategy]="filterStrategy"></igx-grid>
+     * ```
+     */
+    set filterStrategy(classRef: IFilteringStrategy) {
+        this._filteringStrategy = classRef;
     }
 
     /**

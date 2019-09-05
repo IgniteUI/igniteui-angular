@@ -54,6 +54,14 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
 }
 
 export class FilteringStrategy extends BaseFilteringStrategy {
+    private static _instace: FilteringStrategy = null;
+
+    public constructor() { super(); }
+
+    public static instance() {
+        return this._instace || (this._instace = new this());
+    }
+
     public filter<T>(data: T[], expressionsTree: IFilteringExpressionsTree): T[] {
         let i;
         let rec;

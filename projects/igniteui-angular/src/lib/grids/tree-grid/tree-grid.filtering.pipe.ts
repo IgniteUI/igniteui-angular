@@ -3,7 +3,7 @@ import { DataUtil } from '../../data-operations/data-util';
 import { GridBaseAPIService } from '../api.service';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { BaseFilteringStrategy } from '../../data-operations/filtering-strategy';
+import { BaseFilteringStrategy, IFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IFilteringState } from '../../data-operations/filtering-state.interface';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
@@ -60,12 +60,17 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
      }
 
     public transform(hierarchyData: ITreeGridRecord[], expressionsTree: IFilteringExpressionsTree,
+        filterStrategy: IFilteringStrategy,
         id: string, pipeTrigger: number): ITreeGridRecord[] {
         const grid: IgxTreeGridComponent = this.gridAPI.grid;
-        const state = {
+        const state: IFilteringState = {
             expressionsTree: expressionsTree,
             strategy: new TreeGridFilteringStrategy()
         };
+
+        if (filterStrategy) {
+            state.strategy = filterStrategy;
+        }
 
         this.resetFilteredOutProperty(grid.records);
 
