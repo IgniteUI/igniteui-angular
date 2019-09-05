@@ -688,6 +688,7 @@ describe('IgxGrid - Advanced Filtering', () => {
             fix.detectChanges();
             // Click the add icon to display the adding buttons.
             GridFunctions.clickAdvancedFilteringTreeExpressionChipAddIcon(fix, [9]);
+            await wait(50);
             fix.detectChanges();
 
             // Verify the adding buttons are in view.
@@ -719,6 +720,7 @@ describe('IgxGrid - Advanced Filtering', () => {
             fix.detectChanges();
             // Click the add icon to display the adding buttons.
             GridFunctions.clickAdvancedFilteringTreeExpressionChipAddIcon(fix, [8]);
+            await wait(50);
             fix.detectChanges();
             // Click the 'add condition' button.
             const addCondButton = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[0];
