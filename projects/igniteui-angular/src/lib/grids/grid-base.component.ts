@@ -25,8 +25,7 @@ import {
     InjectionToken,
     Optional,
     DoCheck,
-    Injectable,
-    Injector
+    Injectable
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import { Subject, combineLatest, pipe } from 'rxjs';
@@ -2668,8 +2667,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         public filteringService: IgxFilteringService,
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         public summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        protected injector: Injector) {
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(_displayDensityOptions);
             this.cdr.detach();
     }
@@ -4616,7 +4614,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const columns = [];
 
         fields.forEach((field) => {
-            // const ref = this.viewRef.createComponent(factory, null, this.viewRef.injector);
             const ref = factory.create(this.viewRef.injector);
             ref.instance.field = field;
             ref.instance.dataType = this.resolveDataTypes(data[0][field]);

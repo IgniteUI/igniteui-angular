@@ -6,20 +6,40 @@ import {
     Input,
     QueryList,
     OnInit,
+    Inject,
+    ElementRef,
+    ChangeDetectorRef,
+    ComponentFactoryResolver,
+    IterableDiffers,
+    ViewContainerRef,
+    NgZone,
     AfterViewInit,
     OnChanges,
     Output,
     EventEmitter,
+    Optional,
     OnDestroy,
     DoCheck
 } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
+import { IgxGridTransaction, IGridDataBindable, IgxGridBaseComponent } from '../grid-base.component';
+import { GridBaseAPIService } from '../api.service';
+import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
+import { DOCUMENT } from '@angular/common';
+import { IgxFilteringService } from '../filtering/grid-filtering.service';
+import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { TransactionService, Transaction, State } from '../../services';
+import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
+import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+
+import { IgxOverlayService } from '../../services/index';
 import { takeUntil } from 'rxjs/operators';
 import { IgxColumnComponent } from '../column.component';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IBaseEventArgs } from '../../core/utils';
+import { IgxColumnResizingService } from '../grid-column-resizing.service';
 export interface IGridCreatedEventArgs extends IBaseEventArgs {
     owner: IgxRowIslandComponent;
     parentID: any;
@@ -168,13 +188,45 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
     private layout_id = `igx-row-island-`;
     private isInit = false;
 
-    private _rowIslandAPI: IgxRowIslandAPIService;
-
-    public get rowIslandAPI() {
-        if (!this._rowIslandAPI) {
-            this._rowIslandAPI = this.injector.get(IgxRowIslandAPIService);
-        }
-        return this._rowIslandAPI;
+    constructor(
+        public selectionService: IgxGridSelectionService,
+        crudService: IgxGridCRUDService,
+        public colResizingService: IgxColumnResizingService,
+        gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
+        @Inject(IgxGridTransaction) protected transactionFactory: any,
+        elementRef: ElementRef,
+        zone: NgZone,
+        @Inject(DOCUMENT) public document,
+        cdr: ChangeDetectorRef,
+        resolver: ComponentFactoryResolver,
+        differs: IterableDiffers,
+        viewRef: ViewContainerRef,
+        navigation: IgxHierarchicalGridNavigationService,
+        filteringService: IgxFilteringService,
+        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
+        public summaryService: IgxGridSummaryService,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        public rowIslandAPI: IgxRowIslandAPIService) {
+        super(
+            selectionService,
+            crudService,
+            colResizingService,
+            gridAPI,
+            typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
+            elementRef,
+            zone,
+            document,
+            cdr,
+            resolver,
+            differs,
+            viewRef,
+            navigation,
+            filteringService,
+            overlayService,
+            summaryService,
+            _displayDensityOptions
+        );
+        this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
     }
 
     /**
