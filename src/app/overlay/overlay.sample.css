@@ -39,5 +39,7 @@
 .outlet {
     width: 600px;
     height: 500px;
-    perspective: 1px;
+    margin: 0;
+    padding: 0;
+    position: relative;
 }

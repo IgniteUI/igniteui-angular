@@ -83,7 +83,7 @@ class TestChipsLabelAndSuffixComponent {
 
 describe('IgxChip', () => {
     configureTestSuite();
-    const CHIP_ITEM = 'igx-chip__item';
+    const CHIP_ITEM = 'igx-chip__item igx-drag igx-drag--select-disabled';
     const CHIP_REMOVE_BUTTON = 'igx-chip__remove';
 
     beforeEach(async(() => {
@@ -361,7 +361,7 @@ describe('IgxChip', () => {
         expect(chipComponentsIds).not.toContain('City');
     });
 
-    it('should affect the dragGhost density when chip has it set to compact', (done) => {
+    it('should affect the ghostElement density when chip has it set to compact', (done) => {
         const fix = TestBed.createComponent(TestChipComponent);
         fix.detectChanges();
 
@@ -387,12 +387,12 @@ describe('IgxChip', () => {
         }).then(() => {
             fix.detectChanges();
 
-            expect(thirdChip.dragDirective['dragGhost'].className).toEqual('igx-chip__item igx-chip__ghost--compact');
+            expect(thirdChip.dragDirective.ghostElement.className).toEqual(CHIP_ITEM + ' igx-chip__ghost--compact');
 
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            UIInteractions.simulatePointerEvent('pointerup', thirdChip.dragDirective['dragGhost'], startingX + 10, startingY + 10);
+            UIInteractions.simulatePointerEvent('pointerup', thirdChip.dragDirective.ghostElement, startingX + 10, startingY + 10);
 
             done();
         });

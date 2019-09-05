@@ -1,26 +1,11 @@
-<div class="sample-wrapper dark-grid">
+<div style="height: 100vh; width: 100wh">
     <span> Fixed Size Rows</span>
-    <igx-grid #grid1 [data]="localData" [width]="'1200px'" [height]="'800px'" [rowSelectable]="false" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
+    <igx-grid #grid1 [showToolbar]="true" [rowHeight]="20" displayDensity="compact" [columnHiding]="true" [data]="localData" [rowSelectable]="false" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
         <igx-column *ngFor="let c of columns" [sortable]="true" [filterable]="true" [resizable]="true" [field]="c.field" [header]="c.field" [width]="c.width">
         </igx-column>
     </igx-grid>
-    <div><input type='number' #input/><button (click)='scrollTo(grid1, input.value)'>Go To Index</button></div>
-
-    <br/>
-<span> Auto Sized Rows </span>
-    <igx-grid #grid2 [data]="localData" [width]="'500px'" [height]="'800px'" [rowSelectable]="true">
-        <igx-column *ngFor="let c of columns" [sortable]="true" [filterable]="true" [field]="c.field" [header]="c.field" [width]="c.width">
-                <ng-template igxCell let-cell="cell"  let-value>
-                    <div *ngIf="cell.row.index % 2 === 0" style='line-height:300px; vertical-align: middle;'>
-                        {{value}}
-                    </div>
-                    <div *ngIf="cell.row.index % 2 !== 0" style='line-height:100px;vertical-align: middle;'>
-                            {{value}}
-                        </div>
-                </ng-template>
-        </igx-column>
-    </igx-grid>
-    <button igxButton="raised" (click)="ToggleCol()">Add/Remove Column</button>
-    <button igxButton="raised" (click)="ToggleRow()">Add/Remove Row</button>
-    <div><input type='number' #input2/><button (click)='scrollTo(grid2, input2.value)'>Go To Index</button></div>
+    <div>
+        <button (click)="toggleVis()">Show/Hide</button>
+        <input type='number' #input/><button (click)='scrollTo(grid1, input.value)'>Go To Index</button>
+    </div>
 </div>

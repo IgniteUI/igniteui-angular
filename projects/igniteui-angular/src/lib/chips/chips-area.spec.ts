@@ -208,7 +208,7 @@ describe('IgxChipsArea', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            const dragDir = firstChip.dragDirective['dragGhost'];
+            const dragDir = firstChip.dragDirective.ghostElement;
 
             expect(dragDir).toBeUndefined();
         });
@@ -245,14 +245,14 @@ describe('IgxChipsArea', () => {
             fix.detectChanges();
             UIInteractions.simulatePointerEvent(
                 'pointermove',
-                secondChip.dragDirective['dragGhost'],
+                secondChip.dragDirective.ghostElement,
                 startingX + xDragDifference,
                 startingY + yDragDifference
             );
 
             setTimeout(() => {
-                const afterDragTop = secondChip.dragDirective['dragGhost'].getBoundingClientRect().top;
-                const afterDragLeft = secondChip.dragDirective['dragGhost'].getBoundingClientRect().left;
+                const afterDragTop = secondChip.dragDirective.ghostElement.getBoundingClientRect().top;
+                const afterDragLeft = secondChip.dragDirective.ghostElement.getBoundingClientRect().left;
                 expect(afterDragTop - startingTop).toEqual(yDragDifference);
                 expect(afterDragLeft - startingLeft).toEqual(xDragDifference);
             }, 100);
@@ -269,8 +269,8 @@ describe('IgxChipsArea', () => {
         const firstChip = chipComponents[0].componentInstance;
         const secondChip = chipComponents[1].componentInstance;
 
-        firstChip.dragDirective.animateOnRelease = false;
-        secondChip.dragDirective.animateOnRelease = false;
+        firstChip.animateOnRelease = false;
+        secondChip.animateOnRelease = false;
 
         const firstChipElem = firstChip.chipArea.nativeElement;
         const secondChipElem = secondChip.chipArea.nativeElement;
@@ -301,12 +301,12 @@ describe('IgxChipsArea', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            UIInteractions.simulatePointerEvent('pointermove', firstChip.dragDirective['dragGhost'], secondChipX, secondChipY);
+            UIInteractions.simulatePointerEvent('pointermove', firstChip.dragDirective.ghostElement, secondChipX, secondChipY);
             fix.detectChanges();
 
             return fix.whenRenderingDone();
         }).then(() => {
-            UIInteractions.simulatePointerEvent('pointerup', firstChip.dragDirective['dragGhost'], secondChipX, secondChipY);
+            UIInteractions.simulatePointerEvent('pointerup', firstChip.dragDirective.ghostElement, secondChipX, secondChipY);
             return fix.whenRenderingDone();
         }).then(() => {
             setTimeout(() => {
@@ -329,8 +329,8 @@ describe('IgxChipsArea', () => {
         const firstChip = chipComponents[0].componentInstance;
         const secondChip = chipComponents[1].componentInstance;
 
-        firstChip.dragDirective.animateOnRelease = false;
-        secondChip.dragDirective.animateOnRelease = false;
+        firstChip.animateOnRelease = false;
+        secondChip.animateOnRelease = false;
 
         const firstChipElem = firstChip.chipArea.nativeElement;
         const secondChipElem = secondChip.chipArea.nativeElement;
@@ -361,12 +361,12 @@ describe('IgxChipsArea', () => {
             return fix.whenStable();
         }).then(() => {
             fix.detectChanges();
-            UIInteractions.simulatePointerEvent('pointermove', secondChip.dragDirective['dragGhost'], firstChipX, firstChipY);
+            UIInteractions.simulatePointerEvent('pointermove', secondChip.dragDirective.ghostElement, firstChipX, firstChipY);
             fix.detectChanges();
 
             return fix.whenRenderingDone();
         }).then(() => {
-            UIInteractions.simulatePointerEvent('pointerup', secondChip.dragDirective['dragGhost'], firstChipX, firstChipY);
+            UIInteractions.simulatePointerEvent('pointerup', secondChip.dragDirective.ghostElement, firstChipX, firstChipY);
             return fix.whenRenderingDone();
         }).then(() => {
             setTimeout(() => {
@@ -386,8 +386,7 @@ describe('IgxChipsArea', () => {
         const firstChipComp = fix.componentInstance.chips.toArray()[1];
         spyOn(firstChipComp.onClick, 'emit');
 
-        firstChipComp.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1}));
-        firstChipComp.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerup'));
+        firstChipComp.chipArea.nativeElement.click();
 
         fix.detectChanges();
         expect(firstChipComp.onClick.emit).toHaveBeenCalled();
@@ -493,7 +492,9 @@ describe('IgxChipsArea', () => {
         expect(selectedChip.selected).toBe(true);
         expect(selectedChipIconContainer.children.length).toEqual(1);
         expect(selectedChipIconContainer.children[0].tagName).toEqual('IGX-ICON');
-        expect(selectedChip.elementRef.nativeElement.children[0].children[0].offsetWidth).not.toEqual(0);
+        // expect(selectedChip.elementRef.nativeElement.children[0].children[0].offsetWidth).not.toEqual(0);
+        expect(selectedChip.elementRef.nativeElement.children[0].children[0].className).toEqual('igx-chip__select');
+        expect(selectedChip.elementRef.nativeElement.children[0].children[0].className).not.toEqual('igx-chip__select--hidden');
         expect(unselectedChipIconContainer.children.length).toEqual(1);
         expect(unselectedChipIconContainer.children[0].tagName).toEqual('IGX-ICON');
         expect(unselectedChip.elementRef.nativeElement.children[0].children[0].offsetWidth).toEqual(0);
@@ -746,7 +747,7 @@ describe('IgxChipsArea', () => {
         const secondChip = chipComponents[1].componentInstance;
         const secondChipElem = secondChip.chipArea.nativeElement;
 
-        secondChip.dragDirective.animateOnRelease = false;
+        secondChip.animateOnRelease = false;
         secondChip.chipArea.nativeElement.dispatchEvent(spaceKeyEvent);
 
         const startingTop = secondChipElem.getBoundingClientRect().top;
@@ -770,7 +771,7 @@ describe('IgxChipsArea', () => {
             fix.detectChanges();
             UIInteractions.simulatePointerEvent(
                 'pointermove',
-                secondChip.dragDirective['dragGhost'],
+                secondChip.dragDirective.ghostElement,
                  startingX + xDragDifference,
                   startingY + yDragDifference
             );
@@ -779,7 +780,7 @@ describe('IgxChipsArea', () => {
 
             UIInteractions.simulatePointerEvent(
                 'pointerup',
-                secondChip.dragDirective['dragGhost'],
+                secondChip.dragDirective.ghostElement,
                 startingX + xDragDifference,
                 startingY + yDragDifference
             );
@@ -856,29 +857,24 @@ describe('IgxChipsArea', () => {
 
         const chipAreaComp = fix.componentInstance.chipsArea;
         const secondChipComp = fix.componentInstance.chips.toArray()[1];
-        const pointerDownEvt = new PointerEvent('pointerdown', { pointerId: 1 });
-        const pointerUpEvt = new PointerEvent('pointerup', { pointerId: 1 });
 
         spyOn(chipAreaComp.onSelection, 'emit');
-
-        secondChipComp.chipArea.nativeElement.dispatchEvent(pointerDownEvt);
         fix.detectChanges();
-        secondChipComp.chipArea.nativeElement.dispatchEvent(pointerUpEvt);
+
+        secondChipComp.chipArea.nativeElement.click();
         fix.detectChanges();
 
         expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
-            originalEvent: pointerUpEvt,
+            originalEvent: null,
             owner: chipAreaComp,
             newSelection: [secondChipComp]
         });
 
-        secondChipComp.chipArea.nativeElement.dispatchEvent(pointerDownEvt);
-        fix.detectChanges();
-        secondChipComp.chipArea.nativeElement.dispatchEvent(pointerUpEvt);
+        secondChipComp.chipArea.nativeElement.click();
         fix.detectChanges();
 
         expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
-            originalEvent: pointerUpEvt,
+            originalEvent: null,
             owner: chipAreaComp,
             newSelection: []
         });

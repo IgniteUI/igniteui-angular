@@ -17,6 +17,9 @@ export class IgxComboAPIService {
         this.combo = null;
     }
 
+    public get valueKey() {
+        return this.combo.valueKey !== null && this.combo.valueKey !== undefined ? this.combo.valueKey : null;
+    }
 
     public get item_focusable(): boolean {
         return false;

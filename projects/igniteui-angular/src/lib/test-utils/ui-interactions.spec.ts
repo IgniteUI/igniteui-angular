@@ -64,7 +64,7 @@ export class UIInteractions {
         UIInteractions.simulatePointerEvent('pointerdown', nativeElement, elementRect.left, elementRect.top);
         nativeElement.dispatchEvent(new Event('focus'));
         UIInteractions.simulatePointerEvent('pointerup', nativeElement, elementRect.left, elementRect.top);
-        nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
+        nativeElement.dispatchEvent(new Event('click', { bubbles: true}));
     }
 
     public static simulateMouseEvent(eventName: string, element, x, y) {
@@ -124,6 +124,15 @@ export class UIInteractions {
         element.dispatchEvent(new PointerEvent(eventName, options));
     }
 
+    public static simulateClickEvent(element, shift = false, ctrl = false) {
+        const event = new MouseEvent('click', {
+            bubbles: true,
+            shiftKey: shift,
+            ctrlKey: ctrl
+        });
+        element.dispatchEvent(event);
+    }
+
     public static simulateDragScrollOverCellEvent(eventName: string, element, clientX, clientY, shift = false, ctrl = false) {
         const options: PointerEventInit = {
             view: window,
@@ -159,6 +168,7 @@ export class UIInteractions {
         document.documentElement.scrollTop = 0;
         document.documentElement.scrollLeft = 0;
     }
+
     public static simulateWheelEvent(element, deltaX, deltaY) {
         const event = new WheelEvent('wheel', { deltaX: deltaX, deltaY: deltaY });
         Object.defineProperty(event, 'wheelDeltaX', {value: deltaX});

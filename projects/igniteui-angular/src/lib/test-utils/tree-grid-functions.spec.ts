@@ -89,8 +89,12 @@ export class TreeGridFunctions {
     }
 
     public static getRowCheckbox(rowDOM) {
-        const checkboxDiv = rowDOM.query(By.css(TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS));
+        const checkboxDiv = TreeGridFunctions.getRowCheckboxDiv(rowDOM);
         return checkboxDiv.query(By.css(CHECKBOX_INPUT_CSS_CLASS));
+    }
+
+    public static getRowCheckboxDiv(rowDOM) {
+        return rowDOM.query(By.css(TREE_ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS));
     }
 
     public static clickHeaderCell(fix, columnKey) {
@@ -100,13 +104,13 @@ export class TreeGridFunctions {
 
     public static clickRowSelectionCheckbox(fix, rowIndex) {
         const rowDOM = TreeGridFunctions.sortElementsVertically(TreeGridFunctions.getAllRows(fix))[rowIndex];
-        const checkbox = TreeGridFunctions.getRowCheckbox(rowDOM);
+        const checkbox = TreeGridFunctions.getRowCheckboxDiv(rowDOM);
         checkbox.nativeElement.dispatchEvent(new Event('click'));
     }
 
     public static clickHeaderRowSelectionCheckbox(fix) {
         const headerRow = TreeGridFunctions.getHeaderRow(fix);
-        const checkbox = TreeGridFunctions.getRowCheckbox(headerRow);
+        const checkbox = TreeGridFunctions.getRowCheckboxDiv(headerRow);
         checkbox.nativeElement.dispatchEvent(new Event('click'));
     }
 
@@ -293,7 +297,7 @@ export class TreeGridFunctions {
         expect(checkboxComponent.nativeCheckbox.nativeElement.checked).toBe(expectedSelection, 'Incorrect native checkbox selection state');
 
         // Verify selection of row
-        expect(rowComponent.isSelected).toBe(expectedSelection, 'Incorrect row selection state');
+        expect(rowComponent.selected).toBe(expectedSelection, 'Incorrect row selection state');
         expect((<HTMLElement>rowDOM.nativeElement).classList.contains(TREE_ROW_SELECTION_CSS_CLASS)).toBe(expectedSelection);
 
         // Verify selection of row through treeGrid

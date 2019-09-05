@@ -2,13 +2,19 @@
     <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{grid.groupingExpressions.length}}"></div>
 </ng-container>
 <ng-container *ngIf="rowDraggable">
-    <div [class]="resolveDragIndicatorClasses" [igxRowDrag]="this">
+    <div [class]="resolveDragIndicatorClasses" [igxRowDrag]="this" (click)="$event.stopPropagation()">
         <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : this.grid.dragIndicatorIconBase"></ng-container>
     </div>
 </ng-container>
-<ng-container *ngIf="showRowCheckboxes">
-    <div class="igx-grid__cbx-selection">
-        <igx-checkbox [checked]="isSelected" [disabled]="deleted" (change)="onCheckboxClick($event)" disableRipple="true" [disableTransitions]="grid.disableTransitions" [aria-label]="rowCheckboxAriaLabel"></igx-checkbox>
+<ng-container *ngIf="this.showRowSelectors">
+    <div class="igx-grid__cbx-selection" (click)="onRowSelectorClick($event)">
+         <ng-template *ngTemplateOutlet="
+            this.grid.rowSelectorTemplate ? this.grid.rowSelectorTemplate : rowSelectorBaseTemplate;
+            context: { $implicit: {
+                            index: (this.grid.groupingExpressions ? this.grid.filteredSortedData.indexOf(this.rowData) : this.index) +
+                             this.grid.page * this.grid.perPage,
+                            rowID: rowID, selected: selected }}">
+        </ng-template>
     </div>
 </ng-container>
 
@@ -30,7 +36,8 @@
             [width]="col.getCellWidth()"
             [visibleColumnIndex]="col.visibleIndex"
             [value]="rowData[col.field]"
-            [cellTemplate]="col.bodyTemplate">
+            [cellTemplate]="col.bodyTemplate"
+            [cellSelectionMode]="grid.cellSelection">
         </igx-grid-cell>
     </ng-container>
     <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForSizePropName]='"calcPixelWidth"' [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
@@ -49,7 +56,8 @@
             [width]="col.getCellWidth()"
             [visibleColumnIndex]="col.visibleIndex"
             [value]="rowData[col.field]"
-            [cellTemplate]="col.bodyTemplate">
+            [cellTemplate]="col.bodyTemplate"
+            [cellSelectionMode]="grid.cellSelection">
         </igx-grid-cell>
     </ng-template>
 </ng-container>
@@ -75,7 +83,8 @@
                 [rowData]="rowData"
                 [visibleColumnIndex]="child.visibleIndex"
                 [value]="rowData[child.field]"
-                [cellTemplate]="child.bodyTemplate"></igx-grid-cell>
+                [cellTemplate]="child.bodyTemplate"
+                [cellSelectionMode]="grid.cellSelection"></igx-grid-cell>
         </div>
     </ng-container>
     <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxTopLevel" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForSizePropName]='"calcPixelWidth"' [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
@@ -96,7 +105,19 @@
                 [rowData]="rowData"
                 [visibleColumnIndex]="child.visibleIndex"
                 [value]="rowData[child.field]"
-                [cellTemplate]="child.bodyTemplate"></igx-grid-cell>
+                [cellTemplate]="child.bodyTemplate"
+                [cellSelectionMode]="grid.cellSelection"></igx-grid-cell>
         </div>
     </ng-template>
 </ng-container>
+
+<ng-template #rowSelectorBaseTemplate>
+    <igx-checkbox
+        [checked]="selected"
+        [readonly]="true"
+        [disabled]="deleted"
+        disableRipple="true"
+        [disableTransitions]="grid.disableTransitions"
+        [aria-label]="rowCheckboxAriaLabel">
+    </igx-checkbox>
+</ng-template>

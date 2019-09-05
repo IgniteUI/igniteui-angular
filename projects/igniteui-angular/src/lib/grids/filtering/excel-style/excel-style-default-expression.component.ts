@@ -16,14 +16,14 @@ import { IgxInputGroupComponent, IgxInputDirective } from '../../../input-group/
 import { DataType } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
 import { OverlaySettings, ConnectedPositioningStrategy, CloseScrollStrategy } from '../../../services/index';
-import { KEYS } from '../../../core/utils';
+import { KEYS, IBaseEventArgs } from '../../../core/utils';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
 import { DisplayDensity } from '../../../core/density';
 
 /**
  * @hidden
  */
-export interface ILogicOperatorChangedArgs {
+export interface ILogicOperatorChangedArgs extends IBaseEventArgs {
     target: ExpressionUI;
     newValue: FilteringLogic;
 }

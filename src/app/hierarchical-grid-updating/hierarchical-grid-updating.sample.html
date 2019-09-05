@@ -11,7 +11,7 @@
                 <igx-column field="ContactTitle"></igx-column>
                 <igx-column field="Country"></igx-column>
                 <igx-column field="Phone"></igx-column>
-                <igx-row-island #rowIsland1 [key]="'Orders'" [height]="'400px'" [primaryKey]="'MyID'" [autoGenerate]="false"
+                <igx-row-island #rowIsland1 [key]="'Orders'" [primaryKey]="'MyID'" [autoGenerate]="false"
                         [rowSelectable]='isRowSelectable' (onGridCreated)="gridCreated($event, rowIsland1)"
                         [rowEditable]="true">
                         <igx-column field="MyID"></igx-column>

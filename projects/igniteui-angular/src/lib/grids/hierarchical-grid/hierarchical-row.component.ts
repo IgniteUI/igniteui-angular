@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowComponent } from '../row.component';
-import { IgxHierarchicalSelectionAPIService } from './selection';
 import { GridBaseAPIService } from '.././api.service';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
 import { IgxGridCRUDService, IgxGridSelectionService } from '../../core/grid-selection';
@@ -73,7 +72,7 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
      * this.grid1.rowList.first.toggle()
      * ```
      */
-    public toggle() {
+    public toggle(event?) {
         if (this.added) {
             return;
         }
@@ -89,9 +88,22 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
             });
         }
         grid.cdr.detectChanges();
-        requestAnimationFrame(() => {
-            grid.reflow();
-        });
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public select = () => {
+        this.grid.selectRows([this.rowID]);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public deselect = () => {
+        this.grid.deselectRows([this.rowID]);
     }
 
     private endEdit(grid: IgxHierarchicalGridComponent) {
@@ -107,9 +119,8 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
     constructor(public gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>,
         public crudService: IgxGridCRUDService,
         public selectionService: IgxGridSelectionService,
-        private hselection: IgxHierarchicalSelectionAPIService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef) {
-            super(gridAPI, crudService, selectionService, hselection, element, cdr);
+            super(gridAPI, crudService, selectionService, element, cdr);
         }
 }

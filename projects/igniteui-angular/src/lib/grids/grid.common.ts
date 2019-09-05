@@ -16,12 +16,13 @@ import {
     TemplateRef,
     LOCALE_ID,
     AfterViewInit,
-    HostListener
+    HostListener,
+    ViewContainerRef
 } from '@angular/core';
 import { animationFrameScheduler, fromEvent, interval, Subject, Subscription } from 'rxjs';
 import { map, switchMap, takeUntil, throttle, debounceTime } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
-import { IgxDragDirective, IgxDropDirective } from '../directives/dragdrop/dragdrop.directive';
+import { IgxDragDirective, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { ConnectedPositioningStrategy } from '../services';
 import { VerticalAlignment, PositionSettings } from '../services/overlay/utilities';
@@ -343,18 +344,19 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
 
     private subscription$: Subscription;
     private _column: IgxColumnComponent;
-    private _ghostImageClass = 'igx-grid__drag-ghost-image';
-    private dragGhostImgIconClass = 'igx-grid__drag-ghost-image-icon';
-    private dragGhostImgIconGroupClass = 'igx-grid__drag-ghost-image-icon-group';
+    private _ghostClass = 'igx-grid__drag-ghost-image';
+    private ghostImgIconClass = 'igx-grid__drag-ghost-image-icon';
+    private ghostImgIconGroupClass = 'igx-grid__drag-ghost-image-icon-group';
 
     constructor(
         _element: ElementRef,
+        _viewContainer: ViewContainerRef,
         _zone: NgZone,
         _renderer: Renderer2,
         _cdr: ChangeDetectorRef,
         private cms: IgxColumnMovingService,
     ) {
-        super(_cdr, _element, _zone, _renderer);
+        super(_cdr, _element, _viewContainer, _zone, _renderer);
     }
 
     public ngOnDestroy() {
@@ -376,7 +378,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
 
         this._removeOnDestroy = false;
         this.cms.column = this.column;
-        this.ghostImageClass = this._ghostImageClass;
+        this.ghostClass = this._ghostClass;
 
         super.onPointerDown(event);
 
@@ -399,7 +401,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         event.preventDefault();
         super.onPointerMove(event);
 
-        if (this._dragStarted && this.dragGhost && !this.column.grid.draggedColumn) {
+        if (this._dragStarted && this.ghostElement && !this.column.grid.draggedColumn) {
             this.column.grid.draggedColumn = this.column;
             this.column.grid.cdr.detectChanges();
         }
@@ -430,22 +432,13 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         this._unsubscribe();
     }
 
-    protected createDragGhost(event) {
-        super.createDragGhost(event);
+    protected createGhost(pageX, pageY) {
+        super.createGhost(pageX, pageY);
 
-        let pageX, pageY;
-        if (this.pointerEventsEnabled || !this.touchEventsEnabled) {
-            pageX = event.pageX;
-            pageY = event.pageY;
-        } else {
-            pageX = event.touches[0].pageX;
-            pageY = event.touches[0].pageY;
-        }
-
-        this.dragGhost.style.height = null;
-        this.dragGhost.style.minWidth = null;
-        this.dragGhost.style.flexBasis = null;
-        this.dragGhost.style.position = null;
+        this.ghostElement.style.height = null;
+        this.ghostElement.style.minWidth = null;
+        this.ghostElement.style.flexBasis = null;
+        this.ghostElement.style.position = null;
 
         const icon = document.createElement('i');
         const text = document.createTextNode('block');
@@ -454,24 +447,21 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         icon.classList.add('material-icons');
         this.cms.icon = icon;
 
-        const hostElemLeft = this.dragGhostHost ? this.dragGhostHost.getBoundingClientRect().left : 0;
-        const hostElemTop = this.dragGhostHost ? this.dragGhostHost.getBoundingClientRect().top : 0;
-
         if (!this.column.columnGroup) {
-            this.renderer.addClass(icon, this.dragGhostImgIconClass);
+            this.renderer.addClass(icon, this.ghostImgIconClass);
 
-            this.dragGhost.insertBefore(icon, this.dragGhost.firstElementChild);
+            this.ghostElement.insertBefore(icon, this.ghostElement.firstElementChild);
 
-            this.left = this._dragStartX = pageX - ((this.dragGhost.getBoundingClientRect().width / 3) * 2) - hostElemLeft;
-            this.top = this._dragStartY = pageY - ((this.dragGhost.getBoundingClientRect().height / 3) * 2) - hostElemTop;
+            this.ghostLeft = this._ghostStartX = pageX - ((this.ghostElement.getBoundingClientRect().width / 3) * 2);
+            this.ghostTop = this._ghostStartY = pageY - ((this.ghostElement.getBoundingClientRect().height / 3) * 2);
         } else {
-            this.dragGhost.insertBefore(icon, this.dragGhost.childNodes[0]);
+            this.ghostElement.insertBefore(icon, this.ghostElement.childNodes[0]);
 
-            this.renderer.addClass(icon, this.dragGhostImgIconGroupClass);
-            this.dragGhost.children[0].style.paddingLeft = '0px';
+            this.renderer.addClass(icon, this.ghostImgIconGroupClass);
+            this.ghostElement.children[0].style.paddingLeft = '0px';
 
-            this.left = this._dragStartX = pageX - ((this.dragGhost.getBoundingClientRect().width / 3) * 2) - hostElemLeft;
-            this.top = this._dragStartY = pageY - ((this.dragGhost.getBoundingClientRect().height / 3) * 2) - hostElemTop;
+            this.ghostLeft = this._ghostStartX = pageX - ((this.ghostElement.getBoundingClientRect().width / 3) * 2);
+            this.ghostTop = this._ghostStartY = pageY - ((this.ghostElement.getBoundingClientRect().height / 3) * 2);
         }
     }
 
@@ -724,17 +714,17 @@ export class IgxDecimalPipeComponent extends DecimalPipe implements PipeTransfor
 /**
  * @hidden
  */
-export interface ContainerPositionSettings extends PositionSettings {
+export interface RowEditPositionSettings extends PositionSettings {
     container?: HTMLElement;
 }
 
 /**
  * @hidden
  */
-export class ContainerPositioningStrategy extends ConnectedPositioningStrategy {
+export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
     isTop = false;
     isTopInitialPosition = null;
-    public settings: ContainerPositionSettings;
+    public settings: RowEditPositionSettings;
     position(contentElement: HTMLElement, size: { width: number, height: number }, document?: Document, initialCall?: boolean): void {
         const container = this.settings.container; // grid.tbody
         const target = <HTMLElement>this.settings.target; // current grid.row

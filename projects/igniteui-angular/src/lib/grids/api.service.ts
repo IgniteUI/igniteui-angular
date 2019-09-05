@@ -150,9 +150,9 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         this.grid.summaryService.clearSummaryCache(args);
         this.updateData(this.grid, cell.id.rowID, data[index], cell.rowData, { [cell.column.field ]: args.newValue });
         if (this.grid.primaryKey === cell.column.field) {
-            if (this.grid.selection.is_item_selected(this.grid.id, cell.id.rowID)) {
-                this.grid.selection.deselect_item(this.grid.id, cell.id.rowID);
-                this.grid.selection.select_item(this.grid.id, args.newValue);
+             if (this.grid.selectionService.isRowSelected(cell.id.rowID)) {
+                this.grid.selectionService.deselectRow(cell.id.rowID);
+                this.grid.selectionService.selectRowById(args.newValue);
             }
             if (this.grid.hasSummarizedColumns) {
                 this.grid.summaryService.removeSummaries(cell.id.rowID);
@@ -207,7 +207,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
 
     update_row(row: IgxRow, value: any) {
         const grid = this.grid;
-        const selected = grid.selection.is_item_selected(grid.id, row.id);
+        const selected = grid.selectionService.isRowSelected(row.id);
         const rowInEditMode = grid.crudService.row;
         const data = this.get_all_data(grid.transactions.enabled);
         const index = this.get_row_index_in_data(row.id);
@@ -247,8 +247,8 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         this.updateData(grid, row.id, data[index], args.oldValue, args.newValue);
         const newId = grid.primaryKey ? args.newValue[grid.primaryKey] : args.newValue;
         if (selected) {
-            grid.selection.deselect_item(grid.id, row.id);
-            grid.selection.select_item(grid.id, newId);
+            grid.selectionService.deselectRow(row.id);
+            grid.selectionService.selectRowById(newId);
         }
         if (hasSummarized) {
             grid.summaryService.removeSummaries(newId);
@@ -503,16 +503,11 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         //  TODO: should we emit this when cascadeOnDelete is true for each row?!?!
         grid.onRowDeleted.emit({ data: data[index] });
 
-        //  first deselect row then delete it
-        if (grid.rowSelectable && grid.selection.is_item_selected(grid.id, rowId)) {
-            grid.deselectRows([rowId]);
-        } else {
-            grid.checkHeaderCheckboxStatus();
-        }
-
         this.deleteRowFromData(rowId, index);
+
+        grid.selectionService.isRowSelected(rowId) ? grid.selectionService.deselectRow(rowId) : grid.selectionService.clearHeaderCBState();
         (grid as any)._pipeTrigger++;
-        grid.cdr.markForCheck();
+        grid.notifyChanges();
         // Data needs to be recalculated if transactions are in place
         // If no transactions, `data` will be a reference to the grid getter, otherwise it will be stale
         const dataAfterDelete = grid.transactions.enabled ? grid.dataWithAddedInTransactionRows : data;
@@ -523,8 +518,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
     }
 
     public get_row_id(rowData) {
-        const grid = this.grid;
-        return grid.primaryKey ? rowData[grid.primaryKey] : rowData;
+        return this.grid.primaryKey ? rowData[this.grid.primaryKey] : rowData;
     }
 
     public row_deleted_transaction(rowID: any): boolean {

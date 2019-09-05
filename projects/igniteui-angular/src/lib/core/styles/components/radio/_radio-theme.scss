@@ -33,7 +33,9 @@
     $label-color: null,
     $empty-color: null,
     $fill-color: null,
-    $disabled-color: null
+    $fill-hover-border-color:null,
+    $disabled-color: null,
+    $hover-color: null
 
 ) {
     $name: 'igx-radio';
@@ -45,7 +47,9 @@
         label-color: $label-color,
         empty-color: $empty-color,
         fill-color: $fill-color,
+        fill-hover-border-color: $fill-hover-border-color,
         disabled-color: $disabled-color,
+        hover-color: $hover-color,
     ));
 }
 
@@ -67,7 +71,22 @@
 
     $size: em(20px);
 
-    $border-style: 2px solid;
+    $border-width: map-get((
+        material: 2px,
+        fluent: 1px
+    ), map-get($theme, variant));
+
+    $radio-hover-scale: map-get((
+        material: null,
+        fluent: scale3d(.5, .5, .5)
+    ), map-get($theme, variant));
+
+    $ripple-display: map-get((
+        material: block,
+        fluent: none
+    ), map-get($theme, variant));
+
+    $border-style: rem($border-width) solid;
     $border-radius: 50% 50%;
 
     $transition: all .2s ease-in;
@@ -142,6 +161,24 @@
         }
     }
 
+    %igx-radio-hover__composite {
+        &::before {
+            background: --var($theme, 'hover-color');
+            transform: $radio-hover-scale;
+        }
+    }
+
+    %igx-radio--checked-active__composite {
+        &::before {
+            border-color: --var($theme, 'fill-hover-border-color');
+            background: --var($theme, 'fill-hover-border-color');
+        }
+
+        &::after {
+            border-color: --var($theme, 'fill-hover-border-color');
+        }
+    }
+
     %radio-composite--disabled {
         &::after {
             border: $border-style --var($theme, 'disabled-color');
@@ -200,6 +237,7 @@
     %radio-ripple {
         @include igx-ripple($ripple-theme);
         @include igx-css-vars($ripple-theme);
+        display: $ripple-display;
         position: absolute;
         top: calc(50% - #{$ripple-radius});
         left: calc(50% - #{$ripple-radius});
@@ -265,12 +303,10 @@
 ) {
     $label: map-get($categories, 'label');
 
-    @include igx-scope('.igx-typography') {
-        %radio-label {
-            @include igx-type-style($type-scale, $label) {
-                margin-top: 0;
-                margin-bottom: 0;
-            }
+    %radio-label {
+        @include igx-type-style($type-scale, $label) {
+            margin-top: 0;
+            margin-bottom: 0;
         }
     }
 }

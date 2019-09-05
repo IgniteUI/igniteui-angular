@@ -6,13 +6,13 @@ import {
     ElementRef,
     forwardRef,
     HostBinding,
+    HostListener,
     Input,
     QueryList,
     ViewChild,
     ViewChildren
 } from '@angular/core';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
-import { IgxSelectionAPIService } from '../core/selection';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
@@ -20,6 +20,7 @@ import { IgxColumnComponent } from './column.component';
 import { TransactionType, State } from '../services';
 import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxGridSelectionService, IgxGridCRUDService, IgxRow } from '../core/grid-selection';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -111,6 +112,21 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     /**
      * @hidden
      */
+    @Input()
+    @HostBinding('attr.aria-selected')
+    get selected(): boolean {
+        return this.selectionService.isRowSelected(this.rowID);
+    }
+
+    set selected(value: boolean) {
+        value ? this.selectionService.selectRowsWithNoEvent([this.rowID]) :
+        this.selectionService.deselectRowsWithNoEvent([this.rowID]);
+        this.grid.cdr.markForCheck();
+    }
+
+    /**
+     * @hidden
+     */
     get columns(): IgxColumnComponent[] {
         return this.grid.visibleColumns;
     }
@@ -132,22 +148,9 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
     /**
      * @hidden
      */
-    public get rowSelectable(): boolean {
-        return this.grid.rowSelectable;
+    public get showRowSelectors(): boolean {
+        return this.grid.showRowSelectors;
     }
-
-    /**
-     * @hidden
-     */
-    public get showRowCheckboxes(): boolean {
-        return this.grid.showRowCheckboxes;
-    }
-
-    /**
-     * @hidden
-     */
-    @HostBinding('attr.aria-selected')
-    public isSelected: boolean;
 
     /** @hidden */
     public get dirty(): boolean {
@@ -157,6 +160,11 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
         }
 
         return false;
+    }
+
+    @DeprecateProperty('isSelected property is deprecated. Use selected property instead.')
+    public get isSelected() {
+        return this.selectionService.isRowSelected(this.rowID);
     }
 
     /**
@@ -255,27 +263,38 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      */
     public defaultCssClass = 'igx-grid__tr';
 
-    /**
-     * @hidden
-     */
-    protected _rowSelection = false;
 
     constructor(public gridAPI: GridBaseAPIService<T>,
         public crudService: IgxGridCRUDService,
         public selectionService: IgxGridSelectionService,
-        private selection: IgxSelectionAPIService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef) { }
 
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('click', ['$event'])
+    public onClick(event: MouseEvent) {
+        if (this.grid.rowSelection === 'none' || this.deleted) { return; }
+        if (event.shiftKey && this.grid.rowSelection === 'multiple') {
+            this.selectionService.selectMultipleRows(this.rowID, this.rowData, event);
+            return;
+        }
+        this.selectionService.selectRowById(this.rowID, !event.ctrlKey, event);
+    }
 
     /**
      * @hidden
      */
-    public onCheckboxClick(event) {
-        const newSelection = (event.checked) ?
-            this.selection.add_item(this.gridID, this.rowID) :
-            this.selection.delete_item(this.gridID, this.rowID);
-        this.grid.triggerRowSelectionChange(newSelection, this, event);
+    public onRowSelectorClick(event) {
+        event.stopPropagation();
+        if (event.shiftKey && this.grid.rowSelection === 'multiple') {
+            this.selectionService.selectMultipleRows(this.rowID, this.rowData, event);
+            return;
+        }
+        this.selected ? this.selectionService.deselectRow(this.rowID, event) :
+        this.selectionService.selectRowById(this.rowID, false, event);
     }
 
     /**
@@ -316,21 +335,15 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      */
     get rowCheckboxAriaLabel() {
         return this.grid.primaryKey ?
-            this.isSelected ? 'Deselect row with key ' + this.rowID : 'Select row with key ' + this.rowID :
-            this.isSelected ? 'Deselect row' : 'Select row';
+            this.selected ? 'Deselect row with key ' + this.rowID : 'Select row with key ' + this.rowID :
+            this.selected ? 'Deselect row' : 'Select row';
     }
 
     /**
      * @hidden
      */
     public ngDoCheck() {
-        this.isSelected = this.rowSelectable ?
-            this.grid.allRowsSelected ? true : this.selection.is_item_selected(this.gridID, this.rowID) :
-            this.selection.is_item_selected(this.gridID, this.rowID);
         this.cdr.markForCheck();
-        if (this.checkboxElement) {
-            this.checkboxElement.checked = this.isSelected;
-        }
     }
 
     /**
@@ -338,7 +351,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable>
      */
     protected resolveClasses(): string {
         const indexClass = this.index % 2 ? this.grid.evenRowCSS : this.grid.oddRowCSS;
-        const selectedClass = this.isSelected ? 'igx-grid__tr--selected' : '';
+        const selectedClass = this.selected ? 'igx-grid__tr--selected' : '';
         const editClass = this.inEditMode ? 'igx-grid__tr--edit' : '';
         const dirtyClass = this.dirty ? 'igx-grid__tr--edited' : '';
         const deletedClass = this.deleted ? 'igx-grid__tr--deleted' : '';
