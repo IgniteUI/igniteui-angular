@@ -833,6 +833,28 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.getSelectedData()).toEqual([]);
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
         });
+
+        it('Should return correct selected data when onSelection event is emitted', () => {
+            let selectedData = [];
+            grid.onSelection.subscribe((e) => {
+                selectedData = grid.getSelectedData();
+            });
+
+            const cell =  grid.getCellByColumn(2, 'Name');
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            fix.detectChanges();
+
+            expect(selectedData.length).toBe(1);
+            expect(selectedData[0]).toEqual({'Name': 'Monica Reyes'});
+
+            const idCell =  grid.getCellByColumn(1, 'ID');
+            UIInteractions.simulateClickAndSelectCellEvent(idCell, false, true);
+            fix.detectChanges();
+
+            expect(selectedData.length).toBe(2);
+            expect(selectedData[0]).toEqual({'Name': 'Monica Reyes'});
+            expect(selectedData[1]).toEqual({'ID':  957});
+        });
     });
 
     describe('Keyboard navigation', () => {
@@ -3184,6 +3206,25 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.selectedCells.length).toBe(0);
             expect(grid.getSelectedData()).toEqual([]);
             expect(grid.getSelectedRanges()).toEqual([]);
+        });
+
+        it('Should return correct selected data when onSelection event is emitted using mouse click and kb navigation', () => {
+            let selectedData = [];
+            grid.onSelection.subscribe((e) => {
+                selectedData = grid.getSelectedData();
+            });
+
+            const cell =  grid.getCellByColumn(2, 'Name');
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            fix.detectChanges();
+            expect(selectedData.length).toBe(1);
+            expect(selectedData[0]).toEqual({'Name': 'Monica Reyes'});
+
+            UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true, false, true);
+            fix.detectChanges();
+
+            expect(selectedData.length).toBe(1);
+            expect(selectedData[0]).toEqual({'Name': 'Laurence Johnson'});
         });
     });
 
