@@ -45,13 +45,6 @@ private resolver;
 
 
     /**
-     * @hidden
-     */
-    // public get layout() {
-    //     const layout = (this.gridAPI as IgxHierarchicalGridAPIService).getLayout(`igx-row-island-` + this.rowData.key);
-    //    return layout;
-    // }
-    /**
     * @hidden
     */
     @Input()

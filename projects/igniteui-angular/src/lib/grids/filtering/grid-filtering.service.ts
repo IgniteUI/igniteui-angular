@@ -7,7 +7,6 @@ import { IFilteringExpression, FilteringLogic } from '../../data-operations/filt
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { IgxGridSortingPipe } from '../grid/grid.pipes';
 import { IgxDatePipeComponent } from '../grid.common';
 import { IgxColumnComponent } from '../column.component';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';

@@ -1,11 +1,12 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTreeGridModule, IgxTreeGridComponent, GridSelectionMode } from './index';
+import { IgxTreeGridModule, IgxTreeGridComponent } from './index';
 import { IgxTreeGridWithNoScrollsComponent, IgxTreeGridWithScrollsComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { GridSelectionMode } from '../types';
 
 const DEBOUNCETIME = 30;
 const treeColumns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];

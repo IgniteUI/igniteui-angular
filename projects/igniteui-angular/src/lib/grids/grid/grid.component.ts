@@ -1,10 +1,9 @@
 import {
     Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
-    QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, NgZone, ChangeDetectorRef, ComponentFactoryResolver,
-    IterableDiffers, ViewContainerRef, Inject, AfterContentInit, HostBinding, forwardRef, OnInit, Optional
+    QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, AfterContentInit, HostBinding, forwardRef, OnInit
 } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent, IgxGridTransaction, IGridDataBindable, FilterMode } from '../grid-base.component';
+import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridAPIService } from './grid-api.service';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
@@ -12,12 +11,12 @@ import { cloneArray, IBaseEventArgs } from '../../core/utils';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IgxGroupByRowTemplateDirective } from './grid.directives';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
+// import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../../chips/chip.component';
 import { IChipsAreaReorderEventArgs } from '../../chips/chips-area.component';
-import { TransactionService, Transaction, State } from '../../services/transaction/transaction';
-import { DOCUMENT } from '@angular/common';
+// import { TransactionService, Transaction, State } from '../../services/transaction/transaction';
+// import { DOCUMENT } from '@angular/common';
 import { IgxColumnComponent } from '../column.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -25,10 +24,11 @@ import { IGroupingExpression } from '../../data-operations/grouping-expression.i
 import { IgxColumnResizingService } from '../grid-column-resizing.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
-import { IgxOverlayService } from '../../services/index';
+// import { IgxOverlayService } from '../../services/index';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
+import { FilterMode } from '../types';
 
 let NEXT_ID = 0;
 
@@ -57,10 +57,16 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
-    providers: [IgxGridNavigationService, IgxGridSummaryService, IgxGridSelectionService, IgxGridCRUDService,
+    providers: [
+        IgxGridNavigationService,
+        IgxGridSummaryService,
+        IgxGridSelectionService,
+        IgxGridCRUDService,
         { provide: GridBaseAPIService, useClass: IgxGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxGridComponent) },
-        IgxFilteringService, IgxColumnResizingService, IgxForOfSyncService
+        IgxFilteringService,
+        IgxColumnResizingService,
+        IgxForOfSyncService
     ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
@@ -210,32 +216,34 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         return this.verticalScrollContainer.totalItemCount;
     }
 
-    private _gridAPI: IgxGridAPIService;
+    private get _gridAPI(): IgxGridAPIService {
+        return this.gridAPI as IgxGridAPIService;
+    }
     private _filteredData = null;
 
-    constructor(
-        selectionService: IgxGridSelectionService,
-        crudService: IgxGridCRUDService,
-        public colResizingService: IgxColumnResizingService,
-        gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-        @Inject(IgxGridTransaction) _transactions: TransactionService<Transaction, State>,
-        elementRef: ElementRef,
-        zone: NgZone,
-        @Inject(DOCUMENT) public document,
-        cdr: ChangeDetectorRef,
-        resolver: ComponentFactoryResolver,
-        differs: IterableDiffers,
-        viewRef: ViewContainerRef,
-        navigation: IgxGridNavigationService,
-        filteringService: IgxFilteringService,
-        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-            super(selectionService,
-                  crudService, gridAPI, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
-                  filteringService, overlayService, summaryService, _displayDensityOptions);
-            this._gridAPI = <IgxGridAPIService>gridAPI;
-    }
+    // constructor(
+    //     selectionService: IgxGridSelectionService,
+    //     crudService: IgxGridCRUDService,
+    //     public colResizingService: IgxColumnResizingService,
+    //     gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
+    //     @Inject(IgxGridTransaction) _transactions: TransactionService<Transaction, State>,
+    //     elementRef: ElementRef,
+    //     zone: NgZone,
+    //     @Inject(DOCUMENT) public document,
+    //     cdr: ChangeDetectorRef,
+    //     resolver: ComponentFactoryResolver,
+    //     differs: IterableDiffers,
+    //     viewRef: ViewContainerRef,
+    //     navigation: IgxGridNavigationService,
+    //     filteringService: IgxFilteringService,
+    //     @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
+    //     summaryService: IgxGridSummaryService,
+    //     @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+    //         super(selectionService,
+    //               crudService, gridAPI, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
+    //               filteringService, overlayService, summaryService, _displayDensityOptions);
+    //         this._gridAPI = <IgxGridAPIService>gridAPI;
+    // }
 
     /**
      * Returns the group by state of the `IgxGridComponent`.
@@ -894,6 +902,16 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     public getGroupByChipTitle(expression: IGroupingExpression): string {
         const column = this.getColumnByName(expression.fieldName);
         return (column && column.header) || expression.fieldName;
+    }
+    /**
+     * @hidden
+     */
+    public get iconTemplate() {
+        if (this.groupsExpanded) {
+            return this.headerExpandIndicatorTemplate || this.defaultExpandedTemplate;
+        } else {
+            return this.headerCollapseIndicatorTemplate || this.defaultCollapsedTemplate;
+        }
     }
 
     /**

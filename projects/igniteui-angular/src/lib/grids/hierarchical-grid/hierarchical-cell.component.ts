@@ -3,6 +3,7 @@ import { GridBaseAPIService } from '../api.service';
 import { ChangeDetectorRef, ElementRef, ChangeDetectionStrategy, Component,
      OnInit, HostListener, NgZone } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
+// import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 import { HammerGesturesManager } from '../../core/touch';
 
@@ -15,19 +16,21 @@ import { HammerGesturesManager } from '../../core/touch';
 })
 export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent implements OnInit {
 
-    protected hSelection;
+    // protected hSelection;
     protected _rootGrid;
 
     constructor(
         protected selectionService: IgxGridSelectionService,
         protected crudService: IgxGridCRUDService,
         public gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>,
+        // public selection: IgxHierarchicalSelectionAPIService,
         public cdr: ChangeDetectorRef,
         private helement: ElementRef,
         protected zone: NgZone,
         touchManager: HammerGesturesManager
         ) {
             super(selectionService, crudService, gridAPI, cdr, helement, zone, touchManager);
+            // this.hSelection = <IgxHierarchicalSelectionAPIService>selection;
          }
 
     ngOnInit() {

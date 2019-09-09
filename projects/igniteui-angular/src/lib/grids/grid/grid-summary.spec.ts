@@ -26,7 +26,7 @@ import { setupGridScrollDetection, resizeObserverIgnoreError } from '../../test-
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand, SortingDirection, IgxChipComponent } from 'igniteui-angular';
 import { ColumnGroupFourLevelTestComponent } from './column-group.spec';
-import { GridSummaryCalculationMode } from '../grid-base.component';
+import { GridSummaryCalculationMode } from '../types';
 
 describe('IgxGrid - Summaries #grid', () => {
     configureTestSuite();
