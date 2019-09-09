@@ -405,7 +405,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the cross-field filtering state of `IgxGridComponent`.
+     * Returns the advanced filtering state of `IgxGridComponent`.
      * ```typescript
      * let advancedFilteringExpressionsTree = this.grid.advancedFilteringExpressionsTree;
      * ```
@@ -418,14 +418,19 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
-     * Sets the cross-field filtering state of the `IgxGridComponent`.
+     * Sets the advanced filtering state of the `IgxGridComponent`.
      * ```typescript
-     * const logic = new FilteringExpressionsTree(FilteringLogic.And, "ID");
+     * const logic = new FilteringExpressionsTree(FilteringLogic.And);
      * logic.filteringOperands = [
      *     {
      *          condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
      *          fieldName: 'ID',
      *          searchVal: 1
+     *     },
+     *     {
+     *          condition: IgxStringFilteringOperand.instance().condition('contains'),
+     *          fieldName: 'CompanyName',
+     *          searchVal: 'a'
      *     }
      * ];
      * this.grid.advancedFilteringExpressionsTree = logic;

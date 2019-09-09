@@ -8,7 +8,6 @@ import { IgxOverlayService } from '../../../services/overlay/overlay';
 import { IgxGridBaseComponent, IgxColumnComponent } from '../../grid';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { FilteringLogic, IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
-import { IgxStringFilteringOperand } from '../../../data-operations/filtering-condition';
 import { IgxChipComponent } from '../../../chips/chip.component';
 import { IgxSelectComponent } from '../../../select/select.component';
 import { IDragStartEventArgs, IDragBaseEventArgs } from '../../../directives/drag-drop/drag-drop.directive';
@@ -19,6 +18,9 @@ import { takeUntil, first } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { KEYS } from '../../../core/utils';
 
+/**
+ *@hidden
+ */
 class ExpressionItem {
     constructor(parent?: ExpressionGroupItem) {
         this.parent = parent;
@@ -27,6 +29,9 @@ class ExpressionItem {
     selected: boolean;
 }
 
+/**
+ *@hidden
+ */
 class ExpressionGroupItem extends ExpressionItem {
     constructor(operator: FilteringLogic, parent?: ExpressionGroupItem) {
         super(parent);
@@ -37,6 +42,9 @@ class ExpressionGroupItem extends ExpressionItem {
     children: ExpressionItem[];
 }
 
+/**
+ *@hidden
+ */
 class ExpressionOperandItem extends ExpressionItem {
     constructor(expression: IFilteringExpression, parent: ExpressionGroupItem) {
         super(parent);
@@ -48,9 +56,10 @@ class ExpressionOperandItem extends ExpressionItem {
     hovered: boolean;
 }
 
+/**
+ * @hidden
+ */
 @Component({
-    // changeDetection: ChangeDetectionStrategy.OnPush,
-    // preserveWhitespaces: false,
     selector: 'igx-advanced-filtering-dialog',
     templateUrl: './advanced-filtering-dialog.component.html'
 })
