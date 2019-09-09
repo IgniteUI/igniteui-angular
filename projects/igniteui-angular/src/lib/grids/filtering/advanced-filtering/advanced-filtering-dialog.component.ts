@@ -566,8 +566,12 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         }
     }
 
-    public onKeyDown(eventArgs) {
+    public onKeyDown(eventArgs: KeyboardEvent) {
         eventArgs.stopPropagation();
+        if (!this.contextMenuToggle.collapsed &&
+            (eventArgs.key === KEYS.ESCAPE || eventArgs.key === KEYS.ESCAPE_IE)) {
+            this.clearSelection();
+        }
     }
 
     public createAndGroup() {
