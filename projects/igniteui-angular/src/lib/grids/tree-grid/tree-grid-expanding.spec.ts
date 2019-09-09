@@ -7,12 +7,14 @@ import {
     IgxTreeGridRowEditingComponent,
     IgxTreeGridLoadOnDemandComponent,
     IgxTreeGridLoadOnDemandHasChildrenComponent,
-    IgxTreeGridLoadOnDemandChildDataComponent
+    IgxTreeGridLoadOnDemandChildDataComponent,
+    IgxTreeGridCustomExpandersTemplateComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
 import { wait } from '../../test-utils/ui-interactions.spec';
+import { IgxGridModule } from '../grid';
 import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../types';
@@ -1374,6 +1376,44 @@ describe('Row editing expanding/collapsing #tGrid', () => {
         fix.detectChanges();
         expect(overlayContent.style.display).toEqual('');
     }));*/
+});
+
+describe('Custom expand/collapse template', () => {
+    configureTestSuite();
+    let fix;
+    let treeGrid;
+
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxTreeGridCustomExpandersTemplateComponent
+            ],
+            imports: [
+                NoopAnimationsModule,
+                IgxGridModule,
+                IgxTreeGridModule]
+        })
+            .compileComponents();
+    }));
+
+    beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        fix = TestBed.createComponent(IgxTreeGridCustomExpandersTemplateComponent);
+        fix.detectChanges();
+        tick(16);
+        treeGrid = fix.componentInstance.treeGrid;
+    }));
+
+    it('should allow setting custom template for  expand/collapse icons', async() => {
+        const row = treeGrid.dataRowList.toArray()[0];
+        let expander =  row.nativeElement.querySelector('.igx-grid__tree-grouping-indicator');
+        expect(expander.innerText).toBe('EXPANDED');
+
+        row.expanded = false;
+        await wait();
+        fix.detectChanges();
+        expander =  row.nativeElement.querySelector('.igx-grid__tree-grouping-indicator');
+        expect(expander.innerText).toBe('COLLAPSED');
+    });
 });
 
 function verifyGridPager(fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) {

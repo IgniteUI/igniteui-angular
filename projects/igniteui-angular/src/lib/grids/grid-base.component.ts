@@ -94,6 +94,8 @@ import { FilterMode, GridKeydownTargetType, GridSelectionMode, GridSummaryPositi
 import { IgxColumnResizingService } from './grid-column-resizing.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './igx-row-selectors.module';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,
+     IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective } from './grid/grid.directives';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -236,6 +238,24 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private overlayIDs = [];
 
     private _hostWidth;
+
+
+
+
+
+    /**
+    * @hidden
+    */
+   @ViewChild('defaultExpandedTemplate', { read: TemplateRef, static: true })
+   protected defaultExpandedTemplate: TemplateRef<any>;
+
+/**
+   * @hidden
+   */
+   @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
+   protected defaultCollapsedTemplate: TemplateRef<any>;
+
+
     /**
      * An accessor that sets the resource strings.
      * By default it uses EN resources.
@@ -1871,6 +1891,31 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /** @hidden */
     @ContentChild(IgxRowEditActionsDirective, { read: TemplateRef, static: false })
     public rowEditActions: TemplateRef<any>;
+
+
+    /**
+    * The custom template, if any, that should be used when rendering a row expand indicator.
+    */
+   @ContentChild(IgxRowExpandedIndicatorDirective, { read: TemplateRef, static: false })
+   public rowExpandedIndicatorTemplate: TemplateRef<any> = null;
+
+   /**
+   * The custom template, if any, that should be used when rendering a row collapse indicator.
+   */
+   @ContentChild(IgxRowCollapsedIndicatorDirective, { read: TemplateRef, static: false })
+   public rowCollapsedIndicatorTemplate: TemplateRef<any> = null;
+
+    /**
+    * The custom template, if any, that should be used when rendering a header expand indicator.
+    */
+   @ContentChild(IgxHeaderExpandIndicatorDirective, { read: TemplateRef, static: false })
+   public headerExpandIndicatorTemplate: TemplateRef<any> = null;
+
+   /**
+   * The custom template, if any, that should be used when rendering a header collapse indicator.
+   */
+   @ContentChild(IgxHeaderCollapseIndicatorDirective, { read: TemplateRef, static: false })
+   public headerCollapseIndicatorTemplate: TemplateRef<any> = null;
 
     /**
      * @hidden
