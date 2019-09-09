@@ -3,9 +3,9 @@ import { IGroupByRecord } from './groupby-record.interface';
 import { ISortingExpression, SortingDirection } from './sorting-expression.interface';
 import { IGroupingExpression } from './grouping-expression.interface';
 import { IGroupingState } from './groupby-state.interface';
-import { DataUtil } from './data-util';
 import { IGroupByExpandState } from './groupby-expand-state.interface';
 import { IGroupByResult } from './grouping-result.interface';
+import { getHierarchy, isHierarchyMatch } from './operations';
 
 export interface ISortingStrategy {
     sort: (data: any[],
@@ -156,9 +156,9 @@ export class IgxSorting {
             } else {
                 groupsRecords.push(groupRow);
             }
-            const hierarchy = DataUtil.getHierarchy(groupRow);
+            const hierarchy = getHierarchy(groupRow);
             const expandState: IGroupByExpandState = expansion.find((s) =>
-                DataUtil.isHierarchyMatch(s.hierarchy || [{ fieldName: groupRow.expression.fieldName, value: groupRow.value }], hierarchy));
+                isHierarchyMatch(s.hierarchy || [{ fieldName: groupRow.expression.fieldName, value: groupRow.value }], hierarchy));
             const expanded = expandState ? expandState.expanded : state.defaultExpanded;
             let recursiveResult;
             result.push(groupRow);

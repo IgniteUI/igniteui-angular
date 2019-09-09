@@ -25,20 +25,14 @@ import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.c
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 import { IgxGridFooterComponent } from './grid-footer/grid-footer.component';
 import {
-    IgxCellEditorTemplateDirective,
-    IgxCellFooterTemplateDirective,
-    IgxCellHeaderTemplateDirective,
-    IgxCellTemplateDirective,
     IgxColumnResizerDirective,
     IgxColumnMovingDragDirective,
     IgxColumnMovingDropDirective,
     IgxGridBodyDirective,
     IgxColumnMovingService,
-    IgxFilterCellTemplateDirective,
     IgxResizeHandleDirective
 } from './grid.common';
 import { IgxGridTransaction } from './grid-base.component';
-import { IgxRowComponent } from './row.component';
 import { IgxChipsModule } from '../chips/chips.module';
 import { IgxDragDropModule } from '../directives/drag-drop/drag-drop.directive';
 import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
@@ -69,6 +63,13 @@ import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 import { IgxRowDragModule } from './row-drag.directive';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import { IgxSelectModule } from '../select/select.module';
+import {
+    IgxCellFooterTemplateDirective,
+    IgxCellHeaderTemplateDirective,
+    IgxCellEditorTemplateDirective,
+    IgxCellTemplateDirective,
+    IgxFilterCellTemplateDirective
+} from './types';
 import { IgxRowSelectorsModule } from './igx-row-selectors.module';
 /**
  * @hidden
@@ -98,7 +99,6 @@ import { IgxRowSelectorsModule } from './igx-row-selectors.module';
         IgxGridFilteringCellComponent,
         IgxGridFilteringRowComponent,
         IgxSummaryDataPipe,
-        IgxRowComponent,
         IgxGridHeaderGroupComponent,
         IgxSummaryRowComponent,
         IgxSummaryCellComponent,
@@ -134,7 +134,6 @@ import { IgxRowSelectorsModule } from './igx-row-selectors.module';
         IgxColumnMovingDragDirective,
         IgxColumnMovingDropDirective,
         IgxGridBodyDirective,
-        IgxRowComponent,
         IgxSummaryDataPipe,
         IgxButtonModule,
         IgxDatePickerModule,

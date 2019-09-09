@@ -1,5 +1,6 @@
-import { Directive, ElementRef, forwardRef, HostListener, Inject, QueryList } from '@angular/core';
-import { IgxGridBaseComponent } from './grid-base.component';
+import { Directive, ElementRef, HostListener } from '@angular/core';
+import { GridBaseAPIService } from './api.service';
+import { GridType } from './types';
 
 /** @hidden */
 @Directive({
@@ -28,21 +29,19 @@ export class IgxRowEditActionsDirective { }
 export class IgxRowEditTabStopDirective {
     private currentCellIndex: number;
 
-    private get allTabs(): QueryList<IgxRowEditTabStopDirective> {
-        return this.grid.rowEditTabs;
-    }
 
-    constructor(
-        @Inject(forwardRef(() => IgxGridBaseComponent)) private grid: IgxGridBaseComponent,
-        public element: ElementRef) {
+    constructor(public api: GridBaseAPIService<any>, public element: ElementRef) {}
+
+    get grid(): GridType {
+        return this.api.grid;
     }
 
     @HostListener('keydown.Tab', [`$event`])
     @HostListener('keydown.Shift.Tab', [`$event`])
     public handleTab(event: KeyboardEvent): void {
         event.stopPropagation();
-        if ((this.allTabs.last === this && !event.shiftKey) ||
-            (this.allTabs.first === this && event.shiftKey)
+        if ((this.grid.rowEditTabs.last === this && !event.shiftKey) ||
+            (this.grid.rowEditTabs.first === this && event.shiftKey)
         ) {
             this.move(event);
         }

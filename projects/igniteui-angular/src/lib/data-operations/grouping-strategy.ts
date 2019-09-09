@@ -1,5 +1,4 @@
 import { IGroupByRecord } from './groupby-record.interface';
-import { ISortingExpression } from './sorting-expression.interface';
 import { IgxSorting } from './sorting-strategy';
 import { IGroupingState } from './groupby-state.interface';
 import { IGroupByResult } from './grouping-result.interface';

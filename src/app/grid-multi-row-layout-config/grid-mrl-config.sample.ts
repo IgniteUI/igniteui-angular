@@ -44,20 +44,21 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
     public jsonCollection = '';
     public cellSelected;
 
-    private dragStarted = false;
-    private dragStartX;
-    private dragStartY;
+    public dragStarted = false;
+    public dragStartX;
+    public dragStartY;
 
-    private curResizedCell;
-    private colSpanIncrease = 0;
-    private rowSpanIncrease = 0;
-    private resizeVisible = false;
-    private resizeTop;
-    private resizeLeft;
-    private resizeInitialWidth = 0;
-    private resizeInitialHeight = 0;
-    private resizeWidth = 0;
-    private resizeHeight = 0;
+    public curResizedCell;
+    public colSpanIncrease = 0;
+    public rowSpanIncrease = 0;
+    public resizeVisible = false;
+    public resizeTop;
+    public resizeLeft;
+    public resizeRight;
+    public resizeInitialWidth = 0;
+    public resizeInitialHeight = 0;
+    public resizeWidth = 0;
+    public resizeHeight = 0;
 
     public columnsList = [
         { key: 'ContactName', field: 'Contact name'},
