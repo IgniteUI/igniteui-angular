@@ -2,10 +2,8 @@ import { useAnimation } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import {
     Component,
-    ContentChild,
     ElementRef,
     EventEmitter,
-    forwardRef,
     HostBinding,
     Input,
     NgModule,

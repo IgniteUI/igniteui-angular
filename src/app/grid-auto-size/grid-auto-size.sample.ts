@@ -52,7 +52,7 @@ export class GridAutoSizeSampleComponent implements OnInit {
     }
 
 
-    setData(count) {
+    setData(count?) {
         this.data = SAMPLE_DATA.slice(0, count);
     }
 }

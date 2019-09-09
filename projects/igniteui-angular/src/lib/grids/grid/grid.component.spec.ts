@@ -10,7 +10,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxRowComponent } from '../row.component';
 import { IgxColumnComponent } from '../column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { IgxGridModule, GridSelectionMode } from './index';
+import { IgxGridModule } from './index';
 import { DisplayDensity } from '../../core/displayDensity';
 import { DataType } from '../../data-operations/data-util';
 import { GridTemplateStrings } from '../../test-utils/template-strings.spec';
@@ -22,6 +22,7 @@ import { SortingDirection, ISortingExpression } from '../../data-operations/sort
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxTabsModule, IgxTabsComponent } from '../../tabs';
 import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
+import { GridSelectionMode } from '../types';
 
 
 describe('IgxGrid Component Tests #grid', () => {

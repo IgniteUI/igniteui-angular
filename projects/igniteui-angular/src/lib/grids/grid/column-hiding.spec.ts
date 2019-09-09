@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from '../column-hiding-item.directive';
 import { IgxColumnHidingComponent, IgxColumnHidingModule } from '../column-hiding.component';
-import { IgxGridModule, GridSelectionMode } from './index';
+import { IgxGridModule } from './index';
 import { IgxGridComponent } from './grid.component';
 import { IgxButtonModule } from '../../directives/button/button.directive';
 import { ColumnDisplayOrder } from '../column-chooser-base';
@@ -15,7 +15,8 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { take } from 'rxjs/internal/operators/take';
+import { take } from 'rxjs/operators';
+import { GridSelectionMode } from '../types';
 
 describe('Column Hiding UI #grid', () => {
     configureTestSuite();

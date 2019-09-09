@@ -8,8 +8,7 @@ import { IgxColumnComponent } from '../column.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxGroupAreaDropDirective } from './grid.directives';
 import { IgxColumnMovingDragDirective } from '../grid.common';
-import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { IgxGridModule, IgxGridCellComponent, GridSelectionMode } from './index';
+import { IgxGridModule } from './index';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxChipComponent, IChipClickEventArgs } from '../../chips/chip.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
@@ -19,6 +18,7 @@ import { DataParent } from '../../test-utils/sample-test-data.spec';
 import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-samples.spec';
 import { resizeObserverIgnoreError, HelperUtils } from '../../test-utils/helper-utils.spec';
 import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
+import { GridSelectionMode } from '../types';
 
 describe('IgxGrid - GroupBy #grid', () => {
     configureTestSuite();

@@ -24,7 +24,8 @@ import {
     ViewContainerRef,
     InjectionToken,
     Optional,
-    DoCheck
+    DoCheck,
+    Injectable
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import { Subject, combineLatest, pipe } from 'rxjs';
@@ -89,6 +90,8 @@ import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
+import { FilterMode, GridKeydownTargetType, GridSelectionMode, GridSummaryPosition, GridSummaryCalculationMode } from './types';
+import { IgxColumnResizingService } from './grid-column-resizing.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './igx-row-selectors.module';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 
@@ -211,35 +214,7 @@ export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventA
     dragData: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
 }
 
-export enum GridSummaryPosition {
-    top = 'top',
-    bottom = 'bottom'
-}
-
-export enum GridSummaryCalculationMode {
-    rootLevelOnly = 'rootLevelOnly',
-    childLevelsOnly = 'childLevelsOnly',
-    rootAndChildLevels = 'rootAndChildLevels'
-}
-
-export enum FilterMode {
-    quickFilter = 'quickFilter',
-    excelStyleFilter = 'excelStyleFilter'
-}
-
-export enum GridKeydownTargetType {
-    dataCell = 'dataCell',
-    summaryCell = 'summaryCell',
-    groupRow = 'groupRow',
-    hierarchicalRow = 'hierarchicalRow'
-}
-
-export enum GridSelectionMode {
-    none = 'none',
-    single = 'single',
-    multiple = 'multiple',
-}
-
+@Injectable()
 export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
     private _scrollWidth: number;
@@ -2678,7 +2653,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     constructor(
         public selectionService: IgxGridSelectionService,
         public crudService: IgxGridCRUDService,
-        private gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
+        public colResizingService: IgxColumnResizingService,
+        protected gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         @Inject(IgxGridTransaction) protected _transactions: TransactionService<Transaction, State>,
         private elementRef: ElementRef,
         private zone: NgZone,
@@ -4638,7 +4614,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         const columns = [];
 
         fields.forEach((field) => {
-            // const ref = this.viewRef.createComponent(factory, null, this.viewRef.injector);
             const ref = factory.create(this.viewRef.injector);
             ref.instance.field = field;
             ref.instance.dataType = this.resolveDataTypes(data[0][field]);

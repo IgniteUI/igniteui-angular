@@ -6,7 +6,6 @@ import { IgxGridModule } from './index';
 import { GridTemplateStrings, ColumnDefinitions } from '../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { ColumnHiddenFromMarkupComponent, ColumnCellFormatterComponent, DynamicColumnsComponent } from '../../test-utils/grid-samples.spec';
-import { wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand, SortingDirection } from 'igniteui-angular';
