@@ -1,6 +1,6 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTreeGridModule, GridSelectionMode } from './index';
+import { IgxTreeGridModule } from './index';
 import {
     IgxTreeGridExpandingComponent,
     IgxTreeGridPrimaryForeignKeyComponent,
@@ -17,6 +17,7 @@ import { wait } from '../../test-utils/ui-interactions.spec';
 import { IgxGridModule } from '../grid';
 import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { GridSelectionMode } from '../types';
 
 describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     configureTestSuite();

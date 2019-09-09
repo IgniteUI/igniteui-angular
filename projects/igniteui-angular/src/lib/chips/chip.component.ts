@@ -12,7 +12,7 @@
     Inject,
     Optional
 } from '@angular/core';
-import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
 import {
     IgxDragDirective,
     IDragBaseEventArgs,

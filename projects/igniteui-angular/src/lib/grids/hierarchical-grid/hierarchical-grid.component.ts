@@ -286,6 +286,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     private scrollTop = 0;
     private scrollLeft = 0;
 
+    protected _transactions: any;
+
     constructor(
         public selectionService: IgxGridSelectionService,
         crudService: IgxGridCRUDService,
@@ -307,6 +309,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         super(
             selectionService,
             crudService,
+            colResizingService,
             gridAPI,
             typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
             elementRef,
@@ -323,6 +326,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             _displayDensityOptions);
         this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
     }
+
 
     /**
      * @hidden

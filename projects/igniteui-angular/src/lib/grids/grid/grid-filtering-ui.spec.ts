@@ -5,7 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../../calendar/calendar';
 import { IgxInputDirective } from '../../directives/input/input.directive';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule, GridSelectionMode } from './index';
+import { IgxGridModule } from './index';
 import { IgxButtonDirective } from '../../directives/button/button.directive';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -21,14 +21,12 @@ import { IgxGridHeaderComponent } from '../grid-header.component';
 import { IgxGridFilteringRowComponent } from '../filtering/grid-filtering-row.component';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxBadgeComponent } from '../../badge/badge.component';
-import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxGridHeaderGroupComponent } from '../grid-header-group.component';
 import { changei18n, getCurrentResourceStrings } from '../../core/i18n/resources';
 import { registerLocaleData } from '@angular/common';
 import localeDE from '@angular/common/locales/de';
-import { FilterMode } from '../tree-grid';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { IgxChipComponent } from '../../chips/chip.component';
@@ -45,6 +43,7 @@ import {
     IgxGridFilteringESFLoadOnDemandComponent
 } from '../../test-utils/grid-samples.spec';
 import { HelperUtils, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
+import { GridSelectionMode, FilterMode } from '../types';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
@@ -3336,6 +3335,44 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(chips.length).toBe(2);
             expect(grid.rowList.length).toBe(3);
         }));
+
+        it('Should close filter row when hide the current column', (async () => {
+            grid.height = '700px';
+            grid.showToolbar = true;
+            grid.columnHiding = true;
+            fix.detectChanges();
+            await wait(16);
+
+            const prodNameCol = grid.columns.find((col) => col.field === 'ProductName');
+            GridFunctions.verifyColumnIsHidden(prodNameCol, false, 6);
+
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            fix.detectChanges();
+
+            // Check that the filterRow is opened
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            expect(filterUIRow).not.toBeNull();
+
+            // Add first chip.
+            GridFunctions.typeValueInFilterRowInput('a', fix);
+            await wait(16);
+
+            const hideButton = GridFunctions.getColumnHidingButton(fix);
+            hideButton.focus();
+            await wait(100);
+            hideButton.click();
+            await wait(100);
+            fix.detectChanges();
+
+            const dropDown = fix.debugElement.query(By.css('igx-column-hiding'));
+            HelperUtils.getCheckboxInput('ProductName', dropDown,  fix).click();
+            await wait(100);
+            fix.detectChanges();
+
+            // Check that the filterRow is closed
+            expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
+            GridFunctions.verifyColumnIsHidden(prodNameCol, true , 5);
+        }));
     });
 
     describe(null, () => {
@@ -4806,6 +4843,34 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 new Set(['Ignite UI for Angular', 'Ignite UI for JavaScript', 'NetAdvantage']));
         }));
 
+        it('Should not throw error when selecting more than two values and column dataType is date.', fakeAsync(() => {
+            fix.detectChanges();
+
+            const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
+            const headerResArea = headers[4].children[0].nativeElement;
+
+            const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
+            filterIcon.click();
+            fix.detectChanges();
+
+            const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
+            const checkbox = excelMenu.querySelectorAll('.igx-checkbox__input');
+            const applyButton = excelMenu.querySelector('.igx-button--raised');
+
+            checkbox[0].click(); // Select All
+            tick();
+            fix.detectChanges();
+
+            checkbox[2].click();
+            checkbox[3].click();
+            checkbox[4].click();
+            checkbox[6].click();
+            tick();
+            fix.detectChanges();
+
+            expect(() => { applyButton.click(); }).not.toThrowError();
+        }));
+
         it('Should generate "in" and "empty" conditions when selecting more than two values including (Blanks).', fakeAsync(() => {
             fix.detectChanges();
 
@@ -4980,8 +5045,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click 'sort asc' button in ESF.
             GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
-            await wait(100);
             fix.detectChanges();
+            await wait(400);
             GridFunctions.clickSortAscInExcelStyleFiltering(fix);
             await wait(100);
             fix.detectChanges();
@@ -5018,8 +5083,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click 'sort desc' button in ESF.
             GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
-            await wait(100);
             fix.detectChanges();
+            await wait(400);
             GridFunctions.clickSortDescInExcelStyleFiltering(fix);
             await wait(100);
             fix.detectChanges();
@@ -5056,11 +5121,11 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click 'sort desc' button in ESF.
             GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
-            await wait(100);
             fix.detectChanges();
+            await wait(400);
             GridFunctions.clickSortDescInExcelStyleFiltering(fix);
-            await wait(100);
             fix.detectChanges();
+            await wait(100);
 
             // Verify data is sorted in descending order.
             cells = GridFunctions.sortNativeElementsVertically(

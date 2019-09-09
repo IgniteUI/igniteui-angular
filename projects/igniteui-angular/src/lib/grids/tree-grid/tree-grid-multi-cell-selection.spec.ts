@@ -8,10 +8,11 @@ import {
     IgxTreeGridFKeySelectionWithTransactionComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IgxTreeGridModule, GridSelectionMode } from '.';
+import { IgxTreeGridModule } from './tree-grid.module';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { GridSelectionFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
+import { GridSelectionMode } from '../types';
 
 describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
     configureTestSuite();

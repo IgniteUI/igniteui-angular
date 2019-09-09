@@ -2,12 +2,13 @@ import { Component, ViewChild, TemplateRef } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnComponent,
-        IgxGridCellComponent,
-        IgxGridModule,
-        IgxGridRowComponent,
-        IgxGridGroupByRowComponent,
-        GridSelectionMode, } from './index';
+import {
+    IgxColumnComponent,
+    IgxGridCellComponent,
+    IgxGridModule,
+    IgxGridRowComponent,
+    IgxGridGroupByRowComponent,
+} from './index';
 import { IgxGridComponent } from './grid.component';
 import { DataParent } from '../../test-utils/sample-test-data.spec';
 import { IGridCellEventArgs } from '../grid-base.component';
@@ -21,6 +22,7 @@ import {
     VirtualGridComponent, ScrollsComponent,
     GridWithPrimaryKeyComponent, SelectionComponent
 } from '../../test-utils/grid-samples.spec';
+import { GridSelectionMode } from '../types';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 const DEBOUNCETIME = 30;
