@@ -135,6 +135,7 @@
                 <igx-select #columnSelect
                             type="box"
                             [displayDensity]="'compact'"
+                            [placeholder]="grid.resourceStrings.igx_grid_advanced_filter_column_placeholder"
                             [(ngModel)]="selectedColumn">
                     <igx-select-item *ngFor="let column of filterableColumns" [value]="column">
                         {{column.header || column.field}}
@@ -144,6 +145,7 @@
                 <ng-container *ngIf="!selectedColumn">
                     <igx-select type="box"
                                 [displayDensity]="'compact'"
+                                [placeholder]="grid.resourceStrings.igx_grid_filter_condition_placeholder"
                                 [disabled]="true">
                     </igx-select>
                 </ng-container>
@@ -152,6 +154,7 @@
                     <igx-select #conditionSelect
                                 type="box"
                                 [displayDensity]="'compact'"
+                                [placeholder]="grid.resourceStrings.igx_grid_filter_condition_placeholder"
                                 [(ngModel)]="selectedCondition"
                                 [disabled]="!selectedColumn">
                             <igx-select-item *ngFor="let condition of selectedColumn.filters.conditionList()" [value]="condition">
@@ -167,6 +170,7 @@
                     <input #searchValueInput
                            igxInput
                            [type]="selectedColumn && selectedColumn.dataType === 'number' ? 'number' : 'text'"
+                           [placeholder]="grid.resourceStrings.igx_grid_advanced_filter_value_placeholder"
                            [(ngModel)]="searchValue"/>
                 </igx-input-group>
 
@@ -182,7 +186,7 @@
                                     tabindex="0"
                                     (keydown)="invokeClick($event)"
                                     (click)="openDialog(dropDownTarget.element.nativeElement)"
-                                    [placeholder]="inputDatePlaceholder"
+                                    [placeholder]="grid.resourceStrings.igx_grid_filter_row_date_placeholder"
                                     autocomplete="off"
                                     [value]="value | igxdate: grid.locale"
                                     [readonly]="true"

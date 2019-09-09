@@ -87,6 +87,8 @@ export interface IGridResourceStrings {
     igx_grid_advanced_filter_delete?: string;
     igx_grid_advanced_filter_delete_filters?: string;
     igx_grid_advanced_filter_initial_text?: string;
+    igx_grid_advanced_filter_column_placeholder?: string;
+    igx_grid_advanced_filter_value_placeholder?: string;
 }
 
 export const GridResourceStringsEN: IGridResourceStrings = {
@@ -177,5 +179,7 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_advanced_filter_ungroup: 'Ungroup',
     igx_grid_advanced_filter_delete: 'Delete',
     igx_grid_advanced_filter_delete_filters: 'Delete filters',
-    igx_grid_advanced_filter_initial_text: 'Start with creating a group of conditions linked with "And" or "Or"'
+    igx_grid_advanced_filter_initial_text: 'Start with creating a group of conditions linked with "And" or "Or"',
+    igx_grid_advanced_filter_column_placeholder: 'Select column',
+    igx_grid_advanced_filter_value_placeholder: 'Value'
 };
