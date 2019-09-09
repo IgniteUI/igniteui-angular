@@ -612,11 +612,13 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
 
     private toggleGroup(groupItem: ExpressionGroupItem) {
         this.exitOperandEdit();
-        this.toggleGroupRecursive(groupItem, !groupItem.selected);
-        if (!groupItem.selected) {
-            this.deselectParentRecursive(groupItem);
+        if (groupItem.children && groupItem.children.length) {
+            this.toggleGroupRecursive(groupItem, !groupItem.selected);
+            if (!groupItem.selected) {
+                this.deselectParentRecursive(groupItem);
+            }
+            this.toggleContextMenu();
         }
-        this.toggleContextMenu();
     }
 
     private toggleGroupRecursive(groupItem: ExpressionGroupItem, selected: boolean) {
