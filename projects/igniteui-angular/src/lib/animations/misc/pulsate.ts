@@ -2,11 +2,10 @@ import {
     animate,
     animation,
     AnimationMetadata,
-    AnimationReferenceMetadata,
     keyframes,
     style
 } from '@angular/animations';
-import { IAnimationParams } from '../main';
+import { IAnimationParams } from '../interface';
 
 const heartbeatBase: AnimationMetadata[] = [
     style({
