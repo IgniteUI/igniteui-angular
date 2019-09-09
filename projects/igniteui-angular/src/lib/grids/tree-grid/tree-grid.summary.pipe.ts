@@ -1,10 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent, GridSummaryPosition, GridSummaryCalculationMode, IGridDataBindable } from '../grid-base.component';
+import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { ISummaryRecord } from '../summaries/grid-summary';
+import { GridSummaryCalculationMode, GridSummaryPosition } from '../types';
 
 /** @hidden */
 @Pipe({

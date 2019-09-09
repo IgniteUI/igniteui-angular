@@ -736,10 +736,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         return value instanceof Date;
     }
 
-    public get inputDatePlaceholder(): string {
-        return this.grid.resourceStrings['igx_grid_filter_row_date_placeholder'];
-    }
-
     public onExpressionsScrolled() {
         if (!this.contextMenuToggle.collapsed) {
             this.calculateContextMenuTarget();

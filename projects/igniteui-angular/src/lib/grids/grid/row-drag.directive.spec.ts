@@ -14,7 +14,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../column.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxRowDragDirective } from '../row-drag.directive';
-import { IRowDragStartEventArgs, IgxGridBaseComponent, IRowDragEndEventArgs, GridSelectionMode } from '../grid-base.component';
+import { IRowDragStartEventArgs, IgxGridBaseComponent, IRowDragEndEventArgs } from '../grid-base.component';
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -22,6 +22,7 @@ import { IgxHierarchicalGridComponent, IgxHierarchicalGridModule, IgxRowComponen
 import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';
 import { IgxTreeGridComponent, IgxTreeGridModule } from '../tree-grid';
 import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
+import { GridSelectionMode } from '../types';
 
 
 const DEBOUNCE_TIME = 50;
