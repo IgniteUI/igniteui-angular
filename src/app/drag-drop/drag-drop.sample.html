@@ -5,7 +5,7 @@
                 <h4 class="sample-title">No ghost dragging:</h4>
                 <div [style.height.px]="100">
                     <div [igxDrag]="{ dragged: false }" [ghost]="false" class="dialog" [dragChannel]="['Suspect']"
-                        (dragStart)="draggedElem = true" (dragEnd)="draggedElem = false" (click)="dragClick($event)">
+                        (dragStart)="draggedElem = true" (dragEnd)="draggedElem = false">
                         <span *ngIf="!draggedElem">Drag me</span>
                         <span *ngIf="draggedElem">Weeeee</span>
                     </div>
@@ -15,7 +15,7 @@
                 <div #ghostHost [style.height.px]="100">
                     <div [igxDrag]="{ id: 'customGhost'}" [dragChannel]="'Suspect'"  [ghostTemplate]="dragGhost"
                         [ngClass]="customDragged ? 'dragWithGhostPlaceholder' : 'dragWithGhostDefault'"
-                        (dragStart)="customDragged = true" (dragEnd)="customDragged = false"  (click)="dragClick($event)">
+                        (dragStart)="customDragged = true" (dragEnd)="customDragged = false">
                         <span *ngIf="!customDragged">Drag me</span>
                         <ng-template #dragGhost>
                             <div class="customGhost">
@@ -26,11 +26,11 @@
                         </ng-template>
                     </div>
                 </div>
-    
+
                 <br>
                 <h4 class="sample-title">Drag Handle:</h4>
                 <button igxButton="raised" igxRipple (click)="openDialog()" [style.width.px]="150">Open dialog</button>
-                <div igxToggle #toggleForm="toggle" class="igx-dialog" [style.width.px]="280" 
+                <div igxToggle #toggleForm="toggle" class="igx-dialog" [style.width.px]="280"
                      igxDrag [ghost]="false" [dragTolerance]="0" [dragChannel]="'dialog'">
                     <div class="igx-dialog__window">
                         <div class="login-form">
@@ -55,7 +55,7 @@
                         </div>
                         <div class="igx-dialog__window-actions">
                             <button igxButton="flat" type="button" igxRipple (click)="toggleForm.close()"> Cancel </button>
-                            <button igxButton="flat" type="button" igxRipple (click)="signIn($event)"> Sign In </button>
+                            <button igxButton="flat" type="button" igxRipple> Sign In </button>
                         </div>
                     </div>
                 </div>
@@ -140,7 +140,7 @@
                 <div #listArea class="listArea">
                     <div #listItem *ngFor="let item of listNotes; index as itemIndex" class="listItem"
                         [ngStyle]="{ 'box-shadow': item.dragged ? '0px 5px 15px 3px rgb(20, 20, 20)': '', 'border-radius': item.dragged ? '4px' : '0px', 'z-index': item.dragged ? '2' : '1' }"
-                        [igxDrag]="{ id: item.text, moved: false }" [ghost]="false" (dragStart)="listItemDragStart($event, item, itemIndex)" (dragEnd)="listItemDragEnd($event, item)" (transitioned)="litsItemTransitioned($event, item, itemIndex)" 
+                        [igxDrag]="{ id: item.text, moved: false }" [ghost]="false" (dragStart)="listItemDragStart($event, item, itemIndex)" (dragEnd)="listItemDragEnd($event, item)" (transitioned)="litsItemTransitioned($event, item, itemIndex)"
                         igxDrop (enter)="listItemEnter($event, itemIndex)" (over)="listItemOver($event, itemIndex)">
                         {{item.text}}
                     </div>
@@ -160,7 +160,7 @@
                             <span [style.margin]="'auto'">{{elem}}</span>
                         </div>
                     </div>
-    
+
                     <div class="cageArea" igxDrop [dropChannel]="['Suspect']" [dropStrategy]="dropStrategy"
                         [style.backgroundImage]="'url(assets/images/drag-drop/jailBars.png)'"
                         (igxDragEnter)="onDragCageEnter()"
@@ -172,4 +172,3 @@
             </article>
         </section>
     </div>
-    

@@ -1,4 +1,4 @@
-import { VerticalAlignment, HorizontalAlignment, PositionSettings } from './../utilities';
+import { VerticalAlignment, HorizontalAlignment } from './../utilities';
 import { BaseFitPositionStrategy, ConnectedFit } from './base-fit-position-strategy';
 
 /**
