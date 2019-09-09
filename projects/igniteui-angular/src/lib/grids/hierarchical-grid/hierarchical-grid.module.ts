@@ -42,7 +42,7 @@ import { IgxGridComponent } from '../grid/grid.component';
     IgxSelectModule
   ],
   providers: [
-    IgxRowIslandAPIService,
+    IgxRowIslandAPIService
   ],
   entryComponents: [
     IgxGridComponent
