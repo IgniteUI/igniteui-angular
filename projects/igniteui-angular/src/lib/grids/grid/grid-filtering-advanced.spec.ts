@@ -1199,28 +1199,6 @@ describe('IgxGrid - Advanced Filtering', () => {
             expect(GridFunctions.getAdvancedFilteringComponent(fix)).not.toBeNull('Advanced Filtering dialog is not opened.');
         }));
 
-        it('Should discard added group when clicking its operator line without having a single expression.', fakeAsync(() => {
-            // Open Advanced Filtering dialog.
-            GridFunctions.clickAdvancedFilteringButton(fix);
-            fix.detectChanges();
-
-            // Add initial 'and' group.
-            const initialAddAndGroupBtn = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
-            initialAddAndGroupBtn.click();
-            tick(100);
-            fix.detectChanges();
-
-            // Click operator line.
-            const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
-            rootOperatorLine.click();
-            tick(200);
-            fix.detectChanges();
-
-            // Verify group is discarded and the context menu was not opened.
-            expect(GridFunctions.getAdvancedFilteringTreeRootGroup(fix)).toBeNull('Group is not discarded.');
-            verifyContextMenuVisibility(fix, false);
-        }));
-
         it('Should display the adding buttons and the cancel button when trying to add a new condition/group to existing group.',
         fakeAsync(() => {
             // Apply advanced filter through API.
@@ -1395,6 +1373,272 @@ describe('IgxGrid - Advanced Filtering', () => {
             expect(GridFunctions.getAdvancedFilteringTreeChildItems(group, false).length).toBe(5,
                 'incorrect all children count of group with path [0]');
         }));
+
+        describe('Context Menu', () => {
+            it('Should discard added group when clicking its operator line without having a single expression.', fakeAsync(() => {
+                // Open Advanced Filtering dialog.
+                GridFunctions.clickAdvancedFilteringButton(fix);
+                fix.detectChanges();
+
+                // Add initial 'and' group.
+                const initialAddAndGroupBtn = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+                initialAddAndGroupBtn.click();
+                tick(100);
+                fix.detectChanges();
+
+                // Click operator line.
+                const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
+                rootOperatorLine.click();
+                tick(200);
+                fix.detectChanges();
+
+                // Verify group is discarded and the context menu was not opened.
+                expect(GridFunctions.getAdvancedFilteringTreeRootGroup(fix)).toBeNull('Group is not discarded.');
+                verifyContextMenuVisibility(fix, false);
+            }));
+
+            it('Selecting multiple conditions should display the (create group)/(delete filters) context menu.', fakeAsync(() => {
+                // Apply advanced filter through API.
+                const tree = new FilteringExpressionsTree(FilteringLogic.And);
+                tree.filteringOperands.push({
+                    fieldName: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan')
+                });
+                const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
+                orTree.filteringOperands.push({
+                    fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    ignoreCase: true
+                });
+                orTree.filteringOperands.push({
+                    fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    ignoreCase: true
+                });
+                tree.filteringOperands.push(orTree);
+                grid.advancedFilteringExpressionsTree = tree;
+                fix.detectChanges();
+
+                // Open Advanced Filtering dialog.
+                GridFunctions.clickAdvancedFilteringButton(fix);
+                fix.detectChanges();
+
+                // Verify context menu is not visible.
+                verifyContextMenuVisibility(fix, false);
+
+                // Select two chips.
+                GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0]);
+                tick(400);
+                fix.detectChanges();
+                GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [1, 1]);
+                tick(400);
+                fix.detectChanges();
+
+                // Verify context menu is visible.
+                verifyContextMenuVisibility(fix, true);
+                verifyContextMenuType(fix, false);
+
+                // Unselect one of the two selected chips.
+                GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0]);
+                tick(400);
+                fix.detectChanges();
+
+                // Verify context menu is no longer visible.
+                verifyContextMenuVisibility(fix, false);
+            }));
+
+            it('Should create an \'and\' group from multiple selected conditions when respective context menu button is clicked.',
+            fakeAsync(() => {
+                // Apply advanced filter through API.
+                const tree = new FilteringExpressionsTree(FilteringLogic.And);
+                tree.filteringOperands.push({
+                    fieldName: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan')
+                });
+                const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
+                orTree.filteringOperands.push({
+                    fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    ignoreCase: true
+                });
+                orTree.filteringOperands.push({
+                    fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    ignoreCase: true
+                });
+                tree.filteringOperands.push(orTree);
+                grid.advancedFilteringExpressionsTree = tree;
+                fix.detectChanges();
+
+                // Open Advanced Filtering dialog.
+                GridFunctions.clickAdvancedFilteringButton(fix);
+                fix.detectChanges();
+
+                // Verify tree layout before the creation of a new group with context menu.
+                let rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix); // group
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, true).length).toBe(2);
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(4);
+
+                let firstItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [0]); // expression
+                expect(firstItem.classList.contains('igx-filter-tree__expression-item')).toBe(true);
+
+                let secondItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [1]); // group
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(secondItem, true).length).toBe(2);
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(secondItem, false).length).toBe(2);
+
+                // Select two chips.
+                GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0]);
+                tick(400);
+                fix.detectChanges();
+                GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [1, 1]);
+                tick(400);
+                fix.detectChanges();
+
+                // Click "Create And Group" in context menu.
+                const buttons = GridFunctions.getAdvancedFilteringContextMenuButtons(fix);
+                buttons[1].click();
+                tick(100);
+                fix.detectChanges();
+
+                // Verify tree layout after the creation of a new group with context menu.
+                rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix); // group
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, true).length).toBe(2);
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(5);
+
+                firstItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [0]); // the new group
+                verifyOperatorLine(GridFunctions.getAdvancedFilteringTreeGroupOperatorLine(fix, [0]), 'and');
+                expect(firstItem.classList.contains('igx-filter-tree__expression-item')).toBe(false);
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(firstItem, true).length).toBe(2);
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(firstItem, false).length).toBe(2);
+
+                secondItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [1]); // group
+                verifyOperatorLine(GridFunctions.getAdvancedFilteringTreeGroupOperatorLine(fix, [1]), 'or');
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(secondItem, true).length).toBe(1);
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(secondItem, false).length).toBe(1);
+            }));
+
+            it('Should create an \'or\' group from multiple selected conditions when respective context menu button is clicked.',
+            fakeAsync(() => {
+                // Apply advanced filter through API.
+                const tree = new FilteringExpressionsTree(FilteringLogic.And);
+                tree.filteringOperands.push({
+                    fieldName: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan')
+                });
+                const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
+                orTree.filteringOperands.push({
+                    fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    ignoreCase: true
+                });
+                orTree.filteringOperands.push({
+                    fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    ignoreCase: true
+                });
+                tree.filteringOperands.push(orTree);
+                grid.advancedFilteringExpressionsTree = tree;
+                fix.detectChanges();
+
+                // Open Advanced Filtering dialog.
+                GridFunctions.clickAdvancedFilteringButton(fix);
+                fix.detectChanges();
+
+                // Verify tree layout before the creation of a new group with context menu.
+                let rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix); // group
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, true).length).toBe(2);
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(4);
+
+                let firstItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [0]); // expression
+                expect(firstItem.classList.contains('igx-filter-tree__expression-item')).toBe(true);
+
+                let secondItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [1]); // group
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(secondItem, true).length).toBe(2);
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(secondItem, false).length).toBe(2);
+
+                // Select two chips.
+                GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0]);
+                tick(400);
+                fix.detectChanges();
+                GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [1, 1]);
+                tick(400);
+                fix.detectChanges();
+
+                // Click "Create Or Group" in context menu.
+                const buttons = GridFunctions.getAdvancedFilteringContextMenuButtons(fix);
+                buttons[2].click();
+                tick(100);
+                fix.detectChanges();
+
+                // Verify tree layout after the creation of a new group with context menu.
+                rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix); // group
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, true).length).toBe(2);
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(5);
+
+                firstItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [0]); // the new group
+                verifyOperatorLine(GridFunctions.getAdvancedFilteringTreeGroupOperatorLine(fix, [0]), 'or');
+                expect(firstItem.classList.contains('igx-filter-tree__expression-item')).toBe(false);
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(firstItem, true).length).toBe(2);
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(firstItem, false).length).toBe(2);
+
+                secondItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [1]); // group
+                verifyOperatorLine(GridFunctions.getAdvancedFilteringTreeGroupOperatorLine(fix, [1]), 'or');
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(secondItem, true).length).toBe(1);
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(secondItem, false).length).toBe(1);
+            }));
+
+            it('Should delete all selected conditions when the \'delete filters\' option from context menu is clicked.',
+            fakeAsync(() => {
+                // Apply advanced filter through API.
+                const tree = new FilteringExpressionsTree(FilteringLogic.And);
+                tree.filteringOperands.push({
+                    fieldName: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan')
+                });
+                const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
+                orTree.filteringOperands.push({
+                    fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    ignoreCase: true
+                });
+                orTree.filteringOperands.push({
+                    fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    ignoreCase: true
+                });
+                tree.filteringOperands.push(orTree);
+                grid.advancedFilteringExpressionsTree = tree;
+                fix.detectChanges();
+
+                // Open Advanced Filtering dialog.
+                GridFunctions.clickAdvancedFilteringButton(fix);
+                fix.detectChanges();
+
+                // Verify tree layout before the creation of a new group with context menu.
+                let rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix); // group
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, true).length).toBe(2);
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(4);
+
+                let firstItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [0]); // expression
+                expect(firstItem.classList.contains('igx-filter-tree__expression-item')).toBe(true);
+
+                const secondItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [1]); // group
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(secondItem, true).length).toBe(2);
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(secondItem, false).length).toBe(2);
+
+                // Select two chips.
+                GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0]);
+                tick(400);
+                fix.detectChanges();
+                GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [1, 1]);
+                tick(400);
+                fix.detectChanges();
+
+                // Click "Delete Filters" in context menu.
+                const buttons = GridFunctions.getAdvancedFilteringContextMenuButtons(fix);
+                buttons[3].click();
+                tick(100);
+                fix.detectChanges();
+
+                // Verify tree layout after deleting some expressions with the context menu.
+                rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix); // group
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, true).length).toBe(1);
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(2);
+
+                firstItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [0]); // group
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(firstItem, true).length).toBe(1);
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(firstItem, false).length).toBe(1);
+                verifyExpressionChipContent(fix, [0, 0], 'ProductName', 'Contains', 'angular');
+            }));
+        });
 
         describe('Localization', () => {
             it('Should correctly change resource strings for Advanced Filtering dialog.', fakeAsync(() => {
@@ -1755,6 +1999,29 @@ function verifyContextMenuVisibility(fix, shouldBeVisible: boolean) {
     const contextMenuRect = contextMenu.getBoundingClientRect();
     expect(contextMenu.classList.contains('igx-toggle--hidden')).toBe(!shouldBeVisible, 'incorrect context menu visibility');
     expect(contextMenuRect.width === 0 && contextMenuRect.height === 0).toBe(!shouldBeVisible, 'incorrect context menu dimensions');
+}
+
+/**
+* Verifies the type of the context menu (menu for specific group or menu for combining expressions).
+* If contextual group is expected, the context menu should contain buttons for operator change, ungroup and delete.
+* If contextual group is not expected, the context menu should contain buttons for creating new group by combining expressions.
+*/
+function verifyContextMenuType(fix, shouldBeContextualGroup: boolean) {
+    const contextMenuButtons =  GridFunctions.getAdvancedFilteringContextMenuButtons(fix);
+    expect(GridFunctions.getAdvancedFilteringContextMenuButtonGroup(fix) !== null).toBe(shouldBeContextualGroup);
+
+    if (shouldBeContextualGroup) {
+        expect(contextMenuButtons.length).toBe(3, 'incorrect buttons count in context menu');
+        expect(contextMenuButtons[0].innerText.toLowerCase()).toBe('close');
+        expect(contextMenuButtons[1].innerText.toLowerCase()).toBe('ungroup');
+        expect(contextMenuButtons[2].innerText.toLowerCase()).toBe('delete');
+    } else {
+        expect(contextMenuButtons.length).toBe(4, 'incorrect buttons count in context menu');
+        expect(contextMenuButtons[0].innerText.toLowerCase()).toBe('close');
+        expect(contextMenuButtons[1].innerText.toLowerCase()).toBe('create "and" group');
+        expect(contextMenuButtons[2].innerText.toLowerCase()).toBe('create "or" group');
+        expect(contextMenuButtons[3].innerText.toLowerCase()).toBe('delete filters');
+    }
 }
 
 function verifyEqualArrays(firstArr: any[], secondArr: any[]) {
