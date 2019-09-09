@@ -1199,6 +1199,28 @@ describe('IgxGrid - Advanced Filtering', () => {
             expect(GridFunctions.getAdvancedFilteringComponent(fix)).not.toBeNull('Advanced Filtering dialog is not opened.');
         }));
 
+        it('Should discard added group when clicking its operator line without having a single expression.', fakeAsync(() => {
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Add initial 'and' group.
+            const initialAddAndGroupBtn = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            initialAddAndGroupBtn.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Click operator line.
+            const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
+            rootOperatorLine.click();
+            tick(200);
+            fix.detectChanges();
+
+            // Verify group is discarded and the context menu was not opened.
+            expect(GridFunctions.getAdvancedFilteringTreeRootGroup(fix)).toBeNull('Group is not discarded.');
+            verifyContextMenuVisibility(fix, false);
+        }));
+
         describe('Localization', () => {
             it('Should correctly change resource strings for Advanced Filtering dialog.', fakeAsync(() => {
                 fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
@@ -1551,6 +1573,13 @@ function verifyElementIsInExpressionsContainerView(fix, element: HTMLElement) {
     expect(elementRect.bottom <= exprContainerRect.bottom).toBe(true, 'bottom is not in view');
     expect(elementRect.left >= exprContainerRect.left).toBe(true, 'left is not in view');
     expect(elementRect.right <= exprContainerRect.right).toBe(true, 'right is not in view');
+}
+
+function verifyContextMenuVisibility(fix, shouldBeVisible: boolean) {
+    const contextMenu: HTMLElement = GridFunctions.getAdvancedFilteringContextMenu(fix);
+    const contextMenuRect = contextMenu.getBoundingClientRect();
+    expect(contextMenu.classList.contains('igx-toggle--hidden')).toBe(!shouldBeVisible, 'incorrect context menu visibility');
+    expect(contextMenuRect.width === 0 && contextMenuRect.height === 0).toBe(!shouldBeVisible, 'incorrect context menu dimensions');
 }
 
 function verifyEqualArrays(firstArr: any[], secondArr: any[]) {
