@@ -38,7 +38,7 @@ import {
     IgxCellHeaderTemplateDirective,
     IgxCellEditorTemplateDirective,
     IgxFilterCellTemplateDirective
-} from './types';
+} from './common/templates';
 
 /**
  * **Ignite UI for Angular Column** -

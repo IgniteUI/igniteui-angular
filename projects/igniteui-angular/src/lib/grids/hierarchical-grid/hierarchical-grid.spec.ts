@@ -12,7 +12,7 @@ import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { DisplayDensity } from '../../core/displayDensity';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IGridCellEventArgs } from '../grid';
-import { GridSelectionMode } from '../types';
+import { GridSelectionMode } from '../common/enums';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();

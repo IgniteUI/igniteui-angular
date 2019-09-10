@@ -4,7 +4,7 @@ import { first } from 'rxjs/operators';
 import { IgxColumnComponent } from '../../grids/column.component';
 import { ISelectionNode } from '../../core/grid-selection';
 import { isIE } from '../../core/utils';
-import { FilterMode } from '../types';
+import { FilterMode } from '../common/enums';
 
 export class IgxHierarchicalGridNavigationService extends IgxGridNavigationService {
     public grid: IgxHierarchicalGridComponent;
