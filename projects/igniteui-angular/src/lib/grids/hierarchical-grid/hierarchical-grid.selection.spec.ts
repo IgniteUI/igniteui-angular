@@ -858,7 +858,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             GridSelectionFunctions.headerCheckboxClick(hGrid);
             fix.detectChanges();
 
-            expect(fix.componentInstance.handleHeadSelectorClick).toHaveBeenCalledWith(new MouseEvent('click'), {
+            expect(fix.componentInstance.handleHeadSelectorClick).toHaveBeenCalledWith({
                 selectedCount: 0,
                 totalCount: hGrid.data.length,
                 selectAll: jasmine.anything(),
@@ -872,7 +872,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             GridSelectionFunctions.rowCheckboxClick(hGrid.getRowByIndex(1));
             fix.detectChanges();
 
-            expect(fix.componentInstance.handleRowSelectorClick).toHaveBeenCalledWith(new MouseEvent('click'), {
+            expect(fix.componentInstance.handleRowSelectorClick).toHaveBeenCalledWith({
                 index: 1,
                 rowID: '1',
                 selected: false,
