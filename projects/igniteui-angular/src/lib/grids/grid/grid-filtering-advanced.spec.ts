@@ -19,6 +19,7 @@ import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 const ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
 const ADVANCED_FILTERING_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
+const ADVANCED_FILTERING_OPERATOR_LINE_SELECTED_CSS_CLASS = 'igx-filter-tree__line--selected';
 
 describe('IgxGrid - Advanced Filtering', () => {
     configureTestSuite();
@@ -1494,6 +1495,66 @@ describe('IgxGrid - Advanced Filtering', () => {
                 .toBeNull('actions container is visible');
         }));
 
+        it('Should select/deselect all child conditions and groups when clicking a group\'s operator line.', fakeAsync(() => {
+            // Apply advanced filter through API.
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands.push({
+                fieldName: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan')
+            });
+            const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
+            orTree.filteringOperands.push({
+                fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            orTree.filteringOperands.push({
+                fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            const andTree = new FilteringExpressionsTree(FilteringLogic.Or);
+            andTree.filteringOperands.push({
+                fieldName: 'ProductName', searchVal: 'a', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            andTree.filteringOperands.push({
+                fieldName: 'ProductName', searchVal: 's', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            orTree.filteringOperands.push(andTree);
+            tree.filteringOperands.push(orTree);
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Click root group's operator line and verify that the root group and all of its children become selected.
+            let rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
+            rootOperatorLine.click();
+            tick(200);
+            fix.detectChanges();
+            verifyChildrenSelection(GridFunctions.getAdvancedFilteringExpressionsContainer(fix), true);
+
+            // Click root group's operator line again and verify that the root group and all of its children become unselected.
+            rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
+            rootOperatorLine.click();
+            tick(200);
+            fix.detectChanges();
+            verifyChildrenSelection(GridFunctions.getAdvancedFilteringExpressionsContainer(fix), false);
+
+            // Click an inner group's operator line and verify its children become selected.
+            GridFunctions.clickAdvancedFilteringTreeGroupOperatorLine(fix, [1]);
+            tick(200);
+            fix.detectChanges();
+            verifyChildrenSelection(GridFunctions.getAdvancedFilteringTreeItem(fix, [1]), true);
+
+            // Click an inner group's operator line again and verify its children become unselected.
+            GridFunctions.clickAdvancedFilteringTreeGroupOperatorLine(fix, [1]);
+            tick(200);
+            fix.detectChanges();
+            verifyChildrenSelection(GridFunctions.getAdvancedFilteringTreeItem(fix, [1]), false);
+        }));
+
         describe('Context Menu', () => {
             it('Should discard added group when clicking its operator line without having a single expression.', fakeAsync(() => {
                 // Open Advanced Filtering dialog.
@@ -1917,6 +1978,31 @@ describe('IgxGrid - Advanced Filtering', () => {
                 }
             }));
 
+            it('Ungroup button of the root group\'s context menu should be disabled.',
+            fakeAsync(() => {
+                // Apply advanced filter through API.
+                const tree = new FilteringExpressionsTree(FilteringLogic.And);
+                tree.filteringOperands.push({
+                    fieldName: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan')
+                });
+                grid.advancedFilteringExpressionsTree = tree;
+                fix.detectChanges();
+
+                // Open Advanced Filtering dialog.
+                GridFunctions.clickAdvancedFilteringButton(fix);
+                fix.detectChanges();
+
+                // Click root group's operator line.
+                const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
+                rootOperatorLine.click();
+                tick(200);
+                fix.detectChanges();
+
+                // Verify the ungroup button is disabled.
+                const ungroupButton = GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[1];
+                expect(ungroupButton.classList.contains('igx-button--disabled')).toBe(true);
+            }));
+
             it('Should delete the group from the tree when click \'delete\' from context menu.',
             fakeAsync(() => {
                 // Apply advanced filter through API.
@@ -2280,6 +2366,11 @@ function verifyOperatorLine(operatorLine: HTMLElement, operator: string) {
     }
 }
 
+function verifyOperatorLineSelection(operatorLine: HTMLElement, shouldBeSelected: boolean) {
+    expect(operatorLine.classList.contains(ADVANCED_FILTERING_OPERATOR_LINE_SELECTED_CSS_CLASS))
+        .toBe(shouldBeSelected, 'incorrect selection state of the operator line');
+}
+
 function verifyExpressionChipContent(fix, path: number[], columnText: string, operatorText: string, valueText: string) {
     const chip = GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, path);
     const chipSpans = GridFunctions.sortNativeElementsHorizontally(Array.from(chip.querySelectorAll('span')));
@@ -2293,6 +2384,10 @@ function verifyExpressionChipContent(fix, path: number[], columnText: string, op
 
 function verifyExpressionChipSelection(fix, path: number[], shouldBeSelected: boolean) {
     const chip = GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, path);
+    verifyExpressionChipSelectionByChip(chip, shouldBeSelected);
+}
+
+function verifyExpressionChipSelectionByChip(chip: HTMLElement, shouldBeSelected: boolean) {
     const chipItem = chip.querySelector('.igx-chip__item');
     if (shouldBeSelected) {
         expect(chipItem.classList.contains('igx-chip__item--selected')).toBe(true, 'chip is not selected');
@@ -2302,6 +2397,20 @@ function verifyExpressionChipSelection(fix, path: number[], shouldBeSelected: bo
         expect(chipItem.classList.contains('igx-chip__item--selected')).toBe(false, 'chip is selected');
         expect(chipItem.querySelector('.igx-chip__select')).toBeNull();
         expect(chipItem.querySelector('.igx-chip__select--hidden')).not.toBeNull();
+    }
+}
+
+/**
+* Verifies that all children (operator lines and expression chips) of the provided 'parent' are selected.
+*/
+function verifyChildrenSelection(parent: HTMLElement, shouldBeSelected: boolean) {
+    const allOperatorLines: any[] = Array.from(parent.querySelectorAll('.igx-filter-tree__line'));
+    const allExpressionChips: any[] = Array.from(parent.querySelectorAll('.igx-filter-tree__expression-item'));
+    for (const operatorLine of allOperatorLines) {
+        verifyOperatorLineSelection(operatorLine, shouldBeSelected);
+    }
+    for (const expressionChip of allExpressionChips) {
+        verifyExpressionChipSelectionByChip(expressionChip, shouldBeSelected);
     }
 }
 

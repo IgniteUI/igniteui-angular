@@ -249,8 +249,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         if (!this.contextMenuToggle.collapsed) {
             this.calculateContextMenuTarget();
             this.contextMenuToggle.reposition();
-            // 'flex' should be changed '' when styling class is added to contextMenuToggle
-            this.contextMenuToggle.element.style.display = 'flex';
+            this.contextMenuToggle.element.style.display = '';
         }
     }
 
