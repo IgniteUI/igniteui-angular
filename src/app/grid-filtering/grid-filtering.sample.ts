@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { IgxGridComponent, FilteringExpressionsTree, IgxStringFilteringOperand,
     FilteringLogic, IgxCheckboxComponent, IChangeCheckboxEventArgs } from 'igniteui-angular';
-import { FilterMode } from 'projects/igniteui-angular/src/lib/grids/types';
+import { FilterMode } from 'projects/igniteui-angular/src/lib/grids/common/enums';
 
 @Component({
     providers: [],
