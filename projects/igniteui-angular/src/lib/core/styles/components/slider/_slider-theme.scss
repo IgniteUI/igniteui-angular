@@ -166,13 +166,26 @@
         }
     }
 
-    %igx-thumb-label {
+    %igx-label-display {
         position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        height: $slider-thumb-height;
+        outline-style: none;
+        top: -#{rem($slider-thumb-radius)};
+        margin: 0 auto;
+    }
+
+    %igx-thumb-label {
+        position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
         flex: 0 0 auto;
-        top: -#{rem($slider-thumb-height - 6px)};
+        top: -#{rem($slider-thumb-height - 4px)};
+        left: -50%;
         pointer-events: none;
         min-width: rem($slider-label-width);
         height: rem($slider-label-height);
@@ -181,7 +194,7 @@
         margin: 0 auto;
         font-size: $slider-label-font-size;
         font-weight: $slider-label-font-weight;
-        line-height: 1;
+        line-height: rem(18px);
         color: --var($theme, 'label-text-color');
         background: --var($theme, 'label-background-color');
         opacity: 0;
