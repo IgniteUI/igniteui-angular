@@ -1804,6 +1804,8 @@ describe('IgxCalendar', () => {
             fixture.detectChanges();
 
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+            fixture.detectChanges();
+            await wait(400);
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
@@ -1818,6 +1820,8 @@ describe('IgxCalendar', () => {
             fixture.detectChanges();
 
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+            fixture.detectChanges();
+            await wait(400);
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
             fixture.detectChanges();
             await wait(400);
@@ -1851,6 +1855,8 @@ describe('IgxCalendar', () => {
             fixture.detectChanges();
 
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
+            fixture.detectChanges();
+            await wait(400);
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
             fixture.detectChanges();
             await wait(400);
@@ -1859,6 +1865,8 @@ describe('IgxCalendar', () => {
             expect(date.nativeElement).toBe(document.activeElement);
 
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
+            fixture.detectChanges();
+            await wait(400);
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
             fixture.detectChanges();
             await wait(400);
@@ -1892,6 +1900,8 @@ describe('IgxCalendar', () => {
             fixture.detectChanges();
 
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
+            fixture.detectChanges();
+            await wait(400);
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
             fixture.detectChanges();

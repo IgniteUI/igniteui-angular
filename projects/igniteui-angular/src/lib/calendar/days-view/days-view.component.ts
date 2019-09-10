@@ -257,23 +257,31 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
         const index = dates.indexOf(node);
 
         if (!node) { return; }
+        this.nextDate = this.calendarModel.timedelta(node.date.date, 'day', -7);
 
         // focus item in current month
         for (let i = index; i - 7 > -1; i -= 7) {
-            day = prevView ? node : dates[i - 7];
+            day = prevView ? dates[i] : dates[i - 7];
+            this.nextDate = day.date.date;
+            if (day.date.isPrevMonth) {
+                break;
+            }
             if (this.isDayFocusable(day)) {
                 day.nativeElement.focus();
-                break;
+                return;
             }
         }
 
         // focus item in previous visible month
-        this.nextDate = this.calendarModel.timedelta(node.date.date, 'day', -7);
-        day = dates[index - 7];
-        if (this.prevMonthView && ((day && day.date.isPrevMonth) || !day)) {
+        if (this.prevMonthView) {
             dates = this.prevMonthView.dates.toArray();
             day = dates.find((item) => item.date.date.getTime() === this.nextDate.getTime());
-            day.nativeElement.focus();
+
+            if (this.isDayFocusable(day)) {
+                day.nativeElement.focus();
+                return;
+            }
+            this.prevMonthView.focusPreviousUpDate(day.nativeElement);
         }
 
         // focus item in next month, which is currently out of view
@@ -302,23 +310,31 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
         const index = dates.indexOf(node);
 
         if (!node) { return; }
+        this.nextDate = this.calendarModel.timedelta(node.date.date, 'day', 7);
 
         // focus item in current month
         for (let i = index; i + 7 < 42; i += 7) {
-            day = nextView ? node : dates[i + 7];
+            day = nextView ? dates[i] : dates[i + 7];
+            this.nextDate = day.date.date;
+            if (day.date.isNextMonth) {
+                break;
+            }
             if (this.isDayFocusable(day)) {
                 day.nativeElement.focus();
-                break;
+                return;
             }
         }
 
         // focus item in next visible month
-        this.nextDate = this.calendarModel.timedelta(node.date.date, 'day', 7);
-        day = dates[index + 7];
-        if (this.nextMonthView && ((day && day.date.isNextMonth) || !day)) {
+        if (this.nextMonthView) {
             dates = this.nextMonthView.dates.toArray();
             day = dates.find((item) => item.date.date.getTime() === this.nextDate.getTime());
-            day.nativeElement.focus();
+
+            if (this.isDayFocusable(day)) {
+                day.nativeElement.focus();
+                return;
+            }
+            this.nextMonthView.focusNextDownDate(day.nativeElement);
         }
 
         // focus item in next month, which is currently out of view
@@ -349,22 +365,30 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
         const index = dates.indexOf(node);
 
         if (!node) { return; }
+        this.nextDate = this.calendarModel.timedelta(node.date.date, 'day', -1);
 
         for (let i = index; i > 0; i--) {
-            day = prevView ? node : dates[i - 1];
+            day = prevView ? dates[i] : dates[i - 1];
+            this.nextDate = day.date.date;
+            if (day.date.isPrevMonth) {
+                break;
+            }
             if (this.isDayFocusable(day)) {
                 day.nativeElement.focus();
-                break;
+                return;
             }
         }
 
         // focus item in previous visible month
-        this.nextDate = this.calendarModel.timedelta(node.date.date, 'day', -1);
-        day = dates[index - 1];
-        if (this.prevMonthView && ((day && day.date.isPrevMonth) || !day)) {
+        if (this.prevMonthView) {
             dates = this.prevMonthView.dates.toArray();
             day = dates.find((item) => item.date.date.getTime() === this.nextDate.getTime());
-            day.nativeElement.focus();
+
+            if (this.isDayFocusable(day)) {
+                day.nativeElement.focus();
+                return;
+            }
+            this.prevMonthView.focusPreviousDate(day.nativeElement);
         }
 
         // focus item in previous month, which is currently out of view
@@ -390,26 +414,35 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
         const node = this.dates.find((date) => date.nativeElement === target);
         let dates = this.dates.toArray(),
             day: IgxDayItemComponent;
-        const index = dates.indexOf(node);
+        let index = dates.indexOf(node);
 
         if (!node) { return; }
+        this.nextDate = this.calendarModel.timedelta(node.date.date, 'day', 1);
 
         // focus item in current month
         for (let i = index; i < dates.length - 1; i++) {
-            day = nextView ? node : dates[i + 1];
+            day = nextView ? dates[i] : dates[i + 1];
+            this.nextDate = day.date.date;
+            if (day.date.isNextMonth) {
+                break;
+            }
             if (this.isDayFocusable(day)) {
                 day.nativeElement.focus();
-                break;
+                return;
             }
         }
 
         // focus item in next visible month
-        this.nextDate = this.calendarModel.timedelta(node.date.date, 'day', 1);
-        day = dates[index + 1];
-        if (this.nextMonthView && ((day && day.date.isNextMonth) || !day)) {
+        if (this.nextMonthView) {
             dates = this.nextMonthView.dates.toArray();
             day = dates.find((item) => item.date.date.getTime() === this.nextDate.getTime());
-            day.nativeElement.focus();
+            index = dates.indexOf(day);
+
+            if (this.isDayFocusable(day)) {
+                day.nativeElement.focus();
+                return;
+            }
+            this.nextMonthView.focusNextDate(day.nativeElement);
         }
 
         // focus item in next month, which is currently out of view

@@ -12,9 +12,13 @@ export class CalendarSampleComponent implements OnInit {
 
     ngOnInit() {
         this.calendar.disabledDates = [{
-            type: DateRangeType.Between, dateRange: [
-                new Date(2019, 7, 2),
-                new Date(2019, 7, 5)
+            type: DateRangeType.Specific, dateRange: [
+                new Date(2019, 5, 13),
+                new Date(2019, 5, 27),
+                new Date(2019, 5, 30),
+                new Date(2019, 6, 1),
+                new Date(2019, 5, 1),
+                new Date(2019, 4, 31)
             ]
         }];
 
@@ -29,11 +33,11 @@ export class CalendarSampleComponent implements OnInit {
     }
 
     public showHide() {
-        this.calendar1.hideOutsideDays = !this.calendar1.hideOutsideDays;
+        this.calendar.hideOutsideDays = !this.calendar.hideOutsideDays;
     }
 
     public setMonthsViewNumber(args: HTMLInputElement) {
-        this.calendar1.monthsViewNumber = parseInt(args.value, 10);
+        this.calendar.monthsViewNumber = parseInt(args.value, 10);
     }
 
     public select() {
