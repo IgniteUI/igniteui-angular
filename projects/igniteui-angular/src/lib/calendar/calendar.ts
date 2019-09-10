@@ -214,7 +214,7 @@ export class Calendar {
 
             if ((date.getMonth() !== month) && (date.getDay() === this.firstWeekDay)) {
                 if (extraWeek && res.length <= 35) {
-                    for (const i of range(0, 7)) {
+                    for (const _ of range(0, 7)) {
                         value = this.generateICalendarDate(date, year, month);
                         res.push(value);
                         date = this.timedelta(date, 'day', 1);

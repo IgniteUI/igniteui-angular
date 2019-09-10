@@ -1,7 +1,7 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxGridModule, IgxGridGroupByRowComponent, IgxGridComponent, GridSelectionMode } from './index';
+import { IgxGridModule, IgxGridGroupByRowComponent, IgxGridComponent } from './index';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { SelectionWithScrollsComponent,
         SelectionWithTransactionsComponent,
@@ -12,6 +12,8 @@ import { IgxStringFilteringOperand } from '../../data-operations/filtering-condi
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { setupGridScrollDetection, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 import { DefaultSortingStrategy } from 'igniteui-angular';
+import { GridSelectionMode } from '../types';
+
 import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - Cell selection #grid', () => {
@@ -830,6 +832,28 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.getSelectedRanges().length).toEqual(0);
             expect(grid.getSelectedData()).toEqual([]);
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
+        });
+
+        it('Should return correct selected data when onSelection event is emitted', () => {
+            let selectedData = [];
+            grid.onSelection.subscribe((e) => {
+                selectedData = grid.getSelectedData();
+            });
+
+            const cell =  grid.getCellByColumn(2, 'Name');
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            fix.detectChanges();
+
+            expect(selectedData.length).toBe(1);
+            expect(selectedData[0]).toEqual({'Name': 'Monica Reyes'});
+
+            const idCell =  grid.getCellByColumn(1, 'ID');
+            UIInteractions.simulateClickAndSelectCellEvent(idCell, false, true);
+            fix.detectChanges();
+
+            expect(selectedData.length).toBe(2);
+            expect(selectedData[0]).toEqual({'Name': 'Monica Reyes'});
+            expect(selectedData[1]).toEqual({'ID':  957});
         });
     });
 
@@ -3182,6 +3206,25 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.selectedCells.length).toBe(0);
             expect(grid.getSelectedData()).toEqual([]);
             expect(grid.getSelectedRanges()).toEqual([]);
+        });
+
+        it('Should return correct selected data when onSelection event is emitted using mouse click and kb navigation', () => {
+            let selectedData = [];
+            grid.onSelection.subscribe((e) => {
+                selectedData = grid.getSelectedData();
+            });
+
+            const cell =  grid.getCellByColumn(2, 'Name');
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            fix.detectChanges();
+            expect(selectedData.length).toBe(1);
+            expect(selectedData[0]).toEqual({'Name': 'Monica Reyes'});
+
+            UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true, false, true);
+            fix.detectChanges();
+
+            expect(selectedData.length).toBe(1);
+            expect(selectedData[0]).toEqual({'Name': 'Laurence Johnson'});
         });
     });
 

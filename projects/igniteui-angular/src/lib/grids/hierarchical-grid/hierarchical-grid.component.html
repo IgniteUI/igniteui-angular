@@ -11,13 +11,12 @@
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0"
                 [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left"
                 class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
-                <div #headerHierarchyExpander [hidden]='!hasExpandableChildren || !hasVisibleColumns' [ngClass]="{
+                <div #headerHierarchyExpander (click)="toggleAll()" [hidden]='!hasExpandableChildren || !hasVisibleColumns' [ngClass]="{
                     'igx-grid__hierarchical-expander igx-grid__hierarchical-expander--header': hasExpandableChildren,
                     'igx-grid__hierarchical-expander--push': filteringService.isFilterRowVisible,
                     'igx-grid__hierarchical-expander--no-border': isRowSelectable || rowDraggable
                 }">
-                <igx-icon role="button" fontSet="material"
-                    [isActive]='hierarchicalState.length > 0 && hasExpandableChildren' (click)="collapseAllRows()">unfold_less</igx-icon>
+                <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }"></ng-container>
             </div>
             <ng-container *ngIf="rowDraggable">
                 <div class="igx-grid__drag-indicator" [ngClass]="{
@@ -30,12 +29,19 @@
                     </div>
                 </div>
             </ng-container>
-            <ng-container *ngIf="showRowCheckboxes">
-                <div class="igx-grid__cbx-selection" (click)="onHeaderSelectorClick($event)" #headerCheckboxContainer [ngClass]="{
+            <ng-container *ngIf="showRowSelectors">
+                <div class="igx-grid__cbx-selection" (click)="onHeaderSelectorClick($event)" #headerSelectorContainer [ngClass]="{
                         'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible
                     }">
-                    <igx-checkbox [checked]="selectionService.areAllRowSelected()" disableRipple="true" [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
-                        (click)="$event.preventDefault()" [indeterminate]="selectionService.hasSomeRowSelected()" [aria-label]="headerCheckboxAriaLabel" #headerCheckbox></igx-checkbox>
+                    <ng-template #headSelector
+                        *ngTemplateOutlet="
+                        this.headSelectorTemplate ? this.headSelectorTemplate : headSelectorBaseTemplate;
+                        context: { $implicit: {
+                                        selectedCount: this.selectionService.filteredSelectedRowIds.length,
+                                        totalCount: this.totalRowsCountAfterFilter,
+                                        selectAll: selectAllRows,
+                                        deselectAll: deselectAllRows }}">
+                    </ng-template>
                 </div>
             </ng-container>
             <ng-container *ngIf="pinnedColumns.length > 0">
@@ -167,6 +173,13 @@
     </div>
 </ng-template>
 
+<ng-template #defaultCollapsedTemplate>
+    <igx-icon role="button" fontSet="material">unfold_more</igx-icon>
+</ng-template>
+
+<ng-template #defaultExpandedTemplate>
+    <igx-icon role="button" [isActive]='hierarchicalState.length > 0 && hasExpandableChildren' [isActive]='true' fontSet="material">unfold_less</igx-icon>
+</ng-template>
 
 <div *ngIf="rowEditable" igxToggle>
     <div [className]="bannerClass">
@@ -201,6 +214,18 @@
 
 <ng-template #dragIndicatorIconBase>
     <igx-icon fontSet="material">drag_indicator</igx-icon>
+</ng-template>
+
+<ng-template #headSelectorBaseTemplate igxHeadSelector let-context>
+    <igx-checkbox
+        [readonly]="true"
+        [checked]="context.selectedCount > 0 && context.totalCount === context.selectedCount"
+        disableRipple="true"
+        [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
+        [indeterminate]="context.selectedCount > 0 && context.selectedCount !== context.totalCount"
+        [aria-label]="headSelectorBaseAriaLabel"
+        #headerCheckbox>
+    </igx-checkbox>
 </ng-template>
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>

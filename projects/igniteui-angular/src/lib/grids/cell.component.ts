@@ -16,14 +16,13 @@
 } from '@angular/core';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
-import { IgxColumnComponent } from './column.component';
 import { getNodeSizeViaRange, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, NAVIGATION_KEYS, isIE, isLeftClick } from '../core/utils';
 import { State } from '../services/index';
 import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../core/grid-selection';
 import { DeprecateProperty, DeprecateMethod } from '../core/deprecateDecorators';
-import { GridSelectionMode } from './grid-base.component';
 import { HammerGesturesManager } from '../core/touch';
+import { ColumnType, RowType, GridSelectionMode } from './types';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -55,7 +54,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     @Input()
-    public column: IgxColumnComponent;
+    public column: ColumnType;
 
     /**
      * Gets the row of the cell.
@@ -65,7 +64,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     @Input()
-    public row: any;
+    public row: RowType;
 
     /**
      * Gets the data of the row of the cell.
@@ -802,11 +801,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         this.focused = true;
         this.row.focused = true;
         const node = this.selectionNode;
-        const mrl = this.grid.hasColumnLayouts;
-
-        if (this.grid.isCellSelectable && !this.selectionService.isActiveNode(node, mrl)) {
-            this.grid.onSelection.emit({ cell: this, event });
-        }
+        const shouldEmitSelection = !this.selectionService.isActiveNode(node);
 
         if (this.selectionService.primaryButton) {
             this._updateCRUDStatus();
@@ -819,8 +814,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         this.selectionService.primaryButton = true;
-        if (this.cellSelectionMode === GridSelectionMode.multiple) {
+        if (this.cellSelectionMode === GridSelectionMode.multiple && this.selectionService.activeElement) {
+            this.selectionService.add(this.selectionService.activeElement, false); // pointer events handle range generation
             this.selectionService.keyboardStateOnFocus(node, this.grid.onRangeSelection, this.nativeElement);
+        }
+        if (this.grid.isCellSelectable && shouldEmitSelection) {
+            this.grid.onSelection.emit({ cell: this, event });
         }
     }
 

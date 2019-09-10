@@ -1,13 +1,22 @@
 <ng-container #defaultGroupRow>
     <div (click)="toggle()" class="igx-grid__grouping-indicator">
-        <igx-icon *ngIf="!expanded" fontSet="material">expand_more</igx-icon>
-        <igx-icon *ngIf="expanded" fontSet="material">expand_less</igx-icon>
+            <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }">
+            </ng-container>
     </div>
 
     <div class="igx-grid__group-content" #groupContent>
         <ng-container *ngTemplateOutlet="grid.groupRowTemplate ? grid.groupRowTemplate : defaultGroupByTemplate; context: { $implicit: groupRow }">
         </ng-container>
     </div>
+
+    <ng-template #defaultGroupByExpandedTemplate>
+        <igx-icon fontSet="material">expand_more</igx-icon>
+    </ng-template>
+
+    <ng-template #defaultGroupByCollapsedTemplate>
+        <igx-icon fontSet="material">chevron_right</igx-icon>
+    </ng-template>
+
 
     <ng-template #defaultGroupByTemplate>
         <div class="igx-group-label">
