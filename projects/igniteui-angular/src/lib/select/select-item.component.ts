@@ -1,5 +1,5 @@
 import { IgxDropDownItemComponent } from './../drop-down/drop-down-item.component';
-import { Component, HostBinding, Input, DoCheck } from '@angular/core';
+import { Component, DoCheck } from '@angular/core';
 
 @Component({
     selector: 'igx-select-item',

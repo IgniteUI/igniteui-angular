@@ -1,7 +1,7 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { IgxTreeGridModule, IgxGridCellComponent, GridSelectionMode } from './index';
+import { IgxTreeGridModule, IgxGridCellComponent } from './index';
 import { IgxTreeGridCellComponent } from './tree-cell.component';
 import {
     IgxTreeGridSimpleComponent,
@@ -23,6 +23,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowSelectorsModule } from '../igx-row-selectors.module';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { GridSelectionMode } from '../common/enums';
 
 describe('IgxTreeGrid - Selection #tGrid', () => {
     configureTestSuite();
@@ -690,22 +691,24 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         it('should return the correct type of cell when clicking on a cells', () => {
             const rows = TreeGridFunctions.getAllRows(fix);
             const normalCells = TreeGridFunctions.getNormalCells(rows[0]);
-            normalCells[0].triggerEventHandler('focus', new Event('focus'));
+            UIInteractions.simulateClickAndSelectCellEvent(normalCells[0]);
+            fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(1);
             expect(treeGrid.selectedCells[0] instanceof IgxGridCellComponent).toBe(true);
 
             let treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
-            treeGridCell.triggerEventHandler('focus', new Event('focus'));
+            UIInteractions.simulateClickAndSelectCellEvent(treeGridCell);
+            fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(1);
             expect(treeGrid.selectedCells[0] instanceof IgxTreeGridCellComponent).toBe(true);
 
             // perform 2 clicks and check selection again
             treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
-            treeGridCell.triggerEventHandler('focus', new Event('focus'));
+            UIInteractions.simulateClickAndSelectCellEvent(treeGridCell);
             treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
-            treeGridCell.triggerEventHandler('focus', new Event('focus'));
+            UIInteractions.simulateClickAndSelectCellEvent(treeGridCell);
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(1);
@@ -717,21 +720,24 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
 
             // level 1
             let treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
-            treeGridCell.triggerEventHandler('focus', new Event('focus'));
+            UIInteractions.simulateClickAndSelectCellEvent(treeGridCell);
+            fix.detectChanges();
             expect(treeGrid.selectedCells.length).toBe(1);
             expect(treeGrid.selectedCells[0] instanceof IgxGridCellComponent).toBe(true);
             expect(treeGrid.selectedCells[0].value).toBe(147);
 
             // level 2
             treeGridCell = TreeGridFunctions.getTreeCell(rows[1]);
-            treeGridCell.triggerEventHandler('focus', new Event('focus'));
+            UIInteractions.simulateClickAndSelectCellEvent(treeGridCell);
+            fix.detectChanges();
             expect(treeGrid.selectedCells.length).toBe(1);
             expect(treeGrid.selectedCells[0] instanceof IgxGridCellComponent).toBe(true);
             expect(treeGrid.selectedCells[0].value).toBe(475);
 
             // level 3
             treeGridCell = TreeGridFunctions.getTreeCell(rows[2]);
-            treeGridCell.triggerEventHandler('focus', new Event('focus'));
+            UIInteractions.simulateClickAndSelectCellEvent(treeGridCell);
+            fix.detectChanges();
             expect(treeGrid.selectedCells.length).toBe(1);
             expect(treeGrid.selectedCells[0] instanceof IgxGridCellComponent).toBe(true);
             expect(treeGrid.selectedCells[0].value).toBe(957);

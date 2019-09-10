@@ -390,6 +390,7 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
     }
 
     protected findValueInSet(target: any, searchVal: Set<any>) {
+        if (!target) { return false; }
         return searchVal.has(new Date(target.getFullYear(), target.getMonth(), target.getDate()).toISOString());
     }
 }
