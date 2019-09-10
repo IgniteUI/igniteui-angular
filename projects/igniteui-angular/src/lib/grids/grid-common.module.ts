@@ -69,7 +69,7 @@ import {
     IgxCellEditorTemplateDirective,
     IgxCellTemplateDirective,
     IgxFilterCellTemplateDirective
-} from './types';
+} from './common/templates';
 import { IgxRowSelectorsModule } from './igx-row-selectors.module';
 /**
  * @hidden

@@ -18,7 +18,7 @@ import { IgxHierarchicalTransactionServiceFactory } from './hierarchical-grid-ba
 import { IgxIconModule } from '../../icon';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
 import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
-import { GridSelectionMode } from '../types';
+import { GridSelectionMode } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxHierarchicalGrid Integration #hGrid', () => {
@@ -469,9 +469,10 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
 
         it('should size summaries with row selectors for parent and children grids correctly.', fakeAsync(/** row toggle rAF */() => {
-            hierarchicalGrid.rowSelection = GridSelectionMode.multiple;
+            hierarchicalGrid.rowSelectable = true;
             hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
             fixture.detectChanges();
+            tick(16);
 
             const rootExpander =  (hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent).expander;
             const rootCheckbox =  hierarchicalGrid.headerSelectorContainer;

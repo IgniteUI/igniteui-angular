@@ -96,10 +96,12 @@ import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.com
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
-import { FilterMode, GridKeydownTargetType, GridSelectionMode, GridSummaryPosition, GridSummaryCalculationMode } from './types';
 import { IgxColumnResizingService } from './grid-column-resizing.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './igx-row-selectors.module';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,
+     IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective } from './grid/grid.directives';
+import { GridKeydownTargetType, GridSelectionMode, GridSummaryPosition, GridSummaryCalculationMode, FilterMode } from './common/enums';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -255,6 +257,20 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         modal: false,
         positionStrategy: new ConnectedPositioningStrategy(this._advancedFilteringPositionSettings),
     };
+
+
+    /**
+    * @hidden
+    */
+    @ViewChild('defaultExpandedTemplate', { read: TemplateRef, static: true })
+    protected defaultExpandedTemplate: TemplateRef<any>;
+
+    /**
+    * @hidden
+    */
+    @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
+    protected defaultCollapsedTemplate: TemplateRef<any>;
+
 
     /**
      * An accessor that sets the resource strings.
@@ -1980,6 +1996,31 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @ContentChild(IgxRowEditActionsDirective, { read: TemplateRef, static: false })
     public rowEditActions: TemplateRef<any>;
 
+
+    /**
+    * The custom template, if any, that should be used when rendering a row expand indicator.
+    */
+   @ContentChild(IgxRowExpandedIndicatorDirective, { read: TemplateRef, static: false })
+   public rowExpandedIndicatorTemplate: TemplateRef<any> = null;
+
+   /**
+   * The custom template, if any, that should be used when rendering a row collapse indicator.
+   */
+   @ContentChild(IgxRowCollapsedIndicatorDirective, { read: TemplateRef, static: false })
+   public rowCollapsedIndicatorTemplate: TemplateRef<any> = null;
+
+    /**
+    * The custom template, if any, that should be used when rendering a header expand indicator.
+    */
+   @ContentChild(IgxHeaderExpandIndicatorDirective, { read: TemplateRef, static: false })
+   public headerExpandIndicatorTemplate: TemplateRef<any> = null;
+
+   /**
+   * The custom template, if any, that should be used when rendering a header collapse indicator.
+   */
+   @ContentChild(IgxHeaderCollapseIndicatorDirective, { read: TemplateRef, static: false })
+   public headerCollapseIndicatorTemplate: TemplateRef<any> = null;
+
     /**
      * @hidden
      */
@@ -3011,9 +3052,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public notifyChanges(repaint = false) {
         this._cdrRequests = true;
         this._cdrRequestRepaint = repaint;
-        if (!this._tick) {
-            this._tick = Promise.resolve().then(() => this._tick = null);
-        }
         this.cdr.markForCheck();
     }
 
