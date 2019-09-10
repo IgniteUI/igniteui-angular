@@ -321,10 +321,6 @@
         @include e(label) {
             @extend %igx-input-group__label-type-border !optional;
         }
-
-        @include e(input) {
-            @extend %form-group-input--border !optional;
-        }
     }
 
     // INPUT TYPE BORDER -- DENSITY --

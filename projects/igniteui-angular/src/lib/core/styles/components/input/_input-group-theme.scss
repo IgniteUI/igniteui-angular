@@ -521,6 +521,7 @@
         width: 100%;
         position: relative;
         min-height: map-get($type-border-size, 'comfortable');
+        padding-top: rem(18px, map-get($base-scale-size, 'comfortable'));
     }
 
     %igx-input-group__bundle-type-border-main-focused {
@@ -530,10 +531,12 @@
 
     %igx-input-group__bundle-type-border-main--cosy {
         min-height: map-get($type-border-size, 'cosy');
+        padding-top: rem(18px, map-get($base-scale-size, 'cosy'));
     }
 
     %igx-input-group__bundle-type-border-main--compact {
         min-height: map-get($type-border-size, 'compact');
+        padding-top: rem(18px, map-get($base-scale-size, 'compact'));
     }
 
     %igx-input-group__bundle-suffix,
@@ -591,14 +594,8 @@
         padding-right: rem(8px);
     }
 
-    %form-group-input--border {
-        position: absolute;
-        top: 0;
-        height: 100% !important;
-    }
 
     %igx-input-group__label-type-border {
-        top: calc(50% - #{$label-height});
         padding: 0 rem(4px);
         margin-top: 0 !important;
         width: auto;
@@ -1056,6 +1053,7 @@
             font-size: inherit;
             vertical-align: top;
             margin-left: $required-symbol-margin; /* 2px base is 16px */
+            display: inline-block; // Chrome
         }
     }
 
