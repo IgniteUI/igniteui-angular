@@ -121,7 +121,7 @@
                         tabindex="0"
                         (keydown)="invokeClick($event)"
                         (click)="enterExpressionAdd(expressionItem)"
-                        *ngIf="expressionItem.parent !== currentGroup || expressionItem !== currentGroup.children[currentGroup.children.length - 1]"
+                        *ngIf="!expressionItem.inAddMode && (expressionItem.parent !== currentGroup || expressionItem !== currentGroup.children[currentGroup.children.length - 1])"
                     >
                         add
                     </igx-icon>
