@@ -77,7 +77,7 @@ export class GridFilteringComponent implements OnInit, AfterViewInit {
         ];
 
         this.columns = [
-            { field: 'ID', width: 80, resizable: true, movable: true },
+            { field: 'ID', width: 80, resizable: true, movable: true, type: 'string' },
             { field: 'CompanyName', width: 150, resizable: true, movable: true, type: 'string'},
             { field: 'ContactName', width: 150, resizable: true, movable: true, type: 'string' },
             { field: 'Employees', width: 150, resizable: true, movable: true, type: 'number' },

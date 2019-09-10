@@ -121,7 +121,7 @@
                         tabindex="0"
                         (keydown)="invokeClick($event)"
                         (click)="enterExpressionAdd(expressionItem)"
-                        *ngIf="expressionItem.parent !== currentGroup || expressionItem !== currentGroup.children[currentGroup.children.length - 1]"
+                        *ngIf="!expressionItem.inAddMode && (expressionItem.parent !== currentGroup || expressionItem !== currentGroup.children[currentGroup.children.length - 1])"
                     >
                         add
                     </igx-icon>
@@ -135,6 +135,7 @@
                 <igx-select #columnSelect
                             type="box"
                             [displayDensity]="'compact'"
+                            [overlaySettings]="columnSelectOverlaySettings"
                             [placeholder]="grid.resourceStrings.igx_grid_advanced_filter_column_placeholder"
                             [(ngModel)]="selectedColumn">
                     <igx-select-item *ngFor="let column of filterableColumns" [value]="column">
@@ -154,11 +155,22 @@
                     <igx-select #conditionSelect
                                 type="box"
                                 [displayDensity]="'compact'"
+                                [overlaySettings]="conditionSelectOverlaySettings"
                                 [placeholder]="grid.resourceStrings.igx_grid_filter_condition_placeholder"
                                 [(ngModel)]="selectedCondition"
                                 [disabled]="!selectedColumn">
+                            <igx-icon *ngIf="selectedColumn && conditionSelect.value && selectedColumn.filters.condition(conditionSelect.value)"
+                                      igxPrefix
+                                      style="height: 1.125rem"
+                                      fontSet="filtering-icons"
+                                      [name]="selectedColumn.filters.condition(conditionSelect.value).iconName">
+                            </igx-icon>
                             <igx-select-item *ngFor="let condition of selectedColumn.filters.conditionList()" [value]="condition">
-                                {{getConditionFriendlyName(condition)}}
+                                <igx-icon fontSet="filtering-icons"
+                                          style="height: 1.125rem"
+                                          [name]="selectedColumn.filters.condition(condition).iconName">
+                                </igx-icon>
+                                <span>{{getConditionFriendlyName(condition)}}</span>
                             </igx-select-item>
                     </igx-select>
                 </ng-container>
@@ -342,4 +354,7 @@
         </div>
     </footer>
 </article>
-<div #overlayOutlet igxOverlayOutlet></div>
+<div #overlayOutlet
+     igxOverlayOutlet
+     (pointerdown)="onOutletPointerDown($event)">
+</div>
