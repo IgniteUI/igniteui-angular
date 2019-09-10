@@ -48,7 +48,7 @@
         }
 
         @include e(label-#{$t}) {
-            @extend %igx-thumb-display !optional;
+            @extend %igx-label-display !optional;
 
             .label {
                 @extend %igx-thumb-label !optional;
