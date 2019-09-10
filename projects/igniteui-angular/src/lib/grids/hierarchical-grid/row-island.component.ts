@@ -18,7 +18,8 @@ import {
     Output,
     EventEmitter,
     Optional,
-    OnDestroy
+    OnDestroy,
+    DoCheck
 } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxGridTransaction, IGridDataBindable, IgxGridBaseComponent } from '../grid-base.component';
@@ -30,7 +31,6 @@ import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayD
 import { TransactionService, Transaction, State } from '../../services';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
-import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 
@@ -38,7 +38,9 @@ import { IgxOverlayService } from '../../services/index';
 import { takeUntil } from 'rxjs/operators';
 import { IgxColumnComponent } from '../column.component';
 import { IgxRowIslandAPIService } from './row-island-api.service';
-export interface IGridCreatedEventArgs {
+import { IBaseEventArgs } from '../../core/utils';
+import { IgxColumnResizingService } from '../grid-column-resizing.service';
+export interface IGridCreatedEventArgs extends IBaseEventArgs {
     owner: IgxRowIslandComponent;
     parentID: any;
     grid: IgxHierarchicalGridComponent;
@@ -51,7 +53,7 @@ export interface IGridCreatedEventArgs {
     providers: [IgxRowIslandAPIService]
 })
 export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
-            implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy {
+            implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy, DoCheck {
     /**
      * Sets the key of the row island by which child data would be taken from the row data if such is provided.
      * ```html
@@ -189,8 +191,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
     constructor(
         public selectionService: IgxGridSelectionService,
         crudService: IgxGridCRUDService,
+        public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-        selection: IgxHierarchicalSelectionAPIService,
         @Inject(IgxGridTransaction) protected transactionFactory: any,
         elementRef: ElementRef,
         zone: NgZone,
@@ -208,8 +210,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
         super(
             selectionService,
             crudService,
+            colResizingService,
             gridAPI,
-            selection,
             typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
             elementRef,
             zone,
@@ -232,6 +234,12 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
      */
     ngOnInit() {
         this.rootGrid = this.hgridAPI.grid;
+    }
+
+    /**
+     * @hidden
+     */
+    ngDoCheck() {
     }
 
     /**

@@ -35,6 +35,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     public onPointerDown(event) {
         event.preventDefault();
         this._rowDragStarted = false;
+        this._removeOnDestroy = false;
         super.onPointerDown(event);
     }
 
@@ -43,15 +44,16 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         if (this._dragStarted && !this._rowDragStarted) {
             this._rowDragStarted = true;
             const args: IRowDragStartEventArgs = {
-                owner: this,
+                dragDirective: this,
                 dragData: this.row,
-                cancel: false
+                cancel: false,
+                owner: this.row.grid
             };
 
             this.row.grid.onRowDragStart.emit(args);
             if (args.cancel) {
-                this.dragGhost.parentNode.removeChild(this.dragGhost);
-                this.dragGhost = null;
+                this.ghostElement.parentNode.removeChild(this.ghostElement);
+                this.ghostElement = null;
                 this._dragStarted = false;
                 this._clicked = false;
                 return;
@@ -76,33 +78,30 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         }
 
         const args: IRowDragEndEventArgs = {
-            owner: this,
+            dragDirective: this,
             dragData: this.row,
-            animation: false
+            animation: false,
+            owner: this.row.grid
         };
         this.zone.run(() => {
             this.row.grid.onRowDragEnd.emit(args);
         });
 
-        if (args.animation) {
-            this.animateOnRelease = true;
-        }
-
         const dropArea = this._lastDropArea;
         super.onPointerUp(event);
-        if (!dropArea && this.animateOnRelease) {
-            this.dragGhost.addEventListener('transitionend',  this.transitionEndEvent, false);
+        if (!dropArea && this.ghostElement) {
+            this.ghostElement.addEventListener('transitionend', this.transitionEndEvent, false);
         }   else {
             this.endDragging();
         }
     }
 
-    protected createDragGhost(pageX, pageY) {
+    protected createGhost(pageX, pageY) {
         this.row.grid.endEdit(true);
         this.row.grid.markForCheck();
-        super.createDragGhost(pageX, pageY, this.row.nativeElement);
+        super.createGhost(pageX, pageY, this.row.nativeElement);
 
-        const ghost = this.dragGhost;
+        const ghost = this.ghostElement;
 
         const gridRect = this.row.grid.nativeElement.getBoundingClientRect();
         const rowRect = this.row.nativeElement.getBoundingClientRect();
@@ -135,8 +134,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     }
 
     private transitionEndEvent = (evt?) => {
-        if (this.dragGhost) {
-            this.dragGhost.removeEventListener('transitionend', this.transitionEndEvent, false);
+        if (this.ghostElement) {
+            this.ghostElement.removeEventListener('transitionend', this.transitionEndEvent, false);
         }
         this.endDragging();
     }

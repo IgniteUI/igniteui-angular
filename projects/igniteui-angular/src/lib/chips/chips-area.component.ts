@@ -21,14 +21,12 @@ import {
     IChipEnterDragAreaEventArgs,
     IBaseChipEventArgs
 } from './chip.component';
-import {
-    IgxDropEnterEventArgs
-} from '../directives/drag-drop/drag-drop.directive';
+import { IDropBaseEventArgs } from '../directives/drag-drop/drag-drop.directive';
 import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs/internal/Subject';
+import { Subject } from 'rxjs';
 
 export interface IBaseChipsAreaEventArgs {
-    originalEvent: PointerEvent | MouseEvent | TouchEvent | KeyboardEvent | IgxDropEnterEventArgs;
+    originalEvent: PointerEvent | MouseEvent | TouchEvent | KeyboardEvent | IDropBaseEventArgs;
     owner: IgxChipsAreaComponent;
 }
 
@@ -270,7 +268,6 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
      * @hidden
      */
     protected onChipDragEnter(event: IChipEnterDragAreaEventArgs) {
-        const dropChipRect = event.owner.elementRef.nativeElement.getBoundingClientRect();
         const dropChipIndex = this.chipsList.toArray().findIndex((el) => el === event.owner);
         const dragChipIndex = this.chipsList.toArray().findIndex((el) => el === event.dragChip);
         if (dragChipIndex < dropChipIndex) {

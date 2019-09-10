@@ -13,7 +13,6 @@ import {
     Pipe,
     PipeTransform,
     Renderer2,
-    TemplateRef,
     LOCALE_ID,
     AfterViewInit,
     HostListener,
@@ -234,48 +233,6 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
     }
 }
 
-@Directive({
-    selector: '[igxFilterCellTemplate]'
-})
-export class IgxFilterCellTemplateDirective {
-    constructor(public template: TemplateRef<any>) {}
-}
-
-@Directive({
-    selector: '[igxCell]'
-})
-export class IgxCellTemplateDirective {
-
-    constructor(public template: TemplateRef<any>) { }
-}
-
-@Directive({
-    selector: '[igxHeader]'
-})
-export class IgxCellHeaderTemplateDirective {
-
-    constructor(public template: TemplateRef<any>) { }
-
-}
-/**
- * @hidden
- */
-@Directive({
-    selector: '[igxFooter]'
-})
-export class IgxCellFooterTemplateDirective {
-
-    constructor(public template: TemplateRef<any>) { }
-}
-
-@Directive({
-    selector: '[igxCellEditor]'
-})
-export class IgxCellEditorTemplateDirective {
-
-    constructor(public template: TemplateRef<any>) { }
-}
-
 /**
  * @hidden
  */
@@ -344,9 +301,9 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
 
     private subscription$: Subscription;
     private _column: IgxColumnComponent;
-    private _ghostImageClass = 'igx-grid__drag-ghost-image';
-    private dragGhostImgIconClass = 'igx-grid__drag-ghost-image-icon';
-    private dragGhostImgIconGroupClass = 'igx-grid__drag-ghost-image-icon-group';
+    private _ghostClass = 'igx-grid__drag-ghost-image';
+    private ghostImgIconClass = 'igx-grid__drag-ghost-image-icon';
+    private ghostImgIconGroupClass = 'igx-grid__drag-ghost-image-icon-group';
 
     constructor(
         _element: ElementRef,
@@ -378,7 +335,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
 
         this._removeOnDestroy = false;
         this.cms.column = this.column;
-        this.ghostImageClass = this._ghostImageClass;
+        this.ghostClass = this._ghostClass;
 
         super.onPointerDown(event);
 
@@ -401,7 +358,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         event.preventDefault();
         super.onPointerMove(event);
 
-        if (this._dragStarted && this.dragGhost && !this.column.grid.draggedColumn) {
+        if (this._dragStarted && this.ghostElement && !this.column.grid.draggedColumn) {
             this.column.grid.draggedColumn = this.column;
             this.column.grid.cdr.detectChanges();
         }
@@ -432,13 +389,13 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         this._unsubscribe();
     }
 
-    protected createDragGhost(pageX, pageY) {
-        super.createDragGhost(pageX, pageY);
+    protected createGhost(pageX, pageY) {
+        super.createGhost(pageX, pageY);
 
-        this.dragGhost.style.height = null;
-        this.dragGhost.style.minWidth = null;
-        this.dragGhost.style.flexBasis = null;
-        this.dragGhost.style.position = null;
+        this.ghostElement.style.height = null;
+        this.ghostElement.style.minWidth = null;
+        this.ghostElement.style.flexBasis = null;
+        this.ghostElement.style.position = null;
 
         const icon = document.createElement('i');
         const text = document.createTextNode('block');
@@ -448,20 +405,20 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         this.cms.icon = icon;
 
         if (!this.column.columnGroup) {
-            this.renderer.addClass(icon, this.dragGhostImgIconClass);
+            this.renderer.addClass(icon, this.ghostImgIconClass);
 
-            this.dragGhost.insertBefore(icon, this.dragGhost.firstElementChild);
+            this.ghostElement.insertBefore(icon, this.ghostElement.firstElementChild);
 
-            this.ghostLeft = this._ghostStartX = pageX - ((this.dragGhost.getBoundingClientRect().width / 3) * 2);
-            this.ghostTop = this._ghostStartY = pageY - ((this.dragGhost.getBoundingClientRect().height / 3) * 2);
+            this.ghostLeft = this._ghostStartX = pageX - ((this.ghostElement.getBoundingClientRect().width / 3) * 2);
+            this.ghostTop = this._ghostStartY = pageY - ((this.ghostElement.getBoundingClientRect().height / 3) * 2);
         } else {
-            this.dragGhost.insertBefore(icon, this.dragGhost.childNodes[0]);
+            this.ghostElement.insertBefore(icon, this.ghostElement.childNodes[0]);
 
-            this.renderer.addClass(icon, this.dragGhostImgIconGroupClass);
-            this.dragGhost.children[0].style.paddingLeft = '0px';
+            this.renderer.addClass(icon, this.ghostImgIconGroupClass);
+            this.ghostElement.children[0].style.paddingLeft = '0px';
 
-            this.ghostLeft = this._ghostStartX = pageX - ((this.dragGhost.getBoundingClientRect().width / 3) * 2);
-            this.ghostTop = this._ghostStartY = pageY - ((this.dragGhost.getBoundingClientRect().height / 3) * 2);
+            this.ghostLeft = this._ghostStartX = pageX - ((this.ghostElement.getBoundingClientRect().width / 3) * 2);
+            this.ghostTop = this._ghostStartY = pageY - ((this.ghostElement.getBoundingClientRect().height / 3) * 2);
         }
     }
 
@@ -714,17 +671,17 @@ export class IgxDecimalPipeComponent extends DecimalPipe implements PipeTransfor
 /**
  * @hidden
  */
-export interface ContainerPositionSettings extends PositionSettings {
+export interface RowEditPositionSettings extends PositionSettings {
     container?: HTMLElement;
 }
 
 /**
  * @hidden
  */
-export class ContainerPositioningStrategy extends ConnectedPositioningStrategy {
+export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
     isTop = false;
     isTopInitialPosition = null;
-    public settings: ContainerPositionSettings;
+    public settings: RowEditPositionSettings;
     position(contentElement: HTMLElement, size: { width: number, height: number }, document?: Document, initialCall?: boolean): void {
         const container = this.settings.container; // grid.tbody
         const target = <HTMLElement>this.settings.target; // current grid.row

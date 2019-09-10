@@ -1,6 +1,4 @@
 import {
-    QueryList,
-    ContentChildren,
     ElementRef,
     NgZone,
     ChangeDetectorRef,
@@ -23,11 +21,11 @@ import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component
 import { IgxSummaryOperand } from '../summaries/grid-summary';
 import { IgxHierarchicalTransactionService, IgxOverlayService } from '../../services/index';
 import { DOCUMENT } from '@angular/common';
-import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
+import { IgxColumnResizingService } from '../grid-column-resizing.service';
 
 export const IgxHierarchicalTransactionServiceFactory = {
     provide: IgxGridTransaction,
@@ -48,6 +46,12 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
 
     @Input()
     public expandChildren: boolean;
+
+    @Input()
+    public hasChildrenKey: string;
+
+    @Input()
+    public showExpandAll = false;
 
     /**
      * @hidden
@@ -90,44 +94,6 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
     @ViewChild('dragIndicatorIconBase', { read: TemplateRef, static: true })
     public dragIndicatorIconBase: TemplateRef<any>;
 
-    constructor(
-        public selectionService: IgxGridSelectionService,
-        crudService: IgxGridCRUDService,
-        gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-        selection: IgxHierarchicalSelectionAPIService,
-        @Inject(IgxGridTransaction) protected transactionFactory: any,
-        elementRef: ElementRef,
-        zone: NgZone,
-        @Inject(DOCUMENT) public document,
-        cdr: ChangeDetectorRef,
-        resolver: ComponentFactoryResolver,
-        differs: IterableDiffers,
-        viewRef: ViewContainerRef,
-        navigation: IgxHierarchicalGridNavigationService,
-        filteringService: IgxFilteringService,
-        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        public summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-        super(
-            selectionService,
-            crudService,
-            gridAPI,
-            selection,
-            typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
-            elementRef,
-            zone,
-            document,
-            cdr,
-            resolver,
-            differs,
-            viewRef,
-            navigation,
-            filteringService,
-            overlayService,
-            summaryService,
-            _displayDensityOptions);
-        this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
-    }
 
     /**
      * The custom template, if any, that should be used when rendering the row drag indicator icon
@@ -148,6 +114,45 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
      * ```
      */
     public dragIndicatorIconTemplate: TemplateRef<any> = null;
+
+    constructor(
+        public selectionService: IgxGridSelectionService,
+        crudService: IgxGridCRUDService,
+        public colResizingService: IgxColumnResizingService,
+        gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
+        @Inject(IgxGridTransaction) protected transactionFactory: any,
+        elementRef: ElementRef,
+        zone: NgZone,
+        @Inject(DOCUMENT) public document,
+        cdr: ChangeDetectorRef,
+        resolver: ComponentFactoryResolver,
+        differs: IterableDiffers,
+        viewRef: ViewContainerRef,
+        navigation: IgxHierarchicalGridNavigationService,
+        filteringService: IgxFilteringService,
+        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
+        public summaryService: IgxGridSummaryService,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        super(
+            selectionService,
+            crudService,
+            colResizingService,
+            gridAPI,
+            typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
+            elementRef,
+            zone,
+            document,
+            cdr,
+            resolver,
+            differs,
+            viewRef,
+            navigation,
+            filteringService,
+            overlayService,
+            summaryService,
+            _displayDensityOptions);
+        this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
+    }
 
     /**
      * @hidden
@@ -193,7 +198,7 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
             (<IgxColumnGroupComponent>ref.instance).children.reset(newChildren);
             (<IgxColumnGroupComponent>ref.instance).children.notifyOnChanges();
         }
-        (<IgxColumnGroupComponent>ref.instance).grid = this;
+        // (<IgxColumnGroupComponent>ref.instance).grid = this;
         return ref;
     }
 
@@ -208,7 +213,7 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
                 (<any>ref.instance)[propName] = col[propName].constructor;
             }
         });
-        (<IgxColumnComponent>ref.instance).grid = this;
+        // (<IgxColumnComponent>ref.instance).grid = this;
         return ref;
     }
 

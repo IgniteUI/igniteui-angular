@@ -21,8 +21,7 @@
                 [filterMode]="'excelStyleFilter'"
                 [paging]="false"
                 [width]="'900px'"
-                [height]="'800px'"
-                [style.zIndex]="'1'">
+                [height]="'800px'">
                 <igx-column *ngFor="let c of columns" [field]="c.field"
                                                     [header]="c.field"
                                                     [movable]="c.movable"
@@ -44,7 +43,6 @@
                 <button igxButton="raised" (click)="grid1.clearCellSelection()">Clear Selection</button>
                 <button igxButton="raised" (click)="grid1.getSelectedData()">Get Selected Data</button>
                 <button igxButton="raised" (click)="grid1.getSelectedRanges()">Get Selected Ranges</button>
-                <button (click)="grid1.crudService.commit()">Update cell in edit mode</button>
             </div>
         </div>
     </div>

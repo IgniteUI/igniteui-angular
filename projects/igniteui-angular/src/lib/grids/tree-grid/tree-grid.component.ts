@@ -1,48 +1,37 @@
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
-    ComponentFactoryResolver,
-    ElementRef,
     HostBinding,
     Input,
-    IterableDiffers,
-    ViewContainerRef,
     Output,
     EventEmitter,
-    Inject,
-    NgZone,
     forwardRef,
-    Optional,
     OnInit,
     TemplateRef,
     QueryList,
     ContentChild,
     AfterContentInit,
-    ViewChild
+    ViewChild,
+    DoCheck
 } from '@angular/core';
-import { IgxSelectionAPIService } from '../../core/selection';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
-import { IgxGridBaseComponent, IgxGridTransaction, IGridDataBindable } from '../grid-base.component';
+import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { IRowToggleEventArgs } from './tree-grid.interfaces';
 import { HierarchicalTransaction, HierarchicalState, TransactionType } from '../../services/transaction/transaction';
-import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalTransactionService } from '../../services/index';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxTreeGridNavigationService } from './tree-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 import { mergeObjects } from '../../core/utils';
-import { IgxOverlayService } from '../../services/index';
-import { IgxColumnResizingService } from '../grid-column-resizing.service';
 import { IgxColumnComponent } from '../column.component';
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
+import { IgxGridNavigationService } from '../grid-navigation.service';
 
 let NEXT_ID = 0;
 
@@ -68,14 +57,21 @@ let NEXT_ID = 0;
     selector: 'igx-tree-grid',
     templateUrl: 'tree-grid.component.html',
     providers: [
-        IgxGridSelectionService, IgxGridCRUDService, IgxTreeGridNavigationService, IgxGridSummaryService,
+        IgxGridSelectionService,
+        IgxGridCRUDService,
+        IgxGridSummaryService,
+        { provide: IgxGridNavigationService, useClass: IgxTreeGridNavigationService },
         { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
-        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) }, IgxFilteringService, IgxForOfSyncService]
+        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) },
+        IgxFilteringService,
+        IgxForOfSyncService
+    ]
 })
-export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit, AfterContentInit {
+export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit, DoCheck, AfterContentInit {
     private _id = `igx-tree-grid-${NEXT_ID++}`;
     private _data;
     private _rowLoadingIndicatorTemplate: TemplateRef<any>;
+    protected _transactions: IgxHierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>;
 
     /**
      * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
@@ -110,9 +106,8 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
             this.setupColumns();
-            this.reflow();
         }
-        this.cdr.markForCheck();
+        this.notifyChanges(true);
     }
 
     /**
@@ -139,16 +134,13 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     set filteredData(value) {
         this._filteredData = value;
 
-        if (this.rowSelectable) {
-            this.updateHeaderCheckboxStatusOnFilter(this._filteredData);
-        }
     }
 
     /**
      * Get transactions service for the grid.
      * @experimental @hidden
      */
-    get transactions(): IgxHierarchicalTransactionService<HierarchicalTransaction, HierarchicalState> {
+    get transactions() {
         return this._transactions;
     }
 
@@ -266,7 +258,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
 
     public set expansionDepth(value: number) {
         this._expansionDepth = value;
-        this.cdr.markForCheck();
+        this.notifyChanges();
     }
 
     private _expansionStates: Map<any, boolean> = new Map<any, boolean>();
@@ -345,7 +337,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
 
     public set rowLoadingIndicatorTemplate(value: TemplateRef<any>) {
         this._rowLoadingIndicatorTemplate = value;
-        this.cdr.markForCheck();
+        this.notifyChanges();
     }
 
     /**
@@ -391,7 +383,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
      */
     public loadingRows = new Set<any>();
 
-    private _gridAPI: IgxTreeGridAPIService;
+    // Kind of stupid
+    private get _gridAPI(): IgxTreeGridAPIService {
+        return this.gridAPI as IgxTreeGridAPIService;
+    }
     private _filteredData = null;
 
     /**
@@ -400,31 +395,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
      */
     @ViewChild('dragIndicatorIconBase', { read: TemplateRef, static: true })
     public dragIndicatorIconBase: TemplateRef<any>;
-
-    constructor(
-        selectionService: IgxGridSelectionService,
-        crudService: IgxGridCRUDService,
-        public colResizingService: IgxColumnResizingService,
-        gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-        selection: IgxSelectionAPIService,
-        @Inject(IgxGridTransaction) protected _transactions: IgxHierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
-        elementRef: ElementRef,
-        zone: NgZone,
-        @Inject(DOCUMENT) public document,
-        cdr: ChangeDetectorRef,
-        resolver: ComponentFactoryResolver,
-        differs: IterableDiffers,
-        viewRef: ViewContainerRef,
-        navigation: IgxTreeGridNavigationService,
-        filteringService: IgxFilteringService,
-        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-            super(selectionService, crudService, gridAPI, selection,
-                _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
-                filteringService, overlayService, summaryService, _displayDensityOptions);
-        this._gridAPI = <IgxTreeGridAPIService>gridAPI;
-    }
 
     /**
      * @hidden
@@ -435,6 +405,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         this.onRowToggle.pipe(takeUntil(this.destroy$)).subscribe((args) => {
             this.loadChildrenOnRowExpansion(args);
         });
+    }
+
+    ngDoCheck() {
+        super.ngDoCheck();
     }
 
     /**
@@ -457,12 +431,12 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
                 this.loadChildrenOnDemand(parentID, children => {
                     this.loadingRows.delete(parentID);
                     this.addChildRows(children, parentID);
-                    this.cdr.markForCheck();
+                    this.notifyChanges();
 
                     requestAnimationFrame(() => {
-                        const cellID = this.selection.first_item(`${this.id}-cell`);
+                        const cellID = this.selectionService.activeElement;
                         if (cellID) {
-                            const cell = this._gridAPI.get_cell_by_index(cellID.rowIndex, cellID.columnID);
+                            const cell = this._gridAPI.get_cell_by_index(cellID.row, cellID.column);
                             if (cell) {
                                 cell.nativeElement.focus();
                             }
@@ -508,7 +482,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
 
             parentData[this.childDataKey] = children;
         }
-
+        this.selectionService.clearHeaderCBState();
         this._pipeTrigger++;
     }
 
@@ -640,7 +614,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
                 }
                 this.onRowAdded.emit({ data });
                 this._pipeTrigger++;
-                this.cdr.markForCheck();
+                this.notifyChanges();
             }
         } else {
             if (this.primaryKey && this.foreignKey) {
@@ -721,7 +695,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     /**
     * @hidden
     */
-    public getContext(rowData, rowIndex): any {
+    public getContext(rowData: any, rowIndex: Number): any {
         return {
             $implicit: rowData,
             index: rowIndex,

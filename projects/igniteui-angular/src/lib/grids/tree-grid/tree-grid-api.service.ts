@@ -66,6 +66,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         }
     }
 
+    // TODO: Maybe move the focus logic in the tree cell ?
     public trigger_row_expansion_toggle(row: ITreeGridRecord, expanded: boolean, event?: Event, visibleColumnIndex?) {
         const grid = this.grid;
 
@@ -95,6 +96,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             grid.endEdit(true);
         }
 
+        // TODO: Leave it to grid observer
         requestAnimationFrame(() => {
             const el = this.grid.selectionService.activeElement;
             if (el) {
@@ -253,7 +255,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             return;
         }
         for (const child of record.children) {
-            if (grid.selection.is_item_selected(grid.id, child.rowID)) {
+            if (grid.selectionService.isRowSelected(child.rowID)) {
                 selectedRowIDs.push(child.rowID);
             }
             this.get_selected_children(child, selectedRowIDs);

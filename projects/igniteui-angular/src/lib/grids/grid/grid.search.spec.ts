@@ -12,9 +12,9 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DataType } from '../../data-operations/data-util';
-import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { setupGridScrollDetection, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
-describe('IgxGrid - search API', () => {
+describe('IgxGrid - search API #grid', () => {
     configureTestSuite();
     const CELL_CSS_CLASS = '.igx-grid__td';
     let fix, component, grid: IgxGridComponent, fixNativeElement;
@@ -391,6 +391,7 @@ describe('IgxGrid - search API', () => {
 
         it('Hidden columns shouldn\'t be part of the search', () => {
             grid.columns[1].hidden = true;
+            fix.detectChanges();
             grid.findNext('casey');
 
             const activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
@@ -479,6 +480,7 @@ describe('IgxGrid - search API', () => {
             let highlights: any[];
 
             grid.findNext('an');
+            fix.detectChanges();
 
             activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
             highlights = grid.nativeElement.querySelectorAll('.' + component.highlightClass);
@@ -526,7 +528,6 @@ describe('IgxGrid - search API', () => {
         });
 
         it('Highlight should be updated when a column is hidden and there are other hidden columns', () => {
-            pending('Related to the bug 3691');
             grid.columns[1].hidden = true;
             fix.detectChanges();
 
@@ -590,6 +591,7 @@ describe('IgxGrid - search API', () => {
         it('Unsearchable column should not interfere with active highlight for other columns on its right', () => {
             grid.columns[1].searchable = false;
             grid.columns[3].searchable = false;
+            fix.detectChanges();
 
             const count = grid.findNext('Software');
             let spans = fixNativeElement.querySelectorAll('.' + component.highlightClass);
@@ -832,6 +834,7 @@ describe('IgxGrid - search API', () => {
     /* ScrollableGrid */
     describe('', () => {
         beforeEach(async () => {
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(ScrollableGridSearchComponent);
             fix.detectChanges();
 
@@ -1006,6 +1009,7 @@ describe('IgxGrid - search API', () => {
     /* GroupableGrid */
     describe('', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            resizeObserverIgnoreError();
             fix = TestBed.createComponent(GroupableGridSearchComponent);
             fix.detectChanges();
 
@@ -1021,6 +1025,7 @@ describe('IgxGrid - search API', () => {
                 ignoreCase: true,
                 strategy: DefaultSortingStrategy.instance()
             });
+            fix.detectChanges();
             grid.findNext('Software');
             await wait();
             fix.detectChanges();
@@ -1067,6 +1072,7 @@ describe('IgxGrid - search API', () => {
                 ignoreCase: true,
                 strategy: DefaultSortingStrategy.instance()
             });
+            fix.detectChanges();
 
             let cell = grid.getCellByColumn(1, 'JobTitle');
             grid.findNext('software');
@@ -1222,10 +1228,12 @@ describe('IgxGrid - search API', () => {
                 ignoreCase: true,
                 strategy: DefaultSortingStrategy.instance()
             });
+            fix.detectChanges();
 
             grid.findNext('software');
             grid.findNext('software');
             grid.findNext('software');
+            fix.detectChanges();
 
             grid.toggleGroup(grid.groupsRecords[0]);
             await wait();
@@ -1262,6 +1270,7 @@ describe('IgxGrid - search API', () => {
                 ignoreCase: true,
                 strategy: DefaultSortingStrategy.instance()
             });
+            fix.detectChanges();
             grid.findNext('a');
             await wait();
             fix.detectChanges();
@@ -1277,7 +1286,6 @@ describe('IgxGrid - search API', () => {
 
         it('Should be able to search when grouping is enabled', async () => {
             grid.height = '400px';
-            await wait();
             fix.detectChanges();
 
             grid.groupBy({
@@ -1286,8 +1294,10 @@ describe('IgxGrid - search API', () => {
                 ignoreCase: true,
                 strategy: DefaultSortingStrategy.instance()
             });
+            fix.detectChanges();
+
             grid.findNext('Casey');
-            await wait();
+            await wait(30);
             fix.detectChanges();
 
             let row = grid.getRowByIndex(17);
@@ -1295,10 +1305,13 @@ describe('IgxGrid - search API', () => {
             expect(spans.length).toBe(1);
 
             grid.toggleAllGroupRows();
+            fix.detectChanges();
             (grid as any).scrollTo(0, 0);
-            grid.toggleGroup(grid.groupsRecords[0]);
-            grid.toggleGroup(grid.groupsRecords[1]);
             await wait();
+            fix.detectChanges();
+            grid.toggleGroup(grid.groupsRecords[0]);
+            fix.detectChanges();
+            grid.toggleGroup(grid.groupsRecords[1]);
             fix.detectChanges();
 
             grid.findNext('Casey');

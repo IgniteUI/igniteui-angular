@@ -1,6 +1,7 @@
 import { IFilteringExpression, FilteringLogic } from './filtering-expression.interface';
+import { IBaseEventArgs } from '../core/utils';
 
-export declare interface IFilteringExpressionsTree {
+export declare interface IFilteringExpressionsTree extends IBaseEventArgs {
     filteringOperands: (IFilteringExpressionsTree | IFilteringExpression)[];
     operator: FilteringLogic;
     fieldName?: string;

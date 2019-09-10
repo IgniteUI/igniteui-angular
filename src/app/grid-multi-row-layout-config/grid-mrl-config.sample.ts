@@ -1,5 +1,5 @@
 import { Component, ViewChild, AfterViewInit, ElementRef, ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
-import { IgxGridComponent, IgxDropEventArgs, IgxDialogComponent, IgxDropEnterEventArgs, IgxDropLeaveEventArgs } from 'igniteui-angular';
+import { IgxGridComponent, IDropBaseEventArgs, IgxDialogComponent, IDropDroppedEventArgs} from 'igniteui-angular';
 
 class ColumnConfig {
     key: string;
@@ -44,20 +44,21 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
     public jsonCollection = '';
     public cellSelected;
 
-    private dragStarted = false;
-    private dragStartX;
-    private dragStartY;
+    public dragStarted = false;
+    public dragStartX;
+    public dragStartY;
 
-    private curResizedCell;
-    private colSpanIncrease = 0;
-    private rowSpanIncrease = 0;
-    private resizeVisible = false;
-    private resizeTop;
-    private resizeLeft;
-    private resizeInitialWidth = 0;
-    private resizeInitialHeight = 0;
-    private resizeWidth = 0;
-    private resizeHeight = 0;
+    public curResizedCell;
+    public colSpanIncrease = 0;
+    public rowSpanIncrease = 0;
+    public resizeVisible = false;
+    public resizeTop;
+    public resizeLeft;
+    public resizeRight;
+    public resizeInitialWidth = 0;
+    public resizeInitialHeight = 0;
+    public resizeWidth = 0;
+    public resizeHeight = 0;
 
     public columnsList = [
         { key: 'ContactName', field: 'Contact name'},
@@ -195,15 +196,15 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
         this.colsWidth = event.target.value;
     }
 
-    public onColEnter(event: IgxDropEnterEventArgs, rowIndex, colIndex) {
+    public onColEnter(event: IDropBaseEventArgs, rowIndex, colIndex) {
         this.collection[rowIndex][colIndex].hovered = true;
     }
 
-    public onColLeave(event: IgxDropLeaveEventArgs, rowIndex, colIndex) {
+    public onColLeave(event: IDropBaseEventArgs, rowIndex, colIndex) {
         this.collection[rowIndex][colIndex].hovered = false;
     }
 
-    public onColDropped(event: IgxDropEventArgs, rowIndex, colIndex) {
+    public onColDropped(event: IDropDroppedEventArgs, rowIndex, colIndex) {
         event.cancel = true;
         this.collection[rowIndex][colIndex].key = event.drag.data.key;
         this.updateCollectionLayout();

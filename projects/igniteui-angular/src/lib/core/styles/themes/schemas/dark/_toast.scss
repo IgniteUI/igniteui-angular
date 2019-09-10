@@ -11,5 +11,11 @@
 /// @requires {function} extend
 /// @requires $_light-toast
 /// @see $default-palette
+$_dark-toast: extend($_light-toast);
 
-$_dark-toast: extend($_light-toast, ());
+/// Generates a dark fluent toast schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-toast
+$_dark-fluent-toast: extend($_fluent-toast);
+

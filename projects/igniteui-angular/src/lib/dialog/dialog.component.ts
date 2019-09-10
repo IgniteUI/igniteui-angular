@@ -2,10 +2,8 @@ import { useAnimation } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import {
     Component,
-    ContentChild,
     ElementRef,
     EventEmitter,
-    forwardRef,
     HostBinding,
     Input,
     NgModule,
@@ -26,6 +24,7 @@ import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle
 import { OverlaySettings, GlobalPositionStrategy, NoOpScrollStrategy, PositionSettings } from '../services';
 import { slideInBottom, slideOutTop } from '../animations/slide/index';
 import { IgxFocusModule } from '../directives/focus/focus.directive';
+import { IBaseEventArgs } from '../core/utils';
 
 let DIALOG_ID = 0;
 /**
@@ -505,7 +504,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
 
 }
 
-export interface IDialogEventArgs {
+export interface IDialogEventArgs extends IBaseEventArgs {
     dialog: IgxDialogComponent;
     event: Event;
 }

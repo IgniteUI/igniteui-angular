@@ -8,11 +8,13 @@ import {
     IgxTreeGridFKeySelectionWithTransactionComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IgxTreeGridModule } from '.';
-import { HelperUtils, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { IgxTreeGridModule } from './tree-grid.module';
+import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { GridSelectionFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
+import { GridSelectionMode } from '../types';
 
-describe('IgxTreeGrid - Multi Cell selection ', () => {
+describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
     configureTestSuite();
 
     beforeEach(async(() => {
@@ -52,6 +54,69 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             verifySelectingRangeWithMouseDrag(fix, treeGrid, detect);
         });
 
+        it('Should not be possible to select a range when change cellSelection to none', () => {
+            const rangeChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
+            const startCell =  treeGrid.getCellByColumn(0, 'ID');
+            const endCell =  treeGrid.getCellByColumn(2, 'ID');
+
+            expect(treeGrid.cellSelection).toEqual(GridSelectionMode.multiple);
+            GridSelectionFunctions.selectCellsRangeNoWait(fix, startCell, endCell);
+            detect();
+
+            expect(rangeChangeSpy).toHaveBeenCalledTimes(1);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 0, 2, 0, 0);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 2, 0, 0);
+
+            treeGrid.cellSelection = GridSelectionMode.none;
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 0, 2, 0, 0, false);
+            expect(treeGrid.getSelectedData()).toEqual([]);
+            expect(treeGrid.getSelectedRanges()).toEqual([]);
+
+            // Try to select a range
+            GridSelectionFunctions.selectCellsRangeNoWait(fix, endCell, startCell);
+            detect();
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 0, 2, 0, 0, false);
+            expect(rangeChangeSpy).toHaveBeenCalledTimes(1);
+            expect(treeGrid.selectedCells.length).toBe(0);
+            expect(treeGrid.getSelectedData()).toEqual([]);
+            expect(treeGrid.getSelectedRanges()).toEqual([]);
+        });
+
+        it('Should not be possible to select a range when change cellSelection to single', () => {
+            const rangeChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
+            const startCell =  treeGrid.getCellByColumn(0, 'ID');
+            const middleCell =  treeGrid.getCellByColumn(1, 'ID');
+            const endCell =  treeGrid.getCellByColumn(2, 'ID');
+
+            expect(treeGrid.cellSelection).toEqual(GridSelectionMode.multiple);
+            GridSelectionFunctions.selectCellsRangeNoWait(fix, startCell, endCell);
+            detect();
+
+            expect(rangeChangeSpy).toHaveBeenCalledTimes(1);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 0, 2, 0, 0);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 2, 0, 0);
+
+            treeGrid.cellSelection = GridSelectionMode.single;
+            fix.detectChanges();
+
+            expect(treeGrid.cellSelection).toEqual(GridSelectionMode.single);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 0, 2, 0, 0, false);
+            expect(treeGrid.getSelectedData()).toEqual([]);
+            expect(treeGrid.getSelectedRanges()).toEqual([]);
+
+            // Try to select a range
+            GridSelectionFunctions.selectCellsRangeNoWait(fix, endCell, startCell);
+            detect();
+            GridSelectionFunctions.verifyCellSelected(startCell, false);
+            GridSelectionFunctions.verifyCellSelected(middleCell, false);
+            GridSelectionFunctions.verifyCellSelected(endCell);
+            expect(rangeChangeSpy).toHaveBeenCalledTimes(1);
+            expect(treeGrid.selectedCells.length).toBe(1);
+            expect(treeGrid.getSelectedData()).toEqual([{ ID: 957 }]);
+        });
+
         it('Should not change selection when expand collapse row with keyboard', (async () => {
             const expectedData1 = [
                 { ID: 19 },
@@ -68,11 +133,11 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
 
             let startCell = treeGrid.getCellByColumn(10, 'ID');
             const endCell = treeGrid.getCellByColumn(11, 'ID');
-            await HelperUtils.selectCellsRange(fix, startCell, endCell);
+            await GridSelectionFunctions.selectCellsRange(fix, startCell, endCell);
 
             expect(startCell.focused).toBe(true);
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 10, 11, 0, 0);
-            HelperUtils.verifySelectedRange(treeGrid, 10, 11, 0, 0);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 10, 11, 0, 0);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 10, 11, 0, 0);
             expect(treeGrid.getSelectedData()).toEqual(expectedData1);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowleft', startCell.nativeElement, true, true);
@@ -80,8 +145,8 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             fix.detectChanges();
 
             expect(startCell.focused).toBe(true);
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 10, 11, 0, 0);
-            HelperUtils.verifySelectedRange(treeGrid, 10, 11, 0, 0);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 10, 11, 0, 0);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 10, 11, 0, 0);
             expect(treeGrid.getSelectedData()).toEqual(expectedData2);
 
             startCell = treeGrid.getCellByColumn(10, 'ID');
@@ -91,8 +156,8 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
 
             startCell = treeGrid.getCellByColumn(10, 'ID');
             expect(startCell.focused).toBe(true);
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 10, 11, 0, 0);
-            HelperUtils.verifySelectedRange(treeGrid, 10, 11, 0, 0);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 10, 11, 0, 0);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 10, 11, 0, 0);
             expect(treeGrid.getSelectedData()).toEqual(expectedData1);
         }));
 
@@ -102,7 +167,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             UIInteractions.simulateClickAndSelectCellEvent(firstCell);
             fix.detectChanges();
 
-            HelperUtils.verifyCellSelected(firstCell);
+            GridSelectionFunctions.verifyCellSelected(firstCell);
 
             treeGrid.verticalScrollContainer.scrollTo(treeGrid.verticalScrollContainer.igxForOf.length - 1);
             await wait(200);
@@ -120,7 +185,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
             expect(treeGrid.getSelectedRanges()).toEqual([range]);
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 6, 16, 2, 4);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 6, 16, 2, 4);
 
             treeGrid.verticalScrollContainer.scrollTo(0);
             await wait(200);
@@ -138,7 +203,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(2);
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
             expect(treeGrid.getSelectedRanges()).toEqual([range]);
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 4, 6, 0, 2);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, 6, 0, 2);
         }));
 
         it('Should be able to select a range with keyboard', (async () => {
@@ -148,7 +213,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
-            HelperUtils.verifyCellSelected(cell);
+            GridSelectionFunctions.verifyCellSelected(cell);
 
             for (let i = 9; i < 14; i++) {
                 cell = treeGrid.getCellByColumn(i, 'Age');
@@ -158,7 +223,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             }
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 9, 14, 2, 2);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 9, 14, 2, 2);
 
             cell = treeGrid.getCellByColumn(14, 'Age');
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, false, true);
@@ -166,7 +231,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(6);
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 9, 14, 2, 3);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 9, 14, 2, 3);
 
             cell = treeGrid.getCellByColumn(14, 'OnPTO');
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, false, true);
@@ -174,7 +239,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             fix.detectChanges();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(7);
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 9, 14, 2, 4);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 9, 14, 2, 4);
 
             for (let i = 14; i > 3; i--) {
                 cell = treeGrid.getCellByColumn(i, 'HireDate');
@@ -184,7 +249,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             }
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(18);
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 3, 9, 2, 4);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 3, 9, 2, 4);
 
             for (let i = 4; i > 2; i--) {
                 cell = treeGrid.getCellByColumn(3, treeGrid.columns[i].field);
@@ -194,8 +259,8 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             }
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(20);
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 3, 9, 2, 2);
-            HelperUtils.verifySelectedRange(treeGrid, 3, 9, 2, 2);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 3, 9, 2, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 3, 9, 2, 2);
         }));
 
         it('Summaries: should select correct data when summaries are enabled', () => {
@@ -227,28 +292,28 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             for (let i = 1; i < 11; i++) {
                 let cell = treeGrid.getCellByColumn(i, 'ID');
                 if (!cell) {
-                    const summaryRow = HelperUtils.getSummaryRowByDataRowIndex(fix, i);
-                    cell = HelperUtils.getSummaryCellByVisibleIndex(summaryRow, 0);
+                    const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, i);
+                    cell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 0);
                 }
                 UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
                 detect();
-                HelperUtils.verifyCellsRegionSelected(treeGrid, 0, i, 0, 0);
+                GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 0, i, 0, 0);
             }
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
 
             let newCell = treeGrid.getCellByColumn(10, 'Name');
             UIInteractions.simulatePointerOverCellEvent('pointerenter', newCell.nativeElement);
             detect();
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 0, 10, 0, 1);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 0, 10, 0, 1);
 
             newCell = treeGrid.getCellByColumn(10, 'Age');
             UIInteractions.simulatePointerOverCellEvent('pointerenter', newCell.nativeElement);
             UIInteractions.simulatePointerOverCellEvent('pointerup', newCell.nativeElement);
             detect();
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 0, 10, 0, 2);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 0, 10, 0, 2);
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
             expect(selectionChangeSpy).toHaveBeenCalledWith(range);
-            HelperUtils.verifySelectedRange(treeGrid, 0, 10, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 10, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(expectedData);
         });
 
@@ -283,7 +348,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             fix.detectChanges();
 
             treeGrid.selectRange(range);
-            HelperUtils.verifySelectedRange(treeGrid, 0, 10, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 10, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(expectedData2);
 
             treeGrid.summaryPosition = 'top';
@@ -291,8 +356,8 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
 
             // Setting range through the API must NOT call the event emitter
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 0, 10, 0, 2);
-            HelperUtils.verifySelectedRange(treeGrid, 0, 10, 0, 2);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 0, 10, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 10, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(expectedData1);
         });
 
@@ -306,7 +371,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
-            HelperUtils.verifyCellSelected(cell);
+            GridSelectionFunctions.verifyCellSelected(cell);
 
             for (let i = 8; i < 16; i++) {
                 let cellObj = treeGrid.getCellByColumn(i, 'Name');
@@ -320,7 +385,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             }
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 8, 15, 1, 1);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 8, 15, 1, 1);
 
             for (let i = 1; i < 3; i++) {
                 const cellObject = treeGrid.summariesRowList.find(row => row.index === 16)
@@ -330,7 +395,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 fix.detectChanges();
             }
 
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 8, 15, 1, 1);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 8, 15, 1, 1);
 
             const summaryCell = treeGrid.summariesRowList.find(row => row.index === 16)
                         .summaryCells.find(sCell => sCell.visibleColumnIndex === 3);
@@ -338,7 +403,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             await wait(30);
             fix.detectChanges();
             expect(selectionChangeSpy).toHaveBeenCalledTimes(6);
-            HelperUtils.verifySelectedRange(treeGrid,  8, 15, 1, 3);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  8, 15, 1, 3);
         }));
 
         it('Summaries: should clear selected range when navigate from summary cell without pressed shift', (async () => {
@@ -351,7 +416,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             UIInteractions.simulateClickAndSelectCellEvent(cell);
             fix.detectChanges();
 
-            HelperUtils.verifyCellSelected(cell);
+            GridSelectionFunctions.verifyCellSelected(cell);
 
             for (let i = 8; i < 16; i++) {
                 let cellObj = treeGrid.getCellByColumn(i, 'Name');
@@ -365,7 +430,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             }
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 8, 15, 1, 1);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 8, 15, 1, 1);
 
             const summaryCell = treeGrid.summariesRowList.find(row => row.index === 16)
                         .summaryCells.find(sCell => sCell.visibleColumnIndex === 1);
@@ -373,7 +438,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             await wait(30);
             fix.detectChanges();
 
-            HelperUtils.verifySelectedRange(treeGrid,  17, 17, 1, 1);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  17, 17, 1, 1);
         }));
 
         it('Filtering: selection should not change when perform filtering', () => {
@@ -387,7 +452,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 957, Name: 'Thomas Hardy', Age: 29},
                 { ID: 317, Name: 'Monica Reyes', Age: 31}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             treeGrid.filter('Name', 'la', IgxStringFilteringOperand.instance().condition('contains'), false);
@@ -399,7 +464,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 317, Name: 'Monica Reyes', Age: 31},
                 { ID: 711, Name: 'Roland Mendel', Age: 35}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(filterData);
         });
 
@@ -414,7 +479,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 957, Name: 'Thomas Hardy', Age: 29},
                 { ID: 317, Name: 'Monica Reyes', Age: 31}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             const row = treeGrid.getRowByIndex(2);
@@ -427,7 +492,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 317, Name: 'Monica Reyes', Age: 31},
                 { ID: 711, Name: 'Roland Mendel', Age: 35},
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
         });
 
@@ -442,7 +507,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 957, Name: 'Thomas Hardy', Age: 29},
                 { ID: 317, Name: 'Monica Reyes', Age: 31}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             const row = treeGrid.getRowByIndex(2);
@@ -455,7 +520,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 258, Name: 'Michael Cooper', Age: 33},
                 { ID: 317, Name: 'Monica Reyes', Age: 31}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
         });
 
@@ -470,7 +535,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 998, Name: 'Sven Ottlieb', Age: 44},
                 { ID: 847, Name: 'Ana Sanders', Age: 42}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  3, 6, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  3, 6, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             treeGrid.addRow({ ID: 13, Name: 'Michael Cooper', Age: 33, OnPTO: false}, 317);
@@ -482,7 +547,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 998, Name: 'Sven Ottlieb', Age: 44},
                 { ID: 13, Name: 'Michael Cooper', Age: 33}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  3, 6, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  3, 6, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
         });
     });
@@ -524,7 +589,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 957, Name: 'Thomas Hardy', Age: 29},
                 { ID: 317, Name: 'Monica Reyes', Age: 31}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             treeGrid.filter('Name', 'la', IgxStringFilteringOperand.instance().condition('contains'), false);
@@ -536,7 +601,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 317, Name: 'Monica Reyes', Age: 31},
                 { ID: 711, Name: 'Roland Mendel', Age: 35}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(filterData);
         });
 
@@ -551,7 +616,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 957, Name: 'Thomas Hardy', Age: 29},
                 { ID: 317, Name: 'Monica Reyes', Age: 31}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             const row = treeGrid.getRowByIndex(2);
@@ -564,7 +629,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 258, Name: 'Michael Cooper', Age: 33},
                 { ID: 317, Name: 'Monica Reyes', Age: 31}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
         });
 
@@ -580,7 +645,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 998, Name: 'Sven Ottlieb', Age: 44},
                 { ID: 847, Name: 'Ana Sanders', Age: 42}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  3, 6, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  3, 6, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             treeGrid.addRow({ ID: 13, ParentID: 317, Name: 'Michael Cooper', Age: 33, OnPTO: false}, 317);
@@ -592,7 +657,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 998, Name: 'Sven Ottlieb', Age: 44},
                 { ID: 13, Name: 'Michael Cooper', Age: 33}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  3, 6, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  3, 6, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
         });
     });
@@ -621,18 +686,18 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 957, Name: 'Thomas Hardy', Age: 29},
                 { ID: 317, Name: 'Monica Reyes', Age: 31}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             const row = treeGrid.getRowByIndex(2);
             row.delete();
             fix.detectChanges();
 
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             treeGrid.transactions.undo();
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             treeGrid.transactions.redo();
@@ -646,7 +711,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 317, Name: 'Monica Reyes', Age: 31},
                 { ID: 711, Name: 'Roland Mendel', Age: 35}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(nesSelData);
         });
 
@@ -661,7 +726,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 957, Name: 'Thomas Hardy', Age: 29},
                 { ID: 317, Name: 'Monica Reyes', Age: 31}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             const row = treeGrid.getRowByIndex(2);
@@ -674,11 +739,12 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 258, Name: 'Michael Cooper', Age: 33},
                 { ID: 317, Name: 'Monica Reyes', Age: 31}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
 
             treeGrid.transactions.undo();
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            fix.detectChanges();
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             treeGrid.transactions.redo();
@@ -686,7 +752,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             treeGrid.transactions.commit(treeGrid.data, 'ID', 'Employees');
             fix.detectChanges();
 
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
         });
 
@@ -701,7 +767,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 998, Name: 'Sven Ottlieb', Age: 44},
                 { ID: 847, Name: 'Ana Sanders', Age: 42}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  3, 6, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  3, 6, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             treeGrid.addRow({ ID: 13, Name: 'Michael Cooper', Age: 33, OnPTO: false, HireDate: null, Employees: []}, 147);
@@ -713,12 +779,12 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 998, Name: 'Sven Ottlieb', Age: 44},
                 { ID: 13, Name: 'Michael Cooper', Age: 33}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  3, 6, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  3, 6, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
             treeGrid.transactions.commit(treeGrid.data, 'ID', 'Employees');
             fix.detectChanges();
 
-            HelperUtils.verifySelectedRange(treeGrid,  3, 6, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  3, 6, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
         });
 
@@ -748,17 +814,17 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 957, Name: 'Thomas Hardy', Age: 29},
                 { ID: 317, Name: 'Monica Reyes', Age: 31}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
             const row = treeGrid.getRowByIndex(2);
             row.delete();
             fix.detectChanges();
 
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             treeGrid.transactions.undo();
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             treeGrid.transactions.redo();
@@ -772,7 +838,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 317, Name: 'Monica Reyes', Age: 31},
                 { ID: 711, Name: 'Roland Mendel', Age: 35}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(nesSelData);
         });
 
@@ -787,7 +853,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 957, Name: 'Thomas Hardy', Age: 29},
                 { ID: 317, Name: 'Monica Reyes', Age: 31}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
             const row = treeGrid.getRowByIndex(2);
             row.update({ ID: 258, Name: 'Michael Cooper', Age: 33, OnPTO: false,  Employees: []});
@@ -799,11 +865,12 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 258, Name: 'Michael Cooper', Age: 33},
                 { ID: 317, Name: 'Monica Reyes', Age: 31}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
 
             treeGrid.transactions.undo();
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            fix.detectChanges();
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             treeGrid.transactions.redo();
@@ -811,7 +878,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             treeGrid.transactions.commit(fix.componentInstance.data);
             fix.detectChanges();
 
-            HelperUtils.verifySelectedRange(treeGrid,  0, 3, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  0, 3, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
         });
 
@@ -826,7 +893,7 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 998, Name: 'Sven Ottlieb', Age: 44},
                 { ID: 847, Name: 'Ana Sanders', Age: 42}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  3, 6, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  3, 6, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
             treeGrid.addRow({ ID: 13, Name: 'Michael Cooper', Age: 33, OnPTO: false, HireDate: null, Employees: []}, 147);
             fix.detectChanges();
@@ -837,12 +904,12 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
                 { ID: 998, Name: 'Sven Ottlieb', Age: 44},
                 { ID: 13, Name: 'Michael Cooper', Age: 33}
             ];
-            HelperUtils.verifySelectedRange(treeGrid,  3, 6, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  3, 6, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
 
             treeGrid.transactions.undo();
             fix.detectChanges();
-            HelperUtils.verifySelectedRange(treeGrid,  3, 6, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  3, 6, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(selectedData);
 
             treeGrid.transactions.redo();
@@ -850,11 +917,10 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             treeGrid.transactions.commit(fix.componentInstance.data);
             fix.detectChanges();
 
-            HelperUtils.verifySelectedRange(treeGrid,  3, 6, 0, 2);
+            GridSelectionFunctions.verifySelectedRange(treeGrid,  3, 6, 0, 2);
             expect(treeGrid.getSelectedData()).toEqual(newSelectedData);
         });
     });
-
 
     function verifySelectingRegion(fix, treeGrid) {
         const selectionChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
@@ -880,22 +946,22 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
         treeGrid.selectRange(range1);
         fix.detectChanges();
 
-        HelperUtils.verifyCellsRegionSelected(treeGrid, 0, 6, 0, 2);
-        HelperUtils.verifySelectedRange(treeGrid, 0, 6, 0, 2);
+        GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 0, 6, 0, 2);
+        GridSelectionFunctions.verifySelectedRange(treeGrid, 0, 6, 0, 2);
         expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
         expect(treeGrid.getSelectedData()).toEqual(expectedData1);
 
         treeGrid.selectRange();
         fix.detectChanges();
 
-        HelperUtils.verifyCellsRegionSelected(treeGrid, 0, 6, 0, 2, false);
+        GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 0, 6, 0, 2, false);
         expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
         expect(treeGrid.getSelectedRanges().length).toBe(0);
 
         treeGrid.selectRange(range2);
         fix.detectChanges();
 
-        HelperUtils.verifySelectedRange(treeGrid, 11, 16, 0, 3);
+        GridSelectionFunctions.verifySelectedRange(treeGrid, 11, 16, 0, 3);
         expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
         expect(treeGrid.getSelectedData()).toEqual(expectedData2);
     }
@@ -937,36 +1003,36 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
         treeGrid.selectRange(range);
         fix.detectChanges();
 
-        HelperUtils.verifyCellsRegionSelected(treeGrid, 1, 6, 0, 2);
-        HelperUtils.verifySelectedRange(treeGrid, 1, 6, 0, 2);
+        GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 1, 6, 0, 2);
+        GridSelectionFunctions.verifySelectedRange(treeGrid, 1, 6, 0, 2);
         expect(treeGrid.getSelectedData()).toEqual(expectedData1);
 
         treeGrid.toggleRow(treeGrid.getRowByIndex(3).rowID);
         fix.detectChanges();
 
-        HelperUtils.verifyCellsRegionSelected(treeGrid, 1, 6, 0, 2);
-        HelperUtils.verifySelectedRange(treeGrid, 1, 6, 0, 2);
+        GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 1, 6, 0, 2);
+        GridSelectionFunctions.verifySelectedRange(treeGrid, 1, 6, 0, 2);
         expect(treeGrid.getSelectedData()).toEqual(expectedData2);
 
         treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
         fix.detectChanges();
 
-        HelperUtils.verifyCellsRegionSelected(treeGrid, 1, 6, 0, 2);
-        HelperUtils.verifySelectedRange(treeGrid, 1, 6, 0, 2);
+        GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 1, 6, 0, 2);
+        GridSelectionFunctions.verifySelectedRange(treeGrid, 1, 6, 0, 2);
         expect(treeGrid.getSelectedData()).toEqual(expectedData3);
 
         treeGrid.collapseAll();
         fix.detectChanges();
 
-        HelperUtils.verifyCellsRegionSelected(treeGrid, 1, 3, 0, 2);
-        HelperUtils.verifySelectedRange(treeGrid, 1, 6, 0, 2);
+        GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 1, 3, 0, 2);
+        GridSelectionFunctions.verifySelectedRange(treeGrid, 1, 6, 0, 2);
         expect(treeGrid.getSelectedData()).toEqual(expectedData4);
 
         treeGrid.expandAll();
         fix.detectChanges();
 
-        HelperUtils.verifyCellsRegionSelected(treeGrid, 1, 6, 0, 2);
-        HelperUtils.verifySelectedRange(treeGrid, 1, 6, 0, 2);
+        GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 1, 6, 0, 2);
+        GridSelectionFunctions.verifySelectedRange(treeGrid, 1, 6, 0, 2);
         expect(treeGrid.getSelectedData()).toEqual(expectedData1);
     }
 
@@ -998,43 +1064,43 @@ describe('IgxTreeGrid - Multi Cell selection ', () => {
             const cell = treeGrid.getCellByColumn(i, treeGrid.columns[i - 3].field);
             UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
             detect();
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 4, i, 1, i - 3);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, i, 1, i - 3);
         }
 
         for (let i = 5; i > 0; i--) {
             const cell = treeGrid.getCellByColumn(i, 'OnPTO');
             UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
             detect();
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 4, i, 1, 3);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, i, 1, 3);
         }
 
         for (let i = 2; i >= 0; i--) {
             const cell = treeGrid.getCellByColumn(1, treeGrid.columns[i].field);
             UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
             detect();
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 4, 1, 1, i);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, 1, 1, i);
         }
 
         for (let i = 2; i < 10; i++) {
             const cell = treeGrid.getCellByColumn(i, 'ID');
             UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
             detect();
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 4, i, 1, 0);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, i, 1, 0);
         }
 
         for (let i = 8; i > 6; i--) {
             const cell = treeGrid.getCellByColumn(i, treeGrid.columns[9 - i].field);
             UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
             detect();
-            HelperUtils.verifyCellsRegionSelected(treeGrid, 4, i, 1, 9 - i);
+            GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, i, 1, 9 - i);
         }
 
         UIInteractions.simulatePointerOverCellEvent('pointerup', endCell.nativeElement);
         detect();
 
         expect(startCell.focused).toBe(true);
-        HelperUtils.verifyCellsRegionSelected(treeGrid, 4, 7, 1, 2);
-        HelperUtils.verifySelectedRange(treeGrid, 4, 7, 1, 2);
+        GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, 7, 1, 2);
+        GridSelectionFunctions.verifySelectedRange(treeGrid, 4, 7, 1, 2);
 
         expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
         expect(selectionChangeSpy).toHaveBeenCalledWith(range);

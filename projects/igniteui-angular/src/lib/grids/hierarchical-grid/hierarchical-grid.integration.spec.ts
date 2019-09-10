@@ -9,7 +9,7 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
-import { IgxGridGroupByRowComponent, IgxColumnMovingDragDirective, IgxColumnComponent } from '../grid';
+import { IgxColumnMovingDragDirective, IgxColumnComponent } from '../grid';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -17,8 +17,11 @@ import { take } from 'rxjs/operators';
 import { IgxHierarchicalTransactionServiceFactory } from './hierarchical-grid-base.component';
 import { IgxIconModule } from '../../icon';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
+import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
+import { GridSelectionMode } from '../types';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
-describe('IgxHierarchicalGrid Integration', () => {
+describe('IgxHierarchicalGrid Integration #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -164,10 +167,12 @@ describe('IgxHierarchicalGrid Integration', () => {
             hierarchicalGrid.data = hierarchicalGrid.data.slice(0, 3);
             fixture.detectChanges();
             hierarchicalGrid.addRow({ ID: -1, ProductName: 'Name1' });
+            fixture.detectChanges();
             const rows = fixture.debugElement.queryAll(By.directive(IgxHierarchicalRowComponent));
             const lastRow = rows[rows.length - 1];
             expect(lastRow.query(By.css('igx-icon')).nativeElement).toHaveClass('igx-icon--inactive');
             hierarchicalGrid.transactions.commit(hierarchicalGrid.data);
+            fixture.detectChanges();
             expect(lastRow.query(By.css('igx-icon')).nativeElement).not.toHaveClass('igx-icon--inactive');
         }));
 
@@ -175,6 +180,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             hierarchicalGrid.data = hierarchicalGrid.data.slice(0, 3);
             fixture.detectChanges();
             hierarchicalGrid.addRow({ ID: -1, ProductName: 'Name1' });
+            fixture.detectChanges();
             const rows = fixture.debugElement.queryAll(By.directive(IgxHierarchicalRowComponent));
             const lastRowCells = rows[rows.length - 1].queryAll(By.directive(IgxHierarchicalGridCellComponent));
 
@@ -194,6 +200,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(childRows.length).toEqual(0);
 
             hierarchicalGrid.transactions.commit(hierarchicalGrid.data);
+            fixture.detectChanges();
 
             lastRowCells[1].nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
             fixture.detectChanges();
@@ -211,8 +218,10 @@ describe('IgxHierarchicalGrid Integration', () => {
             hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
             fixture.detectChanges();
             childGrid.updateRow({ ProductName: 'Changed' }, '00');
+            fixture.detectChanges();
             expect(childGrid.getCellByColumn(0, 'ProductName').nativeElement.innerText).toEqual('Changed');
             childGrid.transactions.clear();
+            fixture.detectChanges();
             expect(childGrid.getCellByColumn(0, 'ProductName').nativeElement.innerText).toEqual('Product: A0');
         }));
     });
@@ -387,25 +396,6 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(fChildCell.selected).toBe(true);
         }));
 
-        it('should retain selected row when filtering', fakeAsync(() => {
-            hierarchicalGrid.rowSelectable = true;
-            fixture.detectChanges();
-
-            const firstRow = hierarchicalGrid.getRowByIndex(0);
-            const targetCheckbox: HTMLElement = firstRow.nativeElement.querySelector('.igx-checkbox__input');
-
-            targetCheckbox.click();
-            fixture.detectChanges();
-
-            hierarchicalGrid.filter('ID', '0', IgxStringFilteringOperand.instance().condition('contains'), true);
-            fixture.detectChanges();
-
-            expect(hierarchicalGrid.getRowByIndex(0).isSelected).toBeTruthy();
-            const headerRow: HTMLElement = fixture.nativeElement.querySelector('.igx-grid__thead');
-            const headerCheckbox: HTMLInputElement = headerRow.querySelector('.igx-checkbox__input');
-            expect(headerCheckbox.indeterminate).toBeTruthy();
-        }));
-
         it('should show empty filter message when there are no records matching the filter', fakeAsync(() => {
             fixture.componentInstance.data = [];
             fixture.detectChanges();
@@ -422,7 +412,7 @@ describe('IgxHierarchicalGrid Integration', () => {
         }));
 
         it('should apply classes to the header when filter row is visible', fakeAsync(/** filter showHideArrowButtons rAF */() => {
-            hierarchicalGrid.rowSelectable = true;
+            hierarchicalGrid.rowSelection = GridSelectionMode.multiple;
             fixture.detectChanges();
             const headerExpander: HTMLElement = fixture.nativeElement.querySelector('.igx-grid__hierarchical-expander');
             const headerCheckbox: HTMLElement = fixture.nativeElement.querySelector('.igx-grid__cbx-selection');
@@ -482,9 +472,10 @@ describe('IgxHierarchicalGrid Integration', () => {
             hierarchicalGrid.rowSelectable = true;
             hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
             fixture.detectChanges();
+            tick(16);
 
             const rootExpander =  (hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent).expander;
-            const rootCheckbox =  hierarchicalGrid.headerCheckboxContainer;
+            const rootCheckbox =  hierarchicalGrid.headerSelectorContainer;
             const rootSummaryRow = hierarchicalGrid.summariesRowList.first.nativeElement;
             const rootSummaryIndentation = rootSummaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
 
@@ -524,6 +515,7 @@ describe('IgxHierarchicalGrid Integration', () => {
 
     describe('Paging', () => {
         it('should work on data records only when paging is enabled and should not be affected by child grid rows.', (async() => {
+            resizeObserverIgnoreError();
             hierarchicalGrid.paging = true;
             hierarchicalGrid.reflow();
             fixture.detectChanges();
@@ -565,8 +557,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(childGrid.dataRowList.first.cells.first.value).toEqual('00');
 
             // Go to next page
-            const pagingButtons = hierarchicalGrid.nativeElement.querySelectorAll('.igx-grid-paginator__pager > button');
-            pagingButtons[2].dispatchEvent(new Event('click'));
+            GridFunctions.navigateToNextPage(hierarchicalGrid.nativeElement);
             fixture.detectChanges();
 
             expect(hierarchicalGrid.dataRowList.toArray()[0].cells.first.value).toEqual('15');
@@ -578,7 +569,7 @@ describe('IgxHierarchicalGrid Integration', () => {
             expect(childGrids.length).toEqual(0);
 
             // Return to previous page
-            pagingButtons[1].dispatchEvent(new Event('click'));
+            GridFunctions.navigateToPrevPage(hierarchicalGrid.nativeElement);
             fixture.detectChanges();
 
             expect(hierarchicalGrid.dataRowList.toArray()[0].cells.first.value).toEqual('0');
@@ -593,6 +584,7 @@ describe('IgxHierarchicalGrid Integration', () => {
         }));
 
         it('should allow scrolling to the last row after page size has been changed and rows are expanded.', (async() => {
+            resizeObserverIgnoreError();
             hierarchicalGrid.paging = true;
             hierarchicalGrid.perPage = 20;
             hierarchicalGrid.reflow();
@@ -686,6 +678,7 @@ describe('IgxHierarchicalGrid Integration', () => {
         }));
 
         it('should corerctly hide/show vertical scrollbar after page is changed.', (async() => {
+            resizeObserverIgnoreError();
             hierarchicalGrid.paging = true;
             hierarchicalGrid.perPage = 5;
             fixture.detectChanges();
@@ -712,6 +705,8 @@ describe('IgxHierarchicalGrid Integration', () => {
 
             // change page
             hierarchicalGrid.page = 0;
+            fixture.detectChanges();
+            await wait(30);
             fixture.detectChanges();
             await wait(30);
             fixture.detectChanges();
@@ -763,7 +758,7 @@ describe('IgxHierarchicalGrid Integration', () => {
         }));
 
         it('no rows, headers, paging or rowSelectors should be displayed when hideAll columns', fakeAsync(() => {
-            hierarchicalGrid.rowSelectable = true;
+            hierarchicalGrid.rowSelection = GridSelectionMode.multiple;
             hierarchicalGrid.rowDraggable = true;
             hierarchicalGrid.paging = true;
             tick(30);
@@ -902,7 +897,7 @@ describe('IgxHierarchicalGrid Integration', () => {
 
             // The moving indicator shouldn't show that a column can be moved.
             const childGroupHeader = childGrids[0].query(By.css('igx-grid-header')).injector.get(IgxColumnMovingDragDirective);
-            const dragElem = childGroupHeader['dragGhost'];
+            const dragElem = childGroupHeader.ghostElement;
             const dragIcon = dragElem.querySelector('i');
             expect(dragElem).toBeDefined();
             expect(dragIcon.innerText.trim()).toEqual('block');

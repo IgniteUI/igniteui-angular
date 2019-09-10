@@ -6,11 +6,12 @@ import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { GridSelectionMode } from '../types';
 
 const DEBOUNCETIME = 30;
 const treeColumns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];
 
-describe('IgxTreeGrid - Key Board Navigation ', () => {
+describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
@@ -346,7 +347,7 @@ describe('IgxTreeGrid - Key Board Navigation ', () => {
         });
 
         it('should select row when press Space key on a cell', async () => {
-            treeGrid.rowSelectable = true;
+            treeGrid.rowSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
             // Click Space on a treeGrid cell

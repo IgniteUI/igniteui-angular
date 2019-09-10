@@ -3,12 +3,13 @@ import {
     Output
 } from '@angular/core';
 
-import { cloneValue } from '../../core/utils';
+import { cloneValue, IBaseEventArgs } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 
 import { ExportUtilities } from './export-utilities';
 import { IgxExporterOptionsBase } from './exporter-options-base';
 import { ITreeGridRecord } from '../../grids/tree-grid/tree-grid.interfaces';
+import { TreeGridFilteringStrategy } from '../../grids/tree-grid/tree-grid.filtering.pipe';
 
 /**
  * onRowExport event arguments
@@ -16,7 +17,7 @@ import { ITreeGridRecord } from '../../grids/tree-grid/tree-grid.interfaces';
  * // set args properties here
  * })
  */
-export interface IRowExportingEventArgs {
+export interface IRowExportingEventArgs extends IBaseEventArgs {
     /**
      * Contains the exporting row data
      */
@@ -41,7 +42,7 @@ export interface IRowExportingEventArgs {
     * });
     * ```
     */
-export interface IColumnExportingEventArgs {
+export interface IColumnExportingEventArgs extends IBaseEventArgs {
     /**
      * Contains the exporting column header
      */
@@ -257,14 +258,15 @@ export abstract class IgxBaseExporter {
         if (grid.filteringExpressionsTree &&
             grid.filteringExpressionsTree.filteringOperands.length > 0 &&
             !options.ignoreFiltering) {
-            const filteringState = {
+            const filteringState: any = {
                 expressionsTree: grid.filteringExpressionsTree,
                 logic: grid.filteringLogic
             };
 
             if (this._isTreeGrid) {
                 this.flatRecords = [];
-                rootRecords = DataUtil.treeGridFilter(rootRecords, filteringState);
+                filteringState.strategy = new TreeGridFilteringStrategy();
+                rootRecords = filteringState.strategy.filter(rootRecords, filteringState.expressionsTree);
                 this.prepareHierarchicalData(rootRecords);
                 data = this.flatRecords;
             } else {

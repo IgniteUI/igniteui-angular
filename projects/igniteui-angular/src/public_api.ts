@@ -16,6 +16,7 @@ export * from './lib/core/navigation';
 export * from './lib/directives/autocomplete/autocomplete.directive';
 export * from './lib/directives/button/button.directive';
 export * from './lib/directives/divider/divider.directive';
+export * from './lib/directives/drag-drop/drag-drop.strategy';
 export * from './lib/directives/drag-drop/drag-drop.directive';
 export * from './lib/directives/filter/filter.directive';
 export * from './lib/directives/focus/focus.directive';

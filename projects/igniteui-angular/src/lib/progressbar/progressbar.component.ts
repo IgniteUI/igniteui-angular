@@ -12,6 +12,7 @@ import {
     ContentChild
 } from '@angular/core';
 import { IgxProcessBarTextTemplateDirective } from './progressbar.common';
+import { IBaseEventArgs } from '../core/utils';
 
 const ONE_PERCENT = 0.01;
 const MIN_VALUE = 0;
@@ -29,7 +30,7 @@ export enum IgxProgressType {
     SUCCESS = 'success'
 }
 
-export interface IChangeProgressEventArgs {
+export interface IChangeProgressEventArgs extends IBaseEventArgs {
     previousValue: number;
     currentValue: number;
 }

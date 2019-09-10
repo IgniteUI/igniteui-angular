@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { isIE } from '../core/utils';
+import { isIE, IBaseEventArgs } from '../core/utils';
 import { EditorProvider } from '../core/edit-provider';
 
 export enum LabelPosition {
@@ -21,7 +21,7 @@ export enum LabelPosition {
     AFTER = 'after'
 }
 
-export interface IChangeCheckboxEventArgs {
+export interface IChangeCheckboxEventArgs extends IBaseEventArgs {
     checked: boolean;
     checkbox: IgxCheckboxComponent;
 }
@@ -258,12 +258,24 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * <igx-checkbox [disabled] = "true"></igx-checkbox>
      * ```
      * ```typescript
-     * let isDesabled = this.checkbox.disabled;
+     * let isDisabled = this.checkbox.disabled;
      * ```
      * @memberof IgxCheckboxComponent
      */
     @HostBinding('class.igx-checkbox--disabled')
     @Input() public disabled = false;
+    /**
+     * Sets/gets whether the checkbox is readonly.
+     * Default value is `false`.
+     * ```html
+     * <igx-checkbox [readonly]="true"></igx-checkbox>
+     * ```
+     * ```typescript
+     * let readonly = this.checkbox.readonly;
+     * ```
+     * @memberof IgxCheckboxComponent
+     */
+    @Input() public readonly = false;
     /**
      * Sets/gets whether the checkbox should disable all css transitions.
      * Default value is `false`.
@@ -297,7 +309,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * @memberof IgxCheckboxComponent
      */
     public toggle() {
-        if (this.disabled) {
+        if (this.disabled || this.readonly) {
             return;
         }
 
@@ -325,6 +337,13 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
         // we need to prevent the checkbox click event from bubbling up
         // as it gets triggered on label click
         event.stopPropagation();
+
+        if (this.readonly) {
+            // readonly prevents the component from changing state (see toggle() method).
+            // However, the native checkbox can still be activated through user interaction (focus + space, label click)
+            // Prevent the native change so the input remains in sync
+            event.preventDefault();
+        }
 
         if (isIE()) {
             this.nativeCheckbox.nativeElement.blur();

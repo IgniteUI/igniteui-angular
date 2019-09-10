@@ -1,6 +1,6 @@
 import {
     Directive, ElementRef, HostListener, Input, NgModule, ChangeDetectorRef, OnInit,
-    Output, EventEmitter, Optional, HostBinding, OnDestroy, Inject
+    Output, EventEmitter, Optional, HostBinding, Inject
 } from '@angular/core';
 import { useAnimation } from '@angular/animations';
 import { scaleInCenter } from '../../animations/scale/index';
@@ -10,14 +10,14 @@ import { HorizontalAlignment, AutoPositionStrategy, PositionSettings, OverlaySet
 import { CommonModule } from '@angular/common';
 import { IgxNavigationService } from '../../core/navigation';
 import { IgxToggleDirective, IgxToggleActionDirective } from '../toggle/toggle.directive';
-import { Subscription } from 'rxjs';
+import { IBaseEventArgs } from '../../core/utils';
 
-export interface ITooltipShowEventArgs {
+export interface ITooltipShowEventArgs extends IBaseEventArgs {
     target: IgxTooltipTargetDirective;
     tooltip: IgxTooltipDirective;
     cancel: boolean;
 }
-export interface ITooltipHideEventArgs {
+export interface ITooltipHideEventArgs extends IBaseEventArgs {
     target: IgxTooltipTargetDirective;
     tooltip: IgxTooltipDirective;
     cancel: boolean;
@@ -253,7 +253,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * @hidden
      */
     @HostListener('document:keydown.escape', ['$event'])
-    public onKeydownEscape() {
+    public onKeydownEscape(event) {
         const hidingArgs = { target: this, tooltip: this.target, cancel: false };
         this.onTooltipHide.emit(hidingArgs);
 
@@ -350,7 +350,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
             return;
         }
 
-        event.preventDefault();
         this.showTooltip();
     }
 

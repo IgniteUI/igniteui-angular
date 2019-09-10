@@ -6,15 +6,15 @@ import { IGroupByResult } from './grouping-result.interface';
 
 import { IPagingState, PagingError } from './paging-state.interface';
 
-import { IGroupByExpandState, IGroupByKey } from './groupby-expand-state.interface';
+import { IGroupByKey } from './groupby-expand-state.interface';
 import { IGroupByRecord } from './groupby-record.interface';
 import { IGroupingState } from './groupby-state.interface';
-import { TreeGridFilteringStrategy } from '../grids/tree-grid/tree-grid.filtering.pipe';
 import { ISortingExpression } from './sorting-expression.interface';
 import { FilteringStrategy } from './filtering-strategy';
 import { ITreeGridRecord } from '../grids/tree-grid';
 import { cloneValue, mergeObjects } from '../core/utils';
 import { Transaction, TransactionType, HierarchicalTransaction } from '../services/transaction/transaction';
+import { getHierarchy, isHierarchyMatch } from './operations';
 
 /**
  * @hidden
@@ -70,6 +70,7 @@ export class DataUtil {
         groupsRecords.splice(0, groupsRecords.length);
         return grouping.groupBy(data, state, grid, groupsRecords, fullResult);
     }
+
     public static page<T>(data: T[], state: IPagingState): T[] {
         if (!state) {
             return data;
@@ -101,15 +102,10 @@ export class DataUtil {
         }
         return data.slice(index * recordsPerPage, (index + 1) * recordsPerPage);
     }
+
     public static filter<T>(data: T[], state: IFilteringState): T[] {
         if (!state.strategy) {
             state.strategy = new FilteringStrategy();
-        }
-        return state.strategy.filter(data, state.expressionsTree);
-    }
-    public static treeGridFilter(data: ITreeGridRecord[], state: IFilteringState): ITreeGridRecord[] {
-        if (!state.strategy) {
-            state.strategy = new TreeGridFilteringStrategy();
         }
         return state.strategy.filter(data, state.expressionsTree);
     }
@@ -122,24 +118,11 @@ export class DataUtil {
     }
 
     public static getHierarchy(gRow: IGroupByRecord): Array<IGroupByKey> {
-        const hierarchy: Array<IGroupByKey> = [];
-        if (gRow !== undefined && gRow.expression) {
-            hierarchy.push({ fieldName: gRow.expression.fieldName, value: gRow.value });
-            while (gRow.groupParent) {
-                gRow = gRow.groupParent;
-                hierarchy.unshift({ fieldName: gRow.expression.fieldName, value: gRow.value });
-            }
-        }
-        return hierarchy;
+        return getHierarchy(gRow);
     }
 
     public static isHierarchyMatch(h1: Array<IGroupByKey>, h2: Array<IGroupByKey>): boolean {
-        if (h1.length !== h2.length) {
-            return false;
-        }
-        return h1.every((level, index): boolean => {
-            return level.fieldName === h2[index].fieldName && level.value === h2[index].value;
-        });
+        return isHierarchyMatch(h1, h2);
     }
 
     /**

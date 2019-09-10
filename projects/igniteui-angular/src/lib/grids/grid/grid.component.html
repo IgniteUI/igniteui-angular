@@ -29,46 +29,46 @@
 
 <div class="igx-grid__thead">
     <div class="igx-grid__thead-wrapper" [class.igx-grid__tr--mrl]='hasColumnLayouts' role="rowgroup"
-        [style.width.px]='calcWidth + 1' #theadRow>
-        <div class="igx-grid__tr" role="row" [style.width.px]='calcWidth + 1'>
+        [style.width.px]='calcWidth' #theadRow>
+        <div class="igx-grid__tr" role="row" [style.width.px]='calcWidth'>
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
                 [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left"
                 class="igx-grid__scroll-on-drag-left" [style.left.px]="featureColumnsWidth"></span>
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0"
                 [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left"
                 class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
+
             <ng-container *ngIf="groupingExpressions.length > 0">
                 <div class="igx-grid__header-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}"
                     [ngClass]="{
-                    'igx-grid__header-indentation--no-border': rowSelectable || rowDraggable
-                }" #headerGroupContainer>
-                    <igx-icon *ngIf="groupsExpanded" role="button" class="igx-grid__group-expand-btn"
-                        (click)="toggleAllGroupRows()" [ngClass]="{
-                        'igx-grid__group-expand-btn--push': filteringService.isFilterRowVisible
-                    }">unfold_less</igx-icon>
-                    <igx-icon *ngIf="!groupsExpanded" role="button" class="igx-grid__group-expand-btn"
-                        (click)="toggleAllGroupRows()" [ngClass]="{
-                        'igx-grid__group-expand-btn--push': filteringService.isFilterRowVisible
-                    }">unfold_more</igx-icon>
+                    'igx-grid__header-indentation--no-border': isRowSelectable || rowDraggable
+                }" #headerGroupContainer  (click)="toggleAllGroupRows()">
+
+                <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }"></ng-container>
                 </div>
             </ng-container>
             <ng-container *ngIf="rowDraggable">
                 <div class="igx-grid__drag-indicator" [ngClass]="{
-                    'igx-grid__drag-indicator--header': !rowSelectable
+                    'igx-grid__drag-indicator--header': !isRowSelectable
                 }" #headerDragContainer>
                     <div style="visibility: hidden;">
                         <ng-container
-                            *ngTemplateOutlet="this.dragIndicatorIconTemplate ? this.dragIndicatorIconTemplate : this.dragIndicatorIconBase">
+                            *ngTemplateOutlet="this.dragIndicatorIconTemplate ? this.dragIndicatorIconTemplate : dragIndicatorIconBase">
                         </ng-container>
                     </div>
                 </div>
             </ng-container>
-            <ng-container *ngIf="showRowCheckboxes">
-                <div class="igx-grid__cbx-selection" #headerCheckboxContainer [ngClass]="{
+            <ng-container *ngIf="showRowSelectors">
+                <div class="igx-grid__cbx-selection" (click)="onHeaderSelectorClick($event)" #headerSelectorContainer [ngClass]="{
                     'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible
                 }">
-                    <igx-checkbox [checked]="allRowsSelected" (change)="onHeaderCheckboxClick($event, filteredData)"
-                        disableRipple="true" [aria-label]="headerCheckboxAriaLabel" #headerCheckbox></igx-checkbox>
+                    <ng-template #headSelector
+                        *ngTemplateOutlet="
+                        this.headSelectorTemplate ? this.headSelectorTemplate : headSelectorBaseTemplate;
+                        context: { $implicit: {
+                                        selectedCount: this.selectionService.filteredSelectedRowIds.length,
+                                        totalCount: this.totalRowsCountAfterFilter }}">
+                    </ng-template>
                 </div>
             </ng-container>
             <ng-container *ngIf="pinnedColumns.length > 0">
@@ -96,7 +96,7 @@
 <div igxGridBody (keydown.control.c)="copyHandlerIE()" (copy)="copyHandler($event)" class="igx-grid__tbody">
     <div class="igx-grid__tbody-content" role="rowgroup" (onDragStop)="selectionService.dragMode = $event"
         (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
-        [style.height.px]='calcHeight' [style.width.px]='calcWidth ? calcWidth + 1 : null' #tbody (scroll)='scrollHandler($event)'
+        [style.height.px]='calcHeight' [style.width.px]='calcWidth || null' #tbody (scroll)='scrollHandler($event)'
         (wheel)="wheelHandler()">
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
             [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true" id="left"
@@ -117,7 +117,7 @@
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
             #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
             <ng-template #record_template>
-                <igx-grid-row  [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
+                <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
                 </igx-grid-row>
             </ng-template>
             <ng-template #group_template>
@@ -203,6 +203,20 @@
     <span class="igx-drop-area__text">{{dropAreaMessage}}</span>
 </ng-template>
 
+<ng-template #defaultExpandedTemplate>
+    <igx-icon role="button" class="igx-grid__group-expand-btn"
+   [ngClass]="{
+    'igx-grid__group-expand-btn--push': filteringService.isFilterRowVisible
+}">unfold_less</igx-icon>
+</ng-template>
+
+ <ng-template #defaultCollapsedTemplate>
+    <igx-icon role="button" class="igx-grid__group-expand-btn"
+    [ngClass]="{
+    'igx-grid__group-expand-btn--push': filteringService.isFilterRowVisible
+}">unfold_more</igx-icon>
+</ng-template>
+
 <div *ngIf="rowEditable" igxToggle>
     <div [className]="bannerClass">
         <ng-container
@@ -239,6 +253,18 @@
 
 <ng-template #dragIndicatorIconBase>
     <igx-icon fontSet="material">drag_indicator</igx-icon>
+</ng-template>
+
+<ng-template #headSelectorBaseTemplate igxHeadSelector let-context>
+    <igx-checkbox
+        [readonly]="true"
+        [checked]="context.selectedCount > 0 && context.totalCount === context.selectedCount"
+        disableRipple="true"
+        [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
+        [indeterminate]="context.selectedCount > 0 && context.selectedCount !== context.totalCount"
+        [aria-label]="headSelectorBaseAriaLabel"
+        #headerCheckbox>
+    </igx-checkbox>
 </ng-template>
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>
