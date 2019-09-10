@@ -1381,9 +1381,16 @@ export class GridFunctions {
         return closeButton;
     }
 
+    public static getAdvancedFilteringOutlet(fix: ComponentFixture<any>) {
+        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+        const advFilteringDialog = gridNativeElement.querySelector('igx-advanced-filtering-dialog');
+        const outlet = advFilteringDialog.querySelector('.igx-advanced-filter__outlet');
+        return outlet;
+    }
+
     public static getAdvancedFilteringSelectDropdown(fix: ComponentFixture<any>) {
-        const overlay = GridFunctions.getOverlay(fix);
-        const selectDropdown = overlay.querySelector('.igx-drop-down__list--select');
+        const outlet = GridFunctions.getAdvancedFilteringOutlet(fix);
+        const selectDropdown = outlet.querySelector('.igx-drop-down__list--select');
         return selectDropdown;
     }
 
