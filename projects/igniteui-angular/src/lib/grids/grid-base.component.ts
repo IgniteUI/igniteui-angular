@@ -785,8 +785,43 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
+    @WatchChanges()
     @Input()
     set isLoading(value: boolean) {
+        if (!this._isLoading && value /*&& this.data && this.data.length > 0*/) {
+            // a new overlay should be shown
+            const positionSettings = {
+                settings: {
+                    target:  (this as any).rootGrid ? (this as any).rootGrid.nativeElement : this.nativeElement
+                },
+                closeOnOutsideClick: false,
+                outlet: this.outletDirective
+            };
+            if (!this._loadingId) {
+                
+               /* if (!this._componentOverlayId) {
+                    this._filterMenuOverlaySettings.positionStrategy.settings.target =
+                        (this.grid as any).rootGrid ? (this.grid as any).rootGrid.nativeElement : this.grid.nativeElement;
+                    this._filterMenuOverlaySettings.outlet = this.grid.outletDirective;
+        
+                     this._componentOverlayId =
+                        this._overlayService.attach(IgxAdvancedFilteringDialogComponent, this._filterMenuOverlaySettings, this._moduleRef);
+                    this._overlayService.show(this._componentOverlayId, this._filterMenuOverlaySettings);
+                }*/
+
+
+
+
+                this._loadingId = this.overlayService.attach(this.loadingOverlay, positionSettings);
+                this.overlayIDs.push(this._loadingId);
+            }
+            this.overlayService.show(this._loadingId, positionSettings);
+        } else {
+            if (this._loadingId) {
+                this.overlayService.hide(this._loadingId);
+                this._loadingId = null;
+            }
+        }
         this._isLoading = value;
         if (this.gridAPI.grid) {
             this.markForCheck();
@@ -1566,6 +1601,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @ViewChild(IgxGridColumnResizerComponent, { static: false })
     public resizeLine: IgxGridColumnResizerComponent;
+
+    /**
+     * @hidden
+     */
+    @ViewChild("loadingOverlay", { static: true })
+    public loadingOverlay: ElementRef;
 
     /**
      * @hidden
@@ -2552,6 +2593,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected _baseFontSize: number;
     private _horizontalForOfs;
     private _multiRowLayoutRowSize = 1;
+    protected _loadingId;
 
     // Caches
     private _totalWidth = NaN;

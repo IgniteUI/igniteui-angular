@@ -138,7 +138,7 @@
         <ng-container *ngTemplateOutlet="template"></ng-container>
         <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
     </div>
-    <div *ngIf="shouldOverlayLoading" class="igx-grid__tbody-loading">
+    <div [style.display]="isLoading ? 'flex' : 'none'" class="igx-grid__tbody-loading" #loadingOverlay>
         <igx-circular-bar [indeterminate]="true">
         </igx-circular-bar>
     </div>

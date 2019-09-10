@@ -817,10 +817,8 @@
     }
 
     %igx-grid__tbody-loading {
-        position: absolute;
         width: 100%;
         height: 100%;
-        z-index: 100001;
         align-items: center;
         justify-content: center;
         display: flex;
