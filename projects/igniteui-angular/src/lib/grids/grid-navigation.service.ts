@@ -4,7 +4,8 @@ import { IgxColumnComponent } from './column.component';
 import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';
 import { ISelectionNode } from '../core/grid-selection';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
-import { GridType, FilterMode } from './types';
+import { GridType } from './common/grid.interface';
+import { FilterMode } from './common/enums';
 
 enum MoveDirection {
     LEFT = 'left',

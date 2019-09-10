@@ -22,7 +22,7 @@ import { IgxHierarchicalGridComponent, IgxHierarchicalGridModule, IgxRowComponen
 import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';
 import { IgxTreeGridComponent, IgxTreeGridModule } from '../tree-grid';
 import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
-import { GridSelectionMode } from '../types';
+import { GridSelectionMode } from '../common/enums';
 
 
 const DEBOUNCE_TIME = 50;
