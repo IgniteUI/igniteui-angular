@@ -17,6 +17,7 @@ import { IButtonGroupEventArgs } from '../../../buttonGroup/buttonGroup.componen
 import { takeUntil, first } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { KEYS } from '../../../core/utils';
+import { AbsoluteScrollStrategy, AutoPositionStrategy } from '../../../services/index';
 
 /**
  *@hidden
@@ -103,11 +104,37 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         scrollStrategy: new CloseScrollStrategy()
     };
 
+    public columnSelectOverlaySettings: OverlaySettings = {
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        positionStrategy: new ConnectedPositioningStrategy(),
+        modal: false,
+        closeOnOutsideClick: false,
+        excludePositionTarget: true
+    };
+
+    public conditionSelectOverlaySettings: OverlaySettings = {
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        positionStrategy: new AutoPositionStrategy(),
+        modal: false,
+        closeOnOutsideClick: false,
+        excludePositionTarget: true
+    };
+
     @ViewChild('columnSelect', { read: IgxSelectComponent, static: false })
     public columnSelect: IgxSelectComponent;
 
     @ViewChild('conditionSelect', { read: IgxSelectComponent, static: false })
-    public conditionSelect: IgxSelectComponent;
+    public set conditionSelect(value: IgxSelectComponent) {
+        if ((value && !this._conditionSelect) ||
+            (value && this._conditionSelect && this._conditionSelect.element !== value.element)) {
+            this.conditionSelectOverlaySettings.positionStrategy.settings.target = value.element;
+        }
+        this._conditionSelect = value;
+    }
+
+    public get conditionSelect() {
+        return this._conditionSelect;
+    }
 
     @ViewChild('searchValueInput', { read: ElementRef, static: false })
     public searchValueInput: ElementRef;
@@ -186,6 +213,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     private _clickTimer;
     private _dblClickDelay = 200;
     private _preventChipClick = false;
+    private _conditionSelect: IgxSelectComponent;
     private _editingInputsContainer: ElementRef;
     private _addModeContainer: ElementRef;
     private _currentGroupButtonsContainer: ElementRef;
@@ -200,6 +228,9 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         }
 
         this._overlaySettings.outlet = this.overlayOutlet;
+        this.columnSelectOverlaySettings.outlet = this.overlayOutlet;
+        this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;
+
         this.contextMenuToggle.onClosed.pipe(takeUntil(this.destroy$)).subscribe((args) => {
             this.contextualGroup = null;
         });
@@ -441,6 +472,8 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         this.editedExpression = expressionItem;
 
         requestAnimationFrame(() => {
+            this.columnSelectOverlaySettings.positionStrategy.settings.target = this.columnSelect.element;
+
             if (!this.selectedColumn) {
                 this.columnSelect.input.nativeElement.focus();
             } else if (this.selectedColumn.filters.condition(this.selectedCondition).isUnary) {
@@ -748,6 +781,11 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
             eventArgs.preventDefault();
             (eventArgs.currentTarget as HTMLElement).click();
         }
+    }
+
+    public onOutletPointerDown(event) {
+        // This prevents closing the select's dropdown when clicking the scroll
+        event.preventDefault();
     }
 
     public initialize(filteringService: IgxFilteringService, overlayService: IgxOverlayService,
