@@ -1374,6 +1374,126 @@ describe('IgxGrid - Advanced Filtering', () => {
                 'incorrect all children count of group with path [0]');
         }));
 
+        it('Should remove a condition from an existing group by using delete icon of respective chip.', fakeAsync(() => {
+            // Apply advanced filter through API.
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands.push({
+                fieldName: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan')
+            });
+            const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
+            orTree.filteringOperands.push({
+                fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            orTree.filteringOperands.push({
+                fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            tree.filteringOperands.push(orTree);
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Verify tree layout before deleting chips.
+            let rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
+            expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, true).length).toBe(2);
+            expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(4);
+
+            // Delete a chip and verify layout.
+            GridFunctions.clickAdvancedFilteringTreeExpressionChipRemoveIcon(fix, [0]);
+            tick(100);
+            fix.detectChanges();
+
+            rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
+            expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, true).length).toBe(1);
+            expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(3);
+
+            // Delete a chip and verify layout.
+            GridFunctions.clickAdvancedFilteringTreeExpressionChipRemoveIcon(fix, [0, 1]);
+            tick(100);
+            fix.detectChanges();
+            rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
+            expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, true).length).toBe(1);
+            expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(2);
+
+            // Verify remaining chip's content.
+            verifyExpressionChipContent(fix, [0, 0], 'ProductName', 'Contains', 'angular');
+        }));
+
+        it('Should select/deselect a condition when its respective chip is clicked.', fakeAsync(() => {
+            // Apply advanced filter through API.
+            const tree = new FilteringExpressionsTree(FilteringLogic.Or);
+            tree.filteringOperands.push({
+                fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            tree.filteringOperands.push({
+                fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Verify first chip is not selected.
+            verifyExpressionChipSelection(fix, [0], false);
+
+            // Click first chip and verify it is selected.
+            GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0]);
+            tick(200);
+            fix.detectChanges();
+            verifyExpressionChipSelection(fix, [0], true);
+
+            // Click first chip again and verify it is not selected.
+            GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0]);
+            tick(200);
+            fix.detectChanges();
+            verifyExpressionChipSelection(fix, [0], false);
+        }));
+
+        it('Should display edit and add buttons when hovering a chip.', fakeAsync(() => {
+            // Apply advanced filter through API.
+            const tree = new FilteringExpressionsTree(FilteringLogic.Or);
+            tree.filteringOperands.push({
+                fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            tree.filteringOperands.push({
+                fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Verify actions container is not visible. (This container contains the 'edit' and the 'add' buttons.)
+            expect(GridFunctions.getAdvancedFilteringTreeExpressionActionsContainer(fix, [0]))
+                .toBeNull('actions container is visible');
+
+            // Hover the first chip and verify actions container is visible.
+            hoverElement(GridFunctions.getAdvancedFilteringTreeItem(fix, [0]));
+            tick(50);
+            fix.detectChanges();
+            expect(GridFunctions.getAdvancedFilteringTreeExpressionActionsContainer(fix, [0]))
+                .not.toBeNull('actions container is not visible');
+
+            // Unhover the first chip and verify actions container is not visible.
+            unhoverElement(GridFunctions.getAdvancedFilteringTreeItem(fix, [0]));
+            tick(50);
+            fix.detectChanges();
+            expect(GridFunctions.getAdvancedFilteringTreeExpressionActionsContainer(fix, [0]))
+                .toBeNull('actions container is visible');
+        }));
+
         describe('Context Menu', () => {
             it('Should discard added group when clicking its operator line without having a single expression.', fakeAsync(() => {
                 // Open Advanced Filtering dialog.
@@ -2136,6 +2256,14 @@ function sendInputNativeElement(fix, nativeElement, text) {
     fix.detectChanges();
 }
 
+function hoverElement(element: HTMLElement, bubbles: boolean = false) {
+    element.dispatchEvent(new MouseEvent('mouseenter', { bubbles: bubbles }));
+}
+
+function unhoverElement(element: HTMLElement, bubbles: boolean = false) {
+    element.dispatchEvent(new MouseEvent('mouseleave', { bubbles: bubbles }));
+}
+
 /**
 * Verifies the type of the operator line ('and' or 'or').
 * (NOTE: The 'operator' argument must be a string with a value that is either 'and' or 'or'.)
@@ -2154,7 +2282,6 @@ function verifyOperatorLine(operatorLine: HTMLElement, operator: string) {
 
 function verifyExpressionChipContent(fix, path: number[], columnText: string, operatorText: string, valueText: string) {
     const chip = GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, path);
-    // const columnNameContainer = chip.querySelector('.igx-filter-tree__expression-column');
     const chipSpans = GridFunctions.sortNativeElementsHorizontally(Array.from(chip.querySelectorAll('span')));
     const columnSpan = chipSpans[0];
     const operatorSpan = chipSpans[1];
@@ -2162,6 +2289,20 @@ function verifyExpressionChipContent(fix, path: number[], columnText: string, op
     expect(columnSpan.innerText.toLowerCase().trim()).toBe(columnText.toLowerCase(), 'incorrect chip column');
     expect(operatorSpan.innerText.toLowerCase().trim()).toBe(operatorText.toLowerCase(), 'incorrect chip operator');
     expect(valueSpan.innerText.toLowerCase().trim()).toBe(valueText.toLowerCase(), 'incorrect chip filter value');
+}
+
+function verifyExpressionChipSelection(fix, path: number[], shouldBeSelected: boolean) {
+    const chip = GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, path);
+    const chipItem = chip.querySelector('.igx-chip__item');
+    if (shouldBeSelected) {
+        expect(chipItem.classList.contains('igx-chip__item--selected')).toBe(true, 'chip is not selected');
+        expect(chipItem.querySelector('.igx-chip__select')).not.toBeNull();
+        expect(chipItem.querySelector('.igx-chip__select--hidden')).toBeNull();
+    } else {
+        expect(chipItem.classList.contains('igx-chip__item--selected')).toBe(false, 'chip is selected');
+        expect(chipItem.querySelector('.igx-chip__select')).toBeNull();
+        expect(chipItem.querySelector('.igx-chip__select--hidden')).not.toBeNull();
+    }
 }
 
 function verifyEditModeExpressionInputStates(fix,
