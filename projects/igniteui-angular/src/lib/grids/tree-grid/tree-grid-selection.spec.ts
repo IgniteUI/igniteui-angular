@@ -23,7 +23,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowSelectorsModule } from '../igx-row-selectors.module';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { GridSelectionMode } from '../types';
+import { GridSelectionMode } from '../common/enums';
 
 describe('IgxTreeGrid - Selection #tGrid', () => {
     configureTestSuite();

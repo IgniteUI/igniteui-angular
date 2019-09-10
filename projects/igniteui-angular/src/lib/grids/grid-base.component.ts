@@ -90,12 +90,12 @@ import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
-import { FilterMode, GridKeydownTargetType, GridSelectionMode, GridSummaryPosition, GridSummaryCalculationMode } from './types';
 import { IgxColumnResizingService } from './grid-column-resizing.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './igx-row-selectors.module';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,
      IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective } from './grid/grid.directives';
+import { GridKeydownTargetType, GridSelectionMode, GridSummaryPosition, GridSummaryCalculationMode, FilterMode } from './common/enums';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -2924,9 +2924,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public notifyChanges(repaint = false) {
         this._cdrRequests = true;
         this._cdrRequestRepaint = repaint;
-        if (!this._tick) {
-            this._tick = Promise.resolve().then(() => this._tick = null);
-        }
         this.cdr.markForCheck();
     }
 

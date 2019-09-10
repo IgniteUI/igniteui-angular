@@ -17,7 +17,7 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { GridSelectionMode } from '../types';
+import { GridSelectionMode } from '../common/enums';
 import { IgxRowSelectorsModule } from '../igx-row-selectors.module';
 
 const DEBOUNCETIME = 30;

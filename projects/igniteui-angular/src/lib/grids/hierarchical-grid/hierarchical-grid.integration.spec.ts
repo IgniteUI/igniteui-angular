@@ -18,7 +18,7 @@ import { IgxHierarchicalTransactionServiceFactory } from './hierarchical-grid-ba
 import { IgxIconModule } from '../../icon';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
 import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
-import { GridSelectionMode } from '../types';
+import { GridSelectionMode } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxHierarchicalGrid Integration #hGrid', () => {

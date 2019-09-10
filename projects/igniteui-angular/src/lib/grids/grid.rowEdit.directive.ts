@@ -1,6 +1,6 @@
 import { Directive, ElementRef, HostListener } from '@angular/core';
 import { GridBaseAPIService } from './api.service';
-import { GridType } from './types';
+import { GridType } from './common/grid.interface';
 
 /** @hidden */
 @Directive({
