@@ -12,7 +12,9 @@
         <button igxButton="flat" [displayDensity]="grid.displayDensity" #advancedFilteringButton name="btnAdvancedFiltering" igxButton igxRipple
             (click)="showAdvancedFilteringUI()">
             <div class="igx-grid-toolbar__button-space">
-                <igx-icon fontSet="material">filter_list</igx-icon>
+                <igx-icon [ngClass]="grid.advancedFilteringExpressionsTree ? 'igx-grid-toolbar__adv-filter--filtered' : 'igx-grid-toolbar__adv-filter'">
+                    filter_list
+                </igx-icon>
                 <span>{{grid.resourceStrings.igx_grid_advanced_filter_title}}</span>
             </div>
         </button>
