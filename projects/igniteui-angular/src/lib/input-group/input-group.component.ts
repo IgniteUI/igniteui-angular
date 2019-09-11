@@ -15,7 +15,6 @@ import {
     AfterContentChecked,
     ViewChild,
     Renderer2,
-    ChangeDetectorRef
 } from '@angular/core';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
@@ -97,7 +96,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      * @hidden
      */
     @HostBinding('class.igx-input-group--focused')
-    public isFocused = true;
+    public isFocused = false;
 
 
     /**
@@ -289,12 +288,9 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
 
     constructor(private _element: ElementRef,
         @Optional() @Inject(DisplayDensityToken) private _displayDensityOptions: IDisplayDensityOptions,
-        private renderer: Renderer2,
-        private cdr: ChangeDetectorRef) {
+        private renderer: Renderer2) {
         super(_displayDensityOptions);
         this.element = _element;
-
-        this.cdr.detach();
     }
 
     /**
@@ -419,18 +415,31 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     }
 
     ngAfterViewInit() {
-        this.cdr.detectChanges();
-        if (this.label && this.label.elementRef) {
-            const labelEl = this.label.elementRef.nativeElement.getBoundingClientRect();
-            this._labelWidth = labelEl.width;
-        }
-        this.isFocused = false;
-        this.cdr.reattach();
+        this.setLabelSize();
     }
 
     ngAfterContentChecked() {
         if (this.line && this.line.nativeElement) {
             this.renderer.setStyle(this.line.nativeElement, 'width', `calc(100% - ${this._labelWidth}px)`);
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    setLabelSize() {
+        if (this.label && this.label.elementRef && this.isTypeBorder) {
+            const labelEl = this.label.elementRef.nativeElement.getBoundingClientRect();
+
+            if (this.isFilled) {
+                this._labelWidth = labelEl.width;
+            } else {
+                const labelClone = this.label.elementRef.nativeElement.cloneNode(true);
+                this.renderer.setStyle(labelClone, 'transform', 'scale(0.75)');
+                this.label.elementRef.nativeElement.appendChild(labelClone);
+                this._labelWidth = labelClone.getBoundingClientRect().width;
+                this.label.elementRef.nativeElement.removeChild(labelClone);
+            }
         }
     }
 }
