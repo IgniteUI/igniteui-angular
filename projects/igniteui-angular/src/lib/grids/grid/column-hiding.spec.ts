@@ -16,7 +16,7 @@ import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { take } from 'rxjs/operators';
-import { GridSelectionMode } from '../types';
+import { GridSelectionMode } from '../common/enums';
 
 describe('Column Hiding UI #grid', () => {
     configureTestSuite();

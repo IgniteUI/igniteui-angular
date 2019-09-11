@@ -22,7 +22,9 @@ import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../core/grid-selection';
 import { DeprecateProperty, DeprecateMethod } from '../core/deprecateDecorators';
 import { HammerGesturesManager } from '../core/touch';
-import { ColumnType, RowType, GridSelectionMode } from './types';
+import { ColumnType } from './common/column.interface';
+import { RowType } from './common/row.interface';
+import { GridSelectionMode } from './common/enums';
 
 /**
  * Providing reference to `IgxGridCellComponent`:

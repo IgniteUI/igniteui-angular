@@ -6,7 +6,7 @@ import { IgxGridComponent } from './grid.component';
 import { ISummaryRecord } from '../summaries/grid-summary';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IGroupByResult } from '../../data-operations/grouping-result.interface';
-import { GridSummaryCalculationMode, GridSummaryPosition } from '../types';
+import { GridSummaryCalculationMode, GridSummaryPosition } from '../common/enums';
 
 /** @hidden */
 interface ISkipRecord {
