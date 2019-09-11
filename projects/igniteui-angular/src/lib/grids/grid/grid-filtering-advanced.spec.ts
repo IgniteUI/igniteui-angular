@@ -20,6 +20,7 @@ import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 const ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
 const ADVANCED_FILTERING_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
 const ADVANCED_FILTERING_OPERATOR_LINE_SELECTED_CSS_CLASS = 'igx-filter-tree__line--selected';
+const ADVANCED_FILTERING_TOOLBAR_ICON_BUTTON_FILTERED_CSS_CLASS = 'igx-grid-toolbar__adv-filter--filtered';
 
 describe('IgxGrid - Advanced Filtering', () => {
     configureTestSuite();
@@ -322,6 +323,58 @@ describe('IgxGrid - Advanced Filtering', () => {
             expect(grid.filteredData.length).toEqual(2);
             expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
             expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Ignite UI for Angular');
+        }));
+
+        it('Should update the Advanced Filtering button icon in toolbar when (filtering)/(clear filtering).',
+        fakeAsync(() => {
+            // Verify that the advanced filtering button icon indicates there are no filters.
+            let advFilterIcon = GridFunctions.getAdvancedFilteringButton(fix).querySelector('igx-icon');
+            expect(advFilterIcon.classList.contains(ADVANCED_FILTERING_TOOLBAR_ICON_BUTTON_FILTERED_CSS_CLASS))
+                .toBe(false, 'Button icon indicates there is active filtering.');
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Click the initial 'Add And Group' button.
+            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            addAndGroupButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Populate edit inputs.
+            selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            sendInputNativeElement(fix, input, 'angular'); // Type filter value.
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Apply the filters.
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+
+            // Verify that the advanced filtering button icon indicates there are filters.
+            advFilterIcon = GridFunctions.getAdvancedFilteringButton(fix).querySelector('igx-icon');
+            expect(advFilterIcon.classList.contains(ADVANCED_FILTERING_TOOLBAR_ICON_BUTTON_FILTERED_CSS_CLASS))
+                .toBe(true, 'Button icon indicates there is no active filtering.');
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Clear the filters.
+            GridFunctions.clickAdvancedFilteringClearFilterButton(fix);
+            fix.detectChanges();
+
+            // Close the dialog.
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            fix.detectChanges();
+
+            // Verify that the advanced filtering button icon indicates there are no filters.
+            advFilterIcon = GridFunctions.getAdvancedFilteringButton(fix).querySelector('igx-icon');
+            expect(advFilterIcon.classList.contains(ADVANCED_FILTERING_TOOLBAR_ICON_BUTTON_FILTERED_CSS_CLASS))
+                .toBe(false, 'Button icon indicates there is active filtering.');
         }));
 
         it('Should correctly filter by a \'string\' column through UI.', fakeAsync(() => {
