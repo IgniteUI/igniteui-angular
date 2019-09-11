@@ -156,6 +156,7 @@
                                 type="box"
                                 [displayDensity]="'compact'"
                                 [overlaySettings]="conditionSelectOverlaySettings"
+                                (onOpening)="onConditionSelectOpening()"
                                 [placeholder]="grid.resourceStrings.igx_grid_filter_condition_placeholder"
                                 [(ngModel)]="selectedCondition"
                                 [disabled]="!selectedColumn">

@@ -124,17 +124,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     public columnSelect: IgxSelectComponent;
 
     @ViewChild('conditionSelect', { read: IgxSelectComponent, static: false })
-    public set conditionSelect(value: IgxSelectComponent) {
-        if ((value && !this._conditionSelect) ||
-            (value && this._conditionSelect && this._conditionSelect.element !== value.element)) {
-            this.conditionSelectOverlaySettings.positionStrategy.settings.target = value.element;
-        }
-        this._conditionSelect = value;
-    }
-
-    public get conditionSelect() {
-        return this._conditionSelect;
-    }
+    public conditionSelect: IgxSelectComponent;
 
     @ViewChild('searchValueInput', { read: ElementRef, static: false })
     public searchValueInput: ElementRef;
@@ -213,7 +203,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     private _clickTimer;
     private _dblClickDelay = 200;
     private _preventChipClick = false;
-    private _conditionSelect: IgxSelectComponent;
     private _editingInputsContainer: ElementRef;
     private _addModeContainer: ElementRef;
     private _currentGroupButtonsContainer: ElementRef;
@@ -785,6 +774,10 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     public onOutletPointerDown(event) {
         // This prevents closing the select's dropdown when clicking the scroll
         event.preventDefault();
+    }
+
+    public onConditionSelectOpening() {
+        this.conditionSelectOverlaySettings.positionStrategy.settings.target = this.conditionSelect.element;
     }
 
     public initialize(filteringService: IgxFilteringService, overlayService: IgxOverlayService,
