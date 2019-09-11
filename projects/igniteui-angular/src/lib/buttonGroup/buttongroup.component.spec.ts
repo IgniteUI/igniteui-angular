@@ -244,9 +244,9 @@ describe('IgxButtonGroup', () => {
             expect(button.nativeElement.tagName).toBe('BUTTON');
 
             if (i < groupChildren.length - 1) {
-                expect(button.nativeElement.tabIndex).toBe(0);
+                expect(button.nativeElement.disabled).toBe(false);
             } else {
-                expect(button.nativeElement.tabIndex).toBe(-1);
+                expect(button.nativeElement.disabled).toBe(true);
             }
         }
     });
