@@ -1595,6 +1595,66 @@ describe('IgxGrid - Advanced Filtering', () => {
             verifyChildrenSelection(GridFunctions.getAdvancedFilteringTreeItem(fix, [1]), false);
         }));
 
+        it('Should open the operator dropdown below its respective input-group.', fakeAsync(() => {
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Add root group.
+            const initialAddAndGroupBtn = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            initialAddAndGroupBtn.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Add a new expression
+            selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            sendInputNativeElement(fix, input, 'script'); // Type filter value.
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Add another expression to root group.
+            const btn = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[0];
+            btn.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Populate column input.
+            selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+
+            // Open the dropdown.
+            GridFunctions.clickAdvancedFilteringOperatorSelect(fix);
+            tick(50);
+            fix.detectChanges();
+            expect(GridFunctions.getAdvancedFilteringSelectDropdown(fix)).not.toBeNull('dropdown is not opened');
+
+            // Close the dropdown.
+            GridFunctions.clickAdvancedFilteringOperatorSelect(fix);
+            tick(50);
+            fix.detectChanges();
+            expect(GridFunctions.getAdvancedFilteringSelectDropdown(fix)).toBeNull('dropdown is opened');
+
+            // Open the operator dropdown again.
+            GridFunctions.clickAdvancedFilteringOperatorSelect(fix);
+            tick(50);
+            fix.detectChanges();
+
+            // Verify the operator dropdown is positioned below its respective input-group.
+            const dropdown: HTMLElement = GridFunctions.getAdvancedFilteringSelectDropdown(fix);
+            expect(GridFunctions.getAdvancedFilteringSelectDropdown(fix)).not.toBeNull('dropdown is not opened');
+
+            const dropdownRect = dropdown.getBoundingClientRect();
+            const inputGroup: HTMLElement = GridFunctions.getAdvancedFilteringOperatorSelect(fix).querySelector('igx-input-group');
+            const inputGroupRect = inputGroup.getBoundingClientRect();
+            const delta = 2;
+            expect(Math.abs(dropdownRect.top - inputGroupRect.bottom) < delta).toBe(true,
+                'incorrect vertical position of operator dropdown');
+            expect(Math.abs(dropdownRect.left - inputGroupRect.left) < delta).toBe(true,
+                'incorrect horizontal position of operator dropdown');
+        }));
+
         describe('Context Menu', () => {
             it('Should discard added group when clicking its operator line without having a single expression.', fakeAsync(() => {
                 // Open Advanced Filtering dialog.
