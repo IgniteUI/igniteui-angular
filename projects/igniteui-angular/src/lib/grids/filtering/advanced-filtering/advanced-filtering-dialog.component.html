@@ -102,7 +102,7 @@
                         [name]="expressionItem.expression.condition.iconName"
                     >
                     </igx-icon>
-                    <span>
+                    <span class="igx-filter-tree__expression-condition">
                         {{ getConditionFriendlyName(expressionItem.expression.condition.name) }}
                     </span>
                     <span igxSuffix *ngIf="!expressionItem.expression.condition.isUnary">
@@ -111,7 +111,7 @@
                 </igx-chip>
                 <div class="igx-filter-tree__expression-actions"
                 *ngIf="(expressionItem.selected && selectedExpressions.length === 1) || expressionItem.hovered">
-                    <igx-icon 
+                    <igx-icon
                         tabindex="0"
                         (keydown)="invokeClick($event)"
                         (click)="enterExpressionEdit(expressionItem)">
@@ -161,13 +161,11 @@
                                 [disabled]="!selectedColumn">
                             <igx-icon *ngIf="selectedColumn && conditionSelect.value && selectedColumn.filters.condition(conditionSelect.value)"
                                       igxPrefix
-                                      style="height: 1.125rem"
                                       fontSet="filtering-icons"
                                       [name]="selectedColumn.filters.condition(conditionSelect.value).iconName">
                             </igx-icon>
                             <igx-select-item *ngFor="let condition of selectedColumn.filters.conditionList()" [value]="condition">
                                 <igx-icon fontSet="filtering-icons"
-                                          style="height: 1.125rem"
                                           [name]="selectedColumn.filters.condition(condition).iconName">
                                 </igx-icon>
                                 <span>{{getConditionFriendlyName(condition)}}</span>

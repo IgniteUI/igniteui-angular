@@ -23,6 +23,10 @@
             @extend %advanced-filter__main !optional;
         }
 
+        @include e(outlet) {
+            @extend %advanced-filter__outlet !optional;
+        }
+
         @include m('cosy') {
             @extend %advanced-filter--cosy !optional;
         }
@@ -91,6 +95,10 @@
 
         @include e(expression-actions) {
             @extend %filter-tree__expression-actions !optional;
+        }
+
+        @include e(expression-condition) {
+            @extend %filter-tree__expression-condition !optional;
         }
 
         @include e(buttons) {

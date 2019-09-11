@@ -50,6 +50,15 @@
         }
     }
 
+    %advanced-filter__outlet {
+        igx-select-item > igx-icon {
+            width: rem(18px);
+            height: rem(18px);
+            font-size: rem(18px);
+            margin-right: rem(8px);
+        }
+    }
+
     %filter-tree {
         display: flex;
 
@@ -76,6 +85,10 @@
         &-selected {
             background-color: igx-color($palette, 'primary', 700);
         }
+
+        &:focus {
+            box-shadow: inset 0 0 0 2px igx-color($palette, 'primary', 700);
+        }
     }
 
     %filter-tree__line--or {
@@ -83,6 +96,10 @@
 
         &-selected {
             background-color: igx-color($palette, 'secondary', 700);
+        }
+
+        &:focus {
+            box-shadow: inset 0 0 0 2px igx-color($palette, 'secondary', 700);
         }
     }
 
@@ -114,8 +131,10 @@
         igx-icon {
             cursor: pointer;
             color: igx-color($palette, 'grays', 500);
+            outline-style: none;
 
-            &:hover {
+            &:hover,
+            &:focus {
                 color: igx-color($palette, 'grays', 800);
             }
         }
@@ -123,6 +142,10 @@
         igx-icon + igx-icon {
             margin-left: rem(8px);
         }
+    }
+
+    %filter-tree__expression-condition {
+        color: igx-color($palette, 'grays', 500);
     }
 
     %filter-tree__buttons {
