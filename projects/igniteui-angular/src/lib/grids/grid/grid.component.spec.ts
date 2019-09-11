@@ -22,7 +22,7 @@ import { SortingDirection, ISortingExpression } from '../../data-operations/sort
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxTabsModule, IgxTabsComponent } from '../../tabs';
 import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
-import { GridSelectionMode } from '../types';
+import { GridSelectionMode } from '../common/enums';
 
 
 describe('IgxGrid Component Tests #grid', () => {

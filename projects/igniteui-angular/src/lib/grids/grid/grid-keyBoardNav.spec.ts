@@ -22,7 +22,7 @@ import {
     VirtualGridComponent, ScrollsComponent,
     GridWithPrimaryKeyComponent, SelectionComponent
 } from '../../test-utils/grid-samples.spec';
-import { GridSelectionMode } from '../types';
+import { GridSelectionMode } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 const DEBOUNCETIME = 30;
