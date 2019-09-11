@@ -2099,9 +2099,82 @@ describe('IgxGrid - Advanced Filtering', () => {
                 firstItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [0]); // expression
                 expect(firstItem.classList.contains('igx-filter-tree__expression-item')).toBe(true);
             }));
+
+            it('Should close the context menu when clicking its close button.' , fakeAsync(() => {
+                // Apply advanced filter through API.
+                const tree = new FilteringExpressionsTree(FilteringLogic.Or);
+                tree.filteringOperands.push({
+                    fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    ignoreCase: true
+                });
+                tree.filteringOperands.push({
+                    fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    ignoreCase: true
+                });
+                grid.advancedFilteringExpressionsTree = tree;
+                fix.detectChanges();
+
+                // Open Advanced Filtering dialog.
+                GridFunctions.clickAdvancedFilteringButton(fix);
+                fix.detectChanges();
+
+                // Click root operator line to open the context menu.
+                const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
+                rootOperatorLine.click();
+                tick(200);
+                fix.detectChanges();
+
+                // Verify context menu is opened.
+                verifyContextMenuVisibility(fix, true);
+
+                // Click close button of context menu.
+                const buttons = GridFunctions.getAdvancedFilteringContextMenuButtons(fix);
+                buttons[0].click();
+                tick(100);
+                fix.detectChanges();
+
+                // Verify context menu is closed.
+                verifyContextMenuVisibility(fix, false);
+            }));
         });
 
         describe('Keyboard Navigation/Interaction', () => {
+            it('Should close the context menu when pressing \'Escape\' on it.' , fakeAsync(() => {
+                // Apply advanced filter through API.
+                const tree = new FilteringExpressionsTree(FilteringLogic.Or);
+                tree.filteringOperands.push({
+                    fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    ignoreCase: true
+                });
+                tree.filteringOperands.push({
+                    fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    ignoreCase: true
+                });
+                grid.advancedFilteringExpressionsTree = tree;
+                fix.detectChanges();
+
+                // Open Advanced Filtering dialog.
+                GridFunctions.clickAdvancedFilteringButton(fix);
+                fix.detectChanges();
+
+                // Click root operator line to open the context menu.
+                const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
+                rootOperatorLine.click();
+                tick(200);
+                fix.detectChanges();
+
+                // Verify context menu is opened.
+                verifyContextMenuVisibility(fix, true);
+
+                // Press 'Escape' on the context menu.
+                UIInteractions.simulateKeyDownEvent(GridFunctions.getAdvancedFilteringContextMenu(fix), 'Escape');
+                tick(200);
+                fix.detectChanges();
+
+                // Verify context menu is closed.
+                verifyContextMenuVisibility(fix, false);
+            }));
+
             it('Should select/deselect a condition when pressing \'Enter\' on its respective chip.' , fakeAsync(() => {
                 // Apply advanced filter through API.
                 const tree = new FilteringExpressionsTree(FilteringLogic.Or);
