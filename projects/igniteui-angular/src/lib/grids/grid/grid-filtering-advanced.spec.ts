@@ -1021,6 +1021,46 @@ describe('IgxGrid - Advanced Filtering', () => {
             verifyElementIsInExpressionsContainerView(fix, GridFunctions.getAdvancedFilteringEditModeContainer(fix));
         }));
 
+        it('Should keep the context menu in view when scrolling the expressions container.', (async () => {
+            // Apply advanced filter through API.
+            const tree = new FilteringExpressionsTree(FilteringLogic.Or);
+            for (let index = 0; index < 20; index++) {
+                tree.filteringOperands.push({
+                    fieldName: 'Downloads', searchVal: index, condition: IgxNumberFilteringOperand.instance().condition('equals')
+                });
+            }
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            await wait(50);
+            fix.detectChanges();
+
+            // Scroll to the top.
+            const exprContainer = GridFunctions.getAdvancedFilteringExpressionsContainer(fix);
+            exprContainer.scrollTop = 0;
+            fix.detectChanges();
+            await wait(100);
+
+            // Select the first two chips.
+            GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0]);
+            await wait(200);
+            fix.detectChanges();
+            GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [1]);
+            await wait(400);
+            fix.detectChanges();
+
+            // Scroll to the bottom.
+            exprContainer.scrollTop = exprContainer.scrollHeight;
+            fix.detectChanges();
+            await wait(100);
+
+            // Verify that the context menu is correctly repositioned and in view.
+            const contextMenu = GridFunctions.getAdvancedFilteringContextMenu(fix);
+            verifyElementIsInExpressionsContainerView(fix, contextMenu);
+        }));
+
         it('Should clear all conditions and groups when the \'clear filter\' button is clicked.', fakeAsync(() => {
             // Apply advanced filter through API.
             const tree = new FilteringExpressionsTree(FilteringLogic.And);
@@ -2058,6 +2098,78 @@ describe('IgxGrid - Advanced Filtering', () => {
 
                 firstItem = GridFunctions.getAdvancedFilteringTreeItem(fix, [0]); // expression
                 expect(firstItem.classList.contains('igx-filter-tree__expression-item')).toBe(true);
+            }));
+        });
+
+        describe('Keyboard Navigation/Interaction', () => {
+            it('Should select/deselect a condition when pressing \'Enter\' on its respective chip.' , fakeAsync(() => {
+                // Apply advanced filter through API.
+                const tree = new FilteringExpressionsTree(FilteringLogic.Or);
+                tree.filteringOperands.push({
+                    fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    ignoreCase: true
+                });
+                tree.filteringOperands.push({
+                    fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    ignoreCase: true
+                });
+                grid.advancedFilteringExpressionsTree = tree;
+                fix.detectChanges();
+
+                // Open Advanced Filtering dialog.
+                GridFunctions.clickAdvancedFilteringButton(fix);
+                fix.detectChanges();
+
+                // Verify first chip is not selected.
+                verifyExpressionChipSelection(fix, [1], false);
+
+                // Press 'Enter' on the second chip and verify it is selected.
+                UIInteractions.simulateKeyDownEvent(GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, [1]), 'Enter');
+                tick(200);
+                fix.detectChanges();
+                verifyExpressionChipSelection(fix, [1], true);
+
+                // Press 'Enter' on the second chip again and verify it is not selected.
+                UIInteractions.simulateKeyDownEvent(GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, [1]), 'Enter');
+                tick(200);
+                fix.detectChanges();
+                verifyExpressionChipSelection(fix, [1], false);
+            }));
+
+            it('Should remove a chip in when pressing \'Enter\' on its \'remove\' icon.' , fakeAsync(() => {
+                // Apply advanced filter through API.
+                const tree = new FilteringExpressionsTree(FilteringLogic.Or);
+                tree.filteringOperands.push({
+                    fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    ignoreCase: true
+                });
+                tree.filteringOperands.push({
+                    fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    ignoreCase: true
+                });
+                grid.advancedFilteringExpressionsTree = tree;
+                fix.detectChanges();
+
+                // Open Advanced Filtering dialog.
+                GridFunctions.clickAdvancedFilteringButton(fix);
+                fix.detectChanges();
+
+                // Verify the there are two chip expressions.
+                let rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(2);
+                expect(GridFunctions.getAdvancedFilteringTreeChildExpressions(rootGroup, true).length).toBe(2);
+
+                // Press 'Enter' on the remove icon of the second chip.
+                const chip = GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, [1]);
+                const removeIcon = chip.querySelector('.igx-chip__remove');
+                UIInteractions.simulateKeyDownEvent(removeIcon, 'Enter');
+                tick(200);
+                fix.detectChanges();
+
+                // Verify the there is only one chip expression.
+                rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
+                expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(1);
+                expect(GridFunctions.getAdvancedFilteringTreeChildExpressions(rootGroup, true).length).toBe(1);
             }));
         });
 
