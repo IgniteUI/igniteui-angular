@@ -191,9 +191,9 @@ export class IgxButtonDirective extends DisplayDensityBase {
     /**
      * @hidden
      */
-    @HostBinding('attr.tabIndex')
-    public get tabIndex(): number {
-        return this._disabled ? -1 : 0;
+    @HostBinding('attr.disabled')
+    public get disabledAttribute() {
+        return this._disabled ? this._disabled : null;
     }
 
     /**
