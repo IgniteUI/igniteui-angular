@@ -6,7 +6,7 @@ import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
-import { GridSelectionMode } from '../types';
+import { GridSelectionMode } from '../common/enums';
 
 const DEBOUNCETIME = 30;
 const treeColumns = ['ID', 'Name', 'HireDate', 'Age', 'OnPTO'];

@@ -15,7 +15,7 @@ import {
 } from '../../test-utils/hierarhical-grid-components.spec';
 import { IgxRowSelectorsModule } from '../igx-row-selectors.module';
 import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
-import { GridSelectionMode } from '../types';
+import { GridSelectionMode } from '../common/enums';
 
 describe('IgxHierarchicalGrid selection #hGrid', () => {
     configureTestSuite();
