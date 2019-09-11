@@ -16,14 +16,15 @@
 } from '@angular/core';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
-import { IgxColumnComponent } from './column.component';
 import { getNodeSizeViaRange, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, NAVIGATION_KEYS, isIE, isLeftClick } from '../core/utils';
 import { State } from '../services/index';
 import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../core/grid-selection';
 import { DeprecateProperty, DeprecateMethod } from '../core/deprecateDecorators';
-import { GridSelectionMode } from './grid-base.component';
 import { HammerGesturesManager } from '../core/touch';
+import { ColumnType } from './common/column.interface';
+import { RowType } from './common/row.interface';
+import { GridSelectionMode } from './common/enums';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -55,7 +56,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     @Input()
-    public column: IgxColumnComponent;
+    public column: ColumnType;
 
     /**
      * Gets the row of the cell.
@@ -65,7 +66,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     @Input()
-    public row: any;
+    public row: RowType;
 
     /**
      * Gets the data of the row of the cell.

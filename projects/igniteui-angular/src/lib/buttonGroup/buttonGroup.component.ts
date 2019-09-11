@@ -22,7 +22,7 @@ import { IgxButtonDirective, IgxButtonModule } from '../directives/button/button
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxIconModule } from '../icon/index';
 import { takeUntil } from 'rxjs/operators';
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions, DisplayDensity } from '../core/density';
+import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IBaseEventArgs } from '../core/utils';
 
 export enum ButtonGroupAlignment { horizontal, vertical }
