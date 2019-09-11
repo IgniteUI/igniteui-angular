@@ -2357,6 +2357,49 @@ describe('IgxGrid - Advanced Filtering', () => {
                 expect(GridFunctions.getAdvancedFilteringTreeChildItems(rootGroup, false).length).toBe(1);
                 expect(GridFunctions.getAdvancedFilteringTreeChildExpressions(rootGroup, true).length).toBe(1);
             }));
+
+            it('Should select/deselect all child conditions and groups when pressing \'Enter\' on  a group\'s operator line.',
+            fakeAsync(() => {
+                // Apply advanced filter through API.
+                const tree = new FilteringExpressionsTree(FilteringLogic.And);
+                tree.filteringOperands.push({
+                    fieldName: 'Downloads', searchVal: 100, condition: IgxNumberFilteringOperand.instance().condition('greaterThan')
+                });
+                const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
+                orTree.filteringOperands.push({
+                    fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    ignoreCase: true
+                });
+                orTree.filteringOperands.push({
+                    fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                    ignoreCase: true
+                });
+                tree.filteringOperands.push(orTree);
+                grid.advancedFilteringExpressionsTree = tree;
+                fix.detectChanges();
+
+                // Open Advanced Filtering dialog.
+                GridFunctions.clickAdvancedFilteringButton(fix);
+                fix.detectChanges();
+
+                // Press 'Enter' on the root group's operator line
+                // and verify that the root group and all of its children become selected.
+                let rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
+                UIInteractions.simulateKeyDownEvent(rootOperatorLine, 'Enter');
+                tick(200);
+                fix.detectChanges();
+                verifyChildrenSelection(GridFunctions.getAdvancedFilteringExpressionsContainer(fix), true);
+                verifyContextMenuVisibility(fix, true);
+
+                // Press 'Enter' on the root group's operator line again
+                // and verify that the root group and all of its children become unselected.
+                rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
+                UIInteractions.simulateKeyDownEvent(rootOperatorLine, 'Enter');
+                tick(200);
+                fix.detectChanges();
+                verifyChildrenSelection(GridFunctions.getAdvancedFilteringExpressionsContainer(fix), false);
+                verifyContextMenuVisibility(fix, false);
+            }));
         });
 
         describe('Localization', () => {
