@@ -80,6 +80,15 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
         this.fieldName = fieldName;
     }
 
+
+    /**
+     * Checks if filtering expressions tree is empty.
+     * @param expressionTree filtering expressions tree.
+     */
+    public static empty(expressionTree: IFilteringExpressionsTree): boolean {
+        return !expressionTree || !expressionTree.filteringOperands || !expressionTree.filteringOperands.length;
+    }
+
     /**
      * Returns the filtering expression for a column with the provided fieldName.
      * ```typescript

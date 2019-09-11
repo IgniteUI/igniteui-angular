@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { DataUtil } from '../../data-operations/data-util';
 import { GridBaseAPIService } from '../api.service';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { BaseFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IFilteringState } from '../../data-operations/filtering-state.interface';
 import { ITreeGridRecord } from './tree-grid.interfaces';
@@ -22,9 +22,7 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
         let rec: ITreeGridRecord;
         const len = data.length;
         const res: ITreeGridRecord[] = [];
-        if (((!expressionsTree || !expressionsTree.filteringOperands || expressionsTree.filteringOperands.length === 0) &&
-            (!advancedExpressionsTree || !advancedExpressionsTree.filteringOperands ||
-                advancedExpressionsTree.filteringOperands.length === 0)) || !len) {
+        if ((FilteringExpressionsTree.empty(expressionsTree) && FilteringExpressionsTree.empty(advancedExpressionsTree)) || !len) {
             return data;
         }
         for (i = 0; i < len; i++) {
@@ -74,12 +72,7 @@ export class IgxTreeGridFilteringPipe implements PipeTransform {
 
         this.resetFilteredOutProperty(grid.records);
 
-        if ((!state.expressionsTree ||
-            !state.expressionsTree.filteringOperands ||
-            state.expressionsTree.filteringOperands.length === 0)
-            && (!state.advancedExpressionsTree ||
-            !state.advancedExpressionsTree.filteringOperands ||
-            state.advancedExpressionsTree.filteringOperands.length === 0)) {
+        if (FilteringExpressionsTree.empty(state.expressionsTree) && FilteringExpressionsTree.empty(state.advancedExpressionsTree)) {
             grid.filteredData = null;
             return hierarchyData;
         }

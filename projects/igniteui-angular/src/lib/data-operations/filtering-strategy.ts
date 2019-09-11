@@ -60,9 +60,7 @@ export class FilteringStrategy extends BaseFilteringStrategy {
         let rec;
         const len = data.length;
         const res: T[] = [];
-        if (((!expressionsTree || !expressionsTree.filteringOperands || expressionsTree.filteringOperands.length === 0) &&
-            (!advancedExpressionsTree || !advancedExpressionsTree.filteringOperands ||
-                advancedExpressionsTree.filteringOperands.length === 0)) || !len) {
+        if ((FilteringExpressionsTree.empty(expressionsTree) && FilteringExpressionsTree.empty(advancedExpressionsTree)) || !len) {
             return data;
         }
         for (i = 0; i < len; i++) {
