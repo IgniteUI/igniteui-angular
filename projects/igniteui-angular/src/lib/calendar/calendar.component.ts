@@ -10,7 +10,8 @@ import {
     ElementRef,
     AfterViewInit,
     ViewChildren,
-    QueryList
+    QueryList,
+    AfterViewChecked
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { fadeIn, scaleInCenter } from '../animations/main';
@@ -69,7 +70,7 @@ export interface IMonthView {
     selector: 'igx-calendar',
     templateUrl: 'calendar.component.html'
 })
-export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterViewInit {
+export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterViewInit, AfterViewChecked {
     /**
      * Sets/gets the `id` of the calendar.
      * If not set, the `id` will have value `"igx-calendar-0"`.
@@ -357,11 +358,13 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
 
     public ngAfterViewInit() {
 
-        this.monthViews.forEach((item, index) => {
-            const prevMonthView = this.getMonthView(index - 1);
-            const nextMonthView = this.getMonthView(index + 1);
-            item.nextMonthView = nextMonthView;
-            item.prevMonthView = prevMonthView;
+        this.monthViews.changes.subscribe(c => {
+            c.forEach((item, index) => {
+                const prevMonthView = this.getMonthView(index - 1);
+                const nextMonthView = this.getMonthView(index + 1);
+                item.nextMonthView = nextMonthView;
+                item.prevMonthView = prevMonthView;
+            });
         });
 
         this.startMonthScroll$.pipe(
@@ -385,6 +388,15 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
         });
     }
 
+    public ngAfterViewChecked() {
+        this.monthViews.forEach((item, index) => {
+            const prevMonthView = this.getMonthView(index - 1);
+            const nextMonthView = this.getMonthView(index + 1);
+            item.nextMonthView = nextMonthView;
+            item.prevMonthView = prevMonthView;
+        });
+    }
+
     /**
      * Returns the locale representation of the month in the month view if enabled,
      * otherwise returns the default `Date.getMonth()` value.
@@ -403,9 +415,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
      */
     public previousMonth(isKeydownTrigger = false) {
         this.viewDate = this.calendarModel.timedelta(this.viewDate, 'month', -1);
-        this.dayViews.forEach((val) => {
-            val.viewDate = this.calendarModel.timedelta(val.viewDate, 'month', -1);
-        });
+        // this.dayViews.forEach((val) => {
+        //     val.viewDate = this.calendarModel.timedelta(val.viewDate, 'month', -1);
+        // });
         this._monthAction = 'prev';
 
         if (this.daysView) {
@@ -418,9 +430,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
      */
     public nextMonth(isKeydownTrigger = false) {
         this.viewDate = this.calendarModel.timedelta(this.viewDate, 'month', 1);
-        this.dayViews.forEach((val) => {
-            val.viewDate = this.calendarModel.timedelta(val.viewDate, 'month', 1);
-        });
+        // this.dayViews.forEach((val) => {
+        //     val.viewDate = this.calendarModel.timedelta(val.viewDate, 'month', 1);
+        // });
         this._monthAction = 'next';
 
         if (this.daysView) {
@@ -537,11 +549,20 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      * @hidden
      */
+    public daysViewInit(event: IgxDaysViewComponent) {
+       // this.monthViews.
+    }
+
+    /**
+     * @hidden
+     */
     public changeMonth(event: Date) {
         this.viewDate = new Date(this.viewDate.getFullYear(), event.getMonth());
-        this.dayViews.forEach((val, index) => {
-            val.viewDate.setMonth(event.getMonth() + index);
-        });
+        // this.dayViews.forEach((val, index) => {
+        //     // val.viewDate.setMonth(event.getMonth() + index);
+        //     val.viewDate = this.calendarModel.timedelta(val.viewDate, 'month', index);
+        // });
+
         this.activeView = CalendarView.DEFAULT;
 
         requestAnimationFrame(() => {
