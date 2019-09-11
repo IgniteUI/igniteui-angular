@@ -521,7 +521,6 @@
         width: 100%;
         position: relative;
         min-height: map-get($type-border-size, 'comfortable');
-        padding-top: rem(18px, map-get($base-scale-size, 'comfortable'));
     }
 
     %igx-input-group__bundle-type-border-main-focused {
@@ -531,12 +530,16 @@
 
     %igx-input-group__bundle-type-border-main--cosy {
         min-height: map-get($type-border-size, 'cosy');
-        padding-top: rem(18px, map-get($base-scale-size, 'cosy'));
     }
 
     %igx-input-group__bundle-type-border-main--compact {
         min-height: map-get($type-border-size, 'compact');
-        padding-top: rem(18px, map-get($base-scale-size, 'compact'));
+    }
+
+    %form-group-input--border {
+        position: absolute;
+        top: 0;
+        height: 100% !important;
     }
 
     %igx-input-group__bundle-suffix,
@@ -596,15 +599,20 @@
 
 
     %igx-input-group__label-type-border {
-        padding: 0 rem(4px);
+        top: calc(50% - #{$label-height});
         margin-top: 0 !important;
+        padding: 0 rem(4px);
         width: auto;
         max-width: 100%;
     }
 
+    textarea + %igx-input-group__label-type-border {
+        top: 0;
+    }
+
     %igx-input-group__label-type-border-focused {
         transform: scale(.75);
-        top: calc(-#{$label-height--focused} / 2);
+        top: calc(-#{$label-height--focused} / 2) !important;
     }
 
     %form-group-bundle--box {
@@ -1428,6 +1436,56 @@
 
             %igx-input-group__bundle-line {
                 background: --var($theme, 'success-secondary-color');
+                height: 2px;
+                top: -2px;
+            }
+        }
+    }
+
+    %igx-input-group__bundle-type-border--focused--disabled {
+        %igx-input-group__bundle-type-border-main {
+            box-shadow: 0 2px 0 --var($theme, 'disabled-border-color'),
+            0 0 0 transparent;
+        }
+
+        %igx-input-group__bundle-prefix {
+            box-shadow: inset 2px 0 0 --var($theme, 'disabled-border-color'),
+            0 2px 0 --var($theme, 'disabled-border-color'),
+            0 -2px 0 --var($theme, 'disabled-border-color');
+        }
+
+        %igx-input-group__bundle-suffix {
+            box-shadow: inset -2px 0 0 --var($theme, 'disabled-border-color'),
+            0 2px 0 --var($theme, 'disabled-border-color'),
+            0 -2px 0 --var($theme, 'disabled-border-color');
+        }
+
+        %igx-input-group__bundle-line {
+            background: --var($theme, 'disabled-border-color');
+            height: 2px;
+            top: -2px;
+        }
+
+        &:hover {
+            %igx-input-group__bundle-type-border-main {
+                box-shadow: 0 2px 0 --var($theme, 'disabled-border-color'),
+                0 0 0 transparent;
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow: inset 2px 0 0 --var($theme, 'disabled-border-color'),
+                0 2px 0 --var($theme, 'disabled-border-color'),
+                0 -2px 0 --var($theme, 'disabled-border-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow: inset -2px 0 0 --var($theme, 'disabled-border-color'),
+                0 2px 0 --var($theme, 'disabled-border-color'),
+                0 -2px 0 --var($theme, 'disabled-border-color');
+            }
+
+            %igx-input-group__bundle-line {
+                background: --var($theme, 'disabled-border-color');
                 height: 2px;
                 top: -2px;
             }

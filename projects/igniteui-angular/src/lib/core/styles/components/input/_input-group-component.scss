@@ -318,6 +318,10 @@
             @extend %form-group-textarea--border !optional;
         }
 
+        @include e(input) {
+            @extend %form-group-input--border !optional;
+        }
+
         @include e(label) {
             @extend %igx-input-group__label-type-border !optional;
         }
@@ -425,7 +429,11 @@
         }
     }
 
-    // @include mx(disabled, border) {}
+    @include mx(disabled, border) {
+         @include e(bundle-type-border) {
+             @extend %igx-input-group__bundle-type-border--focused--disabled !optional;
+         }
+     }
 
     // INPUT TYPE BORDER -- END --
 
