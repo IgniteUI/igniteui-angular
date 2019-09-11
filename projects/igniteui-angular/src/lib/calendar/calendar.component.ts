@@ -594,6 +594,15 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      * @hidden
      */
+    public getContext(i: number) {
+        const date: Date = new Date(this.viewDate);
+        date.setMonth(date.getMonth() + i);
+        return this.generateContext(date, i);
+    }
+
+    /**
+     * @hidden
+     */
     @HostListener('keydown.pageup', ['$event'])
     public onKeydownPageUp(event: KeyboardEvent) {
         event.preventDefault();
@@ -758,8 +767,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
      * the calendar templates.
      * @hidden
      */
-    private generateContext(value: Date) {
+    private generateContext(value: Date, i?: number) {
         const formatObject = {
+            index: i,
             monthView: () => this.activeViewYear(),
             yearView: () => this.activeViewDecade(),
             ...this.calendarModel.formatToParts(value, this.locale, this.formatOptions,

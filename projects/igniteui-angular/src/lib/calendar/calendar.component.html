@@ -3,19 +3,15 @@
     <span>{{ getFormattedDate().monthday }}</span>
 </ng-template>
 
-<ng-template let-result #defaultMonth >
-    <ng-container *ngFor="let view of dayViews; index as i;">
-        <div [style.width.%]="100/monthsViewNumber" style="text-align: center">
-            <span tabindex="0" #monthsBtn (keydown)="activeViewYearKB($event)" (click)="activeViewYear()"
-                class="igx-calendar-picker__date">
-                {{ formattedMonth(getViewDate(i)) }}
-            </span>
-            <span tabindex="0" #yearsBtn (keydown)="activeViewDecadeKB($event)" (click)="activeViewDecade()"
-                class="igx-calendar-picker__date">
-                {{ formattedYear(getViewDate(i)) }}
-            </span>
-        </div>
-    </ng-container>
+<ng-template let-result #defaultMonth let-obj>
+    <span tabindex="0" #monthsBtn (keydown)="activeViewYearKB($event)" (click)="activeViewYear()"
+        class="igx-calendar-picker__date">
+        {{ formattedMonth(getViewDate(obj.index)) }}
+    </span>
+    <span tabindex="0" #yearsBtn (keydown)="activeViewDecadeKB($event)" (click)="activeViewDecade()"
+        class="igx-calendar-picker__date">
+        {{ formattedYear(getViewDate(obj.index)) }}
+    </span>
 </ng-template>
 
 <div *ngIf="selection === 'single' && hasHeader" class="igx-calendar__header">
@@ -36,9 +32,9 @@
                 }">
             <igx-icon fontSet="material">keyboard_arrow_left</igx-icon>
         </div>
-        <div style="display: contents">
-            <ng-container *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultMonth; context: context">
-            </ng-container>
+        <div *ngFor="let view of dayViews; index as i;" [style.width.%]="100/monthsViewNumber">
+                <ng-template *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultMonth; context: getContext(i)">
+                </ng-template>
         </div>
         <div tabindex="0" class="igx-calendar-picker__next" #nextMonthBtn 
             igxCalendarScrollMonth [startScroll]="startNextMonthScroll" [stopScroll]="stopMonthScroll" [ngStyle]="{
