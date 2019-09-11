@@ -48,6 +48,11 @@ export class IgxButtonDirective extends DisplayDensityBase {
      */
     private _backgroundColor: string;
 
+    /**
+     *@hidden
+     */
+    private _disabled: boolean;
+
     constructor(public element: ElementRef, private _renderer: Renderer2,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(_displayDensityOptions);
@@ -141,6 +146,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      */
     @Input() set disabled(val) {
         val = !!val;
+        this._disabled = val;
         if (val) {
             this._renderer.addClass(this.nativeElement, `${this._cssClassPrefix}--disabled`);
         } else {
@@ -183,6 +189,14 @@ export class IgxButtonDirective extends DisplayDensityBase {
     }
 
     /**
+     * @hidden
+     */
+    @HostBinding('attr.tabIndex')
+    public get tabIndex(): number {
+        return this._disabled ? -1 : 0;
+    }
+
+    /**
      * Gets or sets whether the button is selected.
      * Mainly used in the IgxButtonGroup component and it will have no effect if set separately.
      * ```html
@@ -195,7 +209,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
     /**
      *@hidden
      */
-    @HostListener('click',  ['$event'])
+    @HostListener('click', ['$event'])
     public onClick(ev) {
         this.buttonClick.emit(ev);
     }
