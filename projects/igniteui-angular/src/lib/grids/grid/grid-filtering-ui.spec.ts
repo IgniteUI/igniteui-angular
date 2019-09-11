@@ -43,7 +43,7 @@ import {
     IgxGridFilteringESFLoadOnDemandComponent
 } from '../../test-utils/grid-samples.spec';
 import { HelperUtils, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
-import { GridSelectionMode, FilterMode } from '../types';
+import { GridSelectionMode, FilterMode } from '../common/enums';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
