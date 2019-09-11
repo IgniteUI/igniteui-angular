@@ -764,10 +764,9 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyFilteredGridTemplate;
         }
 
-        // TODO
-        /*if (this.isLoading && (!this.data || this.dataLength === 0)) {
+        if (this.isLoading && (!this.data || this.dataLength === 0)) {
             return this.loadingGridTemplate ? this.loadingGridTemplate : this.loadingGridDefaultTemplate;
-        }*/
+        }
 
         if (this.dataLength === 0) {
             return this.emptyGridTemplate ? this.emptyGridTemplate : this.emptyGridDefaultTemplate;

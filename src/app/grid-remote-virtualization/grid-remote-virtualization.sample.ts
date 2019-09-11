@@ -12,7 +12,7 @@ export class GridVirtualizationSampleComponent implements OnInit, AfterViewInit 
     public remoteData: any;
     public prevRequest: any;
     public columns: any;
-    public loading: boolean = false;
+    public loading: boolean = true;
 
     @ViewChild('grid1', { static: true })
     public grid: IgxGridComponent;

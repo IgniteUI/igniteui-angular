@@ -138,7 +138,7 @@
         <ng-container *ngTemplateOutlet="template"></ng-container>
         <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
     </div>
-    <div [style.display]="isLoading ? 'flex' : 'none'" class="igx-grid__tbody-loading" #loadingOverlay>
+    <div [style.display]="shouldOverlayLoading ? 'flex' : 'none'" #loadingOverlay>
         <igx-circular-bar [indeterminate]="true">
         </igx-circular-bar>
     </div>
@@ -268,4 +268,5 @@
 </ng-template>
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>
+<div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>

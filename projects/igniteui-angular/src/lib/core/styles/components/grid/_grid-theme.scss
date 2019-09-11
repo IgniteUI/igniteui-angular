@@ -835,21 +835,6 @@
         }
     }
 
-    %igx-grid__tbody-loading {
-        width: 100%;
-        height: 100%;
-        align-items: center;
-        justify-content: center;
-        display: flex;
-        background-color: igx-color($palette, 'grays', 300);
-        opacity: 0.5;
-
-        > %circular-display {
-            width: rem(50);
-            height: rem(50);
-        }
-    }
-
     %grid-scroll {
         grid-row: 6;
         display: flex;
@@ -1986,6 +1971,15 @@
     %igx-grid__outlet {
         z-index: 10002;
         position: fixed;
+    }
+
+    %igx-grid__loading-outlet {
+        z-index: 10003;
+
+        %circular-display {
+            width: rem(50);
+            height: rem(50);
+        }
     }
 
     %igx-grid__row-editing-outlet {
