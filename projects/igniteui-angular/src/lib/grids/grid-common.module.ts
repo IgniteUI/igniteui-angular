@@ -46,7 +46,7 @@ import {
 } from './grid.rowEdit.directive';
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
-import { IgxColumnResizingService } from './grid-column-resizing.service';
+import { IgxColumnResizingService } from './resizing/resizing.service';
 import { IgxGridToolbarCustomContentDirective } from './grid-toolbar.component';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
@@ -59,7 +59,7 @@ import { IgxFilterModule } from '../directives/filter/filter.directive';
 import { IgxGridPipesModule } from './grid-pipes.module';
 import { IgxGridExcelStyleFilteringModule } from './filtering/excel-style/grid.excel-style-filtering.module';
 import { IgxGridDragSelectDirective } from './drag-select.directive';
-import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
+import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
 import { IgxRowDragModule } from './row-drag.directive';
 import {
     IgxCellFooterTemplateDirective,

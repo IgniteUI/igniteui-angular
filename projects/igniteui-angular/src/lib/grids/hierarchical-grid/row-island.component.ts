@@ -39,7 +39,7 @@ import { takeUntil } from 'rxjs/operators';
 import { IgxColumnComponent } from '../column.component';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IBaseEventArgs } from '../../core/utils';
-import { IgxColumnResizingService } from '../grid-column-resizing.service';
+import { IgxColumnResizingService } from '../resizing/resizing.service';
 export interface IGridCreatedEventArgs extends IBaseEventArgs {
     owner: IgxRowIslandComponent;
     parentID: any;

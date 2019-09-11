@@ -1,7 +1,10 @@
 import { Injectable, NgZone } from '@angular/core';
-import { IgxColumnComponent } from './column.component';
+import { IgxColumnComponent } from '../column.component';
 
-/** @hidden */
+/**
+ * @hidden
+ * @internal
+ */
 @Injectable()
 export class IgxColumnResizingService {
 

@@ -86,11 +86,11 @@ import {
     IgxExcelStyleHidingTemplateDirective,
     IgxExcelStyleMovingTemplateDirective
 } from './filtering/excel-style/grid.excel-style-filtering.component';
-import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
+import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
-import { IgxColumnResizingService } from './grid-column-resizing.service';
+import { IgxColumnResizingService } from './resizing/resizing.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './igx-row-selectors.module';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,

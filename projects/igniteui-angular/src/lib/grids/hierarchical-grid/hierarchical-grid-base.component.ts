@@ -25,7 +25,7 @@ import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-naviga
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
-import { IgxColumnResizingService } from '../grid-column-resizing.service';
+import { IgxColumnResizingService } from '../resizing/resizing.service';
 
 export const IgxHierarchicalTransactionServiceFactory = {
     provide: IgxGridTransaction,

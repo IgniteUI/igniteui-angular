@@ -19,7 +19,7 @@ import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
-import { IgxColumnResizingService } from './grid-column-resizing.service';
+import { IgxColumnResizingService } from './resizing/resizing.service';
 import { IgxOverlayService } from '../services/overlay/overlay';
 import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { OverlaySettings, PositionSettings, VerticalAlignment } from '../services/overlay/utilities';
