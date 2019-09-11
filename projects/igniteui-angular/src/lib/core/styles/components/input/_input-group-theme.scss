@@ -1444,50 +1444,50 @@
 
     %igx-input-group__bundle-type-border--focused--disabled {
         %igx-input-group__bundle-type-border-main {
-            box-shadow: 0 2px 0 --var($theme, 'disabled-border-color'),
+            box-shadow: 0 1px 0 --var($theme, 'disabled-border-color'),
             0 0 0 transparent;
         }
 
         %igx-input-group__bundle-prefix {
-            box-shadow: inset 2px 0 0 --var($theme, 'disabled-border-color'),
-            0 2px 0 --var($theme, 'disabled-border-color'),
-            0 -2px 0 --var($theme, 'disabled-border-color');
+            box-shadow: inset 1px 0 0 --var($theme, 'disabled-border-color'),
+            0 1px 0 --var($theme, 'disabled-border-color'),
+            0 -1px 0 --var($theme, 'disabled-border-color');
         }
 
         %igx-input-group__bundle-suffix {
-            box-shadow: inset -2px 0 0 --var($theme, 'disabled-border-color'),
-            0 2px 0 --var($theme, 'disabled-border-color'),
-            0 -2px 0 --var($theme, 'disabled-border-color');
+            box-shadow: inset -1px 0 0 --var($theme, 'disabled-border-color'),
+            0 1px 0 --var($theme, 'disabled-border-color'),
+            0 -1px 0 --var($theme, 'disabled-border-color');
         }
 
         %igx-input-group__bundle-line {
             background: --var($theme, 'disabled-border-color');
-            height: 2px;
-            top: -2px;
+            height: 1px;
+            top: -1px;
         }
 
         &:hover {
             %igx-input-group__bundle-type-border-main {
-                box-shadow: 0 2px 0 --var($theme, 'disabled-border-color'),
+                box-shadow: 0 1px 0 --var($theme, 'disabled-border-color'),
                 0 0 0 transparent;
             }
 
             %igx-input-group__bundle-prefix {
-                box-shadow: inset 2px 0 0 --var($theme, 'disabled-border-color'),
-                0 2px 0 --var($theme, 'disabled-border-color'),
-                0 -2px 0 --var($theme, 'disabled-border-color');
+                box-shadow: inset 1px 0 0 --var($theme, 'disabled-border-color'),
+                0 1px 0 --var($theme, 'disabled-border-color'),
+                0 -1px 0 --var($theme, 'disabled-border-color');
             }
 
             %igx-input-group__bundle-suffix {
-                box-shadow: inset -2px 0 0 --var($theme, 'disabled-border-color'),
-                0 2px 0 --var($theme, 'disabled-border-color'),
-                0 -2px 0 --var($theme, 'disabled-border-color');
+                box-shadow: inset -1px 0 0 --var($theme, 'disabled-border-color'),
+                0 1px 0 --var($theme, 'disabled-border-color'),
+                0 -1px 0 --var($theme, 'disabled-border-color');
             }
 
             %igx-input-group__bundle-line {
                 background: --var($theme, 'disabled-border-color');
-                height: 2px;
-                top: -2px;
+                height: 1px;
+                top: -1px;
             }
         }
     }
