@@ -729,3 +729,69 @@ export class IgxTreeGridDefaultLoadingComponent implements OnInit {
         }, 1000);
     }
 }
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGridCustomSelectors
+        [data]="data" primaryKey="ID" foreignKey="ParentID"
+        [paging]="true" [perPage]="5" [rowSelection]="'multiple'" width="900px" height="600px">
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+        <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+        <ng-template igxRowSelector let-rowContext>
+        <span class="rowNumber">{{ rowContext.index }}</span>
+            <igx-checkbox [checked]="rowContext.selected" (click)="onRowCheckboxClick($event, rowContext)"></igx-checkbox>
+        </ng-template>
+        <ng-template igxHeadSelector let-headContext>
+            <igx-checkbox
+                [checked]="headContext.totalCount === headContext.selectedCount"
+                [indeterminate]="headContext.totalCount !== headContext.selectedCount && headContext.selectedCount !== 0"
+                (click)="onHeaderCheckboxClick($event, headContext)">
+            </igx-checkbox>
+        </ng-template>
+    </igx-tree-grid>`
+})
+export class IgxTreeGridCustomRowSelectorsComponent implements OnInit {
+    @ViewChild(IgxTreeGridComponent, { static: true })
+    public treeGrid: IgxTreeGridComponent;
+    public data = [];
+
+    public ngOnInit(): void {
+        this.data = SampleTestData.employeePrimaryForeignKeyTreeData();
+    }
+
+    public onRowCheckboxClick(event, rowContext) {
+        event.stopPropagation();
+        event.preventDefault();
+        rowContext.selected ? this.treeGrid.deselectRows([rowContext.rowID]) : this.treeGrid.selectRows([rowContext.rowID]);
+    }
+
+    public onHeaderCheckboxClick(event, headContext) {
+        event.stopPropagation();
+        event.preventDefault();
+        headContext.selected ? this.treeGrid.deselectAllRows() : this.treeGrid.selectAllRows();
+    }
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" width="900px" height="600px">
+        <igx-column [field]="'ID'" dataType="number" [sortable]="true"></igx-column>
+        <igx-column [field]="'Name'" dataType="string" [sortable]="true"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date" [sortable]="true"></igx-column>
+        <igx-column [field]="'Age'" dataType="number" [sortable]="true"></igx-column>
+        <ng-template igxRowExpandedIndicator>
+        <span>EXPANDED</span>
+        </ng-template>
+        <ng-template igxRowCollapsedIndicator>
+            <span>COLLAPSED</span>
+        </ng-template>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridCustomExpandersTemplateComponent {
+    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeTreeData();
+}

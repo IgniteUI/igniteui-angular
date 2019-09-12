@@ -1,6 +1,6 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTreeGridModule, GridSelectionMode } from './index';
+import { IgxTreeGridModule } from './index';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { DisplayDensity } from '../../core/displayDensity';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -12,6 +12,7 @@ import {
     IgxTreeGridCellSelectionComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
+import { GridSelectionMode } from '../common/enums';
 
 describe('IgxTreeGrid Component Tests #tGrid', () => {
     configureTestSuite();

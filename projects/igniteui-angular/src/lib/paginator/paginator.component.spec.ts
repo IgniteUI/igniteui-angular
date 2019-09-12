@@ -4,6 +4,7 @@ import { ViewChild, Component } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxPaginatorComponent, IgxPaginatorModule } from './paginator.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { GridFunctions } from '../test-utils/grid-functions.spec';
 
 describe('IgxPaginator with default settings', () => {
     configureTestSuite();
@@ -79,7 +80,7 @@ describe('IgxPaginator with default settings', () => {
         paginator.perPage = 100;
         fix.detectChanges();
 
-        const pagingButtons = fix.nativeElement.querySelectorAll('.igx-grid-paginator__pager > button');
+        const pagingButtons =  GridFunctions.getPagingButtons(fix.nativeElement);
         pagingButtons.forEach(element => {
             expect(element.className.includes('igx-button--disabled')).toBe(true);
         });
@@ -144,7 +145,7 @@ describe('IgxPaginator with custom settings', () => {
         const select = fix.debugElement.query(By.css('igx-select')).nativeElement;
         const selectDisabled = select.getAttribute('ng-reflect-is-disabled');
 
-        const pagingButtons = fix.nativeElement.querySelectorAll('.igx-grid-paginator__pager > button');
+        const pagingButtons = GridFunctions.getPagingButtons(fix.nativeElement);
         pagingButtons.forEach(element => {
             expect(element.className.includes('igx-button--disabled')).toBe(true);
         });

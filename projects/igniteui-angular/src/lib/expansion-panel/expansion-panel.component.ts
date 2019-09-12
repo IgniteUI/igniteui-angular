@@ -9,7 +9,7 @@ import {
     forwardRef,
     AfterContentInit
 } from '@angular/core';
-import { AnimationBuilder, AnimationReferenceMetadata, useAnimation, AnimationAnimateRefMetadata } from '@angular/animations';
+import { AnimationBuilder, AnimationReferenceMetadata, useAnimation } from '@angular/animations';
 import { growVerOut, growVerIn } from '../animations/main';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
 import { IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';

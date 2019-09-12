@@ -8,8 +8,7 @@ import { IgxColumnComponent } from '../column.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxGroupAreaDropDirective } from './grid.directives';
 import { IgxColumnMovingDragDirective } from '../grid.common';
-import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { IgxGridModule, IgxGridCellComponent, GridSelectionMode } from './index';
+import { IgxGridModule } from './index';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxChipComponent, IChipClickEventArgs } from '../../chips/chip.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
@@ -18,6 +17,8 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DataParent } from '../../test-utils/sample-test-data.spec';
 import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-samples.spec';
 import { resizeObserverIgnoreError, HelperUtils } from '../../test-utils/helper-utils.spec';
+import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
+import { GridSelectionMode } from '../common/enums';
 
 describe('IgxGrid - GroupBy #grid', () => {
     configureTestSuite();
@@ -518,7 +519,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(currExpr.groupedColumns[0].field).toEqual('Downloads');
         }));
 
-    it('should allow setting custom template for group row content.', fakeAsync(() => {
+    it('should allow setting custom template for group row content and expand/collapse icons.', fakeAsync(() => {
         const fix = TestBed.createComponent(CustomTemplateGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
@@ -534,7 +535,19 @@ describe('IgxGrid - GroupBy #grid', () => {
             const expectedText = 'Total items with value:' + grVal +
                 ' are ' + grRow.groupRow.records.length;
             expect(elem.innerText.trim(['\n', '\r', ' '])).toEqual(expectedText);
+            const expander = grRow.nativeElement.querySelector('.igx-grid__grouping-indicator');
+            expect(expander.innerText).toBe('EXPANDED');
         }
+
+        groupRows[0].toggle();
+        const expndr = groupRows[0].nativeElement.querySelector('.igx-grid__grouping-indicator');
+        expect(expndr.innerText).toBe('COLLAPSED');
+
+        expect(grid.headerGroupContainer.nativeElement.innerText).toBe('EXPANDED');
+        grid.toggleAllGroupRows();
+        fix.detectChanges();
+        expect(grid.headerGroupContainer.nativeElement.innerText).toBe('COLLAPSED');
+
     }));
 
     it('should have the correct ARIA attributes on the group rows.', fakeAsync(() => {
@@ -984,10 +997,10 @@ describe('IgxGrid - GroupBy #grid', () => {
         const grRows = grid.groupsRowList.toArray();
         const dataRows = grid.dataRowList.toArray();
         for (const grRow of grRows) {
-            expect(HelperUtils.getRowCheckboxDiv(grRow.element.nativeElement)).toBeNull();
+            expect(GridSelectionFunctions.getRowCheckboxDiv(grRow.element.nativeElement)).toBeNull();
         }
         for (const dRow of dataRows) {
-            expect(HelperUtils.getRowCheckboxDiv(dRow.element.nativeElement)).toBeDefined();
+            expect(GridSelectionFunctions.getRowCheckboxDiv(dRow.element.nativeElement)).toBeDefined();
         }
     }));
 
@@ -1022,7 +1035,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             fix.detectChanges();
             expect(grid.selectedRows().length).toEqual(0);
 
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
             expect(grid.selectedRows().length).toEqual(8);
@@ -1589,11 +1602,11 @@ describe('IgxGrid - GroupBy #grid', () => {
         setTimeout(() => {
             const rows = grid.dataRowList.toArray();
             expect(rows.length).toEqual(1);
-            HelperUtils.clickRowCheckbox(rows[0].element);
+            GridSelectionFunctions.clickRowCheckbox(rows[0].element);
              setTimeout(() => {
                 grid.cdr.detectChanges();
                 expect(grid.selectedRows().length).toEqual(1);
-                HelperUtils.verifyRowSelected(rows[0]);
+                GridSelectionFunctions.verifyRowSelected(rows[0]);
                 done();
             }, 100);
         }, 100);
@@ -2668,6 +2681,19 @@ export class GroupableGridComponent extends DataParent {
             <igx-column [field]="'Released'" [header]="'Released'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
             <ng-template igxGroupByRow let-groupRow>
                 <span>Total items with value:{{ groupRow.value }} are {{ groupRow.records.length }}</span>
+            </ng-template>
+            <ng-template igxRowExpandedIndicator let-groupRow>
+                <span>EXPANDED</span>
+            </ng-template>
+            <ng-template igxRowCollapsedIndicator let-groupRow>
+                <span>COLLAPSED</span>
+            </ng-template>
+
+            <ng-template igxHeaderExpandedIndicator>
+                <span>EXPANDED</span>
+            </ng-template>
+            <ng-template igxHeaderCollapsedIndicator>
+                <span>COLLAPSED</span>
             </ng-template>
         </igx-grid>
     `

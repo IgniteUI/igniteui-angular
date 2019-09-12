@@ -7,7 +7,6 @@ import {
     EventEmitter,
     forwardRef,
     HostBinding,
-    HostListener,
     Input,
     NgModule,
     Output,

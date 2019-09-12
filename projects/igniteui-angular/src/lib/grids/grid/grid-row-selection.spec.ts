@@ -2,7 +2,7 @@ import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule, GridSelectionMode, IRowSelectionEventArgs } from './index';
+import { IgxGridModule, IRowSelectionEventArgs } from './index';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -12,12 +12,13 @@ import {
     SelectionWithScrollsComponent,
     SingleRowSelectionComponent,
     RowSelectionWithoutPrimaryKeyComponent,
-    SelectionWithTransactionsComponent
+    SelectionWithTransactionsComponent,
+    GridCustomSelectorsComponent
 } from '../../test-utils/grid-samples.spec';
-import { IgxHierarchicalGridModule } from '../hierarchical-grid/hierarchical-grid.module';
-import { HelperUtils } from '../../test-utils/helper-utils.spec';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { GridSelectionMode } from '../common/enums';
+import { IgxRowSelectorsModule } from '../igx-row-selectors.module';
 
 const DEBOUNCETIME = 30;
 
@@ -32,12 +33,13 @@ describe('IgxGrid - Row Selection #grid', () => {
                 SelectionWithScrollsComponent,
                 RowSelectionWithoutPrimaryKeyComponent,
                 SingleRowSelectionComponent,
-                SelectionWithTransactionsComponent
+                SelectionWithTransactionsComponent,
+                GridCustomSelectorsComponent,
             ],
             imports: [
                 NoopAnimationsModule,
                 IgxGridModule,
-                IgxHierarchicalGridModule
+                IgxRowSelectorsModule
             ]
         })
             .compileComponents();
@@ -54,21 +56,21 @@ describe('IgxGrid - Row Selection #grid', () => {
         }));
 
         it('Should have checkbox on each row', (async () => {
-            HelperUtils.verifyHeaderRowHasCheckbox(fix);
-            HelperUtils.verifyHeaderAndRowCheckBoxesAlignment(grid);
+            GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix);
+            GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
 
             for (const row of grid.rowList.toArray()) {
-                HelperUtils.verifyRowHasCheckbox(row.nativeElement);
+                GridSelectionFunctions.verifyRowHasCheckbox(row.nativeElement);
             }
 
-            GridFunctions.setGridScrollTop(grid, 1000);
+            GridFunctions.scrollTop(grid, 1000);
             await wait(100);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderAndRowCheckBoxesAlignment(grid);
+            GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
 
             for (const row of grid.rowList.toArray()) {
-                HelperUtils.verifyRowHasCheckbox(row.nativeElement);
+                GridSelectionFunctions.verifyRowHasCheckbox(row.nativeElement);
             }
         }));
 
@@ -76,57 +78,57 @@ describe('IgxGrid - Row Selection #grid', () => {
             const selectedRow = grid.getRowByIndex(0);
             expect(selectedRow).toBeDefined();
 
-            HelperUtils.verifyRowSelected(selectedRow, false);
+            GridSelectionFunctions.verifyRowSelected(selectedRow, false);
 
-            HelperUtils.clickRowCheckbox(selectedRow);
+            GridSelectionFunctions.clickRowCheckbox(selectedRow);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
-            HelperUtils.verifyRowSelected(selectedRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(selectedRow);
             expect(grid.selectedRows()).toEqual([1]);
 
-            GridFunctions.setGridScrollTop(grid, 500);
+            GridFunctions.scrollTop(grid, 500);
             await wait(100);
             fix.detectChanges();
 
             expect(grid.selectedRows()).toEqual([1]);
-            HelperUtils.verifyRowSelected(grid.rowList.first, false);
+            GridSelectionFunctions.verifyRowSelected(grid.rowList.first, false);
 
-            GridFunctions.setGridScrollTop(grid, 0);
+            GridFunctions.scrollTop(grid, 0);
             await wait(100);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
-            HelperUtils.verifyRowSelected(selectedRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(selectedRow);
             expect(grid.selectedRows()).toEqual([1]);
         }));
 
         it('Should have correct checkboxes position when scroll left', (async () => {
             grid.width = '300px';
             fix.detectChanges();
-            HelperUtils.verifyHeaderAndRowCheckBoxesAlignment(grid);
+            GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
 
             GridFunctions.scrollLeft(grid, 1000);
             await wait(100);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderAndRowCheckBoxesAlignment(grid);
+            GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
 
             GridFunctions.scrollLeft(grid, 0);
             await wait(100);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderAndRowCheckBoxesAlignment(grid);
+            GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
         }));
 
         it('Header checkbox should select/deselect all rows', () => {
             const allRowsArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
             spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
-            HelperUtils.verifyRowsArraySelected(grid.rowList.toArray());
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray());
             expect(grid.selectedRows()).toEqual(allRowsArray);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith({
@@ -138,12 +140,12 @@ describe('IgxGrid - Row Selection #grid', () => {
                 removed: []
             });
 
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
             expect(grid.selectedRows()).toEqual([]);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, false);
-            HelperUtils.verifyRowsArraySelected(grid.rowList.toArray(), false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, false);
+            GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray(), false);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith({
                 oldSelection: allRowsArray,
@@ -159,29 +161,29 @@ describe('IgxGrid - Row Selection #grid', () => {
             const firstRow = grid.getRowByIndex(0);
             spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
 
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
             expect(firstRow.selected).toBeTruthy();
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
 
-            HelperUtils.clickRowCheckbox(firstRow);
+            GridSelectionFunctions.clickRowCheckbox(firstRow);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
-            HelperUtils.clickRowCheckbox(firstRow);
+            GridSelectionFunctions.clickRowCheckbox(firstRow);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
 
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(4);
         });
 
@@ -190,7 +192,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             const secondRow = grid.getRowByIndex(1);
             spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
 
-            HelperUtils.clickRowCheckbox(firstRow);
+            GridSelectionFunctions.clickRowCheckbox(firstRow);
             fix.detectChanges();
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
@@ -204,16 +206,16 @@ describe('IgxGrid - Row Selection #grid', () => {
             });
 
             expect(grid.selectedRows()).toEqual([1]);
-            HelperUtils.verifyRowSelected(firstRow);
-            HelperUtils.verifyRowSelected(secondRow, false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(secondRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
-            HelperUtils.clickRowCheckbox(secondRow);
+            GridSelectionFunctions.clickRowCheckbox(secondRow);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow);
-            HelperUtils.verifyRowSelected(secondRow);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
             expect(grid.selectedRows()).toEqual([1, 2]);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith({
@@ -225,12 +227,12 @@ describe('IgxGrid - Row Selection #grid', () => {
                 removed: []
             });
 
-            HelperUtils.clickRowCheckbox(firstRow);
+            GridSelectionFunctions.clickRowCheckbox(firstRow);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyRowSelected(secondRow);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
             expect(grid.selectedRows()).toEqual([2]);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(3);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith({
@@ -242,11 +244,11 @@ describe('IgxGrid - Row Selection #grid', () => {
                 removed: [1]
             });
 
-            HelperUtils.clickRowCheckbox(secondRow);
+            GridSelectionFunctions.clickRowCheckbox(secondRow);
             fix.detectChanges();
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyRowSelected(secondRow, false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyRowSelected(secondRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix);
             expect(grid.selectedRows()).toEqual([]);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(4);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith({
@@ -268,7 +270,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             firstRow.nativeElement.dispatchEvent(mockEvent);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
             expect(grid.selectedRows()).toEqual([2]);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith({
@@ -284,16 +286,16 @@ describe('IgxGrid - Row Selection #grid', () => {
             UIInteractions.simulateClickEvent(firstRow.nativeElement);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
 
             // Click on a different row
             secondRow.nativeElement.dispatchEvent(mockEvent);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyRowSelected(secondRow);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
             expect(grid.selectedRows()).toEqual([3]);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith({
@@ -315,22 +317,22 @@ describe('IgxGrid - Row Selection #grid', () => {
             fix.detectChanges();
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
 
             // Click again on this row holding Ctrl
             UIInteractions.simulateClickEvent(firstRow.nativeElement, false, true);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
 
             // Click on a different row
             UIInteractions.simulateClickEvent(secondRow.nativeElement, false, true);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow);
-            HelperUtils.verifyRowSelected(secondRow);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
         });
 
@@ -344,8 +346,8 @@ describe('IgxGrid - Row Selection #grid', () => {
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
-            HelperUtils.verifyCellSelected(cell);
-            HelperUtils.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyCellSelected(cell);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
 
             // Press Space key on the cell
             UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
@@ -353,17 +355,17 @@ describe('IgxGrid - Row Selection #grid', () => {
             await wait(DEBOUNCETIME);
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
-            HelperUtils.verifyRowSelected(firstRow);
-            HelperUtils.verifyRowSelected(secondRow, false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(secondRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
             UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true);
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
             cell = grid.getCellByColumn(1, 'ProductName');
-            HelperUtils.verifyCellSelected(cell);
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyCellSelected(cell);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
 
             // Click Space on the cell
             UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
@@ -371,8 +373,8 @@ describe('IgxGrid - Row Selection #grid', () => {
             await wait(DEBOUNCETIME);
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
-            HelperUtils.verifyRowSelected(firstRow);
-            HelperUtils.verifyRowSelected(secondRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
 
             // Click again Space on the cell
             UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
@@ -380,8 +382,8 @@ describe('IgxGrid - Row Selection #grid', () => {
             await wait(DEBOUNCETIME);
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(3);
-            HelperUtils.verifyRowSelected(firstRow);
-            HelperUtils.verifyRowSelected(secondRow, false);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(secondRow, false);
         }));
 
         it('Should select multiple rows with Shift + Click', () => {
@@ -393,7 +395,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             UIInteractions.simulateClickEvent(firstRow.nativeElement);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
 
             // Click on other row holding Shift key
             secondRow.nativeElement.dispatchEvent(mockEvent);
@@ -412,7 +414,7 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             for (let index = 1; index < 5; index++) {
                 const row = grid.getRowByIndex(index);
-                HelperUtils.verifyRowSelected(row);
+                GridSelectionFunctions.verifyRowSelected(row);
             }
         });
 
@@ -424,22 +426,22 @@ describe('IgxGrid - Row Selection #grid', () => {
             UIInteractions.simulateClickEvent(firstRow.nativeElement);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
 
             grid.hideRowSelectors = true;
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow, true, false);
-            HelperUtils.verifyHeaderRowHasCheckbox(fix, false, false);
-            HelperUtils.verifyRowHasCheckbox(firstRow.nativeElement, false, false);
+            GridSelectionFunctions.verifyRowSelected(firstRow, true, false);
+            GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix, false, false);
+            GridSelectionFunctions.verifyRowHasCheckbox(firstRow.nativeElement, false, false);
 
             grid.hideRowSelectors = false;
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
-            HelperUtils.verifyHeaderRowHasCheckbox(fix);
-            HelperUtils.verifyRowHasCheckbox(firstRow.nativeElement);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix);
+            GridSelectionFunctions.verifyRowHasCheckbox(firstRow.nativeElement);
         });
 
         it('Should be able to change RowSelection to none', () => {
@@ -449,21 +451,21 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid.selectRows([1]);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
 
             grid.rowSelection = GridSelectionMode.none;
             fix.detectChanges();
 
             expect(grid.rowSelection).toEqual(GridSelectionMode.none);
-            HelperUtils.verifyRowSelected(firstRow, false, false);
-            HelperUtils.verifyHeaderRowHasCheckbox(fix, false, false);
-            HelperUtils.verifyRowHasCheckbox(firstRow.nativeElement, false, false);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false, false);
+            GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix, false, false);
+            GridSelectionFunctions.verifyRowHasCheckbox(firstRow.nativeElement, false, false);
 
             // Click on a row
             UIInteractions.simulateClickEvent(firstRow.nativeElement);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow, false, false);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false, false);
         });
 
         it('Should be able to change RowSelection to single', () => {
@@ -474,29 +476,29 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid.selectRows([1]);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
 
             grid.rowSelection = GridSelectionMode.single;
             fix.detectChanges();
 
             expect(grid.rowSelection).toEqual(GridSelectionMode.single);
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyHeaderRowHasCheckbox(fix, false);
-            HelperUtils.verifyRowHasCheckbox(firstRow.nativeElement);
-            HelperUtils.verifyHeaderAndRowCheckBoxesAlignment(grid);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix, false);
+            GridSelectionFunctions.verifyRowHasCheckbox(firstRow.nativeElement);
+            GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
 
             // Click on a row
             UIInteractions.simulateClickEvent(firstRow.nativeElement);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
 
             // Click on another row holding Ctrl
             UIInteractions.simulateClickEvent(secondRow.nativeElement);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(secondRow);
-            HelperUtils.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
         });
 
         it('Should be able to cancel onRowSelectionChange event', () => {
@@ -508,49 +510,49 @@ describe('IgxGrid - Row Selection #grid', () => {
             // Click on a row
             UIInteractions.simulateClickEvent(firstRow.nativeElement);
             fix.detectChanges();
-            HelperUtils.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
 
             // Click on a row checkbox
-            HelperUtils.clickRowCheckbox(firstRow);
+            GridSelectionFunctions.clickRowCheckbox(firstRow);
             fix.detectChanges();
-            HelperUtils.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
 
             // Click on header checkbox
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
-            HelperUtils.verifyHeaderRowCheckboxState(fix);
-            HelperUtils.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
 
             // Select rows from API
             grid.selectRows([2, 3]);
             fix.detectChanges();
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
-            HelperUtils.verifyRowSelected(grid.getRowByIndex(1));
-            HelperUtils.verifyRowSelected(grid.getRowByIndex(2));
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(grid.getRowByIndex(1));
+            GridSelectionFunctions.verifyRowSelected(grid.getRowByIndex(2));
 
             // Click on header checkbox
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyRowSelected(grid.getRowByIndex(1));
-            HelperUtils.verifyRowSelected(grid.getRowByIndex(2));
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyRowSelected(grid.getRowByIndex(1));
+            GridSelectionFunctions.verifyRowSelected(grid.getRowByIndex(2));
 
             // Select all rows from API
             grid.selectAllRows();
             fix.detectChanges();
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
-            HelperUtils.verifyRowSelected(firstRow);
-            HelperUtils.verifyRowSelected(grid.getRowByIndex(1));
-            HelperUtils.verifyRowSelected(grid.getRowByIndex(2));
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(grid.getRowByIndex(1));
+            GridSelectionFunctions.verifyRowSelected(grid.getRowByIndex(2));
 
             // Click on header checkbox
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
-            HelperUtils.verifyRowSelected(firstRow);
-            HelperUtils.verifyRowSelected(grid.getRowByIndex(1));
-            HelperUtils.verifyRowSelected(grid.getRowByIndex(2));
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(grid.getRowByIndex(1));
+            GridSelectionFunctions.verifyRowSelected(grid.getRowByIndex(2));
         });
 
         it('Should be able to programmatically overwrite the selection using onRowSelectionChange event', () => {
@@ -563,22 +565,22 @@ describe('IgxGrid - Row Selection #grid', () => {
                 }
             });
 
-            HelperUtils.verifyRowsArraySelected([firstRow, secondRow, thirdRow], false);
+            GridSelectionFunctions.verifyRowsArraySelected([firstRow, secondRow, thirdRow], false);
 
-            HelperUtils.clickRowCheckbox(firstRow);
+            GridSelectionFunctions.clickRowCheckbox(firstRow);
             fix.detectChanges();
 
             expect(firstRow.selected).toBeTruthy();
             expect(secondRow.selected).toBeFalsy();
             expect(thirdRow.selected).toBeFalsy();
 
-            HelperUtils.clickRowCheckbox(firstRow);
-            HelperUtils.clickRowCheckbox(secondRow);
+            GridSelectionFunctions.clickRowCheckbox(firstRow);
+            GridSelectionFunctions.clickRowCheckbox(secondRow);
             fix.detectChanges();
 
             expect(firstRow.selected).toBeFalsy();
             expect(secondRow.selected).toBeFalsy();
-            HelperUtils.verifyRowsArraySelected([firstRow, secondRow, thirdRow], false);
+            GridSelectionFunctions.verifyRowsArraySelected([firstRow, secondRow, thirdRow], false);
         });
 
         it('ARIA support', () => {
@@ -588,14 +590,14 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(headerCheckbox.getAttribute('aria-checked')).toMatch('false');
             expect(headerCheckbox.getAttribute('aria-label')).toMatch('Select all');
 
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
             expect(firstRow.getAttribute('aria-selected')).toMatch('true');
             expect(headerCheckbox.getAttribute('aria-checked')).toMatch('true');
             expect(headerCheckbox.getAttribute('aria-label')).toMatch('Deselect all');
 
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
             expect(firstRow.getAttribute('aria-selected')).toMatch('false');
@@ -613,14 +615,14 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(headerCheckbox.getAttribute('aria-checked')).toMatch('false');
             expect(headerCheckbox.getAttribute('aria-label')).toMatch('Select all filtered');
 
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
             expect(firstRow.getAttribute('aria-selected')).toMatch('true');
             expect(headerCheckbox.getAttribute('aria-checked')).toMatch('true');
             expect(headerCheckbox.getAttribute('aria-label')).toMatch('Deselect all filtered');
 
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
             expect(firstRow.getAttribute('aria-selected')).toMatch('false');
@@ -646,23 +648,23 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid = fix.componentInstance.grid;
         }));
 
-        it('Change RowSelection to multiple ', () => {
-            HelperUtils.verifyHeaderRowHasCheckbox(fix, false, false);
-            HelperUtils.verifyRowHasCheckbox(grid.getRowByIndex(0).nativeElement, false, false);
+        it('Change  RowSelection to multiple ', () => {
+            GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix, false, false);
+            GridSelectionFunctions.verifyRowHasCheckbox(grid.getRowByIndex(0).nativeElement, false, false);
 
             grid.selectRows([475]);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(grid.getRowByIndex(0), true, false);
+            GridSelectionFunctions.verifyRowSelected(grid.getRowByIndex(0), true, false);
 
             grid.rowSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderAndRowCheckBoxesAlignment(grid);
-            HelperUtils.verifyRowSelected(grid.getRowByIndex(0), false, false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix);
-            HelperUtils.verifyHeaderRowHasCheckbox(fix);
-            HelperUtils.verifyRowHasCheckbox(grid.getRowByIndex(0).nativeElement);
+            GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
+            GridSelectionFunctions.verifyRowSelected(grid.getRowByIndex(0), false, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix);
+            GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix);
+            GridSelectionFunctions.verifyRowHasCheckbox(grid.getRowByIndex(0).nativeElement);
         });
     });
 
@@ -677,22 +679,22 @@ describe('IgxGrid - Row Selection #grid', () => {
         }));
 
         it('Should have checkbox on each row nd do not have header checkbox', (async () => {
-            HelperUtils.verifyHeaderRowHasCheckbox(fix, false);
-            HelperUtils.verifyHeaderAndRowCheckBoxesAlignment(grid);
+            GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix, false);
+            GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
 
             for (const row of grid.rowList.toArray()) {
-                HelperUtils.verifyRowHasCheckbox(row.nativeElement);
+                GridSelectionFunctions.verifyRowHasCheckbox(row.nativeElement);
             }
 
-            GridFunctions.setGridScrollTop(grid, 1000);
+            GridFunctions.scrollTop(grid, 1000);
             await wait(100);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowHasCheckbox(fix, false);
-            HelperUtils.verifyHeaderAndRowCheckBoxesAlignment(grid);
+            GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix, false);
+            GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
 
             for (const row of grid.rowList.toArray()) {
-                HelperUtils.verifyRowHasCheckbox(row.nativeElement);
+                GridSelectionFunctions.verifyRowHasCheckbox(row.nativeElement);
             }
         }));
 
@@ -701,7 +703,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             const secondRow = grid.getRowByIndex(1);
             spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
 
-            HelperUtils.clickRowCheckbox(firstRow);
+            GridSelectionFunctions.clickRowCheckbox(firstRow);
             fix.detectChanges();
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
@@ -715,15 +717,15 @@ describe('IgxGrid - Row Selection #grid', () => {
             });
 
             expect(grid.selectedRows()).toEqual([1]);
-            HelperUtils.verifyRowSelected(firstRow);
-            HelperUtils.verifyRowSelected(secondRow, false);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(secondRow, false);
 
             // Click other row checkbox
-            HelperUtils.clickRowCheckbox(secondRow);
+            GridSelectionFunctions.clickRowCheckbox(secondRow);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyRowSelected(secondRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
             expect(grid.selectedRows()).toEqual([2]);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith({
@@ -746,14 +748,14 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
             expect(grid.selectedRows()).toEqual([3]);
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
 
             // Click on a different row holding Ctrl
             UIInteractions.simulateClickEvent(secondRow.nativeElement, false, true);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyRowSelected(secondRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
             expect(grid.selectedRows()).toEqual([1]);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
         });
@@ -768,8 +770,8 @@ describe('IgxGrid - Row Selection #grid', () => {
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
-            HelperUtils.verifyCellSelected(cell);
-            HelperUtils.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyCellSelected(cell);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
 
             // Press Space key on the cell
             UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
@@ -778,8 +780,8 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
             expect(grid.selectedRows()).toEqual([1]);
-            HelperUtils.verifyRowSelected(firstRow);
-            HelperUtils.verifyRowSelected(secondRow, false);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(secondRow, false);
 
             UIInteractions.triggerKeyDownWithBlur('arrowdown', cell.nativeElement, true);
             fix.detectChanges();
@@ -793,8 +795,8 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
             expect(grid.selectedRows()).toEqual([2]);
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyRowSelected(secondRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
 
             // Click again Space on the cell
             UIInteractions.triggerKeyDownEvtUponElem('space', cell.nativeElement, true);
@@ -803,8 +805,8 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(3);
             expect(grid.selectedRows()).toEqual([]);
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyRowSelected(secondRow, false);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyRowSelected(secondRow, false);
         }));
 
         it('Should not select multiple rows with Shift + Click', () => {
@@ -817,7 +819,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             fix.detectChanges();
 
             expect(grid.selectedRows()).toEqual([2]);
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
 
             // Click on other row holding Shift key
             secondRow.nativeElement.dispatchEvent(mockEvent);
@@ -834,10 +836,10 @@ describe('IgxGrid - Row Selection #grid', () => {
                 removed: [2]
             });
 
-            HelperUtils.verifyRowSelected(secondRow);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
             for (let index = 1; index < 4; index++) {
                 const row = grid.getRowByIndex(index);
-                HelperUtils.verifyRowSelected(row, false);
+                GridSelectionFunctions.verifyRowSelected(row, false);
             }
         });
 
@@ -849,34 +851,34 @@ describe('IgxGrid - Row Selection #grid', () => {
             UIInteractions.simulateClickEvent(firstRow.nativeElement);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
 
             grid.hideRowSelectors = true;
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow, true, false);
-            HelperUtils.verifyHeaderRowHasCheckbox(fix, false, false);
-            HelperUtils.verifyRowHasCheckbox(firstRow.nativeElement, false, false);
+            GridSelectionFunctions.verifyRowSelected(firstRow, true, false);
+            GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix, false, false);
+            GridSelectionFunctions.verifyRowHasCheckbox(firstRow.nativeElement, false, false);
 
             grid.hideRowSelectors = false;
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow);
-            HelperUtils.verifyHeaderRowHasCheckbox(fix, false);
-            HelperUtils.verifyRowHasCheckbox(firstRow.nativeElement);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix, false);
+            GridSelectionFunctions.verifyRowHasCheckbox(firstRow.nativeElement);
         });
 
         it('Should be able to select multiple rows from API', () => {
             grid.selectRows([1, 3, 5], true);
             fix.detectChanges();
 
-            HelperUtils.verifyRowsArraySelected([grid.getRowByIndex(0), grid.getRowByIndex(2), grid.getRowByIndex(4)]);
+            GridSelectionFunctions.verifyRowsArraySelected([grid.getRowByIndex(0), grid.getRowByIndex(2), grid.getRowByIndex(4)]);
             expect(grid.selectedRows()).toEqual([1, 3, 5]);
 
             grid.selectRows([1, 2, 4], false);
             fix.detectChanges();
 
-            HelperUtils.verifyRowsArraySelected([grid.getRowByIndex(0),
+            GridSelectionFunctions.verifyRowsArraySelected([grid.getRowByIndex(0),
             grid.getRowByIndex(1), grid.getRowByIndex(2), grid.getRowByIndex(3), grid.getRowByIndex(4)]);
             expect(grid.selectedRows()).toEqual([1, 3, 5, 2, 4]);
         });
@@ -888,7 +890,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             // Click on a row
             UIInteractions.simulateClickEvent(firstRow.nativeElement);
             fix.detectChanges();
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
             expect(grid.selectedRows()).toEqual([1]);
 
             // Cancel the event
@@ -897,23 +899,23 @@ describe('IgxGrid - Row Selection #grid', () => {
             });
 
             // Click on a row checkbox
-            HelperUtils.clickRowCheckbox(firstRow);
+            GridSelectionFunctions.clickRowCheckbox(firstRow);
             fix.detectChanges();
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
             expect(grid.selectedRows()).toEqual([1]);
 
             // Click on other row checkbox
-            HelperUtils.clickRowCheckbox(secondRow);
+            GridSelectionFunctions.clickRowCheckbox(secondRow);
             fix.detectChanges();
-            HelperUtils.verifyRowSelected(firstRow);
-            HelperUtils.verifyRowSelected(secondRow, false);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(secondRow, false);
             expect(grid.selectedRows()).toEqual([1]);
 
             // Click on other row
             UIInteractions.simulateClickEvent(secondRow.nativeElement);
             fix.detectChanges();
-            HelperUtils.verifyRowSelected(firstRow);
-            HelperUtils.verifyRowSelected(secondRow, false);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(secondRow, false);
             expect(grid.selectedRows()).toEqual([1]);
         });
 
@@ -924,21 +926,21 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid.selectRows([1]);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
 
             grid.rowSelection = GridSelectionMode.none;
             fix.detectChanges();
 
             expect(grid.rowSelection).toEqual(GridSelectionMode.none);
-            HelperUtils.verifyRowSelected(firstRow, false, false);
-            HelperUtils.verifyHeaderRowHasCheckbox(fix, false, false);
-            HelperUtils.verifyRowHasCheckbox(firstRow.nativeElement, false, false);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false, false);
+            GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix, false, false);
+            GridSelectionFunctions.verifyRowHasCheckbox(firstRow.nativeElement, false, false);
 
             // Click on a row
             UIInteractions.simulateClickEvent(firstRow.nativeElement);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow, false, false);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false, false);
         });
 
         it('Should be able to change RowSelection to multiple', () => {
@@ -949,29 +951,29 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid.selectRows([1]);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
 
             grid.rowSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
             expect(grid.rowSelection).toEqual(GridSelectionMode.multiple);
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyHeaderRowHasCheckbox(fix);
-            HelperUtils.verifyRowHasCheckbox(firstRow.nativeElement);
-            HelperUtils.verifyHeaderAndRowCheckBoxesAlignment(grid);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix);
+            GridSelectionFunctions.verifyRowHasCheckbox(firstRow.nativeElement);
+            GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
 
             // Click on a row
             UIInteractions.simulateClickEvent(firstRow.nativeElement);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
 
             // Click on another row holding Ctrl
             UIInteractions.simulateClickEvent(secondRow.nativeElement, false, true);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(secondRow);
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
         });
     });
 
@@ -991,21 +993,21 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid.cdr.detectChanges();
             fix.detectChanges();
 
-            HelperUtils.verifyRowsArraySelected(grid.rowList.toArray());
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray());
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
 
             grid.selectAllRows();
             grid.cdr.detectChanges();
             fix.detectChanges();
 
-            HelperUtils.verifyRowsArraySelected(grid.rowList.toArray());
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray());
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
 
             grid.deselectAllRows();
             fix.detectChanges();
 
-            HelperUtils.verifyRowsArraySelected(grid.rowList.toArray(), false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix);
+            GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray(), false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
         });
 
@@ -1017,57 +1019,57 @@ describe('IgxGrid - Row Selection #grid', () => {
             const forthRow = grid.getRowByIndex(3);
 
             expect(grid.selectedRows()).toEqual([]);
-            HelperUtils.verifyRowsArraySelected(grid.rowList.toArray(), false);
+            GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray(), false);
 
             grid.deselectRows([1, 2, 3]);
             fix.detectChanges();
 
             expect(grid.selectedRows()).toEqual([]);
-            HelperUtils.verifyHeaderRowCheckboxState(fix);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix);
 
             grid.selectRows([1, 2, 3], false);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
-            HelperUtils.verifyRowsArraySelected([firstRow, secondRow, thirdRow]);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowsArraySelected([firstRow, secondRow, thirdRow]);
             expect(grid.selectedRows()).toEqual([1, 2, 3]);
 
             grid.deselectRows([1, 3]);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
-            HelperUtils.verifyRowsArraySelected([firstRow, thirdRow], false);
-            HelperUtils.verifyRowSelected(secondRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowsArraySelected([firstRow, thirdRow], false);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
 
             grid.selectRows([1, 2, 3, 4], true);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
-            HelperUtils.verifyRowsArraySelected([firstRow, secondRow, thirdRow, forthRow]);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowsArraySelected([firstRow, secondRow, thirdRow, forthRow]);
             expect(grid.selectedRows()).toEqual([1, 2, 3, 4]);
 
             grid.selectRows([1], true);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
-            HelperUtils.verifyRowsArraySelected([secondRow, thirdRow, forthRow], false);
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowsArraySelected([secondRow, thirdRow, forthRow], false);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
             expect(grid.selectedRows()).toEqual([1]);
 
             grid.deselectRows([2, 3, 100]);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
-            HelperUtils.verifyRowsArraySelected([secondRow, thirdRow, forthRow], false);
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowsArraySelected([secondRow, thirdRow, forthRow], false);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
             expect(grid.selectedRows()).toEqual([1]);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
 
             grid.deselectRows([1]);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix);
-            HelperUtils.verifyRowsArraySelected([firstRow, secondRow, thirdRow, forthRow], false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix);
+            GridSelectionFunctions.verifyRowsArraySelected([firstRow, secondRow, thirdRow, forthRow], false);
             expect(grid.selectedRows()).toEqual([]);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
         });
@@ -1075,19 +1077,19 @@ describe('IgxGrid - Row Selection #grid', () => {
         it('Should be able to correctly select all rows programmatically', fakeAsync(() => {
             const firstRow = grid.getRowByIndex(0);
             const rowsToCheck = [firstRow, grid.getRowByIndex(1)];
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, false);
 
             grid.selectAllRows();
             fix.detectChanges();
 
-            HelperUtils.verifyRowsArraySelected(rowsToCheck);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyRowsArraySelected(rowsToCheck);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
 
-            HelperUtils.clickRowCheckbox(firstRow);
+            GridSelectionFunctions.clickRowCheckbox(firstRow);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow, false, true);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false, true);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
         }));
 
         it('Should be able to select a row', fakeAsync(() => {
@@ -1096,15 +1098,15 @@ describe('IgxGrid - Row Selection #grid', () => {
             fix.detectChanges();
 
             expect(grid.selectedRows()).toEqual([1]);
-            HelperUtils.verifyRowSelected(firstRow);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
             firstRow.selected = false;
             fix.detectChanges();
 
             expect(grid.selectedRows()).toEqual([]);
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix);
         }));
     });
 
@@ -1127,7 +1129,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             UIInteractions.simulateClickEvent(firstRow.nativeElement);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
             expect(grid.selectedRows()).toEqual([gridData[1]]);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledWith({
@@ -1160,26 +1162,26 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid.height = '200px';
             fix.detectChanges();
 
-            HelperUtils.clickRowCheckbox(selectedRow);
+            GridSelectionFunctions.clickRowCheckbox(selectedRow);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
-            HelperUtils.verifyRowSelected(selectedRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(selectedRow);
             expect(grid.selectedRows()).toEqual([gridData[0]]);
 
-            GridFunctions.setGridScrollTop(grid, 500);
+            GridFunctions.scrollTop(grid, 500);
             await wait(100);
             fix.detectChanges();
 
             expect(grid.selectedRows()).toEqual([gridData[0]]);
-            HelperUtils.verifyRowsArraySelected(grid.rowList, false);
+            GridSelectionFunctions.verifyRowsArraySelected(grid.rowList, false);
 
-            GridFunctions.setGridScrollTop(grid, 0);
+            GridFunctions.scrollTop(grid, 0);
             await wait(100);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
-            HelperUtils.verifyRowSelected(selectedRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(selectedRow);
         }));
 
         it('Should be able to select and deselect rows from API', () => {
@@ -1191,23 +1193,23 @@ describe('IgxGrid - Row Selection #grid', () => {
             fix.detectChanges();
 
             expect(grid.selectedRows()).toEqual(gridData);
-            HelperUtils.verifyRowsArraySelected(grid.rowList.toArray());
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray());
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
 
             grid.deselectRows([firstRow.rowID, secondRow.rowID, thirdRow.rowID]);
             fix.detectChanges();
 
             expect(grid.selectedRows()).toEqual([gridData[1], gridData[3], gridData[4], gridData[6]]);
-            HelperUtils.verifyRowsArraySelected([firstRow, secondRow, thirdRow], false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowsArraySelected([firstRow, secondRow, thirdRow], false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
             grid.selectRows([firstRow.rowID, secondRow.rowID, thirdRow.rowID], false);
             fix.detectChanges();
 
             expect(grid.selectedRows())
                 .toEqual([gridData[1], gridData[3], gridData[4], gridData[6], gridData[0], gridData[2], gridData[5]]);
-            HelperUtils.verifyRowsArraySelected(grid.rowList.toArray());
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray());
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
         });
     });
 
@@ -1297,39 +1299,39 @@ describe('IgxGrid - Row Selection #grid', () => {
             const secondRow = grid.getRowByIndex(1);
             const middleRow = grid.getRowByIndex(3);
 
-            HelperUtils.clickRowCheckbox(secondRow);
+            GridSelectionFunctions.clickRowCheckbox(secondRow);
             fix.detectChanges();
-            HelperUtils.clickRowCheckbox(middleRow);
+            GridSelectionFunctions.clickRowCheckbox(middleRow);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(secondRow);
-            HelperUtils.verifyRowSelected(middleRow);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
+            GridSelectionFunctions.verifyRowSelected(middleRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
             grid.nextPage();
             tick();
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(secondRow, false);
-            HelperUtils.verifyRowSelected(middleRow, false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(secondRow, false);
+            GridSelectionFunctions.verifyRowSelected(middleRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
-            HelperUtils.clickRowCheckbox(firstRow);
+            GridSelectionFunctions.clickRowCheckbox(firstRow);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow);
-            HelperUtils.verifyRowSelected(secondRow, false);
-            HelperUtils.verifyRowSelected(middleRow, false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(secondRow, false);
+            GridSelectionFunctions.verifyRowSelected(middleRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
             grid.previousPage();
             tick();
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyRowSelected(secondRow);
-            HelperUtils.verifyRowSelected(middleRow);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
+            GridSelectionFunctions.verifyRowSelected(middleRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
         }));
 
         it('Paging: Should persist all rows selection through paging', fakeAsync(() => {
@@ -1338,31 +1340,31 @@ describe('IgxGrid - Row Selection #grid', () => {
             fix.detectChanges();
 
             const secondRow = grid.getRowByIndex(1);
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
-            HelperUtils.verifyRowsArraySelected(grid.rowList.toArray());
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray());
 
             grid.nextPage();
             tick();
             fix.detectChanges();
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
-            HelperUtils.verifyRowsArraySelected(grid.rowList.toArray());
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray());
 
             // Click on a single row
             UIInteractions.simulateClickEvent(secondRow.nativeElement);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
-            HelperUtils.verifyRowSelected(secondRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
 
             grid.previousPage();
             tick();
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
-            HelperUtils.verifyRowsArraySelected(grid.rowList.toArray(), false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray(), false);
         }));
 
         it('Paging: Should be able to select rows with Shift and Click', fakeAsync(() => {
@@ -1372,36 +1374,36 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             const firstRow = grid.getRowByIndex(0);
             const thirdRow = grid.getRowByIndex(3);
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
             // Select first row on first page
             UIInteractions.simulateClickEvent(firstRow.nativeElement);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
 
             grid.nextPage();
             tick();
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
-            HelperUtils.verifyRowsArraySelected(grid.rowList.toArray(), false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray(), false);
 
             // Click on the last row in page holding Shifth
             UIInteractions.simulateClickEvent(thirdRow.nativeElement, true);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
-            HelperUtils.verifyRowsArraySelected(grid.rowList.toArray());
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray());
 
             grid.previousPage();
             tick();
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
-            HelperUtils.verifyRowsArraySelected(grid.rowList.toArray());
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray());
         }));
 
         it('CRUD: Should handle the deselection on a selected row properly', (async () => {
@@ -1410,8 +1412,8 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
             grid.deleteRow(1);
             fix.detectChanges();
@@ -1420,14 +1422,14 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             expect(grid.getRowByKey(1)).toBeUndefined();
             expect(grid.selectedRows().includes(1)).toBe(false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix);
 
             grid.selectAllRows();
             fix.detectChanges();
 
             firstRow = grid.getRowByKey(2);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
 
             grid.deleteRow(2);
             fix.detectChanges();
@@ -1436,13 +1438,13 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             expect(grid.getRowByKey(2)).toBeUndefined();
             expect(grid.selectedRows().includes(2)).toBe(false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
 
             grid.deselectRows([3]);
             fix.detectChanges();
 
             expect(grid.selectedRows().includes(3)).toBe(false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
             grid.deleteRow(3);
             fix.detectChanges();
@@ -1451,20 +1453,20 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             expect(grid.getRowByKey(3)).toBeUndefined();
             expect(grid.selectedRows().includes(3)).toBe(false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
         }));
 
         it('CRUD: Should handle the adding new row properly', (async () => {
             grid.selectAllRows();
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
             grid.addRow({ ProductID: 20, ProductName: 'test', InStock: true, UnitsInStock: 1, OrderDate: new Date('2019-03-01') });
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
             expect(grid.selectedRows().includes(20)).toBe(false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
         }));
 
         it('CRUD: Should update selected row when update cell', () => {
@@ -1472,53 +1474,53 @@ describe('IgxGrid - Row Selection #grid', () => {
             firstRow.selected = true;
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
             expect(grid.selectedRows()).toEqual([2]);
             grid.updateCell(102, 2, 'ProductID');
             fix.detectChanges();
 
             firstRow = grid.getRowByIndex(1);
             expect(firstRow.rowID).toEqual(102);
-            HelperUtils.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
             expect(grid.selectedRows()).toEqual([102]);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
         });
 
         it('CRUD: Should update selected row when update row', () => {
             grid.selectAllRows();
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
 
             grid.updateRow({ ProductID: 103, ProductName: 'test', InStock: true, UnitsInStock: 1, OrderDate: new Date('2019-03-01') }, 3);
             fix.detectChanges();
 
             const row = grid.getRowByIndex(2);
-            HelperUtils.verifyRowSelected(row);
+            GridSelectionFunctions.verifyRowSelected(row);
             expect(row.rowID).toEqual(103);
             expect(grid.selectedRows().includes(3)).toBe(false);
             expect(grid.selectedRows().includes(103)).toBe(true);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
         });
 
         it('Sorting: Should have persistent selection through data operations', fakeAsync(() => {
             const rowsToCheck = [grid.getRowByIndex(0), grid.getRowByIndex(1)];
-            HelperUtils.verifyRowsArraySelected(rowsToCheck, false);
+            GridSelectionFunctions.verifyRowsArraySelected(rowsToCheck, false);
 
             grid.selectRows([1, 2], false);
             fix.detectChanges();
 
-            HelperUtils.verifyRowsArraySelected(rowsToCheck, true);
+            GridSelectionFunctions.verifyRowsArraySelected(rowsToCheck, true);
 
             grid.sort({ fieldName: 'UnitsInStock', dir: SortingDirection.Desc, ignoreCase: true });
             fix.detectChanges();
 
-            HelperUtils.verifyRowsArraySelected(rowsToCheck, false);
+            GridSelectionFunctions.verifyRowsArraySelected(rowsToCheck, false);
 
             grid.clearSort('UnitsInStock');
             fix.detectChanges();
 
-            HelperUtils.verifyRowsArraySelected(rowsToCheck, true);
+            GridSelectionFunctions.verifyRowsArraySelected(rowsToCheck, true);
         }));
 
         it('Summaries integration', () => {
@@ -1534,7 +1536,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid.filter('ProductID', 10, IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo'), true);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
             expect(grid.selectedRows()).toEqual([]);
 
@@ -1543,29 +1545,29 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
 
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
 
             grid.filter('ProductID', 0, IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo'), true);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
             expect(grid.selectedRows().length).toBe(19);
 
             grid.filter('ProductID', 100, IgxNumberFilteringOperand.instance().condition('greaterThanOrEqualTo'), true);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix);
             expect(grid.rowList.length).toBe(0);
             expect(grid.selectedRows().length).toBe(19);
 
             grid.clearFilter();
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
             expect(grid.selectedRows().length).toBe(19);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
         });
@@ -1574,73 +1576,73 @@ describe('IgxGrid - Row Selection #grid', () => {
             spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
             const secondRow = grid.getRowByIndex(1);
 
-            HelperUtils.clickRowCheckbox(secondRow);
+            GridSelectionFunctions.clickRowCheckbox(secondRow);
             fix.detectChanges();
 
             expect(secondRow.selected).toBeTruthy();
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
 
             grid.filter('ProductName', 'Ca', IgxStringFilteringOperand.instance().condition('contains'), true);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(1);
 
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
 
             grid.clearFilter('ProductName');
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
             expect(grid.getRowByIndex(1).selected).toBeTruthy();
             expect(grid.getRowByIndex(2).selected).toBeTruthy();
             expect(grid.getRowByIndex(6).selected).toBeTruthy();
 
             grid.filter('ProductName', 'Ca', IgxStringFilteringOperand.instance().condition('contains'), true);
             fix.detectChanges();
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
 
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(2);
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(3);
 
             grid.clearFilter('ProductName');
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
             expect(grid.getRowByIndex(1).selected).toBeTruthy();
             expect(grid.getRowByIndex(2).selected).toBeFalsy();
             expect(grid.getRowByIndex(6).selected).toBeFalsy();
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(3);
 
-            HelperUtils.clickRowCheckbox(grid.getRowByIndex(2));
+            GridSelectionFunctions.clickRowCheckbox(grid.getRowByIndex(2));
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(4);
 
             grid.filter('ProductName', 'Ca', IgxStringFilteringOperand.instance().condition('contains'), true);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(4);
 
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix);
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(6);
 
             grid.clearFilter('ProductName');
@@ -1667,18 +1669,18 @@ describe('IgxGrid - Row Selection #grid', () => {
         it('Should unselect row when delete it', () => {
             const firstRow = grid.getRowByIndex(0);
 
-            HelperUtils.clickRowCheckbox(firstRow);
+            GridSelectionFunctions.clickRowCheckbox(firstRow);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(firstRow);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
             grid.deleteRowById(firstRow.rowID);
             fix.detectChanges();
 
             expect(grid.selectedRows()).toEqual([]);
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix);
         });
 
         it('Should not allow selecting rows that are deleted', () => {
@@ -1697,50 +1699,50 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.selectedRows().includes(secondRow.rowID)).toBe(false);
             expect(grid.selectedRows().includes(thirdRow.rowID)).toBe(true);
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
 
             grid.selectRows([firstRow.rowID, secondRow.rowID, thirdRow.rowID]);
             fix.detectChanges();
 
             expect(grid.selectedRows().includes(firstRow.rowID)).toBe(true);
             expect(grid.selectedRows().includes(secondRow.rowID)).toBe(true);
-            HelperUtils.verifyRowSelected(firstRow);
-            HelperUtils.verifyRowSelected(secondRow);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
         });
 
         it('Should have correct header checkbox when delete a row', () => {
             const firstRow = grid.getRowByIndex(0);
             const secondRow = grid.getRowByIndex(1);
 
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
-            HelperUtils.verifyRowsArraySelected(grid.rowList);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyRowsArraySelected(grid.rowList);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
 
             grid.deleteRowById(firstRow.rowID);
             fix.detectChanges();
 
             expect(grid.selectedRows().length).toEqual(7);
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
 
             grid.deselectRows([secondRow.rowID]);
             fix.detectChanges();
 
             expect(grid.selectedRows().length).toEqual(6);
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyRowSelected(secondRow, false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyRowSelected(secondRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
             grid.deleteRowById(secondRow.rowID);
             fix.detectChanges();
 
             expect(grid.selectedRows().length).toEqual(6);
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyRowSelected(secondRow, false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyRowSelected(secondRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
         });
 
         it('Should not be possible to select deleted row', () => {
@@ -1750,75 +1752,75 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid.deleteRowById(firstRow.rowID);
             fix.detectChanges();
 
-            HelperUtils.clickRowCheckbox(firstRow);
+            GridSelectionFunctions.clickRowCheckbox(firstRow);
             fix.detectChanges();
 
             expect(grid.selectedRows()).toEqual([]);
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix);
 
             UIInteractions.simulateClickEvent(firstRow.nativeElement);
             fix.detectChanges();
 
             expect(grid.selectedRows()).toEqual([]);
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix);
 
             UIInteractions.simulateClickEvent(secondRow.nativeElement);
             fix.detectChanges();
 
             expect(grid.selectedRows()).toEqual([secondRow.rowID]);
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyRowSelected(secondRow);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
             UIInteractions.simulateClickEvent(firstRow.nativeElement, true);
             fix.detectChanges();
 
             expect(grid.selectedRows()).toEqual([secondRow.rowID]);
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyRowSelected(secondRow);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
             expect(grid.selectedRows().includes(firstRow.rowID)).toBe(false);
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyRowSelected(secondRow);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
         });
 
         it('Should have correct header checkbox when undo row deleting', () => {
             const firstRow = grid.getRowByIndex(0);
 
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
             expect(grid.selectedRows().includes(firstRow.rowID)).toBe(true);
-            HelperUtils.verifyRowSelected(firstRow);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
 
             grid.deleteRowById(firstRow.rowID);
             fix.detectChanges();
 
             expect(grid.selectedRows().includes(firstRow.rowID)).toBe(false);
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
 
             grid.transactions.undo();
             fix.detectChanges();
 
             expect(grid.selectedRows().length).toBe(7);
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
             grid.transactions.redo();
             fix.detectChanges();
 
             expect(grid.selectedRows().includes(firstRow.rowID)).toBe(false);
-            HelperUtils.verifyRowSelected(firstRow, false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
         });
 
         it('Should have correct header checkbox when add row', (async () => {
@@ -1830,7 +1832,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
 
             grid.addRow({ ID: 112, ParentID: 177, Name: 'Ricardo Matias', HireDate: new Date('Dec 27, 2017'), Age: 55, OnPTO: false });
             await wait(DEBOUNCETIME);
@@ -1838,16 +1840,16 @@ describe('IgxGrid - Row Selection #grid', () => {
             await wait(DEBOUNCETIME);
 
             const addedRow = grid.getRowByKey(112);
-            HelperUtils.verifyRowSelected(addedRow, false);
+            GridSelectionFunctions.verifyRowSelected(addedRow, false);
             expect(grid.selectedRows().includes(112)).toBe(false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
-            HelperUtils.clickRowCheckbox(addedRow);
+            GridSelectionFunctions.clickRowCheckbox(addedRow);
             fix.detectChanges();
 
             expect(grid.selectedRows().includes(112)).toBe(true);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
-            HelperUtils.verifyRowSelected(addedRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyRowSelected(addedRow);
         }));
 
         it('Should be able to select added row', (async () => {
@@ -1861,15 +1863,73 @@ describe('IgxGrid - Row Selection #grid', () => {
             await wait(DEBOUNCETIME);
 
             const addedRow = grid.getRowByKey(112);
-            HelperUtils.verifyRowSelected(addedRow, false);
-            HelperUtils.verifyHeaderRowCheckboxState(fix);
+            GridSelectionFunctions.verifyRowSelected(addedRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix);
 
-            HelperUtils.clickHeaderRowCheckbox(fix);
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
             expect(grid.selectedRows().includes(112)).toBe(true);
-            HelperUtils.verifyHeaderRowCheckboxState(fix, true);
-            HelperUtils.verifyRowSelected(addedRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
+            GridSelectionFunctions.verifyRowSelected(addedRow);
         }));
+    });
+
+    describe('Custom selectors', () => {
+        let fix;
+        let grid;
+
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(GridCustomSelectorsComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+            grid.rowSelection = GridSelectionMode.multiple;
+        }));
+
+        it('Should have the correct properties in the custom row selector template', () => {
+            const firstRow = grid.getRowByIndex(0);
+            const firstCheckbox = firstRow.nativeElement.querySelector('.igx-checkbox__composite');
+            const context = { index: 0, rowID: 'ALFKI', selected: false };
+            const contextUnselect = { index: 0, rowID: 'ALFKI', selected: true };
+            spyOn(fix.componentInstance, 'onRowCheckboxClick').and.callThrough();
+            firstCheckbox.click();
+            fix.detectChanges();
+
+            expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledTimes(1);
+            expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), context);
+
+            // Verify correct properties when unselecting a row
+            firstCheckbox.click();
+            fix.detectChanges();
+
+            expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledTimes(2);
+            expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), contextUnselect);
+        });
+
+        it('Should have the correct properties in the custom row selector header template', () => {
+            const context = { selectedCount: 0, totalCount: 27 };
+            const contextUnselect = { selectedCount: 27, totalCount: 27 };
+            const headerCheckbox = fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-checkbox__composite');
+            spyOn(fix.componentInstance, 'onHeaderCheckboxClick').and.callThrough();
+            headerCheckbox.click();
+            fix.detectChanges();
+
+            expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledTimes(1);
+            expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), context);
+
+            headerCheckbox.click();
+            fix.detectChanges();
+
+            expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledTimes(2);
+            expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), contextUnselect);
+        });
+
+        it('Should have correct indices on all pages', () => {
+            grid.nextPage();
+            fix.detectChanges();
+
+            const firstRootRow = grid.getRowByIndex(0);
+            expect(firstRootRow.nativeElement.querySelector('.rowNumber').textContent).toEqual('30');
+        });
     });
 });

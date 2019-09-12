@@ -2,7 +2,7 @@ import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Point, 
 import { ConnectedPositioningStrategy } from '../services/overlay/position/connected-positioning-strategy';
 import { IPositionStrategy } from '../services/overlay/position';
 import { fadeOut, fadeIn } from '../animations/main';
-import { IgxSelectComponent } from './select.component';
+import { IgxSelectBase } from './select.common';
 import { isIE } from '../core/utils';
 
 /** @hidden */
@@ -26,7 +26,7 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
     };
     public settings: PositionSettings;
 
-    constructor(public select: IgxSelectComponent, settings?: PositionSettings) {
+    constructor(public select: IgxSelectBase, settings?: PositionSettings) {
         super();
         this.settings = Object.assign({}, this._selectDefaultSettings, settings);
     }

@@ -1,15 +1,35 @@
-<div (click)="toggle($event.stopPropagation())" class="igx-grid__hierarchical-expander" [tabIndex]="tabindex" *ngIf="hasChildren" #expander>
-    <igx-icon *ngIf="!expanded" [isActive]='!added' fontSet="material">expand_more</igx-icon>
-    <igx-icon *ngIf="expanded" [isActive]='!added' fontSet="material">expand_less</igx-icon>
+<div (click)="toggle()" class="igx-grid__hierarchical-expander" [tabIndex]="tabindex" *ngIf="hasChildren" #expander>
+        <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }">
+        </ng-container>
 </div>
+<ng-template #defaultExpandedTemplate>
+        <igx-icon [isActive]='!added' fontSet="material">expand_more</igx-icon>
+    </ng-template>
+
+<ng-template #defaultCollapsedTemplate>
+        <igx-icon [isActive]='!added' fontSet="material">chevron_right</igx-icon>
+ </ng-template>
+ 
+ <ng-template #defaultEmptyTemplate>
+    <igx-icon fontSet="material"></igx-icon>
+</ng-template>
+
 <ng-container *ngIf="rowDraggable">
     <div [class]="resolveDragIndicatorClasses" [igxRowDrag]="this" (click)="$event.stopPropagation()">
             <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : this.grid.dragIndicatorIconBase"></ng-container>
     </div>
 </ng-container>
-<ng-container *ngIf="showRowCheckboxes">
+<ng-container *ngIf="showRowSelectors">
     <div class="igx-grid__cbx-selection" (click)="onRowSelectorClick($event)">
-        <igx-checkbox (click)="$event.preventDefault()" [checked]="selected" disableRipple="true" [disabled]="deleted" [disableTransitions]="grid.disableTransitions" [aria-label]="rowCheckboxAriaLabel"></igx-checkbox>
+        <ng-template *ngTemplateOutlet="
+            this.grid.rowSelectorTemplate ? this.grid.rowSelectorTemplate : rowSelectorBaseTemplate;
+            context: { $implicit: {
+                            index: this.index + this.grid.page * this.grid.perPage,
+                            rowID: rowID,
+                            selected: selected,
+                            select: select,
+                            deselect: deselect }}">
+        </ng-template>
     </div>
 </ng-container>
 
@@ -56,3 +76,13 @@
     </igx-hierarchical-grid-cell>
 </ng-template>
 
+<ng-template #rowSelectorBaseTemplate>
+    <igx-checkbox
+        [readonly]="true"
+        [checked]="selected"
+        disableRipple="true"
+        [disabled]="deleted"
+        [disableTransitions]="grid.disableTransitions"
+        [aria-label]="rowCheckboxAriaLabel">
+    </igx-checkbox>
+</ng-template>
