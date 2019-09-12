@@ -1,5 +1,6 @@
 import { Injectable, EventEmitter, NgZone } from '@angular/core';
-import { IGridEditEventArgs } from '../grids/grid-base.component';
+import { IGridEditEventArgs } from '../grids/common/events';
+
 
 export interface GridSelectionRange {
     rowStart: number;

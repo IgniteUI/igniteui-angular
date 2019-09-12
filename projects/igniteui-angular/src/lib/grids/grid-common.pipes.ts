@@ -1,8 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { GridBaseAPIService } from './api.service';
-import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
+import { IgxGridBaseComponent } from './grid-base.component';
 import { DataUtil } from '../data-operations/data-util';
 import { cloneArray } from '../core/utils';
+import { IGridDataBindable } from './common/events';
 
 @Pipe({
     name: 'igxCellStyles'

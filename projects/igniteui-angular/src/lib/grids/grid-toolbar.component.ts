@@ -22,12 +22,13 @@ import {
 } from '../services/index';
 import { GridBaseAPIService } from './api.service';
 import { IgxButtonDirective } from '../directives/button/button.directive';
-import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
+import { IgxGridBaseComponent } from './grid-base.component';
 import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { IgxColumnHidingComponent } from './column-hiding.component';
 import { IgxColumnPinningComponent } from './column-pinning.component';
 import { OverlaySettings, PositionSettings, HorizontalAlignment, VerticalAlignment } from '../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../services/overlay/position';
+import { IGridDataBindable } from './common/events';
 
 /**
  * This class encapsulates the Toolbar's logic and is internally used by

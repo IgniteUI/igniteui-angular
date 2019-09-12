@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
+import { IgxGridBaseComponent } from '../grid-base.component';
+import { IGridDataBindable } from '../common/events';
 
 @Pipe({
     name: 'igxGridSummaryDataPipe',

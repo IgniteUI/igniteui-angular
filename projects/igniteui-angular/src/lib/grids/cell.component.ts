@@ -18,13 +18,14 @@ import { IgxTextHighlightDirective } from '../directives/text-highlight/text-hig
 import { GridBaseAPIService } from './api.service';
 import { getNodeSizeViaRange, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, NAVIGATION_KEYS, isIE, isLeftClick } from '../core/utils';
 import { State } from '../services/index';
-import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
+import { IgxGridBaseComponent } from './grid-base.component';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../core/grid-selection';
 import { DeprecateProperty, DeprecateMethod } from '../core/deprecateDecorators';
 import { HammerGesturesManager } from '../core/touch';
 import { ColumnType } from './common/column.interface';
 import { RowType } from './common/row.interface';
 import { GridSelectionMode } from './common/enums';
+import { IGridDataBindable } from './common/events';
 
 /**
  * Providing reference to `IgxGridCellComponent`:

@@ -6,12 +6,13 @@ import { IFilteringExpression } from '../data-operations/filtering-expression.in
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
-import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
+import { IgxGridBaseComponent } from './grid-base.component';
 import { IgxRowComponent } from './row.component';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType, State } from '../services/transaction/transaction';
 import { IgxCell, IgxRow } from '../core/grid-selection';
+import { IGridDataBindable } from './common/events';
 /**
  *@hidden
  */

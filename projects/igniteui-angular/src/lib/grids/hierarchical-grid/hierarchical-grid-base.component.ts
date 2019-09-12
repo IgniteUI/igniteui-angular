@@ -11,7 +11,7 @@ import {
     ViewChild,
     TemplateRef
 } from '@angular/core';
-import { IgxGridBaseComponent, IgxGridTransaction, IGridDataBindable } from '../grid-base.component';
+import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
@@ -26,6 +26,7 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
+import { IGridDataBindable } from '../common/events';
 
 export const IgxHierarchicalTransactionServiceFactory = {
     provide: IgxGridTransaction,

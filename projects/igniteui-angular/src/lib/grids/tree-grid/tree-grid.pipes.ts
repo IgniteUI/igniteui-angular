@@ -5,8 +5,9 @@ import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IgxGridBaseComponent, IGridDataBindable } from '../grid';
+import { IgxGridBaseComponent } from '../grid';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
+import { IGridDataBindable } from '../common/events';
 
 /**
  *@hidden

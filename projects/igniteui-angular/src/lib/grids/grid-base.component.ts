@@ -30,7 +30,7 @@ import {
 import ResizeObserver from 'resize-observer-polyfill';
 import { Subject, combineLatest, pipe } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
-import { cloneArray, isEdge, isNavigationKey, CancelableEventArgs, flatten, mergeObjects, isIE, IBaseEventArgs } from '../core/utils';
+import { cloneArray, isEdge, isNavigationKey, flatten, mergeObjects, isIE } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
@@ -38,8 +38,6 @@ import { ISortingExpression } from '../data-operations/sorting-expression.interf
 import { IForOfState, IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import {
-    IgxBaseExporter,
-    IgxExporterOptionsBase,
     AbsoluteScrollStrategy,
     HorizontalAlignment,
     VerticalAlignment,
@@ -88,7 +86,6 @@ import {
 } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
-import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
 import { IgxColumnResizingService } from './resizing/resizing.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './igx-row-selectors.module';
@@ -96,6 +93,7 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,
      IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective } from './grid/grid.directives';
 import { GridKeydownTargetType, GridSelectionMode, GridSummaryPosition, GridSummaryCalculationMode, FilterMode } from './common/enums';
+import { IGridCellEventArgs, IRowSelectionEventArgs, IPinColumnEventArgs, IGridEditEventArgs, IPageEventArgs, IRowDataEventArgs, IColumnResizeEventArgs, IColumnMovingStartEventArgs, IColumnMovingEventArgs, IColumnMovingEndEventArgs, IGridKeydownEventArgs, IRowDragStartEventArgs, IRowDragEndEventArgs, IGridClipboardEvent, IGridDataBindable, IGridToolbarExportEventArgs, ISearchInfo, ICellPosition } from './common/events';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -109,119 +107,13 @@ const MIN_ROW_EDITING_COUNT_THRESHOLD = 2;
 
 export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction');
 
-export interface IGridClipboardEvent {
-    data: any[];
-    cancel: boolean;
-}
 
-export interface IGridCellEventArgs extends IBaseEventArgs {
-    cell: IgxGridCellComponent;
-    event: Event;
-}
-
-export interface IGridEditEventArgs extends CancelableEventArgs, IBaseEventArgs {
-    rowID: any;
-    cellID?: {
-        rowID: any,
-        columnID: any,
-        rowIndex: number
-    };
-    oldValue: any;
-    newValue?: any;
-    event?: Event;
-}
-
-export interface IPinColumnEventArgs extends IBaseEventArgs {
-    column: IgxColumnComponent;
-    insertAtIndex: number;
-    isPinned: boolean;
-}
-
-export interface IPageEventArgs extends IBaseEventArgs {
-    previous: number;
-    current: number;
-}
-
-export interface IRowDataEventArgs extends IBaseEventArgs {
-    data: any;
-}
-
-export interface IColumnResizeEventArgs extends IBaseEventArgs {
-    column: IgxColumnComponent;
-    prevWidth: string;
-    newWidth: string;
-}
-
-export interface IRowSelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {
-    oldSelection: any[];
-    newSelection: any[];
-    added: any[];
-    removed: any[];
-    event?: Event;
-}
-
-export interface ISearchInfo {
-    searchText: string;
-    caseSensitive: boolean;
-    exactMatch: boolean;
-    activeMatchIndex: number;
-    matchInfoCache: any[];
-}
-
-export interface IGridToolbarExportEventArgs extends IBaseEventArgs {
-    grid: IgxGridBaseComponent;
-    exporter: IgxBaseExporter;
-    options: IgxExporterOptionsBase;
-    cancel: boolean;
-}
-
-export interface IColumnMovingStartEventArgs extends IBaseEventArgs {
-    source: IgxColumnComponent;
-}
-
-export interface IColumnMovingEventArgs extends IBaseEventArgs {
-    source: IgxColumnComponent;
-    cancel: boolean;
-}
-
-export interface IColumnMovingEndEventArgs extends IBaseEventArgs {
-    source: IgxColumnComponent;
-    target: IgxColumnComponent;
-}
-
-export interface IGridKeydownEventArgs extends IBaseEventArgs {
-    targetType: GridKeydownTargetType;
-    target: Object;
-    event: Event;
-    cancel: boolean;
-}
-
-export interface ICellPosition {
-    rowIndex: number;
-    visibleColumnIndex: number;
-}
-export interface IGridDataBindable {
-    data: any[];
-    filteredData: any[];
-}
-
-export interface IRowDragEndEventArgs extends IBaseEventArgs {
-    dragDirective: IgxDragDirective;
-    dragData: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
-    animation: boolean;
-}
-
-export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventArgs {
-    dragDirective: IgxDragDirective;
-    dragData: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
-}
 
 @Injectable()
 export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
     private _scrollWidth: number;
     protected _init = true;
-    private _tick;
     private _cdrRequests = false;
     protected _cdrRequestRepaint = false;
 

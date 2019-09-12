@@ -7,7 +7,8 @@ import { BaseFilteringStrategy } from '../../data-operations/filtering-strategy'
 import { IFilteringState } from '../../data-operations/filtering-state.interface';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
-import { IgxGridBaseComponent, IGridDataBindable } from '../grid';
+import { IgxGridBaseComponent } from '../grid';
+import { IGridDataBindable } from '../common/events';
 
 /** @hidden */
 export class TreeGridFilteringStrategy extends BaseFilteringStrategy {

@@ -3,7 +3,7 @@ import {
     QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, AfterContentInit, HostBinding, forwardRef, OnInit
 } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
+import { IgxGridBaseComponent } from '../grid-base.component';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridAPIService } from './grid-api.service';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
@@ -25,6 +25,7 @@ import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service
 import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 import { FilterMode } from '../common/enums';
+import { IGridDataBindable } from '../common/events';
 
 let NEXT_ID = 0;
 

@@ -30,7 +30,7 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity } from '../../core/displayDensity';
-import { IGridDataBindable, IgxColumnComponent, } from '../grid/index';
+import { IgxColumnComponent, } from '../grid/index';
 import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
@@ -41,6 +41,7 @@ import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-sel
 import { IgxOverlayService } from '../../services/index';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
+import { IGridDataBindable } from '../common/events';
 
 let NEXT_ID = 0;
 

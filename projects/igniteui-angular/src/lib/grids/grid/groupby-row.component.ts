@@ -12,9 +12,10 @@ import {
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { DataType } from '../../data-operations/data-util';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
+import { IgxGridBaseComponent } from '../grid-base.component';
 import { IgxGridSelectionService, ISelectionNode } from '../../core/grid-selection';
 import { ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS } from '../../core/utils';
+import { IGridDataBindable } from '../common/events';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

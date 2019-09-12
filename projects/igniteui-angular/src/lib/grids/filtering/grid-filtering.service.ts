@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { IgxIconService } from '../../icon/icon.service';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IgxGridBaseComponent, IColumnResizeEventArgs, IGridDataBindable } from '../grid-base.component';
+import { IgxGridBaseComponent } from '../grid-base.component';
 import icons from './svgIcons';
 import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { Subject } from 'rxjs';
@@ -12,6 +12,7 @@ import { IgxColumnComponent } from '../column.component';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { GridBaseAPIService } from '../api.service';
 import { IColumnVisibilityChangedEventArgs } from '../grid';
+import { IGridDataBindable, IColumnResizeEventArgs } from '../common/events';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 

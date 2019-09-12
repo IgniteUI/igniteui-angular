@@ -5,9 +5,10 @@ import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
 import { getNodeSizeViaRange } from '../../core/utils';
 import { DOCUMENT } from '@angular/common';
-import { IgxGridBaseComponent, IGridDataBindable } from '../grid';
+import { IgxGridBaseComponent } from '../grid';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 import { HammerGesturesManager } from '../../core/touch';
+import { IGridDataBindable } from '../common/events';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

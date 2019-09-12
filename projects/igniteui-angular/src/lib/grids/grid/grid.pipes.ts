@@ -9,7 +9,8 @@ import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridComponent } from './grid.component';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
+import { IgxGridBaseComponent } from '../grid-base.component';
+import { IGridDataBindable } from '../common/events';
 
 /**
  *@hidden

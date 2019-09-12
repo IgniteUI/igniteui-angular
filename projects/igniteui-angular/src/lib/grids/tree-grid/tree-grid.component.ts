@@ -15,7 +15,7 @@ import {
     DoCheck
 } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
-import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
+import { IgxGridBaseComponent } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IRowToggleEventArgs } from './tree-grid.interfaces';
@@ -32,6 +32,7 @@ import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives'
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 import { IgxGridNavigationService } from '../grid-navigation.service';
+import { IGridDataBindable } from '../common/events';
 
 let NEXT_ID = 0;
 

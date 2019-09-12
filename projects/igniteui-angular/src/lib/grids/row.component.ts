@@ -17,9 +17,10 @@ import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { TransactionType } from '../services';
-import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
+import { IgxGridBaseComponent } from './grid-base.component';
 import { IgxGridSelectionService, IgxGridCRUDService, IgxRow } from '../core/grid-selection';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { IGridDataBindable } from './common/events';
 
 @Injectable()
 export abstract class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable> implements DoCheck {

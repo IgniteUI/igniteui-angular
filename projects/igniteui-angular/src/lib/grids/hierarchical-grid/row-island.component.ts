@@ -22,7 +22,7 @@ import {
     DoCheck
 } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { IgxGridTransaction, IGridDataBindable, IgxGridBaseComponent } from '../grid-base.component';
+import { IgxGridTransaction, IgxGridBaseComponent } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { DOCUMENT } from '@angular/common';
@@ -40,6 +40,7 @@ import { IgxColumnComponent } from '../column.component';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IBaseEventArgs } from '../../core/utils';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
+import { IGridDataBindable } from '../common/events';
 export interface IGridCreatedEventArgs extends IBaseEventArgs {
     owner: IgxRowIslandComponent;
     parentID: any;

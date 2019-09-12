@@ -1,9 +1,9 @@
 import { Directive, Input, OnDestroy, NgModule } from '@angular/core';
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
-import { IRowDragEndEventArgs, IRowDragStartEventArgs } from './grid-base.component';
 import { KEYS } from '../core/utils';
 import { fromEvent, Subscription } from 'rxjs';
-import { IgxRowComponent, IgxGridBaseComponent, IGridDataBindable } from './grid';
+import { IgxRowComponent, IgxGridBaseComponent } from './grid';
+import { IGridDataBindable, IRowDragStartEventArgs, IRowDragEndEventArgs } from './common/events';
 
 
 const ghostBackgroundClass = 'igx-grid__tr--ghost';

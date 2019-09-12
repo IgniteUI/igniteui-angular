@@ -25,7 +25,7 @@ import {
     IgxStringFilteringOperand,
     IgxFilteringOperand
 } from '../data-operations/filtering-condition';
-import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
+import { IgxGridBaseComponent } from './grid-base.component';
 import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
@@ -39,6 +39,7 @@ import {
     IgxCellEditorTemplateDirective,
     IgxFilterCellTemplateDirective
 } from './common/templates';
+import { IGridDataBindable } from './common/events';
 
 /**
  * **Ignite UI for Angular Column** -

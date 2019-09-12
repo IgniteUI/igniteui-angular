@@ -15,11 +15,12 @@ import {
 import { IgxColumnComponent } from './column.component';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { GridBaseAPIService } from './api.service';
-import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
+import { IgxGridBaseComponent } from './grid-base.component';
 import { IgxColumnResizingService } from './resizing/resizing.service';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { isIE } from '../core/utils';
+import { IGridDataBindable } from './common/events';
 
 const Z_INDEX = 9999;
 
