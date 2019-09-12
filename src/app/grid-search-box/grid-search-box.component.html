@@ -1,4 +1,4 @@
-<igx-input-group type="search">
+<igx-input-group type="search" [displayDensity]="'compact'">
     <igx-prefix>
         <igx-icon *ngIf="searchText.length == 0">search</igx-icon>
         <igx-icon *ngIf="searchText.length > 0" (click)="clearSearch()">clear</igx-icon>
@@ -11,30 +11,25 @@
     <igx-suffix *ngIf="searchText.length > 0">
         <div class="resultsText" *ngIf="grid.lastSearchInfo">
             <span *ngIf="grid.lastSearchInfo.matchInfoCache.length > 0">
-                {{ grid.lastSearchInfo.activeMatchIndex + 1 }} of {{ grid.lastSearchInfo.matchInfoCache.length }}
-                results
+                {{ grid.lastSearchInfo.activeMatchIndex + 1 }}/{{ grid.lastSearchInfo.matchInfoCache.length }}
             </span>
             <span *ngIf="grid.lastSearchInfo.matchInfoCache.length == 0">
-                No results
+                0/0
             </span>
         </div>
         <div class="chips">
             <igx-chips-area>
-                <igx-chip (click)="updateSearch()" [color]="caseSensitive? 'lightgrey' : 'rgba(0, 0, 0, .04)'">
+                <igx-chip (click)="updateSearch()" [displayDensity]="'cosy'" [color]="caseSensitive? 'lightgrey' : 'rgba(0, 0, 0, .04)'">
                     <span title="Match Case">Aa</span>
                 </igx-chip>
-                <igx-chip (click)="updateExactSearch()" [color]="exactMatch? 'lightgrey' : 'rgba(0, 0, 0, .04)'">
+                <igx-chip (click)="updateExactSearch()" [displayDensity]="'cosy'" [color]="exactMatch? 'lightgrey' : 'rgba(0, 0, 0, .04)'">
                     <u title="Match Whole Word">Ab</u>
                 </igx-chip>
             </igx-chips-area>
         </div>
         <div class="searchButtons">
-            <button igxButton="icon" igxRipple igxRippleCentered="true" (click)="grid.findPrev(searchText, caseSensitive, exactMatch)">
-                <igx-icon fontSet="material">navigate_before</igx-icon>
-            </button>
-            <button igxButton="icon" igxRipple igxRippleCentered="true" (click)="grid.findNext(searchText, caseSensitive, exactMatch)">
-                <igx-icon fontSet="material">navigate_next</igx-icon>
-            </button>
+            <igx-icon fontSet="material" igxRipple igxRippleCentered="true" (click)="grid.findPrev(searchText, caseSensitive, exactMatch)">navigate_before</igx-icon>
+            <igx-icon fontSet="material" igxRipple igxRippleCentered="true" (click)="grid.findNext(searchText, caseSensitive, exactMatch)">navigate_next</igx-icon>
         </div>
     </igx-suffix>
 </igx-input-group>
