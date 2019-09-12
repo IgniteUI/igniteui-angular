@@ -1,6 +1,6 @@
 import {
     Directive, EmbeddedViewRef, Input, OnChanges, ChangeDetectorRef,
-    SimpleChange, SimpleChanges, TemplateRef, ViewContainerRef, NgModule, NgZone, ViewRef, Output, EventEmitter
+    SimpleChange, SimpleChanges, TemplateRef, ViewContainerRef, NgModule, NgZone, Output, EventEmitter
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';

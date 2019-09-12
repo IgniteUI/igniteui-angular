@@ -47,6 +47,10 @@ export class HierarchicalGridSampleComponent {
             { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
         ];
         this.localData = this.generateDataUneven(100, 3);
+        this.localData[0].hasChild = false;
+        this.localData[1].hasChild = false;
+        this.localData[2].childData[0].hasChild = false;
+        this.localData[2].childData[1].hasChild = false;
     }
 
     generateData(count: number, level: number) {
@@ -89,7 +93,8 @@ export class HierarchicalGridSampleComponent {
                 Col2: i,
                 Col3: i,
                 childData: children,
-                childData2: children
+                childData2: children,
+                hasChild: true
             });
         }
         return prods;
@@ -119,7 +124,6 @@ export class HierarchicalGridSampleComponent {
 
     cellClick($evt: IGridCellEventArgs) {
         console.log('Cell Click', $evt);
-        // console.log($evt.context);
     }
 
     public LoadMoreColumns() {

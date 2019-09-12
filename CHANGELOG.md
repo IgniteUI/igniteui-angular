@@ -35,6 +35,20 @@ For more information about the theming please read our [documentation](https://w
     - `uniqueColumnValuesStrategy` input is added. This property provides a callback for loading unique column values on demand. If this property is provided, the unique values it generates will be used by the Excel Style Filtering (instead of using the unique values from the data that is bound to the grid).
     - `igxExcelStyleLoading` directive is added, which can be used to provide a custom loading template for the Excel Style Filtering. If this property is not provided, a default loading template will be used instead.
     - introduced new properties `cellSelection` and `rowSelection` which accept GridSelection mode enumeration. Grid selection mode could be none, single or multiple. Also `hideRowSelectors` property is added, which allows you to show and hide row selectors when row selection is enabled.
+    - introduced functionality for templating row and header selectors - [spec](https://github.com/IgniteUI/igniteui-angular/wiki/Row-Selection-Templating-(Grid-feature))
+    ```html
+    <igx-grid [data]="data", [rowSelection]="'multiple'" primaryKey="ID">
+        <igx-column field="Name"></igx-column>
+        <igx-column field="Age"></igx-column>
+
+        <ng-template igxHeadSelector let-headSelector>
+            <igx-icon>done_all</igx-icon>
+        </ng-template>
+        <ng-template igxRowSelector let-rowContext>
+            <igx-switch [checked]="rowContext.selected"></igx-switch>
+        </ng-template>
+    </igx-grid>
+    ```
 - `IgxHierarchicalGrid`
     - Row Islands now emit child grid events with an additional argument - `owner`, which holds reference to the related child grid component instance.
 - `IgxDrag`
@@ -50,6 +64,8 @@ For more information about the theming please read our [documentation](https://w
     - Drop strategies. Three new drop strategies have been provided - Append, Prepend and Insert.  Also an input `dropStrategy` to the `igxDrop` which specify which strategy should be used when dropping an element inside the drop area. Custom one can be specified as well.
 - `IgxCheckbox`
     - introduced a new `readonly` property that doesn't allow user interaction to change the state, but keeps the default active style. Intended for integration in complex controls that handle the interaction and control the checkbox instead through binding.
+- `IgxOverlay`
+    - introduced a new `ContainerPositionStrategy`. The new strategy positions the element inside the containing outlet based on the directions passed in trough PositionSettings.
 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`

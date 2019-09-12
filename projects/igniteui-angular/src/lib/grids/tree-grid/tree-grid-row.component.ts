@@ -1,26 +1,16 @@
-import { Component, forwardRef, Input, ViewChildren, QueryList, HostBinding, ElementRef, ChangeDetectorRef, DoCheck } from '@angular/core';
+import { Component, forwardRef, Input, ViewChildren, QueryList, HostBinding, DoCheck, ChangeDetectionStrategy } from '@angular/core';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { IgxRowComponent } from '../row.component';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
-import { GridBaseAPIService } from '../api.service';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-tree-grid-row',
     templateUrl: 'tree-grid-row.component.html',
     providers: [{ provide: IgxRowComponent, useExisting: forwardRef(() => IgxTreeGridRowComponent) }]
 })
 export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponent> implements DoCheck {
-    constructor(
-        public gridAPI: GridBaseAPIService<IgxTreeGridComponent>,
-        public crudService: IgxGridCRUDService,
-        public selectionService: IgxGridSelectionService,
-        public element: ElementRef,
-        public cdr: ChangeDetectorRef) {
-            // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
-        super(gridAPI, crudService, selectionService, element, cdr);
-    }
     private _treeRow: ITreeGridRecord;
 
     /**
@@ -110,6 +100,6 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
      */
     public ngDoCheck() {
         this.isLoading = this.grid.loadChildrenOnDemand ? this.grid.loadingRows.has(this.rowID) : false;
-        // super.ngDoCheck();
+        super.ngDoCheck();
     }
 }

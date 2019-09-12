@@ -13,7 +13,6 @@ import {
     Pipe,
     PipeTransform,
     Renderer2,
-    TemplateRef,
     LOCALE_ID,
     AfterViewInit,
     HostListener,
@@ -232,48 +231,6 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
         event.preventDefault();
         this.resize.next(event);
     }
-}
-
-@Directive({
-    selector: '[igxFilterCellTemplate]'
-})
-export class IgxFilterCellTemplateDirective {
-    constructor(public template: TemplateRef<any>) {}
-}
-
-@Directive({
-    selector: '[igxCell]'
-})
-export class IgxCellTemplateDirective {
-
-    constructor(public template: TemplateRef<any>) { }
-}
-
-@Directive({
-    selector: '[igxHeader]'
-})
-export class IgxCellHeaderTemplateDirective {
-
-    constructor(public template: TemplateRef<any>) { }
-
-}
-/**
- * @hidden
- */
-@Directive({
-    selector: '[igxFooter]'
-})
-export class IgxCellFooterTemplateDirective {
-
-    constructor(public template: TemplateRef<any>) { }
-}
-
-@Directive({
-    selector: '[igxCellEditor]'
-})
-export class IgxCellEditorTemplateDirective {
-
-    constructor(public template: TemplateRef<any>) { }
 }
 
 /**
@@ -714,17 +671,17 @@ export class IgxDecimalPipeComponent extends DecimalPipe implements PipeTransfor
 /**
  * @hidden
  */
-export interface ContainerPositionSettings extends PositionSettings {
+export interface RowEditPositionSettings extends PositionSettings {
     container?: HTMLElement;
 }
 
 /**
  * @hidden
  */
-export class ContainerPositioningStrategy extends ConnectedPositioningStrategy {
+export class RowEditPositionStrategy extends ConnectedPositioningStrategy {
     isTop = false;
     isTopInitialPosition = null;
-    public settings: ContainerPositionSettings;
+    public settings: RowEditPositionSettings;
     position(contentElement: HTMLElement, size: { width: number, height: number }, document?: Document, initialCall?: boolean): void {
         const container = this.settings.container; // grid.tbody
         const target = <HTMLElement>this.settings.target; // current grid.row

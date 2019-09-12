@@ -15,12 +15,6 @@ import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryOperand } from './summaries/grid-summary';
 import { IgxRowComponent } from './row.component';
-import {
-    IgxCellEditorTemplateDirective,
-    IgxCellHeaderTemplateDirective,
-    IgxCellTemplateDirective,
-    IgxFilterCellTemplateDirective
-} from './grid.common';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
 import { getNodeSizeViaRange, flatten } from '../core/utils';
@@ -39,6 +33,12 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
 import { MRLColumnSizeInfo, MRLResizeColumnInfo } from '../data-operations/multi-row-layout.interfaces';
 import { DisplayDensity } from '../core/displayDensity';
 import { notifyChanges } from './watch-changes';
+import {
+    IgxCellTemplateDirective,
+    IgxCellHeaderTemplateDirective,
+    IgxCellEditorTemplateDirective,
+    IgxFilterCellTemplateDirective
+} from './common/templates';
 
 /**
  * **Ignite UI for Angular Column** -

@@ -34,8 +34,8 @@
          class="igx-grid__tree-grouping-indicator"
          [ngStyle]="{'visibility': showIndicator ? 'visible' : 'hidden'}"
          (click)="toggle($event)" (focus)="onIndicatorFocus()" tabindex="-1">
-        <igx-icon *ngIf="!expanded" fontSet="material">expand_more</igx-icon>
-        <igx-icon *ngIf="expanded" fontSet="material">expand_less</igx-icon>
+         <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit:  this }">
+        </ng-container>
     </div>
     <div *ngIf="isLoading"
          (dblclick)="onLoadingDblClick($event)"
@@ -50,3 +50,9 @@
 </ng-container>
 <ng-container *ngTemplateOutlet="template; context: context">
 </ng-container>
+<ng-template #defaultExpandedTemplate>
+        <igx-icon fontSet="material">expand_more</igx-icon>
+</ng-template>
+<ng-template #defaultCollapsedTemplate>
+        <igx-icon fontSet="material">chevron_right</igx-icon>
+</ng-template>
