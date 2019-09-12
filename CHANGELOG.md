@@ -75,6 +75,7 @@ For more information about the theming please read our [documentation](https://w
     - **Breaking Change** `onRowSelectionChange` event arguments are changed. The `row` property has been removed and the properties `added`, `removed` and `cancel` are newly added.
     - **Breaking Change** `igxExcelStylePinningTemplate` directive is renamed to `igxExcelStylePinning`.
     - **Breaking Change** `onRowDragEnd` and `onRowDragStart` event arguments are changed - `owner` now holds reference to the grid component instance, while `dragDirective` hold reference to the drag directive.
+    - **Behavioral Change** The behavior of the `isLoading` input no longer depends on the state of the data the grid binds to. Setting it to `true` now shows a loading indicator until it is disabled by the user.
 - `IgxCombo`
     - Combo selection is now consistent when `valueKey` is defined. When `valueKey` is specified, selection is based on the value keys of the items. For example:
     ```html

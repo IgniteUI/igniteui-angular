@@ -50,6 +50,10 @@
             [column]="filteringService.filteredColumn"></igx-grid-filtering-row>
     </div>
     <div class="igx-grid__thead-thumb" [hidden]='!hasVerticalSroll()' [style.width.px]="scrollWidth"></div>
+    <div [style.display]="shouldOverlayLoading ? 'flex' : 'none'" #loadingOverlay>
+        <igx-circular-bar [indeterminate]="true">
+        </igx-circular-bar>
+    </div>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true"
         id="right" class="igx-grid__scroll-on-drag-right"></span>
 </div>
@@ -204,4 +208,5 @@
 </ng-template>
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>
+<div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>
