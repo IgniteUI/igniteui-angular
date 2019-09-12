@@ -10,7 +10,8 @@ import {
     ElementRef,
     AfterViewInit,
     ViewChildren,
-    QueryList
+    QueryList,
+    OnDestroy
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { fadeIn, scaleInCenter } from '../animations/main';
@@ -24,7 +25,7 @@ import { CalendarView, IgxMonthPickerBase } from './month-picker-base';
 import { IgxMonthsViewComponent } from './months-view/months-view.component';
 import { IgxYearsViewComponent } from './years-view/years-view.component';
 import { IgxDaysViewComponent, IViewChangedArgs } from './days-view/days-view.component';
-import { interval } from 'rxjs';
+import { interval, Subscription } from 'rxjs';
 import { takeUntil, debounce, skipLast, switchMap } from 'rxjs/operators';
 import { ScrollMonth } from './calendar-base';
 
@@ -69,7 +70,7 @@ export interface IMonthView {
     selector: 'igx-calendar',
     templateUrl: 'calendar.component.html'
 })
-export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterViewInit {
+export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterViewInit, OnDestroy {
     /**
      * Sets/gets the `id` of the calendar.
      * If not set, the `id` will have value `"igx-calendar-0"`.
@@ -353,17 +354,17 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      *@hidden
      */
+    private _monthViewsChanges$: Subscription;
+
+    /**
+     *@hidden
+     */
     public dayViews: Array<IMonthView> = [this.defaultDayView];
 
     public ngAfterViewInit() {
-
-        this.monthViews.changes.subscribe(c => {
-            c.forEach((item, index) => {
-                const prevMonthView = this.getMonthView(index - 1);
-                const nextMonthView = this.getMonthView(index + 1);
-                item.nextMonthView = nextMonthView;
-                item.prevMonthView = prevMonthView;
-            });
+        this.setSiblingMonths(this.monthViews);
+        this._monthViewsChanges$ = this.monthViews.changes.subscribe(c => {
+            this.setSiblingMonths(c);
         });
 
         this.startMonthScroll$.pipe(
@@ -764,6 +765,15 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     }
 
     /**
+     * @hidden
+     */
+    public ngOnDestroy(): void {
+        if (this._monthViewsChanges$) {
+            this._monthViewsChanges$.unsubscribe();
+        }
+    }
+
+    /**
      * Helper method building and returning the context object inside
      * the calendar templates.
      * @hidden
@@ -779,11 +789,25 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
         return { $implicit: formatObject };
     }
 
+
+    /**
+     * Helper method sthat sets references for prev/next months for each month in the view
+     * @hidden
+     */
+    private setSiblingMonths(monthViews: QueryList<IgxDaysViewComponent>) {
+        monthViews.forEach((item, index) => {
+            const prevMonthView = this.getMonthView(index - 1);
+            const nextMonthView = this.getMonthView(index + 1);
+            item.nextMonthView = nextMonthView;
+            item.prevMonthView = prevMonthView;
+        });
+    }
+
     /**
      * Helper method returning previous/next day views
      * @hidden
      */
-    private getMonthView(index): IgxDaysViewComponent {
+    private getMonthView(index: number): IgxDaysViewComponent {
         if (index === -1 || index === this.monthViews.length ) {
             return null;
         } else {
