@@ -40,7 +40,8 @@ import {
     IgxTestExcelFilteringDatePickerComponent,
     IgxGridFilteringTemplateComponent,
     IgxGridFilteringESFTemplatesComponent,
-    IgxGridFilteringESFLoadOnDemandComponent
+    IgxGridFilteringESFLoadOnDemandComponent,
+    CustomFilteringStrategyComponent
 } from '../../test-utils/grid-samples.spec';
 import { HelperUtils, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 import { GridSelectionMode, FilterMode } from '../types';
@@ -5808,6 +5809,64 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.verifyColumnIsPinned(column, true, 8);
         }));
     });
+});
+
+describe('IgxGrid - Custom Filtering Strategy #grid', () => {
+    let fix;
+    let grid;
+
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                CustomFilteringStrategyComponent
+            ],
+            imports: [NoopAnimationsModule, IgxGridModule]
+        }).compileComponents();
+        fix = TestBed.createComponent(CustomFilteringStrategyComponent);
+        grid = fix.componentInstance.grid;
+        fix.detectChanges();
+    }));
+
+    afterEach(() => {
+        UIInteractions.clearOverlay();
+    });
+
+    it('Should be able to set custom filtering strategy', () => {
+       expect(grid.filterStrategy).toBeUndefined();
+       grid.filterStrategy = fix.componentInstance.strategy;
+       fix.detectChanges();
+
+       expect(grid.filterStrategy).toEqual(fix.componentInstance.strategy);
+    });
+
+    fit('Should be able to override getFieldValue method', fakeAsync(() => {
+        GridFunctions.clickFilterCellChip(fix, 'Name'); // Name column contains nasted object as a vulue
+        fix.detectChanges();
+
+        GridFunctions.typeValueInFilterRowInput('ca', fix);
+        tick(50);
+        GridFunctions.submitFilterRowInput(fix);
+        tick(50);
+        fix.detectChanges();
+        grid.filterStrategy = fix.componentInstance.strategy;
+        fix.detectChanges();
+
+        expect(grid.filteredData).toEqual([]);
+
+        GridFunctions.clickFilterCellChip(fix, 'Name'); // Name column contains nasted object as a vulue
+        fix.detectChanges();
+
+        GridFunctions.typeValueInFilterRowInput('ca', fix);
+        tick(50);
+        GridFunctions.submitFilterRowInput(fix);
+        tick(50);
+        fix.detectChanges();
+
+        expect(grid.filteredData).toEqual(
+            [{ ID: 1, Name: { FirstName: 'Casey', LastName: 'Houston' }, JobTitle: 'Vice President', Company: 'Company A' }]);
+
+     }));
+
 });
 
 const expectedResults = [];
