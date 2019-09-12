@@ -39,8 +39,8 @@
                         context: { $implicit: {
                                         selectedCount: this.selectionService.filteredSelectedRowIds.length,
                                         totalCount: this.totalRowsCountAfterFilter,
-                                        selectAll: selectAllRows,
-                                        deselectAll: deselectAllRows }}">
+                                        selectAll: selectAllRows.bind(this),
+                                        deselectAll: deselectAllRows.bind(this) }}">
                     </ng-template>
                 </div>
             </ng-container>
@@ -79,7 +79,7 @@
         <ng-template igxGridFor let-rowData [igxGridForOf]="data
         | gridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
-        | gridFiltering:filteringExpressionsTree:id:pipeTrigger
+        | gridFiltering:filteringExpressionsTree:advancedFilteringExpressionsTree:id:pipeTrigger
         | gridSort:sortingExpressions:id:pipeTrigger
         | gridHierarchicalPaging:page:perPage:id:pipeTrigger
         | gridHierarchical:hierarchicalState:id:primaryKey:childLayoutKeys:pipeTrigger" let-rowIndex="index"
