@@ -457,8 +457,15 @@ export class GridFunctions {
         return div.classList.contains('igx-overlay') ? div : null;
     }
 
+    public static getAdvancedFilteringButton(fix: ComponentFixture<any>) {
+        const button = GridFunctions.getToolbar(fix).queryAll(By.css('button'))
+        .find((b) => b.nativeElement.name === 'btnAdvancedFiltering');
+        return button ? button.nativeElement : undefined;
+    }
+
     public static getColumnHidingButton(fixture) {
-        const button = GridFunctions.getToolbar(fixture).queryAll(By.css('button')).find((b) => b.nativeElement.name === 'btnColumnHiding');
+        const button = GridFunctions.getToolbar(fixture).queryAll(By.css('button'))
+        .find((b) => b.nativeElement.name === 'btnColumnHiding');
         return button ? button.nativeElement : undefined;
     }
 
@@ -944,6 +951,460 @@ export class GridFunctions {
         const customFilterMenu = GridFunctions.getExcelStyleCustomFilteringDialog(fix);
         return GridFunctions.sortNativeElementsVertically(
             Array.from(customFilterMenu.querySelectorAll('igx-excel-style-date-expression')));
+    }
+
+    public static clickAdvancedFilteringButton(fix: ComponentFixture<any>) {
+        const advFilterButton = GridFunctions.getAdvancedFilteringButton(fix);
+        advFilterButton.click();
+    }
+
+    public static clickAdvancedFilteringClearFilterButton(fix: ComponentFixture<any>) {
+        const clearFilterButton = GridFunctions.getAdvancedFilteringClearFilterButton(fix);
+        clearFilterButton.click();
+    }
+
+    public static clickAdvancedFilteringCancelButton(fix: ComponentFixture<any>) {
+        const cancelButton = GridFunctions.getAdvancedFilteringCancelButton(fix);
+        cancelButton.click();
+    }
+
+    public static clickAdvancedFilteringApplyButton(fix: ComponentFixture<any>) {
+        const applyButton = GridFunctions.getAdvancedFilteringApplyButton(fix);
+        applyButton.click();
+    }
+
+    /**
+    * (Double)Click the underlying chip of the expression that is located on the provided 'path'.
+    */
+    public static clickAdvancedFilteringTreeExpressionChip(fix: ComponentFixture<any>, path: number[], dblClick: boolean = false) {
+        const chip = GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, path);
+        if (dblClick) {
+            chip.dispatchEvent(new MouseEvent('dblclick'));
+        } else {
+            chip.click();
+        }
+    }
+
+    /**
+    * Click the remove icon of the expression that is located on the provided 'path'.
+    */
+    public static clickAdvancedFilteringTreeExpressionChipRemoveIcon(fix: ComponentFixture<any>, path: number[]) {
+        const chip = GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, path);
+        const removeIcon = chip.querySelector('.igx-chip__remove');
+        removeIcon.click();
+    }
+
+    /**
+    * Click the edit icon of the expression that is located on the provided 'path'.
+    */
+    public static clickAdvancedFilteringTreeExpressionChipEditIcon(fix: ComponentFixture<any>, path: number[]) {
+        const chipEditIcon = GridFunctions.getAdvancedFilteringTreeExpressionEditIcon(fix, path);
+        chipEditIcon.click();
+    }
+
+    /**
+    * Click the add icon of the expression that is located on the provided 'path'.
+    */
+    public static clickAdvancedFilteringTreeExpressionChipAddIcon(fix: ComponentFixture<any>, path: number[]) {
+        const chipAddIcon = GridFunctions.getAdvancedFilteringTreeExpressionAddIcon(fix, path);
+        chipAddIcon.click();
+    }
+
+    /**
+    * Click the operator line of the group that is located on the provided 'path'.
+    */
+    public static clickAdvancedFilteringTreeGroupOperatorLine(fix: ComponentFixture<any>, path: number[]) {
+        const operatorLine = GridFunctions.getAdvancedFilteringTreeGroupOperatorLine(fix, path);
+        operatorLine.click();
+    }
+
+    /**
+    * Click the column select for the expression that is currently in edit mode.
+    */
+    public static clickAdvancedFilteringColumnSelect(fix: ComponentFixture<any>) {
+        const columnSelect = GridFunctions.getAdvancedFilteringColumnSelect(fix);
+        const inputGroup = columnSelect.querySelector('igx-input-group');
+        inputGroup.click();
+    }
+
+    /**
+    * Click the operator select for the expression that is currently in edit mode.
+    */
+    public static clickAdvancedFilteringOperatorSelect(fix: ComponentFixture<any>) {
+        const operatorSelect = GridFunctions.getAdvancedFilteringOperatorSelect(fix);
+        const inputGroup = operatorSelect.querySelector('igx-input-group');
+        inputGroup.click();
+    }
+
+    /**
+    * Click the value input for the expression that is currently in edit mode.
+    * (NOTE: The value input could be either an input group or a date picker.)
+    */
+    public static clickAdvancedFilteringValueInput(fix: ComponentFixture<any>, dateType: boolean = false) {
+        // Could be either an input group or a date picker.
+        const valueInput = GridFunctions.getAdvancedFilteringValueInput(fix, dateType);
+        valueInput.click();
+    }
+
+    /**
+    * Click the the select dropdown's element that is positioned at the specified 'index'.
+    * (NOTE: This method presumes that the select dropdown is already opened.)
+    */
+    public static clickAdvancedFilteringSelectDropdownItem(fix: ComponentFixture<any>, index: number) {
+        const selectDropdownItems = GridFunctions.sortNativeElementsVertically(
+            Array.from(GridFunctions.getAdvancedFilteringSelectDropdownItems(fix)));
+        const item = selectDropdownItems[index];
+        item.click();
+    }
+
+    /**
+    * Click the commit button of the expression that is currently in edit mode.
+    */
+    public static clickAdvancedFilteringExpressionCommitButton(fix: ComponentFixture<any>) {
+        const commitButton = GridFunctions.getAdvancedFilteringExpressionCommitButton(fix);
+        commitButton.click();
+    }
+
+    /**
+    * Click the close button of the expression that is currently in edit mode.
+    */
+    public static clickAdvancedFilteringExpressionCloseButton(fix: ComponentFixture<any>) {
+        const closeButton = GridFunctions.getAdvancedFilteringExpressionCloseButton(fix);
+        closeButton.click();
+    }
+
+    public static clickAdvancedFilteringContextMenuCloseButton(fix: ComponentFixture<any>) {
+        const contextMenuCloseButton = GridFunctions.getAdvancedFilteringContextMenuCloseButton(fix);
+        contextMenuCloseButton.click();
+    }
+
+    public static getAdvancedFilteringComponent(fix: ComponentFixture<any>) {
+        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+        const advFilterDialog = gridNativeElement.querySelector('.igx-advanced-filter');
+        return advFilterDialog;
+    }
+
+    public static getAdvancedFilteringEmptyPrompt(fix: ComponentFixture<any>) {
+        const advFilterDialog = GridFunctions.getAdvancedFilteringComponent(fix);
+        const emptyPrompt = advFilterDialog.querySelector('.igx-filter-empty');
+        return emptyPrompt;
+    }
+
+    public static getAdvancedFilteringHeader(fix: ComponentFixture<any>) {
+        const advFilterDialog = GridFunctions.getAdvancedFilteringComponent(fix);
+        const header = advFilterDialog.querySelector('.igx-advanced-filter__header');
+        return header;
+    }
+
+    public static getAdvancedFilteringHeaderText(fix: ComponentFixture<any>) {
+        const header = GridFunctions.getAdvancedFilteringHeader(fix);
+        const title = header.querySelector('h4');
+        return title.innerText;
+    }
+
+    public static getAdvancedFilteringHeaderLegendItemAnd(fix: ComponentFixture<any>) {
+        const header = GridFunctions.getAdvancedFilteringHeader(fix);
+        const andLegendItem = header.querySelector('.igx-filter-legend__item--and');
+        return andLegendItem;
+    }
+
+    public static getAdvancedFilteringHeaderLegendItemOr(fix: ComponentFixture<any>) {
+        const header = GridFunctions.getAdvancedFilteringHeader(fix);
+        const orLegendItem = header.querySelector('.igx-filter-legend__item--or');
+        return orLegendItem;
+    }
+
+    public static getAdvancedFilteringAllGroups(fix: ComponentFixture<any>): any[] {
+        const advFilterDialog = GridFunctions.getAdvancedFilteringComponent(fix);
+        const allGroups = Array.from(GridFunctions.getAdvancedFilteringTreeChildGroups(advFilterDialog, false));
+        return allGroups;
+    }
+
+    /**
+    * Get the expressions container that contains all groups and expressions.
+    */
+    public static getAdvancedFilteringExpressionsContainer(fix: ComponentFixture<any>) {
+        const advFilterDialog = GridFunctions.getAdvancedFilteringComponent(fix);
+        const exprContainer = advFilterDialog.querySelector('.igx-advanced-filter__main');
+        return exprContainer;
+    }
+
+    /**
+    * Get the root group.
+    */
+    public static getAdvancedFilteringTreeRootGroup(fix: ComponentFixture<any>) {
+        const exprContainer = GridFunctions.getAdvancedFilteringExpressionsContainer(fix);
+        const rootGroup = exprContainer.querySelector(':scope > .igx-filter-tree');
+        return rootGroup;
+    }
+
+    /**
+    * Get all child groups of the given 'group' by specifying whether to include its direct child groups only
+    * or all of its child groups in the hierarchy. (NOTE: Expressions do not have children!)
+    */
+    public static getAdvancedFilteringTreeChildGroups(group: HTMLElement, directChildrenOnly: boolean = true) {
+        const pattern = directChildrenOnly ? ':scope > .igx-filter-tree' : '.igx-filter-tree';
+        const childrenContainer = group.querySelector('.igx-filter-tree__expression');
+        const childGroups = GridFunctions.sortNativeElementsVertically(Array.from(childrenContainer.querySelectorAll(pattern)));
+        return childGroups;
+    }
+
+    /**
+    * Get all child expressions of the given 'group' by specifying whether to include its direct child expressions only
+    * or all of its child expressions in the hierarchy.
+    */
+    public static getAdvancedFilteringTreeChildExpressions(group: HTMLElement, directChildrenOnly: boolean = true) {
+        const pattern = directChildrenOnly ? ':scope > .igx-filter-tree__expression-item' : '.igx-filter-tree__expression-item';
+        const childrenContainer = group.querySelector('.igx-filter-tree__expression');
+        const childExpressions = GridFunctions.sortNativeElementsVertically(Array.from(childrenContainer.querySelectorAll(pattern)));
+        return childExpressions;
+    }
+
+    /**
+    * Get all child groups and expressions of the given 'group' by specifying whether to include its
+    * direct child groups and expressions only or all of its child groups and expressions in the hierarchy.
+    */
+    public static getAdvancedFilteringTreeChildItems(group: HTMLElement, directChildrenOnly: boolean = true) {
+        const childGroups = Array.from(GridFunctions.getAdvancedFilteringTreeChildGroups(group, directChildrenOnly));
+        const childExpressions = Array.from(GridFunctions.getAdvancedFilteringTreeChildExpressions(group, directChildrenOnly));
+        return GridFunctions.sortNativeElementsVertically(childGroups.concat(childExpressions));
+    }
+
+    /**
+    * Get a specific item from the tree (could be a group or an expression)
+    * by specifying its hierarchical path (not including the root group).
+    * (Example: [2 ,1] will first get the third item of the root group,
+    *  and then it will get the second item of the root group's third item.)
+    * (NOTE: Only the items that are groups have children.)
+    * The returned element is the one that has been gotten last.
+    */
+    public static getAdvancedFilteringTreeItem(fix: ComponentFixture<any>,
+                                               path: number[]) {
+        let node = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
+        for (let index = 0; index < path.length; index++) {
+            const pos = path[index];
+            const directChildren = GridFunctions.getAdvancedFilteringTreeChildItems(node, true);
+            node = directChildren[pos];
+        }
+        return node;
+    }
+
+    /**
+    * Get the operator line of the root group.
+    */
+    public static getAdvancedFilteringTreeRootGroupOperatorLine(fix: ComponentFixture<any>) {
+        const rootGroup = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
+        const directOperatorLine = rootGroup.querySelector(':scope > .igx-filter-tree__line');
+        return directOperatorLine;
+    }
+
+    /**
+    * Get the operator line of the group that is located on the provided 'path'.
+    */
+    public static getAdvancedFilteringTreeGroupOperatorLine(fix: ComponentFixture<any>, path: number[]) {
+        const group = GridFunctions.getAdvancedFilteringTreeItem(fix, path);
+        const directOperatorLine = group.querySelector(':scope > .igx-filter-tree__line');
+        return directOperatorLine;
+    }
+
+    /**
+    * Get the underlying chip of the expression that is located on the provided 'path'.
+    */
+    public static getAdvancedFilteringTreeExpressionChip(fix: ComponentFixture<any>, path: number[]) {
+        const treeItem = GridFunctions.getAdvancedFilteringTreeItem(fix, path);
+        const chip = treeItem.querySelector('igx-chip');
+        return chip;
+    }
+
+    /**
+    * Get the action icons ('edit' and 'add') of the expression that is located on the provided 'path'.
+    */
+    public static getAdvancedFilteringTreeExpressionActionsContainer(fix: ComponentFixture<any>, path: number[]) {
+        const treeItem = GridFunctions.getAdvancedFilteringTreeItem(fix, path);
+        const actionsContainer = treeItem.querySelector('.igx-filter-tree__expression-actions');
+        return actionsContainer;
+    }
+
+    /**
+    * Get the edit icon of the expression that is located on the provided 'path'.
+    */
+    public static getAdvancedFilteringTreeExpressionEditIcon(fix: ComponentFixture<any>, path: number[]) {
+        const actionsContainer = GridFunctions.getAdvancedFilteringTreeExpressionActionsContainer(fix, path);
+        const icons = Array.from(actionsContainer.querySelectorAll('igx-icon'));
+        const editIcon: any = icons.find((icon: any) => icon.innerText === 'edit');
+        return editIcon;
+    }
+
+    /**
+    * Get the add icon of the expression that is located on the provided 'path'.
+    */
+    public static getAdvancedFilteringTreeExpressionAddIcon(fix: ComponentFixture<any>, path: number[]) {
+        const actionsContainer = GridFunctions.getAdvancedFilteringTreeExpressionActionsContainer(fix, path);
+        const icons = Array.from(actionsContainer.querySelectorAll('igx-icon'));
+        const addIcon: any = icons.find((icon: any) => icon.innerText === 'add');
+        return addIcon;
+    }
+
+    /**
+    * Get the adding buttons and the cancel button of a group by specifying the
+    * path of the group and the index position of the buttons container.
+    * (NOTE: The buttons are returned in an array and are sorted in ascending order based on 'X' value.)
+    */
+    public static getAdvancedFilteringTreeGroupButtons(fix: ComponentFixture<any>, path: number[], buttonsIndex: number) {
+        const group = GridFunctions.getAdvancedFilteringTreeItem(fix, path);
+        const childrenContainer = group.querySelector('.igx-filter-tree__expression');
+        const buttonsContainers = GridFunctions.sortNativeElementsVertically(
+            Array.from(childrenContainer.querySelectorAll(':scope > .igx-filter-tree__buttons')));
+        const buttonsContainer: any = buttonsContainers[buttonsIndex];
+        const buttons = GridFunctions.sortNativeElementsHorizontally(Array.from(buttonsContainer.querySelectorAll('button')));
+        return buttons;
+    }
+
+    /**
+    * Get the adding buttons and the cancel button of the root group by specifying the
+    * index position of the buttons container.
+    * (NOTE: The buttons are returned in an array and are sorted in ascending order based on 'X' value.)
+    */
+    public static getAdvancedFilteringTreeRootGroupButtons(fix: ComponentFixture<any>, buttonsIndex: number) {
+        const group = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
+        const childrenContainer = group.querySelector('.igx-filter-tree__expression');
+        const buttonsContainers = GridFunctions.sortNativeElementsVertically(
+            Array.from(childrenContainer.querySelectorAll(':scope > .igx-filter-tree__buttons')));
+        const buttonsContainer: any = buttonsContainers[buttonsIndex];
+        const buttons = GridFunctions.sortNativeElementsHorizontally(Array.from(buttonsContainer.querySelectorAll('button')));
+        return buttons;
+    }
+
+    /**
+    * Get the initial group adding buttons when the dialog does not contain any filters.
+    */
+    public static getAdvancedFilteringInitialAddGroupButtons(fix: ComponentFixture<any>) {
+        const exprContainer = GridFunctions.getAdvancedFilteringExpressionsContainer(fix);
+        const initialButtons = GridFunctions.sortNativeElementsHorizontally(
+            Array.from(exprContainer.querySelectorAll(':scope > button')));
+        return initialButtons;
+    }
+
+    public static getAdvancedFilteringContextMenu(fix: ComponentFixture<any>) {
+        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+        const contextMenu = gridNativeElement.querySelector('.igx-filter-contextual-menu');
+        return contextMenu;
+    }
+
+    public static getAdvancedFilteringContextMenuButtons(fix: ComponentFixture<any>) {
+        const contextMenu = GridFunctions.getAdvancedFilteringContextMenu(fix);
+        const buttons = GridFunctions.sortNativeElementsVertically(Array.from(contextMenu.querySelectorAll('button')));
+        return buttons;
+    }
+
+    public static getAdvancedFilteringContextMenuCloseButton(fix: ComponentFixture<any>) {
+        const contextMenu = GridFunctions.getAdvancedFilteringContextMenu(fix);
+        const buttons = GridFunctions.sortNativeElementsVertically(Array.from(contextMenu.querySelectorAll('button')));
+        const closeButton: any = buttons.find((b: any) => b.innerText.toLowerCase() === 'close');
+        return closeButton;
+    }
+
+    public static getAdvancedFilteringContextMenuButtonGroup(fix: ComponentFixture<any>) {
+        const contextMenu = GridFunctions.getAdvancedFilteringContextMenu(fix);
+        const buttonGroup = contextMenu.querySelector('igx-buttongroup');
+        return buttonGroup;
+    }
+
+    public static getAdvancedFilteringFooter(fix: ComponentFixture<any>) {
+        const advFilterDialog = GridFunctions.getAdvancedFilteringComponent(fix);
+        const footer = advFilterDialog.querySelector('.igx-excel-filter__secondary-footer');
+        return footer;
+    }
+
+    public static getAdvancedFilteringClearFilterButton(fix: ComponentFixture<any>) {
+        const footer = GridFunctions.getAdvancedFilteringFooter(fix);
+        const clearFilterButton: any = Array.from(footer.querySelectorAll('button'))
+                                       .find((b: any) => b.innerText.toLowerCase() === 'clear filter');
+        return clearFilterButton;
+    }
+
+    public static getAdvancedFilteringCancelButton(fix: ComponentFixture<any>) {
+        const footer = GridFunctions.getAdvancedFilteringFooter(fix);
+        const cancelFilterButton: any = Array.from(footer.querySelectorAll('button'))
+                                        .find((b: any) => b.innerText.toLowerCase() === 'cancel');
+        return cancelFilterButton;
+    }
+
+    public static getAdvancedFilteringApplyButton(fix: ComponentFixture<any>) {
+        const footer = GridFunctions.getAdvancedFilteringFooter(fix);
+        const applyFilterButton: any = Array.from(footer.querySelectorAll('button'))
+                                       .find((b: any) => b.innerText.toLowerCase() === 'apply');
+        return applyFilterButton;
+    }
+
+    public static getAdvancedFilteringEditModeContainer(fix: ComponentFixture<any>) {
+        const exprContainer = GridFunctions.getAdvancedFilteringExpressionsContainer(fix);
+        const editModeContainer = exprContainer.querySelector('.igx-filter-tree__inputs');
+        return editModeContainer;
+    }
+
+    public static getAdvancedFilteringColumnSelect(fix: ComponentFixture<any>) {
+        const editModeContainer = GridFunctions.getAdvancedFilteringEditModeContainer(fix);
+        const selects = GridFunctions.sortNativeElementsHorizontally(Array.from(editModeContainer.querySelectorAll('igx-select')));
+        const columnSelect = selects[0];
+        return columnSelect;
+    }
+
+    public static getAdvancedFilteringOperatorSelect(fix: ComponentFixture<any>) {
+        const editModeContainer = GridFunctions.getAdvancedFilteringEditModeContainer(fix);
+        const selects = GridFunctions.sortNativeElementsHorizontally(Array.from(editModeContainer.querySelectorAll('igx-select')));
+        const columnSelect = selects[1];
+        return columnSelect;
+    }
+
+    public static getAdvancedFilteringValueInput(fix: ComponentFixture<any>, dateType: boolean = false) {
+        const editModeContainer = GridFunctions.getAdvancedFilteringEditModeContainer(fix);
+        const input = dateType ?
+                    editModeContainer.querySelector('igx-date-picker').querySelector('input') :
+                    GridFunctions.sortNativeElementsHorizontally(Array.from(editModeContainer.querySelectorAll('igx-input-group')))[2];
+        return input;
+    }
+
+    public static getAdvancedFilteringExpressionCommitButton(fix: ComponentFixture<any>) {
+        const editModeContainer = GridFunctions.getAdvancedFilteringEditModeContainer(fix);
+        const actionButtonsContainer = editModeContainer.querySelector('.igx-filter-tree__inputs-actions');
+        const actionButtons = Array.from(actionButtonsContainer.querySelectorAll('button'));
+        const commitButton: any = actionButtons.find((b: any) => b.innerText === 'check');
+        return commitButton;
+    }
+
+    public static getAdvancedFilteringExpressionCloseButton(fix: ComponentFixture<any>) {
+        const editModeContainer = GridFunctions.getAdvancedFilteringEditModeContainer(fix);
+        const actionButtonsContainer = editModeContainer.querySelector('.igx-filter-tree__inputs-actions');
+        const actionButtons = Array.from(actionButtonsContainer.querySelectorAll('button'));
+        const closeButton: any = actionButtons.find((b: any) => b.innerText === 'close');
+        return closeButton;
+    }
+
+    public static getAdvancedFilteringOutlet(fix: ComponentFixture<any>) {
+        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+        const advFilteringDialog = gridNativeElement.querySelector('igx-advanced-filtering-dialog');
+        const outlet = advFilteringDialog.querySelector('.igx-advanced-filter__outlet');
+        return outlet;
+    }
+
+    public static getAdvancedFilteringSelectDropdown(fix: ComponentFixture<any>) {
+        const outlet = GridFunctions.getAdvancedFilteringOutlet(fix);
+        const selectDropdown = outlet.querySelector('.igx-drop-down__list--select');
+        return selectDropdown;
+    }
+
+    public static getAdvancedFilteringSelectDropdownItems(fix: ComponentFixture<any>) {
+        const selectDropdown = GridFunctions.getAdvancedFilteringSelectDropdown(fix);
+        const items = GridFunctions.sortNativeElementsVertically(
+            Array.from(selectDropdown.querySelectorAll('.igx-drop-down__item')));
+        return items;
+    }
+
+    public static getAdvancedFilteringCalendar(fix: ComponentFixture<any>) {
+        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+        const calendar = gridNativeElement.querySelector('.igx-calendar');
+        return calendar;
     }
 
     public static setInputValueESF(customMenu, expressionIndex: number, value: any, fix: ComponentFixture<any>) {
