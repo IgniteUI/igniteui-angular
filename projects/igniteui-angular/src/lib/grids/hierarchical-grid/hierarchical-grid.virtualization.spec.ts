@@ -126,7 +126,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         expect(childGrid.getCellByColumn(0, 'ID').selected).toBeTruthy();
     });
 
-    fit('should render correct data for child grid after scrolling and start index changes.', async() => {
+    it('should render correct data for child grid after scrolling and start index changes.', async() => {
         resizeObserverIgnoreError();
         const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
         // first child of the row should expand indicator
