@@ -70,7 +70,7 @@
     }
 }
 
-@mixin igx-core($print-layout:true) {
+@mixin igx-core($print-layout: true) {
     @include igx-typography();
 
     @if $print-layout == true {
