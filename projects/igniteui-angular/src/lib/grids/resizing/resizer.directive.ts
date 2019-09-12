@@ -3,7 +3,6 @@ import {
     ElementRef,
     Inject,
     Input,
-    HostBinding,
     NgZone,
     Output,
     OnInit,
@@ -23,10 +22,10 @@ import { map, switchMap, takeUntil, throttle } from 'rxjs/operators';
 export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
     @Input()
-    public restrictHResizeMin = Number.MIN_SAFE_INTEGER;
+    public restrictHResizeMin: number = Number.MIN_SAFE_INTEGER;
 
     @Input()
-    public restrictHResizeMax = Number.MAX_SAFE_INTEGER;
+    public restrictHResizeMax: number = Number.MAX_SAFE_INTEGER;
 
     @Output()
     public resizeEnd = new Subject<any>();
@@ -37,14 +36,10 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
     @Output()
     public resize = new Subject<any>();
 
-    private _left: number;
-    private _top: number;
+    private _left;
     private _destroy = new Subject<boolean>();
 
-    constructor(
-        private element: ElementRef<HTMLElement>,
-        @Inject(DOCUMENT) private document: Document,
-        private zone: NgZone) {
+    constructor(public element: ElementRef, @Inject(DOCUMENT) public document, public zone: NgZone) {
 
         this.resizeStart.pipe(
             map((event) => event.clientX),
@@ -61,23 +56,13 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
             const min = this._left - this.restrictHResizeMin;
             const max = this._left + this.restrictHResizeMax;
 
-            this._left = left < min ? min : left;
+            this.left = left < min ? min : left;
 
             if (left > max) {
-                this._left = max;
+                this.left = max;
             }
         });
 
-    }
-
-    @HostBinding('style.left.px')
-    get left() {
-        return this._left;
-    }
-
-    @HostBinding('style.top.px')
-    get top() {
-        return this._top;
     }
 
     ngOnInit() {
@@ -97,13 +82,13 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
         this._destroy.complete();
     }
 
-    // public set left(val: number) {
-    //     requestAnimationFrame(() => this.element.nativeElement.style.left = `${val}px`);
-    // }
+    public set left(val) {
+        requestAnimationFrame(() => this.element.nativeElement.style.left = val + 'px');
+    }
 
-    // public set top(val: number) {
-    //     requestAnimationFrame(() => this.element.nativeElement.style.top = `${val}px`);
-    // }
+    public set top(val) {
+        requestAnimationFrame(() => this.element.nativeElement.style.top = val + 'px');
+    }
 
     onMouseup(event) {
         this.resizeEnd.next(event);
@@ -114,8 +99,8 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
         event.preventDefault();
         const parent = this.element.nativeElement.parentElement.parentElement;
 
-        this._left = this._left = event.clientX - parent.getBoundingClientRect().left;
-        this._top = event.target.getBoundingClientRect().top - parent.getBoundingClientRect().top;
+        this.left = this._left = event.clientX - parent.getBoundingClientRect().left;
+        this.top = event.target.getBoundingClientRect().top - parent.getBoundingClientRect().top;
 
         this.resizeStart.next(event);
     }

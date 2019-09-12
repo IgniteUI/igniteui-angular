@@ -1,4 +1,4 @@
-﻿import { DOCUMENT, DatePipe, DecimalPipe } from '@angular/common';
+﻿import { DatePipe, DecimalPipe } from '@angular/common';
 import {
     ChangeDetectorRef,
     Directive,
@@ -8,18 +8,14 @@ import {
     Input,
     NgZone,
     OnDestroy,
-    OnInit,
-    Output,
     Pipe,
     PipeTransform,
     Renderer2,
     LOCALE_ID,
-    AfterViewInit,
-    HostListener,
     ViewContainerRef
 } from '@angular/core';
-import { animationFrameScheduler, fromEvent, interval, Subject, Subscription } from 'rxjs';
-import { map, switchMap, takeUntil, throttle, debounceTime } from 'rxjs/operators';
+import { fromEvent, interval, Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
 import { IgxDragDirective, IgxDropDirective } from '../directives/drag-drop/drag-drop.directive';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
@@ -27,211 +23,10 @@ import { ConnectedPositioningStrategy } from '../services';
 import { VerticalAlignment, PositionSettings } from '../services/overlay/utilities';
 import { scaleInVerBottom, scaleInVerTop } from '../animations/main';
 import { KEYS } from '../core/utils';
-import { IgxColumnResizingService } from './resizing/resizing.service';
 import { IgxForOfSyncService } from '../directives/for-of/for_of.sync.service';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
-const DEBOUNCE_TIME = 200;
 
-/**
- * @hidden
- */
-@Directive({
-    selector: '[igxResizeHandle]'
-})
-export class IgxResizeHandleDirective implements AfterViewInit, OnDestroy {
-
-    /**
-     * @hidden
-     */
-    @Input('igxResizeHandle')
-    public column: IgxColumnComponent;
-
-    /**
-     * @hidden
-     */
-    private _dblClick = false;
-
-    /**
-     * @hidden
-     */
-    private destroy$ = new Subject<boolean>();
-
-    constructor(private zone: NgZone,
-               private element: ElementRef,
-               public colResizingService: IgxColumnResizingService) { }
-
-    /**
-     * @hidden
-     */
-    public ngOnDestroy() {
-        this.destroy$.next(true);
-        this.destroy$.complete();
-    }
-
-    /**
-     * @hidden
-     */
-    public ngAfterViewInit() {
-        if (!this.column.columnGroup && this.column.resizable) {
-            this.zone.runOutsideAngular(() => {
-                fromEvent(this.element.nativeElement, 'mousedown').pipe(
-                    debounceTime(DEBOUNCE_TIME),
-                    takeUntil(this.destroy$)
-                ).subscribe((event: MouseEvent) => {
-
-                    if (this._dblClick) {
-                        this._dblClick = false;
-                        return;
-                    }
-
-                    if (event.button === 0) {
-                        this._onResizeAreaMouseDown(event);
-                        this.column.grid.resizeLine.resizer.onMousedown(event);
-                    }
-                });
-            });
-
-            fromEvent(this.element.nativeElement, 'mouseup').pipe(
-                debounceTime(DEBOUNCE_TIME),
-                takeUntil(this.destroy$)
-            ).subscribe(() => {
-                this.colResizingService.isColumnResizing = false;
-                this.colResizingService.showResizer = false;
-                this.column.grid.cdr.detectChanges();
-            });
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('mouseover')
-    public onMouseOver() {
-        this.colResizingService.resizeCursor = 'col-resize';
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('dblclick')
-    public onDoubleClick() {
-        this._dblClick = true;
-        this.colResizingService.column = this.column;
-        this.colResizingService.autosizeColumnOnDblClick();
-    }
-
-    /**
-     * @hidden
-     */
-    private _onResizeAreaMouseDown(event) {
-        this.colResizingService.column = this.column;
-        this.colResizingService.isColumnResizing = true;
-        this.colResizingService.startResizePos = event.clientX;
-
-        this.colResizingService.showResizer = true;
-        this.column.grid.cdr.detectChanges();
-    }
-}
-
-
-// /**
-//  * @hidden
-//  */
-// @Directive({
-//     selector: '[igxResizer]'
-// })
-// export class IgxColumnResizerDirective implements OnInit, OnDestroy {
-
-//     @Input()
-//     public restrictHResizeMin: number = Number.MIN_SAFE_INTEGER;
-
-//     @Input()
-//     public restrictHResizeMax: number = Number.MAX_SAFE_INTEGER;
-
-//     @Output()
-//     public resizeEnd = new Subject<any>();
-
-//     @Output()
-//     public resizeStart = new Subject<any>();
-
-//     @Output()
-//     public resize = new Subject<any>();
-
-//     private _left;
-//     private _destroy = new Subject<boolean>();
-
-//     constructor(public element: ElementRef, @Inject(DOCUMENT) public document, public zone: NgZone) {
-
-//         this.resizeStart.pipe(
-//             map((event) => event.clientX),
-//             takeUntil(this._destroy),
-//             switchMap((offset) => this.resize.pipe(
-//                 map((event) => event.clientX - offset),
-//                 takeUntil(this.resizeEnd),
-//                 takeUntil(this._destroy)
-//             ))
-//         ).subscribe((pos) => {
-
-//             const left = this._left + pos;
-
-//             const min = this._left - this.restrictHResizeMin;
-//             const max = this._left + this.restrictHResizeMax;
-
-//             this.left = left < min ? min : left;
-
-//             if (left > max) {
-//                 this.left = max;
-//             }
-//         });
-
-//     }
-
-//     ngOnInit() {
-//         this.zone.runOutsideAngular(() => {
-//             fromEvent(this.document.defaultView, 'mousemove').pipe(
-//                 throttle(() => interval(0, animationFrameScheduler)),
-//                 takeUntil(this._destroy)
-//             ).subscribe((res) => this.onMousemove(res));
-
-//             fromEvent(this.document.defaultView, 'mouseup').pipe(takeUntil(this._destroy))
-//                 .subscribe((res) => this.onMouseup(res));
-//         });
-//     }
-
-//     ngOnDestroy() {
-//         this._destroy.next(true);
-//         this._destroy.complete();
-//     }
-
-//     public set left(val) {
-//         requestAnimationFrame(() => this.element.nativeElement.style.left = val + 'px');
-//     }
-
-//     public set top(val) {
-//         requestAnimationFrame(() => this.element.nativeElement.style.top = val + 'px');
-//     }
-
-//     onMouseup(event) {
-//         this.resizeEnd.next(event);
-//         this.resizeEnd.complete();
-//     }
-
-//     onMousedown(event) {
-//         event.preventDefault();
-//         const parent = this.element.nativeElement.parentElement.parentElement;
-
-//         this.left = this._left = event.clientX - parent.getBoundingClientRect().left;
-//         this.top = event.target.getBoundingClientRect().top - parent.getBoundingClientRect().top;
-
-//         this.resizeStart.next(event);
-//     }
-
-//     onMousemove(event) {
-//         event.preventDefault();
-//         this.resize.next(event);
-//     }
-// }
 
 /**
  * @hidden

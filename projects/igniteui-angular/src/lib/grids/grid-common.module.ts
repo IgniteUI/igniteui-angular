@@ -25,12 +25,10 @@ import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.c
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 import { IgxGridFooterComponent } from './grid-footer/grid-footer.component';
 import {
-    IgxColumnResizerDirective,
     IgxColumnMovingDragDirective,
     IgxColumnMovingDropDirective,
     IgxGridBodyDirective,
     IgxColumnMovingService,
-    IgxResizeHandleDirective
 } from './grid.common';
 import { IgxGridTransaction } from './grid-base.component';
 import { IgxChipsModule } from '../chips/chips.module';
@@ -46,7 +44,6 @@ import {
 } from './grid.rowEdit.directive';
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
-import { IgxColumnResizingService } from './resizing/resizing.service';
 import { IgxGridToolbarCustomContentDirective } from './grid-toolbar.component';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
@@ -59,7 +56,6 @@ import { IgxFilterModule } from '../directives/filter/filter.directive';
 import { IgxGridPipesModule } from './grid-pipes.module';
 import { IgxGridExcelStyleFilteringModule } from './filtering/excel-style/grid.excel-style-filtering.module';
 import { IgxGridDragSelectDirective } from './drag-select.directive';
-import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
 import { IgxRowDragModule } from './row-drag.directive';
 import {
     IgxCellFooterTemplateDirective,
@@ -69,6 +65,7 @@ import {
     IgxFilterCellTemplateDirective
 } from './common/templates';
 import { IgxRowSelectorsModule } from './igx-row-selectors.module';
+import { IgxGridResizingModule } from './resizing/resize.module';
 /**
  * @hidden
  */
@@ -89,8 +86,6 @@ import { IgxRowSelectorsModule } from './igx-row-selectors.module';
         IgxRowEditActionsDirective,
         IgxRowEditTextDirective,
         IgxRowEditTabStopDirective,
-        IgxColumnResizerDirective,
-        IgxResizeHandleDirective,
         IgxColumnMovingDragDirective,
         IgxColumnMovingDropDirective,
         IgxGridBodyDirective,
@@ -101,7 +96,6 @@ import { IgxRowSelectorsModule } from './igx-row-selectors.module';
         IgxSummaryRowComponent,
         IgxSummaryCellComponent,
         IgxGridDragSelectDirective,
-        IgxGridColumnResizerComponent,
         IgxFilterCellTemplateDirective,
         IgxGridFooterComponent
     ],
@@ -126,7 +120,6 @@ import { IgxRowSelectorsModule } from './igx-row-selectors.module';
         IgxRowEditActionsDirective,
         IgxRowEditTextDirective,
         IgxRowEditTabStopDirective,
-        IgxColumnResizerDirective,
         IgxColumnMovingDragDirective,
         IgxColumnMovingDropDirective,
         IgxGridBodyDirective,
@@ -157,7 +150,6 @@ import { IgxRowSelectorsModule } from './igx-row-selectors.module';
         IgxSummaryRowComponent,
         IgxSummaryCellComponent,
         IgxGridDragSelectDirective,
-        IgxGridColumnResizerComponent,
         IgxFilterModule,
         IgxGridPipesModule,
         IgxGridExcelStyleFilteringModule,
@@ -165,10 +157,12 @@ import { IgxRowSelectorsModule } from './igx-row-selectors.module';
         IgxRowDragModule,
         IgxPaginatorModule,
         IgxGridFooterComponent,
-        IgxRowSelectorsModule
+        IgxRowSelectorsModule,
+        IgxGridResizingModule
     ],
     imports: [
         CommonModule,
+        IgxGridResizingModule,
         FormsModule,
         IgxButtonModule,
         IgxDatePickerModule,
@@ -202,7 +196,6 @@ import { IgxRowSelectorsModule } from './igx-row-selectors.module';
         IgxSelectionAPIService,
         IgxColumnMovingService,
         IgxGridNavigationService,
-        IgxColumnResizingService,
         IgxGridSummaryService,
         { provide: IgxGridTransaction, useClass: IgxBaseTransactionService }
     ]

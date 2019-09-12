@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { IgxColumnResizingService } from './resizing.service';
+import { IgxColumnResizerDirective } from './resizer.directive';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -8,9 +9,8 @@ import { IgxColumnResizingService } from './resizing.service';
     templateUrl: './resizer.component.html'
 })
 export class IgxGridColumnResizerComponent {
-    constructor(public readonly resizingService: IgxColumnResizingService) { }
+    constructor(public colResizingService: IgxColumnResizingService) { }
 
-    public resizeColumn(event) {
-        this.resizingService.resizeColumn(event);
-    }
+    @ViewChild(IgxColumnResizerDirective, { static: true })
+    public resizer: IgxColumnResizerDirective;
 }
