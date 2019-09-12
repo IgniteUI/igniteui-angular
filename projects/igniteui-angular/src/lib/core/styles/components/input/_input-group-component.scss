@@ -430,10 +430,10 @@
     }
 
     @include mx(disabled, border) {
-         @include e(bundle-type-border) {
-             @extend %igx-input-group__bundle-type-border--focused--disabled !optional;
-         }
-     }
+        @include e(bundle-type-border) {
+            @extend %igx-input-group__bundle-type-border--focused--disabled !optional;
+        }
+    }
 
     // INPUT TYPE BORDER -- END --
 

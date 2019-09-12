@@ -1061,7 +1061,7 @@
             font-size: inherit;
             vertical-align: top;
             margin-left: $required-symbol-margin; /* 2px base is 16px */
-            display: inline-block; // Chrome
+            display: inline-block;
         }
     }
 
@@ -1445,19 +1445,19 @@
     %igx-input-group__bundle-type-border--focused--disabled {
         %igx-input-group__bundle-type-border-main {
             box-shadow: 0 1px 0 --var($theme, 'disabled-border-color'),
-            0 0 0 transparent;
+                0 0 0 transparent;
         }
 
         %igx-input-group__bundle-prefix {
             box-shadow: inset 1px 0 0 --var($theme, 'disabled-border-color'),
-            0 1px 0 --var($theme, 'disabled-border-color'),
-            0 -1px 0 --var($theme, 'disabled-border-color');
+                0 1px 0 --var($theme, 'disabled-border-color'),
+                0 -1px 0 --var($theme, 'disabled-border-color');
         }
 
         %igx-input-group__bundle-suffix {
             box-shadow: inset -1px 0 0 --var($theme, 'disabled-border-color'),
-            0 1px 0 --var($theme, 'disabled-border-color'),
-            0 -1px 0 --var($theme, 'disabled-border-color');
+                0 1px 0 --var($theme, 'disabled-border-color'),
+                0 -1px 0 --var($theme, 'disabled-border-color');
         }
 
         %igx-input-group__bundle-line {
@@ -1469,19 +1469,19 @@
         &:hover {
             %igx-input-group__bundle-type-border-main {
                 box-shadow: 0 1px 0 --var($theme, 'disabled-border-color'),
-                0 0 0 transparent;
+                    0 0 0 transparent;
             }
 
             %igx-input-group__bundle-prefix {
                 box-shadow: inset 1px 0 0 --var($theme, 'disabled-border-color'),
-                0 1px 0 --var($theme, 'disabled-border-color'),
-                0 -1px 0 --var($theme, 'disabled-border-color');
+                    0 1px 0 --var($theme, 'disabled-border-color'),
+                    0 -1px 0 --var($theme, 'disabled-border-color');
             }
 
             %igx-input-group__bundle-suffix {
                 box-shadow: inset -1px 0 0 --var($theme, 'disabled-border-color'),
-                0 1px 0 --var($theme, 'disabled-border-color'),
-                0 -1px 0 --var($theme, 'disabled-border-color');
+                    0 1px 0 --var($theme, 'disabled-border-color'),
+                    0 -1px 0 --var($theme, 'disabled-border-color');
             }
 
             %igx-input-group__bundle-line {
