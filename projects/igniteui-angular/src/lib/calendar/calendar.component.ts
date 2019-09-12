@@ -201,7 +201,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
      * @hidden
      */
     @ViewChild('days', { read: IgxDaysViewComponent, static: false })
-    public daysView = new IgxDaysViewComponent;
+    public daysView: IgxDaysViewComponent;
 
     /**
      * @hidden
@@ -346,15 +346,15 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      *@hidden
      */
-    private defaultDayView: IMonthView = {
-        value: this.value,
-        viewDate: this.viewDate,
-    };
+    private _monthViewsChanges$: Subscription;
 
     /**
      *@hidden
      */
-    private _monthViewsChanges$: Subscription;
+    private defaultDayView: IMonthView = {
+        value: this.value,
+        viewDate: this.viewDate,
+    };
 
     /**
      *@hidden
@@ -431,6 +431,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     public startPrevMonthScroll = (isKeydownTrigger = false) => {
         this.startMonthScroll$.next();
         this.daysView.monthScrollDirection = ScrollMonth.PREV;
+
         this.previousMonth(isKeydownTrigger);
     }
 
@@ -534,16 +535,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      * @hidden
      */
-    public daysViewInit(event: IgxDaysViewComponent) {
-       // this.monthViews.
-    }
-
-    /**
-     * @hidden
-     */
     public changeMonth(event: Date) {
         this.viewDate = new Date(this.viewDate.getFullYear(), event.getMonth());
-
         this.activeView = CalendarView.DEFAULT;
 
         requestAnimationFrame(() => {
@@ -588,17 +581,15 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
      * @hidden
      */
     public getViewDate(i: number): Date {
-        const nextMonthDate = new Date(this.viewDate);
-        nextMonthDate.setMonth(nextMonthDate.getMonth() + i);
-        return nextMonthDate;
+        const date = this.calendarModel.timedelta(this.viewDate, 'month', i);
+        return date;
     }
 
     /**
      * @hidden
      */
     public getContext(i: number) {
-        const date: Date = new Date(this.viewDate);
-        date.setMonth(date.getMonth() + i);
+        const date = this.calendarModel.timedelta(this.viewDate, 'month', i);
         return this.generateContext(date, i);
     }
 
@@ -740,7 +731,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     @HostListener('keydown.home', ['$event'])
     public onKeydownHome(event: KeyboardEvent) {
         if (this.daysView) {
-            this.monthViews.first.onKeydownHome(event);
+            this.daysView.onKeydownHome(event);
         }
     }
 
@@ -750,7 +741,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     @HostListener('keydown.end', ['$event'])
     public onKeydownEnd(event: KeyboardEvent) {
         if (this.daysView) {
-            this.monthViews.last.onKeydownEnd(event);
+            this.daysView.onKeydownEnd(event);
         }
     }
 

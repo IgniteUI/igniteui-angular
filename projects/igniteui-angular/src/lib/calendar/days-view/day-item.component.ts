@@ -161,7 +161,7 @@ export class IgxDayItemComponent {
 
     @HostBinding('class.igx-calendar__date--disabled')
     public get isDisabledCSS(): boolean {
-      return this.isDisabled || this.isOutOfRange || this.isHidden;
+        return this.isDisabled || this.isOutOfRange || this.isHidden;
     }
 
     @HostBinding('class.igx-calendar__date--range')
