@@ -127,26 +127,26 @@ export class IgxHierarchicalGridRowSelectionNoTransactionsComponent {
             <igx-column field="ChildLevels"></igx-column>
             <igx-column field="ProductName"></igx-column>
             <ng-template igxHeadSelector let-headContext>
-                <igx-checkbox (click)="handleHeadSelectorClick($event, headContext)"
+                <igx-checkbox [readonly]="true" (click)="handleHeadSelectorClick(headContext)"
                     [checked]="headContext.selectedCount === headContext.totalCount"
                     [indeterminate]="headContext.selectedCount !== headContext.totalCount && headContext.selectedCount !== 0">
                 </igx-checkbox>
             </ng-template>
             <ng-template igxRowSelector let-rowContext>
                 <span class="rowNumberChild">{{ rowContext.index }}</span>
-                <igx-checkbox (click)="handleRowSelectorClick($event, rowContext)" [checked]="rowContext.selected">
+                <igx-checkbox (click)="handleRowSelectorClick(rowContext)" [checked]="rowContext.selected">
                 </igx-checkbox>
             </ng-template>
         </igx-row-island>
         <ng-template igxHeadSelector let-headContext>
-            <igx-checkbox (click)="handleHeadSelectorClick($event, headContext)"
+            <igx-checkbox [readonly]="true" (click)="handleHeadSelectorClick(headContext)"
                 [checked]="headContext.selectedCount === headContext.totalCount"
                 [indeterminate]="headContext.selectedCount !== headContext.totalCount && headContext.selectedCount !== 0">
             </igx-checkbox>
         </ng-template>
         <ng-template igxRowSelector let-rowContext>
             <span class="rowNumber">{{ rowContext.index }}</span>
-            <igx-checkbox (click)="handleRowSelectorClick($event, rowContext)" [checked]="rowContext.selected">
+            <igx-checkbox [readonly]="true" (click)="handleRowSelectorClick(rowContext)" [checked]="rowContext.selected">
             </igx-checkbox>
         </ng-template>
     </igx-hierarchical-grid>`
@@ -165,15 +165,11 @@ export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
         this.data = SampleTestData.generateHGridData(40, 2);
     }
 
-    public handleHeadSelectorClick(event, headContext) {
-        event.stopPropagation();
-        event.preventDefault();
+    public handleHeadSelectorClick(headContext) {
         headContext.totalCount !== headContext.selectedCount ? headContext.selectAll() : headContext.deselectAll();
     }
 
-    public handleRowSelectorClick(event, rowContext) {
-        event.stopPropagation();
-        event.preventDefault();
+    public handleRowSelectorClick(rowContext) {
         rowContext.selected ? rowContext.deselect() : rowContext.select();
     }
 }

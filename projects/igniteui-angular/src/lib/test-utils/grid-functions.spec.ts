@@ -33,6 +33,8 @@ const HEADER_ROW_CSS_CLASS = '.igx-grid__thead';
 const CHECKBOX_INPUT_CSS_CLASS = '.igx-checkbox__input';
 const SCROLL_START_CSS_CLASS = '.igx-grid__scroll-start';
 const CHECKBOX_ELEMENT = 'igx-checkbox';
+const ICON_CSS_CLASS = 'material-icons igx-icon';
+const CHECKBOX_LBL_CSS_CLASS = '.igx-checkbox__composite';
 const DEBOUNCETIME = 50;
 
 export class GridFunctions {
@@ -1740,5 +1742,22 @@ export class GridSelectionFunctions {
     public static clickHeaderRowCheckbox(parent) {
         const checkboxElement = GridSelectionFunctions.getRowCheckboxDiv(GridSelectionFunctions.getHeaderRow(parent));
         checkboxElement.dispatchEvent(new Event('click', {}));
+    }
+
+    // select - deselect a checkbox without a handler
+    public static rowCheckboxClick(row) {
+        const checkboxElement = row.nativeElement ?
+            row.nativeElement.querySelector(CHECKBOX_LBL_CSS_CLASS) :
+            row.querySelector(CHECKBOX_LBL_CSS_CLASS);
+        checkboxElement.click();
+    }
+
+    public static headerCheckboxClick(parent) {
+        GridSelectionFunctions.rowCheckboxClick(GridSelectionFunctions.getHeaderRow(parent));
+    }
+    //
+
+    public static expandRowIsland(rowNumber = 1) {
+        (<any>document.getElementsByClassName(ICON_CSS_CLASS)[rowNumber]).click();
     }
 }
