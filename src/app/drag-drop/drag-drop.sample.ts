@@ -365,4 +365,8 @@ export class DragDropSampleComponent {
             }
         });
     }
+
+    public dragClick() {
+        console.log('click');
+    }
 }
