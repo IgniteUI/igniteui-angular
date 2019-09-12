@@ -14,7 +14,6 @@ import {
     IgxHierarchicalGridRowSelectionNoTransactionsComponent
 } from '../../test-utils/hierarhical-grid-components.spec';
 import { IgxRowSelectorsModule } from '../igx-row-selectors.module';
-import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 
@@ -757,68 +756,68 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
         it('Row context `select` method selects a single row', () => {
             // root grid
             const firstRootRow = hGrid.getRowByIndex(0);
-            HelperUtils.rowCheckboxClick(firstRootRow);
+            GridSelectionFunctions.clickRowCheckbox(firstRootRow);
             fix.detectChanges();
-            HelperUtils.verifyRowSelected(hGrid.getRowByIndex(0));
-            HelperUtils.verifyHeaderRowCheckboxState(fix, false, true);
+            GridSelectionFunctions.verifyRowSelected(hGrid.getRowByIndex(0));
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
             // child grid
-            HelperUtils.expandRowIsland(2);
+            GridSelectionFunctions.expandRowIsland(2);
             fix.detectChanges();
 
             const childGrid = hGrid.hgridAPI.getChildGrids(false)[0];
             const childRow = childGrid.getRowByIndex(0);
-            HelperUtils.rowCheckboxClick(childRow);
+            GridSelectionFunctions.clickRowCheckbox(childRow);
             fix.detectChanges();
 
-            HelperUtils.verifyRowSelected(childRow);
-            HelperUtils.verifyHeaderRowCheckboxState(childGrid, false, true);
+            GridSelectionFunctions.verifyRowSelected(childRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(childGrid, false, true);
         });
 
-        it('Row context `deselect` method deselects an already selected row', () => {
+        it('Row context `deselect` method deselects an already selected row', fakeAsync(() => {
             // root grid
             const firstRootRow = hGrid.getRowByIndex(1);
-            HelperUtils.rowCheckboxClick(firstRootRow);
+            GridSelectionFunctions.clickRowCheckbox(firstRootRow);
             fix.detectChanges();
-            HelperUtils.verifyRowSelected(firstRootRow);
-            HelperUtils.verifyHeaderRowCheckboxState(hGrid, false, true);
+            GridSelectionFunctions.verifyRowSelected(firstRootRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(hGrid, false, true);
 
-            HelperUtils.rowCheckboxClick(firstRootRow);
+            GridSelectionFunctions.clickRowCheckbox(firstRootRow);
             fix.detectChanges();
-            HelperUtils.verifyRowSelected(firstRootRow, false);
-            HelperUtils.verifyHeaderRowCheckboxState(hGrid, false, false);
+            GridSelectionFunctions.verifyRowSelected(firstRootRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(hGrid, false, false);
 
             // child grid
-            HelperUtils.expandRowIsland(2);
+            GridSelectionFunctions.expandRowIsland(2);
             fix.detectChanges();
 
             const childGrid = hGrid.hgridAPI.getChildGrids(false)[0];
             const childRow = childGrid.getRowByIndex(0);
 
-            HelperUtils.rowCheckboxClick(childRow);
+            GridSelectionFunctions.clickRowCheckbox(childRow);
             fix.detectChanges();
-            HelperUtils.verifyRowSelected(childRow);
-            HelperUtils.verifyHeaderRowCheckboxState(childGrid, false, true);
+            GridSelectionFunctions.verifyRowSelected(childRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(childGrid, false, true);
 
-            HelperUtils.rowCheckboxClick(childRow);
+            GridSelectionFunctions.clickRowCheckbox(childRow);
             fix.detectChanges();
-            HelperUtils.verifyRowSelected(childRow, false);
-            HelperUtils.verifyHeaderRowCheckboxState(childGrid, false, false);
-        });
+            GridSelectionFunctions.verifyRowSelected(childRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(childGrid, false, false);
+        }));
 
         it('Header context `selectAll` method selects all rows', () => {
             // root grid
-            HelperUtils.clickHeaderRowCheckbox(hGrid);
+            GridSelectionFunctions.clickHeaderRowCheckbox(hGrid);
             fix.detectChanges();
-            HelperUtils.verifyHeaderRowCheckboxState(hGrid, true, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(hGrid, true, false);
             expect(hGrid.selectionService.areAllRowSelected()).toBeTruthy();
 
             // child grid
-            HelperUtils.expandRowIsland(2);
+            GridSelectionFunctions.expandRowIsland(2);
             fix.detectChanges();
 
             const childGrid = hGrid.hgridAPI.getChildGrids(false)[0];
-            HelperUtils.clickHeaderRowCheckbox(childGrid);
+            GridSelectionFunctions.clickHeaderRowCheckbox(childGrid);
             fix.detectChanges();
 
             expect(childGrid.selectionService.areAllRowSelected()).toBeTruthy();
@@ -826,40 +825,40 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
         it('Header context `deselectAll` method deselects all rows', () => {
             // root grid
-            HelperUtils.clickHeaderRowCheckbox(hGrid);
+            GridSelectionFunctions.clickHeaderRowCheckbox(hGrid);
             fix.detectChanges();
-            HelperUtils.verifyHeaderRowCheckboxState(hGrid, true, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(hGrid, true, false);
             expect(hGrid.selectionService.areAllRowSelected()).toBeTruthy();
 
-            HelperUtils.clickHeaderRowCheckbox(hGrid);
+            GridSelectionFunctions.clickHeaderRowCheckbox(hGrid);
             fix.detectChanges();
-            HelperUtils.verifyHeaderRowCheckboxState(hGrid, false, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(hGrid, false, false);
             expect(hGrid.selectionService.areAllRowSelected()).toBeFalsy();
 
             // child grid
-            HelperUtils.expandRowIsland(2);
+            GridSelectionFunctions.expandRowIsland(2);
             fix.detectChanges();
 
             const childGrid = hGrid.hgridAPI.getChildGrids(false)[0];
 
-            HelperUtils.clickHeaderRowCheckbox(childGrid);
+            GridSelectionFunctions.clickHeaderRowCheckbox(childGrid);
             fix.detectChanges();
-            HelperUtils.verifyHeaderRowCheckboxState(childGrid, true, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(childGrid, true, false);
             expect(childGrid.selectionService.areAllRowSelected()).toBeTruthy();
 
-            HelperUtils.clickHeaderRowCheckbox(childGrid);
+            GridSelectionFunctions.clickHeaderRowCheckbox(childGrid);
             fix.detectChanges();
-            HelperUtils.verifyHeaderRowCheckboxState(childGrid, false, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(childGrid, false, false);
             expect(childGrid.selectionService.areAllRowSelected()).toBeFalsy();
         });
 
         it('Should have the correct properties in the custom row selector header template context', () => {
             spyOn(fix.componentInstance, 'handleHeadSelectorClick').and.callThrough();
 
-            HelperUtils.headerCheckboxClick(hGrid);
+            GridSelectionFunctions.headerCheckboxClick(hGrid);
             fix.detectChanges();
 
-            expect(fix.componentInstance.handleHeadSelectorClick).toHaveBeenCalledWith(new MouseEvent('click'), {
+            expect(fix.componentInstance.handleHeadSelectorClick).toHaveBeenCalledWith({
                 selectedCount: 0,
                 totalCount: hGrid.data.length,
                 selectAll: jasmine.anything(),
@@ -870,10 +869,10 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
         it('Should have the correct properties in the custom row selector template context', () => {
             spyOn(fix.componentInstance, 'handleRowSelectorClick').and.callThrough();
 
-            HelperUtils.rowCheckboxClick(hGrid.getRowByIndex(1));
+            GridSelectionFunctions.rowCheckboxClick(hGrid.getRowByIndex(1));
             fix.detectChanges();
 
-            expect(fix.componentInstance.handleRowSelectorClick).toHaveBeenCalledWith(new MouseEvent('click'), {
+            expect(fix.componentInstance.handleRowSelectorClick).toHaveBeenCalledWith({
                 index: 1,
                 rowID: '1',
                 selected: false,
@@ -889,7 +888,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(hGrid.getRowByIndex(0).nativeElement.querySelector('.rowNumber').textContent).toEqual('15');
 
             // child grid
-            HelperUtils.expandRowIsland(3);
+            GridSelectionFunctions.expandRowIsland(3);
             fix.detectChanges();
 
             const childGrid = hGrid.hgridAPI.getChildGrids(false)[0];

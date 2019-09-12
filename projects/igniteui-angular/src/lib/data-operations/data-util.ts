@@ -107,7 +107,7 @@ export class DataUtil {
         if (!state.strategy) {
             state.strategy = new FilteringStrategy();
         }
-        return state.strategy.filter(data, state.expressionsTree);
+        return state.strategy.filter(data, state.expressionsTree, state.advancedExpressionsTree);
     }
 
     public static correctPagingState(state: IPagingState, length: number) {

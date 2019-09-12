@@ -1,22 +1,59 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxGridComponent } from 'igniteui-angular';
+import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { IgxGridComponent, FilteringExpressionsTree, IgxStringFilteringOperand,
+    FilteringLogic, IgxCheckboxComponent, IChangeCheckboxEventArgs } from 'igniteui-angular';
+import { FilterMode } from 'projects/igniteui-angular/src/lib/grids/common/enums';
 
 @Component({
     providers: [],
-    selector: 'app-grid-search-sample',
-    styleUrls: ['grid-search.sample.css'],
-    templateUrl: 'grid-search.sample.html'
+    selector: 'app-grid-filtering-sample',
+    styleUrls: ['grid-filtering.sample.css'],
+    templateUrl: 'grid-filtering.sample.html'
 })
-
-export class GridSearchComponent implements OnInit {
-
+export class GridFilteringComponent implements OnInit, AfterViewInit {
 
     public data: Array<any>;
     public columns: Array<any>;
     public displayDensities;
+    public filterModes;
     public density = 'comfortable';
 
-    @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
+    @ViewChild('grid1', { static: true })
+    public grid1: IgxGridComponent;
+
+    @ViewChild('applyChangesCheckbox', { static: true })
+    public applyChangesCheckbox: IgxCheckboxComponent;
+
+    ngAfterViewInit(): void {
+        const tree = new FilteringExpressionsTree(FilteringLogic.And);
+        tree.filteringOperands.push({
+            fieldName: 'ID',
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
+            searchVal: 'a',
+            ignoreCase: true
+        });
+        const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
+        orTree.filteringOperands.push({
+            fieldName: 'ID',
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
+            searchVal: 'b',
+            ignoreCase: true
+        });
+        orTree.filteringOperands.push({
+            fieldName: 'CompanyName',
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
+            searchVal: 'c',
+            ignoreCase: true
+        });
+        tree.filteringOperands.push(orTree);
+        tree.filteringOperands.push({
+            fieldName: 'CompanyName',
+            condition: IgxStringFilteringOperand.instance().condition('contains'),
+            searchVal: 'd',
+            ignoreCase: true
+        });
+
+        this.grid1.advancedFilteringExpressionsTree = tree;
+    }
 
     public ngOnInit(): void {
         this.displayDensities = [
@@ -25,8 +62,22 @@ export class GridSearchComponent implements OnInit {
             { label: 'compact', selected: this.density === 'compact', togglable: true }
         ];
 
+        this.filterModes = [
+            {
+                label: 'Filter Row',
+                value: FilterMode.quickFilter,
+                selected: true,
+                togglable: true },
+            {
+                label: 'Excel Style',
+                value: FilterMode.excelStyleFilter,
+                selected: false,
+                togglable: true
+            }
+        ];
+
         this.columns = [
-            { field: 'ID', width: 80, resizable: true, movable: true },
+            { field: 'ID', width: 80, resizable: true, movable: true, type: 'string' },
             { field: 'CompanyName', width: 150, resizable: true, movable: true, type: 'string'},
             { field: 'ContactName', width: 150, resizable: true, movable: true, type: 'string' },
             { field: 'Employees', width: 150, resizable: true, movable: true, type: 'number' },
@@ -479,8 +530,28 @@ export class GridSearchComponent implements OnInit {
         this.density = this.displayDensities[event.index].label;
     }
 
-    toggleColumn(name: string) {
-        const col = this.grid1.getColumnByName(name);
-        col.pinned ? col.pinned = false : col.pinned = true;
+    public selectFilterMode(event) {
+        const filterMode = this.filterModes[event.index].value as FilterMode;
+        if (filterMode !== this.grid1.filterMode) {
+            this.grid1.filterMode = filterMode;
+            this.grid1.reflow();
+        }
+    }
+
+    public openAdvancedFiltering() {
+        this.grid1.openAdvancedFilteringDialog();
+    }
+
+    public closeAdvancedFiltering() {
+        this.grid1.closeAdvancedFilteringDialog(this.applyChangesCheckbox.checked);
+    }
+
+    public clearAdvancedFiltering() {
+        this.grid1.advancedFilteringExpressionsTree = null;
+    }
+
+    public onAllowFilteringChanged(event: IChangeCheckboxEventArgs) {
+        this.grid1.allowFiltering = event.checked;
+        this.grid1.reflow();
     }
 }
