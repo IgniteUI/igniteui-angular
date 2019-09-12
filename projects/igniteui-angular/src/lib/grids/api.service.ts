@@ -117,10 +117,12 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
 
     public submit_value() {
         const cell = this.grid.crudService.cell;
-        if (cell) {
-            const args = this.update_cell(cell, cell.editValue);
-            if (args.cancel) {
-                return;
+        if (cell ) {
+            if (!(isEqual(cell.value, cell.editValue))) {
+                const args = this.update_cell(cell, cell.editValue);
+                if (args.cancel) {
+                    return;
+                }
             }
             this.escape_editMode();
         }
