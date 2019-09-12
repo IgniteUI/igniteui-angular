@@ -373,6 +373,23 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     public dragEnd = new EventEmitter<IDragBaseEventArgs>();
 
     /**
+     * Event triggered when the draggable element is clicked.
+     * ```html
+     * <div igxDrag (dragClick)="onDragClick()">
+     *         <span>Drag Me!</span>
+     * </div>
+     * ```
+     * ```typescript
+     * public onDragClick(){
+     *      alert("The element has been clicked!");
+     * }
+     * ```
+     * @memberof IgxDragDirective
+     */
+    @Output()
+    public dragClick = new EventEmitter<IDragBaseEventArgs>();
+
+    /**
      * Event triggered when the drag ghost element is created.
      * ```html
      * <div igxDrag (ghostCreate)="ghostCreated()">
@@ -422,24 +439,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      */
     @Output()
     public transitioned = new EventEmitter<IDragBaseEventArgs>();
-
-    /**
-     * @deprecated
-     * Event triggered when the draggable element is clicked.
-     * ```html
-     * <div igxDrag (dragClicked)="dragClicked()">
-     *         <span>Drag Me!</span>
-     * </div>
-     * ```
-     * ```typescript
-     * public dragClicked(){
-     *      alert("The element has been clicked!");
-     * }
-     * ```
-     * @memberof IgxDragDirective
-     */
-    @Output()
-    public dragClicked = new EventEmitter<IDragBaseEventArgs>();
 
     /**
      * @hidden
@@ -1046,6 +1045,9 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             if (!this.animInProgress) {
                 this.onTransitionEnd(null);
             }
+        } else {
+            // Trigger our own click event because when there is no ghost, native click cannot be prevented when dragging.
+            this.dragClick.emit(eventArgs);
         }
     }
 
@@ -1459,6 +1461,31 @@ export class IgxDropDirective implements OnInit, OnDestroy {
     @Input()
     public dropChannel: number | string | number[] | string[];
 
+    /**
+     * An @Input property that specifies a drop strategy type that will be executed when an `IgxDrag` element is released inside
+     *  the current drop area. The provided strategies are:
+     *  - IgxDefaultDropStrategy - This is the default base strategy and it doesn't perform any actions.
+     *  - IgxAppendDropStrategy - Appends the dropped element to last position as a direct child to the `igxDrop`.
+     *  - IgxPrependDropStrategy - Prepends the dropped element to first position as a direct child to the `igxDrop`.
+     *  - IgxInsertDropStrategy - If the dropped element is released above a child element of the `igxDrop`, it will be inserted
+     *      at that position. Otherwise the dropped element will be appended if released outside any child of the `igxDrop`.
+     * ```html
+     * <div igxDrag>
+     *      <span>DragMe</span>
+     * </div>
+     * <div igxDrop [dropStrategy]="myDropStrategy">
+     *         <span>Numbers drop area!</span>
+     * </div>
+     * ```
+     * ```typescript
+     * import { IgxAppendDropStrategy } from 'igniteui-angular';
+     *
+     * export class App {
+     *      public myDropStrategy = IgxAppendDropStrategy;
+     * }
+     * ```
+     * @memberof IgxDropDirective
+     */
     @Input()
     public set dropStrategy(classRef: any) {
         this._dropStrategy = new classRef(this._renderer);

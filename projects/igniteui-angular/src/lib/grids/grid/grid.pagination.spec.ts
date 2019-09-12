@@ -10,11 +10,11 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - Grid Paging #grid', () => {
     configureTestSuite();
     const PAGER_CLASS = '.igx-grid-paginator__pager';
-    const PAGER_BUTTONS = '.igx-grid-paginator__pager > button';
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -33,7 +33,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.grid;
         const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
-        const pagingButtons = gridElement.querySelectorAll(PAGER_BUTTONS);
+        const pagingButtons = GridFunctions.getPagingButtons(gridElement);
 
         expect(grid.paging).toBeTruthy();
 
@@ -479,7 +479,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             expect(gridElement.querySelector('.igx-grid-paginator__pager > span').textContent).toMatch(pagerText);
         }
         if (buttonsVisibility != null && buttonsVisibility.length === 4) {
-            const pagingButtons = gridElement.querySelectorAll(PAGER_BUTTONS);
+            const pagingButtons = GridFunctions.getPagingButtons(gridElement);
             expect(pagingButtons.length).toEqual(4);
             expect(pagingButtons[0].className.includes(disabled)).toBe(buttonsVisibility[0]);
             expect(pagingButtons[1].className.includes(disabled)).toBe(buttonsVisibility[1]);

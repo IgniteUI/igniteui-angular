@@ -1,18 +1,19 @@
 sudo: required
-dist: trusty
+dist: xenial
+addons:
+  apt:
+    sources:
+      - google-chrome
+    packages:
+      - google-chrome-stable
+services:
+  - xvfb
 language: node_js
 node_js:
 - '10.12.0'
 before_install:
 - export NG_CLI_ANALYTICS=false
-- export CHROME_BIN=/usr/bin/google-chrome
 - export DISPLAY=:99.0
-- sh -e /etc/init.d/xvfb start
-- sudo apt-get -qq update
-- sudo apt-get install -y libappindicator1 fonts-liberation
-- wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-- sudo dpkg -i google-chrome*.deb
-- sleep 3
 before_script:
 # more heap mem per https://github.com/angular/angular-cli/issues/12645, https://github.com/npm/npm/issues/12238#issuecomment-367147962
 - export NODE_OPTIONS="--max_old_space_size=4096"
@@ -22,6 +23,7 @@ script:
 - npm run lint:lib
 - ng build igniteui-angular --prod
 - npm run build:style
+- if [ -z "${TRAVIS_TAG}" ]; then npm run test:lib:perf; fi
 - if [ -z "${TRAVIS_TAG}" ]; then npm run test:lib:others; fi
 - if [ -z "${TRAVIS_TAG}" ]; then npm run test:lib:grid; fi
 - if [ -z "${TRAVIS_TAG}" ]; then npm run test:lib:tgrid; fi

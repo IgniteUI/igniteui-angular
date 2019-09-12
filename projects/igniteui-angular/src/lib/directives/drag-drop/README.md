@@ -61,7 +61,7 @@ The `ghost` input is set to `true` by default which means that the base element 
 
 #### Dragging without ghost
 
-If `renderGhost` input is set to false the dragging logic for the `igxDrag` provides dragging ability for the initialized element itself. This means that it can freely move an element around by click and hold and when released it will keep its position where it was dragged.
+If `ghost` input is set to false the dragging logic for the `igxDrag` provides dragging ability for the initialized element itself. This means that it can freely move an element around by click and hold and when released it will keep its position where it was dragged.
 
 #### Dragging using a handle
 
@@ -119,11 +119,10 @@ If the user want to have other types of animations that involve element transfor
 
 | Name | Type | Default Value | Description |
 | :--- | :--- | :--- | :--- |
-| igxDrag          | any | - | Input used to save data inside the `igxDrag` directive. This can be set when instancing `igxDrag` on an element. |
-| dragTolerance    | number | 5 | Indicates when the drag should start (in pixels). By default the drag starts after the draggable element is moved by 5px |
-| dragGhostHost | any | null | Sets the element to which the dragged element will be appended.
-| ghostImageClass  | string | '' | Sets a custom class that will be added to the `dragGhost` element. |
-| animateOnRelease | boolean | false | Enables/disables the draggable element animation when the element is released. |
+| `igxDrag`          | any | - | Input used to save data inside the `igxDrag` directive. This can be set when instancing `igxDrag` on an element. |
+| `dragTolerance`    | number | 5 | Indicates when the drag should start (in pixels). By default the drag starts after the draggable element is moved by 5px |
+| `ghostHost` | any | null | Sets the element to which the dragged element will be appended.
+| `ghostClass`  | string | '' | Sets a custom class that will be added to the `igxDrag` element. |
 
 ### Outputs
 
@@ -185,7 +184,7 @@ public onAreaLeave() {
 
 For achieving a drop functionality with the `igxDrag` directive the `igxDrop` directive should be used. It can be applied on any kind of element and it specifies an area where the `igxDrag` can be dropped. 
 
-By default the `igxDrop` does not apply any logic to the dragged element when it is dropped onto it. The user could choose between a few different drop strategies if he would like the `igxDrop` to perform some action or he could implement his own drop logic using the provided `onDragDrop` events.
+By default the `igxDrop` does not apply any logic to the dragged element when it is dropped onto it. The user could choose between a few different drop strategies if he would like the `igxDrop` to perform some action or he could implement his own drop logic using the provided `dropped` event.
 
 #### Drop Strategies
 
@@ -215,7 +214,7 @@ HTML:
 
 #### Canceling a Drop Strategy
 
-When using a specific drop strategy, its behavior can be canceled in the `onDrop` or `onDragDrop` events by setting the cancel property to true. The `onDrop` event is specific to the `igxDrag` and the `onDragDrop` event to the `igxDrop`. If the user does not have drop strategy applied to the `igxDrop` canceling the event would have no side effects.
+When using a specific drop strategy, its behavior can be canceled in the [`dropped`]({environment:angularApiUrl}/classes/igxdropdirective.html#dropped) events by setting the `cancel` property to true. The `dropped` event is specific to the `igxDrop`. If you does not have drop strategy applied to the `igxDrop` canceling the event would have no side effects.
 
 *Example:*
 

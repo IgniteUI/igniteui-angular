@@ -21,6 +21,43 @@ export class IgxGroupByRowTemplateDirective {
  * @hidden
  */
 @Directive({
+    selector: '[igxRowExpandedIndicator]'
+})
+export class IgxRowExpandedIndicatorDirective {
+}
+
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxRowCollapsedIndicator]'
+})
+export class IgxRowCollapsedIndicatorDirective {
+}
+
+
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxHeaderExpandedIndicator]'
+})
+export class IgxHeaderExpandIndicatorDirective {
+}
+
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxHeaderCollapsedIndicator]'
+})
+export class IgxHeaderCollapseIndicatorDirective {
+}
+
+/**
+ * @hidden
+ */
+@Directive({
     selector: '[igxGroupAreaDrop]'
 })
 export class IgxGroupAreaDropDirective extends IgxDropDirective {

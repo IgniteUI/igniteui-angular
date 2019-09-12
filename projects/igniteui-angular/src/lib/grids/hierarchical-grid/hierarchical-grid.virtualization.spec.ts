@@ -1,5 +1,5 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule, IgxHierarchicalRowComponent } from './index';
 import { Component, ViewChild } from '@angular/core';
@@ -8,7 +8,7 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand } from 'igniteui-angular';
 import { By } from '@angular/platform-browser';
-import { first, delay, take } from 'rxjs/operators';
+import { first, delay } from 'rxjs/operators';
 import { setupHierarchicalGridScrollDetection, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
