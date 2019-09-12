@@ -190,6 +190,7 @@ describe('General igxDrag/igxDrop', () => {
 
         spyOn(firstDrag.ghostCreate, 'emit');
         spyOn(firstDrag.ghostDestroy, 'emit');
+        spyOn(firstDrag.dragClick, 'emit');
         expect(document.getElementsByClassName('dragElem').length).toEqual(3);
 
         // Step 1.
@@ -199,6 +200,7 @@ describe('General igxDrag/igxDrop', () => {
 
         expect(firstDrag.ghostCreate.emit).not.toHaveBeenCalled();
         expect(firstDrag.ghostDestroy.emit).not.toHaveBeenCalled();
+        expect(firstDrag.dragClick.emit).not.toHaveBeenCalled();
 
         // Step 2.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
@@ -209,6 +211,7 @@ describe('General igxDrag/igxDrop', () => {
         expect(document.getElementsByClassName('dragElem').length).toEqual(3);
         expect(firstDrag.ghostCreate.emit).not.toHaveBeenCalled();
         expect(firstDrag.ghostDestroy.emit).not.toHaveBeenCalled();
+        expect(firstDrag.dragClick.emit).not.toHaveBeenCalled();
 
         // Step 3.
         // We need to trigger the pointerup on the ghostElement because this is the element we move and is under the mouse
@@ -220,6 +223,7 @@ describe('General igxDrag/igxDrop', () => {
         expect(document.getElementsByClassName('dragElem').length).toEqual(3);
         expect(firstDrag.ghostCreate.emit).not.toHaveBeenCalled();
         expect(firstDrag.ghostDestroy.emit).not.toHaveBeenCalled();
+        expect(firstDrag.dragClick.emit).toHaveBeenCalled();
     }));
 
     it('should position ghost at the same position relative to the mouse when drag started.', (async() => {
@@ -454,6 +458,7 @@ describe('General igxDrag/igxDrop', () => {
         firstDrag.dragTolerance = 25;
 
         spyOn(firstDrag.dragStart, 'emit');
+        spyOn(firstDrag.dragClick, 'emit');
 
         // Step 1.
         UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
@@ -471,6 +476,7 @@ describe('General igxDrag/igxDrop', () => {
         expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
         expect(firstElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top);
         expect(firstDrag.dragStart.emit).not.toHaveBeenCalled();
+        expect(firstDrag.dragClick.emit).not.toHaveBeenCalled();
 
         // Step 3.
         UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 20, startingY + 20);
@@ -481,6 +487,7 @@ describe('General igxDrag/igxDrop', () => {
         expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
         expect(firstElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top);
         expect(firstDrag.dragStart.emit).not.toHaveBeenCalled();
+        expect(firstDrag.dragClick.emit).not.toHaveBeenCalled();
 
         // Step 4.
         UIInteractions.simulatePointerEvent('pointerup', firstElement, startingX + 20, startingY + 20);
@@ -490,6 +497,7 @@ describe('General igxDrag/igxDrop', () => {
         expect(firstElement.getBoundingClientRect().left).toEqual(dragDirsRects[0].left);
         expect(firstElement.getBoundingClientRect().top).toEqual(dragDirsRects[0].top);
         expect(firstDrag.dragStart.emit).not.toHaveBeenCalled();
+        expect(firstDrag.dragClick.emit).toHaveBeenCalled();
     }));
 
     it('should correctly apply dragTolerance of 0 when it is set to 0 and ghost is disabled.', (async() => {
