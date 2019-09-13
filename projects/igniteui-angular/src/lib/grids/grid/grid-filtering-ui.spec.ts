@@ -3273,7 +3273,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(chipDiv.classList.contains('igx-chip__item--selected')).toBe(true, 'chip is not selected');
         }));
 
-        it('Should not throw error when deleting the last chip', (async () => {
+        xit('Should not throw error when deleting the last chip', (async () => {
             grid.width = '700px';
             await wait(16);
             fix.detectChanges();
