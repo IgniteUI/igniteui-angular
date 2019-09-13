@@ -151,12 +151,12 @@ export class IgxGridCRUDService {
     }
 
     begin(cell): void {
-        this.cell = this.createCell(cell);
-        this.cell.primaryKey = this.primaryKey;
+        const newCell = this.createCell(cell);
+        newCell.primaryKey = this.primaryKey;
         const args = {
-            cellID: this.cell.id,
-            rowID: this.cell.id.rowID,
-            oldValue: this.cell.value,
+            cellID: newCell.id,
+            rowID: newCell.id.rowID,
+            oldValue: newCell.value,
             cancel: false
         };
 
@@ -167,20 +167,24 @@ export class IgxGridCRUDService {
             return;
         }
 
-
         if (this.rowEditing) {
             if (!this.row) {
+                this.cell = this.createCell(cell);
+                this.cell.primaryKey = this.primaryKey;
                 this.beginRowEdit();
                 return;
             }
 
-            if (this.row && !this.sameRow(this.cell.id.rowID)) {
+            if (this.row && !this.sameRow(newCell.id.rowID)) {
                 this.grid.endEdit(true);
                 this.cell = this.createCell(cell);
+                this.cell.primaryKey = this.primaryKey;
                 this.beginRowEdit();
                 return;
             }
         } else {
+            this.cell = this.createCell(cell);
+            this.cell.primaryKey = this.primaryKey;
             this.endRowEdit();
         }
     }
