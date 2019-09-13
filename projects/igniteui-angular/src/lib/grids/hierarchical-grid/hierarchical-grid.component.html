@@ -39,8 +39,8 @@
                         context: { $implicit: {
                                         selectedCount: this.selectionService.filteredSelectedRowIds.length,
                                         totalCount: this.totalRowsCountAfterFilter,
-                                        selectAll: selectAllRows,
-                                        deselectAll: deselectAllRows }}">
+                                        selectAll: selectAllRows.bind(this),
+                                        deselectAll: deselectAllRows.bind(this) }}">
                     </ng-template>
                 </div>
             </ng-container>
