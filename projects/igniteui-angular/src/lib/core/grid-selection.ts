@@ -168,23 +168,21 @@ export class IgxGridCRUDService {
         }
 
         if (this.rowEditing) {
-            if (!this.row) {
-                this.cell = this.createCell(cell);
-                this.cell.primaryKey = this.primaryKey;
+            if (this.row && !this.sameRow(newCell.id.rowID)) {
+                this.grid.endEdit(true);
+                this.cell = newCell;
                 this.beginRowEdit();
                 return;
             }
 
-            if (this.row && !this.sameRow(newCell.id.rowID)) {
-                this.grid.endEdit(true);
-                this.cell = this.createCell(cell);
-                this.cell.primaryKey = this.primaryKey;
+            this.cell = newCell;
+
+            if (!this.row) {
                 this.beginRowEdit();
                 return;
             }
         } else {
-            this.cell = this.createCell(cell);
-            this.cell.primaryKey = this.primaryKey;
+            this.cell = newCell;
             this.endRowEdit();
         }
     }
