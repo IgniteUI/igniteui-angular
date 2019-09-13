@@ -25,6 +25,9 @@ Next example shows how you can use the Fluent theme.
 }
 ```
 
+### Theme Changes
+`igx-badge-theme` - Removed the `$disable-shadow` property to mitigate confusion when specifying `$shadow` explicitly.
+
 For more information about the theming please read our [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/index.html)  
 
 ### New Features
