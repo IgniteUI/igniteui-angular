@@ -5839,23 +5839,25 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
        expect(grid.filterStrategy).toEqual(fix.componentInstance.strategy);
     });
 
-    fit('Should be able to override getFieldValue method', fakeAsync(() => {
+    it('Should be able to override getFieldValue method', fakeAsync(() => {
         GridFunctions.clickFilterCellChip(fix, 'Name'); // Name column contains nasted object as a vulue
         fix.detectChanges();
-
         GridFunctions.typeValueInFilterRowInput('ca', fix);
         tick(50);
         GridFunctions.submitFilterRowInput(fix);
         tick(50);
         fix.detectChanges();
-        grid.filterStrategy = fix.componentInstance.strategy;
-        fix.detectChanges();
 
         expect(grid.filteredData).toEqual([]);
-
-        GridFunctions.clickFilterCellChip(fix, 'Name'); // Name column contains nasted object as a vulue
+        GridFunctions.resetFilterRow(fix);
+        GridFunctions.closeFilterRow(fix);
         fix.detectChanges();
 
+        // Apply the custom strategy and perform the same filter
+        grid.filterStrategy = fix.componentInstance.strategy;
+        fix.detectChanges();
+        GridFunctions.clickFilterCellChip(fix, 'Name');
+        fix.detectChanges();
         GridFunctions.typeValueInFilterRowInput('ca', fix);
         tick(50);
         GridFunctions.submitFilterRowInput(fix);
@@ -5864,9 +5866,48 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
 
         expect(grid.filteredData).toEqual(
             [{ ID: 1, Name: { FirstName: 'Casey', LastName: 'Houston' }, JobTitle: 'Vice President', Company: 'Company A' }]);
+    }));
 
-     }));
+    it('Should be able to override findMatchByExpression method', fakeAsync(() => {
+        GridFunctions.clickFilterCellChip(fix, 'JobTitle'); // Default strategy is case not sensitive
+        fix.detectChanges();
+        GridFunctions.typeValueInFilterRowInput('direct', fix);
+        tick(50);
+        GridFunctions.submitFilterRowInput(fix);
+        tick(50);
+        fix.detectChanges();
 
+        expect(grid.filteredData).toEqual([
+            { ID: 2, Name: { FirstName: 'Gilberto', LastName: 'Todd' } , JobTitle: 'Director', Company: 'Company C' },
+            { ID: 3, Name: { FirstName: 'Tanya', LastName: 'Bennett' } , JobTitle: 'Director', Company: 'Company A' }]);
+        GridFunctions.resetFilterRow(fix);
+        GridFunctions.closeFilterRow(fix);
+        fix.detectChanges();
+
+        // Apply the custom strategy and perform the same filter
+        grid.filterStrategy = fix.componentInstance.strategy;
+        fix.detectChanges();
+        GridFunctions.clickFilterCellChip(fix, 'JobTitle');
+        fix.detectChanges();
+        GridFunctions.typeValueInFilterRowInput('direct', fix);
+        tick(50);
+        GridFunctions.submitFilterRowInput(fix);
+        tick(50);
+        fix.detectChanges();
+
+        expect(grid.filteredData).toEqual([]);
+    }));
+
+    it('should use the custom filtering stategy when filter the grid through API method', fakeAsync(() => {
+        grid.filterStrategy = fix.componentInstance.strategy;
+        fix.detectChanges();
+        grid.filter('Name', 'D', IgxStringFilteringOperand.instance().condition('contains'));
+        fix.detectChanges();
+
+        expect(grid.filteredData).toEqual([
+            { ID: 7, Name: { FirstName: 'Debra', LastName: 'Morton' } , JobTitle: 'Associate Software Developer', Company: 'Company B' },
+            { ID: 10, Name: { FirstName: 'Eduardo', LastName: 'Ramirez' }, JobTitle: 'Manager', Company: 'Company E' }]);
+    }));
 });
 
 const expectedResults = [];

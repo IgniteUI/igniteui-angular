@@ -967,14 +967,10 @@ export class CustomFilterStrategy extends FilteringStrategy {
         const ignoreCase = expr.fieldName === 'JobTitle' ? false : true;
         return cond.logic(val, expr.searchVal, ignoreCase);
     }
-/*     public matchRecord(rec: object, expressions): boolean {
-        return super.matchRecord(rec, expressions);
-    }
 
     public filter<T>(data: T[], expressionsTree: IFilteringExpressionsTree): T[]  {
-        filter last name that is longer than 5 symbols
         return super.filter(data, expressionsTree);
-    } */
+    }
 
     public getFieldValue(rec: object, fieldName: string): any {
         return fieldName === 'Name' ?  rec[fieldName]['FirstName'] :  rec[fieldName];
