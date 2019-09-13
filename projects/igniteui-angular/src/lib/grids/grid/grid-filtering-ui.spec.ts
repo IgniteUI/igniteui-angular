@@ -3275,11 +3275,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         it('Should not throw error when deleting the last chip', (async () => {
             grid.width = '700px';
-            fix.detectChanges();
             await wait(16);
+            fix.detectChanges();
 
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
             fix.detectChanges();
+            await wait(16);
 
             // Add first chip.
             GridFunctions.typeValueInFilterRowInput('a', fix);
@@ -3317,11 +3318,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             try {
                 GridFunctions.removeFilterChipByIndex(3, filterUIRow);
                 fix.detectChanges();
-                await wait(300);
+                await wait(400);
             } catch (ex) {
                 expect(ex).toBeNull('Error deleting the last chip');
             }
-
+            fix.detectChanges();
+            await wait(100);
             verifyMultipleChipsVisibility(fix, [false, true, false]);
             chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
             expect(chips.length).toBe(3);
@@ -3329,11 +3331,12 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             try {
                 GridFunctions.removeFilterChipByIndex(2, filterUIRow);
                 fix.detectChanges();
-                await wait(300);
+                await wait(400);
             } catch (ex) {
                 expect(ex).toBeNull('Error deleting the last chip');
             }
-
+            fix.detectChanges();
+            await wait(100);
             verifyMultipleChipsVisibility(fix, [true, false]);
             chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
             expect(chips.length).toBe(2);
