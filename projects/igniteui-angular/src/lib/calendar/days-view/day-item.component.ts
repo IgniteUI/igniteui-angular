@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, HostBinding, ElementRef, HostListener } from '@angular/core';
 import { ICalendarDate, isDateInRanges } from '../calendar';
-import { DateRangeDescriptor, DateRangeType } from '../../core/dates';
+import { DateRangeDescriptor } from '../../core/dates';
 import { CalendarSelection } from '../calendar-base';
 
 /**
@@ -17,8 +17,21 @@ export class IgxDayItemComponent {
     @Input()
     public selection: string;
 
+    /**
+     * Returns boolean indicating if the day is selected
+     *
+     */
     @Input()
-    public value: Date | Date[];
+    public get selected(): any {
+        return this._selected;
+    }
+
+    /**
+     * Selects the day
+     */
+    public set selected(value: any) {
+        this._selected = value;
+    }
 
     @Input()
     public disabledDates: DateRangeDescriptor[];
@@ -32,32 +45,29 @@ export class IgxDayItemComponent {
     @Input()
     public hideOutsideDays = false;
 
+    @Input()
+    @HostBinding('class.igx-calendar__date--last')
+    public isLastInRange = false;
+
+    @Input()
+    @HostBinding('class.igx-calendar__date--first')
+    public isFirstInRange = false;
+
+    @Input()
+    @HostBinding('class.igx-calendar__date--firstday')
+    public isFirstInMonth = false;
+
+    @Input()
+    @HostBinding('class.igx-calendar__date--lastday')
+    public isLastInMonth = false;
+
+    @Input()
+    @HostBinding('class.igx-calendar__date--range')
+    public isWithinRange = false;
+
     @Output()
     public onDateSelection = new EventEmitter<ICalendarDate>();
 
-    public get selected(): boolean {
-        const date = this.date.date;
-
-        if (!this.value) {
-            return;
-        }
-
-        if (this.selection === CalendarSelection.SINGLE) {
-            this._selected = (this.value as Date).getTime() === date.getTime();
-        } else {
-            const selectedDates = (this.value as Date[]);
-            const currentDate = selectedDates.find(element => element.getTime() === date.getTime());
-
-            this._index = selectedDates.indexOf(currentDate) + 1;
-            this._selected = !!this._index;
-        }
-
-        return this._selected;
-    }
-
-    public set selected(value: boolean) {
-        this._selected = value;
-    }
 
     public get isCurrentMonth(): boolean {
         return this.date.isCurrentMonth;
@@ -146,12 +156,12 @@ export class IgxDayItemComponent {
 
     @HostBinding('class.igx-calendar__date--selected')
     public get isSelectedCSS(): boolean {
-        return this.selected && this.isCurrentMonth;
+        return this.isCurrentMonth && this.selected;
     }
 
     @HostBinding('class.igx-calendar__date--selected-dimmed')
     public get isSelectedDimmedCSS(): boolean {
-        return this.isSingleSelection && this.selected && !this.isCurrentMonth;
+        return !this.isCurrentMonth && this.isSingleSelection && this.selected;
     }
 
     @HostBinding('class.igx-calendar__date--weekend')
@@ -161,25 +171,9 @@ export class IgxDayItemComponent {
 
     @HostBinding('class.igx-calendar__date--disabled')
     public get isDisabledCSS(): boolean {
-        return this.isDisabled || this.isOutOfRange || this.isHidden;
+        return this.isHidden || this.isDisabled || this.isOutOfRange;
     }
 
-    @HostBinding('class.igx-calendar__date--range')
-    public get isWithinRange() {
-        if (Array.isArray(this.value) && this.value.length > 1) {
-
-            return isDateInRanges(this.date.date,
-                [
-                    {
-                        type: DateRangeType.Between,
-                        dateRange: [this.value[0], this.value[this.value.length - 1]]
-                    }
-                ]
-            );
-        }
-
-        return false;
-    }
 
     @HostBinding('class.igx-calendar__date--special')
     public get isSpecialCSS(): boolean {
@@ -191,52 +185,11 @@ export class IgxDayItemComponent {
         return this.selection !== CalendarSelection.RANGE;
     }
 
-    @HostBinding('class.igx-calendar__date--first')
-    public get isFirstInRange(): boolean {
-        if (this.isSingleSelection) {
-            return false;
-        }
 
-        return this._index === 1;
-    }
-
-    @HostBinding('class.igx-calendar__date--last')
-    public get isLastInRange(): boolean {
-        if (this.isSingleSelection) {
-            return false;
-        }
-
-        return (this.value as Date[]).length === this._index;
-    }
-
-    @HostBinding('class.igx-calendar__date--lastday')
-    public get isLastInMonth(): boolean {
-        const checkLast = true;
-        return this.isFirstLastInMonth(checkLast);
-    }
-
-    @HostBinding('class.igx-calendar__date--firstday')
-    public get isFirstInMonth(): boolean {
-        const checkLast = false;
-        return this.isFirstLastInMonth(checkLast);
-    }
-
-    private _index: Number;
     private _selected = false;
 
     constructor(private elementRef: ElementRef) { }
 
-    private isFirstLastInMonth(checkLast: boolean): boolean {
-        const inc = checkLast ? 1 : -1;
-        if (!this.isSingleSelection && this.isCurrentMonth && this.isWithinRange) {
-            const nextDay = new Date(this.date.date);
-            nextDay.setDate(nextDay.getDate() + inc);
-            if (this.date.date.getMonth() + inc === nextDay.getMonth()) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     @HostListener('click')
     @HostListener('keydown.enter')

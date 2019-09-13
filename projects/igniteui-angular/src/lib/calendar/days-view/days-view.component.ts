@@ -9,13 +9,14 @@ import {
     HostBinding,
     DoCheck
 } from '@angular/core';
-import { ICalendarDate } from '../../calendar';
+import { ICalendarDate, isDateInRanges } from '../../calendar';
 import { trigger, transition, useAnimation } from '@angular/animations';
 import { slideInLeft, slideInRight } from '../../animations/main';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxDayItemComponent } from './day-item.component';
 import { DateRangeDescriptor, DateRangeType } from '../../core/dates';
-import { IgxCalendarBase, ScrollMonth } from '../calendar-base';
+import { IgxCalendarBase, ScrollMonth, CalendarSelection } from '../calendar-base';
+import { isEqual } from '../../core/utils';
 
 let NEXT_ID = 0;
 
@@ -200,6 +201,100 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
      */
     public isCurrentYear(value: Date): boolean {
         return this.viewDate.getFullYear() === value.getFullYear();
+    }
+
+    /**
+     * @hidden
+     */
+    public isSelected(date: ICalendarDate): boolean {
+        const selectedDates = (this.value as Date[]);
+        if (!date.isCurrentMonth) {
+            return;
+        }
+
+        if (!this.value || selectedDates.length === 0) {
+            return;
+        }
+
+        if (selectedDates.length === 1) {
+            return this.value[0].getTime() === date.date.getTime();
+        }
+
+        if (this.selection === CalendarSelection.MULTI) {
+            const start = this.getDateOnly(selectedDates[0]);
+            const end = this.getDateOnly(selectedDates[selectedDates.length - 1]);
+
+            if (this.isWithinRange(date.date, false, start, end)) {
+                const currentDate = selectedDates.find(element => element.getTime() === date.date.getTime());
+                return !!currentDate;
+            } else {
+                return false;
+            }
+
+        } else {
+            return this.isWithinRange(date.date, false);
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    public isLastInRange(date: ICalendarDate): boolean {
+        if (this.isSingleSelection || !this.value) {
+            return false;
+        }
+
+        const dates = this.value as Date[];
+        const lastDate = dates[dates.length - 1];
+        return isEqual(lastDate, date.date);
+    }
+
+    /**
+     * @hidden
+     */
+    public isFirstInRange(date: ICalendarDate): boolean {
+        if (this.isSingleSelection || !this.value) {
+            return false;
+        }
+
+        return isEqual((this.value as Date[])[0], date.date);
+    }
+
+    /**
+     * @hidden
+     */
+    public isFirstInMonth(date: ICalendarDate): boolean {
+        const checkLast = false;
+        return this.isFirstLastInMonth(checkLast, date);
+    }
+
+    /**
+     * @hidden
+     */
+    public isLastInMonth(date: ICalendarDate): boolean {
+        const checkLast = false;
+        return this.isFirstLastInMonth(checkLast, date);
+    }
+
+    /**
+     * @hidden
+     */
+    public isWithinRange(date: Date, checkForRange: boolean, min?: Date, max?: Date): boolean {
+        if (checkForRange && !(Array.isArray(this.value) && this.value.length > 1)) {
+            return;
+        }
+
+        min = min ? min : this.value[0];
+        max = max ? max : this.value[(this.value as Date[]).length - 1];
+
+        return isDateInRanges(date,
+            [
+                {
+                    type: DateRangeType.Between,
+                    dateRange: [min, max]
+                }
+            ]
+        );
     }
 
     /**
@@ -507,6 +602,28 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
      */
     private isDayFocusable(day: IgxDayItemComponent): boolean {
         return !!day && day.isCurrentMonth && !day.isHidden && !day.isDisabled && !day.isOutOfRange;
+    }
+
+    /**
+     * @hidden
+     */
+    private isFirstLastInMonth(checkLast: boolean, date: ICalendarDate): boolean {
+        const inc = checkLast ? 1 : -1;
+        if (date.isCurrentMonth && !this.isSingleSelection && this.isWithinRange(date.date, true)) {
+            const nextDay = new Date(date.date);
+            nextDay.setDate(nextDay.getDate() + inc);
+            if (this.isWithinRange(nextDay, false) && date.date.getMonth() + inc === nextDay.getMonth()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @hidden
+     */
+    private get isSingleSelection(): boolean {
+        return this.selection !== CalendarSelection.RANGE;
     }
 
     /**

@@ -143,6 +143,10 @@ export class IgxCalendarBase implements ControlValueAccessor {
      * Otherwise it is an array of `Date` objects.
      */
     public set value(value: Date | Date[]) {
+        if (!value || !!value && (value as Date[]).length === 0) {
+            return;
+        }
+
         this.selectDate(value);
     }
 
@@ -416,7 +420,7 @@ export class IgxCalendarBase implements ControlValueAccessor {
                 this.selectedDates = this.selectedDates.concat(newSelection);
             }
         }
-
+        this.selectedDates.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
         this._onChangeCallback(this.selectedDates);
     }
 
