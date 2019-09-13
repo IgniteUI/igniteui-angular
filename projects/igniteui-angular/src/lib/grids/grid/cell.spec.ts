@@ -872,7 +872,6 @@ describe('IgxGrid - Cell component', () => {
         cell = grid.getCellByColumn(0, 'fullName');
         expect(cell.value).toEqual('New Name');
     });
-});
 
     it('should fit last cell in the available display container when there is vertical scroll.', async(() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
