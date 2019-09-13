@@ -3690,7 +3690,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                     }
                     this.gridAPI.escape_editMode();
                 }
-                this.cdr.markForCheck();
+                this.cdr.detectChanges();
             }
         }
     }
@@ -3716,7 +3716,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
             const row = new IgxRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector));
             this.gridAPI.update_row(row, value);
-            this.cdr.markForCheck();
+            this.cdr.detectChanges();
         }
     }
 
