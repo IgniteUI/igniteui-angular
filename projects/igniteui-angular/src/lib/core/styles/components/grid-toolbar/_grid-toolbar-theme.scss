@@ -303,6 +303,10 @@
         }
     }
 
+    %igx-grid-toolbar__adv-filter--filtered {
+        color: igx-color(map-get($theme, 'palette'), 'secondary') !important;
+    }
+
     %igx-grid-toolbar__dropdown {
         position: relative;
 
