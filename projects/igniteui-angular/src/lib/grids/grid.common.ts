@@ -1,17 +1,12 @@
-﻿import { DatePipe, DecimalPipe } from '@angular/common';
-import {
+﻿import {
     ChangeDetectorRef,
     Directive,
     ElementRef,
-    Inject,
     Injectable,
     Input,
     NgZone,
     OnDestroy,
-    Pipe,
-    PipeTransform,
     Renderer2,
-    LOCALE_ID,
     ViewContainerRef
 } from '@angular/core';
 import { fromEvent, interval, Subject, Subscription } from 'rxjs';
@@ -24,9 +19,6 @@ import { VerticalAlignment, PositionSettings } from '../services/overlay/utiliti
 import { scaleInVerBottom, scaleInVerTop } from '../animations/main';
 import { KEYS } from '../core/utils';
 import { IgxForOfSyncService } from '../directives/for-of/for_of.sync.service';
-
-const DEFAULT_DATE_FORMAT = 'mediumDate';
-
 
 /**
  * @hidden
@@ -416,52 +408,6 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
 })
 export class IgxGridBodyDirective {}
 
-/**
- *@hidden
- */
-@Pipe({
-    name: 'igxdate'
-})
-export class IgxDatePipeComponent extends DatePipe implements PipeTransform {
-    constructor(@Inject(LOCALE_ID) locale: string) {
-        // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
-        super(locale);
-    }
-    transform(value: any, locale: string): string {
-        if (value && value instanceof Date) {
-            if (locale) {
-                return super.transform(value, DEFAULT_DATE_FORMAT, undefined, locale);
-            } else {
-                return super.transform(value);
-            }
-        } else {
-            return value;
-        }
-    }
-}
-/**
- *@hidden
- */
-@Pipe({
-    name: 'igxdecimal'
-})
-export class IgxDecimalPipeComponent extends DecimalPipe implements PipeTransform {
-    constructor(@Inject(LOCALE_ID) locale: string) {
-        // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
-        super(locale);
-    }
-    transform(value: any, locale: string): string {
-        if (value && typeof value === 'number') {
-            if (locale) {
-                return super.transform(value, undefined, locale);
-            } else {
-                return super.transform(value);
-            }
-        } else {
-            return value;
-        }
-    }
-}
 
 /**
  * @hidden

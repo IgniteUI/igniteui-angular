@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IgxDatePipeComponent, IgxDecimalPipeComponent } from './grid.common';
 import {
     IgxGridFilterConditionPipe,
     IgxGridTransactionPipe,
@@ -8,8 +7,10 @@ import {
     IgxGridTopLevelColumns,
     IgxGridCellStylesPipe,
     IgxGridPaginatorOptionsPipe,
-    IgxHasVisibleColumnsPipe
-} from './grid-common.pipes';
+    IgxHasVisibleColumnsPipe,
+    IgxDatePipeComponent,
+    IgxDecimalPipeComponent
+} from './pipes';
 
 @NgModule({
     declarations: [

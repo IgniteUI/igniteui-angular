@@ -7,13 +7,13 @@ import { IFilteringExpression, FilteringLogic } from '../../data-operations/filt
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { IgxDatePipeComponent } from '../grid.common';
 import { IgxColumnComponent } from '../column.component';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { GridBaseAPIService } from '../api.service';
 import { IColumnVisibilityChangedEventArgs } from '../grid';
 import { IColumnResizeEventArgs } from '../common/events';
 import { GridType } from '../common/grid.interface';
+import { IgxDatePipeComponent } from '../common/pipes';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 

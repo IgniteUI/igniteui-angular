@@ -53,7 +53,7 @@ import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxProgressBarModule } from '../progressbar/progressbar.component';
 import { IgxPaginatorModule } from '../paginator/paginator.component';
 import { IgxFilterModule } from '../directives/filter/filter.directive';
-import { IgxGridPipesModule } from './grid-pipes.module';
+import { IgxGridPipesModule } from './common/grid-pipes.module';
 import { IgxGridExcelStyleFilteringModule } from './filtering/excel-style/grid.excel-style-filtering.module';
 import { IgxGridDragSelectDirective } from './drag-select.directive';
 import { IgxRowDragModule } from './row-drag.directive';

@@ -1,10 +1,15 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { GridBaseAPIService } from './api.service';
-import { IgxGridBaseComponent } from './grid-base.component';
-import { DataUtil } from '../data-operations/data-util';
-import { cloneArray } from '../core/utils';
-import { GridType } from './common/grid.interface';
+import { GridBaseAPIService } from '../api.service';
+import { IgxGridBaseComponent } from '../grid-base.component';
+import { DataUtil } from '../../data-operations/data-util';
+import { cloneArray } from '../../core/utils';
+import { GridType } from './grid.interface';
+import { DatePipe, DecimalPipe } from '@angular/common';
 
+/**
+ * @hidden
+ * @internal
+ */
 @Pipe({
     name: 'igxCellStyles'
 })
@@ -43,6 +48,10 @@ export class IgxGridNotGroupedPipe implements PipeTransform {
     }
 }
 
+/**
+ * @hidden
+ * @internal
+ */
 @Pipe({
     name: 'igxTopLevel'
 })
@@ -52,8 +61,10 @@ export class IgxGridTopLevelColumns implements PipeTransform {
         return value.filter(item => item.level === 0);
     }
 }
+
 /**
- *@hidden
+ * @hidden
+ * @internal
  */
 @Pipe({
     name: 'filterCondition',
@@ -66,7 +77,10 @@ export class IgxGridFilterConditionPipe implements PipeTransform {
     }
 }
 
-/** @hidden */
+/**
+ * @hidden
+ * @internal
+ */
 @Pipe({
     name: 'gridTransaction',
     pure: true
@@ -89,7 +103,10 @@ export class IgxGridTransactionPipe implements PipeTransform {
     }
 }
 
-/** @hidden */
+/**
+ * @hidden
+ * @internal
+ */
 @Pipe({
     name: 'paginatorOptions',
     pure: true,
@@ -100,6 +117,10 @@ export class IgxGridPaginatorOptionsPipe implements PipeTransform {
     }
 }
 
+/**
+ * @hidden
+ * @internal
+ */
 @Pipe({
     name: 'visibleColumns',
     pure: true
@@ -112,4 +133,58 @@ export class IgxHasVisibleColumnsPipe implements PipeTransform {
         return hasVisibleColumns ? values : [];
     }
 
+}
+
+
+/**
+ * @hidden
+ * @internal
+ */
+@Pipe({
+    name: 'igxdate'
+})
+export class IgxDatePipeComponent extends DatePipe implements PipeTransform {
+
+    private readonly DEFAULT_DATE_FORMAT = 'mediumDate';
+
+    // constructor(@Inject(LOCALE_ID) locale: string) {
+    //     // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
+    //     super(locale);
+    // }
+    transform(value: any, locale: string): string {
+        if (value && value instanceof Date) {
+            if (locale) {
+                return super.transform(value, this.DEFAULT_DATE_FORMAT, undefined, locale);
+            } else {
+                return super.transform(value);
+            }
+        } else {
+            return value;
+        }
+    }
+}
+
+/**
+ * @hidden
+ * @internal
+ */
+@Pipe({
+    name: 'igxdecimal'
+})
+export class IgxDecimalPipeComponent extends DecimalPipe implements PipeTransform {
+    // constructor(@Inject(LOCALE_ID) locale: string) {
+    //     // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
+    //     super(locale);
+    // }
+    transform(value: any, locale: string): string {
+        if (value && typeof value === 'number') {
+            if (locale) {
+                return super.transform(value, undefined, locale);
+            } else {
+                return super.transform(value);
+            }
+        } else {
+            return value;
+        }
+    }
 }
