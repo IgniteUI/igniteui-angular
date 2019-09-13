@@ -1,4 +1,5 @@
 @import './excel-filtering-theme';
+@import './advanced-filtering-theme';
 
 ////
 /// @group themes
@@ -2323,4 +2324,5 @@
     }
 
     @include _excel-filtering($theme, $palette);
+    @include _advanced-filtering($theme, $palette);
 }

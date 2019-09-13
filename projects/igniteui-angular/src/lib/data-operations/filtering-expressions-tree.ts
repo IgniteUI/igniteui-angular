@@ -1,10 +1,16 @@
 import { IFilteringExpression, FilteringLogic } from './filtering-expression.interface';
 import { IBaseEventArgs } from '../core/utils';
 
+export enum FilteringExpressionsTreeType {
+    Regular,
+    Advanced
+}
+
 export declare interface IFilteringExpressionsTree extends IBaseEventArgs {
     filteringOperands: (IFilteringExpressionsTree | IFilteringExpression)[];
     operator: FilteringLogic;
     fieldName?: string;
+    type?: FilteringExpressionsTreeType;
 
     find(fieldName: string): IFilteringExpressionsTree | IFilteringExpression;
     findIndex(fieldName: string): number;
@@ -57,9 +63,30 @@ export class FilteringExpressionsTree implements IFilteringExpressionsTree {
      */
     fieldName?: string;
 
+    /**
+     * Sets/gets the type of the filtering expressions tree.
+     * ```typescript
+     *  gridExpressionTree.type = FilteringExpressionsTree.Advanced;
+     * ```
+     * ```typescript
+     * let type = expressionTree.type;
+     * ```
+     * @memberof FilteringExpressionsTree
+     */
+    type?: FilteringExpressionsTreeType;
+
     constructor(operator: FilteringLogic, fieldName?: string) {
         this.operator = operator;
         this.fieldName = fieldName;
+    }
+
+
+    /**
+     * Checks if filtering expressions tree is empty.
+     * @param expressionTree filtering expressions tree.
+     */
+    public static empty(expressionTree: IFilteringExpressionsTree): boolean {
+        return !expressionTree || !expressionTree.filteringOperands || !expressionTree.filteringOperands.length;
     }
 
     /**
