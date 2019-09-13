@@ -207,17 +207,23 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
      * @hidden
      */
     public isSelected(date: ICalendarDate): boolean {
-        const selectedDates = (this.value as Date[]);
+        let selectedDates: Date | Date[];
         if (!date.isCurrentMonth) {
             return false;
         }
 
-        if (!this.value || selectedDates.length === 0) {
+        if (!this.value || (Array.isArray(this.value) && this.value.length === 0)) {
             return false;
         }
 
-        if (selectedDates.length === 1) {
-            return this.value[0].getTime() === date.date.getTime();
+        if (this.selection === CalendarSelection.SINGLE) {
+            selectedDates = (this.value as Date);
+            return this.getDateOnly(selectedDates).getTime() === date.date.getTime();
+        }
+
+        selectedDates = (this.value as Date[]);
+        if (this.selection === CalendarSelection.RANGE && selectedDates.length === 1) {
+            return this.getDateOnly(selectedDates[0]).getTime() === date.date.getTime();
         }
 
         if (this.selection === CalendarSelection.MULTI) {
