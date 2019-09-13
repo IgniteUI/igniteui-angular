@@ -51,7 +51,7 @@ import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
 import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
 import { ISummaryExpression } from './summaries/grid-summary';
-import { DropPosition, RowEditPositionStrategy } from './grid.common';
+import { RowEditPositionStrategy } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxRowComponent } from './row.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
@@ -102,6 +102,7 @@ import { IGridCellEventArgs, IRowSelectionEventArgs, IPinColumnEventArgs, IGridE
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import { GridType } from './common/grid.interface';
 import { IgxDecimalPipeComponent, IgxDatePipeComponent } from './common/pipes';
+import { DropPosition } from './moving/moving.service';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
