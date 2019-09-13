@@ -209,11 +209,11 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
     public isSelected(date: ICalendarDate): boolean {
         const selectedDates = (this.value as Date[]);
         if (!date.isCurrentMonth) {
-            return;
+            return false;
         }
 
         if (!this.value || selectedDates.length === 0) {
-            return;
+            return false;
         }
 
         if (selectedDates.length === 1) {
@@ -232,7 +232,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
             }
 
         } else {
-            return this.isWithinRange(date.date, false);
+            return this.isWithinRange(date.date, true);
         }
     }
 
@@ -281,7 +281,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
      */
     public isWithinRange(date: Date, checkForRange: boolean, min?: Date, max?: Date): boolean {
         if (checkForRange && !(Array.isArray(this.value) && this.value.length > 1)) {
-            return;
+            return false;
         }
 
         min = min ? min : this.value[0];
@@ -612,7 +612,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
         if (date.isCurrentMonth && !this.isSingleSelection && this.isWithinRange(date.date, true)) {
             const nextDay = new Date(date.date);
             nextDay.setDate(nextDay.getDate() + inc);
-            if (this.isWithinRange(nextDay, false) && date.date.getMonth() + inc === nextDay.getMonth()) {
+            if (this.isWithinRange(nextDay, true) && date.date.getMonth() + inc === nextDay.getMonth()) {
                 return true;
             }
         }

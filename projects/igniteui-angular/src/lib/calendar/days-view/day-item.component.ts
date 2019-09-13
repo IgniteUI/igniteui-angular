@@ -190,7 +190,6 @@ export class IgxDayItemComponent {
 
     constructor(private elementRef: ElementRef) { }
 
-
     @HostListener('click')
     @HostListener('keydown.enter')
     public onSelect() {
