@@ -6,7 +6,7 @@ import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { ISummaryRecord } from '../summaries/grid-summary';
 import { GridSummaryCalculationMode, GridSummaryPosition } from '../common/enums';
-import { IGridDataBindable } from '../common/events';
+import { GridType } from '../common/grid.interface';
 
 /** @hidden */
 @Pipe({
@@ -16,7 +16,7 @@ import { IGridDataBindable } from '../common/events';
 export class IgxTreeGridSummaryPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) {
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>) {
         this.gridAPI = <IgxTreeGridAPIService>gridAPI;
      }
 

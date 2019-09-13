@@ -8,7 +8,7 @@ import { DOCUMENT } from '@angular/common';
 import { IgxGridBaseComponent } from '../grid';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 import { HammerGesturesManager } from '../../core/touch';
-import { IGridDataBindable } from '../common/events';
+import { GridType } from '../common/grid.interface';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,7 +22,7 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
     constructor(
                 selectionService: IgxGridSelectionService,
                 crudService: IgxGridCRUDService,
-                gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
+                gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>,
                 cdr: ChangeDetectorRef,
                 element: ElementRef,
                 protected zone: NgZone,

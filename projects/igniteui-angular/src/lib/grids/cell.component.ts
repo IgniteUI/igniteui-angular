@@ -25,7 +25,7 @@ import { HammerGesturesManager } from '../core/touch';
 import { ColumnType } from './common/column.interface';
 import { RowType } from './common/row.interface';
 import { GridSelectionMode } from './common/enums';
-import { IGridDataBindable } from './common/events';
+import { GridType } from './common/grid.interface';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -550,7 +550,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     constructor(
         protected selectionService: IgxGridSelectionService,
         protected crudService: IgxGridCRUDService,
-        public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
+        public gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>,
         public cdr: ChangeDetectorRef,
         private element: ElementRef,
         protected zone: NgZone,

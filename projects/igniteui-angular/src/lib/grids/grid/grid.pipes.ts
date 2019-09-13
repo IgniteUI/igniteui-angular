@@ -10,7 +10,7 @@ import { IgxGridComponent } from './grid.component';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent } from '../grid-base.component';
-import { IGridDataBindable } from '../common/events';
+import { GridType } from '../common/grid.interface';
 
 /**
  *@hidden
@@ -22,7 +22,7 @@ import { IGridDataBindable } from '../common/events';
 export class IgxGridSortingPipe implements PipeTransform {
     private gridAPI: IgxGridAPIService;
 
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) {
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>) {
         this.gridAPI = <IgxGridAPIService>gridAPI;
     }
 
@@ -51,7 +51,7 @@ export class IgxGridSortingPipe implements PipeTransform {
 export class IgxGridGroupingPipe implements PipeTransform {
     private gridAPI: IgxGridAPIService;
 
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) {
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>) {
         this.gridAPI = <IgxGridAPIService>gridAPI;
     }
 
@@ -93,7 +93,7 @@ export class IgxGridGroupingPipe implements PipeTransform {
 })
 export class IgxGridPagingPipe implements PipeTransform {
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) { }
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>) { }
 
     public transform(collection: IGroupByResult, page = 0, perPage = 15, id: string, pipeTrigger: number): IGroupByResult {
 
@@ -128,7 +128,7 @@ export class IgxGridPagingPipe implements PipeTransform {
 })
 export class IgxGridFilteringPipe implements PipeTransform {
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) { }
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>) { }
 
     public transform(collection: any[], expressionsTree: IFilteringExpressionsTree,
         advancedExpressionsTree: IFilteringExpressionsTree, id: string, pipeTrigger: number) {

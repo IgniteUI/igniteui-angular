@@ -3,7 +3,7 @@ import { GridBaseAPIService } from './api.service';
 import { IgxGridBaseComponent } from './grid-base.component';
 import { DataUtil } from '../data-operations/data-util';
 import { cloneArray } from '../core/utils';
-import { IGridDataBindable } from './common/events';
+import { GridType } from './common/grid.interface';
 
 @Pipe({
     name: 'igxCellStyles'
@@ -73,7 +73,7 @@ export class IgxGridFilterConditionPipe implements PipeTransform {
 })
 export class IgxGridTransactionPipe implements PipeTransform {
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) { }
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>) { }
 
     transform(collection: any[], id: string, pipeTrigger: number) {
         const grid: IgxGridBaseComponent = this.gridAPI.grid;

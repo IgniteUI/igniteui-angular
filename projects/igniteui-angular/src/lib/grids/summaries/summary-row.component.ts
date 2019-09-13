@@ -17,7 +17,7 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent } from '../grid-base.component';
 import { IgxColumnComponent } from '../column.component';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
-import { IGridDataBindable } from '../common/events';
+import { GridType } from '../common/grid.interface';
 
 
 @Component({
@@ -59,7 +59,7 @@ export class IgxSummaryRowComponent implements DoCheck  {
     @ViewChild('igxDirRef', { read: IgxGridForOfDirective, static: false })
     public virtDirRow: IgxGridForOfDirective<any>;
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>,
                 public element: ElementRef,
                 public cdr: ChangeDetectorRef) {}
 

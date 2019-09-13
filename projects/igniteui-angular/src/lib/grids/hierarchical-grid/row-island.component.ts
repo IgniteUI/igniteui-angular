@@ -40,7 +40,7 @@ import { IgxColumnComponent } from '../column.component';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IBaseEventArgs } from '../../core/utils';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
-import { IGridDataBindable } from '../common/events';
+import { GridType } from '../common/grid.interface';
 export interface IGridCreatedEventArgs extends IBaseEventArgs {
     owner: IgxRowIslandComponent;
     parentID: any;
@@ -193,7 +193,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
         public selectionService: IgxGridSelectionService,
         crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
-        gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
+        gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>,
         @Inject(IgxGridTransaction) protected transactionFactory: any,
         elementRef: ElementRef,
         zone: NgZone,

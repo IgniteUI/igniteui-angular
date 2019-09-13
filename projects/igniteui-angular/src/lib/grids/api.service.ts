@@ -12,12 +12,12 @@ import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType, State } from '../services/transaction/transaction';
 import { IgxCell, IgxRow } from '../core/grid-selection';
-import { IGridDataBindable } from './common/events';
+import { GridType } from './common/grid.interface';
 /**
  *@hidden
  */
 @Injectable()
-export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBindable> {
+export class GridBaseAPIService <T extends IgxGridBaseComponent & GridType> {
 
     grid: T;
     protected editCellState: Map<string, any> = new Map<string, any>();
@@ -82,7 +82,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         return grid.primaryKey ? data.findIndex(record => record[grid.primaryKey] === rowID) : data.indexOf(rowID);
     }
 
-    public get_row_by_key(rowSelector: any): IgxRowComponent<IgxGridBaseComponent & IGridDataBindable> {
+    public get_row_by_key(rowSelector: any): IgxRowComponent<IgxGridBaseComponent & GridType> {
         const primaryKey = this.grid.primaryKey;
         if (primaryKey !== undefined && primaryKey !== null) {
             return this.grid.dataRowList.find((row) => row.rowData[primaryKey] === rowSelector);
@@ -91,7 +91,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         }
     }
 
-    public get_row_by_index(rowIndex: number): IgxRowComponent<IgxGridBaseComponent & IGridDataBindable> {
+    public get_row_by_index(rowIndex: number): IgxRowComponent<IgxGridBaseComponent & GridType> {
         return this.grid.rowList.find((row) => row.index === rowIndex);
     }
 

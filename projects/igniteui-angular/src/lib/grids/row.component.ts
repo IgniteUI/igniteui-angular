@@ -20,10 +20,10 @@ import { TransactionType } from '../services';
 import { IgxGridBaseComponent } from './grid-base.component';
 import { IgxGridSelectionService, IgxGridCRUDService, IgxRow } from '../core/grid-selection';
 import { DeprecateProperty } from '../core/deprecateDecorators';
-import { IGridDataBindable } from './common/events';
+import { GridType } from './common/grid.interface';
 
 @Injectable()
-export abstract class IgxRowComponent<T extends IgxGridBaseComponent & IGridDataBindable> implements DoCheck {
+export abstract class IgxRowComponent<T extends IgxGridBaseComponent & GridType> implements DoCheck {
 
     private _rowData: any;
     /**

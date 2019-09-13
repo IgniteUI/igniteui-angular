@@ -3,6 +3,7 @@ import { IgxGridCellComponent, IgxColumnComponent, IgxGridBaseComponent, IgxRowC
 import { IgxBaseExporter, IgxExporterOptionsBase } from '../../services';
 import { GridKeydownTargetType } from './enums';
 import { IgxDragDirective } from '../../directives/drag-drop/drag-drop.directive';
+import { IGridDataBindable } from './grid.interface';
 
 
 export interface IGridClipboardEvent {
@@ -95,10 +96,6 @@ export interface IGridKeydownEventArgs extends IBaseEventArgs {
 export interface ICellPosition {
     rowIndex: number;
     visibleColumnIndex: number;
-}
-export interface IGridDataBindable {
-    data: any[];
-    filteredData: any[];
 }
 
 export interface IRowDragEndEventArgs extends IBaseEventArgs {

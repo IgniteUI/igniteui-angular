@@ -8,7 +8,7 @@ import { IFilteringState } from '../../data-operations/filtering-state.interface
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseComponent } from '../grid';
-import { IGridDataBindable } from '../common/events';
+import { GridType } from '../common/grid.interface';
 
 /** @hidden */
 export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
@@ -58,7 +58,7 @@ export class TreeGridFilteringStrategy extends BaseFilteringStrategy {
 export class IgxTreeGridFilteringPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) {
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>) {
         this.gridAPI = <IgxTreeGridAPIService>gridAPI;
      }
 

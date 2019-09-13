@@ -3,8 +3,8 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { Subject } from 'rxjs';
 import { IPathSegment } from './hierarchical-grid-base.component';
 import { IgxGridBaseComponent, GridBaseAPIService } from '../grid';
-import { IGridDataBindable } from '../common/events';
-export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable> {
+import { GridType } from '../common/grid.interface';
+export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBaseComponent & GridType> {
     protected childRowIslands: Map<string, IgxRowIslandComponent> = new Map<string, IgxRowIslandComponent>();
     protected childGrids:  Map<string, Map<any, IgxHierarchicalGridComponent>> =
         new Map<string, Map<any, IgxHierarchicalGridComponent>>();

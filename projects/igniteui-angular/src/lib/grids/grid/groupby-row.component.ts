@@ -15,7 +15,7 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent } from '../grid-base.component';
 import { IgxGridSelectionService, ISelectionNode } from '../../core/grid-selection';
 import { ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS } from '../../core/utils';
-import { IGridDataBindable } from '../common/events';
+import { GridType } from '../common/grid.interface';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,7 +25,7 @@ import { IGridDataBindable } from '../common/events';
 })
 export class IgxGridGroupByRowComponent {
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>,
         private gridSelection: IgxGridSelectionService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef) { }

@@ -1,6 +1,15 @@
 import { FilterMode } from './enums';
 
-export interface GridType {
+export interface IGridDataBindable {
+    data: any[];
+    filteredData: any[];
+}
+
+/**
+ * @hidden
+ * @internal
+ */
+export interface GridType extends IGridDataBindable {
     nativeElement: HTMLElement;
     rowEditable: boolean;
     rootSummariesEnabled: boolean;

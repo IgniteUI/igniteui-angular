@@ -25,7 +25,7 @@ import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service
 import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 import { FilterMode } from '../common/enums';
-import { IGridDataBindable } from '../common/events';
+import { GridType } from '../common/grid.interface';
 
 let NEXT_ID = 0;
 
@@ -68,7 +68,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
 })
-export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit, DoCheck, AfterContentInit {
+export class IgxGridComponent extends IgxGridBaseComponent implements GridType, OnInit, DoCheck, AfterContentInit {
     private _id = `igx-grid-${NEXT_ID++}`;
     /**
      * @hidden @internal

@@ -41,7 +41,7 @@ import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-sel
 import { IgxOverlayService } from '../../services/index';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
-import { IGridDataBindable } from '../common/events';
+import { GridType } from '../common/grid.interface';
 
 let NEXT_ID = 0;
 
@@ -66,7 +66,7 @@ export interface HierarchicalStateRecord {
     ]
 })
 export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseComponent
-    implements IGridDataBindable, AfterViewInit, AfterContentInit, OnInit, OnDestroy, DoCheck {
+    implements GridType, AfterViewInit, AfterContentInit, OnInit, OnDestroy, DoCheck {
 
     /**
      * Sets the value of the `id` attribute. If not provided it will be automatically generated.
@@ -293,7 +293,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         public selectionService: IgxGridSelectionService,
         crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
-        gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
+        gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>,
         @Inject(IgxGridTransaction) protected transactionFactory: any,
         elementRef: ElementRef,
         zone: NgZone,

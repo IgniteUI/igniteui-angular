@@ -28,7 +28,7 @@ import { IgxColumnHidingComponent } from './column-hiding.component';
 import { IgxColumnPinningComponent } from './column-pinning.component';
 import { OverlaySettings, PositionSettings, HorizontalAlignment, VerticalAlignment } from '../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../services/overlay/position';
-import { IGridDataBindable } from './common/events';
+import { GridType } from './common/grid.interface';
 
 /**
  * This class encapsulates the Toolbar's logic and is internally used by
@@ -215,7 +215,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
         return this.getComponentDensityClass('igx-grid-toolbar');
     }
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>,
         public cdr: ChangeDetectorRef,
         @Optional() public excelExporter: IgxExcelExporterService,
         @Optional() public csvExporter: IgxCsvExporterService,

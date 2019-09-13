@@ -20,7 +20,7 @@ import { IgxColumnResizingService } from './resizing/resizing.service';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { isIE } from '../core/utils';
-import { IGridDataBindable } from './common/events';
+import { GridType } from './common/grid.interface';
 
 const Z_INDEX = 9999;
 
@@ -221,7 +221,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     }
 
     constructor(private cdr: ChangeDetectorRef,
-                public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
+                public gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>,
                 public element: ElementRef,
                 public colResizingService: IgxColumnResizingService,
                 public filteringService: IgxFilteringService) { }

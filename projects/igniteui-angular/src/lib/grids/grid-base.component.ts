@@ -98,8 +98,9 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,
      IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective } from './grid/grid.directives';
 import { GridKeydownTargetType, GridSelectionMode, GridSummaryPosition, GridSummaryCalculationMode, FilterMode } from './common/enums';
-import { IGridCellEventArgs, IRowSelectionEventArgs, IPinColumnEventArgs, IGridEditEventArgs, IPageEventArgs, IRowDataEventArgs, IColumnResizeEventArgs, IColumnMovingStartEventArgs, IColumnMovingEventArgs, IColumnMovingEndEventArgs, IGridKeydownEventArgs, IRowDragStartEventArgs, IRowDragEndEventArgs, IGridClipboardEvent, IGridDataBindable, IGridToolbarExportEventArgs, ISearchInfo, ICellPosition } from './common/events';
+import { IGridCellEventArgs, IRowSelectionEventArgs, IPinColumnEventArgs, IGridEditEventArgs, IPageEventArgs, IRowDataEventArgs, IColumnResizeEventArgs, IColumnMovingStartEventArgs, IColumnMovingEventArgs, IColumnMovingEndEventArgs, IGridKeydownEventArgs, IRowDragStartEventArgs, IRowDragEndEventArgs, IGridClipboardEvent, IGridToolbarExportEventArgs, ISearchInfo, ICellPosition } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
+import { GridType } from './common/grid.interface';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -1916,7 +1917,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    public get rowInEditMode(): IgxRowComponent<IgxGridBaseComponent & IGridDataBindable> {
+    public get rowInEditMode(): IgxRowComponent<IgxGridBaseComponent & GridType> {
         const editRowState = this.crudService.row;
         return editRowState !== null ? this.rowList.find(e => e.rowID === editRowState.id) : null;
     }
@@ -2700,7 +2701,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         public selectionService: IgxGridSelectionService,
         public crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
-        protected gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
+        protected gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>,
         @Inject(IgxGridTransaction) protected _transactions: TransactionService<Transaction, State>,
         private elementRef: ElementRef,
         private zone: NgZone,
@@ -3259,7 +3260,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @param index
      * @memberof IgxGridBaseComponent
      */
-    public getRowByIndex(index: number): IgxRowComponent<IgxGridBaseComponent & IGridDataBindable> {
+    public getRowByIndex(index: number): IgxRowComponent<IgxGridBaseComponent & GridType> {
         return this.gridAPI.get_row_by_index(index);
     }
 
@@ -3272,7 +3273,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @param keyValue
      * @memberof IgxGridBaseComponent
      */
-    public getRowByKey(keyValue: any): IgxRowComponent<IgxGridBaseComponent & IGridDataBindable> {
+    public getRowByKey(keyValue: any): IgxRowComponent<IgxGridBaseComponent & GridType> {
         return this.gridAPI.get_row_by_key(keyValue);
     }
 
@@ -5501,7 +5502,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return undefined;
     }
 
-    protected changeRowEditingOverlayStateOnScroll(row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>) {
+    protected changeRowEditingOverlayStateOnScroll(row: IgxRowComponent<IgxGridBaseComponent & GridType>) {
         if (!this.rowEditable || !this.rowEditingOverlay || this.rowEditingOverlay.collapsed) {
             return;
         }
@@ -5545,7 +5546,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    public repositionRowEditingOverlay(row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>) {
+    public repositionRowEditingOverlay(row: IgxRowComponent<IgxGridBaseComponent & GridType>) {
         if (row && !this.rowEditingOverlay.collapsed) {
             const rowStyle = this.rowEditingOverlay.element.parentElement.style;
             if (row) {

@@ -39,7 +39,7 @@ import {
     IgxCellEditorTemplateDirective,
     IgxFilterCellTemplateDirective
 } from './common/templates';
-import { IGridDataBindable } from './common/events';
+import { GridType } from './common/grid.interface';
 
 /**
  * **Ignite UI for Angular Column** -
@@ -1074,7 +1074,7 @@ export class IgxColumnComponent implements AfterContentInit {
     @ContentChild(IgxFilterCellTemplateDirective, { read: IgxFilterCellTemplateDirective, static: false })
     public filterCellTemplateDirective: IgxFilterCellTemplateDirective;
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, public cdr: ChangeDetectorRef) { }
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>, public cdr: ChangeDetectorRef) { }
 
     /**
      * @hidden
@@ -1833,7 +1833,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
 
     set width(val) { }
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, public cdr: ChangeDetectorRef) {
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>, public cdr: ChangeDetectorRef) {
         // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
         super(gridAPI, cdr);
     }

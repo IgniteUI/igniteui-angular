@@ -7,7 +7,7 @@ import { ISummaryRecord } from '../summaries/grid-summary';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IGroupByResult } from '../../data-operations/grouping-result.interface';
 import { GridSummaryCalculationMode, GridSummaryPosition } from '../common/enums';
-import { IGridDataBindable } from '../common/events';
+import { GridType } from '../common/grid.interface';
 
 /** @hidden */
 interface ISkipRecord {
@@ -22,7 +22,7 @@ interface ISkipRecord {
 export class IgxGridSummaryPipe implements PipeTransform {
     private gridAPI: IgxGridAPIService;
 
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) {
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>) {
         this.gridAPI = <IgxGridAPIService>gridAPI;
     }
 

@@ -12,7 +12,8 @@ import { IgxColumnComponent } from '../column.component';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { GridBaseAPIService } from '../api.service';
 import { IColumnVisibilityChangedEventArgs } from '../grid';
-import { IGridDataBindable, IColumnResizeEventArgs } from '../common/events';
+import { IColumnResizeEventArgs } from '../common/events';
+import { GridType } from '../common/grid.interface';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
@@ -52,7 +53,7 @@ export class IgxFilteringService implements OnDestroy {
 
     grid: IgxGridBaseComponent;
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, private iconService: IgxIconService) {}
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>, private iconService: IgxIconService) {}
 
     ngOnDestroy(): void {
         this.destroy$.next(true);

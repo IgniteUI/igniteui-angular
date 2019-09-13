@@ -29,7 +29,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { fadeIn, fadeOut } from '../animations/main';
 import { AbsoluteScrollStrategy } from '../services/overlay/scroll/absolute-scroll-strategy';
-import { IGridDataBindable } from './common/events';
+import { GridType } from './common/grid.interface';
 
 /**
  * @hidden
@@ -125,7 +125,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     protected sortDirection = SortingDirection.None;
 
     constructor(
-        public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
+        public gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>,
         public colResizingService: IgxColumnResizingService,
         public cdr: ChangeDetectorRef,
         public elementRef: ElementRef,
