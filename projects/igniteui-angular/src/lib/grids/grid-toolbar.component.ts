@@ -39,7 +39,6 @@ import { IGridDataBindable } from './common/events';
     templateUrl: './grid-toolbar.component.html'
 })
 export class IgxGridToolbarComponent extends DisplayDensityBase {
-
     /**
      * @hidden
      */
@@ -239,7 +238,6 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
         excludePositionTarget: true
     };
 
-
     /**
      * Returns the title of `IgxGridToolbarComponent`.
      * ```typescript
@@ -351,6 +349,13 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
         this._overlaySettings.positionStrategy.settings.target = this.columnPinningButton.nativeElement;
         this._overlaySettings.outlet = this.grid.outletDirective;
         this.columnPinningDropdown.toggle(this._overlaySettings);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public showAdvancedFilteringUI() {
+        this.grid.openAdvancedFilteringDialog();
     }
 
     /**

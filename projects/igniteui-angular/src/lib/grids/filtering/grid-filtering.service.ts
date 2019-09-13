@@ -40,6 +40,7 @@ export class IgxFilteringService implements OnDestroy {
     private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
     private _datePipe: IgxDatePipeComponent;
     private columnStartIndex = -1;
+    private _filterIconsRegistered = false;
 
     public gridId: string;
     public isFilterRowVisible = false;
@@ -212,10 +213,13 @@ export class IgxFilteringService implements OnDestroy {
      * Register filtering SVG icons in the icon service.
      */
     public registerSVGIcons(): void {
-        for (const icon of icons) {
-            if (!this.iconService.isSvgIconCached(icon.name, FILTERING_ICONS_FONT_SET)) {
-                this.iconService.addSvgIconFromText(icon.name, icon.value, FILTERING_ICONS_FONT_SET);
+        if (!this._filterIconsRegistered) {
+            for (const icon of icons) {
+                if (!this.iconService.isSvgIconCached(icon.name, FILTERING_ICONS_FONT_SET)) {
+                    this.iconService.addSvgIconFromText(icon.name, icon.value, FILTERING_ICONS_FONT_SET);
+                }
             }
+            this._filterIconsRegistered = true;
         }
     }
 
@@ -504,7 +508,7 @@ export class IgxFilteringService implements OnDestroy {
 
     public isFilteringExpressionsTreeEmpty(): boolean {
         const expressionTree = this.grid.filteringExpressionsTree;
-        if (!expressionTree.filteringOperands || !expressionTree.filteringOperands.length) {
+        if (FilteringExpressionsTree.empty(expressionTree)) {
             return true;
         }
 

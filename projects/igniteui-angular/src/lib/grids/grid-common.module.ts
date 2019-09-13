@@ -57,6 +57,8 @@ import { IgxGridPipesModule } from './grid-pipes.module';
 import { IgxGridExcelStyleFilteringModule } from './filtering/excel-style/grid.excel-style-filtering.module';
 import { IgxGridDragSelectDirective } from './drag-select.directive';
 import { IgxRowDragModule } from './row-drag.directive';
+import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
+import { IgxSelectModule } from '../select/select.module';
 import {
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
@@ -97,12 +99,14 @@ import { IgxGridResizingModule } from './resizing/resize.module';
         IgxSummaryCellComponent,
         IgxGridDragSelectDirective,
         IgxFilterCellTemplateDirective,
-        IgxGridFooterComponent
+        IgxGridFooterComponent,
+        IgxAdvancedFilteringDialogComponent
     ],
     entryComponents: [
         IgxColumnComponent,
         IgxColumnGroupComponent,
-        IgxColumnLayoutComponent
+        IgxColumnLayoutComponent,
+        IgxAdvancedFilteringDialogComponent
     ],
     exports: [
         IgxGridCellComponent,
@@ -158,7 +162,8 @@ import { IgxGridResizingModule } from './resizing/resize.module';
         IgxPaginatorModule,
         IgxGridFooterComponent,
         IgxRowSelectorsModule,
-        IgxGridResizingModule
+        IgxGridResizingModule,
+        IgxAdvancedFilteringDialogComponent
     ],
     imports: [
         CommonModule,
@@ -188,6 +193,7 @@ import { IgxGridResizingModule } from './resizing/resize.module';
         IgxGridPipesModule,
         IgxGridExcelStyleFilteringModule,
         IgxRowDragModule,
+        IgxSelectModule,
         IgxPaginatorModule,
         IgxRowSelectorsModule
     ],

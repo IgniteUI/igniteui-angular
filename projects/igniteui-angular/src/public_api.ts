@@ -69,6 +69,8 @@ export * from './lib/grids/common/events';
 export * from './lib/grids/grid/index';
 export * from './lib/grids/tree-grid/index';
 export * from './lib/grids/hierarchical-grid/index';
+export * from './lib/grids/common/enums';
+export * from './lib/grids/common/templates';
 export * from './lib/icon/index';
 export * from './lib/input-group/index';
 export * from './lib/list/index';
