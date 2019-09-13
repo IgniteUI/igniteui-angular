@@ -3318,7 +3318,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(() => { filterUIRow.componentInstance.onChipRemoved(null, chipToRemove); })
                 .not.toThrowError(/\'id\' of undefined/);
             fix.detectChanges();
-            await wait(100);
+            await wait(50);
+            fix.detectChanges();
+            await wait(50);
 
             verifyMultipleChipsVisibility(fix, [false, true, false]);
             chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
@@ -3328,7 +3330,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(() => { filterUIRow.componentInstance.onChipRemoved(null, chipToRemove); })
                 .not.toThrowError(/\'id\' of undefined/);
             fix.detectChanges();
-            await wait(100);
+            await wait(50);
+            fix.detectChanges();
+            await wait(50);
 
             verifyMultipleChipsVisibility(fix, [true, false]);
             chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
