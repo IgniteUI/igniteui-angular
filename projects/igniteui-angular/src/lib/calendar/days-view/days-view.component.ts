@@ -208,7 +208,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
      */
     public isSelected(date: ICalendarDate): boolean {
         let selectedDates: Date | Date[];
-        if (!date.isCurrentMonth) {
+        if (!date.isCurrentMonth || this.isDateDisabled(date.date)) {
             return false;
         }
 
