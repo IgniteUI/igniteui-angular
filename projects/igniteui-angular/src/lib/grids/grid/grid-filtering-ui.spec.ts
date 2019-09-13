@@ -3257,11 +3257,12 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
         it('Should not throw error when deleting the last chip', (async () => {
             grid.width = '700px';
+            await wait(16);
             fix.detectChanges();
-            await wait(100);
 
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
             fix.detectChanges();
+            await wait(16);
 
             // Add first chip.
             GridFunctions.typeValueInFilterRowInput('a', fix);
@@ -3296,22 +3297,28 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             expect(rightArrowButton).toBeTruthy('Right scroll arrow should be visible');
             expect(grid.rowList.length).toBe(2);
 
-            let chipToRemove = filterUIRow.componentInstance.expressionsList[3];
-            expect(() => { filterUIRow.componentInstance.onChipRemoved(null, chipToRemove); })
-            .not.toThrowError(/\'id\' of undefined/);
-            await wait(200);
+            try {
+                GridFunctions.removeFilterChipByIndex(3, filterUIRow);
+                fix.detectChanges();
+                await wait(400);
+            } catch (ex) {
+                expect(ex).toBeNull('Error deleting the last chip');
+            }
             fix.detectChanges();
-
+            await wait(100);
             verifyMultipleChipsVisibility(fix, [false, true, false]);
             chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
             expect(chips.length).toBe(3);
 
-            chipToRemove = filterUIRow.componentInstance.expressionsList[2];
-            expect(() => { filterUIRow.componentInstance.onChipRemoved(null, chipToRemove); })
-            .not.toThrowError(/\'id\' of undefined/);
-            await wait(200);
+            try {
+                GridFunctions.removeFilterChipByIndex(2, filterUIRow);
+                fix.detectChanges();
+                await wait(400);
+            } catch (ex) {
+                expect(ex).toBeNull('Error deleting the last chip');
+            }
             fix.detectChanges();
-
+            await wait(100);
             verifyMultipleChipsVisibility(fix, [true, false]);
             chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
             expect(chips.length).toBe(2);
