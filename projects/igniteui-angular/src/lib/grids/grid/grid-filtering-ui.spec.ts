@@ -3317,7 +3317,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             try {
                 GridFunctions.removeFilterChipByIndex(3, filterUIRow);
                 fix.detectChanges();
-                await wait(100);
+                await wait(300);
             } catch (ex) {
                 expect(ex).toBeNull('Error deleting the last chip');
             }
@@ -3329,7 +3329,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             try {
                 GridFunctions.removeFilterChipByIndex(2, filterUIRow);
                 fix.detectChanges();
-                await wait(100);
+                await wait(300);
             } catch (ex) {
                 expect(ex).toBeNull('Error deleting the last chip');
             }
