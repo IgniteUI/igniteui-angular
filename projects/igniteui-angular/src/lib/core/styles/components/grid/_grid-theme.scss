@@ -664,6 +664,7 @@
     %grid-thead-container {
         grid-row: 3;
         display: flex;
+        overflow: hidden;
 
         %igx-grid__drag-indicator {
             cursor: default;
@@ -812,6 +813,7 @@
         position: relative;
         display: flex;
         grid-row: 4;
+        overflow: hidden;
     }
 
     %grid-tbody-message {
@@ -842,6 +844,7 @@
         width: 100%;
         background: --var($theme, 'header-background');
         z-index: 10001;
+        overflow: hidden;
     }
 
     %grid-thead-thumb {
@@ -856,6 +859,7 @@
 
     %grid-tbody-scrollbar {
         border-left: 1px solid igx-color($palette, 'grays', 300);
+        position: relative;
     }
 
     %grid-scroll-start {
@@ -1769,6 +1773,7 @@
         padding: map-get($grouparea-padding, 'comfortable');
         z-index: 2;
         height: 100%;
+        overflow: hidden;
 
         &:focus {
             outline-style: none;
