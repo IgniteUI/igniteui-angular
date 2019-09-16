@@ -21,9 +21,6 @@ import {
 } from './grid.rowEdit.directive';
 import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
 import { IgxGridToolbarCustomContentDirective } from './grid-toolbar.component';
-import { IgxSummaryRowComponent } from './summaries/summary-row.component';
-import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
-import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
 import { IgxPaginatorModule } from '../paginator/paginator.component';
 import { IgxFilterModule } from '../directives/filter/filter.directive';
 import { IgxGridPipesModule } from './common/grid-pipes.module';
@@ -41,6 +38,7 @@ import { IgxGridSelectionModule } from './selection/selection.module';
 import { IgxGridResizingModule } from './resizing/resize.module';
 import { IgxColumnMovingModule } from './moving/moving.module';
 import { IgxGridSharedModules } from './common/shared.module';
+import { IgxGridSummaryModule } from './summaries/summary.module';
 /**
  * @hidden
  */
@@ -64,10 +62,7 @@ import { IgxGridSharedModules } from './common/shared.module';
         IgxGridBodyDirective,
         IgxGridFilteringCellComponent,
         IgxGridFilteringRowComponent,
-        IgxSummaryDataPipe,
         IgxGridHeaderGroupComponent,
-        IgxSummaryRowComponent,
-        IgxSummaryCellComponent,
         IgxFilterCellTemplateDirective,
         IgxGridFooterComponent,
         IgxAdvancedFilteringDialogComponent
@@ -95,14 +90,11 @@ import { IgxGridSharedModules } from './common/shared.module';
         IgxRowEditTextDirective,
         IgxRowEditTabStopDirective,
         IgxGridBodyDirective,
-        IgxSummaryDataPipe,
         IgxColumnHidingModule,
         IgxColumnPinningModule,
         IgxGridFilteringCellComponent,
         IgxGridFilteringRowComponent,
         IgxGridHeaderGroupComponent,
-        IgxSummaryRowComponent,
-        IgxSummaryCellComponent,
         IgxFilterModule,
         IgxGridPipesModule,
         IgxGridExcelStyleFilteringModule,
@@ -113,6 +105,7 @@ import { IgxGridSharedModules } from './common/shared.module';
         IgxGridResizingModule,
         IgxColumnMovingModule,
         IgxGridSelectionModule,
+        IgxGridSummaryModule,
         IgxAdvancedFilteringDialogComponent,
         IgxGridSharedModules
     ],
@@ -122,6 +115,7 @@ import { IgxGridSharedModules } from './common/shared.module';
         IgxColumnHidingModule,
         IgxColumnPinningModule,
         IgxGridSelectionModule,
+        IgxGridSummaryModule,
         IgxFilterModule,
         IgxGridPipesModule,
         IgxGridExcelStyleFilteringModule,
