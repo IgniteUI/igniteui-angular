@@ -12,7 +12,7 @@ import { IgxStringFilteringOperand } from '../../data-operations/filtering-condi
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { setupGridScrollDetection, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 import { DefaultSortingStrategy } from 'igniteui-angular';
-import { GridSelectionMode } from '../types';
+import { GridSelectionMode } from '../common/enums';
 
 import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 

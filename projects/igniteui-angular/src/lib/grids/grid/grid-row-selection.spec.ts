@@ -17,7 +17,7 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { GridSelectionMode } from '../types';
+import { GridSelectionMode } from '../common/enums';
 import { IgxRowSelectorsModule } from '../igx-row-selectors.module';
 
 const DEBOUNCETIME = 30;
@@ -1875,7 +1875,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         }));
     });
 
-    describe('Custom selectors', () => {
+    describe('Custom row selectors', () => {
         let fix;
         let grid;
 
@@ -1929,7 +1929,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             fix.detectChanges();
 
             const firstRootRow = grid.getRowByIndex(0);
-            expect(firstRootRow.nativeElement.querySelector('.rowNumber').textContent).toEqual('30');
+            expect(firstRootRow.nativeElement.querySelector('.rowNumber').textContent).toEqual('15');
         });
     });
 });

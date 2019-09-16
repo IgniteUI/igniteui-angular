@@ -5,7 +5,7 @@ import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component'
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { ISummaryRecord } from '../summaries/grid-summary';
-import { GridSummaryCalculationMode, GridSummaryPosition } from '../types';
+import { GridSummaryCalculationMode, GridSummaryPosition } from '../common/enums';
 
 /** @hidden */
 @Pipe({

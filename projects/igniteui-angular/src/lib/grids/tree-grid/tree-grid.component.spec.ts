@@ -12,7 +12,7 @@ import {
     IgxTreeGridCellSelectionComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
-import { GridSelectionMode } from '../types';
+import { GridSelectionMode } from '../common/enums';
 
 describe('IgxTreeGrid Component Tests #tGrid', () => {
     configureTestSuite();
