@@ -9,7 +9,7 @@ import {
     HostBinding,
     DoCheck
 } from '@angular/core';
-import { ICalendarDate, isDateInRanges } from '../../calendar';
+import { ICalendarDate, isDateInRanges } from '../../calendar/calendar';
 import { trigger, transition, useAnimation } from '@angular/animations';
 import { slideInLeft, slideInRight } from '../../animations/main';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -17,14 +17,9 @@ import { IgxDayItemComponent } from './day-item.component';
 import { DateRangeDescriptor, DateRangeType } from '../../core/dates';
 import { IgxCalendarBase, ScrollMonth, CalendarSelection } from '../calendar-base';
 import { isEqual } from '../../core/utils';
+import { IViewChangedArgs } from '../calendar.interface';
 
 let NEXT_ID = 0;
-
-export interface IViewChangedArgs {
-    date: Date;
-    delta: number;
-    moveToFirst?: boolean;
-}
 
 @Component({
     providers: [

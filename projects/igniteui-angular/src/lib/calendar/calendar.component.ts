@@ -24,17 +24,13 @@ import { ICalendarDate, monthRange } from './calendar';
 import { CalendarView, IgxMonthPickerBase } from './month-picker-base';
 import { IgxMonthsViewComponent } from './months-view/months-view.component';
 import { IgxYearsViewComponent } from './years-view/years-view.component';
-import { IgxDaysViewComponent, IViewChangedArgs } from './days-view/days-view.component';
+import { IgxDaysViewComponent } from './days-view/days-view.component';
 import { interval, Subscription } from 'rxjs';
 import { takeUntil, debounce, skipLast, switchMap } from 'rxjs/operators';
 import { ScrollMonth } from './calendar-base';
+import { IMonthView, IViewChangedArgs } from './calendar.interface';
 
 let NEXT_ID = 0;
-
-export interface IMonthView {
-    value: Date | Date[];
-    viewDate: Date;
-}
 
 /**
  * **Ignite UI for Angular Calendar** -
