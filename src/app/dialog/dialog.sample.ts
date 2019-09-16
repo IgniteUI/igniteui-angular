@@ -10,7 +10,7 @@ import { useAnimation } from '@angular/animations';
 })
 export class DialogSampleComponent implements OnInit {
 
-    @ViewChild('alert', { static: true }) public alert: IgxDialogComponent;
+    @ViewChild('alert') public alert: IgxDialogComponent;
 
     public positionSettings: PositionSettings = {
         openAnimation: useAnimation(slideInTop, { params: { duration: '2000ms' } }),
