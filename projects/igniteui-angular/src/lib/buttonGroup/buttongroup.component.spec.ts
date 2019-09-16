@@ -232,6 +232,25 @@ describe('IgxButtonGroup', () => {
         expect(groupChildren[1].element.nativeElement.classList.contains('igx-button--cosy')).toBe(true, 'Missing density class!');
     });
 
+    it('Button Group - should support tab navigation', () => {
+        const fixture = TestBed.createComponent(InitButtonGroupWithValuesComponent);
+        fixture.detectChanges();
+
+        const buttongroup = fixture.componentInstance.buttonGroup;
+        const groupChildren = buttongroup.buttons;
+
+        for (let i = 0; i < groupChildren.length; i++) {
+            const button = groupChildren[i];
+            expect(button.nativeElement.tagName).toBe('BUTTON');
+
+            if (i < groupChildren.length - 1) {
+                expect(button.nativeElement.disabled).toBe(false);
+            } else {
+                expect(button.nativeElement.disabled).toBe(true);
+            }
+        }
+    });
+
 });
 
 @Component({ template: `<igx-buttongroup [values]="buttons"></igx-buttongroup>` })
