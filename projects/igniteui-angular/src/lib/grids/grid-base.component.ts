@@ -43,7 +43,10 @@ import {
     AbsoluteScrollStrategy,
     HorizontalAlignment,
     VerticalAlignment,
-    IgxOverlayService
+    IgxOverlayService,
+    OverlaySettings,
+    PositionSettings,
+    ConnectedPositioningStrategy
 } from '../services/index';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
@@ -55,7 +58,9 @@ import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxRowComponent } from './row.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
+import {
+    FilteringExpressionsTree, IFilteringExpressionsTree, FilteringExpressionsTreeType
+} from '../data-operations/filtering-expressions-tree';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { Transaction, TransactionType, TransactionService, State } from '../services/index';
 import {
@@ -90,6 +95,7 @@ import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
+import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import { IgxColumnResizingService } from './grid-column-resizing.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './igx-row-selectors.module';
 import { DeprecateProperty } from '../core/deprecateDecorators';
@@ -238,22 +244,32 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private overlayIDs = [];
 
     private _hostWidth;
+    private _advancedFilteringOverlayId: string;
+    private _advancedFilteringPositionSettings: PositionSettings = {
+        verticalDirection: VerticalAlignment.Middle,
+        horizontalDirection: HorizontalAlignment.Center,
+        horizontalStartPoint: HorizontalAlignment.Center,
+        verticalStartPoint: VerticalAlignment.Middle
+    };
 
-
-
+    private _advancedFilteringOverlaySettings: OverlaySettings = {
+        closeOnOutsideClick: false,
+        modal: false,
+        positionStrategy: new ConnectedPositioningStrategy(this._advancedFilteringPositionSettings),
+    };
 
 
     /**
     * @hidden
     */
-   @ViewChild('defaultExpandedTemplate', { read: TemplateRef, static: true })
-   protected defaultExpandedTemplate: TemplateRef<any>;
+    @ViewChild('defaultExpandedTemplate', { read: TemplateRef, static: true })
+    protected defaultExpandedTemplate: TemplateRef<any>;
 
-/**
-   * @hidden
-   */
-   @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
-   protected defaultCollapsedTemplate: TemplateRef<any>;
+    /**
+    * @hidden
+    */
+    @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
+    protected defaultCollapsedTemplate: TemplateRef<any>;
 
 
     /**
@@ -364,11 +380,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
             // clone the filtering expression tree in order to trigger the filtering pipe
             const filteringExpressionTreeClone = new FilteringExpressionsTree(value.operator, value.fieldName);
+            filteringExpressionTreeClone.type = FilteringExpressionsTreeType.Regular;
             filteringExpressionTreeClone.filteringOperands = value.filteringOperands;
             this._filteringExpressionsTree = filteringExpressionTreeClone;
             this.filteringExpressionsTreeChange.emit(this._filteringExpressionsTree);
 
-            if (this.filteringService.isFilteringExpressionsTreeEmpty()) {
+            if (this.filteringService.isFilteringExpressionsTreeEmpty() && !this.advancedFilteringExpressionsTree) {
                 this.filteredData = null;
             }
 
@@ -381,6 +398,62 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     @Output()
     public filteringExpressionsTreeChange = new EventEmitter<any>();
+
+    /**
+     * Returns the advanced filtering state of `IgxGridComponent`.
+     * ```typescript
+     * let advancedFilteringExpressionsTree = this.grid.advancedFilteringExpressionsTree;
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    @WatchChanges()
+    @Input()
+    get advancedFilteringExpressionsTree() {
+        return this._advancedFilteringExpressionsTree;
+    }
+
+    /**
+     * Sets the advanced filtering state of the `IgxGridComponent`.
+     * ```typescript
+     * const logic = new FilteringExpressionsTree(FilteringLogic.And);
+     * logic.filteringOperands = [
+     *     {
+     *          condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+     *          fieldName: 'ID',
+     *          searchVal: 1
+     *     },
+     *     {
+     *          condition: IgxStringFilteringOperand.instance().condition('contains'),
+     *          fieldName: 'CompanyName',
+     *          searchVal: 'a'
+     *     }
+     * ];
+     * this.grid.advancedFilteringExpressionsTree = logic;
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    set advancedFilteringExpressionsTree(value) {
+        if (value && value instanceof FilteringExpressionsTree) {
+            // clone the filtering expression tree in order to trigger the filtering pipe
+            const filteringExpressionTreeClone = new FilteringExpressionsTree(value.operator, value.fieldName);
+            filteringExpressionTreeClone.type = FilteringExpressionsTreeType.Advanced;
+            filteringExpressionTreeClone.filteringOperands = value.filteringOperands;
+            this._advancedFilteringExpressionsTree = filteringExpressionTreeClone;
+        } else {
+            this._advancedFilteringExpressionsTree = null;
+        }
+
+        if (this.filteringService.isFilteringExpressionsTreeEmpty() && !this.advancedFilteringExpressionsTree) {
+            this.filteredData = null;
+        }
+
+        this.selectionService.clearHeaderCBState();
+        this.summaryService.clearSummaryCache();
+        this.markForCheck();
+
+        // Wait for the change detection to update filtered data through the pipes and then emit the event.
+        requestAnimationFrame(() => this.onFilteringDone.emit(this._advancedFilteringExpressionsTree));
+    }
 
     /**
      * Returns the locale of the grid.
@@ -892,7 +965,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Sets if the filtering is enabled.
      * By default it's disabled.
      * ```html
-     * <igx-grid #grid [data]="localData" [allowFiltering]="'true" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid [data]="localData" [allowFiltering]="true" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
 	 * @memberof IgxGridBaseComponent
      */
@@ -909,6 +982,37 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.filteringService.filteredColumn = null;
 
             this.notifyChanges(true);
+        }
+    }
+
+    /**
+     * Returns a value indicating whether the advanced filtering is enabled.
+     * ```typescript
+     *  let filtering = this.grid.allowAdvancedFiltering;
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    @Input()
+    get allowAdvancedFiltering() {
+        return this._allowAdvancedFiltering;
+    }
+
+    /**
+     * Sets a value indicating whether the advanced filtering is enabled.
+     * By default it's disabled.
+     * ```html
+     * <igx-grid #grid [data]="localData" [allowAdvancedFiltering]="true" [showToolbar]="true" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    set allowAdvancedFiltering(value) {
+        if (this._allowAdvancedFiltering !== value) {
+            this._allowAdvancedFiltering = value;
+            this.filteringService.registerSVGIcons();
+
+            if (!this._init) {
+                this.notifyChanges(true);
+            }
         }
     }
 
@@ -2576,6 +2680,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    protected _advancedFilteringExpressionsTree: IFilteringExpressionsTree;
+    /**
+     * @hidden
+     */
     protected _sortingExpressions: Array<ISortingExpression> = [];
     /**
      * @hidden
@@ -2596,6 +2704,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected _hasVisibleColumns;
     protected _allowFiltering = false;
+    protected _allowAdvancedFiltering = false;
     protected _filterMode = FilterMode.quickFilter;
 
     protected observer: ResizeObserver;
@@ -2775,7 +2884,21 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.onColumnMoving.pipe(destructor).subscribe(() => this.endEdit(true));
         this.onColumnResized.pipe(destructor).subscribe(() => this.endEdit(true));
 
+        this.overlayService.onOpening.pipe(destructor).subscribe((event) => {
+            if (this._advancedFilteringOverlayId === event.id) {
+                const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
+                if (instance) {
+                    instance.initialize(this.filteringService, this.overlayService, event.id);
+                }
+            }
+        });
+
         this.overlayService.onOpened.pipe(destructor).subscribe((event) => {
+            // do not hide the advanced filtering overlay on scroll
+            if (this._advancedFilteringOverlayId === event.id) {
+                return;
+            }
+
             if (this.overlayService.getOverlayById(event.id).settings.outlet === this.outletDirective &&
                 this.overlayIDs.indexOf(event.id) < 0) {
                 this.overlayIDs.push(event.id);
@@ -2783,6 +2906,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         });
 
         this.overlayService.onClosed.pipe(destructor, filter(() => !this._init)).subscribe((event) => {
+            if (this._advancedFilteringOverlayId === event.id) {
+                this._advancedFilteringOverlayId = null;
+                return;
+            }
+
             const ind = this.overlayIDs.indexOf(event.id);
             if (ind !== -1) {
                 this.overlayIDs.splice(ind, 1);
@@ -2978,6 +3106,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.destroy$.next(true);
         this.destroy$.complete();
         this._destroyed = true;
+
+        if (this._advancedFilteringOverlayId) {
+            this.overlayService.hide(this._advancedFilteringOverlayId);
+        }
 
         this.zone.runOutsideAngular(() => {
             this.observer.disconnect();
@@ -5740,6 +5872,38 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             } else if (summaryRow) {
                 this._restoreVirtState(summaryRow);
             }
+        }
+    }
+
+    /**
+     * Opens the advanced filtering dialog.
+     */
+    public openAdvancedFilteringDialog() {
+        if (!this._advancedFilteringOverlayId) {
+            this._advancedFilteringOverlaySettings.positionStrategy.settings.target =
+                (this as any).rootGrid ? (this as any).rootGrid.nativeElement : this.nativeElement;
+            this._advancedFilteringOverlaySettings.outlet = this.outletDirective;
+
+            this._advancedFilteringOverlayId =
+                this.overlayService.attach(IgxAdvancedFilteringDialogComponent, this._advancedFilteringOverlaySettings);
+                // , this._moduleRef);
+            this.overlayService.show(this._advancedFilteringOverlayId, this._advancedFilteringOverlaySettings);
+        }
+    }
+
+    /**
+     * Closes the advanced filtering dialog.
+     * @param applyChanges indicates whether the changes should be applied
+     */
+    public closeAdvancedFilteringDialog(applyChanges: boolean) {
+        if (this._advancedFilteringOverlayId) {
+            const advancedFilteringOverlay = this.overlayService.getOverlayById(this._advancedFilteringOverlayId);
+            const advancedFilteringDialog = advancedFilteringOverlay.componentRef.instance as IgxAdvancedFilteringDialogComponent;
+
+            if (applyChanges) {
+                advancedFilteringDialog.applyChanges();
+            }
+            advancedFilteringDialog.closeDialog();
         }
     }
 }
