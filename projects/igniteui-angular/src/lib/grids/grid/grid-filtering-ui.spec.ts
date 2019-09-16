@@ -3257,12 +3257,11 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
         it('Should not throw error when deleting the last chip', (async () => {
             grid.width = '700px';
-            await wait(16);
             fix.detectChanges();
+            await wait(16);
 
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
             fix.detectChanges();
-            await wait(16);
 
             // Add first chip.
             GridFunctions.typeValueInFilterRowInput('a', fix);
@@ -3287,7 +3286,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
 
             verifyMultipleChipsVisibility(fix, [false, false, false, true]);
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            let chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
+            const chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
             expect(chips.length).toBe(4);
 
             const leftArrowButton = GridFunctions.getFilterRowLeftArrowButton(fix).nativeElement;
@@ -3297,33 +3296,61 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             expect(rightArrowButton).toBeTruthy('Right scroll arrow should be visible');
             expect(grid.rowList.length).toBe(2);
 
-            try {
-                GridFunctions.removeFilterChipByIndex(3, filterUIRow);
-                fix.detectChanges();
-                await wait(400);
-            } catch (ex) {
-                expect(ex).toBeNull('Error deleting the last chip');
-            }
+            let chipToRemove = filterUIRow.componentInstance.expressionsList[3];
+            expect(() => { filterUIRow.componentInstance.onChipRemoved(null, chipToRemove); })
+                .not.toThrowError(/\'id\' of undefined/);
+            fix.detectChanges();
+            await wait(500);
+            fix.detectChanges();
+
+            chipToRemove = filterUIRow.componentInstance.expressionsList[2];
+            expect(() => { filterUIRow.componentInstance.onChipRemoved(null, chipToRemove); })
+                .not.toThrowError(/\'id\' of undefined/);
             fix.detectChanges();
             await wait(100);
+        }));
+
+        it('should scroll correct chip in view when one is deleted', async() => {
+            grid.width = '700px';
+            fix.detectChanges();
+
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            fix.detectChanges();
+
+            GridFunctions.applyFilter('a', fix);
+            await wait(16);
+            GridFunctions.applyFilter('e', fix);
+            await wait(16);
+            GridFunctions.applyFilter('i', fix);
+            await wait(16);
+            GridFunctions.applyFilter('o', fix);
+            // wait for chip to be scrolled in view
+            await wait(200);
+            fix.detectChanges();
+            await wait(100);
+            verifyMultipleChipsVisibility(fix, [false, false, false, true]);
+
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            GridFunctions.removeFilterChipByIndex(3, filterUIRow);
+            // wait for chip to be scrolled in view
+            fix.detectChanges();
+            await wait(200);
+
             verifyMultipleChipsVisibility(fix, [false, true, false]);
-            chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
+            let chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
             expect(chips.length).toBe(3);
 
-            try {
-                GridFunctions.removeFilterChipByIndex(2, filterUIRow);
-                fix.detectChanges();
-                await wait(400);
-            } catch (ex) {
-                expect(ex).toBeNull('Error deleting the last chip');
-            }
+            GridFunctions.removeFilterChipByIndex(2, filterUIRow);
             fix.detectChanges();
-            await wait(100);
+           // wait for chip to be scrolled in view
+           fix.detectChanges();
+           await wait(200);
+
             verifyMultipleChipsVisibility(fix, [true, false]);
             chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
             expect(chips.length).toBe(2);
             expect(grid.rowList.length).toBe(3);
-        }));
+        });
 
         it('Should close filter row when hide the current column', (async () => {
             grid.height = '700px';
