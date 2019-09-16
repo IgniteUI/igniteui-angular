@@ -1,5 +1,5 @@
 import { Injectable, EventEmitter, NgZone } from '@angular/core';
-import { IGridEditEventArgs } from '../grids/common/events';
+import { IGridEditEventArgs } from '../common/events';
 
 
 export interface GridSelectionRange {

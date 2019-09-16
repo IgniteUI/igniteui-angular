@@ -37,7 +37,7 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { IgxOverlayService } from '../../services/index';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';

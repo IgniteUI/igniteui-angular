@@ -20,7 +20,7 @@ import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';

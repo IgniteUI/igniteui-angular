@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';
-import { ISelectionNode } from '../core/grid-selection';
+import { ISelectionNode } from './selection/selection.service';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { GridType } from './common/grid.interface';
 import { FilterMode } from './common/enums';

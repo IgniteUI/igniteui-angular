@@ -2,7 +2,7 @@ import { Component, forwardRef, ChangeDetectionStrategy, ElementRef, ChangeDetec
 import { IgxGridComponent } from './grid.component';
 import { IgxRowComponent } from '../row.component';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -3,7 +3,7 @@ import { IgxGridBaseComponent } from './grid-base.component';
 import { first } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridNavigationService } from './grid-navigation.service';
-import { ISelectionNode } from '../core/grid-selection';
+import { ISelectionNode } from './selection/selection.service';
 
 
 export interface IStartNavigationCell {

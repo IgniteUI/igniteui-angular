@@ -6,7 +6,7 @@ import { GridBaseAPIService } from '../api.service';
 import { getNodeSizeViaRange } from '../../core/utils';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridBaseComponent } from '../grid';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { HammerGesturesManager } from '../../core/touch';
 import { GridType } from '../common/grid.interface';
 

@@ -2,7 +2,7 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { first } from 'rxjs/operators';
 import { IgxColumnComponent } from '../../grids/column.component';
-import { ISelectionNode } from '../../core/grid-selection';
+import { ISelectionNode } from '../selection/selection.service';
 import { isIE } from '../../core/utils';
 import { FilterMode } from '../common/enums';
 

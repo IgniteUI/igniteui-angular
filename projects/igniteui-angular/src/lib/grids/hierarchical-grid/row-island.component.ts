@@ -32,7 +32,7 @@ import { TransactionService, Transaction, State } from '../../services';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 
 import { IgxOverlayService } from '../../services/index';
 import { takeUntil } from 'rxjs/operators';

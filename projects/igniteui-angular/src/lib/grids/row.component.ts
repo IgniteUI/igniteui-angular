@@ -18,7 +18,7 @@ import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './column.component';
 import { TransactionType } from '../services';
 import { IgxGridBaseComponent } from './grid-base.component';
-import { IgxGridSelectionService, IgxGridCRUDService, IgxRow } from '../core/grid-selection';
+import { IgxGridSelectionService, IgxGridCRUDService, IgxRow } from './selection/selection.service';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { GridType } from './common/grid.interface';
 

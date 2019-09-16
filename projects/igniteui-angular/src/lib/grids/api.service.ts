@@ -11,7 +11,7 @@ import { IgxRowComponent } from './row.component';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType, State } from '../services/transaction/transaction';
-import { IgxCell, IgxRow } from '../core/grid-selection';
+import { IgxCell, IgxRow } from './selection/selection.service';
 import { GridType } from './common/grid.interface';
 /**
  *@hidden

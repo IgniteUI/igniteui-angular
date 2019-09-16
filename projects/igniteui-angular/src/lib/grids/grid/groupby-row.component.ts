@@ -13,7 +13,7 @@ import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { DataType } from '../../data-operations/data-util';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent } from '../grid-base.component';
-import { IgxGridSelectionService, ISelectionNode } from '../../core/grid-selection';
+import { IgxGridSelectionService, ISelectionNode } from '../selection/selection.service';
 import { ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS } from '../../core/utils';
 import { GridType } from '../common/grid.interface';
 

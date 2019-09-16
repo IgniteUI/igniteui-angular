@@ -1,7 +1,8 @@
-import { Directive, NgModule, TemplateRef } from '@angular/core';
+import { Directive, TemplateRef } from '@angular/core';
 
 /**
  * @hidden
+ * @internal
  */
 @Directive({
     selector: '[igxRowSelector]'
@@ -12,20 +13,11 @@ export class IgxRowSelectorDirective {
 
 /**
  * @hidden
+ * @internal
  */
 @Directive({
     selector: '[igxHeadSelector]'
 })
 export class IgxHeadSelectorDirective {
     constructor(public templateRef: TemplateRef<any>) { }
-}
-
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [IgxRowSelectorDirective, IgxHeadSelectorDirective],
-    exports: [IgxRowSelectorDirective, IgxHeadSelectorDirective]
-})
-export class IgxRowSelectorsModule {
 }

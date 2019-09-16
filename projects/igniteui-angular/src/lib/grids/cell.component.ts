@@ -19,7 +19,7 @@ import { GridBaseAPIService } from './api.service';
 import { getNodeSizeViaRange, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, NAVIGATION_KEYS, isIE, isLeftClick } from '../core/utils';
 import { State } from '../services/index';
 import { IgxGridBaseComponent } from './grid-base.component';
-import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../core/grid-selection';
+import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from './selection/selection.service';
 import { DeprecateProperty, DeprecateMethod } from '../core/deprecateDecorators';
 import { HammerGesturesManager } from '../core/touch';
 import { ColumnType } from './common/column.interface';

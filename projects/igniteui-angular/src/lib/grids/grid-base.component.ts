@@ -79,8 +79,8 @@ import { IGridResourceStrings } from '../core/i18n/grid-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
-import { IgxGridSelectionService, GridSelectionRange, IgxGridCRUDService, IgxRow, IgxCell, isChromium } from '../core/grid-selection';
-import { DragScrollDirection } from './drag-select.directive';
+import { IgxGridSelectionService, GridSelectionRange, IgxGridCRUDService, IgxRow, IgxCell, isChromium } from './selection/selection.service';
+import { DragScrollDirection } from './selection/drag-select.directive';
 import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
 import { IgxExcelStyleLoadingValuesTemplateDirective } from './filtering/excel-style/excel-style-search.component';
 import {
@@ -93,7 +93,6 @@ import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
 import { IgxColumnResizingService } from './resizing/resizing.service';
-import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './igx-row-selectors.module';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,
      IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective } from './grid/grid.directives';
@@ -103,6 +102,7 @@ import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filter
 import { GridType } from './common/grid.interface';
 import { IgxDecimalPipeComponent, IgxDatePipeComponent } from './common/pipes';
 import { DropPosition } from './moving/moving.service';
+import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/row-selectors';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;

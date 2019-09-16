@@ -23,7 +23,7 @@ import { IgxHierarchicalTransactionService, IgxOverlayService } from '../../serv
 import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { GridType } from '../common/grid.interface';

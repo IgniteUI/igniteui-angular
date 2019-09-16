@@ -3,7 +3,7 @@ import { GridBaseAPIService } from '../api.service';
 import { ChangeDetectorRef, ElementRef, ChangeDetectionStrategy, Component,
      OnInit, HostListener, NgZone } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { HammerGesturesManager } from '../../core/touch';
 
 @Component({
