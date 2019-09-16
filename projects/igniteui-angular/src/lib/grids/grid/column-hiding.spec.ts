@@ -3,12 +3,10 @@ import { DebugElement } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from '../column-hiding-item.directive';
-import { IgxColumnHidingComponent, IgxColumnHidingModule } from '../column-hiding.component';
+import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from '../hiding/column-hiding-item.directive';
 import { IgxGridModule } from './index';
 import { IgxGridComponent } from './grid.component';
 import { IgxButtonModule } from '../../directives/button/button.directive';
-import { ColumnDisplayOrder } from '../column-chooser-base';
 import { ColumnHidingTestComponent, ColumnGroupsHidingTestComponent } from '../../test-utils/grid-base-components.spec';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
@@ -16,7 +14,9 @@ import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { take } from 'rxjs/operators';
-import { GridSelectionMode } from '../common/enums';
+import { GridSelectionMode, ColumnDisplayOrder } from '../common/enums';
+import { IgxColumnHidingModule } from '../hiding/hiding.module';
+import { IgxColumnHidingComponent } from '../hiding/column-hiding.component';
 
 describe('Column Hiding UI #grid', () => {
     configureTestSuite();

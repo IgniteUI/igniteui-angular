@@ -1,7 +1,6 @@
 import {
     ChangeDetectorRef,
     Component,
-    Directive,
     HostBinding,
     Input,
     Optional,
@@ -10,7 +9,7 @@ import {
     TemplateRef
 } from '@angular/core';
 
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../core/displayDensity';
+import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../../core/displayDensity';
 import {
     CsvFileTypes,
     IgxBaseExporter,
@@ -19,16 +18,16 @@ import {
     IgxExcelExporterOptions,
     IgxExcelExporterService,
     AbsoluteScrollStrategy
-} from '../services/index';
-import { GridBaseAPIService } from './api.service';
-import { IgxButtonDirective } from '../directives/button/button.directive';
-import { IgxGridBaseComponent } from './grid-base.component';
-import { IgxDropDownComponent } from '../drop-down/drop-down.component';
-import { IgxColumnHidingComponent } from './column-hiding.component';
-import { IgxColumnPinningComponent } from './column-pinning.component';
-import { OverlaySettings, PositionSettings, HorizontalAlignment, VerticalAlignment } from '../services/overlay/utilities';
-import { ConnectedPositioningStrategy } from '../services/overlay/position';
-import { GridType } from './common/grid.interface';
+} from '../../services/index';
+import { GridBaseAPIService } from '../api.service';
+import { IgxButtonDirective } from '../../directives/button/button.directive';
+import { IgxGridBaseComponent } from '../grid-base.component';
+import { IgxDropDownComponent } from '../../drop-down/drop-down.component';
+import { IgxColumnHidingComponent } from '../hiding/column-hiding.component';
+import { IgxColumnPinningComponent } from '../pinning/column-pinning.component';
+import { OverlaySettings, PositionSettings, HorizontalAlignment, VerticalAlignment } from '../../services/overlay/utilities';
+import { ConnectedPositioningStrategy } from '../../services/overlay/position';
+import { GridType } from '../common/grid.interface';
 
 /**
  * This class encapsulates the Toolbar's logic and is internally used by
@@ -381,16 +380,4 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
             return null;
         }
     }
-}
-
-/**
- * The IgxGridToolbarCustomContentDirective directive is used to mark an 'ng-template' (with
- * the 'igxToolbarCustomContent' selector) defined in the IgxGrid which is used to provide
- * custom content for cener part of the IgxGridToolbar.
- */
-@Directive({
-    selector: '[igxToolbarCustomContent]'
-})
-export class IgxGridToolbarCustomContentDirective {
-    constructor(public template: TemplateRef<any>) { }
 }

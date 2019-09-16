@@ -3,7 +3,7 @@ import { DebugElement } from '@angular/core';
 import { TestBed, async, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnPinningComponent, IgxColumnPinningModule } from '../column-pinning.component';
+import { IgxColumnPinningComponent, IgxColumnPinningModule } from '../pinning/column-pinning.component';
 import { IgxGridComponent } from './grid.component';
 import { IPinColumnEventArgs } from '../grid-base.component';
 import { IgxGridModule } from './index';

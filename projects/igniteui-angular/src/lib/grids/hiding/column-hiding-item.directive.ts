@@ -1,7 +1,7 @@
 
 import { Directive } from '@angular/core';
-import { ColumnChooserItemBase } from './column-chooser-item-base';
-import { IBaseEventArgs } from '../core/utils';
+import { ColumnChooserItemBase } from '../column-chooser-item-base';
+import { IBaseEventArgs } from '../../core/utils';
 
 export interface IColumnVisibilityChangedEventArgs extends IBaseEventArgs {
     column: any;

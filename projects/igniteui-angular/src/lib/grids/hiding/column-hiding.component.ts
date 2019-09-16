@@ -1,19 +1,13 @@
-import { CommonModule } from '@angular/common';
 import {
     ChangeDetectorRef,
     Component,
     EventEmitter,
     Input,
-    NgModule,
     Output,
     OnDestroy
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { IgxCheckboxModule } from '../checkbox/checkbox.component';
-import { IgxButtonModule } from '../directives/button/button.directive';
 import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from './column-hiding-item.directive';
-import { IgxInputGroupModule } from '../input-group/input-group.component';
-import { ColumnChooserBase } from './column-chooser-base';
+import { ColumnChooserBase } from '../column-chooser-base';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
@@ -185,19 +179,3 @@ export class IgxColumnHidingComponent extends ColumnChooserBase implements OnDes
     }
 }
 
-/**
- * @hidden
- */
-@NgModule({
-    declarations: [IgxColumnHidingComponent, IgxColumnHidingItemDirective],
-    exports: [IgxColumnHidingComponent],
-    imports: [
-        IgxButtonModule,
-        IgxCheckboxModule,
-        IgxInputGroupModule,
-        CommonModule,
-        FormsModule,
-    ]
-})
-export class IgxColumnHidingModule {
-}
