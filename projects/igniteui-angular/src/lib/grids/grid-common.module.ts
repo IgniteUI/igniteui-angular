@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { IgxGridCellComponent } from './cell.component';
-import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent } from './column.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
@@ -23,13 +22,6 @@ import { IgxGridPipesModule } from './common/grid-pipes.module';
 import { IgxGridExcelStyleFilteringModule } from './filtering/excel-style/grid.excel-style-filtering.module';
 import { IgxRowDragModule } from './row-drag.directive';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
-import {
-    IgxCellFooterTemplateDirective,
-    IgxCellHeaderTemplateDirective,
-    IgxCellEditorTemplateDirective,
-    IgxCellTemplateDirective,
-    IgxFilterCellTemplateDirective
-} from './common/templates';
 import { IgxGridSelectionModule } from './selection/selection.module';
 import { IgxGridResizingModule } from './resizing/resize.module';
 import { IgxColumnMovingModule } from './moving/moving.module';
@@ -38,20 +30,14 @@ import { IgxGridSummaryModule } from './summaries/summary.module';
 import { IgxGridToolbarModule } from './toolbar/toolbar.module';
 import { IgxColumnHidingModule } from './hiding/hiding.module';
 import { IgxColumnPinningModule } from './pinning/pinning.module';
+import { IgxGridColumnModule } from './columns/column.module';
 /**
  * @hidden
  */
 @NgModule({
     declarations: [
         IgxGridCellComponent,
-        IgxColumnComponent,
-        IgxColumnGroupComponent,
-        IgxColumnLayoutComponent,
         IgxGridHeaderComponent,
-        IgxCellFooterTemplateDirective,
-        IgxCellHeaderTemplateDirective,
-        IgxCellEditorTemplateDirective,
-        IgxCellTemplateDirective,
         IgxRowEditTemplateDirective,
         IgxRowEditActionsDirective,
         IgxRowEditTextDirective,
@@ -60,26 +46,15 @@ import { IgxColumnPinningModule } from './pinning/pinning.module';
         IgxGridFilteringCellComponent,
         IgxGridFilteringRowComponent,
         IgxGridHeaderGroupComponent,
-        IgxFilterCellTemplateDirective,
         IgxGridFooterComponent,
         IgxAdvancedFilteringDialogComponent
     ],
     entryComponents: [
-        IgxColumnComponent,
-        IgxColumnGroupComponent,
-        IgxColumnLayoutComponent,
         IgxAdvancedFilteringDialogComponent
     ],
     exports: [
         IgxGridCellComponent,
-        IgxColumnComponent,
-        IgxColumnGroupComponent,
-        IgxColumnLayoutComponent,
         IgxGridHeaderComponent,
-        IgxCellFooterTemplateDirective,
-        IgxCellHeaderTemplateDirective,
-        IgxCellEditorTemplateDirective,
-        IgxCellTemplateDirective,
         IgxRowEditTemplateDirective,
         IgxRowEditActionsDirective,
         IgxRowEditTextDirective,
@@ -90,10 +65,10 @@ import { IgxColumnPinningModule } from './pinning/pinning.module';
         IgxGridFilteringCellComponent,
         IgxGridFilteringRowComponent,
         IgxGridHeaderGroupComponent,
+        IgxGridColumnModule,
         IgxFilterModule,
         IgxGridPipesModule,
         IgxGridExcelStyleFilteringModule,
-        IgxFilterCellTemplateDirective,
         IgxRowDragModule,
         IgxPaginatorModule,
         IgxGridFooterComponent,
@@ -106,6 +81,7 @@ import { IgxColumnPinningModule } from './pinning/pinning.module';
         IgxGridSharedModules
     ],
     imports: [
+        IgxGridColumnModule,
         IgxColumnMovingModule,
         IgxGridResizingModule,
         IgxColumnPinningModule,

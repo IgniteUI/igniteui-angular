@@ -1,10 +1,10 @@
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { first } from 'rxjs/operators';
-import { IgxColumnComponent } from '../../grids/column.component';
 import { ISelectionNode } from '../selection/selection.service';
 import { isIE } from '../../core/utils';
 import { FilterMode } from '../common/enums';
+import { IgxColumnComponent } from '../columns/column.component';
 
 export class IgxHierarchicalGridNavigationService extends IgxGridNavigationService {
     public grid: IgxHierarchicalGridComponent;

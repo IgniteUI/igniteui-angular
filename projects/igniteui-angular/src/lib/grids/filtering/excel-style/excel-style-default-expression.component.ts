@@ -8,7 +8,7 @@ import {
     ChangeDetectorRef,
     ViewChild
 } from '@angular/core';
-import { IgxColumnComponent } from '../../column.component';
+import { IgxColumnComponent } from '../../columns/column.component';
 import { ExpressionUI } from '../grid-filtering.service';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
 import { IgxDropDownItemComponent, IgxDropDownComponent } from '../../../drop-down/index';

@@ -1,6 +1,6 @@
 import { Directive, ElementRef, Renderer2, NgZone, HostBinding, TemplateRef } from '@angular/core';
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
-import { IgxColumnComponent } from '../column.component';
+import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridComponent } from './grid.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';

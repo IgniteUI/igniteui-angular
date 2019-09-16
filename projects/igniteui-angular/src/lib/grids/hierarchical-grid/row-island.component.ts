@@ -36,7 +36,7 @@ import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/select
 
 import { IgxOverlayService } from '../../services/index';
 import { takeUntil } from 'rxjs/operators';
-import { IgxColumnComponent } from '../column.component';
+import { IgxColumnComponent } from '../columns/column.component';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IBaseEventArgs } from '../../core/utils';
 import { IgxColumnResizingService } from '../resizing/resizing.service';

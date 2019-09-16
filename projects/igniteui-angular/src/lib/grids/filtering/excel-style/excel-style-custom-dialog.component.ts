@@ -10,7 +10,7 @@ import {
     QueryList,
     ElementRef
 } from '@angular/core';
-import { IgxColumnComponent } from '../../column.component';
+import { IgxColumnComponent } from '../../columns/column.component';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
 import { DataType } from '../../../data-operations/data-util';

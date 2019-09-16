@@ -5,7 +5,6 @@ import { DataUtil, DataType } from '../data-operations/data-util';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from './cell.component';
-import { IgxColumnComponent } from './column.component';
 import { IgxGridBaseComponent } from './grid-base.component';
 import { IgxRowComponent } from './row.component';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
@@ -13,6 +12,7 @@ import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-ope
 import { Transaction, TransactionType, State } from '../services/transaction/transaction';
 import { IgxCell, IgxRow } from './selection/selection.service';
 import { GridType } from './common/grid.interface';
+import { IgxColumnComponent } from './columns/column.component';
 /**
  *@hidden
  */

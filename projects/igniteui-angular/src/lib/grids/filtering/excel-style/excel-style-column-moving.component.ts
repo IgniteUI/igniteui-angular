@@ -1,7 +1,8 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { IgxColumnComponent, IgxColumnGroupComponent } from '../../column.component';
+import { IgxColumnComponent } from '../../columns/column.component';
 import { IgxGridBaseComponent } from '../../grid-base.component';
 import { DisplayDensity } from '../../../core/density';
+import { IgxColumnGroupComponent } from '../../columns/column-group.component';
 
 /**
  * @hidden

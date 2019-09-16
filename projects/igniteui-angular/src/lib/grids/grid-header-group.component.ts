@@ -12,7 +12,7 @@ import {
     ElementRef,
     HostListener
 } from '@angular/core';
-import { IgxColumnComponent } from './column.component';
+import { IgxColumnComponent } from './columns/column.component';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridBaseComponent } from './grid-base.component';

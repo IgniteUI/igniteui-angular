@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IgxGridBaseComponent } from './grid-base.component';
 import { first } from 'rxjs/operators';
-import { IgxColumnComponent } from './column.component';
+import { IgxColumnComponent } from './columns/column.component';
 import { IgxGridNavigationService } from './grid-navigation.service';
 import { ISelectionNode } from './selection/selection.service';
 

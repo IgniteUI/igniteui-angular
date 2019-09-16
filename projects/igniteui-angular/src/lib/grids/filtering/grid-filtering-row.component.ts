@@ -13,7 +13,7 @@ import {
     ChangeDetectionStrategy
 } from '@angular/core';
 import { DataType } from '../../data-operations/data-util';
-import { IgxColumnComponent } from '../column.component';
+import { IgxColumnComponent } from '../columns/column.component';
 import { IgxDropDownComponent, ISelectionEventArgs } from '../../drop-down/index';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';

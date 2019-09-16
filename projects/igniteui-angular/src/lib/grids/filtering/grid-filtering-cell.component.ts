@@ -12,7 +12,7 @@ import {
     ChangeDetectionStrategy,
     DoCheck
 } from '@angular/core';
-import { IgxColumnComponent } from '../column.component';
+import { IgxColumnComponent } from '../columns/column.component';
 import { IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../../chips';
 import { IgxFilteringService, ExpressionUI } from './grid-filtering.service';

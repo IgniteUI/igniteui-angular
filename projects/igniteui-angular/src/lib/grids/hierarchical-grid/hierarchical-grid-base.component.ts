@@ -17,7 +17,6 @@ import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
-import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component';
 import { IgxSummaryOperand } from '../summaries/grid-summary';
 import { IgxHierarchicalTransactionService, IgxOverlayService } from '../../services/index';
 import { DOCUMENT } from '@angular/common';
@@ -27,6 +26,8 @@ import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/select
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { GridType } from '../common/grid.interface';
+import { IgxColumnGroupComponent } from '../columns/column-group.component';
+import { IgxColumnComponent } from '../columns/column.component';
 
 export const IgxHierarchicalTransactionServiceFactory = {
     provide: IgxGridTransaction,

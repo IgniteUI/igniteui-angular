@@ -5,7 +5,6 @@ import { VerticalAlignment, HorizontalAlignment, Point, OverlaySettings } from '
 import { ConnectedPositioningStrategy } from '../../../services/overlay/position/connected-positioning-strategy';
 import { IgxFilteringService } from '../grid-filtering.service';
 import { IgxOverlayService } from '../../../services/overlay/overlay';
-import { IgxGridBaseComponent, IgxColumnComponent } from '../../grid';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { FilteringLogic, IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { IgxChipComponent } from '../../../chips/chip.component';
@@ -18,6 +17,8 @@ import { takeUntil, first } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { KEYS } from '../../../core/utils';
 import { AbsoluteScrollStrategy, AutoPositionStrategy } from '../../../services/index';
+import { IgxColumnComponent } from '../../columns/column.component';
+import { IgxGridBaseComponent } from '../../grid-base.component';
 
 /**
  *@hidden

@@ -1,9 +1,12 @@
 import { IBaseEventArgs, CancelableEventArgs } from '../../core/utils';
-import { IgxGridCellComponent, IgxColumnComponent, IgxGridBaseComponent, IgxRowComponent } from '..';
 import { IgxBaseExporter, IgxExporterOptionsBase } from '../../services';
 import { GridKeydownTargetType } from './enums';
 import { IgxDragDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { IGridDataBindable } from './grid.interface';
+import { IgxGridCellComponent } from '../cell.component';
+import { IgxColumnComponent } from '../columns/column.component';
+import { IgxGridBaseComponent } from '../grid-base.component';
+import { IgxRowComponent } from '../row.component';
 
 
 export interface IGridClipboardEvent {

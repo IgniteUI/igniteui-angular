@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { Subject, fromEvent } from 'rxjs';
 import { debounceTime, takeUntil} from 'rxjs/operators';
-import { IgxColumnComponent } from '../column.component';
+import { IgxColumnComponent } from '../columns/column.component';
 import { IgxColumnResizingService } from './resizing.service';
 
 

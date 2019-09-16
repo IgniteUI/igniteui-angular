@@ -1,5 +1,5 @@
 import { Injectable, NgZone } from '@angular/core';
-import { IgxColumnComponent } from '../column.component';
+import { IgxColumnComponent } from '../columns/column.component';
 
 /**
  * @hidden

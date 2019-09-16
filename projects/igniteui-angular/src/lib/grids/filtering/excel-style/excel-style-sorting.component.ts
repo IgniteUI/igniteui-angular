@@ -4,7 +4,7 @@ import {
     ViewChild,
     Input
 } from '@angular/core';
-import { IgxColumnComponent } from '../../column.component';
+import { IgxColumnComponent } from '../../columns/column.component';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
 import { DisplayDensity } from '../../../core/density';
 

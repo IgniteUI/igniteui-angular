@@ -1,5 +1,5 @@
 import { Directive, Input, OnDestroy, ElementRef, Renderer2, NgZone } from '@angular/core';
-import { IgxColumnComponent } from '../column.component';
+import { IgxColumnComponent } from '../columns/column.component';
 import { DropPosition, IgxColumnMovingService } from './moving.service';
 import { Subject, interval } from 'rxjs';
 import { IgxColumnMovingDragDirective } from './moving.drag.directive';
