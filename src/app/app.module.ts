@@ -110,6 +110,7 @@ import { GridClipboardSampleComponent } from './grid-clipboard/grid-clipboard.sa
 import { GridAutoSizeSampleComponent } from './grid-auto-size/grid-auto-size.sample';
 import { GridFlexSampleComponent } from './grid-flex-layout/grid-flex.sample';
 import { GridEsfLoadOnDemandComponent } from './grid-esf-load-on-demand/grid-esf-load-on-demand.component';
+import { GridFilteringComponent } from './grid-filtering/grid-filtering.sample';
 
 
 
@@ -212,7 +213,8 @@ const components = [
     GridClipboardSampleComponent,
     GridAutoSizeSampleComponent,
     GridFlexSampleComponent,
-    GridEsfLoadOnDemandComponent
+    GridEsfLoadOnDemandComponent,
+    GridFilteringComponent
 ];
 
 @NgModule({

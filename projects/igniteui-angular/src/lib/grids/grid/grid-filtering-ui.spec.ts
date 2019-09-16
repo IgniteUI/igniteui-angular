@@ -1622,45 +1622,45 @@ describe('IgxGrid - Filtering actions #grid', () => {
         filteringCells[1].query(By.css('igx-chip')).nativeElement.click();
         fix.detectChanges();
 
-         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
         const input = filterUIRow.query(By.directive(IgxInputDirective));
         sendInput(input, filterValue, fix);
 
-         const filterChip = filterUIRow.query(By.directive(IgxChipComponent));
+        const filterChip = filterUIRow.query(By.directive(IgxChipComponent));
         expect(filterChip).toBeTruthy();
         expect(filterChip.componentInstance.selected).toBeTruthy();
 
-         // Click on the chip to commit it
+        // Click on the chip to commit it
         clickElemAndBlur(filterChip, input);
         fix.detectChanges();
         await wait(100);
         expect(filterChip.componentInstance.selected).toBeFalsy();
 
-         filterValue = 'c';
+        filterValue = 'c';
         sendInput(input, filterValue, fix);
         fix.detectChanges();
         await wait(100);
 
-         let filterChips = filterUIRow.queryAll(By.directive(IgxChipComponent));
+        let filterChips = filterUIRow.queryAll(By.directive(IgxChipComponent));
         expect(filterChips[1]).toBeTruthy();
         expect(filterChips[1].componentInstance.selected).toBeTruthy();
 
-         GridFunctions.simulateKeyboardEvent(input, 'keydown', 'Enter');
+        GridFunctions.simulateKeyboardEvent(input, 'keydown', 'Enter');
         fix.detectChanges();
         await wait(100);
         expect(filterChips[1].componentInstance.selected).toBeFalsy();
 
-         let selectedColumn = GridFunctions.getColumnHeader('Downloads', fix);
+        let selectedColumn = GridFunctions.getColumnHeader('Downloads', fix);
         selectedColumn.nativeElement.dispatchEvent(new MouseEvent('click'));
         fix.detectChanges();
         await wait(100);
 
-         selectedColumn = GridFunctions.getColumnHeader('ProductName', fix);
+        selectedColumn = GridFunctions.getColumnHeader('ProductName', fix);
         selectedColumn.nativeElement.dispatchEvent(new MouseEvent('click'));
         fix.detectChanges();
         await wait(100);
 
-         filterChips = filterUIRow.queryAll(By.directive(IgxChipComponent));
+        filterChips = filterUIRow.queryAll(By.directive(IgxChipComponent));
         expect(filterChips[0].componentInstance.selected).toBeFalsy();
         expect(filterChips[1].componentInstance.selected).toBeFalsy();
     });
@@ -1939,54 +1939,54 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 expect(stringCellText.nativeElement.textContent).toBe('Filter');
             }));
 
-            it('should reset the filter chips area when changing grid width', (async() => {
-                grid.width = '300px';
-                fix.detectChanges();
-                await wait(30);
+        it('should reset the filter chips area when changing grid width', (async () => {
+            grid.width = '300px';
+            fix.detectChanges();
+            await wait(30);
 
-                const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
-                const expression1 = {
-                    fieldName: 'ProductName',
-                    searchVal: 'Ignite',
-                    condition: IgxStringFilteringOperand.instance().condition('startsWith')
-                };
+            const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+            const expression1 = {
+                fieldName: 'ProductName',
+                searchVal: 'Ignite',
+                condition: IgxStringFilteringOperand.instance().condition('startsWith')
+            };
 
-                const expression2 = {
-                    fieldName: 'ProductName',
-                    searchVal: 'test',
-                    condition: IgxStringFilteringOperand.instance().condition('contains')
-                };
+            const expression2 = {
+                fieldName: 'ProductName',
+                searchVal: 'test',
+                condition: IgxStringFilteringOperand.instance().condition('contains')
+            };
 
-                filteringExpressionsTree.filteringOperands.push(expression1);
-                filteringExpressionsTree.filteringOperands.push(expression2);
-                grid.filter('ProductName', null, filteringExpressionsTree);
+            filteringExpressionsTree.filteringOperands.push(expression1);
+            filteringExpressionsTree.filteringOperands.push(expression2);
+            grid.filter('ProductName', null, filteringExpressionsTree);
 
-                fix.detectChanges();
-                await wait();
+            fix.detectChanges();
+            await wait();
 
-                const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
-                const stringCellChip = filteringCells[1].query(By.css('igx-icon'));
-                stringCellChip.nativeElement.click();
-                fix.detectChanges();
-                await wait();
+            const filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
+            const stringCellChip = filteringCells[1].query(By.css('igx-icon'));
+            stringCellChip.nativeElement.click();
+            fix.detectChanges();
+            await wait();
 
-                let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-                let startArrow = filterUIRow.query(By.css(FILTER_UI_SCROLL_START_CLASS));
-                let endArrow = filterUIRow.query(By.css(FILTER_UI_SCROLL_END_CLASS));
+            let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            let startArrow = filterUIRow.query(By.css(FILTER_UI_SCROLL_START_CLASS));
+            let endArrow = filterUIRow.query(By.css(FILTER_UI_SCROLL_END_CLASS));
 
-                expect(startArrow).not.toBeNull();
-                expect(endArrow).not.toBeNull();
+            expect(startArrow).not.toBeNull();
+            expect(endArrow).not.toBeNull();
 
-                grid.width = '900px';
-                fix.detectChanges();
-                await wait(300);
+            grid.width = '900px';
+            fix.detectChanges();
+            await wait(300);
 
-                filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-                startArrow = filterUIRow.query(By.css(FILTER_UI_SCROLL_START_CLASS));
-                endArrow = filterUIRow.query(By.css(FILTER_UI_SCROLL_END_CLASS));
-                expect(startArrow).toBeNull();
-                expect(endArrow).toBeNull();
-            }));
+            filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            startArrow = filterUIRow.query(By.css(FILTER_UI_SCROLL_START_CLASS));
+            endArrow = filterUIRow.query(By.css(FILTER_UI_SCROLL_END_CLASS));
+            expect(startArrow).toBeNull();
+            expect(endArrow).toBeNull();
+        }));
 
         it('Should correctly update filtering row rendered when changing current column by clicking on a header.', fakeAsync(() => {
             const headers = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent));
@@ -2913,11 +2913,11 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Add first chip.
             GridFunctions.typeValueInFilterRowInput('a', fix);
+            fix.detectChanges();
             await wait(16);
-            fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
-            await wait(100);
             fix.detectChanges();
+            await wait(100);
             // Add second chip.
             GridFunctions.typeValueInFilterRowInput('e', fix);
             await wait(16);
@@ -2938,39 +2938,39 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // Click left arrow 2 times.
             const leftArrowButton = GridFunctions.getFilterRowLeftArrowButton(fix).nativeElement;
             leftArrowButton.click();
-            await wait(300);
             fix.detectChanges();
+            await wait(100);
             leftArrowButton.click();
-            await wait(300);
             fix.detectChanges();
+            await wait(100);
             verifyMultipleChipsVisibility(fix, [false, true, false]);
 
             // Click left arrow 2 times.
             leftArrowButton.click();
-            await wait(300);
             fix.detectChanges();
+            await wait(100);
             leftArrowButton.click();
-            await wait(300);
             fix.detectChanges();
+            await wait(100);
             verifyMultipleChipsVisibility(fix, [true, false, false]);
 
             // Click right arrow 2 times.
             const rightArrowButton = GridFunctions.getFilterRowRightArrowButton(fix).nativeElement;
             rightArrowButton.click();
-            await wait(300);
             fix.detectChanges();
+            await wait(100);
             rightArrowButton.click();
-            await wait(300);
             fix.detectChanges();
+            await wait(100);
             verifyMultipleChipsVisibility(fix, [false, true, false]);
 
             // Click right arrow 2 times.
             rightArrowButton.click();
-            await wait(300);
             fix.detectChanges();
+            await wait(100);
             rightArrowButton.click();
-            await wait(300);
             fix.detectChanges();
+            await wait(100);
             verifyMultipleChipsVisibility(fix, [false, false, true]);
         }));
 
@@ -3011,8 +3011,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             await wait(16);
             fix.detectChanges();
             leftArrowButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
-            await wait(300);
             fix.detectChanges();
+            await wait(100);
 
             // Verify first chip is in view.
             verifyChipVisibility(fix, 0, true);
@@ -3221,8 +3221,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const clearIcon: any = Array.from(lastFilterCellChip.queryAll(By.css('igx-icon')))
                 .find((ic) => ic.nativeElement.innerText === 'cancel');
             clearIcon.nativeElement.click();
-            await wait(100);
             fix.detectChanges();
+            await wait(100);
 
             // Verify chips count.
             expect(GridFunctions.getFilterChipsForColumn('ProductName', fix).length).toBe(2, 'incorrect chips count');
@@ -3276,7 +3276,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         it('Should not throw error when deleting the last chip', (async () => {
             grid.width = '700px';
             fix.detectChanges();
-            await wait(100);
+            await wait(16);
 
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
             fix.detectChanges();
@@ -3304,7 +3304,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             verifyMultipleChipsVisibility(fix, [false, false, false, true]);
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            let chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
+            const chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
             expect(chips.length).toBe(4);
 
             const leftArrowButton = GridFunctions.getFilterRowLeftArrowButton(fix).nativeElement;
@@ -3316,25 +3316,59 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             let chipToRemove = filterUIRow.componentInstance.expressionsList[3];
             expect(() => { filterUIRow.componentInstance.onChipRemoved(null, chipToRemove); })
-            .not.toThrowError(/\'id\' of undefined/);
-            await wait(200);
+                .not.toThrowError(/\'id\' of undefined/);
             fix.detectChanges();
-
-            verifyMultipleChipsVisibility(fix, [false, true, false]);
-            chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
-            expect(chips.length).toBe(3);
+            await wait(500);
+            fix.detectChanges();
 
             chipToRemove = filterUIRow.componentInstance.expressionsList[2];
             expect(() => { filterUIRow.componentInstance.onChipRemoved(null, chipToRemove); })
-            .not.toThrowError(/\'id\' of undefined/);
+                .not.toThrowError(/\'id\' of undefined/);
+            fix.detectChanges();
+            await wait(100);
+        }));
+
+        it('should scroll correct chip in view when one is deleted', async() => {
+            grid.width = '700px';
+            fix.detectChanges();
+
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            fix.detectChanges();
+
+            GridFunctions.applyFilter('a', fix);
+            await wait(16);
+            GridFunctions.applyFilter('e', fix);
+            await wait(16);
+            GridFunctions.applyFilter('i', fix);
+            await wait(16);
+            GridFunctions.applyFilter('o', fix);
+            // wait for chip to be scrolled in view
             await wait(200);
             fix.detectChanges();
+            await wait(100);
+            verifyMultipleChipsVisibility(fix, [false, false, false, true]);
+
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            GridFunctions.removeFilterChipByIndex(3, filterUIRow);
+            // wait for chip to be scrolled in view
+            fix.detectChanges();
+            await wait(200);
+
+            verifyMultipleChipsVisibility(fix, [false, true, false]);
+            let chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
+            expect(chips.length).toBe(3);
+
+            GridFunctions.removeFilterChipByIndex(2, filterUIRow);
+            fix.detectChanges();
+           // wait for chip to be scrolled in view
+           fix.detectChanges();
+           await wait(200);
 
             verifyMultipleChipsVisibility(fix, [true, false]);
             chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
             expect(chips.length).toBe(2);
             expect(grid.rowList.length).toBe(3);
-        }));
+        });
 
         it('Should close filter row when hide the current column', (async () => {
             grid.height = '700px';
@@ -3359,19 +3393,20 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             const hideButton = GridFunctions.getColumnHidingButton(fix);
             hideButton.focus();
-            await wait(100);
-            hideButton.click();
-            await wait(100);
             fix.detectChanges();
+            await wait(16);
+            hideButton.click();
+            fix.detectChanges();
+            await wait(100);
 
             const dropDown = fix.debugElement.query(By.css('igx-column-hiding'));
-            HelperUtils.getCheckboxInput('ProductName', dropDown,  fix).click();
-            await wait(100);
+            HelperUtils.getCheckboxInput('ProductName', dropDown, fix).click();
             fix.detectChanges();
+            await wait(100);
 
             // Check that the filterRow is closed
             expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
-            GridFunctions.verifyColumnIsHidden(prodNameCol, true , 5);
+            GridFunctions.verifyColumnIsHidden(prodNameCol, true, 5);
         }));
     });
 
@@ -4483,108 +4518,108 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('display density is properly applied on the excel custom dialog\'s default expression dropdown',
-        fakeAsync(() => {
-            const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+            fakeAsync(() => {
+                const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
 
-            // Open excel style custom filtering dialog.
-            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-            fix.detectChanges();
-            GridFunctions.clickExcelFilterCascadeButton(fix);
-            fix.detectChanges();
-            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
-            tick(200);
-            fix.detectChanges();
+                // Open excel style custom filtering dialog.
+                GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+                fix.detectChanges();
+                GridFunctions.clickExcelFilterCascadeButton(fix);
+                fix.detectChanges();
+                GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+                tick(200);
+                fix.detectChanges();
 
-            // Click the left input to open the operators dropdown and verify its display density.
-            let expr = GridFunctions.getExcelCustomFilteringDefaultExpressions(fix)[0];
-            let inputs = GridFunctions.sortNativeElementsHorizontally(Array.from(expr.querySelectorAll('input')));
-            let conditionsInput = inputs[0];
-            conditionsInput.click();
-            tick(100);
-            fix.detectChanges();
-            verifyGridSubmenuDisplayDensity(gridNativeElement, DisplayDensity.comfortable);
-            GridFunctions.clickCancelExcelStyleCustomFiltering(fix);
-            tick(100);
-            fix.detectChanges();
+                // Click the left input to open the operators dropdown and verify its display density.
+                let expr = GridFunctions.getExcelCustomFilteringDefaultExpressions(fix)[0];
+                let inputs = GridFunctions.sortNativeElementsHorizontally(Array.from(expr.querySelectorAll('input')));
+                let conditionsInput = inputs[0];
+                conditionsInput.click();
+                tick(100);
+                fix.detectChanges();
+                verifyGridSubmenuDisplayDensity(gridNativeElement, DisplayDensity.comfortable);
+                GridFunctions.clickCancelExcelStyleCustomFiltering(fix);
+                tick(100);
+                fix.detectChanges();
 
-            // Change display density
-            grid.displayDensity = DisplayDensity.cosy;
-            tick(200);
-            fix.detectChanges();
+                // Change display density
+                grid.displayDensity = DisplayDensity.cosy;
+                tick(200);
+                fix.detectChanges();
 
-            // Open excel style custom filtering dialog.
-            GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-            fix.detectChanges();
-            GridFunctions.clickExcelFilterCascadeButton(fix);
-            fix.detectChanges();
-            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
-            tick(200);
-            fix.detectChanges();
+                // Open excel style custom filtering dialog.
+                GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+                fix.detectChanges();
+                GridFunctions.clickExcelFilterCascadeButton(fix);
+                fix.detectChanges();
+                GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+                tick(200);
+                fix.detectChanges();
 
-            // Click the left input to open the operators dropdown and verify its display density.
-            expr = GridFunctions.getExcelCustomFilteringDefaultExpressions(fix)[0];
-            inputs = GridFunctions.sortNativeElementsHorizontally(Array.from(expr.querySelectorAll('input')));
-            conditionsInput = inputs[0];
-            conditionsInput.click();
-            tick(100);
-            fix.detectChanges();
-            verifyGridSubmenuDisplayDensity(gridNativeElement, DisplayDensity.cosy);
-            GridFunctions.clickCancelExcelStyleCustomFiltering(fix);
-            tick(100);
-            fix.detectChanges();
-        }));
+                // Click the left input to open the operators dropdown and verify its display density.
+                expr = GridFunctions.getExcelCustomFilteringDefaultExpressions(fix)[0];
+                inputs = GridFunctions.sortNativeElementsHorizontally(Array.from(expr.querySelectorAll('input')));
+                conditionsInput = inputs[0];
+                conditionsInput.click();
+                tick(100);
+                fix.detectChanges();
+                verifyGridSubmenuDisplayDensity(gridNativeElement, DisplayDensity.cosy);
+                GridFunctions.clickCancelExcelStyleCustomFiltering(fix);
+                tick(100);
+                fix.detectChanges();
+            }));
 
         it('display density is properly applied on the excel custom dialog\'s date expression dropdown',
-        fakeAsync(() => {
-            const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+            fakeAsync(() => {
+                const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
 
-            // Open excel style custom filtering dialog.
-            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
-            fix.detectChanges();
-            GridFunctions.clickExcelFilterCascadeButton(fix);
-            fix.detectChanges();
-            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
-            tick(200);
-            fix.detectChanges();
+                // Open excel style custom filtering dialog.
+                GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+                fix.detectChanges();
+                GridFunctions.clickExcelFilterCascadeButton(fix);
+                fix.detectChanges();
+                GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+                tick(200);
+                fix.detectChanges();
 
-            // Click the left input to open the operators dropdown and verify its display density.
-            let expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
-            let inputs = GridFunctions.sortNativeElementsHorizontally(Array.from(expr.querySelectorAll('input')));
-            let conditionsInput = inputs[0];
-            conditionsInput.click();
-            tick(100);
-            fix.detectChanges();
-            verifyGridSubmenuDisplayDensity(gridNativeElement, DisplayDensity.comfortable);
-            GridFunctions.clickCancelExcelStyleCustomFiltering(fix);
-            tick(100);
-            fix.detectChanges();
+                // Click the left input to open the operators dropdown and verify its display density.
+                let expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
+                let inputs = GridFunctions.sortNativeElementsHorizontally(Array.from(expr.querySelectorAll('input')));
+                let conditionsInput = inputs[0];
+                conditionsInput.click();
+                tick(100);
+                fix.detectChanges();
+                verifyGridSubmenuDisplayDensity(gridNativeElement, DisplayDensity.comfortable);
+                GridFunctions.clickCancelExcelStyleCustomFiltering(fix);
+                tick(100);
+                fix.detectChanges();
 
-            // Change display density
-            grid.displayDensity = DisplayDensity.cosy;
-            tick(200);
-            fix.detectChanges();
+                // Change display density
+                grid.displayDensity = DisplayDensity.cosy;
+                tick(200);
+                fix.detectChanges();
 
-            // Open excel style custom filtering dialog.
-            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
-            fix.detectChanges();
-            GridFunctions.clickExcelFilterCascadeButton(fix);
-            fix.detectChanges();
-            GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
-            tick(200);
-            fix.detectChanges();
+                // Open excel style custom filtering dialog.
+                GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+                fix.detectChanges();
+                GridFunctions.clickExcelFilterCascadeButton(fix);
+                fix.detectChanges();
+                GridFunctions.clickOperatorFromCascadeMenu(fix, 0);
+                tick(200);
+                fix.detectChanges();
 
-            // Click the left input to open the operators dropdown and verify its display density.
-            expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
-            inputs = GridFunctions.sortNativeElementsHorizontally(Array.from(expr.querySelectorAll('input')));
-            conditionsInput = inputs[0];
-            conditionsInput.click();
-            tick(100);
-            fix.detectChanges();
-            verifyGridSubmenuDisplayDensity(gridNativeElement, DisplayDensity.cosy);
-            GridFunctions.clickCancelExcelStyleCustomFiltering(fix);
-            tick(100);
-            fix.detectChanges();
-        }));
+                // Click the left input to open the operators dropdown and verify its display density.
+                expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
+                inputs = GridFunctions.sortNativeElementsHorizontally(Array.from(expr.querySelectorAll('input')));
+                conditionsInput = inputs[0];
+                conditionsInput.click();
+                tick(100);
+                fix.detectChanges();
+                verifyGridSubmenuDisplayDensity(gridNativeElement, DisplayDensity.cosy);
+                GridFunctions.clickCancelExcelStyleCustomFiltering(fix);
+                tick(100);
+                fix.detectChanges();
+            }));
 
         it('Should include \'false\' value in results when searching.', fakeAsync(() => {
             // Open excel style custom filtering dialog.
@@ -5557,94 +5592,94 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Move-left button is disabled when using it to pin a column and max pin area width is reached.',
-        fakeAsync(() => {
-            // Test prerequisites
-            grid.width = '500px';
-            fix.detectChanges();
-            grid.getColumnByName('ID').filterable = true;
-            grid.getColumnByName('ID').movable = true;
-            grid.cdr.detectChanges();
-            tick(100);
-
-            // Pin columns until maximum pin area width is reached.
-            const columns = ['ProductName', 'Downloads', 'Released'];
-            columns.forEach((columnField) => {
-                GridFunctions.clickExcelFilterIcon(fix, columnField);
+            fakeAsync(() => {
+                // Test prerequisites
+                grid.width = '500px';
                 fix.detectChanges();
-                GridFunctions.clickPinIconInExcelStyleFiltering(fix, false);
-                tick(200);
+                grid.getColumnByName('ID').filterable = true;
+                grid.getColumnByName('ID').movable = true;
+                grid.cdr.detectChanges();
+                tick(100);
+
+                // Pin columns until maximum pin area width is reached.
+                const columns = ['ProductName', 'Downloads', 'Released'];
+                columns.forEach((columnField) => {
+                    GridFunctions.clickExcelFilterIcon(fix, columnField);
+                    fix.detectChanges();
+                    GridFunctions.clickPinIconInExcelStyleFiltering(fix, false);
+                    tick(200);
+                    fix.detectChanges();
+                });
+
+                // Verify pinned columns and 'ID' column position.
+                const column = grid.columns.find((col) => col.field === 'ID');
+                GridFunctions.verifyColumnIsPinned(column, false, 3);
+                expect(GridFunctions.getColumnHeaderByIndex(fix, 3).innerText).toBe('ID');
+
+                // Open ESF for the 'ID' column and verify that 'move left' button is disabled.
+                GridFunctions.clickExcelFilterIcon(fix, 'ID');
                 fix.detectChanges();
-            });
-
-            // Verify pinned columns and 'ID' column position.
-            const column = grid.columns.find((col) => col.field === 'ID');
-            GridFunctions.verifyColumnIsPinned(column, false, 3);
-            expect(GridFunctions.getColumnHeaderByIndex(fix, 3).innerText).toBe('ID');
-
-            // Open ESF for the 'ID' column and verify that 'move left' button is disabled.
-            GridFunctions.clickExcelFilterIcon(fix, 'ID');
-            fix.detectChanges();
-            const moveComponent = GridFunctions.getExcelFilteringMoveComponent(fix);
-            const moveLeftButton = GridFunctions.sortNativeElementsHorizontally(
-                Array.from(moveComponent.querySelectorAll('.igx-button--flat')))[0];
-            expect(moveLeftButton.classList.contains('igx-button--disabled')).toBe(true);
-        }));
+                const moveComponent = GridFunctions.getExcelFilteringMoveComponent(fix);
+                const moveLeftButton = GridFunctions.sortNativeElementsHorizontally(
+                    Array.from(moveComponent.querySelectorAll('.igx-button--flat')))[0];
+                expect(moveLeftButton.classList.contains('igx-button--disabled')).toBe(true);
+            }));
 
         it('Pin button is disabled when using it to pin a column and max pin area width is reached.',
-        fakeAsync(() => {
-            // Test prerequisites
-            grid.width = '500px';
-            fix.detectChanges();
-            grid.getColumnByName('ID').filterable = true;
-            grid.getColumnByName('ID').movable = true;
-            grid.cdr.detectChanges();
-            tick(100);
-
-            // Pin columns until maximum pin area width is reached.
-            const columns = ['ProductName', 'Downloads', 'Released'];
-            columns.forEach((columnField) => {
-                GridFunctions.clickExcelFilterIcon(fix, columnField);
+            fakeAsync(() => {
+                // Test prerequisites
+                grid.width = '500px';
                 fix.detectChanges();
-                GridFunctions.clickPinIconInExcelStyleFiltering(fix, false);
+                grid.getColumnByName('ID').filterable = true;
+                grid.getColumnByName('ID').movable = true;
+                grid.cdr.detectChanges();
+                tick(100);
+
+                // Pin columns until maximum pin area width is reached.
+                const columns = ['ProductName', 'Downloads', 'Released'];
+                columns.forEach((columnField) => {
+                    GridFunctions.clickExcelFilterIcon(fix, columnField);
+                    fix.detectChanges();
+                    GridFunctions.clickPinIconInExcelStyleFiltering(fix, false);
+                    tick(200);
+                    fix.detectChanges();
+                });
+
+                // Verify pinned columns and 'ID' column position.
+                const column = grid.columns.find((col) => col.field === 'ID');
+                GridFunctions.verifyColumnIsPinned(column, false, 3);
+                expect(GridFunctions.getColumnHeaderByIndex(fix, 3).innerText).toBe('ID');
+
+                // Open ESF for the 'ID' column and verify that 'pin column' button is disabled.
+                GridFunctions.clickExcelFilterIcon(fix, 'ID');
+                fix.detectChanges();
+                let pinButton = GridFunctions.getExcelFilteringPinContainer(fix);
+                expect(pinButton.classList.contains('igx-excel-filter__actions-pin--disabled')).toBe(true,
+                    'pinButton should be disabled');
+
+                // Close ESF.
+                GridFunctions.clickCancelExcelStyleFiltering(fix);
+                fix.detectChanges();
+
+                grid.displayDensity = DisplayDensity.compact;
                 tick(200);
                 fix.detectChanges();
-            });
 
-            // Verify pinned columns and 'ID' column position.
-            const column = grid.columns.find((col) => col.field === 'ID');
-            GridFunctions.verifyColumnIsPinned(column, false, 3);
-            expect(GridFunctions.getColumnHeaderByIndex(fix, 3).innerText).toBe('ID');
+                // Pin one more column, because there is enough space for one more in 'compact' density.
+                GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+                fix.detectChanges();
+                GridFunctions.clickPinIconInExcelStyleFiltering(fix, true);
+                tick(200);
+                fix.detectChanges();
 
-            // Open ESF for the 'ID' column and verify that 'pin column' button is disabled.
-            GridFunctions.clickExcelFilterIcon(fix, 'ID');
-            fix.detectChanges();
-            let pinButton = GridFunctions.getExcelFilteringPinContainer(fix);
-            expect(pinButton.classList.contains('igx-excel-filter__actions-pin--disabled')).toBe(true,
-                'pinButton should be disabled');
-
-            // Close ESF.
-            GridFunctions.clickCancelExcelStyleFiltering(fix);
-            fix.detectChanges();
-
-            grid.displayDensity = DisplayDensity.compact;
-            tick(200);
-            fix.detectChanges();
-
-            // Pin one more column, because there is enough space for one more in 'compact' density.
-            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
-            fix.detectChanges();
-            GridFunctions.clickPinIconInExcelStyleFiltering(fix, true);
-            tick(200);
-            fix.detectChanges();
-
-            // Open ESF for the 'ID' column and verify that 'pin column' icon button is disabled.
-            GridFunctions.clickExcelFilterIcon(fix, 'ID');
-            fix.detectChanges();
-            const headerButtons = GridFunctions.getExcelFilteringHeaderIcons(fix);
-            pinButton = GridFunctions.sortNativeElementsHorizontally(Array.from(headerButtons))[0];
-            expect(pinButton.classList.contains('igx-button--disabled')).toBe(true,
-                'pinButton in header area should be disabled');
-        }));
+                // Open ESF for the 'ID' column and verify that 'pin column' icon button is disabled.
+                GridFunctions.clickExcelFilterIcon(fix, 'ID');
+                fix.detectChanges();
+                const headerButtons = GridFunctions.getExcelFilteringHeaderIcons(fix);
+                pinButton = GridFunctions.sortNativeElementsHorizontally(Array.from(headerButtons))[0];
+                expect(pinButton.classList.contains('igx-button--disabled')).toBe(true,
+                    'pinButton in header area should be disabled');
+            }));
     });
 
     describe(null, () => {
@@ -5737,7 +5772,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems.length).toBe(6, 'incorrect rendered list items count');
             loadingIndicator = GridFunctions.getExcelFilteringLoadingIndicator(fix);
             expect(loadingIndicator).toBeNull('esf loading indicator is visible');
-          }));
+        }));
     });
 
     describe(null, () => {
@@ -6319,8 +6354,8 @@ function clickElemAndBlur(clickElem, blurElem) {
     const elementRect = clickElem.nativeElement.getBoundingClientRect();
     UIInteractions.simulatePointerEvent('pointerdown', clickElem.nativeElement, elementRect.left, elementRect.top);
     blurElem.nativeElement.blur();
-    blurElem.nativeElement.dispatchEvent(new FocusEvent('focusout', {bubbles: true}));
+    blurElem.nativeElement.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
     (clickElem as DebugElement).nativeElement.focus();
     UIInteractions.simulatePointerEvent('pointerup', clickElem.nativeElement, elementRect.left, elementRect.top);
-    UIInteractions.simulateMouseEvent('click', clickElem.nativeElement, 10 , 10);
+    UIInteractions.simulateMouseEvent('click', clickElem.nativeElement, 10, 10);
 }
