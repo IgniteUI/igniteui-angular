@@ -537,16 +537,8 @@ export class GridFunctions {
             }
         }
     }
-
-    public static filterBy(condition: string, value: string, fix: ComponentFixture<any>) {
+    public static applyFilter(value: string, fix: ComponentFixture<any>) {
         const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-        // open dropdown
-        this.openFilterDD(fix.debugElement);
-        fix.detectChanges();
-
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
-        this.selectFilteringCondition(condition, ddList);
-
         const input = filterUIRow.query(By.directive(IgxInputDirective));
         input.nativeElement.value = value;
         input.nativeElement.dispatchEvent(new Event('keydown'));
@@ -557,6 +549,17 @@ export class GridFunctions {
         // Enter key to submit
         this.simulateKeyboardEvent(input, 'keydown', 'Enter');
         fix.detectChanges();
+    }
+
+    public static filterBy(condition: string, value: string, fix: ComponentFixture<any>) {
+        // open dropdown
+        this.openFilterDD(fix.debugElement);
+        fix.detectChanges();
+
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        this.selectFilteringCondition(condition, ddList);
+
+       this.applyFilter(value, fix);
     }
 
     public static typeValueInFilterRowInput(value: string, fix) {
