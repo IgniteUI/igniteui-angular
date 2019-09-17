@@ -28,7 +28,6 @@ import { IgxDaysViewComponent } from './days-view/days-view.component';
 import { interval, Subscription } from 'rxjs';
 import { takeUntil, debounce, skipLast, switchMap } from 'rxjs/operators';
 import { ScrollMonth } from './calendar-base';
-import { IMonthView, IViewChangedArgs } from './calendar.interface';
 
 let NEXT_ID = 0;
 
@@ -120,7 +119,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
             for (let i = this._monthsViewNumber; i < val; i++) {
                 const nextMonthDate = new Date(this.viewDate);
                 nextMonthDate.setMonth(nextMonthDate.getMonth() + i);
-                const monthView: IMonthView = {
+                const monthView = {
                     value: null,
                     viewDate: nextMonthDate
                 };
@@ -347,7 +346,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      *@hidden
      */
-    private defaultDayView: IMonthView = {
+    private defaultDayView = {
         value: this.value,
         viewDate: this.viewDate,
     };
@@ -355,7 +354,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      *@hidden
      */
-    public dayViews: Array<IMonthView> = [this.defaultDayView];
+    public dayViews = [this.defaultDayView];
 
     public ngAfterViewInit() {
         this.setSiblingMonths(this.monthViews);
@@ -518,16 +517,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      * @hidden
      */
-    public viewChanged(event: IViewChangedArgs) {
-        let date = this.viewDate,
-            delta = event.delta;
-        if (event.moveToFirst) {
-            delta = 0;
-            date = event.date;
-        }
-        this.viewDate = this.calendarModel.timedelta(date, 'month', delta);
+    public viewChanged(event) {
+        this.viewDate = this.calendarModel.timedelta(event, 'month', 0);
     }
-
     /**
      * @hidden
      */
@@ -778,7 +770,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
 
 
     /**
-     * Helper method sthat sets references for prev/next months for each month in the view
+     * Helper method that sets references for prev/next months for each month in the view
      * @hidden
      */
     private setSiblingMonths(monthViews: QueryList<IgxDaysViewComponent>) {

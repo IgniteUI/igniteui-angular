@@ -59,11 +59,6 @@
         @extend %cal-value--selected !optional;
     }
 
-    @include e(date, 'selected-dimmed') {
-        @extend %cal-value !optional;
-        @extend %cal-value--selected-dimmed !optional;
-    }
-
     @include e(date, 'current') {
         @extend %cal-value !optional;
         @extend %cal-value--current !optional;

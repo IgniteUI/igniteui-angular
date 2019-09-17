@@ -22,6 +22,7 @@ export class IgxDayItemComponent {
      *
      */
     @Input()
+    @HostBinding('class.igx-calendar__date--selected')
     public get selected(): any {
         return this._selected;
     }
@@ -85,14 +86,17 @@ export class IgxDayItemComponent {
         return this.elementRef.nativeElement;
     }
 
+    @HostBinding('class.igx-calendar__date--inactive')
     public get isInactive(): boolean {
         return this.date.isNextMonth || this.date.isPrevMonth;
     }
 
+    @HostBinding('class.igx-calendar__date--hidden')
     public get isHidden(): boolean {
         return this.hideOutsideDays && this.isInactive;
     }
 
+    @HostBinding('class.igx-calendar__date--current')
     public get isToday(): boolean {
         const today = new Date(Date.now());
         const date = this.date.date;
@@ -102,6 +106,7 @@ export class IgxDayItemComponent {
         );
     }
 
+    @HostBinding('class.igx-calendar__date--weekend')
     public get isWeekend(): boolean {
         const day = this.date.date.getDay();
         return day === 0 || day === 6;
@@ -123,6 +128,7 @@ export class IgxDayItemComponent {
         return isDateInRanges(this.date.date, this.outOfRangeDates);
     }
 
+    @HostBinding('class.igx-calendar__date--special')
     public get isSpecial(): boolean {
         if (this.specialDates === null) {
             return false;
@@ -139,52 +145,15 @@ export class IgxDayItemComponent {
         return this.date.isCurrentMonth && !(this.isWeekend && this.selected);
     }
 
-    @HostBinding('class.igx-calendar__date--inactive')
-    public get isInactiveCSS(): boolean {
-        return this.isInactive;
-    }
-
-    @HostBinding('class.igx-calendar__date--hidden')
-    get isHiddenCSS(): boolean {
-        return this.isHidden;
-    }
-
-    @HostBinding('class.igx-calendar__date--current')
-    public get isTodayCSS(): boolean {
-        return this.isToday;
-    }
-
-    @HostBinding('class.igx-calendar__date--selected')
-    public get isSelectedCSS(): boolean {
-        return this.isCurrentMonth && this.selected;
-    }
-
-    @HostBinding('class.igx-calendar__date--selected-dimmed')
-    public get isSelectedDimmedCSS(): boolean {
-        return !this.isCurrentMonth && this.isSingleSelection && this.selected;
-    }
-
-    @HostBinding('class.igx-calendar__date--weekend')
-    public get isWeekendCSS(): boolean {
-        return this.isWeekend;
-    }
-
     @HostBinding('class.igx-calendar__date--disabled')
     public get isDisabledCSS(): boolean {
         return this.isHidden || this.isDisabled || this.isOutOfRange;
-    }
-
-
-    @HostBinding('class.igx-calendar__date--special')
-    public get isSpecialCSS(): boolean {
-        return this.isSpecial;
     }
 
     @HostBinding('class.igx-calendar__date--single')
     public get isSingleSelection(): boolean {
         return this.selection !== CalendarSelection.RANGE;
     }
-
 
     private _selected = false;
 

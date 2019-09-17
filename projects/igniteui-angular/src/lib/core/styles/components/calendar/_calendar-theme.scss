@@ -560,14 +560,6 @@
         }
     }
 
-    %cal-value--selected-dimmed {
-        %cal-value-content {
-            color: --var($theme, 'date-selected-text-color');
-            background: --var($theme, 'date-selected-background') ;
-            opacity: .6;
-        }
-    }
-
     %cal-value--current {
         %cal-value-content {
             color: --var($theme, 'date-current-text-color');

@@ -17,7 +17,6 @@ import { IgxDayItemComponent } from './day-item.component';
 import { DateRangeDescriptor, DateRangeType } from '../../core/dates';
 import { IgxCalendarBase, ScrollMonth, CalendarSelection } from '../calendar-base';
 import { isEqual } from '../../core/utils';
-import { IViewChangedArgs } from '../calendar.interface';
 
 let NEXT_ID = 0;
 
@@ -83,7 +82,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
      * @hidden
      */
     @Output()
-    public onViewChanged = new EventEmitter<IViewChangedArgs>();
+    public onViewChanged = new EventEmitter<Date>();
 
     /**
      * @hidden
@@ -203,7 +202,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
      */
     public isSelected(date: ICalendarDate): boolean {
         let selectedDates: Date | Date[];
-        if (!date.isCurrentMonth || this.isDateDisabled(date.date)) {
+        if (this.isDateDisabled(date.date)) {
             return false;
         }
 
@@ -318,6 +317,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
      */
     public selectDay(event) {
         this.selectDateFromClient(event.date);
+        this.deselectDateInMonthViews(event.date);
         this.onDateSelection.emit(event);
 
         this.onSelection.emit(this.selectedDates);
@@ -349,14 +349,14 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
     private focusPreviousUpDate(target, prevView = false) {
         const node = this.dates.find((date) => date.nativeElement === target);
         let dates = this.dates.toArray(),
-            day: IgxDayItemComponent;
+            day: IgxDayItemComponent, i;
         const index = dates.indexOf(node);
 
         if (!node) { return; }
         this.nextDate = this.calendarModel.timedelta(node.date.date, 'day', -7);
 
         // focus item in current month
-        for (let i = index; i - 7 > -1; i -= 7) {
+        for (i = index; i - 7 > -1; i -= 7) {
             day = prevView ? dates[i] : dates[i - 7];
             this.nextDate = day.date.date;
             if (day.date.isPrevMonth) {
@@ -380,6 +380,13 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
             this.prevMonthView.focusPreviousUpDate(day.nativeElement);
         }
 
+        if (!this.isDayFocusable(day)) {
+            day = dates[i - 7];
+            if (!day) {
+                this.nextDate = this.calendarModel.timedelta(this.nextDate, 'day', -7);
+            }
+        }
+
         // focus item in next month, which is currently out of view
         if (this.changeDaysView && !this.prevMonthView && ((day && day.isPreviousMonth) || !day)) {
             this.isKeydownTrigger = true;
@@ -392,7 +399,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
                 }
             };
 
-            this.onViewChanged.emit({ date: this.nextDate, delta: -1 });
+            this.onViewChanged.emit(this.nextDate);
         }
     }
 
@@ -402,14 +409,14 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
     private focusNextDownDate(target, nextView = false) {
         const node = this.dates.find((date) => date.nativeElement === target);
         let dates = this.dates.toArray(),
-            day: IgxDayItemComponent;
+            day: IgxDayItemComponent, i;
         const index = dates.indexOf(node);
 
         if (!node) { return; }
         this.nextDate = this.calendarModel.timedelta(node.date.date, 'day', 7);
 
         // focus item in current month
-        for (let i = index; i + 7 < 42; i += 7) {
+        for (i = index; i + 7 < 42; i += 7) {
             day = nextView ? dates[i] : dates[i + 7];
             this.nextDate = day.date.date;
             if (day.date.isNextMonth) {
@@ -433,6 +440,14 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
             this.nextMonthView.focusNextDownDate(day.nativeElement);
         }
 
+        if (!this.isDayFocusable(day)) {
+            day = dates[i + 7];
+            if (!day) {
+                this.nextDate = this.calendarModel.timedelta(this.nextDate, 'day', 7);
+            }
+
+        }
+
         // focus item in next month, which is currently out of view
         if (this.changeDaysView && !this.nextMonthView && ((day && day.isNextMonth) || !day)) {
             this.isKeydownTrigger = true;
@@ -447,7 +462,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
                 }
             };
 
-            this.onViewChanged.emit({ date: this.nextDate, delta: 1, moveToFirst: true });
+            this.onViewChanged.emit(this.nextDate);
         }
     }
 
@@ -457,13 +472,13 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
     private focusPreviousDate(target, prevView = false) {
         const node = this.dates.find((date) => date.nativeElement === target);
         let dates = this.dates.toArray(),
-            day: IgxDayItemComponent;
+            day: IgxDayItemComponent, i: number;
         const index = dates.indexOf(node);
 
         if (!node) { return; }
         this.nextDate = this.calendarModel.timedelta(node.date.date, 'day', -1);
 
-        for (let i = index; i > 0; i--) {
+        for (i = index; i > 0; i--) {
             day = prevView ? dates[i] : dates[i - 1];
             this.nextDate = day.date.date;
             if (day.date.isPrevMonth) {
@@ -487,6 +502,13 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
             this.prevMonthView.focusPreviousDate(day.nativeElement);
         }
 
+        if (!this.isDayFocusable(day)) {
+            day = dates[i - 1];
+            if (!day) {
+                this.nextDate = this.calendarModel.timedelta(this.nextDate, 'day', -1);
+            }
+        }
+
         // focus item in previous month, which is currently out of view
         if (this.changeDaysView && !this.prevMonthView && ((day && day.isPreviousMonth) || !day)) {
             this.isKeydownTrigger = true;
@@ -499,7 +521,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
                 }
             };
 
-            this.onViewChanged.emit({ date: this.nextDate, delta: -1 });
+            this.onViewChanged.emit(this.nextDate);
         }
     }
 
@@ -509,14 +531,14 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
     private focusNextDate(target, nextView = false) {
         const node = this.dates.find((date) => date.nativeElement === target);
         let dates = this.dates.toArray(),
-            day: IgxDayItemComponent;
+            day: IgxDayItemComponent, i;
         let index = dates.indexOf(node);
 
         if (!node) { return; }
         this.nextDate = this.calendarModel.timedelta(node.date.date, 'day', 1);
 
         // focus item in current month
-        for (let i = index; i < dates.length - 1; i++) {
+        for (i = index; i < dates.length - 1; i++) {
             day = nextView ? dates[i] : dates[i + 1];
             this.nextDate = day.date.date;
             if (day.date.isNextMonth) {
@@ -541,6 +563,13 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
             this.nextMonthView.focusNextDate(day.nativeElement);
         }
 
+        if (!this.isDayFocusable(day)) {
+            day = dates[i + 1];
+            if (!day) {
+                this.nextDate = this.calendarModel.timedelta(this.nextDate, 'day', 1);
+            }
+        }
+
         // focus item in next month, which is currently out of view
         if (this.changeDaysView && !this.nextMonthView && ((day && day.isNextMonth) || !day)) {
             this.isKeydownTrigger = true;
@@ -555,7 +584,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
                 }
             };
 
-            this.onViewChanged.emit({ date: this.nextDate, delta: 1, moveToFirst: true });
+            this.onViewChanged.emit(this.nextDate);
         }
     }
 
@@ -574,6 +603,40 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
             type: DateRangeType.Specific,
             dateRange: dateRange
         }];
+    }
+
+    /**
+     * Helper method that does deselection for all month views when selection is "multi"
+     * If not called, selection in other month views stays
+     * @hidden
+     */
+    private deselectDateInMonthViews(value: Date) {
+        let monthView = this as IgxDaysViewComponent;
+        while (monthView.prevMonthView) {
+            monthView = monthView.prevMonthView;
+            this.deselectMultipleInMonth(monthView, value);
+        }
+        monthView = this as IgxDaysViewComponent;
+        while (monthView.nextMonthView) {
+            monthView = monthView.nextMonthView;
+            this.deselectMultipleInMonth(monthView, value);
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    private deselectMultipleInMonth(monthView: IgxDaysViewComponent, value: Date) {
+        const mDates = monthView.selectedDates.map(v => this.getDateOnly(v).getTime());
+        const selDates = this.selectedDates.map(v => this.getDateOnly(v).getTime());
+
+        if (JSON.stringify(mDates) === JSON.stringify(selDates)) {
+            return;
+        }
+        const valueDateOnly = this.getDateOnly(value);
+        monthView.selectedDates = monthView.selectedDates.filter(
+            (date: Date) => date.getTime() !== valueDateOnly.getTime()
+        );
     }
 
     /**
