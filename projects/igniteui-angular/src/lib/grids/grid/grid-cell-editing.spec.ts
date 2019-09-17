@@ -647,6 +647,46 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.editMode).toBe(true);
         });
 
+        it(`Should be able to update other cell in 'onCellEdit' event`, () => {
+            grid.primaryKey = 'personNumber';
+            fixture.detectChanges();
+
+            spyOn(grid.onCellEdit, 'emit').and.callThrough();
+            grid.onCellEdit.subscribe((e: IGridEditEventArgs) => {
+                if (e.cellID.columnID === 0) {
+                    grid.updateCell(1, e.rowID, 'age' );
+                }
+            });
+
+            let cell = grid.getCellByColumn(0, 'fullName');
+
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            fixture.detectChanges();
+
+            cell.nativeElement.dispatchEvent(new MouseEvent('dblclick'));
+            fixture.detectChanges();
+
+            expect(cell.editMode).toBe(true);
+            let editTemplate = fixture.debugElement.query(By.css('input'));
+            UIInteractions.sendInput(editTemplate, 'New Name');
+            fixture.detectChanges();
+
+            // press tab on edited cell
+            UIInteractions.triggerKeyDownWithBlur('tab', cell.nativeElement, true);
+            fixture.detectChanges();
+
+            expect(grid.onCellEdit.emit).toHaveBeenCalledTimes(2);
+            cell = grid.getCellByColumn(0, 'age');
+            expect(cell.editMode).toBe(true);
+            expect(cell.value).toEqual(1);
+            expect(cell.editValue).toEqual(1);
+            editTemplate = fixture.debugElement.query(By.css('input'));
+            expect(editTemplate.nativeElement.value).toEqual('1');
+
+            cell = grid.getCellByColumn(0, 'fullName');
+            expect(cell.value).toEqual('New Name');
+        });
+
         it(`Should properly emit 'onCellEditCancel' event`, () => {
             spyOn(grid.onCellEditCancel, 'emit').and.callThrough();
             const cell = grid.getCellByColumn(0, 'fullName');
