@@ -2,11 +2,9 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 8.2.x
+## 8.2.0
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - `[filterStrategy] - input that allows you to override the default filtering strategy`
-
-## 8.2.0
 
 ### New theme
 Ignite UI for angular now have a new theme that mimics Microsoft "Fluent" design system.  
