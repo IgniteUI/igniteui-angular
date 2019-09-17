@@ -652,6 +652,18 @@
         }
     }
 
+    %cal-value--inactive%cal-value--selected%cal-value--first {
+        &::after {
+            background: transparent !important;
+        }
+    }
+
+    %cal-value--inactive%cal-value--selected%cal-value--last {
+        &::before {
+            background: transparent !important;
+        }
+    }
+
     %cal-value--first {
         position: relative;
         background: transparent;

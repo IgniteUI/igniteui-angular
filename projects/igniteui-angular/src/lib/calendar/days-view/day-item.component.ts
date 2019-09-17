@@ -54,7 +54,6 @@ export class IgxDayItemComponent {
     public isFirstInRange = false;
 
     @Input()
-    @HostBinding('class.igx-calendar__date--range')
     public isWithinRange = false;
 
     @Output()
@@ -121,6 +120,10 @@ export class IgxDayItemComponent {
         }
 
         return isDateInRanges(this.date.date, this.outOfRangeDates);
+    }
+    @HostBinding('class.igx-calendar__date--range')
+    public get isWithinRangeCSS(): boolean {
+        return !this.isSingleSelection && this.isWithinRange;
     }
 
     @HostBinding('class.igx-calendar__date--special')
