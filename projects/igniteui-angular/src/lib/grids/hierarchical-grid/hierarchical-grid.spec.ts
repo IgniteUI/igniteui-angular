@@ -634,7 +634,7 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         expect(child2._destroyed).toBeTruthy();
     }));
 
-    it(' should emit child grid events with the related child grid instance as an event arg.', async() => {
+    it('should emit child grid events with the related child grid instance as an event arg.', async() => {
         const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         UIInteractions.clickElement(row.expander);
         fixture.detectChanges();
