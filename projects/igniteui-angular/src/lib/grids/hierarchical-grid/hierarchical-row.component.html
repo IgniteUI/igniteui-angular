@@ -77,12 +77,14 @@
 </ng-template>
 
 <ng-template #rowSelectorBaseTemplate>
-    <igx-checkbox
-        [readonly]="true"
-        [checked]="selected"
-        disableRipple="true"
-        [disabled]="deleted"
-        [disableTransitions]="grid.disableTransitions"
-        [aria-label]="rowCheckboxAriaLabel">
-    </igx-checkbox>
+    <div class="igx-grid__def_tmp_padding">
+        <igx-checkbox
+            [readonly]="true"
+            [checked]="selected"
+            disableRipple="true"
+            [disabled]="deleted"
+            [disableTransitions]="grid.disableTransitions"
+            [aria-label]="rowCheckboxAriaLabel">
+        </igx-checkbox>
+    </div>
 </ng-template>

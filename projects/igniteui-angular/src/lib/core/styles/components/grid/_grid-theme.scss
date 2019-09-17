@@ -1379,7 +1379,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: map-get($grid-header-padding, 'comfortable');
         border-right: --var($theme, 'header-border-width')
             --var($theme, 'header-border-style')
             --var($theme, 'header-border-color');
@@ -1387,11 +1386,15 @@
         z-index: 4;
     }
 
-    %grid__cbx-selection--cosy {
+    %grid__def_tmp_padding {
+        padding: map-get($grid-header-padding, 'comfortable');
+    }
+
+    %grid__def_tmp_padding--cosy {
         padding: map-get($grid-header-padding, 'cosy');
     }
 
-    %grid__cbx-selection--compact {
+    %grid__def_tmp_padding--compact {
         padding: map-get($grid-header-padding, 'compact');
     }
 
