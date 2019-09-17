@@ -9,6 +9,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { HammerGesturesManager } from '../../core/touch';
+import * as utils from '../../core/utils';
 
 const DEBOUNCETIME = 30;
 
@@ -186,8 +187,16 @@ describe('IgxGrid - Cell component', () => {
         expect(firstCell).toBe(fix.componentInstance.clickedCell);
     });
 
-    it('Should handle doubletap, trigger onDoubleClick event', () => {
+    it('Should not attach doubletap handler for non-iOS', () => {
         const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
+        spyOn(utils, 'isIOS').and.returnValue(false);
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+    });
+
+    it('Should handle doubletap on iOS, trigger onDoubleClick event', () => {
+        const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
+        spyOn(utils, 'isIOS').and.returnValue(true);
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
 

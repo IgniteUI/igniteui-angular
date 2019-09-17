@@ -228,6 +228,15 @@ export function isFirefox(): boolean {
 
 /**
  * @hidden
+ * TODO: make injectable, check isPlatformBrowser()
+ */
+export function isIOS(): boolean {
+    const iosBrowser = typeof window !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent) && !('MSStream' in window);
+    return iosBrowser;
+}
+
+/**
+ * @hidden
  */
 export function isLeftClick(event: PointerEvent) {
     return event.button === 0;
