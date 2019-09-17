@@ -741,7 +741,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
         });
     });
 
-    describe('Custom selectors', () => {
+    describe('Custom row selectors', () => {
         let hGrid;
         let firstLevelChild;
 
