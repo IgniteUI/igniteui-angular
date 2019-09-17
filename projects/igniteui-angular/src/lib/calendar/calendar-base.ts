@@ -143,6 +143,10 @@ export class IgxCalendarBase implements ControlValueAccessor {
      * Otherwise it is an array of `Date` objects.
      */
     public set value(value: Date | Date[]) {
+        if (!value || !!value && (value as Date[]).length === 0) {
+            return;
+        }
+
         this.selectDate(value);
     }
 
@@ -209,6 +213,20 @@ export class IgxCalendarBase implements ControlValueAccessor {
     public set specialDates(value: DateRangeDescriptor[]) {
         this._specialDates = value;
     }
+
+    /**
+     * Sets/gets whether the outside dates (dates that are out of the current month) will be hidden.
+     * Default value is `false`.
+     * ```html
+     * <igx-calendar [hideOutsideDays] = "true"></igx-calendar>
+     * ```
+     * ```typescript
+     * let hideOutsideDays = this.calendar.hideOutsideDays;
+     * ```
+     */
+
+    @Input()
+    public hideOutsideDays = false;
 
     /**
      * Emits an event when a date is selected.
@@ -379,7 +397,14 @@ export class IgxCalendarBase implements ControlValueAccessor {
      */
     private selectMultiple(value: Date | Date[]) {
         if (Array.isArray(value)) {
-            this.selectedDates = this.selectedDates.concat(value.map(v => this.getDateOnly(v)));
+            const newDates = value.map(v => this.getDateOnly(v).getTime());
+            const selDates = this.selectedDates.map(v => this.getDateOnly(v).getTime());
+
+            if (JSON.stringify(newDates) === JSON.stringify(selDates)) {
+                return;
+            }
+
+            this.selectedDates = Array.from(new Set([...newDates, ...selDates])).map(v => new Date(v));
         } else {
             const valueDateOnly = this.getDateOnly(value);
             const newSelection = [];
@@ -395,7 +420,7 @@ export class IgxCalendarBase implements ControlValueAccessor {
                 this.selectedDates = this.selectedDates.concat(newSelection);
             }
         }
-
+        this.selectedDates.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
         this._onChangeCallback(this.selectedDates);
     }
 
