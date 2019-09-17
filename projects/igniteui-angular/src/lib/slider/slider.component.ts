@@ -657,7 +657,7 @@ export class IgxSliderComponent implements
      * @hidden
      */
     @HostListener('pointerdown', ['$event'])
-    public onPointerDown($event) {
+    public onPointerDown($event: PointerEvent) {
         this.findClosestThumb($event);
 
         if (!this.thumbTo.isActive && this.thumbFrom === undefined) {
@@ -679,6 +679,9 @@ export class IgxSliderComponent implements
         if (!this.thumbTo.isActive && this.thumbFrom === undefined) {
             return;
         }
+
+        const activeThumb = this.thumbTo.isActive ? this.thumbTo : this.thumbTo;
+        activeThumb.nativeElement.releasePointerCapture($event.pointerId);
 
         this.hideSliderIndicators();
     }
@@ -925,7 +928,7 @@ export class IgxSliderComponent implements
      * @hidden
      */
     public onTap($event) {
-        this.update($event.srcEvent.clientX);
+        // this.update($event.srcEvent.clientX);
     }
     /**
      *
@@ -1006,9 +1009,9 @@ export class IgxSliderComponent implements
         return value;
     }
 
-    private findClosestThumb(event) {
+    private findClosestThumb(event: PointerEvent) {
         if (this.isRange) {
-            this.closestHandle(event.clientX);
+            this.closestHandle(event);
         } else {
             this.thumbTo.nativeElement.focus();
         }
@@ -1086,15 +1089,19 @@ export class IgxSliderComponent implements
         this.updateTrack();
     }
 
-    private closestHandle(mouseX) {
+    private closestHandle(event: PointerEvent) {
         const fromOffset = this.thumbFrom.nativeElement.offsetLeft + this.thumbFrom.nativeElement.offsetWidth / 2;
         const toOffset = this.thumbTo.nativeElement.offsetLeft + this.thumbTo.nativeElement.offsetWidth / 2;
-        const xPointer = mouseX - this._el.nativeElement.getBoundingClientRect().left;
+        const xPointer = event.clientX - this._el.nativeElement.getBoundingClientRect().left;
         const match = this.closestTo(xPointer, [fromOffset, toOffset]);
 
-        if (match === fromOffset) {
+        if (fromOffset === toOffset && toOffset < xPointer) {
+            this.thumbTo.nativeElement.focus();
+        } else if (fromOffset === toOffset && toOffset > xPointer ) {
             this.thumbFrom.nativeElement.focus();
-        } else if (match === toOffset) {
+        } else if (match === fromOffset) {
+            this.thumbFrom.nativeElement.focus();
+        } else {
             this.thumbTo.nativeElement.focus();
         }
     }
