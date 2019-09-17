@@ -693,7 +693,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
 
     private calculateContextMenuTarget() {
         const containerRect = this.expressionsContainer.nativeElement.getBoundingClientRect();
-        const chips = this.chips.filter(c => this.selectedExpressions.includes(c.data));
+        const chips = this.chips.filter(c => this.selectedExpressions.indexOf(c.data) !== -1);
         let minTop = chips.reduce((t, c) =>
             Math.min(t, c.elementRef.nativeElement.getBoundingClientRect().top), Number.MAX_VALUE);
         minTop = Math.max(containerRect.top, minTop);
