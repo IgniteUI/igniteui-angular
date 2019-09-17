@@ -3313,38 +3313,35 @@ describe('IgxGrid - Filtering Row UI actions', () => {
         it('should scroll correct chip in view when one is deleted', async() => {
             grid.width = '700px';
             fix.detectChanges();
+            await wait(30);
 
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
             fix.detectChanges();
 
             GridFunctions.applyFilter('a', fix);
-            await wait(16);
-            GridFunctions.applyFilter('e', fix);
-            await wait(16);
-            GridFunctions.applyFilter('i', fix);
-            await wait(16);
-            GridFunctions.applyFilter('o', fix);
-            // wait for chip to be scrolled in view
-            await wait(200);
-            fix.detectChanges();
             await wait(100);
+            GridFunctions.applyFilter('e', fix);
+            await wait(100);
+            GridFunctions.applyFilter('i', fix);
+            await wait(100);
+            GridFunctions.applyFilter('o', fix);
+            await wait(300);
             verifyMultipleChipsVisibility(fix, [false, false, false, true]);
 
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             GridFunctions.removeFilterChipByIndex(3, filterUIRow);
             // wait for chip to be scrolled in view
             fix.detectChanges();
-            await wait(200);
+            await wait(400);
 
             verifyMultipleChipsVisibility(fix, [false, true, false]);
             let chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
             expect(chips.length).toBe(3);
 
             GridFunctions.removeFilterChipByIndex(2, filterUIRow);
+            // wait for chip to be scrolled in view
             fix.detectChanges();
-           // wait for chip to be scrolled in view
-           fix.detectChanges();
-           await wait(200);
+            await wait(300);
 
             verifyMultipleChipsVisibility(fix, [true, false]);
             chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
