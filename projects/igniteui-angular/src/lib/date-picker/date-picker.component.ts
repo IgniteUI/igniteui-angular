@@ -32,6 +32,7 @@ import { IgxInputGroupModule, IgxInputDirective, IgxInputGroupComponent } from '
 import { Subject, fromEvent, animationFrameScheduler, interval } from 'rxjs';
 import { filter, takeUntil, throttle } from 'rxjs/operators';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { IgxTextSelectionModule} from '../directives/text-selection/text-selection.directive';
 import {
     OverlaySettings,
     IgxOverlayService,
@@ -1351,7 +1352,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         IgxDatePickerTemplateDirective, DatePickerDisplayValuePipe, DatePickerInputValuePipe],
     exports: [IgxDatePickerComponent, IgxDatePickerTemplateDirective, IgxDatePickerActionsDirective,
         DatePickerDisplayValuePipe, DatePickerInputValuePipe],
-    imports: [CommonModule, IgxIconModule, IgxInputGroupModule, IgxCalendarModule, IgxButtonModule, IgxRippleModule, IgxMaskModule],
+    imports: [CommonModule, IgxIconModule, IgxInputGroupModule, IgxCalendarModule, IgxButtonModule,
+                IgxRippleModule, IgxMaskModule, IgxTextSelectionModule],
     entryComponents: [IgxCalendarContainerComponent]
 })
 export class IgxDatePickerModule { }
