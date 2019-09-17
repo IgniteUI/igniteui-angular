@@ -300,7 +300,9 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
      */
     public selectDay(event) {
         this.selectDateFromClient(event.date);
-        this.deselectDateInMonthViews(event.date);
+        if (this.selection === 'multi') {
+            this.deselectDateInMonthViews(event.date);
+        }
         this.onDateSelection.emit(event);
 
         this.onSelection.emit(this.selectedDates);
