@@ -13,7 +13,7 @@ import { IgxPrefixDirective } from './../directives/prefix/prefix.directive';
 import { IgxLabelDirective } from './../directives/label/label.directive';
 import { IgxSuffixDirective } from './../directives/suffix/suffix.directive';
 import { DisplayDensity } from '../core/displayDensity';
-import { UIInteractions} from '../test-utils/ui-interactions.spec';
+import { UIInteractions, wait} from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 
 @Component({
@@ -398,13 +398,14 @@ describe('IgxChip', () => {
         });
     });
 
-    it('should fire onSelection event when selectable is true', () => {
+    it('should fire onSelection event when selectable is true', (async() => {
         const fix = TestBed.createComponent(TestChipComponent);
         fix.detectChanges();
 
         const secondChipComp = fix.componentInstance.chips.toArray()[1];
 
         spyOn(secondChipComp.onSelection, 'emit');
+        spyOn(secondChipComp.onSelectionEnd, 'emit');
         secondChipComp.chipArea.nativeElement.focus();
 
         const keyEvent = new KeyboardEvent('keydown', {
@@ -413,7 +414,11 @@ describe('IgxChip', () => {
         secondChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
         fix.detectChanges();
         expect(secondChipComp.onSelection.emit).toHaveBeenCalled();
-    });
+        expect(secondChipComp.onSelectionEnd.emit).not.toHaveBeenCalled();
+
+        await wait(400);
+        expect(secondChipComp.onSelectionEnd.emit).toHaveBeenCalled();
+    }));
 
     it('should not fire onSelection event when selectable is false', () => {
         const fix = TestBed.createComponent(TestChipComponent);
@@ -422,6 +427,7 @@ describe('IgxChip', () => {
         const firstChipComp = fix.componentInstance.chips.toArray()[0];
 
         spyOn(firstChipComp.onSelection, 'emit');
+        spyOn(firstChipComp.onSelectionEnd, 'emit');
         firstChipComp.elementRef.nativeElement.focus();
 
         const keyEvent = new KeyboardEvent('keydown', {
@@ -430,6 +436,7 @@ describe('IgxChip', () => {
         firstChipComp.elementRef.nativeElement.dispatchEvent(keyEvent);
         fix.detectChanges();
         expect(firstChipComp.onSelection.emit).toHaveBeenCalledTimes(0);
+        expect(firstChipComp.onSelectionEnd.emit).toHaveBeenCalledTimes(0);
     });
 
     it('should not fire onSelection event when the remove button is clicked', () => {
@@ -439,6 +446,7 @@ describe('IgxChip', () => {
         const secondChipComp = fix.componentInstance.chips.toArray()[1];
 
         spyOn(secondChipComp.onSelection, 'emit');
+        spyOn(secondChipComp.onSelectionEnd, 'emit');
 
         const chipRemoveButton = secondChipComp.elementRef.nativeElement.querySelectorAll('.' + CHIP_REMOVE_BUTTON)[0];
         const removeBtnTop = chipRemoveButton.getBoundingClientRect().top;
@@ -450,5 +458,6 @@ describe('IgxChip', () => {
         fix.detectChanges();
 
         expect(secondChipComp.onSelection.emit).not.toHaveBeenCalled();
+        expect(secondChipComp.onSelectionEnd.emit).not.toHaveBeenCalled();
     });
 });

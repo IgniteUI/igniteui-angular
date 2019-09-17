@@ -538,17 +538,21 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
                     }
                 ];
             }
-
-            setTimeout(() => {
-                this.calculateContextMenuTarget();
-                if (this.contextMenuToggle.collapsed) {
-                    this.contextMenuToggle.open(this._overlaySettings);
-                } else {
-                    this.contextMenuToggle.reposition();
-                }
-            }, 200);
         } else {
             this.contextMenuToggle.close();
+        }
+    }
+
+    private onChipSelectionEnd() {
+        const contextualGroup = this.findSingleSelectedGroup();
+        if (contextualGroup || this.selectedExpressions.length > 1) {
+            this.contextualGroup = contextualGroup;
+            this.calculateContextMenuTarget();
+            if (this.contextMenuToggle.collapsed) {
+                this.contextMenuToggle.open(this._overlaySettings);
+            } else {
+                this.contextMenuToggle.reposition();
+            }
         }
     }
 
