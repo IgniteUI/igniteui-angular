@@ -18,7 +18,9 @@ import { IgxSelectionAPIService } from '../core/selection';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './column.component';
-import { getNodeSizeViaRange, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, NAVIGATION_KEYS, isIE, isLeftClick } from '../core/utils';
+import {
+    getNodeSizeViaRange, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, NAVIGATION_KEYS, isIE, isLeftClick, PlatformUtil
+} from '../core/utils';
 import { State } from '../services/index';
 import { IgxGridBaseComponent, IGridEditEventArgs, IGridDataBindable } from './grid-base.component';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../core/grid-selection';
@@ -555,9 +557,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 this.nativeElement.addEventListener('compositionend', this.compositionEndHandler);
             }
         });
-        this.touchManager.addEventListener(this.nativeElement, 'doubletap', this.onDoubleClick, {
-            cssProps: { } /* don't disable user-select, etc */
-        } as HammerOptions);
+        if (PlatformUtil.isIOS()) {
+            this.touchManager.addEventListener(this.nativeElement, 'doubletap', this.onDoubleClick, {
+                cssProps: { } /* don't disable user-select, etc */
+            } as HammerOptions);
+        }
     }
 
     /**
