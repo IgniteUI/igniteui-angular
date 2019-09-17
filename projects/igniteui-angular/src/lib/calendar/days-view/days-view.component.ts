@@ -382,9 +382,6 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
 
         if (!this.isDayFocusable(day)) {
             day = dates[i - 7];
-            if (!day) {
-                this.nextDate = this.calendarModel.timedelta(this.nextDate, 'day', -7);
-            }
         }
 
         // focus item in next month, which is currently out of view
@@ -442,9 +439,6 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
 
         if (!this.isDayFocusable(day)) {
             day = dates[i + 7];
-            if (!day) {
-                this.nextDate = this.calendarModel.timedelta(this.nextDate, 'day', 7);
-            }
 
         }
 
@@ -504,9 +498,6 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
 
         if (!this.isDayFocusable(day)) {
             day = dates[i - 1];
-            if (!day) {
-                this.nextDate = this.calendarModel.timedelta(this.nextDate, 'day', -1);
-            }
         }
 
         // focus item in previous month, which is currently out of view
@@ -565,9 +556,6 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
 
         if (!this.isDayFocusable(day)) {
             day = dates[i + 1];
-            if (!day) {
-                this.nextDate = this.calendarModel.timedelta(this.nextDate, 'day', 1);
-            }
         }
 
         // focus item in next month, which is currently out of view

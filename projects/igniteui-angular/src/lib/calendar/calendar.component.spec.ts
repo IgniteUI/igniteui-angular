@@ -1040,7 +1040,6 @@ describe('IgxCalendar', () => {
 
             selectedDates.forEach(d => {
                 expect(d.selected).toBe(true);
-                expect(d.isSelectedCSS).toBe(true);
             });
 
             const notSelectedDates = calendar.daysView.dates.toArray().filter(d => {
@@ -1051,7 +1050,6 @@ describe('IgxCalendar', () => {
 
             notSelectedDates.forEach(d => {
                 expect(d.selected).toBe(false);
-                expect(d.isSelectedCSS).toBe(false);
             });
         });
     });
