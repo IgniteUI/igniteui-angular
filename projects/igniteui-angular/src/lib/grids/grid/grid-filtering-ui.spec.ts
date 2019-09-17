@@ -3341,10 +3341,9 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             expect(chips.length).toBe(3);
 
             GridFunctions.removeFilterChipByIndex(2, filterUIRow);
+            // wait for chip to be scrolled in view
             fix.detectChanges();
-           // wait for chip to be scrolled in view
-           fix.detectChanges();
-           await wait(200);
+            await wait(200);
 
             verifyMultipleChipsVisibility(fix, [true, false]);
             chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
