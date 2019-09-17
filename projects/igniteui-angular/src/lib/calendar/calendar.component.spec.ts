@@ -1070,7 +1070,6 @@ describe('IgxCalendar', () => {
 
         specialDates.forEach(d => {
             expect(d.isSpecial).toBe(true);
-            expect(d.isSpecialCSS).toBe(true);
         });
 
         let disabledDates = calendar.daysView.dates.toArray().filter(d => {
@@ -1098,7 +1097,6 @@ describe('IgxCalendar', () => {
 
         specialDates.forEach(d => {
             expect(d.isSpecial).toBe(true);
-            expect(d.isSpecialCSS).toBe(true);
         });
 
         disabledDates = calendar.daysView.dates.toArray().filter(d => {
@@ -2070,7 +2068,6 @@ class DateTester {
     static testDatesSpeciality(dates: IgxDayItemComponent[], special: boolean): void {
         for (const date of dates) {
             expect(date.isSpecial).toBe(special);
-            expect(date.isSpecialCSS).toBe(special);
         }
     }
 }
