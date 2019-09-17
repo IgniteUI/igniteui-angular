@@ -179,7 +179,7 @@ private resolver;
         // exclude outputs related to two-way binding functionality
         const inputNames = factory.inputs.map(input => input.propName);
         const outputs = factory.outputs.filter(o => {
-            const matchingInputPropName = o.propName.slice(0, o.propName.indexOf('Changed'));
+            const matchingInputPropName = o.propName.slice(0, o.propName.indexOf('Change'));
             return inputNames.indexOf(matchingInputPropName) === -1;
         });
         outputs.forEach(output => {
