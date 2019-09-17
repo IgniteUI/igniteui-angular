@@ -1386,15 +1386,18 @@
         z-index: 4;
     }
 
-    %grid__def_tmp_padding {
+    %cbx-padding {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         padding: map-get($grid-header-padding, 'comfortable');
     }
 
-    %grid__def_tmp_padding--cosy {
+    %cbx-padding--cosy {
         padding: map-get($grid-header-padding, 'cosy');
     }
 
-    %grid__def_tmp_padding--compact {
+    %cbx_padding--compact {
         padding: map-get($grid-header-padding, 'compact');
     }
 

@@ -331,8 +331,8 @@
         @extend %grid-cell-text !optional;
     }
 
-    @include e(def_tmp_padding) {
-        @extend %grid__def_tmp_padding !optional;
+    @include e(cbx-padding) {
+        @extend %cbx-padding !optional;
     }
 
     @include e(cbx-selection) {
@@ -523,8 +523,8 @@
             @extend %igx-grid__drag-indicator--cosy !optional;
         }
 
-        @include e(def_tmp_padding) {
-            @extend %grid__def_tmp_padding--cosy !optional;
+        @include e(cbx-padding) {
+            @extend %cbx-padding--cosy !optional;
         }
 
         @include e(cbx-selection, $m: push) {
@@ -623,8 +623,8 @@
             @extend %igx-grid__drag-indicator--compact !optional;
         }
 
-        @include e(def_tmp_padding) {
-            @extend %grid__def_tmp_padding--compact !optional;
+        @include e(cbx-padding) {
+            @extend %cbx-padding--compact !optional;
         }
 
         @include e(cbx-selection, $m: push) {
