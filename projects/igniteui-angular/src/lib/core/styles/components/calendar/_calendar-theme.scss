@@ -316,6 +316,10 @@
         border-radius: --var($theme, 'border-radius');
     }
 
+    %cal-display + %cal-display {
+        margin-left: 1rem;
+    }
+
     %cal-display--vertical {
         flex-flow: row nowrap;
 
@@ -355,6 +359,11 @@
         justify-content: space-between;
         align-items: center;
         padding-bottom: $cal-picker-padding;
+        position: relative;
+
+        div {
+            text-align: center;
+        }
     }
 
     %cal-picker-arrow {
@@ -364,7 +373,9 @@
         user-select: none;
         outline: none;
         cursor: pointer;
-        flex-basis: 14.28%; /* equals the width of a single date 100% / 7 (days) */
+        position: absolute;
+        height: 100%;
+        align-items: center;
 
         &:focus,
         &:hover {
@@ -467,6 +478,8 @@
         color: --var($theme, 'inactive-text-color');
         cursor: default;
         border-radius: 0;
+        flex-basis: 14.28%;
+        // 100 divided by the number of weekdays
     }
 
     %cal-value--weekend {
@@ -612,6 +625,45 @@
         }
     }
 
+    %cal-value--hidden%cal-value--disabled-range {
+        background: transparent !important;
+
+        &::after,
+        &::before {
+            background: transparent !important;
+        }
+    }
+
+    %cal-value--range%cal-value--inactive%cal-value--selected {
+        background: transparent !important;
+
+        %cal-value-content {
+            color: --var($theme, 'date-disabled-text-color');
+            background: transparent !important;
+        }
+    }
+
+    %cal-value--range%cal-value--inactive%cal-value--selected%cal-value--single {
+        background: transparent !important;
+
+        %cal-value-content {
+            color: --var($theme, 'date-selected-text-color');
+            background: --var($theme, 'date-selected-background') !important;
+        }
+    }
+
+    %cal-value--inactive%cal-value--selected%cal-value--first {
+        &::after {
+            background: transparent !important;
+        }
+    }
+
+    %cal-value--inactive%cal-value--selected%cal-value--last {
+        &::before {
+            background: transparent !important;
+        }
+    }
+
     %cal-value--first {
         position: relative;
         background: transparent;
@@ -643,6 +695,12 @@
             bottom: 0;
             background: --var($theme, 'date-selected-background');
             z-index: -1;
+        }
+    }
+
+    %cal-value--hidden {
+        %cal-value-content {
+            visibility: hidden;
         }
     }
 }
