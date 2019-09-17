@@ -503,7 +503,7 @@
     @include igx-root-css-vars($theme);
 
     $palette: map-get($theme, 'palette');
-
+    $cbx-size: rem(20px);
     $grid-shadow: --var($theme, 'grid-shadow');
 
     $grid-caption-fs: rem(20px);
@@ -533,6 +533,16 @@
         cosy: 0 rem(16px),
         compact: 0 rem(12px)
     );
+
+    $grid-cbx-padding: (
+        comfortable: rem(24px),
+        cosy: rem(16px),
+        compact: rem(12px)
+    );
+
+    $cbx-padding: map-get($grid-cbx-padding, 'comfortable');
+    $cbx-padding-cosy: map-get($grid-cbx-padding, 'cosy');
+    $cbx-padding-compact: map-get($grid-cbx-padding, 'compact');
 
     $grid-header-height: (
         comfortable: rem(50px),
@@ -1390,15 +1400,16 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: map-get($grid-header-padding, 'comfortable');
+        // The min-width here plays the role of padding because of IE11
+        min-width: calc(#{$cbx-size} + (#{$cbx-padding} * 2));
     }
 
     %cbx-padding--cosy {
-        padding: map-get($grid-header-padding, 'cosy');
+        min-width: calc(#{$cbx-size} + (#{$cbx-padding-cosy} * 2));
     }
 
     %cbx-padding--compact {
-        padding: map-get($grid-header-padding, 'compact');
+        min-width: calc(#{$cbx-size} + (#{$cbx-padding-compact} * 2));
     }
 
     %grid__resize-handle {
