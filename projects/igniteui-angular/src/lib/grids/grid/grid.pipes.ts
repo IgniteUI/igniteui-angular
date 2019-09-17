@@ -11,6 +11,7 @@ import { IGroupingExpression } from '../../data-operations/grouping-expression.i
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent } from '../grid-base.component';
 import { GridType } from '../common/grid.interface';
+import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 
 /**
  *@hidden
@@ -131,10 +132,12 @@ export class IgxGridFilteringPipe implements PipeTransform {
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>) { }
 
     public transform(collection: any[], expressionsTree: IFilteringExpressionsTree,
+        filterStrategy: IFilteringStrategy,
         advancedExpressionsTree: IFilteringExpressionsTree, id: string, pipeTrigger: number) {
         const grid = this.gridAPI.grid;
         const state = {
             expressionsTree: expressionsTree,
+            strategy: filterStrategy,
             advancedExpressionsTree: advancedExpressionsTree
         };
 

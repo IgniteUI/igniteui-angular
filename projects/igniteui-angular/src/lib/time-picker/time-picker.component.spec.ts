@@ -147,12 +147,12 @@ describe('IgxTimePicker', () => {
 
         const target = dom.query(By.directive(IgxInputDirective));
 
-        spyOn(timePicker.onOpen, 'emit');
+        spyOn(timePicker.onOpened, 'emit');
 
         target.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
         tick();
 
-        expect(timePicker.onOpen.emit).toHaveBeenCalled();
+        expect(timePicker.onOpened.emit).toHaveBeenCalled();
     }));
 
     it('TimePicker Validation Failed event', fakeAsync(() => {
@@ -1398,26 +1398,26 @@ describe('IgxTimePicker', () => {
             expect(dom.query(By.css('.igx-time-picker--dropdown'))).toBeNull();
         }));
 
-        it('should fire events onOpen and onClose for dropdown mode.', fakeAsync(() => {
+        it('should fire events onOpened and onClosed for dropdown mode.', fakeAsync(() => {
             fixture.detectChanges();
 
             const iconTime = dom.queryAll(By.css('.igx-icon'))[0];
 
-            spyOn(timePicker.onOpen, 'emit');
+            spyOn(timePicker.onOpened, 'emit');
 
             UIInteractions.clickElement(iconTime);
             tick();
             fixture.detectChanges();
 
-            expect(timePicker.onOpen.emit).toHaveBeenCalled();
+            expect(timePicker.onOpened.emit).toHaveBeenCalled();
 
-            spyOn(timePicker.onClose, 'emit');
+            spyOn(timePicker.onClosed, 'emit');
 
             UIInteractions.clickElement(iconTime);
             tick();
             fixture.detectChanges();
 
-            expect(timePicker.onOpen.emit).toHaveBeenCalled();
+            expect(timePicker.onOpened.emit).toHaveBeenCalled();
         }));
 
         it('should display OK and Cancel buttons by default.', fakeAsync(() => {

@@ -1809,6 +1809,33 @@ describe('IgxGrid - Row Editing #grid', () => {
                 cancel: false
             });
         }));
+
+        it(`Should properly emit 'onCellEdit' event `, fakeAsync(() => {
+            spyOn(grid.onCellEdit, 'emit').and.callThrough();
+            spyOn(grid.onRowEdit, 'emit').and.callThrough();
+
+            let cell = grid.getCellByColumn(0, 'ProductName');
+            const cellArgs = { cellID: cell.cellID, rowID: cell.row.rowID, oldValue: 'Chai', newValue: 'New Value', cancel: false };
+
+            cell.nativeElement.dispatchEvent(new MouseEvent('dblclick'));
+            tick(16);
+            fix.detectChanges();
+
+            expect(cell.editMode).toBe(true);
+            const editTemplate = fix.debugElement.query(By.css('input'));
+            UIInteractions.sendInput(editTemplate, 'New Value');
+            fix.detectChanges();
+
+            // Click on cell in different row
+            cell = grid.getCellByColumn(2, 'ProductName');
+            UIInteractions.simulateClickAndSelectCellEvent(cell);
+            tick(16);
+            fix.detectChanges();
+
+            expect(grid.onRowEdit.emit).toHaveBeenCalledTimes(1);
+            expect(grid.onCellEdit.emit).toHaveBeenCalledTimes(1);
+            expect(grid.onCellEdit.emit).toHaveBeenCalledWith(cellArgs);
+        }));
     });
 
     describe('Column editable property', () => {

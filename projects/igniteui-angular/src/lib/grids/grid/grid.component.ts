@@ -567,7 +567,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements GridType, 
      */
     public groupBy(expression: IGroupingExpression | Array<IGroupingExpression>): void {
         this.endEdit(true);
-        this._gridAPI.submit_value();
         if (expression instanceof Array) {
             this._gridAPI.groupBy_multiple(expression);
         } else {

@@ -41,8 +41,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
 
     public set isLoading(value: boolean) {
         this._isLoading = value;
-        if (!(this._cdr as any).destroyed) {
-            this._cdr.detectChanges();
+        if (!(this.cdr as any).destroyed) {
+            this.cdr.detectChanges();
         }
     }
 
@@ -79,7 +79,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
         }
     }
 
-    constructor(private _cdr: ChangeDetectorRef) { }
+    constructor(public cdr: ChangeDetectorRef) { }
 
     public ngAfterViewInit() {
         this.refreshSize();

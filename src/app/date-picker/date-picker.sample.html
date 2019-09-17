@@ -14,8 +14,11 @@
         <article class="datepicker-column">
             <h4 class="sample-title">Default Date Picker</h4>
             <p class="sample-description">Date Picker with passed date</p>
+            <button igxButton="raised" igxRipple (click)="showHide()">Show/hide</button>
+            <input type="number"  #monthsviewnumber />
+            <button igxButton="flat" igxRipple (click)="setMonthsViewNumber(monthsviewnumber)">Set months number</button>
             <div class="preview">
-                <igx-date-picker [value]="date"></igx-date-picker>
+                <igx-date-picker #datepicker1 [value]="date"></igx-date-picker>
             </div>
         </article>
         <article class="datepicker-column">

@@ -118,7 +118,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & GridType> {
 
     public submit_value() {
         const cell = this.grid.crudService.cell;
-        if (cell) {
+        if (cell ) {
             const args = this.update_cell(cell, cell.editValue);
             if (args.cancel) {
                 return;
