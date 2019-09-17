@@ -3,7 +3,6 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 8.2.0
-
 ### New theme
 Ignite UI for angular now have a new theme that mimics Microsoft "Fluent" design system.  
 Depending on your use case you can use one of the following mixins:  
@@ -31,6 +30,7 @@ For more information about the theming please read our [documentation](https://w
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Advanced Filtering functionality is added. In the advanced filtering dialog, you could create groups of conditions across all grid columns. The advanced filtering button is shown in the grid's toolbar when `allowAdvancedFiltering` and `showToolbar` properties are set to `true`. You could also open/close the advanced filtering dialog using the `openAdvancedFilteringDialog` and `closeAdvancedFilteringDialog` methods.
     - `uniqueColumnValuesStrategy` input is added. This property provides a callback for loading unique column values on demand. If this property is provided, the unique values it generates will be used by the Excel Style Filtering (instead of using the unique values from the data that is bound to the grid).
+    - `[filterStrategy] - input that allows you to override the default filtering strategy`
     - `igxExcelStyleLoading` directive is added, which can be used to provide a custom loading template for the Excel Style Filtering. If this property is not provided, a default loading template will be used instead.
     - introduced new properties `cellSelection` and `rowSelection` which accept GridSelection mode enumeration. Grid selection mode could be none, single or multiple. Also `hideRowSelectors` property is added, which allows you to show and hide row selectors when row selection is enabled.
     - introduced functionality for templating row and header selectors - [spec](https://github.com/IgniteUI/igniteui-angular/wiki/Row-Selection-Templating-(Grid-feature))
