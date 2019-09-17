@@ -22,7 +22,7 @@ const ADVANCED_FILTERING_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or
 const ADVANCED_FILTERING_OPERATOR_LINE_SELECTED_CSS_CLASS = 'igx-filter-tree__line--selected';
 const ADVANCED_FILTERING_TOOLBAR_ICON_BUTTON_FILTERED_CSS_CLASS = 'igx-grid-toolbar__adv-filter--filtered';
 
-fdescribe('IgxGrid - Advanced Filtering', () => {
+describe('IgxGrid - Advanced Filtering', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
