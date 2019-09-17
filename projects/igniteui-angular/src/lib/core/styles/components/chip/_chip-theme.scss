@@ -215,7 +215,7 @@
     @include igx-root-css-vars($theme);
 
     $transition: all 120ms $ease-in-out-quad;
-    $chip-max-width: 24ch;
+    $chip-max-width: 32ch;
 
     $chip-height-material: (
         comfortable: rem(32px),
@@ -338,9 +338,10 @@
 
     %igx-chip__prefix,
     %igx-chip__suffix {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
+        @include ellipsis();
+        display: inline-block;
+        vertical-align: middle;
+        max-width: $chip-max-width;
     }
 
     %igx-chip__suffix {
