@@ -301,14 +301,14 @@ describe('Dialog', () => {
         expect(overlayWrapper.classList.contains(OVERLAY_WRAPPER_CLASS)).toBe(false);
     }));
 
-    it('Default button of the dialog is focused after opening the dialog and can be closed with keyboard.', (async() => {
+    it('Default button of the dialog is focused after opening the dialog and can be closed with keyboard.', fakeAsync( () => {
         const fix = TestBed.createComponent(DialogComponent);
         fix.detectChanges();
 
         const dialog: IgxDialogComponent = fix.componentInstance.dialog as IgxDialogComponent;
         dialog.open();
+        tick(100);
         fix.detectChanges();
-        await wait(16);
 
         // Verify dialog is opened and its default right button is focused
         const dialogDOM = fix.debugElement.query(By.css('.igx-dialog'));
@@ -318,8 +318,8 @@ describe('Dialog', () => {
 
         // Press 'escape' key
         UIInteractions.simulateKeyDownEvent(document.activeElement, 'Escape');
+        tick(100);
         fix.detectChanges();
-        await wait(16);
 
         // Verify dialog is closed and its default right button is no longer focused
         expect(document.activeElement).not.toBe(rightButton.nativeElement);
@@ -329,20 +329,18 @@ describe('Dialog', () => {
     describe('Position settings', () => {
         let fix;
         let dialog;
-        let detect;
 
         beforeEach( fakeAsync(() => {
             fix = TestBed.createComponent(PositionSettingsDialogComponent);
             fix.detectChanges();
             dialog = fix.componentInstance.dialog;
-            detect = () => dialog.cdr.detectChanges();
         }));
 
-        it('Define different position settings ', (async() => {
+        it('Define different position settings ', fakeAsync(() => {
             const currentElement = fix.componentInstance;
             dialog.open();
+            tick(16);
             fix.detectChanges();
-            await wait(16);
 
             expect(dialog.isOpen).toEqual(true);
             const firstContentRect = document.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0].getBoundingClientRect();
@@ -352,17 +350,17 @@ describe('Dialog', () => {
             expect(firstContentRect.top).toBeLessThanOrEqual(middleDialogPosition + 2, 'OffsetTop position check');
 
             dialog.close();
+            tick(16);
             fix.detectChanges();
-            await wait(16);
 
             expect(dialog.isOpen).toEqual(false);
             dialog.positionSettings = currentElement.newPositionSettings;
+            tick(16);
             fix.detectChanges();
-            await wait(16);
 
             dialog.open();
+            tick(16);
             fix.detectChanges();
-            await wait(16);
 
             expect(dialog.isOpen).toEqual(true);
             const secondContentRect = document.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0].getBoundingClientRect();
@@ -372,13 +370,13 @@ describe('Dialog', () => {
             expect(secondContentRect.left).toBeLessThanOrEqual(topDialogPosition + 2, 'OffsetLeft position check');
 
             dialog.close();
+            tick(16);
             fix.detectChanges();
-            await wait(16);
 
             expect(dialog.isOpen).toEqual(false);
         }));
 
-        it('Set animation settings', (async() => {
+        it('Set animation settings',  () => {
             const currentElement = fix.componentInstance;
 
             // Check initial animation settings
@@ -390,12 +388,11 @@ describe('Dialog', () => {
 
             dialog.positionSettings = currentElement.animationSettings;
             fix.detectChanges();
-            await wait(16);
 
             // Check the new animation settings
             expect(dialog.positionSettings.openAnimation.options.params.duration).toEqual('800ms', 'Animation duration is set to 800ms');
             expect(dialog.positionSettings.closeAnimation.options.params.duration).toEqual('700ms', 'Animation duration is set to 700ms');
-        }));
+        });
     });
 
     function dispatchEvent(element: HTMLElement, eventType: string) {
