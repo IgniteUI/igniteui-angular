@@ -7,6 +7,7 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { HammerGesturesManager } from '../../core/touch';
+import { PlatformUtil } from '../../core/utils';
 
 describe('IgxGrid - Cell component #grid', () => {
     configureTestSuite();
@@ -179,8 +180,16 @@ describe('IgxGrid - Cell component #grid', () => {
         expect(firstCell).toBe(fix.componentInstance.clickedCell);
     });
 
-    it('Should handle doubletap, trigger onDoubleClick event', () => {
+    it('Should not attach doubletap handler for non-iOS', () => {
         const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
+        spyOn(PlatformUtil, 'isIOS').and.returnValue(false);
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+    });
+
+    it('Should handle doubletap on iOS, trigger onDoubleClick event', () => {
+        const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
+        spyOn(PlatformUtil, 'isIOS').and.returnValue(true);
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
 
