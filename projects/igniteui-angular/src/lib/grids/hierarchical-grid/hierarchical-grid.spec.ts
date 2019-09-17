@@ -30,6 +30,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
     }));
 
     beforeEach(async(() => {
+        resizeObserverIgnoreError();
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
