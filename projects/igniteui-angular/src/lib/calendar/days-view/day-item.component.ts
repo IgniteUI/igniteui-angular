@@ -22,7 +22,6 @@ export class IgxDayItemComponent {
      *
      */
     @Input()
-    @HostBinding('class.igx-calendar__date--selected')
     public get selected(): any {
         return this._selected;
     }
@@ -55,20 +54,11 @@ export class IgxDayItemComponent {
     public isFirstInRange = false;
 
     @Input()
-    @HostBinding('class.igx-calendar__date--firstday')
-    public isFirstInMonth = false;
-
-    @Input()
-    @HostBinding('class.igx-calendar__date--lastday')
-    public isLastInMonth = false;
-
-    @Input()
     @HostBinding('class.igx-calendar__date--range')
     public isWithinRange = false;
 
     @Output()
     public onDateSelection = new EventEmitter<ICalendarDate>();
-
 
     public get isCurrentMonth(): boolean {
         return this.date.isCurrentMonth;
@@ -84,6 +74,11 @@ export class IgxDayItemComponent {
 
     public get nativeElement() {
         return this.elementRef.nativeElement;
+    }
+
+    @HostBinding('class.igx-calendar__date--selected')
+    public get isSelectedCSS(): boolean {
+        return (!this.isDisabled && this.selected);
     }
 
     @HostBinding('class.igx-calendar__date--inactive')

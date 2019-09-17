@@ -627,6 +627,28 @@
 
     %cal-value--hidden%cal-value--disabled-range {
         background: transparent !important;
+
+        &::after, &::before {
+            background: transparent !important;
+        }
+    }
+
+    %cal-value--range%cal-value--inactive%cal-value--selected {
+        background: transparent !important;
+
+        %cal-value-content {
+            color: --var($theme, 'date-disabled-text-color');
+            background: transparent !important;
+        }
+    }
+
+    %cal-value--range%cal-value--inactive%cal-value--selected%cal-value--single {
+        background: transparent !important;
+
+        %cal-value-content {
+            color: --var($theme, 'date-selected-text-color');
+            background: --var($theme, 'date-selected-background') !important;
+        }
     }
 
     %cal-value--first {

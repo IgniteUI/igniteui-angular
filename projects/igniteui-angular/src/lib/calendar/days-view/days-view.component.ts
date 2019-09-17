@@ -202,11 +202,9 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
      */
     public isSelected(date: ICalendarDate): boolean {
         let selectedDates: Date | Date[];
-        if (this.isDateDisabled(date.date)) {
-            return false;
-        }
-
-        if (!this.value || (Array.isArray(this.value) && this.value.length === 0)) {
+        if (this.isDateDisabled(date.date) || !this.value ||
+            (Array.isArray(this.value) && this.value.length === 0)
+            )  {
             return false;
         }
 
@@ -260,21 +258,6 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
         return isEqual((this.value as Date[])[0], date.date);
     }
 
-    /**
-     * @hidden
-     */
-    public isFirstInMonth(date: ICalendarDate): boolean {
-        const checkLast = false;
-        return this.isFirstLastInMonth(checkLast, date);
-    }
-
-    /**
-     * @hidden
-     */
-    public isLastInMonth(date: ICalendarDate): boolean {
-        const checkLast = false;
-        return this.isFirstLastInMonth(checkLast, date);
-    }
 
     /**
      * @hidden
@@ -654,21 +637,6 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
      */
     private isDayFocusable(day: IgxDayItemComponent): boolean {
         return !!day && day.isCurrentMonth && !day.isHidden && !day.isDisabled && !day.isOutOfRange;
-    }
-
-    /**
-     * @hidden
-     */
-    private isFirstLastInMonth(checkLast: boolean, date: ICalendarDate): boolean {
-        const inc = checkLast ? 1 : -1;
-        if (date.isCurrentMonth && !this.isSingleSelection && this.isWithinRange(date.date, true)) {
-            const nextDay = new Date(date.date);
-            nextDay.setDate(nextDay.getDate() + inc);
-            if (this.isWithinRange(nextDay, true) && date.date.getMonth() + inc === nextDay.getMonth()) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**

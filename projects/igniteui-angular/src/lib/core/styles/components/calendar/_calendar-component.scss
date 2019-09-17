@@ -68,6 +68,10 @@
         @extend %cal-value--hidden !optional;
     }
 
+    @include e(date, 'range') {
+        @extend %cal-value--range !optional;
+    }
+
     @include e(date, $mods: ('selected', 'current')) {
         @extend %cal-value--current--selected !optional;
     }
