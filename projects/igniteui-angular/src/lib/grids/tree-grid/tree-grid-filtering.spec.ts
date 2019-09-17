@@ -6,6 +6,7 @@ import { IgxTreeGridFilteringComponent, IgxTreeGridFilteringRowEditingComponent 
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from '../../data-operations/filtering-condition';
+import { FilteringStrategy } from '../../data-operations/filtering-strategy';
 
 describe('IgxTreeGrid - Filtering actions #tGrid', () => {
     configureTestSuite();
@@ -389,6 +390,45 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
                 // if there are any parent nodes in this collection then the changes were preserved
                 expect(filteredParentNodes.length).toBeGreaterThan(0);
             }));
-    });
 
+            it('should be able to apply custom filter strategy', fakeAsync(() => {
+                expect(treeGrid.filterStrategy).toBeUndefined();
+                treeGrid.filter('Name', 'd', IgxStringFilteringOperand.instance().condition('contains'), true);
+                tick(30);
+                fix.detectChanges();
+
+                expect(treeGrid.rowList.length).toBe(9);
+
+                treeGrid.clearFilter();
+                fix.detectChanges();
+                // tslint:disable-next-line: no-use-before-declare
+                const customFilter = new CustomTreeGridFilterStrategy();
+                // apply the same filter condition but with custu
+                treeGrid.filterStrategy = customFilter;
+                fix.detectChanges();
+
+                treeGrid.filter('Name', 'd', IgxStringFilteringOperand.instance().condition('contains'), true);
+                tick(30);
+                fix.detectChanges();
+
+                expect(treeGrid.rowList.length).toBe(4);
+                expect(treeGrid.filteredData.map(rec => rec.ID)).toEqual([ 847, 225, 663, 141]);
+            }));
+    });
+    class CustomTreeGridFilterStrategy  extends FilteringStrategy {
+
+        public filter(data: [], expressionsTree): any[] {
+                const result = [];
+                if (!expressionsTree || !expressionsTree.filteringOperands ||
+                    expressionsTree.filteringOperands.length === 0 || !data.length) {
+                    return data;
+                }
+                data.forEach((rec: any) => {
+                    if (this.matchRecord(rec.data, expressionsTree)) {
+                        result.push(rec);
+                    }
+                });
+                return result;
+            }
+    }
 });
