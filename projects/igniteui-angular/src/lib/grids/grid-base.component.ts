@@ -99,6 +99,7 @@ import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filter
 import { IgxColumnResizingService } from './grid-column-resizing.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './igx-row-selectors.module';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { IFilteringStrategy } from '../data-operations/filtering-strategy';
 import { IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,
      IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective } from './grid/grid.directives';
 import { GridKeydownTargetType, GridSelectionMode, GridSummaryPosition, GridSummaryCalculationMode, FilterMode } from './common/enums';
@@ -242,6 +243,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _locale = null;
     public _destroyed = false;
     private overlayIDs = [];
+    private _filteringStrategy: IFilteringStrategy;
 
     private _hostWidth;
     private _advancedFilteringOverlayId: string;
@@ -1080,6 +1082,27 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.summaryService.resetSummaryHeight();
             this.notifyChanges(true);
         }
+    }
+
+    /**
+     * Gets the filtering strategy of the grid.
+     * ```typescript
+     *  let filterStrategy = this.grid.filterStrategy
+     * ```
+     */
+    @Input()
+    get filterStrategy(): IFilteringStrategy {
+        return this._filteringStrategy;
+    }
+
+    /**
+     * Sets the filtering strategy of the grid.
+     * ```html
+     *  <igx-grid #grid [data]="localData" [filterStrategy]="filterStrategy"></igx-grid>
+     * ```
+     */
+    set filterStrategy(classRef: IFilteringStrategy) {
+        this._filteringStrategy = classRef;
     }
 
     /**
@@ -3822,8 +3845,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                     }
                     this.gridAPI.escape_editMode();
                 }
-
-                this.notifyChanges();
+                this.cdr.detectChanges();
             }
         }
     }
@@ -3849,7 +3871,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
             const row = new IgxRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector));
             this.gridAPI.update_row(row, value);
-            this.notifyChanges();
+            this.cdr.detectChanges();
         }
     }
 

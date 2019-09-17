@@ -958,6 +958,46 @@ export class IgxGridFilteringComponent extends BasicGridComponent {
     }
 }
 
+export class CustomFilterStrategy extends FilteringStrategy {
+    public constructor() { super(); }
+
+    public findMatchByExpression(rec: object, expr): boolean {
+        const cond = expr.condition;
+        const val = this.getFieldValue(rec, expr.fieldName);
+        const ignoreCase = expr.fieldName === 'JobTitle' ? false : true;
+        return cond.logic(val, expr.searchVal, ignoreCase);
+    }
+
+    public filter<T>(data: T[], expressionsTree: IFilteringExpressionsTree): T[]  {
+        return super.filter(data, expressionsTree);
+    }
+
+    public getFieldValue(rec: object, fieldName: string): any {
+        return fieldName === 'Name' ?  rec[fieldName]['FirstName'] :  rec[fieldName];
+    }
+ }
+
+@Component({
+    template: `<igx-grid [data]="data" height="500px" width="600px" [allowFiltering]='true'>
+        <igx-column [field]="'ID'" [header]="'ID'" [filterable]="false"></igx-column>
+        <igx-column width="100px" [field]="'Name'" [filterable]="filterable">
+            <ng-template igxCell let-val>
+                <span>{{val.FirstName}}</span>
+            </ng-template>
+        </igx-column>
+        <igx-column [field]="'JobTitle'" [filterable]="filterable" ></igx-column>
+        <igx-column [field]="'Company'" [filterable]="filterable" ></igx-column>
+    </igx-grid>`
+})
+export class CustomFilteringStrategyComponent extends BasicGridComponent {
+    public strategy = new CustomFilterStrategy();
+    public filterable = true;
+
+    public data = SampleTestData.personNameObjectJobCompany();
+}
+
+
+
 @Component({
     template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true'
                          [filterMode]="'excelStyleFilter'" [uniqueColumnValuesStrategy]="columnValuesStrategy">
