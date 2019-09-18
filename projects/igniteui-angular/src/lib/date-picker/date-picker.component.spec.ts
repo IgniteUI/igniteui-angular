@@ -1092,26 +1092,26 @@ describe('IgxDatePicker', () => {
     });
 
     describe('Drop-down mode select all text on focus', () => {
-        let fixture: ComponentFixture<IgxDatePickerOpeningComponent>;
+        let fixture: ComponentFixture<IgxDatePickerEditableComponent>;
         let datePicker: IgxDatePickerComponent;
 
         beforeEach(() => {
-            fixture = TestBed.createComponent(IgxDatePickerOpeningComponent);
+            fixture = TestBed.createComponent(IgxDatePickerEditableComponent);
             datePicker = fixture.componentInstance.datePicker;
             fixture.detectChanges();
         });
 
-        it('Should select all input text on input focus', async () => {
+        it('Should select all input text on input focus', fakeAsync(() => {
             const input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
             input.focus();
             fixture.detectChanges();
-            await wait(100);
+            tick(100);
 
             expect(input).toEqual(document.activeElement);
             expect(input.selectionEnd).toEqual(input.value.length);
             expect(input.selectionStart).toEqual(0);
             expect(input.value.substring(input.selectionStart, input.selectionEnd)).toEqual(input.value);
-        });
+        }));
     });
 });
 
@@ -1252,10 +1252,9 @@ export class IgxDatePickerCustomizedComponent {
 @Component({
     template:
         `
-        <igx-date-picker mode="dropdown" [value]="date"></igx-date-picker>
+        <igx-date-picker mode="dropdown"></igx-date-picker>
         `
 })
 export class IgxDatePickerOpeningComponent {
     @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
-    public date = new Date(2017, 7, 7);
 }
