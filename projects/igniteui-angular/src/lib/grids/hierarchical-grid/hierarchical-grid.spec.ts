@@ -13,6 +13,7 @@ import { DisplayDensity } from '../../core/displayDensity';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IGridCellEventArgs } from '../grid';
 import { GridSelectionMode } from '../common/enums';
+import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
@@ -29,6 +30,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
     }));
 
     beforeEach(async(() => {
+        resizeObserverIgnoreError();
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
@@ -422,6 +424,7 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
     }));
 
     beforeEach(async(() => {
+        resizeObserverIgnoreError();
         fixture = TestBed.createComponent(IgxHierarchicalGridMultiLayoutComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
