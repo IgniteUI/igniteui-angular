@@ -543,19 +543,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         }
     }
 
-    private onChipSelectionEnd() {
-        const contextualGroup = this.findSingleSelectedGroup();
-        if (contextualGroup || this.selectedExpressions.length > 1) {
-            this.contextualGroup = contextualGroup;
-            this.calculateContextMenuTarget();
-            if (this.contextMenuToggle.collapsed) {
-                this.contextMenuToggle.open(this._overlaySettings);
-            } else {
-                this.contextMenuToggle.reposition();
-            }
-        }
-    }
-
     private findSingleSelectedGroup(): ExpressionGroupItem {
         for (const group of this.selectedGroups) {
             const containsAllSelectedExpressions = this.selectedExpressions.every(op => this.isInsideGroup(op, group));
@@ -835,5 +822,18 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     public onApplyButtonClick() {
         this.applyChanges();
         this.closeDialog();
+    }
+
+    public onChipSelectionEnd() {
+        const contextualGroup = this.findSingleSelectedGroup();
+        if (contextualGroup || this.selectedExpressions.length > 1) {
+            this.contextualGroup = contextualGroup;
+            this.calculateContextMenuTarget();
+            if (this.contextMenuToggle.collapsed) {
+                this.contextMenuToggle.open(this._overlaySettings);
+            } else {
+                this.contextMenuToggle.reposition();
+            }
+        }
     }
 }

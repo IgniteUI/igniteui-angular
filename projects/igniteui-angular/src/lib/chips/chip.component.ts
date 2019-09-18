@@ -449,7 +449,7 @@ export class IgxChipComponent extends DisplayDensityBase {
         }
     }
 
-    protected onSelectTransitionDone(event) {
+    public onSelectTransitionDone(event) {
         if (event.propertyName === 'width') {
             this.onSelectionEnd.emit({
                 owner: this,

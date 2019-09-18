@@ -1,4 +1,4 @@
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+﻿import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
@@ -2451,13 +2451,8 @@ describe('IgxGrid - Advanced Filtering', () => {
                     .toBe('My or group');
 
                 // Populate edit inputs.
-                selectColumnInEditModeExpressionBase(fix, 1); // Select 'ProductName' column.
-                await wait();
-                fix.detectChanges();
-
-                selectOperatorInEditModeExpressionBase(fix, 0); // Select 'Contains' operator.
-                await wait();
-                fix.detectChanges();
+                selectColumnInEditModeExpressionAsync(fix, 1); // Select 'ProductName' column.
+                selectOperatorInEditModeExpressionAsync(fix, 0); // Select 'Contains' operator.
 
                 let input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
                 sendInputNativeElement(fix, input, 'angular'); // Type filter value.
@@ -2492,13 +2487,8 @@ describe('IgxGrid - Advanced Filtering', () => {
                 fix.detectChanges();
 
                 // Populate edit inputs.
-                selectColumnInEditModeExpressionBase(fix, 1); // Select 'ProductName' column.
-                await wait();
-                fix.detectChanges();
-
-                selectOperatorInEditModeExpressionBase(fix, 0); // Select 'Contains' operator.
-                await wait();
-                fix.detectChanges();
+                selectColumnInEditModeExpressionAsync(fix, 1); // Select 'ProductName' column.
+                selectOperatorInEditModeExpressionAsync(fix, 0); // Select 'Contains' operator.
 
                 input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
                 sendInputNativeElement(fix, input, 'script'); // Type filter value.
@@ -2581,13 +2571,8 @@ describe('IgxGrid - Advanced Filtering', () => {
                     .toBe('My or group');
 
                 // Populate edit inputs.
-                selectColumnInEditModeExpressionBase(fix, 1); // Select 'ProductName' column.
-                await wait();
-                fix.detectChanges();
-
-                selectOperatorInEditModeExpressionBase(fix, 0); // Select 'Contains' operator.
-                await wait();
-                fix.detectChanges();
+                selectColumnInEditModeExpressionAsync(fix, 1); // Select 'ProductName' column.
+                selectOperatorInEditModeExpressionAsync(fix, 0); // Select 'Contains' operator.
 
                 let input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
                 sendInputNativeElement(fix, input, 'angular'); // Type filter value.
@@ -2621,13 +2606,8 @@ describe('IgxGrid - Advanced Filtering', () => {
                 await wait(100);
                 fix.detectChanges();
                 // Populate edit inputs.
-                selectColumnInEditModeExpressionBase(fix, 1); // Select 'ProductName' column.
-                await wait();
-                fix.detectChanges();
-
-                selectOperatorInEditModeExpressionBase(fix, 0); // Select 'Contains' operator.
-                await wait();
-                fix.detectChanges();
+                selectColumnInEditModeExpressionAsync(fix, 1); // Select 'ProductName' column.
+                selectOperatorInEditModeExpressionAsync(fix, 0); // Select 'Contains' operator.
 
                 input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
                 sendInputNativeElement(fix, input, 'script'); // Type filter value.
@@ -2684,27 +2664,36 @@ describe('IgxGrid - Advanced Filtering', () => {
     });
 });
 
-function selectColumnInEditModeExpressionBase(fix, dropdownItemIndex: number) {
+
+function selectColumnInEditModeExpression(fix, dropdownItemIndex: number) {
     GridFunctions.clickAdvancedFilteringColumnSelect(fix);
     fix.detectChanges();
     GridFunctions.clickAdvancedFilteringSelectDropdownItem(fix, dropdownItemIndex);
-}
-
-function selectColumnInEditModeExpression(fix, dropdownItemIndex: number) {
-    selectColumnInEditModeExpressionBase(fix, dropdownItemIndex);
     tick();
     fix.detectChanges();
 }
 
-function selectOperatorInEditModeExpressionBase(fix, dropdownItemIndex: number) {
-    GridFunctions.clickAdvancedFilteringOperatorSelect(fix);
+async function selectColumnInEditModeExpressionAsync(fix, dropdownItemIndex: number) {
+    GridFunctions.clickAdvancedFilteringColumnSelect(fix);
     fix.detectChanges();
     GridFunctions.clickAdvancedFilteringSelectDropdownItem(fix, dropdownItemIndex);
+    await wait();
+    fix.detectChanges();
 }
 
 function selectOperatorInEditModeExpression(fix, dropdownItemIndex: number) {
-    selectOperatorInEditModeExpressionBase(fix, dropdownItemIndex);
+    GridFunctions.clickAdvancedFilteringOperatorSelect(fix);
+    fix.detectChanges();
+    GridFunctions.clickAdvancedFilteringSelectDropdownItem(fix, dropdownItemIndex);
     tick();
+    fix.detectChanges();
+}
+
+async function selectOperatorInEditModeExpressionAsync(fix, dropdownItemIndex: number) {
+    GridFunctions.clickAdvancedFilteringOperatorSelect(fix);
+    fix.detectChanges();
+    GridFunctions.clickAdvancedFilteringSelectDropdownItem(fix, dropdownItemIndex);
+    await wait();
     fix.detectChanges();
 }
 
