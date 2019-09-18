@@ -263,7 +263,7 @@ export abstract class IgxRowComponent<T extends IgxGridBaseComponent & GridType>
         public gridAPI: GridBaseAPIService<T>,
         public crudService: IgxGridCRUDService,
         public selectionService: IgxGridSelectionService,
-        public element: ElementRef,
+        public element: ElementRef<HTMLElement>,
         public cdr: ChangeDetectorRef) {}
 
     /**
