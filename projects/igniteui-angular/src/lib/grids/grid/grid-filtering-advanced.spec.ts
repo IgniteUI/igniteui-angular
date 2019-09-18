@@ -2451,8 +2451,8 @@ describe('IgxGrid - Advanced Filtering', () => {
                     .toBe('My or group');
 
                 // Populate edit inputs.
-                selectColumnInEditModeExpressionAsync(fix, 1); // Select 'ProductName' column.
-                selectOperatorInEditModeExpressionAsync(fix, 0); // Select 'Contains' operator.
+                await selectColumnInEditModeExpressionAsync(fix, 1); // Select 'ProductName' column.
+                await selectOperatorInEditModeExpressionAsync(fix, 0); // Select 'Contains' operator.
 
                 let input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
                 sendInputNativeElement(fix, input, 'angular'); // Type filter value.
@@ -2487,8 +2487,8 @@ describe('IgxGrid - Advanced Filtering', () => {
                 fix.detectChanges();
 
                 // Populate edit inputs.
-                selectColumnInEditModeExpressionAsync(fix, 1); // Select 'ProductName' column.
-                selectOperatorInEditModeExpressionAsync(fix, 0); // Select 'Contains' operator.
+                await selectColumnInEditModeExpressionAsync(fix, 1); // Select 'ProductName' column.
+                await selectOperatorInEditModeExpressionAsync(fix, 0); // Select 'Contains' operator.
 
                 input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
                 sendInputNativeElement(fix, input, 'script'); // Type filter value.
@@ -2571,8 +2571,8 @@ describe('IgxGrid - Advanced Filtering', () => {
                     .toBe('My or group');
 
                 // Populate edit inputs.
-                selectColumnInEditModeExpressionAsync(fix, 1); // Select 'ProductName' column.
-                selectOperatorInEditModeExpressionAsync(fix, 0); // Select 'Contains' operator.
+                await selectColumnInEditModeExpressionAsync(fix, 1); // Select 'ProductName' column.
+                await selectOperatorInEditModeExpressionAsync(fix, 0); // Select 'Contains' operator.
 
                 let input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
                 sendInputNativeElement(fix, input, 'angular'); // Type filter value.
@@ -2606,8 +2606,8 @@ describe('IgxGrid - Advanced Filtering', () => {
                 await wait(100);
                 fix.detectChanges();
                 // Populate edit inputs.
-                selectColumnInEditModeExpressionAsync(fix, 1); // Select 'ProductName' column.
-                selectOperatorInEditModeExpressionAsync(fix, 0); // Select 'Contains' operator.
+                await selectColumnInEditModeExpressionAsync(fix, 1); // Select 'ProductName' column.
+                await selectOperatorInEditModeExpressionAsync(fix, 0); // Select 'Contains' operator.
 
                 input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
                 sendInputNativeElement(fix, input, 'script'); // Type filter value.

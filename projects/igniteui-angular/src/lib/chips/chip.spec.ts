@@ -405,7 +405,7 @@ describe('IgxChip', () => {
         const secondChipComp = fix.componentInstance.chips.toArray()[1];
 
         spyOn(secondChipComp.onSelection, 'emit');
-        spyOn(secondChipComp.onSelectionEnd, 'emit');
+        spyOn(secondChipComp.onSelectionDone, 'emit');
         secondChipComp.chipArea.nativeElement.focus();
 
         const keyEvent = new KeyboardEvent('keydown', {
@@ -414,10 +414,10 @@ describe('IgxChip', () => {
         secondChipComp.chipArea.nativeElement.dispatchEvent(keyEvent);
         fix.detectChanges();
         expect(secondChipComp.onSelection.emit).toHaveBeenCalled();
-        expect(secondChipComp.onSelectionEnd.emit).not.toHaveBeenCalled();
+        expect(secondChipComp.onSelectionDone.emit).not.toHaveBeenCalled();
 
         await wait(400);
-        expect(secondChipComp.onSelectionEnd.emit).toHaveBeenCalled();
+        expect(secondChipComp.onSelectionDone.emit).toHaveBeenCalled();
     }));
 
     it('should not fire onSelection event when selectable is false', () => {
@@ -427,7 +427,7 @@ describe('IgxChip', () => {
         const firstChipComp = fix.componentInstance.chips.toArray()[0];
 
         spyOn(firstChipComp.onSelection, 'emit');
-        spyOn(firstChipComp.onSelectionEnd, 'emit');
+        spyOn(firstChipComp.onSelectionDone, 'emit');
         firstChipComp.elementRef.nativeElement.focus();
 
         const keyEvent = new KeyboardEvent('keydown', {
@@ -436,7 +436,7 @@ describe('IgxChip', () => {
         firstChipComp.elementRef.nativeElement.dispatchEvent(keyEvent);
         fix.detectChanges();
         expect(firstChipComp.onSelection.emit).toHaveBeenCalledTimes(0);
-        expect(firstChipComp.onSelectionEnd.emit).toHaveBeenCalledTimes(0);
+        expect(firstChipComp.onSelectionDone.emit).toHaveBeenCalledTimes(0);
     });
 
     it('should not fire onSelection event when the remove button is clicked', () => {
@@ -446,7 +446,7 @@ describe('IgxChip', () => {
         const secondChipComp = fix.componentInstance.chips.toArray()[1];
 
         spyOn(secondChipComp.onSelection, 'emit');
-        spyOn(secondChipComp.onSelectionEnd, 'emit');
+        spyOn(secondChipComp.onSelectionDone, 'emit');
 
         const chipRemoveButton = secondChipComp.elementRef.nativeElement.querySelectorAll('.' + CHIP_REMOVE_BUTTON)[0];
         const removeBtnTop = chipRemoveButton.getBoundingClientRect().top;
@@ -458,6 +458,6 @@ describe('IgxChip', () => {
         fix.detectChanges();
 
         expect(secondChipComp.onSelection.emit).not.toHaveBeenCalled();
-        expect(secondChipComp.onSelectionEnd.emit).not.toHaveBeenCalled();
+        expect(secondChipComp.onSelectionDone.emit).not.toHaveBeenCalled();
     });
 });

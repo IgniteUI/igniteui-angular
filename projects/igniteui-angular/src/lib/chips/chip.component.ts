@@ -295,11 +295,11 @@ export class IgxChipComponent extends DisplayDensityBase {
      * }
      * ```
      * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" (onSelectionEnd)="chipSelectEnd($event)">
+     * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" (onSelectionDone)="chipSelectEnd($event)">
      * ```
      */
     @Output()
-    public onSelectionEnd = new EventEmitter<IBaseChipEventArgs>();
+    public onSelectionDone = new EventEmitter<IBaseChipEventArgs>();
 
     /**
      * Emits an event when the `IgxChipComponent` keyboard navigation is being used.
@@ -451,7 +451,7 @@ export class IgxChipComponent extends DisplayDensityBase {
 
     public onSelectTransitionDone(event) {
         if (event.propertyName === 'width') {
-            this.onSelectionEnd.emit({
+            this.onSelectionDone.emit({
                 owner: this,
                 originalEvent: event
             });

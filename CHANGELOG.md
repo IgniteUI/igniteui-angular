@@ -65,7 +65,7 @@ For more information about the theming please read our [documentation](https://w
 - `IgxOverlay`
     - introduced a new `ContainerPositionStrategy`. The new strategy positions the element inside the containing outlet based on the directions passed in trough PositionSettings.
 - `IgxChip`
-    - add `onSelectionEnd` event that is triggered after all animations and transitions related to selection have ended.
+    - add `onSelectionDone` event that is triggered after all animations and transitions related to selection have ended.
 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
