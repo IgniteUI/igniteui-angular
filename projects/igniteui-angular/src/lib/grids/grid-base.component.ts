@@ -367,6 +367,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ];
      * this.grid.filteringExpressionsTree = (logic);
      * ```
+     * Two-way data binding.
+     * ```html
+     * <igx-grid #grid [data]="Data" [autoGenerate]="true" [(filteringExpressionsTree)]="model.filteringExpressions"></igx-grid>
+     * ```
 	 * @memberof IgxGridBaseComponent
      */
     set filteringExpressionsTree(value) {
@@ -398,8 +402,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
+    /**
+     *@hidden
+     */
     @Output()
-    public filteringExpressionsTreeChange = new EventEmitter<any>();
+    public filteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
 
     /**
      * Returns the advanced filtering state of `IgxGridComponent`.
@@ -518,6 +525,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * Sets the current page index.
      * <igx-grid #grid [data]="Data" [paging]="true" [page]="5" [autoGenerate]="true"></igx-grid>
+     *
+     * Two-way data binding.
+     * <igx-grid #grid [data]="Data" [paging]="true" [(page)]="model.page" [autoGenerate]="true"></igx-grid>
      */
     set page(val: number) {
         if (val === this._page || val < 0 || val > this.totalPages - 1) {
@@ -530,8 +540,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.notifyChanges();
     }
 
+    /**
+     *@hidden
+     */
     @Output()
-    public pageChange = new EventEmitter<any>();
+    public pageChange = new EventEmitter<number>();
 
     /**
      * Returns the number of visible items per page of the `IgxGridComponent`.
@@ -551,6 +564,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```html
      * <igx-grid #grid [data]="Data" [paging]="true" [perPage]="5" [autoGenerate]="true"></igx-grid>
      * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-grid #grid [data]="Data" [paging]="true" [(perPage)]="model.perPage" [autoGenerate]="true"></igx-grid>
+     * ```
 	 * @memberof IgxGridBaseComponent
      */
     set perPage(val: number) {
@@ -565,8 +583,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.notifyChanges();
     }
 
+    /**
+     *@hidden
+     */
     @Output()
-    public perPageChange = new EventEmitter<any>();
+    public perPageChange = new EventEmitter<number>();
 
     /**
      * You can provide a custom `ng-template` for the pagination UI of the grid.
@@ -2168,6 +2189,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      *     ignoreCase: true
      * }];
      * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-grid #grid [data]="Data" [autoGenerate]="true" [(sortingExpressions)]="model.sortingExpressions"></igx-grid>
+     * ```
 	 * @memberof IgxGridBaseComponent
      */
     set sortingExpressions(value: ISortingExpression[]) {
@@ -2176,8 +2202,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.notifyChanges();
     }
 
+    /**
+     *@hidden
+     */
     @Output()
-    public sortingExpressionsChange = new EventEmitter<any>();
+    public sortingExpressionsChange = new EventEmitter<ISortingExpression[]>();
 
     /**
      * @hidden
@@ -5906,9 +5935,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 (this as any).rootGrid ? (this as any).rootGrid.nativeElement : this.nativeElement;
             this._advancedFilteringOverlaySettings.outlet = this.outletDirective;
 
-            this._advancedFilteringOverlayId =
-                this.overlayService.attach(IgxAdvancedFilteringDialogComponent, this._advancedFilteringOverlaySettings);
-                // , this._moduleRef);
+            this._advancedFilteringOverlayId = this.overlayService.attach(
+                IgxAdvancedFilteringDialogComponent,
+                this._advancedFilteringOverlaySettings,
+                {
+                    injector: this.viewRef.injector,
+                    componentFactoryResolver: this.resolver
+                });
             this.overlayService.show(this._advancedFilteringOverlayId, this._advancedFilteringOverlaySettings);
         }
     }

@@ -565,6 +565,14 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
         }
     }
 
+    private selectAllFilterItems() {
+        this.listData.forEach(filterListItem => {
+            filterListItem.isSelected = true;
+            filterListItem.indeterminate = false;
+        });
+        this.excelStyleSearch.cdr.detectChanges();
+    }
+
     // TODO: sort members by access modifier
 
     get sortingTemplate() {
@@ -681,7 +689,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
 
     public clearFilter() {
         this.filteringService.clearFilter(this.column.field);
-        this.populateColumnData();
+        this.selectAllFilterItems();
     }
 
     public onClearFilterKeyDown(eventArgs) {

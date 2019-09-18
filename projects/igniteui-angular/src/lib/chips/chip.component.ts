@@ -165,14 +165,22 @@ export class IgxChipComponent extends DisplayDensityBase {
      * ```html
      * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" [selected]="true">
      * ```
+     *
+     * Two-way data binding:
+     * ```html
+     * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" [(selected)]="model.isSelected">
+     * ```
      */
     @Input()
     public set selected(newValue: boolean) {
         this.changeSelection(newValue);
     }
 
+    /**
+     *@hidden
+     */
     @Output()
-    public selectedChange = new EventEmitter<any>();
+    public selectedChange = new EventEmitter<boolean>();
 
     /**
      * Returns if the `IgxChipComponent` is selected.

@@ -60,6 +60,11 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     * ```html
     * <igx-tabs selectedIndex="1">
     * ```
+    *
+    * Two-way data binding.
+    * ```html
+    * <igx-tabs [(selectedIndex)]="model.selectedIndex">
+    * ```
     */
     @Input()
     public get selectedIndex(): number {
@@ -81,8 +86,11 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         }
     }
 
+    /**
+     *@hidden
+     */
     @Output()
-    public selectedIndexChange = new EventEmitter<any>();
+    public selectedIndexChange = new EventEmitter<number>();
 
     /**
      * Defines the tab header sizing mode. You can choose between `contentfit` or `fixed`.

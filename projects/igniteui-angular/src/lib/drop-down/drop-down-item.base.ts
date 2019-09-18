@@ -122,6 +122,11 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      *  let mySelectedItem = this.dropdown.selectedItem;
      *  let isMyItemSelected = mySelectedItem.selected; // true
      * ```
+     *
+     * Two-way data binding
+     * ```html
+     * <igx-drop-down-item [(selected)]='model.isSelected'></igx-drop-down-item>
+     * ```
      */
     @Input()
     @HostBinding('attr.aria-selected')
@@ -138,8 +143,11 @@ export abstract class IgxDropDownItemBase implements DoCheck {
         this.selectedChange.emit(this._selected);
     }
 
+    /**
+     *@hidden
+     */
     @Output()
-    public selectedChange = new EventEmitter<any>();
+    public selectedChange = new EventEmitter<boolean>();
 
     /**
      * @hidden @internal
