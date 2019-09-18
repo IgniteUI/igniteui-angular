@@ -2908,30 +2908,32 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         it('Verify condition chips are scrolled into/(out of) view by using arrow buttons.', (async () => {
             grid.width = '700px';
             fix.detectChanges();
+            await wait(100);
 
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
             fix.detectChanges();
+            await wait(16);
 
             // Add first chip.
             GridFunctions.typeValueInFilterRowInput('a', fix);
-            fix.detectChanges();
             await wait(16);
-            GridFunctions.submitFilterRowInput(fix);
             fix.detectChanges();
-            await wait(100);
+            GridFunctions.submitFilterRowInput(fix);
+            await wait(200);
+            fix.detectChanges();
             // Add second chip.
             GridFunctions.typeValueInFilterRowInput('e', fix);
             await wait(16);
             fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
-            await wait(100);
+            await wait(200);
             fix.detectChanges();
             // Add third chip.
             GridFunctions.typeValueInFilterRowInput('i', fix);
             await wait(16);
             fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
-            await wait(100);
+            await wait(200);
             fix.detectChanges();
 
             verifyMultipleChipsVisibility(fix, [false, false, true]);
@@ -3277,7 +3279,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         it('Should not throw error when deleting the last chip', (async () => {
             grid.width = '700px';
             fix.detectChanges();
-            await wait(16);
+            await wait(100);
 
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
             fix.detectChanges();
@@ -3360,10 +3362,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(chips.length).toBe(3);
 
             GridFunctions.removeFilterChipByIndex(2, filterUIRow);
+            // wait for chip to be scrolled in view
             fix.detectChanges();
-           // wait for chip to be scrolled in view
-           fix.detectChanges();
-           await wait(200);
+            await wait(200);
 
             verifyMultipleChipsVisibility(fix, [true, false]);
             chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
