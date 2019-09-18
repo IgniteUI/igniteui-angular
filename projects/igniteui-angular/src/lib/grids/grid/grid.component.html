@@ -252,15 +252,17 @@
 </ng-template>
 
 <ng-template #headSelectorBaseTemplate igxHeadSelector let-context>
-    <igx-checkbox
-        [readonly]="true"
-        [checked]="context.selectedCount > 0 && context.totalCount === context.selectedCount"
-        disableRipple="true"
-        [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
-        [indeterminate]="context.selectedCount > 0 && context.selectedCount !== context.totalCount"
-        [aria-label]="headSelectorBaseAriaLabel"
-        #headerCheckbox>
-    </igx-checkbox>
+    <div class="igx-grid__cbx-padding">
+        <igx-checkbox
+            [readonly]="true"
+            [checked]="context.selectedCount > 0 && context.totalCount === context.selectedCount"
+            disableRipple="true"
+            [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
+            [indeterminate]="context.selectedCount > 0 && context.selectedCount !== context.totalCount"
+            [aria-label]="headSelectorBaseAriaLabel"
+            #headerCheckbox>
+        </igx-checkbox>
+    </div>
 </ng-template>
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>
