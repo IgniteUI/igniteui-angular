@@ -540,6 +540,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.notifyChanges();
     }
 
+    /**
+     *@hidden
+     */
     @Output()
     public pageChange = new EventEmitter<number>();
 
@@ -561,6 +564,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```html
      * <igx-grid #grid [data]="Data" [paging]="true" [perPage]="5" [autoGenerate]="true"></igx-grid>
      * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-grid #grid [data]="Data" [paging]="true" [(perPage)]="model.perPage" [autoGenerate]="true"></igx-grid>
+     * ```
 	 * @memberof IgxGridBaseComponent
      */
     set perPage(val: number) {
@@ -575,6 +583,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.notifyChanges();
     }
 
+    /**
+     *@hidden
+     */
     @Output()
     public perPageChange = new EventEmitter<number>();
 
@@ -2191,6 +2202,9 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.notifyChanges();
     }
 
+    /**
+     *@hidden
+     */
     @Output()
     public sortingExpressionsChange = new EventEmitter<ISortingExpression[]>();
 

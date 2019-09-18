@@ -321,6 +321,9 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
+    /**
+     *@hidden
+     */
     @Output()
     public widthChange = new EventEmitter<string>();
 
@@ -524,6 +527,9 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
+    /**
+     *@hidden
+     */
     @Output()
     public pinnedChange = new EventEmitter<boolean>();
 
@@ -1804,6 +1810,10 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         this.hiddenChange.emit(this._hidden);
         this.children.forEach(child => child.hidden = value);
     }
+
+    /**
+     *@hidden
+     */
     @Output()
     public hiddenChange = new EventEmitter<boolean>();
 
