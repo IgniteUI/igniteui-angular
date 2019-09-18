@@ -49,7 +49,6 @@ import { IgxGridSummaryPipe } from './grid.summary.pipe';
     IgxHeaderExpandIndicatorDirective,
     IgxHeaderCollapseIndicatorDirective,
     IgxGroupAreaDropDirective,
-    IgxGridCommonModule,
     IgxGridGroupingPipe,
     IgxGridPagingPipe,
     IgxGridSortingPipe,

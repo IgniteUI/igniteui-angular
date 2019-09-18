@@ -1,8 +1,5 @@
 import { NgModule } from '@angular/core';
 import { IgxGridCellComponent } from './cell.component';
-import { IgxGridHeaderComponent } from './grid-header.component';
-import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
-import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 import { IgxGridFooterComponent } from './grid-footer/grid-footer.component';
 import {
     IgxGridBodyDirective,
@@ -15,9 +12,7 @@ import {
     IgxRowEditTextDirective,
     IgxRowEditTabStopDirective
 } from './grid.rowEdit.directive';
-import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
 import { IgxPaginatorModule } from '../paginator/paginator.component';
-import { IgxFilterModule } from '../directives/filter/filter.directive';
 import { IgxGridPipesModule } from './common/grid-pipes.module';
 import { IgxGridExcelStyleFilteringModule } from './filtering/excel-style/grid.excel-style-filtering.module';
 import { IgxRowDragModule } from './row-drag.directive';
@@ -31,21 +26,19 @@ import { IgxGridToolbarModule } from './toolbar/toolbar.module';
 import { IgxColumnHidingModule } from './hiding/hiding.module';
 import { IgxColumnPinningModule } from './pinning/pinning.module';
 import { IgxGridColumnModule } from './columns/column.module';
+import { IgxGridHeadersModule } from './headers/headers.module';
+import { IgxGridFilteringModule } from './filtering/base/filtering.module';
 /**
  * @hidden
  */
 @NgModule({
     declarations: [
         IgxGridCellComponent,
-        IgxGridHeaderComponent,
         IgxRowEditTemplateDirective,
         IgxRowEditActionsDirective,
         IgxRowEditTextDirective,
         IgxRowEditTabStopDirective,
         IgxGridBodyDirective,
-        IgxGridFilteringCellComponent,
-        IgxGridFilteringRowComponent,
-        IgxGridHeaderGroupComponent,
         IgxGridFooterComponent,
         IgxAdvancedFilteringDialogComponent
     ],
@@ -54,7 +47,6 @@ import { IgxGridColumnModule } from './columns/column.module';
     ],
     exports: [
         IgxGridCellComponent,
-        IgxGridHeaderComponent,
         IgxRowEditTemplateDirective,
         IgxRowEditActionsDirective,
         IgxRowEditTextDirective,
@@ -62,12 +54,10 @@ import { IgxGridColumnModule } from './columns/column.module';
         IgxGridBodyDirective,
         IgxColumnHidingModule,
         IgxColumnPinningModule,
-        IgxGridFilteringCellComponent,
-        IgxGridFilteringRowComponent,
-        IgxGridHeaderGroupComponent,
         IgxGridColumnModule,
-        IgxFilterModule,
+        IgxGridHeadersModule,
         IgxGridPipesModule,
+        IgxGridFilteringModule,
         IgxGridExcelStyleFilteringModule,
         IgxRowDragModule,
         IgxPaginatorModule,
@@ -82,6 +72,7 @@ import { IgxGridColumnModule } from './columns/column.module';
     ],
     imports: [
         IgxGridColumnModule,
+        IgxGridHeadersModule,
         IgxColumnMovingModule,
         IgxGridResizingModule,
         IgxColumnPinningModule,
@@ -89,8 +80,8 @@ import { IgxGridColumnModule } from './columns/column.module';
         IgxGridSummaryModule,
         IgxGridToolbarModule,
         IgxColumnHidingModule,
-        IgxFilterModule,
         IgxGridPipesModule,
+        IgxGridFilteringModule,
         IgxGridExcelStyleFilteringModule,
         IgxRowDragModule,
         IgxPaginatorModule,

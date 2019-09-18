@@ -12,15 +12,15 @@ import {
     ElementRef,
     HostListener
 } from '@angular/core';
-import { IgxColumnComponent } from './columns/column.component';
-import { IgxFilteringService } from './filtering/grid-filtering.service';
-import { GridBaseAPIService } from './api.service';
-import { IgxGridBaseComponent } from './grid-base.component';
-import { IgxColumnResizingService } from './resizing/resizing.service';
+import { IgxColumnComponent } from '../columns/column.component';
+import { IgxFilteringService } from '../filtering/grid-filtering.service';
+import { GridBaseAPIService } from '../api.service';
+import { IgxGridBaseComponent } from '../grid-base.component';
+import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxGridHeaderComponent } from './grid-header.component';
-import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
-import { isIE } from '../core/utils';
-import { GridType } from './common/grid.interface';
+import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
+import { isIE } from '../../core/utils';
+import { GridType } from '../common/grid.interface';
 
 const Z_INDEX = 9999;
 

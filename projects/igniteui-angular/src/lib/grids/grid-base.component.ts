@@ -53,7 +53,7 @@ import { ISummaryExpression } from './summaries/grid-summary';
 import { RowEditPositionStrategy } from './grid.common';
 import { IgxGridToolbarComponent } from './toolbar/grid-toolbar.component';
 import { IgxRowComponent } from './row.component';
-import { IgxGridHeaderComponent } from './grid-header.component';
+import { IgxGridHeaderComponent } from './headers/grid-header.component';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import {
     FilteringExpressionsTree, IFilteringExpressionsTree, FilteringExpressionsTreeType
@@ -70,9 +70,9 @@ import { IgxGridNavigationService } from './grid-navigation.service';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
 import { IgxGridRowComponent } from './grid';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
-import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
+import { IgxGridFilteringCellComponent } from './filtering/base/grid-filtering-cell.component';
 import { WatchChanges } from './watch-changes';
-import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
+import { IgxGridHeaderGroupComponent } from './headers/grid-header-group.component';
 import { IGridResourceStrings } from '../core/i18n/grid-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
@@ -88,7 +88,7 @@ import {
     IgxExcelStyleMovingTemplateDirective
 } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
-import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
+import { IgxGridFilteringRowComponent } from './filtering/base/grid-filtering-row.component';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
 import { IgxColumnResizingService } from './resizing/resizing.service';
 import { DeprecateProperty } from '../core/deprecateDecorators';
@@ -2672,8 +2672,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             if (this.rowEditable) {
                 this.changeRowEditingOverlayStateOnScroll(this.rowInEditMode);
             }
-            this.disableTransitions = false;
         });
+        this.disableTransitions = false;
 
         this.hideOverlays();
     }

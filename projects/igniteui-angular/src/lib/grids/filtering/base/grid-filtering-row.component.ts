@@ -12,19 +12,19 @@ import {
     HostListener,
     ChangeDetectionStrategy
 } from '@angular/core';
-import { DataType } from '../../data-operations/data-util';
-import { IgxColumnComponent } from '../columns/column.component';
-import { IgxDropDownComponent, ISelectionEventArgs } from '../../drop-down/index';
-import { IFilteringOperation } from '../../data-operations/filtering-condition';
-import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
-import { HorizontalAlignment, VerticalAlignment, OverlaySettings } from '../../services/overlay/utilities';
-import { ConnectedPositioningStrategy } from '../../services/overlay/position/connected-positioning-strategy';
-import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../../chips';
-import { ExpressionUI } from './grid-filtering.service';
-import { IgxDropDownItemComponent } from '../../drop-down/drop-down-item.component';
-import { IgxFilteringService } from './grid-filtering.service';
-import { KEYS, isEdge } from '../../core/utils';
-import { AbsoluteScrollStrategy } from '../../services/overlay/scroll';
+import { DataType } from '../../../data-operations/data-util';
+import { IgxColumnComponent } from '../../columns/column.component';
+import { IgxDropDownComponent, ISelectionEventArgs } from '../../../drop-down/index';
+import { IFilteringOperation } from '../../../data-operations/filtering-condition';
+import { FilteringLogic, IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
+import { HorizontalAlignment, VerticalAlignment, OverlaySettings } from '../../../services/overlay/utilities';
+import { ConnectedPositioningStrategy } from '../../../services/overlay/position/connected-positioning-strategy';
+import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../../../chips';
+import { ExpressionUI } from '../grid-filtering.service';
+import { IgxDropDownItemComponent } from '../../../drop-down/drop-down-item.component';
+import { IgxFilteringService } from '../grid-filtering.service';
+import { KEYS, isEdge } from '../../../core/utils';
+import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll';
 
 /**
  * @hidden

@@ -4,14 +4,14 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Calendar } from '../../calendar/index';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { IgxColumnComponent } from '../column.component';
 import { IgxGridComponent } from './grid.component';
-import { IGridCellEventArgs } from '../grid-base.component';
 import { IgxGridModule } from './index';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxGridHeaderGroupComponent } from '../grid-header-group.component';
+import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
+import { IGridCellEventArgs } from '../common/events';
+import { IgxColumnComponent } from '../columns/column.component';
 
 describe('IgxGrid - Column Pinning #grid ', () => {
     configureTestSuite();
