@@ -2116,7 +2116,7 @@ describe('IgxGrid - Advanced Filtering', () => {
 
                 // Click "Ungroup" in context menu.
                 const buttons = GridFunctions.getAdvancedFilteringContextMenuButtons(fix);
-                buttons[1].click();
+                buttons[3].click();
                 tick(100);
                 fix.detectChanges();
 
@@ -2152,7 +2152,7 @@ describe('IgxGrid - Advanced Filtering', () => {
                 fix.detectChanges();
 
                 // Verify the ungroup button is disabled.
-                const ungroupButton = GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[1];
+                const ungroupButton = GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[3];
                 expect(ungroupButton.classList.contains('igx-button--disabled')).toBe(true);
             }));
 
@@ -2200,7 +2200,7 @@ describe('IgxGrid - Advanced Filtering', () => {
 
                 // Click "Delete" in context menu.
                 const buttons = GridFunctions.getAdvancedFilteringContextMenuButtons(fix);
-                buttons[2].click();
+                buttons[4].click();
                 tick(100);
                 fix.detectChanges();
 
@@ -2475,9 +2475,9 @@ describe('IgxGrid - Advanced Filtering', () => {
                                             .querySelectorAll('.igx-button-group__item-content')));
                 expect(buttonGroupItems[0].textContent).toBe('My and');
                 expect(buttonGroupItems[1].textContent).toBe('My or');
-                expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[1].querySelector('span').innerText)
+                expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[3].querySelector('span').innerText)
                     .toBe('My ungroup');
-                expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[2].querySelector('span').innerText)
+                expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[4].querySelector('span').innerText)
                     .toBe('My delete');
 
                 // Close context menu.
@@ -2605,9 +2605,9 @@ describe('IgxGrid - Advanced Filtering', () => {
                                             .querySelectorAll('.igx-button-group__item-content')));
                 expect(buttonGroupItems[0].textContent).toBe('My and');
                 expect(buttonGroupItems[1].textContent).toBe('My or');
-                expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[1].querySelector('span').innerText)
+                expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[3].querySelector('span').innerText)
                     .toBe('My ungroup');
-                expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[2].querySelector('span').innerText)
+                expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[4].querySelector('span').innerText)
                     .toBe('My delete');
 
                 // Close context menu.
@@ -2850,10 +2850,10 @@ function verifyContextMenuType(fix, shouldBeContextualGroup: boolean) {
     expect(GridFunctions.getAdvancedFilteringContextMenuButtonGroup(fix) !== null).toBe(shouldBeContextualGroup);
 
     if (shouldBeContextualGroup) {
-        expect(contextMenuButtons.length).toBe(3, 'incorrect buttons count in context menu');
+        expect(contextMenuButtons.length).toBe(5, 'incorrect buttons count in context menu');
         expect(contextMenuButtons[0].innerText.toLowerCase()).toBe('close');
-        expect(contextMenuButtons[1].querySelector('span').innerText.toLowerCase()).toBe('ungroup');
-        expect(contextMenuButtons[2].querySelector('span').innerText.toLowerCase()).toBe('delete');
+        expect(contextMenuButtons[3].querySelector('span').innerText.toLowerCase()).toBe('ungroup');
+        expect(contextMenuButtons[4].querySelector('span').innerText.toLowerCase()).toBe('delete');
     } else {
         expect(contextMenuButtons.length).toBe(4, 'incorrect buttons count in context menu');
         expect(contextMenuButtons[0].innerText.toLowerCase()).toBe('close');
