@@ -5786,9 +5786,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                 (this as any).rootGrid ? (this as any).rootGrid.nativeElement : this.nativeElement;
             this._advancedFilteringOverlaySettings.outlet = this.outletDirective;
 
-            this._advancedFilteringOverlayId =
-                this.overlayService.attach(IgxAdvancedFilteringDialogComponent, this._advancedFilteringOverlaySettings);
-                // , this._moduleRef);
+            this._advancedFilteringOverlayId = this.overlayService.attach(
+                IgxAdvancedFilteringDialogComponent,
+                this._advancedFilteringOverlaySettings,
+                {
+                    injector: this.viewRef.injector,
+                    componentFactoryResolver: this.resolver
+                });
             this.overlayService.show(this._advancedFilteringOverlayId, this._advancedFilteringOverlaySettings);
         }
     }
