@@ -23,6 +23,10 @@
         @extend %igx-grid-toolbar__actions !optional;
     }
 
+    @include e(adv-filter, $m: 'filtered') {
+        @extend %igx-grid-toolbar__adv-filter--filtered !optional;
+    }
+
     @include e(dropdown){
         @extend %igx-grid-toolbar__dropdown !optional;
     }

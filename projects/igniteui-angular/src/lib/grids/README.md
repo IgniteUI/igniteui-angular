@@ -170,9 +170,11 @@ Below is the list of all inputs that the developers may set to configure the gri
 |`page`| number | The current page index.|
 |`perPage`|number|Visible items per page, default is 15|
 |`allowFiltering`| boolean | Enables quick filtering functionality in the grid. |
+|`allowAdvancedFiltering`| boolean | Enables advanced filtering functionality in the grid. |
 |`filterMode`| `FilterMode` | Determines the filter mode, default value is `quickFilter`.|
 |`filteringLogic`| FilteringLogic | The filtering logic of the grid. Defaults to _AND_. |
 |`filteringExpressionsTree`| IFilteringExpressionsTree | The filtering state of the grid. |
+|`advancedFilteringExpressionsTree`| IFilteringExpressionsTree | The advanced filtering state of the grid. |
 |`emptyFilteredGridMessage`| string | The message displayed when there are no records and the grid is filtered.|
 |`uniqueColumnValuesStrategy`| void | Property that provides a callback for loading unique column values on demand. If this property is provided, the unique values it generates will be used by the Excel Style Filtering. |
 |`sortingExpressions`|Array|The sorting state of the grid.|
@@ -299,7 +301,8 @@ Here is a list of all public methods exposed by **igx-grid**:
 |`isExpandedGroup(group: IGroupByRecord )`| Returns if a group is expanded or not.
 |`toggleGroup(group: IGroupByRecord)`| Toggles the expansion state of a group.
 |`toggleAllGroupRows()`| Toggles the expansion state of all group rows recursively.
-
+|`openAdvancedFilteringDialog()`| Opens the advanced filtering dialog.
+|`closeAdvancedFilteringDialog(applyChanges: boolean)`| Closes the advanced filtering dialog.
 
 
 ## IgxColumnComponent

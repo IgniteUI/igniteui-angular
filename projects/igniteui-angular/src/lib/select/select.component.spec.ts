@@ -53,7 +53,7 @@ describe('igxSelect', () => {
         expect(focusedItems.length).toEqual(1);
         expect(selectList.children[focusedItemIndex].nativeElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeTruthy();
         expect(select.focusedItem).toBe(select.items[focusedItemIndex]);
-        expect(select.items[focusedItemIndex].isFocused).toBeTruthy();
+        expect(select.items[focusedItemIndex].focused).toBeTruthy();
     };
     const verifySelectedItem = function (itemIndex) {
         expect(select.input.value).toEqual(select.items[itemIndex].value);
@@ -742,7 +742,7 @@ describe('igxSelect', () => {
             tick();
             fixture.detectChanges();
             verifySelectedItem(selectedItemIndex);
-            expect(select.items[focusedItemIndex].isFocused).toBeFalsy();
+            expect(select.items[focusedItemIndex].focused).toBeFalsy();
 
             // Unselect selected item
             select.value = '';
@@ -790,10 +790,10 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             checkInputValue();
 
-            // Select item - item isSelected property
+            // Select item - item selected property
             selectedItemIndex = 12;
             selectedItemValue = select.items[selectedItemIndex].value;
-            select.items[selectedItemIndex].isSelected = true;
+            select.items[selectedItemIndex].selected = true;
             fixture.detectChanges();
             tick();
             fixture.detectChanges();
@@ -936,7 +936,7 @@ describe('igxSelect', () => {
             selectedItemEl.nativeElement.click();
             tick();
             fixture.detectChanges();
-            expect(selectedItem.isSelected).toBeTruthy();
+            expect(selectedItem.selected).toBeTruthy();
             expect(select.value).toEqual(selectedItem.value);
             expect(select.input.value.toString().trim()).toEqual(selectedItem.value);
             expect(select.selectedItem).toEqual(selectedItem);
@@ -945,7 +945,7 @@ describe('igxSelect', () => {
             // Throws an error 'Cannot read property disabled of null'
             select.selectItem(null);
             fixture.detectChanges();
-            expect(selectedItem.isSelected).toBeTruthy();
+            expect(selectedItem.selected).toBeTruthy();
             expect(select.value).toEqual(selectedItem.value);
             expect(select.input.value.toString().trim()).toEqual(selectedItem.value);
             expect(select.selectedItem).toEqual(selectedItem);
@@ -998,7 +998,7 @@ describe('igxSelect', () => {
                 cancel: false
             };
 
-            selectedItem.isSelected = true;
+            selectedItem.selected = true;
             fixture.detectChanges();
             expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
             expect(select.selectItem).toHaveBeenCalledTimes(1);
@@ -1006,7 +1006,7 @@ describe('igxSelect', () => {
 
             args.oldSelection = selectedItem;
             selectedItem = select.items[9];
-            selectedItem.isSelected = true;
+            selectedItem.selected = true;
             args.newSelection = selectedItem;
             fixture.detectChanges();
             expect(select.onSelection.emit).toHaveBeenCalledTimes(2);
@@ -1198,7 +1198,7 @@ describe('igxSelect', () => {
             expect(focusedItems.length).toEqual(1);
             expect(focusedItemElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeTruthy();
             expect(select.focusedItem).toBe(select.items[0]);
-            expect(select.items[0].isFocused).toBeTruthy();
+            expect(select.items[0].focused).toBeTruthy();
             expect(groupElement.nativeElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeFalsy();
         }));
     });

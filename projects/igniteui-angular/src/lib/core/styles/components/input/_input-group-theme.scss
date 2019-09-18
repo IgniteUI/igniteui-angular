@@ -1753,11 +1753,6 @@
 
     /// FLUENT END ///
 
-    %form-group-prefix--box,
-    %form-group-suffix--box {
-        height: 100%;
-    }
-
     %form-group-prefix--box {
         padding: 0 rem(8px, map-get($base-scale-size, 'comfortable')) 0 0;
 
