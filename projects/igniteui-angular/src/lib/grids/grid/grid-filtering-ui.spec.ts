@@ -40,7 +40,8 @@ import {
     IgxTestExcelFilteringDatePickerComponent,
     IgxGridFilteringTemplateComponent,
     IgxGridFilteringESFTemplatesComponent,
-    IgxGridFilteringESFLoadOnDemandComponent
+    IgxGridFilteringESFLoadOnDemandComponent,
+    CustomFilteringStrategyComponent
 } from '../../test-utils/grid-samples.spec';
 import { HelperUtils, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 import { GridSelectionMode, FilterMode } from '../common/enums';
@@ -2907,30 +2908,32 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         it('Verify condition chips are scrolled into/(out of) view by using arrow buttons.', (async () => {
             grid.width = '700px';
             fix.detectChanges();
+            await wait(100);
 
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
             fix.detectChanges();
+            await wait(16);
 
             // Add first chip.
             GridFunctions.typeValueInFilterRowInput('a', fix);
-            fix.detectChanges();
             await wait(16);
-            GridFunctions.submitFilterRowInput(fix);
             fix.detectChanges();
-            await wait(100);
+            GridFunctions.submitFilterRowInput(fix);
+            await wait(200);
+            fix.detectChanges();
             // Add second chip.
             GridFunctions.typeValueInFilterRowInput('e', fix);
             await wait(16);
             fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
-            await wait(100);
+            await wait(200);
             fix.detectChanges();
             // Add third chip.
             GridFunctions.typeValueInFilterRowInput('i', fix);
             await wait(16);
             fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
-            await wait(100);
+            await wait(200);
             fix.detectChanges();
 
             verifyMultipleChipsVisibility(fix, [false, false, true]);
@@ -3276,7 +3279,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         it('Should not throw error when deleting the last chip', (async () => {
             grid.width = '700px';
             fix.detectChanges();
-            await wait(16);
+            await wait(100);
 
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
             fix.detectChanges();
@@ -3304,7 +3307,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             verifyMultipleChipsVisibility(fix, [false, false, false, true]);
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-            let chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
+            const chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
             expect(chips.length).toBe(4);
 
             const leftArrowButton = GridFunctions.getFilterRowLeftArrowButton(fix).nativeElement;
@@ -3318,23 +3321,56 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(() => { filterUIRow.componentInstance.onChipRemoved(null, chipToRemove); })
                 .not.toThrowError(/\'id\' of undefined/);
             fix.detectChanges();
-            await wait(100);
-
-            verifyMultipleChipsVisibility(fix, [false, true, false]);
-            chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
-            expect(chips.length).toBe(3);
+            await wait(500);
+            fix.detectChanges();
 
             chipToRemove = filterUIRow.componentInstance.expressionsList[2];
             expect(() => { filterUIRow.componentInstance.onChipRemoved(null, chipToRemove); })
                 .not.toThrowError(/\'id\' of undefined/);
             fix.detectChanges();
             await wait(100);
+        }));
+
+        it('should scroll correct chip in view when one is deleted', async() => {
+            grid.width = '700px';
+            fix.detectChanges();
+
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            fix.detectChanges();
+
+            GridFunctions.applyFilter('a', fix);
+            await wait(16);
+            GridFunctions.applyFilter('e', fix);
+            await wait(16);
+            GridFunctions.applyFilter('i', fix);
+            await wait(16);
+            GridFunctions.applyFilter('o', fix);
+            // wait for chip to be scrolled in view
+            await wait(200);
+            fix.detectChanges();
+            await wait(100);
+            verifyMultipleChipsVisibility(fix, [false, false, false, true]);
+
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            GridFunctions.removeFilterChipByIndex(3, filterUIRow);
+            // wait for chip to be scrolled in view
+            fix.detectChanges();
+            await wait(200);
+
+            verifyMultipleChipsVisibility(fix, [false, true, false]);
+            let chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
+            expect(chips.length).toBe(3);
+
+            GridFunctions.removeFilterChipByIndex(2, filterUIRow);
+            // wait for chip to be scrolled in view
+            fix.detectChanges();
+            await wait(200);
 
             verifyMultipleChipsVisibility(fix, [true, false]);
             chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
             expect(chips.length).toBe(2);
             expect(grid.rowList.length).toBe(3);
-        }));
+        });
 
         it('Should close filter row when hide the current column', (async () => {
             grid.height = '700px';
@@ -3567,7 +3603,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 IgxTestExcelFilteringDatePickerComponent,
                 IgxGridFilteringESFTemplatesComponent,
                 IgxGridFilteringESFLoadOnDemandComponent,
-                IgxGridFilteringMCHComponent
+                IgxGridFilteringMCHComponent,
+                CustomFilteringStrategyComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -5807,6 +5844,97 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify 'AnotherField' column is successfully pinned next to the column group.
             GridFunctions.verifyColumnIsPinned(column, true, 8);
+        }));
+    });
+    describe('IgxGrid - Custom Filtering Strategy #grid', () => {
+        let fix;
+        let grid;
+
+        beforeEach(async(() => {
+            resizeObserverIgnoreError();
+            fix = TestBed.createComponent(CustomFilteringStrategyComponent);
+            grid = fix.componentInstance.grid;
+            fix.detectChanges();
+        }));
+
+        it('Should be able to set custom filtering strategy', () => {
+           expect(grid.filterStrategy).toBeUndefined();
+           grid.filterStrategy = fix.componentInstance.strategy;
+           fix.detectChanges();
+
+           expect(grid.filterStrategy).toEqual(fix.componentInstance.strategy);
+        });
+
+        it('Should be able to override getFieldValue method', fakeAsync(() => {
+            GridFunctions.clickFilterCellChip(fix, 'Name'); // Name column contains nasted object as a vulue
+            fix.detectChanges();
+            GridFunctions.typeValueInFilterRowInput('ca', fix);
+            tick(50);
+            GridFunctions.submitFilterRowInput(fix);
+            tick(50);
+            fix.detectChanges();
+
+            expect(grid.filteredData).toEqual([]);
+            GridFunctions.resetFilterRow(fix);
+            GridFunctions.closeFilterRow(fix);
+            fix.detectChanges();
+
+            // Apply the custom strategy and perform the same filter
+            grid.filterStrategy = fix.componentInstance.strategy;
+            fix.detectChanges();
+            GridFunctions.clickFilterCellChip(fix, 'Name');
+            fix.detectChanges();
+            GridFunctions.typeValueInFilterRowInput('ca', fix);
+            tick(50);
+            GridFunctions.submitFilterRowInput(fix);
+            tick(50);
+            fix.detectChanges();
+
+            expect(grid.filteredData).toEqual(
+                [{ ID: 1, Name: { FirstName: 'Casey', LastName: 'Houston' }, JobTitle: 'Vice President', Company: 'Company A' }]);
+        }));
+
+        it('Should be able to override findMatchByExpression method', fakeAsync(() => {
+            GridFunctions.clickFilterCellChip(fix, 'JobTitle'); // Default strategy is case not sensitive
+            fix.detectChanges();
+            GridFunctions.typeValueInFilterRowInput('direct', fix);
+            tick(50);
+            GridFunctions.submitFilterRowInput(fix);
+            tick(50);
+            fix.detectChanges();
+
+            expect(grid.filteredData).toEqual([
+                { ID: 2, Name: { FirstName: 'Gilberto', LastName: 'Todd' } , JobTitle: 'Director', Company: 'Company C' },
+                { ID: 3, Name: { FirstName: 'Tanya', LastName: 'Bennett' } , JobTitle: 'Director', Company: 'Company A' }]);
+            GridFunctions.resetFilterRow(fix);
+            GridFunctions.closeFilterRow(fix);
+            fix.detectChanges();
+
+            // Apply the custom strategy and perform the same filter
+            grid.filterStrategy = fix.componentInstance.strategy;
+            fix.detectChanges();
+            GridFunctions.clickFilterCellChip(fix, 'JobTitle');
+            fix.detectChanges();
+            GridFunctions.typeValueInFilterRowInput('direct', fix);
+            tick(50);
+            GridFunctions.submitFilterRowInput(fix);
+            tick(50);
+            fix.detectChanges();
+
+            expect(grid.filteredData).toEqual([]);
+        }));
+
+        it('should use the custom filtering stategy when filter the grid through API method', fakeAsync(() => {
+            grid.filterStrategy = fix.componentInstance.strategy;
+            fix.detectChanges();
+            grid.filter('Name', 'D', IgxStringFilteringOperand.instance().condition('contains'));
+            tick(30);
+            fix.detectChanges();
+
+            expect(grid.filteredData).toEqual([
+                { ID: 7, Name: { FirstName: 'Debra', LastName: 'Morton' } ,
+                    JobTitle: 'Associate Software Developer', Company: 'Company B' },
+                { ID: 10, Name: { FirstName: 'Eduardo', LastName: 'Ramirez' }, JobTitle: 'Manager', Company: 'Company E' }]);
         }));
     });
 });
