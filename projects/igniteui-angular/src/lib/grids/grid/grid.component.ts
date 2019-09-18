@@ -239,6 +239,11 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      *     ignoreCase: false
      * }];
      * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-grid #grid [data]="Data" [autoGenerate]="true" [(groupingExpressions)]="model.groupingExpressions"></igx-grid>
+     * ```
 	 * @memberof IgxGridComponent
      */
     set groupingExpressions(value: IGroupingExpression[]) {
@@ -289,8 +294,11 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         }
     }
 
+    /**
+     *@hidden
+     */
     @Output()
-    public groupingExpressionsChange = new EventEmitter<any>();
+    public groupingExpressionsChange = new EventEmitter<IGroupingExpression[]>();
 
     /**
      * Returns a list of expansion states for group rows.
@@ -315,6 +323,11 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      *   }];
      * // You can use DataUtil.getHierarchy(groupRow) to get the group `IgxGridRowComponent` hierarchy.
      * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-grid #grid [data]="Data" [autoGenerate]="true" [(groupingExpansionState)]="model.groupingExpansionState"></igx-grid>
+     * ```
 	 * @memberof IgxGridComponent
      */
     set groupingExpansionState(value) {
@@ -323,8 +336,11 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         this.cdr.detectChanges();
     }
 
+    /**
+     *@hidden
+     */
     @Output()
-    public groupingExpansionStateChange = new EventEmitter<any>();
+    public groupingExpansionStateChange = new EventEmitter<IGroupByExpandState[]>();
 
     /**
      * An @Input property that determines whether created groups are rendered expanded or collapsed.

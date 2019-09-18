@@ -96,6 +96,11 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
      * ```html
      *  this.panel.collapsed = true;
      * ```
+     *
+     * Two-way data binding:
+     * ```html
+     * <igx-expansion-panel [(collapsed)]="model.isCollapsed"></igx-expansion-panel>
+     * ```
      */
     @Input()
     public get collapsed(): boolean {
@@ -106,8 +111,11 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
         this.collapsedChange.emit(this._collapsed);
     }
 
+    /**
+     *@hidden
+     */
     @Output()
-    public collapsedChange = new EventEmitter<any>();
+    public collapsedChange = new EventEmitter<boolean>();
 
     /**
      * Emitted when the expansion panel finishes collapsing

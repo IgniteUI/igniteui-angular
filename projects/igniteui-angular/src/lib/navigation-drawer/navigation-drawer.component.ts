@@ -122,6 +122,12 @@ export class IgxNavigationDrawerComponent implements
      * <!--set-->
      * <igx-nav-drawer [isOpen]='false'></igx-nav-drawer>
      * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <!--set-->
+     * <igx-nav-drawer [(isOpen)]='model.isOpen'></igx-nav-drawer>
+     * ```
      */
     @Input()
     public get isOpen() {
@@ -131,7 +137,11 @@ export class IgxNavigationDrawerComponent implements
         this._isOpen = value;
         this.isOpenChange.emit(this._isOpen);
     }
-    @Output() public isOpenChange = new EventEmitter<any>();
+
+    /**
+     *@hidden
+     */
+    @Output() public isOpenChange = new EventEmitter<boolean>();
 
     /**
      * When pinned the drawer is relatively positioned instead of sitting above content.

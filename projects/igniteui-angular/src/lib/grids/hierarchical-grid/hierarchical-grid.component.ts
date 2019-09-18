@@ -127,6 +127,15 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     *      <igx-column field="Description"  [dataType]='string'></igx-column>
     * </igx-hierarchical-grid>
     * ```
+    *
+    * Two-way data binding.
+    * ```html
+    * <igx-hierarchical-grid [primaryKey]="'ID'" [data]="Data" [autoGenerate]="false" [(hierarchicalState)]="hgridState">
+    *      <igx-column field="ID"  [dataType]='number'></igx-column>
+    *      <igx-column field="Product"  [dataType]='string'></igx-column>
+    *      <igx-column field="Description"  [dataType]='string'></igx-column>
+    * </igx-hierarchical-grid>
+    * ```
     * @memberof IgxHierarchicalGridComponent
     */
     @Input()
@@ -147,6 +156,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         }
     }
 
+    /**
+     *@hidden
+     */
     @Output()
     public hierarchicalStateChange = new EventEmitter<any>();
 

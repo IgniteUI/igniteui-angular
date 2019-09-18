@@ -217,8 +217,13 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      * Sets the column hidden property.
      * Default value is `false`.
-     * ```typescript
+     * ```html
      * <igx-column [hidden] = "true"></igx-column>
+     * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-column [(hidden)] = "model.isHidden"></igx-column>
      * ```
      * @memberof IgxColumnComponent
      */
@@ -240,8 +245,11 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
+    /**
+     *@hidden
+     */
     @Output()
-    public hiddenChange = new EventEmitter<any>();
+    public hiddenChange = new EventEmitter<boolean>();
     /**
      * Gets whether the hiding is disabled.
      * ```typescript
@@ -293,6 +301,11 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```html
      * <igx-column [width] = "'25%'"></igx-column>
      * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-column [(width)]="model.columns[0].width"></igx-column>
+     * ```
      * @memberof IgxColumnComponent
      */
     public set width(value: string) {
@@ -308,8 +321,11 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
+    /**
+     *@hidden
+     */
     @Output()
-    public widthChange = new EventEmitter<any>();
+    public widthChange = new EventEmitter<string>();
 
     /**
      * @hidden
@@ -490,6 +506,11 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```html
      * <igx-column [pinned] = "true"></igx-column>
      * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-column [(pinned)] = "model.columns[0].isPinned"></igx-column>
+     * ```
      * @memberof IgxColumnComponent
      */
     public set pinned(value: boolean) {
@@ -506,8 +527,11 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
+    /**
+     *@hidden
+     */
     @Output()
-    public pinnedChange = new EventEmitter<any>();
+    public pinnedChange = new EventEmitter<boolean>();
 
     /**
      * @deprecated
@@ -1771,8 +1795,13 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     }
     /**
      * Sets the column group hidden property.
-     * ```typescript
+     * ```html
      * <igx-column [hidden] = "true"></igx-column>
+     * ```
+     *
+     * Two-way data binding
+     * ```html
+     * <igx-column [(hidden)] = "model.columns[0].isHidden"></igx-column>
      * ```
      * @memberof IgxColumnGroupComponent
      */
@@ -1781,8 +1810,12 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         this.hiddenChange.emit(this._hidden);
         this.children.forEach(child => child.hidden = value);
     }
+
+    /**
+     *@hidden
+     */
     @Output()
-    public hiddenChange = new EventEmitter<any>();
+    public hiddenChange = new EventEmitter<boolean>();
 
     /**
      *@hidden
