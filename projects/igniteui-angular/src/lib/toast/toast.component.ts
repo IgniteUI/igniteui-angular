@@ -172,6 +172,11 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
      * ```typescript
      * let isVisible = this.toast.isVisible;
      * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-toast [(isVisible)] = "model.isVisible"></igx-toast>
+     * ```
      * @memberof IgxToastComponent
      */
     @Input()
@@ -183,8 +188,12 @@ export class IgxToastComponent implements IToggleView, OnInit, OnDestroy {
         this.isVisibleChange.emit(this._isVisible);
 
     }
+
+    /**
+     *@hidden
+     */
     @Output()
-    public isVisibleChange = new EventEmitter<any>();
+    public isVisibleChange = new EventEmitter<boolean>();
 
     /**
      * Sets/gets the message that will be shown by the toast.
