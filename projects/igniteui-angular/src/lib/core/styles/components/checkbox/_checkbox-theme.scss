@@ -85,6 +85,8 @@
 
     @include scale-in-out($start-scale: .9);
 
+    // If updating the WIDTH of the checkbox here, please update it in the grid theme as well.
+    // It is under the name of $cbx-size
     $size: em(20px);
     $checkbox-radius: $size / 2;
 
