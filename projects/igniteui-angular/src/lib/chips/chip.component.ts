@@ -169,7 +169,6 @@ export class IgxChipComponent extends DisplayDensityBase {
     @Input()
     public set selected(newValue: boolean) {
         this.changeSelection(newValue);
-        this.selectedChange.emit(this._selected);
     }
 
     @Output()
@@ -428,6 +427,7 @@ export class IgxChipComponent extends DisplayDensityBase {
             if (!onSelectArgs.cancel) {
                 this.renderer.addClass(this.chipArea.nativeElement, this._selectedItemClass);
                 this._selected = newValue;
+                this.selectedChange.emit(this._selected);
             }
         } else if (!newValue && this._selected) {
             this.onSelection.emit(onSelectArgs);
@@ -435,6 +435,7 @@ export class IgxChipComponent extends DisplayDensityBase {
             if (!onSelectArgs.cancel) {
                 this.renderer.removeClass(this.chipArea.nativeElement, this._selectedItemClass);
                 this._selected = newValue;
+                this.selectedChange.emit(this._selected);
             }
         }
     }
