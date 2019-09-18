@@ -331,6 +331,10 @@
         @extend %grid-cell-text !optional;
     }
 
+    @include e(cbx-padding) {
+        @extend %cbx-padding !optional;
+    }
+
     @include e(cbx-selection) {
         @extend %grid__cbx-selection !optional;
     }
@@ -519,8 +523,8 @@
             @extend %igx-grid__drag-indicator--cosy !optional;
         }
 
-        @include e(cbx-selection) {
-            @extend %grid__cbx-selection--cosy !optional;
+        @include e(cbx-padding) {
+            @extend %cbx-padding--cosy !optional;
         }
 
         @include e(cbx-selection, $m: push) {
@@ -619,8 +623,8 @@
             @extend %igx-grid__drag-indicator--compact !optional;
         }
 
-        @include e(cbx-selection) {
-            @extend %grid__cbx-selection--compact !optional;
+        @include e(cbx-padding) {
+            @extend %cbx-padding--compact !optional;
         }
 
         @include e(cbx-selection, $m: push) {
