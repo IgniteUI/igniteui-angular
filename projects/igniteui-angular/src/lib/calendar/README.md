@@ -55,6 +55,12 @@ A multiple selection calendar with different locale and templating for the subhe
 </igx-calendar>
 ```
 
+A calendar displaying more than one month in the view and hiding the days that are outside of the current month
+```html
+<igx-calendar monthsViewNumber="2" [hideOutsideDays]="'true'">
+</igx-calendar>
+```
+
 The **igxCalendar** implements the `ControlValueAccessor` interface, providing two-way data-binding
 and the expected behavior when used both in Template-driven or Reactive Forms.
 
@@ -65,8 +71,8 @@ When the **igxCalendar** component is focused:
 - `PageDown` will move to the next month.
 - `Shift + PageUp` will move to the previous year.
 - `Shift + PageDown` will move to the next year.
-- `Home` will focus the first day of the current month that is into view.
-- `End` will focus the last day of the current month that is into view.
+- `Home` will focus the first day of the current month (or first month if more months are displayed) hat is into view.
+- `End` will focus the last day of the current month ((or last month if more months are displayed)) that is into view.
 - `Tab` will navigate through the subheader buttons;
 
 When `prev` or `next` month buttons (in the subheader) are focused:
@@ -82,6 +88,7 @@ When a day inside the current month is focused:
 - Arrow keys will navigate through the days.
 - Arrow keys will allow navigation to previous/next month as well.
 - `Enter` will select the currently focused day.
+- When more than one month view is displayed, navigating with the arrow keys should move to next/previous month after navigating from first/last day in current month.
 
 When a month inside the months view is focused:
 - Arrow keys will navigate through the months.
@@ -153,6 +160,13 @@ The default values are listed below.
 ```typescript
 { day: false, month: true, year: false }
 ```
+
+- `monthViewsNumber: number`
+Controls the number of month views displayed. Default is 1.
+
+- `hideOusideDays: boolean`
+Controls the visibility of the dates that do not belong to the current month.
+
 
 ### Outputs
 
