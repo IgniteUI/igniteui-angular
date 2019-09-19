@@ -83,12 +83,20 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
     }
 
     /**
+    * @hidden
+    */
+    protected expanderClick(event) {
+        event.stopPropagation();
+        this.toggle();
+    }
+
+    /**
      * Toggles the hierarchical row.
      * ```typescript
      * this.grid1.rowList.first.toggle()
      * ```
      */
-    public toggle(event?) {
+    public toggle() {
         if (this.added) {
             return;
         }
