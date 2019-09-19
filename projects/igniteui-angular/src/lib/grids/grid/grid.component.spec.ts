@@ -219,7 +219,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             // The scrollbar is no longer visible
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toEqual(gridBodyHeight);
-        });
+        }));
 
         it('should not have column misalignment when no vertical scrollbar is shown', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridTestComponent);
