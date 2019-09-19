@@ -85,7 +85,7 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
     /**
     * @hidden
     */
-    protected expanderClick(event) {
+   public expanderClick(event) {
         event.stopPropagation();
         this.toggle();
     }
