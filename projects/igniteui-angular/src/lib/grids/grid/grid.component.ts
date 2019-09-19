@@ -333,7 +333,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     set groupingExpansionState(value) {
         this._groupingExpandState = cloneArray(value);
         this.groupingExpansionStateChange.emit(this._groupingExpandState);
-        this.cdr.detectChanges();
+        this.notifyChanges();
     }
 
     /**

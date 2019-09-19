@@ -82,7 +82,6 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             } else {
                 this._selectedIndex = newIndex;
             }
-            this.selectedIndexChange.emit(this._selectedIndex);
         }
     }
 
@@ -383,6 +382,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             // if there is no new selected tab hide the selection indicator
             this.hideIndicator();
         }
+        this.selectedIndexChange.emit(this._selectedIndex);
     }
 
     private performDeselection(oldTab: IgxTabItemBase): void {
