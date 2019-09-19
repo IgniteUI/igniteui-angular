@@ -1992,6 +1992,15 @@
         position: fixed;
     }
 
+    %igx-grid__loading-outlet {
+        z-index: 10003;
+
+        %circular-display {
+            width: rem(50);
+            height: rem(50);
+        }
+    }
+
     %igx-grid__row-editing-outlet {
         z-index: 10000;
         position: absolute;
