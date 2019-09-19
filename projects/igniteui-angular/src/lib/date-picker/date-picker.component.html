@@ -15,7 +15,8 @@
             <igx-icon>today</igx-icon>
         </igx-prefix>
         <label *ngIf="labelVisibility" igxLabel>{{label}}</label>
-        <input #editableInput class="igx-date-picker__input-date" igxInput type="text" [value]="transformedDate"
+        <input #editableInput class="igx-date-picker__input-date" igxInput [igxTextSelection]="true"
+            type="text" [value]="transformedDate"
             [igxMask]="inputMask" [placeholder]="mask" [disabled]="disabled" [displayValuePipe]="displayValuePipe"
             [focusedValuePipe]="inputValuePipe" (blur)="onBlur($event)" (wheel)="onWheel($event)"
             (input)="onInput($event)" (focus)="onFocus()" />

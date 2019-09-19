@@ -123,11 +123,14 @@ export class IgxOverlayService implements OnDestroy {
      * Generates Id. Provide this Id when call `show(id, settings?)` method
      * @param component Component Type to show in overlay
      * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
-     * @param moduleRef Optional reference to the NgModule that can resolve the component's factory
+     * @param moduleRef Optional reference to an object containing Injector and ComponentFactoryResolver
+     * that can resolve the component's factory
      * @returns Id of the created overlay. Valid until `onClosed` is emitted.
      */
-    attach(component: Type<any>, settings?: OverlaySettings, moduleRef?: NgModuleRef<any>): string;
-    attach(component: ElementRef | Type<any>, settings?: OverlaySettings, moduleRef?: NgModuleRef<any>): string {
+    attach(component: Type<any>, settings?: OverlaySettings,
+        moduleRef?: Pick<NgModuleRef<any>, 'injector' | 'componentFactoryResolver'>): string;
+    attach(component: ElementRef | Type<any>, settings?: OverlaySettings,
+        moduleRef?: Pick<NgModuleRef<any>, 'injector' | 'componentFactoryResolver'>): string {
         let info: OverlayInfo;
         info = this.getOverlayInfo(component, moduleRef);
 
@@ -330,7 +333,7 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    private getOverlayInfo(component: any, moduleRef?: NgModuleRef<any>): OverlayInfo {
+    private getOverlayInfo(component: any, moduleRef?: Pick<NgModuleRef<any>, 'injector' | 'componentFactoryResolver'>): OverlayInfo {
         const info: OverlayInfo = { ngZone: this._zone };
         if (component instanceof ElementRef) {
             info.elementRef = <ElementRef>component;
