@@ -423,7 +423,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             }
         }
         const defaultItemSize = 'igxForItemSize';
-        if (defaultItemSize in changes && !changes[defaultItemSize].firstChange && this.igxForScrollOrientation === 'vertical') {
+        if (defaultItemSize in changes && !changes[defaultItemSize].firstChange &&
+            this.igxForScrollOrientation === 'vertical' && this.igxForOf) {
             // handle default item size changed.
             this.initSizesCache(this.igxForOf);
             this._applyChanges();
@@ -1325,7 +1326,8 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
             }
         }
         const defaultItemSize = 'igxForItemSize';
-        if (defaultItemSize in changes && !changes[defaultItemSize].firstChange && this.igxForScrollOrientation === 'vertical') {
+        if (defaultItemSize in changes && !changes[defaultItemSize].firstChange &&
+             this.igxForScrollOrientation === 'vertical' && this.igxForOf) {
             // handle default item size changed.
             this.initSizesCache(this.igxForOf);
         }
