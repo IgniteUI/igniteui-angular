@@ -3,7 +3,6 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 8.2.0
-
 ### New theme
 Ignite UI for angular now have a new theme that mimics Microsoft "Fluent" design system.  
 Depending on your use case you can use one of the following mixins:  
@@ -29,7 +28,9 @@ For more information about the theming please read our [documentation](https://w
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Advanced Filtering functionality is added. In the advanced filtering dialog, you could create groups of conditions across all grid columns. The advanced filtering button is shown in the grid's toolbar when `allowAdvancedFiltering` and `showToolbar` properties are set to `true`. You could also open/close the advanced filtering dialog using the `openAdvancedFilteringDialog` and `closeAdvancedFilteringDialog` methods.
     - `uniqueColumnValuesStrategy` input is added. This property provides a callback for loading unique column values on demand. If this property is provided, the unique values it generates will be used by the Excel Style Filtering (instead of using the unique values from the data that is bound to the grid).
+    - `[filterStrategy] - input that allows you to override the default filtering strategy`
     - `igxExcelStyleLoading` directive is added, which can be used to provide a custom loading template for the Excel Style Filtering. If this property is not provided, a default loading template will be used instead.
     - introduced new properties `cellSelection` and `rowSelection` which accept GridSelection mode enumeration. Grid selection mode could be none, single or multiple. Also `hideRowSelectors` property is added, which allows you to show and hide row selectors when row selection is enabled.
     - introduced functionality for templating row and header selectors - [spec](https://github.com/IgniteUI/igniteui-angular/wiki/Row-Selection-Templating-(Grid-feature))
@@ -63,6 +64,8 @@ For more information about the theming please read our [documentation](https://w
     - introduced a new `readonly` property that doesn't allow user interaction to change the state, but keeps the default active style. Intended for integration in complex controls that handle the interaction and control the checkbox instead through binding.
 - `IgxOverlay`
     - introduced a new `ContainerPositionStrategy`. The new strategy positions the element inside the containing outlet based on the directions passed in trough PositionSettings.
+- `IgxChip`
+    - add `onSelectionDone` event that is triggered after all animations and transitions related to selection have ended.
 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
@@ -75,6 +78,7 @@ For more information about the theming please read our [documentation](https://w
     - **Breaking Change** `onRowSelectionChange` event arguments are changed. The `row` property has been removed and the properties `added`, `removed` and `cancel` are newly added.
     - **Breaking Change** `igxExcelStylePinningTemplate` directive is renamed to `igxExcelStylePinning`.
     - **Breaking Change** `onRowDragEnd` and `onRowDragStart` event arguments are changed - `owner` now holds reference to the grid component instance, while `dragDirective` hold reference to the drag directive.
+    - **Behavioral Change** The behavior of the `isLoading` input no longer depends on the state of the data the grid binds to. Setting it to `true` now shows a loading indicator until it is disabled by the user.
 - `IgxCombo`
     - Combo selection is now consistent when `valueKey` is defined. When `valueKey` is specified, selection is based on the value keys of the items. For example:
     ```html
