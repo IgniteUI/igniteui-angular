@@ -450,7 +450,8 @@ export class IgxChipComponent extends DisplayDensityBase {
     }
 
     public onSelectTransitionDone(event) {
-        if (event.propertyName === 'width') {
+        if (event.propertyName === 'width' && !!event.target.tagName) {
+            // Trigger onSelectionDone on when `width` property is changed and the target is valid element(not comment).
             this.onSelectionDone.emit({
                 owner: this,
                 originalEvent: event
