@@ -13,7 +13,7 @@ const SLIDER_CLASS = '.igx-slider';
 const THUMB_TO_CLASS = '.igx-slider__thumb-to';
 const THUMB_FROM_CLASS = '.igx-slider__thumb-from';
 
-describe('IgxSlider', () => {
+fdescribe('IgxSlider', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -560,7 +560,7 @@ describe('IgxSlider', () => {
             let activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-to--active'));
             expect(activeThumb).not.toBeNull();
 
-            sliderEl.dispatchEvent( new PointerEvent('pointerup'));
+            sliderEl.dispatchEvent( new PointerEvent('pointerup', { pointerId: 1 }));
             await wait(slider.thumbLabelVisibilityDuration + 10);
             fixture.detectChanges();
 
@@ -579,7 +579,7 @@ describe('IgxSlider', () => {
             let activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-to--active'));
             expect(activeThumb).not.toBeNull();
 
-            sliderEl.dispatchEvent( new PointerEvent('pointerup'));
+            sliderEl.dispatchEvent( new PointerEvent('pointerup', { pointerId: 1 }));
             await wait(750);
             fixture.detectChanges();
 
@@ -830,7 +830,7 @@ describe('IgxSlider', () => {
             let activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-from--active'));
             expect(activeThumb).not.toBeNull();
 
-            sliderEl.dispatchEvent( new PointerEvent('pointerup'));
+            sliderEl.dispatchEvent( new PointerEvent('pointerup', { pointerId: 1}));
             await wait(slider.thumbLabelVisibilityDuration + 10);
             fixture.detectChanges();
 
@@ -849,7 +849,7 @@ describe('IgxSlider', () => {
             let activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-from--active'));
             expect(activeThumb).not.toBeNull();
 
-            sliderEl.dispatchEvent( new PointerEvent('pointerup'));
+            sliderEl.dispatchEvent( new PointerEvent('pointerup', { pointerId: 1}));
             await wait(750);
             fixture.detectChanges();
 
