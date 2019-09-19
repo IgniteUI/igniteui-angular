@@ -12,6 +12,7 @@ export class GridVirtualizationSampleComponent implements OnInit, AfterViewInit 
     public remoteData: any;
     public prevRequest: any;
     public columns: any;
+    public loading: boolean = true;
 
     @ViewChild('grid1', { static: true })
     public grid: IgxGridComponent;
@@ -47,6 +48,11 @@ export class GridVirtualizationSampleComponent implements OnInit, AfterViewInit 
     public loadData() {
         this.grid.shouldGenerate = true;
         this.remoteData = this.remoteService.remoteData;
+    }
+
+    public toggleLoading() {
+        this.loading = !this.loading;
+        this.grid.cdr.markForCheck();
     }
 
     public ngAfterViewInit() {
