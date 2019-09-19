@@ -668,6 +668,7 @@ export class IgxSliderComponent implements
         activeThumb.nativeElement.setPointerCapture($event.pointerId);
         this.showSliderIndicators();
 
+        $event.preventDefault();
     }
 
 
