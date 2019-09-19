@@ -46,7 +46,8 @@ import {
     IgxOverlayService,
     OverlaySettings,
     PositionSettings,
-    ConnectedPositioningStrategy
+    ConnectedPositioningStrategy,
+    ContainerPositionStrategy
 } from '../services/index';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
@@ -845,9 +846,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
+    @WatchChanges()
     @Input()
     set isLoading(value: boolean) {
-        this._isLoading = value;
+        if (this._isLoading !== value) {
+            this._isLoading = value;
+            this.evaluateLoadingState();
+        }
         this.notifyChanges();
     }
 
@@ -1649,6 +1654,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @ViewChild(IgxGridColumnResizerComponent, { static: false })
     public resizeLine: IgxGridColumnResizerComponent;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('loadingOverlay', { static: true })
+    public loadingOverlay: ElementRef;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('igxLoadingOverlayOutlet', { read: IgxOverlayOutletDirective, static: true })
+    public loadingOutlet: IgxOverlayOutletDirective;
 
     /**
      * @hidden
@@ -2728,6 +2745,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected _baseFontSize: number;
     private _horizontalForOfs: Array<IgxGridForOfDirective<any>> = [];
     private _multiRowLayoutRowSize = 1;
+    protected _loadingId;
 
     // Caches
     private _totalWidth = NaN;
@@ -2927,6 +2945,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.verticalScrollContainer.onDataChanging.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
             this.calculateGridHeight();
             $event.containerSize = this.calcHeight;
+            this.evaluateLoadingState();
             this.notifyChanges(true);
         });
 
@@ -5642,6 +5661,30 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
+    /**
+     * Should be called when data and/or isLoading input changes so that the overlay can be
+     * hidden/shown based on the current value of shouldOverlayLoading
+     */
+    protected evaluateLoadingState() {
+        if (this.shouldOverlayLoading) {
+            // a new overlay should be shown
+            const overlaySettings: OverlaySettings = {
+                outlet: this.loadingOutlet,
+                closeOnOutsideClick: false,
+                positionStrategy: new ContainerPositionStrategy()
+            };
+            if (!this._loadingId) {
+                this._loadingId = this.overlayService.attach(this.loadingOverlay, overlaySettings);
+                this.overlayService.show(this._loadingId, overlaySettings);
+            }
+        } else {
+            if (this._loadingId) {
+                this.overlayService.hide(this._loadingId);
+                this._loadingId = null;
+            }
+        }
+    }
+
     openRowOverlay(id) {
         this.configureRowEditingOverlay(id, this.rowList.length <= MIN_ROW_EDITING_COUNT_THRESHOLD);
 
@@ -5827,6 +5870,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected getExportCsv(): boolean {
         return this._exportCsv;
+    }
+
+    /**
+     * @hidden
+     */
+    get shouldOverlayLoading(): boolean {
+        return this.isLoading && this.data && this.data.length > 0;
     }
 
     /**
