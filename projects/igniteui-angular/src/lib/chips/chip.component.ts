@@ -281,11 +281,25 @@ export class IgxChipComponent extends DisplayDensityBase {
      * }
      * ```
      * ```html
-     * <igx-chip #myChip [id]="'igx-chip-1'" [draggable]="true" (onSelection)="chipSelect($event)">
+     * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" (onSelection)="chipSelect($event)">
      * ```
      */
     @Output()
     public onSelection = new EventEmitter<IChipSelectEventArgs>();
+
+    /**
+     * Emits event when the `IgxChipComponent` is selected/deselected and any related animations and transitions also end.
+     * ```typescript
+     * chipSelectEnd(event: IBaseChipEventArgs){
+     *     let selectedChip = event.owner;
+     * }
+     * ```
+     * ```html
+     * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" (onSelectionDone)="chipSelectEnd($event)">
+     * ```
+     */
+    @Output()
+    public onSelectionDone = new EventEmitter<IBaseChipEventArgs>();
 
     /**
      * Emits an event when the `IgxChipComponent` keyboard navigation is being used.
@@ -432,6 +446,16 @@ export class IgxChipComponent extends DisplayDensityBase {
                 this.renderer.removeClass(this.chipArea.nativeElement, this._selectedItemClass);
                 this._selected = newValue;
             }
+        }
+    }
+
+    public onSelectTransitionDone(event) {
+        if (event.propertyName === 'width' && !!event.target.tagName) {
+            // Trigger onSelectionDone on when `width` property is changed and the target is valid element(not comment).
+            this.onSelectionDone.emit({
+                owner: this,
+                originalEvent: event
+            });
         }
     }
 
