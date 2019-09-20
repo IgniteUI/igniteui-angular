@@ -59,6 +59,12 @@ The DatePicker also supports binding through `ngModel` if two-way date-bind is n
 </igx-date-picker>
 ```
 
+A date-picker opening a calendar than one month in the view and hiding the days that are outside of the current month
+```html
+<igx-date-picker monthsViewNumber="2" [hideOutsideDays]="'true'">
+</igx-date-picker>
+```
+
 The DatePicker has `dropdown` mode as well. Custom display format and editor mask can be configured by setting the `format` and `mask` properties.
 ```html
 <igx-date-picker [(ngModel)]="myDateValue" mode="dropdown" mask="dd-MM-y">
@@ -127,6 +133,8 @@ The DatePicker action buttons could be retemplated.
 | `vertical` | `boolean` | Configure the calendar mode - horizontal or vertical in read-only datePicker. |
 | `mode` | `InteractionMode` | Configure the datePicker mode - `dialog` or `dropdown`. In `dropdown` mode, the datePicker input is editable and drop down calendar is displayed, in a `dialog` mode  - the input is read-only and calendar dialog appears to select a date.|
 | `isSpinLoop` | `boolean` | Configure whether the date parts would spin continuously or stop when min/max value is reached in `dropdown` mode.|
+| `monthViewsNumber` | `number` | Controls the number of month views displayed. |
+| `hideOutsideDays`| `boolean` | Controls the visibility of the dates that do not belong to the current month. |
 
 
 ### Outputs
