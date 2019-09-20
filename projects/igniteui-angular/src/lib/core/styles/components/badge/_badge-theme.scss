@@ -15,7 +15,6 @@
 /// @param {Color} $text-color [null] - The text color used.
 /// @param {Color} $border-color [null] - The border color used.
 /// @param {Color} $background-color [null] - The background color used.
-/// @param {Bool} $disable-shadow [true] - Sets the badge shadow visibility.
 /// @param {Bool} $disable-border [true] - Sets the badge border visibility.
 /// @param {box-shadow} $shadow [null] - Sets a shadow to be used for the badge.
 /// @param {border-radius} $border-radius [null] - The border radius used for badge component.
@@ -52,7 +51,6 @@
     $background-color: null,
     $shadow: null,
 
-    $disable-shadow: true,
     $disable-border: true
 ) {
     $name: 'igx-badge';
@@ -75,10 +73,6 @@
     @if not($shadow) {
         $elevation: map-get($badge-schema, 'elevation');
         $shadow: igx-elevation($elevations, $elevation);
-    }
-
-    @if $disable-shadow {
-        $shadow: none;
     }
 
     @return extend($theme, (
