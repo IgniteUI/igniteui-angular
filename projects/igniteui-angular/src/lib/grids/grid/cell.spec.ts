@@ -2,13 +2,14 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnComponent, IgxGridCellComponent, IgxGridComponent, IgxGridModule, IGridCellEventArgs } from './index';
+import { IgxColumnComponent, IgxGridCellComponent, IgxGridComponent, IgxGridModule, IGridCellEventArgs, IGridEditEventArgs } from './index';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { HammerGesturesManager } from '../../core/touch';
+import { PlatformUtil } from '../../core/utils';
 
 const DEBOUNCETIME = 30;
 
@@ -186,8 +187,16 @@ describe('IgxGrid - Cell component', () => {
         expect(firstCell).toBe(fix.componentInstance.clickedCell);
     });
 
-    it('Should handle doubletap, trigger onDoubleClick event', () => {
+    it('Should not attach doubletap handler for non-iOS', () => {
         const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
+        spyOn(PlatformUtil, 'isIOS').and.returnValue(false);
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+    });
+
+    it('Should handle doubletap on iOS, trigger onDoubleClick event', () => {
+        const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
+        spyOn(PlatformUtil, 'isIOS').and.returnValue(true);
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
 
@@ -828,6 +837,49 @@ describe('IgxGrid - Cell component', () => {
 
             expect(cell.editMode).toBeFalsy();
         });
+    });
+
+    it(`Should be able to update other cell in 'onCellEdit' event`, () => {
+        const fixture = TestBed.createComponent(CellEditingTestComponent);
+        fixture.detectChanges();
+        const grid = fixture.componentInstance.grid;
+        grid.primaryKey = 'personNumber';
+        fixture.detectChanges();
+
+        spyOn(grid.onCellEdit, 'emit').and.callThrough();
+        grid.onCellEdit.subscribe((e: IGridEditEventArgs) => {
+            if (e.cellID.columnID === 0) {
+                grid.updateCell(1, e.rowID, 'age');
+            }
+        });
+
+        let cell = grid.getCellByColumn(0, 'fullName');
+
+        UIInteractions.simulateClickAndSelectCellEvent(cell);
+        fixture.detectChanges();
+
+        cell.nativeElement.dispatchEvent(new MouseEvent('dblclick'));
+        fixture.detectChanges();
+
+        expect(cell.editMode).toBe(true);
+        let editTemplate = fixture.debugElement.query(By.css('input'));
+        UIInteractions.sendInput(editTemplate, 'New Name');
+        fixture.detectChanges();
+
+        // press tab on edited cell
+        UIInteractions.triggerKeyDownWithBlur('tab', cell.nativeElement, true);
+        fixture.detectChanges();
+
+        expect(grid.onCellEdit.emit).toHaveBeenCalledTimes(2);
+        cell = grid.getCellByColumn(0, 'age');
+        expect(cell.editMode).toBe(true);
+        expect(cell.value).toEqual(1);
+        expect(cell.editValue).toEqual(1);
+        editTemplate = fixture.debugElement.query(By.css('input'));
+        expect(editTemplate.nativeElement.value).toEqual('1');
+
+        cell = grid.getCellByColumn(0, 'fullName');
+        expect(cell.value).toEqual('New Name');
     });
 
     it('should fit last cell in the available display container when there is vertical scroll.', async(() => {
