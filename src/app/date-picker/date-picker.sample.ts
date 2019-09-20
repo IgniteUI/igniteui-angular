@@ -21,7 +21,7 @@ export class DatePickerSampleComponent {
         weekday: 'short',
         year: 'numeric'
     };
-    // @ViewChild('dp99') public datePicker99: IgxDatePickerComponent;
+    @ViewChild('datepicker1', { read: IgxDatePickerComponent, static: true }) datepicker1: IgxDatePickerComponent;
 
     public date1;
     public date2;
@@ -48,6 +48,14 @@ export class DatePickerSampleComponent {
 
     public deselect(datePicker) {
         datePicker.deselectDate();
+    }
+
+    public showHide() {
+        this.datepicker1.hideOutsideDays = !this.datepicker1.hideOutsideDays;
+    }
+
+    public setMonthsViewNumber(args: HTMLInputElement) {
+        this.datepicker1.monthsViewNumber = parseInt(args.value, 10);
     }
 
     constructor() {

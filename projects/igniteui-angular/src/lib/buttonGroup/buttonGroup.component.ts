@@ -22,7 +22,7 @@ import { IgxButtonDirective, IgxButtonModule } from '../directives/button/button
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxIconModule } from '../icon/index';
 import { takeUntil } from 'rxjs/operators';
-import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions, DisplayDensity } from '../core/density';
+import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IBaseEventArgs } from '../core/utils';
 
 export enum ButtonGroupAlignment { horizontal, vertical }
@@ -78,6 +78,12 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     @HostBinding('attr.id')
     @Input()
     public id = `igx-buttongroup-${NEXT_ID++}`;
+
+    /**
+     * @hidden
+     */
+    @HostBinding('style.zIndex')
+    public zIndex = 0;
 
     /**
      * Allows you to set a style using the `itemContentCssClass` input.
@@ -252,7 +258,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
 
     constructor(private _cdr: ChangeDetectorRef, private _renderer: Renderer2,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-            super(_displayDensityOptions);
+        super(_displayDensityOptions);
     }
 
     /**
@@ -361,7 +367,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * @hidden
      */
     public ngAfterContentInit() {
-        this.templateButtons.forEach( (button) => {
+        this.templateButtons.forEach((button) => {
             if (!button.initialDensity) {
                 button.displayDensity = this.displayDensity;
             }

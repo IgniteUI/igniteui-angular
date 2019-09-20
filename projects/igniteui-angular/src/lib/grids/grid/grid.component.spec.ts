@@ -10,7 +10,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxRowComponent } from '../row.component';
 import { IgxColumnComponent } from '../column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { IgxGridModule, GridSelectionMode } from './index';
+import { IgxGridModule } from './index';
 import { DisplayDensity } from '../../core/displayDensity';
 import { DataType } from '../../data-operations/data-util';
 import { GridTemplateStrings } from '../../test-utils/template-strings.spec';
@@ -22,6 +22,7 @@ import { SortingDirection, ISortingExpression } from '../../data-operations/sort
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxTabsModule, IgxTabsComponent } from '../../tabs';
 import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
+import { GridSelectionMode } from '../common/enums';
 
 
 describe('IgxGrid Component Tests #grid', () => {
@@ -357,6 +358,7 @@ describe('IgxGrid Component Tests #grid', () => {
             tick(16);
 
             const grid = fixture.componentInstance.grid;
+            const gridElement = fixture.debugElement.query(By.css('.igx-grid'));
             const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
             let loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
 
@@ -371,6 +373,10 @@ describe('IgxGrid Component Tests #grid', () => {
 
             loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
             expect(loadingIndicator).toBeNull();
+
+            // the overlay should be shown
+            loadingIndicator = gridElement.query(By.css('.igx-grid__loading-outlet'));
+            expect(loadingIndicator.nativeElement.children.length).not.toBe(0);
 
             // Check for empty filter grid message and body less than 100px
             const columns = fixture.componentInstance.grid.columns;
@@ -392,6 +398,10 @@ describe('IgxGrid Component Tests #grid', () => {
 
             loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
             expect(loadingIndicator).not.toBeNull();
+
+            // the overlay should be hidden
+            loadingIndicator = gridElement.query(By.css('.igx-grid__loading-outlet'));
+            expect(loadingIndicator.nativeElement.children.length).toBe(0);
         }));
 
         it('should render loading indicator when loading is enabled and autoGenerate is enabled', fakeAsync(() => {
@@ -475,6 +485,50 @@ describe('IgxGrid Component Tests #grid', () => {
             const colHeaders = gridHead.queryAll(By.css('igx-grid-header'));
             expect(colHeaders.length).toBeGreaterThan(0);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(500);
+        }));
+
+        it('should remove loading overlay when isLoading is set to false', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxGridTestComponent);
+            fixture.componentInstance.data = [];
+            fixture.componentInstance.grid.isLoading = true;
+            fixture.detectChanges();
+            tick(16);
+
+            const grid = fixture.componentInstance.grid;
+            const gridElement = fixture.debugElement.query(By.css('.igx-grid'));
+            const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
+            let loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+
+            expect(loadingIndicator).not.toBeNull();
+            expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
+
+            // Check for loaded rows in grid's container
+            fixture.componentInstance.generateData(30);
+            fixture.detectChanges();
+            tick(1000);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
+
+            loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+            expect(loadingIndicator).toBeNull();
+
+            // the overlay should be shown
+            loadingIndicator = gridElement.query(By.css('.igx-grid__loading-outlet'));
+            expect(loadingIndicator.nativeElement.children.length).not.toBe(0);
+
+            grid.isLoading = false;
+            tick(16);
+            expect(loadingIndicator.nativeElement.children.length).toBe(0);
+
+            // Clearing grid's data and check for empty grid message
+            fixture.componentInstance.clearData();
+            fixture.detectChanges();
+            tick(100);
+
+            // isLoading is still false so the empty data message should show, not the loading indicator
+            loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+            expect(loadingIndicator).toBeNull();
+
+            expect(gridBody.nativeElement.textContent).toEqual(grid.emptyGridMessage);
         }));
 
         it('should render empty message when grid height is 100%', fakeAsync(() => {

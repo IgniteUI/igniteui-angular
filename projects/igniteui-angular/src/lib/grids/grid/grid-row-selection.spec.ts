@@ -2,7 +2,7 @@ import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
-import { IgxGridModule, GridSelectionMode, IRowSelectionEventArgs } from './index';
+import { IgxGridModule, IRowSelectionEventArgs } from './index';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -17,6 +17,7 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { GridSelectionMode } from '../common/enums';
 import { IgxRowSelectorsModule } from '../igx-row-selectors.module';
 
 const DEBOUNCETIME = 30;
@@ -1239,12 +1240,12 @@ describe('IgxGrid - Row Selection #grid', () => {
         });
 
         it('Should be able to update row through primaryKey', () => {
-            spyOn(grid.cdr, 'markForCheck').and.callThrough();
+            spyOn(grid.onRowEdit, 'emit').and.callThrough();
             expect(grid.primaryKey).toBeTruthy();
             expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
             expect(grid.getRowByKey(2).rowData['JobTitle']).toMatch('Director');
             grid.updateRow({ ID: 2, Name: 'Gilberto Todd', JobTitle: 'Vice President' }, 2);
-            expect(grid.cdr.markForCheck).toHaveBeenCalledTimes(1);
+            expect(grid.onRowEdit.emit).toHaveBeenCalledTimes(1);
             fix.detectChanges();
             expect(grid.getRowByIndex(1).rowData['JobTitle']).toMatch('Vice President');
             expect(grid.getRowByKey(2).rowData['JobTitle']).toMatch('Vice President');
@@ -1874,7 +1875,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         }));
     });
 
-    describe('Custom selectors', () => {
+    describe('Custom row selectors', () => {
         let fix;
         let grid;
 
@@ -1928,7 +1929,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             fix.detectChanges();
 
             const firstRootRow = grid.getRowByIndex(0);
-            expect(firstRootRow.nativeElement.querySelector('.rowNumber').textContent).toEqual('30');
+            expect(firstRootRow.nativeElement.querySelector('.rowNumber').textContent).toEqual('15');
         });
     });
 });

@@ -9,16 +9,20 @@
                 <div class="calendar-sample-buttons">
                     <button igxButton="raised" igxRipple (click)="select()">Select</button>
                     <button igxButton="flat" igxRipple (click)="deselect()">Deselect</button>
+
+                    <button igxButton="raised" igxRipple (click)="showHide()">Show/hide</button>
+                    <input type="number"  #monthsviewnumber />
+                    <button igxButton="flat" igxRipple (click)="setMonthsViewNumber(monthsviewnumber)">Set months number</button>
                 </div>
                 <igx-card>
-                    <igx-calendar #calendar weekStart="1" selection="range"></igx-calendar>
+                    <igx-calendar #calendar weekStart="1" selection="range" [hideOutsideDays]="true" [monthsViewNumber]="3"></igx-calendar>
                 </igx-card>
             </div>
 
             <div class="calendar-sample">
                 <h4 class="sample-title">Vertical Calendar</h4>
                 <igx-card>
-                    <igx-calendar #calendar2 weekStart="1" [vertical]="true"></igx-calendar>
+                    <igx-calendar #calendar1 weekStart="1" [vertical]="true" selection="multi"></igx-calendar>
                 </igx-card>
             </div>
 

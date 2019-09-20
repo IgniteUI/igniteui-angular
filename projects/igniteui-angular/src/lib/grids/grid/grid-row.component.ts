@@ -9,9 +9,11 @@ import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-sel
     preserveWhitespaces: false,
     selector: 'igx-grid-row',
     templateUrl: './grid-row.component.html',
-    providers: [{provide: IgxRowComponent, useExisting: forwardRef(() => IgxGridRowComponent)}]
+    providers: [{ provide: IgxRowComponent, useExisting: forwardRef(() => IgxGridRowComponent) }]
 })
 export class IgxGridRowComponent extends IgxRowComponent<IgxGridComponent> {
+
+    // R.K. TODO: Remove
     constructor(
         public gridAPI: GridBaseAPIService<IgxGridComponent>,
         public crudService: IgxGridCRUDService,
@@ -22,8 +24,8 @@ export class IgxGridRowComponent extends IgxRowComponent<IgxGridComponent> {
             super(gridAPI, crudService, selectionService, element, cdr);
         }
 
-        @HostBinding('class.igx-grid__tr--mrl')
-        get hasColumnLayouts(): boolean {
-            return this.grid.hasColumnLayouts;
-        }
+    @HostBinding('class.igx-grid__tr--mrl')
+    get hasColumnLayouts(): boolean {
+        return this.grid.hasColumnLayouts;
+    }
 }

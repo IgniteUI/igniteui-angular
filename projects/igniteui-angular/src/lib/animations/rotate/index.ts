@@ -1,6 +1,6 @@
 import { animate, animation, AnimationMetadata, AnimationReferenceMetadata, style } from '@angular/animations';
 import { EaseIn, EaseOut } from '../easings';
-import { IAnimationParams } from '../main';
+import { IAnimationParams } from '../interface';
 
 const baseRecipe: AnimationMetadata[] = [
     style({

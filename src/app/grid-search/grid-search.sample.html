@@ -3,15 +3,23 @@
         Allows search in a grid.
     </app-page-header>
 
+    
+
     <div class="sample-content">
         <div class="sample-column">
+            <div class="density-chooser">
+                <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)"></igx-buttongroup>
+            </div>
+
             <igx-grid
                 #grid1
                 [data]="data"
+                [displayDensity]="density"
                 [allowFiltering]="true"
+                [allowAdvancedFiltering]="true"
                 [rowSelectable]="true"
                 [paging]="false"
-                [width]="'900px'"
+                [width]="'980px'"
                 [height]="'600px'" 
                 [showToolbar]="true"
                 [columnHiding]="true" 
@@ -37,7 +45,7 @@
                 </igx-column>
 
                 <ng-template igxToolbarCustomContent>
-                    <app-grid-search-box [grid]="grid1" [style.width]="'530px'"></app-grid-search-box>
+                    <app-grid-search-box [grid]="grid1" [style.width]="'400px'"></app-grid-search-box>
                 </ng-template>
             </igx-grid>
             <div class="sample-buttons">

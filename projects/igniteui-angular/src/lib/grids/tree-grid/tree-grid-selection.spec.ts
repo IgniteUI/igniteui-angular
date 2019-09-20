@@ -1,7 +1,7 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { IgxTreeGridModule, IgxGridCellComponent, GridSelectionMode } from './index';
+import { IgxTreeGridModule, IgxGridCellComponent } from './index';
 import { IgxTreeGridCellComponent } from './tree-cell.component';
 import {
     IgxTreeGridSimpleComponent,
@@ -23,6 +23,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowSelectorsModule } from '../igx-row-selectors.module';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { GridSelectionMode } from '../common/enums';
 
 describe('IgxTreeGrid - Selection #tGrid', () => {
     configureTestSuite();
@@ -745,7 +746,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         it('should not persist selection after paging', () => {
             let rows = TreeGridFunctions.getAllRows(fix);
             let treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
-            treeGridCell.nativeElement.dispatchEvent(new Event('focus'));
+            UIInteractions.simulateClickAndSelectCellEvent(treeGridCell);
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(1);
@@ -764,7 +765,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
 
             rows = TreeGridFunctions.getAllRows(fix);
             treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
-            treeGridCell.nativeElement.dispatchEvent(new Event('focus'));
+            UIInteractions.simulateClickAndSelectCellEvent(treeGridCell);
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(1);
@@ -783,7 +784,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         it('should persist selection after filtering', fakeAsync(() => {
             const rows = TreeGridFunctions.getAllRows(fix);
             const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
-            treeGridCell.triggerEventHandler('focus', new Event('focus'));
+            UIInteractions.simulateClickAndSelectCellEvent(treeGridCell);
             fix.detectChanges();
 
             treeGrid.filter('ID', '14', IgxStringFilteringOperand.instance().condition('startsWith'), true);
@@ -811,8 +812,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
 
             const rows = TreeGridFunctions.getAllRows(fix);
             const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
-            treeGridCell.triggerEventHandler('focus', new Event('focus'));
-            await wait(100);
+            UIInteractions.simulateClickAndSelectCellEvent(treeGridCell);
             fix.detectChanges();
 
             // scroll down 150 pixels
@@ -835,7 +835,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         it('should persist selection after sorting', () => {
             const rows = TreeGridFunctions.getAllRows(fix);
             const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
-            treeGridCell.triggerEventHandler('focus', new Event('focus'));
+            UIInteractions.simulateClickAndSelectCellEvent(treeGridCell);
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(1);
@@ -853,7 +853,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         it('should persist selection after row delete', () => {
             const rows = TreeGridFunctions.getAllRows(fix);
             const treeGridCell = TreeGridFunctions.getTreeCell(rows[0]);
-            treeGridCell.triggerEventHandler('focus', new Event('focus'));
+            UIInteractions.simulateClickAndSelectCellEvent(treeGridCell);
             fix.detectChanges();
 
             expect(treeGrid.selectedCells.length).toBe(1);
@@ -919,8 +919,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
 
             // select a cell
             const targetCell = treeGridCells[0];
-            targetCell.triggerEventHandler('focus', new Event('focus'));
-            tick(16);
+            UIInteractions.simulateClickAndSelectCellEvent(targetCell);
             fix.detectChanges();
 
             // there should be at least one selected cell

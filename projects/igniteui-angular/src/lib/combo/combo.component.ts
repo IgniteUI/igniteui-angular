@@ -1549,6 +1549,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
                     this.registerRemoteEntries(addedItems);
                     this.registerRemoteEntries(removedItems, false);
                     value = Object.keys(this._remoteSelection).map(e => this._remoteSelection[e]).join(', ');
+                } else {
+                    // If new selection is empty, clear all items
+                    this.registerRemoteEntries(args.oldSelection, false);
                 }
             } else {
                 value = this.displayKey !== null && this.displayKey !== undefined ?
