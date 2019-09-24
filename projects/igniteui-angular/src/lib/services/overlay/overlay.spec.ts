@@ -328,50 +328,70 @@ describe('igxOverlay', () => {
             spyOn(overlayInstance.onAnimation, 'emit');
 
             const firstCallId = overlayInstance.show(SimpleDynamicComponent);
+
             tick();
 
             expect(overlayInstance.onOpening.emit).toHaveBeenCalledTimes(1);
-            expect(overlayInstance.onOpening.emit)
-                .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef), cancel: false });
+            expect(overlayInstance.onOpening.emit).toHaveBeenCalledWith({
+                id: firstCallId,
+                componentRef: jasmine.any(ComponentRef),
+                cancel: false,
+                settings: jasmine.any(Object)
+            });
             const args: OverlayEventArgs = (overlayInstance.onOpening.emit as jasmine.Spy).calls.mostRecent().args[0];
             expect(args.componentRef.instance).toEqual(jasmine.any(SimpleDynamicComponent));
             expect(overlayInstance.onAnimation.emit).toHaveBeenCalledTimes(1);
 
             tick();
             expect(overlayInstance.onOpened.emit).toHaveBeenCalledTimes(1);
-            expect(overlayInstance.onOpened.emit).toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef) });
+            expect(overlayInstance.onOpened.emit)
+                .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef), settings: jasmine.any(Object) });
             overlayInstance.hide(firstCallId);
 
             tick();
             expect(overlayInstance.onClosing.emit).toHaveBeenCalledTimes(1);
-            expect(overlayInstance.onClosing.emit)
-                .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef), cancel: false, event: undefined });
+            expect(overlayInstance.onClosing.emit).toHaveBeenCalledWith({
+                id: firstCallId,
+                componentRef: jasmine.any(ComponentRef),
+                cancel: false,
+                event: undefined,
+                settings: jasmine.any(Object)
+            });
             expect(overlayInstance.onAnimation.emit).toHaveBeenCalledTimes(2);
 
             tick();
             expect(overlayInstance.onClosed.emit).toHaveBeenCalledTimes(1);
-            expect(overlayInstance.onClosed.emit).toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef) });
+            expect(overlayInstance.onClosed.emit)
+                .toHaveBeenCalledWith({ id: firstCallId, componentRef: jasmine.any(ComponentRef), settings: jasmine.any(Object) });
 
             const secondCallId = overlayInstance.show(fix.componentInstance.item);
             tick();
             expect(overlayInstance.onOpening.emit).toHaveBeenCalledTimes(2);
-            expect(overlayInstance.onOpening.emit).toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId, cancel: false });
+            expect(overlayInstance.onOpening.emit)
+                .toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId, cancel: false, settings: jasmine.any(Object) });
             expect(overlayInstance.onAnimation.emit).toHaveBeenCalledTimes(3);
 
             tick();
             expect(overlayInstance.onOpened.emit).toHaveBeenCalledTimes(2);
-            expect(overlayInstance.onOpened.emit).toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId });
+            expect(overlayInstance.onOpened.emit)
+                .toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId, settings: jasmine.any(Object) });
 
             overlayInstance.hide(secondCallId);
             tick();
             expect(overlayInstance.onClosing.emit).toHaveBeenCalledTimes(2);
-            expect(overlayInstance.onClosing.emit).
-                toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId, cancel: false, event: undefined });
+            expect(overlayInstance.onClosing.emit).toHaveBeenCalledWith({
+                componentRef: undefined,
+                id: secondCallId,
+                cancel: false,
+                event: undefined,
+                settings: jasmine.any(Object)
+            });
             expect(overlayInstance.onAnimation.emit).toHaveBeenCalledTimes(4);
 
             tick();
             expect(overlayInstance.onClosed.emit).toHaveBeenCalledTimes(2);
-            expect(overlayInstance.onClosed.emit).toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId });
+            expect(overlayInstance.onClosed.emit)
+                .toHaveBeenCalledWith({ componentRef: undefined, id: secondCallId, settings: jasmine.any(Object) });
         }));
 
         it('Should properly set style on position method call - GlobalPosition.', () => {
@@ -3372,22 +3392,23 @@ describe('igxOverlay', () => {
                 positionStrategy: new GlobalPositionStrategy()
             };
 
-            spyOn(overlay, 'show').and.callThrough();
-            spyOn(overlay.onClosing, 'emit');
+            spyOn(overlay.onClosing, 'emit').and.callThrough();
 
-            const firstCallId = overlay.show(SimpleDynamicComponent, overlaySettings);
+            const firstCallId = overlay.attach(SimpleDynamicComponent, overlaySettings);
+            overlay.show(firstCallId);
             tick();
-            expect(overlay.show).toHaveBeenCalledTimes(1);
             expect(overlay.onClosing.emit).toHaveBeenCalledTimes(0);
 
             fixture.componentInstance.buttonElement.nativeElement.click();
             tick();
             expect(overlay.onClosing.emit).toHaveBeenCalledTimes(1);
-            expect(overlay.onClosing.emit)
-                .toHaveBeenCalledWith({
-                    id: firstCallId, componentRef: jasmine.any(ComponentRef), cancel: false,
-                    event: new MouseEvent('click')
-                });
+            expect(overlay.onClosing.emit).toHaveBeenCalledWith({
+                id: firstCallId,
+                componentRef: jasmine.any(ComponentRef),
+                cancel: false,
+                event: new MouseEvent('click'),
+                settings: jasmine.any(Object)
+            });
         }));
 
     });
