@@ -293,7 +293,9 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     public set expansionStates(value) {
         this._expansionStates = this.cloneMap(value);
         this.expansionStatesChange.emit(this._expansionStates);
-        this.cdr.detectChanges();
+        if (this.gridAPI.grid) {
+            this.cdr.detectChanges();
+        }
     }
 
     /**
