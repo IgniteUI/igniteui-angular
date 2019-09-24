@@ -3410,8 +3410,33 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
             GridFunctions.verifyColumnIsHidden(prodNameCol, true, 5);
         }));
-    });
 
+        it('Unary conditions should be committable', fakeAsync (() => {
+            grid.height = '700px';
+            fix.detectChanges();
+
+            const prodNameCol = grid.columns.find((col) => col.field === 'ProductName');
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            fix.detectChanges();
+
+            // Check that the filterRow is opened
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            GridFunctions.openFilterDD(fix.debugElement);
+            const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+            GridFunctions.selectFilteringCondition('Empty', dropdownList);
+            fix.detectChanges();
+            tick(16);
+
+            const chip = filterUIRow.query(By.directive(IgxChipComponent));
+            const input = filterUIRow.query(By.directive(IgxInputDirective));
+            expect(chip.componentInstance.selected).toBeTruthy();
+
+            clickElemAndBlur(chip, input);
+            fix.detectChanges();
+            tick(100);
+            expect(chip.componentInstance.selected).toBeFalsy();
+    }));
+});
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
@@ -6448,8 +6473,8 @@ function clickElemAndBlur(clickElem, blurElem) {
     const elementRect = clickElem.nativeElement.getBoundingClientRect();
     UIInteractions.simulatePointerEvent('pointerdown', clickElem.nativeElement, elementRect.left, elementRect.top);
     blurElem.nativeElement.blur();
-    blurElem.nativeElement.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
     (clickElem as DebugElement).nativeElement.focus();
+    blurElem.nativeElement.dispatchEvent(new FocusEvent('focusout', {bubbles: true}));
     UIInteractions.simulatePointerEvent('pointerup', clickElem.nativeElement, elementRect.left, elementRect.top);
     UIInteractions.simulateMouseEvent('click', clickElem.nativeElement, 10, 10);
 }
