@@ -2748,7 +2748,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
         });
 
-        this.resizeNotify.pipe(destructor, filter(() => !this._init), throttleTime(40))
+        this.resizeNotify.pipe(destructor, filter(() => !this._init), throttleTime(100))
             .subscribe(() => {
                 this.zone.run(() => {
                     this.notifyChanges(true);
