@@ -143,6 +143,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         return this._hierarchicalState;
     }
     public set hierarchicalState(val) {
+        if (this._hierarchicalState !== val) {
+            this.hierarchicalStateChange.emit(val);
+        }
         if (this.hasChildrenKey) {
             val = val.filter(item => {
                 const rec = this.primaryKey ? this.data.find(x => x[this.primaryKey] === item.rowID) : item.rowID;
@@ -150,7 +153,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             });
         }
         this._hierarchicalState = val;
-        this.hierarchicalStateChange.emit(this._hierarchicalState);
         if (this.parent) {
             this.notifyChanges(true);
         }
