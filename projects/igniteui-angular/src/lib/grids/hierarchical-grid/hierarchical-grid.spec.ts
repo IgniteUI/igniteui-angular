@@ -13,6 +13,7 @@ import { DisplayDensity } from '../../core/displayDensity';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IGridCellEventArgs } from '../grid';
 import { GridSelectionMode } from '../common/enums';
+import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
@@ -29,6 +30,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
     }));
 
     beforeEach(async(() => {
+        resizeObserverIgnoreError();
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
@@ -422,6 +424,7 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
     }));
 
     beforeEach(async(() => {
+        resizeObserverIgnoreError();
         fixture = TestBed.createComponent(IgxHierarchicalGridMultiLayoutComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
@@ -634,7 +637,7 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         expect(child2._destroyed).toBeTruthy();
     }));
 
-    it(' should emit child grid events with the related child grid instance as an event arg.', async() => {
+    it('should emit child grid events with the related child grid instance as an event arg.', async() => {
         const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         UIInteractions.clickElement(row.expander);
         fixture.detectChanges();

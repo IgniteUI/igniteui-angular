@@ -1,4 +1,5 @@
 @import './excel-filtering-component';
+@import './advanced-filtering-component';
 
 ////
 /// @group components
@@ -7,6 +8,7 @@
 /// @requires {mixin} bem-elem
 /// @requires {mixin} bem-mod
 /// @requires {mixin} _excel-filtering-partial
+/// @requires {mixin} _advanced-filtering-partial
 ////
 @include b(igx-grid) {
     $this: bem--selector-to-string(&);
@@ -329,6 +331,10 @@
         @extend %grid-cell-text !optional;
     }
 
+    @include e(cbx-padding) {
+        @extend %cbx-padding !optional;
+    }
+
     @include e(cbx-selection) {
         @extend %grid__cbx-selection !optional;
     }
@@ -425,6 +431,10 @@
         @extend %igx-grid__outlet !optional;
     }
 
+    @include e(loading-outlet) {
+        @extend %igx-grid__loading-outlet !optional;
+    }
+
     @include e(row-editing-outlet) {
         @extend %igx-grid__row-editing-outlet !optional;
     }
@@ -517,8 +527,8 @@
             @extend %igx-grid__drag-indicator--cosy !optional;
         }
 
-        @include e(cbx-selection) {
-            @extend %grid__cbx-selection--cosy !optional;
+        @include e(cbx-padding) {
+            @extend %cbx-padding--cosy !optional;
         }
 
         @include e(cbx-selection, $m: push) {
@@ -617,8 +627,8 @@
             @extend %igx-grid__drag-indicator--compact !optional;
         }
 
-        @include e(cbx-selection) {
-            @extend %grid__cbx-selection--compact !optional;
+        @include e(cbx-padding) {
+            @extend %cbx-padding--compact !optional;
         }
 
         @include e(cbx-selection, $m: push) {
@@ -711,6 +721,7 @@
     }
 
     @include _excel-filtering-partial();
+    @include _advanced-filtering-partial();
 }
 
 @include b(igx-drop-area) {
