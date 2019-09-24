@@ -246,7 +246,12 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private _show(info: OverlayInfo) {
-        const eventArgs: OverlayCancelableEventArgs = { id: info.id, componentRef: info.componentRef, cancel: false };
+        const eventArgs: OverlayCancelableEventArgs = {
+            id: info.id,
+            componentRef: info.componentRef,
+            cancel: false,
+            settings: info.settings
+        };
         this.onOpening.emit(eventArgs);
         if (eventArgs.cancel) {
             if (info.componentRef) {
@@ -295,7 +300,7 @@ export class IgxOverlayService implements OnDestroy {
         } else {
             //  to eliminate flickering show the element just before onOpened fire
             info.elementRef.nativeElement.parentElement.style.visibility = '';
-            this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
+            this.onOpened.emit({ id: info.id, componentRef: info.componentRef, settings: info.settings });
         }
     }
 
@@ -307,7 +312,7 @@ export class IgxOverlayService implements OnDestroy {
             return;
         }
 
-        const eventArgs = { id, componentRef: info.componentRef, cancel: false, event };
+        const eventArgs: OverlayClosingEventArgs = { id, componentRef: info.componentRef, cancel: false, event, settings: info.settings };
         this.onClosing.emit(eventArgs);
         if (eventArgs.cancel) {
             return;
@@ -449,7 +454,7 @@ export class IgxOverlayService implements OnDestroy {
 
     private onCloseDone(info: OverlayInfo) {
         this.cleanUp(info);
-        this.onClosed.emit({ id: info.id, componentRef: info.componentRef });
+        this.onClosed.emit({ id: info.id, componentRef: info.componentRef, settings: info.settings });
     }
 
     private cleanUp(info: OverlayInfo) {
@@ -493,7 +498,7 @@ export class IgxOverlayService implements OnDestroy {
             const innerRenderer = (<any>info.openAnimationPlayer)._renderer;
             info.openAnimationInnerPlayer = innerRenderer.engine.players[innerRenderer.engine.players.length - 1];
             info.openAnimationPlayer.onDone(() => {
-                this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
+                this.onOpened.emit({ id: info.id, componentRef: info.componentRef, settings: info.settings });
                 if (info.openAnimationPlayer) {
                     info.openAnimationPlayer.reset();
                     info.openAnimationPlayer = null;

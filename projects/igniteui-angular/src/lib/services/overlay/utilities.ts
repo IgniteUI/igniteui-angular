@@ -64,6 +64,8 @@ export interface OverlayEventArgs extends IBaseEventArgs {
     id: string;
     /** Available when `Type<T>` is provided to the `attach()` method and allows access to the created Component instance */
     componentRef?: ComponentRef<{}>;
+    /** Display settings used for this overlay, such as positioning and scroll/close behavior. */
+    settings: OverlaySettings;
 }
 
 export interface OverlayCancelableEventArgs extends OverlayEventArgs, CancelableEventArgs {
