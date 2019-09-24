@@ -8,7 +8,8 @@ import {
     Input,
     QueryList,
     TemplateRef,
-    forwardRef
+    forwardRef,
+    OnDestroy
 } from '@angular/core';
 import { DataType } from '../data-operations/data-util';
 import { GridBaseAPIService } from './api.service';
@@ -33,6 +34,8 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
 import { MRLColumnSizeInfo, MRLResizeColumnInfo } from '../data-operations/multi-row-layout.interfaces';
 import { DisplayDensity } from '../core/displayDensity';
 import { notifyChanges } from './watch-changes';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import {
     IgxCellTemplateDirective,
     IgxCellHeaderTemplateDirective,
@@ -1646,7 +1649,8 @@ export class IgxColumnComponent implements AfterContentInit {
     selector: 'igx-column-group',
     template: ``
 })
-export class IgxColumnGroupComponent extends IgxColumnComponent implements AfterContentInit {
+export class IgxColumnGroupComponent extends IgxColumnComponent implements AfterContentInit, OnDestroy {
+    private destroy$ = new Subject<boolean>();
 
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     children = new QueryList<IgxColumnComponent>();
@@ -1774,11 +1778,22 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         if (this.headTemplate && this.headTemplate.length) {
             this._headerTemplate = this.headTemplate.toArray()[0].template;
         }
-        this.children.reset(this.children.toArray().slice(1));
-        this.children.forEach(child => {
-            child.parent = this;
+        this.updateChildren();
+        this.children.changes.pipe(takeUntil(this.destroy$))
+        .subscribe(() => {
+            this.updateChildren();
         });
     }
+
+    protected updateChildren() {
+        if (this.children && this.children.toArray().length > 0 && this.children.toArray()[0] === this) {
+                this.children.reset(this.children.toArray().slice(1));
+                this.children.forEach(child => {
+                    child.parent = this;
+                });
+            }
+    }
+
     /**
      * Returns the children columns collection.
      * ```typescript
@@ -1835,6 +1850,14 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, public cdr: ChangeDetectorRef) {
         // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
         super(gridAPI, cdr);
+    }
+
+    /**
+     * @hidden
+     */
+    public ngOnDestroy() {
+        this.destroy$.next(true);
+        this.destroy$.complete();
     }
 }
 
@@ -1980,5 +2003,4 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
             this.childrenVisibleIndexes.push({column: child, index: vIndex});
         });
     }
-
 }
