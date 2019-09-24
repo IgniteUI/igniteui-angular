@@ -1795,10 +1795,12 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         });
         this.children.changes.pipe(takeUntil(this.destroy$))
             .subscribe(() => {
-                this.children.reset(this.children.toArray().slice(1));
-                this.children.forEach(child => {
-                    child.parent = this;
-                });
+                if (this.children && this.children.toArray().length > 0 && this.children.toArray()[0] === this) {
+                    this.children.reset(this.children.toArray().slice(1));
+                    this.children.forEach(child => {
+                        child.parent = this;
+                    });
+                }
             });
     }
 
