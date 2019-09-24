@@ -70,7 +70,6 @@ export * from './lib/grids/common/events';
 export * from './lib/grids/grid/index';
 export * from './lib/grids/tree-grid/index';
 export * from './lib/grids/hierarchical-grid/index';
-export * from './lib/grids/common/enums';
 export * from './lib/grids/columns/templates.directive';
 export * from './lib/grids/columns/column.component';
 export * from './lib/grids/columns/column-group.component';

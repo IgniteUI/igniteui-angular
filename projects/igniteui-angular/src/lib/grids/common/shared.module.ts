@@ -5,7 +5,7 @@ import { IgxButtonModule } from '../../directives/button/button.directive';
 import { IgxDatePickerModule } from '../../date-picker/date-picker.component';
 import { IgxIconModule } from '../../icon/index';
 import { IgxRippleModule } from '../../directives/ripple/ripple.directive';
-import { IgxInputGroupModule } from '../../input-group';
+import { IgxInputGroupModule } from '../../input-group/index';
 import { IgxFocusModule } from '../../directives/focus/focus.directive';
 import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
 import { IgxForOfModule } from '../../directives/for-of/for_of.directive';
@@ -44,7 +44,7 @@ import { IgxDropDownModule } from '../../drop-down/index';
         IgxDropDownModule,
         IgxButtonGroupModule,
         IgxProgressBarModule,
-        IgxSelectModule,
+        IgxSelectModule
     ],
     exports: [
         CommonModule,
@@ -67,7 +67,7 @@ import { IgxDropDownModule } from '../../drop-down/index';
         IgxDropDownModule,
         IgxButtonGroupModule,
         IgxProgressBarModule,
-        IgxSelectModule,
+        IgxSelectModule
     ]
 })
 export class IgxGridSharedModules {}
