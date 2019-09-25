@@ -1,5 +1,5 @@
 import {
-    Input, HostBinding, ElementRef, QueryList, Output, EventEmitter, ChangeDetectorRef, Optional, Inject
+    Input, HostBinding, ElementRef, QueryList, Output, EventEmitter, ChangeDetectorRef, Optional, Inject, Directive
 } from '@angular/core';
 
 import { Navigate, ISelectionEventArgs } from './drop-down.common';
@@ -17,7 +17,10 @@ let NEXT_ID = 0;
  * Properties and methods for navigating (highlighting/focusing) items from the collection
  * Properties and methods for selecting items from the collection
  */
-export abstract class IgxDropDownBase extends DisplayDensityBase implements IDropDownList {
+@Directive({
+    selector: '[igxDropDownBase]'
+})
+export class IgxDropDownBase extends DisplayDensityBase implements IDropDownList {
     protected _width;
     protected _height;
     protected _focusedItem: any = null;
@@ -167,7 +170,7 @@ export abstract class IgxDropDownBase extends DisplayDensityBase implements IDro
     /**
      * Gets if the dropdown is collapsed
      */
-    public abstract collapsed: boolean;
+    public collapsed: boolean;
 
     constructor(
         protected elementRef: ElementRef,

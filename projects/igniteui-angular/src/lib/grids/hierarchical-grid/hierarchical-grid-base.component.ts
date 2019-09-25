@@ -9,7 +9,8 @@ import {
     Optional,
     Input,
     ViewChild,
-    TemplateRef
+    TemplateRef,
+    Directive
 } from '@angular/core';
 import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
@@ -43,8 +44,11 @@ export interface IPathSegment {
     rowIslandKey: string;
 }
 
-export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseComponent {
-    public abstract rootGrid;
+@Directive({
+    selector: '[igxHGridBase]'
+})
+export class IgxHierarchicalGridBaseComponent extends IgxGridBaseComponent {
+    public rootGrid;
 
     @Input()
     public expandChildren: boolean;

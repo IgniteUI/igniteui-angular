@@ -454,6 +454,7 @@ export class IgxListComponent extends IgxListBase {
  */
 @NgModule({
     declarations: [
+        IgxListBase,
         IgxListComponent,
         IgxListItemComponent,
         IgxListThumbnailDirective,

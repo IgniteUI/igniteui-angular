@@ -25,7 +25,7 @@ import {
     InjectionToken,
     Optional,
     DoCheck,
-    Injectable
+    Directive
 } from '@angular/core';
 import ResizeObserver from 'resize-observer-polyfill';
 import { Subject, combineLatest, pipe } from 'rxjs';
@@ -121,8 +121,10 @@ export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction
 
 
 
-@Injectable()
-export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
+@Directive({
+    selector: '[igxGridBaseComponent]'
+})
+export class IgxGridBaseComponent extends DisplayDensityBase implements
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
     private _scrollWidth: number;
     protected _init = true;
@@ -198,7 +200,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @Input()
     public autoGenerate = false;
 
-    public abstract id: string;
+    public id: string;
 
     /**
      * An @Input property that sets a custom template when the `IgxGridComponent` is empty.
@@ -2545,8 +2547,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     public columnWidthSetByUser = false;
 
-    abstract data: any[];
-    abstract filteredData: any[];
+    data: any[];
+    filteredData: any[];
 
     /**
      * @hidden

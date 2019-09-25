@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, Inject, LOCALE_ID } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent } from '../grid-base.component';
 import { DataUtil } from '../../data-operations/data-util';
@@ -147,10 +147,10 @@ export class IgxDatePipeComponent extends DatePipe implements PipeTransform {
 
     private readonly DEFAULT_DATE_FORMAT = 'mediumDate';
 
-    // constructor(@Inject(LOCALE_ID) locale: string) {
-    //     // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
-    //     super(locale);
-    // }
+    constructor(@Inject(LOCALE_ID) locale: string) {
+        // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
+        super(locale);
+    }
     transform(value: any, locale: string): string {
         if (value && value instanceof Date) {
             if (locale) {
@@ -172,10 +172,10 @@ export class IgxDatePipeComponent extends DatePipe implements PipeTransform {
     name: 'igxdecimal'
 })
 export class IgxDecimalPipeComponent extends DecimalPipe implements PipeTransform {
-    // constructor(@Inject(LOCALE_ID) locale: string) {
-    //     // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
-    //     super(locale);
-    // }
+    constructor(@Inject(LOCALE_ID) locale: string) {
+        // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
+        super(locale);
+    }
     transform(value: any, locale: string): string {
         if (value && typeof value === 'number') {
             if (locale) {

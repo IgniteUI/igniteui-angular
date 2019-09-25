@@ -9,7 +9,7 @@ import {
     QueryList,
     ViewChild,
     ViewChildren,
-    Injectable
+    Directive
 } from '@angular/core';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
@@ -22,8 +22,10 @@ import { IgxGridSelectionService, IgxGridCRUDService, IgxRow } from './selection
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { GridType } from './common/grid.interface';
 
-@Injectable()
-export abstract class IgxRowComponent<T extends IgxGridBaseComponent & GridType> implements DoCheck {
+@Directive({
+    selector: '[igxRowBaseComponent]'
+})
+export class IgxRowComponent<T extends IgxGridBaseComponent & GridType> implements DoCheck {
 
     private _rowData: any;
     /**
