@@ -1850,9 +1850,13 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         this.children.forEach(child => {
             child.parent = this;
         });
+        /*
+            TO DO: In Angular 9 this need to be removed, because the @ContentChildren will not return the `parent`
+            component in the query list.
+        */
         this.children.changes.pipe(takeUntil(this.destroy$))
-            .subscribe(() => {
-                if (this.children && this.children.toArray().length > 0 && this.children.toArray()[0] === this) {
+            .subscribe((change) => {
+                if (change.length > 1 && change.first === this) {
                     this.children.reset(this.children.toArray().slice(1));
                     this.children.forEach(child => {
                         child.parent = this;
