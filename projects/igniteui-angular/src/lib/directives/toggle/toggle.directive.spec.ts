@@ -118,7 +118,8 @@ describe('IgxToggle', () => {
         toggle.open();
         tick();
         expect(toggle.onOpened.emit).toHaveBeenCalledTimes(2);
-        const otherId = overlay.show(fixture.componentInstance.other);
+        const otherId = overlay.attach(fixture.componentInstance.other);
+        overlay.show(otherId);
         overlay.hide(otherId);
         tick();
         expect(toggle.onClosed.emit).toHaveBeenCalledTimes(1);

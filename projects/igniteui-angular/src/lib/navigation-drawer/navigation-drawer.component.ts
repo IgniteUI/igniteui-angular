@@ -14,7 +14,6 @@ import {
     Output,
     Renderer,
     SimpleChange,
-    TemplateRef,
     ViewChild
 } from '@angular/core';
 import { fromEvent, interval, Subscription } from 'rxjs';

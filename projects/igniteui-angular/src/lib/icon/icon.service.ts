@@ -139,18 +139,25 @@ export class IgxIconService {
 
         // load – when the result is ready, that includes HTTP errors like 404.
         httpRequest.onload = function (event: ProgressEvent) {
-            const request = event.target as XMLHttpRequest;
-            if (request.status === 200) {
-                instance.cacheSvgIcon(iconName, request.responseText, fontSet);
+            if (event) {
+                const request = event.target as XMLHttpRequest;
+                if (request.status === 200) {
+                    instance.cacheSvgIcon(iconName, request.responseText, fontSet);
+                } else {
+                    throw new Error(`Could not fetch SVG from url: ${url}; error: ${request.status} (${request.statusText})`);
+                }
             } else {
-                throw new Error(`Could not fetch SVG from url: ${url}; error: ${request.status} (${request.statusText})`);
+                throw new Error(`Could not fetch SVG from url: ${url};`);
             }
         };
 
         // error – when the request couldn’t be made, e.g.network down or invalid URL.
         httpRequest.onerror = function (event: ProgressEvent) {
-            const request = event.target as XMLHttpRequest;
-            throw new Error(`Could not fetch SVG from url: ${url}; error status code: ${request.status} (${request.statusText})`);
+            if (event) {
+                const request = event.target as XMLHttpRequest;
+                throw new Error(`Could not fetch SVG from url: ${url}; error status code: ${request.status} (${request.statusText})`);
+            }
+            throw new Error(`Could not fetch SVG from url: ${url};`);
         };
 
         httpRequest.send();

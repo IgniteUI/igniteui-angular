@@ -1,6 +1,6 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTreeGridModule, GridSelectionMode } from './index';
+import { IgxTreeGridModule } from './index';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { DisplayDensity } from '../../core/displayDensity';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -12,6 +12,7 @@ import {
     IgxTreeGridCellSelectionComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
+import { GridSelectionMode } from '../common/enums';
 
 describe('IgxTreeGrid Component Tests #tGrid', () => {
     configureTestSuite();
@@ -140,14 +141,15 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
 
         it('should auto-generate columns', async () => {
             fix.detectChanges();
-            let circularBar = fix.debugElement.query(By.css('igx-circular-bar'));
-            expect(circularBar).toBeTruthy();
+            const gridElement = fix.debugElement.query(By.css('.igx-grid'));
+            let loadingIndicator = gridElement.query(By.css('.igx-grid__loading'));
+            expect(loadingIndicator).not.toBeNull();
             expect(grid.dataRowList.length).toBe(0);
 
             await wait(1000);
             fix.detectChanges();
-            circularBar = fix.debugElement.query(By.css('igx-circular-bar'));
-            expect(circularBar).toBeFalsy();
+            loadingIndicator = gridElement.query(By.css('.igx-grid__loading'));
+            expect(loadingIndicator).toBeNull();
             expect(grid.dataRowList.length).toBeGreaterThan(0);
         });
     });

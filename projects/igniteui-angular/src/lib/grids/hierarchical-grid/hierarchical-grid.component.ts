@@ -132,6 +132,12 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         return this._hierarchicalState;
     }
     public set hierarchicalState(val) {
+        if (this.hasChildrenKey) {
+            val = val.filter(item => {
+                const rec = this.primaryKey ? this.data.find(x => x[this.primaryKey] === item.rowID) : item.rowID;
+                return rec[this.hasChildrenKey];
+            });
+        }
         this._hierarchicalState = val;
         if (this.parent) {
             this.notifyChanges(true);
@@ -280,6 +286,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     private scrollTop = 0;
     private scrollLeft = 0;
 
+    protected _transactions: any;
+
     constructor(
         public selectionService: IgxGridSelectionService,
         crudService: IgxGridCRUDService,
@@ -301,6 +309,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         super(
             selectionService,
             crudService,
+            colResizingService,
             gridAPI,
             typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
             elementRef,
@@ -317,6 +326,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             _displayDensityOptions);
         this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
     }
+
 
     /**
      * @hidden
@@ -372,6 +382,23 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         this.toolbarCustomContentTemplates = this.parentIsland ?
             this.parentIsland.toolbarCustomContentTemplates :
             this.toolbarCustomContentTemplates;
+
+        this.headSelectorsTemplates = this.parentIsland ?
+            this.parentIsland.headSelectorsTemplates :
+            this.headSelectorsTemplates;
+
+        this.rowSelectorsTemplates = this.parentIsland ?
+            this.parentIsland.rowSelectorsTemplates :
+            this.rowSelectorsTemplates;
+        this.rowExpandedIndicatorTemplate  = this.rootGrid.rowExpandedIndicatorTemplate;
+        this.rowCollapsedIndicatorTemplate   = this.rootGrid.rowCollapsedIndicatorTemplate;
+        this.headerCollapseIndicatorTemplate = this.rootGrid.headerCollapseIndicatorTemplate;
+        this.headerExpandIndicatorTemplate = this.rootGrid.headerExpandIndicatorTemplate;
+        this.hasChildrenKey = this.parentIsland ?
+         this.parentIsland.hasChildrenKey || this.rootGrid.hasChildrenKey :
+         this.rootGrid.hasChildrenKey;
+         this.showExpandAll = this.parentIsland ?
+         this.parentIsland.showExpandAll : this.rootGrid.showExpandAll;
     }
 
     private updateSizes() {
@@ -605,6 +632,18 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     /**
      * @hidden
     */
+    public get iconTemplate() {
+        const expanded = this.hierarchicalState.length > 0 && this.hasExpandableChildren;
+        if (!expanded && this.showExpandAll) {
+            return this.headerCollapseIndicatorTemplate || this.defaultCollapsedTemplate;
+        } else {
+            return this.headerExpandIndicatorTemplate || this.defaultExpandedTemplate;
+        }
+    }
+
+    /**
+     * @hidden
+    */
     protected initColumns(collection: QueryList<IgxColumnComponent>, cb: Function = null) {
         if (this.hasColumnLayouts) {
             // invalid configuration - hierarchical grid should not allow column layouts
@@ -633,8 +672,39 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     /**
      * @hidden
     */
-    public collapseAllRows() {
+   toggleAll() {
+    const expanded = this.hierarchicalState.length > 0 && this.hasExpandableChildren;
+    if (!expanded && this.showExpandAll) {
+        this.expandAll();
+    } else {
+        this.collapseAll();
+    }
+   }
+
+    /**
+     * Collapses all rows of the current hierarchical grid.
+     * ```typescript
+     * this.grid.collapseAll();
+     * ```
+	 * @memberof IgxHierarchicalGridComponent
+     */
+    public collapseAll() {
         this.hierarchicalState = [];
+    }
+
+    /**
+     * Expands all rows of the current hierarchical grid.
+     * ```typescript
+     * this.grid.expandAll();
+     * ```
+	 * @memberof IgxHierarchicalGridComponent
+     */
+    public expandAll() {
+        if (this.data) {
+            this.hierarchicalState = this.data.map((rec) => {
+                return { rowID: this.primaryKey ? rec[this.primaryKey] : rec };
+            });
+        }
     }
 
     /**

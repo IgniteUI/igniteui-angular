@@ -1,20 +1,23 @@
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTreeGridModule, GridSelectionMode } from './index';
+import { IgxTreeGridModule } from './index';
 import {
     IgxTreeGridExpandingComponent,
     IgxTreeGridPrimaryForeignKeyComponent,
     IgxTreeGridRowEditingComponent,
     IgxTreeGridLoadOnDemandComponent,
     IgxTreeGridLoadOnDemandHasChildrenComponent,
-    IgxTreeGridLoadOnDemandChildDataComponent
+    IgxTreeGridLoadOnDemandChildDataComponent,
+    IgxTreeGridCustomExpandersTemplateComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
 import { wait } from '../../test-utils/ui-interactions.spec';
+import { IgxGridModule } from '../grid';
 import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { GridSelectionMode } from '../common/enums';
 
 describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     configureTestSuite();
@@ -945,7 +948,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 TreeGridFunctions.verifyTreeRowIndicator(row, false);
                 expect(rows.length).toBe(3);
 
-                const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(row);
+                let indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(row);
                 indicatorDiv.triggerEventHandler('click', new Event('click'));
                 await wait(500);
                 fix.detectChanges();
@@ -959,6 +962,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 rows = TreeGridFunctions.getAllRows(fix);
                 TreeGridFunctions.verifyTreeRowIndicator(row, false);
                 expect(rows.length).toBe(5);
+                indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(row);
                 indicatorDiv.triggerEventHandler('click', new Event('click'));
                 await wait(16);
                 fix.detectChanges();
@@ -1035,7 +1039,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 TreeGridFunctions.verifyTreeRowIndicator(row, false);
                 expect(rows.length).toBe(3);
 
-                const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(row);
+                let indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(row);
                 indicatorDiv.triggerEventHandler('click', new Event('click'));
                 fix.detectChanges();
                 await wait(500);
@@ -1051,6 +1055,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 rows = TreeGridFunctions.getAllRows(fix);
                 TreeGridFunctions.verifyTreeRowIndicator(row, false);
                 expect(rows.length).toBe(5);
+                indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(row);
                 indicatorDiv.triggerEventHandler('click', new Event('click'));
                 fix.detectChanges();
                 await wait(16);
@@ -1099,7 +1104,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 TreeGridFunctions.verifyTreeRowIndicator(secondRow, false, false);
                 expect(rows.length).toBe(3);
 
-                const indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(firstRow);
+                let indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(firstRow);
                 indicatorDiv.triggerEventHandler('click', new Event('click'));
                 await wait(500);
                 fix.detectChanges();
@@ -1113,6 +1118,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 rows = TreeGridFunctions.getAllRows(fix);
                 TreeGridFunctions.verifyTreeRowIndicator(firstRow, false);
                 expect(rows.length).toBe(5);
+                indicatorDiv = TreeGridFunctions.getExpansionIndicatorDiv(firstRow);
                 indicatorDiv.triggerEventHandler('click', new Event('click'));
                 await wait(16);
                 fix.detectChanges();
@@ -1370,6 +1376,44 @@ describe('Row editing expanding/collapsing #tGrid', () => {
         fix.detectChanges();
         expect(overlayContent.style.display).toEqual('');
     }));*/
+});
+
+describe('Custom expand/collapse template', () => {
+    configureTestSuite();
+    let fix;
+    let treeGrid;
+
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxTreeGridCustomExpandersTemplateComponent
+            ],
+            imports: [
+                NoopAnimationsModule,
+                IgxGridModule,
+                IgxTreeGridModule]
+        })
+            .compileComponents();
+    }));
+
+    beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        fix = TestBed.createComponent(IgxTreeGridCustomExpandersTemplateComponent);
+        fix.detectChanges();
+        tick(16);
+        treeGrid = fix.componentInstance.treeGrid;
+    }));
+
+    it('should allow setting custom template for  expand/collapse icons', async() => {
+        const row = treeGrid.dataRowList.toArray()[0];
+        let expander =  row.nativeElement.querySelector('.igx-grid__tree-grouping-indicator');
+        expect(expander.innerText).toBe('EXPANDED');
+
+        row.expanded = false;
+        await wait();
+        fix.detectChanges();
+        expander =  row.nativeElement.querySelector('.igx-grid__tree-grouping-indicator');
+        expect(expander.innerText).toBe('COLLAPSED');
+    });
 });
 
 function verifyGridPager(fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) {

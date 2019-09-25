@@ -26,7 +26,7 @@ module.exports = function (config) {
         random: false
       },
       tagPrefix: '#',
-      skipTags: 'hGrid,tGrid,grid'
+      skipTags: 'hGrid,tGrid,grid,perf'
     },
     coverageIstanbulReporter: {
       dir: require('path').join(__dirname, '../../coverage/non-grid'),

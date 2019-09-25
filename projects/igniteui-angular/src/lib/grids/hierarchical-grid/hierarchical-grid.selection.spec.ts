@@ -1,16 +1,21 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { GridSelectionMode, IgxHierarchicalGridModule } from './index';
+import { IgxHierarchicalGridModule } from './index';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxIconModule } from '../../icon';
-import { IgxHierarchicalGridTestBaseComponent,
-        IgxHierarchicalGridRowSelectionComponent,
-        IgxHierarchicalGridRowSelectionNoTransactionsComponent } from '../../test-utils/hierarhical-grid-components.spec';
+import {
+    IgxHierarchicalGridTestBaseComponent,
+    IgxHierarchicalGridRowSelectionComponent,
+    IgxHierarchicalGridCustomSelectorsComponent,
+    IgxHierarchicalGridRowSelectionNoTransactionsComponent
+} from '../../test-utils/hierarhical-grid-components.spec';
+import { IgxRowSelectorsModule } from '../igx-row-selectors.module';
 import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
+import { GridSelectionMode } from '../common/enums';
 
 describe('IgxHierarchicalGrid selection #hGrid', () => {
     configureTestSuite();
@@ -24,10 +29,14 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             declarations: [
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridRowSelectionComponent,
+                IgxHierarchicalGridCustomSelectorsComponent,
                 IgxHierarchicalGridRowSelectionNoTransactionsComponent
             ],
             imports: [
-                NoopAnimationsModule, IgxHierarchicalGridModule, IgxIconModule]
+                NoopAnimationsModule,
+                IgxHierarchicalGridModule,
+                IgxIconModule,
+                IgxRowSelectorsModule]
         }).compileComponents();
     }));
 
@@ -729,6 +738,164 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.detectChanges();
             GridSelectionFunctions.verifyRowSelected(addedRow);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(childGrid, true);
+        });
+    });
+
+    describe('Custom row selectors', () => {
+        let hGrid;
+        let firstLevelChild;
+
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxHierarchicalGridCustomSelectorsComponent);
+            fix.detectChanges();
+            hGrid = fix.componentInstance.hGrid;
+            hGrid.rowSelection = GridSelectionMode.multiple;
+            firstLevelChild = fix.componentInstance.firstLevelChild;
+        }));
+
+        it('Row context `select` method selects a single row', () => {
+            // root grid
+            const firstRootRow = hGrid.getRowByIndex(0);
+            GridSelectionFunctions.clickRowCheckbox(firstRootRow);
+            fix.detectChanges();
+            GridSelectionFunctions.verifyRowSelected(hGrid.getRowByIndex(0));
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
+
+            // child grid
+            GridSelectionFunctions.expandRowIsland(2);
+            fix.detectChanges();
+
+            const childGrid = hGrid.hgridAPI.getChildGrids(false)[0];
+            const childRow = childGrid.getRowByIndex(0);
+            GridSelectionFunctions.clickRowCheckbox(childRow);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyRowSelected(childRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(childGrid, false, true);
+        });
+
+        it('Row context `deselect` method deselects an already selected row', fakeAsync(() => {
+            // root grid
+            const firstRootRow = hGrid.getRowByIndex(1);
+            GridSelectionFunctions.clickRowCheckbox(firstRootRow);
+            fix.detectChanges();
+            GridSelectionFunctions.verifyRowSelected(firstRootRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(hGrid, false, true);
+
+            GridSelectionFunctions.clickRowCheckbox(firstRootRow);
+            fix.detectChanges();
+            GridSelectionFunctions.verifyRowSelected(firstRootRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(hGrid, false, false);
+
+            // child grid
+            GridSelectionFunctions.expandRowIsland(2);
+            fix.detectChanges();
+
+            const childGrid = hGrid.hgridAPI.getChildGrids(false)[0];
+            const childRow = childGrid.getRowByIndex(0);
+
+            GridSelectionFunctions.clickRowCheckbox(childRow);
+            fix.detectChanges();
+            GridSelectionFunctions.verifyRowSelected(childRow);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(childGrid, false, true);
+
+            GridSelectionFunctions.clickRowCheckbox(childRow);
+            fix.detectChanges();
+            GridSelectionFunctions.verifyRowSelected(childRow, false);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(childGrid, false, false);
+        }));
+
+        it('Header context `selectAll` method selects all rows', () => {
+            // root grid
+            GridSelectionFunctions.clickHeaderRowCheckbox(hGrid);
+            fix.detectChanges();
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(hGrid, true, false);
+            expect(hGrid.selectionService.areAllRowSelected()).toBeTruthy();
+
+            // child grid
+            GridSelectionFunctions.expandRowIsland(2);
+            fix.detectChanges();
+
+            const childGrid = hGrid.hgridAPI.getChildGrids(false)[0];
+            GridSelectionFunctions.clickHeaderRowCheckbox(childGrid);
+            fix.detectChanges();
+
+            expect(childGrid.selectionService.areAllRowSelected()).toBeTruthy();
+        });
+
+        it('Header context `deselectAll` method deselects all rows', () => {
+            // root grid
+            GridSelectionFunctions.clickHeaderRowCheckbox(hGrid);
+            fix.detectChanges();
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(hGrid, true, false);
+            expect(hGrid.selectionService.areAllRowSelected()).toBeTruthy();
+
+            GridSelectionFunctions.clickHeaderRowCheckbox(hGrid);
+            fix.detectChanges();
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(hGrid, false, false);
+            expect(hGrid.selectionService.areAllRowSelected()).toBeFalsy();
+
+            // child grid
+            GridSelectionFunctions.expandRowIsland(2);
+            fix.detectChanges();
+
+            const childGrid = hGrid.hgridAPI.getChildGrids(false)[0];
+
+            GridSelectionFunctions.clickHeaderRowCheckbox(childGrid);
+            fix.detectChanges();
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(childGrid, true, false);
+            expect(childGrid.selectionService.areAllRowSelected()).toBeTruthy();
+
+            GridSelectionFunctions.clickHeaderRowCheckbox(childGrid);
+            fix.detectChanges();
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(childGrid, false, false);
+            expect(childGrid.selectionService.areAllRowSelected()).toBeFalsy();
+        });
+
+        it('Should have the correct properties in the custom row selector header template context', () => {
+            spyOn(fix.componentInstance, 'handleHeadSelectorClick').and.callThrough();
+
+            GridSelectionFunctions.headerCheckboxClick(hGrid);
+            fix.detectChanges();
+
+            expect(fix.componentInstance.handleHeadSelectorClick).toHaveBeenCalledWith({
+                selectedCount: 0,
+                totalCount: hGrid.data.length,
+                selectAll: jasmine.anything(),
+                deselectAll: jasmine.anything()
+            });
+        });
+
+        it('Should have the correct properties in the custom row selector template context', () => {
+            spyOn(fix.componentInstance, 'handleRowSelectorClick').and.callThrough();
+
+            GridSelectionFunctions.rowCheckboxClick(hGrid.getRowByIndex(1));
+            fix.detectChanges();
+
+            expect(fix.componentInstance.handleRowSelectorClick).toHaveBeenCalledWith({
+                index: 1,
+                rowID: '1',
+                selected: false,
+                select: jasmine.anything(),
+                deselect: jasmine.anything()
+            });
+        });
+
+        it('Should have correct indices on all pages', () => {
+            // root grid
+            hGrid.nextPage();
+            fix.detectChanges();
+            expect(hGrid.getRowByIndex(0).nativeElement.querySelector('.rowNumber').textContent).toEqual('15');
+
+            // child grid
+            GridSelectionFunctions.expandRowIsland(3);
+            fix.detectChanges();
+
+            const childGrid = hGrid.hgridAPI.getChildGrids(false)[0];
+
+            childGrid.nextPage();
+            fix.detectChanges();
+            expect(childGrid.getRowByIndex(2).nativeElement.querySelector('.rowNumberChild').textContent).toEqual('17');
         });
     });
 });

@@ -2,11 +2,12 @@ import { FilteringLogic, IFilteringExpression } from './filtering-expression.int
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from './filtering-expressions-tree';
 
 export interface IFilteringStrategy {
-    filter(data: any[], expressionsTree: IFilteringExpressionsTree): any[];
+    filter(data: any[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree): any[];
 }
 
 export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
-    public abstract filter(data: any[], expressionsTree: IFilteringExpressionsTree): any[];
+    public abstract filter(data: any[], expressionsTree: IFilteringExpressionsTree,
+        advancedExpressionsTree?: IFilteringExpressionsTree): any[];
 
     protected abstract getFieldValue(rec: object, fieldName: string): any;
 
@@ -54,17 +55,25 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
 }
 
 export class FilteringStrategy extends BaseFilteringStrategy {
-    public filter<T>(data: T[], expressionsTree: IFilteringExpressionsTree): T[] {
+    private static _instace: FilteringStrategy = null;
+
+    public constructor() { super(); }
+
+    public static instance() {
+        return this._instace || (this._instace = new this());
+    }
+
+    public filter<T>(data: T[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree): T[] {
         let i;
         let rec;
         const len = data.length;
         const res: T[] = [];
-        if (!expressionsTree || !expressionsTree.filteringOperands || expressionsTree.filteringOperands.length === 0 || !len) {
+        if ((FilteringExpressionsTree.empty(expressionsTree) && FilteringExpressionsTree.empty(advancedExpressionsTree)) || !len) {
             return data;
         }
         for (i = 0; i < len; i++) {
             rec = data[i];
-            if (this.matchRecord(rec, expressionsTree)) {
+            if (this.matchRecord(rec, expressionsTree) && this.matchRecord(rec, advancedExpressionsTree)) {
                 res.push(rec);
             }
         }

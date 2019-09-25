@@ -1,0 +1,422 @@
+////
+/// @group themes
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// @param {Map} $theme - The grid theme used to style the component.
+/// @param {Map} $palette - The palette map used as base for the component.
+/// @requires igx-color
+/// @requires rem
+/// @requires --var
+@mixin _advanced-filtering($theme, $palette) {
+    $vertical-space-comfortable: rem(16px);
+    $vertical-space-cosy: rem(12px);
+    $vertical-space-compact: rem(8px);
+    $horizontal-space-comfortable: rem(16px);
+    $horizontal-space-cosy: rem(12px);
+    $horizontal-space-compact: rem(8px);
+
+    %advanced-filter {
+        width: 660px;
+        min-width: 660px;
+        max-width: 720px;
+        background-color: --var($theme, 'filtering-row-background');
+        box-shadow: igx-elevation($elevations, 12);
+        border-radius: rem(4px);
+        pointer-events: all;
+    }
+
+    %advanced-filter__header {
+        display: flex;
+        align-items: center;
+        padding: $vertical-space-comfortable;
+        color: igx-color($palette, 'grays', 700);
+        background-color: igx-color($palette, 'grays', 200);
+        user-select: none;
+        cursor: grab;
+    }
+
+    %advanced-filter__main {
+        display: block;
+        padding: rem(16px);
+        overflow: auto;
+        min-height: 214px;
+        max-height: 468px;
+
+        [igxButton] + [igxButton] {
+            margin-left: rem(8px);
+        }
+    }
+
+    %advanced-filter__outlet {
+        igx-select-item > igx-icon {
+            width: rem(18px);
+            height: rem(18px);
+            font-size: rem(18px);
+            margin-right: rem(8px);
+        }
+    }
+
+    %filter-tree {
+        display: flex;
+
+        + %filter-tree,
+        + %filter-tree__expression-item,
+        + %filter-tree__inputs {
+            margin-top: $vertical-space-comfortable;
+        }
+    }
+
+    %filter-tree__line {
+        width: rem(8px);
+        min-width: rem(8px);
+        background-color: white;
+        margin-right: $horizontal-space-comfortable;
+        outline-style: none;
+        border-radius: rem(4px);
+        cursor: pointer;
+    }
+
+    %filter-tree__line--and {
+        background-color: igx-color($palette, 'primary', 300);
+
+        &-selected {
+            background-color: igx-color($palette, 'primary', 700);
+        }
+
+        &:focus {
+            box-shadow: inset 0 0 0 2px igx-color($palette, 'primary', 700);
+        }
+    }
+
+    %filter-tree__line--or {
+        background-color: igx-color($palette, 'secondary', 300);
+
+        &-selected {
+            background-color: igx-color($palette, 'secondary', 700);
+        }
+
+        &:focus {
+            box-shadow: inset 0 0 0 2px igx-color($palette, 'secondary', 700);
+        }
+    }
+
+    %filter-tree__expression {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    %filter-tree__expression-item {
+        display: flex;
+        align-items: center;
+
+        + %filter-tree,
+        + %filter-tree__inputs,
+        + %filter-tree__expression-item {
+            margin-top: $vertical-space-comfortable;
+        }
+    }
+
+    %filter-tree__expression-column {
+        padding: 0 rem(8px);
+    }
+
+    %filter-tree__expression-actions {
+        display: inline-flex;
+        margin: 0 rem(8px);
+
+        igx-icon {
+            cursor: pointer;
+            color: igx-color($palette, 'grays', 500);
+            outline-style: none;
+
+            &:hover,
+            &:focus {
+                color: igx-color($palette, 'grays', 800);
+            }
+        }
+
+        igx-icon + igx-icon {
+            margin-left: rem(8px);
+        }
+    }
+
+    %filter-tree__expression-condition {
+        color: igx-color($palette, 'grays', 500);
+    }
+
+    %filter-tree__buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: $vertical-space-comfortable;
+
+        + %filter-tree,
+        + %filter-tree__expression-item,
+        + %filter-tree__inputs {
+            margin-top: $vertical-space-comfortable;
+        }
+    }
+
+    %filter-tree__inputs {
+        display: flex;
+        justify-content: space-between;
+
+        igx-select + igx-select,
+        igx-select + igx-input-group,
+        igx-select + igx-date-picker,
+        igx-input-group + igx-select {
+            margin-left: rem(8px);
+        }
+
+        + %filter-tree,
+        + %filter-tree__expression-item {
+            margin-top: $vertical-space-comfortable;
+        }
+    }
+
+    %filter-tree__inputs-actions {
+        display: flex;
+        margin: 0 rem(8px);
+        align-items: center;
+
+        [igxButton] + [igxButton] {
+            margin-left: rem(8px);
+        }
+    }
+
+    %filter-legend {
+        display: flex;
+        margin-left: auto;
+        pointer-events: none;
+    }
+
+    %filter-legend__item {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        font-size: rem(12px);
+
+        &::before {
+            content: '';
+            width: rem(24px);
+            height: rem(24px);
+            background: white;
+            border-radius: rem(4px);
+            margin-right: rem(8px);
+        }
+
+        + %filter-legend__item {
+            margin-left: rem(24px);
+        }
+    }
+
+    %filter-legend__item--and::before {
+        background-color: igx-color($palette, 'primary', 300);
+    }
+
+    %filter-legend__item--or::before {
+        background-color: igx-color($palette, 'secondary', 300);
+    }
+
+    %filter-con-menu {
+        position: relative;
+        display: flex;
+        flex-flow: column;
+        width: 196px;
+        background-color: --var($theme, 'filtering-row-background');
+        padding: rem(16px);
+        margin-left: rem(16px);
+        border-radius: rem(4px);
+        border: 1px solid igx-color($palette, 'grays', 200);
+
+        > [igxButton] + [igxButton],
+        igx-buttongroup + [igxButton],
+        [igxButton] + igx-buttongroup {
+            margin-top: $vertical-space-comfortable;
+        }
+
+        > [igxButton]%filter-con-menu__close-btn + [igxButton],
+        [igxButton]%filter-con-menu__close-btn + igx-buttongroup {
+            margin-top: 0;
+        }
+
+        [igxButton] > igx-icon + * {
+            margin-left: 8px;
+        }
+
+        igx-buttongroup > * {
+            box-shadow: none;
+        }
+    }
+
+    %filter-con-menu__delete-btn {
+        color: igx-color($palette, 'error');
+
+        &:hover,
+        &:focus {
+            color: igx-color($palette, 'error');
+        }
+    }
+
+    %filter-con-menu__close-btn {
+        position: absolute;
+        top: rem(-18px);
+        right: rem(-18px);
+        background-color: --var($theme, 'filtering-row-background');
+        border: 1px solid igx-color($palette, 'grays', 200);
+
+        &:hover,
+        &:focus {
+            background-color: --var($theme, 'filtering-row-background');
+        }
+    }
+
+    %filter-empty {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 144px;
+    }
+
+    %filter-empty__title {
+        color: igx-color($palette, 'grays', 500);
+    }
+
+    %advanced-filter--cosy {
+        %advanced-filter__main {
+            min-height: 164px;
+            max-height: 394px;
+        }
+
+        %filter-empty {
+            height: 107px;
+        }
+
+        %advanced-filter__main,
+        %advanced-filter__header {
+            padding: $vertical-space-cosy rem(16px);
+        }
+
+        %filter-tree__expression-actions igx-icon {
+            font-size: rem(18px);
+            width: rem(18px);
+            height: rem(18px);
+        }
+
+        %filter-tree__line {
+            margin-right: $horizontal-space-cosy;
+        }
+
+        %filter-tree {
+            + %filter-tree,
+            + %filter-tree__expression-item,
+            + %filter-tree__inputs {
+                margin-top: $vertical-space-cosy;
+            }
+        }
+
+        %filter-tree__expression-item {
+            + %filter-tree,
+            + %filter-tree__inputs,
+            + %filter-tree__expression-item {
+                margin-top: $vertical-space-cosy;
+            }
+        }
+
+        %filter-tree__buttons {
+            margin-top: $vertical-space-cosy;
+
+            + %filter-tree,
+            + %filter-tree__expression-item,
+            + %filter-tree__inputs {
+                margin-top: $vertical-space-cosy;
+            }
+        }
+
+        %filter-tree__inputs {
+            + %filter-tree,
+            + %filter-tree__expression-item {
+                margin-top: $vertical-space-cosy;
+            }
+        }
+    }
+
+    %advanced-filter--compact {
+        %advanced-filter__main {
+            min-height: 138px;
+            max-height: 305px;
+        }
+
+        %filter-empty {
+            height: 92px;
+        }
+
+        %advanced-filter__main,
+        %advanced-filter__header {
+            padding: $vertical-space-compact rem(16px);
+        }
+
+        %filter-tree__expression-actions igx-icon {
+            font-size: rem(18px);
+            width: rem(18px);
+            height: rem(18px);
+        }
+
+        %filter-tree__line {
+            margin-right: $horizontal-space-compact;
+        }
+
+        %filter-tree {
+            + %filter-tree,
+            + %filter-tree__expression-item,
+            + %filter-tree__inputs {
+                margin-top: $vertical-space-compact;
+            }
+        }
+
+        %filter-tree__expression-item {
+            + %filter-tree,
+            + %filter-tree__inputs,
+            + %filter-tree__expression-item {
+                margin-top: $vertical-space-compact;
+            }
+        }
+
+        %filter-tree__buttons {
+            margin-top: $vertical-space-compact;
+
+            + %filter-tree,
+            + %filter-tree__expression-item,
+            + %filter-tree__inputs {
+                margin-top: $vertical-space-compact;
+            }
+        }
+
+        %filter-tree__inputs {
+            + %filter-tree,
+            + %filter-tree__expression-item {
+                margin-top: $vertical-space-compact;
+            }
+        }
+    }
+
+    %filter-con-menu--cosy {
+        > [igxButton] + [igxButton],
+        igx-buttongroup + [igxButton],
+        [igxButton] + igx-buttongroup {
+            margin-top: $vertical-space-cosy;
+        }
+    }
+
+    %filter-con-menu--compact {
+        > [igxButton] + [igxButton],
+        igx-buttongroup + [igxButton],
+        [igxButton] + igx-buttongroup {
+            margin-top: $vertical-space-compact;
+        }
+    }
+}

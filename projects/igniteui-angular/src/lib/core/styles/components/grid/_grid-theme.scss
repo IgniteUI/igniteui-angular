@@ -1,4 +1,5 @@
 @import './excel-filtering-theme';
+@import './advanced-filtering-theme';
 
 ////
 /// @group themes
@@ -502,7 +503,7 @@
     @include igx-root-css-vars($theme);
 
     $palette: map-get($theme, 'palette');
-
+    $cbx-size: rem(20px);
     $grid-shadow: --var($theme, 'grid-shadow');
 
     $grid-caption-fs: rem(20px);
@@ -532,6 +533,16 @@
         cosy: 0 rem(16px),
         compact: 0 rem(12px)
     );
+
+    $grid-cbx-padding: (
+        comfortable: rem(24px),
+        cosy: rem(16px),
+        compact: rem(12px)
+    );
+
+    $cbx-padding: map-get($grid-cbx-padding, 'comfortable');
+    $cbx-padding-cosy: map-get($grid-cbx-padding, 'cosy');
+    $cbx-padding-compact: map-get($grid-cbx-padding, 'compact');
 
     $grid-header-height: (
         comfortable: rem(50px),
@@ -886,6 +897,7 @@
 
         &%igx-grid__tr--ghost {
             background: --var($theme, 'row-ghost-background');
+            z-index: 1;
         }
     }
 
@@ -1377,7 +1389,6 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: map-get($grid-header-padding, 'comfortable');
         border-right: --var($theme, 'header-border-width')
             --var($theme, 'header-border-style')
             --var($theme, 'header-border-color');
@@ -1385,12 +1396,20 @@
         z-index: 4;
     }
 
-    %grid__cbx-selection--cosy {
-        padding: map-get($grid-header-padding, 'cosy');
+    %cbx-padding {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        // The min-width here plays the role of padding because of IE11
+        min-width: calc(#{$cbx-size} + (#{$cbx-padding} * 2));
     }
 
-    %grid__cbx-selection--compact {
-        padding: map-get($grid-header-padding, 'compact');
+    %cbx-padding--cosy {
+        min-width: calc(#{$cbx-size} + (#{$cbx-padding-cosy} * 2));
+    }
+
+    %cbx-padding--compact {
+        min-width: calc(#{$cbx-size} + (#{$cbx-padding-compact} * 2));
     }
 
     %grid__resize-handle {
@@ -1973,6 +1992,15 @@
         position: fixed;
     }
 
+    %igx-grid__loading-outlet {
+        z-index: 10003;
+
+        %circular-display {
+            width: rem(50);
+            height: rem(50);
+        }
+    }
+
     %igx-grid__row-editing-outlet {
         z-index: 10000;
         position: absolute;
@@ -2323,4 +2351,5 @@
     }
 
     @include _excel-filtering($theme, $palette);
+    @include _advanced-filtering($theme, $palette);
 }

@@ -4,7 +4,7 @@
 module.exports = function (config) {
   config.set({
     basePath: '',
-    frameworks: ['jasmine', '@angular-devkit/build-angular'],
+    frameworks: ['jasmine', 'jasmine-spec-tags', '@angular-devkit/build-angular'],
     files: [
       { pattern: '../../node_modules/hammerjs/hammer.min.js', watched: false },
       { pattern: '../../node_modules/hammer-simulator/index.js', watched: false },
@@ -14,6 +14,7 @@ module.exports = function (config) {
     plugins: [
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
+      require('karma-jasmine-spec-tags'),
       require('karma-jasmine-html-reporter'),
       require('karma-coverage-istanbul-reporter'),
       require('karma-spec-reporter'),
@@ -23,7 +24,9 @@ module.exports = function (config) {
       clearContext: false, // leave Jasmine Spec Runner output visible in browser
       jasmine: {
         random: false
-      }
+      },
+      tagPrefix: '#',
+      skipTags: 'perf'
     },
     coverageIstanbulReporter: {
       dir: require('path').join(__dirname, '../../coverage'),

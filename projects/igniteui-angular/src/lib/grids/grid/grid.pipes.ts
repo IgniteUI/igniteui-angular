@@ -3,13 +3,14 @@ import { cloneArray } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IGroupByResult } from '../../data-operations/grouping-result.interface';
-import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridComponent } from './grid.component';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
+import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 
 /**
  *@hidden
@@ -130,13 +131,16 @@ export class IgxGridFilteringPipe implements PipeTransform {
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) { }
 
     public transform(collection: any[], expressionsTree: IFilteringExpressionsTree,
-        id: string, pipeTrigger: number) {
+        filterStrategy: IFilteringStrategy,
+        advancedExpressionsTree: IFilteringExpressionsTree, id: string, pipeTrigger: number) {
         const grid = this.gridAPI.grid;
-        const state = { expressionsTree: expressionsTree };
+        const state = {
+            expressionsTree: expressionsTree,
+            strategy: filterStrategy,
+            advancedExpressionsTree: advancedExpressionsTree
+        };
 
-        if (!state.expressionsTree ||
-            !state.expressionsTree.filteringOperands ||
-            state.expressionsTree.filteringOperands.length === 0) {
+        if (FilteringExpressionsTree.empty(state.expressionsTree) && FilteringExpressionsTree.empty(state.advancedExpressionsTree)) {
             return collection;
         }
 

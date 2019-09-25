@@ -10,7 +10,7 @@ import { IgxGridComponent } from './grid.component';
 import { IgxRowComponent } from '../row.component';
 import { IgxColumnComponent } from '../column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { IgxGridModule, GridSelectionMode } from './index';
+import { IgxGridModule } from './index';
 import { DisplayDensity } from '../../core/displayDensity';
 import { DataType } from '../../data-operations/data-util';
 import { GridTemplateStrings } from '../../test-utils/template-strings.spec';
@@ -18,10 +18,11 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { BasicGridComponent } from '../../test-utils/grid-base-components.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { SortingDirection, ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxTabsModule, IgxTabsComponent } from '../../tabs';
 import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
+import { GridSelectionMode } from '../common/enums';
 
 
 describe('IgxGrid Component Tests #grid', () => {
@@ -357,6 +358,7 @@ describe('IgxGrid Component Tests #grid', () => {
             tick(16);
 
             const grid = fixture.componentInstance.grid;
+            const gridElement = fixture.debugElement.query(By.css('.igx-grid'));
             const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
             let loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
 
@@ -371,6 +373,10 @@ describe('IgxGrid Component Tests #grid', () => {
 
             loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
             expect(loadingIndicator).toBeNull();
+
+            // the overlay should be shown
+            loadingIndicator = gridElement.query(By.css('.igx-grid__loading-outlet'));
+            expect(loadingIndicator.nativeElement.children.length).not.toBe(0);
 
             // Check for empty filter grid message and body less than 100px
             const columns = fixture.componentInstance.grid.columns;
@@ -392,6 +398,10 @@ describe('IgxGrid Component Tests #grid', () => {
 
             loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
             expect(loadingIndicator).not.toBeNull();
+
+            // the overlay should be hidden
+            loadingIndicator = gridElement.query(By.css('.igx-grid__loading-outlet'));
+            expect(loadingIndicator.nativeElement.children.length).toBe(0);
         }));
 
         it('should render loading indicator when loading is enabled and autoGenerate is enabled', fakeAsync(() => {
@@ -477,6 +487,50 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBeGreaterThan(500);
         }));
 
+        it('should remove loading overlay when isLoading is set to false', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxGridTestComponent);
+            fixture.componentInstance.data = [];
+            fixture.componentInstance.grid.isLoading = true;
+            fixture.detectChanges();
+            tick(16);
+
+            const grid = fixture.componentInstance.grid;
+            const gridElement = fixture.debugElement.query(By.css('.igx-grid'));
+            const gridBody = fixture.debugElement.query(By.css(TBODY_CLASS));
+            let loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+
+            expect(loadingIndicator).not.toBeNull();
+            expect(gridBody.nativeElement.textContent).not.toEqual(grid.emptyFilteredGridMessage);
+
+            // Check for loaded rows in grid's container
+            fixture.componentInstance.generateData(30);
+            fixture.detectChanges();
+            tick(1000);
+            expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(548);
+
+            loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+            expect(loadingIndicator).toBeNull();
+
+            // the overlay should be shown
+            loadingIndicator = gridElement.query(By.css('.igx-grid__loading-outlet'));
+            expect(loadingIndicator.nativeElement.children.length).not.toBe(0);
+
+            grid.isLoading = false;
+            tick(16);
+            expect(loadingIndicator.nativeElement.children.length).toBe(0);
+
+            // Clearing grid's data and check for empty grid message
+            fixture.componentInstance.clearData();
+            fixture.detectChanges();
+            tick(100);
+
+            // isLoading is still false so the empty data message should show, not the loading indicator
+            loadingIndicator = gridBody.query(By.css('.igx-grid__loading'));
+            expect(loadingIndicator).toBeNull();
+
+            expect(gridBody.nativeElement.textContent).toEqual(grid.emptyGridMessage);
+        }));
+
         it('should render empty message when grid height is 100%', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridEmptyMessage100PercentComponent);
             fixture.detectChanges();
@@ -535,7 +589,7 @@ describe('IgxGrid Component Tests #grid', () => {
             }
         });
 
-        it('should not keep a cached-out template as master after column resizing', async() => {
+        it('should not keep a cached-out template as master after column resizing', async () => {
             const fix = TestBed.createComponent(IgxGridTestComponent);
             for (let i = 2; i < 100; i++) {
                 fix.componentInstance.data.push({ index: i, value: i, desc: i, detail: i });
@@ -607,34 +661,34 @@ describe('IgxGrid Component Tests #grid', () => {
 
         it(`should init columns with width >= 136px and a horizontal scrollbar
             when 1000 rows and 30 columns are rendered`, fakeAsync(() => {
-                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
-                fix.componentInstance.initColumnsRows(1000, 30);
-                fix.detectChanges();
-                tick(16);
+            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            fix.componentInstance.initColumnsRows(1000, 30);
+            fix.detectChanges();
+            tick(16);
 
-                const grid = fix.componentInstance.grid;
+            const grid = fix.componentInstance.grid;
 
-                expect(grid.columns[0].width).not.toBeLessThan(136);
-                expect(grid.columns[4].width).not.toBeLessThan(136);
-                expect(grid.columns[14].width).not.toBeLessThan(136);
-                expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
-            }));
+            expect(grid.columns[0].width).not.toBeLessThan(136);
+            expect(grid.columns[4].width).not.toBeLessThan(136);
+            expect(grid.columns[14].width).not.toBeLessThan(136);
+            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+        }));
 
         it(`should init columns with width >= 136px and a horizontal scrollbar
             when 200 rows and 150 columns are rendered`, fakeAsync(() => {
-                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
-                fix.componentInstance.initColumnsRows(200, 150);
-                fix.detectChanges();
-                tick(16);
+            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            fix.componentInstance.initColumnsRows(200, 150);
+            fix.detectChanges();
+            tick(16);
 
-                const grid = fix.componentInstance.grid;
+            const grid = fix.componentInstance.grid;
 
-                expect(grid.columns[0].width).not.toBeLessThan(136);
-                expect(grid.columns[4].width).not.toBeLessThan(136);
-                expect(grid.columns[100].width).not.toBeLessThan(136);
-                expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
-                expect(grid.rowList.length).toBeGreaterThan(0);
-            }));
+            expect(grid.columns[0].width).not.toBeLessThan(136);
+            expect(grid.columns[4].width).not.toBeLessThan(136);
+            expect(grid.columns[100].width).not.toBeLessThan(136);
+            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+            expect(grid.rowList.length).toBeGreaterThan(0);
+        }));
 
         it('should account for columns with set width when determining default column width when grid has 100% width', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
@@ -709,77 +763,77 @@ describe('IgxGrid Component Tests #grid', () => {
 
         it(`should account for columns with set width when determining default column width when grid has 100% width
             and there are enough rows to cover the grid's height`, fakeAsync(() => {
-                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
-                const grid = fix.componentInstance.grid;
-                fix.componentInstance.initColumnsRows(30, 5);
-                fix.componentInstance.changeInitColumns = true;
-                fix.detectChanges();
-                tick(16);
+            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            const grid = fix.componentInstance.grid;
+            fix.componentInstance.initColumnsRows(30, 5);
+            fix.componentInstance.changeInitColumns = true;
+            fix.detectChanges();
+            tick(16);
 
-                expect(grid.width).toEqual('100%');
-                expect(grid.columns[0].width).toEqual('100px');
-                expect(grid.columns[4].width).toEqual('100px');
+            expect(grid.width).toEqual('100%');
+            expect(grid.columns[0].width).toEqual('100px');
+            expect(grid.columns[4].width).toEqual('100px');
 
-                const actualGridWidth = grid.unpinnedWidth;
+            const actualGridWidth = grid.unpinnedWidth;
 
-                const expectedDefWidth = Math.max(Math.floor((actualGridWidth -
-                    parseInt(grid.columns[0].width, 10) -
-                    parseInt(grid.columns[4].width, 10)) / 3),
-                    parseInt(MIN_COL_WIDTH, 10));
-                expect(parseInt(grid.columnWidth, 10)).toEqual(expectedDefWidth);
+            const expectedDefWidth = Math.max(Math.floor((actualGridWidth -
+                parseInt(grid.columns[0].width, 10) -
+                parseInt(grid.columns[4].width, 10)) / 3),
+                parseInt(MIN_COL_WIDTH, 10));
+            expect(parseInt(grid.columnWidth, 10)).toEqual(expectedDefWidth);
 
-                expect(parseInt(grid.columns[1].width, 10)).toEqual(expectedDefWidth);
-                expect(parseInt(grid.columns[2].width, 10)).toEqual(expectedDefWidth);
-                expect(parseInt(grid.columns[3].width, 10)).toEqual(expectedDefWidth);
+            expect(parseInt(grid.columns[1].width, 10)).toEqual(expectedDefWidth);
+            expect(parseInt(grid.columns[2].width, 10)).toEqual(expectedDefWidth);
+            expect(parseInt(grid.columns[3].width, 10)).toEqual(expectedDefWidth);
 
-                grid.columns.forEach((column) => {
-                    const width = parseInt(column.width, 10);
-                    const minWidth = parseInt(grid.columnWidth, 10);
-                    if (column.index !== 0 && column.index !== 4) {
-                        expect(width).toBeGreaterThanOrEqual(minWidth);
-                    }
-                });
+            grid.columns.forEach((column) => {
+                const width = parseInt(column.width, 10);
+                const minWidth = parseInt(grid.columnWidth, 10);
+                if (column.index !== 0 && column.index !== 4) {
+                    expect(width).toBeGreaterThanOrEqual(minWidth);
+                }
+            });
 
-                expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(false);
-                expect(grid.rowList.length).toBeGreaterThan(0);
-            }));
+            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(false);
+            expect(grid.rowList.length).toBeGreaterThan(0);
+        }));
 
         it(`should account for columns with set width when determining default column width when grid has 100% width
             and there are enough rows to cover the grid's height and enough columns to cover the grid's width`, fakeAsync(() => {
-                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
-                const grid = fix.componentInstance.grid;
-                fix.componentInstance.initColumnsRows(1000, 30);
-                fix.componentInstance.changeInitColumns = true;
-                fix.detectChanges();
-                tick(16);
+            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            const grid = fix.componentInstance.grid;
+            fix.componentInstance.initColumnsRows(1000, 30);
+            fix.componentInstance.changeInitColumns = true;
+            fix.detectChanges();
+            tick(16);
 
-                expect(grid.width).toEqual('100%');
-                expect(grid.columns[0].width).toEqual('200px');
-                expect(grid.columns[3].width).toEqual('200px');
-                expect(grid.columns[5].width).toEqual('200px');
-                expect(grid.columns[10].width).toEqual('200px');
-                expect(grid.columns[25].width).toEqual('200px');
+            expect(grid.width).toEqual('100%');
+            expect(grid.columns[0].width).toEqual('200px');
+            expect(grid.columns[3].width).toEqual('200px');
+            expect(grid.columns[5].width).toEqual('200px');
+            expect(grid.columns[10].width).toEqual('200px');
+            expect(grid.columns[25].width).toEqual('200px');
 
-                const actualGridWidth = grid.nativeElement.clientWidth;
+            const actualGridWidth = grid.nativeElement.clientWidth;
 
-                const expectedDefWidth = Math.max(Math.floor((actualGridWidth - 5 * 200) / 25), parseInt(MIN_COL_WIDTH, 10));
-                expect(parseInt(grid.columnWidth, 10)).toEqual(expectedDefWidth);
-                expect(parseInt(grid.columns[1].width, 10)).toEqual(expectedDefWidth);
-                expect(parseInt(grid.columns[2].width, 10)).toEqual(expectedDefWidth);
-                expect(parseInt(grid.columns[4].width, 10)).toEqual(expectedDefWidth);
+            const expectedDefWidth = Math.max(Math.floor((actualGridWidth - 5 * 200) / 25), parseInt(MIN_COL_WIDTH, 10));
+            expect(parseInt(grid.columnWidth, 10)).toEqual(expectedDefWidth);
+            expect(parseInt(grid.columns[1].width, 10)).toEqual(expectedDefWidth);
+            expect(parseInt(grid.columns[2].width, 10)).toEqual(expectedDefWidth);
+            expect(parseInt(grid.columns[4].width, 10)).toEqual(expectedDefWidth);
 
-                grid.columns.forEach((column) => {
-                    const width = parseInt(column.width, 10);
-                    const minWidth = parseInt(grid.columnWidth, 10);
-                    if (column.index !== 0 && column.index !== 3 && column.index !== 5 &&
-                        column.index !== 10 && column.index !== 25) {
-                        expect(width).toEqual(minWidth);
-                    }
-                });
+            grid.columns.forEach((column) => {
+                const width = parseInt(column.width, 10);
+                const minWidth = parseInt(grid.columnWidth, 10);
+                if (column.index !== 0 && column.index !== 3 && column.index !== 5 &&
+                    column.index !== 10 && column.index !== 25) {
+                    expect(width).toEqual(minWidth);
+                }
+            });
 
-                expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
-                expect(grid.rowList.length).toBeGreaterThan(0);
-            }));
+            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+            expect(grid.rowList.length).toBeGreaterThan(0);
+        }));
 
         it(`should account for columns with set width when determining default column width when grid has px width
             and there are enough rows to cover the grid's height and enough columns to cover the grid's width`, fakeAsync(() => {
@@ -816,32 +870,32 @@ describe('IgxGrid Component Tests #grid', () => {
 
         it(`should account for columns with set width when determining default column width when grid has 100% width
             and there are 10000 rows and 150 columns`, fakeAsync(() => {
-                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
-                const grid = fix.componentInstance.grid;
-                fix.componentInstance.initColumnsRows(10000, 150);
-                fix.componentInstance.changeInitColumns = true;
-                fix.detectChanges();
-                tick(16);
+            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            const grid = fix.componentInstance.grid;
+            fix.componentInstance.initColumnsRows(10000, 150);
+            fix.componentInstance.changeInitColumns = true;
+            fix.detectChanges();
+            tick(16);
 
-                expect(grid.width).toEqual('100%');
-                expect(grid.columns[0].width).toEqual('500px');
-                expect(grid.columns[3].width).toEqual('500px');
-                expect(grid.columns[5].width).toEqual('500px');
-                expect(grid.columns[10].width).toEqual('500px');
-                expect(grid.columns[50].width).toEqual('500px');
+            expect(grid.width).toEqual('100%');
+            expect(grid.columns[0].width).toEqual('500px');
+            expect(grid.columns[3].width).toEqual('500px');
+            expect(grid.columns[5].width).toEqual('500px');
+            expect(grid.columns[10].width).toEqual('500px');
+            expect(grid.columns[50].width).toEqual('500px');
 
-                grid.columns.forEach((column) => {
-                    const width = parseInt(column.width, 10);
-                    const minWidth = parseInt(grid.columnWidth, 10);
-                    if (column.index !== 0 && column.index !== 3 && column.index !== 5 &&
-                        column.index !== 10 && column.index !== 50) {
-                        expect(width).toEqual(minWidth);
-                    }
-                });
+            grid.columns.forEach((column) => {
+                const width = parseInt(column.width, 10);
+                const minWidth = parseInt(grid.columnWidth, 10);
+                if (column.index !== 0 && column.index !== 3 && column.index !== 5 &&
+                    column.index !== 10 && column.index !== 50) {
+                    expect(width).toEqual(minWidth);
+                }
+            });
 
-                expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
-                expect(grid.rowList.length).toBeGreaterThan(0);
-            }));
+            expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
+            expect(grid.rowList.length).toBeGreaterThan(0);
+        }));
 
         it(`should account for columns with set width when determining default column width when grid has px width
             and there are 10000 rows and 150 columns`, fakeAsync(() => {
@@ -946,51 +1000,51 @@ describe('IgxGrid Component Tests #grid', () => {
         }));
 
         it(`should render 10 records if height is 100% and parent container's height is unset and
-            display density is changed`, async() => {
-            resizeObserverIgnoreError();
-            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
-            fix.detectChanges();
+            display density is changed`, async () => {
+                resizeObserverIgnoreError();
+                const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+                fix.detectChanges();
 
-            fix.componentInstance.grid.height = '100%';
-            fix.componentInstance.data = fix.componentInstance.fullData.slice(0, 11);
-            fix.detectChanges();
-            await wait(100);
+                fix.componentInstance.grid.height = '100%';
+                fix.componentInstance.data = fix.componentInstance.fullData.slice(0, 11);
+                fix.detectChanges();
+                await wait(100);
 
-            fix.componentInstance.density = DisplayDensity.compact;
-            fix.detectChanges();
-            await wait(100);
+                fix.componentInstance.density = DisplayDensity.compact;
+                fix.detectChanges();
+                await wait(100);
 
-            const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            const defaultHeightNum = parseInt(defaultHeight, 10);
-            expect(defaultHeight).not.toBeNull();
-            expect(defaultHeightNum).toBe(330);
-            expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
-            expect(fix.componentInstance.grid.rowList.length).toEqual(11);
-        });
+                const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+                const defaultHeightNum = parseInt(defaultHeight, 10);
+                expect(defaultHeight).not.toBeNull();
+                expect(defaultHeightNum).toBe(330);
+                expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
+                expect(fix.componentInstance.grid.rowList.length).toEqual(11);
+            });
 
         it(`should render grid with correct height when parent container's height is set
             and the total row height is smaller than parent height #1861`, fakeAsync(() => {
-                const fix = TestBed.createComponent(IgxGridFixedContainerHeightComponent);
-                fix.componentInstance.grid.height = '100%';
-                fix.componentInstance.paging = true;
-                fix.componentInstance.data = fix.componentInstance.data.slice(0, 5);
+            const fix = TestBed.createComponent(IgxGridFixedContainerHeightComponent);
+            fix.componentInstance.grid.height = '100%';
+            fix.componentInstance.paging = true;
+            fix.componentInstance.data = fix.componentInstance.data.slice(0, 5);
 
-                tick();
-                fix.detectChanges();
-                const domGrid = fix.debugElement.query(By.css('igx-grid')).nativeElement;
-                expect(parseInt(window.getComputedStyle(domGrid).height, 10)).toBe(300);
+            tick();
+            fix.detectChanges();
+            const domGrid = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+            expect(parseInt(window.getComputedStyle(domGrid).height, 10)).toBe(300);
         }));
 
         it(`should render grid with correct height when height is in percent and the
             sum height of all rows is lower than parent height #1858`, fakeAsync(() => {
-                const fix = TestBed.createComponent(IgxGridFixedContainerHeightComponent);
-                fix.componentInstance.grid.height = '100%';
-                fix.componentInstance.data = fix.componentInstance.data.slice(0, 3);
+            const fix = TestBed.createComponent(IgxGridFixedContainerHeightComponent);
+            fix.componentInstance.grid.height = '100%';
+            fix.componentInstance.data = fix.componentInstance.data.slice(0, 3);
 
-                tick();
-                fix.detectChanges();
-                const domGrid = fix.debugElement.query(By.css('igx-grid')).nativeElement;
-                expect(parseInt(window.getComputedStyle(domGrid).height, 10)).toBe(300);
+            tick();
+            fix.detectChanges();
+            const domGrid = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+            expect(parseInt(window.getComputedStyle(domGrid).height, 10)).toBe(300);
         }));
 
         it('should keep auto-sizing if initial data is empty then set to a new array', fakeAsync(() => {
@@ -1030,22 +1084,22 @@ describe('IgxGrid Component Tests #grid', () => {
 
         it(`should not render with calcHeight null at any point when loading data and
             auto-sizing is required and initial data is empty`, () => {
-            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
-            fix.detectChanges();
+                const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+                fix.detectChanges();
 
-            let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            expect(defaultHeight).toBeNull(); // initially body height is null in auto-sizing scenarios with empty data
-            expect(fix.componentInstance.grid.calcHeight).toBeNull();
+                let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+                expect(defaultHeight).toBeNull(); // initially body height is null in auto-sizing scenarios with empty data
+                expect(fix.componentInstance.grid.calcHeight).toBeNull();
 
-            fix.componentInstance.data = Array.from({ length: 100000 }, (_, i) => ({ 'ID': i, 'CompanyName': 'CN' + i }));
-            fix.detectChanges();
+                fix.componentInstance.data = Array.from({ length: 100000 }, (_, i) => ({ 'ID': i, 'CompanyName': 'CN' + i }));
+                fix.detectChanges();
 
-            defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            const defaultHeightNum = parseInt(defaultHeight, 10);
-            expect(defaultHeight).not.toBeNull();
-            expect(defaultHeightNum).toBe(510);
-            expect(fix.componentInstance.grid.calcHeight).toBe(510);
-        });
+                defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+                const defaultHeightNum = parseInt(defaultHeight, 10);
+                expect(defaultHeight).not.toBeNull();
+                expect(defaultHeightNum).toBe(510);
+                expect(fix.componentInstance.grid.calcHeight).toBe(510);
+            });
 
         it('should keep auto-sizing if initial data is set to small array that is then filled', () => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
@@ -1067,21 +1121,21 @@ describe('IgxGrid Component Tests #grid', () => {
 
         it(`should render with calcHeight null if initial data is small but then
             auto-size when it is filled`, async () => {
-            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
-            fix.componentInstance.data = fix.componentInstance.semiData;
-            fix.detectChanges();
-            let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            expect(defaultHeight).toBeNull();
-            expect(fix.componentInstance.grid.calcHeight).toBeNull();
-            fix.componentInstance.data = Array.from({ length: 100000 }, (_, i) => ({ 'ID': i, 'CompanyName': 'CN' + i }));
-            fix.detectChanges();
-            await wait(500);
-            defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            const defaultHeightNum = parseInt(defaultHeight, 10);
-            expect(defaultHeight).not.toBeNull();
-            expect(defaultHeightNum).toBe(510);
-            expect(fix.componentInstance.grid.calcHeight).toBe(510);
-        });
+                const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+                fix.componentInstance.data = fix.componentInstance.semiData;
+                fix.detectChanges();
+                let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+                expect(defaultHeight).toBeNull();
+                expect(fix.componentInstance.grid.calcHeight).toBeNull();
+                fix.componentInstance.data = Array.from({ length: 100000 }, (_, i) => ({ 'ID': i, 'CompanyName': 'CN' + i }));
+                fix.detectChanges();
+                await wait(500);
+                defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+                const defaultHeightNum = parseInt(defaultHeight, 10);
+                expect(defaultHeight).not.toBeNull();
+                expect(defaultHeightNum).toBe(510);
+                expect(fix.componentInstance.grid.calcHeight).toBe(510);
+            });
 
         it('should keep default height when filtering', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
@@ -1333,7 +1387,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             await wait(16);
             // check UI
-            const rowSelectorHeader =  fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-grid__cbx-selection');
+            const rowSelectorHeader = fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-grid__cbx-selection');
             const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
             const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
             const header2 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[2];
@@ -1388,7 +1442,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             await wait(16);
 
-             // grid should render all columns and all should be visible.
+            // grid should render all columns and all should be visible.
             const cells = grid.getRowByIndex(0).cells;
             expect(cells.length).toBe(30);
             expect(parseInt(grid.hostWidth, 10)).toBe(30 * 136);
@@ -1409,27 +1463,27 @@ describe('IgxGrid Component Tests #grid', () => {
 
         it(`When edit a cell onto filtered data through grid method, the row should
             disapear and the new value should not persist onto the next row`, fakeAsync(() => {
-                const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
-                fix.componentInstance.initColumnsRows(5, 5);
-                fix.detectChanges();
-                tick(16);
+            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            fix.componentInstance.initColumnsRows(5, 5);
+            fix.detectChanges();
+            tick(16);
 
-                const grid = fix.componentInstance.grid;
-                const cols = fix.componentInstance.columns;
-                const editValue = 0;
+            const grid = fix.componentInstance.grid;
+            const cols = fix.componentInstance.columns;
+            const editValue = 0;
 
-                grid.filter(cols[1].key, 2, IgxNumberFilteringOperand.instance().condition('greaterThan'));
-                fix.detectChanges();
-                grid.getCellByColumn(0, cols[1].key).update(editValue);
-                fix.detectChanges();
-                const gridRows = fix.debugElement.queryAll(By.css('igx-grid-row'));
-                expect(gridRows.length).toEqual(1);
-                const firstRowCells = gridRows[0].queryAll(By.css('igx-grid-cell'));
-                const firstCellInputValue = firstRowCells[1].nativeElement.textContent.trim();
-                expect(firstCellInputValue).toEqual('4');
-            }));
+            grid.filter(cols[1].key, 2, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+            fix.detectChanges();
+            grid.getCellByColumn(0, cols[1].key).update(editValue);
+            fix.detectChanges();
+            const gridRows = fix.debugElement.queryAll(By.css('igx-grid-row'));
+            expect(gridRows.length).toEqual(1);
+            const firstRowCells = gridRows[0].queryAll(By.css('igx-grid-cell'));
+            const firstCellInputValue = firstRowCells[1].nativeElement.textContent.trim();
+            expect(firstCellInputValue).toEqual('4');
+        }));
 
-        it(`GetNextCell: should return correctly next cell coordinates`, async() => {
+        it(`GetNextCell: should return correctly next cell coordinates`, async () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(15, 5);
             fix.detectChanges();
@@ -1446,25 +1500,25 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             // when the next cell is on the same row
             let nextCellCoords = grid.getNextCell(0, 0, (col) => col.editable);
-            expect(nextCellCoords).toEqual({rowIndex: 0, visibleColumnIndex: 2});
+            expect(nextCellCoords).toEqual({ rowIndex: 0, visibleColumnIndex: 2 });
             // when the next cell is on the next row
             nextCellCoords = grid.getNextCell(0, 4, (col) => col.editable);
-            expect(nextCellCoords).toEqual({rowIndex: 1, visibleColumnIndex: 2});
+            expect(nextCellCoords).toEqual({ rowIndex: 1, visibleColumnIndex: 2 });
             // when the next cell is not in the view
             nextCellCoords = grid.getNextCell(9, 4, (col) => col.editable);
-            expect(nextCellCoords).toEqual({rowIndex: 10, visibleColumnIndex: 2});
+            expect(nextCellCoords).toEqual({ rowIndex: 10, visibleColumnIndex: 2 });
             // when the current row and column index are not valid
             nextCellCoords = grid.getNextCell(-10, 14, (col) => col.editable);
-            expect(nextCellCoords).toEqual({rowIndex: -10, visibleColumnIndex: 14});
+            expect(nextCellCoords).toEqual({ rowIndex: -10, visibleColumnIndex: 14 });
             // when grid has no data
             grid.filter('col0', 2, IgxNumberFilteringOperand.instance().condition('greaterThan'));
             fix.detectChanges();
 
             nextCellCoords = grid.getNextCell(0, 0, (col) => col.editable);
-            expect(nextCellCoords).toEqual({rowIndex: 0, visibleColumnIndex: 0});
+            expect(nextCellCoords).toEqual({ rowIndex: 0, visibleColumnIndex: 0 });
         });
 
-        it(`GetPreviousCell: should return correctly next cell coordinates`, async() => {
+        it(`GetPreviousCell: should return correctly next cell coordinates`, async () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(15, 5);
             fix.detectChanges();
@@ -1481,25 +1535,25 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             // when the previous cell is on the same row
             let prevCellCoords = grid.getPreviousCell(0, 4, (col) => col.editable);
-            expect(prevCellCoords).toEqual({rowIndex: 0, visibleColumnIndex: 2});
+            expect(prevCellCoords).toEqual({ rowIndex: 0, visibleColumnIndex: 2 });
             // when the previous cell is on the previous row
             prevCellCoords = grid.getPreviousCell(1, 2, (col) => col.editable);
-            expect(prevCellCoords).toEqual({rowIndex: 0, visibleColumnIndex: 4});
+            expect(prevCellCoords).toEqual({ rowIndex: 0, visibleColumnIndex: 4 });
             // when the current row and column index are not valid
             prevCellCoords = grid.getPreviousCell(-110, 2, (col) => col.editable);
-            expect(prevCellCoords).toEqual({rowIndex: -110, visibleColumnIndex: 2});
+            expect(prevCellCoords).toEqual({ rowIndex: -110, visibleColumnIndex: 2 });
             // when there is no previous cell
             prevCellCoords = grid.getPreviousCell(0, 2, (col) => col.editable);
-            expect(prevCellCoords).toEqual({rowIndex: 0, visibleColumnIndex: 2});
-             // when the filter function has no matching colums
-             prevCellCoords = grid.getPreviousCell(0, 3, (col) => col.movable);
-             expect(prevCellCoords).toEqual({rowIndex: 0, visibleColumnIndex: 3});
+            expect(prevCellCoords).toEqual({ rowIndex: 0, visibleColumnIndex: 2 });
+            // when the filter function has no matching colums
+            prevCellCoords = grid.getPreviousCell(0, 3, (col) => col.movable);
+            expect(prevCellCoords).toEqual({ rowIndex: 0, visibleColumnIndex: 3 });
             // when grid has no data
             grid.filter('col0', 2, IgxNumberFilteringOperand.instance().condition('greaterThan'));
             fix.detectChanges();
 
             prevCellCoords = grid.getPreviousCell(99, 0, (col) => col.editable);
-            expect(prevCellCoords).toEqual({rowIndex: 99, visibleColumnIndex: 0});
+            expect(prevCellCoords).toEqual({ rowIndex: 99, visibleColumnIndex: 0 });
         });
     });
 
@@ -1659,6 +1713,214 @@ describe('IgxGrid Component Tests #grid', () => {
             const paginationText = paginationContent.textContent.trim();
 
             expect(paginationText).toEqual(totalRecords);
+        });
+    });
+
+    describe('IgxGrid - Performance tests #perf', () => {
+        const MAX_RAW_RENDER = 1967; // two average diffs from 7.3 rendering performance
+        const MAX_GROUPED_RENDER = 1500;
+        const MAX_VER_SCROLL_O = 220;
+        const MAX_HOR_SCROLL_O = 220;
+        const MAX_VER_SCROLL_U = 380;
+        const MAX_HOR_SCROLL_U = 380;
+        const MAX_FOCUS = 120;
+        let observer: MutationObserver;
+
+        configureTestSuite();
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxGridPerformanceComponent
+                ],
+                imports: [
+                    NoopAnimationsModule,
+                    IgxGridModule,
+                    IgxTabsModule
+                ]
+            }).compileComponents();
+        }));
+        afterEach(() => {
+            if (observer) {
+                observer.disconnect();
+            }
+        });
+
+        it('should render the grid in a certain amount of time', async () => {
+            const fix = TestBed.createComponent(IgxGridPerformanceComponent);
+            fix.detectChanges();
+            expect(fix.componentInstance.delta)
+                .withContext('Rendering took: ' + fix.componentInstance.delta +
+                    'ms but should have taken at most: ' + MAX_RAW_RENDER + 'ms')
+                .toBeLessThan(MAX_RAW_RENDER);
+        });
+
+        it('should render grouped grid in a certain amount of time', async () => {
+            const fix = TestBed.createComponent(IgxGridPerformanceComponent);
+            fix.componentInstance.groupingExpressions.push({
+                fieldName: 'field0',
+                dir: SortingDirection.Asc
+            });
+            fix.detectChanges();
+            expect(fix.componentInstance.delta)
+                .withContext('Rendering took: ' + fix.componentInstance.delta +
+                    'ms but should have taken at most: ' + MAX_GROUPED_RENDER + 'ms')
+                .toBeLessThan(MAX_GROUPED_RENDER);
+        });
+
+        xit('should scroll (optimized delta) the grid vertically in a certain amount of time', async (done) => {
+            const fix = TestBed.createComponent(IgxGridPerformanceComponent);
+            fix.detectChanges();
+            await wait(16);
+            const startTime = new Date().getTime();
+            const config: MutationObserverInit = {
+                attributes: true,
+                attributeOldValue: true,
+                attributeFilter: ['ng-reflect-value']
+            };
+            const callback = () => {
+                let ready = true;
+                const rows = fix.componentInstance.grid.rowList.toArray();
+                for (let i = 0; i < 4; i++) {
+                    if (rows[i].cells.first.nativeElement.attributes['ng-reflect-value'].nodeValue !== String(i + 3)) {
+                        ready = false;
+                        break;
+                    }
+                }
+                if (ready) {
+                    const delta = new Date().getTime() - startTime;
+                    expect(delta)
+                        .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_VER_SCROLL_O + 'ms')
+                        .toBeLessThan(MAX_VER_SCROLL_O);
+                    observer.disconnect();
+                    done();
+                }
+
+            };
+            observer = new MutationObserver(callback);
+            observer.observe(fix.componentInstance.grid.rowList.first.cells.first.nativeElement, config);
+            fix.componentInstance.verticalScroll.scrollTop = 120;
+            await wait(100);
+            fix.detectChanges();
+        });
+
+        xit('should scroll (unoptimized delta) the grid vertically in a certain amount of time', async (done) => {
+            const fix = TestBed.createComponent(IgxGridPerformanceComponent);
+            fix.detectChanges();
+            await wait(16);
+            const startTime = new Date().getTime();
+            const config: MutationObserverInit = {
+                attributes: true,
+                attributeOldValue: true,
+                attributeFilter: ['ng-reflect-value']
+            };
+            const callback = (mutationsList) => {
+                const cellMutated = mutationsList.filter((mutation) => {
+                    return mutation.oldValue === '60' && mutation.target.attributes['ng-reflect-value'].nodeValue === '84';
+                }).length === 1;
+                if (cellMutated) {
+                    const delta = new Date().getTime() - startTime;
+                    expect(delta)
+                        .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_VER_SCROLL_U + 'ms')
+                        .toBeLessThan(MAX_VER_SCROLL_U);
+                    observer.disconnect();
+                    done();
+                }
+            };
+            observer = new MutationObserver(callback);
+            observer.observe(fix.componentInstance.grid.rowList.last.cells.first.nativeElement, config);
+            fix.componentInstance.verticalScroll.scrollTop = 800;
+            await wait(100);
+            fix.detectChanges();
+        });
+
+        xit('should scroll (optimized delta) the grid horizontally in a certain amount of time', async (done) => {
+            const fix = TestBed.createComponent(IgxGridPerformanceComponent);
+            fix.detectChanges();
+            await wait(16);
+            const startTime = new Date().getTime();
+            const config: MutationObserverInit = {
+                attributes: true,
+                attributeOldValue: true,
+                attributeFilter: ['ng-reflect-value']
+            };
+            const callback = (mutationsList) => {
+                const cellMutated = mutationsList.filter((mutation) => {
+                    return mutation.oldValue === '1' && mutation.target.attributes['ng-reflect-value'].nodeValue === '22';
+                }).length === 1;
+                if (cellMutated) {
+                    const delta = new Date().getTime() - startTime;
+                    expect(delta)
+                        .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_HOR_SCROLL_O + 'ms')
+                        .toBeLessThan(MAX_HOR_SCROLL_O);
+                    observer.disconnect();
+                    done();
+                }
+            };
+            observer = new MutationObserver(callback);
+            observer.observe(fix.componentInstance.grid.rowList.last.cells.toArray()[1].nativeElement, config);
+            fix.componentInstance.horizontalScroll.scrollLeft = 250;
+            await wait(100);
+            fix.detectChanges();
+        });
+
+        xit('should scroll (unoptimized delta) the grid horizontally in a certain amount of time', async (done) => {
+            const fix = TestBed.createComponent(IgxGridPerformanceComponent);
+            fix.detectChanges();
+            await wait(16);
+            const startTime = new Date().getTime();
+            const config: MutationObserverInit = {
+                attributes: true,
+                attributeOldValue: true,
+                attributeFilter: ['ng-reflect-value']
+            };
+            const callback = (mutationsList) => {
+                const cellMutated = mutationsList.filter((mutation) => {
+                    return mutation.oldValue === '60' && mutation.target.attributes['ng-reflect-value'].nodeValue === '8';
+                }).length === 1;
+                if (cellMutated) {
+                    const delta = new Date().getTime() - startTime;
+                    expect(delta)
+                        .withContext('Scrolling took: ' + delta + 'ms but should have taken at most: ' + MAX_HOR_SCROLL_U + 'ms')
+                        .toBeLessThan(MAX_HOR_SCROLL_U);
+                    observer.disconnect();
+                    done();
+                }
+            };
+            observer = new MutationObserver(callback);
+            observer.observe(fix.componentInstance.grid.rowList.last.cells.first.nativeElement, config);
+            fix.componentInstance.horizontalScroll.scrollLeft = 800;
+            await wait(100);
+            fix.detectChanges();
+        });
+
+        xit('should focus a cell in a certain amount of time', async (done) => {
+            const fix = TestBed.createComponent(IgxGridPerformanceComponent);
+            fix.detectChanges();
+            await wait(16);
+            const startTime = new Date().getTime();
+            const config: MutationObserverInit = {
+                attributes: true,
+                attributeOldValue: true,
+                attributeFilter: ['aria-selected']
+            };
+            const callback = (mutationsList) => {
+                const cellMutated = mutationsList.filter((mutation) => {
+                    return mutation.oldValue === 'false' && mutation.target.attributes['aria-selected'].nodeValue === 'true';
+                }).length === 1;
+                if (cellMutated) {
+                    const delta = new Date().getTime() - startTime;
+                    expect(delta)
+                        .withContext('Focusing took: ' + delta + 'ms but should have taken at most: ' + MAX_FOCUS + 'ms')
+                        .toBeLessThan(MAX_FOCUS);
+                    observer.disconnect();
+                    done();
+                }
+            };
+            observer = new MutationObserver(callback);
+            observer.observe(fix.componentInstance.grid.rowList.first.cells.first.nativeElement, config);
+            // UIInteractions.clickElement(fix.componentInstance.grid.rowList.first.cells.first.nativeElement);
+            await wait(16);
+            fix.detectChanges();
         });
     });
 });
@@ -2163,4 +2425,53 @@ export class IgxGridWithCustomPaginationTemplateComponent {
     public data = SampleTestData.foodProductData();
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
+}
+
+@Component({
+    template: `<igx-grid #grid [width]="'2000px'" [height]="'2000px'" [data]="data"
+        [autoGenerate]="autoGenerate" [displayDensity]="'compact'" [groupingExpressions]="groupingExpressions">
+        <igx-column *ngFor="let column of columns" [field]="column.field" [header]="column.field" [width]="column.width"></igx-column>
+    </igx-grid>`
+})
+export class IgxGridPerformanceComponent implements AfterViewInit, OnInit {
+
+    @ViewChild('grid', { read: IgxGridComponent, static: true }) public grid: IgxGridComponent;
+
+    public columns = [];
+    public data = [];
+
+    public startTime;
+    public delta;
+
+    public groupingExpressions: Array<ISortingExpression> = [];
+
+    public get verticalScroll() {
+        return this.grid.verticalScrollContainer.getVerticalScroll();
+    }
+
+    public get horizontalScroll() {
+        return this.grid.parentVirtDir.getHorizontalScroll();
+    }
+
+    public ngOnInit() {
+        const cols = [], d = [];
+        for (let i = 0; i < 30; i++) {
+            cols.push({ field: 'field' + i, width: '100px', hasSummary: false });
+        }
+        for (let i = 0; i < 10000; i++) {
+            const r = {};
+            r['field0'] = i;
+            for (let j = 1; j < 30; j++) {
+                r['field' + j] = j;
+            }
+            d.push(r);
+        }
+        this.columns = cols;
+        this.data = d;
+        this.startTime = new Date().getTime();
+    }
+
+    public ngAfterViewInit() {
+        this.delta = new Date().getTime() - this.startTime;
+    }
 }

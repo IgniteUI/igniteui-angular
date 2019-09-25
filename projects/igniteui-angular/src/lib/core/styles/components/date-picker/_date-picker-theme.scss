@@ -14,7 +14,6 @@
 
     %date-picker {
         min-width: 200px;
-        max-width: 340px;
         box-shadow: igx-elevation($elevations, 24);
         border-radius: --var($theme, 'border-radius');
         background: --var($theme, 'content-background');
@@ -48,6 +47,7 @@
 
         %cal-value {
             color: --var($theme, 'content-text-color');
+            flex-basis: 14.28%;
         }
 
         %cal-value--label {

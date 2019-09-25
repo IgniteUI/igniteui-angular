@@ -7,11 +7,11 @@ import { IFilteringExpression, FilteringLogic } from '../../data-operations/filt
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { IgxGridSortingPipe } from '../grid/grid.pipes';
 import { IgxDatePipeComponent } from '../grid.common';
 import { IgxColumnComponent } from '../column.component';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { GridBaseAPIService } from '../api.service';
+import { IColumnVisibilityChangedEventArgs } from '../grid';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
@@ -39,6 +39,7 @@ export class IgxFilteringService implements OnDestroy {
     private columnToExpressionsMap = new Map<string, ExpressionUI[]>();
     private _datePipe: IgxDatePipeComponent;
     private columnStartIndex = -1;
+    private _filterIconsRegistered = false;
 
     public gridId: string;
     public isFilterRowVisible = false;
@@ -112,6 +113,13 @@ export class IgxFilteringService implements OnDestroy {
                 this.grid.filterCellList.forEach((filterCell) => {
                     filterCell.updateFilterCellArea();
                 });
+            });
+
+            this.grid.onColumnVisibilityChanged.pipe(takeUntil(this.destroy$)).subscribe((eventArgs: IColumnVisibilityChangedEventArgs) => {
+                if (this.grid.filteringRow && this.grid.filteringRow.column === eventArgs.column ) {
+                    this.grid.filteringRow.close();
+
+                }
             });
         }
     }
@@ -204,10 +212,13 @@ export class IgxFilteringService implements OnDestroy {
      * Register filtering SVG icons in the icon service.
      */
     public registerSVGIcons(): void {
-        for (const icon of icons) {
-            if (!this.iconService.isSvgIconCached(icon.name, FILTERING_ICONS_FONT_SET)) {
-                this.iconService.addSvgIconFromText(icon.name, icon.value, FILTERING_ICONS_FONT_SET);
+        if (!this._filterIconsRegistered) {
+            for (const icon of icons) {
+                if (!this.iconService.isSvgIconCached(icon.name, FILTERING_ICONS_FONT_SET)) {
+                    this.iconService.addSvgIconFromText(icon.name, icon.value, FILTERING_ICONS_FONT_SET);
+                }
             }
+            this._filterIconsRegistered = true;
         }
     }
 
@@ -496,7 +507,7 @@ export class IgxFilteringService implements OnDestroy {
 
     public isFilteringExpressionsTreeEmpty(): boolean {
         const expressionTree = this.grid.filteringExpressionsTree;
-        if (!expressionTree.filteringOperands || !expressionTree.filteringOperands.length) {
+        if (FilteringExpressionsTree.empty(expressionTree)) {
             return true;
         }
 

@@ -34,10 +34,6 @@
         @include e(thumb-#{$t}) {
             @extend %igx-thumb-display !optional;
 
-            .label {
-                @extend %igx-thumb-label !optional;
-            }
-
             .dot {
                 @extend %igx-thumb-dot !optional;
             }
@@ -46,12 +42,24 @@
         @include e(thumb-#{$t}, $m: active) {
             @extend %igx-thumb--active !optional;
 
-            .label {
-                @extend %igx-thumb-label--active !optional;
-            }
-
             .dot {
                 @extend %igx-thumb-dot--active !optional;
+            }
+        }
+
+        @include e(label-#{$t}) {
+            @extend %igx-label-display !optional;
+
+            .label {
+                @extend %igx-thumb-label !optional;
+            }
+        }
+
+        @include e(label-#{$t}, $m: active) {
+            @extend %igx-thumb--active !optional;
+
+            .label {
+                @extend %igx-thumb-label--active !optional;
             }
         }
     }
@@ -90,10 +98,6 @@
             @include e(thumb-#{$t}) {
                 @extend %igx-thumb-display !optional;
                 @extend %igx-thumb--disabled !optional;
-
-                .label {
-                    @extend %igx-thumb-label !optional;
-                }
 
                 .dot {
                     @extend %igx-thumb-dot--disabled !optional;

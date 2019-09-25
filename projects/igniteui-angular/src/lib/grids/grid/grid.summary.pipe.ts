@@ -1,11 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { IgxGridAPIService } from './grid-api.service';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent, GridSummaryPosition, GridSummaryCalculationMode, IGridDataBindable } from '../grid-base.component';
+import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
 import { IgxGridComponent } from './grid.component';
 import { ISummaryRecord } from '../summaries/grid-summary';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IGroupByResult } from '../../data-operations/grouping-result.interface';
+import { GridSummaryCalculationMode, GridSummaryPosition } from '../common/enums';
 
 /** @hidden */
 interface ISkipRecord {
