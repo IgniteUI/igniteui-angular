@@ -5,12 +5,12 @@ import {
     ViewChild,
     TemplateRef,
     ContentChild,
-    AfterContentInit,
     OnDestroy,
     HostListener,
     ViewChildren,
     QueryList,
-    ChangeDetectorRef
+    ChangeDetectorRef,
+    AfterContentChecked
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { EditorProvider } from '../core/edit-provider';
@@ -63,7 +63,7 @@ export class IgxSliderComponent implements
     EditorProvider,
     OnInit,
     AfterViewInit,
-    AfterContentInit,
+    AfterContentChecked,
     OnDestroy {
 
     // Limit handle travel zone
@@ -714,14 +714,6 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * @hidden
-     */
-    @HostListener('tap', ['$event'])
-    public onTapListener($event) {
-        this.onTap($event);
-    }
-
-    /**
      *Returns whether the `IgxSliderComponent` type is RANGE.
      *```typescript
      *@ViewChild("slider")
@@ -878,7 +870,7 @@ export class IgxSliderComponent implements
     /**
      * @hidden
      */
-    public ngAfterContentInit() {
+    public ngAfterContentChecked() {
         // Calculates the distance between every step in pixels.
         this.stepDistance = this.calculateStepDistance();
     }
@@ -924,13 +916,6 @@ export class IgxSliderComponent implements
         return this.isRange ? this.thumbFrom.nativeElement : this.thumbTo.nativeElement;
     }
 
-    /**
-     *
-     * @hidden
-     */
-    public onTap($event) {
-        // this.update($event.srcEvent.clientX);
-    }
     /**
      *
      * @hidden
