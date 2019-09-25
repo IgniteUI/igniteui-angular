@@ -24,6 +24,9 @@ Next example shows how you can use the Fluent theme.
 }
 ```
 
+### Theme Changes
+`igx-badge-theme` - Removed the `$disable-shadow` property to mitigate confusion when specifying `$shadow` explicitly.
+
 For more information about the theming please read our [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/index.html)  
 
 ### New Features
@@ -64,6 +67,8 @@ For more information about the theming please read our [documentation](https://w
     - introduced a new `readonly` property that doesn't allow user interaction to change the state, but keeps the default active style. Intended for integration in complex controls that handle the interaction and control the checkbox instead through binding.
 - `IgxOverlay`
     - introduced a new `ContainerPositionStrategy`. The new strategy positions the element inside the containing outlet based on the directions passed in trough PositionSettings.
+- `IgxChip`
+    - add `onSelectionDone` event that is triggered after all animations and transitions related to selection have ended.
 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
@@ -76,6 +81,7 @@ For more information about the theming please read our [documentation](https://w
     - **Breaking Change** `onRowSelectionChange` event arguments are changed. The `row` property has been removed and the properties `added`, `removed` and `cancel` are newly added.
     - **Breaking Change** `igxExcelStylePinningTemplate` directive is renamed to `igxExcelStylePinning`.
     - **Breaking Change** `onRowDragEnd` and `onRowDragStart` event arguments are changed - `owner` now holds reference to the grid component instance, while `dragDirective` hold reference to the drag directive.
+    - **Behavioral Change** The behavior of the `isLoading` input no longer depends on the state of the data the grid binds to. Setting it to `true` now shows a loading indicator until it is disabled by the user.
 - `IgxCombo`
     - Combo selection is now consistent when `valueKey` is defined. When `valueKey` is specified, selection is based on the value keys of the items. For example:
     ```html
