@@ -7,5 +7,11 @@
 }
 
 .searchButtons {    
+    display: flex;
     margin-left: 5px;
 }
+
+.searchButtons > igx-icon {
+    user-select: none;
+    position: relative;
+}  

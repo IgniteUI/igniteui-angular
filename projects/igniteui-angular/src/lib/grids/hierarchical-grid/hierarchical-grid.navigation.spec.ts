@@ -25,6 +25,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
     }));
 
     beforeEach(async(() => {
+        resizeObserverIgnoreError();
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
@@ -295,7 +296,6 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
     }));
 
     it('should not lose focus when pressing Ctrl+ArrowDown is pressed at the bottom row(expended) in a child grid.', (async () => {
-        resizeObserverIgnoreError();
         hierarchicalGrid.height = '600px';
         hierarchicalGrid.width = '800px';
         fixture.componentInstance.rowIsland.height = '400px';

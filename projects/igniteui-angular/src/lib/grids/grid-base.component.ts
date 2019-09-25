@@ -43,7 +43,11 @@ import {
     AbsoluteScrollStrategy,
     HorizontalAlignment,
     VerticalAlignment,
-    IgxOverlayService
+    IgxOverlayService,
+    OverlaySettings,
+    PositionSettings,
+    ConnectedPositioningStrategy,
+    ContainerPositionStrategy
 } from '../services/index';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
@@ -55,7 +59,9 @@ import { IgxGridToolbarComponent } from './grid-toolbar.component';
 import { IgxRowComponent } from './row.component';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
+import {
+    FilteringExpressionsTree, IFilteringExpressionsTree, FilteringExpressionsTreeType
+} from '../data-operations/filtering-expressions-tree';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { Transaction, TransactionType, TransactionService, State } from '../services/index';
 import {
@@ -90,9 +96,11 @@ import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { CharSeparatedValueData } from '../services/csv/char-separated-value-data';
+import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import { IgxColumnResizingService } from './grid-column-resizing.service';
 import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './igx-row-selectors.module';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { IFilteringStrategy } from '../data-operations/filtering-strategy';
 import { IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,
      IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective } from './grid/grid.directives';
 import { GridKeydownTargetType, GridSelectionMode, GridSummaryPosition, GridSummaryCalculationMode, FilterMode } from './common/enums';
@@ -236,24 +244,35 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     private _locale = null;
     public _destroyed = false;
     private overlayIDs = [];
+    private _filteringStrategy: IFilteringStrategy;
 
     private _hostWidth;
+    private _advancedFilteringOverlayId: string;
+    private _advancedFilteringPositionSettings: PositionSettings = {
+        verticalDirection: VerticalAlignment.Middle,
+        horizontalDirection: HorizontalAlignment.Center,
+        horizontalStartPoint: HorizontalAlignment.Center,
+        verticalStartPoint: VerticalAlignment.Middle
+    };
 
-
-
+    private _advancedFilteringOverlaySettings: OverlaySettings = {
+        closeOnOutsideClick: false,
+        modal: false,
+        positionStrategy: new ConnectedPositioningStrategy(this._advancedFilteringPositionSettings),
+    };
 
 
     /**
     * @hidden
     */
-   @ViewChild('defaultExpandedTemplate', { read: TemplateRef, static: true })
-   protected defaultExpandedTemplate: TemplateRef<any>;
+    @ViewChild('defaultExpandedTemplate', { read: TemplateRef, static: true })
+    protected defaultExpandedTemplate: TemplateRef<any>;
 
-/**
-   * @hidden
-   */
-   @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
-   protected defaultCollapsedTemplate: TemplateRef<any>;
+    /**
+    * @hidden
+    */
+    @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
+    protected defaultCollapsedTemplate: TemplateRef<any>;
 
 
     /**
@@ -364,10 +383,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
             // clone the filtering expression tree in order to trigger the filtering pipe
             const filteringExpressionTreeClone = new FilteringExpressionsTree(value.operator, value.fieldName);
+            filteringExpressionTreeClone.type = FilteringExpressionsTreeType.Regular;
             filteringExpressionTreeClone.filteringOperands = value.filteringOperands;
             this._filteringExpressionsTree = filteringExpressionTreeClone;
 
-            if (this.filteringService.isFilteringExpressionsTreeEmpty()) {
+            if (this.filteringService.isFilteringExpressionsTreeEmpty() && !this.advancedFilteringExpressionsTree) {
                 this.filteredData = null;
             }
 
@@ -376,6 +396,62 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.summaryService.clearSummaryCache();
             this.notifyChanges();
         }
+    }
+
+    /**
+     * Returns the advanced filtering state of `IgxGridComponent`.
+     * ```typescript
+     * let advancedFilteringExpressionsTree = this.grid.advancedFilteringExpressionsTree;
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    @WatchChanges()
+    @Input()
+    get advancedFilteringExpressionsTree() {
+        return this._advancedFilteringExpressionsTree;
+    }
+
+    /**
+     * Sets the advanced filtering state of the `IgxGridComponent`.
+     * ```typescript
+     * const logic = new FilteringExpressionsTree(FilteringLogic.And);
+     * logic.filteringOperands = [
+     *     {
+     *          condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+     *          fieldName: 'ID',
+     *          searchVal: 1
+     *     },
+     *     {
+     *          condition: IgxStringFilteringOperand.instance().condition('contains'),
+     *          fieldName: 'CompanyName',
+     *          searchVal: 'a'
+     *     }
+     * ];
+     * this.grid.advancedFilteringExpressionsTree = logic;
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    set advancedFilteringExpressionsTree(value) {
+        if (value && value instanceof FilteringExpressionsTree) {
+            // clone the filtering expression tree in order to trigger the filtering pipe
+            const filteringExpressionTreeClone = new FilteringExpressionsTree(value.operator, value.fieldName);
+            filteringExpressionTreeClone.type = FilteringExpressionsTreeType.Advanced;
+            filteringExpressionTreeClone.filteringOperands = value.filteringOperands;
+            this._advancedFilteringExpressionsTree = filteringExpressionTreeClone;
+        } else {
+            this._advancedFilteringExpressionsTree = null;
+        }
+
+        if (this.filteringService.isFilteringExpressionsTreeEmpty() && !this.advancedFilteringExpressionsTree) {
+            this.filteredData = null;
+        }
+
+        this.selectionService.clearHeaderCBState();
+        this.summaryService.clearSummaryCache();
+        this.markForCheck();
+
+        // Wait for the change detection to update filtered data through the pipes and then emit the event.
+        requestAnimationFrame(() => this.onFilteringDone.emit(this._advancedFilteringExpressionsTree));
     }
 
     /**
@@ -770,9 +846,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
+    @WatchChanges()
     @Input()
     set isLoading(value: boolean) {
-        this._isLoading = value;
+        if (this._isLoading !== value) {
+            this._isLoading = value;
+            this.evaluateLoadingState();
+        }
         this.notifyChanges();
     }
 
@@ -880,7 +960,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Sets if the filtering is enabled.
      * By default it's disabled.
      * ```html
-     * <igx-grid #grid [data]="localData" [allowFiltering]="'true" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid [data]="localData" [allowFiltering]="true" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
 	 * @memberof IgxGridBaseComponent
      */
@@ -897,6 +977,37 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.filteringService.filteredColumn = null;
 
             this.notifyChanges(true);
+        }
+    }
+
+    /**
+     * Returns a value indicating whether the advanced filtering is enabled.
+     * ```typescript
+     *  let filtering = this.grid.allowAdvancedFiltering;
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    @Input()
+    get allowAdvancedFiltering() {
+        return this._allowAdvancedFiltering;
+    }
+
+    /**
+     * Sets a value indicating whether the advanced filtering is enabled.
+     * By default it's disabled.
+     * ```html
+     * <igx-grid #grid [data]="localData" [allowAdvancedFiltering]="true" [showToolbar]="true" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridBaseComponent
+     */
+    set allowAdvancedFiltering(value) {
+        if (this._allowAdvancedFiltering !== value) {
+            this._allowAdvancedFiltering = value;
+            this.filteringService.registerSVGIcons();
+
+            if (!this._init) {
+                this.notifyChanges(true);
+            }
         }
     }
 
@@ -976,6 +1087,27 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.summaryService.resetSummaryHeight();
             this.notifyChanges(true);
         }
+    }
+
+    /**
+     * Gets the filtering strategy of the grid.
+     * ```typescript
+     *  let filterStrategy = this.grid.filterStrategy
+     * ```
+     */
+    @Input()
+    get filterStrategy(): IFilteringStrategy {
+        return this._filteringStrategy;
+    }
+
+    /**
+     * Sets the filtering strategy of the grid.
+     * ```html
+     *  <igx-grid #grid [data]="localData" [filterStrategy]="filterStrategy"></igx-grid>
+     * ```
+     */
+    set filterStrategy(classRef: IFilteringStrategy) {
+        this._filteringStrategy = classRef;
     }
 
     /**
@@ -1522,6 +1654,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     @ViewChild(IgxGridColumnResizerComponent, { static: false })
     public resizeLine: IgxGridColumnResizerComponent;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('loadingOverlay', { static: true })
+    public loadingOverlay: ElementRef;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('igxLoadingOverlayOutlet', { read: IgxOverlayOutletDirective, static: true })
+    public loadingOutlet: IgxOverlayOutletDirective;
 
     /**
      * @hidden
@@ -2560,6 +2704,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    protected _advancedFilteringExpressionsTree: IFilteringExpressionsTree;
+    /**
+     * @hidden
+     */
     protected _sortingExpressions: Array<ISortingExpression> = [];
     /**
      * @hidden
@@ -2580,6 +2728,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     protected _hasVisibleColumns;
     protected _allowFiltering = false;
+    protected _allowAdvancedFiltering = false;
     protected _filterMode = FilterMode.quickFilter;
 
     protected observer: ResizeObserver;
@@ -2596,6 +2745,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected _baseFontSize: number;
     private _horizontalForOfs: Array<IgxGridForOfDirective<any>> = [];
     private _multiRowLayoutRowSize = 1;
+    protected _loadingId;
 
     // Caches
     private _totalWidth = NaN;
@@ -2759,7 +2909,21 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.onColumnMoving.pipe(destructor).subscribe(() => this.endEdit(true));
         this.onColumnResized.pipe(destructor).subscribe(() => this.endEdit(true));
 
+        this.overlayService.onOpening.pipe(destructor).subscribe((event) => {
+            if (this._advancedFilteringOverlayId === event.id) {
+                const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
+                if (instance) {
+                    instance.initialize(this.filteringService, this.overlayService, event.id);
+                }
+            }
+        });
+
         this.overlayService.onOpened.pipe(destructor).subscribe((event) => {
+            // do not hide the advanced filtering overlay on scroll
+            if (this._advancedFilteringOverlayId === event.id) {
+                return;
+            }
+
             if (this.overlayService.getOverlayById(event.id).settings.outlet === this.outletDirective &&
                 this.overlayIDs.indexOf(event.id) < 0) {
                 this.overlayIDs.push(event.id);
@@ -2767,6 +2931,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         });
 
         this.overlayService.onClosed.pipe(destructor, filter(() => !this._init)).subscribe((event) => {
+            if (this._advancedFilteringOverlayId === event.id) {
+                this._advancedFilteringOverlayId = null;
+                return;
+            }
+
             const ind = this.overlayIDs.indexOf(event.id);
             if (ind !== -1) {
                 this.overlayIDs.splice(ind, 1);
@@ -2776,6 +2945,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.verticalScrollContainer.onDataChanging.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
             this.calculateGridHeight();
             $event.containerSize = this.calcHeight;
+            this.evaluateLoadingState();
             this.notifyChanges(true);
         });
 
@@ -2962,6 +3132,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.destroy$.next(true);
         this.destroy$.complete();
         this._destroyed = true;
+
+        if (this._advancedFilteringOverlayId) {
+            this.overlayService.hide(this._advancedFilteringOverlayId);
+        }
 
         this.zone.runOutsideAngular(() => {
             this.observer.disconnect();
@@ -3690,8 +3864,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
                     }
                     this.gridAPI.escape_editMode();
                 }
-
-                this.notifyChanges();
+                this.cdr.detectChanges();
             }
         }
     }
@@ -3717,7 +3890,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
             const row = new IgxRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector));
             this.gridAPI.update_row(row, value);
-            this.notifyChanges();
+            this.cdr.detectChanges();
         }
     }
 
@@ -5488,6 +5661,30 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
+    /**
+     * Should be called when data and/or isLoading input changes so that the overlay can be
+     * hidden/shown based on the current value of shouldOverlayLoading
+     */
+    protected evaluateLoadingState() {
+        if (this.shouldOverlayLoading) {
+            // a new overlay should be shown
+            const overlaySettings: OverlaySettings = {
+                outlet: this.loadingOutlet,
+                closeOnOutsideClick: false,
+                positionStrategy: new ContainerPositionStrategy()
+            };
+            if (!this._loadingId) {
+                this._loadingId = this.overlayService.attach(this.loadingOverlay, overlaySettings);
+                this.overlayService.show(this._loadingId, overlaySettings);
+            }
+        } else {
+            if (this._loadingId) {
+                this.overlayService.hide(this._loadingId);
+                this._loadingId = null;
+            }
+        }
+    }
+
     openRowOverlay(id) {
         this.configureRowEditingOverlay(id, this.rowList.length <= MIN_ROW_EDITING_COUNT_THRESHOLD);
 
@@ -5676,6 +5873,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden
+     */
+    get shouldOverlayLoading(): boolean {
+        return this.isLoading && this.data && this.data.length > 0;
+    }
+
+    /**
     * @hidden
     */
     public isSummaryRow(rowData): boolean {
@@ -5724,6 +5928,42 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             } else if (summaryRow) {
                 this._restoreVirtState(summaryRow);
             }
+        }
+    }
+
+    /**
+     * Opens the advanced filtering dialog.
+     */
+    public openAdvancedFilteringDialog() {
+        if (!this._advancedFilteringOverlayId) {
+            this._advancedFilteringOverlaySettings.positionStrategy.settings.target =
+                (this as any).rootGrid ? (this as any).rootGrid.nativeElement : this.nativeElement;
+            this._advancedFilteringOverlaySettings.outlet = this.outletDirective;
+
+            this._advancedFilteringOverlayId = this.overlayService.attach(
+                IgxAdvancedFilteringDialogComponent,
+                this._advancedFilteringOverlaySettings,
+                {
+                    injector: this.viewRef.injector,
+                    componentFactoryResolver: this.resolver
+                });
+            this.overlayService.show(this._advancedFilteringOverlayId, this._advancedFilteringOverlaySettings);
+        }
+    }
+
+    /**
+     * Closes the advanced filtering dialog.
+     * @param applyChanges indicates whether the changes should be applied
+     */
+    public closeAdvancedFilteringDialog(applyChanges: boolean) {
+        if (this._advancedFilteringOverlayId) {
+            const advancedFilteringOverlay = this.overlayService.getOverlayById(this._advancedFilteringOverlayId);
+            const advancedFilteringDialog = advancedFilteringOverlay.componentRef.instance as IgxAdvancedFilteringDialogComponent;
+
+            if (applyChanges) {
+                advancedFilteringDialog.applyChanges();
+            }
+            advancedFilteringDialog.closeDialog();
         }
     }
 }

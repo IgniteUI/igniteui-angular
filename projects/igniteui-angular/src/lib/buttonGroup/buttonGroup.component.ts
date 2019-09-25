@@ -80,6 +80,12 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     public id = `igx-buttongroup-${NEXT_ID++}`;
 
     /**
+     * @hidden
+     */
+    @HostBinding('style.zIndex')
+    public zIndex = 0;
+
+    /**
      * Allows you to set a style using the `itemContentCssClass` input.
      * The value should be the CSS class name that will be applied to the button group.
      *```typescript
@@ -252,7 +258,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
 
     constructor(private _cdr: ChangeDetectorRef, private _renderer: Renderer2,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-            super(_displayDensityOptions);
+        super(_displayDensityOptions);
     }
 
     /**
@@ -361,7 +367,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * @hidden
      */
     public ngAfterContentInit() {
-        this.templateButtons.forEach( (button) => {
+        this.templateButtons.forEach((button) => {
             if (!button.initialDensity) {
                 button.displayDensity = this.displayDensity;
             }
