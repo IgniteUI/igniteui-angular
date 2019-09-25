@@ -3435,6 +3435,11 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
             tick(100);
             expect(chip.componentInstance.selected).toBeFalsy();
+
+            GridFunctions.clickChip(chip);
+            fix.detectChanges();
+            tick(100);
+            expect(chip.componentInstance.selected).toBeTruthy();
     }));
 });
     describe(null, () => {
