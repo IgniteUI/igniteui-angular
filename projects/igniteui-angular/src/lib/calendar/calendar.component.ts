@@ -113,7 +113,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     }
 
     set monthsViewNumber(val: number) {
-        if (this._monthsViewNumber === val || val === 0) {
+        if (this._monthsViewNumber === val || val <= 0) {
             return;
         } else if (this._monthsViewNumber < val) {
             for (let i = this._monthsViewNumber; i < val; i++) {
@@ -561,7 +561,10 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     public deselectDate(value?: Date | Date[]) {
         super.deselectDate(value);
 
-        this.daysView.selectedDates = this.selectedDates;
+        this.monthViews.forEach((view) => {
+            view.selectedDates = this.selectedDates;
+            view.rangeStarted = false;
+        });
         this._onChangeCallback(this.selectedDates);
     }
 
