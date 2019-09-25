@@ -17,7 +17,6 @@ import { IFilteringExpression } from '../../../data-operations/filtering-express
 import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../../../chips';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
 import { KEYS } from '../../../core/utils';
-import { IgxGridNavigationService } from '../../grid-navigation.service';
 
 /**
  * @hidden
@@ -63,7 +62,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     @HostBinding('class.igx-grid__filtering-cell')
     public cssClass = 'igx-grid__filtering-cell';
 
-    constructor(public cdr: ChangeDetectorRef, public filteringService: IgxFilteringService, public navService: IgxGridNavigationService) {
+    constructor(public cdr: ChangeDetectorRef, public filteringService: IgxFilteringService) {
         this.filteringService.subscribeToEvents();
     }
 
