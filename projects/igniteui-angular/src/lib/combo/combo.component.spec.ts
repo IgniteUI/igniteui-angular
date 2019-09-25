@@ -960,8 +960,8 @@ describe('igxCombo', () => {
             // Combo selection is now based on valueKey:
             // if valueKey is specified, only the key will be written in the selection (not the whole data entry)
             const itemID = combo.valueKey !== null && combo.value !== undefined ?
-            combo.data[itemIndex][combo.valueKey] :
-            combo.data[itemIndex];
+                combo.data[itemIndex][combo.valueKey] :
+                combo.data[itemIndex];
             expect(combo.isItemSelected(itemID)).toBeTruthy();
             expect(combo.selectedItems()[selectedItemIndex]).toEqual(itemID);
         }
@@ -971,8 +971,8 @@ describe('igxCombo', () => {
             itemIndex: number) {
             const checkbox = getCheckbox(dropdownElement, itemIndex);
             const itemID = combo.valueKey !== null && combo.value !== undefined ?
-            combo.data[itemIndex][combo.valueKey] :
-            combo.data[itemIndex];
+                combo.data[itemIndex][combo.valueKey] :
+                combo.data[itemIndex];
             expect(checkbox.classList.contains(CSS_CLASS_CHECKED)).toBeFalsy();
             expect(combo.isItemSelected(itemID)).toBeFalsy();
         }
@@ -2286,6 +2286,43 @@ describe('igxCombo', () => {
                 }, 20);
             }, 10);
         });
+
+        it('Should bind combo data to remote data and clear selection properly when items are out of view', async (done) => {
+            const fixture = TestBed.createComponent(IgxComboRemoteDataComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.instance;
+            const selectedItems = [combo.data[0], combo.data[1]];
+            combo.toggle();
+            combo.selectItems([selectedItems[0][combo.valueKey], selectedItems[1][combo.valueKey]]);
+            expect(combo.value).toEqual(`${selectedItems[0][combo.displayKey]}, ${selectedItems[1][combo.displayKey]}`);
+            expect(combo.selectedItems()).toEqual([selectedItems[0][combo.valueKey], selectedItems[1][combo.valueKey]]);
+            combo.virtualScrollContainer.scrollTo(40);
+            await wait(60);
+            fixture.detectChanges();
+            const spyObj = jasmine.createSpyObj('event', ['stopPropagation']);
+            combo.handleClearItems(spyObj);
+            expect(combo.selectedItems().indexOf(selectedItems[0][combo.valueKey]) < 0).toBeTruthy();
+            expect(combo.selectedItems().indexOf(selectedItems[1][combo.valueKey]) < 0).toBeTruthy();
+            expect(combo.value).toBe('');
+            done();
+        });
+
+        it('Should bind combo data to remote data and clear selection properly when items are in view', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxComboRemoteDataComponent);
+            fixture.detectChanges();
+            const combo = fixture.componentInstance.instance;
+            const selectedItems = [combo.data[0], combo.data[1]];
+            combo.toggle();
+            combo.selectItems([selectedItems[0][combo.valueKey], selectedItems[1][combo.valueKey]]);
+            expect(combo.value).toEqual(`${selectedItems[0][combo.displayKey]}, ${selectedItems[1][combo.displayKey]}`);
+            expect(combo.selectedItems()).toEqual([selectedItems[0][combo.valueKey], selectedItems[1][combo.valueKey]]);
+            const spyObj = jasmine.createSpyObj('event', ['stopPropagation']);
+            combo.handleClearItems(spyObj);
+            expect(combo.selectedItems().indexOf(selectedItems[0][combo.valueKey]) < 0).toBeTruthy();
+            expect(combo.selectedItems().indexOf(selectedItems[1][combo.valueKey]) < 0).toBeTruthy();
+            expect(combo.value).toBe('');
+        }));
+
         it('Should render empty template when combo data source is not set', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboEmptyTestComponent);
             fixture.detectChanges();
@@ -3214,7 +3251,7 @@ describe('igxCombo', () => {
             expect(fixture.componentInstance.comboSelectedItems).toEqual([...data].splice(1, 3));
         }));
 
-        it('Should properly initialize when used in a Template form control', fakeAsync (() => {
+        it('Should properly initialize when used in a Template form control', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboInTemplatedFormComponent);
             fix.detectChanges();
             tick();
