@@ -93,12 +93,19 @@
     $legacy-support: true,
     $roundness: null,
     $elevation: true,
+    $direction: ltr
 ) {
     // Stores all excluded component styles
     $excluded: ();
 
     $default-palette: $palette !global;
     $igx-legacy-support: $legacy-support !global;
+
+    @if $direction != ltr and $direction != rtl {
+        $direction: ltr !global;
+    } @else {
+        $direction: $direction !global;
+    }
 
     @if length($exclude) > 0 {
         $excluded: is-component($exclude);
@@ -414,6 +421,7 @@
     $legacy-support: true,
     $roundness: null,
     $elevation: true,
+    $direction: ltr,
 ) {
     $grays: igx-color($palette, 'grays');
     $surface: igx-color($palette, 'surface');
@@ -436,6 +444,7 @@
         $exclude: $exclude,
         $roundness: $roundness,
         $elevation: $elevation,
+        $direction: $direction,
     );
 }
 
@@ -449,6 +458,7 @@
     $legacy-support: true,
     $roundness: null,
     $elevation: true,
+    $direction: ltr,
 ) {
     $grays: igx-color($palette, 'grays');
     $surface: igx-color($palette, 'surface');
@@ -471,6 +481,7 @@
         $exclude: $exclude,
         $roundness: $roundness,
         $elevation: $elevation,
+        $direction: $direction,
     );
 }
 
@@ -481,7 +492,8 @@
 @mixin igx-fluent-theme(
     $palette,
     $exclude: (),
-    $legacy-support: true
+    $legacy-support: true,
+    $direction: ltr,
 ) {
     $primary: igx-color($palette, 'primary');
     $secondary: igx-color($palette, 'secondary');
@@ -502,7 +514,8 @@
         ),
         $schema: $light-fluent-schema,
         $legacy-support: $legacy-support,
-        $exclude: $exclude
+        $exclude: $exclude,
+        $direction: $direction,
     );
 }
 
@@ -513,7 +526,8 @@
 @mixin igx-fluent-dark-theme(
     $palette,
     $exclude: (),
-    $legacy-support: true
+    $legacy-support: true,
+    $direction: ltr,
 ) {
     $primary: igx-color($palette, 'primary');
     $secondary: igx-color($palette, 'secondary');
@@ -534,6 +548,7 @@
         ),
         $schema: $dark-fluent-schema,
         $legacy-support: $legacy-support,
-        $exclude: $exclude
+        $exclude: $exclude,
+        $direction: $direction,
     );
 }
