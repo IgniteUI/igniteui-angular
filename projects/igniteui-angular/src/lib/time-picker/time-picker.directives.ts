@@ -49,9 +49,9 @@ export class IgxItemListDirective {
         return this.type === 'minuteList';
     }
 
-    @HostBinding('class.igx-time-picker__secondList')
-    get secondCSS(): boolean {
-        return this.type === 'secondList';
+    @HostBinding('class.igx-time-picker__secondsList')
+    get secondsCSS(): boolean {
+        return this.type === 'secondsList';
     }
 
     @HostBinding('class.igx-time-picker__ampmList')
@@ -79,8 +79,8 @@ export class IgxItemListDirective {
                 this.timePicker.nextMinute();
                 break;
             }
-            case 'secondList': {
-                this.timePicker.nextSecond();
+            case 'secondsList': {
+                this.timePicker.nextSeconds();
                 break;
             }
             case 'ampmList': {
@@ -100,8 +100,8 @@ export class IgxItemListDirective {
                 this.timePicker.prevMinute();
                 break;
             }
-            case 'secondList': {
-                this.timePicker.prevSecond();
+            case 'secondsList': {
+                this.timePicker.prevSeconds();
                 break;
             }
             case 'ampmList': {
@@ -142,9 +142,9 @@ export class IgxItemListDirective {
 
         if (listName.indexOf('hourList') !== -1 && this.timePicker.minuteList) {
             this.timePicker.minuteList.nativeElement.focus();
-        } else if ((listName.indexOf('hourList') !== -1 || listName.indexOf('minuteList') !== -1) && this.timePicker.secondList) {
-            this.timePicker.secondList.nativeElement.focus();
-        } else if ((listName.indexOf('hourList') !== -1 || listName.indexOf('minuteList') !== -1 || listName.indexOf('secondList') !== -1) && this.timePicker.ampmList) {
+        } else if ((listName.indexOf('hourList') !== -1 || listName.indexOf('minuteList') !== -1) && this.timePicker.secondsList) {
+            this.timePicker.secondsList.nativeElement.focus();
+        } else if ((listName.indexOf('hourList') !== -1 || listName.indexOf('minuteList') !== -1 || listName.indexOf('secondsList') !== -1) && this.timePicker.ampmList) {
             this.timePicker.ampmList.nativeElement.focus();
         }
     }
@@ -158,11 +158,11 @@ export class IgxItemListDirective {
 
         const listName = (event.target as HTMLElement).className;
 
-        if (listName.indexOf('ampmList') !== -1 && this.timePicker.secondList) {
-            this.timePicker.secondList.nativeElement.focus();
-        } else if (listName.indexOf('ampmList') !== -1 || listName.indexOf('secondList') !== -1 && this.timePicker.minuteList) {
+        if (listName.indexOf('ampmList') !== -1 && this.timePicker.secondsList) {
+            this.timePicker.secondsList.nativeElement.focus();
+        } else if (listName.indexOf('ampmList') !== -1 || listName.indexOf('secondsList') !== -1 && this.timePicker.minuteList) {
             this.timePicker.minuteList.nativeElement.focus();
-        } else if ((listName.indexOf('ampmList') !== -1 || listName.indexOf('secondList') !== -1 || listName.indexOf('minuteList') !== -1) && this.timePicker.hourList) {
+        } else if ((listName.indexOf('ampmList') !== -1 || listName.indexOf('secondsList') !== -1 || listName.indexOf('minuteList') !== -1) && this.timePicker.hourList) {
             this.timePicker.hourList.nativeElement.focus();
         }
     }
@@ -315,11 +315,11 @@ export class IgxMinuteItemDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxSecondItem]'
+    selector: '[igxSecondsItem]'
 })
-export class IgxSecondItemDirective {
+export class IgxSecondsItemDirective {
 
-    @Input('igxSecondItem')
+    @Input('igxSecondsItem')
     public value: string;
 
     @HostBinding('class.igx-time-picker__item')
@@ -329,16 +329,16 @@ export class IgxSecondItemDirective {
 
     @HostBinding('class.igx-time-picker__item--selected')
     get selectedCSS(): boolean {
-        return this.isSelectedSecond;
+        return this.isSelectedSeconds;
     }
 
     @HostBinding('class.igx-time-picker__item--active')
     get activeCSS(): boolean {
-        return this.isSelectedSecond && this.itemList.isActive;
+        return this.isSelectedSeconds && this.itemList.isActive;
     }
 
-    get isSelectedSecond(): boolean {
-        return this.timePicker.selectedSecond === this.value;
+    get isSelectedSeconds(): boolean {
+        return this.timePicker.selectedSeconds === this.value;
     }
 
     constructor(@Inject(IGX_TIME_PICKER_COMPONENT)
@@ -348,7 +348,7 @@ export class IgxSecondItemDirective {
     @HostListener('click', ['value'])
     public onClick(item) {
         if (item !== '') {
-            this.timePicker.scrollMinuteIntoView(item);
+            this.timePicker.scrollSecondsIntoView(item);
         }
     }
 }

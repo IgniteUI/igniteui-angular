@@ -50,8 +50,8 @@
             <div *ngIf="showMinutesList" #minuteList [igxItemList]="'minuteList'">
                 <span [igxMinuteItem]="minute" *ngFor="let minute of minuteView">{{ minute }}</span>
             </div>
-            <div *ngIf="showSecondsList" #secondList [igxItemList]="'secondList'">
-                <span [igxSecondItem]="second" *ngFor="let second of secondView">{{ second }}</span>
+            <div *ngIf="showSecondsList" #secondsList [igxItemList]="'secondsList'">
+                <span [igxSecondsItem]="seconds" *ngFor="let seconds of secondsView">{{ seconds }}</span>
             </div>
             <div *ngIf="showAmPmList" #ampmList [igxItemList]="'ampmList'">
                 <span [igxAmPmItem]="ampm" *ngFor="let ampm of ampmView">{{ ampm }}</span>
