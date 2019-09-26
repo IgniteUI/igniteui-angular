@@ -282,12 +282,27 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
      * states.set(1, true);
      * this.grid.expansionStates = states;
      * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-tree-grid #grid [data]="employeeData" [childDataKey]="'employees'" [(expansionStates)]="model.expansionStates">
+     * </igx-tree-grid>
+     * ```
 	 * @memberof IgxTreeGridComponent
      */
     public set expansionStates(value) {
         this._expansionStates = this.cloneMap(value);
-        this.cdr.detectChanges();
+        this.expansionStatesChange.emit(this._expansionStates);
+        if (this.gridAPI.grid) {
+            this.cdr.detectChanges();
+        }
     }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public expansionStatesChange = new EventEmitter<Map<any, boolean>>();
 
     /**
      * @hidden

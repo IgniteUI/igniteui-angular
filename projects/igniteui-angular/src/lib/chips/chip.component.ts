@@ -165,11 +165,22 @@ export class IgxChipComponent extends DisplayDensityBase {
      * ```html
      * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" [selected]="true">
      * ```
+     *
+     * Two-way data binding:
+     * ```html
+     * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" [(selected)]="model.isSelected">
+     * ```
      */
     @Input()
     public set selected(newValue: boolean) {
         this.changeSelection(newValue);
     }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public selectedChange = new EventEmitter<boolean>();
 
     /**
      * Returns if the `IgxChipComponent` is selected.
@@ -438,6 +449,7 @@ export class IgxChipComponent extends DisplayDensityBase {
             if (!onSelectArgs.cancel) {
                 this.renderer.addClass(this.chipArea.nativeElement, this._selectedItemClass);
                 this._selected = newValue;
+                this.selectedChange.emit(this._selected);
             }
         } else if (!newValue && this._selected) {
             this.onSelection.emit(onSelectArgs);
@@ -445,6 +457,7 @@ export class IgxChipComponent extends DisplayDensityBase {
             if (!onSelectArgs.cancel) {
                 this.renderer.removeClass(this.chipArea.nativeElement, this._selectedItemClass);
                 this._selected = newValue;
+                this.selectedChange.emit(this._selected);
             }
         }
     }

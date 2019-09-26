@@ -60,7 +60,7 @@ export class IgxNavigationDrawerComponent implements
     AfterContentInit,
     OnDestroy,
     OnChanges {
-
+    private _isOpen = false;
     @HostBinding('class') public cssClass = 'igx-nav-drawer';
 
     /**
@@ -122,8 +122,26 @@ export class IgxNavigationDrawerComponent implements
      * <!--set-->
      * <igx-nav-drawer [isOpen]='false'></igx-nav-drawer>
      * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <!--set-->
+     * <igx-nav-drawer [(isOpen)]='model.isOpen'></igx-nav-drawer>
+     * ```
      */
-    @Input() public isOpen = false;
+    @Input()
+    public get isOpen() {
+        return this._isOpen;
+    }
+    public set isOpen(value) {
+        this._isOpen = value;
+        this.isOpenChange.emit(this._isOpen);
+    }
+
+    /**
+     *@hidden
+     */
+    @Output() public isOpenChange = new EventEmitter<boolean>();
 
     /**
      * When pinned the drawer is relatively positioned instead of sitting above content.
