@@ -2287,41 +2287,35 @@ describe('igxCombo', () => {
             }, 10);
         });
 
-        it('Should bind combo data to remote data and clear selection properly when items are out of view', async (done) => {
+        it('Should bind combo data to remote data and clear selection properly', async (done) => {
             const fixture = TestBed.createComponent(IgxComboRemoteDataComponent);
             fixture.detectChanges();
             const combo = fixture.componentInstance.instance;
-            const selectedItems = [combo.data[0], combo.data[1]];
+            let selectedItems = [combo.data[0], combo.data[1]];
+            const spyObj = jasmine.createSpyObj('event', ['stopPropagation']);
             combo.toggle();
             combo.selectItems([selectedItems[0][combo.valueKey], selectedItems[1][combo.valueKey]]);
             expect(combo.value).toEqual(`${selectedItems[0][combo.displayKey]}, ${selectedItems[1][combo.displayKey]}`);
             expect(combo.selectedItems()).toEqual([selectedItems[0][combo.valueKey], selectedItems[1][combo.valueKey]]);
+            // Clear items while they are in view
+            combo.handleClearItems(spyObj);
+            expect(combo.selectedItems()).toEqual([]);
+            expect(combo.value).toBe('');
+            selectedItems = [combo.data[2], combo.data[3]];
+            combo.selectItems([selectedItems[0][combo.valueKey], selectedItems[1][combo.valueKey]]);
+            expect(combo.value).toEqual(`${selectedItems[0][combo.displayKey]}, ${selectedItems[1][combo.displayKey]}`);
+
+            // Scroll selected items out of view
             combo.virtualScrollContainer.scrollTo(40);
             await wait(60);
             fixture.detectChanges();
-            const spyObj = jasmine.createSpyObj('event', ['stopPropagation']);
             combo.handleClearItems(spyObj);
-            expect(combo.selectedItems().indexOf(selectedItems[0][combo.valueKey]) < 0).toBeTruthy();
-            expect(combo.selectedItems().indexOf(selectedItems[1][combo.valueKey]) < 0).toBeTruthy();
+            expect(combo.selectedItems()).toEqual([]);
             expect(combo.value).toBe('');
+            combo.selectItems([combo.data[7][combo.valueKey]]);
+            expect(combo.value).toBe(combo.data[7][combo.displayKey]);
             done();
         });
-
-        it('Should bind combo data to remote data and clear selection properly when items are in view', fakeAsync(() => {
-            const fixture = TestBed.createComponent(IgxComboRemoteDataComponent);
-            fixture.detectChanges();
-            const combo = fixture.componentInstance.instance;
-            const selectedItems = [combo.data[0], combo.data[1]];
-            combo.toggle();
-            combo.selectItems([selectedItems[0][combo.valueKey], selectedItems[1][combo.valueKey]]);
-            expect(combo.value).toEqual(`${selectedItems[0][combo.displayKey]}, ${selectedItems[1][combo.displayKey]}`);
-            expect(combo.selectedItems()).toEqual([selectedItems[0][combo.valueKey], selectedItems[1][combo.valueKey]]);
-            const spyObj = jasmine.createSpyObj('event', ['stopPropagation']);
-            combo.handleClearItems(spyObj);
-            expect(combo.selectedItems().indexOf(selectedItems[0][combo.valueKey]) < 0).toBeTruthy();
-            expect(combo.selectedItems().indexOf(selectedItems[1][combo.valueKey]) < 0).toBeTruthy();
-            expect(combo.value).toBe('');
-        }));
 
         it('Should render empty template when combo data source is not set', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboEmptyTestComponent);
