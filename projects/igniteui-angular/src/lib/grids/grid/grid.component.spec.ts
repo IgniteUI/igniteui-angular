@@ -2112,7 +2112,7 @@ export class IgxGridWithCustomFooterComponent extends IgxGridTestComponent {
         `<div>
         <igx-grid #grid [data]="data" [displayDensity]="'cosy'" [autoGenerate]="true">
             <igx-grid-footer>
-            Lqto2016
+            Sample Content
             </igx-grid-footer>
         </igx-grid>
         </div>`
