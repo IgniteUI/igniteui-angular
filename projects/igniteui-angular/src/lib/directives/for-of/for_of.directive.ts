@@ -1576,6 +1576,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
         this.recalcUpdateSizes();
+        this.cdr.markForCheck();
     }
 
     onHScroll(scrollAmount) {
