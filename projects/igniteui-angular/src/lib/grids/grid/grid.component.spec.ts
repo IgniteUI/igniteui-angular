@@ -1710,7 +1710,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
 
             const footer = fix.debugElement.query(By.css('igx-grid-footer')).nativeElement;
-            expect(footer.offsetHeight).not.toBe(0);
+            expect(footer.getBoundingClientRect().top).not.toBe(560);
         });
     });
 
@@ -2123,7 +2123,7 @@ export class IgxGridWithCustomFooterWithNoPaging extends IgxGridTestComponent {
 @Component({
     template:
         `<div [style.width.px]="outerWidth" [style.height.px]="outerHeight">
-            <igx-grid #grid [data]="data" [displayDensity]="density" [autoGenerate]="true"
+            <igx-grid #grid [height]="'560px'" [data]="data" [displayDensity]="density" [autoGenerate]="true"
                 [paging]="paging" [perPage]="pageSize">
             </igx-grid>
         </div>`
