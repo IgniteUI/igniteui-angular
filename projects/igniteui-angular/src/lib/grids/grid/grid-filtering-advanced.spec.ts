@@ -1,4 +1,4 @@
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+﻿import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './index';
@@ -1731,7 +1731,7 @@ describe('IgxGrid - Advanced Filtering', () => {
                 verifyContextMenuVisibility(fix, false);
             }));
 
-            it('Selecting multiple conditions should display the (create group)/(delete filters) context menu.', fakeAsync(() => {
+            it('Selecting multiple conditions should display the (create group)/(delete filters) context menu.', (async() => {
                 // Apply advanced filter through API.
                 const tree = new FilteringExpressionsTree(FilteringLogic.And);
                 tree.filteringOperands.push({
@@ -1759,10 +1759,10 @@ describe('IgxGrid - Advanced Filtering', () => {
 
                 // Select two chips.
                 GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0]);
-                tick(400);
+                await wait(400);
                 fix.detectChanges();
                 GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [1, 1]);
-                tick(400);
+                await wait(400);
                 fix.detectChanges();
 
                 // Verify context menu is visible.
@@ -1771,7 +1771,7 @@ describe('IgxGrid - Advanced Filtering', () => {
 
                 // Unselect one of the two selected chips.
                 GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0]);
-                tick(400);
+                await wait(400);
                 fix.detectChanges();
 
                 // Verify context menu is no longer visible.
@@ -1973,7 +1973,7 @@ describe('IgxGrid - Advanced Filtering', () => {
                 verifyExpressionChipContent(fix, [0, 0], 'ProductName', 'Contains', 'angular');
             }));
 
-            it('Should show/hide group\'s context menu when clicking its operator line.', fakeAsync(() => {
+            it('Should show/hide group\'s context menu when clicking its operator line.', (async() => {
                 // Apply advanced filter through API.
                 const tree = new FilteringExpressionsTree(FilteringLogic.And);
                 tree.filteringOperands.push({
@@ -2002,7 +2002,7 @@ describe('IgxGrid - Advanced Filtering', () => {
                 // Click the innner group's operator line.
                 const operatorLine = GridFunctions.getAdvancedFilteringTreeGroupOperatorLine(fix, [1]);
                 operatorLine.click();
-                tick(400);
+                await wait(400);
                 fix.detectChanges();
 
                 // Verify context menu is visible.
@@ -2011,7 +2011,7 @@ describe('IgxGrid - Advanced Filtering', () => {
 
                 // Click the innner group's operator line again.
                 operatorLine.click();
-                tick(400);
+                await wait(400);
                 fix.detectChanges();
 
                 // Verify context menu is no longer visible.
@@ -2213,7 +2213,7 @@ describe('IgxGrid - Advanced Filtering', () => {
                 expect(firstItem.classList.contains('igx-filter-tree__expression-item')).toBe(true);
             }));
 
-            it('Should close the context menu when clicking its close button.' , fakeAsync(() => {
+            it('Should close the context menu when clicking its close button.' , (async() => {
                 // Apply advanced filter through API.
                 const tree = new FilteringExpressionsTree(FilteringLogic.Or);
                 tree.filteringOperands.push({
@@ -2234,7 +2234,7 @@ describe('IgxGrid - Advanced Filtering', () => {
                 // Click root operator line to open the context menu.
                 const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
                 rootOperatorLine.click();
-                tick(200);
+                await wait(200);
                 fix.detectChanges();
 
                 // Verify context menu is opened.
@@ -2243,7 +2243,7 @@ describe('IgxGrid - Advanced Filtering', () => {
                 // Click close button of context menu.
                 const buttons = GridFunctions.getAdvancedFilteringContextMenuButtons(fix);
                 buttons[0].click();
-                tick(100);
+                await wait(100);
                 fix.detectChanges();
 
                 // Verify context menu is closed.
@@ -2252,7 +2252,7 @@ describe('IgxGrid - Advanced Filtering', () => {
         });
 
         describe('Keyboard Navigation/Interaction', () => {
-            it('Should close the context menu when pressing \'Escape\' on it.' , fakeAsync(() => {
+            it('Should close the context menu when pressing \'Escape\' on it.' , (async() => {
                 // Apply advanced filter through API.
                 const tree = new FilteringExpressionsTree(FilteringLogic.Or);
                 tree.filteringOperands.push({
@@ -2273,7 +2273,7 @@ describe('IgxGrid - Advanced Filtering', () => {
                 // Click root operator line to open the context menu.
                 const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
                 rootOperatorLine.click();
-                tick(200);
+                await wait(200);
                 fix.detectChanges();
 
                 // Verify context menu is opened.
@@ -2281,7 +2281,7 @@ describe('IgxGrid - Advanced Filtering', () => {
 
                 // Press 'Escape' on the context menu.
                 UIInteractions.simulateKeyDownEvent(GridFunctions.getAdvancedFilteringContextMenu(fix), 'Escape');
-                tick(200);
+                await wait(200);
                 fix.detectChanges();
 
                 // Verify context menu is closed.
@@ -2359,7 +2359,7 @@ describe('IgxGrid - Advanced Filtering', () => {
             }));
 
             it('Should select/deselect all child conditions and groups when pressing \'Enter\' on  a group\'s operator line.',
-            fakeAsync(() => {
+            (async() => {
                 // Apply advanced filter through API.
                 const tree = new FilteringExpressionsTree(FilteringLogic.And);
                 tree.filteringOperands.push({
@@ -2386,7 +2386,7 @@ describe('IgxGrid - Advanced Filtering', () => {
                 // and verify that the root group and all of its children become selected.
                 let rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
                 UIInteractions.simulateKeyDownEvent(rootOperatorLine, 'Enter');
-                tick(200);
+                await wait(200);
                 fix.detectChanges();
                 verifyChildrenSelection(GridFunctions.getAdvancedFilteringExpressionsContainer(fix), true);
                 verifyContextMenuVisibility(fix, true);
@@ -2395,7 +2395,7 @@ describe('IgxGrid - Advanced Filtering', () => {
                 // and verify that the root group and all of its children become unselected.
                 rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
                 UIInteractions.simulateKeyDownEvent(rootOperatorLine, 'Enter');
-                tick(200);
+                await wait(200);
                 fix.detectChanges();
                 verifyChildrenSelection(GridFunctions.getAdvancedFilteringExpressionsContainer(fix), false);
                 verifyContextMenuVisibility(fix, false);
@@ -2403,7 +2403,7 @@ describe('IgxGrid - Advanced Filtering', () => {
         });
 
         describe('Localization', () => {
-            it('Should correctly change resource strings for Advanced Filtering dialog.', fakeAsync(() => {
+            it('Should correctly change resource strings for Advanced Filtering dialog.', (async() => {
                 fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
                 grid = fix.componentInstance.grid;
                 grid.resourceStrings = Object.assign({}, grid.resourceStrings, {
@@ -2440,7 +2440,7 @@ describe('IgxGrid - Advanced Filtering', () => {
 
                 const initialAddAndGroupBtn = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
                 initialAddAndGroupBtn.click();
-                tick(100);
+                await wait(100);
                 fix.detectChanges();
 
                 expect(GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[0].querySelector('span').innerText)
@@ -2451,8 +2451,9 @@ describe('IgxGrid - Advanced Filtering', () => {
                     .toBe('My or group');
 
                 // Populate edit inputs.
-                selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
-                selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+                await selectColumnInEditModeExpressionAsync(fix, 1); // Select 'ProductName' column.
+                await selectOperatorInEditModeExpressionAsync(fix, 0); // Select 'Contains' operator.
+
                 let input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
                 sendInputNativeElement(fix, input, 'angular'); // Type filter value.
                 // Commit the populated expression.
@@ -2461,7 +2462,7 @@ describe('IgxGrid - Advanced Filtering', () => {
 
                 const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
                 rootOperatorLine.click();
-                tick(200);
+                await wait(200);
                 fix.detectChanges();
 
                 const buttonGroupItems = GridFunctions.sortNativeElementsHorizontally(
@@ -2476,17 +2477,19 @@ describe('IgxGrid - Advanced Filtering', () => {
 
                 // Close context menu.
                 GridFunctions.clickAdvancedFilteringContextMenuCloseButton(fix);
-                tick(100);
+                await wait(100);
                 fix.detectChanges();
 
                 // Add another expression to root group.
                 let btn = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[0];
                 btn.click();
-                tick(100);
+                await wait(100);
                 fix.detectChanges();
+
                 // Populate edit inputs.
-                selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
-                selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+                await selectColumnInEditModeExpressionAsync(fix, 1); // Select 'ProductName' column.
+                await selectOperatorInEditModeExpressionAsync(fix, 0); // Select 'Contains' operator.
+
                 input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
                 sendInputNativeElement(fix, input, 'script'); // Type filter value.
                 // Commit the populated expression.
@@ -2495,10 +2498,10 @@ describe('IgxGrid - Advanced Filtering', () => {
 
                 // Select two chips.
                 GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0]);
-                tick(500);
+                await wait(500);
                 fix.detectChanges();
                 GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [1]);
-                tick(500);
+                await wait(500);
                 fix.detectChanges();
 
                 expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[1].innerText).toBe('My create and group');
@@ -2507,20 +2510,20 @@ describe('IgxGrid - Advanced Filtering', () => {
 
                 // Close context menu.
                 GridFunctions.clickAdvancedFilteringContextMenuCloseButton(fix);
-                tick(100);
+                await wait(100);
                 fix.detectChanges();
 
                 // Add an 'or' group to root group.
                 btn = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[2];
                 btn.click();
-                tick(100);
+                await wait(100);
                 fix.detectChanges();
 
                 const endGroupButton = GridFunctions.getAdvancedFilteringTreeGroupButtons(fix, [2], 0)[3];
                 expect(endGroupButton.querySelector('span').innerText).toBe('My end group');
             }));
 
-            it('Should correctly change resource strings for Advanced Filtering dialog by using Changei18n.', fakeAsync(() => {
+            it('Should correctly change resource strings for Advanced Filtering dialog by using Changei18n.', (async() => {
                 fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
                 grid = fix.componentInstance.grid;
                 const strings = getCurrentResourceStrings();
@@ -2557,7 +2560,7 @@ describe('IgxGrid - Advanced Filtering', () => {
 
                 const initialAddAndGroupBtn = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
                 initialAddAndGroupBtn.click();
-                tick(100);
+                await wait(100);
                 fix.detectChanges();
 
                 expect(GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[0].querySelector('span').innerText)
@@ -2568,8 +2571,9 @@ describe('IgxGrid - Advanced Filtering', () => {
                     .toBe('My or group');
 
                 // Populate edit inputs.
-                selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
-                selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+                await selectColumnInEditModeExpressionAsync(fix, 1); // Select 'ProductName' column.
+                await selectOperatorInEditModeExpressionAsync(fix, 0); // Select 'Contains' operator.
+
                 let input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
                 sendInputNativeElement(fix, input, 'angular'); // Type filter value.
                 // Commit the populated expression.
@@ -2578,7 +2582,7 @@ describe('IgxGrid - Advanced Filtering', () => {
 
                 const rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
                 rootOperatorLine.click();
-                tick(200);
+                await wait(200);
                 fix.detectChanges();
 
                 const buttonGroupItems = GridFunctions.sortNativeElementsHorizontally(
@@ -2593,17 +2597,18 @@ describe('IgxGrid - Advanced Filtering', () => {
 
                 // Close context menu.
                 GridFunctions.clickAdvancedFilteringContextMenuCloseButton(fix);
-                tick(100);
+                await wait(100);
                 fix.detectChanges();
 
                 // Add another expression to root group.
                 let btn = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[0];
                 btn.click();
-                tick(100);
+                await wait(100);
                 fix.detectChanges();
                 // Populate edit inputs.
-                selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
-                selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+                await selectColumnInEditModeExpressionAsync(fix, 1); // Select 'ProductName' column.
+                await selectOperatorInEditModeExpressionAsync(fix, 0); // Select 'Contains' operator.
+
                 input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
                 sendInputNativeElement(fix, input, 'script'); // Type filter value.
                 // Commit the populated expression.
@@ -2612,10 +2617,10 @@ describe('IgxGrid - Advanced Filtering', () => {
 
                 // Select two chips.
                 GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [0]);
-                tick(500);
+                await wait(500);
                 fix.detectChanges();
                 GridFunctions.clickAdvancedFilteringTreeExpressionChip(fix, [1]);
-                tick(500);
+                await wait(500);
                 fix.detectChanges();
 
                 expect(GridFunctions.getAdvancedFilteringContextMenuButtons(fix)[1].innerText).toBe('My create and group');
@@ -2624,13 +2629,13 @@ describe('IgxGrid - Advanced Filtering', () => {
 
                 // Close context menu.
                 GridFunctions.clickAdvancedFilteringContextMenuCloseButton(fix);
-                tick(100);
+                await wait(100);
                 fix.detectChanges();
 
                 // Add an 'or' group to root group.
                 btn = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[2];
                 btn.click();
-                tick(100);
+                await wait(100);
                 fix.detectChanges();
 
                 const endGroupButton = GridFunctions.getAdvancedFilteringTreeGroupButtons(fix, [2], 0)[3];
@@ -2659,6 +2664,7 @@ describe('IgxGrid - Advanced Filtering', () => {
     });
 });
 
+
 function selectColumnInEditModeExpression(fix, dropdownItemIndex: number) {
     GridFunctions.clickAdvancedFilteringColumnSelect(fix);
     fix.detectChanges();
@@ -2667,11 +2673,27 @@ function selectColumnInEditModeExpression(fix, dropdownItemIndex: number) {
     fix.detectChanges();
 }
 
+async function selectColumnInEditModeExpressionAsync(fix, dropdownItemIndex: number) {
+    GridFunctions.clickAdvancedFilteringColumnSelect(fix);
+    fix.detectChanges();
+    GridFunctions.clickAdvancedFilteringSelectDropdownItem(fix, dropdownItemIndex);
+    await wait();
+    fix.detectChanges();
+}
+
 function selectOperatorInEditModeExpression(fix, dropdownItemIndex: number) {
     GridFunctions.clickAdvancedFilteringOperatorSelect(fix);
     fix.detectChanges();
     GridFunctions.clickAdvancedFilteringSelectDropdownItem(fix, dropdownItemIndex);
     tick();
+    fix.detectChanges();
+}
+
+async function selectOperatorInEditModeExpressionAsync(fix, dropdownItemIndex: number) {
+    GridFunctions.clickAdvancedFilteringOperatorSelect(fix);
+    fix.detectChanges();
+    GridFunctions.clickAdvancedFilteringSelectDropdownItem(fix, dropdownItemIndex);
+    await wait();
     fix.detectChanges();
 }
 

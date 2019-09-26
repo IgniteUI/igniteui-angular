@@ -24,6 +24,9 @@ Next example shows how you can use the Fluent theme.
 }
 ```
 
+### Theme Changes
+`igx-badge-theme` - Removed the `$disable-shadow` property to mitigate confusion when specifying `$shadow` explicitly.
+
 For more information about the theming please read our [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/index.html)  
 
 ### New Features
@@ -64,6 +67,8 @@ For more information about the theming please read our [documentation](https://w
     - introduced a new `readonly` property that doesn't allow user interaction to change the state, but keeps the default active style. Intended for integration in complex controls that handle the interaction and control the checkbox instead through binding.
 - `IgxOverlay`
     - introduced a new `ContainerPositionStrategy`. The new strategy positions the element inside the containing outlet based on the directions passed in trough PositionSettings.
+- `IgxChip`
+    - add `onSelectionDone` event that is triggered after all animations and transitions related to selection have ended.
 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
