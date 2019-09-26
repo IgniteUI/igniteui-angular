@@ -2,7 +2,16 @@
     <div igxFlex igxLayout igxLayoutDir="column">
         <div igxFlex>
                 <h4 class="sample-title">Grid1</h4>
-                <igx-grid #grid1 [data]="localData" [autoGenerate]="true">
+                <igx-grid #grid1 [columnPinning]='true' [paging]='true' [data]="localData" [showToolbar]='true' [autoGenerate]="false">
+                    <igx-column *ngFor="let c of columns" [field]="c.field"
+                    [header]="c.field"
+                    [resizable]="true"
+                    [width]="c.width"
+                    [groupable] = 'true'
+                    [hasSummary] = 'true'
+                    [minWidth]="c.minWidth"
+                    [maxWidth]="c.maxWidth" [editable]='true'>
+                </igx-column>
                 </igx-grid>
 
         </div>
@@ -11,5 +20,19 @@
                 <igx-grid #grid2 [data]="localData" [autoGenerate]="true">
                 </igx-grid>
         </div>
+
+        <div igxFlex>
+            <h4 class="sample-title">HGrid</h4>
+            <igx-hierarchical-grid [showToolbar]='true' [data]="localData" [autoGenerate]="true" #hGrid2>
+                <igx-row-island [key]="'childData'" [autoGenerate]="true" [allowFiltering]='true'  >
+                </igx-row-island>
+            </igx-hierarchical-grid>
+        </div>
+
+    <div igxFlex>
+        <h4 class="sample-title">TreeGrid</h4>
+        <igx-tree-grid childDataKey="Child" [data]="localData" [autoGenerate]="true">
+        </igx-tree-grid>
+    </div>
     </div>
 </div>
