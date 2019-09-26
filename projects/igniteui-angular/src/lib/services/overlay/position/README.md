@@ -7,20 +7,26 @@ Position strategies determine where to display the component in the provided Igx
 |:---------------------------|:-------------------------|
 | HorizontalAlignment.Center | VerticalAlignment.Middle |
 
+2) **Container** - Positions the element inside the containing outlet based on the directions passed in trough PositionSettings. These are Top/Middle/Bottom for verticalDirection and Left/Center/Right for horizontalDirection. Defaults to:
 
-2) **Connected** - Positions the element based on the directions and start point passed in trough PositionSettings. It is possible to either pass a start point or an HTMLElement as a positioning base. Defaults to:
+| horizontalDirection        | verticalDirection        |
+|:---------------------------|:-------------------------|
+| HorizontalAlignment.Center | VerticalAlignment.Middle |
+
+
+3) **Connected** - Positions the element based on the directions and start point passed in trough PositionSettings. It is possible to either pass a start point or an HTMLElement as a positioning base. Defaults to:
 
 | target          | horizontalDirection       |  verticalDirection       | horizontalStartPoint     | verticalStartPoint       |
 |:----------------|:--------------------------|:-------------------------|:-------------------------|:-------------------------|
 | new Point(0, 0) | HorizontalAlignment.Right | VerticalAlignment.Bottom | HorizontalAlignment.Left | VerticalAlignment.Bottom |
 
-3) **Auto** - Positions the element as in **Connected** positioning strategy and re-positions the element in the view port (calculating a different start point) in case the element is partially getting out of view. Defaults to:
+4) **Auto** - Positions the element as in **Connected** positioning strategy and re-positions the element in the view port (calculating a different start point) in case the element is partially getting out of view. Defaults to:
 
 | target          | horizontalDirection       |  verticalDirection       | horizontalStartPoint     | verticalStartPoint       |
 |:----------------|:--------------------------|:-------------------------|:-------------------------|:-------------------------|
 | new Point(0, 0) | HorizontalAlignment.Right | VerticalAlignment.Bottom | HorizontalAlignment.Left | VerticalAlignment.Bottom |
 
-4) **Elastic** - Positions the element as in **Connected** positioning strategy and resize the element to fit in the view port in case the element is partially getting out of view. Defaults to:
+5) **Elastic** - Positions the element as in **Connected** positioning strategy and resize the element to fit in the view port in case the element is partially getting out of view. Defaults to:
 
 | target          | horizontalDirection       |  verticalDirection       | horizontalStartPoint     | verticalStartPoint       | minSize                 |
 |:----------------|:--------------------------|:-------------------------|:-------------------------|:-------------------------|-------------------------|
@@ -58,6 +64,7 @@ import {AutoPositionStrategy, GlobalPositionStrategy, ConnectedPositioningStrate
 | Position Strategy | Name                                                   | Description                                                                       |
 |:------------------|:-------------------------------------------------------|:----------------------------------------------------------------------------------|
 | Global            | `position(contentElement)`                             | Positions the element, based on the horizontal and vertical directions.           |
+| Container         | `position(contentElement)`                             | Positions the element inside the containing outlet based on the directions passed in trough PositionSettings. |
 | Connected         | `position(contentElement, size{})`                     | Positions the element, based on the position strategy used and the size passed in.|
 | Auto              | `position(contentElement, size{}, document?)`          | Positions the element, based on the position strategy used and the size passed in.|
 | Elastic           | `position(contentElement, size{}, document?, minSize?)`| Positions the element, based on the position strategy used and the size passed in.|

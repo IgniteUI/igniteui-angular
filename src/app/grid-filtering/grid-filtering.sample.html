@@ -1,0 +1,60 @@
+<div class="wrapper">
+    <app-page-header title="Grid Filtering">
+        Demonstrates grid's filtering functionality.
+    </app-page-header>
+
+    
+
+    <div class="sample-content">
+        <div class="sample-column">
+            <div class="density-chooser">
+                <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)"></igx-buttongroup>
+            </div>
+
+            <igx-grid
+                #grid1
+                [data]="data"
+                [displayDensity]="density"
+                [allowFiltering]="true"
+                [allowAdvancedFiltering]="true"
+                [rowSelectable]="true"
+                [paging]="false"
+                [width]="'980px'"
+                [height]="'600px'" 
+                [showToolbar]="true"
+                [columnHiding]="true" 
+                [columnPinning]="true"
+                [exportExcel]="true" 
+                [exportCsv]="true" 
+                exportText="Export"
+                exportExcelText="Export to Excel" 
+                exportCsvText="Export to CSV">
+                <igx-column *ngFor="let c of columns" [field]="c.field"
+                                                    [header]="c.field"
+                                                    [movable]="c.movable"
+                                                    [groupable]="true"
+                                                    [resizable]="c.resizable"
+                                                    [width]="c.width"
+                                                    [sortable]="true"
+                                                    [filterable]="true"
+                                                    [editable]="true"
+                                                    [hidden]="c.hidden"
+                                                    [minWidth]="c.minWidth"
+                                                    [maxWidth]="c.maxWidth"
+                                                    [dataType]="c.type">
+                </igx-column>
+            </igx-grid>
+            <div class="sample-buttons">
+                <igx-checkbox [checked]="grid1.allowFiltering" (change)="onAllowFilteringChanged($event)">Allow Filtering</igx-checkbox>
+                <igx-buttongroup [multiSelection]="false" [values]="filterModes" (onSelect)="selectFilterMode($event)"></igx-buttongroup>
+            </div>
+            <div class="sample-buttons">
+                <igx-checkbox [(ngModel)]="grid1.allowAdvancedFiltering">Allow Advanced Filtering</igx-checkbox>
+                <button igxButton="raised" (click)="openAdvancedFiltering()">Open Advanced Filtering</button>
+                <button igxButton="raised" (click)="closeAdvancedFiltering()">Close Advanced Filtering</button>
+                <igx-checkbox #applyChangesCheckbox checked="true">Apply Changes</igx-checkbox>
+                <button igxButton="raised" (click)="clearAdvancedFiltering()">Clear Advanced Filtering</button>
+            </div>
+        </div>
+    </div>
+</div>

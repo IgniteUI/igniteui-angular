@@ -8,6 +8,18 @@
 </div>
 
 <div class="igx-grid-toolbar__actions">
+    <div *ngIf="grid.allowAdvancedFiltering">
+        <button igxButton="flat" [displayDensity]="grid.displayDensity" #advancedFilteringButton name="btnAdvancedFiltering" igxButton igxRipple
+            (click)="showAdvancedFilteringUI()">
+            <div class="igx-grid-toolbar__button-space">
+                <igx-icon [ngClass]="grid.advancedFilteringExpressionsTree ? 'igx-grid-toolbar__adv-filter--filtered' : 'igx-grid-toolbar__adv-filter'">
+                    filter_list
+                </igx-icon>
+                <span>{{grid.resourceStrings.igx_grid_advanced_filter_title}}</span>
+            </div>
+        </button>
+    </div>
+
     <div *ngIf="grid.columnHiding">
         <button igxButton="flat" [displayDensity]="grid.displayDensity" #columnHidingButton name="btnColumnHiding" igxButton igxRipple
             (click)="toggleColumnHidingUI()">
@@ -47,7 +59,6 @@
                 [columnsAreaMaxHeight]="defaultDropDownsMaxHeight"></igx-column-pinning>
         </igx-drop-down>
     </div>
-
 
     <div class="igx-grid-toolbar__dropdown" *ngIf="shouldShowExportButton" id="btnExport">
         <button igxButton="flat" [displayDensity]="grid.displayDensity" igxRipple #btnExport

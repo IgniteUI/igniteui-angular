@@ -32,7 +32,7 @@ import { VirtualHelperComponent } from './virtual.helper.component';
 import { IgxScrollInertiaModule } from './../scroll-inertia/scroll_inertia.directive';
 import { IgxForOfSyncService } from './for_of.sync.service';
 import { Subject } from 'rxjs';
-import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
+import { takeUntil, filter, throttleTime } from 'rxjs/operators';
 import ResizeObserver from 'resize-observer-polyfill';
 import { IBaseEventArgs } from '../../core/utils';
 

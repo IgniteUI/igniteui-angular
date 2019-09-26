@@ -1,6 +1,6 @@
 import {
     Directive, ElementRef, HostListener, Input, NgModule, ChangeDetectorRef, OnInit,
-    Output, EventEmitter, Optional, HostBinding, OnDestroy, Inject
+    Output, EventEmitter, Optional, HostBinding, Inject
 } from '@angular/core';
 import { useAnimation } from '@angular/animations';
 import { scaleInCenter } from '../../animations/scale/index';
@@ -10,7 +10,6 @@ import { HorizontalAlignment, AutoPositionStrategy, PositionSettings, OverlaySet
 import { CommonModule } from '@angular/common';
 import { IgxNavigationService } from '../../core/navigation';
 import { IgxToggleDirective, IgxToggleActionDirective } from '../toggle/toggle.directive';
-import { Subscription } from 'rxjs';
 import { IBaseEventArgs } from '../../core/utils';
 
 export interface ITooltipShowEventArgs extends IBaseEventArgs {

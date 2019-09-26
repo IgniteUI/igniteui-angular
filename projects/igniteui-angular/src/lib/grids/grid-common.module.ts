@@ -25,20 +25,14 @@ import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.c
 import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 import { IgxGridFooterComponent } from './grid-footer/grid-footer.component';
 import {
-    IgxCellEditorTemplateDirective,
-    IgxCellFooterTemplateDirective,
-    IgxCellHeaderTemplateDirective,
-    IgxCellTemplateDirective,
     IgxColumnResizerDirective,
     IgxColumnMovingDragDirective,
     IgxColumnMovingDropDirective,
     IgxGridBodyDirective,
     IgxColumnMovingService,
-    IgxFilterCellTemplateDirective,
     IgxResizeHandleDirective
 } from './grid.common';
 import { IgxGridTransaction } from './grid-base.component';
-import { IgxRowComponent } from './row.component';
 import { IgxChipsModule } from '../chips/chips.module';
 import { IgxDragDropModule } from '../directives/drag-drop/drag-drop.directive';
 import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
@@ -67,6 +61,16 @@ import { IgxGridExcelStyleFilteringModule } from './filtering/excel-style/grid.e
 import { IgxGridDragSelectDirective } from './drag-select.directive';
 import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 import { IgxRowDragModule } from './row-drag.directive';
+import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
+import { IgxSelectModule } from '../select/select.module';
+import {
+    IgxCellFooterTemplateDirective,
+    IgxCellHeaderTemplateDirective,
+    IgxCellEditorTemplateDirective,
+    IgxCellTemplateDirective,
+    IgxFilterCellTemplateDirective
+} from './common/templates';
+import { IgxRowSelectorsModule } from './igx-row-selectors.module';
 /**
  * @hidden
  */
@@ -95,19 +99,20 @@ import { IgxRowDragModule } from './row-drag.directive';
         IgxGridFilteringCellComponent,
         IgxGridFilteringRowComponent,
         IgxSummaryDataPipe,
-        IgxRowComponent,
         IgxGridHeaderGroupComponent,
         IgxSummaryRowComponent,
         IgxSummaryCellComponent,
         IgxGridDragSelectDirective,
         IgxGridColumnResizerComponent,
         IgxFilterCellTemplateDirective,
-        IgxGridFooterComponent
+        IgxGridFooterComponent,
+        IgxAdvancedFilteringDialogComponent
     ],
     entryComponents: [
         IgxColumnComponent,
         IgxColumnGroupComponent,
-        IgxColumnLayoutComponent
+        IgxColumnLayoutComponent,
+        IgxAdvancedFilteringDialogComponent
     ],
     exports: [
         IgxGridCellComponent,
@@ -129,7 +134,6 @@ import { IgxRowDragModule } from './row-drag.directive';
         IgxColumnMovingDragDirective,
         IgxColumnMovingDropDirective,
         IgxGridBodyDirective,
-        IgxRowComponent,
         IgxSummaryDataPipe,
         IgxButtonModule,
         IgxDatePickerModule,
@@ -164,7 +168,9 @@ import { IgxRowDragModule } from './row-drag.directive';
         IgxFilterCellTemplateDirective,
         IgxRowDragModule,
         IgxPaginatorModule,
-        IgxGridFooterComponent
+        IgxGridFooterComponent,
+        IgxAdvancedFilteringDialogComponent,
+        IgxRowSelectorsModule
     ],
     imports: [
         CommonModule,
@@ -193,7 +199,9 @@ import { IgxRowDragModule } from './row-drag.directive';
         IgxGridPipesModule,
         IgxGridExcelStyleFilteringModule,
         IgxRowDragModule,
-        IgxPaginatorModule
+        IgxSelectModule,
+        IgxPaginatorModule,
+        IgxRowSelectorsModule
     ],
     providers: [
         IgxGridSelectionService,

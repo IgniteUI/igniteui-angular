@@ -43,7 +43,7 @@ import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxMaskModule } from '../directives/mask/mask.directive';
 import { IgxOverlayOutletDirective, IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { TimeDisplayFormatPipe, TimeInputFormatPipe } from './time-picker.pipes';
-import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from '../core/i18n/time-picker-resources';
+import { ITimePickerResourceStrings } from '../core/i18n/time-picker-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { KEYS, CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { InteractionMode } from '../core/enums';
