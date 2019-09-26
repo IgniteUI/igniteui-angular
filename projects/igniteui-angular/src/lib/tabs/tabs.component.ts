@@ -36,7 +36,6 @@ export enum TabsType {
 })
 
 export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
-
     /**
     * Provides an observable collection of all `IgxTabsGroupComponent`s.
     * ```typescript
@@ -61,6 +60,11 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     * ```html
     * <igx-tabs selectedIndex="1">
     * ```
+    *
+    * Two-way data binding.
+    * ```html
+    * <igx-tabs [(selectedIndex)]="model.selectedIndex">
+    * ```
     */
     @Input()
     public get selectedIndex(): number {
@@ -80,6 +84,12 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             }
         }
     }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public selectedIndexChange = new EventEmitter<number>();
 
     /**
      * Defines the tab header sizing mode. You can choose between `contentfit` or `fixed`.
@@ -372,6 +382,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             // if there is no new selected tab hide the selection indicator
             this.hideIndicator();
         }
+        this.selectedIndexChange.emit(this._selectedIndex);
     }
 
     private performDeselection(oldTab: IgxTabItemBase): void {
