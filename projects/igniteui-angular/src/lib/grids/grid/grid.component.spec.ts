@@ -8,7 +8,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IgxRowComponent } from '../row.component';
-import { IgxColumnComponent } from '../column.component';
+import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxGridModule } from './index';
 import { DisplayDensity } from '../../core/displayDensity';

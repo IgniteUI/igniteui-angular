@@ -6,7 +6,7 @@ import { IgxTreeGridSimpleComponent, IgxTreeGridPrimaryForeignKeyComponent } fro
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { first } from 'rxjs/operators';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { DropPosition } from '../grid';
+import { DropPosition } from '../moving/moving.service';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 

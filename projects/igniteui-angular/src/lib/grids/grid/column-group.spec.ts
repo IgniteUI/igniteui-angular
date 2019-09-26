@@ -4,7 +4,8 @@ import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild, DebugElement, OnInit, TemplateRef, ElementRef } from '@angular/core';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component';
+import { IgxColumnComponent } from '../columns/column.component';
+import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { By } from '@angular/platform-browser';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
