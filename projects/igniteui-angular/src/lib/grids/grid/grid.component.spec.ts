@@ -1669,7 +1669,7 @@ describe('IgxGrid Component Tests #grid', () => {
         });
     });
 
-    describe('IgxGrid - footer section', () => {
+    fdescribe('IgxGrid - footer section', () => {
         configureTestSuite();
         beforeEach(async(() => {
             TestBed.configureTestingModule({
@@ -1681,14 +1681,17 @@ describe('IgxGrid Component Tests #grid', () => {
             }).compileComponents();
         }));
 
-        it('should be able to display custom content', () => {
+        it('should be able to display custom content even with no paging', () => {
             const fix = TestBed.createComponent(IgxGridWithCustomFooterComponent);
             fix.detectChanges();
-
             const footer = fix.debugElement.query(By.css('igx-grid-footer')).nativeElement;
             const footerContent = footer.textContent.trim();
-
             expect(footerContent).toEqual('Custom content');
+            
+            const grid = fix.componentInstance.grid;
+            grid.paging = false;
+            grid.height = '560px';    
+            expect(footer.getBoundingClientRect().top).toBeLessThan(560);
         });
     });
 
@@ -2105,20 +2108,6 @@ export class IgxGridColumnPercentageWidthComponent extends IgxGridDefaultRenderi
         </div>`
 })
 export class IgxGridWithCustomFooterComponent extends IgxGridTestComponent {
-}
-
-@Component({
-    template:
-        `<div>
-        <igx-grid #grid [data]="data" [displayDensity]="'cosy'" [autoGenerate]="true">
-            <igx-grid-footer>
-            Sample Content
-            </igx-grid-footer>
-        </igx-grid>
-        </div>`
-})
-export class IgxGridWithCustomFooterWithNoPaging extends IgxGridTestComponent {
-
 }
 @Component({
     template:
