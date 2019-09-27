@@ -9,7 +9,9 @@ import {
     QueryList,
     TemplateRef,
     forwardRef,
-    OnDestroy
+    OnDestroy,
+    Output,
+    EventEmitter
 } from '@angular/core';
 import { DataType } from '../data-operations/data-util';
 import { GridBaseAPIService } from './api.service';
@@ -218,14 +220,20 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     /**
      * Sets the column hidden property.
      * Default value is `false`.
-     * ```typescript
+     * ```html
      * <igx-column [hidden] = "true"></igx-column>
+     * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-column [(hidden)] = "model.isHidden"></igx-column>
      * ```
      * @memberof IgxColumnComponent
      */
     set hidden(value: boolean) {
         if (this._hidden !== value) {
             this._hidden = value;
+            this.hiddenChange.emit(this._hidden);
             if (this.columnLayoutChild && this.parent.hidden !== value) {
                 this.parent.hidden = value;
                 return;
@@ -239,6 +247,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             }
         }
     }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public hiddenChange = new EventEmitter<boolean>();
     /**
      * Gets whether the hiding is disabled.
      * ```typescript
@@ -290,6 +304,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * ```html
      * <igx-column [width] = "'25%'"></igx-column>
      * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-column [(width)]="model.columns[0].width"></igx-column>
+     * ```
      * @memberof IgxColumnComponent
      */
     public set width(value: string) {
@@ -301,8 +320,15 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             if (this.grid) {
                 this.cacheCalcWidth();
             }
+            this.widthChange.emit(this._width);
         }
     }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public widthChange = new EventEmitter<string>();
 
     /**
      * @hidden
@@ -483,6 +509,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * ```html
      * <igx-column [pinned] = "true"></igx-column>
      * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-column [(pinned)] = "model.columns[0].isPinned"></igx-column>
+     * ```
      * @memberof IgxColumnComponent
      */
     public set pinned(value: boolean) {
@@ -495,8 +526,16 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
                will re-init the group (if present)
             */
             this._pinned = value;
+            this.pinnedChange.emit(this._pinned);
         }
     }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public pinnedChange = new EventEmitter<boolean>();
+
     /**
      * @deprecated
      * Gets/Sets the `id` of the `igx-grid`.
@@ -1356,6 +1395,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         }
 
         this._pinned = true;
+        this.pinnedChange.emit(this._pinned);
         this._unpinnedIndex = grid._unpinnedColumns.indexOf(this);
         index = index !== undefined ? index : grid._pinnedColumns.length;
         const targetColumn = grid._pinnedColumns[index];
@@ -1420,6 +1460,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         index = (index !== undefined ? index :
             this._unpinnedIndex !== undefined ? this._unpinnedIndex : this.index);
         this._pinned = false;
+        this.pinnedChange.emit(this._pinned);
 
         const targetColumn = grid._unpinnedColumns[index];
 
@@ -1769,15 +1810,28 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     }
     /**
      * Sets the column group hidden property.
-     * ```typescript
+     * ```html
      * <igx-column [hidden] = "true"></igx-column>
+     * ```
+     *
+     * Two-way data binding
+     * ```html
+     * <igx-column [(hidden)] = "model.columns[0].isHidden"></igx-column>
      * ```
      * @memberof IgxColumnGroupComponent
      */
     set hidden(value: boolean) {
         this._hidden = value;
+        this.hiddenChange.emit(this._hidden);
         this.children.forEach(child => child.hidden = value);
     }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public hiddenChange = new EventEmitter<boolean>();
+
     /**
      *@hidden
      */
