@@ -7,7 +7,7 @@ import { IgxInputDirective } from '../input-group';
 import { IgxGridHeaderComponent } from '../grids/headers/grid-header.component';
 import { IgxChipComponent } from '../chips';
 import { IgxGridComponent } from '../grids/grid/grid.component';
-import { IgxColumnGroupComponent } from '../grids/column.component';
+import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
 import { IgxGridHeaderGroupComponent } from '../grids/headers/grid-header-group.component';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';

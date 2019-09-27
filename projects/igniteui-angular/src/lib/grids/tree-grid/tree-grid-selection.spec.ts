@@ -950,14 +950,14 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             const context = { index: 0, rowID: 1, selected: false };
             const contextUnselect = { index: 0, rowID: 1, selected: true };
             spyOn(fix.componentInstance, 'onRowCheckboxClick').and.callThrough();
-            firstCheckbox.click();
+            (firstCheckbox as HTMLElement).click();
             fix.detectChanges();
 
             expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledTimes(1);
             expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), context);
 
             // Verify correct properties when unselecting a row
-            firstCheckbox.click();
+            (firstCheckbox as HTMLElement).click();
             fix.detectChanges();
 
             expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledTimes(2);
