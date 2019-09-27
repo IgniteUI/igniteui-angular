@@ -129,9 +129,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     @ViewChild('inputGroup', { read: ElementRef, static: false })
     protected inputGroup: ElementRef;
 
-    @ViewChild('dropDownTarget', { read: ElementRef, static: false })
-    protected inputGroupDate: ElementRef;
-
     @ViewChild('inputGroupPrefix', { read: ElementRef, static: false })
     protected inputGroupPrefix: ElementRef;
 
@@ -449,9 +446,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             if (focusedElement.className === 'igx-chip__remove') {
                 return;
             }
-            if (!(focusedElement &&
-                (this.inputGroup !== undefined ? this.inputGroup.nativeElement.contains(focusedElement) :
-                    this.inputGroupDate.nativeElement.contains(focusedElement)))
+            if (!(focusedElement && this.inputGroup.nativeElement.contains(focusedElement))
                 && this.dropDownConditions.collapsed) {
                 this.commitInput();
             }
@@ -490,7 +485,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     /*
     * noop
     */
-    public noop() {}
+    public noop() { }
 
     /**
      *  Event handler for date picker's selection.
@@ -541,8 +536,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     public onChipPointerdown(args, chip: IgxChipComponent) {
         const activeElement = document.activeElement;
         this._cancelChipClick = chip.selected && activeElement &&
-            (this.inputGroup !== undefined ? this.inputGroup.nativeElement.contains(activeElement) :
-                this.inputGroupDate.nativeElement.contains(activeElement));
+            this.inputGroup.nativeElement.contains(activeElement);
     }
 
     public onChipClick(args, item: ExpressionUI) {

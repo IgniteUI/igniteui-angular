@@ -50,7 +50,7 @@
         (onSelection)="onDateSelected($event)"
         (onClose)="datePickerClose()">
         <ng-template igxDatePickerTemplate let-openDialog="openDialog">
-            <igx-input-group #dropDownTarget type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true" (focusout)="onInputGroupFocusout()">
+            <igx-input-group #inputGroup type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true" (focusout)="onInputGroupFocusout()">
                 <igx-prefix #inputGroupPrefix
                             tabindex="0"
                             (click)="toggleConditionsDropDown(inputGroupPrefix)"
@@ -61,7 +61,7 @@
                 <input #input
                        igxInput
                        tabindex="0"
-                       (click)="expression.condition.isUnary ? noop() : openDialog(dropDownTarget.element.nativeElement)"
+                       (click)="expression.condition.isUnary ? noop() : openDialog(inputGroup.element.nativeElement)"
                        [placeholder]="placeholder"
                        autocomplete="off"
                        [value]="value | igxdate: filteringService.grid.locale"
