@@ -551,16 +551,16 @@ describe('IgxSlider', () => {
         });
 
         it('labels should show/hide on pointer up/down', async() => {
-            const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS)).nativeElement;
-            sliderEl.dispatchEvent( new PointerEvent('pointerdown', { pointerId: 1 }));
+            const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS));
+            sliderEl.nativeElement.dispatchEvent( new PointerEvent('pointerdown', { pointerId: 1 }));
             await wait(50);
             fixture.detectChanges();
 
             expect(sliderEl).toBeDefined();
-            let activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-to--active'));
+            let activeThumb = sliderEl.query(By.css('.igx-slider__thumb-to--active'));
             expect(activeThumb).not.toBeNull();
 
-            sliderEl.dispatchEvent( new PointerEvent('pointerup'));
+            sliderEl.nativeElement.dispatchEvent( new PointerEvent('pointerup', { pointerId: 1 }));
             await wait(slider.thumbLabelVisibilityDuration + 10);
             fixture.detectChanges();
 
@@ -569,26 +569,26 @@ describe('IgxSlider', () => {
         });
 
         it('should be able to change thumbLabelVisibilityDuration', async() => {
-            const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS)).nativeElement;
+            const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS));
             slider.thumbLabelVisibilityDuration = 1000;
-            sliderEl.dispatchEvent( new PointerEvent('pointerdown', { pointerId: 1 }));
+            sliderEl.nativeElement.dispatchEvent( new PointerEvent('pointerdown', { pointerId: 1 }));
             await wait(50);
             fixture.detectChanges();
 
             expect(sliderEl).toBeDefined();
-            let activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-to--active'));
+            let activeThumb = sliderEl.query(By.css('.igx-slider__thumb-to--active'));
             expect(activeThumb).not.toBeNull();
 
-            sliderEl.dispatchEvent( new PointerEvent('pointerup'));
+            sliderEl.nativeElement.dispatchEvent( new PointerEvent('pointerup', { pointerId: 1 }));
             await wait(750);
             fixture.detectChanges();
 
-            activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-to--active'));
+            activeThumb = sliderEl.query(By.css('.igx-slider__thumb-to--active'));
             expect(activeThumb).not.toBeNull();
 
             await wait(300);
             fixture.detectChanges();
-            activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-to--active'));
+            activeThumb = sliderEl.query(By.css('.igx-slider__thumb-to--active'));
             expect(activeThumb).toBeNull();
         });
 
@@ -830,7 +830,7 @@ describe('IgxSlider', () => {
             let activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-from--active'));
             expect(activeThumb).not.toBeNull();
 
-            sliderEl.dispatchEvent( new PointerEvent('pointerup'));
+            sliderEl.dispatchEvent( new PointerEvent('pointerup', { pointerId: 1}));
             await wait(slider.thumbLabelVisibilityDuration + 10);
             fixture.detectChanges();
 
@@ -849,7 +849,7 @@ describe('IgxSlider', () => {
             let activeThumb = fixture.debugElement.query(By.css('.igx-slider__thumb-from--active'));
             expect(activeThumb).not.toBeNull();
 
-            sliderEl.dispatchEvent( new PointerEvent('pointerup'));
+            sliderEl.dispatchEvent( new PointerEvent('pointerup', { pointerId: 1}));
             await wait(750);
             fixture.detectChanges();
 
