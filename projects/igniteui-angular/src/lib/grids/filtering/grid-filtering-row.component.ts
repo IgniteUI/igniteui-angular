@@ -539,7 +539,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
     public onChipPointerdown(args, chip: IgxChipComponent) {
         const activeElement = document.activeElement;
-        this._cancelChipClick = chip.selected && activeElement && this.inputGroup.nativeElement.contains(activeElement);
+        this._cancelChipClick = chip.selected && activeElement &&
+            this.inputGroup.nativeElement.contains(activeElement);
     }
 
     public onChipClick(args, item: ExpressionUI) {
