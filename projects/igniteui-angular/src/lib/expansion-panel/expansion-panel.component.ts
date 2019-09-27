@@ -27,6 +27,7 @@ export interface AnimationSettings {
     providers: [{ provide: IGX_EXPANSION_PANEL_COMPONENT, useExisting: IgxExpansionPanelComponent }]
 })
 export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterContentInit {
+    private _collapsed = true;
     /**
      * Sets/gets the animation settings of the expansion panel component
      * Open and Close animation should be passed
@@ -95,9 +96,26 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
      * ```html
      *  this.panel.collapsed = true;
      * ```
+     *
+     * Two-way data binding:
+     * ```html
+     * <igx-expansion-panel [(collapsed)]="model.isCollapsed"></igx-expansion-panel>
+     * ```
      */
     @Input()
-    public collapsed = true;
+    public get collapsed(): boolean {
+        return this._collapsed;
+    }
+    public set collapsed(value) {
+        this._collapsed = value;
+        this.collapsedChange.emit(this._collapsed);
+    }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public collapsedChange = new EventEmitter<boolean>();
 
     /**
      * Emitted when the expansion panel finishes collapsing
