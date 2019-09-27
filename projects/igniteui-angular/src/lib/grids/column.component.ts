@@ -612,7 +612,7 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      * Gets the column `sortStrategy`.
      * ```typescript
-     * let sortStrategy = this.column.sortStrategy'
+     * let sortStrategy = this.column.sortStrategy
      * ```
      * @memberof IgxColumnComponent
      */
@@ -624,10 +624,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * Sets the column `sortStrategy`.
      * ```typescript
      * this.column.sortStrategy = new CustomSortingStrategy().
-     *
-     * class CustomSortingStrategy extends SortingStrategy {
-     * ...
-     * }
+     * class CustomSortingStrategy extends SortingStrategy {...}
      * ```
      * @memberof IgxColumnComponent
      */
@@ -1536,7 +1533,6 @@ export class IgxColumnComponent implements AfterContentInit {
      * Autosize the column to the longest currently visible cell value, including the header cell.
      * ```typescript
      * @ViewChild('grid') grid: IgxGridComponent;
-     *
      * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
      * column.autosize();
      * ```
