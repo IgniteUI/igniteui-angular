@@ -99,8 +99,8 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
     /**
      * @hidden
      */
-    public activeViewDecadeKB(event, args: Date) {
-        super.activeViewDecadeKB(event, args);
+    public activeViewDecadeKB(event) {
+        super.activeViewDecadeKB(event);
 
         if (event.key === KEYS.RIGHT_ARROW || event.key === KEYS.RIGHT_ARROW_IE) {
             event.preventDefault();
@@ -120,8 +120,8 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
     /**
      * @hidden
      */
-    public activeViewDecade(args: Date) {
-        super.activeViewDecade(args);
+    public activeViewDecade() {
+        super.activeViewDecade();
 
         requestAnimationFrame(() => {
             this.dacadeView.el.nativeElement.focus();

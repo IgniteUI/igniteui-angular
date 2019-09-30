@@ -74,7 +74,7 @@ export class IgxMonthPickerBase extends IgxCalendarBase {
     /**
      * @hidden
      */
-    public activeViewDecade(args?: Date, event?): void {
+    public activeViewDecade(args?: Date): void {
         this._activeView = CalendarView.DECADE;
     }
 

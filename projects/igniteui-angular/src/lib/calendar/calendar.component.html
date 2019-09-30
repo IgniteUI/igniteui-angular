@@ -8,7 +8,7 @@
         class="igx-calendar-picker__date">
         {{ formattedMonth(getViewDate(obj.index)) }}
     </span>
-    <span tabindex="0" #yearsBtn (keydown)="activeViewDecadeKB($event, getViewDate(obj.index))" (click)="activeViewDecade(getViewDate(obj.index), $event)"
+    <span tabindex="0" #yearsBtn (keydown)="activeViewDecadeKB($event, getViewDate(obj.index))" (click)="activeViewDecade(getViewDate(obj.index))"
         class="igx-calendar-picker__date">
         {{ formattedYear(getViewDate(obj.index)) }}
     </span>
