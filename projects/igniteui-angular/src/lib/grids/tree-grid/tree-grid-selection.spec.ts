@@ -21,7 +21,7 @@ import {
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { IgxRowSelectorsModule } from '../igx-row-selectors.module';
+import { IgxGridSelectionModule } from '../selection/selection.module';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 
@@ -40,7 +40,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                 IgxTreeGridRowEditingTransactionComponent,
                 IgxTreeGridCustomRowSelectorsComponent
             ],
-            imports: [IgxTreeGridModule, NoopAnimationsModule, IgxRowSelectorsModule]
+            imports: [IgxTreeGridModule, NoopAnimationsModule, IgxGridSelectionModule]
         })
             .compileComponents();
     }));
@@ -950,14 +950,14 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             const context = { index: 0, rowID: 1, selected: false };
             const contextUnselect = { index: 0, rowID: 1, selected: true };
             spyOn(fix.componentInstance, 'onRowCheckboxClick').and.callThrough();
-            firstCheckbox.click();
+            (firstCheckbox as HTMLElement).click();
             fix.detectChanges();
 
             expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledTimes(1);
             expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), context);
 
             // Verify correct properties when unselecting a row
-            firstCheckbox.click();
+            (firstCheckbox as HTMLElement).click();
             fix.detectChanges();
 
             expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledTimes(2);

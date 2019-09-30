@@ -7,6 +7,7 @@ import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
 import { IgxDropDownBase } from './drop-down.base';
+import { IgxDropDownItemBase } from './drop-down-item.base';
 
 export * from './drop-down.component';
 export * from './drop-down-item.component';
@@ -23,6 +24,7 @@ export * from './drop-down-group.component';
     declarations: [
         IgxDropDownBase,
         IgxDropDownComponent,
+        IgxDropDownItemBase,
         IgxDropDownItemComponent,
         IgxDropDownGroupComponent,
         IgxDropDownItemNavigationDirective

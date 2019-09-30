@@ -1,5 +1,5 @@
 import { IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down.common';
-import { Input, HostBinding, HostListener, ElementRef, Optional, Inject, DoCheck } from '@angular/core';
+import { Input, HostBinding, HostListener, ElementRef, Optional, Inject, DoCheck, Directive } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { DeprecateProperty, showMessage } from '../core/deprecateDecorators';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
@@ -14,7 +14,10 @@ let warningShown = false;
  * Parent component (has to be used under a parent with type `IDropDownBase`)
  * Method for handling click on Host()
  */
-export abstract class IgxDropDownItemBase implements DoCheck {
+@Directive({
+    selector: '[IgxDropDownItemBase]'
+})
+export class IgxDropDownItemBase implements DoCheck {
     /**
      * @hidden
      */

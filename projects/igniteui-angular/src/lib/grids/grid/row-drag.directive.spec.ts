@@ -11,10 +11,11 @@ import { Point } from '../../services';
 
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
-import { IgxColumnComponent } from '../column.component';
+import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxRowDragDirective } from '../row-drag.directive';
-import { IRowDragStartEventArgs, IgxGridBaseComponent, IRowDragEndEventArgs } from '../grid-base.component';
+import { IRowDragStartEventArgs, IRowDragEndEventArgs } from '../common/events';
+import { IgxGridBaseComponent } from '../grid-base.component';
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';

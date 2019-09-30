@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridModule } from './index';
-import { IgxColumnGroupComponent } from '../column.component';
+import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxInputDirective } from '../../directives/input/input.directive';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import {

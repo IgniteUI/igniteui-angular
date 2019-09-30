@@ -1156,21 +1156,21 @@ describe('IgxHierarchicalGrid custom template', () => {
         let rows = hierarchicalGrid.dataRowList.toArray();
         for (const row of rows) {
             const expander =  row.nativeElement.querySelector('.igx-grid__hierarchical-expander');
-            expect(expander.innerText).toBe('COLLAPSED');
+            expect((expander as HTMLElement).innerText).toBe('COLLAPSED');
         }
         hierarchicalGrid.expandChildren = true;
         fixture.detectChanges();
         rows = hierarchicalGrid.dataRowList.toArray();
         for (const row of rows) {
             const expander =  row.nativeElement.querySelector('.igx-grid__hierarchical-expander');
-            expect(expander.innerText).toBe('EXPANDED');
+            expect((expander as HTMLElement).innerText).toBe('EXPANDED');
         }
 
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         const childRows = childGrid.dataRowList.toArray();
         for (const row of childRows) {
             const expander =  row.nativeElement.querySelector('.igx-grid__hierarchical-expander');
-            expect(expander.innerText).toBe('COLLAPSED');
+            expect((expander as HTMLElement).innerText).toBe('COLLAPSED');
         }
 
         expect((hierarchicalGrid as any).headerHierarchyExpander.nativeElement.innerText).toBe('EXPANDED');
