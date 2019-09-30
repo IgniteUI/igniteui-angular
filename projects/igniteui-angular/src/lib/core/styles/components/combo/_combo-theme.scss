@@ -41,6 +41,9 @@
 @mixin igx-combo($theme) {
     @include igx-root-css-vars($theme);
 
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
+
     %igx-combo {
         position: relative;
         display: block;
@@ -52,14 +55,14 @@
     }
 
     %igx-combo__checkbox {
-        margin-right: rem(8);
+        margin-#{$right}: rem(8);
     }
 
 
     [dir='rtl'] {
         %igx-combo__checkbox {
-            margin-right: 0;
-            margin-left: rem(8);
+            margin-#{$right}: 0;
+            margin-#{$left}: rem(8);
         }
     }
 
