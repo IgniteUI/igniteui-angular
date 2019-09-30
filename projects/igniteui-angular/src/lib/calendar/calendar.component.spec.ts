@@ -13,7 +13,7 @@ import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxDayItemComponent } from './days-view/day-item.component';
 
-fdescribe('IgxCalendar', () => {
+describe('IgxCalendar', () => {
     configureTestSuite();
     beforeEach(() => {
         TestBed.configureTestingModule({
