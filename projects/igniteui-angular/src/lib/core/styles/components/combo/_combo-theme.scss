@@ -58,14 +58,6 @@
         margin-#{$right}: rem(8);
     }
 
-
-    [dir='rtl'] {
-        %igx-combo__checkbox {
-            margin-#{$right}: 0;
-            margin-#{$left}: rem(8);
-        }
-    }
-
     %igx-combo__drop-down {
         position: absolute;
         width: 100%;
