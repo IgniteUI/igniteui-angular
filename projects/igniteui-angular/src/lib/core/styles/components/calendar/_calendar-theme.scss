@@ -387,6 +387,14 @@
         }
     }
 
+    %cal-picker-prev {
+        left: 0
+    }
+
+    %cal-picker-next {
+        right: 0
+    }
+
     %cal-picker-date {
         color: --var($theme, 'picker-text-color');
         text-align: center;

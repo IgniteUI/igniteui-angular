@@ -99,8 +99,8 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
     /**
      * @hidden
      */
-    public activeViewDecadeKB(event) {
-        super.activeViewDecadeKB(event);
+    public activeViewDecadeKB(event, args: Date) {
+        super.activeViewDecadeKB(event, args);
 
         if (event.key === KEYS.RIGHT_ARROW || event.key === KEYS.RIGHT_ARROW_IE) {
             event.preventDefault();
@@ -120,8 +120,8 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
     /**
      * @hidden
      */
-    public activeViewDecade() {
-        super.activeViewDecade();
+    public activeViewDecade(args: Date) {
+        super.activeViewDecade(args);
 
         requestAnimationFrame(() => {
             this.dacadeView.el.nativeElement.focus();
@@ -185,7 +185,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
         this.onSelection.emit(this.selectedDates);
 
         requestAnimationFrame(() => {
-            this.yearsBtn.nativeElement.focus();
+            if (this.yearsBtn) { this.yearsBtn.nativeElement.focus(); }
         });
     }
 
