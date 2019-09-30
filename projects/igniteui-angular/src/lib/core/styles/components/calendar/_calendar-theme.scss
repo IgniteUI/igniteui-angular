@@ -305,6 +305,8 @@
         fluent:--var($theme, 'date-current-text-color')
     ), map-get($theme, variant));
 
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
 
     %cal-display {
         display: flex;
@@ -317,7 +319,7 @@
     }
 
     %cal-display + %cal-display {
-        margin-left: 1rem;
+        margin-#{$left}: 1rem;
     }
 
     %cal-display--vertical {
@@ -366,14 +368,19 @@
         }
     }
 
+    %cal-picker-dates {
+        display: flex;
+        justify-content: center;
+    }
+
     %cal-picker-arrow {
+        position: absolute;
         display: inline-flex;
         justify-content: center;
         color: --var($theme, 'picker-arrow-color');
         user-select: none;
         outline: none;
         cursor: pointer;
-        position: absolute;
         height: 100%;
         align-items: center;
 
@@ -382,15 +389,24 @@
             color: --var($theme, 'picker-arrow-hover-color');
         }
 
-        [dir='rtl'] & {
-            transform: scaleX(-1)
+        @include if-rtl() {
+            transform: scaleX(-1);
         }
+    }
+
+    %cal-picker-arrow__prev {
+        #{$left}: 0;
+    }
+
+    %cal-picker-arrow__next {
+        #{$right}: 0;
     }
 
     %cal-picker-date {
         color: --var($theme, 'picker-text-color');
         text-align: center;
         outline: none;
+        padding: 0 rem(2px);
 
         &:hover,
         &:focus {

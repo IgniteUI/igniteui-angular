@@ -178,15 +178,21 @@
 @include b(igx-calendar-picker) {
     @extend %cal-picker-display !optional;
 
+    @include e(dates) {
+        @extend %cal-picker-dates !optional;
+    }
+
     @include e(date) {
         @extend %cal-picker-date !optional;
     }
 
     @include e(prev) {
         @extend %cal-picker-arrow !optional;
+        @extend %cal-picker-arrow__prev !optional;
     }
 
     @include e(next) {
         @extend %cal-picker-arrow !optional;
+        @extend %cal-picker-arrow__next !optional;
     }
 }
