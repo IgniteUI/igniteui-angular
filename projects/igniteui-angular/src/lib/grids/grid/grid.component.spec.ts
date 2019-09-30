@@ -1695,28 +1695,6 @@ describe('IgxGrid Component Tests #grid', () => {
         });
     });
 
-    describe('IgxGrid - footer with no paging', () => {
-        configureTestSuite();
-        beforeEach(async() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    IgxGridWithCustomFooterWithNoPaging
-                ],
-                imports: [
-                    NoopAnimationsModule, IgxGridModule
-                ]
-            }).compileComponents();
-        });
-
-        it('should display footer even when no paging', () => {
-            const fix = TestBed.createComponent(IgxGridWithCustomFooterWithNoPaging);
-            fix.detectChanges();
-
-            const footer = fix.debugElement.query(By.css('igx-grid-footer')).nativeElement;
-            expect(footer.getBoundingClientRect().top).not.toBe(560);
-        });
-    });
-
     describe('IgxGrid - with custom pagination template', () => {
         configureTestSuite();
         beforeEach(async(() => {
