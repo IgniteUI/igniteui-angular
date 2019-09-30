@@ -32,7 +32,12 @@ import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { getNodeSizeViaRange } from '../../core/utils';
 import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxDateSummaryOperand } from '../summaries/grid-summary';
-import { IgxCellTemplateDirective, IgxCellHeaderTemplateDirective, IgxCellEditorTemplateDirective, IgxFilterCellTemplateDirective } from './templates.directive';
+import {
+    IgxCellTemplateDirective,
+    IgxCellHeaderTemplateDirective,
+    IgxCellEditorTemplateDirective,
+    IgxFilterCellTemplateDirective
+} from './templates.directive';
 import { MRLResizeColumnInfo, MRLColumnSizeInfo } from './interfaces';
 
 /**

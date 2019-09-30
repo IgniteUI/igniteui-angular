@@ -15,7 +15,7 @@ let warningShown = false;
  * Method for handling click on Host()
  */
 @Directive({
-    selector: '[IgxDropDownItemBase]'
+    selector: '[igxDropDownItemBase]'
 })
 export class IgxDropDownItemBase implements DoCheck {
     /**
