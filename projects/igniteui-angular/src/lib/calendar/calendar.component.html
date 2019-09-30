@@ -4,7 +4,7 @@
 </ng-template>
 
 <ng-template let-result #defaultMonth let-obj>
-    <span tabindex="0" #monthsBtn (keydown)="activeViewYearKB($event, getViewDate(obj.index))" (click)="activeViewYear(getViewDate(obj.index), $event)"
+    <span tabindex="0" #monthsBtn (keydown)="activeViewYearKB(getViewDate(obj.index), $event)" (click)="activeViewYear(getViewDate(obj.index), $event)"
         class="igx-calendar-picker__date">
         {{ formattedMonth(getViewDate(obj.index)) }}
     </span>

@@ -538,7 +538,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      * @hidden
      */
-    public activeViewYear(args: Date, event?): void {
+    public activeViewYear(args: Date, event): void {
         this.activeView = CalendarView.YEAR;
         requestAnimationFrame(() => {
             this.monthsView.date = args;
@@ -555,7 +555,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      * @hidden
      */
-    public activeViewYearKB(event, args: Date): void {
+    public activeViewYearKB(args: Date, event): void {
         if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
             event.preventDefault();
             this.activeViewYear(args, event);

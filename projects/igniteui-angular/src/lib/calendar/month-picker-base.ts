@@ -81,7 +81,7 @@ export class IgxMonthPickerBase extends IgxCalendarBase {
     /**
      * @hidden
      */
-    public activeViewDecadeKB(event?, args?: Date) {
+    public activeViewDecadeKB(event, args?: Date) {
         if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
             event.preventDefault();
             this.activeViewDecade();
