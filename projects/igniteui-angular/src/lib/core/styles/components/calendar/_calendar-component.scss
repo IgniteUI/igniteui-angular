@@ -184,9 +184,11 @@
 
     @include e(prev) {
         @extend %cal-picker-arrow !optional;
+        @extend %cal-picker-prev !optional;
     }
 
     @include e(next) {
         @extend %cal-picker-arrow !optional;
+        @extend %cal-picker-next !optional;
     }
 }
