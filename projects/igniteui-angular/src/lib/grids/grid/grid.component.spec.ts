@@ -1669,7 +1669,7 @@ describe('IgxGrid Component Tests #grid', () => {
         });
     });
 
-    fdescribe('IgxGrid - footer section', () => {
+    describe('IgxGrid - footer section', () => {
         configureTestSuite();
         beforeEach(async(() => {
             TestBed.configureTestingModule({
