@@ -653,7 +653,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
                 this.showArrows = this.chipsAreaWidth >= containerWidth && this.isColumnFiltered;
 
                 // TODO: revise the cdr.detectChanges() usage here
-                // this.cdr.detectChanges();
+                this.cdr.detectChanges();
             }
         });
     }
