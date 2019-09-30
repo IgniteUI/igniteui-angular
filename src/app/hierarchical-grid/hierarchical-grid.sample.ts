@@ -19,6 +19,7 @@ export class HierarchicalGridSampleComponent {
     density = 'comfortable';
     displayDensities;
     riToggle = true;
+    hgridState = [];
 
     public columns;
     public childColumns;
@@ -73,6 +74,10 @@ export class HierarchicalGridSampleComponent {
             });
         }
         return prods;
+    }
+
+    getState() {
+        console.log(this.hgridState);
     }
 
     generateDataUneven(count: number, level: number, parendID: string = null) {
