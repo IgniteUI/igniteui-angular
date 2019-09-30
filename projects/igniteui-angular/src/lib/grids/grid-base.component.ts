@@ -4681,11 +4681,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
             if (added || removed) {
                 this.summaryService.clearSummaryCache();
-                this.notifyChanges(true);
-                this.cdr.markForCheck();
+                Promise.resolve().then(() => {
+                    // onColumnsChanged can be executed midway a current detectChange cycle and notifyChanges will be ignored then.
+                    // This ensured that we will wait for the current cycle to trigger the next one, so ngDoCheck will fire.
+                    this.notifyChanges(true);
+                });
             }
         }
-        // this.notifyChanges();
     }
 
     /**
