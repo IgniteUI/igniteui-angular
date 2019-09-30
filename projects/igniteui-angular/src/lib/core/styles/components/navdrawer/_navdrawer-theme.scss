@@ -198,7 +198,14 @@
     }
 
     %aside--collapsed {
-        transform: translate3d(-300px, 0, 0);
+        @include if-ltr() {
+            transform: translate3d(-300px, 0, 0);
+        }
+
+        @include if-rtl() {
+            transform: translate3d(300px, 0, 0);
+        }
+
         box-shadow: none;
     }
 
