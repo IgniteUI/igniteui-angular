@@ -5,12 +5,12 @@ import {
     ViewChild,
     TemplateRef,
     ContentChild,
-    AfterContentInit,
     OnDestroy,
     HostListener,
     ViewChildren,
     QueryList,
-    ChangeDetectorRef
+    ChangeDetectorRef,
+    AfterContentChecked
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { EditorProvider } from '../core/edit-provider';
@@ -63,7 +63,7 @@ export class IgxSliderComponent implements
     EditorProvider,
     OnInit,
     AfterViewInit,
-    AfterContentInit,
+    AfterContentChecked,
     OnDestroy {
 
     // Limit handle travel zone
@@ -657,7 +657,7 @@ export class IgxSliderComponent implements
      * @hidden
      */
     @HostListener('pointerdown', ['$event'])
-    public onPointerDown($event) {
+    public onPointerDown($event: PointerEvent) {
         this.findClosestThumb($event);
 
         if (!this.thumbTo.isActive && this.thumbFrom === undefined) {
@@ -668,6 +668,7 @@ export class IgxSliderComponent implements
         activeThumb.nativeElement.setPointerCapture($event.pointerId);
         this.showSliderIndicators();
 
+        $event.preventDefault();
     }
 
 
@@ -679,6 +680,9 @@ export class IgxSliderComponent implements
         if (!this.thumbTo.isActive && this.thumbFrom === undefined) {
             return;
         }
+
+        const activeThumb = this.thumbTo.isActive ? this.thumbTo : this.thumbTo;
+        activeThumb.nativeElement.releasePointerCapture($event.pointerId);
 
         this.hideSliderIndicators();
     }
@@ -707,14 +711,6 @@ export class IgxSliderComponent implements
     @HostListener('panend')
     public onPanEnd() {
         this.hideSliderIndicators();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('tap', ['$event'])
-    public onTapListener($event) {
-        this.onTap($event);
     }
 
     /**
@@ -874,7 +870,7 @@ export class IgxSliderComponent implements
     /**
      * @hidden
      */
-    public ngAfterContentInit() {
+    public ngAfterContentChecked() {
         // Calculates the distance between every step in pixels.
         this.stepDistance = this.calculateStepDistance();
     }
@@ -920,13 +916,6 @@ export class IgxSliderComponent implements
         return this.isRange ? this.thumbFrom.nativeElement : this.thumbTo.nativeElement;
     }
 
-    /**
-     *
-     * @hidden
-     */
-    public onTap($event) {
-        this.update($event.srcEvent.clientX);
-    }
     /**
      *
      * @hidden
@@ -1006,9 +995,9 @@ export class IgxSliderComponent implements
         return value;
     }
 
-    private findClosestThumb(event) {
+    private findClosestThumb(event: PointerEvent) {
         if (this.isRange) {
-            this.closestHandle(event.clientX);
+            this.closestHandle(event);
         } else {
             this.thumbTo.nativeElement.focus();
         }
@@ -1086,15 +1075,19 @@ export class IgxSliderComponent implements
         this.updateTrack();
     }
 
-    private closestHandle(mouseX) {
+    private closestHandle(event: PointerEvent) {
         const fromOffset = this.thumbFrom.nativeElement.offsetLeft + this.thumbFrom.nativeElement.offsetWidth / 2;
         const toOffset = this.thumbTo.nativeElement.offsetLeft + this.thumbTo.nativeElement.offsetWidth / 2;
-        const xPointer = mouseX - this._el.nativeElement.getBoundingClientRect().left;
+        const xPointer = event.clientX - this._el.nativeElement.getBoundingClientRect().left;
         const match = this.closestTo(xPointer, [fromOffset, toOffset]);
 
-        if (match === fromOffset) {
+        if (fromOffset === toOffset && toOffset < xPointer) {
+            this.thumbTo.nativeElement.focus();
+        } else if (fromOffset === toOffset && toOffset > xPointer ) {
             this.thumbFrom.nativeElement.focus();
-        } else if (match === toOffset) {
+        } else if (match === fromOffset) {
+            this.thumbFrom.nativeElement.focus();
+        } else {
             this.thumbTo.nativeElement.focus();
         }
     }

@@ -15,6 +15,7 @@ export class GridGroupBySampleComponent implements OnInit {
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
     public data: Array<any>;
     public hideGroupedColumns = false;
+    expState = [];
     public columns: Array<any>;
     public groupingExpressions: Array<ISortingExpression>;
     public summaryMode = 'rootLevelOnly';
@@ -103,6 +104,11 @@ export class GridGroupBySampleComponent implements OnInit {
     }
     getRowsList() {
         console.log(this.grid1.rowList);
+    }
+
+    getState() {
+        console.log(JSON.stringify(this.expState));
+        console.log(JSON.stringify(this.groupingExpressions));
     }
 
     onGroupingDoneHandler(event){
