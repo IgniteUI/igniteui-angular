@@ -2296,6 +2296,10 @@
             max-width: $hierarchical-action-icon;
             min-width: $hierarchical-action-icon;
         }
+
+        @include if-rtl() {
+            transform: scaleX(-1);
+        }
     }
 
     %igx-grid__hierarchical-expander--cosy {
