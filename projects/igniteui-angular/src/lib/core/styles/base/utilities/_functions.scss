@@ -549,7 +549,9 @@
 ///    $right: if-ltr(right, left);
 /// @requires $direction
 @function if-ltr($if, $else: null) {
-    @if $direction != rtl {
+    $dir: if(global-variable-exists('direction'), $direction, 'ltr');
+
+    @if $dir != rtl {
         @return $if;
     } @else {
         @return $else;
