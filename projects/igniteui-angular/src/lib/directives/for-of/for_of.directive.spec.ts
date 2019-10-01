@@ -24,6 +24,7 @@ import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { IgxForOfSyncService } from './for_of.sync.service';
 
 describe('IgxForOf directive -', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
@@ -1203,8 +1204,9 @@ export class TestIgxForOfDirective<T> extends IgxForOfDirective<T> {
         public differs: IterableDiffers,
         public fResolver: ComponentFactoryResolver,
         public changeDet: ChangeDetectorRef,
-        public zone: NgZone) {
-        super(viewContainer, template, differs, fResolver, changeDet, zone);
+        public zone: NgZone,
+        protected syncService: IgxForOfSyncService) {
+        super(viewContainer, template, differs, fResolver, changeDet, zone, syncService);
     }
     public scrStepArray = [];
     public scrTopArray = [];
