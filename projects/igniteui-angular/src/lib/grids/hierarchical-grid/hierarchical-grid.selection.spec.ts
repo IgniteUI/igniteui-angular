@@ -661,6 +661,15 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             lastRow = childGrid.getRowByIndex(3);
             GridSelectionFunctions.verifyRowSelected(lastRow);
         });
+
+        it('should not select row on expander click.', () => {
+            const firstRow = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+            UIInteractions.clickElement(firstRow.expander);
+            fix.detectChanges();
+
+            // check row is not selected
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+        });
     });
 
     describe('Row Selection CRUD', () => {
