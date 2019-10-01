@@ -693,10 +693,6 @@
         margin-top: 0 !important;
         height: auto;
         color: igx-color(map-get($theme, 'palette'), 'grays', 800);
-
-        [dir='rtl'] & {
-            transform-origin: top #{$left};
-        }
     }
 
     %fluent-label-success {
@@ -798,10 +794,6 @@
         will-change: transform;
         transform-origin: top #{$left};
         transition: transform $transition-timing, color $transition-timing, margin $transition-timing;
-
-        [dir='rtl'] & {
-            transform-origin: top #{$left};
-        }
     }
 
     %form-group-label--cosy {
@@ -924,29 +916,16 @@
         height: auto;
         resize: vertical;
         overflow: hidden;
-
-        [dir='rtl'] & {
-            margin-#{$right}: initial;
-            margin-#{$left}: -#{rem(16px, map-get($base-scale-size, 'comfortable'))};
-        }
     }
 
     %form-group-textarea--cosy {
         min-height: rem(82px, map-get($base-scale-size, 'cosy'));
         margin-#{$right}: -#{rem(16px, map-get($base-scale-size, 'cosy'))};
-
-        [dir='rtl'] & {
-            margin-#{$left}: -#{rem(16px, map-get($base-scale-size, 'cosy'))};
-        }
     }
 
     %form-group-textarea--compact {
         min-height: rem(82px, map-get($base-scale-size, 'compact'));
         margin-#{$right}: -#{rem(16px, map-get($base-scale-size, 'compact'))};
-
-        [dir='rtl'] & {
-            margin-#{$left}: -#{rem(16px, map-get($base-scale-size, 'compact'))};
-        }
     }
 
     %form-group-textarea--box {
@@ -980,12 +959,14 @@
     }
 
     %form-group-prefix {
-        padding: rem(8px, map-get($base-scale-size, 'comfortable'))
-            rem(8px, map-get($base-scale-size, 'comfortable'))
-            rem(8px, map-get($base-scale-size, 'comfortable'))
-            0;
+        @include if-ltr() {
+            padding: rem(8px, map-get($base-scale-size, 'comfortable'))
+                rem(8px, map-get($base-scale-size, 'comfortable'))
+                rem(8px, map-get($base-scale-size, 'comfortable'))
+                0;
+        }
 
-        [dir='rtl'] & {
+        @include if-rtl() {
             padding: rem(8px, map-get($base-scale-size, 'comfortable'))
                 0
                 rem(8px, map-get($base-scale-size, 'comfortable'))
@@ -1009,12 +990,14 @@
     }
 
     %form-group-prefix--cosy {
-        padding: rem(8px, map-get($base-scale-size, 'cosy'))
-            rem(8px, map-get($base-scale-size, 'cosy'))
-            rem(8px, map-get($base-scale-size, 'cosy'))
-            0;
+        @include if-ltr() {
+            padding: rem(8px, map-get($base-scale-size, 'cosy'))
+                rem(8px, map-get($base-scale-size, 'cosy'))
+                rem(8px, map-get($base-scale-size, 'cosy'))
+                0;
+        }
 
-        [dir='rtl'] & {
+        @include if-rtl() {
             padding: rem(8px, map-get($base-scale-size, 'cosy'))
                 0
                 rem(8px, map-get($base-scale-size, 'cosy'))
@@ -1023,12 +1006,14 @@
     }
 
     %form-group-prefix--compact {
-        padding: rem(8px, map-get($base-scale-size, 'compact'))
-            rem(8px, map-get($base-scale-size, 'compact'))
-            rem(8px, map-get($base-scale-size, 'compact'))
-            0;
+        @include if-ltr() {
+            padding: rem(8px, map-get($base-scale-size, 'compact'))
+                rem(8px, map-get($base-scale-size, 'compact'))
+                rem(8px, map-get($base-scale-size, 'compact'))
+                0;
+        }
 
-        [dir='rtl'] & {
+        @include if-rtl() {
             padding: rem(8px, map-get($base-scale-size, 'compact'))
                 0
                 rem(8px, map-get($base-scale-size, 'compact'))
@@ -1059,10 +1044,6 @@
         }
 
         padding: rem(8px, map-get($base-scale-size, 'comfortable'));
-
-        [dir='rtl'] & {
-            padding: rem(8px, map-get($base-scale-size, 'comfortable'))
-        }
     }
 
     %form-group-prefix-fluent-search {
@@ -1073,10 +1054,6 @@
         }
 
         padding: rem(8px, map-get($base-scale-size, 'comfortable'));
-
-        [dir='rtl'] & {
-            padding: rem(8px, map-get($base-scale-size, 'comfortable'))
-        }
 
         &:last-of-type {
             margin-#{$right}: 0;
@@ -1131,19 +1108,11 @@
     %form-group-prefix-fluent-search--cosy,
     %form-group-prefix-fluent--cosy {
         padding: rem(8px, map-get($base-scale-size, 'cosy'));
-
-        [dir='rtl'] & {
-            padding: rem(8px, map-get($base-scale-size, 'cosy'));
-        }
     }
 
     %form-group-prefix-fluent-search--compact,
     %form-group-prefix-fluent--compact {
         padding: rem(8px, map-get($base-scale-size, 'compact'));
-
-        [dir='rtl'] & {
-            padding: rem(8px, map-get($base-scale-size, 'compact'));
-        }
     }
 
     %form-group-suffix-fluent-search--cosy,
@@ -1157,27 +1126,32 @@
     }
 
     /// FLUENT END ///
-
     %form-group-prefix--box {
-        padding: 0 rem(8px, map-get($base-scale-size, 'comfortable')) 0 0;
+        @include if-ltr() {
+            padding: 0 rem(8px, map-get($base-scale-size, 'comfortable')) 0 0;
+        }
 
-        [dir='rtl'] & {
+        @include if-rtl() {
             padding: 0 0 0 rem(8px, map-get($base-scale-size, 'comfortable')); /* 8px, base is 16px */
         }
     }
 
     %form-group-prefix--box-cosy {
-        padding: 0 rem(8px, map-get($base-scale-size, 'cosy')) 0 0;
+        @include if-ltr() {
+            padding: 0 rem(8px, map-get($base-scale-size, 'cosy')) 0 0;
+        }
 
-        [dir='rtl'] & {
+        @include if-rtl() {
             padding: 0 0 0 rem(8px, map-get($base-scale-size, 'cosy')); /* 8px, base is 16px */
         }
     }
 
     %form-group-prefix--box-compact {
-        padding: 0 rem(8px, map-get($base-scale-size, 'compact')) 0 0;
+        @include if-ltr() {
+            padding: 0 rem(8px, map-get($base-scale-size, 'compact')) 0 0;
+        }
 
-        [dir='rtl'] & {
+        @include if-rtl() {
             padding: 0 0 0 rem(8px, map-get($base-scale-size, 'compact')); /* 8px, base is 16px */
         }
     }
