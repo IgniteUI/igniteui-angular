@@ -143,6 +143,7 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
         const result = flatten(columns);
         this.columnList.reset(result);
         this.columnList.notifyOnChanges();
+        this.initPinning();
     }
 
     protected _createColumn(col) {
