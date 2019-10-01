@@ -6,7 +6,7 @@
     <igx-thumb-label
         *ngIf="isRange"
         [type]="0"
-        [value]="value"
+        [value]="lowerLabel"
         [templateRef]="thumbFromTemplateRef"
         [continuous]="continuous"
         [context]="context"></igx-thumb-label>
@@ -27,7 +27,7 @@
         [thumbLabelVisibilityDuration]="thumbLabelVisibilityDuration"></igx-thumb>
 
     <igx-thumb-label
-        [value]="value"
+        [value]="upperLabel"
         [type]="1"
         [templateRef]="thumbToTemplateRef"
         [continuous]="continuous"

@@ -8,7 +8,7 @@ import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxInputDirective } from '../directives/input/input.directive';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxInputGroupModule } from '../input-group';
-
+import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { DateRangeType } from 'igniteui-angular';
 import { IgxButtonModule } from '../directives/button/button.directive';
@@ -32,7 +32,8 @@ describe('IgxDatePicker', () => {
                 IgxDropDownDatePickerRetemplatedComponent,
                 IgxDatePickerOpeningComponent
             ],
-            imports: [IgxDatePickerModule, FormsModule, NoopAnimationsModule, IgxInputGroupModule, IgxCalendarModule, IgxButtonModule]
+            imports: [IgxDatePickerModule, FormsModule, NoopAnimationsModule, IgxInputGroupModule, IgxCalendarModule,
+                        IgxButtonModule, IgxTextSelectionModule]
         })
             .compileComponents();
     }));
@@ -1088,6 +1089,29 @@ describe('IgxDatePicker', () => {
 
             expect(instance.getEditElement()).toBe(editElement);
         });
+    });
+
+    describe('Drop-down mode select all text on focus', () => {
+        let fixture: ComponentFixture<IgxDatePickerEditableComponent>;
+        let datePicker: IgxDatePickerComponent;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(IgxDatePickerEditableComponent);
+            datePicker = fixture.componentInstance.datePicker;
+            fixture.detectChanges();
+        });
+
+        it('Should select all input text on input focus', fakeAsync(() => {
+            const input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+            input.focus();
+            fixture.detectChanges();
+            tick(100);
+
+            expect(input).toEqual(document.activeElement);
+            expect(input.selectionEnd).toEqual(input.value.length);
+            expect(input.selectionStart).toEqual(0);
+            expect(input.value.substring(input.selectionStart, input.selectionEnd)).toEqual(input.value);
+        }));
     });
 });
 
