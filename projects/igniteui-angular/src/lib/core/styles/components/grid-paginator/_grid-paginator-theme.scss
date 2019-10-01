@@ -49,6 +49,9 @@
 @mixin igx-grid-paginator($theme) {
     @include igx-root-css-vars($theme);
 
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
+
     $paginator-padding: (
         comfortable: 0 rem(24px),
         cosy: 0 rem(16px),
@@ -74,7 +77,7 @@
         padding: map-get($paginator-padding, 'comfortable');
         height: map-get($paginator-height, 'comfortable');
         width: 100%;
-        
+
         &:empty {
             padding: 0;
         }
@@ -92,7 +95,7 @@
 
 
     %igx-grid-paginator__label {
-        margin-right: 8px;
+        margin-#{$right}: 8px;
         @include ellipsis();
     }
 
@@ -110,7 +113,7 @@
         flex: 1;
 
         > * {
-            margin-left: rem(8px);
+            margin-#{$left}: rem(8px);
         }
     }
 
