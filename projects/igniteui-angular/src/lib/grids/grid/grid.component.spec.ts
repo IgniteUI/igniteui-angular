@@ -130,7 +130,7 @@ describe('IgxGrid Component Tests', () => {
             expect(rows.length).toEqual(10);
 
             const verticalScroll = fix.componentInstance.instance.verticalScrollContainer;
-            const elem = verticalScroll['vh'].instance.elementRef.nativeElement;
+            const elem = verticalScroll['scrollComponent'].elementRef.nativeElement;
 
             // scroll down
             expect(() => {
