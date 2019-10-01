@@ -20,6 +20,8 @@ export abstract class VirtualHelperBase implements OnDestroy {
     @HostListener('scroll', ['$event'])
     onScroll(event) {
         this.scrollAmount = event.target.scrollTop || event.target.scrollLeft;
+        // TODO - Instead of every single igxForOf instance attaching a DOM event listener
+        // we could instaed subscribe to this onScrollEvent and remove related workaround logic in igxGridForOf.
         this.onScrollEvent.emit(event);
     }
     constructor(public elementRef: ElementRef, public cdr: ChangeDetectorRef) { }
