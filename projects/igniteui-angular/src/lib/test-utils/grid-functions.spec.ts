@@ -423,7 +423,8 @@ export class GridFunctions {
 
         const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
         this.selectFilteringCondition(condition, ddList);
-
+        fix.detectChanges();
+        tick(100);
        this.applyFilter(value, fix);
     }
 
