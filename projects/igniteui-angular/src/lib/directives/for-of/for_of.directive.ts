@@ -29,7 +29,7 @@ import { DisplayContainerComponent } from './display.container';
 import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
 import { VirtualHelperComponent } from './virtual.helper.component';
 import { IgxScrollInertiaModule } from './../scroll-inertia/scroll_inertia.directive';
-import { IgxForOfSyncService } from './for_of.sync.service';
+import { IgxForOfSyncService, IgxForOfScrollSyncService } from './for_of.sync.service';
 import { VirtualHelperBase } from './base.helper.component';
 
 /**
@@ -269,7 +269,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         private resolver: ComponentFactoryResolver,
         public cdr: ChangeDetectorRef,
         protected _zone: NgZone,
-        protected syncService: IgxForOfSyncService) { }
+        protected syncScrollService: IgxForOfScrollSyncService) { }
 
     /**
      * @hidden
@@ -341,7 +341,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
         if (this.igxForOf && this.igxForOf.length) {
             totalSize = this.initSizesCache(this.igxForOf);
-            this.scrollComponent = this.syncService.getScrollMaster(this.igxForScrollOrientation);
+            this.scrollComponent = this.syncScrollService.getScrollMaster(this.igxForScrollOrientation);
             this.state.chunkSize = this._calculateChunkSize();
             this.dc.instance.notVirtual = !(this.igxForContainerSize && this.state.chunkSize < this.igxForOf.length);
             if (this.scrollComponent) {
@@ -366,6 +366,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.scrollComponent = vc.createComponent(factory).instance;
             this._maxHeight = this._calcMaxBrowserHeight();
             this.scrollComponent.size = this.igxForOf ? this._calcHeight() : 0;
+            this.syncScrollService.setScrollMaster(this.igxForScrollOrientation, this.scrollComponent);
             this._zone.runOutsideAngular(() => {
                 this.verticalScrollHandler = this.verticalScrollHandler.bind(this);
                 this.scrollComponent.nativeElement.addEventListener('scroll', this.verticalScrollHandler);
@@ -375,12 +376,13 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         if (this.igxForScrollOrientation === 'horizontal') {
             this.func = (evt) => { this.onHScroll(evt); };
-            this.scrollComponent = this.syncService.getScrollMaster(this.igxForScrollOrientation);
+            this.scrollComponent = this.syncScrollService.getScrollMaster(this.igxForScrollOrientation);
             if (!this.scrollComponent) {
                 const hvFactory: ComponentFactory<HVirtualHelperComponent> =
                     this.resolver.resolveComponentFactory(HVirtualHelperComponent);
                 this.scrollComponent = vc.createComponent(hvFactory).instance;
                 this.scrollComponent.size = totalSize;
+                this.syncScrollService.setScrollMaster(this.igxForScrollOrientation, this.scrollComponent);
                 this._zone.runOutsideAngular(() => {
                     this.scrollComponent.nativeElement.addEventListener('scroll', this.func);
                     this.dc.instance.scrollContainer = this.scrollComponent.nativeElement;
@@ -1281,8 +1283,9 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         resolver: ComponentFactoryResolver,
         cdr: ChangeDetectorRef,
         _zone: NgZone,
+        protected syncScrollService: IgxForOfScrollSyncService,
         protected syncService: IgxForOfSyncService) {
-        super(_viewContainer, _template, _differs, resolver, cdr, _zone, syncService);
+        super(_viewContainer, _template, _differs, resolver, cdr, _zone, syncScrollService);
     }
 
     @Input()

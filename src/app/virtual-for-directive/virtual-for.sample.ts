@@ -126,7 +126,7 @@ export class VirtualForSampleComponent implements OnInit, AfterViewInit {
             text: 'Ward Riley',
             height: 100
         }];
-        for (let i = 10; i < 1e5; i++) {
+        for (let i = 10; i < 100; i++) {
             const obj = Object.assign({}, data[i % 10]);
             obj['key'] = i;
             data.push(obj);

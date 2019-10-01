@@ -8,7 +8,6 @@ import { VirtualHelperBase } from './base.helper.component';
 export class IgxForOfSyncService {
 
     private _master: Map<string, IgxGridForOfDirective<any>> = new Map<string, IgxGridForOfDirective<any>>();
-    private _masterScroll: Map<string, VirtualHelperBase> = new Map<string, any>();
 
     /**
      * @hidden
@@ -25,14 +24,6 @@ export class IgxForOfSyncService {
         if (orientation && (forced || !this._master.has(orientation))) {
             this._master.set(orientation, directive);
         }
-    }
-
-    public setScrollMaster(dir: string, scroll: VirtualHelperBase) {
-        this._masterScroll.set(dir, scroll);
-    }
-
-    public getScrollMaster(dir: string) {
-        return this._masterScroll.get(dir);
     }
 
     /**
@@ -54,5 +45,19 @@ export class IgxForOfSyncService {
      */
     public chunkSize(dir: string): number {
         return this._master.get(dir).state.chunkSize;
+    }
+}
+
+@Injectable({
+    providedIn: 'root',
+})
+export class IgxForOfScrollSyncService {
+    private _masterScroll: Map<string, VirtualHelperBase> = new Map<string, any>();
+    public setScrollMaster(dir: string, scroll: VirtualHelperBase) {
+        this._masterScroll.set(dir, scroll);
+    }
+
+    public getScrollMaster(dir: string) {
+        return this._masterScroll.get(dir);
     }
 }

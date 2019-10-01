@@ -29,8 +29,9 @@
                     <ng-template igxFor let-item [igxForOf]="data" #virtDirHorizontal
                         [igxForScrollOrientation]="'horizontal'"
                         [igxForContainerSize]='"500px"'
+                        [igxForItemSize]="'100px'"
                         let-rowIndex="index">
-                            <td [style.width.px]='item.width' [style.min-width.px]='item.width' style='height:100px;'>{{rowIndex}} : {{item.text}}</td>
+                            <td [style.width.px]='item.width' [style.min-width.px]='100' style='height:100px;'>{{rowIndex}} : {{item.text}}</td>
                     </ng-template>
                 </div>
             </tr>

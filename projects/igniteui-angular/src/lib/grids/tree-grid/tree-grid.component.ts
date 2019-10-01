@@ -41,7 +41,7 @@ import { IgxColumnResizingService } from '../grid-column-resizing.service';
 import { IgxColumnComponent } from '../column.component';
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
-import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
+import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 
 let NEXT_ID = 0;
@@ -70,7 +70,8 @@ let NEXT_ID = 0;
     providers: [
         IgxGridSelectionService, IgxGridCRUDService, IgxTreeGridNavigationService, IgxGridSummaryService,
         { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
-        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) }, IgxFilteringService, IgxForOfSyncService]
+        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) },
+        IgxFilteringService, IgxForOfSyncService, IgxForOfScrollSyncService]
 })
 export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit, AfterContentInit {
     private _id = `igx-tree-grid-${NEXT_ID++}`;
