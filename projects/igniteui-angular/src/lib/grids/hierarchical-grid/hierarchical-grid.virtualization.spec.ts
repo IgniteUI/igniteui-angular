@@ -38,7 +38,7 @@ describe('IgxHierarchicalGrid Virtualization', () => {
         fixture.detectChanges();
         expect(firstRow.expanded).toBeTruthy();
         const verticalScroll = fixture.componentInstance.hgrid.verticalScrollContainer;
-        const elem = verticalScroll['vh'].instance.elementRef.nativeElement;
+        const elem = verticalScroll['scrollComponent'].elementRef.nativeElement;
 
         // scroll down
         elem.scrollTop = 1000;
@@ -64,7 +64,7 @@ describe('IgxHierarchicalGrid Virtualization', () => {
 
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         const verticalScroll = childGrid.verticalScrollContainer;
-        const elem = verticalScroll['vh'].instance.elementRef.nativeElement;
+        const elem = verticalScroll['scrollComponent'].elementRef.nativeElement;
 
         // scroll down
         elem.scrollTop = 400;
@@ -111,7 +111,7 @@ describe('IgxHierarchicalGrid Virtualization', () => {
         expect(childGrid.getCellByColumn(0, 'ID').selected).toBeTruthy();
 
         const verticalScroll = fixture.componentInstance.hgrid.verticalScrollContainer;
-        const elem = verticalScroll['vh'].instance.elementRef.nativeElement;
+        const elem = verticalScroll['scrollComponent'].elementRef.nativeElement;
         // scroll down
         elem.scrollTop = 1000;
         await wait();
