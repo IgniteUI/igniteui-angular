@@ -5,6 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxCalendarComponent, IgxCalendarModule, WEEKDAYS } from './index';
+import { IgxDatePickerComponent, IgxDatePickerModule } from '../date-picker/date-picker.component';
 import { DateRangeType } from '../core/dates';
 
 
@@ -14,8 +15,8 @@ describe('Multi-View Calendar - ', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [MultiViewCalendarSampleComponent],
-            imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
+            declarations: [MultiViewCalendarSampleComponent, MultiViewDatePickerSampleComponent],
+            imports: [IgxCalendarModule, IgxDatePickerModule, FormsModule, NoopAnimationsModule]
         }).compileComponents();
     }));
 
@@ -768,10 +769,82 @@ describe('Multi-View Calendar - ', () => {
             expect(HelperTestFunctions.getSelectedDatesInRangeCalendar(fixture, 1).length).toBe(31);
             expect(HelperTestFunctions.getSelectedDatesInRangeCalendar(fixture, 2).length).toBe(0);
         });
+    });
 
+    describe('DatePicker/Calendar Integration Tests - ', () => {
+        let datePicker;
+        beforeEach(fakeAsync(() => {
+            fixture = TestBed.createComponent(MultiViewDatePickerSampleComponent);
+            fixture.detectChanges();
+            datePicker = fixture.componentInstance.datePicker;
+        }));
+        afterEach(() => {
+            UIInteractions.clearOverlay();
+        });
 
+        it('Verify opening Multi View Calendar from datepicker', fakeAsync(() => {
+            let target = fixture.nativeElement.querySelector('.igx-icon');
+            UIInteractions.clickElement(target);
+            tick(400);
+            fixture.detectChanges();
 
+            let overlay = document.querySelector('.igx-overlay');
+            HelperTestFunctions.verifyMonthsViewNumber(overlay, 3, new Date('2019-09-16'));
+            HelperTestFunctions.verifyCalendarSubHeaders(overlay, [new Date('2019-09-16'), new Date('2019-10-16'), new Date('2019-11-16')]);
 
+            // close the datePicker
+            const overlayDiv = document.getElementsByClassName('igx-overlay__wrapper--modal')[0];
+            UIInteractions.clickElement(overlayDiv);
+            tick(400);
+            fixture.detectChanges();
+
+            datePicker.mode = 'dropdown';
+            datePicker.monthsViewNumber = 2;
+            tick();
+            fixture.detectChanges();
+
+            target = fixture.nativeElement.querySelector('.igx-icon');
+            UIInteractions.clickElement(target);
+            tick(400);
+            fixture.detectChanges();
+
+            overlay = document.querySelector('.igx-overlay');
+            HelperTestFunctions.verifyMonthsViewNumber(overlay, 2, new Date('2019-09-16'));
+            HelperTestFunctions.verifyCalendarSubHeaders(overlay, [new Date('2019-09-16'), new Date('2019-10-16')]);
+        }));
+
+        it('Verify setting hideOutsideDays and monthsViewNumber from datepicker', fakeAsync(() => {
+            const target = fixture.nativeElement.querySelector('.igx-icon');
+            UIInteractions.clickElement(target);
+            tick(400);
+            fixture.detectChanges();
+
+            expect(datePicker.hideOutsideDays).toBe(true);
+            let overlay = document.querySelector('.igx-overlay');
+            expect(HelperTestFunctions.getHiidenDays(overlay, 0).length).toBe(HelperTestFunctions.getInactiveDays(overlay, 0).length);
+            expect(HelperTestFunctions.getHiidenDays(overlay, 1).length).toBe(HelperTestFunctions.getInactiveDays(overlay, 1).length);
+            expect(HelperTestFunctions.getHiidenDays(overlay, 2).length).toBe(HelperTestFunctions.getInactiveDays(overlay, 2).length);
+
+            // close the datePicker
+            const overlayDiv = document.getElementsByClassName('igx-overlay__wrapper--modal')[0];
+            UIInteractions.clickElement(overlayDiv);
+            tick(400);
+            fixture.detectChanges();
+
+            datePicker.hideOutsideDays = false;
+            tick();
+            fixture.detectChanges();
+
+            UIInteractions.clickElement(target);
+            tick(400);
+            fixture.detectChanges();
+
+            expect(datePicker.hideOutsideDays).toBe(false);
+            overlay = document.querySelector('.igx-overlay');
+            expect(HelperTestFunctions.getHiidenDays(overlay, 0).length).toBe(0);
+            expect(HelperTestFunctions.getHiidenDays(overlay, 1).length).toBe(0);
+            expect(HelperTestFunctions.getHiidenDays(overlay, 2).length).toBe(0);
+        }));
 
     });
 });
@@ -791,13 +864,14 @@ class HelperTestFunctions {
     public static SELECTED_DATE = '.igx-calendar__date--selected';
 
     public static verifyMonthsViewNumber(fixture, monthsView: number, viewDate?: Date) {
-        const daysView = fixture.nativeElement.querySelectorAll(HelperTestFunctions.DAYS_VIEW);
+        const el = fixture.nativeElement ? fixture.nativeElement : fixture;
+        const daysView = el.querySelectorAll(HelperTestFunctions.DAYS_VIEW);
         expect(daysView).toBeDefined();
         expect(daysView.length).toBe(monthsView);
-        const monthPickers = HelperTestFunctions.getCalendarSubHeader(fixture).querySelectorAll('div');
+        const monthPickers = HelperTestFunctions.getCalendarSubHeader(el).querySelectorAll('div');
         expect(monthPickers.length).toBe(monthsView + 2); // plus the navigation arrows
         if (!viewDate) {
-            const currentDate = fixture.nativeElement.querySelector(HelperTestFunctions.CURRENT_DATE_CSSCLASS);
+            const currentDate = el.querySelector(HelperTestFunctions.CURRENT_DATE_CSSCLASS);
             expect(currentDate).not.toBeNull();
         }
     }
@@ -812,7 +886,7 @@ class HelperTestFunctions {
         expect(date).not.toBeNull();
         const dateParts = selectedDate.toUTCString().split(' '); // (weekday, date month year)
         expect(date.children[0].innerText.trim()).toEqual(dateParts[0]);
-        expect(date.children[1].innerText.trim()).toEqual(dateParts[2] + ' ' + dateParts[1]);
+        expect(date.children[1].innerText.trim()).toEqual(dateParts[2] + ' ' + Number(dateParts[1]));
     }
 
     public static verifyNoRangeSelectionCreated(fixture, monthNumber: number) {
@@ -829,7 +903,8 @@ class HelperTestFunctions {
     }
 
     public static verifyCalendarSubHeaders(fixture, viewDates: Date[]) {
-        const monthPickers = HelperTestFunctions.getCalendarSubHeader(fixture).querySelectorAll('div.ng-star-inserted');
+        const dom = fixture.nativeElement ? fixture.nativeElement : fixture;
+        const monthPickers = HelperTestFunctions.getCalendarSubHeader(dom).querySelectorAll('div.ng-star-inserted');
         expect(monthPickers.length).toEqual(viewDates.length);
         for (let index = 0; index < viewDates.length; index++) {
             const dateParts = viewDates[index].toString().split(' '); // weekday month day year
@@ -849,11 +924,13 @@ class HelperTestFunctions {
     }
 
     public static getCalendarSubHeader(fixture): HTMLElement {
-        return fixture.nativeElement.querySelector('div.igx-calendar-picker');
+        const element = fixture.nativeElement ? fixture.nativeElement : fixture;
+        return element.querySelector('div.igx-calendar-picker');
     }
 
     public static getMonthView(fixture, monthsViewNumber: number) {
-        return fixture.nativeElement.querySelectorAll('igx-days-view')[monthsViewNumber];
+        const domEL = fixture.nativeElement ? fixture.nativeElement : fixture;
+        return domEL.querySelectorAll('igx-days-view')[monthsViewNumber];
     }
 
     public static getMonthViewDates(fixture, monthsViewNumber: number) {
@@ -889,5 +966,16 @@ class HelperTestFunctions {
 })
 export class MultiViewCalendarSampleComponent {
     @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
+    public monthViews = 3;
+}
+
+@Component({
+    template: `
+        <igx-date-picker [value]="date" [monthsViewNumber]="monthViews" [hideOutsideDays]="true"></igx-date-picker>
+    `
+})
+export class MultiViewDatePickerSampleComponent {
+    @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
+    public date = new Date('2019-09-15');
     public monthViews = 3;
 }
