@@ -282,12 +282,6 @@
             margin-#{$left}: rem(32px);
         }
 
-        &[dir='rtl'] {
-            > igx-icon + span {
-                margin-#{$right}: rem(32px);
-            }
-        }
-
         igx-icon {
             color: --var($theme, 'item-icon-color');
         }
