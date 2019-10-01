@@ -67,21 +67,21 @@ export class IgxMonthPickerBase extends IgxCalendarBase {
         this._activeView = CalendarView.DEFAULT;
 
         requestAnimationFrame(() => {
-            this.yearsBtn.nativeElement.focus();
+            if (this.yearsBtn) { this.yearsBtn.nativeElement.focus(); }
         });
     }
 
     /**
      * @hidden
      */
-    public activeViewDecade(): void {
+    public activeViewDecade(args?: Date): void {
         this._activeView = CalendarView.DECADE;
     }
 
     /**
      * @hidden
      */
-    public activeViewDecadeKB(event) {
+    public activeViewDecadeKB(event, args?: Date) {
         if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
             event.preventDefault();
             this.activeViewDecade();

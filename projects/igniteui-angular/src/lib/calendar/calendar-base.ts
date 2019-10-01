@@ -3,6 +3,7 @@ import { WEEKDAYS, Calendar, isDateInRanges, IFormattingOptions, IFormattingView
 import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
 import { Subject } from 'rxjs';
+import { isDate } from '../core/utils';
 
 /**
  * Sets the selction type - single, multi or range.
@@ -243,7 +244,7 @@ export class IgxCalendarBase implements ControlValueAccessor {
     /**
      *@hidden
      */
-    private rangeStarted = false;
+    public rangeStarted = false;
 
     /**
     *@hidden
@@ -580,12 +581,14 @@ export class IgxCalendarBase implements ControlValueAccessor {
      */
     public selectDate(value: Date | Date[]) {
         if (value === null || value === undefined || (Array.isArray(value) && value.length === 0)) {
-            return new Date();
+            return;
         }
 
         switch (this.selection) {
             case CalendarSelection.SINGLE:
-                this.selectSingle(value as Date);
+                if (isDate(value)) {
+                    this.selectSingle(value as Date);
+                }
                 break;
             case CalendarSelection.MULTI:
                 this.selectMultiple(value);
