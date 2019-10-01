@@ -141,6 +141,9 @@
 @mixin igx-grid-toolbar($theme) {
     @include igx-root-css-vars($theme);
 
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
+
     // Caption
     $grid-toolbar-fs: rem(16px);
 
@@ -148,6 +151,12 @@
         comfortable: 0 rem(16px) 0 rem(24px),
         cosy: 0 rem(12px) 0 rem(16px),
         compact: 0 rem(8px) 0 rem(12px)
+    );
+
+    $grid-toolbar-padding-rtl: (
+        comfortable: 0 rem(24px) 0 rem(16px),
+        cosy: 0 rem(16px) 0 rem(12px),
+        compact: 0 rem(12px) 0 rem(8px)
     );
 
     $grid-toolbar-height: (
@@ -162,7 +171,12 @@
         justify-content: flex-end;
         grid-row: 1;
         font-size: $grid-toolbar-fs;
-        padding: map-get($grid-toolbar-padding, 'comfortable');
+        @include if-ltr(){
+            padding: map-get($grid-toolbar-padding, 'comfortable');
+        }
+        @include if-rtl(){
+            padding: map-get($grid-toolbar-padding-rtl, 'comfortable');
+        }
         border-bottom: 1px solid igx-color(map-get($theme, 'palette'), 'grays', 300);
         background: --var($theme, 'background-color');
         height: map-get($grid-toolbar-height, 'comfortable');
@@ -170,7 +184,7 @@
         %igx-button--flat {
             background: --var($theme, 'button-background');
             color: --var($theme, 'button-text-color');
-            margin-left: rem(8);
+            margin-#{$left}: rem(8);
 
             &:hover {
                 background: --var($theme, 'button-hover-background');
@@ -187,7 +201,7 @@
         %igx-button--icon {
             background: --var($theme, 'button-background');
             color: --var($theme, 'button-text-color');
-            margin-left: rem(8);
+            margin-#{$left}: rem(8);
             border-radius: 0;
 
             &:hover {
@@ -208,33 +222,33 @@
             align-items: center;
 
             > * {
-                margin-left: rem(8px);
+                margin-#{$left}: rem(8px);
 
                 &:first-child {
-                    margin-left: 0;
+                    margin-#{$left}: 0;
                 }
             }
         }
 
         &[dir='rtl'] {
-            text-align: right;
+            text-align: #{$right};
 
             %igx-button--flat,
             %igx-button--icon {
-                margin-left: 0;
-                margin-right: rem(8);
+                margin-#{$left}: 0;
+                margin-#{$right}: rem(8);
             }
 
             %igx-grid-toolbar__button-space {
-                text-align: right;
+                text-align: #{$right};
 
                 > * {
-                    margin-left: 0;
-                    margin-right: rem(8px);
+                    margin-#{$left}: 0;
+                    margin-#{$right}: rem(8px);
                 }
 
                 > *:last-child {
-                    margin-left: 0;
+                    margin-#{$left}: 0;
                 }
             }
         }
@@ -242,36 +256,23 @@
 
     %igx-grid-toolbar--cosy {
         height: map-get($grid-toolbar-height, 'cosy');
-        padding: map-get($grid-toolbar-padding, 'cosy');
+        @include if-ltr() {
+            padding: map-get($grid-toolbar-padding, 'cosy');
+        }
+
+        @include if-rtl() {
+            padding: map-get($grid-toolbar-padding-rtl, 'cosy');
+        }
     }
 
     %igx-grid-toolbar--compact {
         height: map-get($grid-toolbar-height, 'compact');
-        padding: map-get($grid-toolbar-padding, 'compact');
-    }
+        @include if-ltr() {
+            padding: map-get($grid-toolbar-padding, 'compact');
+        }
 
-    [dir='rtl'] {
-        %igx-grid-toolbar {
-            text-align: right;
-
-            %igx-button--flat,
-            %igx-button--icon {
-                margin-left: 0;
-                margin-right: rem(8px);
-            }
-
-            %igx-grid-toolbar__button-space {
-                text-align: right;
-
-                > * {
-                    margin-left: 0;
-                    margin-right: rem(8px);
-                }
-
-                > *:last-child {
-                    margin-left: 0;
-                }
-            }
+        @include if-rtl() {
+            padding: map-get($grid-toolbar-padding-rtl, 'compact');
         }
     }
 
@@ -312,7 +313,7 @@
 
         %igx-filtering-menu {
             padding: rem(0);
-            right: 0;
+            #{$right}: 0;
             margin: 0;
             min-width: auto;
         }
