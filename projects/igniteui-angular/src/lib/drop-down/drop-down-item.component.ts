@@ -53,6 +53,7 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
             return;
         }
         this._selected = value;
+        this.selectedChange.emit(this._selected);
     }
     /**
      * @hidden @internal
