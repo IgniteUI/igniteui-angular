@@ -35,6 +35,20 @@
         "Requires": "必須",
         "Default value": "デフォルト値",
         "Optional": "オプション",
-        "Rest": "残りの引数"
+        "Rest": "残りの引数",
+        "All": "All test",
+        "Public": "test ublic",
+        "Public/Protected": "test Public/Protected",
+        "Inherited": "test Inherited",
+        "Externals": "test Externals",
+        "Only exported": "test Only exported",
+        "Search API": "test Search API...",
+        "Classes": "test Classes",
+        "Interfaces": "test Interfaces",
+        "Enumerations": "test Enumerations",
+        "Variables": "test Variables",
+        "Functions": "tet Functions",
+        "Object literals": "test Object literals",
+        "GLOBALS": "test Globals"
     }
 }
