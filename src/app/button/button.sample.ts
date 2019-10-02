@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
     selector: 'app-button-sample',
     styleUrls: ['button.sample.css'],
-    templateUrl: 'button.sample.html'
+    templateUrl: 'button.sample.html',
+    encapsulation: ViewEncapsulation.None
 })
 export class ButtonSampleComponent implements OnInit {
     public density = 'comfortable';
