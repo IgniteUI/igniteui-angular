@@ -49,9 +49,6 @@
 @mixin igx-grid-paginator($theme) {
     @include igx-root-css-vars($theme);
 
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
-
     $paginator-padding: (
         comfortable: 0 rem(24px),
         cosy: 0 rem(16px),
@@ -63,6 +60,9 @@
         cosy: rem(48px),
         compact: rem(44px)
     );
+
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
 
     %igx-grid-paginator {
         display: flex;
@@ -114,6 +114,12 @@
 
         > * {
             margin-#{$left}: rem(8px);
+        }
+
+        @include if-rtl() {
+            igx-icon {
+                transform: scaleX(-1);
+            }
         }
     }
 
