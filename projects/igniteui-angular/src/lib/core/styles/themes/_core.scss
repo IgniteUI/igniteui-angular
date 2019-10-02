@@ -70,8 +70,15 @@
     }
 }
 
-@mixin igx-core($print-layout: true) {
+@mixin igx-core($print-layout: true, $direction: ltr) {
+    @if $direction != ltr and $direction != rtl {
+        $direction: ltr !global;
+    } @else {
+        $direction: $direction !global;
+    }
+
     @include igx-typography();
+    @include igx-vhelper();
 
     @if $print-layout == true {
         @include igx-print-layout();
