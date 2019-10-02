@@ -96,7 +96,7 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
                 hierarchy: DataUtil.getHierarchy(groupRow)
             });
         }
-        this.grid.groupingExpansionState = expansionState;
+        this.grid.groupingExpansionState = [...expansionState];
         if (grid.rowEditable) {
             grid.repositionRowEditingOverlay(grid.rowInEditMode);
         }
