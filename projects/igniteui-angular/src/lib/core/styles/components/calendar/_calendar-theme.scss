@@ -307,6 +307,8 @@
 
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
+    $before: if-ltr(before, after);
+    $after: if-ltr(after, before);
 
     %cal-display {
         display: flex;
@@ -690,7 +692,7 @@
             content: '';
             width: 50%;
             top: 0;
-            left: 50%;
+            #{$left}: 50%;
             bottom: 0;
             background: --var($theme, 'date-selected-background');
             z-index: -1;
@@ -707,7 +709,7 @@
             content: '';
             width: 50%;
             top: 0;
-            right: 50%;
+            #{$right}: 50%;
             bottom: 0;
             background: --var($theme, 'date-selected-background');
             z-index: -1;
