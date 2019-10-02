@@ -3,7 +3,7 @@ import { TestBed, async, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxCalendarComponent, IgxCalendarModule, WEEKDAYS } from './index';
 import { IgxDatePickerComponent, IgxDatePickerModule } from '../date-picker/date-picker.component';
 import { DateRangeType } from '../core/dates';
@@ -389,7 +389,6 @@ describe('Multi-View Calendar - ', () => {
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [date3, date4, date5]);
         }));
 
-
         it('Verify navigation with arrow up when there are disabled dates', fakeAsync(() => {
             calendar.viewDate = new Date(2019, 11, 25);
             calendar.disabledDates = dateRangeDescriptors;
@@ -514,6 +513,82 @@ describe('Multi-View Calendar - ', () => {
             // Verify months are changed
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [date1, date2, date3]);
         }));
+
+        it('Verify that months increment/decrement continiouslt on enter keydown', (async() => {
+            calendar.monthsViewNumber = 2;
+            await wait();
+            fixture.detectChanges();
+            const dates = [new Date('2019-10-15'), new Date('2019-11-15'), new Date('2019-12-15'),
+            new Date('2020-1-15'), new Date('2020-2-15'), new Date('2020-3-15'), new Date('2020-4-15')];
+
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[0], dates[1]]);
+
+            for (let i = 1; i < dates.length - 1; i++) {
+                const arrowRight = HelperTestFunctions.getCalendarSubHeader(fixture).querySelector('.igx-calendar-picker__next');
+                UIInteractions.simulateKeyDownEvent(arrowRight, 'Enter');
+                await wait(300);
+                fixture.detectChanges();
+
+                HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[i], dates[i + 1]]);
+            }
+            for (let index = dates.length - 2; index > 0; index--) {
+                const arrowLeft = HelperTestFunctions.getCalendarSubHeader(fixture).querySelector('.igx-calendar-picker__prev');
+                UIInteractions.simulateKeyDownEvent(arrowLeft, 'Enter');
+                await wait(300);
+                fixture.detectChanges();
+
+                HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[index - 1], dates[index]]);
+            }
+        }));
+
+        it('Verify that months increment/decrement continiouslt on mouse down', (async() => {
+            calendar.monthsViewNumber = 2;
+            await wait();
+            fixture.detectChanges();
+            const dates = [new Date('2019-10-15'), new Date('2019-11-15'), new Date('2019-12-15'),
+            new Date('2020-1-15'), new Date('2020-2-15'), new Date('2020-3-15'), new Date('2020-4-15')];
+
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[0], dates[1]]);
+
+            for (let i = 1; i < dates.length - 1; i++) {
+                const arrowRight = HelperTestFunctions.getCalendarSubHeader(fixture).querySelector('.igx-calendar-picker__next');
+                UIInteractions.simulateMouseEvent('mousedown', arrowRight, 0, 0);
+                await wait(300);
+                fixture.detectChanges();
+
+                HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[i], dates[i + 1]]);
+            }
+            for (let index = dates.length - 2; index > 0; index--) {
+                const arrowLeft = HelperTestFunctions.getCalendarSubHeader(fixture).querySelector('.igx-calendar-picker__prev');
+                UIInteractions.simulateMouseEvent('mousedown', arrowLeft, 0, 0);
+                await wait(300);
+                fixture.detectChanges();
+
+                HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[index - 1], dates[index]]);
+            }
+        }));
+
+        it('When navigating to a new month the selected date should not steal the focus', (async() => {
+            calendar.monthsViewNumber = 2;
+            await wait();
+            fixture.detectChanges();
+            const dates = [new Date('2019-10-15'), new Date('2019-11-15'), new Date('2019-12-15')];
+
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[0], dates[1]]);
+
+            calendar.selectDate(dates[2]);
+            fixture.detectChanges();
+
+            const arrowRight = HelperTestFunctions.getCalendarSubHeader(fixture).querySelector('.igx-calendar-picker__next');
+            UIInteractions.simulateKeyDownEvent(arrowRight, 'Enter');
+            await wait(3000);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toEqual(arrowRight);
+
+        }));
+
+
     });
 
     describe('Selection tests - ', () => {
