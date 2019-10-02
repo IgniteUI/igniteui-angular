@@ -1819,6 +1819,8 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             fix.detectChanges();
 
             GridFunctions.filterBy('Today', '', fix);
+            fix.detectChanges();
+            tick(100);
             expect(grid.rowList.length).toEqual(1);
             GridFunctions.filterBy('Null', '', fix);
             expect(grid.rowList.length).toEqual(0);
