@@ -14,14 +14,15 @@ import {
     Output,
     Renderer,
     SimpleChange,
-    TemplateRef,
-    ViewChild
+    ViewChild,
+    PLATFORM_ID
 } from '@angular/core';
 import { fromEvent, interval, Subscription } from 'rxjs';
 import { debounce } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
 import { HammerGesturesManager } from '../core/touch';
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
+import { isPlatformBrowser } from '@angular/common';
 
 let NEXT_ID = 0;
 /**
@@ -595,6 +596,10 @@ export class IgxNavigationDrawerComponent implements
     }
 
     private getWindowWidth() {
+        if (!isPlatformBrowser(PLATFORM_ID)) {
+            return;
+        }
+
         return (window.innerWidth > 0) ? window.innerWidth : screen.width;
     }
 
@@ -602,11 +607,15 @@ export class IgxNavigationDrawerComponent implements
      * Sets the drawer width.
      */
     private setDrawerWidth(width: string) {
-        requestAnimationFrame(() => {
-            if (this.drawer) {
-                this.renderer.setElementStyle(this.drawer, 'width', width);
-            }
-        });
+        if (isPlatformBrowser(PLATFORM_ID)) {
+            requestAnimationFrame(() => {
+                if (this.drawer) {
+                    this.renderer.setElementStyle(this.drawer, 'width', width);
+                }
+            });
+        } else {
+            this.renderer.setElementStyle(this.drawer, 'width', width);
+        }
     }
 
     /**
@@ -632,7 +641,7 @@ export class IgxNavigationDrawerComponent implements
             this._touchManager.addGlobalEventListener('document', 'panmove', this.pan);
             this._touchManager.addGlobalEventListener('document', 'panend', this.panEnd);
         }
-        if (!this._resizeObserver) {
+        if (!this._resizeObserver && isPlatformBrowser(PLATFORM_ID)) {
             this._resizeObserver = fromEvent(window, 'resize').pipe(debounce(() => interval(150)))
                 .subscribe((value) => {
                     this.checkPinThreshold(value);
@@ -788,19 +797,27 @@ export class IgxNavigationDrawerComponent implements
      * @param opacity optional value to apply to the overlay
      */
     private setXSize(x: number, opacity?: string) {
-        // Angular polyfills patches window.requestAnimationFrame, but switch to DomAdapter API (TODO)
-        window.requestAnimationFrame(() => {
-            if (this.hasAnimateWidth) {
-                this.renderer.setElementStyle(this.drawer, 'width', x ? Math.abs(x) + 'px' : '');
-            } else {
-                this.renderer.setElementStyle(this.drawer, 'transform', x ? 'translate3d(' + x + 'px,0,0)' : '');
-                this.renderer.setElementStyle(this.drawer, '-webkit-transform',
-                    x ? 'translate3d(' + x + 'px,0,0)' : '');
-            }
-            if (opacity !== undefined) {
-                this.renderer.setElementStyle(this.overlay, 'opacity', opacity);
-            }
-        });
+        if (isPlatformBrowser(PLATFORM_ID)) {
+            // Angular polyfills patches window.requestAnimationFrame, but switch to DomAdapter API (TODO)
+            window.requestAnimationFrame(() => {
+                this.setXSizeInternal(x, opacity);
+            });
+        } else {
+            this.setXSizeInternal(x, opacity);
+        }
+    }
+
+    private setXSizeInternal(x: number, opacity?: string) {
+        if (this.hasAnimateWidth) {
+            this.renderer.setElementStyle(this.drawer, 'width', x ? Math.abs(x) + 'px' : '');
+        } else {
+            this.renderer.setElementStyle(this.drawer, 'transform', x ? 'translate3d(' + x + 'px,0,0)' : '');
+            this.renderer.setElementStyle(this.drawer, '-webkit-transform',
+                x ? 'translate3d(' + x + 'px,0,0)' : '');
+        }
+        if (opacity !== undefined) {
+            this.renderer.setElementStyle(this.overlay, 'opacity', opacity);
+        }
     }
 
     private toggleOpenedEvent = (evt?) => {
