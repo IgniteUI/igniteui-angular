@@ -78,7 +78,14 @@ import { IGridResourceStrings } from '../core/i18n/grid-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
-import { IgxGridSelectionService, GridSelectionRange, IgxGridCRUDService, IgxRow, IgxCell, isChromium } from './selection/selection.service';
+import {
+    IgxGridSelectionService,
+    GridSelectionRange,
+    IgxGridCRUDService,
+    IgxRow,
+    IgxCell,
+    isChromium
+} from './selection/selection.service';
 import { DragScrollDirection } from './selection/drag-select.directive';
 import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
 import { IgxExcelStyleLoadingValuesTemplateDirective } from './filtering/excel-style/excel-style-search.component';
@@ -97,7 +104,25 @@ import { IFilteringStrategy } from '../data-operations/filtering-strategy';
 import { IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,
      IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective } from './grid/grid.directives';
 import { GridKeydownTargetType, GridSelectionMode, GridSummaryPosition, GridSummaryCalculationMode, FilterMode } from './common/enums';
-import { IGridCellEventArgs, IRowSelectionEventArgs, IPinColumnEventArgs, IGridEditEventArgs, IPageEventArgs, IRowDataEventArgs, IColumnResizeEventArgs, IColumnMovingStartEventArgs, IColumnMovingEventArgs, IColumnMovingEndEventArgs, IGridKeydownEventArgs, IRowDragStartEventArgs, IRowDragEndEventArgs, IGridClipboardEvent, IGridToolbarExportEventArgs, ISearchInfo, ICellPosition } from './common/events';
+import {
+    IGridCellEventArgs,
+    IRowSelectionEventArgs,
+    IPinColumnEventArgs,
+    IGridEditEventArgs,
+    IPageEventArgs,
+    IRowDataEventArgs,
+    IColumnResizeEventArgs,
+    IColumnMovingStartEventArgs,
+    IColumnMovingEventArgs,
+    IColumnMovingEndEventArgs,
+    IGridKeydownEventArgs,
+    IRowDragStartEventArgs,
+    IRowDragEndEventArgs,
+    IGridClipboardEvent,
+    IGridToolbarExportEventArgs,
+    ISearchInfo,
+    ICellPosition
+} from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import { GridType } from './common/grid.interface';
 import { IgxDecimalPipeComponent, IgxDatePipeComponent } from './common/pipes';
