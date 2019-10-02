@@ -1,0 +1,4 @@
+@import '../index';
+
+@include igx-core($direction: rtl);
+@include igx-fluent-dark-theme($fluent-excel-palette);
