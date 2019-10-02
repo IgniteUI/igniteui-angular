@@ -21,7 +21,9 @@ import {
     Optional,
     OnInit,
     OnDestroy,
-    DoCheck
+    DoCheck,
+    EventEmitter,
+    Output
 } from '@angular/core';
 import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
@@ -126,6 +128,15 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     *      <igx-column field="Description"  [dataType]='string'></igx-column>
     * </igx-hierarchical-grid>
     * ```
+    *
+    * Two-way data binding.
+    * ```html
+    * <igx-hierarchical-grid [primaryKey]="'ID'" [data]="Data" [autoGenerate]="false" [(hierarchicalState)]="hgridState">
+    *      <igx-column field="ID"  [dataType]='number'></igx-column>
+    *      <igx-column field="Product"  [dataType]='string'></igx-column>
+    *      <igx-column field="Description"  [dataType]='string'></igx-column>
+    * </igx-hierarchical-grid>
+    * ```
     * @memberof IgxHierarchicalGridComponent
     */
     @Input()
@@ -133,6 +144,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         return this._hierarchicalState;
     }
     public set hierarchicalState(val) {
+        if (this._hierarchicalState !== val) {
+            this.hierarchicalStateChange.emit(val);
+        }
         if (this.hasChildrenKey) {
             val = val.filter(item => {
                 const rec = this.primaryKey ? this.data.find(x => x[this.primaryKey] === item.rowID) : item.rowID;
@@ -144,6 +158,12 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             this.notifyChanges(true);
         }
     }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public hierarchicalStateChange = new EventEmitter<any>();
 
     /**
      * Sets an array of objects containing the filtered data in the `IgxHierarchicalGridComponent`.

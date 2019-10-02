@@ -8,6 +8,8 @@ import {
     Input,
     QueryList,
     TemplateRef,
+    Output,
+    EventEmitter,
 } from '@angular/core';
 import { notifyChanges } from '../watch-changes';
 import { DataType } from '../../data-operations/data-util';
@@ -215,14 +217,20 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      * Sets the column hidden property.
      * Default value is `false`.
-     * ```typescript
+     * ```html
      * <igx-column [hidden] = "true"></igx-column>
+     * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-column [(hidden)] = "model.isHidden"></igx-column>
      * ```
      * @memberof IgxColumnComponent
      */
     set hidden(value: boolean) {
         if (this._hidden !== value) {
             this._hidden = value;
+            this.hiddenChange.emit(this._hidden);
             if (this.columnLayoutChild && this.parent.hidden !== value) {
                 this.parent.hidden = value;
                 return;
@@ -236,6 +244,12 @@ export class IgxColumnComponent implements AfterContentInit {
             }
         }
     }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public hiddenChange = new EventEmitter<boolean>();
     /**
      * Gets whether the hiding is disabled.
      * ```typescript
@@ -287,6 +301,11 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```html
      * <igx-column [width] = "'25%'"></igx-column>
      * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-column [(width)]="model.columns[0].width"></igx-column>
+     * ```
      * @memberof IgxColumnComponent
      */
     public set width(value: string) {
@@ -298,8 +317,15 @@ export class IgxColumnComponent implements AfterContentInit {
             if (this.grid) {
                 this.cacheCalcWidth();
             }
+            this.widthChange.emit(this._width);
         }
     }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public widthChange = new EventEmitter<string>();
 
     /**
      * @hidden
@@ -480,6 +506,11 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```html
      * <igx-column [pinned] = "true"></igx-column>
      * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-column [(pinned)] = "model.columns[0].isPinned"></igx-column>
+     * ```
      * @memberof IgxColumnComponent
      */
     public set pinned(value: boolean) {
@@ -492,8 +523,16 @@ export class IgxColumnComponent implements AfterContentInit {
                will re-init the group (if present)
             */
             this._pinned = value;
+            this.pinnedChange.emit(this._pinned);
         }
     }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public pinnedChange = new EventEmitter<boolean>();
+
     /**
      * @deprecated
      * Gets/Sets the `id` of the `igx-grid`.
@@ -1348,6 +1387,7 @@ export class IgxColumnComponent implements AfterContentInit {
         }
 
         this._pinned = true;
+        this.pinnedChange.emit(this._pinned);
         this._unpinnedIndex = grid._unpinnedColumns.indexOf(this);
         index = index !== undefined ? index : grid._pinnedColumns.length;
         const targetColumn = grid._pinnedColumns[index];
@@ -1412,6 +1452,7 @@ export class IgxColumnComponent implements AfterContentInit {
         index = (index !== undefined ? index :
             this._unpinnedIndex !== undefined ? this._unpinnedIndex : this.index);
         this._pinned = false;
+        this.pinnedChange.emit(this._pinned);
 
         const targetColumn = grid._unpinnedColumns[index];
 

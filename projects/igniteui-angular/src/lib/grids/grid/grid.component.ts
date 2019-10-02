@@ -240,6 +240,11 @@ export class IgxGridComponent extends IgxGridBaseComponent implements GridType, 
      *     ignoreCase: false
      * }];
      * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-grid #grid [data]="Data" [autoGenerate]="true" [(groupingExpressions)]="model.groupingExpressions"></igx-grid>
+     * ```
 	 * @memberof IgxGridComponent
      */
     set groupingExpressions(value: IGroupingExpression[]) {
@@ -249,6 +254,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements GridType, 
         const oldExpressions: IGroupingExpression[] = this.groupingExpressions;
         const newExpressions: IGroupingExpression[] = value;
         this._groupingExpressions = cloneArray(value);
+        this.groupingExpressionsChange.emit(this._groupingExpressions);
         this.chipsGoupingExpressions = cloneArray(value);
         if (this._gridAPI.grid) {
             /* grouping should work in conjunction with sorting
@@ -290,6 +296,12 @@ export class IgxGridComponent extends IgxGridBaseComponent implements GridType, 
     }
 
     /**
+     *@hidden
+     */
+    @Output()
+    public groupingExpressionsChange = new EventEmitter<IGroupingExpression[]>();
+
+    /**
      * Returns a list of expansion states for group rows.
      * Includes only states that differ from the default one (controlled through groupsExpanded and states that the user has changed.
      * Contains the expansion state (expanded: boolean) and the unique identifier for the group row (Array).
@@ -312,12 +324,28 @@ export class IgxGridComponent extends IgxGridBaseComponent implements GridType, 
      *   }];
      * // You can use DataUtil.getHierarchy(groupRow) to get the group `IgxGridRowComponent` hierarchy.
      * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-grid #grid [data]="Data" [autoGenerate]="true" [(groupingExpansionState)]="model.groupingExpansionState"></igx-grid>
+     * ```
 	 * @memberof IgxGridComponent
      */
     set groupingExpansionState(value) {
-        this._groupingExpandState = cloneArray(value);
-        this.cdr.detectChanges();
+        if (value !== this._groupingExpandState) {
+            this.groupingExpansionStateChange.emit(value);
+        }
+        this._groupingExpandState = value;
+        if (this.gridAPI.grid) {
+            this.cdr.detectChanges();
+        }
     }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public groupingExpansionStateChange = new EventEmitter<IGroupByExpandState[]>();
 
     /**
      * An @Input property that determines whether created groups are rendered expanded or collapsed.

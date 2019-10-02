@@ -291,6 +291,10 @@ export class IgxGridBaseComponent extends DisplayDensityBase implements
      * ];
      * this.grid.filteringExpressionsTree = (logic);
      * ```
+     * Two-way data binding.
+     * ```html
+     * <igx-grid #grid [data]="Data" [autoGenerate]="true" [(filteringExpressionsTree)]="model.filteringExpressions"></igx-grid>
+     * ```
 	 * @memberof IgxGridBaseComponent
      */
     set filteringExpressionsTree(value) {
@@ -309,6 +313,7 @@ export class IgxGridBaseComponent extends DisplayDensityBase implements
             filteringExpressionTreeClone.type = FilteringExpressionsTreeType.Regular;
             filteringExpressionTreeClone.filteringOperands = value.filteringOperands;
             this._filteringExpressionsTree = filteringExpressionTreeClone;
+            this.filteringExpressionsTreeChange.emit(this._filteringExpressionsTree);
 
             if (this.filteringService.isFilteringExpressionsTreeEmpty() && !this.advancedFilteringExpressionsTree) {
                 this.filteredData = null;
@@ -320,6 +325,12 @@ export class IgxGridBaseComponent extends DisplayDensityBase implements
             this.notifyChanges();
         }
     }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public filteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
 
     /**
      * Returns the advanced filtering state of `IgxGridComponent`.
@@ -438,6 +449,9 @@ export class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * Sets the current page index.
      * <igx-grid #grid [data]="Data" [paging]="true" [page]="5" [autoGenerate]="true"></igx-grid>
+     *
+     * Two-way data binding.
+     * <igx-grid #grid [data]="Data" [paging]="true" [(page)]="model.page" [autoGenerate]="true"></igx-grid>
      */
     set page(val: number) {
         if (val === this._page || val < 0 || val > this.totalPages - 1) {
@@ -446,8 +460,15 @@ export class IgxGridBaseComponent extends DisplayDensityBase implements
         this.selectionService.clear(true);
         this.onPagingDone.emit({ previous: this._page, current: val });
         this._page = val;
+        this.pageChange.emit(this._page);
         this.notifyChanges();
     }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public pageChange = new EventEmitter<number>();
 
     /**
      * Returns the number of visible items per page of the `IgxGridComponent`.
@@ -467,6 +488,11 @@ export class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```html
      * <igx-grid #grid [data]="Data" [paging]="true" [perPage]="5" [autoGenerate]="true"></igx-grid>
      * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-grid #grid [data]="Data" [paging]="true" [(perPage)]="model.perPage" [autoGenerate]="true"></igx-grid>
+     * ```
 	 * @memberof IgxGridBaseComponent
      */
     set perPage(val: number) {
@@ -475,10 +501,17 @@ export class IgxGridBaseComponent extends DisplayDensityBase implements
         }
         this.selectionService.clear(true);
         this._perPage = val;
+        this.perPageChange.emit(this._perPage);
         this.page = 0;
         this.endEdit(true);
         this.notifyChanges();
     }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public perPageChange = new EventEmitter<number>();
 
     /**
      * You can provide a custom `ng-template` for the pagination UI of the grid.
@@ -2096,12 +2129,24 @@ export class IgxGridBaseComponent extends DisplayDensityBase implements
      *     ignoreCase: true
      * }];
      * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-grid #grid [data]="Data" [autoGenerate]="true" [(sortingExpressions)]="model.sortingExpressions"></igx-grid>
+     * ```
 	 * @memberof IgxGridBaseComponent
      */
     set sortingExpressions(value: ISortingExpression[]) {
         this._sortingExpressions = cloneArray(value);
+        this.sortingExpressionsChange.emit(this._sortingExpressions);
         this.notifyChanges();
     }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public sortingExpressionsChange = new EventEmitter<ISortingExpression[]>();
 
     /**
      * @hidden

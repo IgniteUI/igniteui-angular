@@ -6,7 +6,9 @@ import {
     Input,
     forwardRef,
     QueryList,
-    TemplateRef
+    TemplateRef,
+    Output,
+    EventEmitter
 } from '@angular/core';
 
 import { IgxColumnComponent } from './column.component';
@@ -128,15 +130,28 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     }
     /**
      * Sets the column group hidden property.
-     * ```typescript
+     * ```html
      * <igx-column [hidden] = "true"></igx-column>
+     * ```
+     *
+     * Two-way data binding
+     * ```html
+     * <igx-column [(hidden)] = "model.columns[0].isHidden"></igx-column>
      * ```
      * @memberof IgxColumnGroupComponent
      */
     set hidden(value: boolean) {
         this._hidden = value;
+        this.hiddenChange.emit(this._hidden);
         this.children.forEach(child => child.hidden = value);
     }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public hiddenChange = new EventEmitter<boolean>();
+
     /**
      *@hidden
      */
@@ -206,7 +221,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
 
     set width(val) { }
 
-    // constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>, public cdr: ChangeDetectorRef) {
+    // constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, public cdr: ChangeDetectorRef) {
     //     // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
     //     super(gridAPI, cdr);
     // }
