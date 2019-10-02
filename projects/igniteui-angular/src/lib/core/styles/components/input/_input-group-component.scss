@@ -409,13 +409,29 @@
         }
     }
 
+    @include mx(filled, valid, border) {
+        @include e(bundle-type-border) {
+            @extend %igx-input-group__bundle-type-border--filled--success !optional;
+        }
+    }
+
     @include mx(focused, invalid, border) {
         @include e(bundle-type-border) {
             @extend %igx-input-group__bundle-type-border--focused--error !optional;
         }
     }
 
+    @include mx(filled, invalid, border) {
+        @include e(bundle-type-border) {
+            @extend %igx-input-group__bundle-type-border--invalid--error !optional;
+        }
+    }
+
     @include mx(filled, border) {
+        @include e(bundle-type-border) {
+            @extend %igx-input-group__bundle-type-border--filled !optional;
+        }
+
         @include e(bundle-type-border-main) {
             @extend %igx-input-group__bundle-type-border-main-filled !optional;
         }
