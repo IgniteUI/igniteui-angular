@@ -16,7 +16,13 @@
     <button [disabled]="isFirstPage || !pagerEnabled ? true: false" (click)="previousPage()" igxButton="icon" igxRipple igxRippleCentered="true">
         <igx-icon fontSet="material">chevron_left</igx-icon>
     </button>
-    <span>{{ page + 1 }} of {{ totalPages }}</span>
+    <div style="display: flex">
+        <span>{{ page + 1 }}</span>
+        &nbsp;
+        <span>of</span>
+        &nbsp;
+        <span>{{ totalPages }}</span>
+    </div>
     <button [disabled]="isLastPage || !pagerEnabled ? true: false" (click)="nextPage()" igxRipple igxRippleCentered="true" igxButton="icon">
         <igx-icon fontSet="material">chevron_right</igx-icon>
     </button>
