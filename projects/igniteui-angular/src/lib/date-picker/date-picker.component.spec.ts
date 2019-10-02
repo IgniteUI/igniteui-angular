@@ -264,7 +264,7 @@ describe('IgxDatePicker', () => {
         expect(firstDayValue).toBe(expectedResult);
     });
 
-    fit('Retemplated calendar in date picker', () => {
+    it('Retemplated calendar in date picker', () => {
         const fixture = TestBed.createComponent(IgxDatePickerCustomizedComponent);
         fixture.detectChanges();
 
@@ -288,7 +288,7 @@ describe('IgxDatePicker', () => {
         expect((buttons[0] as HTMLElement).innerText).toBe('TEST');
     });
 
-    fit('Retemplated calendar in date picker - dropdown mode', () => {
+    it('Retemplated calendar in date picker - dropdown mode', () => {
         const fixture = TestBed.createComponent(IgxDatePickerCustomizedComponent);
         const datePicker = fixture.componentInstance.customizedDatePicker;
         datePicker.mode = InteractionMode.DropDown;
