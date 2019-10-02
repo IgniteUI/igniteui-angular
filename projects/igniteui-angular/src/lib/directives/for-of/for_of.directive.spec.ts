@@ -889,7 +889,7 @@ describe('IgxForOf directive -', () => {
             expect(fix.componentInstance.parentVirtDir.state.startIndex).toBe(0);
         });
 
-        it('should set correct left offset when scrolling to right, clearing data and then setting new data', async(() => {
+        it('should set correct left offset when scrolling to right, clearing data and then setting new data', async() => {
             /**  Scroll left 1500px */
             expect(() => {
                 fix.componentInstance.scrollLeft(1500);
@@ -897,7 +897,7 @@ describe('IgxForOf directive -', () => {
             }).not.toThrow();
 
             /** Timeout for scroll event to trigger during test */
-
+            await wait(200);
             let firstRowDisplayContainer = fix.nativeElement.querySelectorAll('igx-display-container')[1];
             expect(firstRowDisplayContainer.style.left).toEqual('-82px');
 
@@ -911,7 +911,7 @@ describe('IgxForOf directive -', () => {
             firstRowDisplayContainer = fix.nativeElement.querySelectorAll('igx-display-container')[1];
             expect(firstRowDisplayContainer.style.left).toEqual('-82px');
 
-        }));
+        });
 
         it('should correctly scroll to the last element when using the scrollTo method', (done) => {
             fix.componentInstance.parentVirtDir.onChunkLoad.pipe(take(1)).subscribe(() => {

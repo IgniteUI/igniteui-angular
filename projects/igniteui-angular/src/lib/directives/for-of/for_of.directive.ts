@@ -277,9 +277,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     protected _bScrollInternal = false;
     // End properties related to virtual height handling
 
-    /** caching scroll position reduces reflows */
-    protected _scrollPosition = 0;
-
     protected _embeddedViews: Array<EmbeddedViewRef<any>> = [];
 
     protected contentResizeNotify = new Subject();
@@ -311,14 +308,16 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * @internal
      */
     public get scrollPosition(): number {
-        return this._scrollPosition;
+        return this.scrollComponent.scrollAmount;
     }
     /**
      * @hidden
      * @internal
      */
     public set scrollPosition(val: number) {
-        this._scrollPosition = val;
+        if (val === this.scrollComponent.scrollAmount) {
+            return;
+        }
         if (this.igxForScrollOrientation === 'horizontal' && this.scrollComponent) {
             this.scrollComponent.nativeElement.scrollLeft = val;
         } else if (this.scrollComponent) {
@@ -373,7 +372,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.state.chunkSize = this._calculateChunkSize();
             this.dc.instance.notVirtual = !(this.igxForContainerSize && this.state.chunkSize < this.igxForOf.length);
             if (this.scrollComponent) {
-                this._scrollPosition = this.scrollComponent.scrollAmount;
                 this.state.startIndex = Math.min(this.getIndexAt(this.scrollPosition, this.sizesCache, 0),
                     this.igxForOf.length - this.state.chunkSize);
             }
@@ -736,7 +734,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         } else {
             this._bScrollInternal = false;
         }
-        this._scrollPosition = this._virtScrollTop;
         const prevStartIndex = this.state.startIndex;
         const scrollOffset = this.fixedUpdateAllElements(this._virtScrollTop);
 
@@ -932,10 +929,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (!parseInt(this.scrollComponent.nativeElement.children[0].style.width, 10)) {
             return;
         }
-        this._scrollPosition = event.target.scrollLeft;
         const prevStartIndex = this.state.startIndex;
         // Updating horizontal chunks
-        const scrollOffset = this.fixedUpdateAllElements(this._scrollPosition);
+        const scrollOffset = this.fixedUpdateAllElements(event.target.scrollLeft);
         this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
 
         this.dc.changeDetectorRef.detectChanges();
@@ -1574,7 +1570,6 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         } else {
             this._bScrollInternal = false;
         }
-        this._scrollPosition = this._virtScrollTop;
         const scrollOffset = this.fixedUpdateAllElements(this._virtScrollTop);
 
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
@@ -1586,7 +1581,6 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         if (!this.scrollComponent || !parseInt(this.scrollComponent.nativeElement.children[0].style.width, 10)) {
             return;
         }
-        this._scrollPosition = scrollAmount;
         // Updating horizontal chunks
         const scrollOffset = this.fixedUpdateAllElements(scrollAmount);
         this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
