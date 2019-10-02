@@ -13,17 +13,21 @@ export class GridFlexSampleComponent implements OnInit, AfterViewInit {
     public localData;
     @ViewChild('grid1', { static: true })
     grid1: IgxGridComponent;
+    columns;
 
     constructor(){
     }
 
     ngOnInit() {
-        this.localData = [
-            { ID: 1, Name: 'A' },
-            { ID: 2, Name: 'B' },
-            { ID: 3, Name: 'C' },
-            { ID: 4, Name: 'D' },
-            { ID: 5, Name: 'E' }
+        const data = [];
+        for (let i = 0; i < 20; i++) {
+            data.push(  { ID: i, Name: 'A' + i });
+        }
+        this.localData = data;
+
+        this.columns = [
+            { field: 'ID', width: 800, resizable: true, maxWidth: 1000, minWidth: 70 },
+            { field: 'Name', width: 800, resizable: true, maxWidth: 1000, minWidth: 70 }
         ];
     }
     ngAfterViewInit() {
