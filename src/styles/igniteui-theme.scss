@@ -5,7 +5,7 @@
 @import 'app-palettes';
 @import 'app-layout';
 
-@include igx-core($direction: rtl);
+@include igx-core($direction: ltr);
 
 /* autoprefixer grid: on */
 .default-theme {
