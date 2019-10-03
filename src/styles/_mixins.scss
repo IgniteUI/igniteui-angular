@@ -33,7 +33,6 @@
     $palette,
     $exclude: (),
     $legacy-support: true,
-    $direction: ltr
 ) {
     $primary: igx-color($palette, 'primary');
     $secondary: igx-color($palette, 'secondary');
@@ -49,7 +48,6 @@
         $schema: $light-square-schema,
         $legacy-support: $legacy-support,
         $exclude: $exclude,
-        $direction: $direction
     );
 }
 
@@ -61,7 +59,6 @@
     $palette,
     $exclude: (),
     $legacy-support: true,
-    $direction: ltr
 ) {
     $primary: igx-color($palette, 'primary');
     $secondary: igx-color($palette, 'secondary');
@@ -77,6 +74,5 @@
         $schema: $light-square-schema,
         $legacy-support: $legacy-support,
         $exclude: $exclude,
-        $direction: $direction
     );
 }

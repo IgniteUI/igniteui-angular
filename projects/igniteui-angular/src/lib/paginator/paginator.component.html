@@ -18,9 +18,7 @@
     </button>
     <div style="display: flex">
         <span>{{ page + 1 }}</span>
-        &nbsp;
-        <span>of</span>
-        &nbsp;
+        <span>&nbsp;of&nbsp;</span>
         <span>{{ totalPages }}</span>
     </div>
     <button [disabled]="isLastPage || !pagerEnabled ? true: false" (click)="nextPage()" igxRipple igxRippleCentered="true" igxButton="icon">

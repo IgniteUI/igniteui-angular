@@ -117,6 +117,7 @@
     %grid-excel-action--compact {
         display: flex;
         align-items: center;
+        justify-content: space-between;
 
         header {
             color: igx-color($palette, 'grays', 700);
@@ -212,6 +213,7 @@
 
     %grid-excel-menu--cosy {
         %grid-excel-menu__header {
+            justify-content: space-between;
             padding: rem(8px);
         }
 
@@ -243,6 +245,7 @@
 
     %grid-excel-menu--compact {
         %grid-excel-menu__header {
+            justify-content: space-between;
             padding: rem(4px);
         }
 
