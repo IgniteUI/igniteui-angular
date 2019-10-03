@@ -182,14 +182,15 @@ describe('IgxGrid - Cell component #grid', () => {
 
     it('Should not attach doubletap handler for non-iOS', () => {
         const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
-        spyOn(PlatformUtil, 'isIOS').and.returnValue(false);
+        spyOn(PlatformUtil.prototype, 'isIOS').and.returnValue(false);
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
+        expect(addListenerSpy).not.toHaveBeenCalled();
     });
 
     it('Should handle doubletap on iOS, trigger onDoubleClick event', () => {
         const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
-        spyOn(PlatformUtil, 'isIOS').and.returnValue(true);
+        spyOn(PlatformUtil.prototype, 'isIOS').and.returnValue(true);
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
 
