@@ -383,8 +383,9 @@
         user-select: none;
         outline: none;
         cursor: pointer;
-        height: 100%;
+        height: calc(100% - #{$cal-picker-padding});
         align-items: center;
+        top: 0;
 
         &:focus,
         &:hover {
