@@ -2026,6 +2026,20 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(m).toBe('Maximum amount of grouped columns is 10.');
     }));
 
+    fit('should not allow grouping by column with no name', fakeAsync(() => {
+        const fix = TestBed.createComponent(GroupByEmptyColumnFieldComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        tick();
+        debugger;
+        const expr = grid.columns.map(val => {
+            return { fieldName: val.field, dir: SortingDirection.Asc, ignoreCase: true };
+        });
+        grid.groupBy(expr);
+        tick();
+        expect(grid.groupsRowList.toArray().length).toBe(0);
+    }));
+
     it('should display column header text in the grouping chip.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
@@ -2736,6 +2750,27 @@ export class GroupByDataMoreColumnsComponent extends DataParent {
         { field: 'M', width: 100 },
         { field: 'N', width: 100 }
     ];
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public instance: IgxGridComponent;
+}
+
+@Component({
+    template: `
+        <igx-grid
+            [width]='width'
+            [height]='height' >
+            <igx-column width="100px" [groupable]="true">
+                <ng-template igxCell let-cell="cell" let-val>
+                    <button>Dummy button</button>
+                </ng-template>
+            </igx-column>
+        </igx-grid>
+    `
+})
+export class GroupByEmptyColumnFieldComponent extends DataParent {
+    public width = '200px';
+    public height = null;
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
