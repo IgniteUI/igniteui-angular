@@ -14,15 +14,14 @@ import {
     Output,
     Renderer,
     SimpleChange,
-    ViewChild,
-    PLATFORM_ID
+    ViewChild
 } from '@angular/core';
 import { fromEvent, interval, Subscription } from 'rxjs';
 import { debounce } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
 import { HammerGesturesManager } from '../core/touch';
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
-import { isPlatformBrowser } from '@angular/common';
+import { PlatformUtil } from '../core/utils';
 
 let NEXT_ID = 0;
 /**
@@ -419,7 +418,8 @@ export class IgxNavigationDrawerComponent implements
         @Optional() private _state: IgxNavigationService,
         // private animate: AnimationBuilder, TODO
         protected renderer: Renderer,
-        private _touchManager: HammerGesturesManager) {
+        private _touchManager: HammerGesturesManager,
+        private platformUtil: PlatformUtil) {
     }
 
     /**
@@ -614,7 +614,7 @@ export class IgxNavigationDrawerComponent implements
     }
 
     private getWindowWidth() {
-        if (!isPlatformBrowser(PLATFORM_ID)) {
+        if (!this.platformUtil.isPlatformBrowser()) {
             return;
         }
 
@@ -625,7 +625,7 @@ export class IgxNavigationDrawerComponent implements
      * Sets the drawer width.
      */
     private setDrawerWidth(width: string) {
-        if (isPlatformBrowser(PLATFORM_ID)) {
+        if (this.platformUtil.isPlatformBrowser()) {
             requestAnimationFrame(() => {
                 if (this.drawer) {
                     this.renderer.setElementStyle(this.drawer, 'width', width);
@@ -659,7 +659,7 @@ export class IgxNavigationDrawerComponent implements
             this._touchManager.addGlobalEventListener('document', 'panmove', this.pan);
             this._touchManager.addGlobalEventListener('document', 'panend', this.panEnd);
         }
-        if (!this._resizeObserver && isPlatformBrowser(PLATFORM_ID)) {
+        if (!this._resizeObserver && this.platformUtil.isPlatformBrowser()) {
             this._resizeObserver = fromEvent(window, 'resize').pipe(debounce(() => interval(150)))
                 .subscribe((value) => {
                     this.checkPinThreshold(value);
@@ -815,7 +815,7 @@ export class IgxNavigationDrawerComponent implements
      * @param opacity optional value to apply to the overlay
      */
     private setXSize(x: number, opacity?: string) {
-        if (isPlatformBrowser(PLATFORM_ID)) {
+        if (this.platformUtil.isPlatformBrowser()) {
             // Angular polyfills patches window.requestAnimationFrame, but switch to DomAdapter API (TODO)
             window.requestAnimationFrame(() => {
                 this.setXSizeInternal(x, opacity);
