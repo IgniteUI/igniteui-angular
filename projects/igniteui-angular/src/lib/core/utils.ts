@@ -1,3 +1,6 @@
+import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+
 /**
  *@hidden
  */
@@ -230,10 +233,21 @@ export function isFirefox(): boolean {
  * @hidden
  * TODO: make injectable, check isPlatformBrowser()
  */
+@Injectable({ providedIn: 'root' })
 export class PlatformUtil {
-    static isIOS(): boolean {
-        const iosBrowser = typeof window !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent) && !('MSStream' in window);
+    private platformBrowser: boolean;
+
+    constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+        this.platformBrowser = isPlatformBrowser(this.platformId);
+    }
+
+    public isIOS(): boolean {
+        const iosBrowser = this.platformBrowser && /iPad|iPhone|iPod/.test(navigator.userAgent) && !('MSStream' in window);
         return iosBrowser;
+    }
+
+    public isPlatformBrowser(): boolean {
+        return this.platformBrowser;
     }
 }
 
@@ -246,8 +260,21 @@ export function isLeftClick(event: PointerEvent) {
 
 /** @hidden */
 export function isNavigationKey(key: string): boolean {
-    return ['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
-        'home', 'end', 'space', 'spacebar', ' '].indexOf(key) !== -1;
+    return [
+        'down',
+        'up',
+        'left',
+        'right',
+        'arrowdown',
+        'arrowup',
+        'arrowleft',
+        'arrowright',
+        'home',
+        'end',
+        'space',
+        'spacebar',
+        ' '
+    ].indexOf(key) !== -1;
 }
 
 /**
@@ -278,8 +305,21 @@ export interface CancelableBrowserEventArgs extends CancelableEventArgs {
     event?: Event;
 }
 
-export const NAVIGATION_KEYS = new Set(['down', 'up', 'left', 'right', 'arrowdown', 'arrowup', 'arrowleft', 'arrowright',
-                                'home', 'end', 'space', 'spacebar', ' ']);
+export const NAVIGATION_KEYS = new Set([
+    'down',
+    'up',
+    'left',
+    'right',
+    'arrowdown',
+    'arrowup',
+    'arrowleft',
+    'arrowright',
+    'home',
+    'end',
+    'space',
+    'spacebar',
+    ' '
+]);
 export const ROW_EXPAND_KEYS = new Set('right down arrowright arrowdown'.split(' '));
 export const ROW_COLLAPSE_KEYS = new Set('left up arrowleft arrowup'.split(' '));
 export const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'tab', 'enter', 'f2', 'escape', 'esc']);

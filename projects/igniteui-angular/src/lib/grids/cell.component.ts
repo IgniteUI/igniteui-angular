@@ -538,7 +538,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         public cdr: ChangeDetectorRef,
         private element: ElementRef,
         protected zone: NgZone,
-        private touchManager: HammerGesturesManager) { }
+        private touchManager: HammerGesturesManager,
+        protected platformUtil: PlatformUtil) { }
 
 
     /**
@@ -560,7 +561,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 this.nativeElement.addEventListener('compositionend', this.compositionEndHandler);
             }
         });
-        if (PlatformUtil.isIOS()) {
+        if (this.platformUtil.isIOS()) {
             this.touchManager.addEventListener(this.nativeElement, 'doubletap', this.onDoubleClick, {
                 cssProps: { } /* don't disable user-select, etc */
             } as HammerOptions);
