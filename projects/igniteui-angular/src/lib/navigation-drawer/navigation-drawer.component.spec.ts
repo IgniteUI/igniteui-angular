@@ -19,7 +19,7 @@ import { PlatformUtil } from '../core/utils';
 declare var Simulator: any;
 const oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
 
-fdescribe('Navigation Drawer', () => {
+describe('Navigation Drawer', () => {
     let widthSpyOverride: jasmine.Spy;
     // configureTestSuite();
     beforeEach(async(() => {
@@ -457,7 +457,7 @@ fdescribe('Navigation Drawer', () => {
         });
     }));
 
-    fit('should update width from css or property', async(done) => {
+    it('should update width from css or property', async(done) => {
         const template = `<igx-nav-drawer [miniWidth]="drawerMiniWidth" [width]="drawerWidth">
                             <ng-template igxDrawer></ng-template>
                             <ng-template igxDrawerMini></ng-template>
