@@ -593,6 +593,9 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
 	 * @memberof IgxGridComponent
      */
     public groupBy(expression: IGroupingExpression | Array<IGroupingExpression>): void {
+        if (this.checkIfNoField(expression)) {
+            return;
+        }
         this.endEdit(true);
         if (expression instanceof Array) {
             this._gridAPI.groupBy_multiple(expression);
@@ -600,6 +603,31 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
             this._gridAPI.groupBy(expression);
         }
         this.notifyChanges(true);
+    }
+
+    /**
+     * Checks whether `IgxColumnComponent` has an element without a `[field]`.
+     * Supports both single instance of the `ISortingExpression` and an array of elements.
+     * ```typescript
+     * this.grid.checkIfNoField({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false });
+     * this.grid.checkIfNoField([
+            { fieldName: name1, dir: SortingDirection.Asc, ignoreCase: false },
+            { fieldName: name2, dir: SortingDirection.Desc, ignoreCase: true },
+            { fieldName: name3, dir: SortingDirection.Desc, ignoreCase: false }
+        ]);
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    public checkIfNoField(expression: IGroupingExpression | Array<IGroupingExpression> | any): boolean {
+        if (expression instanceof Array) {
+            for (const singleExpression of expression) {
+                if (singleExpression.fieldName === undefined) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return expression.fieldName === undefined;
     }
 
     /**
