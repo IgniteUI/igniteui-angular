@@ -233,7 +233,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     public get virtualHelper() {
-        return this.vh.instance.elementRef.nativeElement;
+        return this.scrollComponent.nativeElement;
     }
 
     protected get sizesCache(): number[] {
