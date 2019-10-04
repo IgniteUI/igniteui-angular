@@ -1,5 +1,6 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { IgxGridComponent, IgxButtonDirective, IgxColumnGroupComponent } from 'igniteui-angular';
+import { IGridColumn } from 'projects/igniteui-angular/src/lib/grids/common/column.interface';
 
 @Component({
     selector: 'app-grid-column-groups-sample',
@@ -12,6 +13,37 @@ export class GridColumnGroupsSampleComponent implements AfterViewInit {
     grid: IgxGridComponent;
 
     columnGroupStates = new Map<IgxColumnGroupComponent, boolean>();
+    gridColumns: IGridColumn[] = [
+        { field: 'ID', width: '200px', filterable: true, sortable: true, resizable: true },
+        { header: 'General Information', movable: true, groupChildren: [
+            { field: 'CompanyName',  filterable: true, sortable: true, resizable: true, movable: true, width: '200px' },
+            { header: 'Person Details', groupChildren: [
+                { field: 'ContactName',  filterable: true, sortable: true, resizable: true, movable: true, width: '200px' },
+                { field: 'ContactTitle',  filterable: true, sortable: true, resizable: true, movable: true, width: '200px',
+                    hasSummary: true }
+            ]}
+        ]},
+        { header: 'Address Information', movable: true, groupChildren: [
+            { field: 'Country',  filterable: true, sortable: true, resizable: true, movable: true },
+            { field: 'Region',  filterable: true, sortable: true, resizable: true, movable: true },
+            { field: 'City',  filterable: true, sortable: true, resizable: true, movable: true },
+            { field: 'Address',  filterable: true, sortable: true, resizable: true, movable: true },
+            { field: 'FullAddress',  filterable: true, sortable: true, resizable: true, movable: true, width: '250px' },
+        ]},
+        { header: 'Address Information', movable: true, groupChildren: [
+            { header: 'Location', groupChildren: [
+                { field: 'Country',  filterable: true, sortable: true, resizable: true, movable: true },
+                { field: 'Region',  filterable: true, sortable: true, resizable: true, movable: true },
+                { field: 'City',  filterable: true, sortable: true, resizable: true, movable: true },
+                { field: 'Address',  filterable: true, sortable: true, resizable: true, movable: true }
+            ]},
+            { header: 'Contact Information', groupChildren: [
+                { field: 'Phone',  filterable: true, sortable: true, resizable: true, movable: true },
+                { field: 'Fax',  filterable: true, sortable: true, resizable: true, movable: true },
+                { field: 'PostalCode',  filterable: true, sortable: true, resizable: true, movable: true }
+            ]}
+        ]},
+    ];
 
     data: any[] = [
         // tslint:disable:max-line-length

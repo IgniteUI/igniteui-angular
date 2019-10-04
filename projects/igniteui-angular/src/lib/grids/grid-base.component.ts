@@ -52,7 +52,7 @@ import {
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IColumnVisibilityChangedEventArgs } from './column-hiding-item.directive';
-import { IgxColumnComponent, IgxColumnGroupComponent } from './column.component';
+import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent } from './column.component';
 import { ISummaryExpression } from './summaries/grid-summary';
 import { DropPosition, RowEditPositionStrategy, IgxDecimalPipeComponent, IgxDatePipeComponent } from './grid.common';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
@@ -104,6 +104,7 @@ import { IFilteringStrategy } from '../data-operations/filtering-strategy';
 import { IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,
      IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective } from './grid/grid.directives';
 import { GridKeydownTargetType, GridSelectionMode, GridSummaryPosition, GridSummaryCalculationMode, FilterMode } from './common/enums';
+import { IGridColumn } from './common/column.interface';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -2733,7 +2734,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected _columns: IgxColumnComponent[] = [];
+    protected _columns: IGridColumn[] = [];
+    /**
+     * @hidden
+     */
+    protected _columnRefs: IgxColumnComponent[] = [];
     /**
      * @hidden
      */
@@ -3025,6 +3030,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected setupColumns() {
         if (this.autoGenerate) {
             this.autogenerateColumns();
+        } else if (this._columns.length) {
+            this.createColumns(this._columns);
         }
 
         this.initColumns(this.columnList, (col: IgxColumnComponent) => this.onColumnInit.emit(col));
@@ -3378,6 +3385,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return this.featureColumnsWidth;
     }
 
+    @Input()
+    set columns(value: IGridColumn[]) {
+        this._columns = value;
+        if (!this._init) {
+            this.createDynamicColumns(this._columns);
+        }
+    }
+
     /**
      * Returns an array of `IgxColumnComponent`s.
      * ```typescript
@@ -3385,8 +3400,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseComponent
      */
-    get columns(): IgxColumnComponent[] {
+    get columns(): IGridColumn[] {
         return this._columns;
+    }
+
+    get columnRefs(): IgxColumnComponent[] {
+        return this._columnRefs;
     }
 
     /**
@@ -3776,7 +3795,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this._moveColumns(column, dropTarget, position);
         this.notifyChanges();
         if (this.hasColumnLayouts) {
-            this.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
+            this._columnRefs.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
 
         const args = {
@@ -4868,9 +4887,51 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         return scrollWidth;
     }
 
-    /**
-     * @hidden
-     */
+    protected createColumns(columnsList: IGridColumn[]) {
+        const result = this.createDynamicColumns(columnsList);
+        this.columnList.reset(result.all);
+        this.columnList.notifyOnChanges();
+    }
+
+    protected createDynamicColumns(columnsList: IGridColumn[], parent?: IgxColumnComponent) {
+        const directChildren = [];
+        let allColumns = [];
+        columnsList.forEach((col: IGridColumn) => {
+            let factory;
+
+            if (!col.layoutChildren && !col.groupChildren) {
+                factory = this.resolver.resolveComponentFactory(IgxColumnComponent);
+            } else if (col.groupChildren) {
+                factory = this.resolver.resolveComponentFactory(IgxColumnGroupComponent);
+            } else {
+                factory = this.resolver.resolveComponentFactory(IgxColumnLayoutComponent);
+            }
+            const newColumn = factory.create(this.viewRef.injector);
+
+            newColumn.instance.parent = parent ? parent : null;
+            Object.keys(col).forEach((key) => {
+                if (key !== 'columnLayout' && key !== 'groupChildren') {
+                    newColumn.instance[key] = col[key];
+                }
+            });
+
+            newColumn.changeDetectorRef.detectChanges();
+            directChildren.push(newColumn.instance);
+            allColumns.push(newColumn.instance);
+
+            if (col.groupChildren && col.groupChildren.length) {
+                const childColumns = this.createDynamicColumns(col.groupChildren, newColumn.instance);
+                allColumns = allColumns.concat(childColumns.all);
+                newColumn.instance.children.reset(childColumns.direct);
+            } else if (col.layoutChildren && col.layoutChildren.length) {
+                const childColumns = this.createDynamicColumns(col.layoutChildren, newColumn.instance);
+                allColumns = allColumns.concat(childColumns.all);
+                newColumn.instance.children.reset(childColumns.all);
+            }
+        });
+        return { all: allColumns, direct: directChildren};
+    }
+
     protected autogenerateColumns() {
         const data = this.gridAPI.get_data();
         const factory = this.resolver.resolveComponentFactory(IgxColumnComponent);
@@ -4925,7 +4986,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.columnList.reset(columnLayoutColumns);
         }
         this._maxLevelHeaderDepth = null;
-        this._columns = this.columnList.toArray();
+        this._columnRefs = this.columnList.toArray();
         collection.forEach((column: IgxColumnComponent) => {
             column.defaultWidth = this.columnWidthSetByUser ? this._columnWidth : column.defaultWidth ? column.defaultWidth : '';
 
@@ -5548,29 +5609,29 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         // Make sure we don't exceed unpinned area min width and get pinned and unpinned col collections.
         // We take into account top level columns (top level groups and non groups).
         // If top level is unpinned the pinning handles all children to be unpinned as well.
-        for (let i = 0; i < this._columns.length; i++) {
-            if (this._columns[i].pinned && !this._columns[i].parent) {
+        for (let i = 0; i < this._columnRefs.length; i++) {
+            if (this._columnRefs[i].pinned && !this._columnRefs[i].parent) {
                 // Pinned column. Check if with it the unpinned min width is exceeded.
-                const colWidth = parseInt(this._columns[i].width, 10);
+                const colWidth = parseInt(this._columnRefs[i].width, 10);
                 if (currentPinnedWidth + colWidth > this.calcWidth - this.unpinnedAreaMinWidth) {
                     // unpinned min width is exceeded. Unpin the columns and add it to the unpinned collection.
-                    this._columns[i].pinned = false;
-                    unpinnedColumns.push(this._columns[i]);
-                    newUnpinnedCols.push(this._columns[i]);
+                    this._columnRefs[i].pinned = false;
+                    unpinnedColumns.push(this._columnRefs[i]);
+                    newUnpinnedCols.push(this._columnRefs[i]);
                 } else {
                     // unpinned min width is not exceeded. Keep it pinned and add it to the pinned collection.
                     currentPinnedWidth += colWidth;
-                    pinnedColumns.push(this._columns[i]);
+                    pinnedColumns.push(this._columnRefs[i]);
                 }
-            } else if (this._columns[i].pinned && this._columns[i].parent) {
-                if (this._columns[i].topLevelParent.pinned) {
-                    pinnedColumns.push(this._columns[i]);
+            } else if (this._columnRefs[i].pinned && this._columnRefs[i].parent) {
+                if (this._columnRefs[i].topLevelParent.pinned) {
+                    pinnedColumns.push(this._columnRefs[i]);
                 } else {
-                    this._columns[i].pinned = false;
-                    unpinnedColumns.push(this._columns[i]);
+                    this._columnRefs[i].pinned = false;
+                    unpinnedColumns.push(this._columnRefs[i]);
                 }
             } else {
-                unpinnedColumns.push(this._columns[i]);
+                unpinnedColumns.push(this._columnRefs[i]);
             }
         }
 

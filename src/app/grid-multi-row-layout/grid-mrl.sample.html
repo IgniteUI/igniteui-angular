@@ -4,7 +4,8 @@
         <div class="density-chooser" style="margin-bottom: 16px">
             <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
         </div>
-        <igx-grid [showToolbar]="true"  [columnHiding] = "true" [columnPinning]='true' [rowEditable]="true" [rowSelectable]="false" [primaryKey]="'PostalCode'" #grid [data]="data" [displayDensity]="density" [width]="'100%'" [height]="'500px'" [rowEditable]="true" >
+        <igx-grid [showToolbar]="true"  [columnHiding] = "true" [columnPinning]='true' [rowEditable]="true" [rowSelectable]="false" [primaryKey]="'PostalCode'" #grid
+            [data]="data" [displayDensity]="density" [width]="'100%'" [height]="'500px'" [rowEditable]="true" [columns]="cols">
             <igx-column-layout field='group1'>
                 <igx-column [groupable]="true" [rowStart]="1" [colStart]="1" [rowEnd]="4" field="ID" [width]="'800px'"  [groupable]='true' ></igx-column>
             </igx-column-layout>

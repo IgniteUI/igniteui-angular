@@ -32,7 +32,7 @@
         </button>
         <igx-drop-down #columnHidingDropdown>
             <igx-column-hiding
-                [columns]="grid.columns"
+                [columns]="grid.columnRefs"
                 [title]="grid.columnHidingTitle"
                 [filterColumnsPrompt]="filterColumnsPrompt"
                 [columnsAreaMaxHeight]="defaultDropDownsMaxHeight"
@@ -53,7 +53,7 @@
         </button>
         <igx-drop-down #columnPinningDropdown>
             <igx-column-pinning
-                [columns]="grid.columns"
+                [columns]="grid.columnRefs"
                 [title]="grid.columnPinningTitle"
                 [filterColumnsPrompt]="filterColumnsPrompt"
                 [columnsAreaMaxHeight]="defaultDropDownsMaxHeight"></igx-column-pinning>
