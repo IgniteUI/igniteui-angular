@@ -1,11 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, async, fakeAsync, tick, flush } from '@angular/core/testing';
+import { TestBed, async, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxCalendarComponent, IgxCalendarModule, WEEKDAYS } from './index';
+import { IgxDatePickerComponent, IgxDatePickerModule } from '../date-picker/date-picker.component';
 import { DateRangeType } from '../core/dates';
+import { By } from '@angular/platform-browser';
 
 
 describe('Multi-View Calendar - ', () => {
@@ -14,8 +16,8 @@ describe('Multi-View Calendar - ', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [MultiViewCalendarSampleComponent],
-            imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
+            declarations: [MultiViewCalendarSampleComponent, MultiViewDatePickerSampleComponent],
+            imports: [IgxCalendarModule, IgxDatePickerModule, FormsModule, NoopAnimationsModule]
         }).compileComponents();
     }));
 
@@ -30,90 +32,75 @@ describe('Multi-View Calendar - ', () => {
             const today = new Date(Date.now());
 
             expect(calendar.monthsViewNumber).toBe(3);
-            HelperTestFunctions.verifyMonthsViewNumber(fixture, 3);
+            HelperTestFunctions.verifyMonthsViewNumber(fixture, 3, true);
             HelperTestFunctions.verifyCalendarHeader(fixture, today);
 
             calendar.monthsViewNumber = 4;
             fixture.detectChanges();
 
             expect(calendar.monthsViewNumber).toBe(4);
-            HelperTestFunctions.verifyMonthsViewNumber(fixture, 4);
+            HelperTestFunctions.verifyMonthsViewNumber(fixture, 4, true);
             HelperTestFunctions.verifyCalendarHeader(fixture, today);
 
             calendar.monthsViewNumber = 2;
             fixture.detectChanges();
 
             expect(calendar.monthsViewNumber).toBe(2);
-            HelperTestFunctions.verifyMonthsViewNumber(fixture, 2);
+            HelperTestFunctions.verifyMonthsViewNumber(fixture, 2, true);
             HelperTestFunctions.verifyCalendarHeader(fixture, today);
         });
 
         it('should  render properly if set monthsViewNumber to a value < 1', () => {
-            pending('this should be fixed');
             expect(calendar.monthsViewNumber).toBe(3);
-            HelperTestFunctions.verifyMonthsViewNumber(fixture, 3);
+            HelperTestFunctions.verifyMonthsViewNumber(fixture, 3, true);
 
             calendar.monthsViewNumber = 0;
             fixture.detectChanges();
 
             expect(calendar.monthsViewNumber).toBe(3);
-            HelperTestFunctions.verifyMonthsViewNumber(fixture, 3);
+            HelperTestFunctions.verifyMonthsViewNumber(fixture, 3, true);
 
             calendar.monthsViewNumber = -3;
             fixture.detectChanges();
 
             expect(calendar.monthsViewNumber).toBe(3);
-            HelperTestFunctions.verifyMonthsViewNumber(fixture, 3);
+            HelperTestFunctions.verifyMonthsViewNumber(fixture, 3, true);
         });
 
         it('should change months views when viewDate is changed', () => {
-            const dateJun = new Date('2019-06-19');
-            const dateJul = new Date('2019-07-19');
-            const dateAug = new Date('2019-08-19');
+            const dates =  [new Date('2019-06-19'), new Date('2019-07-19') , new Date('2019-08-19')];
             const today = new Date(Date.now());
             expect(calendar.monthsViewNumber).toBe(3);
-            HelperTestFunctions.verifyMonthsViewNumber(fixture, 3);
+            HelperTestFunctions.verifyMonthsViewNumber(fixture, 3, true);
 
-            calendar.viewDate = dateJun;
+            calendar.viewDate = dates[0];
             fixture.detectChanges();
 
             expect(calendar.monthsViewNumber).toBe(3);
-            HelperTestFunctions.verifyMonthsViewNumber(fixture, 3, dateJun);
+            HelperTestFunctions.verifyMonthsViewNumber(fixture, 3);
             HelperTestFunctions.verifyCalendarHeader(fixture, today);
-            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dateJun, dateJul, dateAug]);
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, dates);
         });
 
         it('should be able to change hideOutsideDays property runtime', () => {
+            calendar.viewDate = new Date('2019-07-19');
+            fixture.detectChanges();
+
             expect(calendar.hideOutsideDays).toBe(false);
             calendar.monthsViewNumber = 2;
             fixture.detectChanges();
 
             expect(calendar.monthsViewNumber).toBe(2);
-
-            const firstDayView = HelperTestFunctions.getMonthView(fixture, 0);
-            let firstInactiveDays = firstDayView.querySelectorAll(HelperTestFunctions.INACTIVE_DAYS_CSSCLASS);
-            let hiddenDays = firstDayView.querySelectorAll(HelperTestFunctions.HIDDEN_DAYS_CSSCLASS);
-
-            expect(firstInactiveDays.length).toBeGreaterThan(1);
-            expect(hiddenDays.length).toBe(0);
-
-            const secondDayView = HelperTestFunctions.getMonthView(fixture, 1);
-            let secondInactiveDays = secondDayView.querySelectorAll(HelperTestFunctions.INACTIVE_DAYS_CSSCLASS);
-            let secondHiddenDays = secondDayView.querySelectorAll(HelperTestFunctions.HIDDEN_DAYS_CSSCLASS);
-
-            expect(secondInactiveDays.length).toBeGreaterThan(1);
-            expect(secondHiddenDays.length).toBe(0);
+            expect(HelperTestFunctions.getInactiveDays(fixture, 0).length).toBeGreaterThan(1);
+            expect(HelperTestFunctions.getHiidenDays(fixture, 0).length).toBe(0);
+            expect(HelperTestFunctions.getInactiveDays(fixture, 1).length).toBeGreaterThan(1);
+            expect(HelperTestFunctions.getHiidenDays(fixture, 1).length).toBe(0);
 
             calendar.hideOutsideDays = true;
             fixture.detectChanges();
 
-            firstInactiveDays = firstDayView.querySelectorAll(HelperTestFunctions.INACTIVE_DAYS_CSSCLASS);
-            secondInactiveDays = secondDayView.querySelectorAll(HelperTestFunctions.INACTIVE_DAYS_CSSCLASS);
-            hiddenDays = firstDayView.querySelectorAll(HelperTestFunctions.HIDDEN_DAYS_CSSCLASS);
-            secondHiddenDays = secondDayView.querySelectorAll(HelperTestFunctions.HIDDEN_DAYS_CSSCLASS);
-
-            expect(hiddenDays.length).toBe(firstInactiveDays.length);
-            expect(secondHiddenDays.length).toBe(secondInactiveDays.length);
+            expect(HelperTestFunctions.getHiidenDays(fixture, 0).length).toBe(HelperTestFunctions.getInactiveDays(fixture, 0).length);
+            expect(HelperTestFunctions.getHiidenDays(fixture, 1).length).toBe(HelperTestFunctions.getInactiveDays(fixture, 1).length);
         });
 
         it('weekStart should be properly set to all month views', () => {
@@ -143,14 +130,14 @@ describe('Multi-View Calendar - ', () => {
             const today = new Date(Date.now());
 
             expect(calendar.monthsViewNumber).toBe(3);
-            HelperTestFunctions.verifyMonthsViewNumber(fixture, 3);
+            HelperTestFunctions.verifyMonthsViewNumber(fixture, 3, true);
             HelperTestFunctions.verifyCalendarHeader(fixture, today);
 
             calendar.monthsViewNumber = 2;
             fixture.detectChanges();
 
             expect(calendar.monthsViewNumber).toBe(2);
-            HelperTestFunctions.verifyMonthsViewNumber(fixture, 2);
+            HelperTestFunctions.verifyMonthsViewNumber(fixture, 2, true);
             HelperTestFunctions.verifyCalendarHeader(fixture, today);
         });
 
@@ -160,36 +147,32 @@ describe('Multi-View Calendar - ', () => {
             calendar.viewDate = viewDate;
             fixture.detectChanges();
 
-            const firstMonth = HelperTestFunctions.getMonthView(fixture, 0);
-            const secondMonth = HelperTestFunctions.getMonthView(fixture, 1);
-            const thirdMonth = HelperTestFunctions.getMonthView(fixture, 2);
-
-            let dateEls = firstMonth.querySelectorAll(HelperTestFunctions.DAY_CSSCLASS);
+            let dateEls = HelperTestFunctions.getMonthViewDates(fixture, 0);
             UIInteractions.simulateClickEvent(dateEls[15]);
             fixture.detectChanges();
 
             expect(calendar.onSelection.emit).toHaveBeenCalledTimes(1);
-            expect(firstMonth.querySelector(HelperTestFunctions.SELECTED_DATE)).not.toBeNull();
-            expect(secondMonth.querySelector(HelperTestFunctions.SELECTED_DATE)).toBeNull();
-            expect(thirdMonth.querySelector(HelperTestFunctions.SELECTED_DATE)).toBeNull();
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(1);
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(0);
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 2).length).toBe(0);
 
-            dateEls = secondMonth.querySelectorAll(HelperTestFunctions.DAY_CSSCLASS);
+            dateEls = HelperTestFunctions.getMonthViewDates(fixture, 1);
             UIInteractions.simulateClickEvent(dateEls[21]);
             fixture.detectChanges();
 
             expect(calendar.onSelection.emit).toHaveBeenCalledTimes(2);
-            expect(firstMonth.querySelector(HelperTestFunctions.SELECTED_DATE)).toBeNull();
-            expect(secondMonth.querySelector(HelperTestFunctions.SELECTED_DATE)).not.toBeNull();
-            expect(thirdMonth.querySelector(HelperTestFunctions.SELECTED_DATE)).toBeNull();
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(0);
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(1);
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 2).length).toBe(0);
 
-            dateEls = thirdMonth.querySelectorAll(HelperTestFunctions.DAY_CSSCLASS);
+            dateEls = HelperTestFunctions.getMonthViewDates(fixture, 2);
             UIInteractions.simulateClickEvent(dateEls[19]);
             fixture.detectChanges();
 
             expect(calendar.onSelection.emit).toHaveBeenCalledTimes(3);
-            expect(firstMonth.querySelector(HelperTestFunctions.SELECTED_DATE)).toBeNull();
-            expect(secondMonth.querySelector(HelperTestFunctions.SELECTED_DATE)).toBeNull();
-            expect(thirdMonth.querySelector(HelperTestFunctions.SELECTED_DATE)).not.toBeNull();
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(0);
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(0);
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 2).length).toBe(1);
         });
     });
 
@@ -202,6 +185,7 @@ describe('Multi-View Calendar - ', () => {
         const jan2020 = new Date('2020-1-19');
         const feb2020 = new Date('2020-2-19');
         const march2020 = new Date('2020-3-19');
+        const april2020 = new Date('2020-4-19');
 
         const dateRangeDescriptors = [
             { type: DateRangeType.Between, dateRange: [new Date(2019, 10, 15), new Date(2019, 11, 8)] },
@@ -264,12 +248,15 @@ describe('Multi-View Calendar - ', () => {
             tick(600);
 
             firstMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
+
+            // The focus should not be stolen by the selected date
             expect(document.activeElement).toEqual(firstMonthDates[29]);
             // Verify months are changed
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [sept2019, oct2019, nov2019]);
         }));
 
         it('Verify navigation with arrow down', fakeAsync(() => {
+            // pending('issue #5888');
             let monthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
             UIInteractions.simulateClickEvent(monthDates[22]);
             fixture.detectChanges();
@@ -311,13 +298,14 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
             tick(600);
 
-            monthDates = HelperTestFunctions.getMonthViewDates(fixture, 2);
+            monthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
             expect(document.activeElement).toEqual(monthDates[2]);
-            // Verify months are changed
-            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [nov2019, dec2019, jan2020]);
+            // TODO: Consider issue #5913
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [jan2020, feb2020, march2020]);
         }));
 
         it('Verify navigation with arrow left', fakeAsync(() => {
+            // pending('issue #5888');
             const secondMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
             UIInteractions.simulateClickEvent(secondMonthDates[1]);
             fixture.detectChanges();
@@ -358,10 +346,15 @@ describe('Multi-View Calendar - ', () => {
         }));
 
         it('Verify navigation with arrow right', fakeAsync(() => {
+            // pending('issue #5888');
             let monthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
             UIInteractions.simulateClickEvent(monthDates[20]);
             fixture.detectChanges();
             tick();
+
+            calendar.selectDate(new Date('2020-2-19'));
+            tick();
+            fixture.detectChanges();
 
             for (let index = 20; index < 29; index++) {
                 UIInteractions.simulateKeyDownEvent(monthDates[index], 'ArrowRight');
@@ -391,13 +384,15 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
             tick(600);
 
-            monthDates = HelperTestFunctions.getMonthViewDates(fixture, 2);
+            // TODO: Consider issue #5913
+            monthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
             expect(document.activeElement).toEqual(monthDates[0]);
             // Verify months are changed
-            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [nov2019, dec2019, jan2020]);
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [jan2020, feb2020, march2020]);
         }));
 
         it('Verify navigation with arrow up when there are disabled dates', fakeAsync(() => {
+            // pending('issue #5888');
             calendar.viewDate = new Date(2019, 11, 25);
             calendar.disabledDates = dateRangeDescriptors;
             fixture.detectChanges();
@@ -423,12 +418,12 @@ describe('Multi-View Calendar - ', () => {
             // Verify months are not changed
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dec2019, jan2020, feb2020]);
 
-            UIInteractions.simulateKeyDownEvent(secondMonthDates[9], 'ArrowUp');
+            UIInteractions.simulateKeyDownEvent(firstMonthDates[9], 'ArrowUp');
             fixture.detectChanges();
             tick(600);
 
             firstMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
-            expect(document.activeElement).toEqual(firstMonthDates[11]);
+            expect(document.activeElement).toEqual(firstMonthDates[13]);
             // Verify months are changed
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [nov2019, dec2019, jan2020]);
         }));
@@ -455,21 +450,20 @@ describe('Multi-View Calendar - ', () => {
             tick();
 
             let monthDates = HelperTestFunctions.getMonthViewDates(fixture, 2);
-            expect(document.activeElement).toEqual(monthDates[15]);
-            // Verify months are not changed
-            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dec2019, jan2020, feb2020]);
+            expect(document.activeElement).toEqual(monthDates[20]);
 
-            UIInteractions.simulateKeyDownEvent(secondMonthDates[20], 'ArrowDown');
+            UIInteractions.simulateKeyDownEvent(monthDates[20], 'ArrowDown');
             fixture.detectChanges();
             tick(600);
 
-            monthDates = HelperTestFunctions.getMonthViewDates(fixture, 2);
+            monthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
             expect(document.activeElement).toEqual(monthDates[12]);
             // Verify months are changed
-            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [jan2020, feb2020, march2020]);
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [ march2020, april2020, new Date('2020-5-19')]);
         }));
 
         it('Verify navigation with arrow left when there are disabled dates', fakeAsync(() => {
+            // pending('issue #5888');
             calendar.viewDate = new Date(2019, 11, 25);
             calendar.disabledDates = dateRangeDescriptors;
             fixture.detectChanges();
@@ -735,6 +729,510 @@ describe('Multi-View Calendar - ', () => {
             monthDates = HelperTestFunctions.getMonthViewDates(fixture, 2);
             expect(document.activeElement).toEqual(monthDates[11]);
         }));
+
+        it('Verify that months increment/decrement continiously on enter keydown', (async() => {
+            calendar.monthsViewNumber = 2;
+            await wait();
+            fixture.detectChanges();
+            const dates = [new Date('2019-10-15'), new Date('2019-11-15'), new Date('2019-12-15'),
+            new Date('2020-1-15'), new Date('2020-2-15'), new Date('2020-3-15'), new Date('2020-4-15')];
+
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[0], dates[1]]);
+
+            for (let i = 1; i < dates.length - 1; i++) {
+                const arrowRight = HelperTestFunctions.getNexArrowElement(fixture);
+                UIInteractions.simulateKeyDownEvent(arrowRight, 'Enter');
+                await wait(300);
+                fixture.detectChanges();
+
+                HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[i], dates[i + 1]]);
+            }
+            for (let index = dates.length - 2; index > 0; index--) {
+                const arrowLeft = HelperTestFunctions.getPreviousArrowElement(fixture);
+                UIInteractions.simulateKeyDownEvent(arrowLeft, 'Enter');
+                await wait(300);
+                fixture.detectChanges();
+
+                HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[index - 1], dates[index]]);
+            }
+        }));
+
+        it('Verify that months increment/decrement continiouslt on mouse down', (async() => {
+            calendar.monthsViewNumber = 2;
+            await wait();
+            fixture.detectChanges();
+            const dates = [new Date('2019-10-15'), new Date('2019-11-15'), new Date('2019-12-15'),
+            new Date('2020-1-15'), new Date('2020-2-15'), new Date('2020-3-15'), new Date('2020-4-15')];
+
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[0], dates[1]]);
+
+            for (let i = 1; i < dates.length - 1; i++) {
+                const arrowRight = HelperTestFunctions.getNexArrowElement(fixture);
+                UIInteractions.simulateMouseEvent('mousedown', arrowRight, 0, 0);
+                await wait(300);
+                fixture.detectChanges();
+
+                HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[i], dates[i + 1]]);
+            }
+            for (let index = dates.length - 2; index > 0; index--) {
+                const arrowLeft = HelperTestFunctions.getPreviousArrowElement(fixture);
+                UIInteractions.simulateMouseEvent('mousedown', arrowLeft, 0, 0);
+                await wait(300);
+                fixture.detectChanges();
+
+                HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[index - 1], dates[index]]);
+            }
+        }));
+
+        it('When navigating to a new month the selected date should not steal the focus', (async() => {
+            pending('to Be refactored when the animations are fixed');
+            calendar.monthsViewNumber = 2;
+            await wait();
+            fixture.detectChanges();
+            const dates = [new Date('2019-10-15'), new Date('2019-11-15'), new Date('2019-12-15')];
+
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[0], dates[1]]);
+
+            const arrowRight = HelperTestFunctions.getNexArrowElement(fixture);
+            arrowRight.focus();
+
+            expect(document.activeElement).toEqual(arrowRight);
+
+            calendar.selectDate(dates[2]);
+            fixture.detectChanges();
+
+            UIInteractions.simulateKeyDownEvent(arrowRight, 'Enter');
+            await wait(50);
+            fixture.detectChanges();
+            await wait(900);
+
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [dates[1], dates[2]]);
+            expect(document.activeElement).toEqual(arrowRight);
+        }));
+
+        it('When select a new month - should come at correct position', fakeAsync(() => {
+            const monthPicker = HelperTestFunctions.getCalendarSubHeader(fixture).querySelectorAll('.igx-calendar-picker__date')[2];
+            UIInteractions.simulateKeyDownEvent(monthPicker, 'Enter');
+            fixture.detectChanges();
+            tick(100);
+            const months = HelperTestFunctions.getMonthsFromMonthView(fixture);
+            expect(months.length).toBe(12);
+            expect(document.activeElement).toEqual(months[10]);
+
+            UIInteractions.simulateKeyDownEvent(months[10], 'ArrowUp');
+            fixture.detectChanges();
+            tick(100);
+            expect(document.activeElement).toEqual(months[7]);
+
+            UIInteractions.simulateKeyDownEvent(months[7], 'ArrowLeft');
+            fixture.detectChanges();
+            tick(100);
+            expect(document.activeElement).toEqual(months[6]);
+
+            UIInteractions.simulateKeyDownEvent(months[6], 'ArrowDown');
+            fixture.detectChanges();
+            tick(100);
+            expect(document.activeElement).toEqual(months[9]);
+
+            UIInteractions.simulateKeyDownEvent(months[9], 'ArrowRight');
+            fixture.detectChanges();
+            tick(100);
+            expect(document.activeElement).toEqual(months[10]);
+
+            UIInteractions.simulateKeyDownEvent(months[10], 'ArrowRight');
+            fixture.detectChanges();
+            tick(100);
+            expect(document.activeElement).toEqual(months[11]);
+
+            UIInteractions.simulateKeyDownEvent(months[11], 'Enter');
+            fixture.detectChanges();
+            tick(100);
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [new Date('2019-12-12'), new Date('2020-1-1'), new Date('2020-2-2')]);
+        }));
+
+        it('When select a new year - should come at correct position', fakeAsync(() => {
+            calendar.viewDate = new Date('2019-12-12');
+            tick();
+            fixture.detectChanges();
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [new Date('2019-12-12'), new Date('2020-1-1'), new Date('2020-2-2')]);
+
+            const monthPicker = HelperTestFunctions.getCalendarSubHeader(fixture).querySelectorAll('.igx-calendar-picker__date')[3];
+            UIInteractions.simulateKeyDownEvent(monthPicker, 'Enter');
+            fixture.detectChanges();
+            tick(150);
+            fixture.detectChanges();
+
+            let years = HelperTestFunctions.getYearsFromYearView(fixture);
+            expect(years.length).toBe(7);
+            expect(Number(years[3].innerText)).toEqual(2020);
+
+            for (let i = 1; i < 4; i++) {
+            UIInteractions.simulateKeyDownEvent(years[3], 'ArrowUp');
+            tick(100);
+            fixture.detectChanges();
+
+            years = HelperTestFunctions.getYearsFromYearView(fixture);
+            expect(Number(years[3].innerText)).toEqual(2020 - i);
+            }
+
+            for (let i = 1; i < 5; i++) {
+                UIInteractions.simulateKeyDownEvent(years[3], 'ArrowDown');
+                tick(100);
+                fixture.detectChanges();
+
+                years = HelperTestFunctions.getYearsFromYearView(fixture);
+                expect(Number(years[3].innerText)).toEqual(2017 + i);
+            }
+
+            UIInteractions.simulateKeyDownEvent(years[3], 'Enter');
+            tick(100);
+            fixture.detectChanges();
+
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [new Date('2021-12-12'), new Date('2022-1-1'), new Date('2022-2-2')]);
+        }));
+
+    });
+
+    describe('Selection tests - ', () => {
+        const septemberDate = new Date('2019-09-16');
+        const octoberDate = new Date('2019-10-16');
+        const novemberDate = new Date('2019-11-16');
+        beforeEach(fakeAsync(() => {
+            fixture = TestBed.createComponent(MultiViewCalendarSampleComponent);
+            fixture.detectChanges();
+            calendar = fixture.componentInstance.calendar;
+            calendar.viewDate = new Date(2019, 8, 1); // 1st September 2019
+            tick();
+            fixture.detectChanges();
+        }));
+
+
+        it('days should be selected in all month views, when hideOutsideDays is false and selection is single/multi', () =>  {
+            spyOn(calendar.onSelection, 'emit');
+            expect(calendar.hideOutsideDays).toBe(false);
+            const fistMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
+            const secondMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
+            UIInteractions.simulateClickEvent(fistMonthDates[29]);
+            fixture.detectChanges();
+
+            expect(calendar.onSelection.emit).toHaveBeenCalledTimes(1);
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(1);
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(1);
+
+            calendar.selection = 'multi';
+            fixture.detectChanges();
+
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(0);
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(0);
+
+            UIInteractions.simulateClickEvent(secondMonthDates[2]);
+            fixture.detectChanges();
+            UIInteractions.simulateClickEvent(secondMonthDates[3]);
+            fixture.detectChanges();
+            UIInteractions.simulateClickEvent(secondMonthDates[28]);
+            fixture.detectChanges();
+            UIInteractions.simulateClickEvent(secondMonthDates[29]);
+            fixture.detectChanges();
+
+            expect(calendar.onSelection.emit).toHaveBeenCalledTimes(5);
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(2);
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(4);
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 2).length).toBe(2);
+
+            calendar.hideOutsideDays = true;
+            fixture.detectChanges();
+
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(0);
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(4);
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 2).length).toBe(0);
+        });
+
+        it('Multi Selecion - Select/Deselect date from one view should also select/deselect the date in the another', () =>  {
+            spyOn(calendar.onSelection, 'emit');
+            expect(calendar.hideOutsideDays).toBe(false);
+            calendar.selection = 'multi';
+            fixture.detectChanges();
+
+            const octoberfourth = new Date('2019-10-4');
+            const octoberthird = new Date('2019-10-3');
+            const secondMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
+            UIInteractions.simulateClickEvent(secondMonthDates[2]);
+            fixture.detectChanges();
+            calendar.selectDate(octoberfourth);
+            fixture.detectChanges();
+
+            expect(calendar.onSelection.emit).toHaveBeenCalledTimes(1);
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(2);
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(2);
+
+            UIInteractions.simulateClickEvent(secondMonthDates[3]);
+            fixture.detectChanges();
+
+            expect(calendar.onSelection.emit).toHaveBeenCalledTimes(2);
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(1);
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(1);
+
+            calendar.deselectDate([octoberthird]);
+            fixture.detectChanges();
+
+            expect(calendar.onSelection.emit).toHaveBeenCalledTimes(2);
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(0);
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(0);
+        });
+
+        it('Multi/Single Selecion - select multiple dates should not create range', () =>  {
+            expect(calendar.hideOutsideDays).toBe(false);
+            calendar.selection = 'multi';
+            fixture.detectChanges();
+
+            calendar.selectDate([new Date('2019-10-29'), new Date('2019-11-2'), new Date('2019-10-31'),
+                new Date('2019-11-1'), new Date('2019-10-30')]);
+                fixture.detectChanges();
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(5);
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 2).length).toBe(5);
+            HelperTestFunctions.verifyNoRangeSelectionCreated(fixture, 1);
+            HelperTestFunctions.verifyNoRangeSelectionCreated(fixture, 2);
+
+            calendar.selection = 'single';
+            fixture.detectChanges();
+            calendar.selectDate(new Date('2019-10-29'));
+            fixture.detectChanges();
+            calendar.selectDate(new Date('2019-10-30'));
+            fixture.detectChanges();
+
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(1);
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 2).length).toBe(1);
+            HelperTestFunctions.verifyNoRangeSelectionCreated(fixture, 1);
+            HelperTestFunctions.verifyNoRangeSelectionCreated(fixture, 2);
+        });
+
+        it('outside month days should be hidden when hideOutsideDays is true', () =>  {
+            calendar.monthsViewNumber = 2;
+            fixture.detectChanges();
+
+            expect(calendar.hideOutsideDays).toBe(false);
+            expect(HelperTestFunctions.getHiidenDays(fixture, 0).length).toBe(0);
+            expect(HelperTestFunctions.getHiidenDays(fixture, 1).length).toBe(0);
+
+            calendar.hideOutsideDays = true;
+            fixture.detectChanges();
+
+            const firstMonthInactiveDays = HelperTestFunctions.getInactiveDays(fixture, 0).length;
+            const secondMonthInactiveDays = HelperTestFunctions.getInactiveDays(fixture, 1).length;
+            expect(HelperTestFunctions.getHiidenDays(fixture, 0).length).toBe(firstMonthInactiveDays);
+            expect(HelperTestFunctions.getHiidenDays(fixture, 1).length).toBe(secondMonthInactiveDays);
+
+            calendar.selection = 'multi';
+            fixture.detectChanges();
+            expect(HelperTestFunctions.getHiidenDays(fixture, 0).length).toBe(firstMonthInactiveDays);
+            expect(HelperTestFunctions.getHiidenDays(fixture, 1).length).toBe(secondMonthInactiveDays);
+
+            calendar.selection = 'range';
+            fixture.detectChanges();
+            expect(HelperTestFunctions.getHiidenDays(fixture, 0).length).toBe(firstMonthInactiveDays);
+            expect(HelperTestFunctions.getHiidenDays(fixture, 1).length).toBe(secondMonthInactiveDays);
+        });
+
+        it('should change days view when selecting an outside day', () => {
+            calendar.monthsViewNumber = 2;
+            fixture.detectChanges();
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [septemberDate, octoberDate]);
+
+            const inactiveDays = HelperTestFunctions.getInactiveDays(fixture, 0);
+            UIInteractions.simulateClickEvent(inactiveDays[5]);
+            fixture.detectChanges();
+
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [octoberDate, novemberDate]);
+
+            const inactiveDaysOctober = HelperTestFunctions.getInactiveDays(fixture, 0);
+            UIInteractions.simulateClickEvent(inactiveDaysOctober[0]);
+            fixture.detectChanges();
+
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [septemberDate, octoberDate]);
+        });
+
+        it('Single Selection - Verify API methods selectDate and deselectDate', () => {
+            expect(calendar.selection).toEqual('single');
+
+            calendar.selectDate(septemberDate);
+            fixture.detectChanges();
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(1);
+
+            calendar.deselectDate(septemberDate);
+            fixture.detectChanges();
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(0);
+
+            calendar.selectDate(octoberDate);
+            fixture.detectChanges();
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(1);
+
+            calendar.deselectDate();
+            fixture.detectChanges();
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(0);
+        });
+
+        it('Multi Selection - Verify API methods selectDate and deselectDate', () => {
+            calendar.selection = 'multi';
+            fixture.detectChanges();
+            expect(calendar.selection).toEqual('multi');
+
+            calendar.selectDate([septemberDate]);
+            fixture.detectChanges();
+            calendar.selectDate([new Date('2019-09-21')]);
+            fixture.detectChanges();
+
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(2);
+
+
+            calendar.deselectDate([septemberDate, new Date('2019-09-21')]);
+            fixture.detectChanges();
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(0);
+
+            calendar.selectDate([septemberDate, new Date('2019-10-24'), octoberDate, novemberDate]);
+            fixture.detectChanges();
+
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(2); // october
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(1); // september
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 2).length).toBe(1); // november
+
+            calendar.deselectDate();
+            fixture.detectChanges();
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(0); // october
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(0); // september
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 2).length).toBe(0); // november
+        });
+
+        it('Range Selection - Verify API methods selectDate and deselectDate', () => {
+            calendar.selection = 'range';
+            calendar.hideOutsideDays = true;
+            fixture.detectChanges();
+            expect(calendar.selection).toEqual('range');
+
+            calendar.selectDate([octoberDate, septemberDate, novemberDate]);
+            fixture.detectChanges();
+
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(31); // october
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(15); // september
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 2).length).toBe(16); // november
+
+            calendar.deselectDate([octoberDate, septemberDate, novemberDate]);
+            fixture.detectChanges();
+
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).length).toBe(0); // october
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).length).toBe(0); // september
+            expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 2).length).toBe(0); // november
+        });
+
+        it('ouside days should NOT be selected in all month views, when hideOutsideDays is false and selection is range', () =>  {
+            spyOn(calendar.onSelection, 'emit');
+            calendar.selection = 'range';
+            fixture.detectChanges();
+
+            const secondMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
+            UIInteractions.simulateClickEvent(secondMonthDates[0]);
+            fixture.detectChanges();
+
+            expect(calendar.onSelection.emit).toHaveBeenCalledTimes(1);
+
+            // TODO: check is this is by design
+            /* HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).forEach((el) => {
+                expect(el.classList.contains(HelperTestFunctions.RANGE_CSSCLASS)).toBeTruthy();
+            });
+            HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).forEach((el) => {
+                expect(el.classList.contains(HelperTestFunctions.RANGE_CSSCLASS)).toBeTruthy();
+            }); */
+
+            UIInteractions.simulateClickEvent(secondMonthDates[30]);
+            fixture.detectChanges();
+
+            expect(calendar.onSelection.emit).toHaveBeenCalledTimes(2);
+            HelperTestFunctions.getMonthViewSelectedDates(fixture, 0).forEach((el) => {
+                expect(el.classList.contains(HelperTestFunctions.RANGE_CSSCLASS)).toBeTruthy();
+            });
+            HelperTestFunctions.getMonthViewSelectedDates(fixture, 1).forEach((el) => {
+                expect(el.classList.contains(HelperTestFunctions.RANGE_CSSCLASS)).toBeTruthy();
+            });
+            HelperTestFunctions.getMonthViewSelectedDates(fixture, 2).forEach((el) => {
+                expect(el.classList.contains(HelperTestFunctions.RANGE_CSSCLASS)).toBeTruthy();
+            });
+        });
+    });
+
+    describe('DatePicker/Calendar Integration Tests - ', () => {
+        let datePicker;
+        beforeEach(fakeAsync(() => {
+            fixture = TestBed.createComponent(MultiViewDatePickerSampleComponent);
+            fixture.detectChanges();
+            datePicker = fixture.componentInstance.datePicker;
+        }));
+        afterEach(() => {
+            UIInteractions.clearOverlay();
+        });
+
+        it('Verify opening Multi View Calendar from datepicker', fakeAsync(() => {
+            let target = fixture.nativeElement.querySelector('.igx-icon');
+            UIInteractions.clickElement(target);
+            tick(400);
+            fixture.detectChanges();
+
+            let overlay = document.querySelector('.igx-overlay');
+            HelperTestFunctions.verifyMonthsViewNumber(overlay, 3);
+            HelperTestFunctions.verifyCalendarSubHeaders(overlay, [new Date('2019-09-16'), new Date('2019-10-16'), new Date('2019-11-16')]);
+
+            // close the datePicker
+            const overlayDiv = document.getElementsByClassName('igx-overlay__wrapper--modal')[0];
+            UIInteractions.clickElement(overlayDiv);
+            tick(400);
+            fixture.detectChanges();
+
+            datePicker.mode = 'dropdown';
+            datePicker.monthsViewNumber = 2;
+            tick();
+            fixture.detectChanges();
+
+            target = fixture.nativeElement.querySelector('.igx-icon');
+            UIInteractions.clickElement(target);
+            tick(400);
+            fixture.detectChanges();
+
+            overlay = document.querySelector('.igx-overlay');
+            HelperTestFunctions.verifyMonthsViewNumber(overlay, 2);
+            HelperTestFunctions.verifyCalendarSubHeaders(overlay, [new Date('2019-09-16'), new Date('2019-10-16')]);
+        }));
+
+        it('Verify setting hideOutsideDays and monthsViewNumber from datepicker', fakeAsync(() => {
+            const target = fixture.nativeElement.querySelector('.igx-icon');
+            UIInteractions.clickElement(target);
+            tick(400);
+            fixture.detectChanges();
+
+            expect(datePicker.hideOutsideDays).toBe(true);
+            let overlay = document.querySelector('.igx-overlay');
+            expect(HelperTestFunctions.getHiidenDays(overlay, 0).length).toBe(HelperTestFunctions.getInactiveDays(overlay, 0).length);
+            expect(HelperTestFunctions.getHiidenDays(overlay, 1).length).toBe(HelperTestFunctions.getInactiveDays(overlay, 1).length);
+            expect(HelperTestFunctions.getHiidenDays(overlay, 2).length).toBe(HelperTestFunctions.getInactiveDays(overlay, 2).length);
+
+            // close the datePicker
+            const overlayDiv = document.getElementsByClassName('igx-overlay__wrapper--modal')[0];
+            UIInteractions.clickElement(overlayDiv);
+            tick(400);
+            fixture.detectChanges();
+
+            datePicker.hideOutsideDays = false;
+            tick();
+            fixture.detectChanges();
+
+            UIInteractions.clickElement(target);
+            tick(400);
+            fixture.detectChanges();
+
+            expect(datePicker.hideOutsideDays).toBe(false);
+            overlay = document.querySelector('.igx-overlay');
+            expect(HelperTestFunctions.getHiidenDays(overlay, 0).length).toBe(0);
+            expect(HelperTestFunctions.getHiidenDays(overlay, 1).length).toBe(0);
+            expect(HelperTestFunctions.getHiidenDays(overlay, 2).length).toBe(0);
+        }));
+
     });
 });
 
@@ -750,21 +1248,22 @@ class HelperTestFunctions {
     public static WEEKSTART_LABEL_CSSCLASS = '.igx-calendar__label';
     public static VERICAL_CALENDAR_CSSCLASS = '.igx-calendar--vertical';
     public static DAY_CSSCLASS = '.igx-calendar__date';
-    public static INACTIVE_DAY_CSSCLASS = '.igx-calendar__date--inactive';
     public static SELECTED_DATE = '.igx-calendar__date--selected';
+    public static RANGE_CSSCLASS = 'igx-calendar__date--range';
     public static CALENDAR_PREV_BUTTON_CSSCLASS = '.igx-calendar-picker__prev';
     public static CALENDAR_NEXT_BUTTON_CSSCLASS = '.igx-calendar-picker__next';
     public static CALENDAR_SUBHEADERS_SELECTOR =
         'div:not(' + HelperTestFunctions.CALENDAR_PREV_BUTTON_CSSCLASS + '):not(' + HelperTestFunctions.CALENDAR_NEXT_BUTTON_CSSCLASS + ')';
 
-    public static verifyMonthsViewNumber(fixture, monthsView: number, viewDate?: Date) {
-        const daysView = fixture.nativeElement.querySelectorAll(HelperTestFunctions.DAYS_VIEW);
+    public static verifyMonthsViewNumber(fixture, monthsView: number, checkCurrentDate = false) {
+        const el = fixture.nativeElement ? fixture.nativeElement : fixture;
+        const daysView = el.querySelectorAll(HelperTestFunctions.DAYS_VIEW);
         expect(daysView).toBeDefined();
         expect(daysView.length).toBe(monthsView);
-        const monthPickers = HelperTestFunctions.getCalendarSubHeader(fixture).querySelectorAll('div');
+        const monthPickers = HelperTestFunctions.getCalendarSubHeader(el).querySelectorAll('div');
         expect(monthPickers.length).toBe(monthsView + 2); // plus the navigation arrows
-        if (!viewDate) {
-            const currentDate = fixture.nativeElement.querySelector(HelperTestFunctions.CURRENT_DATE_CSSCLASS);
+        if (checkCurrentDate) {
+            const currentDate = el.querySelector(HelperTestFunctions.CURRENT_DATE_CSSCLASS);
             expect(currentDate).not.toBeNull();
         }
     }
@@ -779,7 +1278,13 @@ class HelperTestFunctions {
         expect(date).not.toBeNull();
         const dateParts = selectedDate.toUTCString().split(' '); // (weekday, date month year)
         expect(date.children[0].innerText.trim()).toEqual(dateParts[0]);
-        expect(date.children[1].innerText.trim()).toEqual(dateParts[2] + ' ' + dateParts[1]);
+        expect(date.children[1].innerText.trim()).toEqual(dateParts[2] + ' ' + Number(dateParts[1]));
+    }
+
+    public static verifyNoRangeSelectionCreated(fixture, monthNumber: number) {
+        expect(HelperTestFunctions.getMonthView(fixture, monthNumber).querySelector('.igx-calendar__date--range')).toBeNull();
+        expect(HelperTestFunctions.getMonthView(fixture, monthNumber).querySelector('.igx-calendar__date--first')).toBeNull();
+        expect(HelperTestFunctions.getMonthView(fixture, monthNumber).querySelector('.igx-calendar__date--last')).toBeNull();
     }
 
     public static verifyCalendarSubHeader(fixture, monthNumber: number, viewDate: Date) {
@@ -790,7 +1295,8 @@ class HelperTestFunctions {
     }
 
     public static verifyCalendarSubHeaders(fixture, viewDates: Date[]) {
-        const monthPickers = HelperTestFunctions.getCalendarSubHeader(fixture).querySelectorAll(this.CALENDAR_SUBHEADERS_SELECTOR);
+        const dom = fixture.nativeElement ? fixture.nativeElement : fixture;
+        const monthPickers = HelperTestFunctions.getCalendarSubHeader(dom).querySelectorAll(this.CALENDAR_SUBHEADERS_SELECTOR);
         expect(monthPickers.length).toEqual(viewDates.length);
         for (let index = 0; index < viewDates.length; index++) {
             const dateParts = viewDates[index].toString().split(' '); // weekday month day year
@@ -799,12 +1305,24 @@ class HelperTestFunctions {
         }
     }
 
+    public static getHiidenDays(fixture, monthNumber: number) {
+        const monthView = HelperTestFunctions.getMonthView(fixture, monthNumber);
+        return monthView.querySelectorAll(HelperTestFunctions.HIDDEN_DAYS_CSSCLASS);
+    }
+
+    public static getInactiveDays(fixture, monthNumber: number) {
+        const monthView = HelperTestFunctions.getMonthView(fixture, monthNumber);
+        return monthView.querySelectorAll(HelperTestFunctions.INACTIVE_DAYS_CSSCLASS);
+    }
+
     public static getCalendarSubHeader(fixture): HTMLElement {
-        return fixture.nativeElement.querySelector('div.igx-calendar-picker');
+        const element = fixture.nativeElement ? fixture.nativeElement : fixture;
+        return element.querySelector('div.igx-calendar-picker');
     }
 
     public static getMonthView(fixture, monthsViewNumber: number) {
-        return fixture.nativeElement.querySelectorAll('igx-days-view')[monthsViewNumber];
+        const domEL = fixture.nativeElement ? fixture.nativeElement : fixture;
+        return domEL.querySelectorAll('igx-days-view')[monthsViewNumber];
     }
 
     public static getMonthViewDates(fixture, monthsViewNumber: number) {
@@ -814,11 +1332,36 @@ class HelperTestFunctions {
 
     public static getMonthViewInactiveDates(fixture, monthsViewNumber: number) {
         const month = HelperTestFunctions.getMonthView(fixture, monthsViewNumber);
-        return month.querySelectorAll(HelperTestFunctions.INACTIVE_DAY_CSSCLASS);
+        return month.querySelectorAll(HelperTestFunctions.INACTIVE_DAYS_CSSCLASS);
     }
+
     public static getMonthViewSelectedDates(fixture, monthsViewNumber: number) {
         const month = HelperTestFunctions.getMonthView(fixture, monthsViewNumber);
-        return month.querySelectorAll(HelperTestFunctions.SELECTED_DATE);
+        return month.querySelectorAll(HelperTestFunctions.SELECTED_DATE +
+            `:not(${HelperTestFunctions.HIDDEN_DAYS_CSSCLASS})`);
+    }
+
+    public static getMonthsFromMonthView(fixture) {
+        return fixture.nativeElement.querySelector('igx-months-view')
+        .querySelectorAll('.igx-calendar__month, .igx-calendar__month--current');
+    }
+
+    public static getYearsFromYearView(fixture) {
+        return fixture.nativeElement.querySelector('igx-years-view')
+        .querySelectorAll('.igx-calendar__year, .igx-calendar__year--current');
+    }
+
+    public static getCurrentYearsFromYearView(fixture) {
+        return fixture.nativeElement.querySelector('igx-years-view')
+        .querySelector('.igx-calendar__year--current');
+    }
+
+    public static getNexArrowElement(fixture) {
+        return fixture.debugElement.query(By.css(HelperTestFunctions.CALENDAR_NEXT_BUTTON_CSSCLASS)).nativeElement;
+    }
+
+    public static getPreviousArrowElement(fixture) {
+        return fixture.debugElement.query(By.css(HelperTestFunctions.CALENDAR_PREV_BUTTON_CSSCLASS)).nativeElement;
     }
 }
 
@@ -829,5 +1372,16 @@ class HelperTestFunctions {
 })
 export class MultiViewCalendarSampleComponent {
     @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
+    public monthViews = 3;
+}
+
+@Component({
+    template: `
+        <igx-date-picker [value]="date" [monthsViewNumber]="monthViews" [hideOutsideDays]="true"></igx-date-picker>
+    `
+})
+export class MultiViewDatePickerSampleComponent {
+    @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
+    public date = new Date('2019-09-15');
     public monthViews = 3;
 }
