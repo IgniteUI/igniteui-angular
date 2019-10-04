@@ -157,7 +157,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     });
 
     it('should not lose scroll position after expanding/collapsing a row.', async() => {
-        hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop = 750;
+        hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 750;
         await wait(100);
         fixture.detectChanges();
         const startIndex = hierarchicalGrid.verticalScrollContainer.state.startIndex;
@@ -197,7 +197,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         fixture.detectChanges();
 
         // Scroll to bottom
-        hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop = 5000;
+        hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 5000;
         await wait(100);
         fixture.detectChanges();
 
@@ -211,12 +211,12 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         fixture.detectChanges();
 
         // Scroll to top to make sure top.
-        hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop = 0;
+        hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 0;
         await wait(100);
         fixture.detectChanges();
 
         // Scroll to somewhere in the middle and make sure scroll position stays when expanding/collapsing.
-        hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop = 1250;
+        hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop = 1250;
         await wait(100);
         fixture.detectChanges();
         const startIndex = hierarchicalGrid.verticalScrollContainer.state.startIndex;
@@ -261,19 +261,19 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
             hierarchicalGrid.verticalScrollContainer.state.startIndex +
             hierarchicalGrid.verticalScrollContainer.state.chunkSize)
         .toBe(80);
-        expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop)
-        .toEqual(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight -
+        expect(hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop)
+        .toEqual(hierarchicalGrid.verticalScrollContainer.getScroll().scrollHeight -
         parseInt(hierarchicalGrid.verticalScrollContainer.igxForContainerSize, 10));
     });
 
     it('should update scroll height after expanding/collapsing rows.', async() => {
-        const scrHeight = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight;
+        const scrHeight = hierarchicalGrid.verticalScrollContainer.getScroll().scrollHeight;
         const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
             UIInteractions.clickElement(firstRow.nativeElement.children[0]);
             fixture.detectChanges();
             await wait(200);
             const childGrid1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
-            expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight)
+            expect(hierarchicalGrid.verticalScrollContainer.getScroll().scrollHeight)
             .toBeGreaterThan(scrHeight + childGrid1.calcHeight);
             expect(childGrid1.nativeElement.parentElement.className.indexOf('igx-grid__hierarchical-indent--scroll'))
             .not.toBe(-1);
@@ -295,7 +295,7 @@ it('should update scroll height after expanding/collapsing row in a nested child
             }];
         fixture.detectChanges();
 
-        let scrHeight = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight;
+        let scrHeight = hierarchicalGrid.verticalScrollContainer.getScroll().scrollHeight;
         expect(scrHeight).toBe(0);
 
         hierarchicalGrid.dataRowList.toArray()[2].nativeElement.children[0].click();
@@ -306,21 +306,21 @@ it('should update scroll height after expanding/collapsing row in a nested child
         fixture.detectChanges();
 
         const childGrid1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
-        scrHeight = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight;
+        scrHeight = hierarchicalGrid.verticalScrollContainer.getScroll().scrollHeight;
         expect(scrHeight).toBe(3 * 51 + childGrid1.nativeElement.closest('.igx-grid__tr-container').offsetHeight - 1);
 
         // expand
         childGrid1.dataRowList.toArray()[0].nativeElement.children[0].click();
         await wait(100);
         fixture.detectChanges();
-        scrHeight = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight;
+        scrHeight = hierarchicalGrid.verticalScrollContainer.getScroll().scrollHeight;
         expect(scrHeight).toBe(3 * 51 + childGrid1.nativeElement.closest('.igx-grid__tr-container').offsetHeight - 1);
 
         // collapse
         childGrid1.dataRowList.toArray()[0].nativeElement.children[0].click();
         await wait(100);
         fixture.detectChanges();
-        scrHeight = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollHeight;
+        scrHeight = hierarchicalGrid.verticalScrollContainer.getScroll().scrollHeight;
         expect(scrHeight).toBe(3 * 51 + childGrid1.nativeElement.closest('.igx-grid__tr-container').offsetHeight - 1);
     });
 
@@ -354,20 +354,20 @@ it('should update scroll height after expanding/collapsing row in a nested child
                 await wait(200);
                 fixture.detectChanges();
 
-                expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight).toEqual(958);
+                expect(hierarchicalGrid.verticalScrollContainer.getScroll().children[0].offsetHeight).toEqual(958);
                 done();
             }
         );
 
 
-        expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight).toEqual(510);
+        expect(hierarchicalGrid.verticalScrollContainer.getScroll().children[0].offsetHeight).toEqual(510);
 
         // expand 1st row
         const row = hierarchicalGrid.dataRowList.toArray()[0];
         row.nativeElement.children[0].click();
         fixture.detectChanges();
 
-        expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().children[0].offsetHeight).toEqual(561);
+        expect(hierarchicalGrid.verticalScrollContainer.getScroll().children[0].offsetHeight).toEqual(561);
     });
 });
 
@@ -393,7 +393,7 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
         const hierarchicalGrid = fixture.componentInstance.hgrid;
 
         const initialBodyWidth = hierarchicalGrid.tbody.nativeElement.offsetWidth;
-        expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().parentElement.hidden).toBeTruthy();
+        expect(hierarchicalGrid.verticalScrollContainer.getScroll().parentElement.hidden).toBeTruthy();
 
         // expand 1st row
         const row = hierarchicalGrid.dataRowList.toArray()[0];
@@ -401,13 +401,13 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
         fixture.detectChanges();
         await wait(200);
 
-        expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().parentElement.hidden).toBeTruthy();
+        expect(hierarchicalGrid.verticalScrollContainer.getScroll().parentElement.hidden).toBeTruthy();
         expect(hierarchicalGrid.tbody.nativeElement.offsetWidth).toEqual(initialBodyWidth);
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         childGrid.data = fixture.componentInstance.generateData(10, 0);
         fixture.detectChanges();
         await wait(200);
-        expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().parentElement.hidden).toBeFalsy();
+        expect(hierarchicalGrid.verticalScrollContainer.getScroll().parentElement.hidden).toBeFalsy();
         expect(hierarchicalGrid.tbody.nativeElement.offsetWidth).toBeLessThan(initialBodyWidth);
     });
 });

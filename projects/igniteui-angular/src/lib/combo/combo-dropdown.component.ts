@@ -34,8 +34,8 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     }
 
     protected get isScrolledToLast(): boolean {
-        const scrollTop = this.virtDir.getVerticalScroll().scrollTop;
-        const scrollHeight = this.virtDir.getVerticalScroll().scrollHeight;
+        const scrollTop = this.virtDir.scrollPosition;
+        const scrollHeight = this.virtDir.getScroll().scrollHeight;
         return Math.floor(scrollTop + this.virtDir.igxForContainerSize) === scrollHeight;
     }
 
@@ -162,7 +162,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      * @hidden @internal
      */
     public updateScrollPosition() {
-        this.virtDir.getVerticalScroll().scrollTop = this._scrollPosition;
+        this.virtDir.getScroll().scrollTop = this._scrollPosition;
     }
 
     /**
@@ -202,14 +202,14 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     }
 
     public ngAfterViewInit() {
-        this.virtDir.getVerticalScroll().addEventListener('scroll', this.scrollHandler);
+        this.virtDir.getScroll().addEventListener('scroll', this.scrollHandler);
     }
 
     /**
      *@hidden @internal
      */
     public ngOnDestroy(): void {
-        this.virtDir.getVerticalScroll().removeEventListener('scroll', this.scrollHandler);
+        this.virtDir.getScroll().removeEventListener('scroll', this.scrollHandler);
         this.destroy$.next(true);
         this.destroy$.complete();
     }

@@ -351,7 +351,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
         }));
 
         it('When cell in editMode and try to navigate with `ArrowDown` - focus should remain over the input.', async () => {
-            const verticalScroll = grid.verticalScrollContainer.getVerticalScroll();
+            const verticalScroll = grid.verticalScrollContainer.getScroll();
             const cellElem = fixture.debugElement.query(By.css(CELL_CSS_CLASS)).nativeElement;
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(false);
 
@@ -376,7 +376,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
         });
 
         it('When cell in editMode and try to navigate with `ArrowUp` - focus should remain over the input.', (async () => {
-            const verticalScroll = grid.verticalScrollContainer.getVerticalScroll();
+            const verticalScroll = grid.verticalScrollContainer.getScroll();
             let expectedScroll;
             let cellElem;
             GridFunctions.scrollTop(grid, 1000);

@@ -22,7 +22,7 @@ export class IgxGridNavigationService {
     }
 
     get displayContainerScrollLeft() {
-        return Math.round(this.grid.parentVirtDir.getHorizontalScroll().scrollLeft);
+        return Math.round(this.grid.headerContainer.scrollPosition);
     }
 
     get verticalDisplayContainerElement() {
@@ -76,7 +76,7 @@ export class IgxGridNavigationService {
     }
 
     private isColumnPinned(columnIndex: number, forOfDir: IgxForOfDirective<any>): boolean {
-        const horizontalScroll = forOfDir.getHorizontalScroll();
+        const horizontalScroll = forOfDir.getScroll();
         const column = this.grid.columnList.filter(c => !c.columnGroup).find((col) => col.visibleIndex === columnIndex);
         return (!horizontalScroll.clientWidth || column.pinned);
     }
@@ -239,7 +239,7 @@ export class IgxGridNavigationService {
     }
 
     public navigateTop(visibleColumnIndex) {
-        const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
+        const verticalScroll = this.grid.verticalScrollContainer.getScroll();
         const cellSelector = this.getCellSelector(visibleColumnIndex);
         if (verticalScroll.scrollTop === 0) {
             const cells = this.grid.nativeElement.querySelectorAll(
@@ -258,7 +258,7 @@ export class IgxGridNavigationService {
     }
 
     public navigateBottom(visibleColumnIndex) {
-        const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
+        const verticalScroll = this.grid.verticalScrollContainer.getScroll();
         const cellSelector = this.getCellSelector(visibleColumnIndex);
         if (verticalScroll.scrollHeight === 0 ||
             verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
@@ -361,8 +361,8 @@ export class IgxGridNavigationService {
     }
 
     public goToFirstCell() {
-        const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
-        const horizontalScroll = this.grid.dataRowList.first.virtDirRow.getHorizontalScroll();
+        const verticalScroll = this.grid.verticalScrollContainer.getScroll();
+        const horizontalScroll = this.grid.dataRowList.first.virtDirRow.getScroll();
         if (verticalScroll.scrollTop === 0) {
             this.onKeydownHome(this.grid.dataRowList.first.index);
         } else {
@@ -381,7 +381,7 @@ export class IgxGridNavigationService {
     }
 
     public goToLastCell() {
-        const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
+        const verticalScroll = this.grid.verticalScrollContainer.getScroll();
         if (verticalScroll.scrollHeight === 0 ||
             verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
             const rows = this.getAllRows();
@@ -402,7 +402,7 @@ export class IgxGridNavigationService {
     }
 
     public goToLastBodyElement() {
-        const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
+        const verticalScroll = this.grid.verticalScrollContainer.getScroll();
         if (verticalScroll.scrollHeight === 0 ||
             verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
             const rowIndex = this.grid.verticalScrollContainer.igxForOf.length - 1;

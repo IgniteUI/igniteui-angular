@@ -424,7 +424,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             cell = grid.getCellByColumn(0, 'Test');
             expect(cell.editMode).toBeTruthy();
-            expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(0);
+            expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(0);
 
             // move to Cancel
             UIInteractions.triggerKeyDownEvtUponElem('tab', cell, true);
@@ -444,7 +444,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             cell = grid.getCellByColumn(0, 'Downloads');
             expect(cell.editMode).toBeTruthy();
-            expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toEqual(0);
+            expect(grid.headerContainer.getScroll().scrollLeft).toEqual(0);
         }));
 
         it(`Should skip non-editable columns`, fakeAsync(() => {
@@ -701,7 +701,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             const currentEditCell = grid.getCellByColumn(0, 'Test');
             expect(currentEditCell.editMode).toBeTruthy();
-            expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(0);
+            expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(0);
 
             // change last editable cell value
             currentEditCell.editValue = 'No test';

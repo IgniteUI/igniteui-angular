@@ -170,7 +170,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         const gridWidth = hierarchicalGrid.nativeElement.offsetWidth;
         expect(cellLeftOffset).not.toBeGreaterThan(gridWidth);
 
-        const hScroll = hierarchicalGrid.parentVirtDir.getHorizontalScroll();
+        const hScroll = hierarchicalGrid.headerContainer.getScroll();
         expect(hScroll.children[0].offsetWidth).not.toBeGreaterThan(hScroll.offsetWidth);
     });
 
@@ -578,11 +578,11 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         expect(childGrid.nativeElement.style.width).toBe(ri1.width);
         // check virtualization state
         expect(childGrid.verticalScrollContainer.state.chunkSize).toBe(4);
-        expect(childGrid.verticalScrollContainer.getVerticalScroll().scrollHeight).toBe(357);
+        expect(childGrid.verticalScrollContainer.getScroll().scrollHeight).toBe(357);
 
         let hVirt = childGrid.getRowByIndex(0).virtDirRow;
         expect(hVirt.state.chunkSize).toBe(2);
-        expect(hVirt.getHorizontalScroll().scrollWidth).toBe(272);
+        expect(hVirt.getScroll().scrollWidth).toBe(272);
         // collapse row
         UIInteractions.clickElement(row.expander);
         fixture.detectChanges();
@@ -606,9 +606,9 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
          expect(childGrid.nativeElement.style.width).toBe(ri1.width);
          // check virtualization state
          expect(childGrid.verticalScrollContainer.state.chunkSize).toBe(11);
-         expect(childGrid.verticalScrollContainer.getVerticalScroll().scrollHeight).toBe(714);
+         expect(childGrid.verticalScrollContainer.getScroll().scrollHeight).toBe(714);
          hVirt = childGrid.getRowByIndex(0).virtDirRow;
-         expect(hVirt.getHorizontalScroll().scrollWidth).toBe(272);
+         expect(hVirt.getScroll().scrollWidth).toBe(272);
     }));
 
     it('should destroy cached instances of child grids when root grid is destroyed', (async () => {

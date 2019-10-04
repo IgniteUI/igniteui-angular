@@ -573,7 +573,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
         expect(grid.columns[0].width).toEqual('700px');
 
         // Check grid has updated cells and scrollbar
-        const hScroll = fixture.componentInstance.grid.parentVirtDir.getHorizontalScroll();
+        const hScroll = fixture.componentInstance.grid.headerContainer.getScroll();
         const hScrollVisible = hScroll.offsetWidth < hScroll.children[0].offsetWidth;
         rowsRendered = displayContainer.querySelectorAll('igx-display-container');
         colsRendered = rowsRendered[0].children;
@@ -610,7 +610,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
         expect(grid.columns[0].width).toEqual('250px');
 
         // Check grid has updated cells and scrollbar
-        const hScroll = fixture.componentInstance.grid.parentVirtDir.getHorizontalScroll();
+        const hScroll = fixture.componentInstance.grid.headerContainer.getScroll();
         const hScrollVisible = hScroll.offsetWidth < hScroll.children[0].offsetWidth;
 
         // Should 243 - 18, because the horizontal scrollbar has 18px height

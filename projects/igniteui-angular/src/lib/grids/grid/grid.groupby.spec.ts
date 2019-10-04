@@ -773,7 +773,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
-        const origScrollHeight = parseInt(grid.verticalScrollContainer.getVerticalScroll().children[0].style.height, 10);
+        const origScrollHeight = parseInt(grid.verticalScrollContainer.getScroll().children[0].style.height, 10);
 
         // collapse all group rows currently in the view
         const grRows = grid.groupsRowList.toArray();
@@ -787,7 +787,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(grid.rowList.toArray().length).toEqual(5);
 
         // verify scrollbar is updated - 4 rows x 51px are hidden.
-        expect(parseInt(grid.verticalScrollContainer.getVerticalScroll().children[0].style.height, 10))
+        expect(parseInt(grid.verticalScrollContainer.getScroll().children[0].style.height, 10))
             .toEqual(origScrollHeight - 204);
 
         grRows[0].toggle();
@@ -798,7 +798,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(grid.dataRowList.toArray().length).toEqual(2);
         expect(grid.rowList.toArray().length).toEqual(5);
 
-        expect(parseInt(grid.verticalScrollContainer.getVerticalScroll().children[0].style.height, 10))
+        expect(parseInt(grid.verticalScrollContainer.getScroll().children[0].style.height, 10))
             .toEqual(origScrollHeight);
     }));
 
@@ -826,12 +826,12 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         // scroll to bottom
-        grid.verticalScrollContainer.getVerticalScroll().scrollTop = 10000;
+        grid.verticalScrollContainer.getScroll().scrollTop = 10000;
         await wait(100);
         fix.detectChanges();
 
         // scroll back to the top
-        grid.verticalScrollContainer.getVerticalScroll().scrollTop = 0;
+        grid.verticalScrollContainer.getScroll().scrollTop = 0;
         await wait(100);
         fix.detectChanges();
 
@@ -856,7 +856,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         // scroll to bottom
-        grid.verticalScrollContainer.getVerticalScroll().scrollTop = 10000;
+        grid.verticalScrollContainer.getScroll().scrollTop = 10000;
         await wait(100);
         fix.detectChanges();
 
@@ -899,7 +899,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         // scroll to bottom
-        grid.verticalScrollContainer.getVerticalScroll().scrollTop = 10000;
+        grid.verticalScrollContainer.getScroll().scrollTop = 10000;
         await wait(100);
         fix.detectChanges();
 
@@ -930,7 +930,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
         const groupRow = grid.groupsRowList.toArray()[0];
         const origRect = groupRow.element.nativeElement.getBoundingClientRect();
-        grid.parentVirtDir.getHorizontalScroll().scrollLeft = 1000;
+        grid.headerContainer.getScroll().scrollLeft = 1000;
         await wait(100);
         fix.detectChanges();
 
@@ -1421,15 +1421,16 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         // scroll left
-        grid.parentVirtDir.getHorizontalScroll().scrollLeft = 1000;
+        grid.headerContainer.getScroll().scrollLeft = 1000;
         fix.detectChanges();
 
-        const gridScrLeft = grid.parentVirtDir.getHorizontalScroll().scrollLeft;
+        const gridScrLeft = grid.headerContainer.getScroll().scrollLeft;
         await wait(100);
         fix.detectChanges();
 
         grid.toggleAllGroupRows();
         fix.detectChanges();
+        await wait();
         // verify rows are scrolled to the right
         let dataRows = grid.dataRowList.toArray();
         dataRows.forEach(dr => {
@@ -1443,7 +1444,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         });
 
         // scroll down
-        grid.verticalScrollContainer.getVerticalScroll().scrollTop = 10000;
+        grid.verticalScrollContainer.getScroll().scrollTop = 10000;
         await wait(100);
         fix.detectChanges();
 
@@ -1597,7 +1598,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         // scroll to bottom
-        grid.verticalScrollContainer.getVerticalScroll().scrollTop = 10000;
+        grid.verticalScrollContainer.getScroll().scrollTop = 10000;
         fix.detectChanges();
         setTimeout(() => {
             const rows = grid.dataRowList.toArray();

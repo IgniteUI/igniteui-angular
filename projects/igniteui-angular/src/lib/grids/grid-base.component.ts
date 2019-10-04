@@ -1952,7 +1952,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ViewChild('headerContainer', { read: IgxGridForOfDirective, static: false })
+    @ViewChild('hContainer', { read: IgxGridForOfDirective, static: true })
     public headerContainer: IgxGridForOfDirective<any>;
 
     /**
@@ -3115,8 +3115,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public _zoneBegoneListeners() {
         this.zone.runOutsideAngular(() => {
             this.nativeElement.addEventListener('keydown', this.keydownHandler);
-            this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this.verticalScrollHandler);
-            this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', this.horizontalScrollHandler);
+            this.verticalScrollContainer.getScroll().addEventListener('scroll', this.verticalScrollHandler);
+            this.headerContainer.getScroll().addEventListener('scroll', this.horizontalScrollHandler);
 
             this.observer = new ResizeObserver(() => this.resizeNotify.next());
             this.observer.observe(this.nativeElement);
@@ -3189,8 +3189,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.zone.runOutsideAngular(() => {
             this.observer.disconnect();
             this.nativeElement.removeEventListener('keydown', this.keydownHandler);
-            this.verticalScrollContainer.getVerticalScroll().removeEventListener('scroll', this.verticalScrollHandler);
-            this.parentVirtDir.getHorizontalScroll().removeEventListener('scroll', this.horizontalScrollHandler);
+            this.verticalScrollContainer.getScroll().removeEventListener('scroll', this.verticalScrollHandler);
+            this.headerContainer.getScroll().removeEventListener('scroll', this.horizontalScrollHandler);
             const vertScrDC = this.verticalScrollContainer.displayContainer;
             vertScrDC.removeEventListener('scroll', this.scrollHandler);
             vertScrDC.removeEventListener('wheel', () => this.wheelHandler());
@@ -5074,8 +5074,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     dragScroll(dir: DragScrollDirection): void {
         const scrollDelta = 48;
-        const horizontal = this.parentVirtDir.getHorizontalScroll();
-        const vertical = this.verticalScrollContainer.getVerticalScroll();
+        const horizontal = this.headerContainer.getScroll();
+        const vertical = this.verticalScrollContainer.getScroll();
         switch (dir) {
             case DragScrollDirection.LEFT:
                 horizontal.scrollLeft -= scrollDelta;
@@ -5218,8 +5218,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public scrollHandler = (event) => {
-        this.parentVirtDir.getHorizontalScroll().scrollLeft += event.target.scrollLeft;
-        this.verticalScrollContainer.getVerticalScroll().scrollTop += event.target.scrollTop;
+        this.headerContainer.scrollPosition += event.target.scrollLeft;
+        this.verticalScrollContainer.scrollPosition += event.target.scrollTop;
         event.target.scrollLeft = 0;
         event.target.scrollTop = 0;
     }
@@ -5901,7 +5901,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         // check virtualization state of data record added from cache
         // in case state is no longer valid - update it.
         const rowForOf = row.virtDirRow;
-        const gridScrLeft = rowForOf.getHorizontalScroll().scrollLeft;
+        const gridScrLeft = rowForOf.getScroll().scrollLeft;
         const left = -parseInt(rowForOf.dc.instance._viewContainer.element.nativeElement.style.left, 10);
         const actualScrollLeft = left + rowForOf.getColumnScrollLeft(rowForOf.state.startIndex);
         if (gridScrLeft !== actualScrollLeft) {

@@ -477,7 +477,7 @@ export class IgxTreeGridWrappedInContComponent {
     public outerHeight: number;
 
     public isHorizontalScrollbarVisible() {
-        const scrollbar = this.treeGrid.parentVirtDir.getHorizontalScroll();
+        const scrollbar = this.treeGrid.headerContainer.getScroll();
         if (scrollbar) {
             return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
         }
@@ -486,7 +486,7 @@ export class IgxTreeGridWrappedInContComponent {
     }
 
     public getVerticalScrollHeight() {
-        const scrollbar = this.treeGrid.verticalScrollContainer.getVerticalScroll();
+        const scrollbar = this.treeGrid.verticalScrollContainer.getScroll();
         if (scrollbar) {
             return parseInt(scrollbar.style.height, 10);
         }
@@ -495,7 +495,7 @@ export class IgxTreeGridWrappedInContComponent {
     }
 
     public isVerticalScrollbarVisible() {
-        const scrollbar = this.treeGrid.verticalScrollContainer.getVerticalScroll();
+        const scrollbar = this.treeGrid.verticalScrollContainer.getScroll();
         if (scrollbar && scrollbar.offsetHeight > 0) {
             return scrollbar.offsetHeight < scrollbar.children[0].offsetHeight;
         }

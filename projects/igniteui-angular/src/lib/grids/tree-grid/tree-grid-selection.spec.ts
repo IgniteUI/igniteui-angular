@@ -816,14 +816,14 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             fix.detectChanges();
 
             // scroll down 150 pixels
-            treeGrid.verticalScrollContainer.getVerticalScroll().scrollTop = 150;
-            treeGrid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
+            treeGrid.verticalScrollContainer.getScroll().scrollTop = 150;
+            treeGrid.headerContainer.getScroll().dispatchEvent(new Event('scroll'));
             await wait(100);
             fix.detectChanges();
 
             // then scroll back to top
-            treeGrid.verticalScrollContainer.getVerticalScroll().scrollTop = 0;
-            treeGrid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
+            treeGrid.verticalScrollContainer.getScroll().scrollTop = 0;
+            treeGrid.headerContainer.getScroll().dispatchEvent(new Event('scroll'));
             await wait(100);
             fix.detectChanges();
 

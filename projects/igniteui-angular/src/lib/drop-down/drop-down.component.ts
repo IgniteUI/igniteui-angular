@@ -315,7 +315,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
 
     private isIndexOutOfBounds(index: number, direction: Navigate) {
         const virtState = this.virtDir.state;
-        const currentPosition = this.virtDir.getVerticalScroll().scrollTop;
+        const currentPosition = this.virtDir.getScroll().scrollTop;
         const itemPosition = this.virtDir.getScrollForIndex(index, direction === Navigate.Down);
         const indexOutOfChunk = index < virtState.startIndex || index > virtState.chunkSize + virtState.startIndex;
         const scrollNeeded = direction === Navigate.Down ? currentPosition < itemPosition : currentPosition > itemPosition;
@@ -350,7 +350,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         let targetScroll = this.virtDir.getScrollForIndex(this.selectedItem.index);
         const itemsInView = this.virtDir.igxForContainerSize / this.virtDir.igxForItemSize;
         targetScroll -= (itemsInView / 2 - 1) * this.virtDir.igxForItemSize;
-        this.virtDir.getVerticalScroll().scrollTop = targetScroll;
+        this.virtDir.getScroll().scrollTop = targetScroll;
     }
 
     /**
@@ -365,7 +365,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
             this.scrollToItem(this.selectedItem);
         }
         if (this.virtDir) {
-            this.virtDir.getVerticalScroll().scrollTop = this._scrollPosition;
+            this.virtDir.scrollPosition = this._scrollPosition;
         }
     }
 
@@ -388,7 +388,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     public onToggleClosing(e: CancelableBrowserEventArgs) {
         this.onClosing.emit(e);
         if (this.virtDir) {
-            this._scrollPosition = this.virtDir.getVerticalScroll().scrollTop;
+            this._scrollPosition = this.virtDir.scrollPosition;
         }
     }
 

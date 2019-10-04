@@ -95,7 +95,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * ```
      */
     @Input()
-    public igxForScrollOrientation: string;
+    public igxForScrollOrientation = 'vertical';
 
     /**
      * Optionally pass the parent `igxFor` instance to create a virtual template scrolling both horizontally and vertically.
@@ -244,10 +244,10 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     private get _isScrolledToBottom() {
-        if (!this.getVerticalScroll()) {
+        if (!this.getScroll()) {
             return true;
         }
-        const scrollHeight = this.getVerticalScroll().scrollHeight;
+        const scrollHeight = this.getScroll().scrollHeight;
         // Use === and not >= because `scrollTop + container size` can't be bigger than `scrollHeight`, unless something isn't updated.
         // Also use Math.round because Chrome has some inconsistencies and `scrollTop + container` can be float when zooming the page.
         return Math.round(this.scrollPosition + this.igxForContainerSize) === scrollHeight;
@@ -304,16 +304,16 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     /**
-     * @hidden
-     * @internal
+     *
+     * Gets/Sets the scroll position.
+     * ```typescript
+     * const position = directive.scrollPosition;
+     * directive.scrollPosition = value;
+     * ```
      */
     public get scrollPosition(): number {
         return this.scrollComponent.scrollAmount;
     }
-    /**
-     * @hidden
-     * @internal
-     */
     public set scrollPosition(val: number) {
         if (val === this.scrollComponent.scrollAmount) {
             return;
@@ -331,15 +331,12 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     protected removeScrollEventListeners() {
         if (this.igxForScrollOrientation === 'horizontal') {
             this._zone.runOutsideAngular(() =>
-                this.getHorizontalScroll().removeEventListener('scroll', this.func)
+                this.scrollComponent.nativeElement.removeEventListener('scroll', this.func)
             );
         } else {
-            const vertical = this.getVerticalScroll();
-            if (vertical) {
-                this._zone.runOutsideAngular(() =>
-                    vertical.removeEventListener('scroll', this.verticalScrollHandler)
-                );
-            }
+            this._zone.runOutsideAngular(() =>
+                this.scrollComponent.nativeElement.removeEventListener('scroll', this.verticalScrollHandler)
+            );
         }
     }
 
@@ -647,19 +644,6 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     /**
-     * Returns a reference to the vertical scrollbar DOM element.
-     * ```typescript
-     * this.parentVirtDir.getVerticalScroll();
-     * ```
-     */
-    public getVerticalScroll() {
-        if (this.scrollComponent) {
-            return this.scrollComponent.nativeElement;
-        }
-        return null;
-    }
-
-    /**
      * Returns the total number of items that are fully visible.
      * ```typescript
      * this.parentVirtDir.getItemCountInView();
@@ -684,15 +668,15 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     }
 
     /**
-     * Returns a reference to the horizontal scrollbar DOM element.
+     * Returns a reference to the scrollbar DOM element.
+     * This is either a vertical or horizontal scrollbar depending on the specified igxForScrollOrientation.
      * ```typescript
-     * this.parentVirtDir.getHorizontalScroll();
+     * dir.getScroll();
      * ```
      */
-    public getHorizontalScroll() {
-        return this.getElement(this._viewContainer, 'igx-horizontal-virtual-helper') || this.scrollComponent.nativeElement;
+    public getScroll() {
+        return this.scrollComponent.nativeElement;
     }
-
     /**
      * Returns the size of the element at the specified index.
      * ```typescript
@@ -1286,14 +1270,14 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     private _updateVScrollOffset() {
         let scrollOffset = 0;
         const vScroll =  this.scrollComponent.nativeElement;
-        scrollOffset = vScroll && parseInt(vScroll.style.height, 10) ?
+        scrollOffset = vScroll && this.scrollComponent.size ?
             this.scrollPosition - this.sizesCache[this.state.startIndex] : 0;
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
     }
     private _updateHScrollOffset() {
         let scrollOffset = 0;
         scrollOffset =  this.scrollComponent.nativeElement &&
-            parseInt( this.scrollComponent.nativeElement.children[0].style.width, 10) ?
+            this.scrollComponent.size ?
             this.scrollPosition - this.sizesCache[this.state.startIndex] : 0;
         this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
     }
