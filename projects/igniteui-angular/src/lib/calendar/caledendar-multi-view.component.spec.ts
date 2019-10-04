@@ -298,7 +298,6 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
             tick(600);
 
-            debugger;
             monthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
             expect(document.activeElement).toEqual(monthDates[2]);
             // TODO: Consider issue #5913
