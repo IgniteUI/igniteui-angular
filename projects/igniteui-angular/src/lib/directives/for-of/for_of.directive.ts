@@ -1211,7 +1211,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (prevChunkSize !== this.state.chunkSize) {
             this.onChunkLoad.emit(this.state);
         }
-        if (this.sizesCache &&  this.scrollComponent) {
+        if (this.sizesCache && this.igxForScrollOrientation === 'horizontal') {
             // Updating horizontal chunks and offsets based on the new scrollLeft
             const scrollOffset = this.fixedUpdateAllElements(this.scrollPosition);
             this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
