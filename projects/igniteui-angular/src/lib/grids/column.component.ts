@@ -9,6 +9,7 @@ import {
     QueryList,
     TemplateRef,
     forwardRef,
+    OnDestroy,
     Output,
     EventEmitter
 } from '@angular/core';
@@ -35,6 +36,8 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
 import { MRLColumnSizeInfo, MRLResizeColumnInfo } from '../data-operations/multi-row-layout.interfaces';
 import { DisplayDensity } from '../core/displayDensity';
 import { notifyChanges } from './watch-changes';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import {
     IgxCellTemplateDirective,
     IgxCellHeaderTemplateDirective,
@@ -56,7 +59,7 @@ import {
     selector: 'igx-column',
     template: ``
 })
-export class IgxColumnComponent implements AfterContentInit {
+export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     /**
      * Sets/gets the `field` value.
      * ```typescript
@@ -871,13 +874,13 @@ export class IgxColumnComponent implements AfterContentInit {
         return false;
     }
 
-     /**
-     * Returns a boolean indicating if the column is a child of a `ColumnLayout` for multi-row layout.
-     * ```typescript
-     * let columnLayoutChild =  this.column.columnLayoutChild;
-     * ```
-     * @memberof IgxColumnComponent
-     */
+    /**
+    * Returns a boolean indicating if the column is a child of a `ColumnLayout` for multi-row layout.
+    * ```typescript
+    * let columnLayoutChild =  this.column.columnLayoutChild;
+    * ```
+    * @memberof IgxColumnComponent
+    */
     get columnLayoutChild() {
         return this.parent && this.parent.columnLayout;
     }
@@ -1012,6 +1015,11 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     children: QueryList<IgxColumnComponent>;
+    /**
+     * @hidden
+     */
+    protected destroy$ = new Subject<boolean>();
+
     /**
      *@hidden
      */
@@ -1195,7 +1203,7 @@ export class IgxColumnComponent implements AfterContentInit {
             if (!col.colStart) {
                 return;
             }
-            const newWidthSet =  col.widthSetByUser && columnSizes[col.colStart - 1] && !columnSizes[col.colStart - 1].widthSetByUser;
+            const newWidthSet = col.widthSetByUser && columnSizes[col.colStart - 1] && !columnSizes[col.colStart - 1].widthSetByUser;
             const newSpanSmaller = columnSizes[col.colStart - 1] && columnSizes[col.colStart - 1].colSpan > col.gridColumnSpan;
             const bothWidthsSet = col.widthSetByUser && columnSizes[col.colStart - 1] && columnSizes[col.colStart - 1].widthSetByUser;
             const bothWidthsNotSet = !col.widthSetByUser && columnSizes[col.colStart - 1] && !columnSizes[col.colStart - 1].widthSetByUser;
@@ -1267,8 +1275,8 @@ export class IgxColumnComponent implements AfterContentInit {
                 for (; j < columnSizes[i].colSpan && i + j + 1 < columnSizes[i].colEnd; j++) {
                     if (columnSizes[i + j] &&
                         ((!columnSizes[i].width && columnSizes[i + j].width) ||
-                         (!columnSizes[i].width && !columnSizes[i + j].width && columnSizes[i + j].colSpan <= columnSizes[i].colSpan) ||
-                        (!!columnSizes[i + j].width && columnSizes[i + j].colSpan <= columnSizes[i].colSpan))) {
+                            (!columnSizes[i].width && !columnSizes[i + j].width && columnSizes[i + j].colSpan <= columnSizes[i].colSpan) ||
+                            (!!columnSizes[i + j].width && columnSizes[i + j].colSpan <= columnSizes[i].colSpan))) {
                         // If we reach an already defined column that has width and the current doesn't have or
                         // if the reached column has bigger colSpan we stop.
                         break;
@@ -1316,8 +1324,8 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     protected getColumnSizesString(children: QueryList<IgxColumnComponent>): string {
-       const res = this.getFilledChildColumnSizes(children);
-       return res.join(' ');
+        const res = this.getFilledChildColumnSizes(children);
+        return res.join(' ');
     }
 
     public getResizableColUnderEnd(): MRLResizeColumnInfo[] {
@@ -1331,7 +1339,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
         for (let i = 0; i < columnSized.length; i++) {
             if (this.colStart <= i + 1 && i + 1 < colEnd) {
-                targets.push({ target: columnSized[i].ref, spanUsed: 1});
+                targets.push({ target: columnSized[i].ref, spanUsed: 1 });
             }
         }
 
@@ -1411,7 +1419,7 @@ export class IgxColumnComponent implements AfterContentInit {
         grid.resetCaches();
         grid.notifyChanges();
         if (this.columnLayoutChild) {
-            this.grid.columns.filter(x => x.columnLayout).forEach( x => x.populateVisibleIndexes());
+            this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
         this.grid.filteringService.refreshExpressions();
         // this.grid.refreshSearch(true);
@@ -1475,7 +1483,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
         grid.notifyChanges();
         if (this.columnLayoutChild) {
-            this.grid.columns.filter(x => x.columnLayout).forEach( x => x.populateVisibleIndexes());
+            this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
         this.grid.filteringService.refreshExpressions();
         // this.grid.refreshSearch(true);
@@ -1674,6 +1682,14 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      */
     public populateVisibleIndexes() { }
+
+    /**
+     * @hidden
+     */
+    public ngOnDestroy() {
+        this.destroy$.next(true);
+        this.destroy$.complete();
+    }
 }
 
 
@@ -1683,8 +1699,7 @@ export class IgxColumnComponent implements AfterContentInit {
     selector: 'igx-column-group',
     template: ``
 })
-export class IgxColumnGroupComponent extends IgxColumnComponent implements AfterContentInit {
-
+export class IgxColumnGroupComponent extends IgxColumnComponent implements AfterContentInit, OnDestroy {
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     children = new QueryList<IgxColumnComponent>();
     /**
@@ -1828,7 +1843,21 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         this.children.forEach(child => {
             child.parent = this;
         });
+        /*
+            TO DO: In Angular 9 this need to be removed, because the @ContentChildren will not return the `parent`
+            component in the query list.
+        */
+        this.children.changes.pipe(takeUntil(this.destroy$))
+            .subscribe((change) => {
+                if (change.length > 1 && change.first === this) {
+                    this.children.reset(this.children.toArray().slice(1));
+                    this.children.forEach(child => {
+                        child.parent = this;
+                    });
+                }
+            });
     }
+
     /**
      * Returns the children columns collection.
      * ```typescript
@@ -1873,7 +1902,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
                 return acc;
             }
             if (typeof val.width === 'string' && val.width.indexOf('%') !== -1) {
-                   isChildrenWidthInPercent = true;
+                isChildrenWidthInPercent = true;
             }
             return acc + parseInt(val.width, 10);
         }, 0)}`;
@@ -1894,7 +1923,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     selector: 'igx-column-layout',
     template: ``
 })
-export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements AfterContentInit {
+export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements AfterContentInit, OnDestroy {
     public childrenVisibleIndexes = [];
     /**
      * Gets the width of the column layout.
@@ -1979,7 +2008,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         this.children.forEach(child => child.hidden = value);
         if (this.grid && this.grid.columns && this.grid.columns.length > 0) {
             // reset indexes in case columns are hidden/shown runtime
-            this.grid.columns.filter(x => x.columnGroup).forEach( x => x.populateVisibleIndexes());
+            this.grid.columns.filter(x => x.columnGroup).forEach(x => x.populateVisibleIndexes());
         }
     }
 
@@ -2018,8 +2047,8 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         const grid = this.gridAPI.grid;
         const columns = grid && grid.pinnedColumns && grid.unpinnedColumns ? grid.pinnedColumns.concat(grid.unpinnedColumns) : [];
         const orderedCols = columns
-        .filter(x => !x.columnGroup && !x.hidden)
-        .sort((a, b) => a.rowStart - b.rowStart || columns.indexOf(a.parent) - columns.indexOf(b.parent) || a.colStart - b.colStart);
+            .filter(x => !x.columnGroup && !x.hidden)
+            .sort((a, b) => a.rowStart - b.rowStart || columns.indexOf(a.parent) - columns.indexOf(b.parent) || a.colStart - b.colStart);
         this.children.forEach(child => {
             const rs = child.rowStart || 1;
             let vIndex = 0;
@@ -2027,8 +2056,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
             const cols = orderedCols.filter(c =>
                 !c.columnGroup && (c.rowStart || 1) <= rs);
             vIndex = cols.indexOf(child);
-            this.childrenVisibleIndexes.push({column: child, index: vIndex});
+            this.childrenVisibleIndexes.push({ column: child, index: vIndex });
         });
     }
-
 }

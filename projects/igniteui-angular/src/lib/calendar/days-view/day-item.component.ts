@@ -135,9 +135,6 @@ export class IgxDayItemComponent {
         return isDateInRanges(this.date.date, this.specialDates);
     }
 
-    @HostBinding('attr.tabindex')
-    public tabindex = 0;
-
     @HostBinding('class.igx-calendar__date')
     public get defaultCSS(): boolean {
         return this.date.isCurrentMonth && !(this.isWeekend && this.selected);
@@ -151,6 +148,11 @@ export class IgxDayItemComponent {
     @HostBinding('class.igx-calendar__date--single')
     public get isSingleSelection(): boolean {
         return this.selection !== CalendarSelection.RANGE;
+    }
+
+    @HostBinding('attr.tabindex')
+    public get tabindex(): number {
+        return this.isDisabled || this.isHidden ? -1 : 0;
     }
 
     private _selected = false;
