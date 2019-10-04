@@ -40,6 +40,7 @@ describe('IgxGrid - GroupBy #grid', () => {
                 GroupableGridComponent,
                 CustomTemplateGridComponent,
                 GroupByDataMoreColumnsComponent,
+                GroupByEmptyColumnFieldComponent,
                 MultiColumnHeadersWithGroupingComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
@@ -2026,12 +2027,11 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(m).toBe('Maximum amount of grouped columns is 10.');
     }));
 
-    fit('should not allow grouping by column with no name', fakeAsync(() => {
+    it('should not allow grouping by column with no name', fakeAsync(() => {
         const fix = TestBed.createComponent(GroupByEmptyColumnFieldComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
         tick();
-        debugger;
         const expr = grid.columns.map(val => {
             return { fieldName: val.field, dir: SortingDirection.Asc, ignoreCase: true };
         });
@@ -2759,9 +2759,10 @@ export class GroupByDataMoreColumnsComponent extends DataParent {
     template: `
         <igx-grid
             [width]='width'
-            [height]='height' >
-            <igx-column width="100px" [groupable]="true">
-                <ng-template igxCell let-cell="cell" let-val>
+            [autoGenerate]='false'
+            [data]='data'>
+            <igx-column [width]='width' [groupable]='true'>
+                <ng-template igxCell>
                     <button>Dummy button</button>
                 </ng-template>
             </igx-column>
@@ -2770,8 +2771,6 @@ export class GroupByDataMoreColumnsComponent extends DataParent {
 })
 export class GroupByEmptyColumnFieldComponent extends DataParent {
     public width = '200px';
-    public height = null;
-
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 }
