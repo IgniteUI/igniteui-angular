@@ -123,6 +123,10 @@
         }
     }
 
+    %igx-grid-paginator__pager-text {
+        display: flex;
+    }
+
     %igx-grid-paginator__select-input {
         display: flex;
         max-width: 90px;

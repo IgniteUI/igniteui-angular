@@ -16,7 +16,7 @@
     <button [disabled]="isFirstPage || !pagerEnabled ? true: false" (click)="previousPage()" igxButton="icon" igxRipple igxRippleCentered="true">
         <igx-icon fontSet="material">chevron_left</igx-icon>
     </button>
-    <div style="display: flex">
+    <div class='igx-grid-paginator__pager-text'>
         <span>{{ page + 1 }}</span>
         <span>&nbsp;of&nbsp;</span>
         <span>{{ totalPages }}</span>

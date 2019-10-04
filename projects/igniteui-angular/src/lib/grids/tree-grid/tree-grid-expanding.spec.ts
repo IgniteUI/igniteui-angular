@@ -348,7 +348,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
 
             // Verify current page
-            verifyGridPager(fix, 4, '147', '1 of 5', [true, true, false, false]);
+            verifyGridPager(fix, 4, '147', '1\xA0of\xA05', [true, true, false, false]);
             expect(treeGrid.totalPages).toBe(5);
 
             // Go to fourth page
@@ -357,14 +357,14 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             tick(16);
 
             // Verify current page
-            verifyGridPager(fix, 4, '17', '4 of 5', [false, false, false, false]);
+            verifyGridPager(fix, 4, '17', '4\xA0of\xA05', [false, false, false, false]);
             expect(treeGrid.totalPages).toBe(5);
 
             treeGrid.collapseAll();
             fix.detectChanges();
 
             // Verify current page is the first one and only root rows are visible.
-            verifyGridPager(fix, 4, '147', '1 of 1', [true, true, true, true]);
+            verifyGridPager(fix, 4, '147', '1\xA0of\xA01', [true, true, true, true]);
             expect(treeGrid.totalPages).toBe(1);
         }));
 
@@ -380,7 +380,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             tick(16);
 
             // Verify current page
-            verifyGridPager(fix, 4, '147', '1 of 1', [true, true, true, true]);
+            verifyGridPager(fix, 4, '147', '1\xA0of\xA01', [true, true, true, true]);
             expect(treeGrid.totalPages).toBe(1);
 
             // Expand a row
@@ -390,7 +390,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
 
             // Verify current page
-            verifyGridPager(fix, 5, '147', '1 of 2', [true, true, false, false]);
+            verifyGridPager(fix, 5, '147', '1\xA0of\xA02', [true, true, false, false]);
             expect(treeGrid.totalPages).toBe(2);
 
             // Expand another row
@@ -407,7 +407,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
 
             // Verify current page
-            verifyGridPager(fix, 5, '17', '2 of 3', [false, false, false, false]);
+            verifyGridPager(fix, 5, '17', '2\xA0of\xA03', [false, false, false, false]);
             expect(treeGrid.totalPages).toBe(3);
         }));
 
@@ -423,14 +423,14 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             tick(16);
 
             // Verify current page
-            verifyGridPager(fix, 5, '147', '1 of 4', [true, true, false, false]);
+            verifyGridPager(fix, 5, '147', '1\xA0of\xA04', [true, true, false, false]);
             expect(treeGrid.totalPages).toBe(4);
 
             // Go to third page
             treeGrid.page = 2;
             fix.detectChanges();
             tick(16);
-            verifyGridPager(fix, 5, '19', '3 of 4', [false, false, false, false]);
+            verifyGridPager(fix, 5, '19', '3\xA0of\xA04', [false, false, false, false]);
             expect(treeGrid.totalPages).toBe(4);
 
             const rowsDOM = TreeGridFunctions.getAllRows(fix);
@@ -442,7 +442,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
 
             // // Verify current page
-            verifyGridPager(fix, 4, '19', '3 of 3', [false, false, true, true]);
+            verifyGridPager(fix, 4, '19', '3\xA0of\xA03', [false, false, true, true]);
             expect(treeGrid.totalPages).toBe(3);
 
             treeGrid.page = 0;
@@ -453,7 +453,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
 
             // // Verify current page
-            verifyGridPager(fix, 5, '147', '1 of 2', [true, true, false, false]);
+            verifyGridPager(fix, 5, '147', '1\xA0of\xA02', [true, true, false, false]);
             expect(treeGrid.totalPages).toBe(2);
         }));
 
@@ -463,7 +463,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
 
             // Verify current page
-            verifyGridPager(fix, 4, '147', '1 of 1', [true, true, true, true]);
+            verifyGridPager(fix, 4, '147', '1\xA0of\xA01', [true, true, true, true]);
             expect(treeGrid.totalPages).toBe(1);
 
             // Go to third page
@@ -480,13 +480,13 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             GridFunctions.navigateToNextPage(tGrid);
             fix.detectChanges();
             // Verify current page
-            verifyGridPager(fix, 1, '101', '2 of 2', [false, false, true, true]);
+            verifyGridPager(fix, 1, '101', '2\xA0of\xA02', [false, false, true, true]);
             expect(treeGrid.totalPages).toBe(2);
 
             GridFunctions.navigateToFirstPage(tGrid);
             fix.detectChanges();
             // Verify current page
-            verifyGridPager(fix, 10, '147', '1 of 2', [true, true, false, false]);
+            verifyGridPager(fix, 10, '147', '1\xA0of\xA02', [true, true, false, false]);
             expect(treeGrid.totalPages).toBe(2);
         });
     });
@@ -797,7 +797,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
             tick(16);
             // Verify current page
-            verifyGridPager(fix, 2, '1', '1 of 4', [true, true, false, false]);
+            verifyGridPager(fix, 2, '1', '1\xA0of\xA04', [true, true, false, false]);
             expect(treeGrid.totalPages).toBe(4);
 
             // Go to fourth page
@@ -805,14 +805,14 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
             tick(16);
             // Verify current page
-            verifyGridPager(fix, 2, '10', '4 of 4', [false, false, true, true]);
+            verifyGridPager(fix, 2, '10', '4\xA0of\xA04', [false, false, true, true]);
             expect(treeGrid.totalPages).toBe(4);
 
             treeGrid.collapseAll();
             fix.detectChanges();
             tick(16);
             // Verify current page is the last one and only root rows are visible.
-            verifyGridPager(fix, 1, '10', '2 of 2', [false, false, true, true]);
+            verifyGridPager(fix, 1, '10', '2\xA0of\xA02', [false, false, true, true]);
             expect(treeGrid.totalPages).toBe(2);
             tick(16);
         }));
@@ -829,7 +829,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             tick(16);
 
             // Verify current page
-            verifyGridPager(fix, 3, '1', '1 of 1', [true, true, true, true]);
+            verifyGridPager(fix, 3, '1', '1\xA0of\xA01', [true, true, true, true]);
             expect(treeGrid.totalPages).toBe(1);
 
             // Expand a row
@@ -839,7 +839,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
 
             // Verify current page
-            verifyGridPager(fix, 5, '1', '1 of 1', [true, true, true, true]);
+            verifyGridPager(fix, 5, '1', '1\xA0of\xA01', [true, true, true, true]);
             expect(treeGrid.totalPages).toBe(1);
 
             // Expand another row
@@ -847,7 +847,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             indicatorDivDOM.triggerEventHandler('click', new Event('click'));
             fix.detectChanges();
             // Verify current page
-            verifyGridPager(fix, 5, '1', '1 of 2', [true, true, false, false]);
+            verifyGridPager(fix, 5, '1', '1\xA0of\xA02', [true, true, false, false]);
             expect(treeGrid.totalPages).toBe(2);
 
             treeGrid.page = 1;
@@ -858,7 +858,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
 
             // Verify current page
-            verifyGridPager(fix, 3, '6', '2 of 2', [false, false, true, true]);
+            verifyGridPager(fix, 3, '6', '2\xA0of\xA02', [false, false, true, true]);
             expect(treeGrid.totalPages).toBe(2);
         }));
 
@@ -874,7 +874,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             tick(16);
 
             // Verify current page
-            verifyGridPager(fix, 5, '1', '1 of 2', [true, true, false, false]);
+            verifyGridPager(fix, 5, '1', '1\xA0of\xA02', [true, true, false, false]);
             expect(treeGrid.totalPages).toBe(2);
 
             // Go to third page
@@ -888,7 +888,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
 
             // // Verify current page
-            verifyGridPager(fix, 3, '1', '1 of 1', [true, true, true, true]);
+            verifyGridPager(fix, 3, '1', '1\xA0of\xA01', [true, true, true, true]);
             expect(treeGrid.totalPages).toBe(1);
         }));
 
@@ -900,7 +900,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             tick(16);
 
             // Verify current page
-            verifyGridPager(fix, 3, '1', '1 of 1', [true, true, true, true]);
+            verifyGridPager(fix, 3, '1', '1\xA0of\xA01', [true, true, true, true]);
             expect(treeGrid.totalPages).toBe(1);
 
             // Go to third page
@@ -912,7 +912,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
 
             // Verify current page
-            verifyGridPager(fix, 5, '1', '1 of 2', [true, true, false, false]);
+            verifyGridPager(fix, 5, '1', '1\xA0of\xA02', [true, true, false, false]);
             expect(treeGrid.totalPages).toBe(2);
 
             const tGrid: HTMLElement = treeGrid.nativeElement;
@@ -920,14 +920,14 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             fix.detectChanges();
             tick(16);
             // Verify current page
-            verifyGridPager(fix, 1, '9', '2 of 2', [false, false, true, true]);
+            verifyGridPager(fix, 1, '9', '2\xA0of\xA02', [false, false, true, true]);
             expect(treeGrid.totalPages).toBe(2);
 
             GridFunctions.navigateToPrevPage(tGrid);
             fix.detectChanges();
             tick(16);
             // Verify current page
-            verifyGridPager(fix, 5, '1', '1 of 2', [true, true, false, false]);
+            verifyGridPager(fix, 5, '1', '1\xA0of\xA02', [true, true, false, false]);
             expect(treeGrid.totalPages).toBe(2);
         }));
     });
@@ -1427,7 +1427,7 @@ function verifyGridPager(fix, rowsCount, firstCellValue, pagerText, buttonsVisib
     if (pagerText != null) {
         expect(gridElement.querySelector('.igx-grid-paginator__pager')).toBeDefined();
         expect(gridElement.querySelectorAll('igx-select').length).toEqual(1);
-        expect(gridElement.querySelector('.igx-grid-paginator__pager > span').textContent).toMatch(pagerText);
+        expect(gridElement.querySelector('.igx-grid-paginator__pager-text').textContent).toMatch(pagerText);
     }
     if (buttonsVisibility != null && buttonsVisibility.length === 4) {
         const pagingButtons = GridFunctions.getPagingButtons(gridElement);
