@@ -654,83 +654,86 @@ describe('Multi-View Calendar - ', () => {
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [oct2019, nov2019, dec2019]);
         }));
 
-        xit('Verify navigation with Tab',  fakeAsync(() => {
+        it('Verify tab index of disabled dates and outside dates',  fakeAsync(() => {
             calendar.disabledDates = [
-                { type: DateRangeType.Between, dateRange: [new Date(2019, 9, 7), new Date(2019, 9, 14)] },
-                { type: DateRangeType.Between, dateRange: [new Date(2019, 10, 2), new Date(2019, 11, 11)] }];
+                { type: DateRangeType.Between, dateRange: [new Date(2019, 9, 7), new Date(2019, 9, 14)] }];
+            calendar.hideOutsideDays = true;
             fixture.detectChanges();
 
             let monthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
-            UIInteractions.simulateClickEvent(monthDates[4]);
-            fixture.detectChanges();
+            for (let index = 6; index < 14; index++) {
+               expect(monthDates[index].tabIndex).toEqual(-1);
 
-
-
-            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', monthDates[4], true);
-            fixture.detectChanges();
-
-            expect(document.activeElement).toEqual(monthDates[5]);
-            UIInteractions.simulateKeyDownEvent(monthDates[5], 'Tab');
-
-            const keyboardEvent = new KeyboardEvent('keypress', {
-                key: 'Tab',
-                bubbles: true
-            });
-            monthDates[5].dispatchEvent(keyboardEvent);
-            fixture.detectChanges();
-            tick();
-            // Verify disabled dates are skipped
-            expect(document.activeElement).toEqual(monthDates[6]);
-
-            for (let index = 14; index < 30; index++) {
-                UIInteractions.triggerKeyDownEvtUponElem('Tab', monthDates[index], true);
-                fixture.detectChanges();
-                // Verify disabled dates are skipped
-                expect(document.activeElement).toEqual(monthDates[index + 1]);
             }
-
-            UIInteractions.triggerKeyDownEvtUponElem('Tab', monthDates[30], true);
-            fixture.detectChanges();
-
             let inactiveDates = HelperTestFunctions.getMonthViewInactiveDates(fixture, 0);
+            inactiveDates.forEach(date => {
+                expect(date.tabIndex).toEqual(-1);
+            });
 
-            expect(document.activeElement).toEqual(inactiveDates[2]);
+            calendar.hideOutsideDays = false;
+            calendar.disabledDates = [];
+            fixture.detectChanges();
+            inactiveDates = HelperTestFunctions.getMonthViewInactiveDates(fixture, 0);
+            inactiveDates.forEach(date => {
+                expect(date.tabIndex).toEqual(0);
+            });
 
-            for (let index = 2; index < inactiveDates.length - 1; index++) {
-                UIInteractions.triggerKeyDownEvtUponElem('Tab', inactiveDates[index], true);
-                fixture.detectChanges();
-                // Verify disabled dates are skipped
-                expect(document.activeElement).toEqual(inactiveDates[index + 1]);
+            monthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
+            for (let index = 6; index < 14; index++) {
+               expect(monthDates[index].tabIndex).toEqual(0);
+
             }
-
-            UIInteractions.triggerKeyDownEvtUponElem('Tab', inactiveDates[10], true);
-            fixture.detectChanges();
-
-            inactiveDates = HelperTestFunctions.getMonthViewInactiveDates(fixture, 1);
-            expect(document.activeElement).toEqual(inactiveDates[0]);
-
-            for (let index = 0; index < 4; index++) {
-                UIInteractions.triggerKeyDownEvtUponElem('Tab', inactiveDates[index], true);
-                fixture.detectChanges();
-                // Verify disabled dates are skipped
-                expect(document.activeElement).toEqual(inactiveDates[index + 1]);
-            }
-
-            UIInteractions.triggerKeyDownEvtUponElem('Tab', inactiveDates[4], true);
-            fixture.detectChanges();
-
-            monthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
-            expect(document.activeElement).toEqual(monthDates[0]);
-
-            UIInteractions.triggerKeyDownEvtUponElem('Tab', monthDates[0], true);
-            fixture.detectChanges();
-
-            // Verify disabled dates are skipped
-            monthDates = HelperTestFunctions.getMonthViewDates(fixture, 2);
-            expect(document.activeElement).toEqual(monthDates[11]);
         }));
 
-        it('Verify that months increment/decrement continiously on enter keydown', (async() => {
+        it('Verify navigation with Home and End keys', fakeAsync(() => {
+            let monthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
+            UIInteractions.simulateClickEvent(monthDates[16]);
+            fixture.detectChanges();
+            tick();
+
+            UIInteractions.triggerKeyDownEvtUponElem('Home', monthDates[16], true);
+            fixture.detectChanges();
+            tick();
+
+            monthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
+            expect(document.activeElement).toEqual(monthDates[0]);
+
+            UIInteractions.triggerKeyDownEvtUponElem('End', monthDates[0], true);
+            fixture.detectChanges();
+            tick();
+
+            monthDates = HelperTestFunctions.getMonthViewDates(fixture, 2);
+            expect(document.activeElement).toEqual(monthDates[monthDates.length - 1]);
+        }));
+
+        it('Verify navigation with Home and End keys when there are disabled dates', fakeAsync(() => {
+            calendar.disabledDates = [
+                { type: DateRangeType.Between, dateRange: [new Date(2019, 9, 1), new Date(2019, 9, 14)] },
+                { type: DateRangeType.Between, dateRange: [new Date(2019, 10, 12), new Date(2020, 0, 14)] }
+            ];
+            fixture.detectChanges();
+
+            let monthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
+            UIInteractions.simulateClickEvent(monthDates[3]);
+            fixture.detectChanges();
+            tick();
+
+            UIInteractions.triggerKeyDownEvtUponElem('Home', monthDates[3], true);
+            fixture.detectChanges();
+            tick();
+
+            monthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
+            expect(document.activeElement).toEqual(monthDates[14]);
+
+            UIInteractions.triggerKeyDownEvtUponElem('End', monthDates[14], true);
+            fixture.detectChanges();
+            tick();
+
+            monthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
+            expect(document.activeElement).toEqual(monthDates[10]);
+        }));
+
+        it('Verify that months increment/decrement continuously on enter keydown', (async() => {
             calendar.monthsViewNumber = 2;
             await wait();
             fixture.detectChanges();
