@@ -1,5 +1,6 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
 import { IgxGridComponent, DropPosition } from 'igniteui-angular';
+import { IGridColumn } from 'projects/igniteui-angular/src/lib/grids/common/column.interface';
 
 @Component({
     selector: 'app-grid-mrl-sample',
@@ -9,17 +10,25 @@ export class GridMRLSampleComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
     width = null;
-    cols: Array<any> = [
-        { field: 'ID', rowStart: 1, colStart: 1},
-        { field: 'CompanyName', rowStart: 1, colStart: 2},
-        { field: 'ContactName', rowStart: 1, colStart: 3},
-        { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 'span 2', colEnd : 'span 3'},
-    ];
-    colGroups = [
-        {
-            group: 'group1',
-            columns: this.cols
-        }
+    cols: IGridColumn[] = [
+        { field: 'group1', layoutChildren: [
+            { field: 'ID', colStart: 1, rowStart: 1, rowEnd: 4, width: '800px', groupable: true}
+        ]},
+        { field: 'group2', layoutChildren: [
+            { field: 'CompanyName', rowStart: 1, colStart: 1, colEnd: 3, width: '300px'},
+            { field: 'ContactName', rowStart: 2, colStart: 1, width: '100px'},
+            { field: 'ContactTitle', rowStart: 2, colStart: 2, width: '200px'},
+            { field: 'Address', rowStart: 3, colStart: 1, colEnd: 3, width: '300px'}
+        ]},
+        { field: 'group3', layoutChildren: [
+            { field: 'City', rowStart: 1, rowEnd: 3, colStart: 1, colEnd: 3, width: '300px'},
+            { field: 'Region', rowStart: 3, colStart: 1, colEnd: 3, width: '300px', sortable: true},
+        ]},
+        { field: 'group4', layoutChildren: [
+            { field: 'Country', rowStart: 1, colStart: 1, colEnd: 3, width: '300px', groupable: true},
+            { field: 'Phone', rowStart: 1, colStart: 2, width: '150px', sortable: true},
+            { field: 'Fax', rowStart: 2, rowEnd: 4, colStart: 1, colEnd: 3, width: '150px', sortable: true},
+        ]}
     ];
 
     public density = 'compact';

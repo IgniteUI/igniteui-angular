@@ -11,17 +11,16 @@
             </div>
         </ng-template>
 
-        <igx-grid [allowFiltering]="true" [rowSelectable]="false" #grid [data]="data" displayDensity="compact">
-            <igx-column [movable]="true" [hasSummary]="true" [resizable]="true" [pinned]="true" field="Missing"></igx-column>
+        <igx-grid [allowFiltering]="true" [rowSelectable]="false" #grid [data]="data" displayDensity="compact" [columns]="gridColumns">
+            <!-- <igx-column [movable]="true" [hasSummary]="true" [resizable]="true" field="ID" editable="true"></igx-column>
             <igx-column-group [movable]="true" [pinned]="false" header="General Information" [headerTemplate]="columnGroupTemplate">
-                <igx-column [movable]="true" [filterable]="false" sortable="true" resizable="true" field="CompanyName" width="200px"></igx-column>
+                <igx-column [movable]="true" filterable="true" sortable="true" resizable="true" field="CompanyName"></igx-column>
                 <igx-column-group [movable]="true" header="Person Details">
-                    <igx-column [movable]="true" [pinned]="false" filterable="true" sortable="true" resizable="true" field="ContactName"></igx-column>
+                    <igx-column [movable]="true" filterable="true" sortable="true" resizable="true" field="ContactName"></igx-column>
                     <igx-column [movable]="true" [hasSummary]="true" filterable="true" sortable="true" resizable="true" field="ContactTitle"></igx-column>
                 </igx-column-group>
-            </igx-column-group>
-            <igx-column [movable]="true" [hasSummary]="true" [resizable]="true" field="ID" editable="true"></igx-column>
-            <igx-column-group [movable]="true" header="Address Information" [headerTemplate]="columnGroupTemplate">
+            </igx-column-group> -->
+            <!-- <igx-column-group [movable]="true" header="Address Information" [headerTemplate]="columnGroupTemplate">
                 <igx-column [movable]="true" filterable="true" sortable="true" resizable="true" field="Country"></igx-column>
                 <igx-column [movable]="true" filterable="true" sortable="true" resizable="true" field="Region"></igx-column>
                 <igx-column [movable]="true" filterable="true" sortable="true" resizable="true" field="City"></igx-column>
@@ -70,9 +69,9 @@
                 <igx-column filterable="true" sortable="true" resizable="true" field="Phone"></igx-column>
                 <igx-column filterable="true" sortable="true" resizable="true" field="Fax"></igx-column>
                 <igx-column filterable="true" sortable="true" resizable="true" field="PostalCode"></igx-column>
-            </igx-column-group>
+            </igx-column-group> -->
         </igx-grid>
-        <span igxButton (click)="pinGroup()">Pin first group</span>
-        <span igxButton (click)="hideGroup()">Hide first group</span>
+        <span igxButton (click)="addCol()">Add</span>
+        <span igxButton (click)="deleteCol()">Delete</span>
     </section>
 </div>

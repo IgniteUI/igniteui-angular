@@ -1,5 +1,6 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { IgxGridComponent, IgxButtonDirective, IgxColumnGroupComponent } from 'igniteui-angular';
+import { IGridColumn } from 'projects/igniteui-angular/src/lib/grids/common/column.interface';
 
 @Component({
     selector: 'app-grid-column-groups-sample',
@@ -12,6 +13,42 @@ export class GridColumnGroupsSampleComponent implements AfterViewInit {
     grid: IgxGridComponent;
 
     columnGroupStates = new Map<IgxColumnGroupComponent, boolean>();
+    // gridColumns: IGridColumn[] = [
+    //     { field: 'CompanyName', width: '200px', filterable: true, sortable: true, hasSummary: true, resizable: true },
+    //     { field: 'ContactName', width: '200px', filterable: true, sortable: true, hasSummary: true, resizable: true }
+    // ];
+
+    gridColumns: IGridColumn[] = [
+        { field: 'ID', width: '200px', filterable: true, sortable: true, resizable: true },
+        { header: 'General Information', movable: true, groupChildren: [
+            { field: 'CompanyName',  filterable: true, sortable: true, resizable: true, movable: true, width: '200px' },
+            { header: 'Person Details', groupChildren: [
+                { field: 'ContactName',  filterable: true, sortable: true, resizable: true, movable: true, width: '200px' },
+                { field: 'ContactTitle',  filterable: true, sortable: true, resizable: true, movable: true, width: '200px',
+                    hasSummary: true }
+            ]}
+        ]},
+        { header: 'Address Information', movable: true, groupChildren: [
+            { field: 'Country',  filterable: true, sortable: true, resizable: true, movable: true },
+            { field: 'Region',  filterable: true, sortable: true, resizable: true, movable: true },
+            { field: 'City',  filterable: true, sortable: true, resizable: true, movable: true },
+            { field: 'Address',  filterable: true, sortable: true, resizable: true, movable: true },
+            { field: 'FullAddress',  filterable: true, sortable: true, resizable: true, movable: true, width: '250px' },
+        ]},
+        { header: 'Address Information', movable: true, groupChildren: [
+            { header: 'Location', groupChildren: [
+                { field: 'Country',  filterable: true, sortable: true, resizable: true, movable: true },
+                { field: 'Region',  filterable: true, sortable: true, resizable: true, movable: true },
+                { field: 'City',  filterable: true, sortable: true, resizable: true, movable: true },
+                { field: 'Address',  filterable: true, sortable: true, resizable: true, movable: true }
+            ]},
+            { header: 'Contact Information', groupChildren: [
+                { field: 'Phone',  filterable: true, sortable: true, resizable: true, movable: true },
+                { field: 'Fax',  filterable: true, sortable: true, resizable: true, movable: true },
+                { field: 'PostalCode',  filterable: true, sortable: true, resizable: true, movable: true }
+            ]}
+        ]},
+    ];
 
     data: any[] = [
         // tslint:disable:max-line-length
@@ -46,7 +83,7 @@ export class GridColumnGroupsSampleComponent implements AfterViewInit {
     // tslint:enable:max-line-length
 
 
-    constructor() {
+    constructor(public cdr: ChangeDetectorRef) {
         for (const item of this.data) {
             item.FullAddress = `${item.Address}, ${item.City}, ${item.Country}`;
         }
@@ -82,5 +119,20 @@ export class GridColumnGroupsSampleComponent implements AfterViewInit {
         }
 
         this.columnGroupStates.set(columnGroup, !this.columnGroupStates.get(columnGroup));
+    }
+
+    addCol() {
+        this.gridColumns.push({
+            field: 'ContactName',
+            width: '500px',
+            filterable: true,
+            sortable: true,
+        });
+        this.gridColumns = [...this.gridColumns];
+    }
+
+    deleteCol() {
+        this.gridColumns.shift();
+        this.gridColumns = [...this.gridColumns];
     }
 }
