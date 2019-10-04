@@ -1,11 +1,4 @@
-import {
-    async,
-    ComponentFixture,
-    fakeAsync,
-    TestBed,
-    tick
-} from '@angular/core/testing';
-
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, ViewChild, PLATFORM_ID } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { wait } from '../test-utils/ui-interactions.spec';
@@ -44,6 +37,10 @@ describe('Navigation Drawer', () => {
 
     afterEach(() => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = oldTimeout;
+    });
+
+    afterAll(() => {
+        TestBed.resetTestingModule();
     });
 
     it('should initialize without DI service', async(() => {
@@ -561,6 +558,7 @@ describe('Navigation Drawer', () => {
         const originalWidth = window.innerWidth;
         const platformUtil: PlatformUtil = new PlatformUtil(TestBed.get(PLATFORM_ID));
         const drawer = new IgxNavigationDrawerComponent(null, null, null, null, platformUtil);
+
         // re-enable `getWindowWidth`
         const widthSpy = (widthSpyOverride as jasmine.Spy).and.callThrough();
         let width = widthSpy.call(drawer);
