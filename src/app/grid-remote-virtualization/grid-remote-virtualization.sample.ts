@@ -46,13 +46,24 @@ export class GridVirtualizationSampleComponent implements OnInit, AfterViewInit 
 
     public loadData() {
         this.grid.shouldGenerate = true;
+        this.remoteService.getData(this.grid.virtualizationState, (data) => {
+            this.remoteData = this.remoteService.remoteData;
+        });
+    }
+
+    public loadNullData() {
+        this.remoteService.nullData();
+        this.remoteData = this.remoteService.remoteData;
+    }
+
+    public loadUndefinedData() {
+        this.remoteService.undefinedData();
         this.remoteData = this.remoteService.remoteData;
     }
 
     public ngAfterViewInit() {
-        this.remoteService.getData(this.grid.virtualizationState, (data) => {
-            this.grid.totalItemCount = data['@odata.count'];
-        });
+        this.remoteService.nullData();
+        this.remoteData = this.remoteService.remoteData;
     }
 
     dataLoading(evt) {

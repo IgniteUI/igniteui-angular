@@ -255,6 +255,19 @@ describe('IgxForOf directive -', () => {
             }
         });
 
+        it('should not throw error when itemSize is changed while data is null/undefined.', () => {
+            let errorMessage = '';
+            fix.componentInstance.data = null;
+            fix.detectChanges();
+            try {
+                fix.componentInstance.itemSize = '100px';
+                fix.detectChanges();
+            } catch (ex) {
+                errorMessage = ex.message;
+            }
+            expect(errorMessage).toBe('');
+        });
+
         it('should allow initially undefined value for igxForOf and then detect changes correctly once the value is updated', async () => {
             fix = TestBed.createComponent(VerticalVirtualNoDataComponent);
             expect(() => {
