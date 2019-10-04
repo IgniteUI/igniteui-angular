@@ -244,12 +244,15 @@ describe('Multi-View Calendar - ', () => {
             tick(600);
 
             firstMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
+
+            // The focus should not be stolen by the selected date
             expect(document.activeElement).toEqual(firstMonthDates[29]);
             // Verify months are changed
             HelperTestFunctions.verifyCalendarSubHeaders(fixture, [date1, date2, date3]);
         }));
 
         it('Verify navigation with arrow down', fakeAsync(() => {
+            // pending('issue #5888');
             let monthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
             UIInteractions.simulateClickEvent(monthDates[22]);
             fixture.detectChanges();
@@ -291,13 +294,15 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
             tick(600);
 
-            monthDates = HelperTestFunctions.getMonthViewDates(fixture, 2);
+            debugger;
+            monthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
             expect(document.activeElement).toEqual(monthDates[2]);
-            // Verify months are changed
-            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [date3, date4, date5]);
+            // TODO: Consider issue #5913
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [date5, new Date('2020-2-19'), new Date('2020-3-19')]);
         }));
 
         it('Verify navigation with arrow left', fakeAsync(() => {
+            // pending('issue #5888');
             const secondMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
             UIInteractions.simulateClickEvent(secondMonthDates[1]);
             fixture.detectChanges();
@@ -338,10 +343,15 @@ describe('Multi-View Calendar - ', () => {
         }));
 
         it('Verify navigation with arrow right', fakeAsync(() => {
+            // pending('issue #5888');
             let monthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
             UIInteractions.simulateClickEvent(monthDates[20]);
             fixture.detectChanges();
             tick();
+
+            calendar.selectDate(new Date('2020-2-19'));
+            tick();
+            fixture.detectChanges();
 
             for (let index = 20; index < 29; index++) {
                 UIInteractions.simulateKeyDownEvent(monthDates[index], 'ArrowRight');
@@ -371,13 +381,15 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
             tick(600);
 
-            monthDates = HelperTestFunctions.getMonthViewDates(fixture, 2);
+            // TODO: Consider issue #5913
+            monthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
             expect(document.activeElement).toEqual(monthDates[0]);
             // Verify months are changed
-            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [date3, date4, date5]);
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [date5, new Date('2020-2-19'), new Date('2020-3-19')]);
         }));
 
         it('Verify navigation with arrow up when there are disabled dates', fakeAsync(() => {
+            // pending('issue #5888');
             calendar.viewDate = new Date(2019, 11, 25);
             calendar.disabledDates = dateRangeDescriptors;
             fixture.detectChanges();
@@ -401,16 +413,16 @@ describe('Multi-View Calendar - ', () => {
             let firstMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
             expect(document.activeElement).toEqual(firstMonthDates[9]);
             // Verify months are not changed
-            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [date2, date3, date4]);
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [date4, date5, new Date('2020-2-19')]);
 
-            UIInteractions.simulateKeyDownEvent(secondMonthDates[9], 'ArrowUp');
+            UIInteractions.simulateKeyDownEvent(firstMonthDates[9], 'ArrowUp');
             fixture.detectChanges();
             tick(600);
 
             firstMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
-            expect(document.activeElement).toEqual(firstMonthDates[11]);
+            expect(document.activeElement).toEqual(firstMonthDates[13]);
             // Verify months are changed
-            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [date1, date2, date3]);
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [date3, date4, date5]);
         }));
 
         it('Verify navigation with arrow down when there are disabled dates', fakeAsync(() => {
@@ -435,21 +447,20 @@ describe('Multi-View Calendar - ', () => {
             tick();
 
             let monthDates = HelperTestFunctions.getMonthViewDates(fixture, 2);
-            expect(document.activeElement).toEqual(monthDates[15]);
-            // Verify months are not changed
-            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [date2, date3, date4]);
+            expect(document.activeElement).toEqual(monthDates[20]);
 
-            UIInteractions.simulateKeyDownEvent(secondMonthDates[20], 'ArrowDown');
+            UIInteractions.simulateKeyDownEvent(monthDates[20], 'ArrowDown');
             fixture.detectChanges();
             tick(600);
 
-            monthDates = HelperTestFunctions.getMonthViewDates(fixture, 2);
+            monthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
             expect(document.activeElement).toEqual(monthDates[12]);
             // Verify months are changed
-            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [date3, date4, date5]);
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [ new Date('2020-3-19'), new Date('2020-4-19'), new Date('2020-5-19')]);
         }));
 
         it('Verify navigation with arrow left when there are disabled dates', fakeAsync(() => {
+            // pending('issue #5888');
             calendar.viewDate = new Date(2019, 11, 25);
             calendar.disabledDates = dateRangeDescriptors;
             fixture.detectChanges();
@@ -490,7 +501,7 @@ describe('Multi-View Calendar - ', () => {
             }
 
             // Verify months are not changed
-            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [date2, date3, date4]);
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [date4, date5, new Date('2020-2-19')]);
 
             UIInteractions.simulateKeyDownEvent(firstMonthDates[8], 'ArrowLeft');
             fixture.detectChanges();
@@ -499,10 +510,10 @@ describe('Multi-View Calendar - ', () => {
             firstMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 0);
             expect(document.activeElement).toEqual(firstMonthDates[29]);
             // Verify months are changed
-            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [date1, date2, date3]);
+            HelperTestFunctions.verifyCalendarSubHeaders(fixture, [date3, date4, date5]);
         }));
 
-        it('Verify that months increment/decrement continiouslt on enter keydown', (async() => {
+        it('Verify that months increment/decrement continiously on enter keydown', (async() => {
             calendar.monthsViewNumber = 2;
             await wait();
             fixture.detectChanges();
