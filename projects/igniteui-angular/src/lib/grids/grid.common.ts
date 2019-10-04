@@ -603,8 +603,8 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
 
                 interval(100).pipe(takeUntil(this._dragLeave)).subscribe(() => {
                     this.cms.column.grid.wheelHandler();
-                    event.target.id === 'right' ? this.horizontalScroll.getHorizontalScroll().scrollLeft += 15 :
-                        this.horizontalScroll.getHorizontalScroll().scrollLeft -= 15;
+                    event.target.id === 'right' ? this.horizontalScroll.scrollPosition += 15 :
+                        this.horizontalScroll.scrollPosition -= 15;
                 });
             }
     }

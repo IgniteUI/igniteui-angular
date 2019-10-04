@@ -214,7 +214,7 @@ describe('IgxGrid - Grid Paging', () => {
         grid.perPage = 5;
         await wait();
         fix.detectChanges();
-        let vScrollBar = grid.verticalScrollContainer.getVerticalScroll();
+        let vScrollBar = grid.verticalScrollContainer.getScroll();
         expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(1);
         verifyGridPager(fix, 5, '1', '1 of 2', [true, true, false, false]);
         expect(vScrollBar.scrollHeight).toBeGreaterThanOrEqual(250);
@@ -224,7 +224,7 @@ describe('IgxGrid - Grid Paging', () => {
         grid.perPage = 33;
         await wait();
         fix.detectChanges();
-        vScrollBar = grid.verticalScrollContainer.getVerticalScroll();
+        vScrollBar = grid.verticalScrollContainer.getScroll();
         // onPagingDone should be emitted only if we have a change in the page number
         expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(1);
         verifyGridPager(fix, 5, '1', '1 of 1', [true, true, true, true]);

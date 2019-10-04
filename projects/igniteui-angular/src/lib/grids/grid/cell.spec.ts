@@ -663,7 +663,7 @@ describe('IgxGrid - Cell component', () => {
             }));
 
             it('When cell in editMode and try to navigate with `ArrowDown` - focus should remain over the input.', async () => {
-                const verticalScroll = grid.verticalScrollContainer.getVerticalScroll();
+                const verticalScroll = grid.verticalScrollContainer.getScroll();
                 const cellElem = fixture.debugElement.query(By.css(CELL_CSS_CLASS)).nativeElement;
                 expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(false);
 
@@ -688,7 +688,7 @@ describe('IgxGrid - Cell component', () => {
             });
 
             it('When cell in editMode and try to navigate with `ArrowUp` - focus should remain over the input.', (async () => {
-                const verticalScroll = grid.verticalScrollContainer.getVerticalScroll();
+                const verticalScroll = grid.verticalScrollContainer.getScroll();
                 let expectedScroll;
                 let cellElem;
                 fixture.componentInstance.scrollTop(1000);
@@ -977,7 +977,7 @@ describe('IgxGrid - Cell component', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
 
-        const scrollbar = grid.parentVirtDir.getHorizontalScroll();
+        const scrollbar = grid.headerContainer.getScroll();
         scrollbar.scrollLeft = 10000;
         fix.detectChanges();
 
@@ -1129,11 +1129,11 @@ export class VirtualGridComponent {
     }
 
     public scrollTop(newTop: number) {
-        this.instance.verticalScrollContainer.getVerticalScroll().scrollTop = newTop;
+        this.instance.verticalScrollContainer.getScroll().scrollTop = newTop;
     }
 
     public scrollLeft(newLeft: number) {
-        this.instance.parentVirtDir.getHorizontalScroll().scrollLeft = newLeft;
+        this.instance.headerContainer.getScroll().scrollLeft = newLeft;
     }
 }
 
@@ -1230,11 +1230,11 @@ export class CellEditingScrollTestComponent {
     ];
 
     public scrollTop(newTop: number) {
-        this.grid.verticalScrollContainer.getVerticalScroll().scrollTop = newTop;
+        this.grid.verticalScrollContainer.getScroll().scrollTop = newTop;
     }
 
     public scrollLeft(newLeft: number) {
-        this.grid.parentVirtDir.getHorizontalScroll().scrollLeft = newLeft;
+        this.grid.headerContainer.getScroll().scrollLeft = newLeft;
     }
 }
 

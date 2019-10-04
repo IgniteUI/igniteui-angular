@@ -1124,7 +1124,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         fix.detectChanges();
         const lastCell = grid.getCellByColumn(0, 'ContactTitle');
         expect(lastCell.focused).toBe(true);
-        expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(600);
+        expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(600);
         // check if cell right edge is visible
         const diff = lastCell.nativeElement.getBoundingClientRect().right + 1 - grid.tbody.nativeElement.getBoundingClientRect().right;
         expect(diff).toBe(0);
@@ -1302,7 +1302,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         // check next cell is focused and is fully in view
         cell = grid.getCellByColumn(2, 'Phone');
         expect(cell.focused).toBe(true);
-        expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop).toBeGreaterThan(50);
+        expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThan(50);
         let diff = cell.nativeElement.getBoundingClientRect().bottom - grid.tbody.nativeElement.getBoundingClientRect().bottom;
         expect(diff).toBe(0);
 
@@ -1319,7 +1319,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         // check next cell is focused and is fully in view
         cell = grid.getCellByColumn(0, 'ContactName');
         expect(cell.focused).toBe(true);
-        expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop).toBe(0);
+        expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(0);
         diff = cell.nativeElement.getBoundingClientRect().top - grid.tbody.nativeElement.getBoundingClientRect().top;
         expect(diff).toBe(0);
 
@@ -1336,7 +1336,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         // check next cell is focused and is fully in view
         cell = grid.getCellByColumn(2, 'Address');
         expect(cell.focused).toBe(true);
-        expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop).toBeGreaterThan(50);
+        expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThan(50);
         diff = cell.nativeElement.getBoundingClientRect().bottom - grid.tbody.nativeElement.getBoundingClientRect().bottom;
         expect(diff).toBe(0);
 
@@ -1353,7 +1353,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         // check next cell is focused and is fully in view
         cell = grid.getCellByColumn(0, 'ContactName');
         expect(cell.focused).toBe(true);
-        expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop).toBe(0);
+        expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(0);
         diff = cell.nativeElement.getBoundingClientRect().top - grid.tbody.nativeElement.getBoundingClientRect().top;
         expect(diff).toBe(0);
     }));
@@ -1392,7 +1392,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         // check next cell is focused
         cell = grid.getCellByColumn(0, 'City');
         expect(cell.focused).toBe(true);
-        expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(300);
+        expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(300);
         let diff = cell.nativeElement.getBoundingClientRect().right + 1 - grid.tbody.nativeElement.getBoundingClientRect().right;
         expect(diff).toBe(0);
 
@@ -1404,7 +1404,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         // check next cell is focused
         cell = grid.getCellByColumn(0, 'Phone');
         expect(cell.focused).toBe(true);
-        expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBe(0);
+        expect(grid.headerContainer.getScroll().scrollLeft).toBe(0);
         diff = cell.nativeElement.getBoundingClientRect().left - grid.tbody.nativeElement.getBoundingClientRect().left;
         expect(diff).toBe(0);
     }));
@@ -2102,7 +2102,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         // check correct cell is focused and is fully in view
         const lastCell =  grid.getCellByColumn(0, 'Address');
         expect(lastCell.focused).toBe(true);
-        expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(800);
+        expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(800);
         let diff = lastCell.nativeElement.getBoundingClientRect().right + 1 - grid.tbody.nativeElement.getBoundingClientRect().right;
         expect(diff).toBe(0);
 
@@ -2114,7 +2114,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         // first cell should be focused and is fully in view
         firstCell = grid.getCellByColumn(0, 'ID');
         expect(firstCell.focused).toBe(true);
-        expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBe(0);
+        expect(grid.headerContainer.getScroll().scrollLeft).toBe(0);
         diff = firstCell.nativeElement.getBoundingClientRect().left - grid.tbody.nativeElement.getBoundingClientRect().left;
         expect(diff).toBe(0);
     });
@@ -2198,7 +2198,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
             fix.detectChanges();
 
             // scroll right
-            grid.parentVirtDir.getHorizontalScroll().scrollLeft = 800;
+            grid.headerContainer.getScroll().scrollLeft = 800;
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
@@ -2229,7 +2229,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
             expect(firstCell.focused).toBe(true);
 
             // scroll right
-            grid.parentVirtDir.getHorizontalScroll().scrollLeft = 800;
+            grid.headerContainer.getScroll().scrollLeft = 800;
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
@@ -2456,7 +2456,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
                 fourthCell  ] = thirdBlock.queryAll(By.css(CELL_CSS_CLASS));
             const firstCell = secondBlock.queryAll(By.css(CELL_CSS_CLASS))[0];
 
-            fix.componentInstance.grid.parentVirtDir.getHorizontalScroll().scrollLeft = 500;
+            fix.componentInstance.grid.headerContainer.getScroll().scrollLeft = 500;
             await wait();
             fix.detectChanges();
 
@@ -3038,7 +3038,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         fix.detectChanges();
         // cell should be at bottom of grid
         let cell =  grid.getCellByColumn(2, 'ContactTitle');
-        expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop).toBeGreaterThan(50);
+        expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThan(50);
         let diff = cell.nativeElement.getBoundingClientRect().bottom - grid.tbody.nativeElement.getBoundingClientRect().bottom;
         // there is 2px border at the bottom now
         expect(diff).toBe(0);
@@ -3050,7 +3050,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         fix.detectChanges();
         // cell should be at top of grid
         cell =  grid.getCellByColumn(0, 'CompanyName');
-        expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop).toBe(0);
+        expect(grid.verticalScrollContainer.getScroll().scrollTop).toBe(0);
         diff = cell.nativeElement.getBoundingClientRect().top - grid.tbody.nativeElement.getBoundingClientRect().top;
         expect(diff).toBe(0);
 
@@ -3061,7 +3061,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         fix.detectChanges();
         // cell should be at bottom of grid
         cell =  grid.getCellByColumn(10, 'CompanyName');
-        expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop).toBeGreaterThan(50 * 10);
+        expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThan(50 * 10);
         diff = cell.nativeElement.getBoundingClientRect().bottom - grid.tbody.nativeElement.getBoundingClientRect().bottom;
         // there is 2px border at the bottom now
         expect(diff).toBe(0);
@@ -3074,7 +3074,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
 
         // cell should be at right edge of grid
         cell =  grid.getCellByColumn(10, 'City');
-        expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(100);
+        expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(100);
         // check if cell right edge is visible
         diff = cell.nativeElement.getBoundingClientRect().right + 1 - grid.tbody.nativeElement.getBoundingClientRect().right;
         expect(diff).toBe(0);
@@ -3087,7 +3087,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
 
         // cell should be at left edge of grid
         cell =  grid.getCellByColumn(10, 'CompanyName');
-        expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBe(0);
+        expect(grid.headerContainer.getScroll().scrollLeft).toBe(0);
         // check if cell right left is visible
         diff = cell.nativeElement.getBoundingClientRect().left - grid.tbody.nativeElement.getBoundingClientRect().left;
         expect(diff).toBe(0);
@@ -3101,7 +3101,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
 
         // cell should be at right edge of grid
         cell =  grid.getCellByColumn(9, 'ID');
-        expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(250);
+        expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(250);
         // check if cell right right is visible
         diff = cell.nativeElement.getBoundingClientRect().right + 1 - grid.tbody.nativeElement.getBoundingClientRect().right;
         expect(diff).toBe(0);

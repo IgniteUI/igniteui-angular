@@ -63,7 +63,7 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     public get displayContainerScrollLeft() {
-        return parseInt(this.grid.parentVirtDir.getHorizontalScroll().scrollLeft, 10);
+        return this.grid.headerContainer.scrollPosition;
     }
 
     public get areAllColumnsInView() {
@@ -414,9 +414,9 @@ export class IgxFilteringService implements OnDestroy {
         const forOfDir = this.grid.headerContainer;
         const width = this.displayContainerWidth + this.displayContainerScrollLeft;
         if (shouldFocusNext) {
-            forOfDir.getHorizontalScroll().scrollLeft += currentColumnRight - width;
+            forOfDir.scrollPosition += currentColumnRight - width;
         } else {
-            forOfDir.getHorizontalScroll().scrollLeft = currentColumnLeft;
+            forOfDir.scrollPosition = currentColumnLeft;
         }
     }
 

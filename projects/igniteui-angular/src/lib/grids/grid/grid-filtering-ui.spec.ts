@@ -3521,7 +3521,7 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             expect(emptyFilterHeader.componentInstance.column.field).toEqual('Downloads');
 
             // Scroll to the right
-            grid.parentVirtDir.getHorizontalScroll().scrollLeft = 300;
+            grid.headerContainer.getScroll().scrollLeft = 300;
             await wait();
             fix.detectChanges();
 
@@ -5024,7 +5024,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering', () => {
             await wait(16);
 
             // Scroll a bit to the right, so the ProductName column is not fully visible.
-            grid.parentVirtDir.getHorizontalScroll().scrollLeft = 500;
+            grid.headerContainer.getScroll().scrollLeft = 500;
             await wait(100);
             fix.detectChanges();
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');

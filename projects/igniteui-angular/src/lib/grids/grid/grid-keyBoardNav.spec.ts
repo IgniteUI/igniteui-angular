@@ -663,7 +663,7 @@ describe('IgxGrid - Keyboard navigation', () => {
             expect(selectedCell.value).toEqual(0);
             expect(selectedCell.column.field).toMatch('other');
             expect(selectedCell.rowIndex).toEqual(0);
-            expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop).toEqual(0);
+            expect(grid.verticalScrollContainer.getScroll().scrollTop).toEqual(0);
             expect(selectedCellFromGrid.value).toEqual(0);
             expect(selectedCellFromGrid.column.field).toMatch('other');
             expect(selectedCellFromGrid.rowIndex).toEqual(0);
@@ -698,7 +698,7 @@ describe('IgxGrid - Keyboard navigation', () => {
             expect(selectedCellFromGrid.value).toEqual(0);
             expect(selectedCellFromGrid.column.field).toMatch('0');
             expect(selectedCellFromGrid.rowIndex).toEqual(0);
-            expect(grid.verticalScrollContainer.getVerticalScroll().scrollTop).toEqual(0);
+            expect(grid.verticalScrollContainer.getScroll().scrollTop).toEqual(0);
 
             cell = grid.getCellByColumn(4, '2');
             cell.nativeElement.dispatchEvent(new Event('focus'));
@@ -819,14 +819,14 @@ describe('IgxGrid - Keyboard navigation', () => {
             grid.cdr.detectChanges();
 
             await wait();
-            let currScrollTop = grid.verticalScrollContainer.getVerticalScroll().scrollTop;
+            let currScrollTop = grid.verticalScrollContainer.getScroll().scrollTop;
             expect(currScrollTop).toEqual(grid.verticalScrollContainer.igxForContainerSize);
 
             // testing the pageup key
             UIInteractions.triggerKeyDownEvtUponElem('PageUp', grid.nativeElement, true);
             grid.cdr.detectChanges();
             await wait();
-            currScrollTop = grid.parentVirtDir.getHorizontalScroll().scrollTop;
+            currScrollTop = grid.headerContainer.getScroll().scrollTop;
             expect(currScrollTop).toEqual(0);
         });
 
@@ -1076,7 +1076,7 @@ describe('IgxGrid - Keyboard navigation', () => {
             });
             fix.detectChanges();
 
-            grid.parentVirtDir.getHorizontalScroll().scrollLeft = 1000;
+            grid.headerContainer.getScroll().scrollLeft = 1000;
             await wait(DEBOUNCETIME);
             let cell = grid.getCellByColumn(2, 'Released');
             cell.nativeElement.dispatchEvent(new Event('focus'));
@@ -1340,7 +1340,7 @@ describe('IgxGrid - Keyboard navigation', () => {
                 ignoreCase: false, strategy: DefaultSortingStrategy.instance()
             });
             fix.detectChanges();
-            grid.parentVirtDir.getHorizontalScroll().scrollLeft = 1000;
+            grid.headerContainer.getScroll().scrollLeft = 1000;
             await wait(100);
             fix.detectChanges();
             grid.verticalScrollContainer.addScrollTop(1000);

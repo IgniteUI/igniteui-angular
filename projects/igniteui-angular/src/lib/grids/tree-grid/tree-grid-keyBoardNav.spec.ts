@@ -252,7 +252,7 @@ describe('IgxTreeGrid - Key Board Navigation ', () => {
             treeGrid.cdr.detectChanges();
 
             await wait(100);
-            currScrollTop = treeGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
+            currScrollTop = treeGrid.verticalScrollContainer.getScroll().scrollTop;
             expect(currScrollTop).toBeGreaterThan(100);
             expect(virtualizationSpy).toHaveBeenCalledTimes(1);
 
@@ -260,7 +260,7 @@ describe('IgxTreeGrid - Key Board Navigation ', () => {
             UIInteractions.triggerKeyDownEvtUponElem('PageUp', treeGrid.nativeElement, true);
             treeGrid.cdr.detectChanges();
             await wait(100);
-            currScrollTop = treeGrid.parentVirtDir.getHorizontalScroll().scrollTop;
+            currScrollTop = treeGrid.headerContainer.getScroll().scrollTop;
             expect(currScrollTop).toEqual(0);
             expect(virtualizationSpy).toHaveBeenCalledTimes(2);
             TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell);

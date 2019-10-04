@@ -541,10 +541,10 @@ describe('IgxGrid Component Tests', () => {
                 { field: 'detail', header: 'detail', dataType: 'number', width: '400px', hasSummary: false }
             );
             fix.detectChanges();
-            fix.componentInstance.grid.verticalScrollContainer.getVerticalScroll().scrollTop = 100;
+            fix.componentInstance.grid.verticalScrollContainer.getScroll().scrollTop = 100;
             await wait(100);
             fix.detectChanges();
-            fix.componentInstance.grid.verticalScrollContainer.getVerticalScroll().scrollTop = 250;
+            fix.componentInstance.grid.verticalScrollContainer.getScroll().scrollTop = 250;
             await wait(100);
             fix.detectChanges();
             fix.componentInstance.grid.width = '1300px';
@@ -1206,7 +1206,7 @@ describe('IgxGrid Component Tests', () => {
                 fix.detectChanges();
                 await wait(16);
                 expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
-                const scrollbar = grid.parentVirtDir.getHorizontalScroll();
+                const scrollbar = grid.headerContainer.getScroll();
                 scrollbar.scrollLeft = 10000;
                 grid.width = '1500px';
 
@@ -2053,7 +2053,7 @@ describe('IgxGrid Component Tests', () => {
             }));
 
             it(`Should jump from last editable columns to overlay buttons`, (async () => {
-                grid.parentVirtDir.getHorizontalScroll().scrollLeft = grid.parentVirtDir.getHorizontalScroll().clientWidth;
+                grid.headerContainer.getScroll().scrollLeft = grid.headerContainer.getScroll().clientWidth;
                 await wait(DEBOUNCETIME);
                 const targetCell = fixture.componentInstance.getCell(0, 'Test');
                 const lastCellElement = targetCell.nativeElement;
@@ -2087,7 +2087,7 @@ describe('IgxGrid Component Tests', () => {
                 let currentEditCell: IgxGridCellComponent;
                 const targetCell = fixture.componentInstance.focusGridCell(0, 'Downloads');
                 fixture.detectChanges();
-                grid.parentVirtDir.getHorizontalScroll().scrollLeft = 0;
+                grid.headerContainer.getScroll().scrollLeft = 0;
                 await wait(300);
 
                 targetCell.onKeydownEnterEditMode();
@@ -2110,7 +2110,7 @@ describe('IgxGrid Component Tests', () => {
                 await wait(300);
 
                 currentEditCell = fixture.componentInstance.getCurrentEditCell();
-                expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(0);
+                expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(0);
                 expect(currentEditCell.column.field).toEqual('Test');
 
                 // move to Cancel
@@ -2130,7 +2130,7 @@ describe('IgxGrid Component Tests', () => {
                 await wait(300);
 
                 currentEditCell = fixture.componentInstance.getCurrentEditCell();
-                expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toEqual(0);
+                expect(grid.headerContainer.getScroll().scrollLeft).toEqual(0);
                 expect(currentEditCell.column.field).toEqual('Downloads');
             }));
 
@@ -2426,7 +2426,7 @@ describe('IgxGrid Component Tests', () => {
                 await wait(DEBOUNCETIME);
 
                 currentEditCell = fixture.componentInstance.getCurrentEditCell();
-                expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(0);
+                expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(0);
                 expect(currentEditCell.column.field).toEqual('Test');
 
                 // change last editable cell value
@@ -2452,7 +2452,7 @@ describe('IgxGrid Component Tests', () => {
                 await wait(DEBOUNCETIME);
 
                 // Scroll the grid
-                grid.parentVirtDir.getHorizontalScroll().scrollLeft = grid.parentVirtDir.getHorizontalScroll().clientWidth;
+                grid.headerContainer.getScroll().scrollLeft = grid.headerContainer.getScroll().clientWidth;
                 fixture.detectChanges();
                 await wait(DEBOUNCETIME);
 
@@ -4481,7 +4481,7 @@ export class IgxGridTestComponent {
     }
 
     public isHorizontalScrollbarVisible() {
-        const scrollbar = this.grid.parentVirtDir.getHorizontalScroll();
+        const scrollbar = this.grid.headerContainer.getScroll();
         if (scrollbar) {
             return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
         }
@@ -4490,7 +4490,7 @@ export class IgxGridTestComponent {
     }
 
     public getVerticalScrollHeight() {
-        const scrollbar = this.grid.verticalScrollContainer.getVerticalScroll();
+        const scrollbar = this.grid.verticalScrollContainer.getScroll();
         if (scrollbar) {
             return parseInt(scrollbar.style.height, 10);
         }
@@ -4499,7 +4499,7 @@ export class IgxGridTestComponent {
     }
 
     public isVerticalScrollbarVisible() {
-        const scrollbar = this.grid.verticalScrollContainer.getVerticalScroll();
+        const scrollbar = this.grid.verticalScrollContainer.getScroll();
         if (scrollbar && scrollbar.offsetHeight > 0) {
             return scrollbar.offsetHeight < scrollbar.children[0].offsetHeight;
         }
@@ -4558,7 +4558,7 @@ export class IgxGridDefaultRenderingComponent {
     }
 
     public isHorizonatScrollbarVisible() {
-        const scrollbar = this.grid.parentVirtDir.getHorizontalScroll();
+        const scrollbar = this.grid.headerContainer.getScroll();
         return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
     }
 

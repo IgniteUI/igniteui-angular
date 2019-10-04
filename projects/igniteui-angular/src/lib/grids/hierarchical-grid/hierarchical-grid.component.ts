@@ -340,8 +340,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      */
     ngAfterViewInit() {
         super.ngAfterViewInit();
-        this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this.hg_verticalScrollHandler.bind(this));
-        this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', this.hg_horizontalScrollHandler.bind(this));
+        this.verticalScrollContainer.getScroll().addEventListener('scroll', this.hg_verticalScrollHandler.bind(this));
+        this.headerContainer.getScroll().addEventListener('scroll', this.hg_horizontalScrollHandler.bind(this));
 
         if (this.expandChildren && this.data && this.hierarchicalState.length !== this.data.length) {
             this.hierarchicalState = this.data.map((rec) => {
@@ -700,8 +700,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      * @hidden
      */
     public updateScrollPosition() {
-        const vScr = this.verticalScrollContainer.getVerticalScroll();
-        const hScr = this.parentVirtDir.getHorizontalScroll();
+        const vScr = this.verticalScrollContainer.getScroll();
+        const hScr = this.headerContainer.getScroll();
         if (vScr) {
             vScr.scrollTop = this.scrollTop;
         }
@@ -741,8 +741,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             const virt = currGrid.verticalScrollContainer;
             virt.recalcUpdateSizes();
             const offset = parseInt(virt.dc.instance._viewContainer.element.nativeElement.style.top, 10);
-            const scr = virt.getVerticalScroll();
-            scr.scrollTop = virt.getScrollForIndex(virt.state.startIndex) - offset;
+            virt.scrollPosition = virt.getScrollForIndex(virt.state.startIndex) - offset;
 
             if (hadScrollbar !== currGrid.hasVerticalSroll()) {
                 // If after recalculations the grid should show vertical scrollbar it should also reflow.
