@@ -278,10 +278,12 @@ export class IgxTabItemComponent extends IgxTabItemBase implements AfterViewInit
     public setSelectedInternal(newValue: boolean) {
         this._isSelected = newValue;
         this._ngZone.runOutsideAngular(() => {
-            if (this._isSelected) {
-                this._resizeObserver.observe(this._element.nativeElement);
-            } else {
-                this._resizeObserver.disconnect();
+            if (this._resizeObserver) {
+                if (this._isSelected) {
+                    this._resizeObserver.observe(this._element.nativeElement);
+                } else {
+                    this._resizeObserver.disconnect();
+                }
             }
         });
         this.tabindex = newValue ? 0 : -1;
