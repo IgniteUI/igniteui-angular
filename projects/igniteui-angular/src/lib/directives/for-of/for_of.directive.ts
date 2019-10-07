@@ -250,7 +250,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const scrollHeight = this.getScroll().scrollHeight;
         // Use === and not >= because `scrollTop + container size` can't be bigger than `scrollHeight`, unless something isn't updated.
         // Also use Math.round because Chrome has some inconsistencies and `scrollTop + container` can be float when zooming the page.
-        return Math.round(this.scrollPosition + this.igxForContainerSize) === scrollHeight;
+        return Math.round(this.getScroll().scrollTop + this.igxForContainerSize) === scrollHeight;
     }
 
     private get _isAtBottomIndex() {
