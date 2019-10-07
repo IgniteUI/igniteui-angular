@@ -9,7 +9,8 @@ import {
     OnDestroy,
     Renderer2,
     SimpleChanges,
-    AfterViewChecked
+    AfterViewChecked,
+    HostBinding
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -67,6 +68,8 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
     private _forceEvaluation = false;
     private _activeElementIndex = -1;
     private _valueChanged: boolean;
+    private _defaultCssClass = 'igx-highlight';
+    private _defaultActiveCssClass = 'igx-highlight--active';
 
     /**
      * Determines the `CSS` class of the highlight elements.
@@ -391,8 +394,8 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
             }
 
             const elementToActivate = spans[index];
+            this.renderer.addClass(elementToActivate, this._defaultActiveCssClass);
             this.renderer.addClass(elementToActivate, this.activeCssClass);
-            this.renderer.setAttribute(elementToActivate, 'style', 'background:orange;color:black');
         }
     }
 
@@ -409,8 +412,8 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
         }
 
         const elementToDeactivate = spans[this._activeElementIndex];
+        this.renderer.removeClass(elementToDeactivate, this._defaultActiveCssClass);
         this.renderer.removeClass(elementToDeactivate, this.activeCssClass);
-        this.renderer.setAttribute(elementToDeactivate, 'style', 'background:yellow;color:black');
         this._activeElementIndex = -1;
     }
 
@@ -437,7 +440,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
         if (exactMatch) {
             if (contentStringResolved === searchTextResolved) {
                 // tslint:disable-next-line:max-line-length
-                this.appendSpan(`<span class="${this.cssClass}" style="background:yellow;color:black">${stringValue}</span>`);
+                this.appendSpan(`<span class="${this._defaultCssClass} ${this.cssClass ? this.cssClass : ''}">${stringValue}</span>`);
                 matchCount++;
             } else {
                 this.appendText(stringValue);
@@ -452,7 +455,7 @@ export class IgxTextHighlightDirective implements AfterViewInit, AfterViewChecke
 
                 this.appendText(stringValue.substring(previousMatchEnd, start));
                 // tslint:disable-next-line:max-line-length
-                this.appendSpan(`<span class="${this.cssClass}" style="background:yellow;color:black">${stringValue.substring(start, end)}</span>`);
+                this.appendSpan(`<span class="${this._defaultCssClass} ${this.cssClass ? this.cssClass : ''}">${stringValue.substring(start, end)}</span>`);
 
                 previousMatchEnd = end;
                 matchCount++;
