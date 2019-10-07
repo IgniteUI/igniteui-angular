@@ -161,16 +161,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     public type = 'line';
 
     /**
-     * An @Input property that sets what display density to be used for the input group.
-     * The allowed values are `compact`, `cosy` and `comfortable`. The default is `comfortable`.
-     * ```html
-     *<igx-select [displayDensity]="'compact'"></igx-select>
-     * ```
-     */
-    @Input()
-    public displayDensity = 'comfortable';
-
-    /**
      * The custom template, if any, that should be used when rendering the select TOGGLE(open/close) button
      *
      * ```typescript
