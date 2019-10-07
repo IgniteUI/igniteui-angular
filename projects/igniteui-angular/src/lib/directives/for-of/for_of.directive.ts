@@ -35,7 +35,7 @@ import { Subject } from 'rxjs';
 import { takeUntil, filter, throttleTime } from 'rxjs/operators';
 import ResizeObserver from 'resize-observer-polyfill';
 import { IBaseEventArgs } from '../../core/utils';
-import { VirtualHelperBase } from './base.helper.component';
+import { VirtualHelperBaseDirective } from './base.helper.component';
 
 /**
  *  @publicApi
@@ -220,7 +220,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     public onChunkPreload = new EventEmitter<IForOfState>();
     protected func;
     protected _sizesCache: number[] = [];
-    protected scrollComponent: VirtualHelperBase;
+    protected scrollComponent: VirtualHelperBaseDirective;
     protected _differ: IterableDiffer<T> | null = null;
     protected _trackByFn: TrackByFunction<T>;
     protected heightCache = [];
@@ -1645,7 +1645,8 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
  * @hidden
  */
 @NgModule({
-    declarations: [IgxForOfDirective, IgxGridForOfDirective, DisplayContainerComponent, VirtualHelperComponent, HVirtualHelperComponent],
+    declarations: [IgxForOfDirective, IgxGridForOfDirective, DisplayContainerComponent, VirtualHelperComponent,
+         HVirtualHelperComponent, VirtualHelperBaseDirective],
     entryComponents: [DisplayContainerComponent, VirtualHelperComponent, HVirtualHelperComponent],
     exports: [IgxForOfDirective, IgxGridForOfDirective],
     imports: [IgxScrollInertiaModule, CommonModule]
