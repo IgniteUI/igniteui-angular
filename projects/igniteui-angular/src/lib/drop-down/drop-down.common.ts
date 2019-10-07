@@ -1,7 +1,7 @@
 import { CancelableEventArgs, CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { IgxDropDownItemBase } from './drop-down-item.base';
 import { IToggleView } from '../core/navigation/IToggleView';
-import { EventEmitter } from '@angular/core';
+import { EventEmitter, InjectionToken } from '@angular/core';
 import { DisplayDensityBase } from '../core/density';
 
 /** @hidden */
@@ -39,7 +39,7 @@ export interface IDropDownNavigationDirective {
     onHomeKeyDown(event?: KeyboardEvent): void;
 }
 
-export const IGX_DROPDOWN_BASE = 'IgxDropDownBaseToken';
+export const IGX_DROPDOWN_BASE = new InjectionToken<IDropDownBase>('IgxDropDownBaseToken');
 
 /**
  * @hidden

@@ -6,7 +6,6 @@ import {
     Input,
     Output,
     ContentChild,
-    forwardRef,
     AfterContentInit
 } from '@angular/core';
 import { AnimationBuilder, AnimationReferenceMetadata, useAnimation } from '@angular/animations';
@@ -161,15 +160,13 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
     /**
      * @hidden
      */
-    @ContentChild(forwardRef(() => IgxExpansionPanelBodyComponent),
-        { read: forwardRef(() => IgxExpansionPanelBodyComponent), static: false })
+    @ContentChild(IgxExpansionPanelBodyComponent, { read: IgxExpansionPanelBodyComponent, static: false })
     public body: IgxExpansionPanelBodyComponent;
 
     /**
      * @hidden
      */
-    @ContentChild(forwardRef(() => IgxExpansionPanelHeaderComponent),
-        { read: forwardRef(() => IgxExpansionPanelHeaderComponent), static: false })
+    @ContentChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent, static: false })
     public header: IgxExpansionPanelHeaderComponent;
 
     constructor(private cdr: ChangeDetectorRef, private builder: AnimationBuilder) { }

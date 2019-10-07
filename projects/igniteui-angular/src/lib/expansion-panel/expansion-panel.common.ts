@@ -1,4 +1,4 @@
-import { EventEmitter } from '@angular/core';
+import { EventEmitter, InjectionToken } from '@angular/core';
 import { AnimationReferenceMetadata } from '@angular/animations';
 import { IBaseEventArgs } from '../core/utils';
 
@@ -17,7 +17,7 @@ export interface IgxExpansionPanelBase {
 }
 
 /** @hidden */
-export const IGX_EXPANSION_PANEL_COMPONENT = 'IgxExpansionPanelToken';
+export const IGX_EXPANSION_PANEL_COMPONENT = new InjectionToken<IgxExpansionPanelBase>('IgxExpansionPanelToken');
 
 export interface IExpansionPanelEventArgs extends IBaseEventArgs {
     event: Event;
