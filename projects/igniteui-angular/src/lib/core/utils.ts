@@ -231,7 +231,6 @@ export function isFirefox(): boolean {
 
 /**
  * @hidden
- * TODO: make injectable, check isPlatformBrowser()
  */
 @Injectable({ providedIn: 'root' })
 export class PlatformUtil {
@@ -241,12 +240,12 @@ export class PlatformUtil {
         this.platformBrowser = isPlatformBrowser(this.platformId);
     }
 
-    public isIOS(): boolean {
+    public get isIOS(): boolean {
         const iosBrowser = this.platformBrowser && /iPad|iPhone|iPod/.test(navigator.userAgent) && !('MSStream' in window);
         return iosBrowser;
     }
 
-    public isPlatformBrowser(): boolean {
+    public get isPlatformBrowser(): boolean {
         return this.platformBrowser;
     }
 }
