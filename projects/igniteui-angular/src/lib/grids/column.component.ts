@@ -8,7 +8,10 @@ import {
     Input,
     QueryList,
     TemplateRef,
-    forwardRef
+    forwardRef,
+    OnDestroy,
+    Output,
+    EventEmitter
 } from '@angular/core';
 import { DataType } from '../data-operations/data-util';
 import { GridBaseAPIService } from './api.service';
@@ -33,6 +36,8 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
 import { MRLColumnSizeInfo, MRLResizeColumnInfo } from '../data-operations/multi-row-layout.interfaces';
 import { DisplayDensity } from '../core/displayDensity';
 import { notifyChanges } from './watch-changes';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import {
     IgxCellTemplateDirective,
     IgxCellHeaderTemplateDirective,
@@ -54,7 +59,7 @@ import {
     selector: 'igx-column',
     template: ``
 })
-export class IgxColumnComponent implements AfterContentInit {
+export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     /**
      * Sets/gets the `field` value.
      * ```typescript
@@ -215,14 +220,20 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      * Sets the column hidden property.
      * Default value is `false`.
-     * ```typescript
+     * ```html
      * <igx-column [hidden] = "true"></igx-column>
+     * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-column [(hidden)] = "model.isHidden"></igx-column>
      * ```
      * @memberof IgxColumnComponent
      */
     set hidden(value: boolean) {
         if (this._hidden !== value) {
             this._hidden = value;
+            this.hiddenChange.emit(this._hidden);
             if (this.columnLayoutChild && this.parent.hidden !== value) {
                 this.parent.hidden = value;
                 return;
@@ -236,6 +247,12 @@ export class IgxColumnComponent implements AfterContentInit {
             }
         }
     }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public hiddenChange = new EventEmitter<boolean>();
     /**
      * Gets whether the hiding is disabled.
      * ```typescript
@@ -287,6 +304,11 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```html
      * <igx-column [width] = "'25%'"></igx-column>
      * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-column [(width)]="model.columns[0].width"></igx-column>
+     * ```
      * @memberof IgxColumnComponent
      */
     public set width(value: string) {
@@ -298,8 +320,15 @@ export class IgxColumnComponent implements AfterContentInit {
             if (this.grid) {
                 this.cacheCalcWidth();
             }
+            this.widthChange.emit(this._width);
         }
     }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public widthChange = new EventEmitter<string>();
 
     /**
      * @hidden
@@ -480,6 +509,11 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```html
      * <igx-column [pinned] = "true"></igx-column>
      * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-column [(pinned)] = "model.columns[0].isPinned"></igx-column>
+     * ```
      * @memberof IgxColumnComponent
      */
     public set pinned(value: boolean) {
@@ -492,8 +526,16 @@ export class IgxColumnComponent implements AfterContentInit {
                will re-init the group (if present)
             */
             this._pinned = value;
+            this.pinnedChange.emit(this._pinned);
         }
     }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public pinnedChange = new EventEmitter<boolean>();
+
     /**
      * @deprecated
      * Gets/Sets the `id` of the `igx-grid`.
@@ -573,7 +615,7 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      * Gets the column `sortStrategy`.
      * ```typescript
-     * let sortStrategy = this.column.sortStrategy'
+     * let sortStrategy = this.column.sortStrategy
      * ```
      * @memberof IgxColumnComponent
      */
@@ -585,10 +627,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * Sets the column `sortStrategy`.
      * ```typescript
      * this.column.sortStrategy = new CustomSortingStrategy().
-     *
-     * class CustomSortingStrategy extends SortingStrategy {
-     * ...
-     * }
+     * class CustomSortingStrategy extends SortingStrategy {...}
      * ```
      * @memberof IgxColumnComponent
      */
@@ -835,13 +874,13 @@ export class IgxColumnComponent implements AfterContentInit {
         return false;
     }
 
-     /**
-     * Returns a boolean indicating if the column is a child of a `ColumnLayout` for multi-row layout.
-     * ```typescript
-     * let columnLayoutChild =  this.column.columnLayoutChild;
-     * ```
-     * @memberof IgxColumnComponent
-     */
+    /**
+    * Returns a boolean indicating if the column is a child of a `ColumnLayout` for multi-row layout.
+    * ```typescript
+    * let columnLayoutChild =  this.column.columnLayoutChild;
+    * ```
+    * @memberof IgxColumnComponent
+    */
     get columnLayoutChild() {
         return this.parent && this.parent.columnLayout;
     }
@@ -976,6 +1015,11 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     children: QueryList<IgxColumnComponent>;
+    /**
+     * @hidden
+     */
+    protected destroy$ = new Subject<boolean>();
+
     /**
      *@hidden
      */
@@ -1159,7 +1203,7 @@ export class IgxColumnComponent implements AfterContentInit {
             if (!col.colStart) {
                 return;
             }
-            const newWidthSet =  col.widthSetByUser && columnSizes[col.colStart - 1] && !columnSizes[col.colStart - 1].widthSetByUser;
+            const newWidthSet = col.widthSetByUser && columnSizes[col.colStart - 1] && !columnSizes[col.colStart - 1].widthSetByUser;
             const newSpanSmaller = columnSizes[col.colStart - 1] && columnSizes[col.colStart - 1].colSpan > col.gridColumnSpan;
             const bothWidthsSet = col.widthSetByUser && columnSizes[col.colStart - 1] && columnSizes[col.colStart - 1].widthSetByUser;
             const bothWidthsNotSet = !col.widthSetByUser && columnSizes[col.colStart - 1] && !columnSizes[col.colStart - 1].widthSetByUser;
@@ -1231,8 +1275,8 @@ export class IgxColumnComponent implements AfterContentInit {
                 for (; j < columnSizes[i].colSpan && i + j + 1 < columnSizes[i].colEnd; j++) {
                     if (columnSizes[i + j] &&
                         ((!columnSizes[i].width && columnSizes[i + j].width) ||
-                         (!columnSizes[i].width && !columnSizes[i + j].width && columnSizes[i + j].colSpan <= columnSizes[i].colSpan) ||
-                        (!!columnSizes[i + j].width && columnSizes[i + j].colSpan <= columnSizes[i].colSpan))) {
+                            (!columnSizes[i].width && !columnSizes[i + j].width && columnSizes[i + j].colSpan <= columnSizes[i].colSpan) ||
+                            (!!columnSizes[i + j].width && columnSizes[i + j].colSpan <= columnSizes[i].colSpan))) {
                         // If we reach an already defined column that has width and the current doesn't have or
                         // if the reached column has bigger colSpan we stop.
                         break;
@@ -1280,8 +1324,8 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     protected getColumnSizesString(children: QueryList<IgxColumnComponent>): string {
-       const res = this.getFilledChildColumnSizes(children);
-       return res.join(' ');
+        const res = this.getFilledChildColumnSizes(children);
+        return res.join(' ');
     }
 
     public getResizableColUnderEnd(): MRLResizeColumnInfo[] {
@@ -1295,7 +1339,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
         for (let i = 0; i < columnSized.length; i++) {
             if (this.colStart <= i + 1 && i + 1 < colEnd) {
-                targets.push({ target: columnSized[i].ref, spanUsed: 1});
+                targets.push({ target: columnSized[i].ref, spanUsed: 1 });
             }
         }
 
@@ -1348,6 +1392,7 @@ export class IgxColumnComponent implements AfterContentInit {
         }
 
         this._pinned = true;
+        this.pinnedChange.emit(this._pinned);
         this._unpinnedIndex = grid._unpinnedColumns.indexOf(this);
         index = index !== undefined ? index : grid._pinnedColumns.length;
         const targetColumn = grid._pinnedColumns[index];
@@ -1374,7 +1419,7 @@ export class IgxColumnComponent implements AfterContentInit {
         grid.resetCaches();
         grid.notifyChanges();
         if (this.columnLayoutChild) {
-            this.grid.columns.filter(x => x.columnLayout).forEach( x => x.populateVisibleIndexes());
+            this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
         this.grid.filteringService.refreshExpressions();
         // this.grid.refreshSearch(true);
@@ -1412,6 +1457,7 @@ export class IgxColumnComponent implements AfterContentInit {
         index = (index !== undefined ? index :
             this._unpinnedIndex !== undefined ? this._unpinnedIndex : this.index);
         this._pinned = false;
+        this.pinnedChange.emit(this._pinned);
 
         const targetColumn = grid._unpinnedColumns[index];
 
@@ -1437,7 +1483,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
         grid.notifyChanges();
         if (this.columnLayoutChild) {
-            this.grid.columns.filter(x => x.columnLayout).forEach( x => x.populateVisibleIndexes());
+            this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
         this.grid.filteringService.refreshExpressions();
         // this.grid.refreshSearch(true);
@@ -1495,7 +1541,6 @@ export class IgxColumnComponent implements AfterContentInit {
      * Autosize the column to the longest currently visible cell value, including the header cell.
      * ```typescript
      * @ViewChild('grid') grid: IgxGridComponent;
-     *
      * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
      * column.autosize();
      * ```
@@ -1637,6 +1682,14 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      */
     public populateVisibleIndexes() { }
+
+    /**
+     * @hidden
+     */
+    public ngOnDestroy() {
+        this.destroy$.next(true);
+        this.destroy$.complete();
+    }
 }
 
 
@@ -1646,8 +1699,7 @@ export class IgxColumnComponent implements AfterContentInit {
     selector: 'igx-column-group',
     template: ``
 })
-export class IgxColumnGroupComponent extends IgxColumnComponent implements AfterContentInit {
-
+export class IgxColumnGroupComponent extends IgxColumnComponent implements AfterContentInit, OnDestroy {
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     children = new QueryList<IgxColumnComponent>();
     /**
@@ -1754,15 +1806,28 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     }
     /**
      * Sets the column group hidden property.
-     * ```typescript
+     * ```html
      * <igx-column [hidden] = "true"></igx-column>
+     * ```
+     *
+     * Two-way data binding
+     * ```html
+     * <igx-column [(hidden)] = "model.columns[0].isHidden"></igx-column>
      * ```
      * @memberof IgxColumnGroupComponent
      */
     set hidden(value: boolean) {
         this._hidden = value;
+        this.hiddenChange.emit(this._hidden);
         this.children.forEach(child => child.hidden = value);
     }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public hiddenChange = new EventEmitter<boolean>();
+
     /**
      *@hidden
      */
@@ -1778,7 +1843,21 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         this.children.forEach(child => {
             child.parent = this;
         });
+        /*
+            TO DO: In Angular 9 this need to be removed, because the @ContentChildren will not return the `parent`
+            component in the query list.
+        */
+        this.children.changes.pipe(takeUntil(this.destroy$))
+            .subscribe((change) => {
+                if (change.length > 1 && change.first === this) {
+                    this.children.reset(this.children.toArray().slice(1));
+                    this.children.forEach(child => {
+                        child.parent = this;
+                    });
+                }
+            });
     }
+
     /**
      * Returns the children columns collection.
      * ```typescript
@@ -1823,7 +1902,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
                 return acc;
             }
             if (typeof val.width === 'string' && val.width.indexOf('%') !== -1) {
-                   isChildrenWidthInPercent = true;
+                isChildrenWidthInPercent = true;
             }
             return acc + parseInt(val.width, 10);
         }, 0)}`;
@@ -1844,7 +1923,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     selector: 'igx-column-layout',
     template: ``
 })
-export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements AfterContentInit {
+export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements AfterContentInit, OnDestroy {
     public childrenVisibleIndexes = [];
     /**
      * Gets the width of the column layout.
@@ -1929,7 +2008,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         this.children.forEach(child => child.hidden = value);
         if (this.grid && this.grid.columns && this.grid.columns.length > 0) {
             // reset indexes in case columns are hidden/shown runtime
-            this.grid.columns.filter(x => x.columnGroup).forEach( x => x.populateVisibleIndexes());
+            this.grid.columns.filter(x => x.columnGroup).forEach(x => x.populateVisibleIndexes());
         }
     }
 
@@ -1968,8 +2047,8 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         const grid = this.gridAPI.grid;
         const columns = grid && grid.pinnedColumns && grid.unpinnedColumns ? grid.pinnedColumns.concat(grid.unpinnedColumns) : [];
         const orderedCols = columns
-        .filter(x => !x.columnGroup && !x.hidden)
-        .sort((a, b) => a.rowStart - b.rowStart || columns.indexOf(a.parent) - columns.indexOf(b.parent) || a.colStart - b.colStart);
+            .filter(x => !x.columnGroup && !x.hidden)
+            .sort((a, b) => a.rowStart - b.rowStart || columns.indexOf(a.parent) - columns.indexOf(b.parent) || a.colStart - b.colStart);
         this.children.forEach(child => {
             const rs = child.rowStart || 1;
             let vIndex = 0;
@@ -1977,8 +2056,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
             const cols = orderedCols.filter(c =>
                 !c.columnGroup && (c.rowStart || 1) <= rs);
             vIndex = cols.indexOf(child);
-            this.childrenVisibleIndexes.push({column: child, index: vIndex});
+            this.childrenVisibleIndexes.push({ column: child, index: vIndex });
         });
     }
-
 }

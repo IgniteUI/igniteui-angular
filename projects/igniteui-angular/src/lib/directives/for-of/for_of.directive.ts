@@ -473,7 +473,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             }
         }
         const defaultItemSize = 'igxForItemSize';
-        if (defaultItemSize in changes && !changes[defaultItemSize].firstChange && this.igxForScrollOrientation === 'vertical') {
+        if (defaultItemSize in changes && !changes[defaultItemSize].firstChange &&
+            this.igxForScrollOrientation === 'vertical' && this.igxForOf) {
             // handle default item size changed.
             this.initSizesCache(this.igxForOf);
             this._applyChanges();
@@ -493,7 +494,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             if (changes) {
                 //  re-init cache.
                 if (!this.igxForOf) {
-                    return;
+                    this.igxForOf = [];
                 }
                 this._updateSizeCache();
                 this._zone.run(() => {
@@ -1375,7 +1376,8 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
             }
         }
         const defaultItemSize = 'igxForItemSize';
-        if (defaultItemSize in changes && !changes[defaultItemSize].firstChange && this.igxForScrollOrientation === 'vertical') {
+        if (defaultItemSize in changes && !changes[defaultItemSize].firstChange &&
+             this.igxForScrollOrientation === 'vertical' && this.igxForOf) {
             // handle default item size changed.
             this.initSizesCache(this.igxForOf);
         }
@@ -1538,7 +1540,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 this.onDataChanging.emit(args);
                 //  re-init cache.
                 if (!this.igxForOf) {
-                    return;
+                    this.igxForOf = [];
                 }
                 /* we need to reset the master dir if all rows are removed
                 (e.g. because of filtering); if all columns are hidden, rows are

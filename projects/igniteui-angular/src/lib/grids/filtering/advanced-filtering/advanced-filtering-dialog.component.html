@@ -94,6 +94,7 @@
                           (click)="onChipClick(expressionItem)"
                           (dblclick)="onChipDblClick(expressionItem)"
                           (onRemove)="onChipRemove(expressionItem)"
+                          (onSelectionDone)="onChipSelectionEnd()"
                     >
                     <span igxPrefix class="igx-filter-tree__expression-column">{{ expressionItem.expression.fieldName }}</span>
                     <igx-icon
@@ -143,36 +144,25 @@
                     </igx-select-item>
                 </igx-select>
 
-                <ng-container *ngIf="!selectedColumn">
-                    <igx-select type="box"
-                                [displayDensity]="'compact'"
-                                [placeholder]="grid.resourceStrings.igx_grid_filter_condition_placeholder"
-                                [disabled]="true">
-                    </igx-select>
-                </ng-container>
-
-                <ng-container *ngIf="selectedColumn">
-                    <igx-select #conditionSelect
-                                type="box"
-                                [displayDensity]="'compact'"
-                                [overlaySettings]="conditionSelectOverlaySettings"
-                                (onOpening)="onConditionSelectOpening()"
-                                [placeholder]="grid.resourceStrings.igx_grid_filter_condition_placeholder"
-                                [(ngModel)]="selectedCondition"
-                                [disabled]="!selectedColumn">
-                            <igx-icon *ngIf="selectedColumn && conditionSelect.value && selectedColumn.filters.condition(conditionSelect.value)"
-                                      igxPrefix
-                                      fontSet="filtering-icons"
-                                      [name]="selectedColumn.filters.condition(conditionSelect.value).iconName">
-                            </igx-icon>
-                            <igx-select-item *ngFor="let condition of selectedColumn.filters.conditionList()" [value]="condition">
-                                <igx-icon fontSet="filtering-icons"
-                                          [name]="selectedColumn.filters.condition(condition).iconName">
-                                </igx-icon>
-                                <span>{{getConditionFriendlyName(condition)}}</span>
-                            </igx-select-item>
-                    </igx-select>
-                </ng-container>
+                <igx-select #conditionSelect
+                            type="box"
+                            [displayDensity]="'compact'"
+                            [overlaySettings]="conditionSelectOverlaySettings"
+                            [placeholder]="grid.resourceStrings.igx_grid_filter_condition_placeholder"
+                            [(ngModel)]="selectedCondition"
+                            [disabled]="!selectedColumn">
+                    <igx-icon *ngIf="selectedColumn && conditionSelect.value && selectedColumn.filters.condition(conditionSelect.value)"
+                              igxPrefix
+                              fontSet="filtering-icons"
+                              [name]="selectedColumn.filters.condition(conditionSelect.value).iconName">
+                    </igx-icon>
+                    <igx-select-item *ngFor="let condition of getConditionList()" [value]="condition">
+                        <igx-icon fontSet="filtering-icons"
+                                  [name]="selectedColumn.filters.condition(condition).iconName">
+                        </igx-icon>
+                        <span>{{getConditionFriendlyName(condition)}}</span>
+                    </igx-select-item>
+                </igx-select>
 
                 <igx-input-group *ngIf="!selectedColumn || selectedColumn.dataType !== 'date'"
                                  type="box"
