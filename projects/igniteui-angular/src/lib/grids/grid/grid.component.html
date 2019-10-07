@@ -96,8 +96,7 @@
 <div igxGridBody (keydown.control.c)="copyHandlerIE()" (copy)="copyHandler($event)" class="igx-grid__tbody">
     <div class="igx-grid__tbody-content" role="rowgroup" (onDragStop)="selectionService.dragMode = $event"
         (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
-        [style.height.px]='calcHeight' [style.width.px]='calcWidth || null' #tbody (scroll)='scrollHandler($event)'
-        (wheel)="wheelHandler()">
+        [style.height.px]='calcHeight' [style.width.px]='calcWidth || null' #tbody>
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
             [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
             class="igx-grid__scroll-on-drag-left"></span>

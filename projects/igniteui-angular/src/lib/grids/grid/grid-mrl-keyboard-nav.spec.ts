@@ -1392,7 +1392,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         // check next cell is focused
         cell = grid.getCellByColumn(0, 'City');
         expect(cell.focused).toBe(true);
-        expect(grid.parentVirtDir.getScroll().scrollLeft).toBeGreaterThan(300);
+        expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(300);
         let diff = cell.nativeElement.getBoundingClientRect().right - grid.tbody.nativeElement.getBoundingClientRect().right;
         expect(diff).toBe(0);
 
@@ -2102,7 +2102,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         // check correct cell is focused and is fully in view
         const lastCell =  grid.getCellByColumn(0, 'Address');
         expect(lastCell.focused).toBe(true);
-        expect(grid.parentVirtDir.getScroll().scrollLeft).toBeGreaterThan(800);
+        expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(800);
         let diff = lastCell.nativeElement.getBoundingClientRect().right - grid.tbody.nativeElement.getBoundingClientRect().right;
         expect(diff).toBe(0);
 

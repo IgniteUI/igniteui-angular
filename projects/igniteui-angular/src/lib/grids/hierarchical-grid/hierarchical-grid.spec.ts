@@ -1153,6 +1153,7 @@ describe('IgxHierarchicalGrid custom template', () => {
     }));
 
     it(' should allow setting custom template for  expand/collapse icons', async() => {
+        resizeObserverIgnoreError();
         let rows = hierarchicalGrid.dataRowList.toArray();
         for (const row of rows) {
             const expander =  row.nativeElement.querySelector('.igx-grid__hierarchical-expander');
