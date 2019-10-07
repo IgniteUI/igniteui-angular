@@ -354,6 +354,12 @@
     }
 
     // INPUT TYPE BORDER -- STATES (valid, invalid, focused, fulled, disabled)  --
+    @include mx(filled, focused, border) {
+        @include e(bundle-type-border) {
+            @extend %igx-input-group__bundle-type-border--filled--focused !optional;
+        }
+    }
+
     @include mx(valid, border) {
         @extend %form-group-display--success !optional;
 
@@ -383,6 +389,36 @@
         }
     }
 
+    @include mx(filled, border) {
+        @include e(bundle-type-border) {
+            @extend %igx-input-group__bundle-type-border--filled !optional;
+        }
+
+        @include e(bundle-type-border-main) {
+            @extend %igx-input-group__bundle-type-border-main-filled !optional;
+        }
+
+        @include e(label) {
+            @extend %igx-input-group__label-type-border-focused !optional;
+        }
+
+        @include e(bundle-line) {
+            @extend %igx-input-group__bundle-line--filled !optional;
+        }
+    }
+
+    @include mx(filled, valid, border) {
+        @include e(bundle-type-border) {
+            @extend %igx-input-group__bundle-type-border--filled--success !optional;
+        }
+    }
+
+    @include mx(filled, invalid, border) {
+        @include e(bundle-type-border) {
+            @extend %igx-input-group__bundle-type-border--filled--error !optional;
+        }
+    }
+
     @include mx(focused, border) {
         @extend %form-group-display--focus !optional;
 
@@ -409,45 +445,21 @@
         }
     }
 
-    @include mx(filled, valid, border) {
-        @include e(bundle-type-border) {
-            @extend %igx-input-group__bundle-type-border--filled--success !optional;
-        }
-    }
-
     @include mx(focused, invalid, border) {
         @include e(bundle-type-border) {
             @extend %igx-input-group__bundle-type-border--focused--error !optional;
         }
     }
 
-    @include mx(filled, invalid, border) {
-        @include e(bundle-type-border) {
-            @extend %igx-input-group__bundle-type-border--invalid--error !optional;
-        }
-    }
-
-    @include mx(filled, border) {
-        @include e(bundle-type-border) {
-            @extend %igx-input-group__bundle-type-border--filled !optional;
-        }
-
-        @include e(bundle-type-border-main) {
-            @extend %igx-input-group__bundle-type-border-main-filled !optional;
-        }
-
-        @include e(label) {
-            @extend %igx-input-group__label-type-border-focused !optional;
-        }
-
-        @include e(bundle-line) {
-            @extend %igx-input-group__bundle-line--filled !optional;
-        }
-    }
+    //@include mx(filled, focused, invalid, border) {
+    //    @include e(bundle-type-border) {
+    //        @extend %igx-input-group__bundle-type-border--filled--focused--error !optional;
+    //    }
+    //}
 
     @include mx(disabled, border) {
         @include e(bundle-type-border) {
-            @extend %igx-input-group__bundle-type-border--focused--disabled !optional;
+            @extend %igx-input-group__bundle-type-border--disabled !optional;
         }
     }
 

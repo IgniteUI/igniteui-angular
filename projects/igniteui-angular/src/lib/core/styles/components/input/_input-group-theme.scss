@@ -227,8 +227,8 @@
     $required-symbol: '*';
     $required-symbol-margin: 2px;
 
-    $label-height: rem(18px);
-    $label-height--focused: rem(13.5px);
+    $label-height: 18px;
+    $label-height--focused: 13.5px;
 
     // This creates an inverse relationship
     // between the value of the base scale size and
@@ -242,9 +242,9 @@
     );
 
     $type-border-size: (
-        'comfortable': rem(50px),
-        'cosy': rem(42px),
-        'compact': rem(36px)
+        'comfortable': 50px,
+        'cosy': 42px,
+        'compact': 36px
     );
 
     $search-border-width: map-get((
@@ -449,6 +449,60 @@
         padding-top: rem(18px, map-get($base-scale-size, 'compact'));
     }
 
+    %igx-input-group__bundle-suffix,
+    %igx-input-group__bundle-prefix {
+        min-height: rem(32px, map-get($base-scale-size, 'comfortable'));
+
+        igx-prefix,
+        [igx-prefix],
+        igx-suffix,
+        [igx-suffix] {
+            height: 100%;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        igx-prefix,
+        [igx-prefix] {
+            padding-left: 0;
+            height: 100%;
+        }
+
+        igx-suffix,
+        [igx-suffix] {
+            padding-right: 0;
+        }
+    }
+
+    %igx-input-group__bundle-prefix {
+        box-shadow: inset 1px 0 0 --var($theme, 'idle-bottom-line-color'),
+            0 1px 0 --var($theme, 'idle-bottom-line-color'),
+            0 -1px 0 --var($theme, 'idle-bottom-line-color');
+
+        border-radius: --var($theme, 'border-border-radius');
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        padding-left: rem(16px, map-get($base-scale-size, 'comfortable'));
+    }
+
+    %igx-input-group__bundle-prefix--cosy {
+        padding-left: rem(16px, map-get($base-scale-size, 'cosy'));
+    }
+
+    %igx-input-group__bundle-prefix--compact {
+        padding-left: rem(16px, map-get($base-scale-size, 'compact'));
+    }
+
+    %igx-input-group__bundle-suffix {
+        box-shadow: inset -1px 0 0 --var($theme, 'idle-bottom-line-color'),
+            0 1px 0 --var($theme, 'idle-bottom-line-color'),
+            0 -1px 0 --var($theme, 'idle-bottom-line-color');
+
+        border-radius: --var($theme, 'border-border-radius');
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        padding-right: rem(8px);
+    }
 
     // INPUT GROUP TYPE BORDER
     %input-type-border {
@@ -507,10 +561,6 @@
                     0 1px 0 --var($theme, 'hover-bottom-line-color'),
                     0 -1px 0 --var($theme, 'hover-bottom-line-color');
             }
-
-            %igx-input-group__bundle-line {
-                background: --var($theme, 'hover-bottom-line-color');
-            }
         }
     }
 
@@ -521,6 +571,12 @@
         width: 100%;
         position: relative;
         min-height: map-get($type-border-size, 'comfortable');
+    }
+
+    %igx-input-group__bundle-type-border-main,
+    %igx-input-group__bundle-prefix,
+    %igx-input-group__bundle-suffix {
+        transition: box-shadow $transition-timing, color $transition-timing;
     }
 
     %igx-input-group__bundle-type-border-main-focused {
@@ -546,62 +602,6 @@
         top: 0;
         height: 100% !important;
     }
-
-    %igx-input-group__bundle-suffix,
-    %igx-input-group__bundle-prefix {
-        min-height: rem(32px, map-get($base-scale-size, 'comfortable'));
-
-        igx-prefix,
-        [igx-prefix],
-        igx-suffix,
-        [igx-suffix] {
-            height: 100%;
-            padding-top: 0;
-            padding-bottom: 0;
-        }
-
-        igx-prefix,
-        [igx-prefix] {
-            padding-left: 0;
-            height: 100%;
-        }
-
-        igx-suffix,
-        [igx-suffix] {
-            padding-right: 0;
-        }
-    }
-
-    %igx-input-group__bundle-prefix {
-        box-shadow: inset 1px 0 0 --var($theme, 'idle-bottom-line-color'),
-            0 1px 0 --var($theme, 'idle-bottom-line-color'),
-            0 -1px 0 --var($theme, 'idle-bottom-line-color');
-
-        border-radius: --var($theme, 'border-border-radius');
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-        padding-left: rem(16px, map-get($base-scale-size, 'comfortable'));
-    }
-
-    %igx-input-group__bundle-prefix--cosy {
-        padding-left: rem(16px, map-get($base-scale-size, 'cosy'));
-    }
-
-    %igx-input-group__bundle-prefix--compact {
-        padding-left: rem(16px, map-get($base-scale-size, 'compact'));
-    }
-
-    %igx-input-group__bundle-suffix {
-        box-shadow: inset -1px 0 0 --var($theme, 'idle-bottom-line-color'),
-            0 1px 0 --var($theme, 'idle-bottom-line-color'),
-            0 -1px 0 --var($theme, 'idle-bottom-line-color');
-
-        border-radius: --var($theme, 'border-border-radius');
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
-        padding-right: rem(8px);
-    }
-
 
     %igx-input-group__label-type-border {
         top: calc(50% - #{$label-height});
@@ -1124,16 +1124,17 @@
         transform: translateY(-25%);
     }
 
+    // Type Border START
     %igx-input-group__bundle-line {
         position: absolute;
-        top: rem(-1px);
-        height: 1px;
+        height: 2px;
+        top: -3px;
         right: 0;
         flex: 1;
-        background: --var($theme, 'idle-bottom-line-color');
         visibility: hidden;
         width: 100%;
-        transition: width $transition-timing;
+        transition: box-shadow $transition-timing;
+        box-shadow: 0 1px 0 --var($theme, 'border-color');
     }
 
     %igx-input-group__bundle-line--filled,
@@ -1141,19 +1142,35 @@
         visibility: visible;
     }
 
+    %igx-input-group__bundle-line--filled {
+        box-shadow: 0 1px 0 --var($theme, 'border-color');
+    }
+
     %igx-input-group__bundle-line--focused {
-        background: --var($theme, 'focused-secondary-color');
+        box-shadow: 0 2px 0 --var($theme, 'focused-secondary-color');
+        top: -4px;
     }
 
     %igx-input-group__bundle-line--error {
-        background: --var($theme, 'error-secondary-color');
+        box-shadow: 0 1px 0 --var($theme, 'error-secondary-color');
     }
 
     %igx-input-group__bundle-line--success {
-        background: --var($theme, 'success-secondary-color');
+        box-shadow: 0 1px 0 --var($theme, 'success-secondary-color');
     }
 
-    // Type Border START
+    %igx-input-group__bundle-type-border--filled--focused {
+        %igx-input-group__bundle-line {
+            box-shadow: 0 2px 0 --var($theme, 'focused-secondary-color');
+        }
+
+        &:hover {
+            %igx-input-group__bundle-line {
+                box-shadow: 0 2px 0 --var($theme, 'focused-secondary-color');
+            }
+        }
+    }
+
     %igx-input-group__bundle-type-border--filled {
         %igx-input-group__bundle-type-border-main {
             box-shadow: 0 1px 0 --var($theme, 'border-color'), 0 0 0 transparent;
@@ -1177,12 +1194,6 @@
             }
         }
 
-        %igx-input-group__bundle-line {
-            background: --var($theme, 'border-color');
-            height: 1px;
-            top: -1px;
-        }
-
         &:hover {
             %igx-input-group__bundle-type-border-main {
                 box-shadow: 0 1px 0 --var($theme, 'hover-border-color'), 0 0 0 transparent;
@@ -1197,69 +1208,7 @@
             }
 
             %igx-input-group__bundle-line {
-                background: --var($theme, 'hover-border-color');
-                height: 1px;
-                top: -1px;
-            }
-        }
-    }
-
-    %igx-input-group__bundle-type-border--focused {
-        %igx-input-group__bundle-type-border-main {
-            box-shadow: 0 2px 0 --var($theme, 'focused-secondary-color'),
-                0 0 0 transparent;
-        }
-
-        %igx-input-group__bundle-prefix {
-            box-shadow: inset 2px 0 0 --var($theme, 'focused-secondary-color'),
-                0 2px 0 --var($theme, 'focused-secondary-color'),
-                0 -2px 0 --var($theme, 'focused-secondary-color');
-
-            igx-prefix,
-            [igx-prefix] {
-                color: --var($theme, 'idle-text-color');
-            }
-        }
-
-        %igx-input-group__bundle-suffix {
-            box-shadow: inset -2px 0 0 --var($theme, 'focused-secondary-color'),
-                0 2px 0 --var($theme, 'focused-secondary-color'),
-                0 -2px 0 --var($theme, 'focused-secondary-color');
-
-            igx-suffix,
-            [igx-suffix] {
-                color: --var($theme, 'idle-text-color');
-            }
-        }
-
-        %igx-input-group__bundle-line {
-            background: --var($theme, 'focused-secondary-color');
-            height: 2px;
-            top: -2px;
-        }
-
-        &:hover {
-            %igx-input-group__bundle-type-border-main {
-                box-shadow: 0 2px 0 --var($theme, 'focused-secondary-color'),
-                    0 0 0 transparent;
-            }
-
-            %igx-input-group__bundle-prefix {
-                box-shadow: inset 2px 0 0 --var($theme, 'focused-secondary-color'),
-                    0 2px 0 --var($theme, 'focused-secondary-color'),
-                    0 -2px 0 --var($theme, 'focused-secondary-color');
-            }
-
-            %igx-input-group__bundle-suffix {
-                box-shadow: inset -2px 0 0 --var($theme, 'focused-secondary-color'),
-                    0 2px 0 --var($theme, 'focused-secondary-color'),
-                    0 -2px 0 --var($theme, 'focused-secondary-color');
-            }
-
-            %igx-input-group__bundle-line {
-                background: --var($theme, 'focused-secondary-color');
-                height: 2px;
-                top: -2px;
+                box-shadow: 0 1px 0 --var($theme, 'hover-border-color');
             }
         }
     }
@@ -1292,12 +1241,6 @@
             }
         }
 
-        %igx-input-group__bundle-line {
-            background: --var($theme, 'error-secondary-color');
-            height: 1px;
-            top: -1px;
-        }
-
         &:hover {
             %igx-input-group__bundle-type-border-main {
                 box-shadow: 0 1px 0 --var($theme, 'error-secondary-color'),
@@ -1314,74 +1257,6 @@
                 box-shadow: inset -1px 0 0 --var($theme, 'error-secondary-color'),
                     0 1px 0 --var($theme, 'error-secondary-color'),
                     0 -1px 0 --var($theme, 'error-secondary-color');
-            }
-
-            %igx-input-group__bundle-line {
-                background: --var($theme, 'error-secondary-color');
-                height: 1px;
-                top: -1px;
-            }
-        }
-    }
-
-    %igx-input-group__bundle-type-border--focused--error {
-        %igx-input-group__bundle-type-border-main {
-            box-shadow: 0 2px 0 --var($theme, 'error-secondary-color'),
-                0 0 0 transparent;
-        }
-
-        %igx-input-group__bundle-prefix {
-            box-shadow: inset 2px 0 0 --var($theme, 'error-secondary-color'),
-                0 2px 0 --var($theme, 'error-secondary-color'),
-                0 -2px 0 --var($theme, 'error-secondary-color');
-            color: --var($theme, 'idle-text-color');
-
-            igx-prefix,
-            [igx-prefix] {
-                color: --var($theme, 'idle-text-color') !important;
-            }
-        }
-
-        %igx-input-group__bundle-suffix {
-            box-shadow: inset -2px 0 0 --var($theme, 'error-secondary-color'),
-                0 2px 0 --var($theme, 'error-secondary-color'),
-                0 -2px 0 --var($theme, 'error-secondary-color');
-            color: --var($theme, 'idle-text-color');
-
-            igx-suffix,
-            [igx-suffix] {
-                color: --var($theme, 'idle-text-color') !important;
-            }
-        }
-
-        %igx-input-group__bundle-line {
-            background: --var($theme, 'error-secondary-color');
-            height: 2px;
-            top: -2px;
-        }
-
-        &:hover {
-            %igx-input-group__bundle-type-border-main {
-                box-shadow: 0 2px 0 --var($theme, 'error-secondary-color'),
-                    0 0 0 transparent;
-            }
-
-            %igx-input-group__bundle-prefix {
-                box-shadow: inset 2px 0 0 --var($theme, 'error-secondary-color'),
-                    0 2px 0 --var($theme, 'error-secondary-color'),
-                    0 -2px 0 --var($theme, 'error-secondary-color');
-            }
-
-            %igx-input-group__bundle-suffix {
-                box-shadow: inset -2px 0 0 --var($theme, 'error-secondary-color'),
-                    0 2px 0 --var($theme, 'error-secondary-color'),
-                    0 -2px 0 --var($theme, 'error-secondary-color');
-            }
-
-            %igx-input-group__bundle-line {
-                background: --var($theme, 'error-secondary-color');
-                height: 2px;
-                top: -2px;
             }
         }
     }
@@ -1417,9 +1292,7 @@
         }
 
         %igx-input-group__bundle-line {
-            background: --var($theme, 'error-secondary-color');
-            height: 1px;
-            top: -1px;
+            box-shadow: 0 1px 0 --var($theme, 'error-secondary-color');
         }
 
         &:hover {
@@ -1441,9 +1314,53 @@
             }
 
             %igx-input-group__bundle-line {
-                background: --var($theme, 'error-secondary-color');
-                height: 1px;
-                top: -1px;
+                box-shadow: 0 1px 0 --var($theme, 'error-secondary-color');
+            }
+        }
+    }
+
+    %igx-input-group__bundle-type-border--filled--success {
+        %igx-input-group__bundle-type-border-main {
+            box-shadow: 0 1px 0 --var($theme, 'success-secondary-color'),
+                0 0 0 transparent;
+        }
+
+        %igx-input-group__bundle-prefix {
+            box-shadow: inset 1px 0 0 --var($theme, 'success-secondary-color'),
+                0 1px 0 --var($theme, 'success-secondary-color'),
+                0 -1px 0 --var($theme, 'success-secondary-color');
+        }
+
+        %igx-input-group__bundle-suffix {
+            box-shadow: inset -1px 0 0 --var($theme, 'success-secondary-color'),
+                0 1px 0 --var($theme, 'success-secondary-color'),
+                0 -1px 0 --var($theme, 'success-secondary-color');
+        }
+
+        %igx-input-group__bundle-line {
+            box-shadow: 0 1px 0 --var($theme, 'success-secondary-color');
+        }
+
+        &:hover {
+            %igx-input-group__bundle-type-border-main {
+                box-shadow: 0 1px 0 --var($theme, 'success-secondary-color'),
+                    0 0 0 transparent;
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow: inset 1px 0 0 --var($theme, 'success-secondary-color'),
+                    0 1px 0 --var($theme, 'success-secondary-color'),
+                    0 -1px 0 --var($theme, 'success-secondary-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow: inset -1px 0 0 --var($theme, 'success-secondary-color'),
+                    0 1px 0 --var($theme, 'success-secondary-color'),
+                    0 -1px 0 --var($theme, 'success-secondary-color');
+            }
+
+            %igx-input-group__bundle-line {
+                box-shadow: 0 1px 0 --var($theme, 'success-secondary-color');
             }
         }
     }
@@ -1478,12 +1395,6 @@
             }
         }
 
-        %igx-input-group__bundle-line {
-            background: --var($theme, 'success-secondary-color');
-            height: 1px;
-            top: -1px;
-        }
-
         &:hover {
             %igx-input-group__bundle-type-border-main {
                 box-shadow: 0 1px 0 --var($theme, 'success-secondary-color'),
@@ -1501,11 +1412,111 @@
                     0 1px 0 --var($theme, 'success-secondary-color'),
                     0 -1px 0 --var($theme, 'success-secondary-color');
             }
+        }
+    }
+
+    %igx-input-group__bundle-type-border--focused {
+        %igx-input-group__bundle-type-border-main {
+            box-shadow: 0 2px 0 --var($theme, 'focused-secondary-color'),
+                0 0 0 transparent;
+        }
+
+        %igx-input-group__bundle-prefix {
+            box-shadow: inset 2px 0 0 --var($theme, 'focused-secondary-color'),
+                0 2px 0 --var($theme, 'focused-secondary-color'),
+                0 -2px 0 --var($theme, 'focused-secondary-color');
+
+            igx-prefix,
+            [igx-prefix] {
+                color: --var($theme, 'idle-text-color');
+            }
+        }
+
+        %igx-input-group__bundle-suffix {
+            box-shadow: inset -2px 0 0 --var($theme, 'focused-secondary-color'),
+                0 2px 0 --var($theme, 'focused-secondary-color'),
+                0 -2px 0 --var($theme, 'focused-secondary-color');
+
+            igx-suffix,
+            [igx-suffix] {
+                color: --var($theme, 'idle-text-color');
+            }
+        }
+
+        &:hover {
+            %igx-input-group__bundle-type-border-main {
+                box-shadow: 0 2px 0 --var($theme, 'focused-secondary-color'),
+                    0 0 0 transparent;
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow: inset 2px 0 0 --var($theme, 'focused-secondary-color'),
+                    0 2px 0 --var($theme, 'focused-secondary-color'),
+                    0 -2px 0 --var($theme, 'focused-secondary-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow: inset -2px 0 0 --var($theme, 'focused-secondary-color'),
+                    0 2px 0 --var($theme, 'focused-secondary-color'),
+                    0 -2px 0 --var($theme, 'focused-secondary-color');
+            }
+        }
+    }
+
+    %igx-input-group__bundle-type-border--focused--error {
+        %igx-input-group__bundle-type-border-main {
+            box-shadow: 0 2px 0 --var($theme, 'error-secondary-color'),
+                0 0 0 transparent;
+        }
+
+        %igx-input-group__bundle-prefix {
+            box-shadow: inset 2px 0 0 --var($theme, 'error-secondary-color'),
+                0 2px 0 --var($theme, 'error-secondary-color'),
+                0 -2px 0 --var($theme, 'error-secondary-color');
+            color: --var($theme, 'idle-text-color');
+
+            igx-prefix,
+            [igx-prefix] {
+                color: --var($theme, 'idle-text-color') !important;
+            }
+        }
+
+        %igx-input-group__bundle-suffix {
+            box-shadow: inset -2px 0 0 --var($theme, 'error-secondary-color'),
+                0 2px 0 --var($theme, 'error-secondary-color'),
+                0 -2px 0 --var($theme, 'error-secondary-color');
+            color: --var($theme, 'idle-text-color');
+
+            igx-suffix,
+            [igx-suffix] {
+                color: --var($theme, 'idle-text-color') !important;
+            }
+        }
+
+        %igx-input-group__bundle-line {
+            box-shadow: 0 2px 0 --var($theme, 'error-secondary-color');
+        }
+
+        &:hover {
+            %igx-input-group__bundle-type-border-main {
+                box-shadow: 0 2px 0 --var($theme, 'error-secondary-color'),
+                    0 0 0 transparent;
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow: inset 2px 0 0 --var($theme, 'error-secondary-color'),
+                    0 2px 0 --var($theme, 'error-secondary-color'),
+                    0 -2px 0 --var($theme, 'error-secondary-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow: inset -2px 0 0 --var($theme, 'error-secondary-color'),
+                    0 2px 0 --var($theme, 'error-secondary-color'),
+                    0 -2px 0 --var($theme, 'error-secondary-color');
+            }
 
             %igx-input-group__bundle-line {
-                background: --var($theme, 'success-secondary-color');
-                height: 1px;
-                top: -1px;
+                box-shadow: 0 2px 0 --var($theme, 'error-secondary-color');
             }
         }
     }
@@ -1529,9 +1540,7 @@
         }
 
         %igx-input-group__bundle-line {
-            background: --var($theme, 'success-secondary-color');
-            height: 2px;
-            top: -2px;
+            box-shadow: 0 2px 0 --var($theme, 'success-secondary-color');
         }
 
         &:hover {
@@ -1553,64 +1562,12 @@
             }
 
             %igx-input-group__bundle-line {
-                background: --var($theme, 'success-secondary-color');
-                height: 2px;
-                top: -2px;
+                box-shadow: 0 2px 0 --var($theme, 'success-secondary-color');
             }
         }
     }
 
-    %igx-input-group__bundle-type-border--filled--success {
-        %igx-input-group__bundle-type-border-main {
-            box-shadow: 0 1px 0 --var($theme, 'success-secondary-color'),
-                0 0 0 transparent;
-        }
-
-        %igx-input-group__bundle-prefix {
-            box-shadow: inset 1px 0 0 --var($theme, 'success-secondary-color'),
-                0 1px 0 --var($theme, 'success-secondary-color'),
-                0 -1px 0 --var($theme, 'success-secondary-color');
-        }
-
-        %igx-input-group__bundle-suffix {
-            box-shadow: inset -1px 0 0 --var($theme, 'success-secondary-color'),
-                0 1px 0 --var($theme, 'success-secondary-color'),
-                0 -1px 0 --var($theme, 'success-secondary-color');
-        }
-
-        %igx-input-group__bundle-line {
-            background: --var($theme, 'success-secondary-color');
-            height: 1px;
-            top: -1px;
-        }
-
-        &:hover {
-            %igx-input-group__bundle-type-border-main {
-                box-shadow: 0 1px 0 --var($theme, 'success-secondary-color'),
-                    0 0 0 transparent;
-            }
-
-            %igx-input-group__bundle-prefix {
-                box-shadow: inset 1px 0 0 --var($theme, 'success-secondary-color'),
-                    0 1px 0 --var($theme, 'success-secondary-color'),
-                    0 -1px 0 --var($theme, 'success-secondary-color');
-            }
-
-            %igx-input-group__bundle-suffix {
-                box-shadow: inset -1px 0 0 --var($theme, 'success-secondary-color'),
-                    0 1px 0 --var($theme, 'success-secondary-color'),
-                    0 -1px 0 --var($theme, 'success-secondary-color');
-            }
-
-            %igx-input-group__bundle-line {
-                background: --var($theme, 'success-secondary-color');
-                height: 1px;
-                top: -1px;
-            }
-        }
-    }
-
-    %igx-input-group__bundle-type-border--focused--disabled {
+    %igx-input-group__bundle-type-border--disabled {
         %igx-input-group__bundle-type-border-main {
             box-shadow: 0 1px 0 --var($theme, 'disabled-border-color'),
                 0 0 0 transparent;
@@ -1629,9 +1586,7 @@
         }
 
         %igx-input-group__bundle-line {
-            background: --var($theme, 'disabled-border-color');
-            height: 1px;
-            top: -1px;
+            box-shadow: 0 1px 0 --var($theme, 'disabled-border-color');
         }
 
         &:hover {
@@ -1653,12 +1608,927 @@
             }
 
             %igx-input-group__bundle-line {
-                background: --var($theme, 'disabled-border-color');
-                height: 1px;
-                top: -1px;
+                box-shadow: 0 1px 0 --var($theme, 'disabled-border-color');
             }
         }
     }
+
+    // TARGET ONLY IE11
+    @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+        %igx-input-group__bundle-line {
+            box-shadow: none !important;
+            background: --var($theme, 'border-color') !important;
+            height: 1px;
+            top: -1px
+        }
+
+        %igx-input-group__bundle-line--focused {
+            height: 2px;
+            top: 0;
+        }
+
+        %igx-input-group__bundle-type-border-main {
+            box-shadow: none !important;
+            border-bottom: 1px solid --var($theme, 'border-color');
+            border-top: 1px solid --var($theme, 'border-color');
+        }
+
+        %igx-input-group__bundle-type-border-main-focused {
+            box-shadow: none !important;
+            border-top: transparent;
+            border-bottom: 2px solid --var($theme, 'border-color');
+        }
+
+        %igx-input-group__bundle-type-border-main-filled {
+            box-shadow: none !important;
+            border-top: transparent;
+            border-bottom: 1px solid --var($theme, 'border-color');
+        }
+
+        %igx-input-group__bundle-type-border {
+            %igx-input-group__bundle-type-border-main-filled {
+                box-shadow: none !important;
+                border-bottom: 1px solid --var($theme, 'border-color');
+                border-top: 1px solid --var($theme, 'border-color');
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow: none !important;
+                border-bottom: 1px solid  --var($theme, 'idle-text-color');
+                border-top: 1px solid  --var($theme, 'idle-text-color');
+                border-left: 1px solid  --var($theme, 'idle-text-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow: none !important;
+                border-bottom: 1px solid  --var($theme, 'idle-text-color');
+                border-top: 1px solid  --var($theme, 'idle-text-color');
+                border-right: 1px solid  --var($theme, 'idle-text-color');
+            }
+
+            &:hover {
+                %igx-input-group__bundle-line {
+                    box-shadow: none !important;
+                    background: --var($theme, 'border-color');
+                }
+
+                %igx-input-group__bundle-type-border-main-filled {
+                    box-shadow: none !important;
+                    border-bottom: 1px solid --var($theme, 'hover-bottom-line-color');
+                }
+
+                %igx-input-group__bundle-type-border-main {
+                    box-shadow: none !important;
+                    border-bottom: 1px solid --var($theme, 'hover-bottom-line-color');
+                    border-top: 1px solid --var($theme, 'hover-bottom-line-color')
+                }
+
+                %igx-input-group__bundle-prefix {
+                    box-shadow: none !important;
+                    border-bottom: 1px solid --var($theme, 'hover-bottom-line-color');
+                    border-top: 1px solid --var($theme, 'hover-bottom-line-color');
+                    border-left: 1px solid --var($theme, 'hover-bottom-line-color');
+                }
+
+                %igx-input-group__bundle-suffix {
+                    box-shadow: none !important;
+                    border-bottom: 1px solid --var($theme, 'hover-bottom-line-color');
+                    border-top: 1px solid --var($theme, 'hover-bottom-line-color');
+                    border-right: 1px solid --var($theme, 'hover-bottom-line-color');
+                }
+            }
+        }
+
+        %igx-input-group__bundle-type-border--filled {
+            %igx-input-group__bundle-type-border-main {
+                box-shadow: none !important;
+                border-top-color: transparent !important;
+                border-bottom-color: --var($theme, 'border-color');
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow: none;
+                border-top: 1px solid --var($theme, 'border-color');
+                border-bottom: 1px solid --var($theme, 'border-color');
+                border-left: 1px solid --var($theme, 'border-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow: none;
+                border-top: 1px solid --var($theme, 'border-color');
+                border-bottom: 1px solid --var($theme, 'border-color');
+                border-right: 1px solid --var($theme, 'border-color');
+            }
+
+            %igx-input-group__bundle-line {
+                box-shadow: none !important;
+                background: --var($theme, 'border-color') !important;
+            }
+
+            &:hover {
+                %igx-input-group__bundle-type-border-main {
+                    border-bottom-color: --var($theme, 'hover-border-color');
+                }
+
+                %igx-input-group__bundle-prefix {
+                    border-top-color: --var($theme, 'hover-border-color');
+                    border-bottom-color: --var($theme, 'hover-border-color');
+                    border-left-color: --var($theme, 'hover-border-color');
+                }
+
+                %igx-input-group__bundle-suffix {
+                    border-top-color: --var($theme, 'hover-border-color');
+                    border-bottom-color: --var($theme, 'hover-border-color');
+                    border-right-color: --var($theme, 'hover-border-color');
+                }
+
+                %igx-input-group__bundle-line {
+                    box-shadow: none !important;
+                    background: --var($theme, 'hover-border-color') !important;
+                }
+            }
+        }
+
+        %igx-input-group__bundle-type-border--focused {
+            %igx-input-group__bundle-type-border-main {
+                box-shadow: none !important;
+                border-top: transparent;
+                border-top-width: 2px;
+                border-bottom-width: 2px;
+                border-bottom-color: --var($theme, 'focused-secondary-color');
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow: none;
+                border-top: 2px solid --var($theme, 'focused-secondary-color');
+                border-bottom: 2px solid --var($theme, 'focused-secondary-color');
+                border-left: 2px solid --var($theme, 'focused-secondary-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow: none;
+                border-top: 2px solid --var($theme, 'focused-secondary-color');
+                border-bottom: 2px solid --var($theme, 'focused-secondary-color');
+                border-right: 2px solid --var($theme, 'focused-secondary-color');
+            }
+
+            %igx-input-group__bundle-line {
+                box-shadow: none !important;
+                background: --var($theme, 'focused-secondary-color') !important;
+            }
+
+            &:hover {
+                %igx-input-group__bundle-type-border-main {
+                    border-bottom-color: --var($theme, 'focused-secondary-color');
+                    border-bottom-width: 2px;
+                }
+
+                %igx-input-group__bundle-prefix {
+                    border-top-color: --var($theme, 'focused-secondary-color');
+                    border-bottom-color: --var($theme, 'focused-secondary-color');
+                    border-left-color: --var($theme, 'focused-secondary-color');
+                }
+
+                %igx-input-group__bundle-suffix {
+                    border-top-color: --var($theme, 'focused-secondary-color');
+                    border-bottom-color: --var($theme, 'focused-secondary-color');
+                    border-right-color: --var($theme, 'focused-secondary-color');
+                }
+
+                %igx-input-group__bundle-line {
+                    box-shadow: none !important;
+                    background: --var($theme, 'focused-secondary-color') !important;
+                }
+            }
+        }
+
+        %igx-input-group__bundle-type-border--error {
+            %igx-input-group__bundle-type-border-main {
+                box-shadow: none;
+                border-top-color: --var($theme, 'error-secondary-color');
+                border-bottom-color: --var($theme, 'error-secondary-color');
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow: none;
+                border-top: 1px solid --var($theme, 'error-secondary-color');
+                border-bottom: 1px solid --var($theme, 'error-secondary-color');
+                border-left: 1px solid --var($theme, 'error-secondary-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow: none;
+                border-top: 1px solid --var($theme, 'error-secondary-color');
+                border-bottom: 1px solid --var($theme, 'error-secondary-color');
+                border-right: 1px solid --var($theme, 'error-secondary-color');
+            }
+
+            %igx-input-group__bundle-line {
+                box-shadow: none !important;
+                background: --var($theme, 'error-secondary-color') !important;
+            }
+
+            &:hover {
+                %igx-input-group__bundle-type-border-main {
+                    box-shadow: none;
+                    border-top-color: --var($theme, 'error-secondary-color');
+                    border-bottom-color: --var($theme, 'error-secondary-color');
+                }
+
+                %igx-input-group__bundle-prefix {
+                    box-shadow: none;
+                    border-top: 1px solid --var($theme, 'error-secondary-color');
+                    border-bottom: 1px solid --var($theme, 'error-secondary-color');
+                    border-left: 1px solid --var($theme, 'error-secondary-color');
+                }
+
+                %igx-input-group__bundle-suffix {
+                    box-shadow: none;
+                    border-top: 1px solid --var($theme, 'error-secondary-color');
+                    border-bottom: 1px solid --var($theme, 'error-secondary-color');
+                    border-right: 1px solid --var($theme, 'error-secondary-color');
+                }
+
+                %igx-input-group__bundle-line {
+                    box-shadow: none !important;
+                    background: --var($theme, 'error-secondary-color') !important;
+                }
+            }
+        }
+
+        %igx-input-group__bundle-type-border--focused--error {
+            %igx-input-group__bundle-type-border-main {
+                box-shadow: none;
+                border-top-color: --var($theme, 'error-secondary-color');
+                border-bottom-color: --var($theme, 'error-secondary-color');
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow: none;
+                border-top: 2px solid --var($theme, 'error-secondary-color');
+                border-bottom: 2px solid --var($theme, 'error-secondary-color');
+                border-left: 2px solid --var($theme, 'error-secondary-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow: none;
+                border-top: 2px solid --var($theme, 'error-secondary-color');
+                border-bottom: 2px solid --var($theme, 'error-secondary-color');
+                border-right: 2px solid --var($theme, 'error-secondary-color');
+            }
+
+            %igx-input-group__bundle-line {
+                box-shadow: none !important;
+                background: --var($theme, 'error-secondary-color') !important;
+            }
+
+            &:hover {
+                %igx-input-group__bundle-type-border-main {
+                    box-shadow: none;
+                    border-top-color: --var($theme, 'error-secondary-color');
+                    border-bottom-color: --var($theme, 'error-secondary-color');
+                }
+
+                %igx-input-group__bundle-prefix {
+                    box-shadow: none;
+                    border-top: 2px solid --var($theme, 'error-secondary-color');
+                    border-bottom: 2px solid --var($theme, 'error-secondary-color');
+                    border-left: 2px solid --var($theme, 'error-secondary-color');
+                }
+
+                %igx-input-group__bundle-suffix {
+                    box-shadow: none;
+                    border-top: 2px solid --var($theme, 'error-secondary-color');
+                    border-bottom: 2px solid --var($theme, 'error-secondary-color');
+                    border-right: 2px solid --var($theme, 'error-secondary-color');
+                }
+
+                %igx-input-group__bundle-line {
+                    box-shadow: none !important;
+                    background: --var($theme, 'error-secondary-color') !important;
+                }
+            }
+        }
+
+        %igx-input-group__bundle-type-border--success {
+            %igx-input-group__bundle-type-border-main {
+                box-shadow: none;
+                border-top-color: --var($theme, 'success-secondary-color');
+                border-bottom-color: --var($theme, 'success-secondary-color');
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow: none;
+                border-top: 1px solid --var($theme, 'success-secondary-color');
+                border-bottom: 1px solid --var($theme, 'success-secondary-color');
+                border-left: 1px solid --var($theme, 'success-secondary-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow: none;
+                border-top: 1px solid --var($theme, 'success-secondary-color');
+                border-bottom: 1px solid --var($theme, 'success-secondary-color');
+                border-right: 1px solid --var($theme, 'success-secondary-color');
+            }
+
+            %igx-input-group__bundle-line {
+                box-shadow: none !important;
+                background: --var($theme, 'success-secondary-color') !important;
+            }
+
+            &:hover {
+                %igx-input-group__bundle-type-border-main {
+                    box-shadow: none;
+                    border-top-color: --var($theme, 'success-secondary-color');
+                    border-bottom-color: --var($theme, 'success-secondary-color');
+                }
+
+                %igx-input-group__bundle-prefix {
+                    box-shadow: none;
+                    border-top: 1px solid --var($theme, 'success-secondary-color');
+                    border-bottom: 1px solid --var($theme, 'success-secondary-color');
+                    border-left: 1px solid --var($theme, 'success-secondary-color');
+                }
+
+                %igx-input-group__bundle-suffix {
+                    box-shadow: none;
+                    border-top: 1px solid --var($theme, 'success-secondary-color');
+                    border-bottom: 1px solid --var($theme, 'success-secondary-color');
+                    border-right: 1px solid --var($theme, 'success-secondary-color');
+                }
+
+                %igx-input-group__bundle-line {
+                    box-shadow: none !important;
+                    background: --var($theme, 'success-secondary-color') !important;
+                }
+            }
+        }
+
+        %igx-input-group__bundle-type-border--focused--success {
+            %igx-input-group__bundle-type-border-main {
+                box-shadow: none;
+                border-top-color: --var($theme, 'success-secondary-color');
+                border-bottom-color: --var($theme, 'success-secondary-color');
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow: none;
+                border-top: 2px solid --var($theme, 'success-secondary-color');
+                border-bottom: 2px solid --var($theme, 'success-secondary-color');
+                border-left: 2px solid --var($theme, 'success-secondary-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow: none;
+                border-top: 2px solid --var($theme, 'success-secondary-color');
+                border-bottom: 2px solid --var($theme, 'success-secondary-color');
+                border-right: 2px solid --var($theme, 'success-secondary-color');
+            }
+
+            %igx-input-group__bundle-line {
+                background: --var($theme, 'success-secondary-color') !important;
+            }
+
+            &:hover {
+                %igx-input-group__bundle-type-border-main {
+                    box-shadow: none;
+                    border-top-color: --var($theme, 'success-secondary-color');
+                    border-bottom-color: --var($theme, 'success-secondary-color');
+                }
+
+                %igx-input-group__bundle-prefix {
+                    box-shadow: none;
+                    border-top: 2px solid --var($theme, 'success-secondary-color');
+                    border-bottom: 2px solid --var($theme, 'success-secondary-color');
+                    border-left: 2px solid --var($theme, 'success-secondary-color');
+                }
+
+                %igx-input-group__bundle-suffix {
+                    box-shadow: none;
+                    border-top: 2px solid --var($theme, 'success-secondary-color');
+                    border-bottom: 2px solid --var($theme, 'success-secondary-color');
+                    border-right: 2px solid --var($theme, 'success-secondary-color');
+                }
+
+                %igx-input-group__bundle-line {
+                    background: --var($theme, 'success-secondary-color') !important;
+                }
+            }
+        }
+
+        %igx-input-group__bundle-type-border--focused--disabled {
+            %igx-input-group__bundle-type-border-main {
+                box-shadow: none;
+                border-top-color: transparent;
+                border-bottom-color: --var($theme, 'disabled-border-color');
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow: none;
+                border-top: 1px solid --var($theme, 'disabled-border-color');
+                border-bottom: 1px solid --var($theme, 'disabled-border-color');
+                border-left: 1px solid --var($theme, 'disabled-border-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow: none;
+                border-top: 1px solid --var($theme, 'disabled-border-color');
+                border-bottom: 1px solid --var($theme, 'disabled-border-color');
+                border-right: 1px solid --var($theme, 'disabled-border-color');
+            }
+
+            %igx-input-group__bundle-line {
+                box-shadow: none !important;
+                background: --var($theme, 'disabled-border-color') !important;
+            }
+
+            &:hover {
+                %igx-input-group__bundle-type-border-main {
+                    box-shadow: none;
+                    border-top-color: --var($theme, 'disabled-border-color');
+                    border-bottom-color: --var($theme, 'disabled-border-color');
+                }
+
+                %igx-input-group__bundle-prefix {
+                    box-shadow: none;
+                    border-top: 1px solid --var($theme, 'disabled-border-color');
+                    border-bottom: 1px solid --var($theme, 'disabled-border-color');
+                    border-left: 1px solid --var($theme, 'disabled-border-color');
+                }
+
+                %igx-input-group__bundle-suffix {
+                    box-shadow: none;
+                    border-top: 1px solid --var($theme, 'disabled-border-color');
+                    border-bottom: 1px solid --var($theme, 'disabled-border-color');
+                    border-right: 1px solid --var($theme, 'disabled-border-color');
+                }
+
+                %igx-input-group__bundle-line {
+                    box-shadow: none !important;
+                    background: --var($theme, 'disabled-border-color') !important;
+                }
+            }
+        }
+    }
+
+    // TARGET ONLY EDGE
+    @supports (-ms-ime-align: auto) {
+        %igx-input-group__bundle-line {
+            box-shadow: none !important;
+            background: --var($theme, 'border-color') !important;
+            height: 1px;
+            top: -1px
+        }
+
+        %igx-input-group__bundle-line--focused {
+            height: 2px;
+            top: 0;
+        }
+
+        %igx-input-group__bundle-type-border-main {
+            box-shadow: none !important;
+            border-bottom: 1px solid --var($theme, 'border-color');
+            border-top: 1px solid --var($theme, 'border-color');
+        }
+
+        %igx-input-group__bundle-type-border-main-focused {
+            box-shadow: none !important;
+            border-top: transparent;
+            border-bottom: 2px solid --var($theme, 'border-color');
+        }
+
+        %igx-input-group__bundle-type-border-main-filled {
+            box-shadow: none !important;
+            border-top: transparent;
+            border-bottom: 1px solid --var($theme, 'border-color');
+        }
+
+        %igx-input-group__bundle-type-border {
+            %igx-input-group__bundle-type-border-main-filled {
+                box-shadow: none !important;
+                border-bottom: 1px solid --var($theme, 'border-color');
+                border-top: 1px solid --var($theme, 'border-color');
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow: none !important;
+                border-bottom: 1px solid  --var($theme, 'idle-text-color');
+                border-top: 1px solid  --var($theme, 'idle-text-color');
+                border-left: 1px solid  --var($theme, 'idle-text-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow: none !important;
+                border-bottom: 1px solid  --var($theme, 'idle-text-color');
+                border-top: 1px solid  --var($theme, 'idle-text-color');
+                border-right: 1px solid  --var($theme, 'idle-text-color');
+            }
+
+            &:hover {
+                %igx-input-group__bundle-line {
+                    box-shadow: none !important;
+                    background: --var($theme, 'border-color');
+                }
+
+                %igx-input-group__bundle-type-border-main-filled {
+                    box-shadow: none !important;
+                    border-bottom: 1px solid --var($theme, 'hover-bottom-line-color');
+                }
+
+                %igx-input-group__bundle-type-border-main {
+                    box-shadow: none !important;
+                    border-bottom: 1px solid --var($theme, 'hover-bottom-line-color');
+                    border-top: 1px solid --var($theme, 'hover-bottom-line-color')
+                }
+
+                %igx-input-group__bundle-prefix {
+                    box-shadow: none !important;
+                    border-bottom: 1px solid --var($theme, 'hover-bottom-line-color');
+                    border-top: 1px solid --var($theme, 'hover-bottom-line-color');
+                    border-left: 1px solid --var($theme, 'hover-bottom-line-color');
+                }
+
+                %igx-input-group__bundle-suffix {
+                    box-shadow: none !important;
+                    border-bottom: 1px solid --var($theme, 'hover-bottom-line-color');
+                    border-top: 1px solid --var($theme, 'hover-bottom-line-color');
+                    border-right: 1px solid --var($theme, 'hover-bottom-line-color');
+                }
+            }
+        }
+
+        %igx-input-group__bundle-type-border--filled {
+            %igx-input-group__bundle-type-border-main {
+                box-shadow: none !important;
+                border-top-color: transparent !important;
+                border-bottom-color: --var($theme, 'border-color');
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow: none;
+                border-top: 1px solid --var($theme, 'border-color');
+                border-bottom: 1px solid --var($theme, 'border-color');
+                border-left: 1px solid --var($theme, 'border-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow: none;
+                border-top: 1px solid --var($theme, 'border-color');
+                border-bottom: 1px solid --var($theme, 'border-color');
+                border-right: 1px solid --var($theme, 'border-color');
+            }
+
+            %igx-input-group__bundle-line {
+                box-shadow: none !important;
+                background: --var($theme, 'border-color') !important;
+            }
+
+            &:hover {
+                %igx-input-group__bundle-type-border-main {
+                    border-bottom-color: --var($theme, 'hover-border-color');
+                }
+
+                %igx-input-group__bundle-prefix {
+                    border-top-color: --var($theme, 'hover-border-color');
+                    border-bottom-color: --var($theme, 'hover-border-color');
+                    border-left-color: --var($theme, 'hover-border-color');
+                }
+
+                %igx-input-group__bundle-suffix {
+                    border-top-color: --var($theme, 'hover-border-color');
+                    border-bottom-color: --var($theme, 'hover-border-color');
+                    border-right-color: --var($theme, 'hover-border-color');
+                }
+
+                %igx-input-group__bundle-line {
+                    box-shadow: none !important;
+                    background: --var($theme, 'hover-border-color') !important;
+                }
+            }
+        }
+
+        %igx-input-group__bundle-type-border--focused {
+            %igx-input-group__bundle-type-border-main {
+                box-shadow: none !important;
+                border-top: transparent;
+                border-top-width: 2px;
+                border-bottom-width: 2px;
+                border-bottom-color: --var($theme, 'focused-secondary-color');
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow: none;
+                border-top: 2px solid --var($theme, 'focused-secondary-color');
+                border-bottom: 2px solid --var($theme, 'focused-secondary-color');
+                border-left: 2px solid --var($theme, 'focused-secondary-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow: none;
+                border-top: 2px solid --var($theme, 'focused-secondary-color');
+                border-bottom: 2px solid --var($theme, 'focused-secondary-color');
+                border-right: 2px solid --var($theme, 'focused-secondary-color');
+            }
+
+            %igx-input-group__bundle-line {
+                box-shadow: none !important;
+                background: --var($theme, 'focused-secondary-color') !important;
+            }
+
+            &:hover {
+                %igx-input-group__bundle-type-border-main {
+                    border-bottom-color: --var($theme, 'focused-secondary-color');
+                    border-bottom-width: 2px;
+                }
+
+                %igx-input-group__bundle-prefix {
+                    border-top-color: --var($theme, 'focused-secondary-color');
+                    border-bottom-color: --var($theme, 'focused-secondary-color');
+                    border-left-color: --var($theme, 'focused-secondary-color');
+                }
+
+                %igx-input-group__bundle-suffix {
+                    border-top-color: --var($theme, 'focused-secondary-color');
+                    border-bottom-color: --var($theme, 'focused-secondary-color');
+                    border-right-color: --var($theme, 'focused-secondary-color');
+                }
+
+                %igx-input-group__bundle-line {
+                    box-shadow: none !important;
+                    background: --var($theme, 'focused-secondary-color') !important;
+                }
+            }
+        }
+
+        %igx-input-group__bundle-type-border--error {
+            %igx-input-group__bundle-type-border-main {
+                box-shadow: none;
+                border-top-color: --var($theme, 'error-secondary-color');
+                border-bottom-color: --var($theme, 'error-secondary-color');
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow: none;
+                border-top: 1px solid --var($theme, 'error-secondary-color');
+                border-bottom: 1px solid --var($theme, 'error-secondary-color');
+                border-left: 1px solid --var($theme, 'error-secondary-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow: none;
+                border-top: 1px solid --var($theme, 'error-secondary-color');
+                border-bottom: 1px solid --var($theme, 'error-secondary-color');
+                border-right: 1px solid --var($theme, 'error-secondary-color');
+            }
+
+            %igx-input-group__bundle-line {
+                box-shadow: none !important;
+                background: --var($theme, 'error-secondary-color') !important;
+            }
+
+            &:hover {
+                %igx-input-group__bundle-type-border-main {
+                    box-shadow: none;
+                    border-top-color: --var($theme, 'error-secondary-color');
+                    border-bottom-color: --var($theme, 'error-secondary-color');
+                }
+
+                %igx-input-group__bundle-prefix {
+                    box-shadow: none;
+                    border-top: 1px solid --var($theme, 'error-secondary-color');
+                    border-bottom: 1px solid --var($theme, 'error-secondary-color');
+                    border-left: 1px solid --var($theme, 'error-secondary-color');
+                }
+
+                %igx-input-group__bundle-suffix {
+                    box-shadow: none;
+                    border-top: 1px solid --var($theme, 'error-secondary-color');
+                    border-bottom: 1px solid --var($theme, 'error-secondary-color');
+                    border-right: 1px solid --var($theme, 'error-secondary-color');
+                }
+
+                %igx-input-group__bundle-line {
+                    box-shadow: none !important;
+                    background: --var($theme, 'error-secondary-color') !important;
+                }
+            }
+        }
+
+        %igx-input-group__bundle-type-border--focused--error {
+            %igx-input-group__bundle-type-border-main {
+                box-shadow: none;
+                border-top-color: --var($theme, 'error-secondary-color');
+                border-bottom-color: --var($theme, 'error-secondary-color');
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow: none;
+                border-top: 2px solid --var($theme, 'error-secondary-color');
+                border-bottom: 2px solid --var($theme, 'error-secondary-color');
+                border-left: 2px solid --var($theme, 'error-secondary-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow: none;
+                border-top: 2px solid --var($theme, 'error-secondary-color');
+                border-bottom: 2px solid --var($theme, 'error-secondary-color');
+                border-right: 2px solid --var($theme, 'error-secondary-color');
+            }
+
+            %igx-input-group__bundle-line {
+                box-shadow: none !important;
+                background: --var($theme, 'error-secondary-color') !important;
+            }
+
+            &:hover {
+                %igx-input-group__bundle-type-border-main {
+                    box-shadow: none;
+                    border-top-color: --var($theme, 'error-secondary-color');
+                    border-bottom-color: --var($theme, 'error-secondary-color');
+                }
+
+                %igx-input-group__bundle-prefix {
+                    box-shadow: none;
+                    border-top: 2px solid --var($theme, 'error-secondary-color');
+                    border-bottom: 2px solid --var($theme, 'error-secondary-color');
+                    border-left: 2px solid --var($theme, 'error-secondary-color');
+                }
+
+                %igx-input-group__bundle-suffix {
+                    box-shadow: none;
+                    border-top: 2px solid --var($theme, 'error-secondary-color');
+                    border-bottom: 2px solid --var($theme, 'error-secondary-color');
+                    border-right: 2px solid --var($theme, 'error-secondary-color');
+                }
+
+                %igx-input-group__bundle-line {
+                    box-shadow: none !important;
+                    background: --var($theme, 'error-secondary-color') !important;
+                }
+            }
+        }
+
+        %igx-input-group__bundle-type-border--success {
+            %igx-input-group__bundle-type-border-main {
+                box-shadow: none;
+                border-top-color: --var($theme, 'success-secondary-color');
+                border-bottom-color: --var($theme, 'success-secondary-color');
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow: none;
+                border-top: 1px solid --var($theme, 'success-secondary-color');
+                border-bottom: 1px solid --var($theme, 'success-secondary-color');
+                border-left: 1px solid --var($theme, 'success-secondary-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow: none;
+                border-top: 1px solid --var($theme, 'success-secondary-color');
+                border-bottom: 1px solid --var($theme, 'success-secondary-color');
+                border-right: 1px solid --var($theme, 'success-secondary-color');
+            }
+
+            %igx-input-group__bundle-line {
+                box-shadow: none !important;
+                background: --var($theme, 'success-secondary-color') !important;
+            }
+
+            &:hover {
+                %igx-input-group__bundle-type-border-main {
+                    box-shadow: none;
+                    border-top-color: --var($theme, 'success-secondary-color');
+                    border-bottom-color: --var($theme, 'success-secondary-color');
+                }
+
+                %igx-input-group__bundle-prefix {
+                    box-shadow: none;
+                    border-top: 1px solid --var($theme, 'success-secondary-color');
+                    border-bottom: 1px solid --var($theme, 'success-secondary-color');
+                    border-left: 1px solid --var($theme, 'success-secondary-color');
+                }
+
+                %igx-input-group__bundle-suffix {
+                    box-shadow: none;
+                    border-top: 1px solid --var($theme, 'success-secondary-color');
+                    border-bottom: 1px solid --var($theme, 'success-secondary-color');
+                    border-right: 1px solid --var($theme, 'success-secondary-color');
+                }
+
+                %igx-input-group__bundle-line {
+                    box-shadow: none !important;
+                    background: --var($theme, 'success-secondary-color') !important;
+                }
+            }
+        }
+
+        %igx-input-group__bundle-type-border--focused--success {
+            %igx-input-group__bundle-type-border-main {
+                box-shadow: none;
+                border-top-color: --var($theme, 'success-secondary-color');
+                border-bottom-color: --var($theme, 'success-secondary-color');
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow: none;
+                border-top: 2px solid --var($theme, 'success-secondary-color');
+                border-bottom: 2px solid --var($theme, 'success-secondary-color');
+                border-left: 2px solid --var($theme, 'success-secondary-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow: none;
+                border-top: 2px solid --var($theme, 'success-secondary-color');
+                border-bottom: 2px solid --var($theme, 'success-secondary-color');
+                border-right: 2px solid --var($theme, 'success-secondary-color');
+            }
+
+            %igx-input-group__bundle-line {
+                background: --var($theme, 'success-secondary-color') !important;
+            }
+
+            &:hover {
+                %igx-input-group__bundle-type-border-main {
+                    box-shadow: none;
+                    border-top-color: --var($theme, 'success-secondary-color');
+                    border-bottom-color: --var($theme, 'success-secondary-color');
+                }
+
+                %igx-input-group__bundle-prefix {
+                    box-shadow: none;
+                    border-top: 2px solid --var($theme, 'success-secondary-color');
+                    border-bottom: 2px solid --var($theme, 'success-secondary-color');
+                    border-left: 2px solid --var($theme, 'success-secondary-color');
+                }
+
+                %igx-input-group__bundle-suffix {
+                    box-shadow: none;
+                    border-top: 2px solid --var($theme, 'success-secondary-color');
+                    border-bottom: 2px solid --var($theme, 'success-secondary-color');
+                    border-right: 2px solid --var($theme, 'success-secondary-color');
+                }
+
+                %igx-input-group__bundle-line {
+                    background: --var($theme, 'success-secondary-color') !important;
+                }
+            }
+        }
+
+        %igx-input-group__bundle-type-border--focused--disabled {
+            %igx-input-group__bundle-type-border-main {
+                box-shadow: none;
+                border-top-color: transparent;
+                border-bottom-color: --var($theme, 'disabled-border-color');
+            }
+
+            %igx-input-group__bundle-prefix {
+                box-shadow: none;
+                border-top: 1px solid --var($theme, 'disabled-border-color');
+                border-bottom: 1px solid --var($theme, 'disabled-border-color');
+                border-left: 1px solid --var($theme, 'disabled-border-color');
+            }
+
+            %igx-input-group__bundle-suffix {
+                box-shadow: none;
+                border-top: 1px solid --var($theme, 'disabled-border-color');
+                border-bottom: 1px solid --var($theme, 'disabled-border-color');
+                border-right: 1px solid --var($theme, 'disabled-border-color');
+            }
+
+            %igx-input-group__bundle-line {
+                box-shadow: none !important;
+                background: --var($theme, 'disabled-border-color') !important;
+            }
+
+            &:hover {
+                %igx-input-group__bundle-type-border-main {
+                    box-shadow: none;
+                    border-top-color: --var($theme, 'disabled-border-color');
+                    border-bottom-color: --var($theme, 'disabled-border-color');
+                }
+
+                %igx-input-group__bundle-prefix {
+                    box-shadow: none;
+                    border-top: 1px solid --var($theme, 'disabled-border-color');
+                    border-bottom: 1px solid --var($theme, 'disabled-border-color');
+                    border-left: 1px solid --var($theme, 'disabled-border-color');
+                }
+
+                %igx-input-group__bundle-suffix {
+                    box-shadow: none;
+                    border-top: 1px solid --var($theme, 'disabled-border-color');
+                    border-bottom: 1px solid --var($theme, 'disabled-border-color');
+                    border-right: 1px solid --var($theme, 'disabled-border-color');
+                }
+
+                %igx-input-group__bundle-line {
+                    box-shadow: none !important;
+                    background: --var($theme, 'disabled-border-color') !important;
+                }
+            }
+        }
+    }
+
     // Type Border END
 
     %form-group-input--hover {

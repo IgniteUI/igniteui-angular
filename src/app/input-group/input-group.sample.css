@@ -3,6 +3,12 @@
     /* background: #202020; */
 }
 
+.igx-input-group + .igx-input-group,
+.igx-input-group + .igx-select {
+    margin-bottom: 10px;
+}
+
+
 .sample-title {
     margin-top: 24px;
     margin-bottom: 24px;
