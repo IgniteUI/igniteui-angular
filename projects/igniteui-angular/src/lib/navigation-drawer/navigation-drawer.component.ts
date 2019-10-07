@@ -596,10 +596,6 @@ export class IgxNavigationDrawerComponent implements
     }
 
     private getWindowWidth() {
-        if (!this.platformUtil.isPlatformBrowser()) {
-            return;
-        }
-
         return (window.innerWidth > 0) ? window.innerWidth : screen.width;
     }
 
@@ -607,7 +603,7 @@ export class IgxNavigationDrawerComponent implements
      * Sets the drawer width.
      */
     private setDrawerWidth(width: string) {
-        if (this.platformUtil.isPlatformBrowser()) {
+        if (this.platformUtil.isPlatformBrowser) {
             requestAnimationFrame(() => {
                 if (this.drawer) {
                     this.renderer.setElementStyle(this.drawer, 'width', width);
@@ -641,7 +637,7 @@ export class IgxNavigationDrawerComponent implements
             this._touchManager.addGlobalEventListener('document', 'panmove', this.pan);
             this._touchManager.addGlobalEventListener('document', 'panend', this.panEnd);
         }
-        if (!this._resizeObserver && this.platformUtil.isPlatformBrowser()) {
+        if (!this._resizeObserver && this.platformUtil.isPlatformBrowser) {
             this._resizeObserver = fromEvent(window, 'resize').pipe(debounce(() => interval(150)))
                 .subscribe((value) => {
                     this.checkPinThreshold(value);
@@ -659,6 +655,9 @@ export class IgxNavigationDrawerComponent implements
     }
 
     private checkPinThreshold = (evt?: Event) => {
+        if (!this.platformUtil.isPlatformBrowser) {
+            return;
+        }
         let windowWidth;
         if (this.pinThreshold) {
             windowWidth = this.getWindowWidth();
@@ -797,27 +796,19 @@ export class IgxNavigationDrawerComponent implements
      * @param opacity optional value to apply to the overlay
      */
     private setXSize(x: number, opacity?: string) {
-        if (this.platformUtil.isPlatformBrowser()) {
-            // Angular polyfills patches window.requestAnimationFrame, but switch to DomAdapter API (TODO)
-            window.requestAnimationFrame(() => {
-                this.setXSizeInternal(x, opacity);
-            });
-        } else {
-            this.setXSizeInternal(x, opacity);
-        }
-    }
-
-    private setXSizeInternal(x: number, opacity?: string) {
-        if (this.hasAnimateWidth) {
-            this.renderer.setElementStyle(this.drawer, 'width', x ? Math.abs(x) + 'px' : '');
-        } else {
-            this.renderer.setElementStyle(this.drawer, 'transform', x ? 'translate3d(' + x + 'px,0,0)' : '');
-            this.renderer.setElementStyle(this.drawer, '-webkit-transform',
-                x ? 'translate3d(' + x + 'px,0,0)' : '');
-        }
-        if (opacity !== undefined) {
-            this.renderer.setElementStyle(this.overlay, 'opacity', opacity);
-        }
+        // Angular polyfills patches window.requestAnimationFrame, but switch to DomAdapter API (TODO)
+        window.requestAnimationFrame(() => {
+            if (this.hasAnimateWidth) {
+                this.renderer.setElementStyle(this.drawer, 'width', x ? Math.abs(x) + 'px' : '');
+            } else {
+                const transform = x ? 'translate3d(' + x + 'px,0,0)' : '';
+                this.renderer.setElementStyle(this.drawer, 'transform', transform);
+                this.renderer.setElementStyle(this.drawer, '-webkit-transform', transform);
+            }
+            if (opacity !== undefined) {
+                this.renderer.setElementStyle(this.overlay, 'opacity', opacity);
+            }
+        });
     }
 
     private toggleOpenedEvent = (evt?) => {

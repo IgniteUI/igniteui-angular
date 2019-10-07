@@ -561,7 +561,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 this.nativeElement.addEventListener('compositionend', this.compositionEndHandler);
             }
         });
-        if (this.platformUtil.isIOS()) {
+        if (this.platformUtil.isIOS) {
             this.touchManager.addEventListener(this.nativeElement, 'doubletap', this.onDoubleClick, {
                 cssProps: { } /* don't disable user-select, etc */
             } as HammerOptions);
