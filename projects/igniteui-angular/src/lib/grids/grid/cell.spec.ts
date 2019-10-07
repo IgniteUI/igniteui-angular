@@ -10,8 +10,11 @@ import { IgxStringFilteringOperand } from '../../data-operations/filtering-condi
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { HammerGesturesManager } from '../../core/touch';
 import { PlatformUtil } from '../../core/utils';
+import { SelectionWithTransactionsComponent } from '../../test-utils/grid-samples.spec';
 
 const DEBOUNCETIME = 30;
+const CELL_CSS_CLASS_NUMBER_FORMAT = '.igx-grid__td--number';
+const EDITED_CELL_CSS_CLASS = 'igx-grid__td--edited';
 
 describe('IgxGrid - Cell component', () => {
     configureTestSuite();
@@ -28,7 +31,8 @@ describe('IgxGrid - Cell component', () => {
                 CellEditingScrollTestComponent,
                 ConditionalCellStyleTestComponent,
                 ColumnEditablePropertyTestComponent,
-                GridColumnWidthsComponent
+                GridColumnWidthsComponent,
+                SelectionWithTransactionsComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
@@ -90,9 +94,9 @@ describe('IgxGrid - Cell component', () => {
 
         expect(spy.calls.count()).toEqual(1);
 
-        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter'}));
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
         fix.detectChanges();
-        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape'}));
+        cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
         fix.detectChanges();
 
         expect(spy.calls.count()).toEqual(1);
@@ -206,7 +210,7 @@ describe('IgxGrid - Cell component', () => {
 
         // should attach 'doubletap'
         expect(addListenerSpy.calls.count()).toBeGreaterThan(1);
-        expect(addListenerSpy).toHaveBeenCalledWith(firstCell.nativeElement, 'doubletap', firstCell.onDoubleClick, { cssProps: { } });
+        expect(addListenerSpy).toHaveBeenCalledWith(firstCell.nativeElement, 'doubletap', firstCell.onDoubleClick, { cssProps: {} });
 
         spyOn(grid.onDoubleClick, 'emit').and.callThrough();
 
@@ -528,7 +532,7 @@ describe('IgxGrid - Cell component', () => {
                 UIInteractions.sendInput(editTemplate, 9);
                 fixture.detectChanges();
 
-                expect (() => previousCell.onClick(new MouseEvent('click'))).not.toThrow();
+                expect(() => previousCell.onClick(new MouseEvent('click'))).not.toThrow();
             });
 
             it('should exit edit mode on sorting', () => {
@@ -550,7 +554,7 @@ describe('IgxGrid - Cell component', () => {
             });
 
             it('should update correct cell when sorting is applied', () => {
-                grid.sort( {fieldName: 'age',  dir: SortingDirection.Desc, ignoreCase: false});
+                grid.sort({ fieldName: 'age', dir: SortingDirection.Desc, ignoreCase: false });
                 fixture.detectChanges();
 
                 const cell = grid.getCellByColumn(0, 'fullName');
@@ -959,17 +963,17 @@ describe('IgxGrid - Cell component', () => {
     }));
 
     it('should not make last column smaller when vertical scrollbar is on the right of last cell',
-    fakeAsync(/** height/width setter rAF */() => {
-        GridColumnWidthsComponent.COLUMN_WIDTH = '30px';
-        const fix = TestBed.createComponent(GridColumnWidthsComponent);
-        fix.detectChanges();
-        const grid = fix.componentInstance.instance;
+        fakeAsync(/** height/width setter rAF */() => {
+            GridColumnWidthsComponent.COLUMN_WIDTH = '30px';
+            const fix = TestBed.createComponent(GridColumnWidthsComponent);
+            fix.detectChanges();
+            const grid = fix.componentInstance.instance;
 
-        const lastColumnCells = grid.columns[grid.columns.length - 1].cells;
-        lastColumnCells.forEach(function (item) {
-            expect(item.width).toEqual('30px');
-        });
-    }));
+            const lastColumnCells = grid.columns[grid.columns.length - 1].cells;
+            lastColumnCells.forEach(function (item) {
+                expect(item.width).toEqual('30px');
+            });
+        }));
 
     it('should not make last column smaller when vertical scrollbar is on the left of last cell', async () => {
         GridColumnWidthsComponent.COLUMN_WIDTH = '500px';
@@ -1024,6 +1028,54 @@ describe('IgxGrid - Cell component', () => {
         expect(columns[4].editable).toBeFalsy();
         expect(columns[5].editable).toBeFalsy();
     }));
+
+    // Bug #5855
+    fit('should apply proper style on cell editing when new value equals zero or false', () => {
+        const fixture = TestBed.createComponent(SelectionWithTransactionsComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        grid.getColumnByName('ParentID').hidden = true;
+        grid.getColumnByName('Name').hidden = true;
+        grid.getColumnByName('HireDate').hidden = true;
+        grid.getColumnByName('Age').editable = true;
+        grid.getColumnByName('OnPTO').editable = true;
+        fixture.detectChanges();
+
+        let cell = grid.getCellByColumn(0, 'Age');
+        let cellDomPK = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS_NUMBER_FORMAT))[1];
+
+        cellDomPK.triggerEventHandler('dblclick', {});
+        fixture.detectChanges();
+        expect(cell.editMode).toBe(true);
+
+        let editTemplate = cellDomPK.query(By.css('input[type=\'number\']'));
+        UIInteractions.sendInput(editTemplate, 0);
+        fixture.detectChanges();
+        UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomPK.nativeElement, true);
+        fixture.detectChanges();
+
+        expect(cell.editMode).toBe(false);
+        expect(cell.value).toBe(0);
+        expect(cell.nativeElement.classList).toContain(EDITED_CELL_CSS_CLASS);
+
+        cell = grid.getCellByColumn(1, 'OnPTO');
+        cellDomPK = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[5];
+
+        cellDomPK.triggerEventHandler('dblclick', {});
+        fixture.detectChanges();
+        expect(cell.editMode).toBe(true);
+
+        editTemplate = cellDomPK.query(By.css('.igx-checkbox')).query(By.css('.igx-checkbox__label'));
+        editTemplate.nativeElement.click();
+        fixture.detectChanges();
+        UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomPK.nativeElement, true);
+        fixture.detectChanges();
+
+        expect(cell.editMode).toBe(false);
+        expect(cell.value).toBe(false);
+        expect(cell.nativeElement.classList).toContain(EDITED_CELL_CSS_CLASS);
+    });
 });
 
 @Component({
@@ -1286,7 +1338,7 @@ export class ConditionalCellStyleTestComponent implements OnInit {
             { field: 'ProductID', width: 100, cellClasses: this.cellClasses },
             { field: 'ProductName', width: 200, cellClasses: this.cellClasses1 },
             { field: 'InStock', width: 150, cellClasses: this.cellClasses1 },
-            { field: 'UnitsInStock', width: 150, cellClasses: {'test1' : true } },
+            { field: 'UnitsInStock', width: 150, cellClasses: { 'test1': true } },
             { field: 'OrderDate', width: 150, cellClasses: this.cellClasses1 }
         ];
         this.data = SampleTestData.foodProductDataExtended();
