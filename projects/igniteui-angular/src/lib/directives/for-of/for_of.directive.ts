@@ -30,7 +30,7 @@ import { HVirtualHelperComponent } from './horizontal.virtual.helper.component';
 import { VirtualHelperComponent } from './virtual.helper.component';
 import { IgxScrollInertiaModule } from './../scroll-inertia/scroll_inertia.directive';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from './for_of.sync.service';
-import { VirtualHelperBase } from './base.helper.component';
+import { VirtualHelperBaseDirective } from './base.helper.component';
 
 /**
  *  @publicApi
@@ -209,7 +209,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     public onChunkPreload = new EventEmitter<IForOfState>();
     protected func;
     protected _sizesCache: number[] = [];
-    protected scrollComponent: VirtualHelperBase;
+    protected scrollComponent: VirtualHelperBaseDirective;
     protected _differ: IterableDiffer<T> | null = null;
     protected _trackByFn: TrackByFunction<T>;
     protected heightCache = [];
@@ -1598,7 +1598,8 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
  * @hidden
  */
 @NgModule({
-    declarations: [IgxForOfDirective, IgxGridForOfDirective, DisplayContainerComponent, VirtualHelperComponent, HVirtualHelperComponent],
+    declarations: [IgxForOfDirective, IgxGridForOfDirective, DisplayContainerComponent, VirtualHelperComponent,
+         HVirtualHelperComponent, VirtualHelperBaseDirective],
     entryComponents: [DisplayContainerComponent, VirtualHelperComponent, HVirtualHelperComponent],
     exports: [IgxForOfDirective, IgxGridForOfDirective],
     imports: [IgxScrollInertiaModule, CommonModule]

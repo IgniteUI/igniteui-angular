@@ -4,10 +4,14 @@ import {
     HostListener,
     ElementRef,
     ChangeDetectorRef,
-    OnDestroy
+    OnDestroy,
+    Directive
 } from '@angular/core';
 
-export abstract class VirtualHelperBase implements OnDestroy {
+@Directive({
+    selector: '[igxVirtualHelperBase]'
+})
+export class VirtualHelperBaseDirective implements OnDestroy {
     public scrollAmount = 0;
 
     public _size = 0;

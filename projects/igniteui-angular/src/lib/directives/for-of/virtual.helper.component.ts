@@ -1,11 +1,11 @@
 import { Component, ElementRef, HostBinding, Input, ViewChild, ViewContainerRef, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { VirtualHelperBase } from './base.helper.component';
+import { VirtualHelperBaseDirective } from './base.helper.component';
 
 @Component({
     selector: 'igx-virtual-helper',
     template: '<div #container class="igx-vhelper__placeholder-content" [style.height.px]="size"></div>'
 })
-export class VirtualHelperComponent extends VirtualHelperBase implements OnDestroy  {
+export class VirtualHelperComponent extends VirtualHelperBaseDirective implements OnDestroy  {
     @HostBinding('scrollTop')
     public scrollTop;
 
