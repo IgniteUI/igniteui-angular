@@ -1,18 +1,24 @@
 import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnComponent,  IgxGridComponent, IgxGridModule, IGridEditEventArgs } from './index';
+import { IgxColumnComponent, IgxGridComponent, IgxGridModule, IGridEditEventArgs } from './index';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { ColumnEditablePropertyTestComponent } from './cell.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { CellEditingTestComponent, CellEditingScrollTestComponent } from '../../test-utils/grid-samples.spec';
+import {
+    CellEditingTestComponent, CellEditingScrollTestComponent,
+    SelectionWithTransactionsComponent
+} from '../../test-utils/grid-samples.spec';
+import { getIdentifierPositions } from 'projects/igniteui-angular/migrations/common/tsUtils';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
+const CELL_CSS_CLASS_NUMBER_FORMAT = '.igx-grid__td--number';
 const CELL_CLASS_IN_EDIT_MODE = 'igx-grid__td--editing';
+const EDITED_CELL_CSS_CLASS = 'igx-grid__td--edited';
 
 describe('IgxGrid - Cell Editing #grid', () => {
     configureTestSuite();
@@ -21,7 +27,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
             declarations: [
                 CellEditingTestComponent,
                 CellEditingScrollTestComponent,
-                ColumnEditablePropertyTestComponent
+                ColumnEditablePropertyTestComponent,
+                SelectionWithTransactionsComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
@@ -654,7 +661,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             spyOn(grid.onCellEdit, 'emit').and.callThrough();
             grid.onCellEdit.subscribe((e: IGridEditEventArgs) => {
                 if (e.cellID.columnID === 0) {
-                    grid.updateCell(1, e.rowID, 'age' );
+                    grid.updateCell(1, e.rowID, 'age');
                 }
             });
 
@@ -703,8 +710,10 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerKeyDownEvtUponElem('escape', cell.nativeElement, true);
             fixture.detectChanges();
 
-            const cellArgs: IGridEditEventArgs = { cellID: cell.cellID,
-                rowID: cell.row.rowID, oldValue: 'John Brown', newValue: 'New Name', cancel: false };
+            const cellArgs: IGridEditEventArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID, oldValue: 'John Brown', newValue: 'New Name', cancel: false
+            };
             expect(grid.onCellEditCancel.emit).toHaveBeenCalledTimes(1);
             expect(grid.onCellEditCancel.emit).toHaveBeenCalledWith(cellArgs);
 
@@ -730,8 +739,10 @@ describe('IgxGrid - Cell Editing #grid', () => {
             UIInteractions.triggerKeyDownEvtUponElem('escape', cell.nativeElement, true);
             fixture.detectChanges();
 
-            const cellArgs: IGridEditEventArgs = { cellID: cell.cellID,
-                rowID: cell.row.rowID, oldValue: 'John Brown', newValue: 'New Name', cancel: true };
+            const cellArgs: IGridEditEventArgs = {
+                cellID: cell.cellID,
+                rowID: cell.row.rowID, oldValue: 'John Brown', newValue: 'New Name', cancel: true
+            };
             expect(grid.onCellEditCancel.emit).toHaveBeenCalledTimes(1);
             expect(grid.onCellEditCancel.emit).toHaveBeenCalledWith(cellArgs);
 
@@ -861,4 +872,52 @@ describe('IgxGrid - Cell Editing #grid', () => {
         expect(columns[4].editable).toBeFalsy();
         expect(columns[5].editable).toBeFalsy();
     }));
+
+    // Bug #5855
+    it('should apply proper style on cell editing when new value equals zero or false', () => {
+        const fixture = TestBed.createComponent(SelectionWithTransactionsComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+        grid.getColumnByName('ParentID').hidden = true;
+        grid.getColumnByName('Name').hidden = true;
+        grid.getColumnByName('HireDate').hidden = true;
+        grid.getColumnByName('Age').editable = true;
+        grid.getColumnByName('OnPTO').editable = true;
+        fixture.detectChanges();
+
+        let cell = grid.getCellByColumn(0, 'Age');
+        let cellDomPK = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS_NUMBER_FORMAT))[1];
+
+        cellDomPK.triggerEventHandler('dblclick', {});
+        fixture.detectChanges();
+        expect(cell.editMode).toBe(true);
+
+        let editTemplate = cellDomPK.query(By.css('input[type=\'number\']'));
+        UIInteractions.sendInput(editTemplate, 0);
+        fixture.detectChanges();
+        UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomPK.nativeElement, true);
+        fixture.detectChanges();
+
+        expect(cell.editMode).toBe(false);
+        expect(cell.value).toBe(0);
+        expect(cell.nativeElement.classList).toContain(EDITED_CELL_CSS_CLASS);
+
+        cell = grid.getCellByColumn(1, 'OnPTO');
+        cellDomPK = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[5];
+
+        cellDomPK.triggerEventHandler('dblclick', {});
+        fixture.detectChanges();
+        expect(cell.editMode).toBe(true);
+
+        editTemplate = cellDomPK.query(By.css('.igx-checkbox')).query(By.css('.igx-checkbox__label'));
+        editTemplate.nativeElement.click();
+        fixture.detectChanges();
+        UIInteractions.triggerKeyDownEvtUponElem('enter', cellDomPK.nativeElement, true);
+        fixture.detectChanges();
+
+        expect(cell.editMode).toBe(false);
+        expect(cell.value).toBe(false);
+        expect(cell.nativeElement.classList).toContain(EDITED_CELL_CSS_CLASS);
+    });
 });

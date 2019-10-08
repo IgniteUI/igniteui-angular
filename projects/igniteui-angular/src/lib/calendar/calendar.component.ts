@@ -476,7 +476,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
      * @hidden
      */
     public activeViewDecadeKB(event, args: Date) {
-        super.activeViewDecadeKB(event);
+        super.activeViewDecadeKB(event, args);
 
         requestAnimationFrame(() => {
             if (this.dacadeView) {

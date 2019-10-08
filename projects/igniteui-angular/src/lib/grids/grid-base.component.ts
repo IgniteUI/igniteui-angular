@@ -525,10 +525,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /**
      * Sets the current page index.
+     * ```html
      * <igx-grid #grid [data]="Data" [paging]="true" [page]="5" [autoGenerate]="true"></igx-grid>
-     *
+     *```
      * Two-way data binding.
+     * ```html
      * <igx-grid #grid [data]="Data" [paging]="true" [(page)]="model.page" [autoGenerate]="true"></igx-grid>
+     * ```
+	 * @memberof IgxGridBaseComponent
      */
     set page(val: number) {
         if (val === this._page || val < 0 || val > this.totalPages - 1) {
@@ -2252,7 +2256,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * for the built-in column hiding UI of the`IgxColumnComponent`.
      * ```typescript
      * const hiddenColText = this.grid.hiddenColumnsText;
-     * ``
+     * ```
+	 * @memberof IgxGridBaseComponent
      */
     @WatchChanges()
     @Input()
@@ -4138,7 +4143,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * Returns how many times the grid contains the string.
      * ```typescript
      * this.grid.findPrev("financial");
-     * ````
+     * ```
      * @param text the string to search.
      * @param caseSensitive optionally, if the search should be case sensitive (defaults to false).
      * @param exactMatch optionally, if the text should match the entire value (defaults to false).
@@ -4681,11 +4686,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
             if (added || removed) {
                 this.summaryService.clearSummaryCache();
-                this.notifyChanges(true);
-                this.cdr.markForCheck();
+                Promise.resolve().then(() => {
+                    // `onColumnsChanged` can be executed midway a current detectChange cycle and markForCheck will be ignored then.
+                    // This ensures that we will wait for the current cycle to end so we can trigger a new one and ngDoCheck to fire.
+                    this.notifyChanges(true);
+                });
             }
         }
-        // this.notifyChanges();
     }
 
     /**
