@@ -45,7 +45,7 @@ export class IgxSummaryOperand {
      *   constructor() {
      *     super();
      *   }
-     *   public operate(data?: any[]): IgxSummaryResult[] {
+     *   public operate(data: any[], fieldName: string): IgxSummaryResult[] {
      *     const result = [];
      *     result.push({
      *       key: "test",
@@ -133,7 +133,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      *   constructor() {
      *     super();
      *   }
-     *   public operate(data?: any[]): IgxSummaryResult[] {
+     *   public operate(data: any[], fieldName: string): IgxSummaryResult[] {
      *     const result = [];
      *     result.push({
      *       key: "avg",
@@ -152,7 +152,7 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * ```
      * @memberof IgxNumberSummaryOperand
      */
-    public operate(data: any[] = [], fieldName?: string): IgxSummaryResult[] {
+    public operate(data: any[] = [], fieldName: string): IgxSummaryResult[] {
         const result = super.operate(data, fieldName);
         result.push({
             key: 'min',
@@ -219,7 +219,7 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      *   constructor() {
      *     super();
      *   }
-     *   public operate(data?: any[]): IgxSummaryResult[] {
+     *   public operate(data: any[], fieldName: string): IgxSummaryResult[] {
      *     const result = [];
      *     result.push({
      *       key: "latest",
@@ -233,7 +233,7 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      * ```
      * @memberof IgxDateSummaryOperand
      */
-    public operate(data: any[] = [], fieldName?: string): IgxSummaryResult[] {
+    public operate(data: any[] = [], fieldName: string): IgxSummaryResult[] {
         const result = super.operate(data, fieldName);
         result.push({
             key: 'earliest',
