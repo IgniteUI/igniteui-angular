@@ -233,19 +233,19 @@ describe('IgxGrid - Column properties #grid', () => {
         fix.detectChanges();
 
         expect(grid.calcWidth).toBe(600);
-        expect(grid.columns[0].width).toBe('300');
-        expect(!grid.columns[0].widthSetByUser);
-        expect(grid.columns[1].width).toBe('300');
-        expect(!grid.columns[1].widthSetByUser);
-        grid.columns[0].hidden = true;
+        expect(grid.allColumns[0].width).toBe('300');
+        expect(!grid.allColumns[0].widthSetByUser);
+        expect(grid.allColumns[1].width).toBe('300');
+        expect(!grid.allColumns[1].widthSetByUser);
+        grid.allColumns[0].hidden = true;
         fix.detectChanges();
 
-        expect(grid.columns[1].width).toBe('600');
-        grid.columns[0].hidden = false;
+        expect(grid.allColumns[1].width).toBe('600');
+        grid.allColumns[0].hidden = false;
         fix.detectChanges();
 
-        expect(grid.columns[0].width).toBe('300');
-        expect(grid.columns[1].width).toBe('300');
+        expect(grid.allColumns[0].width).toBe('300');
+        expect(grid.allColumns[1].width).toBe('300');
     });
 
     it('should support passing templates through the markup as an input property', () => {
@@ -275,7 +275,7 @@ describe('IgxGrid - Column properties #grid', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
-        const col = grid.columns[1];
+        const col = grid.allColumns[1];
         expect(col.formatter).toBeUndefined();
         const rowCount = grid.rowList.length;
         for (let i = 0; i < rowCount; i++) {
@@ -310,7 +310,7 @@ describe('IgxGrid - Column properties #grid', () => {
         grid.allowFiltering = true;
         fix.detectChanges();
 
-        expect(grid.columns.length).toBe(7);
+        expect(grid.allColumns.length).toBe(7);
 
         grid.filter('CompanyName', 'NoItemsFound', IgxStringFilteringOperand.instance().condition('contains'), true);
         fix.detectChanges();
@@ -323,7 +323,7 @@ describe('IgxGrid - Column properties #grid', () => {
         }).not.toThrow();
 
         expect(grid.rowList.length).toBeGreaterThan(10);
-        expect(grid.columns.length).toBe(4);
+        expect(grid.allColumns.length).toBe(4);
     });
 
     it('should clear grouping when a columns is removed dynamically', () => {
@@ -355,7 +355,7 @@ describe('IgxGrid - Column properties #grid', () => {
         groupRows = grid.nativeElement.querySelectorAll('igx-grid-groupby-row');
 
         expect(groupRows.length).toBe(0);
-        expect(grid.columns.length).toBe(4);
+        expect(grid.allColumns.length).toBe(4);
     });
 });
 

@@ -187,7 +187,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
             verifySearchResult(fixNativeElement, 6, 0);
 
             // Apply asc sorting
-            treeGrid.columns.filter(c => c.field === 'JobTitle')[0].sortable = true;
+            treeGrid.allColumns.filter(c => c.field === 'JobTitle')[0].sortable = true;
             fix.detectChanges();
             treeGrid.sort({fieldName: 'JobTitle', dir: SortingDirection.Asc, ignoreCase: true });
             fix.detectChanges();
@@ -203,7 +203,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
 
         it('Should update search highlights when clearing sorting', () => {
             // Apply asc sorting
-            treeGrid.columns.filter(c => c.field === 'JobTitle')[0].sortable = true;
+            treeGrid.allColumns.filter(c => c.field === 'JobTitle')[0].sortable = true;
             fix.detectChanges();
             treeGrid.sort({fieldName: 'JobTitle', dir: SortingDirection.Asc, ignoreCase: true });
             fix.detectChanges();
@@ -230,7 +230,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
             verifySearchResult(cell.nativeElement, 1, 0);
 
             // Pin column
-            const column = treeGrid.columns.filter(c => c.field === 'Name')[0];
+            const column = treeGrid.allColumns.filter(c => c.field === 'Name')[0];
             column.pinned = true;
             fix.detectChanges();
 
@@ -258,7 +258,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
             verifySearchResult(cell.nativeElement, 1, 0);
 
             // Hide 'Age' column
-            const column = treeGrid.columns.filter(c => c.field === 'Age')[0];
+            const column = treeGrid.allColumns.filter(c => c.field === 'Age')[0];
             column.hidden = true;
             fix.detectChanges();
 
@@ -280,7 +280,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
             verifySearchResult(cell.nativeElement, 1, 0);
 
             // Hide 'Name' column
-            const column = treeGrid.columns.filter(c => c.field === 'Name')[0];
+            const column = treeGrid.allColumns.filter(c => c.field === 'Name')[0];
             column.hidden = true;
             fix.detectChanges();
 
@@ -324,7 +324,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
             treeGrid = fix.componentInstance.treeGrid;
             treeGrid.expansionDepth = 0;
             treeGrid.height = '400px';
-            treeGrid.columns[3].hasSummary = false;
+            treeGrid.allColumns[3].hasSummary = false;
             fix.detectChanges();
         });
 

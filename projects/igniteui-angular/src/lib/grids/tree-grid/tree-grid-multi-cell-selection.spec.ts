@@ -252,7 +252,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 3, 9, 2, 4);
 
             for (let i = 4; i > 2; i--) {
-                cell = treeGrid.getCellByColumn(3, treeGrid.columns[i].field);
+                cell = treeGrid.getCellByColumn(3, treeGrid.allColumns[i].field);
                 UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
                 await wait(30);
                 fix.detectChanges();
@@ -1061,7 +1061,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         expect(startCell.focused).toBe(true);
 
         for (let i = 5; i < 7; i++) {
-            const cell = treeGrid.getCellByColumn(i, treeGrid.columns[i - 3].field);
+            const cell = treeGrid.getCellByColumn(i, treeGrid.allColumns[i - 3].field);
             UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
             detect();
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, i, 1, i - 3);
@@ -1075,7 +1075,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         }
 
         for (let i = 2; i >= 0; i--) {
-            const cell = treeGrid.getCellByColumn(1, treeGrid.columns[i].field);
+            const cell = treeGrid.getCellByColumn(1, treeGrid.allColumns[i].field);
             UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
             detect();
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, 1, 1, i);
@@ -1089,7 +1089,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         }
 
         for (let i = 8; i > 6; i--) {
-            const cell = treeGrid.getCellByColumn(i, treeGrid.columns[9 - i].field);
+            const cell = treeGrid.getCellByColumn(i, treeGrid.allColumns[9 - i].field);
             UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
             detect();
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, i, 1, 9 - i);

@@ -16,6 +16,7 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridFilteringComponent, CustomFilter } from '../../test-utils/grid-samples.spec';
 import { ExpressionUI } from '../filtering/grid-filtering.service';
+import { wait } from '../../test-utils/ui-interactions.spec';
 
 describe('IgxGrid - Filtering actions #grid', () => {
     configureTestSuite();
@@ -387,7 +388,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         grid.filterGlobal('some', IgxStringFilteringOperand.instance().condition('contains'));
         fix.detectChanges();
 
-        expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(grid.columns.length);
+        expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(grid.allColumns.length);
         expect(grid.rowList.length).toEqual(1);
     }));
 

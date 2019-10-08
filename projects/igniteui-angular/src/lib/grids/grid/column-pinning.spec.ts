@@ -207,17 +207,17 @@ describe('Column Pinning UI #grid', () => {
                 currentArgs = args;
             });
 
-            grid.columns[0].pin();
+            grid.allColumns[0].pin();
             expect(counter).toBe(1);
             expect(currentArgs.column.field).toBe('ID');
             expect(currentArgs.insertAtIndex).toBe(0);
             expect(currentArgs.isPinned).toBe(true);
 
             // onColumnPinning should not be fired if column is already pinned
-            grid.columns[0].pin();
+            grid.allColumns[0].pin();
             expect(counter).toBe(1);
 
-            grid.columns[0].unpin();
+            grid.allColumns[0].unpin();
             expect(counter).toBe(2);
             expect(currentArgs.column.field).toBe('ID');
             expect(currentArgs.insertAtIndex).toBe(0);
@@ -230,9 +230,9 @@ describe('Column Pinning UI #grid', () => {
             checkboxes[1].click();
             checkboxes[2].click();
 
-            verifyColumnIsPinned(grid.columns[0], true, 2);
-            verifyColumnIsPinned(grid.columns[1], true, 2);
-            verifyColumnIsPinned(grid.columns[2], false, 2);
+            verifyColumnIsPinned(grid.allColumns[0], true, 2);
+            verifyColumnIsPinned(grid.allColumns[1], true, 2);
+            verifyColumnIsPinned(grid.allColumns[2], false, 2);
 
         }));
 
@@ -241,23 +241,23 @@ describe('Column Pinning UI #grid', () => {
             checkboxes[0].click();
             checkboxes[1].click();
 
-            grid.columns[1].hidden = true;
+            grid.allColumns[1].hidden = true;
             fix.detectChanges();
 
             expect(grid.pinnedColumns.length).toBe(1);
 
             checkboxes = GridFunctions.getCheckboxInputs(columnChooserElement);
             checkboxes[2].click();
-            verifyColumnIsPinned(grid.columns[2], false, 1);
+            verifyColumnIsPinned(grid.allColumns[2], false, 1);
 
             checkboxes[0].click();
-            verifyColumnIsPinned(grid.columns[0], false, 0);
+            verifyColumnIsPinned(grid.allColumns[0], false, 0);
 
-            grid.columns[1].hidden = false;
+            grid.allColumns[1].hidden = false;
             fix.detectChanges();
 
             verifyCheckbox('ProductName', true, false, columnChooserElement, fix);
-            verifyColumnIsPinned(grid.columns[1], true, 1);
+            verifyColumnIsPinned(grid.allColumns[1], true, 1);
         }));
 
         it('- should size cells correctly when there is a large pinned templated column', fakeAsync(/** height/width setter rAF */() => {
@@ -302,24 +302,24 @@ describe('Column Pinning UI #grid', () => {
 
             fix.detectChanges();
             verifyCheckbox(columnName, true, false, columnChooserElement, fix);
-            expect(grid.columns[1].allChildren.every((col) => col.pinned)).toBe(true);
+            expect(grid.allColumns[1].allChildren.every((col) => col.pinned)).toBe(true);
         });
 
 
         it('- unpinning group column unpins all children.', () => {
             const columnName = 'General Information';
-            grid.columns[0].unpin();
-            grid.columns[1].pin();
+            grid.allColumns[0].unpin();
+            grid.allColumns[1].pin();
             fix.detectChanges();
 
             verifyCheckbox(columnName, true, false, columnChooserElement, fix);
-            expect(grid.columns[1].allChildren.every((col) => col.pinned)).toBe(true);
+            expect(grid.allColumns[1].allChildren.every((col) => col.pinned)).toBe(true);
 
             GridFunctions.getCheckboxInput(columnName, columnChooserElement, fix).click();
 
             fix.detectChanges();
             verifyCheckbox(columnName, false, false, columnChooserElement, fix);
-            expect(grid.columns[1].allChildren.every((col) => !col.pinned)).toBe(true);
+            expect(grid.allColumns[1].allChildren.every((col) => !col.pinned)).toBe(true);
         });
     });
 

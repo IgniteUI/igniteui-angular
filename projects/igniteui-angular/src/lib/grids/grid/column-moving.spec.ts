@@ -70,8 +70,8 @@ describe('IgxGrid - Column Moving #grid', () => {
         it('Should reorder only movable columns when dropping the ghost image on an interactive area.', (async() => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
-            expect(grid.columns[0].movable).toBeTruthy();
-            expect(grid.columns[2].movable).toBeFalsy();
+            expect(grid.allColumns[0].movable).toBeTruthy();
+            expect(grid.allColumns[2].movable).toBeFalsy();
 
             // step 1 - verify columns are not reordered when
             // moving a column that is not movable
@@ -181,7 +181,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulateMouseEvent('mouseup', resizer, 300, 5);
             fixture.detectChanges();
 
-            expect(grid.columns[0].width).toEqual('250px');
+            expect(grid.allColumns[0].width).toEqual('250px');
 
 
             // step 3 - verify sorting is not broken

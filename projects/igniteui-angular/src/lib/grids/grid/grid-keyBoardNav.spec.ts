@@ -883,7 +883,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
             grid.primaryKey = '0';
             grid.rowEditable = true;
-            grid.columns.every(c => c.editable = true);
+            grid.allColumns.every(c => c.editable = true);
 
             grid.getColumnByName('2').pinned = true;
             grid.getColumnByName('3').pinned = true;

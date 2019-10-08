@@ -106,7 +106,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         it('should transform a non-tree column into a tree column when hiding the original tree-column', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
 
-            const column = treeGrid.columns.filter(c => c.field === 'ID')[0];
+            const column = treeGrid.allColumns.filter(c => c.field === 'ID')[0];
             column.hidden = true;
             fix.detectChanges();
 
@@ -124,7 +124,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.pinColumn('Age');
             fix.detectChanges();
 
-            const column = treeGrid.columns.filter(c => c.field === 'Age')[0];
+            const column = treeGrid.allColumns.filter(c => c.field === 'Age')[0];
             column.hidden = true;
             fix.detectChanges();
 
@@ -135,8 +135,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 4);
 
             // Move tree-column
-            const sourceColumn = treeGrid.columns.filter(c => c.field === 'ID')[0];
-            const targetColumn = treeGrid.columns.filter(c => c.field === 'HireDate')[0];
+            const sourceColumn = treeGrid.allColumns.filter(c => c.field === 'ID')[0];
+            const targetColumn = treeGrid.allColumns.filter(c => c.field === 'HireDate')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn);
             fix.detectChanges();
 
@@ -220,7 +220,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         it('should transform a non-tree column into a tree column when hiding the original tree-column', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
 
-            const column = treeGrid.columns.filter(c => c.field === 'ID')[0];
+            const column = treeGrid.allColumns.filter(c => c.field === 'ID')[0];
             column.hidden = true;
             fix.detectChanges();
 
@@ -238,7 +238,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.pinColumn('Age');
             fix.detectChanges();
 
-            const column = treeGrid.columns.filter(c => c.field === 'Age')[0];
+            const column = treeGrid.allColumns.filter(c => c.field === 'Age')[0];
             column.hidden = true;
             fix.detectChanges();
 
@@ -249,8 +249,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             TreeGridFunctions.verifyTreeColumn(fix, 'ID', 5);
 
             // Move tree-column
-            const sourceColumn = treeGrid.columns.filter(c => c.field === 'ID')[0];
-            const targetColumn = treeGrid.columns.filter(c => c.field === 'JobTitle')[0];
+            const sourceColumn = treeGrid.allColumns.filter(c => c.field === 'ID')[0];
+            const targetColumn = treeGrid.allColumns.filter(c => c.field === 'JobTitle')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn);
             fix.detectChanges();
 
@@ -1165,7 +1165,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         it('Should transform a hidden column to a tree column when it becomes visible and it is part of a column group', () => {
             TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'ID', 4);
 
-            const column = treeGrid.columns.filter(c => c.field === 'ID')[0];
+            const column = treeGrid.allColumns.filter(c => c.field === 'ID')[0];
             column.hidden = true;
             fix.detectChanges();
 
@@ -1179,13 +1179,13 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
         it('Should transform a hidden column to a tree column when all columns from left-most group are hidden', () => {
             // hide Name column so that the tested columns (ID and HireDate) are not part of the same group
-            const columnName = treeGrid.columns.filter(c => c.field === 'Name')[0];
+            const columnName = treeGrid.allColumns.filter(c => c.field === 'Name')[0];
             columnName.hidden = true;
             fix.detectChanges();
 
             TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'ID', 3);
 
-            const column = treeGrid.columns.filter(c => c.field === 'ID')[0];
+            const column = treeGrid.allColumns.filter(c => c.field === 'ID')[0];
             column.hidden = true;
             fix.detectChanges();
 
@@ -1201,8 +1201,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'ID', 4);
 
             // Move tree-column
-            const sourceColumn = treeGrid.columns.filter(c => c.field === 'ID')[0];
-            const targetColumn = treeGrid.columns.filter(c => c.field === 'Name')[0];
+            const sourceColumn = treeGrid.allColumns.filter(c => c.field === 'ID')[0];
+            const targetColumn = treeGrid.allColumns.filter(c => c.field === 'Name')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn);
             fix.detectChanges();
 
@@ -1230,8 +1230,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             TreeGridFunctions.verifyTreeColumnInMultiColHeaders(fix, 'ID', 4);
 
             // Move group-column
-            const sourceColumn = treeGrid.columns.filter(c => c.header === 'General Information')[0];
-            const targetColumn = treeGrid.columns.filter(c => c.header === 'Additional Information')[0];
+            const sourceColumn = treeGrid.allColumns.filter(c => c.header === 'General Information')[0];
+            const targetColumn = treeGrid.allColumns.filter(c => c.header === 'Additional Information')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn);
             fix.detectChanges();
 

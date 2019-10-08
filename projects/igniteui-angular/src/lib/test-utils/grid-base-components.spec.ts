@@ -120,7 +120,7 @@ export class GridWithToolbarComponent extends GridWithSizeComponent {
 
 @Component({
     template: `<div>
-    <igx-column-hiding [columns]="grid.columns" *ngIf="showInline" [disableFilter]="disableFilter"></igx-column-hiding>
+    <igx-column-hiding [columns]="grid.allColumns" *ngIf="showInline" [disableFilter]="disableFilter"></igx-column-hiding>
     ${ GridTemplateStrings.declareGrid(` #grid [height]="height" [width]="width"`, ``, ColumnDefinitions.productHidable) }
     </div>`
 })
@@ -145,7 +145,7 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
 
 @Component({
     template: `<div>
-    <igx-column-hiding [columns]="grid.columns" *ngIf="showInline"></igx-column-hiding>
+    <igx-column-hiding [columns]="grid.allColumns" *ngIf="showInline"></igx-column-hiding>
     ${ GridTemplateStrings.declareGrid(` #grid [height]="height" [width]="width"`, ``, ColumnDefinitions.contactInfoGroupableColumns) }
     </div>`
 })
@@ -157,7 +157,7 @@ export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
 
 @Component({
     template: `<div>
-        <igx-column-pinning [columns]="grid.columns" *ngIf="showInline" [disableFilter]="disableFilter"></igx-column-pinning>
+        <igx-column-pinning [columns]="grid.allColumns" *ngIf="showInline" [disableFilter]="disableFilter"></igx-column-pinning>
         ${GridTemplateStrings.declareGrid(`#grid [height]="height" [width]="width"`, ``, ColumnDefinitions.productFilterable)}
     </div>`
 })
@@ -205,7 +205,7 @@ export class ColumnPinningWithTemplateTestComponent extends ColumnPinningTestCom
 
 @Component({
     template: `<div>
-    <igx-column-pinning [columns]="grid.columns" *ngIf="showInline"></igx-column-pinning>
+    <igx-column-pinning [columns]="grid.allColumns" *ngIf="showInline"></igx-column-pinning>
     ${ GridTemplateStrings.declareGrid(` #grid [height]="height" `, ``, ColumnDefinitions.contactInfoGroupableColumns) }
     </div>`
 })

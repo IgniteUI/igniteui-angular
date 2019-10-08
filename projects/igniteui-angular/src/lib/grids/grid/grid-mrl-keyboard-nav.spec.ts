@@ -861,7 +861,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         UIInteractions.clickElement(cell);
         await wait();
         fix.detectChanges();
-        const dataCols = grid.columns.filter(x => !x.columnLayout);
+        const dataCols = grid.allColumns.filter(x => !x.columnLayout);
         // tab thorugh all data cols and check cells are selected/focused.
         for (let i = 1; i < dataCols.length; i++) {
             UIInteractions.triggerKeyDownWithBlur('Tab', cell.nativeElement, true);
@@ -911,7 +911,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         fix.detectChanges();
         const order = ['ID', 'ContactName', 'Address', 'Phone', 'City', 'ContactTitle', 'PostalCode'];
 
-        const dataCols = grid.columns.filter(x => !x.columnLayout);
+        const dataCols = grid.allColumns.filter(x => !x.columnLayout);
         // shift+tab through all data cols and check cells are selected/focused.
         for (let i = dataCols.length - 1; i >= 0; i--) {
             cell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
@@ -1016,7 +1016,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         UIInteractions.clickElement(cell);
         await wait();
         fix.detectChanges();
-        const dataCols = grid.columns.filter(x => !x.columnLayout);
+        const dataCols = grid.allColumns.filter(x => !x.columnLayout);
         // tab thorugh all data cols and check cells are selected/focused.
         for (let i = 1; i < dataCols.length; i++) {
            UIInteractions.triggerKeyDownWithBlur('Tab', cell.nativeElement, true);
@@ -1063,7 +1063,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         forOfDir.scrollTo(2);
         await wait(200);
         fix.detectChanges();
-        const dataCols = grid.columns.filter(x => !x.columnLayout);
+        const dataCols = grid.allColumns.filter(x => !x.columnLayout);
         const order = ['ID', 'ContactName', 'Address', 'Phone', 'City', 'ContactTitle', 'PostalCode'];
          // focus last
          let cell = grid.getCellByColumn(0, 'PostalCode');

@@ -2147,7 +2147,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         it('should update UI when filtering via the API.', fakeAsync(() => {
             grid.width = '1600px';
-            grid.columns[1].width = '400px';
+            grid.allColumns[1].width = '400px';
             fix.detectChanges();
 
             const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
@@ -2189,7 +2189,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('should display view more icon in filter cell if chips don\'t fit in the cell.', fakeAsync(() => {
-            grid.columns[1].width = '200px';
+            grid.allColumns[1].width = '200px';
             fix.detectChanges();
 
             let filteringCells = fix.debugElement.queryAll(By.css(FILTER_UI_CELL));
@@ -2214,7 +2214,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('Should allow setting filtering conditions through filteringExpressionsTree.', fakeAsync(() => {
-            grid.columns[1].width = '150px';
+            grid.allColumns[1].width = '150px';
             fix.detectChanges();
 
             // Add initial filtering conditions
@@ -2394,7 +2394,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         // Filtering + Resizing
         it('Should display view more indicator when column is resized so not all filters are visible.', fakeAsync(() => {
-            grid.columns[1].width = '250px';
+            grid.allColumns[1].width = '250px';
             fix.detectChanges();
 
             // Add initial filtering conditions
@@ -2448,11 +2448,11 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         // Filtering + Resizing
         it('Should correctly resize the current column that filtering the row is rendered for.', fakeAsync(() => {
-            grid.columns[1].width = '250px';
+            grid.allColumns[1].width = '250px';
             fix.detectChanges();
 
             // Enable resizing
-            grid.columns.forEach(col => col.resizable = true);
+            grid.allColumns.forEach(col => col.resizable = true);
             fix.detectChanges();
 
             const initialChips = fix.debugElement.queryAll(By.directive(IgxChipComponent));
@@ -2482,7 +2482,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         // Filtering + Resizing
         it('Should correctly render all filtering chips when column is resized so all filter are visible.', fakeAsync(() => {
-            grid.columns[2].width = '100px';
+            grid.allColumns[2].width = '100px';
             fix.detectChanges();
 
             // Add initial filtering conditions
@@ -2497,7 +2497,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             // Enable resizing
-            grid.columns.forEach(col => col.resizable = true);
+            grid.allColumns.forEach(col => col.resizable = true);
             fix.detectChanges();
             grid.cdr.detectChanges();
 
@@ -2869,7 +2869,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Ignite UI for Angular');
 
             // Hide another column and verify the filtering results remain the same.
-            const column = grid.columns.find((c) => c.field === 'Released');
+            const column = grid.allColumns.find((c) => c.field === 'Released');
             column.hidden = true;
             fix.detectChanges();
             expect(grid.rowList.length).toEqual(2);
@@ -3131,7 +3131,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         it('Should remove first condition chip when click \'clear\' button and focus \'more\' icon.', (async () => {
             grid.width = '700px';
-            grid.columns.find((c) => c.field === 'ProductName').width = '160px';
+            grid.allColumns.find((c) => c.field === 'ProductName').width = '160px';
             await wait(100);
             fix.detectChanges();
 
@@ -3182,7 +3182,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('Should update active element when click \'clear\' button of last chip and there is no \`more\` icon.', (async () => {
-            grid.columns.find((c) => c.field === 'ProductName').width = '350px';
+            grid.allColumns.find((c) => c.field === 'ProductName').width = '350px';
             await wait(100);
             fix.detectChanges();
 
@@ -3379,7 +3379,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
             await wait(16);
 
-            const prodNameCol = grid.columns.find((col) => col.field === 'ProductName');
+            const prodNameCol = grid.allColumns.find((col) => col.field === 'ProductName');
             GridFunctions.verifyColumnIsHidden(prodNameCol, false, 6);
 
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
@@ -3629,7 +3629,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should sort the grid properly, when clicking Ascending/Descending buttons.', fakeAsync(() => {
-            grid.columns[2].sortable = true;
+            grid.allColumns[2].sortable = true;
             fix.detectChanges();
 
             const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
@@ -3651,7 +3651,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should toggle correct Ascending/Descending button on opening when sorting is applied.', fakeAsync(() => {
-            grid.columns[2].sortable = true;
+            grid.allColumns[2].sortable = true;
             grid.sortingExpressions.push({ dir: SortingDirection.Asc, fieldName: 'Downloads' });
             fix.detectChanges();
 
@@ -3673,7 +3673,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should move column left/right when clicking buttons.', fakeAsync(() => {
-            grid.columns[2].movable = true;
+            grid.allColumns[2].movable = true;
             fix.detectChanges();
 
             const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
@@ -3692,23 +3692,23 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             moveLeft.click();
             fix.detectChanges();
 
-            expect(grid.columns[2].field).toBe('ProductName');
-            expect(grid.columns[1].field).toBe('Downloads');
+            expect(grid.allColumns[2].field).toBe('ProductName');
+            expect(grid.allColumns[1].field).toBe('Downloads');
 
             moveLeft.click();
             tick();
             fix.detectChanges();
 
-            expect(grid.columns[1].field).toBe('ID');
-            expect(grid.columns[0].field).toBe('Downloads');
+            expect(grid.allColumns[1].field).toBe('ID');
+            expect(grid.allColumns[0].field).toBe('Downloads');
             expect(moveLeft).toHaveClass('igx-button--disabled');
 
             moveRight.click();
             tick();
             fix.detectChanges();
 
-            expect(grid.columns[0].field).toBe('ID');
-            expect(grid.columns[1].field).toBe('Downloads');
+            expect(grid.allColumns[0].field).toBe('ID');
+            expect(grid.allColumns[1].field).toBe('Downloads');
             expect(moveLeft).not.toHaveClass('igx-button--disabled');
         }));
 
@@ -3730,7 +3730,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should unpin column when clicking buttons.', fakeAsync(() => {
-            grid.columns[2].pinned = true;
+            grid.allColumns[2].pinned = true;
             fix.detectChanges();
 
             const headers: DebugElement[] = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
@@ -3764,7 +3764,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(1);
-            expect(grid.columns[2].hidden).toBeTruthy();
+            expect(grid.allColumns[2].hidden).toBeTruthy();
         }));
 
         it('Should not select values in list if two values with And operator are entered.', fakeAsync(() => {
@@ -4218,7 +4218,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick(200);
             fix.detectChanges();
 
-            const column = grid.columns.find((col) => col.field === 'ProductName');
+            const column = grid.allColumns.find((col) => col.field === 'ProductName');
             GridFunctions.verifyColumnIsPinned(column, true, 1);
 
             // Open excel style filtering component and UNpin 'ProductName' column through header icon
@@ -4236,7 +4236,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick(200);
             fix.detectChanges();
 
-            const column = grid.columns.find((col) => col.field === 'ProductName');
+            const column = grid.allColumns.find((col) => col.field === 'ProductName');
             GridFunctions.verifyColumnIsHidden(column, false, 6);
 
             // Open excel style filtering component and hide 'ProductName' column through header icon
@@ -4250,12 +4250,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should move pinned column correctly by using move buttons', fakeAsync(() => {
-            const productNameCol = grid.columns.find((col) => col.field === 'ProductName');
+            const productNameCol = grid.allColumns.find((col) => col.field === 'ProductName');
             productNameCol.movable = true;
             productNameCol.pinned = true;
             fix.detectChanges();
 
-            const idCol = grid.columns.find((col) => col.field === 'ID');
+            const idCol = grid.allColumns.find((col) => col.field === 'ID');
             idCol.movable = true;
             idCol.pinned = true;
             fix.detectChanges();
@@ -4302,12 +4302,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should move unpinned column correctly by using move buttons', fakeAsync(() => {
-            const productNameCol = grid.columns.find((col) => col.field === 'ProductName');
+            const productNameCol = grid.allColumns.find((col) => col.field === 'ProductName');
             productNameCol.movable = true;
             productNameCol.pinned = true;
             fix.detectChanges();
 
-            const downloadsCol = grid.columns.find((col) => col.field === 'Downloads');
+            const downloadsCol = grid.allColumns.find((col) => col.field === 'Downloads');
             downloadsCol.movable = true;
             fix.detectChanges();
             expect(GridFunctions.getColumnHeaderByIndex(fix, 0).innerText).toBe('ProductName');
@@ -4397,7 +4397,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
         it('display density is properly applied on the excel style filtering component', fakeAsync(() => {
             const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
-            const column = grid.columns.find((c) => c.field === 'ProductName');
+            const column = grid.allColumns.find((c) => c.field === 'ProductName');
             column.sortable = true;
             column.movable = true;
             fix.detectChanges();
@@ -4434,7 +4434,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
         it('display density is properly applied on the excel style custom filtering dialog', fakeAsync(() => {
             const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
-            const column = grid.columns.find((c) => c.field === 'ProductName');
+            const column = grid.allColumns.find((c) => c.field === 'ProductName');
             column.sortable = true;
             column.movable = true;
             fix.detectChanges();
@@ -4758,7 +4758,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Column formatter should skip the \'SelectAll\' list item', fakeAsync(() => {
-            grid.columns[4].formatter = (val: Date) => {
+            grid.allColumns[4].formatter = (val: Date) => {
                 return new Intl.DateTimeFormat('bg-BG').format(val);
             };
             grid.cdr.detectChanges();
@@ -5047,7 +5047,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Test prerequisites
             grid.width = '800px';
             fix.detectChanges();
-            for (const column of grid.columns) {
+            for (const column of grid.allColumns) {
                 column.width = '300px';
             }
             grid.cdr.detectChanges();
@@ -5071,7 +5071,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         });
 
         it('Should sort/unsort when clicking the sort ASC button.', async () => {
-            const column = grid.columns.find((c) => c.field === 'Downloads');
+            const column = grid.allColumns.find((c) => c.field === 'Downloads');
             column.sortable = true;
             fix.detectChanges();
 
@@ -5109,7 +5109,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         });
 
         it('Should sort/unsort when clicking the sort DESC button.', async () => {
-            const column = grid.columns.find((c) => c.field === 'Downloads');
+            const column = grid.allColumns.find((c) => c.field === 'Downloads');
             column.sortable = true;
             fix.detectChanges();
 
@@ -5147,7 +5147,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         });
 
         it('Should (sort ASC)/(sort DESC) when clicking the respective sort button.', async () => {
-            const column = grid.columns.find((c) => c.field === 'Downloads');
+            const column = grid.allColumns.find((c) => c.field === 'Downloads');
             column.sortable = true;
             fix.detectChanges();
 
@@ -5615,7 +5615,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 });
 
                 // Verify pinned columns and 'ID' column position.
-                const column = grid.columns.find((col) => col.field === 'ID');
+                const column = grid.allColumns.find((col) => col.field === 'ID');
                 GridFunctions.verifyColumnIsPinned(column, false, 3);
                 expect(GridFunctions.getColumnHeaderByIndex(fix, 3).innerText).toBe('ID');
 
@@ -5649,7 +5649,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 });
 
                 // Verify pinned columns and 'ID' column position.
-                const column = grid.columns.find((col) => col.field === 'ID');
+                const column = grid.allColumns.find((col) => col.field === 'ID');
                 GridFunctions.verifyColumnIsPinned(column, false, 3);
                 expect(GridFunctions.getColumnHeaderByIndex(fix, 3).innerText).toBe('ID');
 
@@ -5695,7 +5695,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should use custom templates for ESF components instead of default ones.', fakeAsync(() => {
-            const filterableColumns = grid.columns.filter((c) => c.filterable === true);
+            const filterableColumns = grid.allColumns.filter((c) => c.filterable === true);
             for (const column of filterableColumns) {
                 // Open ESF.
                 GridFunctions.clickExcelFilterIcon(fix, column.field);
@@ -5816,12 +5816,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Adjust column widths, so their group can be pinned.
             const columnFields = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'AnotherField'];
             columnFields.forEach((columnField) => {
-                const col = grid.columns.find((c) => c.field === columnField);
+                const col = grid.allColumns.find((c) => c.field === columnField);
                 col.width = '100px';
             });
             fix.detectChanges();
             // Make 'AnotherField' column movable.
-            const column = grid.columns.find((c) => c.field === 'AnotherField');
+            const column = grid.allColumns.find((c) => c.field === 'AnotherField');
             column.movable = true;
             fix.detectChanges();
 

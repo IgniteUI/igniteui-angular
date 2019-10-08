@@ -170,8 +170,8 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             verifyCellsContentAlignment(fix, 'ID', true); // Verify cells of 'ID' are left-aligned.
 
             // Moving 'ID' column
-            const sourceColumn = treeGrid.columns.filter(c => c.field === 'ID')[0];
-            let targetColumn = treeGrid.columns.filter(c => c.field === 'Age')[0];
+            const sourceColumn = treeGrid.allColumns.filter(c => c.field === 'ID')[0];
+            let targetColumn = treeGrid.allColumns.filter(c => c.field === 'Age')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
             fix.detectChanges();
 
@@ -179,7 +179,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             verifyCellsContentAlignment(fix, 'ID', false); // Verify cells of 'ID' are right-aligned.
 
             // Moving 'ID' column
-            targetColumn = treeGrid.columns.filter(c => c.field === 'Name')[0];
+            targetColumn = treeGrid.allColumns.filter(c => c.field === 'Name')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
             fix.detectChanges();
 
@@ -325,8 +325,8 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             verifyCellsContentAlignment(fix, 'ID', true); // Verify cells of 'ID' are left-aligned.
 
             // Moving 'ID' column
-            const sourceColumn = treeGrid.columns.filter(c => c.field === 'ID')[0];
-            let targetColumn = treeGrid.columns.filter(c => c.field === 'Age')[0];
+            const sourceColumn = treeGrid.allColumns.filter(c => c.field === 'ID')[0];
+            let targetColumn = treeGrid.allColumns.filter(c => c.field === 'Age')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
             fix.detectChanges();
             tick(16);
@@ -334,7 +334,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             verifyCellsContentAlignment(fix, 'ID', false); // Verify cells of 'ID' are right-aligned.
 
             // Moving 'ID' column
-            targetColumn = treeGrid.columns.filter(c => c.field === 'ParentID')[0];
+            targetColumn = treeGrid.allColumns.filter(c => c.field === 'ParentID')[0];
             treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
             fix.detectChanges();
             tick(16);

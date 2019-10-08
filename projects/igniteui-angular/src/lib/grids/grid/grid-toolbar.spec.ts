@@ -350,7 +350,7 @@ describe('IgxGrid - Grid Toolbar #grid', () => {
         grid.columnHiding = true;
         fixture.detectChanges();
 
-        grid.columns[0].hidden = true;
+        grid.allColumns[0].hidden = true;
         fixture.detectChanges();
 
         const button = getColumnHidingButton(fixture);
@@ -358,7 +358,7 @@ describe('IgxGrid - Grid Toolbar #grid', () => {
         let btnText = button.nativeElement.innerText.toLowerCase();
         expect(btnText.includes('1') && btnText.includes('visibility_off')).toBe(true);
 
-        grid.columns[0].hidden = false;
+        grid.allColumns[0].hidden = false;
         fixture.detectChanges();
         btnText = button.nativeElement.innerText.toLowerCase();
         expect(btnText.includes('0') && btnText.includes('visibility') && !btnText.includes('visibility_off')).toBe(true);

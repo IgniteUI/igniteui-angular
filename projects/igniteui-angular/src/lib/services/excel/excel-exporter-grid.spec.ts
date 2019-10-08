@@ -108,7 +108,7 @@ describe('Excel Exporter', () => {
             await wait();
 
             const grid = fix.componentInstance.grid;
-            grid.columns[0].hidden = true;
+            grid.allColumns[0].hidden = true;
             options.ignoreColumnsOrder = true;
             options.ignoreColumnsVisibility = false;
             fix.detectChanges();
@@ -136,21 +136,21 @@ describe('Excel Exporter', () => {
             let wrapper = await getExportedData(grid, options);
             wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All columns should have been exported!');
 
-            grid.columns[0].hidden = true;
+            grid.allColumns[0].hidden = true;
             fix.detectChanges();
 
             expect(grid.visibleColumns.length).toEqual(2, 'Invalid number of visible columns!');
             wrapper = await getExportedData(grid, options);
             wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitle, 'Two columns should have been exported!');
 
-            grid.columns[0].hidden = false;
+            grid.allColumns[0].hidden = false;
             fix.detectChanges();
 
             expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
             wrapper = await getExportedData(grid, options);
             wrapper.verifyDataFilesContent(actualData.simpleGridData, 'All columns should have been exported!');
 
-            grid.columns[0].hidden = undefined;
+            grid.allColumns[0].hidden = undefined;
             fix.detectChanges();
 
             expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
@@ -196,7 +196,7 @@ describe('Excel Exporter', () => {
             let wrapper = await getExportedData(grid, options);
             wrapper.verifyDataFilesContent(actualData.gridNameFrozen, 'One frozen column should have been exported!');
 
-            grid.columns[1].pinned = false;
+            grid.allColumns[1].pinned = false;
             fix.detectChanges();
             wrapper = await getExportedData(grid, options);
             wrapper.verifyDataFilesContent(actualData.simpleGridData, 'No frozen columns should have been exported!');
@@ -251,8 +251,8 @@ describe('Excel Exporter', () => {
             await wait();
 
             const grid = fix.componentInstance.grid;
-            grid.columns[1].hidden = true;
-            grid.columns[2].hidden = true;
+            grid.allColumns[1].hidden = true;
+            grid.allColumns[2].hidden = true;
             const columnWidths = [100, 200, 0, undefined, null];
             fix.detectChanges();
 
@@ -313,7 +313,7 @@ describe('Excel Exporter', () => {
                 cols.push({ header: value.header, index: value.columnIndex });
             });
 
-            grid.columns[0].hidden = true;
+            grid.allColumns[0].hidden = true;
             options.ignoreColumnsVisibility = false;
             fix.detectChanges();
 
@@ -387,8 +387,8 @@ describe('Excel Exporter', () => {
             await wait();
 
             const grid = fix.componentInstance.grid;
-            grid.columns[1].header = 'My header';
-            grid.columns[1].sortable = true;
+            grid.allColumns[1].header = 'My header';
+            grid.allColumns[1].sortable = true;
             grid.sort({fieldName: 'Name', dir: SortingDirection.Desc, ignoreCase: false});
             const sortField = grid.sortingExpressions[0].fieldName;
             fix.detectChanges();
@@ -409,7 +409,7 @@ describe('Excel Exporter', () => {
             const grid = fix.componentInstance.grid;
 
             // Set column formatters
-            grid.columns[0].formatter = ((val: number) => {
+            grid.allColumns[0].formatter = ((val: number) => {
                 const numbers = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine' , 'ten'];
                 return numbers[val - 1];
             });
@@ -569,7 +569,7 @@ describe('Excel Exporter', () => {
         });
 
         it('should skip the formatter when columnExproting skipFormatter is true', async () => {
-            treeGrid.columns[4].formatter = ((val: number) => {
+            treeGrid.allColumns[4].formatter = ((val: number) => {
                 const t = Math.floor(val / 10);
                 const o = val % 10;
                 return val + parseFloat(((t + o) / 12).toFixed(2));

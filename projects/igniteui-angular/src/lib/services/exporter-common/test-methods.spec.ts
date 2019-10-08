@@ -44,7 +44,7 @@ export class TestMethods {
 
         // Pin columns
         colIndices.forEach((i) => {
-            myGrid.columns[i].pinned = true;
+            myGrid.allColumns[i].pinned = true;
         });
 
         return { fixture: fix, grid: myGrid };

@@ -102,7 +102,7 @@ describe('CSV Grid Exporter', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        grid.columns[0].hidden = true;
+        grid.allColumns[0].hidden = true;
         options.ignoreColumnsOrder = true;
         options.ignoreColumnsVisibility = false;
 
@@ -129,19 +129,19 @@ describe('CSV Grid Exporter', () => {
         let wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.simpleGridData, 'All columns data should have been exported!');
 
-        grid.columns[0].hidden = true;
+        grid.allColumns[0].hidden = true;
         fix.detectChanges();
         expect(grid.visibleColumns.length).toEqual(2, 'Invalid number of visible columns!');
         wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.gridNameJobTitle, 'Two columns data should have been exported!');
 
-        grid.columns[0].hidden = false;
+        grid.allColumns[0].hidden = false;
         fix.detectChanges();
         expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
         wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.simpleGridData, 'All columns data should have been exported!');
 
-        grid.columns[0].hidden = undefined;
+        grid.allColumns[0].hidden = undefined;
         fix.detectChanges();
         expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
         wrapper = await getExportedData(grid, options);
@@ -244,7 +244,7 @@ describe('CSV Grid Exporter', () => {
             cols.push({ header: value.header, index: value.columnIndex });
         });
 
-        grid.columns[0].hidden = true;
+        grid.allColumns[0].hidden = true;
         options.ignoreColumnsVisibility = false;
         fix.detectChanges();
 
@@ -310,10 +310,10 @@ describe('CSV Grid Exporter', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        grid.columns[1].formatter = ((val: string) => {
+        grid.allColumns[1].formatter = ((val: string) => {
             return val.toUpperCase();
         });
-        grid.columns[2].formatter = ((val: string) => {
+        grid.allColumns[2].formatter = ((val: string) => {
             return val.toLowerCase();
         });
         grid.cdr.detectChanges();
@@ -419,10 +419,10 @@ describe('CSV Grid Exporter', () => {
         });
 
         it('should skip the column formatter when onColumnExporting skipFormatter is true.', async () => {
-            treeGrid.columns[3].formatter = ((val: string) => {
+            treeGrid.allColumns[3].formatter = ((val: string) => {
                 return val.toLowerCase();
             });
-            treeGrid.columns[4].formatter = ((val: number) => {
+            treeGrid.allColumns[4].formatter = ((val: number) => {
                 return val * 12; // months
             });
             treeGrid.cdr.detectChanges();

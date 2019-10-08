@@ -494,7 +494,7 @@ describe('IgxGrid - Column Pinning #grid ', () => {
         const fix = TestBed.createComponent(GridPinningComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
-        grid.columns.forEach((column) => {
+        grid.allColumns.forEach((column) => {
             if (column.index === 0 || column.index === 1 || column.index === 4 ||
                 column.index === 6) {
                 column.pinned = true;
@@ -502,10 +502,10 @@ describe('IgxGrid - Column Pinning #grid ', () => {
         });
         tick();
         fix.detectChanges();
-        expect(grid.columns[0].pinned).toBe(true);
-        expect(grid.columns[1].pinned).toBe(true);
-        expect(grid.columns[4].pinned).toBe(false);
-        expect(grid.columns[6].pinned).toBe(true);
+        expect(grid.allColumns[0].pinned).toBe(true);
+        expect(grid.allColumns[1].pinned).toBe(true);
+        expect(grid.allColumns[4].pinned).toBe(false);
+        expect(grid.allColumns[6].pinned).toBe(true);
         expect(grid.unpinnedWidth).toBeGreaterThanOrEqual(grid.unpinnedAreaMinWidth);
     }));
 
@@ -523,15 +523,15 @@ describe('IgxGrid - Column Pinning #grid ', () => {
         expect(rowChildren[3].tagName).toEqual('IGX-GRID-CELL');
         expect(rowChildren[4].tagName).toEqual('IGX-DISPLAY-CONTAINER');
 
-        expect(grid.columns[0].pinned).not.toBe(true);
-        expect(grid.columns[1].pinned).toBe(true);
-        expect(grid.columns[2].pinned).toBe(true);
-        expect(grid.columns[3].pinned).toBe(true);
-        expect(grid.columns[4].pinned).toBe(true);
-        expect(grid.columns[5].pinned).not.toBe(true);
-        expect(grid.columns[6].pinned).not.toBe(true);
-        expect(grid.columns[7].pinned).not.toBe(true);
-        expect(grid.columns[8].pinned).not.toBe(true);
+        expect(grid.allColumns[0].pinned).not.toBe(true);
+        expect(grid.allColumns[1].pinned).toBe(true);
+        expect(grid.allColumns[2].pinned).toBe(true);
+        expect(grid.allColumns[3].pinned).toBe(true);
+        expect(grid.allColumns[4].pinned).toBe(true);
+        expect(grid.allColumns[5].pinned).not.toBe(true);
+        expect(grid.allColumns[6].pinned).not.toBe(true);
+        expect(grid.allColumns[7].pinned).not.toBe(true);
+        expect(grid.allColumns[8].pinned).not.toBe(true);
 
         expect(grid.unpinnedWidth).toBeGreaterThanOrEqual(grid.unpinnedAreaMinWidth);
     }));
@@ -550,15 +550,15 @@ describe('IgxGrid - Column Pinning #grid ', () => {
         expect(rowChildren[3].tagName).toEqual('IGX-GRID-CELL');
         expect(rowChildren[4].tagName).toEqual('IGX-DISPLAY-CONTAINER');
 
-        expect(grid.columns[0].pinned).toBe(true);
-        expect(grid.columns[1].pinned).toBe(true);
-        expect(grid.columns[2].pinned).toBe(true);
-        expect(grid.columns[3].pinned).toBe(true);
-        expect(grid.columns[4].pinned).toBe(true);
-        expect(grid.columns[5].pinned).toBe(true);
-        expect(grid.columns[6].pinned).not.toBe(true);
-        expect(grid.columns[7].pinned).not.toBe(true);
-        expect(grid.columns[8].pinned).not.toBe(true);
+        expect(grid.allColumns[0].pinned).toBe(true);
+        expect(grid.allColumns[1].pinned).toBe(true);
+        expect(grid.allColumns[2].pinned).toBe(true);
+        expect(grid.allColumns[3].pinned).toBe(true);
+        expect(grid.allColumns[4].pinned).toBe(true);
+        expect(grid.allColumns[5].pinned).toBe(true);
+        expect(grid.allColumns[6].pinned).not.toBe(true);
+        expect(grid.allColumns[7].pinned).not.toBe(true);
+        expect(grid.allColumns[8].pinned).not.toBe(true);
 
         expect(grid.unpinnedWidth).toBeGreaterThanOrEqual(grid.unpinnedAreaMinWidth);
     }));
@@ -578,15 +578,15 @@ describe('IgxGrid - Column Pinning #grid ', () => {
             expect(rowChildren[3].tagName).toEqual('IGX-GRID-CELL');
             expect(rowChildren[4].tagName).toEqual('IGX-DISPLAY-CONTAINER');
 
-            expect(grid.columns[0].pinned).toBe(true);
-            expect(grid.columns[1].pinned).toBe(true);
-            expect(grid.columns[2].pinned).toBe(true);
-            expect(grid.columns[3].pinned).toBe(true);
-            expect(grid.columns[4].pinned).toBe(true);
-            expect(grid.columns[5].pinned).toBe(true);
-            expect(grid.columns[6].pinned).not.toBe(true);
-            expect(grid.columns[7].pinned).not.toBe(true);
-            expect(grid.columns[8].pinned).not.toBe(true);
+            expect(grid.allColumns[0].pinned).toBe(true);
+            expect(grid.allColumns[1].pinned).toBe(true);
+            expect(grid.allColumns[2].pinned).toBe(true);
+            expect(grid.allColumns[3].pinned).toBe(true);
+            expect(grid.allColumns[4].pinned).toBe(true);
+            expect(grid.allColumns[5].pinned).toBe(true);
+            expect(grid.allColumns[6].pinned).not.toBe(true);
+            expect(grid.allColumns[7].pinned).not.toBe(true);
+            expect(grid.allColumns[8].pinned).not.toBe(true);
 
             expect(grid.unpinnedWidth).toBeGreaterThanOrEqual(grid.unpinnedAreaMinWidth);
         }));

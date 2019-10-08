@@ -319,7 +319,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         }
 
         filteringTree.filteringOperands = [];
-        for (const column of grid.columns) {
+        for (const column of grid.allColumns) {
             this.prepare_filtering_expression(filteringTree, column.field, term,
                 condition, ignoreCase || column.filteringIgnoreCase);
         }

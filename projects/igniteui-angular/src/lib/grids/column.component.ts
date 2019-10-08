@@ -428,7 +428,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @memberof IgxColumnComponent
      */
     get index(): number {
-        return this.grid.columnRefs.indexOf(this);
+        return this.grid.allColumns.indexOf(this);
     }
     /**
      * When autogenerating columns, the formatter is used to format the display of the column data
@@ -1422,7 +1422,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         grid.resetCaches();
         grid.notifyChanges();
         if (this.columnLayoutChild) {
-            this.grid.columnRefs.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
+            this.grid.allColumns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
         this.grid.filteringService.refreshExpressions();
         // this.grid.refreshSearch(true);
@@ -1486,7 +1486,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
         grid.notifyChanges();
         if (this.columnLayoutChild) {
-            this.grid.columnRefs.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
+            this.grid.allColumns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
         this.grid.filteringService.refreshExpressions();
         // this.grid.refreshSearch(true);
@@ -2010,9 +2010,9 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
     set hidden(value: boolean) {
         this._hidden = value;
         this.children.forEach(child => child.hidden = value);
-        if (this.grid && this.grid.columnRefs && this.grid.columnRefs.length > 0) {
+        if (this.grid && this.grid.allColumns && this.grid.allColumns.length > 0) {
             // reset indexes in case columns are hidden/shown runtime
-            this.grid.columnRefs.filter(x => x.columnGroup).forEach(x => x.populateVisibleIndexes());
+            this.grid.allColumns.filter(x => x.columnGroup).forEach(x => x.populateVisibleIndexes());
         }
     }
 

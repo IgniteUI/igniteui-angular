@@ -390,7 +390,7 @@ describe('IgxGrid - search API #grid', () => {
         });
 
         it('Hidden columns shouldn\'t be part of the search', () => {
-            grid.columns[1].hidden = true;
+            grid.allColumns[1].hidden = true;
             fix.detectChanges();
             grid.findNext('casey');
 
@@ -401,7 +401,7 @@ describe('IgxGrid - search API #grid', () => {
         });
 
         it('Search should honor the visible columns order', () => {
-            grid.columns[3].pinned = true;
+            grid.allColumns[3].pinned = true;
             const cell = grid.getCellByColumn(0, 'HireDate').nativeElement;
 
             grid.findNext('1');
@@ -423,7 +423,7 @@ describe('IgxGrid - search API #grid', () => {
             highlights = cellName.querySelectorAll('.' + component.highlightClass);
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
-            grid.columns[1].pinned = true;
+            grid.allColumns[1].pinned = true;
 
             fix.detectChanges();
             cellName = grid.getCellByColumn(0, 'Name').nativeElement;
@@ -432,7 +432,7 @@ describe('IgxGrid - search API #grid', () => {
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
 
-            grid.columns[1].pinned = false;
+            grid.allColumns[1].pinned = false;
 
             fix.detectChanges();
             cellName = grid.getCellByColumn(0, 'Name').nativeElement;
@@ -453,7 +453,7 @@ describe('IgxGrid - search API #grid', () => {
             highlights = cellName.querySelectorAll('.' + component.highlightClass);
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
-            grid.columns[0].hidden = true;
+            grid.allColumns[0].hidden = true;
 
             fix.detectChanges();
             cellName = grid.getCellByColumn(0, 'Name').nativeElement;
@@ -462,7 +462,7 @@ describe('IgxGrid - search API #grid', () => {
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
 
-            grid.columns[0].hidden = false;
+            grid.allColumns[0].hidden = false;
 
             fix.detectChanges();
             cellName = grid.getCellByColumn(0, 'Name').nativeElement;
@@ -473,7 +473,7 @@ describe('IgxGrid - search API #grid', () => {
         });
 
         it('Highlights should be updated after a column is hidden and another column is already hidden', () => {
-            grid.columns[0].hidden = true;
+            grid.allColumns[0].hidden = true;
             fix.detectChanges();
 
             let activeHighlight: any;
@@ -489,7 +489,7 @@ describe('IgxGrid - search API #grid', () => {
             expect(grid.lastSearchInfo.matchInfoCache.length).toBe(3);
             expect(grid.lastSearchInfo.activeMatchIndex).toBe(0);
 
-            grid.columns[1].hidden = true;
+            grid.allColumns[1].hidden = true;
             fix.detectChanges();
 
             activeHighlight = grid.nativeElement.querySelector('.' + component.activeClass);
@@ -501,7 +501,7 @@ describe('IgxGrid - search API #grid', () => {
         });
 
         it('Highlight should be updated when a column is hidden/shown and columns have different data types', () => {
-            grid.columns[0].dataType = DataType.Number;
+            grid.allColumns[0].dataType = DataType.Number;
             fix.detectChanges();
 
             let cell = grid.getCellByColumn(0, 'ID').nativeElement;
@@ -515,10 +515,10 @@ describe('IgxGrid - search API #grid', () => {
             expect(highlights.length).toBe(1);
             expect(activeHighlight).toBe(highlights[0]);
 
-            grid.columns[0].hidden = true;
+            grid.allColumns[0].hidden = true;
             fix.detectChanges();
 
-            grid.columns[0].hidden = false;
+            grid.allColumns[0].hidden = false;
             fix.detectChanges();
 
             cell = grid.getCellByColumn(0, 'ID').nativeElement;
@@ -528,13 +528,13 @@ describe('IgxGrid - search API #grid', () => {
         });
 
         it('Highlight should be updated when a column is hidden and there are other hidden columns', () => {
-            grid.columns[1].hidden = true;
+            grid.allColumns[1].hidden = true;
             fix.detectChanges();
 
             let finds = grid.findNext('Director');
             expect(finds).toEqual(2);
 
-            grid.columns[2].hidden = true;
+            grid.allColumns[2].hidden = true;
             fix.detectChanges();
 
             finds = grid.findNext('Director');
@@ -589,8 +589,8 @@ describe('IgxGrid - search API #grid', () => {
         }));
 
         it('Unsearchable column should not interfere with active highlight for other columns on its right', () => {
-            grid.columns[1].searchable = false;
-            grid.columns[3].searchable = false;
+            grid.allColumns[1].searchable = false;
+            grid.allColumns[3].searchable = false;
             fix.detectChanges();
 
             const count = grid.findNext('Software');
@@ -1383,7 +1383,7 @@ describe('IgxGrid - search API #grid', () => {
         });
 
         it('Cells with custom template should be excluded from search when pin/unpin', () => {
-            grid.columns[1].pinned = true;
+            grid.allColumns[1].pinned = true;
             fix.detectChanges();
 
             const matches = grid.findNext('https');
@@ -1394,7 +1394,7 @@ describe('IgxGrid - search API #grid', () => {
             let image = cell.querySelector('.cell__inner, .avatar-cell') as HTMLElement;
             expect(image.hidden).toBeFalsy();
 
-            grid.columns[1].pinned = false;
+            grid.allColumns[1].pinned = false;
             fix.detectChanges();
 
             cell = grid.getCellByColumn(0, 'Avatar').nativeElement;

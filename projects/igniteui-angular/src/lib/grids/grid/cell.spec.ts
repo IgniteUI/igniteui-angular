@@ -76,7 +76,7 @@ describe('IgxGrid - Cell component #grid', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
-        const cell = grid.columns[0].cells[0];
+        const cell = grid.allColumns[0].cells[0];
         const spy = spyOn(grid.onSelection, 'emit');
 
         cell.nativeElement.dispatchEvent(new Event('focus'));
@@ -119,7 +119,7 @@ describe('IgxGrid - Cell component #grid', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
-        grid.columns[0].editable = true;
+        grid.allColumns[0].editable = true;
         fix.detectChanges();
 
         const cellElem = fix.debugElement.query(By.css(CELL_CSS_CLASS));
@@ -325,7 +325,7 @@ describe('IgxGrid - Cell component #grid', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
 
-        const lastColumnCells = grid.columns[grid.columns.length - 1].cells;
+        const lastColumnCells = grid.allColumns[grid.allColumns.length - 1].cells;
         lastColumnCells.forEach(function (item) {
             expect(item.width).toEqual('30px');
         });
@@ -343,7 +343,7 @@ describe('IgxGrid - Cell component #grid', () => {
 
         await wait(100);
 
-        const lastColumnCells = grid.columns[grid.columns.length - 1].cells;
+        const lastColumnCells = grid.allColumns[grid.allColumns.length - 1].cells;
         fix.detectChanges();
         lastColumnCells.forEach(function (item) {
             expect(item.width).toEqual('500px');

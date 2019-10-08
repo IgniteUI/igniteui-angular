@@ -1140,8 +1140,8 @@ export class IgxGridFilteringMCHComponent extends IgxGridFilteringComponent {}
             dataType="string" [filters]="customFilter">
         </igx-column>
     </igx-grid>
-    <igx-excel-style-date-expression *ngIf="grid1.columns.length > 0"
-                                     [column]="grid1.columns[4]"
+    <igx-excel-style-date-expression *ngIf="grid1.allColumns.length > 0"
+                                     [column]="grid1.allColumns[4]"
                                      [grid]="grid1"
                                      [expressionUI]="exprUI"
                                      [expressionsList]="exprList">
