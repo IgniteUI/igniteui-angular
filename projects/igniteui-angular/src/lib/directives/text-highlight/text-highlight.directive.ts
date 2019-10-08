@@ -10,7 +10,6 @@ import {
     Renderer2,
     SimpleChanges,
     AfterViewChecked,
-    HostBinding
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
