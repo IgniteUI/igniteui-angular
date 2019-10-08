@@ -193,20 +193,26 @@ describe('IgxGrid - Cell component', () => {
 
     it('Should not attach doubletap handler for non-iOS', () => {
         const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
-        spyOnProperty(PlatformUtil.prototype, 'isIOS').and.returnValue(false);
+        const platformUtil: PlatformUtil = TestBed.get(PlatformUtil);
+        const oldIsIOS = platformUtil.isIOS;
+        platformUtil.isIOS = false;
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
+        // spyOnProperty(PlatformUtil.prototype, 'isIOS').and.returnValue(false);
         expect(addListenerSpy).not.toHaveBeenCalled();
+
+        platformUtil.isIOS = oldIsIOS;
     });
 
     it('Should handle doubletap on iOS, trigger onDoubleClick event', () => {
         const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
-        spyOnProperty(PlatformUtil.prototype, 'isIOS').and.returnValue(true);
+        const platformUtil: PlatformUtil = TestBed.get(PlatformUtil);
+        const oldIsIOS = platformUtil.isIOS;
+        platformUtil.isIOS = true;
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.instance;
-        const cellElem = fix.debugElement.query(By.css(CELL_CSS_CLASS));
         const firstCell = grid.getCellByColumn(0, 'index');
 
         // should attach 'doubletap'
@@ -229,6 +235,8 @@ describe('IgxGrid - Cell component', () => {
         expect(event.preventDefault).toHaveBeenCalled();
         expect(grid.onDoubleClick.emit).toHaveBeenCalledWith(args);
         expect(firstCell).toBe(fix.componentInstance.clickedCell);
+
+        platformUtil.isIOS = oldIsIOS;
     });
 
     it('Should blur selected cell when scrolling with mouse wheel', (async () => {

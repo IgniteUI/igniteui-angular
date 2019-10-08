@@ -603,7 +603,7 @@ export class IgxNavigationDrawerComponent implements
      * Sets the drawer width.
      */
     private setDrawerWidth(width: string) {
-        if (this.platformUtil.isPlatformBrowser) {
+        if (this.platformUtil.isBrowser) {
             requestAnimationFrame(() => {
                 if (this.drawer) {
                     this.renderer.setElementStyle(this.drawer, 'width', width);
@@ -637,7 +637,7 @@ export class IgxNavigationDrawerComponent implements
             this._touchManager.addGlobalEventListener('document', 'panmove', this.pan);
             this._touchManager.addGlobalEventListener('document', 'panend', this.panEnd);
         }
-        if (!this._resizeObserver && this.platformUtil.isPlatformBrowser) {
+        if (!this._resizeObserver && this.platformUtil.isBrowser) {
             this._resizeObserver = fromEvent(window, 'resize').pipe(debounce(() => interval(150)))
                 .subscribe((value) => {
                     this.checkPinThreshold(value);
@@ -655,7 +655,7 @@ export class IgxNavigationDrawerComponent implements
     }
 
     private checkPinThreshold = (evt?: Event) => {
-        if (!this.platformUtil.isPlatformBrowser) {
+        if (!this.platformUtil.isBrowser) {
             return;
         }
         let windowWidth;
