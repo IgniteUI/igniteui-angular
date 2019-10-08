@@ -423,7 +423,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      * <igx-grid [dropAreaTemplate]="dropAreaRef">
      *      <igx-column [groupable]="true" field="ID"></igx-column>
      * </igx-grid>
-     *
      * <ng-template #myDropArea>
      *      <span> Custom drop area! </span>
      * </ng-template>
