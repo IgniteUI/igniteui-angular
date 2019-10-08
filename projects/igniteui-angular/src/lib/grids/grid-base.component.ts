@@ -890,7 +890,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this._isLoading = value;
             this.evaluateLoadingState();
         }
-        this.notifyChanges();
+        Promise.resolve().then(() => {
+            // wait for the current detection cycle to end before triggering a new one.
+            this.notifyChanges();
+        });
     }
 
     /**
