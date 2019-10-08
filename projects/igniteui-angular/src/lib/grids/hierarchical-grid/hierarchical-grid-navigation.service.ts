@@ -68,6 +68,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     }
 
     public navigateUp(rowElement, selectedNode: ISelectionNode) {
+        if (selectedNode.isSummaryRow) { return; }
         const prevElem = rowElement.previousElementSibling;
         const visibleColumnIndex = selectedNode.column;
         const currentRowIndex = selectedNode.row;
@@ -103,6 +104,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
     }
     public navigateDown(rowElement, selectedNode: ISelectionNode) {
+        if (selectedNode.isSummaryRow) { return; }
         const nextElem = rowElement.nextElementSibling;
         const visibleColumnIndex = selectedNode.column;
         const currentRowIndex = selectedNode.row;
