@@ -59,12 +59,16 @@ export class IgxSummaryOperand {
      * ```
      * @memberof IgxSummaryOperand
      */
-    public operate(data: any[] = []): IgxSummaryResult[] {
+    public operate(data: any[] = [], fieldName: string): IgxSummaryResult[] {
         return [{
             key: 'count',
             label: 'Count',
-            summaryResult: IgxSummaryOperand.count(data)
+            summaryResult: IgxSummaryOperand.count(this.getColumnData(data, fieldName))
         }];
+    }
+
+    protected getColumnData(data, field): any[] {
+        return data.map(rec => rec[field]);
     }
 }
 
@@ -148,27 +152,27 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      * ```
      * @memberof IgxNumberSummaryOperand
      */
-    public operate(data: any[] = []): IgxSummaryResult[] {
-        const result = super.operate(data);
+    public operate(data: any[] = [], fieldName?: string): IgxSummaryResult[] {
+        const result = super.operate(data, fieldName);
         result.push({
             key: 'min',
             label: 'Min',
-            summaryResult: IgxNumberSummaryOperand.min(data)
+            summaryResult: IgxNumberSummaryOperand.min(super.getColumnData(data, fieldName))
         });
         result.push({
             key: 'max',
             label: 'Max',
-            summaryResult: IgxNumberSummaryOperand.max(data)
+            summaryResult: IgxNumberSummaryOperand.max(super.getColumnData(data, fieldName))
         });
         result.push({
             key: 'sum',
             label: 'Sum',
-            summaryResult: IgxNumberSummaryOperand.sum(data)
+            summaryResult: IgxNumberSummaryOperand.sum(super.getColumnData(data, fieldName))
         });
         result.push({
             key: 'average',
             label: 'Avg',
-            summaryResult: IgxNumberSummaryOperand.average(data)
+            summaryResult: IgxNumberSummaryOperand.average(super.getColumnData(data, fieldName))
         });
         return result;
     }
@@ -229,17 +233,17 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      * ```
      * @memberof IgxDateSummaryOperand
      */
-    public operate(data: any[] = []): IgxSummaryResult[] {
-        const result = super.operate(data);
+    public operate(data: any[] = [], fieldName?: string): IgxSummaryResult[] {
+        const result = super.operate(data, fieldName);
         result.push({
             key: 'earliest',
             label: 'Earliest',
-            summaryResult: IgxDateSummaryOperand.earliest(data)
+            summaryResult: IgxDateSummaryOperand.earliest(super.getColumnData(data, fieldName))
         });
         result.push({
             key: 'latest',
             label: 'Latest',
-            summaryResult: IgxDateSummaryOperand.latest(data)
+            summaryResult: IgxDateSummaryOperand.latest(super.getColumnData(data, fieldName))
         });
         return result;
     }
