@@ -14,13 +14,16 @@ class MySummary extends IgxNumberSummaryOperand {
         super();
     }
 
-    operate(data?: any[]): IgxSummaryResult[] {
-        const result = super.operate(data);
-        result.push({
-            key: 'test',
-            label: 'Test',
-            summaryResult: data.filter((rec) => rec > 10 && rec < 30).length
-        });
+    operate(data?: any[], fieldName?): IgxSummaryResult[] {
+        fieldName = fieldName === 'Sum' ? 'ReorderLevel' : fieldName;
+        const result = super.operate(data, fieldName);
+        if (!(fieldName === 'ReorderLevel')) {
+            result.push({
+                key: 'test',
+                label: 'Total Discounted',
+                summaryResult: data.filter((rec) => rec.Discontinued).length
+            });
+        }
 
         return result;
     }
