@@ -683,7 +683,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Input()
-    public placeholder = '';
+    public placeholder;
 
     /**
      * @hidden @internal
