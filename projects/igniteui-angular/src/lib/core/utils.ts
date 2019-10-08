@@ -234,19 +234,11 @@ export function isFirefox(): boolean {
  */
 @Injectable({ providedIn: 'root' })
 export class PlatformUtil {
-    private platformBrowser: boolean;
+    public isBrowser: boolean = isPlatformBrowser(this.platformId);
+
+    public isIOS = this.isBrowser && /iPad|iPhone|iPod/.test(navigator.userAgent) && !('MSStream' in window);
 
     constructor(@Inject(PLATFORM_ID) private platformId: Object) {
-        this.platformBrowser = isPlatformBrowser(this.platformId);
-    }
-
-    public get isIOS(): boolean {
-        const iosBrowser = this.platformBrowser && /iPad|iPhone|iPod/.test(navigator.userAgent) && !('MSStream' in window);
-        return iosBrowser;
-    }
-
-    public get isPlatformBrowser(): boolean {
-        return this.platformBrowser;
     }
 }
 

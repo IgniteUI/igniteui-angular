@@ -21,7 +21,7 @@ export class HammerGesturesManager {
     private _hammerManagers: Array<{ element: EventTarget, manager: HammerManager; }> = [];
 
     constructor(private _zone: NgZone, @Inject(DOCUMENT) private doc: any, private platformUtil: PlatformUtil) {
-        this.platformBrowser = this.platformUtil.isPlatformBrowser;
+        this.platformBrowser = this.platformUtil.isBrowser;
         if (this.platformBrowser) {
             this.hammerOptions = {
                 // D.P. #447 Force TouchInput due to PointerEventInput bug (https://github.com/hammerjs/hammer.js/issues/1065)
