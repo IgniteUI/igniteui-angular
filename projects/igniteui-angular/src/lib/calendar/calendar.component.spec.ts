@@ -889,7 +889,6 @@ describe('IgxCalendar', () => {
             expect(document.activeElement).toBe(date);
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', document.activeElement, true);
             fixture.detectChanges();
-            await wait(500);
 
             expect(document.activeElement.textContent.trim()).toMatch('2');
         });
@@ -1767,6 +1766,7 @@ describe('IgxCalendar', () => {
             expect(date.nativeElement).toBe(document.activeElement);
 
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
+            fixture.detectChanges();
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
             fixture.detectChanges();
             await wait(400);
@@ -1919,7 +1919,7 @@ describe('IgxCalendar', () => {
             expect(date.nativeElement).toBe(document.activeElement);
         });
 
-        it('AKB - should preserve the active date on (schift) pageup and pagedown.', async () => {
+        it('AKB - should preserve the active date on (shift) pageup and pagedown.', async () => {
             const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
             fixture.detectChanges();
 
