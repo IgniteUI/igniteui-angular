@@ -1818,11 +1818,10 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             dateCellChip.nativeElement.click();
             fix.detectChanges();
 
-            GridFunctions.filterBy('Today', '', fix);
-            fix.detectChanges();
+            GridFunctions.filterBy('Today', null, fix);
             tick(100);
             expect(grid.rowList.length).toEqual(1);
-            GridFunctions.filterBy('Null', '', fix);
+            GridFunctions.filterBy('Null', null, fix);
             expect(grid.rowList.length).toEqual(0);
         }));
 

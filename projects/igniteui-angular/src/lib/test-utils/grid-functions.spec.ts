@@ -413,7 +413,7 @@ export class GridFunctions {
 
         // Enter key to submit
         this.simulateKeyboardEvent(input, 'keydown', 'Enter');
-        this.simulateKeyboardEvent(input, 'keyup', 'Enter');
+        // this.simulateKeyboardEvent(input, 'keyup', 'Enter');
         // fix.detectChanges();
     }
 
@@ -424,9 +424,10 @@ export class GridFunctions {
 
         const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
         this.selectFilteringCondition(condition, ddList);
-        fix.detectChanges();
-        tick(100);
+        // fix.detectChanges();
+        tick(200);
        this.applyFilter(value, fix);
+       tick(500);
     }
 
     public static typeValueInFilterRowInput(value: string, fix) {
