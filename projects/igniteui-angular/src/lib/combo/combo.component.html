@@ -24,7 +24,7 @@
     <ng-container ngProjectAs="igx-hint, [igxHint]">
             <ng-content select="igx-hint, [igxHint]"></ng-content>
         </ng-container>
-    <input igxInput #comboInput name="comboInput" type="text" [value]="value" readonly [placeholder]="placeholder"
+    <input igxInput #comboInput name="comboInput" type="text" [value]="value" readonly [attr.placeholder]="placeholder"
         [disabled]="disabled" (blur)="onBlur()" />
     <ng-container ngProjectAs="igx-suffix">
         <ng-content select="igx-suffix"></ng-content>
@@ -47,7 +47,7 @@
     <igx-input-group *ngIf="displaySearchInput" [displayDensity]="displayDensity" class="igx-combo__search">
         <input class="igx-combo-input" igxInput #searchInput name="searchInput" autocomplete="off" type="text"
             [(ngModel)]="searchValue" (ngModelChange)="handleInputChange($event)" (keyup)="handleKeyUp($event)"
-            (keydown)="handleKeyDown($event)" (focus)="dropdown.onBlur($event)" [placeholder]="searchPlaceholder"
+            (keydown)="handleKeyDown($event)" (focus)="dropdown.onBlur($event)" [attr.placeholder]="searchPlaceholder"
             aria-autocomplete="both" [attr.aria-owns]="dropdown.id" [attr.aria-labelledby]="ariaLabelledBy" />
     </igx-input-group>
     <ng-container *ngTemplateOutlet="headerTemplate">
