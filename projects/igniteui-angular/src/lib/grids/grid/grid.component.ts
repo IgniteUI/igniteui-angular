@@ -341,6 +341,17 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     }
 
     /**
+     * Returns a complete list of the elements in the current vertical dataview.
+     * ```typescript
+     *      const dataView = this.grid.dataView;
+     * ```
+     * @memberof IgxGridComponent
+     */
+    get dataView(): any {
+        return this.verticalScrollContainer.igxForOf;
+    }
+
+    /**
      *@hidden
      */
     @Output()
