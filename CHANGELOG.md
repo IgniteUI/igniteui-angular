@@ -2,7 +2,7 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 8.2.1
+## 8.2.3
 - `IgxTextHighlightDirective` - The default highlight directive styles have been moved to a Sass theme - `igx-highlight-theme`; You can modify the resting and active background and text color styles of the directive by passing the respective properties to the Sass theme. You can still pass your own CSS classes to the highlight directive via the cssClass and activeCssClass inputs.
 
 ## 8.2.0
