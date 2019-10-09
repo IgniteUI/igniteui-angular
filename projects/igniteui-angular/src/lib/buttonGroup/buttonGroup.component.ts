@@ -341,10 +341,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         const button = this.buttons[index];
         const buttonElement = button.nativeElement;
 
-        if (buttonElement.classList.contains('igx-button--disabled')) {
-            return;
-        }
-
         this.selectedIndexes.splice(this.selectedIndexes.indexOf(index), 1);
         button.selected = false;
 
