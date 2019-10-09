@@ -287,7 +287,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     set columns(value: IGridColumn[]) {
         this._columns = value;
         if (!this._init) {
-            this.createDynamicColumns(this._columns);
+            this.createColumns(this._columns);
         }
     }
 
