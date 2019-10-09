@@ -592,7 +592,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
 	 * @memberof IgxGridComponent
      */
     public groupBy(expression: IGroupingExpression | Array<IGroupingExpression>): void {
-        if (this.checkIfNoField(expression)) {
+        if (this.checkIfNoColumnField(expression)) {
             return;
         }
         this.endEdit(true);
@@ -996,7 +996,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         }
     }
 
-    public checkIfNoField(expression: IGroupingExpression | Array<IGroupingExpression> | any): boolean {
+    private checkIfNoColumnField(expression: IGroupingExpression | Array<IGroupingExpression> | any): boolean {
         if (expression instanceof Array) {
             for (const singleExpression of expression) {
                 if (!singleExpression.fieldName) {
