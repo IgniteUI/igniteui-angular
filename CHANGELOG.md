@@ -4,7 +4,7 @@ All notable changes for each version of this project will be documented in this 
 
 ## 8.2.3
 - `IgxChip`
-    - **Breaking Change** The `originalEvent` property for the events `onMoveStart`, `onMoveEnd`, `onClick` now provide the events passed from the `igxDrag` directive, which are the original events for the `igxChip` component events instead of the first events in the whole chain, which are usually PointerEvent, MouseEvent and etc.
+    - **Breaking Change** The `originalEvent` property for the events `onMoveStart`, `onMoveEnd`, `onClick` and `onSelection` now provide the events passed from the `igxDrag` directive. The passed ones are the original events for the `igxChip` component events instead of the first events in the whole chain, which are usually PointerEvent, MouseEvent and etc.
 
 ## 8.2.0
 ### New theme
