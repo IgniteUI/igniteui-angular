@@ -32,7 +32,7 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
         protected platformUtil: PlatformUtil
         ) {
             super(selectionService, crudService, gridAPI, selection, cdr, helement, zone, touchManager, platformUtil);
-            // this.hSelection = <IgxHierarchicalSelectionAPIService>selection;
+            this.hSelection = <IgxHierarchicalSelectionAPIService>selection;
          }
 
     ngOnInit() {
