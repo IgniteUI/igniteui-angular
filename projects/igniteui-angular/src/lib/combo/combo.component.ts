@@ -670,7 +670,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Input()
-    public placeholder = '';
+    public placeholder;
 
     /**
      * @hidden @internal
@@ -1108,14 +1108,14 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
     /** Contains key-value pairs of the selected valueKeys and their resp. displayKeys */
     private registerRemoteEntries(ids: any[], add = true) {
-        const selection = this.getValueDisplayPairs(ids);
         if (add) {
+            const selection = this.getValueDisplayPairs(ids);
             for (const entry of selection) {
                 this._remoteSelection[entry[this.valueKey]] = entry[this.displayKey];
             }
         } else {
-            for (const entry of selection) {
-                delete this._remoteSelection[entry[this.valueKey]];
+            for (const entry of ids) {
+                delete this._remoteSelection[entry];
             }
         }
     }

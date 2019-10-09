@@ -4,11 +4,11 @@
 </ng-template>
 
 <ng-template let-result #defaultMonth let-obj>
-    <span tabindex="0" #monthsBtn (keydown)="activeViewYearKB($event)" (click)="activeViewYear()"
+    <span tabindex="0" #monthsBtn (keydown)="activeViewYearKB(getViewDate(obj.index), $event)" (click)="activeViewYear(getViewDate(obj.index), $event)"
         class="igx-calendar-picker__date">
         {{ formattedMonth(getViewDate(obj.index)) }}
     </span>
-    <span tabindex="0" #yearsBtn (keydown)="activeViewDecadeKB($event)" (click)="activeViewDecade()"
+    <span tabindex="0" #yearsBtn (keydown)="activeViewDecadeKB($event, getViewDate(obj.index))" (click)="activeViewDecade(getViewDate(obj.index))"
         class="igx-calendar-picker__date">
         {{ formattedYear(getViewDate(obj.index)) }}
     </span>
@@ -26,21 +26,15 @@
     (swipeleft)="nextMonth()">
     <div class="igx-calendar-picker">
         <div tabindex="0" class="igx-calendar-picker__prev" #prevMonthBtn
-            igxCalendarScrollMonth [startScroll]="startPrevMonthScroll" [stopScroll]="stopMonthScroll"  [ngStyle]="{
-                    'min-width.%': 100/(monthsViewNumber*7),
-                    'left': 0
-                }">
+            igxCalendarScrollMonth [startScroll]="startPrevMonthScroll" [stopScroll]="stopMonthScroll" [ngStyle]="{'min-width.%': 100/(monthsViewNumber*7)}">
             <igx-icon fontSet="material">keyboard_arrow_left</igx-icon>
         </div>
-        <div *ngFor="let view of dayViews; index as i;" [style.width.%]="100/monthsViewNumber">
+        <div *ngFor="let view of dayViews; index as i;" [style.width.%]="100/monthsViewNumber" [attr.data-month]="getMonth(i)">
             <ng-container *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultMonth; context: getContext(i)">
             </ng-container>
         </div>
         <div tabindex="0" class="igx-calendar-picker__next" #nextMonthBtn 
-            igxCalendarScrollMonth [startScroll]="startNextMonthScroll" [stopScroll]="stopMonthScroll" [ngStyle]="{
-                    'min-width.%': 100/(monthsViewNumber*7),
-                    'right': 0
-                }">
+            igxCalendarScrollMonth [startScroll]="startNextMonthScroll" [stopScroll]="stopMonthScroll" [ngStyle]="{'min-width.%': 100/(monthsViewNumber*7)}">
             <igx-icon fontSet="material">keyboard_arrow_right</igx-icon>
         </div>
     </div>
