@@ -499,7 +499,8 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
         UIInteractions.simulateMouseEvent('mouseup', resizer, 450, 5);
         fixture.detectChanges();
 
-        const expetedWidth = grid.calcPinnedContainerMaxWidth - parseInt(grid.allColumns[1].width, 10) - parseInt(grid.allColumns[2].width, 10);
+        const expetedWidth = grid.calcPinnedContainerMaxWidth -
+            parseInt(grid.allColumns[1].width, 10) - parseInt(grid.allColumns[2].width, 10);
         expect(grid.allColumns[0].width).toEqual(expetedWidth + 'px');
         expect(grid.allColumns[1].width).toEqual('100px');
         expect(grid.allColumns[2].width).toEqual('100px');
