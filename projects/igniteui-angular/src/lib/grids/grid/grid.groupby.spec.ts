@@ -40,6 +40,7 @@ describe('IgxGrid - GroupBy #grid', () => {
                 GroupableGridComponent,
                 CustomTemplateGridComponent,
                 GroupByDataMoreColumnsComponent,
+                GroupByEmptyColumnFieldComponent,
                 MultiColumnHeadersWithGroupingComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
@@ -2026,6 +2027,19 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(m).toBe('Maximum amount of grouped columns is 10.');
     }));
 
+    it('should not allow grouping by column with no name', fakeAsync(() => {
+        const fix = TestBed.createComponent(GroupByEmptyColumnFieldComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        tick();
+        const expr = grid.columns.map(val => {
+            return { fieldName: val.field, dir: SortingDirection.Asc, ignoreCase: true };
+        });
+        grid.groupBy(expr);
+        tick();
+        expect(grid.groupsRowList.toArray().length).toBe(0);
+    }));
+
     it('should display column header text in the grouping chip.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
@@ -2737,6 +2751,26 @@ export class GroupByDataMoreColumnsComponent extends DataParent {
         { field: 'N', width: 100 }
     ];
 
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public instance: IgxGridComponent;
+}
+
+@Component({
+    template: `
+        <igx-grid
+            [width]='width'
+            [autoGenerate]='false'
+            [data]='data'>
+            <igx-column [width]='width' [groupable]='true'>
+                <ng-template igxCell>
+                    <button>Dummy button</button>
+                </ng-template>
+            </igx-column>
+        </igx-grid>
+    `
+})
+export class GroupByEmptyColumnFieldComponent extends DataParent {
+    public width = '200px';
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 }
