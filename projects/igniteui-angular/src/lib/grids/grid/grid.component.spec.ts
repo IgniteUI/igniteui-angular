@@ -138,7 +138,22 @@ describe('IgxGrid Component Tests #grid', () => {
             }
         });
 
-        it('height/width should be calculated depending on number of records', () => {
+        it('should remove all rows if data becomes null/undefined.', async () => {
+            const fix = TestBed.createComponent(IgxGridRemoteVirtualizationComponent);
+            fix.detectChanges();
+            const grid = fix.componentInstance.instance;
+            expect(grid.rowList.length).toEqual(10);
+
+            fix.componentInstance.nullData();
+            fix.detectChanges();
+
+            const noRecordsSpan = fix.debugElement.query(By.css('.igx-grid__tbody-message'));
+            expect(grid.rowList.length).toEqual(0);
+            expect(noRecordsSpan).toBeTruthy();
+            expect(noRecordsSpan.nativeElement.innerText).toBe('Grid has no data.');
+        });
+
+        it('height/width should be calculated depending on number of records', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridTestComponent);
             fix.detectChanges();
             const grid = fix.componentInstance.grid;
@@ -204,7 +219,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             // The scrollbar is no longer visible
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toEqual(gridBodyHeight);
-        });
+        }));
 
         it('should not have column misalignment when no vertical scrollbar is shown', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridTestComponent);
@@ -1001,7 +1016,6 @@ describe('IgxGrid Component Tests #grid', () => {
 
         it(`should render 10 records if height is 100% and parent container's height is unset and
             display density is changed`, async () => {
-                resizeObserverIgnoreError();
                 const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
                 fix.detectChanges();
 
@@ -1578,8 +1592,6 @@ describe('IgxGrid Component Tests #grid', () => {
         });
 
         it('IgxTabs: should initialize a grid with correct width/height', async () => {
-            resizeObserverIgnoreError();
-
             const grid = fix.componentInstance.grid3;
             const tab = fix.componentInstance.tabs;
             expect(grid.calcHeight).toBe(510);
@@ -2196,6 +2208,10 @@ export class LocalService {
         this.records = this._records.asObservable();
     }
 
+    nullData() {
+        this._records.next(null);
+    }
+
     public getData(data?: IForOfState, cb?: (any) => void): any {
         const size = data.chunkSize === 0 ? 10 : data.chunkSize;
         this.dataStore = this.generateData(data.startIndex, data.startIndex + size);
@@ -2231,6 +2247,10 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
     constructor(private localService: LocalService, public cdr: ChangeDetectorRef) { }
     public ngOnInit(): void {
         this.data = this.localService.records;
+    }
+
+    nullData() {
+        this.localService.nullData();
     }
 
     public ngAfterViewInit() {
