@@ -1,4 +1,5 @@
 <article
+    *ngIf="grid"
     class="igx-advanced-filter"
     igxDrag
     [ghost]="false"
@@ -266,6 +267,7 @@
         <div igxToggle
             class="igx-filter-contextual-menu"
             (keydown)="onKeyDown($event)"
+            (onClosed)="contextMenuClosed()"
             [ngClass]="{
                 'igx-filter-contextual-menu--cosy': displayDensity === 'cosy',
                 'igx-filter-contextual-menu--compact': displayDensity === 'compact'
@@ -336,7 +338,7 @@
         <button igxButton [displayDensity]="displayDensity" (click)="onClearButtonClick()">{{ grid.resourceStrings.igx_grid_excel_custom_dialog_clear }}</button>
 
         <div>
-            <button igxButton [displayDensity]="displayDensity" (click)="closeDialog()">{{ grid.resourceStrings.igx_grid_excel_cancel }}</button>
+            <button igxButton [displayDensity]="displayDensity" (click)="cancelChanges()">{{ grid.resourceStrings.igx_grid_excel_cancel }}</button>
             <button igxButton="raised" [displayDensity]="displayDensity" (click)="onApplyButtonClick()">
                 {{ grid.resourceStrings.igx_grid_excel_apply }}
             </button>

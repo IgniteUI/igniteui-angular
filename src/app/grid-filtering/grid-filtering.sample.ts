@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { IgxGridComponent, FilteringExpressionsTree, IgxStringFilteringOperand,
     FilteringLogic, IgxCheckboxComponent, IChangeCheckboxEventArgs } from 'igniteui-angular';
 import { FilterMode } from 'projects/igniteui-angular/src/lib/grids/common/enums';
@@ -22,6 +22,9 @@ export class GridFilteringComponent implements OnInit, AfterViewInit {
 
     @ViewChild('applyChangesCheckbox', { static: true })
     public applyChangesCheckbox: IgxCheckboxComponent;
+
+    constructor(private cdr: ChangeDetectorRef) {
+    }
 
     ngAfterViewInit(): void {
         const tree = new FilteringExpressionsTree(FilteringLogic.And);
@@ -53,6 +56,7 @@ export class GridFilteringComponent implements OnInit, AfterViewInit {
         });
 
         this.grid1.advancedFilteringExpressionsTree = tree;
+        this.cdr.detectChanges();
     }
 
     public ngOnInit(): void {

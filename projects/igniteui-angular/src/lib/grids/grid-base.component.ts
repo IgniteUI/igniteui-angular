@@ -2967,7 +2967,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             if (this._advancedFilteringOverlayId === event.id) {
                 const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
                 if (instance) {
-                    instance.initialize(this.filteringService, this.overlayService, event.id);
+                    instance.initialize(this, this.overlayService, event.id);
                 }
             }
         });

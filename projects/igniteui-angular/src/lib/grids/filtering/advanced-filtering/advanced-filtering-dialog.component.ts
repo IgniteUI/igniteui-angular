@@ -65,13 +65,12 @@ class ExpressionOperandItem extends ExpressionItem {
     templateUrl: './advanced-filtering-dialog.component.html'
 })
 export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDestroy {
-    @Input()
-    public filteringService: IgxFilteringService;
+    public get filteringService(): IgxFilteringService {
+        return this._grid.filteringService;
+    }
 
-    @Input()
     public overlayComponentId: string;
 
-    @Input()
     public overlayService: IgxOverlayService;
 
     public rootGroup: ExpressionGroupItem;
@@ -181,13 +180,13 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         return this._currentGroupButtonsContainer;
     }
 
-    @ViewChild(IgxToggleDirective, { static: true })
+    @ViewChild(IgxToggleDirective, { static: false })
     public contextMenuToggle: IgxToggleDirective;
 
     @ViewChildren(IgxChipComponent)
     public chips: QueryList<IgxChipComponent>;
 
-    @ViewChild('expressionsContainer', { static: true })
+    @ViewChild('expressionsContainer', { static: false })
     protected expressionsContainer: ElementRef;
 
     @ViewChild('overlayOutlet', { read: IgxOverlayOutletDirective, static: true })
@@ -204,6 +203,8 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     private _editingInputsContainer: ElementRef;
     private _addModeContainer: ElementRef;
     private _currentGroupButtonsContainer: ElementRef;
+    private _grid: IgxGridBaseComponent;
+    private _advancedFilteringExpressionsTree: IFilteringExpressionsTree;
 
     constructor(private element: ElementRef, public cdr: ChangeDetectorRef) { }
 
@@ -217,10 +218,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         this._overlaySettings.outlet = this.overlayOutlet;
         this.columnSelectOverlaySettings.outlet = this.overlayOutlet;
         this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;
-
-        this.contextMenuToggle.onClosed.pipe(takeUntil(this.destroy$)).subscribe((args) => {
-            this.contextualGroup = null;
-        });
     }
 
     public ngOnDestroy(): void {
@@ -249,8 +246,30 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         }
     }
 
+    @Input()
     get grid(): IgxGridBaseComponent {
-        return this.filteringService.grid;
+        return this._grid;
+    }
+
+    set grid(grid: IgxGridBaseComponent) {
+        this._grid = grid;
+        if (this._grid) {
+            this.init();
+        }
+    }
+
+    @Input()
+    get advancedFilteringExpressionsTree(): IFilteringExpressionsTree {
+        return this._advancedFilteringExpressionsTree;
+    }
+
+    set advancedFilteringExpressionsTree(value: IFilteringExpressionsTree) {
+        this._advancedFilteringExpressionsTree = value;
+
+        if (this._advancedFilteringExpressionsTree) {
+            this.rootGroup = this.createExpressionGroupItem(this._advancedFilteringExpressionsTree);
+            this.currentGroup = this.rootGroup;
+        }
     }
 
     get filterableColumns(): IgxColumnComponent[] {
@@ -258,6 +277,11 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     }
 
     public dragStart(dragArgs: IDragStartEventArgs) {
+        if (!this.overlayComponentId) {
+            dragArgs.cancel = true;
+            return;
+        }
+
         if (!this.contextMenuToggle.collapsed) {
             this.contextMenuToggle.element.style.display = 'none';
         }
@@ -519,6 +543,10 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         }
     }
 
+    public contextMenuClosed() {
+        this.contextualGroup = null;
+    }
+
     private toggleContextMenu() {
         const contextualGroup = this.findSingleSelectedGroup();
 
@@ -770,13 +798,11 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         return this.selectedColumn ? this.selectedColumn.filters.conditionList() : [];
     }
 
-    public initialize(filteringService: IgxFilteringService, overlayService: IgxOverlayService,
+    public initialize(grid: IgxGridBaseComponent, overlayService: IgxOverlayService,
         overlayComponentId: string) {
-        this.filteringService = filteringService;
+        this.grid = grid;
         this.overlayService = overlayService;
         this.overlayComponentId = overlayComponentId;
-
-        this.filteringService.registerSVGIcons();
 
         // Set pointer-events to none of the overlay content element which blocks the grid interaction after dragging
         this.overlayService.onOpened.pipe(first()).subscribe(() => {
@@ -784,11 +810,11 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
                 this.element.nativeElement.parentElement.style['pointer-events'] = 'none';
             }
         });
+    }
 
-        if (this.grid.advancedFilteringExpressionsTree) {
-            this.rootGroup = this.createExpressionGroupItem(this.grid.advancedFilteringExpressionsTree);
-            this.currentGroup = this.rootGroup;
-        }
+    private init() {
+        this.filteringService.registerSVGIcons();
+        this.advancedFilteringExpressionsTree = this.grid.advancedFilteringExpressionsTree;
     }
 
     public context(expression: ExpressionItem, afterExpression?: ExpressionItem) {
@@ -816,6 +842,11 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     public applyChanges() {
         this.exitOperandEdit();
         this.grid.advancedFilteringExpressionsTree = this.createExpressionsTreeFromGroupItem(this.rootGroup);
+    }
+
+    public cancelChanges() {
+        this.advancedFilteringExpressionsTree = this.grid.advancedFilteringExpressionsTree;
+        this.closeDialog();
     }
 
     public onApplyButtonClick() {
