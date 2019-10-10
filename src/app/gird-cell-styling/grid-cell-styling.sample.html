@@ -5,24 +5,37 @@
 
     <div class="sample-content">
         <div class="sample-column">
-            <igx-grid #grid1 [data]="data" [primaryKey]="'ID'" [width]="'900px'" [height]="'500px'" [rowSelectable]="true">
-                <igx-column *ngFor="let c of columns" [field]="c.field"
-                                                      [header]="c.field"
-                                                      [width]="c.width"
-                                                      [movable]="true"
-                                                      [groupable]="true"
-                                                      [resizable]="true"
-                                                      [sortable]="true"
-                                                      [filterable]="true"
-                                                      [editable]="true"
-                                                      [cellClasses]="c.cellClasses">
+            <div>
+                <button igxButton="outlined" (click)="applyCSS()">Apply CSS bindings</button>
+                <button igxButton="outlined" (click)="applyCSSClasses()">Apply CSS classes</button>
+            </div>
+            <igx-grid style="margin-bottom: 10vh;" [allowFiltering]="true" filterMode="excelStyleFilter" #grid1 [data]="data" primaryKey="ID" width="80%" height="600px">
+                <igx-column *ngFor="let c of columns"
+                    [field]="c.field"
+                    [header]="c.field"
+                    [movable]="true"
+                    [groupable]="true"
+                    [resizable]="true"
+                    [sortable]="true"
+                    [editable]="true"
+                    [cellClasses]="c.cellClasses"
+                    [cellStyles]="c.cellStyles"
+                >
                 </igx-column>
             </igx-grid>
-            <div class="sample-buttons">
-                <button igxButton="raised" (click)="toggleColumn('ContactName')">Pin/Unpin 'ContactName'</button>
-                <button igxButton="raised" (click)="toggleColumn('ContactTitle')">Pin/Unpin 'ContactTitle'</button>
-                <button igxButton="raised" (click)="toggleColumn('Address')">Pin/Unpin 'Address'</button>
-            </div>
+            <igx-tree-grid [allowFiltering]="true" filterMode="excelStyleFilter"  [data]="data" primaryKey="ID" foreignKey="Infragistics" width="80%" height="600px">
+                <igx-column *ngFor="let c of columns"
+                    [field]="c.field"
+                    [header]="c.field"
+                    [movable]="true"
+                    [resizable]="true"
+                    [sortable]="true"
+                    [editable]="true"
+                    [cellClasses]="c.cellClasses"
+                    [cellStyles]="c.cellStyles"
+                >
+                </igx-column>
+            </igx-tree-grid>
         </div>
     </div>
 </div>

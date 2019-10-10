@@ -420,6 +420,15 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @notifyChanges()
     @Input()
     public cellClasses: any;
+
+    /**
+     *
+     *
+     * @memberof IgxColumnComponent
+     */
+    @notifyChanges()
+    @Input()
+    cellStyles = null;
     /**
      * Gets the column index.
      * ```typescript

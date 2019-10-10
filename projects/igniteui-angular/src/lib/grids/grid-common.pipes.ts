@@ -4,12 +4,16 @@ import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { DataUtil } from '../data-operations/data-util';
 import { cloneArray } from '../core/utils';
 
+/**
+ * @hidden
+ * @internal
+ */
 @Pipe({
-    name: 'igxCellStyles'
+    name: 'igxCellStyleClasses'
 })
-export class IgxGridCellStylesPipe implements PipeTransform {
+export class IgxGridCellStyleClassesPipe implements PipeTransform {
 
-    transform(cssClasses: any, _value: any, data: any, field: string): string {
+    transform(cssClasses: { [prop: string]: any }, _value: any, data: any, field: string): string {
         if (!cssClasses) {
             return '';
         }
@@ -25,6 +29,30 @@ export class IgxGridCellStylesPipe implements PipeTransform {
         }
 
         return result.join(' ');
+    }
+}
+
+/**
+ * @hidden
+ * @internal
+ */
+@Pipe({
+    name: 'igxCellStyles'
+})
+export class IgxGridCellStylesPipe implements PipeTransform {
+
+    transform(styles: { [prop: string]: any }, _value: any, data: any, field: string): { [prop: string]: any } {
+        const css = {};
+        if (!styles) {
+            return css;
+        }
+
+        for (const prop of Object.keys(styles)) {
+            const value = styles[prop];
+            css[prop] = typeof value === 'function' ? value(data, field) : value;
+        }
+
+        return css;
     }
 }
 
