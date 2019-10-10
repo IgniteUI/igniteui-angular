@@ -485,7 +485,7 @@ describe('IgxGrid - Grid Paging', () => {
 
         paginator = grid.nativeElement.querySelector(PAGER_CLASS);
         expect(paginator).toBeDefined();
-        expect(grid.rowList.length).toBe(11);
+        expect(grid.rowList.length).toBe(5);
     }));
 
     function verifyGridPager(fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) {
