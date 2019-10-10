@@ -6,6 +6,7 @@ import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 // import { IgxHierarchicalSelectionAPIService } from './selection';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 import { HammerGesturesManager } from '../../core/touch';
+import { PlatformUtil } from '../../core/utils';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,9 +28,10 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
         public cdr: ChangeDetectorRef,
         private helement: ElementRef,
         protected zone: NgZone,
-        touchManager: HammerGesturesManager
+        touchManager: HammerGesturesManager,
+        protected platformUtil: PlatformUtil
         ) {
-            super(selectionService, crudService, gridAPI, cdr, helement, zone, touchManager);
+            super(selectionService, crudService, gridAPI, cdr, helement, zone, touchManager, platformUtil);
             // this.hSelection = <IgxHierarchicalSelectionAPIService>selection;
          }
 
