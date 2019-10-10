@@ -5004,7 +5004,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * ```
      * @memberof IgxGridComponent
      */
-    get dataView(): any {
+    get dataView(): any[] {
         return this.verticalScrollContainer.igxForOf;
     }
 
