@@ -174,6 +174,7 @@ export class IgxHierarchicalGridBaseComponent extends IgxGridBaseComponent {
         const result = flatten(columns);
         this.columnList.reset(result);
         this.columnList.notifyOnChanges();
+        this.initPinning();
     }
 
     protected _createColumn(col) {
@@ -204,7 +205,6 @@ export class IgxHierarchicalGridBaseComponent extends IgxGridBaseComponent {
             (<IgxColumnGroupComponent>ref.instance).children.reset(newChildren);
             (<IgxColumnGroupComponent>ref.instance).children.notifyOnChanges();
         }
-        // (<IgxColumnGroupComponent>ref.instance).grid = this;
         return ref;
     }
 
@@ -219,7 +219,6 @@ export class IgxHierarchicalGridBaseComponent extends IgxGridBaseComponent {
                 (<any>ref.instance)[propName] = col[propName].constructor;
             }
         });
-        // (<IgxColumnComponent>ref.instance).grid = this;
         return ref;
     }
 

@@ -267,6 +267,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
     }
 
     protected updateChildren() {
+        // Delete the line below once we update to Angular 9
         this.children.reset(this.children.toArray().slice(1));
         this.children.forEach(child => {
             child.parentIsland = this;

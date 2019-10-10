@@ -14,10 +14,10 @@ import {
 import {
     HorizontalAlignment,
     VerticalAlignment,
-    ConnectedPositioningStrategy,
     OverlaySettings,
     IgxOverlayService,
-    AbsoluteScrollStrategy
+    AbsoluteScrollStrategy,
+    AutoPositionStrategy
 } from '../../../services/index';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
 import {
@@ -114,7 +114,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
     private _subMenuOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
         modal: false,
-        positionStrategy: new ConnectedPositioningStrategy(this._subMenuPositionSettings),
+        positionStrategy: new AutoPositionStrategy(this._subMenuPositionSettings),
         scrollStrategy: new AbsoluteScrollStrategy()
     };
 

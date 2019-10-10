@@ -240,7 +240,6 @@ export class IgxColumnComponent implements AfterContentInit {
                 this.grid.summaryService.resetSummaryHeight();
                 this.grid.filteringService.refreshExpressions();
                 this.grid.notifyChanges();
-                // this.grid.refreshSearch(true);
             }
         }
     }
@@ -612,7 +611,7 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      * Gets the column `sortStrategy`.
      * ```typescript
-     * let sortStrategy = this.column.sortStrategy'
+     * let sortStrategy = this.column.sortStrategy
      * ```
      * @memberof IgxColumnComponent
      */
@@ -624,10 +623,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * Sets the column `sortStrategy`.
      * ```typescript
      * this.column.sortStrategy = new CustomSortingStrategy().
-     *
-     * class CustomSortingStrategy extends SortingStrategy {
-     * ...
-     * }
+     * class CustomSortingStrategy extends SortingStrategy {...}
      * ```
      * @memberof IgxColumnComponent
      */
@@ -874,13 +870,13 @@ export class IgxColumnComponent implements AfterContentInit {
         return false;
     }
 
-     /**
-     * Returns a boolean indicating if the column is a child of a `ColumnLayout` for multi-row layout.
-     * ```typescript
-     * let columnLayoutChild =  this.column.columnLayoutChild;
-     * ```
-     * @memberof IgxColumnComponent
-     */
+    /**
+    * Returns a boolean indicating if the column is a child of a `ColumnLayout` for multi-row layout.
+    * ```typescript
+    * let columnLayoutChild =  this.column.columnLayoutChild;
+    * ```
+    * @memberof IgxColumnComponent
+    */
     get columnLayoutChild() {
         return this.parent && this.parent.columnLayout;
     }
@@ -1015,6 +1011,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     children: QueryList<IgxColumnComponent>;
+
     /**
      *@hidden
      */
@@ -1198,7 +1195,7 @@ export class IgxColumnComponent implements AfterContentInit {
             if (!col.colStart) {
                 return;
             }
-            const newWidthSet =  col.widthSetByUser && columnSizes[col.colStart - 1] && !columnSizes[col.colStart - 1].widthSetByUser;
+            const newWidthSet = col.widthSetByUser && columnSizes[col.colStart - 1] && !columnSizes[col.colStart - 1].widthSetByUser;
             const newSpanSmaller = columnSizes[col.colStart - 1] && columnSizes[col.colStart - 1].colSpan > col.gridColumnSpan;
             const bothWidthsSet = col.widthSetByUser && columnSizes[col.colStart - 1] && columnSizes[col.colStart - 1].widthSetByUser;
             const bothWidthsNotSet = !col.widthSetByUser && columnSizes[col.colStart - 1] && !columnSizes[col.colStart - 1].widthSetByUser;
@@ -1270,8 +1267,8 @@ export class IgxColumnComponent implements AfterContentInit {
                 for (; j < columnSizes[i].colSpan && i + j + 1 < columnSizes[i].colEnd; j++) {
                     if (columnSizes[i + j] &&
                         ((!columnSizes[i].width && columnSizes[i + j].width) ||
-                         (!columnSizes[i].width && !columnSizes[i + j].width && columnSizes[i + j].colSpan <= columnSizes[i].colSpan) ||
-                        (!!columnSizes[i + j].width && columnSizes[i + j].colSpan <= columnSizes[i].colSpan))) {
+                            (!columnSizes[i].width && !columnSizes[i + j].width && columnSizes[i + j].colSpan <= columnSizes[i].colSpan) ||
+                            (!!columnSizes[i + j].width && columnSizes[i + j].colSpan <= columnSizes[i].colSpan))) {
                         // If we reach an already defined column that has width and the current doesn't have or
                         // if the reached column has bigger colSpan we stop.
                         break;
@@ -1319,8 +1316,8 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     protected getColumnSizesString(children: QueryList<IgxColumnComponent>): string {
-       const res = this.getFilledChildColumnSizes(children);
-       return res.join(' ');
+        const res = this.getFilledChildColumnSizes(children);
+        return res.join(' ');
     }
 
     public getResizableColUnderEnd(): MRLResizeColumnInfo[] {
@@ -1334,7 +1331,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
         for (let i = 0; i < columnSized.length; i++) {
             if (this.colStart <= i + 1 && i + 1 < colEnd) {
-                targets.push({ target: columnSized[i].ref, spanUsed: 1});
+                targets.push({ target: columnSized[i].ref, spanUsed: 1 });
             }
         }
 
@@ -1414,10 +1411,9 @@ export class IgxColumnComponent implements AfterContentInit {
         grid.resetCaches();
         grid.notifyChanges();
         if (this.columnLayoutChild) {
-            this.grid.columns.filter(x => x.columnLayout).forEach( x => x.populateVisibleIndexes());
+            this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
         this.grid.filteringService.refreshExpressions();
-        // this.grid.refreshSearch(true);
         return true;
     }
     /**
@@ -1478,10 +1474,9 @@ export class IgxColumnComponent implements AfterContentInit {
 
         grid.notifyChanges();
         if (this.columnLayoutChild) {
-            this.grid.columns.filter(x => x.columnLayout).forEach( x => x.populateVisibleIndexes());
+            this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
         this.grid.filteringService.refreshExpressions();
-        // this.grid.refreshSearch(true);
 
         return true;
     }
@@ -1536,7 +1531,6 @@ export class IgxColumnComponent implements AfterContentInit {
      * Autosize the column to the longest currently visible cell value, including the header cell.
      * ```typescript
      * @ViewChild('grid') grid: IgxGridComponent;
-     *
      * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
      * column.autosize();
      * ```

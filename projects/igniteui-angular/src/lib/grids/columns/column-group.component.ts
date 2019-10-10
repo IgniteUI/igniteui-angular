@@ -163,6 +163,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         if (this.headTemplate && this.headTemplate.length) {
             this._headerTemplate = this.headTemplate.toArray()[0].template;
         }
+        // Delete the line below once we update to Angular 9
         this.children.reset(this.children.toArray().slice(1));
         this.children.forEach(child => {
             child.parent = this;
@@ -212,7 +213,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
                 return acc;
             }
             if (typeof val.width === 'string' && val.width.indexOf('%') !== -1) {
-                   isChildrenWidthInPercent = true;
+                isChildrenWidthInPercent = true;
             }
             return acc + parseInt(val.width, 10);
         }, 0)}`;
