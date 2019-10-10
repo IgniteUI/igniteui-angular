@@ -2690,7 +2690,7 @@ describe('IgxGrid - Advanced Filtering', () => {
             fix.detectChanges();
             const dropdownValues = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix).map((x: any) => x.innerText);
             const expectedValues = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'Another Field'];
-            verifyEqualArrays(dropdownValues, expectedValues);
+            expect(expectedValues).toEqual(dropdownValues);
         }));
     });
 });
@@ -2885,8 +2885,6 @@ function verifyContextMenuType(fix, shouldBeContextualGroup: boolean) {
 
 function verifyEqualArrays(firstArr: any[], secondArr: any[]) {
     expect(firstArr.length).toEqual(secondArr.length, 'Array lengths mismatch.');
-    firstArr = firstArr.sort();
-    secondArr = secondArr.sort();
     // Verify sorted arrays have equal respective elements.
     const len = firstArr.length;
     for (let index = 0; index < len; index++) {
