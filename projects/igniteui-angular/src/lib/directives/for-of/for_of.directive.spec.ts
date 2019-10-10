@@ -24,7 +24,6 @@ import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 describe('IgxForOf directive -', () => {
     const INACTIVE_VIRT_CONTAINER = 'igx-display-container--inactive';
@@ -294,7 +293,6 @@ describe('IgxForOf directive -', () => {
         });
 
         it('should always fill available space for last chunk size calculation - vertical virtualization', async () => {
-            resizeObserverIgnoreError();
             fix.componentInstance.height = '1900px';
             const virtualContainer = fix.componentInstance.parentVirtDir;
             virtualContainer.igxForSizePropName = 'height';
