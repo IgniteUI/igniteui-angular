@@ -1504,7 +1504,7 @@ export class CellEditingScrollTestComponent extends BasicGridComponent {
 @Component({
     template: GridTemplateStrings.declareGrid(
             ` [width]="width" [height]="height" [paging]="'true'" [perPage]="perPage" [primaryKey]="'ProductID'"`,
-            '', ColumnDefinitions.productBasicNumberID)
+            '', ColumnDefinitions.productBasic)
 })
 export class GridWithUndefinedDataComponent implements OnInit  {
     @ViewChild(IgxGridComponent, { static: true })
