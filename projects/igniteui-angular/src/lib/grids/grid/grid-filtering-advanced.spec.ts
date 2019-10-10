@@ -13,9 +13,9 @@ import { changei18n, getCurrentResourceStrings } from '../../core/i18n/resources
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import {
+    IgxGridAdvancedFilteringColumnGroupComponent,
     IgxGridAdvancedFilteringComponent
 } from '../../test-utils/grid-samples.spec';
-import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 const ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
 const ADVANCED_FILTERING_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
@@ -27,6 +27,7 @@ describe('IgxGrid - Advanced Filtering', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
+                IgxGridAdvancedFilteringColumnGroupComponent,
                 IgxGridAdvancedFilteringComponent
             ],
             imports: [
@@ -42,7 +43,6 @@ describe('IgxGrid - Advanced Filtering', () => {
     describe('', () => {
         let fix, grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
-            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
             grid = fix.componentInstance.grid;
             fix.detectChanges();
@@ -2662,6 +2662,34 @@ describe('IgxGrid - Advanced Filtering', () => {
             }));
         });
     });
+
+    describe('', () => {
+        let fix, grid: IgxGridComponent;
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridAdvancedFilteringColumnGroupComponent);
+            grid = fix.componentInstance.grid;
+            fix.detectChanges();
+        }));
+
+        it('Should not display column groups in advanced filtering dialog.', fakeAsync(() => {
+            // Open dialog through API.
+            grid.openAdvancedFilteringDialog();
+            fix.detectChanges();
+
+            // Click the initial 'Add And Group' button.
+            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            addAndGroupButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Open column dropdown and verify that there are no column groups present.
+            GridFunctions.clickAdvancedFilteringColumnSelect(fix);
+            fix.detectChanges();
+            const dropdownValues = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix).map((x: any) => x.innerText);
+            const expectedValues = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'Another Field'];
+            expect(expectedValues).toEqual(dropdownValues);
+        }));
+    });
 });
 
 
@@ -2854,8 +2882,6 @@ function verifyContextMenuType(fix, shouldBeContextualGroup: boolean) {
 
 function verifyEqualArrays(firstArr: any[], secondArr: any[]) {
     expect(firstArr.length).toEqual(secondArr.length, 'Array lengths mismatch.');
-    firstArr = firstArr.sort();
-    secondArr = secondArr.sort();
     // Verify sorted arrays have equal respective elements.
     const len = firstArr.length;
     for (let index = 0; index < len; index++) {
