@@ -209,7 +209,6 @@ describe('IgxGrid - Summaries #grid', () => {
         }));
 
         it('should render correct data after hiding one bigger and then one smaller summary when scrolled to the bottom', (async () => {
-            resizeObserverIgnoreError();
             const fixture = TestBed.createComponent(VirtualSummaryColumnComponent);
             fixture.detectChanges();
             await wait(100);
@@ -292,7 +291,6 @@ describe('IgxGrid - Summaries #grid', () => {
             let fix;
             let grid: IgxGridComponent;
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
-                resizeObserverIgnoreError();
                 fix = TestBed.createComponent(SummaryColumnComponent);
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
@@ -1163,7 +1161,6 @@ describe('IgxGrid - Summaries #grid', () => {
         let fix;
         let grid;
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
-            resizeObserverIgnoreError();
             fix = TestBed.createComponent(SummariesGroupByTransactionsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
