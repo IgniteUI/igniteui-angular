@@ -8,7 +8,7 @@ import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxRowIslandComponent } from './row-island.component';
 import { By } from '@angular/platform-browser';
 import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
-import { setupHierarchicalGridScrollDetection, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
+import { setupHierarchicalGridScrollDetection } from '../../test-utils/helper-utils.spec';
 
 describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
     configureTestSuite();
@@ -25,7 +25,6 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
     }));
 
     beforeEach(async(() => {
-        resizeObserverIgnoreError();
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
@@ -33,23 +32,35 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
     }));
 
     // simple tests
-    it('should allow navigating down from parent row into child grid.', () => {
-        const fCell = hierarchicalGrid.dataRowList.toArray()[0].cells.toArray()[0].nativeElement;
+    it('should allow navigating down from parent row into child grid.', (async() => {
+        hierarchicalGrid.expandChildren = false;
+        hierarchicalGrid.height = '600px';
+        hierarchicalGrid.width = '800px';
+        fixture.componentInstance.rowIsland.height = '350px';
+        fixture.detectChanges();
+        await wait(100);
+
+        const row1 = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
+        UIInteractions.clickElement(row1.expander);
+        fixture.detectChanges();
+        await wait(100);
+
+        const fCell = hierarchicalGrid.dataRowList.toArray()[1].cells.toArray()[0].nativeElement;
         fCell.focus();
         fixture.detectChanges();
+
         const keyboardEvent = new KeyboardEvent('keydown', {
             code: 'ArrowDown',
             key: 'ArrowDown'
         });
         fCell.dispatchEvent(keyboardEvent);
+        await wait(100);
         fixture.detectChanges();
 
-        const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
-        const childFirstCell =  childGrid.dataRowList.toArray()[0].cells.toArray()[0];
-
-        expect(childFirstCell.selected).toBe(true);
-        expect(childFirstCell.focused).toBe(true);
-    });
+        const sCell = hierarchicalGrid.dataRowList.toArray()[2].cells.toArray()[0];
+        expect(sCell.selected).toBe(true);
+        expect(sCell.focused).toBe(true);
+    }));
 
     it('should allow navigating up from child row into parent grid.', () => {
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
