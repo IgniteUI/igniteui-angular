@@ -21,6 +21,7 @@ import { debounce } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
 import { HammerGesturesManager } from '../core/touch';
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
+import { PlatformUtil } from '../core/utils';
 
 let NEXT_ID = 0;
 /**
@@ -417,7 +418,8 @@ export class IgxNavigationDrawerComponent implements
         @Optional() private _state: IgxNavigationService,
         // private animate: AnimationBuilder, TODO
         protected renderer: Renderer,
-        private _touchManager: HammerGesturesManager) {
+        private _touchManager: HammerGesturesManager,
+        private platformUtil: PlatformUtil) {
     }
 
     /**
@@ -619,11 +621,15 @@ export class IgxNavigationDrawerComponent implements
      * Sets the drawer width.
      */
     private setDrawerWidth(width: string) {
-        requestAnimationFrame(() => {
-            if (this.drawer) {
-                this.renderer.setElementStyle(this.drawer, 'width', width);
-            }
-        });
+        if (this.platformUtil.isBrowser) {
+            requestAnimationFrame(() => {
+                if (this.drawer) {
+                    this.renderer.setElementStyle(this.drawer, 'width', width);
+                }
+            });
+        } else {
+            this.renderer.setElementStyle(this.drawer, 'width', width);
+        }
     }
 
     /**
@@ -649,7 +655,7 @@ export class IgxNavigationDrawerComponent implements
             this._touchManager.addGlobalEventListener('document', 'panmove', this.pan);
             this._touchManager.addGlobalEventListener('document', 'panend', this.panEnd);
         }
-        if (!this._resizeObserver) {
+        if (!this._resizeObserver && this.platformUtil.isBrowser) {
             this._resizeObserver = fromEvent(window, 'resize').pipe(debounce(() => interval(150)))
                 .subscribe((value) => {
                     this.checkPinThreshold(value);
@@ -667,6 +673,9 @@ export class IgxNavigationDrawerComponent implements
     }
 
     private checkPinThreshold = (evt?: Event) => {
+        if (!this.platformUtil.isBrowser) {
+            return;
+        }
         let windowWidth;
         if (this.pinThreshold) {
             windowWidth = this.getWindowWidth();
@@ -810,9 +819,9 @@ export class IgxNavigationDrawerComponent implements
             if (this.hasAnimateWidth) {
                 this.renderer.setElementStyle(this.drawer, 'width', x ? Math.abs(x) + 'px' : '');
             } else {
-                this.renderer.setElementStyle(this.drawer, 'transform', x ? 'translate3d(' + x + 'px,0,0)' : '');
-                this.renderer.setElementStyle(this.drawer, '-webkit-transform',
-                    x ? 'translate3d(' + x + 'px,0,0)' : '');
+                const transform = x ? 'translate3d(' + x + 'px,0,0)' : '';
+                this.renderer.setElementStyle(this.drawer, 'transform', transform);
+                this.renderer.setElementStyle(this.drawer, '-webkit-transform', transform);
             }
             if (opacity !== undefined) {
                 this.renderer.setElementStyle(this.overlay, 'opacity', opacity);
