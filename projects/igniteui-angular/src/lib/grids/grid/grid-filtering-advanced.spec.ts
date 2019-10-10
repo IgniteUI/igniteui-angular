@@ -15,7 +15,6 @@ import { FilteringLogic } from '../../data-operations/filtering-expression.inter
 import {
     IgxGridAdvancedFilteringComponent
 } from '../../test-utils/grid-samples.spec';
-import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 const ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
 const ADVANCED_FILTERING_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
@@ -42,7 +41,6 @@ describe('IgxGrid - Advanced Filtering', () => {
     describe('', () => {
         let fix, grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
-            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
             grid = fix.componentInstance.grid;
             fix.detectChanges();
