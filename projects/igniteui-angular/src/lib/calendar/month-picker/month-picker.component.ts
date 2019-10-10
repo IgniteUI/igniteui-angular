@@ -185,7 +185,7 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
         this.onSelection.emit(this.selectedDates);
 
         requestAnimationFrame(() => {
-            this.yearsBtn.nativeElement.focus();
+            if (this.yearsBtn) { this.yearsBtn.nativeElement.focus(); }
         });
     }
 

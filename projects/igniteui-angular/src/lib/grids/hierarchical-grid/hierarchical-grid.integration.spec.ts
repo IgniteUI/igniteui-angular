@@ -938,6 +938,35 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(childGrid.columnList.toArray()[0].pinned).toBeTruthy();
             expect(headers[0].classList.contains('igx-grid__th--pinned')).toBeTruthy();
         }));
+
+        it('should be applied correctly for child grid with multi-column header.', (() => {
+            const ri = fixture.componentInstance.rowIsland;
+            const col = ri.columnList.find(x => x.header === 'Information');
+            col.pinned = true;
+            fixture.detectChanges();
+
+            const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+            UIInteractions.clickElement(row.expander);
+            fixture.detectChanges();
+
+            const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+            const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+            // check unpinned/pinned columns
+            expect(childGrid.pinnedColumns.length).toBe(3);
+            expect(childGrid.unpinnedColumns.length).toBe(1);
+             // check cells
+            const cells = childGrid.getRowByIndex(0).cells;
+            expect(cells.length).toBe(3);
+            let cell = childGrid.getCellByColumn(0, 'ChildLevels');
+            expect(cell.visibleColumnIndex).toEqual(0);
+            expect(cell.nativeElement.classList.contains('igx-grid__td--pinned')).toBe(true);
+            cell = childGrid.getCellByColumn(0, 'ProductName');
+            expect(cell.visibleColumnIndex).toEqual(1);
+            expect(cell.nativeElement.classList.contains('igx-grid__td--pinned')).toBe(true);
+            cell = childGrid.getCellByColumn(0, 'ID');
+            expect(cell.visibleColumnIndex).toEqual(2);
+            expect(cell.nativeElement.classList.contains('igx-grid__td--pinned')).toBe(false);
+        }));
     });
 });
 

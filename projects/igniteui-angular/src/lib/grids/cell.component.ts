@@ -455,7 +455,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             }
         } else {
             const rowTransaction: State = this.grid.transactions.getState(this.row.rowID);
-            return rowTransaction && rowTransaction.value && rowTransaction.value[this.column.field];
+                return rowTransaction && rowTransaction.value &&
+                (rowTransaction.value[this.column.field] ||
+                 rowTransaction.value[this.column.field] === 0 ||
+                 rowTransaction.value[this.column.field] === false);
         }
 
         return false;

@@ -1554,6 +1554,39 @@ describe('IgxGrid - multi-column headers #grid', () => {
         expect(firstColumnGroup.header).toEqual(expectedColumnName);
         expect(expectedColumnListLength).toEqual(columnLength);
     });
+
+    it('There shouldn\'t be any errors when dynamically removing or adding a column in column group', () => {
+        const fixture = TestBed.createComponent(DynamicColGroupsGridComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.grid;
+
+        expect(grid.columnList.length).toEqual(10);
+
+        expect(() => {
+            // Delete column
+            fixture.componentInstance.columnGroups[0].columns.splice(0, 1);
+            fixture.detectChanges();
+        }).not.toThrow();
+
+        expect(grid.columnList.length).toEqual(9);
+
+        expect(() => {
+            // Add column
+            fixture.componentInstance.columnGroups[0].columns.push({ field: 'Fax', type: 'string' });
+            fixture.detectChanges();
+        }).not.toThrow();
+
+        expect(grid.columnList.length).toEqual(10);
+
+        expect(() => {
+            // Update column
+            fixture.componentInstance.columnGroups[0].columns[1] = { field: 'City', type: 'string' };
+            fixture.detectChanges();
+        }).not.toThrow();
+
+        expect(grid.columnList.length).toEqual(10);
+    });
 });
 
 @Component({

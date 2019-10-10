@@ -1908,6 +1908,8 @@ describe('IgxCalendar', () => {
 
             date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 7, 5).getTime());
             date.nativeElement.focus();
+            fixture.detectChanges();
+            await wait(400);
 
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
             fixture.detectChanges();

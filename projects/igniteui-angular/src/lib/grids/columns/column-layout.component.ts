@@ -100,7 +100,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         this.children.forEach(child => child.hidden = value);
         if (this.grid && this.grid.columns && this.grid.columns.length > 0) {
             // reset indexes in case columns are hidden/shown runtime
-            this.grid.columns.filter(x => x.columnGroup).forEach( x => x.populateVisibleIndexes());
+            this.grid.columns.filter(x => x.columnGroup).forEach(x => x.populateVisibleIndexes());
         }
     }
 
@@ -139,8 +139,8 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         const grid = this.gridAPI.grid;
         const columns = grid && grid.pinnedColumns && grid.unpinnedColumns ? grid.pinnedColumns.concat(grid.unpinnedColumns) : [];
         const orderedCols = columns
-        .filter(x => !x.columnGroup && !x.hidden)
-        .sort((a, b) => a.rowStart - b.rowStart || columns.indexOf(a.parent) - columns.indexOf(b.parent) || a.colStart - b.colStart);
+            .filter(x => !x.columnGroup && !x.hidden)
+            .sort((a, b) => a.rowStart - b.rowStart || columns.indexOf(a.parent) - columns.indexOf(b.parent) || a.colStart - b.colStart);
         this.children.forEach(child => {
             const rs = child.rowStart || 1;
             let vIndex = 0;
@@ -148,8 +148,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
             const cols = orderedCols.filter(c =>
                 !c.columnGroup && (c.rowStart || 1) <= rs);
             vIndex = cols.indexOf(child);
-            this.childrenVisibleIndexes.push({column: child, index: vIndex});
+            this.childrenVisibleIndexes.push({ column: child, index: vIndex });
         });
     }
-
 }
