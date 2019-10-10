@@ -252,7 +252,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     private onOverlayOpening(eventArgs) {
         const instance = eventArgs.componentRef.instance as IgxGridExcelStyleFilteringComponent;
         if (instance) {
-            instance.initialize(this.column, this._filteringService, this._overlayService, eventArgs.id);
+            instance.initialize(this.column, this._overlayService, eventArgs.id);
         }
     }
 

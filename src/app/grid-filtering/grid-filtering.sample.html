@@ -12,6 +12,10 @@
             </div>
 
             <div style="display: flex">
+                <igx-grid-excel-style-filtering 
+                    [column]="grid1.columns[0]">
+                </igx-grid-excel-style-filtering>
+
                 <igx-grid
                     #grid1
                     [data]="data"
@@ -45,12 +49,13 @@
                                                         [dataType]="c.type">
                     </igx-column>
                 </igx-grid>
-
-                <igx-advanced-filtering-dialog
-                    [grid]="grid1"
-                    [advancedFilteringExpressionsTree]="grid1.advancedFilteringExpressionsTree">
-                </igx-advanced-filtering-dialog>
             </div>
+
+            <igx-advanced-filtering-dialog
+                [grid]="grid1"
+                [advancedFilteringExpressionsTree]="grid1.advancedFilteringExpressionsTree">
+            </igx-advanced-filtering-dialog>
+
             <div class="sample-buttons">
                 <igx-checkbox [checked]="grid1.allowFiltering" (change)="onAllowFilteringChanged($event)">Allow Filtering</igx-checkbox>
                 <igx-buttongroup [multiSelection]="false" [values]="filterModes" (onSelect)="selectFilterMode($event)"></igx-buttongroup>

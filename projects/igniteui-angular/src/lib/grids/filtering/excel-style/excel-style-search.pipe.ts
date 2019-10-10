@@ -18,7 +18,9 @@ export class IgxExcelStyleSearchFilterPipe implements PipeTransform {
         }
 
         if (!searchText) {
-            this.esf.excelStyleSearch.filteredData = null;
+            if (this.esf.excelStyleSearch) {
+                this.esf.excelStyleSearch.filteredData = null;
+            }
             return items;
         }
 
@@ -32,8 +34,10 @@ export class IgxExcelStyleSearchFilterPipe implements PipeTransform {
         const finalResult = result.length > 1 ? result : [];
 
         // Update the filteredData of the search component.
-        this.esf.excelStyleSearch.filteredData = cloneArray(finalResult);
-        this.esf.cdr.detectChanges();
+        if (this.esf.excelStyleSearch) {
+            this.esf.excelStyleSearch.filteredData = cloneArray(finalResult);
+            this.esf.cdr.detectChanges();
+        }
 
         return finalResult;
     }

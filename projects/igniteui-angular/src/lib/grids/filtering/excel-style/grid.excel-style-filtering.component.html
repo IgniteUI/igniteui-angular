@@ -1,4 +1,5 @@
 <article #dropdown
+    *ngIf="column"
     class="igx-excel-filter__menu"
     [ngClass]="{
         'igx-excel-filter__menu--cosy': grid.displayDensity === 'cosy',
@@ -134,7 +135,13 @@
     </footer>
 </article>
 
-<igx-drop-down [maxHeight]="'397px'" [displayDensity]="grid.displayDensity" #subMenu (onSelection)="onSubMenuSelection($event)" (onClosed)="onSubMenuClosed()">
+<igx-drop-down 
+    *ngIf="column"
+    #subMenu
+    [maxHeight]="'397px'"
+    [displayDensity]="grid.displayDensity"
+    (onSelection)="onSubMenuSelection($event)"
+    (onClosed)="onSubMenuClosed()">
     <div>
         <igx-drop-down-item
             *ngFor="let condition of conditions"
@@ -150,6 +157,7 @@
 </igx-drop-down>
 
 <igx-excel-style-custom-dialog
+    *ngIf="column"
     #customDialog
     [column]="column"
     [filteringService]="filteringService"

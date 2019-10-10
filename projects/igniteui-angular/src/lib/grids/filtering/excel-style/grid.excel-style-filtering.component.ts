@@ -9,7 +9,8 @@ import {
     OnDestroy,
     AfterViewInit,
     ElementRef,
-    OnInit
+    OnInit,
+    Input
 } from '@angular/core';
 import {
     HorizontalAlignment,
@@ -38,6 +39,7 @@ import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
 import { takeUntil } from 'rxjs/operators';
 import { ISelectionEventArgs, IgxDropDownComponent } from '../../../drop-down';
 import { IgxColumnComponent } from '../../column.component';
+import { IgxGridBaseComponent } from '../../grid';
 
 /**
  *@hidden
@@ -97,11 +99,24 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
     private selectAllSelected = true;
     private selectAllIndeterminate = false;
     private filterValues = new Set<any>();
+    private _column: IgxColumnComponent;
 
     protected columnMoving = new Subscription();
 
-    public column: IgxColumnComponent;
-    public filteringService: IgxFilteringService;
+    @Input()
+    public get column(): IgxColumnComponent {
+        return this._column;
+    }
+    public set column(value: IgxColumnComponent) {
+        this._column = value;
+        if (this._column) {
+            this.init();
+        }
+    }
+
+    public get filteringService(): IgxFilteringService {
+        return this.grid.filteringService;
+    }
     public listData = new Array<FilterListItem>();
     public uniqueValues = [];
     public overlayService: IgxOverlayService;
@@ -121,37 +136,37 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
     @HostBinding('class.igx-excel-filter')
     className = 'igx-excel-filter';
 
-    @ViewChild('dropdown', { read: ElementRef, static: true })
+    @ViewChild('dropdown', { read: ElementRef, static: false })
     public mainDropdown: ElementRef;
 
-    @ViewChild('subMenu', { read: IgxDropDownComponent, static: true })
+    @ViewChild('subMenu', { read: IgxDropDownComponent, static: false })
     public subMenu: IgxDropDownComponent;
 
-    @ViewChild('customDialog', { read: IgxExcelStyleCustomDialogComponent, static: true })
+    @ViewChild('customDialog', { read: IgxExcelStyleCustomDialogComponent, static: false })
     public customDialog: IgxExcelStyleCustomDialogComponent;
 
-    @ViewChild('excelStyleSearch', { read: IgxExcelStyleSearchComponent, static: true })
+    @ViewChild('excelStyleSearch', { read: IgxExcelStyleSearchComponent, static: false })
     public excelStyleSearch: IgxExcelStyleSearchComponent;
 
     @ViewChild('excelStyleSorting', { read: IgxExcelStyleSortingComponent, static: false })
     protected excelStyleSorting: IgxExcelStyleSortingComponent;
 
-    @ViewChild('defaultExcelStyleSortingTemplate', { read: TemplateRef, static: true })
+    @ViewChild('defaultExcelStyleSortingTemplate', { read: TemplateRef, static: false })
     protected defaultExcelStyleSortingTemplate: TemplateRef<any>;
 
-    @ViewChild('defaultExcelStyleHidingTemplate', { read: TemplateRef, static: true })
+    @ViewChild('defaultExcelStyleHidingTemplate', { read: TemplateRef, static: false })
     protected defaultExcelStyleHidingTemplate: TemplateRef<any>;
 
-    @ViewChild('defaultExcelStyleMovingTemplate', { read: TemplateRef, static: true })
+    @ViewChild('defaultExcelStyleMovingTemplate', { read: TemplateRef, static: false })
     protected defaultExcelStyleMovingTemplate: TemplateRef<any>;
 
-    @ViewChild('defaultExcelStylePinningTemplate', { read: TemplateRef, static: true })
+    @ViewChild('defaultExcelStylePinningTemplate', { read: TemplateRef, static: false })
     protected defaultExcelStylePinningTemplate: TemplateRef<any>;
 
     public isColumnPinnable: boolean;
 
-    get grid(): any {
-        return this.filteringService.grid;
+    get grid(): IgxGridBaseComponent {
+        return this.column.grid;
     }
 
     get conditions() {
@@ -174,7 +189,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
     constructor(public cdr: ChangeDetectorRef) {}
 
     ngOnInit() {
-        this.isColumnPinnable = this.column.pinnable;
+        if (this.column) {
+            this.isColumnPinnable = this.column.pinnable;
+        }
     }
 
     ngOnDestroy(): void {
@@ -184,12 +201,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
 
     ngAfterViewInit(): void {
         this.expressionsList = new Array<ExpressionUI>();
-        this.filteringService.generateExpressionsList(this.column.filteringExpressionsTree, this.grid.filteringLogic, this.expressionsList);
-        if (this.expressionsList && this.expressionsList.length &&
-            this.expressionsList[0].expression.condition.name !== 'in') {
-            this.customDialog.expressionsList = this.expressionsList;
-        }
-        this.populateColumnData();
 
         if (this.excelStyleSorting) {
             const se = this.grid.sortingExpressions.find(expr => expr.fieldName === this.column.field);
@@ -201,6 +212,17 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
         requestAnimationFrame(() => {
             this.excelStyleSearch.searchInput.nativeElement.focus();
         });
+    }
+
+    private init() {
+        this.expressionsList = new Array<ExpressionUI>();
+
+        this.filteringService.generateExpressionsList(this.column.filteringExpressionsTree, this.grid.filteringLogic, this.expressionsList);
+        if (this.expressionsList && this.expressionsList.length &&
+            this.expressionsList[0].expression.condition.name !== 'in') {
+            this.customDialog.expressionsList = this.expressionsList;
+        }
+        this.populateColumnData();
     }
 
     public clearFilterClass() {
@@ -215,14 +237,13 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
         return this.isColumnPinnable ? 'igx-excel-filter__actions-pin' : 'igx-excel-filter__actions-pin--disabled';
     }
 
-    public initialize(column: IgxColumnComponent, filteringService: IgxFilteringService, overlayService: IgxOverlayService,
+    public initialize(column: IgxColumnComponent, overlayService: IgxOverlayService,
         overlayComponentId: string) {
         this.column = column;
-        this.filteringService = filteringService;
         this.overlayService = overlayService;
         this.overlayComponentId = overlayComponentId;
 
-        this._subMenuOverlaySettings.outlet = this.grid.outlet;
+        this._subMenuOverlaySettings.outlet = (this.grid as any).outlet;
 
         this.columnMoving = this.grid.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.closeDropdown();
@@ -293,9 +314,11 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
     public onSubMenuSelection(eventArgs: ISelectionEventArgs) {
         this.customDialog.selectedOperator = eventArgs.newSelection.value;
         eventArgs.cancel = true;
-        this.mainDropdown.nativeElement.style.display = 'none';
+        if (this.overlayComponentId) {
+            this.mainDropdown.nativeElement.style.display = 'none';
+        }
         this.subMenu.close();
-        this.customDialog.open();
+        this.customDialog.open(this.mainDropdown.nativeElement);
     }
 
     private areExpressionsSelectable () {
@@ -364,7 +387,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
     }
 
     public renderColumnValuesFromData() {
-        let data = this.column.gridAPI.get_all_data(this.grid.id);
+        let data = this.column.gridAPI.get_all_data((this.grid as any).id);
         const expressionsTree = this.getColumnFilterExpressionsTree();
 
         if (expressionsTree.filteringOperands.length) {
@@ -608,7 +631,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
     }
 
     get applyButtonDisabled() {
-        return  (this.excelStyleSearch.filteredData && this.excelStyleSearch.filteredData.length === 0) ||
+        return  (this.excelStyleSearch && this.excelStyleSearch.filteredData && this.excelStyleSearch.filteredData.length === 0) ||
                 (this.listData[0] && !this.listData[0].isSelected && !this.listData[0].indeterminate);
     }
 
