@@ -716,7 +716,6 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     it('should allow grouping of already sorted column', async(() => {
-        resizeObserverIgnoreError();
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.enableSorting = true;
@@ -1408,7 +1407,6 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     it('should update horizontal virtualization state correcly when data row views are re-used from cache.',   async () => {
-        resizeObserverIgnoreError();
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
@@ -1839,7 +1837,6 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     it('should reorder groups when reordering chip', async () => {
-        resizeObserverIgnoreError();
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();

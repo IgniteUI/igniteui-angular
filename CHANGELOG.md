@@ -1,10 +1,12 @@
-﻿# Ignite UI for Angular Change Log
+# Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
 
 ## 8.2.3
+- `IgxTextHighlightDirective` - The default highlight directive styles have been moved to a Sass theme - `igx-highlight-theme`; You can modify the resting and active background and text color styles of the directive by passing the respective properties to the Sass theme. You can still pass your own CSS classes to the highlight directive via the cssClass and activeCssClass inputs.
+
 - `IgxChip`
-    - **Breaking Change** The `originalEvent` property for the events `onMoveStart`, `onMoveEnd`, `onClick` and `onSelection` now provide the events passed from the `igxDrag` directive. The passed ones are the original events for the `igxChip` component events instead of the first events in the whole chain, which are usually PointerEvent, MouseEvent and etc.
+    - **Breaking Change** The `originalEvent` property for the events `onMoveStart`, `onMoveEnd`, `onClick` and `onSelection` now provide the events passed from the `igxDrag` directive. The passed original events are in other words the previous events that triggered the `igxChip` ones. They also have original events until a browser event is reached..
 
 ## 8.2.0
 ### New theme

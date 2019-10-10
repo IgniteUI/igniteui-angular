@@ -21,7 +21,6 @@ import { IgxStringFilteringOperand } from '../../data-operations/filtering-condi
 import { IgxHierarchicalGridComponent, IgxHierarchicalGridModule, IgxRowComponent } from '../hierarchical-grid';
 import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';
 import { IgxTreeGridComponent, IgxTreeGridModule } from '../tree-grid';
-import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 import { GridSelectionMode } from '../common/enums';
 
 
@@ -70,7 +69,6 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
         let dragRows: DebugElement[];
         // configureTestSuite();
         beforeEach(async(() => {
-            resizeObserverIgnoreError();
             fixture = TestBed.createComponent(IgxGridRowDraggableComponent);
             grid = fixture.componentInstance.instance;
             dropArea = fixture.componentInstance.dropArea;
@@ -404,7 +402,6 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
             }
         }
         beforeEach(async(() => {
-            resizeObserverIgnoreError();
             fixture = TestBed.createComponent(IgxGridFeaturesRowDragComponent);
             dragGrid = fixture.componentInstance.dragGrid;
             dropGrid = fixture.componentInstance.dropGrid;
@@ -790,7 +787,6 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
         }));
 
         it('should be able to drag row on every hiearchical level', (async () => {
-            resizeObserverIgnoreError();
             // first level row
             let dragIndicatorElement: Element = dragIndicatorElements[1].nativeElement;
             let rowToDrag = dragGrid.getRowByIndex(0);
