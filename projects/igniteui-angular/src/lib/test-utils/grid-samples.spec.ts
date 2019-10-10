@@ -1500,3 +1500,23 @@ export class CellEditingScrollTestComponent extends BasicGridComponent {
         { firstName: 'Michael', lastName: 'Parker', age: 48, isActive: true, birthday: new Date('08/08/1970'), fullName: 'Michael Parker' }
     ];
 }
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
+            ` [width]="width" [height]="height" [paging]="'true'" [perPage]="perPage" [primaryKey]="'ProductID'"`,
+            '', ColumnDefinitions.productBasicNumberID)
+})
+export class GridWithUndefinedDataComponent implements OnInit  {
+    @ViewChild(IgxGridComponent, { static: true })
+    public grid: IgxGridComponent;
+    public data ;
+    public perPage = 5;
+    public width = '800px';
+    public height = '600px';
+
+    public ngOnInit(): void {
+        setTimeout(() => {
+           this.data = SampleTestData.foodProductDataExtended();
+        }, 300);
+    }
+}
