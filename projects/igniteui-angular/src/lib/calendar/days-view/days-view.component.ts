@@ -7,7 +7,8 @@ import {
     ViewChildren,
     QueryList,
     HostBinding,
-    DoCheck
+    DoCheck,
+    OnInit
 } from '@angular/core';
 import { ICalendarDate, isDateInRanges } from '../../calendar/calendar';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -15,8 +16,8 @@ import { IgxDayItemComponent } from './day-item.component';
 import { DateRangeDescriptor, DateRangeType } from '../../core/dates';
 import { IgxCalendarBase, CalendarSelection } from '../calendar-base';
 import { isEqual } from '../../core/utils';
-import { IgxCalendarNavigationService } from '../calendar-navigation.service';
 import { IViewChangingEventArgs } from './days-view.interface';
+import { IgxDaysViewNavigationService } from './daysview-navigation.service';
 
 let NEXT_ID = 0;
 
@@ -27,12 +28,12 @@ let NEXT_ID = 0;
             provide: NG_VALUE_ACCESSOR,
             useExisting: IgxDaysViewComponent
         },
-        { provide: IgxCalendarNavigationService, useClass: IgxCalendarNavigationService }
+        { provide: IgxDaysViewNavigationService, useClass: IgxDaysViewNavigationService }
     ],
     selector: 'igx-days-view',
     templateUrl: 'days-view.component.html'
 })
-export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
+export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck, OnInit {
     /**
      * Sets/gets the `id` of the days view.
      * If not set, the `id` will have value `"igx-days-view-0"`.
@@ -97,7 +98,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
     /**
      * @hidden
      */
-    constructor(public navService: IgxCalendarNavigationService) {
+    constructor(public navService: IgxDaysViewNavigationService) {
         super();
     }
 
@@ -106,6 +107,13 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
      */
     public get getCalendarMonth(): ICalendarDate[][] {
         return this.calendarModel.monthdatescalendar(this.viewDate.getFullYear(), this.viewDate.getMonth(), true);
+    }
+
+    /**
+     * @hidden
+     */
+    public ngOnInit() {
+        this.navService.monthView = this;
     }
 
     /**
@@ -333,7 +341,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
     public onKeydownArrow(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
-        this.navService.focusNextDate(event.target as HTMLElement, event.key, this);
+        this.navService.focusNextDate(event.target as HTMLElement, event.key);
     }
 
     /**
@@ -343,8 +351,7 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
     public onKeydownHome(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
-
-        this.navService.focusHomeDate(this.getFirstMonthView());
+        this.getFirstMonthView().navService.focusHomeDate();
     }
 
     /**
@@ -354,7 +361,6 @@ export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck {
     public onKeydownEnd(event: KeyboardEvent) {
         event.preventDefault();
         event.stopPropagation();
-
-        this.navService.focusEndDate(this.getLastMonthView());
+        this.getLastMonthView().navService.focusEndDate();
     }
 }

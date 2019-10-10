@@ -517,9 +517,6 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
      * @hidden
      */
     public childClicked(instance: ICalendarDate) {
-        if (this.selection === 'multi') {
-            this.deselectDateInMonthViews(instance.date);
-        }
         if (instance.isPrevMonth) {
             this.previousMonth();
         }
@@ -529,6 +526,9 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
         }
 
         this.selectDateFromClient(instance.date);
+        if (this.selection === 'multi') {
+            this.deselectDateInMonthViews(instance.date);
+        }
         this.onSelection.emit(this.selectedDates);
     }
 
@@ -542,7 +542,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
         this.callback = (next) => {
             const day = this.daysView.dates.find((item) => item.date.date.getTime() === next.getTime());
             if (day) {
-                this.daysView.navService.focusNextDate(day.nativeElement, args.key, this.daysView, true);
+                this.daysView.navService.focusNextDate(day.nativeElement, args.key, true);
             }
         };
         this.viewDate = this.calendarModel.timedelta(this.nextDate, 'month', 0);
@@ -729,7 +729,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
             this.callback = (next) => {
                 monthView = this.daysView as IgxDaysViewComponent;
                 let dayItem;
-                while (!dayItem && monthView) {
+                while ((!dayItem && monthView) || (dayItem && !dayItem.isCurrentMonth)) {
                     dayItem = monthView.dates.find((d) => d.date.date.getTime() === next.getTime());
                     monthView = monthView.nextMonthView;
                 }
@@ -754,7 +754,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
             return;
         }
 
-        const isPageDown = event.key === 'Shift.PageDown';
+        const isPageDown = event.key === 'PageDown';
         const step = isPageDown ? 1 : -1;
         this.viewDate = this.calendarModel.timedelta(this.viewDate, 'year', step);
 
@@ -785,7 +785,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
             this.callback = (next) => {
                 monthView = this.daysView as IgxDaysViewComponent;
                 let dayItem;
-                while (!dayItem && monthView) {
+                while ((!dayItem && monthView) || (dayItem && !dayItem.isCurrentMonth)) {
                     dayItem = monthView.dates.find((d) => d.date.date.getTime() === next.getTime());
                     monthView = monthView.nextMonthView;
                 }

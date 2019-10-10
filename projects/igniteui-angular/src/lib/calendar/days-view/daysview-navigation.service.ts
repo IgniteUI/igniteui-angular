@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { isIE } from '../core/utils';
-import { IgxDayItemComponent } from './days-view/day-item.component';
-import { IgxDaysViewComponent } from './days-view/days-view.component';
-import { ScrollMonth } from './calendar-base';
+import { isIE } from '../../core/utils';
+import { IgxDayItemComponent } from './day-item.component';
+import { IgxDaysViewComponent } from './days-view.component';
+import { ScrollMonth } from '../calendar-base';
 
 enum Direction {
     Up = 'ArrowUp',
@@ -13,16 +13,17 @@ enum Direction {
 
 /** @hidden */
 @Injectable()
-export class IgxCalendarNavigationService {
-
+export class IgxDaysViewNavigationService {
+    public monthView: IgxDaysViewComponent;
     /**
      * Implements kb navigation in all MoveDirections. nextDate and nextMonthView namimg convention is used for both previous/next
      * @hidden
      */
-    public focusNextDate(target: HTMLElement, key: string, monthView: IgxDaysViewComponent, nextView = false) {
+    public focusNextDate(target: HTMLElement, key: string, nextView = false) {
         if (isIE()) {
             target = target.parentElement;
         }
+        const monthView = this.monthView;
         const node = monthView.dates.find((date) => date.nativeElement === target);
         let dates = monthView.dates.toArray(),
             day: IgxDayItemComponent, step, i, nextDate: Date;
@@ -108,7 +109,7 @@ export class IgxCalendarNavigationService {
                 day.nativeElement.focus();
                 return;
             }
-            this.focusNextDate(day.nativeElement, key, nextMonthView);
+            nextMonthView.navService.focusNextDate(day.nativeElement, key);
         }
 
         // if iterating in the visible prev/next moths above found a day that is not focusable, ie is disabled, hidden, etc
@@ -133,10 +134,10 @@ export class IgxCalendarNavigationService {
      * Focuses first focusable day in the month. Will go to next visible month, if no day in the first month is focusable
      * @hidden
      */
-    public focusHomeDate(monthView: IgxDaysViewComponent) {
+    public focusHomeDate() {
+        let monthView = this.monthView;
         while (!this.focusFirstDay(monthView) && monthView.nextMonthView) {
             monthView = monthView.nextMonthView;
-            this.focusFirstDay(monthView);
         }
     }
 
@@ -144,10 +145,10 @@ export class IgxCalendarNavigationService {
      * Focuses last focusable day in the month. Will go to previous visible month, if no day in the first month is focusable
      * @hidden
      */
-    public focusEndDate(monthView: IgxDaysViewComponent) {
+    public focusEndDate() {
+        let monthView = this.monthView;
         while (!this.focusLastDay(monthView) && monthView.prevMonthView) {
             monthView = monthView.prevMonthView;
-            this.focusLastDay(monthView);
         }
     }
 
