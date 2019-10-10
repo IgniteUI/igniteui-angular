@@ -341,17 +341,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     }
 
     /**
-     * Returns a complete list of the elements in the current vertical dataview.
-     * ```typescript
-     *      const dataView = this.grid.dataView;
-     * ```
-     * @memberof IgxGridComponent
-     */
-    get dataView(): any {
-        return this.verticalScrollContainer.igxForOf;
-    }
-
-    /**
      *@hidden
      */
     @Output()
@@ -990,7 +979,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
 
             };
 
-            this.verticalScrollContainer.igxForOf.forEach(process);
+            this.dataView.forEach(process);
             return this.extractDataFromSelection(source, formatters, headers);
         } else {
             return super.getSelectedData(formatters, headers);

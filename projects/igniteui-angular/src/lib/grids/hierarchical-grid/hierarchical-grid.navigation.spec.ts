@@ -537,7 +537,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
 
     it('should retain focused cell when expand/collapse hierarchical row using ALT+Arrow Right/ALT+Arrow Left.', (async () => {
         // scroll to last row
-        const lastDataIndex = hierarchicalGrid.verticalScrollContainer.igxForOf.length - 2;
+        const lastDataIndex = hierarchicalGrid.dataView.length - 2;
         hierarchicalGrid.verticalScrollContainer.scrollTo(lastDataIndex);
         await wait(100);
         fixture.detectChanges();
@@ -877,7 +877,7 @@ describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
             await wait(100);
             fixture.detectChanges();
             const child = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
-            const lastIndex =  child.verticalScrollContainer.igxForOf.length - 1;
+            const lastIndex =  child.dataView.length - 1;
             child.verticalScrollContainer.scrollTo(lastIndex);
             await wait(100);
             fixture.detectChanges();
@@ -956,7 +956,7 @@ describe('IgxHierarchicalGrid Multi-layout Navigation #hGrid', () => {
         const child1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         const child2 = hierarchicalGrid.hgridAPI.getChildGrids(false)[4];
 
-        child1.verticalScrollContainer.scrollTo(child1.verticalScrollContainer.igxForOf.length - 1);
+        child1.verticalScrollContainer.scrollTo(child1.dataView.length - 1);
         await wait(100);
         fixture.detectChanges();
 
@@ -977,7 +977,7 @@ describe('IgxHierarchicalGrid Multi-layout Navigation #hGrid', () => {
         const child1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         const child2 = hierarchicalGrid.hgridAPI.getChildGrids(false)[4];
 
-        child1.verticalScrollContainer.scrollTo(child1.verticalScrollContainer.igxForOf.length - 1);
+        child1.verticalScrollContainer.scrollTo(child1.dataView.length - 1);
         await wait(100);
         fixture.detectChanges();
         const rowVirt = child1.dataRowList.toArray()[0].virtDirRow;

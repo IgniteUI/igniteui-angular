@@ -293,7 +293,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
             GridSelectionFunctions.verifyCellSelected(firstCell);
 
-            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
             await wait(100);
             fix.detectChanges();
 
@@ -514,7 +514,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
             expect(grid.getSelectedData()).toEqual(expectedData);
 
-            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
             await wait(100);
             fix.detectChanges();
 
@@ -538,7 +538,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
             expect(grid.getSelectedData()).toEqual(expectedData);
 
-            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
             await wait(100);
             fix.detectChanges();
 
@@ -1040,7 +1040,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 0, 0, 0, 0);
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 0, 0);
 
-            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
             await wait(100);
             fix.detectChanges();
 

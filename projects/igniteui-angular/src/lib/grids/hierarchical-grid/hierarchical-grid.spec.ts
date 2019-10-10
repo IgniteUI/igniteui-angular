@@ -144,7 +144,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         fixture.detectChanges();
         expect(row.expanded).toBe(true);
         // scroll to bottom
-        hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
+        hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.dataView.length - 1);
         await wait(100);
         fixture.detectChanges();
         // scroll to top
@@ -622,7 +622,7 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         const child2 = children[1];
         expect(child1._destroyed).toBeFalsy();
         expect(child2._destroyed).toBeFalsy();
-        hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
+        hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.dataView.length - 1);
         await wait(100);
         fixture.detectChanges();
 
