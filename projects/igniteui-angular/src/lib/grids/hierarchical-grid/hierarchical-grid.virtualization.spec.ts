@@ -9,7 +9,7 @@ import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { FilteringExpressionsTree, FilteringLogic, IgxStringFilteringOperand } from 'igniteui-angular';
 import { By } from '@angular/platform-browser';
 import { first, delay } from 'rxjs/operators';
-import { setupHierarchicalGridScrollDetection, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
+import { setupHierarchicalGridScrollDetection } from '../../test-utils/helper-utils.spec';
 
 describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     configureTestSuite();
@@ -32,7 +32,6 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     }));
 
     it('should retain expansion state when scrolling.', async () => {
-        resizeObserverIgnoreError();
         const firstRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
         // first child of the row should expand indicator
         firstRow.nativeElement.children[0].click();
@@ -127,7 +126,6 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     });
 
     it('should render correct data for child grid after scrolling and start index changes.', async() => {
-        resizeObserverIgnoreError();
         const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
         // first child of the row should expand indicator
         firstRow.nativeElement.children[0].click();
@@ -186,7 +184,6 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     });
 
     it('should not lose scroll position after expanding a row when there are already expanded rows above.', async() => {
-        resizeObserverIgnoreError();
         // Expand two rows at the top
         hierarchicalGrid.dataRowList.toArray()[2].nativeElement.children[0].click();
         await wait(100);
@@ -280,7 +277,6 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     });
 
 it('should update scroll height after expanding/collapsing row in a nested child grid that has no height.', async () => {
-        resizeObserverIgnoreError();
         fixture.componentInstance.data = [
             { ID: 0, ChildLevels: 3, ProductName: 'Product: A0 ' },
             { ID: 1, ChildLevels: 3, ProductName: 'Product: A0 ' },
@@ -325,7 +321,6 @@ it('should update scroll height after expanding/collapsing row in a nested child
     });
 
     it('should update context information correctly for child grid container after scrolling',  async() => {
-        resizeObserverIgnoreError();
         // expand 3rd row
         const row = hierarchicalGrid.dataRowList.toArray()[3];
         row.nativeElement.children[0].click();
@@ -385,7 +380,6 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
     }));
 
     it('should show scrollbar after expanding a row with data loaded after initial view initialization',  async() => {
-        resizeObserverIgnoreError();
         const fixture = TestBed.createComponent(IgxHierarchicalGridNoScrollTestComponent);
         fixture.detectChanges();
         await wait();
