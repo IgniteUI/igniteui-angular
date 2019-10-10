@@ -4630,7 +4630,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public hasVerticalSroll() {
         if (this._init) { return false; }
         const isScrollable = this.verticalScrollContainer ? this.verticalScrollContainer.isScrollable() : false;
-        return !!(this.calcWidth && this.dataView && 
+        return !!(this.calcWidth && this.dataView &&
             this.dataView.length > 0 &&
             isScrollable);
     }
