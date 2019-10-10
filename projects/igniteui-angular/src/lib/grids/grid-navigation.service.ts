@@ -22,7 +22,7 @@ export class IgxGridNavigationService {
     }
 
     get displayContainerScrollLeft() {
-        return Math.round(this.grid.parentVirtDir.getHorizontalScroll().scrollLeft);
+        return Math.ceil(this.grid.parentVirtDir.getHorizontalScroll().scrollLeft);
     }
 
     get verticalDisplayContainerElement() {
