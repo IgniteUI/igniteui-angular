@@ -73,16 +73,16 @@
             </ng-container>
             <ng-container *ngIf="pinnedColumns.length > 0">
                 <ng-template ngFor let-col [ngForOf]="pinnedColumns | igxTopLevel">
-                    <igx-grid-header-group [column]="col" [gridID]="id" [style.min-width.px]="getHeaderGroupWidth(col)"
-                        [style.flex-basis.px]="getHeaderGroupWidth(col)"></igx-grid-header-group>
+                    <igx-grid-header-group [column]="col" [gridID]="id" [style.min-width]="getHeaderGroupWidth(col)"
+                        [style.flex-basis]="getHeaderGroupWidth(col)"></igx-grid-header-group>
                 </ng-template>
             </ng-container>
             <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxTopLevel"
                 [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
                 [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges'
                 [igxForSizePropName]='"calcPixelWidth"' #headerContainer>
-                <igx-grid-header-group [column]="col" [gridID]="id" [style.min-width.px]="getHeaderGroupWidth(col)"
-                    [style.flex-basis.px]="getHeaderGroupWidth(col)"></igx-grid-header-group>
+                <igx-grid-header-group [column]="col" [gridID]="id" [style.min-width]="getHeaderGroupWidth(col)"
+                    [style.flex-basis]="getHeaderGroupWidth(col)"></igx-grid-header-group>
             </ng-template>
         </div>
         <igx-grid-filtering-row #filteringRow [style.width.px]='calcWidth' *ngIf="filteringService.isFilterRowVisible"

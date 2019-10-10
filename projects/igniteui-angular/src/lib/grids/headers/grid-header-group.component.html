@@ -38,8 +38,8 @@
             <igx-grid-header-group *ngIf="!child.hidden" class="igx-grid__thead-subgroup"
                                 [column]="child"
                                 [gridID]="child.grid.id"
-                                [style.min-width.px]="grid.getHeaderGroupWidth(child)"
-                                [style.flex-basis.px]="grid.getHeaderGroupWidth(child)">
+                                [style.min-width]="grid.getHeaderGroupWidth(child)"
+                                [style.flex-basis]="grid.getHeaderGroupWidth(child)">
             </igx-grid-header-group>
         </ng-container>
     </div>

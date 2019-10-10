@@ -128,9 +128,6 @@ export class IgxSummaryCellComponent {
         }
     }
 
-    @HostBinding('style.min-width')
-    @HostBinding('style.max-width')
-    @HostBinding('style.flex-basis')
     get width() {
         return this.column.getCellWidth();
     }

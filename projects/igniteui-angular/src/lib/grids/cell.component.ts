@@ -417,9 +417,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```
      * @memberof IgxGridCellComponent
      */
-    @HostBinding('style.min-width')
-    @HostBinding('style.max-width')
-    @HostBinding('style.flex-basis')
     @Input()
     width = '';
 

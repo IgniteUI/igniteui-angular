@@ -4278,7 +4278,7 @@ export class IgxGridBaseComponent extends DisplayDensityBase implements
                 const columnWidthCombined = parseInt(this._columnWidth, 10) * (column.colEnd ? column.colEnd - column.colStart : 1);
                 column.defaultWidth = columnWidthCombined + 'px';
             } else {
-                column.defaultWidth = this._columnWidth;
+                column.defaultWidth = this._columnWidth + 'px';
                 column.resetCaches();
             }
         });

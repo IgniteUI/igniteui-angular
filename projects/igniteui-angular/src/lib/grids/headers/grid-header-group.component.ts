@@ -105,8 +105,6 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      * Gets the width of the header group.
      * @memberof IgxGridHeaderGroupComponent
      */
-    @HostBinding('style.min-width')
-    @HostBinding('style.flex-basis')
     get width() {
         return this.grid.getHeaderGroupWidth(this.column);
     }

@@ -313,7 +313,7 @@ export class IgxColumnComponent implements AfterContentInit {
             this._calcWidth = null;
             this.calcPixelWidth = NaN;
             this.widthSetByUser = true;
-            this._width = value;
+            this._width = typeof(value) === 'number' ? value + 'px' : value;
             if (this.grid) {
                 this.cacheCalcWidth();
             }
