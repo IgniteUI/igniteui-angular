@@ -4998,7 +4998,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
-     * Returns a complete list of the elements in the current vertical dataview.
+     * Returns the currently transformed paged/filtered/sorted/grouped data, displayed in the grid.
      * ```typescript
      *      const dataView = this.grid.dataView;
      * ```

@@ -24,7 +24,7 @@ export interface GridType {
     pinnedColumns: any;
     summariesRowList: any;
     headerContainer: any;
-    dataView: any;
+    dataView: any[];
 
     rowInEditMode: any;
     rowEditTabs: any;
