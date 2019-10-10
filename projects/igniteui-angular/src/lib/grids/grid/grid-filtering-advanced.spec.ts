@@ -2666,7 +2666,6 @@ describe('IgxGrid - Advanced Filtering', () => {
     describe('', () => {
         let fix, grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
-            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridAdvancedFilteringColumnGroupComponent);
             grid = fix.componentInstance.grid;
             fix.detectChanges();
