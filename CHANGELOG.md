@@ -75,6 +75,7 @@ For more information about the theming please read our [documentation](https://w
     - `isCellSelected` method has been deprecated. Now you can use `selected` property.
     - `rowSelectable` property has been deprecated. Now you can use `rowSelection` property to enable row selection and also you can show and hide the row selectors by setting `hideRowSelectors` property to true or false (which is the default value).
     - Removed deprecated event `OnFocusChange`
+    - Privately accessed method, `verticalScrollContainer.igxForOf`, is now publicly exposed as `dataView`  
     - **Breaking Change** `igxExcelStyleSortingTemplate` directive is renamed to `igxExcelStyleSorting`.
     - **Breaking Change** `igxExcelStyleMovingTemplate` directive is renamed to `igxExcelStyleMoving`.
     - **Breaking Change** `igxExcelStyleHidingTemplate` directive is renamed to `igxExcelStyleHiding`.
