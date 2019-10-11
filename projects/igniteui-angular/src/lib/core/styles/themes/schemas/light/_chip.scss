@@ -29,8 +29,8 @@
 /// @prop {Map} focus-selected-background [igx-color: ('grays', 400)] - The selected chip focus background color.
 /// @prop {Map} focus-selected-border-color [transparent] - The selected chip focus border color.
 /// @prop {Number} ghost-elevation [8] - The elevation level for the chip's ghost (dragging mode). Between 0-24.
-/// @param {color} remove-icon-color [currentColor] - The remove icon color for the chip.
-/// @param {Map} remove-icon-color-focus [igx-color: ('error')] - The remove icon color on focus for the chip.
+/// @prop {color} remove-icon-color [currentColor] - The remove icon color for the chip.
+/// @prop {Map} remove-icon-color-focus [igx-color: ('error')] - The remove icon color on focus for the chip.
 ///
 /// @requires {function} extend
 /// @requires {map} $_default-shape-chip
