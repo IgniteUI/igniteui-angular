@@ -402,9 +402,20 @@
             display: none;
         }
 
-        &:focus-within {
+        // FIX IE11 and Edge focus styles.
+        // [focus-within] is not supported by IE & Edge.
+        &:focus {
             outline-style: none;
-            color: igx-color(map-get($theme, 'palette'), error);
+
+            igx-icon {
+                color: igx-color(map-get($theme, 'palette'), error);
+            }
+        }
+
+        igx-icon {
+            &:focus{
+                outline-style: none;
+            }
         }
 
         [dir='rtl'] & {
