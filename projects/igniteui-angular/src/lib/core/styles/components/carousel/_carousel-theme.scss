@@ -49,7 +49,7 @@
 
     $indicator-dot-color: null,
     $indicator-border-color: null,
-    $indicator-active-border-color: null
+    $indicator-active-border-color: null,
 ){
     $name: 'igx-carousel';
     $carousel-schema: map-get($schema, $name);
