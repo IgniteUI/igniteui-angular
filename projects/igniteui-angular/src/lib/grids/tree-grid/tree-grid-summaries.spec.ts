@@ -1609,6 +1609,44 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         verifySummaryForRow847(fix, 6);
     }));
 
+    it('should be able to access alldata from each summary', fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxTreeGridCustomSummariesComponent);
+        fix.detectChanges();
+        const treeGrid = fix.componentInstance.treeGrid;
+
+        treeGrid.expandAll();
+        fix.detectChanges();
+
+        let summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 6);
+        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
+        summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 7);
+        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
+        summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
+        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
+
+        treeGrid.getColumnByName('Name').summaries = fix.componentInstance.ptoSummary;
+        tick();
+        fix.detectChanges();
+
+        summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 6);
+        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'People on PTO'], ['2', '1']);
+        summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 7);
+        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'People on PTO'], ['3', '1']);
+        summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
+        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'People on PTO'], ['4', '0']);
+
+        treeGrid.getCellByColumn(5, 'OnPTO').update(true);
+        tick();
+        fix.detectChanges();
+
+        summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 6);
+        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'People on PTO'], ['2', '2']);
+        summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 7);
+        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'People on PTO'], ['3', '1']);
+        summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 0);
+        GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count', 'People on PTO'], ['4', '0']);
+    }));
+
     it('should render rows correctly after collapse and expand', async () => {
         const fix = TestBed.createComponent(IgxTreeGridSummariesScrollingComponent);
         const treeGrid = fix.componentInstance.treeGrid;
