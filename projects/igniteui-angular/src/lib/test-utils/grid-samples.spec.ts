@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild, Input, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, TemplateRef, ViewChild, Input, AfterViewInit, ChangeDetectorRef, OnInit } from '@angular/core';
 import { IgxGridCellComponent } from '../grids/cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/summaries/grid-summary';
 import { IGridCellEventArgs, IGridEditEventArgs, IgxGridTransaction } from '../grids/grid-base.component';
@@ -11,6 +11,7 @@ import { IgxColumnComponent } from '../grids/column.component';
 import { IgxTransactionService } from '../services';
 import { IgxFilteringOperand } from '../data-operations/filtering-condition';
 import { ExpressionUI } from '../grids/filtering/grid-filtering.service';
+import { IgxGridComponent } from '../grids/grid';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -1118,4 +1119,24 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
     data = SampleTestData.contactInfoDataFull();
     width = '800px';
     height = '800px';
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
+            ` [width]="width" [height]="height" [paging]="'true'" [perPage]="perPage" [primaryKey]="'ProductID'"`,
+            '', ColumnDefinitions.productBasic)
+})
+export class GridWithUndefinedDataComponent implements OnInit  {
+    @ViewChild(IgxGridComponent, { static: true })
+    public grid: IgxGridComponent;
+    public data ;
+    public perPage = 5;
+    public width = '800px';
+    public height = '600px';
+
+    public ngOnInit(): void {
+        setTimeout(() => {
+           this.data = SampleTestData.foodProductDataExtended();
+        }, 300);
+    }
 }
