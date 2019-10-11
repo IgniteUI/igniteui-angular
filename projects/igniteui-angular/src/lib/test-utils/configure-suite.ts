@@ -1,4 +1,5 @@
 import { TestBed, getTestBed, ComponentFixture } from '@angular/core/testing';
+import { resizeObserverIgnoreError } from './helper-utils.spec';
 
 /**
  * Per https://github.com/angular/angular/issues/12409#issuecomment-391087831
@@ -11,6 +12,7 @@ export const configureTestSuite = () => {
     originReset = TestBed.resetTestingModule;
     // TestBed.resetTestingModule();
     TestBed.resetTestingModule = () => TestBed;
+    resizeObserverIgnoreError();
   });
 
   afterEach(() => {

@@ -716,7 +716,6 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     it('should allow grouping of already sorted column', async(() => {
-        resizeObserverIgnoreError();
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.enableSorting = true;
@@ -1408,7 +1407,6 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     it('should update horizontal virtualization state correcly when data row views are re-used from cache.',   async () => {
-        resizeObserverIgnoreError();
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
@@ -1689,11 +1687,15 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(chips[1].querySelectorAll(CHIP_REMOVE_ICON).length).toEqual(1);
 
         // check click does not allow changing sort dir
-        chips[0].children[0].click();
+        chips[0].children[0].dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
+        tick();
+        chips[0].children[0].dispatchEvent(new PointerEvent('pointerup'));
         tick();
         fix.detectChanges();
 
-        chips[1].children[0].click();
+        chips[1].children[0].dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
+        tick();
+        chips[1].children[0].dispatchEvent(new PointerEvent('pointerup'));
         tick();
 
         fix.detectChanges();
@@ -1835,7 +1837,6 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     it('should reorder groups when reordering chip', async () => {
-        resizeObserverIgnoreError();
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();

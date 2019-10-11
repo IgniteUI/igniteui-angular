@@ -9,7 +9,6 @@ import { IgxGridComponent } from './grid.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
-import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - Grid Paging #grid', () => {
@@ -192,7 +191,6 @@ describe('IgxGrid - Grid Paging #grid', () => {
     }));
 
     it('change paging pages per page API', (async () => {
-        resizeObserverIgnoreError();
         const fix = TestBed.createComponent(ReorderedColumnsComponent);
         fix.detectChanges();
 
@@ -306,7 +304,6 @@ describe('IgxGrid - Grid Paging #grid', () => {
     }));
 
     it('should change not leave prev page data after scorlling', (async () => {
-        resizeObserverIgnoreError();
         const fix = TestBed.createComponent(PagingComponent);
         fix.componentInstance.perPage = 5;
         fix.componentInstance.grid.height = '300px';
