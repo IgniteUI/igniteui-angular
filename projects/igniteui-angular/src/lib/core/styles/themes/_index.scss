@@ -192,7 +192,7 @@
             $palette,
             $schema,
             $border-radius: $roundness,
-            $disable-button-shadow: if($elevation == false, 0, true),
+            $button-shadow: if($elevation == false, 0, null),
         ));
     }
 

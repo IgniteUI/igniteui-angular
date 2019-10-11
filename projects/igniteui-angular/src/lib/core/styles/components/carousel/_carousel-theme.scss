@@ -14,7 +14,7 @@
 /// @param {Color} $indicator-dot-color [null] - The active indicator dot color.
 /// @param {Color} $indicator-border-color [null] - The idle indicator border color.
 /// @param {Color} $indicator-active-border-color [null] - The active indicator border color.
-/// @param {Bool} $disable-button-shadow [true] - Show shadow underneath the previous/next buttons.
+/// @param {box-shadow} $button-shadow [null] - Shadow underneath the previous/next buttons.
 ///
 /// @param {border-radius} $border-radius [null] - The border radius used for carousel component.
 ///
@@ -37,8 +37,10 @@
 @function igx-carousel-theme(
     $palette: $default-palette,
     $schema: $light-schema,
+    $elevations: $elevations,
 
     $border-radius: null,
+    $button-shadow: null,
 
     $button-background: null,
     $button-hover-background: null,
@@ -47,9 +49,7 @@
 
     $indicator-dot-color: null,
     $indicator-border-color: null,
-    $indicator-active-border-color: null,
-
-    $disable-button-shadow: true
+    $indicator-active-border-color: null
 ){
     $name: 'igx-carousel';
     $carousel-schema: map-get($schema, $name);
@@ -59,7 +59,10 @@
         if($border-radius, $border-radius, map-get($carousel-schema, 'border-radius')),0 ,36px
     );
 
-    $button-shadow: if($disable-button-shadow == true, none, igx-elevation($elevations, 1));
+    @if not($button-shadow) {
+        $button-elevation: map-get($carousel-schema, 'button-elevation');
+        $button-shadow: igx-elevation($elevations, $button-elevation);
+    }
 
     @if not($button-arrow-color) and $button-background {
         $button-arrow-color: text-contrast($button-background);
@@ -72,18 +75,18 @@
     @return extend($theme, (
         name: $name,
         palette: $palette,
+
         border-radius: $border-radius,
+        button-shadow: $button-shadow,
+
         button-background: $button-background,
         button-hover-background: $button-hover-background,
         button-arrow-color: $button-arrow-color,
         button-hover-arrow-color: $button-hover-arrow-color,
-        button-shadow: $button-shadow,
 
         indicator-dot-color: $indicator-dot-color,
         indicator-border-color: $indicator-border-color,
         indicator-active-border-color: $indicator-active-border-color,
-
-        disable-button-shadow: $disable-button-shadow
     ));
 }
 
