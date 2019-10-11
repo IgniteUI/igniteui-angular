@@ -105,11 +105,10 @@ export class IgxGridSummaryService {
             this.summaryCacheMap.set(rowID, rowSummaries);
         }
         if (!this.hasSummarizedColumns || !data) {return rowSummaries; }
-        const allData = data;
         this.grid.columnList.filter(col => col.hasSummary).forEach((column) => {
             if (!rowSummaries.get(column.field)) {
                 rowSummaries.set(column.field,
-                    column.summaries.operate(data.map(r => r[column.field]), allData, column.field));
+                    column.summaries.operate(data.map(r => r[column.field]), data, column.field));
             }
         });
         return rowSummaries;
