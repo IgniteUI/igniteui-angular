@@ -1,6 +1,7 @@
 import { FilterMode } from './enums';
 
 export interface GridType {
+    id: string;
     nativeElement: HTMLElement;
     rowEditable: boolean;
     rootSummariesEnabled: boolean;

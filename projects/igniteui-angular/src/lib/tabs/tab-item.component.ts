@@ -6,20 +6,23 @@ import {
     HostListener,
     Input,
     TemplateRef,
-    ViewChild
+    ViewChild,
+    NgZone,
+    AfterViewInit,
+    OnDestroy
 } from '@angular/core';
 
 import { IgxTabsGroupComponent } from './tabs-group.component';
 import { IgxTabItemBase, IgxTabsBase } from './tabs.common';
 import { IgxTabItemTemplateDirective } from './tabs.directives';
+import ResizeObserver from 'resize-observer-polyfill';
 
 @Component({
     selector: 'igx-tab-item',
     templateUrl: 'tab-item.component.html'
 })
 
-export class IgxTabItemComponent extends IgxTabItemBase {
-
+export class IgxTabItemComponent extends IgxTabItemBase implements AfterViewInit, OnDestroy {
     /**
     * Gets the group associated with the tab.
     * ```html
@@ -82,8 +85,9 @@ export class IgxTabItemComponent extends IgxTabItemBase {
     private _changesCount = 0; // changes and updates accordingly applied to the tab.
     private _isSelected = false;
     private _disabled = false;
+    private _resizeObserver: ResizeObserver;
 
-    constructor(private _tabs: IgxTabsBase, private _element: ElementRef) {
+    constructor(private _tabs: IgxTabsBase, private _element: ElementRef, private _ngZone: NgZone) {
         super();
         this._nativeTabItem = _element;
     }
@@ -145,22 +149,26 @@ export class IgxTabItemComponent extends IgxTabItemBase {
     @HostBinding('attr.aria-controls')
     public ariaControls = 'igx-tab-item-group-' + this.index;
 
+    ngAfterViewInit(): void {
+        this._ngZone.runOutsideAngular(() => {
+            this._resizeObserver = new ResizeObserver(() => {
+                this._tabs.transformIndicatorAnimation(this._nativeTabItem.nativeElement, 0);
+            });
+        });
+    }
+
+    ngOnDestroy(): void {
+        this._ngZone.runOutsideAngular(() => {
+            this._resizeObserver.disconnect();
+        });
+    }
+
     /**
      * @hidden
      */
     @HostListener('click', ['$event'])
     public onClick(event) {
         this.select();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('window:resize', ['$event'])
-    public onResize(event) {
-        if (this.isSelected) {
-            this._tabs.transformIndicatorAnimation(this.nativeTabItem.nativeElement);
-        }
     }
 
     /**
@@ -269,6 +277,15 @@ export class IgxTabItemComponent extends IgxTabItemBase {
      */
     public setSelectedInternal(newValue: boolean) {
         this._isSelected = newValue;
+        this._ngZone.runOutsideAngular(() => {
+            if (this._resizeObserver) {
+                if (this._isSelected) {
+                    this._resizeObserver.observe(this._element.nativeElement);
+                } else {
+                    this._resizeObserver.disconnect();
+                }
+            }
+        });
         this.tabindex = newValue ? 0 : -1;
     }
 

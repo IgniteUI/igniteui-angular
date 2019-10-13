@@ -1043,7 +1043,9 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             }
         } else {
             // Trigger our own click event because when there is no ghost, native click cannot be prevented when dragging.
-            this.dragClick.emit(eventArgs);
+            this.zone.run(() => {
+                this.dragClick.emit(eventArgs);
+            });
         }
     }
 

@@ -24,7 +24,7 @@ import { IBaseEventArgs } from '../core/utils';
 
 
 export interface IBaseChipEventArgs extends IBaseEventArgs {
-    originalEvent: PointerEvent | MouseEvent | TouchEvent | KeyboardEvent | IDropBaseEventArgs;
+    originalEvent: IDragBaseEventArgs | IDropBaseEventArgs | KeyboardEvent | MouseEvent | TouchEvent;
     owner: IgxChipComponent;
 }
 
@@ -557,7 +557,7 @@ export class IgxChipComponent extends DisplayDensityBase {
     // Start chip igxDrag behavior
     public onChipDragStart(event: IDragStartEventArgs) {
         this.onMoveStart.emit({
-            originalEvent: event.originalEvent,
+            originalEvent: event,
             owner: this
         });
         event.cancel = !this.draggable || this.disabled;
@@ -578,7 +578,7 @@ export class IgxChipComponent extends DisplayDensityBase {
     public onChipMoveEnd(event: IDragBaseEventArgs) {
         // moveEnd is triggered after return animation has finished. This happen when we drag and release the chip.
         this.onMoveEnd.emit({
-            originalEvent: event.originalEvent,
+            originalEvent: event,
             owner: this
         });
 
@@ -592,14 +592,14 @@ export class IgxChipComponent extends DisplayDensityBase {
      */
     public onChipDragClicked(event: IDragBaseEventArgs) {
         const clickEventArgs: IChipClickEventArgs = {
-            originalEvent: event.originalEvent,
+            originalEvent: event,
             owner: this,
             cancel: false
         };
         this.onClick.emit(clickEventArgs);
 
         if (!clickEventArgs.cancel && this.selectable && !this.disabled) {
-            this.changeSelection(!this.selected, event.originalEvent);
+            this.changeSelection(!this.selected, event);
         }
     }
     // End chip igxDrag behavior

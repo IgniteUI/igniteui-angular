@@ -22,7 +22,7 @@ export class IgxGridNavigationService {
     }
 
     get displayContainerScrollLeft() {
-        return Math.round(this.grid.parentVirtDir.getHorizontalScroll().scrollLeft);
+        return Math.ceil(this.grid.parentVirtDir.getHorizontalScroll().scrollLeft);
     }
 
     get verticalDisplayContainerElement() {
@@ -628,7 +628,7 @@ export class IgxGridNavigationService {
 
     protected getNextRowByIndex(nextIndex) {
         return this.grid.tbody.nativeElement.querySelector(
-            `[data-rowindex="${nextIndex}"]`);
+            `[data-rowindex="${nextIndex}"][data-gridid="${this.grid.id}"]`);
     }
 
     private getAllRows() {

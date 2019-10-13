@@ -10,7 +10,7 @@ import { SelectionWithScrollsComponent,
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { setupGridScrollDetection, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
+import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { DefaultSortingStrategy } from 'igniteui-angular';
 import { GridSelectionMode } from '../common/enums';
 
@@ -1616,7 +1616,6 @@ describe('IgxGrid - Cell selection #grid', () => {
         let detect;
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
-            resizeObserverIgnoreError();
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
