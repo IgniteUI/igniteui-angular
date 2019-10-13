@@ -275,7 +275,7 @@ export class IgxGridGroupByRowComponent {
         if (shift) {
             this.grid.navigation.performShiftTabKey(this.nativeElement, activeNode);
         } else {
-            if (this.index === this.grid.verticalScrollContainer.igxForOf.length - 1 && this.grid.rootSummariesEnabled) {
+            if (this.index === this.grid.dataView.length - 1 && this.grid.rootSummariesEnabled) {
                 this.grid.navigation.onKeydownHome(0, true);
             } else {
                 const orderedColumns = this.grid.navigation.gridOrderedColumns;
