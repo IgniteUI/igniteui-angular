@@ -11,7 +11,6 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { wait } from '../../test-utils/ui-interactions.spec';
-import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 const HIGHLIGHT_CLASS = 'igx-highlight';
 const ACTIVE_CLASS = 'igx-highlight__active';
@@ -317,7 +316,6 @@ describe('IgxTreeGrid - search API #tGrid', () => {
 
     describe('Scrollable TreeGrid', () => {
         beforeEach(async() => {
-            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxTreeGridSummariesScrollingComponent);
             fix.detectChanges();
             fixNativeElement = fix.debugElement.nativeElement;

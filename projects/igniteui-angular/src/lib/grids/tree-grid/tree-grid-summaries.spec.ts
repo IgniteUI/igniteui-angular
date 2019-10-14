@@ -1391,7 +1391,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             treeGrid.expandAll();
             fix.detectChanges();
 
-            treeGrid.verticalScrollContainer.scrollTo(treeGrid.verticalScrollContainer.igxForOf.length - 1);
+            treeGrid.verticalScrollContainer.scrollTo(treeGrid.dataView.length - 1);
             await wait(100);
             fix.detectChanges();
 
