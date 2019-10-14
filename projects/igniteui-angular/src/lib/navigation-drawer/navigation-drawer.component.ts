@@ -21,6 +21,7 @@ import { debounce } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
 import { HammerGesturesManager } from '../core/touch';
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
+import { PlatformUtil } from '../core/utils';
 
 let NEXT_ID = 0;
 /**
@@ -415,9 +416,9 @@ export class IgxNavigationDrawerComponent implements
     constructor(
         @Inject(ElementRef) private elementRef: ElementRef,
         @Optional() private _state: IgxNavigationService,
-        // private animate: AnimationBuilder, TODO
         protected renderer: Renderer2,
-        private _touchManager: HammerGesturesManager) {
+        private _touchManager: HammerGesturesManager,
+        private platformUtil: PlatformUtil) {
     }
 
     /**
@@ -621,11 +622,15 @@ export class IgxNavigationDrawerComponent implements
      * Sets the drawer width.
      */
     private setDrawerWidth(width: string) {
-        requestAnimationFrame(() => {
-            if (this.drawer) {
-                this.renderer.setStyle(this.drawer, 'width', width);
-            }
-        });
+        if (this.platformUtil.isBrowser) {
+            requestAnimationFrame(() => {
+                if (this.drawer) {
+                    this.renderer.setStyle(this.drawer, 'width', width);
+                }
+            });
+        } else {
+            this.renderer.setStyle(this.drawer, 'width', width);
+        }
     }
 
     /**
@@ -651,7 +656,7 @@ export class IgxNavigationDrawerComponent implements
             this._touchManager.addGlobalEventListener('document', 'panmove', this.pan);
             this._touchManager.addGlobalEventListener('document', 'panend', this.panEnd);
         }
-        if (!this._resizeObserver) {
+        if (!this._resizeObserver && this.platformUtil.isBrowser) {
             this._resizeObserver = fromEvent(window, 'resize').pipe(debounce(() => interval(150)))
                 .subscribe((value) => {
                     this.checkPinThreshold(value);
@@ -669,6 +674,9 @@ export class IgxNavigationDrawerComponent implements
     }
 
     private checkPinThreshold = (evt?: Event) => {
+        if (!this.platformUtil.isBrowser) {
+            return;
+        }
         let windowWidth;
         if (this.pinThreshold) {
             windowWidth = this.getWindowWidth();

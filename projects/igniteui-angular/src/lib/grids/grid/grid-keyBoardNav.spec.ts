@@ -981,7 +981,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
                 });
                 fix.detectChanges();
 
-                grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+                grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
                 await wait(100);
                 fix.detectChanges();
 
@@ -1009,7 +1009,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
                 });
                 fix.detectChanges();
 
-                grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+                grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
                 await wait(100);
                 fix.detectChanges();
 

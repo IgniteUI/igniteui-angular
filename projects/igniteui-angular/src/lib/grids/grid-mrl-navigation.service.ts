@@ -249,7 +249,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             moveNext = true;
         }
         const rowIndex = moveNext ? selectedNode.row + 1 : selectedNode.row;
-        if (rowIndex > this.grid.verticalScrollContainer.igxForOf.length - 1) {
+        if (rowIndex > this.grid.dataView.length - 1) {
             // end of rows reached.
             return;
         }
@@ -469,7 +469,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
 
     private _isGroupRecordAt(rowIndex: number) {
-        const record = this.grid.verticalScrollContainer.igxForOf[rowIndex];
+        const record = this.grid.dataView[rowIndex];
         return record.records && record.records.length;
     }
 

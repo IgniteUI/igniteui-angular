@@ -10,6 +10,7 @@ export interface IGridDataBindable {
  * @internal
  */
 export interface GridType extends IGridDataBindable {
+    id: string;
     nativeElement: HTMLElement;
     rowEditable: boolean;
     rootSummariesEnabled: boolean;
@@ -35,6 +36,7 @@ export interface GridType extends IGridDataBindable {
     pinnedColumns: any;
     summariesRowList: any;
     headerContainer: any;
+    dataView: any[];
 
     rowInEditMode: any;
     rowEditTabs: any;

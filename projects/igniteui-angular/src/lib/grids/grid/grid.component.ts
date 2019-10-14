@@ -593,6 +593,9 @@ export class IgxGridComponent extends IgxGridBaseComponent implements GridType, 
 	 * @memberof IgxGridComponent
      */
     public groupBy(expression: IGroupingExpression | Array<IGroupingExpression>): void {
+        if (this.checkIfNoColumnField(expression)) {
+            return;
+        }
         this.endEdit(true);
         if (expression instanceof Array) {
             this._gridAPI.groupBy_multiple(expression);
@@ -980,7 +983,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements GridType, 
 
             };
 
-            this.verticalScrollContainer.igxForOf.forEach(process);
+            this.dataView.forEach(process);
             return this.extractDataFromSelection(source, formatters, headers);
         } else {
             return super.getSelectedData(formatters, headers);
@@ -993,4 +996,17 @@ export class IgxGridComponent extends IgxGridBaseComponent implements GridType, 
             this.navigation.grid = this;
         }
     }
+
+    private checkIfNoColumnField(expression: IGroupingExpression | Array<IGroupingExpression> | any): boolean {
+        if (expression instanceof Array) {
+            for (const singleExpression of expression) {
+                if (!singleExpression.fieldName) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return !expression.fieldName;
+    }
+
 }

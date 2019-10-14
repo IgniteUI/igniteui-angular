@@ -813,7 +813,10 @@ export class IgxGridBaseComponent extends DisplayDensityBase implements
             this._isLoading = value;
             this.evaluateLoadingState();
         }
-        this.notifyChanges();
+        Promise.resolve().then(() => {
+            // wait for the current detection cycle to end before triggering a new one.
+            this.notifyChanges();
+        });
     }
 
     /**
@@ -4553,8 +4556,8 @@ export class IgxGridBaseComponent extends DisplayDensityBase implements
     public hasVerticalSroll() {
         if (this._init) { return false; }
         const isScrollable = this.verticalScrollContainer ? this.verticalScrollContainer.isScrollable() : false;
-        return !!(this.calcWidth && this.verticalScrollContainer.igxForOf &&
-            this.verticalScrollContainer.igxForOf.length > 0 &&
+        return !!(this.calcWidth && this.dataView &&
+            this.dataView.length > 0 &&
             isScrollable);
     }
 
@@ -4921,6 +4924,17 @@ export class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
+     * Returns the currently transformed paged/filtered/sorted/grouped data, displayed in the grid.
+     * ```typescript
+     *      const dataView = this.grid.dataView;
+     * ```
+     * @memberof IgxGridComponent
+     */
+    get dataView(): any[] {
+        return this.verticalScrollContainer.igxForOf;
+    }
+
+    /**
      * Get current selection state.
      * Returns an array with selected rows' IDs (primaryKey or rowData)
      * ```typescript
@@ -5138,7 +5152,7 @@ export class IgxGridBaseComponent extends DisplayDensityBase implements
      * If `headers` is enabled, it will use the column header (if any) instead of the column field.
      */
     getSelectedData(formatters = false, headers = false) {
-        const source = this.verticalScrollContainer.igxForOf;
+        const source = this.dataView;
         return this.extractDataFromSelection(source, formatters, headers);
     }
 
@@ -5207,12 +5221,12 @@ export class IgxGridBaseComponent extends DisplayDensityBase implements
 	 * @memberof IgxGridBaseComponent
      */
     public navigateTo(rowIndex: number, visibleColIndex = -1, cb: Function = null) {
-        if (rowIndex < 0 || rowIndex > this.verticalScrollContainer.igxForOf.length - 1
+        if (rowIndex < 0 || rowIndex > this.dataView.length - 1
             || (visibleColIndex !== -1 && this.columnList.map(col => col.visibleIndex).indexOf(visibleColIndex) === -1)) {
             return;
         }
         this.wheelHandler();
-        if (this.verticalScrollContainer.igxForOf.slice(rowIndex, rowIndex + 1).find(rec => rec.expression || rec.childGridsData)) {
+        if (this.dataView.slice(rowIndex, rowIndex + 1).find(rec => rec.expression || rec.childGridsData)) {
             visibleColIndex = -1;
         }
         if (visibleColIndex === -1 || this.navigation.isColumnFullyVisible(visibleColIndex)) {
@@ -5248,7 +5262,7 @@ export class IgxGridBaseComponent extends DisplayDensityBase implements
         const colIndexes = callback ? columns.filter((col) => callback(col)).map(editCol => editCol.visibleIndex).sort((a, b) => a - b) :
             columns.map(editCol => editCol.visibleIndex).sort((a, b) => a - b);
         const nextCellIndex = colIndexes.find(index => index > curVisibleColIndex);
-        if (this.verticalScrollContainer.igxForOf.slice(currRowIndex, currRowIndex + 1)
+        if (this.dataView.slice(currRowIndex, currRowIndex + 1)
             .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData) && nextCellIndex !== undefined) {
             return { rowIndex: currRowIndex, visibleColumnIndex: nextCellIndex };
         } else {
@@ -5280,7 +5294,7 @@ export class IgxGridBaseComponent extends DisplayDensityBase implements
         const colIndexes = callback ? columns.filter((col) => callback(col)).map(editCol => editCol.visibleIndex).sort((a, b) => b - a) :
             columns.map(editCol => editCol.visibleIndex).sort((a, b) => b - a);
         const prevCellIndex = colIndexes.find(index => index < curVisibleColIndex);
-        if (this.verticalScrollContainer.igxForOf.slice(currRowIndex, currRowIndex + 1)
+        if (this.dataView.slice(currRowIndex, currRowIndex + 1)
             .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData) && prevCellIndex !== undefined) {
             return { rowIndex: currRowIndex, visibleColumnIndex: prevCellIndex };
         } else {
@@ -5323,24 +5337,24 @@ export class IgxGridBaseComponent extends DisplayDensityBase implements
     private getPrevDataRowIndex(currentRowIndex): number {
         if (currentRowIndex <= 0) { return currentRowIndex; }
 
-        const prevRow = this.verticalScrollContainer.igxForOf.slice(0, currentRowIndex).reverse()
+        const prevRow = this.dataView.slice(0, currentRowIndex).reverse()
             .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData);
-        return prevRow ? this.verticalScrollContainer.igxForOf.indexOf(prevRow) : currentRowIndex;
+        return prevRow ? this.dataView.indexOf(prevRow) : currentRowIndex;
     }
 
     private getNextDataRowIndex(currentRowIndex): number {
-        if (currentRowIndex === this.verticalScrollContainer.igxForOf.length) { return currentRowIndex; }
+        if (currentRowIndex === this.dataView.length) { return currentRowIndex; }
 
-        const nextRow = this.verticalScrollContainer.igxForOf.slice(currentRowIndex + 1, this.verticalScrollContainer.igxForOf.length)
+        const nextRow = this.dataView.slice(currentRowIndex + 1, this.dataView.length)
             .find(rec => !rec.expression && !rec.summaries && !rec.childGridsData);
-        return nextRow ? this.verticalScrollContainer.igxForOf.indexOf(nextRow) : currentRowIndex;
+        return nextRow ? this.dataView.indexOf(nextRow) : currentRowIndex;
     }
 
     private isValidPosition(rowIndex, colIndex): boolean {
         const rows = this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).length;
         const cols = this.columnList.filter(col => !col.columnGroup && col.visibleIndex >= 0).length;
         if (rows < 1 || cols < 1) { return false; }
-        if (rowIndex > -1 && rowIndex < this.verticalScrollContainer.igxForOf.length &&
+        if (rowIndex > -1 && rowIndex < this.dataView.length &&
             colIndex > - 1 && colIndex <= this.unpinnedColumns[this.unpinnedColumns.length - 1].visibleIndex) {
             return true;
         }
@@ -5537,11 +5551,11 @@ export class IgxGridBaseComponent extends DisplayDensityBase implements
         if (delayScrolling) {
             this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
                 this.scrollDirective(this.verticalScrollContainer,
-                    typeof (row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(row));
+                    typeof (row) === 'number' ? row : this.dataView.indexOf(row));
             });
         } else {
             this.scrollDirective(this.verticalScrollContainer,
-                typeof (row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(row));
+                typeof (row) === 'number' ? row : this.dataView.indexOf(row));
         }
 
         this.scrollToHorizontally(column);
