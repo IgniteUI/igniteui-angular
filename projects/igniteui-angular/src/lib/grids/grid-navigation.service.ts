@@ -21,7 +21,7 @@ export class IgxGridNavigationService {
     }
 
     get displayContainerScrollLeft() {
-        return Math.round(this.grid.headerContainer.scrollPosition);
+        return Math.ceil(this.grid.headerContainer.scrollPosition);
     }
 
     get verticalDisplayContainerElement() {
