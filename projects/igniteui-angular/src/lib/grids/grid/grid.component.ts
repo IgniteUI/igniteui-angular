@@ -982,7 +982,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
 
             };
 
-            this.verticalScrollContainer.igxForOf.forEach(process);
+            this.dataView.forEach(process);
             return this.extractDataFromSelection(source, formatters, headers);
         } else {
             return super.getSelectedData(formatters, headers);

@@ -905,10 +905,10 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         // verify virtualization states - should be in last chunk
         const virtState = grid.verticalScrollContainer.state;
-        expect(virtState.startIndex).toBe(grid.verticalScrollContainer.igxForOf.length - virtState.chunkSize);
+        expect(virtState.startIndex).toBe(grid.dataView.length - virtState.chunkSize);
 
         // verify last row is visible at bottom
-        const lastRow = grid.getRowByIndex(grid.verticalScrollContainer.igxForOf.length - 1);
+        const lastRow = grid.getRowByIndex(grid.dataView.length - 1);
         expect(lastRow.nativeElement.getBoundingClientRect().bottom).toBe(grid.tbody.nativeElement.getBoundingClientRect().bottom);
 
     });
