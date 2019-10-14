@@ -280,7 +280,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
 
     /**
      * Selects a button by its index.
-     * @memberOf {@link IgxButtonGroupComponent}
      *```typescript
      *@ViewChild("MyChild")
      *private buttonG: IgxButtonGroupComponent;
@@ -289,6 +288,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      *    this.cdr.detectChanges();
      *}
      *```
+     * @memberOf {@link IgxButtonGroupComponent}
      */
     public selectButton(index: number) {
         if (index >= this.buttons.length || index < 0) {
@@ -327,7 +327,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
 
     /**
      * Deselects a button by its index.
-     * @memberOf {@link IgxButtonGroupComponent}
      * ```typescript
      *@ViewChild("MyChild")
      *private buttonG: IgxButtonGroupComponent;
@@ -336,6 +335,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      *    this.cdr.detectChanges();
      *}
      * ```
+     * @memberOf {@link IgxButtonGroupComponent}
      */
     public deselectButton(index: number) {
         if (index >= this.buttons.length || index < 0) {
