@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxGridComponent } from 'igniteui-angular';
-import { SAMPLE_DATA } from '../shared/sample-data';
+import { SAMPLE_DATA, HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
 @Component({
     providers: [],
@@ -12,15 +12,16 @@ import { SAMPLE_DATA } from '../shared/sample-data';
 export class GridCellStylingSampleComponent implements OnInit {
 
     public data: Array<any>;
+    data2: Array<any>;
     public columns: Array<any>;
 
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
 
     styles = {
-        'background': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        'color': (_, field) => field === 'ID' ? 'yellow' : 'white',
+        'background': 'linear-gradient(180deg, #dd4c4c 0%, firebrick 100%)',
+        'color': 'white',
         'text-shadow': '1px 1px 2px rgba(25,25,25,.25)',
-        'animation': '0.5s ease-in-out forwards alternate popin'
+        'animation': '0.25s ease-in-out forwards alternate popin'
     };
 
     condition = (rowData: any): boolean => {
@@ -76,15 +77,37 @@ export class GridCellStylingSampleComponent implements OnInit {
         ];
 
         this.data = SAMPLE_DATA.slice(0);
+        this.data2 = HIERARCHICAL_SAMPLE_DATA.slice(0);
+    }
+
+    indent(event: KeyboardEvent, element: HTMLTextAreaElement) {
+        event.preventDefault();
+        const start = element.selectionStart;
+        const end = element.selectionEnd;
+        const value = element.value;
+        element.value = `${value.substring(0, start)}  ${value.substring(end)}`;
+        element.selectionStart = element.selectionEnd = start + 2;
+    }
+
+    dedent(event: KeyboardEvent, element: HTMLTextAreaElement) {
+        event.preventDefault();
+        const start = element.selectionStart;
+        const end = element.selectionEnd;
+        const value = element.value;
+        element.value = `${value.substring(0, start)}${value.substring(end)}`;
+        element.selectionStart = element.selectionEnd = start - 2;
     }
 
     applyCSS() {
-        // this.columns.forEach(column => column.cellClasses = null);
         this.columns.forEach(column => column.cellStyles = this.styles);
     }
 
     applyCSSClasses() {
         this.columns.forEach(column => column.cellClasses = this.cellClasses1);
-        // this.columns.forEach(column => column.cellStyles = null);
+    }
+
+    updateCSS(css: string) {
+        this.styles = {...this.styles, ...JSON.parse(css)};
+        this.applyCSS();
     }
 }

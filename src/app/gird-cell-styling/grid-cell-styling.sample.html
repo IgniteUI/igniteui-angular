@@ -8,8 +8,20 @@
             <div>
                 <button igxButton="outlined" (click)="applyCSS()">Apply CSS bindings</button>
                 <button igxButton="outlined" (click)="applyCSSClasses()">Apply CSS classes</button>
+                <igx-input-group type="border">
+                    <textarea (keydown.Tab)="indent($event, userCSS)" (keydown.Shift.Tab)="dedent($event, userCSS)" style="font-family: monospace;" #userCSS igxInput cols="15" rows="5">{{ styles | json }}</textarea>
+                    <igx-hint>Note: You cannot use the callback functionality here</igx-hint>
+                </igx-input-group>
+                <button igxButton="outlined" (click)="updateCSS(userCSS.value)">Apply new styles</button>
             </div>
-            <igx-grid style="margin-bottom: 10vh;" [allowFiltering]="true" filterMode="excelStyleFilter" #grid1 [data]="data" primaryKey="ID" width="80%" height="600px">
+            <igx-grid style="margin-bottom: 10vh;"
+                [allowFiltering]="true"
+                filterMode="excelStyleFilter"
+                #grid1 [data]="data"
+                primaryKey="ID"
+                width="80%"
+                height="600px"
+            >
                 <igx-column *ngFor="let c of columns"
                     [field]="c.field"
                     [header]="c.field"
@@ -23,7 +35,16 @@
                 >
                 </igx-column>
             </igx-grid>
-            <igx-tree-grid [allowFiltering]="true" filterMode="excelStyleFilter"  [data]="data" primaryKey="ID" foreignKey="Infragistics" width="80%" height="600px">
+            <igx-tree-grid
+                [allowFiltering]="true"
+                filterMode="excelStyleFilter"
+                [data]="data2"
+                childDataKey="ChildCompanies"
+                primaryKey="ID"
+                expansionDepth="1"
+                width="80%"
+                height="600px"
+            >
                 <igx-column *ngFor="let c of columns"
                     [field]="c.field"
                     [header]="c.field"
