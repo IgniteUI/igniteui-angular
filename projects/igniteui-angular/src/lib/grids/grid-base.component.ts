@@ -3359,11 +3359,11 @@ export class IgxGridBaseComponent extends DisplayDensityBase implements
         const minWidth = this.defaultHeaderGroupMinWidth;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
 
-        if (!isPercentageWidth && parseInt(column.width, 10) < minWidth) {
-            return minWidth.toString();
+        if (!isPercentageWidth && parseInt(colWidth, 10) < minWidth) {
+            return minWidth + 'px';
         }
 
-        return column.width;
+        return colWidth;
     }
 
     /**

@@ -1332,8 +1332,8 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
 
             const grid = fix.componentInstance.grid;
-            expect(grid.columns[1].width).toEqual('150');
-            expect(grid.columns[2].width).toEqual('150');
+            expect(grid.columns[1].width).toEqual('150px');
+            expect(grid.columns[2].width).toEqual('150px');
 
             const hScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
             expect(hScroll.nativeElement.hidden).toBe(true);
