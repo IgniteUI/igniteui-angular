@@ -249,7 +249,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         fixture.detectChanges();
         await wait(100);
         // scroll to bottom
-        hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
+        hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.dataView.length - 1);
         fixture.detectChanges();
         await wait(100);
         fixture.detectChanges();
