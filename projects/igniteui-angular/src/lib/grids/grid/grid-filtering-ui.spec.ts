@@ -2940,38 +2940,20 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const leftArrowButton = GridFunctions.getFilterRowLeftArrowButton(fix).nativeElement;
             leftArrowButton.click();
             fix.detectChanges();
-            await wait(100);
+            await wait(150);
             leftArrowButton.click();
             fix.detectChanges();
-            await wait(100);
+            await wait(150);
             verifyMultipleChipsVisibility(fix, [false, true, false]);
-
-            // Click left arrow 2 times.
-            leftArrowButton.click();
-            fix.detectChanges();
-            await wait(100);
-            leftArrowButton.click();
-            fix.detectChanges();
-            await wait(100);
-            verifyMultipleChipsVisibility(fix, [true, false, false]);
 
             // Click right arrow 2 times.
             const rightArrowButton = GridFunctions.getFilterRowRightArrowButton(fix).nativeElement;
             rightArrowButton.click();
             fix.detectChanges();
-            await wait(100);
+            await wait(150);
             rightArrowButton.click();
             fix.detectChanges();
-            await wait(100);
-            verifyMultipleChipsVisibility(fix, [false, true, false]);
-
-            // Click right arrow 2 times.
-            rightArrowButton.click();
-            fix.detectChanges();
-            await wait(100);
-            rightArrowButton.click();
-            fix.detectChanges();
-            await wait(100);
+            await wait(150);
             verifyMultipleChipsVisibility(fix, [false, false, true]);
         }));
 
