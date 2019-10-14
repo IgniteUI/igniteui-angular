@@ -384,7 +384,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
                     button.disabled = true;
                 }
 
-                if (!button.disabled && button.selected) {
+                if (button.selected) {
                     this.selectButton(index);
                 }
 
