@@ -853,6 +853,8 @@ describe('IgxGrid - Keyboard navigation', () => {
             grid.navigateTo(50, 50, (args) => { args.target.nativeElement.focus(); });
             await wait(DEBOUNCETIME);
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
 
             const target = grid.getCellByColumn(50, '50');
             expect(target).toBeDefined();
