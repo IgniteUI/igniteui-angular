@@ -62,6 +62,7 @@ export class IgxRowComponent<T extends IgxGridBaseComponent & GridType> implemen
      * @hidden
      */
     @Input()
+    @HostBinding('attr.data-gridID')
     public gridID: string;
 
     /**

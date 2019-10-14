@@ -1,6 +1,12 @@
-﻿# Ignite UI for Angular Change Log
+# Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+
+## 8.2.3
+- `IgxTextHighlightDirective` - The default highlight directive styles have been moved to a Sass theme - `igx-highlight-theme`; You can modify the resting and active background and text color styles of the directive by passing the respective properties to the Sass theme. You can still pass your own CSS classes to the highlight directive via the cssClass and activeCssClass inputs.
+
+- `IgxChip`
+    - **Breaking Change** The `originalEvent` property for the events `onMoveStart`, `onMoveEnd`, `onClick` and `onSelection` now provides the events, passed from the `igxDrag` directive. The passed original events are in other words the previous events that triggered the `igxChip` ones. They also have original events until a browser event is reached.
 
 ## 8.2.0
 ### New theme
@@ -75,6 +81,7 @@ For more information about the theming please read our [documentation](https://w
     - `isCellSelected` method has been deprecated. Now you can use `selected` property.
     - `rowSelectable` property has been deprecated. Now you can use `rowSelection` property to enable row selection and also you can show and hide the row selectors by setting `hideRowSelectors` property to true or false (which is the default value).
     - Removed deprecated event `OnFocusChange`
+    - `IgxGridBaseComponent` exposes a new property, `dataView` that returns the currently transformed paged/filtered/sorted/grouped data, displayed in the grid
     - **Breaking Change** `igxExcelStyleSortingTemplate` directive is renamed to `igxExcelStyleSorting`.
     - **Breaking Change** `igxExcelStyleMovingTemplate` directive is renamed to `igxExcelStyleMoving`.
     - **Breaking Change** `igxExcelStyleHidingTemplate` directive is renamed to `igxExcelStyleHiding`.
