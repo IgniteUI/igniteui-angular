@@ -790,8 +790,7 @@ describe('IgxCalendar', () => {
             fixture.detectChanges();
 
             expect(calendar.viewDate.getMonth()).toEqual(6);
-
-            UIInteractions.simulateKeyDownEvent(component.nativeElement, 'Shift.PageUp');
+            UIInteractions.triggerKeyDownEvtUponElem('PageUp', component.nativeElement, true, false, true);
             fixture.detectChanges();
 
             expect(calendar.viewDate.getFullYear()).toEqual(2016);
@@ -799,7 +798,7 @@ describe('IgxCalendar', () => {
             calendar.viewDate = new Date(2017, 5, 13);
             fixture.detectChanges();
 
-            UIInteractions.simulateKeyDownEvent(component.nativeElement, 'Shift.PageDown');
+            UIInteractions.triggerKeyDownEvtUponElem('PageDown', component.nativeElement, true, false, true);
             fixture.detectChanges();
 
             expect(calendar.viewDate.getFullYear()).toEqual(2018);
@@ -1948,14 +1947,14 @@ describe('IgxCalendar', () => {
             date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 5, 1).getTime());
             expect(date.nativeElement).toBe(document.activeElement);
 
-            UIInteractions.simulateKeyDownEvent(document.activeElement, 'Shift.PageUp');
+            UIInteractions.triggerKeyDownEvtUponElem('PageUp', document.activeElement, true, false, true);
             fixture.detectChanges();
             await wait(400);
 
             date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2016, 5, 1).getTime());
             expect(date.nativeElement).toBe(document.activeElement);
 
-            UIInteractions.simulateKeyDownEvent(document.activeElement, 'Shift.PageDown');
+            UIInteractions.triggerKeyDownEvtUponElem('PageDown', document.activeElement, true, false, true);
             fixture.detectChanges();
             await wait(400);
 
