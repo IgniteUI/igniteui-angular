@@ -4283,7 +4283,7 @@ export class IgxGridBaseComponent extends DisplayDensityBase implements
                 const columnWidthCombined = parseInt(this._columnWidth, 10) * (column.colEnd ? column.colEnd - column.colStart : 1);
                 column.defaultWidth = columnWidthCombined + 'px';
             } else {
-                column.defaultWidth = this._columnWidth + 'px';
+                column.defaultWidth = this._columnWidth;
                 column.resetCaches();
             }
         });
@@ -4495,7 +4495,7 @@ export class IgxGridBaseComponent extends DisplayDensityBase implements
             Math.max(computedWidth / columnsToSize, MINIMUM_COLUMN_WIDTH) :
             Math.max((computedWidth - sumExistingWidths) / columnsToSize, MINIMUM_COLUMN_WIDTH));
 
-        return columnWidth.toString();
+            return columnWidth + 'px';
     }
 
     /**

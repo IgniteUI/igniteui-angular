@@ -214,10 +214,11 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
             }
             if (typeof val.width === 'string' && val.width.indexOf('%') !== -1) {
                 isChildrenWidthInPercent = true;
+                return acc + parseInt(val.width, 10);
             }
-            return acc + parseInt(val.width, 10);
+            return acc + parseInt(val.calcWidth, 10);
         }, 0)}`;
-        return isChildrenWidthInPercent ? width + '%' : width;
+        return isChildrenWidthInPercent ? width + '%' : width + 'px';
     }
 
     set width(val) { }
