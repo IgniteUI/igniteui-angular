@@ -1199,6 +1199,31 @@ export class IgxGridAdvancedFilteringComponent extends BasicGridComponent {
 }
 
 @Component({
+    template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true" [showToolbar]="true">
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" dataType="number" [hasSummary]="true"></igx-column>
+        <igx-column-group header="Released Group">
+            <igx-column width="100px" [field]="'Released'" dataType="boolean"></igx-column>
+            <igx-column width="100px" [field]="'ReleaseDate'" dataType="date" headerClasses="header-release-date"></igx-column>
+        </igx-column-group>
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" dataType="string" [filters]="customFilter">
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridAdvancedFilteringColumnGroupComponent extends BasicGridComponent {
+    public customFilter = CustomFilter.instance();
+    public resizable = false;
+    public filterable = true;
+
+    public data = SampleTestData.excelFilteringData();
+    public activateFiltering(activate: boolean) {
+        this.grid.allowFiltering = activate;
+        this.grid.cdr.markForCheck();
+    }
+}
+
+@Component({
     template: `
     <igx-grid [data]="data" height="500px" width="500px">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'"></igx-column>
@@ -1499,4 +1524,24 @@ export class CellEditingScrollTestComponent extends BasicGridComponent {
         { firstName: 'Tomas', lastName: 'Smith', age: 81, isActive: false, birthday: new Date('08/08/1931'), fullName: 'Tomas Smith' },
         { firstName: 'Michael', lastName: 'Parker', age: 48, isActive: true, birthday: new Date('08/08/1970'), fullName: 'Michael Parker' }
     ];
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
+            ` [width]="width" [height]="height" [paging]="'true'" [perPage]="perPage" [primaryKey]="'ProductID'"`,
+            '', ColumnDefinitions.productBasic)
+})
+export class GridWithUndefinedDataComponent implements OnInit  {
+    @ViewChild(IgxGridComponent, { static: true })
+    public grid: IgxGridComponent;
+    public data ;
+    public perPage = 5;
+    public width = '800px';
+    public height = '600px';
+
+    public ngOnInit(): void {
+        setTimeout(() => {
+           this.data = SampleTestData.foodProductDataExtended();
+        }, 300);
+    }
 }

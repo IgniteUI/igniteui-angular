@@ -619,7 +619,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
                     $implicit: rowData,
                     moveView: view,
                     owner: tmlpOutlet,
-                    index: this.verticalScrollContainer.igxForOf.indexOf(rowData)
+                    index: this.dataView.indexOf(rowData)
                 };
             } else {
                 const rowID = this.primaryKey ? rowData.rowID : this.data.indexOf(rowData.rowID);
@@ -627,14 +627,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
                 return {
                     $implicit: rowData,
                     templateID: 'childRow-' + rowID,
-                    index: this.verticalScrollContainer.igxForOf.indexOf(rowData)
+                    index: this.dataView.indexOf(rowData)
                 };
             }
         } else {
             return {
                 $implicit: rowData,
                 templateID: 'dataRow',
-                index: this.verticalScrollContainer.igxForOf.indexOf(rowData)
+                index: this.dataView.indexOf(rowData)
             };
         }
     }

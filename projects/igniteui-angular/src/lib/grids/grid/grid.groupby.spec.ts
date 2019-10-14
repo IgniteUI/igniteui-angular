@@ -40,6 +40,7 @@ describe('IgxGrid - GroupBy #grid', () => {
                 GroupableGridComponent,
                 CustomTemplateGridComponent,
                 GroupByDataMoreColumnsComponent,
+                GroupByEmptyColumnFieldComponent,
                 MultiColumnHeadersWithGroupingComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
@@ -715,7 +716,6 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     it('should allow grouping of already sorted column', async(() => {
-        resizeObserverIgnoreError();
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.enableSorting = true;
@@ -905,10 +905,10 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         // verify virtualization states - should be in last chunk
         const virtState = grid.verticalScrollContainer.state;
-        expect(virtState.startIndex).toBe(grid.verticalScrollContainer.igxForOf.length - virtState.chunkSize);
+        expect(virtState.startIndex).toBe(grid.dataView.length - virtState.chunkSize);
 
         // verify last row is visible at bottom
-        const lastRow = grid.getRowByIndex(grid.verticalScrollContainer.igxForOf.length - 1);
+        const lastRow = grid.getRowByIndex(grid.dataView.length - 1);
         expect(lastRow.nativeElement.getBoundingClientRect().bottom).toBe(grid.tbody.nativeElement.getBoundingClientRect().bottom);
 
     });
@@ -1407,7 +1407,6 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     it('should update horizontal virtualization state correcly when data row views are re-used from cache.',   async () => {
-        resizeObserverIgnoreError();
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
@@ -1689,11 +1688,15 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(chips[1].querySelectorAll(CHIP_REMOVE_ICON).length).toEqual(1);
 
         // check click does not allow changing sort dir
-        chips[0].children[0].click();
+        chips[0].children[0].dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
+        tick();
+        chips[0].children[0].dispatchEvent(new PointerEvent('pointerup'));
         tick();
         fix.detectChanges();
 
-        chips[1].children[0].click();
+        chips[1].children[0].dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
+        tick();
+        chips[1].children[0].dispatchEvent(new PointerEvent('pointerup'));
         tick();
 
         fix.detectChanges();
@@ -1835,7 +1838,6 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     it('should reorder groups when reordering chip', async () => {
-        resizeObserverIgnoreError();
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
@@ -2025,6 +2027,19 @@ describe('IgxGrid - GroupBy #grid', () => {
         }
         tick();
         expect(m).toBe('Maximum amount of grouped columns is 10.');
+    }));
+
+    it('should not allow grouping by column with no name', fakeAsync(() => {
+        const fix = TestBed.createComponent(GroupByEmptyColumnFieldComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        tick();
+        const expr = grid.columns.map(val => {
+            return { fieldName: val.field, dir: SortingDirection.Asc, ignoreCase: true };
+        });
+        grid.groupBy(expr);
+        tick();
+        expect(grid.groupsRowList.toArray().length).toBe(0);
     }));
 
     it('should display column header text in the grouping chip.', fakeAsync(() => {
@@ -2738,6 +2753,26 @@ export class GroupByDataMoreColumnsComponent extends DataParent {
         { field: 'N', width: 100 }
     ];
 
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public instance: IgxGridComponent;
+}
+
+@Component({
+    template: `
+        <igx-grid
+            [width]='width'
+            [autoGenerate]='false'
+            [data]='data'>
+            <igx-column [width]='width' [groupable]='true'>
+                <ng-template igxCell>
+                    <button>Dummy button</button>
+                </ng-template>
+            </igx-column>
+        </igx-grid>
+    `
+})
+export class GroupByEmptyColumnFieldComponent extends DataParent {
+    public width = '200px';
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 }
