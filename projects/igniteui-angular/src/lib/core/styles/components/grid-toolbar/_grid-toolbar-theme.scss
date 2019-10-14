@@ -171,15 +171,17 @@
         justify-content: flex-end;
         grid-row: 1;
         font-size: $grid-toolbar-fs;
-        @include if-ltr(){
-            padding: map-get($grid-toolbar-padding, 'comfortable');
-        }
-        @include if-rtl(){
-            padding: map-get($grid-toolbar-padding-rtl, 'comfortable');
-        }
         border-bottom: 1px solid igx-color(map-get($theme, 'palette'), 'grays', 300);
         background: --var($theme, 'background-color');
         height: map-get($grid-toolbar-height, 'comfortable');
+
+        @include if-ltr(){
+            padding: map-get($grid-toolbar-padding, 'comfortable');
+        }
+
+        @include if-rtl(){
+            padding: map-get($grid-toolbar-padding-rtl, 'comfortable');
+        }
 
         %igx-button--flat {
             background: --var($theme, 'button-background');

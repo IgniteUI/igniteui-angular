@@ -13,7 +13,6 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IColumnResized } from '../../test-utils/grid-interfaces.spec';
 import { MultiColumnHeadersComponent } from '../../test-utils/grid-samples.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 describe('IgxGrid - Deferred Column Resizing #grid', () => {
     configureTestSuite();
@@ -191,8 +190,6 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
     it ('should change the defaultMinWidth on density change', async() => {
         const fixture = TestBed.createComponent(ResizableColumnsComponent);
         fixture.detectChanges();
-
-        resizeObserverIgnoreError();
 
         const grid = fixture.componentInstance.grid;
         const column = grid.getColumnByName('ID');

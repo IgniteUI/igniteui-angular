@@ -6,6 +6,7 @@ import { IgxGridBaseComponent } from '../grids/index';
 import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid';
 
 export function resizeObserverIgnoreError() {
+    jasmine.getEnv().allowRespy(true);
     const spy = spyOn(window, 'onerror').and.callFake((...args) => {
         if (args[0].toString().match('ResizeObserver loop limit exceeded')) {
             return;

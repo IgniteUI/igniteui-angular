@@ -1,7 +1,12 @@
 import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridModule } from './index';
-import { ReorderedColumnsComponent, PagingAndEditingComponent, GridIDNameJobTitleComponent } from '../../test-utils/grid-samples.spec';
+import {
+    ReorderedColumnsComponent,
+    PagingAndEditingComponent,
+    GridIDNameJobTitleComponent,
+    GridWithUndefinedDataComponent
+} from '../../test-utils/grid-samples.spec';
 import { PagingComponent } from '../../test-utils/grid-base-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
@@ -9,7 +14,6 @@ import { IgxGridComponent } from './grid.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
-import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - Grid Paging #grid', () => {
@@ -22,7 +26,8 @@ describe('IgxGrid - Grid Paging #grid', () => {
                 ReorderedColumnsComponent,
                 PagingComponent,
                 PagingAndEditingComponent,
-                GridIDNameJobTitleComponent
+                GridIDNameJobTitleComponent,
+                GridWithUndefinedDataComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
         }).compileComponents();
@@ -64,7 +69,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         verifyGridPager(fix, 3, '1', '1\xA0of\xA04', [true, true, false, false]);
     }));
 
-    it('should paginate data API', fakeAsync (() => {
+    it('should paginate data API', fakeAsync(() => {
         const fix = TestBed.createComponent(PagingComponent);
         fix.detectChanges();
 
@@ -192,7 +197,6 @@ describe('IgxGrid - Grid Paging #grid', () => {
     }));
 
     it('change paging pages per page API', (async () => {
-        resizeObserverIgnoreError();
         const fix = TestBed.createComponent(ReorderedColumnsComponent);
         fix.detectChanges();
 
@@ -283,7 +287,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         verifyGridPager(fix, 2, '9', '3\xA0of\xA03', []);
     });
 
-    it('activate/deactivate paging',  fakeAsync(() => {
+    it('activate/deactivate paging', fakeAsync(() => {
         const fix = TestBed.createComponent(ReorderedColumnsComponent);
         const grid = fix.componentInstance.grid;
         fix.detectChanges();
@@ -306,7 +310,6 @@ describe('IgxGrid - Grid Paging #grid', () => {
     }));
 
     it('should change not leave prev page data after scorlling', (async () => {
-        resizeObserverIgnoreError();
         const fix = TestBed.createComponent(PagingComponent);
         fix.componentInstance.perPage = 5;
         fix.componentInstance.grid.height = '300px';
@@ -463,6 +466,27 @@ describe('IgxGrid - Grid Paging #grid', () => {
         tick();
         fix.detectChanges();
         expect(gridElement.querySelector(PAGER_CLASS)).not.toBeNull();
+    }));
+
+    it('should not throw error when data is undefined', fakeAsync(() => {
+        let errorMessage = '';
+        const fix = TestBed.createComponent(GridWithUndefinedDataComponent);
+        try {
+            fix.detectChanges();
+        } catch (ex) {
+            errorMessage = ex.message;
+        }
+        expect(errorMessage).toBe('');
+        const grid = fix.componentInstance.grid;
+        let paginator = grid.nativeElement.querySelector(PAGER_CLASS);
+        expect(paginator).toBeNull();
+        expect(grid.rowList.length).toBe(0);
+        tick(305);
+        fix.detectChanges();
+
+        paginator = grid.nativeElement.querySelector(PAGER_CLASS);
+        expect(paginator).toBeDefined();
+        expect(grid.rowList.length).toBe(5);
     }));
 
     function verifyGridPager(fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) {

@@ -13,7 +13,6 @@ import { DisplayDensity } from '../../core/displayDensity';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IGridCellEventArgs } from '../grid';
 import { GridSelectionMode } from '../common/enums';
-import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
@@ -30,7 +29,6 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
     }));
 
     beforeEach(async(() => {
-        resizeObserverIgnoreError();
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
@@ -144,7 +142,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         fixture.detectChanges();
         expect(row.expanded).toBe(true);
         // scroll to bottom
-        hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
+        hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.dataView.length - 1);
         await wait(100);
         fixture.detectChanges();
         // scroll to top
@@ -424,7 +422,6 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
     }));
 
     beforeEach(async(() => {
-        resizeObserverIgnoreError();
         fixture = TestBed.createComponent(IgxHierarchicalGridMultiLayoutComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
@@ -622,7 +619,7 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         const child2 = children[1];
         expect(child1._destroyed).toBeFalsy();
         expect(child2._destroyed).toBeFalsy();
-        hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
+        hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.dataView.length - 1);
         await wait(100);
         fixture.detectChanges();
 

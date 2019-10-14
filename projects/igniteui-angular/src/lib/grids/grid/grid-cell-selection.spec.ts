@@ -10,7 +10,7 @@ import { SelectionWithScrollsComponent,
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { setupGridScrollDetection, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
+import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { DefaultSortingStrategy } from 'igniteui-angular';
 import { GridSelectionMode } from '../common/enums';
 
@@ -293,7 +293,7 @@ describe('IgxGrid - Cell selection #grid', () => {
 
             GridSelectionFunctions.verifyCellSelected(firstCell);
 
-            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
             await wait(100);
             fix.detectChanges();
 
@@ -514,7 +514,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
             expect(grid.getSelectedData()).toEqual(expectedData);
 
-            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
             await wait(100);
             fix.detectChanges();
 
@@ -538,7 +538,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(0);
             expect(grid.getSelectedData()).toEqual(expectedData);
 
-            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
             await wait(100);
             fix.detectChanges();
 
@@ -1040,7 +1040,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(grid, 0, 0, 0, 0);
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 0, 0);
 
-            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
             await wait(100);
             fix.detectChanges();
 
@@ -1616,7 +1616,6 @@ describe('IgxGrid - Cell selection #grid', () => {
         let detect;
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
-            resizeObserverIgnoreError();
             fix = TestBed.createComponent(SelectionWithScrollsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
