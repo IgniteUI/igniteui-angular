@@ -402,7 +402,7 @@
 
     %igx-chip__remove {
         display: inline-flex;
-        color: --var($theme, 'remove-icon-color');
+        color: --var($theme, 'remove-icon-color', currentColor);
         margin-right: rem(4px);
 
         &:empty {
