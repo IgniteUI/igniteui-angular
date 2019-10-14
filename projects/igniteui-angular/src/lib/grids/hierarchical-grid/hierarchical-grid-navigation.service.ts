@@ -52,7 +52,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         return scrollHeight === 0 || Math.round(scrollTop + grid.verticalScrollContainer.igxForContainerSize) === scrollHeight;
     }
     private getIsChildAtIndex(index) {
-        return this.grid.isChildGridRecord(this.grid.verticalScrollContainer.igxForOf[index]);
+        return this.grid.isChildGridRecord(this.grid.dataView[index]);
     }
 
     public getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummary = false) {
@@ -122,11 +122,11 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                     super.navigateDown(rowElement, selectedNode);
                 }
             }
-        } else if (currentRowIndex !== this.grid.verticalScrollContainer.igxForOf.length - 1) {
+        } else if (currentRowIndex !== this.grid.dataView.length - 1) {
             // scroll next in view
             super.navigateDown(rowElement, selectedNode);
         } else if (this.grid.parent !== null &&
-            currentRowIndex === this.grid.verticalScrollContainer.igxForOf.length - 1) {
+            currentRowIndex === this.grid.dataView.length - 1) {
             // move to next row in sibling layout or in parent
             this.focusNext(visibleColumnIndex);
         }
@@ -154,7 +154,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     public navigateBottom(visibleColumnIndex) {
         // handle scenario where last index is child grid
         // in that case focus cell in last data row
-        const lastIndex = this.grid.verticalScrollContainer.igxForOf.length - 1;
+        const lastIndex = this.grid.dataView.length - 1;
         if (this.getIsChildAtIndex(lastIndex)) {
             const targetIndex = lastIndex - 1;
             const scrTopPosition = this.grid.verticalScrollContainer.getScrollForIndex(targetIndex, true);
@@ -191,7 +191,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     public goToLastCell() {
         // handle scenario where last index is child grid
         // in that case focus last cell in last data row
-        const lastIndex = this.grid.verticalScrollContainer.igxForOf.length - 1;
+        const lastIndex = this.grid.dataView.length - 1;
         if (this.getIsChildAtIndex(lastIndex)) {
             const targetIndex = lastIndex - 1;
             const scrTopPosition = this.grid.verticalScrollContainer.getScrollForIndex(targetIndex, true);
@@ -271,7 +271,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const isSummaryRow = selectedNode.isSummaryRow;
         const summaryRows = this.grid.summariesRowList.toArray();
         const hasSummaries = summaryRows.length > 0;
-        const isLastDataRow = rowIndex === this.grid.verticalScrollContainer.igxForOf.length - 1;
+        const isLastDataRow = rowIndex === this.grid.dataView.length - 1;
         const nextIsDataRow = this.grid.dataRowList.find(row => row.index === rowIndex + 1);
         const isLastColumn = this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex;
         const isLastSummaryRow = hasSummaries && isSummaryRow;
@@ -315,7 +315,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
          const parentHasSummary = parent.summariesRowList.length > 0;
          const parentRowIndex = parseInt(
             this.getClosestElemByTag(currentRowEl, 'igx-child-grid-row').parentNode.getAttribute('data-rowindex'), 10);
-         const isLastRowInParent = parent.verticalScrollContainer.igxForOf.length - 1 === parentRowIndex;
+         const isLastRowInParent = parent.dataView.length - 1 === parentRowIndex;
          // check if next is sibling
          const childRowContainer = this.getChildGridRowContainer(this.grid);
          const nextIsSiblingChild = !!childRowContainer.nextElementSibling;
@@ -406,7 +406,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             const gridElem = this.getLastGridElem(currentRowEl.previousElementSibling);
             this.performShiftTabIntoChild(gridElem, currentRowEl, rowIndex);
         } else if (visibleColumnIndex === 0 && isSummary) {
-            const lastRowIndex = this.grid.verticalScrollContainer.igxForOf.length - 1;
+            const lastRowIndex = this.grid.dataView.length - 1;
             if (lastRowIndex === -1) {
                 // no child data
                 if (this.grid.allowFiltering && this.grid.filterMode === FilterMode.quickFilter) {
@@ -533,7 +533,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         visibleColumnIndex = Math.min(lastCellIndex, visibleColumnIndex);
 
         const isScrolledToBottom = this._isScrolledToBottom(childGrid);
-        const lastIndex = childGrid.verticalScrollContainer.igxForOf.length - 1;
+        const lastIndex = childGrid.dataView.length - 1;
         if (!isScrolledToBottom) {
             // scroll to end
             this.scrollGrid(childGrid, 'bottom', () => this.focusPrevChild(elem, visibleColumnIndex, grid));
@@ -611,7 +611,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const verticalScroll = nextParentGrid.verticalScrollContainer.getVerticalScroll();
         const parentState = nextParentGrid.verticalScrollContainer.state;
         const atLastChunk = parentState.startIndex + parentState.chunkSize ===
-         nextParentGrid.verticalScrollContainer.igxForOf.length;
+         nextParentGrid.dataView.length;
         if (next) {
             if (nextIsSiblingChild) {
                 this.focusNextChild(next, visibleColumnIndex, nextParentGrid);
@@ -754,7 +754,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             } else {
                 switch (target) {
                     case 'top': grid.verticalScrollContainer.scrollTo(0); break;
-                    case 'bottom': grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1); break;
+                    case 'bottom': grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1); break;
                     case 'next': grid.verticalScrollContainer.scrollNext(); break;
                     case 'prev': grid.verticalScrollContainer.scrollPrev(); break;
                 }
