@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxTreeGridComponent } from '../grids/tree-grid/tree-grid.component';
 import { SampleTestData } from './sample-test-data.spec';
-import { IgxNumberSummaryOperand, IgxSummaryResult } from '../grids';
+import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids';
 import { IgxGridTransaction } from '../grids/grid-base.component';
 import { IgxTransactionService } from '../services/transaction/igx-transaction';
 import { IgxHierarchicalTransactionService } from '../services/transaction/igx-hierarchical-transaction';
@@ -400,6 +400,24 @@ class AgeSummaryTest extends IgxNumberSummaryOperand {
     }
 }
 
+class PTOSummary extends IgxSummaryOperand {
+    constructor() {
+        super();
+    }
+
+    public operate(summaries?: any[], allData = [], field?): IgxSummaryResult[] {
+        const result = super.operate(summaries);
+        if (field && field === 'Name') {
+            result.push({
+                key: 'test',
+                label: 'People on PTO',
+                summaryResult: allData.filter((rec) => rec.OnPTO).length
+            });
+        }
+        return result;
+    }
+}
+
 @Component({
     template: `
     <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" [rowEditable]="true" width="900px" height="600px">
@@ -433,6 +451,7 @@ export class IgxTreeGridCustomSummariesComponent {
     public data = SampleTestData.employeeTreeData();
     public ageSummary = AgeSummary;
     public ageSummaryTest = AgeSummaryTest;
+    public ptoSummary = PTOSummary;
 }
 
 @Component({
