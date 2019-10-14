@@ -59,6 +59,7 @@ export abstract class IgxRowComponent<T extends IgxGridBaseComponent & IGridData
      * @hidden
      */
     @Input()
+    @HostBinding('attr.data-gridID')
     public gridID: string;
 
     /**

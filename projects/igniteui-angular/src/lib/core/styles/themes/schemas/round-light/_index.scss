@@ -26,6 +26,7 @@
 @import '../light/grid-pagination';
 @import '../light/grid-summary';
 @import '../light/grid-toolbar';
+@import '../light/highlight';
 @import '../light/icon';
 @import '../light/input-group';
 @import '../light/list';
@@ -67,6 +68,7 @@
 /// @property {Map} igx-grid-paginator [$_light-grid-pagination]
 /// @property {Map} igx-grid-summary [$_light-grid-summary]
 /// @property {Map} igx-grid-toolbar [$_light-grid-toolbar]
+/// @property {Map} igx-highlight [$_light-highlight]
 /// @property {Map} igx-icon [$_light-icon]
 /// @property {Map} igx-input-group [$_light-input-group]
 /// @property {Map} igx-list [$_light-list]
@@ -108,6 +110,7 @@ $light-round-schema: (
     igx-grid-paginator: extend($_light-grid-pagination, $_round-shape-grid-pagination),
     igx-grid-summary: extend($_light-grid-summary, $_round-shape-grid-summary),
     igx-grid-toolbar: extend($_light-grid-toolbar, $_round-shape-tooltip),
+    igx-highlight: $_light-highlight,
     igx-icon: extend($_light-icon, $_round-shape-icon),
     igx-input-group: extend($_light-input-group, $_round-shape-input-group),
     igx-list: extend($_light-list, $_round-shape-list),

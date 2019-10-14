@@ -1016,7 +1016,6 @@ describe('IgxGrid Component Tests #grid', () => {
 
         it(`should render 10 records if height is 100% and parent container's height is unset and
             display density is changed`, async () => {
-                resizeObserverIgnoreError();
                 const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
                 fix.detectChanges();
 
@@ -1593,8 +1592,6 @@ describe('IgxGrid Component Tests #grid', () => {
         });
 
         it('IgxTabs: should initialize a grid with correct width/height', async () => {
-            resizeObserverIgnoreError();
-
             const grid = fix.componentInstance.grid3;
             const tab = fix.componentInstance.tabs;
             expect(grid.calcHeight).toBe(510);
