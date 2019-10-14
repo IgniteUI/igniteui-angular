@@ -5,10 +5,5 @@
             "remove": true,
             "owner": "igx-badge-theme"
         },
-        {
-            "name": "$disable-button-shadow",
-            "replaceWith": "$button-shadow",
-            "owner": "igx-carousel-theme"
-        },
     ]
 }
