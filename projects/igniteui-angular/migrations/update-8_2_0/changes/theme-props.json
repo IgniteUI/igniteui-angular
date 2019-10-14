@@ -4,6 +4,6 @@
             "name": "$disable-shadow",
             "remove": true,
             "owner": "igx-badge-theme"
-        },
+        }
     ]
 }
