@@ -202,13 +202,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
     ngAfterViewInit(): void {
         this.expressionsList = new Array<ExpressionUI>();
 
-        if (this.excelStyleSorting) {
-            const se = this.grid.sortingExpressions.find(expr => expr.fieldName === this.column.field);
-            if (se) {
-                this.excelStyleSorting.selectButton(se.dir);
-            }
-        }
-
         requestAnimationFrame(() => {
             this.excelStyleSearch.searchInput.nativeElement.focus();
         });
@@ -223,6 +216,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
             this.customDialog.expressionsList = this.expressionsList;
         }
         this.populateColumnData();
+
+        this.isColumnPinnable = this.column.pinnable;
     }
 
     public clearFilterClass() {

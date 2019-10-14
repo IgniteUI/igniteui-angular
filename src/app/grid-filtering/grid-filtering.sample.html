@@ -11,16 +11,28 @@
                 <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)"></igx-buttongroup>
             </div>
 
-            <div style="display: flex">
-                <igx-grid-excel-style-filtering 
-                    [column]="grid1.columns[0]">
-                </igx-grid-excel-style-filtering>
+            <igx-advanced-filtering-dialog
+                [grid]="grid1"
+                [advancedFilteringExpressionsTree]="grid1.advancedFilteringExpressionsTree">
+            </igx-advanced-filtering-dialog>
 
+            <div style="display: flex;">
+                <div style="display: flex; flex-flow: column;">
+                    <igx-select #columnSelect value="ID">
+                        <igx-select-item *ngFor="let column of columns" [value]="column.field">
+                            {{column.field}}
+                        </igx-select-item>
+                    </igx-select>
+                    <igx-grid-excel-style-filtering 
+                        [column]="grid1.getColumnByName(columnSelect.value)">
+                    </igx-grid-excel-style-filtering>
+                </div>
                 <igx-grid
                     #grid1
                     [data]="data"
                     [displayDensity]="density"
                     [allowFiltering]="true"
+                    [filterMode]="'excelStyleFilter'"
                     [allowAdvancedFiltering]="true"
                     [rowSelectable]="true"
                     [paging]="false"
@@ -50,11 +62,6 @@
                     </igx-column>
                 </igx-grid>
             </div>
-
-            <igx-advanced-filtering-dialog
-                [grid]="grid1"
-                [advancedFilteringExpressionsTree]="grid1.advancedFilteringExpressionsTree">
-            </igx-advanced-filtering-dialog>
 
             <div class="sample-buttons">
                 <igx-checkbox [checked]="grid1.allowFiltering" (change)="onAllowFilteringChanged($event)">Allow Filtering</igx-checkbox>

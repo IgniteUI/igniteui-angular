@@ -70,12 +70,12 @@ export class GridFilteringComponent implements OnInit, AfterViewInit {
             {
                 label: 'Filter Row',
                 value: FilterMode.quickFilter,
-                selected: true,
+                selected: false,
                 togglable: true },
             {
                 label: 'Excel Style',
                 value: FilterMode.excelStyleFilter,
-                selected: false,
+                selected: true,
                 togglable: true
             }
         ];
