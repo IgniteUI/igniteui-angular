@@ -5306,16 +5306,16 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this.dataView.slice(rowIndex, rowIndex + 1).find(rec => rec.expression || rec.childGridsData)) {
             visibleColIndex = -1;
         }
-        if (visibleColIndex === -1 || this.navigation.isColumnFullyVisible(visibleColIndex)) {
-            if (this.navigation.shouldPerformVerticalScroll(rowIndex, visibleColIndex)) {
-                this.navigation.performVerticalScrollToCell(rowIndex, visibleColIndex,
-                    () => { this.executeCallback(rowIndex, visibleColIndex, cb); });
-            } else {
-                this.executeCallback(rowIndex, visibleColIndex, cb);
-            }
-        } else {
+        const shouldScrollVertically = this.navigation.shouldPerformVerticalScroll(rowIndex, visibleColIndex);
+        const shouldScrollHorizontally = visibleColIndex !== -1 && !this.navigation.isColumnFullyVisible(visibleColIndex);
+        if (shouldScrollVertically) {
+            this.navigation.performVerticalScrollToCell(rowIndex, visibleColIndex,
+                () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
+        } else if (shouldScrollHorizontally) {
             this.navigation.performHorizontalScrollToCell(rowIndex, visibleColIndex, false,
-                () => { this.executeCallback(rowIndex, visibleColIndex, cb); });
+                     () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
+        } else {
+            this.executeCallback(rowIndex, visibleColIndex, cb);
         }
     }
 
