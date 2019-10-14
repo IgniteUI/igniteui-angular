@@ -905,10 +905,10 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         // verify virtualization states - should be in last chunk
         const virtState = grid.verticalScrollContainer.state;
-        expect(virtState.startIndex).toBe(grid.verticalScrollContainer.igxForOf.length - virtState.chunkSize);
+        expect(virtState.startIndex).toBe(grid.dataView.length - virtState.chunkSize);
 
         // verify last row is visible at bottom
-        const lastRow = grid.getRowByIndex(grid.verticalScrollContainer.igxForOf.length - 1);
+        const lastRow = grid.getRowByIndex(grid.dataView.length - 1);
         expect(lastRow.nativeElement.getBoundingClientRect().bottom).toBe(grid.tbody.nativeElement.getBoundingClientRect().bottom);
 
     });
@@ -1687,11 +1687,15 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(chips[1].querySelectorAll(CHIP_REMOVE_ICON).length).toEqual(1);
 
         // check click does not allow changing sort dir
-        chips[0].children[0].click();
+        chips[0].children[0].dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
+        tick();
+        chips[0].children[0].dispatchEvent(new PointerEvent('pointerup'));
         tick();
         fix.detectChanges();
 
-        chips[1].children[0].click();
+        chips[1].children[0].dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
+        tick();
+        chips[1].children[0].dispatchEvent(new PointerEvent('pointerup'));
         tick();
 
         fix.detectChanges();
