@@ -1189,6 +1189,7 @@
         %grid-cell-text {
             font-style: italic;
             color: --var($theme, 'cell-edited-value-color');
+            padding: 0 1px;
         }
     }
 
