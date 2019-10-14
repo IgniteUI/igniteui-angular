@@ -5,7 +5,7 @@
 @import 'app-palettes';
 @import 'app-layout';
 
-@include igx-core($direction: rtl);
+@include igx-core($direction: ltr);
 
 /* autoprefixer grid: on */
 .default-theme {
@@ -94,7 +94,7 @@
     @include igx-light-square-theme($purple-palette);
 
     .nav-header {
-        @include nav-logo('../assets/images/rsrcs/igniteui-logo-light-bg', $igx-background-color);
+        @include nav-logo('../assets/images/rsrcs/igniteui-logo-light-bg', $igx-foreground-color);
     }
 }
 
