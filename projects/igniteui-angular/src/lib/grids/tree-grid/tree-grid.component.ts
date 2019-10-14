@@ -697,11 +697,11 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         if (delayScrolling) {
             this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
                 this.scrollDirective(this.verticalScrollContainer,
-                    typeof(row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(record));
+                    typeof(row) === 'number' ? row : this.dataView.indexOf(record));
             });
         } else {
             this.scrollDirective(this.verticalScrollContainer,
-                typeof(row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(record));
+                typeof(row) === 'number' ? row : this.dataView.indexOf(record));
         }
 
         this.scrollToHorizontally(column);
@@ -732,7 +732,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
             source.push(record.data);
         };
 
-        this.verticalScrollContainer.igxForOf.forEach(process);
+        this.dataView.forEach(process);
         return this.extractDataFromSelection(source, formatters, headers);
     }
 

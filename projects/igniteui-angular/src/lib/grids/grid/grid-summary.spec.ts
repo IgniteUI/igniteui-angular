@@ -1386,7 +1386,7 @@ describe('IgxGrid - Summaries #grid', () => {
             });
             fix.detectChanges();
 
-            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
             await wait(100);
             fix.detectChanges();
 
@@ -1452,7 +1452,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 ['Count', 'Earliest', 'Latest'], ['9', 'Dec 18, 2007', 'Dec 9, 2017']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '50']);
 
-            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
             await wait(50);
             fix.detectChanges();
 
@@ -1482,7 +1482,7 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '50']);
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 0, 5, ['Count'], ['9']);
 
-            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
             await wait(50);
             fix.detectChanges();
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 18, 5, ['Count'], ['1']);
@@ -1545,7 +1545,7 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['8']);
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '50']);
 
-            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
             await wait(50);
             fix.detectChanges();
 
@@ -1614,7 +1614,7 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 4, 2, ['Count'], ['3']);
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 4, 4, ['Min', 'Max'], ['19', '50']);
 
-            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
             await wait(50);
             fix.detectChanges();
 
@@ -1754,7 +1754,7 @@ describe('IgxGrid - Summaries #grid', () => {
             expect(groupRows[0].groupRow.value).toEqual(-1);
             expect(groupRows[1].groupRow.value).toEqual(19);
 
-            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
             await wait(50);
             fix.detectChanges();
 
