@@ -287,6 +287,37 @@ describe('IgxGrid - Summaries #grid', () => {
                 'summary cell and data cell are not right aligned');
         }));
 
+        it('should be able to access alldata from each summary', fakeAsync(() => {
+            const fixture = TestBed.createComponent(CustomSummariesComponent);
+            const grid = fixture.componentInstance.grid1;
+            fixture.detectChanges();
+
+            const summaryRow = fixture.debugElement.query(By.css(SUMMARY_ROW));
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['10', '39,004', '3,900.4']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Earliest'], ['5/17/1990']);
+            GridSummaryFunctions.verifyVisibleSummariesHeight(fixture, 3, grid.defaultSummaryHeight);
+            grid.getColumnByName('UnitsInStock').summaries = fixture.componentInstance.inStockSummary;
+            tick(100);
+            fixture.detectChanges();
+
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Items InStock'],
+                ['10', '0', '20,000', '39,004', '3,900.4', '6']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Earliest'], ['5/17/1990']);
+
+            grid.getCellByColumn(4, 'InStock').update(true);
+            tick();
+            fixture.detectChanges();
+
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Items InStock'],
+                ['10', '0', '20,000', '39,004', '3,900.4', '7']);
+
+            grid.filter('UnitsInStock', 0, IgxNumberFilteringOperand.instance().condition('equals'));
+            fixture.detectChanges();
+
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Items InStock'],
+            ['3', '0', '0', '0', '0', '1']);
+        }));
+
         describe('', () => {
             let fix;
             let grid: IgxGridComponent;
@@ -2441,6 +2472,24 @@ class EarliestSummary extends IgxDateSummaryOperand {
     }
 }
 
+class InStockSummary extends IgxNumberSummaryOperand {
+    constructor() {
+        super();
+    }
+
+    public operate(summaries?: any[], allData = [], field?): IgxSummaryResult[] {
+        const result = super.operate(summaries);
+        if (field && field === 'UnitsInStock') {
+            result.push({
+                key: 'test',
+                label: 'Items InStock',
+                summaryResult: allData.filter((rec) => rec.InStock).length
+            });
+        }
+        return result;
+    }
+}
+
 @Component({
     template: `
         <igx-grid #grid1 [data]="data" [primaryKey]="'ProductID'" [allowFiltering]="true">
@@ -2466,6 +2515,7 @@ export class CustomSummariesComponent {
     public dealsSummary = DealsSummary;
     public dealsSummaryMinMax = DealsSummaryMinMax;
     public earliest = EarliestSummary;
+    public inStockSummary = InStockSummary;
 }
 
 @Component({
