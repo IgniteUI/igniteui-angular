@@ -10,7 +10,8 @@ import {
     ElementRef,
     HostBinding,
     HostListener,
-    ChangeDetectionStrategy
+    ChangeDetectionStrategy,
+    ViewRef
 } from '@angular/core';
 import { DataType } from '../../data-operations/data-util';
 import { IgxColumnComponent } from '../column.component';
@@ -653,7 +654,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
                 this.showArrows = this.chipsAreaWidth >= containerWidth && this.isColumnFiltered;
 
                 // TODO: revise the cdr.detectChanges() usage here
-                this.cdr.detectChanges();
+                if (!(this.cdr as ViewRef).destroyed) {
+                this.cdr.detectChanges(); }
             }
         });
     }
