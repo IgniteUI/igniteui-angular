@@ -1,16 +1,27 @@
 <div class="sample-wrapper">
     <app-page-header title="Carousel">
-        Displays a collection of slides or page-based interfaces. It can be used as a separate full screen element or inside another
+        Displays a collection of slides or page-based interfaces. It can be used as a separate full screen element or
+        inside another
         component.
     </app-page-header>
     <div class="sample-content">
         <section style="width: 100%">
             <article>
                 <h4 class="sample-title">Desktop</h4>
-                <igx-carousel [interval]="interval" [pause]="pause" [loop]="loop">
+                <igx-switch [(ngModel)]="car.navigation">navigation</igx-switch>
+                <igx-switch [(ngModel)]="loop">loop</igx-switch>
+                 <button igxButton="raised" (click)="changeSlides()">Change slides add</button>
+                <button igxButton="raised" (click)="changeSlidesRemove()">Change slides remove</button>
+                 <button igxButton="raised" (click)="changeOrientation()">changeOrientation</button>
+                <igx-carousel #car [interval]="interval" [pause]="pause" [loop]="loop">
                     <igx-slide *ngFor="let slide of slides;" [active]="slide.active">
                         <img [src]="slide.image">
                     </igx-slide>
+
+                    <ng-template igxCarouselIndicator let-slide>
+                        <igx-icon *ngIf="slide.active" fontSet="material">brightness_7</igx-icon>
+                        <igx-icon *ngIf="!slide.active" fontSet="material">brightness_5</igx-icon>
+                    </ng-template>
                 </igx-carousel>
             </article>
         </section>

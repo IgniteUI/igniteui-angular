@@ -19,6 +19,16 @@
         @extend %igx-carousel-indicators !optional;
     }
 
+    @include e(indicators, $m: top) {
+        @extend %igx-carousel-indicators !optional;
+        @extend %igx-carousel-indicators--top !optional;
+    }
+
+    @include e(indicators, $m: bottom) {
+        @extend %igx-carousel-indicators !optional;
+        @extend %igx-carousel-indicators--bottom !optional;
+    }
+
     @include e(arrow) {
         @extend %igx-carousel-arrow !optional;
     }

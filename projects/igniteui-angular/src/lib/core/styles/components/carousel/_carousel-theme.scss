@@ -180,12 +180,9 @@
         position: absolute;
         list-style: none;
         z-index: 10;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
         padding: $carousel-indicators-padding;
 
-        li {
+        .default-indicator-item {
             margin: $carousel-indicator-margin;
             position: relative;
             width: 12px;
@@ -227,6 +224,23 @@
                 opacity: 1;
             }
         }
+
+        .carousel-indicator {
+            margin: $carousel-indicator-margin;
+            position: relative;
+        }
+    }
+
+    %igx-carousel-indicators--bottom {
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    %igx-carousel-indicators--top {
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
     }
 
     %igx-carousel-slide {

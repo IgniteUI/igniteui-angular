@@ -1,13 +1,23 @@
+<ng-template #defaultIndicator let-slide>
+        <div  [class.active]="slide.active" class="default-indicator-item"></div>
+</ng-template>
+
 <div tabindex="0" aria-label="carousel" class="igx-carousel"
         (mouseenter)="stop()"
         (mouseleave)="play()"
         (swipeleft)="next()"
         (swiperight)="prev()"
         (tap)="isPlaying ? stop() : play()">
-    <ul class="igx-carousel__indicators" [hidden]="slides.length <= 1">
-        <li *ngFor="let slide of slides" [attr.aria-label]="setAriaLabel(slide)" [attr.aria-selected]="slide.active" [class.active]="slide.active === true"
-            (click)="select(slide)"></li>
-    </ul>
+
+    <div *ngIf="showIndicators" [ngClass]="indicatorsOrientationClass">
+        <div *ngFor="let slide of slides" class ="carousel-indicator" (click)="select(slide)" [attr.aria-label]="setAriaLabel(slide)" [attr.aria-selected]="slide.active" >
+            <ng-container *ngTemplateOutlet="getIndicatorTemplate; context: {$implicit: slide};"></ng-container>
+        </div>
+    </div>
+
+    <div *ngIf="showIndicatorsLabel" [ngClass]="indicatorsOrientationClass">
+            <span>{{ current + 1 }} of {{ total }}</span>
+    </div>
     <div class="igx-carousel__inner" role="list">
         <ng-content></ng-content>
     </div>
