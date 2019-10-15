@@ -1,5 +1,5 @@
 <igx-grid #grid1 [data]="data" [autoGenerate]="false" [displayDensity]="'compact'" [width]="w" [height]="h"
-    [paging]="false" [allowFiltering]='true' [filterMode]="'excelStyleFilter'">
+    [paging]="false" [allowFiltering]='true' [filterMode]="'excelStyleFilter'" [summaryCalculationMode]="'rootAndChildLevels'">
     <igx-column field="Index" header="Index" [width]="cw">
     </igx-column>
     <igx-column field="ProductID" header="Product ID" [width]="cw" [headerClasses]="'prodId'" [groupable]="groupable">
@@ -9,29 +9,25 @@
     </igx-column>
     <igx-column field="ReorderLevel" [width]="cw" [sortable]="true" [groupable]="groupable" [filterable]="filterable"
         editable="true" [dataType]="'number'" [disableHiding]="disableHiding" [disablePinning]="disablePinning">
-        <ng-template igxCell let-cell="cell" let-val let-row>
-            {{val}} {{row.gridID}}
-        </ng-template>
     </igx-column>
     <igx-column field="QuantityPerUnit" [width]="cw" header="QuantityPerUnit" [sortable]="true" [dataType]="'string'"
         [editable]="true">
     </igx-column>
-    <igx-column field="UnitsInStock" header="UnitsInStock" [width]="cw" [dataType]="'number'" [summaries]="mySummary"
+    <igx-column field="UnitsInStock" header="UnitsInStock" [width]="cw" [dataType]="'number'"
         [hasSummary]="hasSummaryUnit" [hidden]="hasHidden" editable="true" [sortable]="true">
         <ng-template igxCell let-cell="cell" let-val let-row>
             ${{val}}
         </ng-template>
     </igx-column>
     <igx-column field="OrderDate" [width]="cw" [dataType]="'date'" [hasSummary]="false" [sortable]="true">
-        <ng-template igxCell let-cell="cell" let-val let-row>
-            {{val}}
-        </ng-template>
     </igx-column>
     <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" [width]="cw" [hasSummary]="false"
         editable="true">
         <ng-template igxCell let-cell="cell" let-val>
             {{val}}
         </ng-template>
+    </igx-column>
+    <igx-column field="Sum" [hasSummary]="true" [summaries]="mySummary">
     </igx-column>
 </igx-grid>
 
