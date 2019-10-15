@@ -409,12 +409,11 @@ export class GridFunctions {
         input.nativeElement.dispatchEvent(new Event('keydown'));
         input.nativeElement.dispatchEvent(new Event('input'));
         input.nativeElement.dispatchEvent(new Event('keyup'));
-        // fix.detectChanges();
+        fix.detectChanges();
 
         // Enter key to submit
         this.simulateKeyboardEvent(input, 'keydown', 'Enter');
-        // this.simulateKeyboardEvent(input, 'keyup', 'Enter');
-        // fix.detectChanges();
+        fix.detectChanges();
     }
 
     public static filterBy(condition: string, value: string, fix: ComponentFixture<any>) {
@@ -425,9 +424,9 @@ export class GridFunctions {
         const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
         this.selectFilteringCondition(condition, ddList);
         // fix.detectChanges();
-        tick(200);
-       this.applyFilter(value, fix);
-       tick(500);
+        tick(100);
+        this.applyFilter(value, fix);
+        tick(100);
     }
 
     public static typeValueInFilterRowInput(value: string, fix) {
