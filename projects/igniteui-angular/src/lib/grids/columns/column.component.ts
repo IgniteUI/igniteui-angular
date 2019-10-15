@@ -312,7 +312,12 @@ export class IgxColumnComponent implements AfterContentInit {
             this._calcWidth = null;
             this.calcPixelWidth = NaN;
             this.widthSetByUser = true;
-            this._width = typeof(value) === 'number' ? value + 'px' : value;
+            // width could be passed as number from the template
+            // host bindings are not px affixed so we need to ensure we affix simple number strings
+            if (typeof(value) === 'number' || value.match(/^[0-9]*$/)) {
+                value = value + 'px';
+            }
+            this._width = value;
             if (this.grid) {
                 this.cacheCalcWidth();
             }
