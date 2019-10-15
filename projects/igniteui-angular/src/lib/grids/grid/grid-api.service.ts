@@ -5,7 +5,9 @@ import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.
 import { DataUtil } from '../../data-operations/data-util';
 import { cloneArray } from '../../core/utils';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
+import { Injectable } from '@angular/core';
 
+@Injectable()
 export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
 
     public groupBy(expression: IGroupingExpression): void {

@@ -5,7 +5,9 @@ import { ISelectionNode } from '../selection/selection.service';
 import { isIE } from '../../core/utils';
 import { FilterMode } from '../common/enums';
 import { IgxColumnComponent } from '../columns/column.component';
+import { Injectable } from '@angular/core';
 
+@Injectable()
 export class IgxHierarchicalGridNavigationService extends IgxGridNavigationService {
     public grid: IgxHierarchicalGridComponent;
 
