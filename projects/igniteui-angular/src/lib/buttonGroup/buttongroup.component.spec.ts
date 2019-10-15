@@ -7,6 +7,7 @@ import { ButtonGroupAlignment, IgxButtonGroupComponent, IgxButtonGroupModule } f
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 interface IButton {
     type?: string;
@@ -129,7 +130,27 @@ describe('IgxButtonGroup', () => {
         expect(buttongroup.selectedButtons.length).toBe(0);
         buttongroup.selectButton(0);
         buttongroup.selectButton(3);
-        // Button 3 is disabled, so it isn't selected
+        // Button 3 is disabled, but it can be selected
+        expect(buttongroup.selectedButtons.length).toBe(2);
+    });
+
+    it('Button Group multiple selection with mouse click', () => {
+        const fixture = TestBed.createComponent(InitButtonGroupWithValuesComponent);
+        fixture.detectChanges();
+
+        const buttongroup = fixture.componentInstance.buttonGroup;
+        expect(buttongroup.multiSelection).toBeTruthy();
+
+        UIInteractions.simulateClickEvent(buttongroup.buttons[0].nativeElement);
+        expect(buttongroup.selectedButtons.length).toBe(1);
+        UIInteractions.simulateClickEvent(buttongroup.buttons[1].nativeElement);
+        expect(buttongroup.selectedButtons.length).toBe(2);
+        UIInteractions.simulateClickEvent(buttongroup.buttons[0].nativeElement);
+        UIInteractions.simulateClickEvent(buttongroup.buttons[1].nativeElement);
+        expect(buttongroup.selectedButtons.length).toBe(0);
+        UIInteractions.simulateClickEvent(buttongroup.buttons[0].nativeElement);
+        UIInteractions.simulateClickEvent(buttongroup.buttons[3].nativeElement);
+        // Button 3 is disabled, and it should not be selected with mouse click
         expect(buttongroup.selectedButtons.length).toBe(1);
     });
 
@@ -150,7 +171,9 @@ describe('IgxButtonGroup', () => {
         expect(buttongroup.selectedButtons.length).toBe(0);
         buttongroup.selectButton(0);
         buttongroup.selectButton(3);
-        // Button 3 is disabled, so it isn't selected
+        // It should be possible to select disabled buttons
+        expect(buttongroup.selectedButtons.length).toBe(2);
+        buttongroup.deselectButton(3);
         expect(buttongroup.selectedButtons.length).toBe(1);
     });
 
@@ -178,8 +201,8 @@ describe('IgxButtonGroup', () => {
         buttongroup.selectButton(2);
         buttongroup.selectButton(3);
         expect(buttongroup.selectedButtons.length).toBe(1);
-        // Button 3 is disabled, so it isn't selected
-        expect(buttongroup.buttons.indexOf(buttongroup.selectedButtons[0])).toBe(2);
+        // Button 3 is disabled, but it can be selected
+        expect(buttongroup.buttons.indexOf(buttongroup.selectedButtons[0])).toBe(3);
     });
 
     it('Button Group - selection handles wrong indexes gracefully', () => {
