@@ -17,7 +17,7 @@ export abstract class IgxTabsBase {
     scrollElement(element: any, scrollRight: boolean) {}
     performSelectionChange(newTab: IgxTabItemBase) {}
     transformContentAnimation(tab: IgxTabItemBase, duration: number) {}
-    transformIndicatorAnimation(element: HTMLElement) {}
+    transformIndicatorAnimation(element: HTMLElement, duration?: number) {}
 }
 
 /** @hidden */

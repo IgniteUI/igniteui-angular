@@ -415,9 +415,19 @@ describe('IgxChip', () => {
         fix.detectChanges();
         expect(secondChipComp.onSelection.emit).toHaveBeenCalled();
         expect(secondChipComp.onSelectionDone.emit).not.toHaveBeenCalled();
+        expect(secondChipComp.onSelection.emit).not.toHaveBeenCalledWith({
+            originalEvent: null,
+            owner: secondChipComp,
+            cancel: false,
+            selected: true
+        });
 
         await wait(400);
         expect(secondChipComp.onSelectionDone.emit).toHaveBeenCalled();
+        expect(secondChipComp.onSelectionDone.emit).not.toHaveBeenCalledWith({
+            originalEvent: null,
+            owner: secondChipComp
+        });
     }));
 
     it('should not fire onSelection event when selectable is false', () => {
