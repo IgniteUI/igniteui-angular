@@ -437,7 +437,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             }
         } else {
             const rowTransaction: State = this.grid.transactions.getState(this.row.rowID);
-            return rowTransaction && rowTransaction.value && rowTransaction.value[this.column.field];
+                return rowTransaction && rowTransaction.value &&
+                (rowTransaction.value[this.column.field] ||
+                 rowTransaction.value[this.column.field] === 0 ||
+                 rowTransaction.value[this.column.field] === false);
         }
 
         return false;
@@ -535,7 +538,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         public cdr: ChangeDetectorRef,
         private element: ElementRef,
         protected zone: NgZone,
-        private touchManager: HammerGesturesManager) { }
+        private touchManager: HammerGesturesManager,
+        protected platformUtil: PlatformUtil) { }
 
 
     /**
@@ -557,7 +561,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 this.nativeElement.addEventListener('compositionend', this.compositionEndHandler);
             }
         });
-        if (PlatformUtil.isIOS()) {
+        if (this.platformUtil.isIOS) {
             this.touchManager.addEventListener(this.nativeElement, 'doubletap', this.onDoubleClick, {
                 cssProps: { } /* don't disable user-select, etc */
             } as HammerOptions);
