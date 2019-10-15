@@ -218,6 +218,14 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
         this.populateColumnData();
 
         this.isColumnPinnable = this.column.pinnable;
+
+        this.grid.onColumnPinning.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.cdr.detectChanges();
+        });
+
+        this.grid.onColumnVisibilityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.cdr.detectChanges();
+        });
     }
 
     public clearFilterClass() {
@@ -264,9 +272,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
         this.closeDropdown();
     }
 
-    public onHide() {
-        this.column.hidden = true;
-        this.grid.onColumnVisibilityChanged.emit({ column: this.column, newValue: true });
+    public onHideToggle() {
+        this.column.hidden = !this.column.hidden;
+        this.grid.onColumnVisibilityChanged.emit({ column: this.column, newValue: this.column.hidden });
         this.closeDropdown();
     }
 

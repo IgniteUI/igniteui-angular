@@ -30,8 +30,8 @@
                 igxButton="icon"
                 [displayDensity]="grid.displayDensity"
                 tabindex="0"
-                (click)="onHide()">
-                <igx-icon>visibility_off</igx-icon>
+                (click)="onHideToggle()">
+                <igx-icon>{{ column.hidden ? 'visibility' : 'visibility_off' }}</igx-icon>
             </button>
         </div>
     </header>
@@ -90,9 +90,9 @@
         <ng-template #defaultExcelStyleHidingTemplate>
             <div class="igx-excel-filter__actions-hide"
                 tabindex="0"
-                (click)="onHide()">
-                <span>{{ grid.resourceStrings.igx_grid_excel_hide }}</span>
-                <igx-icon>visibility_off</igx-icon>
+                (click)="onHideToggle()">
+                <span>{{ column.hidden ? grid.resourceStrings.igx_grid_excel_show : grid.resourceStrings.igx_grid_excel_hide }}</span>
+                <igx-icon>{{ column.hidden ? 'visibility' : 'visibility_off' }}</igx-icon>
             </div>
         </ng-template>
 

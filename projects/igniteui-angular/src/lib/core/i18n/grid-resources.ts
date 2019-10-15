@@ -66,6 +66,7 @@ export interface IGridResourceStrings {
     igx_grid_excel_select_all?: string;
     igx_grid_excel_blanks?: string;
     igx_grid_excel_hide?: string;
+    igx_grid_excel_show?: string;
     igx_grid_excel_pin?: string;
     igx_grid_excel_unpin?: string;
     igx_grid_excel_text_filter?: string;
@@ -159,6 +160,7 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_excel_select_all: 'Select All',
     igx_grid_excel_blanks: '(Blanks)',
     igx_grid_excel_hide: 'Hide column',
+    igx_grid_excel_show: 'Show column',
     igx_grid_excel_pin: 'Pin column',
     igx_grid_excel_unpin: 'Unpin column',
     igx_grid_excel_text_filter: 'Text filter',
