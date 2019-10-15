@@ -29,6 +29,15 @@
                     </ng-template>
                 </igx-slider>
             </article>
+
+            <article class="sample-column" class="flex-row">
+                <!-- <h4 class="sample-title">Range label slider</h4> -->
+                <span class="outer-label">{{getLowerVal}}</span>
+                <igx-slider style="width: 60%;" #slider3 [type]="sliderType" (onValueChange)="valueChange($event)"
+                    [labels]="labels" [continuous]="true">
+                </igx-slider>
+                <span class="outer-label">{{getUpperVal}}</span>
+            </article>
         </div>
 
         <div>
