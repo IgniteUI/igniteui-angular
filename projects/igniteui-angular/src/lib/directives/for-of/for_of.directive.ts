@@ -1230,6 +1230,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     protected removeLastElem() {
         const oldElem = this._embeddedViews.pop();
         this.onBeforeViewDestroyed.emit(oldElem);
+        // also detach from ViewContainerRef to make absolutely sure this is removed from the view container.
+        this.dc.instance._vcr.detach(this.dc.instance._vcr.length - 1);
         oldElem.destroy();
 
         this.state.chunkSize--;
