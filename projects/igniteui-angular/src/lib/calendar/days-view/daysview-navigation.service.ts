@@ -16,7 +16,7 @@ enum Direction {
 export class IgxDaysViewNavigationService {
     public monthView: IgxDaysViewComponent;
     /**
-     * Implements kb navigation in all MoveDirections. nextDate and nextMonthView namimg convention is used for both previous/next
+     * Implements kb navigation in all MoveDirections. nextDate and nextMonthView naming convention is used for both previous/next
      * @hidden
      */
     public focusNextDate(target: HTMLElement, key: string, nextView = false) {
