@@ -7,6 +7,7 @@ import {
     HostListener,
     Input,
     ViewChild,
+    TemplateRef,
 } from '@angular/core';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { DataType } from '../../data-operations/data-util';
@@ -37,6 +38,18 @@ export class IgxGridGroupByRowComponent {
      * @hidden
      */
     protected paddingIndentationCssClass = 'igx-grid__group-row--padding-level';
+
+    /**
+    * @hidden
+    */
+    @ViewChild('defaultGroupByExpandedTemplate', { read: TemplateRef, static: true })
+    protected defaultGroupByExpandedTemplate: TemplateRef<any>;
+
+    /**
+    * @hidden
+    */
+    @ViewChild('defaultGroupByCollapsedTemplate', { read: TemplateRef, static: true })
+    protected defaultGroupByCollapsedTemplate: TemplateRef<any>;
 
     /**
      * @hidden
@@ -70,6 +83,7 @@ export class IgxGridGroupByRowComponent {
      * ```
      */
     @Input()
+    @HostBinding('attr.data-gridID')
     public gridID: string;
 
     /**
@@ -177,6 +191,14 @@ export class IgxGridGroupByRowComponent {
         }
     }
 
+    public get iconTemplate() {
+        if (this.expanded) {
+            return this.grid.rowExpandedIndicatorTemplate || this.defaultGroupByExpandedTemplate;
+        } else {
+            return this.grid.rowCollapsedIndicatorTemplate || this.defaultGroupByCollapsedTemplate;
+        }
+    }
+
     protected get selectionNode(): ISelectionNode {
         return {
             row: this.index,
@@ -253,7 +275,7 @@ export class IgxGridGroupByRowComponent {
         if (shift) {
             this.grid.navigation.performShiftTabKey(this.nativeElement, activeNode);
         } else {
-            if (this.index === this.grid.verticalScrollContainer.igxForOf.length - 1 && this.grid.rootSummariesEnabled) {
+            if (this.index === this.grid.dataView.length - 1 && this.grid.rootSummariesEnabled) {
                 this.grid.navigation.onKeydownHome(0, true);
             } else {
                 const orderedColumns = this.grid.navigation.gridOrderedColumns;

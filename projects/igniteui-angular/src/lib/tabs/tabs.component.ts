@@ -7,14 +7,14 @@ import {
     EventEmitter,
     forwardRef,
     HostBinding,
-    HostListener,
     Input,
     NgModule,
     Output,
     QueryList,
     ViewChild,
     ViewChildren,
-    OnDestroy
+    OnDestroy,
+    NgZone
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { IgxBadgeModule } from '../badge/badge.component';
@@ -24,6 +24,7 @@ import { IgxTabItemComponent } from './tab-item.component';
 import { IgxTabsGroupComponent } from './tabs-group.component';
 import { IgxLeftButtonStyleDirective, IgxRightButtonStyleDirective, IgxTabItemTemplateDirective } from './tabs.directives';
 import { IgxTabsBase, IgxTabItemBase } from './tabs.common';
+import ResizeObserver from 'resize-observer-polyfill';
 
 export enum TabsType {
     FIXED = 'fixed',
@@ -37,7 +38,6 @@ export enum TabsType {
 })
 
 export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
-
     /**
     * Provides an observable collection of all `IgxTabsGroupComponent`s.
     * ```typescript
@@ -62,6 +62,11 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     * ```html
     * <igx-tabs selectedIndex="1">
     * ```
+    *
+    * Two-way data binding.
+    * ```html
+    * <igx-tabs [(selectedIndex)]="model.selectedIndex">
+    * ```
     */
     @Input()
     public get selectedIndex(): number {
@@ -81,6 +86,12 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             }
         }
     }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public selectedIndexChange = new EventEmitter<number>();
 
     /**
      * Defines the tab header sizing mode. You can choose between `contentfit` or `fixed`.
@@ -219,6 +230,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
 
     private _groupChanges$: Subscription;
     private _selectedIndex = -1;
+    private _resizeObserver: ResizeObserver;
 
     /**
      * @hidden
@@ -286,7 +298,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         }
     }
 
-    constructor(private _element: ElementRef) {
+    constructor(private _element: ElementRef, private _ngZone: NgZone) {
     }
 
     /**
@@ -317,6 +329,17 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         this._groupChanges$ = this.groups.changes.subscribe(() => {
             this.resetSelectionOnCollectionChanged();
         });
+
+        this._ngZone.runOutsideAngular(() => {
+            this._resizeObserver = new ResizeObserver(() => {
+                if (!this.hasContentTabs && this._selectedIndex >= 0 && this._selectedIndex < this.tabs.length) {
+                    const newTab = this.tabs.toArray()[this._selectedIndex];
+                    this.transformContentAnimation(newTab, 0);
+                }
+            });
+
+            this._resizeObserver.observe(this.tabsContainer.nativeElement);
+        });
     }
 
     /**
@@ -326,6 +349,10 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
         if (this._groupChanges$) {
             this._groupChanges$.unsubscribe();
         }
+
+        this._ngZone.runOutsideAngular(() => {
+            this._resizeObserver.disconnect();
+        });
     }
 
     private resetSelectionOnCollectionChanged(): void {
@@ -373,6 +400,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             // if there is no new selected tab hide the selection indicator
             this.hideIndicator();
         }
+        this.selectedIndexChange.emit(this._selectedIndex);
     }
 
     private performDeselection(oldTab: IgxTabItemBase): void {
@@ -435,16 +463,17 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     // animation for the new panel/group (not needed for tab only mode)
     public transformContentAnimation(tab: IgxTabItemBase, duration: number): void {
         const contentOffset = this.tabsContainer.nativeElement.offsetWidth * tab.index;
-        this.contentsContainer.nativeElement.style.transitionDuration = `${duration}s`;
+        this.contentsContainer.nativeElement.style.transitionDuration = duration > 0 ? `${duration}s` : 'initial';
         this.contentsContainer.nativeElement.style.transform = `translate(${-contentOffset}px)`;
     }
 
     /**
      * @hidden
      */
-    public transformIndicatorAnimation(element: HTMLElement): void {
+    public transformIndicatorAnimation(element: HTMLElement, duration = 0.3): void {
         if (this.selectedIndicator) {
             this.selectedIndicator.nativeElement.style.visibility = 'visible';
+            this.selectedIndicator.nativeElement.style.transitionDuration = duration > 0 ? `${duration}s` : 'initial';
             this.selectedIndicator.nativeElement.style.width = `${element.offsetWidth}px`;
             this.selectedIndicator.nativeElement.style.transform = `translate(${element.offsetLeft}px)`;
         }

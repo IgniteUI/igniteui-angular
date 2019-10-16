@@ -1,19 +1,11 @@
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
-    ComponentFactoryResolver,
-    ElementRef,
     HostBinding,
     Input,
-    IterableDiffers,
-    ViewContainerRef,
     Output,
     EventEmitter,
-    Inject,
-    NgZone,
     forwardRef,
-    Optional,
     OnInit,
     TemplateRef,
     QueryList,
@@ -23,26 +15,23 @@ import {
     DoCheck
 } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
-import { IgxGridBaseComponent, IgxGridTransaction, IGridDataBindable } from '../grid-base.component';
+import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { IRowToggleEventArgs } from './tree-grid.interfaces';
 import { HierarchicalTransaction, HierarchicalState, TransactionType } from '../../services/transaction/transaction';
-import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalTransactionService } from '../../services/index';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxTreeGridNavigationService } from './tree-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 import { mergeObjects } from '../../core/utils';
-import { IgxOverlayService } from '../../services/index';
-import { IgxColumnResizingService } from '../grid-column-resizing.service';
 import { IgxColumnComponent } from '../column.component';
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
+import { IgxGridNavigationService } from '../grid-navigation.service';
 
 let NEXT_ID = 0;
 
@@ -68,14 +57,21 @@ let NEXT_ID = 0;
     selector: 'igx-tree-grid',
     templateUrl: 'tree-grid.component.html',
     providers: [
-        IgxGridSelectionService, IgxGridCRUDService, IgxTreeGridNavigationService, IgxGridSummaryService,
+        IgxGridSelectionService,
+        IgxGridCRUDService,
+        IgxGridSummaryService,
+        { provide: IgxGridNavigationService, useClass: IgxTreeGridNavigationService },
         { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
-        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) }, IgxFilteringService, IgxForOfSyncService]
+        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) },
+        IgxFilteringService,
+        IgxForOfSyncService
+    ]
 })
 export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit, DoCheck, AfterContentInit {
     private _id = `igx-tree-grid-${NEXT_ID++}`;
     private _data;
     private _rowLoadingIndicatorTemplate: TemplateRef<any>;
+    protected _transactions: IgxHierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>;
 
     /**
      * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
@@ -138,14 +134,13 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     set filteredData(value) {
         this._filteredData = value;
 
-
     }
 
     /**
      * Get transactions service for the grid.
      * @experimental @hidden
      */
-    get transactions(): IgxHierarchicalTransactionService<HierarchicalTransaction, HierarchicalState> {
+    get transactions() {
         return this._transactions;
     }
 
@@ -287,12 +282,27 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
      * states.set(1, true);
      * this.grid.expansionStates = states;
      * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-tree-grid #grid [data]="employeeData" [childDataKey]="'employees'" [(expansionStates)]="model.expansionStates">
+     * </igx-tree-grid>
+     * ```
 	 * @memberof IgxTreeGridComponent
      */
     public set expansionStates(value) {
         this._expansionStates = this.cloneMap(value);
-        this.cdr.detectChanges();
+        this.expansionStatesChange.emit(this._expansionStates);
+        if (this.gridAPI.grid) {
+            this.cdr.detectChanges();
+        }
     }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public expansionStatesChange = new EventEmitter<Map<any, boolean>>();
 
     /**
      * @hidden
@@ -388,7 +398,10 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
      */
     public loadingRows = new Set<any>();
 
-    private _gridAPI: IgxTreeGridAPIService;
+    // Kind of stupid
+    private get _gridAPI(): IgxTreeGridAPIService {
+        return this.gridAPI as IgxTreeGridAPIService;
+    }
     private _filteredData = null;
 
     /**
@@ -397,30 +410,6 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
      */
     @ViewChild('dragIndicatorIconBase', { read: TemplateRef, static: true })
     public dragIndicatorIconBase: TemplateRef<any>;
-
-    constructor(
-        selectionService: IgxGridSelectionService,
-        crudService: IgxGridCRUDService,
-        public colResizingService: IgxColumnResizingService,
-        gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-        @Inject(IgxGridTransaction) protected _transactions: IgxHierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
-        elementRef: ElementRef,
-        zone: NgZone,
-        @Inject(DOCUMENT) public document,
-        cdr: ChangeDetectorRef,
-        resolver: ComponentFactoryResolver,
-        differs: IterableDiffers,
-        viewRef: ViewContainerRef,
-        navigation: IgxTreeGridNavigationService,
-        filteringService: IgxFilteringService,
-        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-            super(selectionService, crudService, gridAPI,
-                _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
-                filteringService, overlayService, summaryService, _displayDensityOptions);
-        this._gridAPI = <IgxTreeGridAPIService>gridAPI;
-    }
 
     /**
      * @hidden
@@ -708,11 +697,11 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         if (delayScrolling) {
             this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
                 this.scrollDirective(this.verticalScrollContainer,
-                    typeof(row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(record));
+                    typeof(row) === 'number' ? row : this.dataView.indexOf(record));
             });
         } else {
             this.scrollDirective(this.verticalScrollContainer,
-                typeof(row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(record));
+                typeof(row) === 'number' ? row : this.dataView.indexOf(record));
         }
 
         this.scrollToHorizontally(column);
@@ -721,7 +710,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     /**
     * @hidden
     */
-    public getContext(rowData, rowIndex): any {
+    public getContext(rowData: any, rowIndex: Number): any {
         return {
             $implicit: rowData,
             index: rowIndex,
@@ -743,7 +732,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
             source.push(record.data);
         };
 
-        this.verticalScrollContainer.igxForOf.forEach(process);
+        this.dataView.forEach(process);
         return this.extractDataFromSelection(source, formatters, headers);
     }
 

@@ -5,7 +5,6 @@ import {
     Inject,
     Input,
     DoCheck,
-    Host,
     HostListener
 } from '@angular/core';
 import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';

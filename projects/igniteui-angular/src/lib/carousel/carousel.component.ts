@@ -107,7 +107,7 @@ export class IgxCarouselComponent implements OnDestroy {
      * Sets the time `interval` in milliseconds before the slide changes.
      * If not set, the carousel will not change `slides` automatically.
      * ```html
-     * <igx-carousel [interval] = "1000"></carousel>
+     * <igx-carousel [interval] = "1000"></igx-carousel>
      * ```
      * @memberof IgxCarouselComponent
      */
@@ -512,12 +512,12 @@ export class IgxCarouselComponent implements OnDestroy {
 })
 
 export class IgxSlideComponent implements OnInit, OnDestroy {
-
+    private _active;
     /**
      * Gets/sets the `index` of the slide inside the carousel.
      * ```html
      * <igx-carousel>
-     *  <igx-slide index = "1"</igx-slide>
+     *  <igx-slide index = "1"></igx-slide>
      * <igx-carousel>
      * ```
      * @memberOf IgxSlideComponent
@@ -528,7 +528,7 @@ export class IgxSlideComponent implements OnInit, OnDestroy {
      * Gets/sets the target `direction` for the slide.
      * ```html
      * <igx-carousel>
-     *  <igx-slide direction="NEXT"</igx-slide>
+     *  <igx-slide direction="NEXT"></igx-slide>
      * <igx-carousel>
      * ```
      * @memberOf IgxSlideComponent
@@ -538,13 +538,31 @@ export class IgxSlideComponent implements OnInit, OnDestroy {
      * Gets/sets the `active` state of the slide.
      * ```html
      * <igx-carousel>
-     *  <igx-slide [active] ="false"</igx-slide>
+     *  <igx-slide [active] ="false"></igx-slide>
+     * <igx-carousel>
+     * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-carousel>
+     *  <igx-slide [(active)] ="model.isActive"></igx-slide>
      * <igx-carousel>
      * ```
      * @memberof IgxSlideComponent
      */
     @HostBinding('class.active')
-    @Input() public active: boolean;
+    @Input()
+    public get active(): boolean {
+        return this._active;
+    }
+    public set active(value)  {
+        this._active = value;
+        this.activeChange.emit(this._active);
+    }
+    /**
+     *@hidden
+     */
+    @Output() public activeChange = new EventEmitter<boolean>();
 
     constructor(private carousel: IgxCarouselComponent) { }
     /**

@@ -9,6 +9,7 @@ import { DataUtil } from '../../data-operations/data-util';
 import { ExportUtilities } from './export-utilities';
 import { IgxExporterOptionsBase } from './exporter-options-base';
 import { ITreeGridRecord } from '../../grids/tree-grid/tree-grid.interfaces';
+import { TreeGridFilteringStrategy } from '../../grids/tree-grid/tree-grid.filtering.pipe';
 
 /**
  * onRowExport event arguments
@@ -257,14 +258,17 @@ export abstract class IgxBaseExporter {
         if (grid.filteringExpressionsTree &&
             grid.filteringExpressionsTree.filteringOperands.length > 0 &&
             !options.ignoreFiltering) {
-            const filteringState = {
+            const filteringState: any = {
                 expressionsTree: grid.filteringExpressionsTree,
+                advancedExpressionsTree: grid.advancedExpressionsTree,
                 logic: grid.filteringLogic
             };
 
             if (this._isTreeGrid) {
                 this.flatRecords = [];
-                rootRecords = DataUtil.treeGridFilter(rootRecords, filteringState);
+                filteringState.strategy = new TreeGridFilteringStrategy();
+                rootRecords = filteringState.strategy.filter(rootRecords,
+                    filteringState.expressionsTree, filteringState.advancedExpressionsTree);
                 this.prepareHierarchicalData(rootRecords);
                 data = this.flatRecords;
             } else {

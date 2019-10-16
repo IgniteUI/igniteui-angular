@@ -14,13 +14,12 @@ import {
 import {
     HorizontalAlignment,
     VerticalAlignment,
-    ConnectedPositioningStrategy,
     OverlaySettings,
     IgxOverlayService,
-    AbsoluteScrollStrategy
+    AbsoluteScrollStrategy,
+    AutoPositionStrategy
 } from '../../../services/index';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
-import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
 import {
     IFilteringOperation,
     IgxStringFilteringOperand,
@@ -115,7 +114,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
     private _subMenuOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
         modal: false,
-        positionStrategy: new ConnectedPositioningStrategy(this._subMenuPositionSettings),
+        positionStrategy: new AutoPositionStrategy(this._subMenuPositionSettings),
         scrollStrategy: new AbsoluteScrollStrategy()
     };
 
@@ -566,6 +565,14 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
         }
     }
 
+    private selectAllFilterItems() {
+        this.listData.forEach(filterListItem => {
+            filterListItem.isSelected = true;
+            filterListItem.indeterminate = false;
+        });
+        this.excelStyleSearch.cdr.detectChanges();
+    }
+
     // TODO: sort members by access modifier
 
     get sortingTemplate() {
@@ -682,7 +689,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
 
     public clearFilter() {
         this.filteringService.clearFilter(this.column.field);
-        this.populateColumnData();
+        this.selectAllFilterItems();
     }
 
     public onClearFilterKeyDown(eventArgs) {

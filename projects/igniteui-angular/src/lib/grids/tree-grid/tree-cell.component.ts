@@ -1,8 +1,9 @@
-import { Component, ChangeDetectorRef, ElementRef, ViewChild, Inject, ChangeDetectionStrategy, NgZone, OnInit, Input } from '@angular/core';
+import { Component, ChangeDetectorRef, ElementRef, ViewChild, Inject,
+     ChangeDetectionStrategy, NgZone, OnInit, Input, TemplateRef } from '@angular/core';
 import { IgxGridCellComponent } from '../cell.component';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
-import { getNodeSizeViaRange } from '../../core/utils';
+import { getNodeSizeViaRange, PlatformUtil } from '../../core/utils';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridBaseComponent, IGridDataBindable } from '../grid';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
@@ -25,8 +26,9 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
                 element: ElementRef,
                 protected zone: NgZone,
                 touchManager: HammerGesturesManager,
-                @Inject(DOCUMENT) public document) {
-        super(selectionService, crudService, gridAPI, cdr, element, zone, touchManager);
+                @Inject(DOCUMENT) public document,
+                protected platformUtil: PlatformUtil) {
+        super(selectionService, crudService, gridAPI, cdr, element, zone, touchManager, platformUtil);
         this.treeGridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
@@ -56,6 +58,18 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
 
     @ViewChild('defaultContentElement', { read: ElementRef, static: false })
     public defaultContentElement: ElementRef;
+
+    /**
+    * @hidden
+    */
+   @ViewChild('defaultExpandedTemplate', { read: TemplateRef, static: true })
+   protected defaultExpandedTemplate: TemplateRef<any>;
+
+    /**
+    * @hidden
+    */
+   @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
+   protected defaultCollapsedTemplate: TemplateRef<any>;
 
     /**
      * @hidden
@@ -108,5 +122,16 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
         const largestWidth = Math.max(...Array.from(this.nativeElement.children)
             .map((child) => getNodeSizeViaRange(range, child)));
         return largestWidth + indicatorWidth + indicatorMargin + leftPadding;
+    }
+
+    /**
+     * @hidden
+    */
+    public get iconTemplate() {
+        if (this.expanded) {
+            return this.grid.rowExpandedIndicatorTemplate || this.defaultExpandedTemplate;
+        } else {
+            return this.grid.rowCollapsedIndicatorTemplate || this.defaultCollapsedTemplate;
+        }
     }
 }

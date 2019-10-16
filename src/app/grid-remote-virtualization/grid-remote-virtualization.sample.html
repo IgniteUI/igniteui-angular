@@ -1,6 +1,9 @@
 <div class="sample-wrapper dark-grid">
-    <igx-grid #grid1 [isLoading]="true" [autoGenerate]="true" [data]="remoteData | async" (onDataPreLoad)="dataLoading($event)" [height]="'600px'">
+    <igx-grid #grid1 [isLoading]="loading" [autoGenerate]="true" [data]="remoteData | async" (onDataPreLoad)="dataLoading($event)" [height]="'600px'">
     </igx-grid>
 
     <button (click)="loadData()">loadData</button>
+    <button (click)="loadNullData()">null Data</button>
+    <button (click)="loadUndefinedData()">undefined Data</button>
+    <button igxButton="raised" (click)="toggleLoading()">toggle loading</button>
 </div>

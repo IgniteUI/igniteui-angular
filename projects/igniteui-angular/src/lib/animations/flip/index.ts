@@ -6,8 +6,8 @@ import {
     keyframes,
     style
 } from '@angular/animations';
-import { EaseIn, EaseOut } from '../easings';
-import { IAnimationParams } from '../main';
+import { EaseOut } from '../easings';
+import { IAnimationParams } from '../interface';
 
 const baseRecipe: AnimationMetadata[] = [
     style({

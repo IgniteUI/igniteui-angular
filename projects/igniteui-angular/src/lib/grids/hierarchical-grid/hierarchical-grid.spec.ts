@@ -1,7 +1,7 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxHierarchicalGridModule, GridSelectionMode } from './index';
+import { IgxHierarchicalGridModule } from './index';
 import { ChangeDetectorRef, Component, ViewChild, AfterViewInit } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
@@ -12,6 +12,7 @@ import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { DisplayDensity } from '../../core/displayDensity';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IGridCellEventArgs } from '../grid';
+import { GridSelectionMode } from '../common/enums';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
@@ -43,14 +44,14 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         const row1 = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         expect(row1.hasChildren).toBe(true);
         const rowElems = fixture.debugElement.queryAll(By.directive(IgxHierarchicalRowComponent));
-        expect(rowElems[0].query(By.css('igx-icon')).nativeElement.innerText).toEqual('expand_more');
+        expect(rowElems[0].query(By.css('igx-icon')).nativeElement.innerText).toEqual('chevron_right');
         const row2 = hierarchicalGrid.getRowByIndex(1) as IgxHierarchicalRowComponent;
         expect(row2.hasChildren).toBe(true);
-        expect(rowElems[1].query(By.css('igx-icon')).nativeElement.innerText).toEqual('expand_more');
+        expect(rowElems[1].query(By.css('igx-icon')).nativeElement.innerText).toEqual('chevron_right');
 
         const row3 = hierarchicalGrid.getRowByIndex(1) as IgxHierarchicalRowComponent;
         expect(row3.hasChildren).toBe(true);
-        expect(rowElems[2].query(By.css('igx-icon')).nativeElement.innerText).toEqual('expand_more');
+        expect(rowElems[2].query(By.css('igx-icon')).nativeElement.innerText).toEqual('chevron_right');
     });
 
     it('should allow expand/collapse rows through the UI', fakeAsync(/** row toggle rAF */() => {
@@ -70,11 +71,11 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
     it('should change expand/collapse indicators when state of the row changes', fakeAsync(/** row toggle rAF */() => {
         const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         const rowElem = fixture.debugElement.queryAll(By.directive(IgxHierarchicalRowComponent))[0];
-        expect(rowElem.query(By.css('igx-icon')).nativeElement.innerText).toEqual('expand_more');
+        expect(rowElem.query(By.css('igx-icon')).nativeElement.innerText).toEqual('chevron_right');
         UIInteractions.clickElement(row.expander);
         fixture.detectChanges();
 
-        expect(rowElem.query(By.css('igx-icon')).nativeElement.innerText).toEqual('expand_less');
+        expect(rowElem.query(By.css('igx-icon')).nativeElement.innerText).toEqual('expand_more');
     }));
 
     it('should collapse all rows that belongs to a grid via header collapse icon', fakeAsync(/** row toggle rAF */() => {
@@ -100,6 +101,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         rows.forEach((r) => {
             expect(r.expanded).toBe(false);
         });
+        icon = headerExpanderElem.query(By.css('igx-icon')).componentInstance;
         iconTxt = headerExpanderElem.query(By.css('igx-icon')).nativeElement.textContent.toLowerCase();
         expect(iconTxt).toBe('unfold_less');
         expect(icon.getActive).toBe(false);
@@ -140,7 +142,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         fixture.detectChanges();
         expect(row.expanded).toBe(true);
         // scroll to bottom
-        hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
+        hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.dataView.length - 1);
         await wait(100);
         fixture.detectChanges();
         // scroll to top
@@ -617,7 +619,7 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         const child2 = children[1];
         expect(child1._destroyed).toBeFalsy();
         expect(child2._destroyed).toBeFalsy();
-        hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
+        hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.dataView.length - 1);
         await wait(100);
         fixture.detectChanges();
 
@@ -632,7 +634,7 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         expect(child2._destroyed).toBeTruthy();
     }));
 
-    it(' should emit child grid events with the related child grid instance as an event arg.', async() => {
+    it('should emit child grid events with the related child grid instance as an event arg.', async() => {
         const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         UIInteractions.clickElement(row.expander);
         fixture.detectChanges();
@@ -1127,6 +1129,61 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
 
 });
 
+describe('IgxHierarchicalGrid custom template', () => {
+    configureTestSuite();
+    let fixture: ComponentFixture<IgxHierarchicalGridCustomTemplateComponent>;
+    let hierarchicalGrid: IgxHierarchicalGridComponent;
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxHierarchicalGridCustomTemplateComponent
+            ],
+            imports: [
+                NoopAnimationsModule, IgxHierarchicalGridModule]
+        }).compileComponents();
+    }));
+
+    beforeEach(async(() => {
+        fixture = TestBed.createComponent(IgxHierarchicalGridCustomTemplateComponent);
+        fixture.detectChanges();
+        hierarchicalGrid = fixture.componentInstance.hgrid;
+    }));
+
+    it(' should allow setting custom template for  expand/collapse icons', async() => {
+        let rows = hierarchicalGrid.dataRowList.toArray();
+        for (const row of rows) {
+            const expander =  row.nativeElement.querySelector('.igx-grid__hierarchical-expander');
+            expect(expander.innerText).toBe('COLLAPSED');
+        }
+        hierarchicalGrid.expandChildren = true;
+        fixture.detectChanges();
+        rows = hierarchicalGrid.dataRowList.toArray();
+        for (const row of rows) {
+            const expander =  row.nativeElement.querySelector('.igx-grid__hierarchical-expander');
+            expect(expander.innerText).toBe('EXPANDED');
+        }
+
+        const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+        const childRows = childGrid.dataRowList.toArray();
+        for (const row of childRows) {
+            const expander =  row.nativeElement.querySelector('.igx-grid__hierarchical-expander');
+            expect(expander.innerText).toBe('COLLAPSED');
+        }
+
+        expect((hierarchicalGrid as any).headerHierarchyExpander.nativeElement.innerText).toBe('EXPANDED');
+        expect((childGrid as any).headerHierarchyExpander.nativeElement.innerText).toBe('COLLAPSED');
+
+        childRows[0].toggle();
+        fixture.detectChanges();
+        expect((childGrid as any).headerHierarchyExpander.nativeElement.innerText).toBe('EXPANDED');
+        hierarchicalGrid.expandChildren = false;
+        fixture.detectChanges();
+        await wait(100);
+        fixture.detectChanges();
+        expect((hierarchicalGrid as any).headerHierarchyExpander.nativeElement.innerText).toBe('COLLAPSED');
+    });
+});
+
 @Component({
     template: `
     <igx-hierarchical-grid #grid1 [data]="data"
@@ -1329,4 +1386,32 @@ public toggleRI = true;
 public toggleChildRI = true;
 
 }
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #grid1 [data]="data" [showExpandAll]='true'
+     [autoGenerate]="false" [height]="'400px'" [width]="width" #hierarchicalGrid>
+     <igx-column field="ID"></igx-column>
+     <igx-column field="ProductName"></igx-column>
+        <igx-row-island [showExpandAll]='true' [key]="'childData'" [autoGenerate]="false" #rowIsland>
+            <igx-column field="ID"></igx-column>
+            <igx-column field="ProductName"></igx-column>
+            <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 >
+            </igx-row-island>
+        </igx-row-island>
+        <ng-template igxRowExpandedIndicator>
+                <span>EXPANDED</span>
+        </ng-template>
+        <ng-template igxRowCollapsedIndicator>
+                <span>COLLAPSED</span>
+        </ng-template>
+        <ng-template igxHeaderCollapsedIndicator>
+            <span>COLLAPSED</span>
+        </ng-template>
+        <ng-template igxHeaderExpandedIndicator>
+            <span>EXPANDED</span>
+        </ng-template>
+    </igx-hierarchical-grid>`
+})
+export class IgxHierarchicalGridCustomTemplateComponent extends IgxHierarchicalGridTestBaseComponent {}
 

@@ -7,7 +7,7 @@ import {
     style
 } from '@angular/animations';
 import { EaseInOut } from '../easings';
-import { IAnimationParams } from '../main';
+import { IAnimationParams } from '../interface';
 
 const baseRecipe: AnimationMetadata[] = [
     animate(

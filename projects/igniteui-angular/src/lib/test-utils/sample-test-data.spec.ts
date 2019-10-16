@@ -201,6 +201,20 @@ export class SampleTestData {
         { ID: 10, Name: 'Eduardo Ramirez', JobTitle: 'Manager', Company: 'Company E' }
     ])
 
+    /* Data fields: ID: number, Name: Object{FirstName: string, LastName: string },
+    JobTitle: string, Company: string; 10 items, sorted by ID. */
+    public static personNameObjectJobCompany = () => ([
+        { ID: 1, Name: { FirstName: 'Casey', LastName: 'Houston' }, JobTitle: 'Vice President', Company: 'Company A' },
+        { ID: 2, Name: { FirstName: 'Gilberto', LastName: 'Todd' } , JobTitle: 'Director', Company: 'Company C' },
+        { ID: 3, Name: { FirstName: 'Tanya', LastName: 'Bennett' } , JobTitle: 'Director', Company: 'Company A' },
+        { ID: 4, Name: { FirstName: 'Jack', LastName: 'Simon' }, JobTitle: 'Software Developer', Company: 'Company D' },
+        { ID: 5, Name: { FirstName: 'Celia', LastName: 'Martinez' }, JobTitle: 'Senior Software DEVELOPER', Company: 'Company B' },
+        { ID: 6, Name: { FirstName: 'Erma', LastName: 'Walsh' }, JobTitle: 'CEO', Company: 'Company C' },
+        { ID: 7, Name: { FirstName: 'Debra', LastName: 'Morton' } , JobTitle: 'Associate Software Developer', Company: 'Company B' },
+        { ID: 8, Name: { FirstName: 'Erika', LastName: 'Wells' } , JobTitle: 'Software Development Team Lead', Company: 'Company A' },
+        { ID: 9, Name: { FirstName: 'Leslie', LastName: 'Hansen' } , JobTitle: 'Associate Software Developer', Company: 'Company D' },
+        { ID: 10, Name: { FirstName: 'Eduardo', LastName: 'Ramirez' }, JobTitle: 'Manager', Company: 'Company E' }
+    ])
     /* Data fields: ID: number, CompanyName: string, ContactName: string, ContactTitle: string, Address: string,
         City: string, Region: string, PostalCode: string, Country: string, Phone: string, Fax: string;
         11 items, sorted by ID. */
@@ -1566,7 +1580,7 @@ export class SampleTestData {
         for (let i = 0; i < count; i++) {
             const rowID = parendID ? parendID + i : i.toString();
            if (level > 0 ) {
-                children = this.generateData(count / 2 , currLevel - 1, rowID);
+                children = this.generateHGridData(count / 2 , currLevel - 1, rowID);
            }
            prods.push({
             ID: rowID, ChildLevels: currLevel,  ProductName: 'Product: A' + i, 'Col1': i,

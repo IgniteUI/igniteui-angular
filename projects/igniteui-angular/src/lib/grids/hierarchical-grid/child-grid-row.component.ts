@@ -45,13 +45,6 @@ private resolver;
 
 
     /**
-     * @hidden
-     */
-    // public get layout() {
-    //     const layout = (this.gridAPI as IgxHierarchicalGridAPIService).getLayout(`igx-row-island-` + this.rowData.key);
-    //    return layout;
-    // }
-    /**
     * @hidden
     */
     @Input()
@@ -183,7 +176,12 @@ private resolver;
         const destructor = takeUntil(this.hGrid.destroy$);
 
         const factory = this.resolver.resolveComponentFactory(IgxGridComponent);
-        const outputs = factory.outputs;
+        // exclude outputs related to two-way binding functionality
+        const inputNames = factory.inputs.map(input => input.propName);
+        const outputs = factory.outputs.filter(o => {
+            const matchingInputPropName = o.propName.slice(0, o.propName.indexOf('Change'));
+            return inputNames.indexOf(matchingInputPropName) === -1;
+        });
         outputs.forEach(output => {
             if (this.hGrid[output.propName]) {
                 this.hGrid[output.propName].pipe(destructor).subscribe((args) => {
