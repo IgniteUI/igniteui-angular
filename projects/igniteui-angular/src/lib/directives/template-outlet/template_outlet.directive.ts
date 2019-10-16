@@ -111,7 +111,10 @@ export class IgxTemplateOutletDirective implements OnChanges {
         // if view exists, but template has been changed and there is a view in the cache with the related template
         // then detach old view and insert the stored one with the matching template
         // after that update its context.
-        this._viewContainerRef.detach(this._viewContainerRef.indexOf(this._viewRef));
+        if (this._viewContainerRef.length > 0) {
+            this._viewContainerRef.detach(this._viewContainerRef.indexOf(this._viewRef));
+        }
+
         this._viewRef = cachedView;
         const oldContext = this._cloneContext(cachedView.context);
         this._viewContainerRef.insert(this._viewRef, 0);
