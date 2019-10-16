@@ -4,12 +4,16 @@ import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
 import { DataUtil } from '../data-operations/data-util';
 import { cloneArray } from '../core/utils';
 
+/**
+ * @hidden
+ * @internal
+ */
 @Pipe({
-    name: 'igxCellStyles'
+    name: 'igxCellStyleClasses'
 })
-export class IgxGridCellStylesPipe implements PipeTransform {
+export class IgxGridCellStyleClassesPipe implements PipeTransform {
 
-    transform(cssClasses: any, _value: any, data: any, field: string): string {
+    transform(cssClasses: { [prop: string]: any }, value: any, data: any, field: string, index: number): string {
         if (!cssClasses) {
             return '';
         }
@@ -18,13 +22,37 @@ export class IgxGridCellStylesPipe implements PipeTransform {
 
         for (const cssClass of Object.keys(cssClasses)) {
             const callbackOrValue = cssClasses[cssClass];
-            const apply = typeof callbackOrValue === 'function' ? callbackOrValue(data, field) : callbackOrValue;
+            const apply = typeof callbackOrValue === 'function' ? callbackOrValue(data, field, value, index) : callbackOrValue;
             if (apply) {
                 result.push(cssClass);
             }
         }
 
         return result.join(' ');
+    }
+}
+
+/**
+ * @hidden
+ * @internal
+ */
+@Pipe({
+    name: 'igxCellStyles'
+})
+export class IgxGridCellStylesPipe implements PipeTransform {
+
+    transform(styles: { [prop: string]: any }, value: any, data: any, field: string, index: number): { [prop: string]: any } {
+        const css = {};
+        if (!styles) {
+            return css;
+        }
+
+        for (const prop of Object.keys(styles)) {
+            const res = styles[prop];
+            css[prop] = typeof res === 'function' ? res(data, field, value, index) : res;
+        }
+
+        return css;
     }
 }
 
