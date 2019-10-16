@@ -4,9 +4,8 @@
     </span>
 </div>
 
-<div *ngFor="let week of getCalendarMonth; last as isLast; index as i; trackBy: rowTracker" class="igx-calendar__body-row"
-    [@animateChange]="animationAction"
-    (@animateChange.done)="animationDone($event, isLast)">
+<div *ngFor="let week of getCalendarMonth; last as isLast; index as i; trackBy: rowTracker"
+    class="igx-calendar__body-row">
     <igx-day-item
         *ngFor="let day of week; trackBy: dateTracker"
         [date]="day"
