@@ -13,6 +13,7 @@
 /// @prop {Color} row-even-background [#222] - The background color of even rows.
 /// @prop {Map} row-hover-background [igx-color: ('grays', 100), hexrgba: #222] - The hover row background color.
 /// @prop {Map} row-selected-background [igx-color: ('secondary', 500), rgba: .24, hexrgba: #222] - The selected row background color.
+/// @prop {Map} row-selected-hover-background [igx-color: ('secondary', 'A700'), rgba: .24, hexrgba: #222] - The selected row background color on hover.
 /// @prop {Color} row-selected-text-color [#fff] - The selected row text color.
 /// @prop {Color} ghost-header-background [#222] - The dragged header background color.
 /// @prop {Color} cell-editing-background [#222] - The background for the cell in editing mode.
@@ -48,6 +49,12 @@ $_base-dark-grid: (
 
     row-selected-background: (
         igx-color: ('secondary', 500),
+        rgba: .24,
+        hexrgba: #222
+    ),
+
+    row-selected-hover-background: (
+        igx-color: ('secondary', 'A700'),
         rgba: .24,
         hexrgba: #222
     ),

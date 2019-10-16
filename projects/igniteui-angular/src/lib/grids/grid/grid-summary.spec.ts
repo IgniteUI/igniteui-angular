@@ -209,7 +209,6 @@ describe('IgxGrid - Summaries #grid', () => {
         }));
 
         it('should render correct data after hiding one bigger and then one smaller summary when scrolled to the bottom', (async () => {
-            resizeObserverIgnoreError();
             const fixture = TestBed.createComponent(VirtualSummaryColumnComponent);
             fixture.detectChanges();
             await wait(100);
@@ -288,11 +287,41 @@ describe('IgxGrid - Summaries #grid', () => {
                 'summary cell and data cell are not right aligned');
         }));
 
+        it('should be able to access alldata from each summary', fakeAsync(() => {
+            const fixture = TestBed.createComponent(CustomSummariesComponent);
+            const grid = fixture.componentInstance.grid1;
+            fixture.detectChanges();
+
+            const summaryRow = fixture.debugElement.query(By.css(SUMMARY_ROW));
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['10', '39,004', '3,900.4']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Earliest'], ['5/17/1990']);
+            GridSummaryFunctions.verifyVisibleSummariesHeight(fixture, 3, grid.defaultSummaryHeight);
+            grid.getColumnByName('UnitsInStock').summaries = fixture.componentInstance.inStockSummary;
+            tick(100);
+            fixture.detectChanges();
+
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Items InStock'],
+                ['10', '0', '20,000', '39,004', '3,900.4', '6']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Earliest'], ['5/17/1990']);
+
+            grid.getCellByColumn(4, 'InStock').update(true);
+            tick();
+            fixture.detectChanges();
+
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Items InStock'],
+                ['10', '0', '20,000', '39,004', '3,900.4', '7']);
+
+            grid.filter('UnitsInStock', 0, IgxNumberFilteringOperand.instance().condition('equals'));
+            fixture.detectChanges();
+
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Items InStock'],
+            ['3', '0', '0', '0', '0', '1']);
+        }));
+
         describe('', () => {
             let fix;
             let grid: IgxGridComponent;
             beforeEach(fakeAsync(/** height/width setter rAF */() => {
-                resizeObserverIgnoreError();
                 fix = TestBed.createComponent(SummaryColumnComponent);
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
@@ -1163,7 +1192,6 @@ describe('IgxGrid - Summaries #grid', () => {
         let fix;
         let grid;
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
-            resizeObserverIgnoreError();
             fix = TestBed.createComponent(SummariesGroupByTransactionsComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -1389,7 +1417,7 @@ describe('IgxGrid - Summaries #grid', () => {
             });
             fix.detectChanges();
 
-            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
             await wait(100);
             fix.detectChanges();
 
@@ -1455,7 +1483,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 ['Count', 'Earliest', 'Latest'], ['9', 'Dec 18, 2007', 'Dec 9, 2017']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '50']);
 
-            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
             await wait(50);
             fix.detectChanges();
 
@@ -1485,7 +1513,7 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '50']);
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 0, 5, ['Count'], ['9']);
 
-            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
             await wait(50);
             fix.detectChanges();
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 18, 5, ['Count'], ['1']);
@@ -1548,7 +1576,7 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['8']);
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '50']);
 
-            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
             await wait(50);
             fix.detectChanges();
 
@@ -1617,7 +1645,7 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 4, 2, ['Count'], ['3']);
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 4, 4, ['Min', 'Max'], ['19', '50']);
 
-            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
             await wait(50);
             fix.detectChanges();
 
@@ -1757,7 +1785,7 @@ describe('IgxGrid - Summaries #grid', () => {
             expect(groupRows[0].groupRow.value).toEqual(-1);
             expect(groupRows[1].groupRow.value).toEqual(19);
 
-            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            grid.verticalScrollContainer.scrollTo(grid.dataView.length - 1);
             await wait(50);
             fix.detectChanges();
 
@@ -2444,6 +2472,24 @@ class EarliestSummary extends IgxDateSummaryOperand {
     }
 }
 
+class InStockSummary extends IgxNumberSummaryOperand {
+    constructor() {
+        super();
+    }
+
+    public operate(summaries?: any[], allData = [], field?): IgxSummaryResult[] {
+        const result = super.operate(summaries);
+        if (field && field === 'UnitsInStock') {
+            result.push({
+                key: 'test',
+                label: 'Items InStock',
+                summaryResult: allData.filter((rec) => rec.InStock).length
+            });
+        }
+        return result;
+    }
+}
+
 @Component({
     template: `
         <igx-grid #grid1 [data]="data" [primaryKey]="'ProductID'" [allowFiltering]="true">
@@ -2469,6 +2515,7 @@ export class CustomSummariesComponent {
     public dealsSummary = DealsSummary;
     public dealsSummaryMinMax = DealsSummaryMinMax;
     public earliest = EarliestSummary;
+    public inStockSummary = InStockSummary;
 }
 
 @Component({

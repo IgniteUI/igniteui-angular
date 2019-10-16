@@ -106,7 +106,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
 
     public columnSelectOverlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
-        positionStrategy: new ConnectedPositioningStrategy(),
         modal: false,
         closeOnOutsideClick: false,
         excludePositionTarget: true
@@ -114,7 +113,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
 
     public conditionSelectOverlaySettings: OverlaySettings = {
         scrollStrategy: new AbsoluteScrollStrategy(),
-        positionStrategy: new AutoPositionStrategy(),
         modal: false,
         closeOnOutsideClick: false,
         excludePositionTarget: true
@@ -256,7 +254,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     }
 
     get filterableColumns(): IgxColumnComponent[] {
-        return this.grid.columns.filter((col) => col.filterable);
+        return this.grid.columns.filter((col) => !col.columnGroup && col.filterable);
     }
 
     public dragStart(dragArgs: IDragStartEventArgs) {
@@ -459,17 +457,18 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         expressionItem.inEditMode = true;
         this.editedExpression = expressionItem;
 
-        requestAnimationFrame(() => {
-            this.columnSelectOverlaySettings.positionStrategy.settings.target = this.columnSelect.element;
+        this.cdr.detectChanges();
 
-            if (!this.selectedColumn) {
-                this.columnSelect.input.nativeElement.focus();
-            } else if (this.selectedColumn.filters.condition(this.selectedCondition).isUnary) {
-                this.conditionSelect.input.nativeElement.focus();
-            } else {
-                this.searchValueInput.nativeElement.focus();
-            }
-        });
+        this.columnSelectOverlaySettings.positionStrategy = new AutoPositionStrategy({target: this.columnSelect.element});
+        this.conditionSelectOverlaySettings.positionStrategy = new AutoPositionStrategy({target: this.conditionSelect.element});
+
+        if (!this.selectedColumn) {
+            this.columnSelect.input.nativeElement.focus();
+        } else if (this.selectedColumn.filters.condition(this.selectedCondition).isUnary) {
+            this.conditionSelect.input.nativeElement.focus();
+        } else {
+            this.searchValueInput.nativeElement.focus();
+        }
     }
 
     public clearSelection() {
@@ -767,8 +766,8 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         event.preventDefault();
     }
 
-    public onConditionSelectOpening() {
-        this.conditionSelectOverlaySettings.positionStrategy.settings.target = this.conditionSelect.element;
+    public getConditionList(): string[] {
+        return this.selectedColumn ? this.selectedColumn.filters.conditionList() : [];
     }
 
     public initialize(filteringService: IgxFilteringService, overlayService: IgxOverlayService,

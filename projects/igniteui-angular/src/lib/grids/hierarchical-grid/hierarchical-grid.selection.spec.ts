@@ -661,6 +661,15 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             lastRow = childGrid.getRowByIndex(3);
             GridSelectionFunctions.verifyRowSelected(lastRow);
         });
+
+        it('should not select row on expander click.', () => {
+            const firstRow = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+            UIInteractions.clickElement(firstRow.expander);
+            fix.detectChanges();
+
+            // check row is not selected
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+        });
     });
 
     describe('Row Selection CRUD', () => {
@@ -817,7 +826,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.detectChanges();
 
             const childGrid = hGrid.hgridAPI.getChildGrids(false)[0];
-            GridSelectionFunctions.clickHeaderRowCheckbox(childGrid);
+            GridSelectionFunctions.headerCheckboxClick(childGrid);
             fix.detectChanges();
 
             expect(childGrid.selectionService.areAllRowSelected()).toBeTruthy();
@@ -840,13 +849,12 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.detectChanges();
 
             const childGrid = hGrid.hgridAPI.getChildGrids(false)[0];
-
-            GridSelectionFunctions.clickHeaderRowCheckbox(childGrid);
+            GridSelectionFunctions.headerCheckboxClick(childGrid);
             fix.detectChanges();
             GridSelectionFunctions.verifyHeaderRowCheckboxState(childGrid, true, false);
             expect(childGrid.selectionService.areAllRowSelected()).toBeTruthy();
 
-            GridSelectionFunctions.clickHeaderRowCheckbox(childGrid);
+            GridSelectionFunctions.headerCheckboxClick(childGrid);
             fix.detectChanges();
             GridSelectionFunctions.verifyHeaderRowCheckboxState(childGrid, false, false);
             expect(childGrid.selectionService.areAllRowSelected()).toBeFalsy();

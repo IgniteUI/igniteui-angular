@@ -29,6 +29,7 @@
 @import '../components/grid-summary/grid-summary-theme';
 @import '../components/grid-paginator/grid-paginator-theme';
 @import '../components/grid-toolbar/grid-toolbar-theme';
+@import '../components/highlight/highlight-theme';
 @import '../components/overlay/overlay-theme';
 @import '../components/toast/toast-theme';
 @import '../components/tooltip/tooltip-theme';
@@ -192,7 +193,7 @@
             $palette,
             $schema,
             $border-radius: $roundness,
-            $disable-button-shadow: if($elevation == false, 0, true),
+            $button-shadow: if($elevation == false, 0, null),
         ));
     }
 
@@ -276,6 +277,10 @@
 
     @if not(index($exclude, 'igx-grid-toolbar')) {
         @include igx-grid-toolbar(igx-grid-toolbar-theme($palette, $schema));
+    }
+
+    @if not(index($exclude, 'igx-highlight')) {
+        @include igx-highlight(igx-highlight-theme($palette, $schema));
     }
 
     @if not(index($exclude, 'igx-icon')) {

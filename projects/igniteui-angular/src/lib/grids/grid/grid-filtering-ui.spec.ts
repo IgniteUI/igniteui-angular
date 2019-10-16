@@ -43,7 +43,7 @@ import {
     IgxGridFilteringESFLoadOnDemandComponent,
     CustomFilteringStrategyComponent
 } from '../../test-utils/grid-samples.spec';
-import { HelperUtils, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
+import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { GridSelectionMode, FilterMode } from '../common/enums';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
@@ -68,7 +68,6 @@ describe('IgxGrid - Filtering actions #grid', () => {
 
     let fix, grid;
     beforeEach(fakeAsync(() => {
-        resizeObserverIgnoreError();
 
         fix = TestBed.createComponent(IgxGridFilteringComponent);
         fix.detectChanges();
@@ -1693,7 +1692,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
-            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridFilteringComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -2942,38 +2940,20 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const leftArrowButton = GridFunctions.getFilterRowLeftArrowButton(fix).nativeElement;
             leftArrowButton.click();
             fix.detectChanges();
-            await wait(100);
+            await wait(150);
             leftArrowButton.click();
             fix.detectChanges();
-            await wait(100);
+            await wait(150);
             verifyMultipleChipsVisibility(fix, [false, true, false]);
-
-            // Click left arrow 2 times.
-            leftArrowButton.click();
-            fix.detectChanges();
-            await wait(100);
-            leftArrowButton.click();
-            fix.detectChanges();
-            await wait(100);
-            verifyMultipleChipsVisibility(fix, [true, false, false]);
 
             // Click right arrow 2 times.
             const rightArrowButton = GridFunctions.getFilterRowRightArrowButton(fix).nativeElement;
             rightArrowButton.click();
             fix.detectChanges();
-            await wait(100);
+            await wait(150);
             rightArrowButton.click();
             fix.detectChanges();
-            await wait(100);
-            verifyMultipleChipsVisibility(fix, [false, true, false]);
-
-            // Click right arrow 2 times.
-            rightArrowButton.click();
-            fix.detectChanges();
-            await wait(100);
-            rightArrowButton.click();
-            fix.detectChanges();
-            await wait(100);
+            await wait(150);
             verifyMultipleChipsVisibility(fix, [false, false, true]);
         }));
 
@@ -3415,7 +3395,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
-            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridFilteringMCHComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -3531,7 +3510,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
-            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridFilteringScrollComponent);
             grid = fix.componentInstance.grid;
             fix.detectChanges();
@@ -3564,7 +3542,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
-            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridFilteringTemplateComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -3621,7 +3598,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
-            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxGridFilteringComponent);
             grid = fix.componentInstance.grid;
             grid.filterMode = FilterMode.excelStyleFilter;
@@ -5688,7 +5664,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
-            resizeObserverIgnoreError();
+
             fix = TestBed.createComponent(IgxGridFilteringESFTemplatesComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -5731,7 +5707,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
-            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxTestExcelFilteringDatePickerComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid;
@@ -5851,7 +5826,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         let grid;
 
         beforeEach(async(() => {
-            resizeObserverIgnoreError();
             fix = TestBed.createComponent(CustomFilteringStrategyComponent);
             grid = fix.componentInstance.grid;
             fix.detectChanges();

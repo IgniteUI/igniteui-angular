@@ -282,7 +282,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     public ghostHost;
 
     /**
-     * An @Input property that specifies the offset of the ghost created relative to the mouse in pixels.
+     * An @Input property that specifies the offset of the dragged element relative to the mouse in pixels.
      * By default it's taking the relative position to the mouse when the drag started and keeps it the same.
      * ```html
      * <div #hostDiv></div>
@@ -294,15 +294,15 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      */
     @Input()
     public set ghostOffsetX(value) {
-        this._ghostOffsetX = parseInt(value, 10);
+        this._offsetX = parseInt(value, 10);
     }
 
     public get ghostOffsetX() {
-        return this._ghostOffsetX;
+        return this._offsetX !== undefined ? this._offsetX : this._defaultOffsetX;
     }
 
     /**
-     * An @Input property that specifies the offset of the ghost created relative to the mouse in pixels.
+     * An @Input property that specifies the offset of the dragged element relative to the mouse in pixels.
      * By default it's taking the relative position to the mouse when the drag started and keeps it the same.
      * ```html
      * <div #hostDiv></div>
@@ -314,11 +314,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      */
     @Input()
     public set ghostOffsetY(value) {
-        this._ghostOffsetY = parseInt(value, 10);
+        this._offsetY = parseInt(value, 10);
     }
 
     public get ghostOffsetY() {
-        return this._ghostOffsetY;
+        return this._offsetY !== undefined ? this._offsetY : this._defaultOffsetY ;
     }
 
     /**
@@ -613,8 +613,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected _baseMarginTop = 0;
     protected _baseOriginX;
     protected _baseOriginY;
-    protected _baseLeft;
-    protected _baseTop;
     protected _startX = 0;
     protected _startY = 0;
     protected _lastX = 0;
@@ -622,8 +620,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected _dragStarted = false;
 
     /** Drag ghost related properties */
-    protected _ghostOffsetX;
-    protected _ghostOffsetY;
+    protected _defaultOffsetX;
+    protected _defaultOffsetY;
+    protected _offsetX;
+    protected _offsetY;
     protected _ghostStartX;
     protected _ghostStartY;
     protected _ghostHostX = 0;
@@ -887,22 +887,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             this._startY = event.touches[0].pageY;
         }
 
-        let offsetX;
-        if (this.ghostOffsetX !== undefined) {
-            offsetX = this.ghostOffsetX;
-        } else {
-            offsetX = this.baseLeft + this.getWindowScrollLeft() - this._startX;
-        }
-
-        let offsetY;
-        if (this.ghostOffsetY !== undefined) {
-            offsetY = this.ghostOffsetY;
-        } else {
-            offsetY = this.baseTop + this.getWindowScrollTop()  - this._startY;
-        }
-
-        this._ghostStartX = this._startX + offsetX;
-        this._ghostStartY = this._startY + offsetY;
+        this._defaultOffsetX = this.baseLeft + this.getWindowScrollLeft() - this._startX;
+        this._defaultOffsetY = this.baseTop + this.getWindowScrollTop()  - this._startY;
+        this._ghostStartX = this._startX + this.ghostOffsetX;
+        this._ghostStartY = this._startY + this.ghostOffsetY;
         this._lastX = this._startX;
         this._lastY = this._startY;
     }
@@ -950,7 +938,15 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                     this._dragStarted = true;
                     if (this.ghost) {
                         // We moved enough so ghostElement can be rendered and actual dragging to start.
+                        // When creating it will take into account any offset set by the user by default.
                         this.createGhost(pageX, pageY);
+                    } else if (this._offsetX !== undefined || this._offsetY !== undefined) {
+                        // There is no need for ghost, but we will need to position initially the base element to reflect any offset.
+                        const transformX = (this._offsetX !== undefined ? this._offsetX - this._defaultOffsetX : 0) +
+                            this.getTransformX(this.element.nativeElement);
+                        const transformY = (this._offsetY !== undefined ? this._offsetY - this._defaultOffsetY : 0) +
+                            this.getTransformY(this.element.nativeElement);
+                        this.setTransformXY(transformX, transformY);
                     }
                 } else {
                     return;
@@ -1047,7 +1043,9 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             }
         } else {
             // Trigger our own click event because when there is no ghost, native click cannot be prevented when dragging.
-            this.dragClick.emit(eventArgs);
+            this.zone.run(() => {
+                this.dragClick.emit(eventArgs);
+            });
         }
     }
 
@@ -1393,10 +1391,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     /** Method setting transformation to the base draggable element. */
     protected setTransformXY(x: number, y: number) {
-        const curX = this.getTransformX(this.element.nativeElement);
-        const curY = this.getTransformY(this.element.nativeElement);
-        this._baseLeft += x - curX;
-        this._baseTop += y - curY;
         this.element.nativeElement.style.transform = 'translate3d(' + x + 'px, ' + y + 'px, 0px)';
     }
 
