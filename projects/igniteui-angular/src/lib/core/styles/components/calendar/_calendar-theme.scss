@@ -374,8 +374,9 @@
         outline: none;
         cursor: pointer;
         position: absolute;
-        height: 100%;
+        height: calc(100% - #{$cal-picker-padding});
         align-items: center;
+        top: 0;
 
         &:focus,
         &:hover {
@@ -385,6 +386,14 @@
         [dir='rtl'] & {
             transform: scaleX(-1)
         }
+    }
+
+    %cal-picker-prev {
+        left: 0
+    }
+
+    %cal-picker-next {
+        right: 0
     }
 
     %cal-picker-date {

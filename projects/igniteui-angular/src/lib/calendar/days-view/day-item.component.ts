@@ -121,6 +121,11 @@ export class IgxDayItemComponent {
 
         return isDateInRanges(this.date.date, this.outOfRangeDates);
     }
+
+    public get isFocusable(): boolean {
+        return this.isCurrentMonth && !this.isHidden && !this.isDisabled && !this.isOutOfRange;
+    }
+
     @HostBinding('class.igx-calendar__date--range')
     public get isWithinRangeCSS(): boolean {
         return !this.isSingleSelection && this.isWithinRange;
@@ -135,9 +140,6 @@ export class IgxDayItemComponent {
         return isDateInRanges(this.date.date, this.specialDates);
     }
 
-    @HostBinding('attr.tabindex')
-    public tabindex = 0;
-
     @HostBinding('class.igx-calendar__date')
     public get defaultCSS(): boolean {
         return this.date.isCurrentMonth && !(this.isWeekend && this.selected);
@@ -151,6 +153,11 @@ export class IgxDayItemComponent {
     @HostBinding('class.igx-calendar__date--single')
     public get isSingleSelection(): boolean {
         return this.selection !== CalendarSelection.RANGE;
+    }
+
+    @HostBinding('attr.tabindex')
+    public get tabindex(): number {
+        return this.isDisabled || this.isHidden ? -1 : 0;
     }
 
     private _selected = false;

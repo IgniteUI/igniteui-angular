@@ -28,6 +28,9 @@
 /// @param {color} $focus-selected-background [null] - The selected chip focus background color.
 /// @param {color} $focus-selected-border-color [null] - The selected chip focus border color.
 ///
+/// @param {color} $remove-icon-color [null] - The remove icon color for the chip.
+/// @param {color} $remove-icon-color-focus [null] - The remove icon color on focus for the chip.
+///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
@@ -71,6 +74,8 @@
     $focus-selected-border-color: null,
 
     $ghost-shadow: null,
+    $remove-icon-color: null,
+    $remove-icon-color-focus: null,
 ) {
     $name: 'igx-chip';
     $chip-schema: map-get($schema, $name);
@@ -204,6 +209,8 @@
         focus-selected-border-color: $focus-selected-border-color,
 
         ghost-shadow: $ghost-shadow,
+        remove-icon-color: $remove-icon-color,
+        remove-icon-color-focus: $remove-icon-color-focus,
     ));
 }
 
@@ -395,16 +402,28 @@
 
     %igx-chip__remove {
         display: inline-flex;
-        color: currentColor;
+        color: --var($theme, 'remove-icon-color', currentColor);
         margin-right: rem(4px);
 
         &:empty {
             display: none;
         }
 
-        &:focus-within {
+        // FIX IE11 and Edge focus styles.
+        // [focus-within] is not supported by IE & Edge.
+        &:focus {
             outline-style: none;
-            color: igx-color(map-get($theme, 'palette'), error);
+
+            igx-icon {
+                outline-style: none;
+                color: --var($theme, 'remove-icon-color-focus');
+            }
+        }
+
+        igx-icon {
+            &:focus{
+                outline-style: none;
+            }
         }
 
         [dir='rtl'] & {
