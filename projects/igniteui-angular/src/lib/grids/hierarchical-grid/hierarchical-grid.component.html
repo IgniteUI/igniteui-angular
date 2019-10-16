@@ -90,35 +90,30 @@
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" [igxForTrackBy]='trackChanges'
             #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
+            <ng-template #hierarchical_record_template>
+                <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
+                </igx-hierarchical-grid-row>
+            </ng-template>
+            <ng-template #child_record_template let-rowIndex="index" let-rowData>
+                <div style="overflow:auto;width: 100%;" [attr.data-rowindex]='rowIndex' (scroll)='onContainerScroll()'
+                    [ngClass]="{
+                    'igx-grid__tr-container': true,
+                    'igx-grid__tr--highlighted':isRowHighlighted(rowData)
+                }">
+                    <igx-child-grid-row *ngFor="let layout of childLayoutList" [parentGridID]="id" [index]="rowIndex"
+                        [rowData]="rowData" [layout]='layout' #row>
+                    </igx-child-grid-row>
+                </div>
+            </ng-template>
             <ng-template
-                [igxTemplateOutlet]='(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template))'
-                [igxTemplateOutletContext]='getContext(rowData)' (onViewCreated)='viewCreatedHandler($event)'
-                (onViewMoved)='viewMovedHandler($event)' (onCachedViewLoaded)='cachedViewLoaded($event)'></ng-template>
+            [igxTemplateOutlet]='(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template))'
+            [igxTemplateOutletContext]='getContext(rowData)' (onViewCreated)='viewCreatedHandler($event)'
+            (onViewMoved)='viewMovedHandler($event)' (onCachedViewLoaded)='cachedViewLoaded($event)'></ng-template>
             <!-- <ng-container *igxTemplateOutlet="(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template)); context: getContext(rowData)"></ng-container> -->
-        </ng-template>
-        <ng-template #hierarchical_record_template let-rowIndex="index" let-rowData>
-            <igx-hierarchical-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
-            </igx-hierarchical-grid-row>
-        </ng-template>
-        <ng-template #child_record_template let-rowIndex="index" let-rowData>
-            <div style="overflow:auto;width: 100%;" [attr.data-rowindex]='rowIndex' (scroll)='onContainerScroll()'
-                [ngClass]="{
-                'igx-grid__tr-container': true,
-                'igx-grid__tr--highlighted':isRowHighlighted(rowData)
-            }">
-                <igx-child-grid-row *ngFor="let layout of childLayoutList" [parentGridID]="id" [index]="rowIndex"
-                    [rowData]="rowData" [layout]='layout' #row>
-                </igx-child-grid-row>
-            </div>
-        </ng-template>
-        <ng-template #summary_template let-rowIndex="index" let-rowData>
-            <igx-grid-summary-row [gridID]="id" [summaries]="rowData.summaries" [index]="rowIndex"
-                class="igx-grid__summaries--body" #summaryRow>
-            </igx-grid-summary-row>
         </ng-template>
         <ng-container *ngTemplateOutlet="template"></ng-container>
         <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true"
-            id="right" class="igx-grid__scroll-on-drag-right"></span>
+        id="right" class="igx-grid__scroll-on-drag-right"></span>
         <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
     </div>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true"
