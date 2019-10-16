@@ -121,6 +121,11 @@ export class IgxDayItemComponent {
 
         return isDateInRanges(this.date.date, this.outOfRangeDates);
     }
+
+    public get isFocusable(): boolean {
+        return this.isCurrentMonth && !this.isHidden && !this.isDisabled && !this.isOutOfRange;
+    }
+
     @HostBinding('class.igx-calendar__date--range')
     public get isWithinRangeCSS(): boolean {
         return !this.isSingleSelection && this.isWithinRange;
