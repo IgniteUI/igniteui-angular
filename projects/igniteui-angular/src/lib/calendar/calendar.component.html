@@ -39,9 +39,10 @@
         </div>
     </div>
 
-    <div style="display: flex">
+    <div style="display: flex"
+        [@animateChange]="animationAction"
+        (@animateChange.done)="animationDone($event)">
         <igx-days-view *ngFor="let view of dayViews; index as i;" [changeDaysView]="true" #days
-                [animationAction]="monthAction"
                 [locale]="locale"
                 [value]="value"
                 [viewDate]="getViewDate(i)"
@@ -52,7 +53,7 @@
                 [disabledDates]="disabledDates"
                 [specialDates]="specialDates"
                 [hideOutsideDays]="hideOutsideDays"
-                (onViewChanged)="viewChanged($event)"
+                (onViewChanging)="viewChanging($event)"
                 (onDateSelection)="childClicked($event)">
         </igx-days-view>
     </div>
