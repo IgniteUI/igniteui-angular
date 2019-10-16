@@ -4973,6 +4973,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public onHeaderSelectorClick(event) {
+        if (!this.isMultiRowSelectionEnabled) { return; }
         this.selectionService.areAllRowSelected() ?
             this.selectionService.clearRowSelection(event) : this.selectionService.selectAllRows(event);
     }

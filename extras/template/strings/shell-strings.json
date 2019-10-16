@@ -35,6 +35,20 @@
         "Requires": "必須",
         "Default value": "デフォルト値",
         "Optional": "オプション",
-        "Rest": "残りの引数"
+        "Rest": "残りの引数",
+        "All": "すべて",
+        "Public": "パブリック",
+        "Public/Protected": "パブリック/保護",
+        "Inherited": "継承",
+        "Externals": "外部",
+        "Only exported": "エクスポートされたのみ",
+        "Search API": "検索 API...",
+        "Classes": "クラス",
+        "Interfaces": "インターフェイス",
+        "Enumerations": "列挙体",
+        "Variables": "変数",
+        "Functions": "関数",
+        "Object literals": "オブジェクト リテラル",
+        "GLOBALS": "グローバル"
     }
 }
