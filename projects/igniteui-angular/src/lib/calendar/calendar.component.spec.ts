@@ -202,8 +202,8 @@ describe('IgxCalendar', () => {
         it('should initialize a calendar component with `id` property', () => {
             const domCalendar = dom.query(By.css('igx-calendar')).nativeElement;
 
-            expect(calendar.id).toBe('igx-calendar-1');
-            expect(domCalendar.id).toBe('igx-calendar-1');
+            expect(calendar.id).toContain('igx-calendar-');
+            expect(domCalendar.id).toContain('igx-calendar-');
 
             calendar.id = 'customCalendar';
             fixture.detectChanges();
