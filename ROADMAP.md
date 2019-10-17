@@ -12,7 +12,7 @@
 7. Access all data when calculating summary per column [#5754](https://github.com/IgniteUI/igniteui-angular/issues/5754)
 8. Angular 9 support [#5998](https://github.com/IgniteUI/igniteui-angular/issues/5998)
 9. Allow master-detail style visualization with igxHierarchicalGrid [#5880](https://github.com/IgniteUI/igniteui-angular/issues/5880)
-10. Collapsible column groups (column expansion state templates) [#3343](https://github.com/IgniteUI/igniteui-angular/issues/3343)
+10. Collapsible column groups (column expansion state templates) [#3343](https://github.com/IgniteUI/igniteui-angular/issues/3343) 
 
 ## Going down the road
 
