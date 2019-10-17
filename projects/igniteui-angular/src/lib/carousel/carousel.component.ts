@@ -30,8 +30,6 @@ let NEXT_ID = 0;
 
 export enum Direction { NONE, NEXT, PREV }
 export enum CarouselIndicatorsOrientation {
-    left = 'left',
-    right = 'right',
     bottom = 'bottom',
     top = 'top'
 }
@@ -176,7 +174,8 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     @Input() public maximumIndicatorsCount = 5;
 
     /**
-    * Gets/sets the display mode of carousel indicators
+    * Gets/sets the display mode of carousel indicators. It can be top or bottom.
+    * Default value is `bottom`.
     * ```html
     * <igx-carousel indicatorsOrientation=CarouselIndicatorsOrientation.top>
     * <igx-carousel>
