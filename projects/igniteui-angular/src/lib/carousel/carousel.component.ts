@@ -193,7 +193,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```typescript
      * // Set in typescript
      * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
-     * myComponent.carousel.itemTemplate = myCustomTemplate;
+     * myComponent.carousel.indicatorTemplate = myCustomTemplate;
      * ```
      * ```html
      * <!-- Set in markup -->
