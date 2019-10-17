@@ -12,7 +12,7 @@ import {
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { DataType } from '../../data-operations/data-util';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent } from '../grid-base.component';
+import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxGridSelectionService, ISelectionNode } from '../selection/selection.service';
 import { ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS } from '../../core/utils';
 import { GridType } from '../common/grid.interface';
@@ -25,7 +25,7 @@ import { GridType } from '../common/grid.interface';
 })
 export class IgxGridGroupByRowComponent {
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>,
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         private gridSelection: IgxGridSelectionService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef) { }

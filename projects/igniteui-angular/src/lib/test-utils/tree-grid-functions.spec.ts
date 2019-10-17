@@ -1,5 +1,5 @@
 import { By } from '@angular/platform-browser';
-import { IgxTreeGridComponent, IgxRowComponent, IgxGridBaseComponent, IgxGridCellComponent } from '../grids/tree-grid';
+import { IgxTreeGridComponent, IgxRowDirective, IgxGridBaseDirective, IgxGridCellComponent } from '../grids/tree-grid';
 import { IGridDataBindable } from '../grids/common/grid.interface';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
@@ -276,14 +276,14 @@ export class TreeGridFunctions {
     /**
      * Returns true if a tree-grid row is 'grayed out' because of filtering
      */
-    public static checkRowIsGrayedOut(row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>): boolean {
+    public static checkRowIsGrayedOut(row: IgxRowDirective<IgxGridBaseDirective & IGridDataBindable>): boolean {
         return row.nativeElement.classList.contains('igx-grid__tr--filtered');
     }
 
     /**
      * Returns true if a tree-grid row is NOT 'grayed out' because of filtering
      */
-    public static checkRowIsNotGrayedOut(row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>): boolean {
+    public static checkRowIsNotGrayedOut(row: IgxRowDirective<IgxGridBaseDirective & IGridDataBindable>): boolean {
         return !row.nativeElement.classList.contains('igx-grid__tr--filtered');
     }
 

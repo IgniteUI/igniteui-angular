@@ -25,7 +25,7 @@ import {
     EventEmitter,
     Output
 } from '@angular/core';
-import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
+import { IgxGridBaseDirective, IgxGridTransaction } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
@@ -36,7 +36,7 @@ import { IgxColumnComponent, } from '../columns/column.component';
 import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
+import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
 import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
@@ -60,14 +60,14 @@ export interface HierarchicalStateRecord {
         IgxGridSelectionService,
         IgxGridCRUDService,
         { provide: GridBaseAPIService, useClass: IgxHierarchicalGridAPIService },
-        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxHierarchicalGridComponent) },
+        { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxHierarchicalGridComponent) },
         IgxGridSummaryService,
         IgxFilteringService,
         IgxHierarchicalGridNavigationService,
         IgxForOfSyncService
     ]
 })
-export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseComponent
+export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirective
     implements GridType, AfterViewInit, AfterContentInit, OnInit, OnDestroy, DoCheck {
 
     /**
@@ -313,7 +313,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         public selectionService: IgxGridSelectionService,
         crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
-        gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>,
+        gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         @Inject(IgxGridTransaction) protected transactionFactory: any,
         elementRef: ElementRef,
         zone: NgZone,

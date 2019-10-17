@@ -20,7 +20,7 @@ import {
     getNodeSizeViaRange, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, NAVIGATION_KEYS, isIE, isLeftClick, PlatformUtil
 } from '../core/utils';
 import { State } from '../services/index';
-import { IgxGridBaseComponent } from './grid-base.component';
+import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from './selection/selection.service';
 import { DeprecateProperty, DeprecateMethod } from '../core/deprecateDecorators';
 import { HammerGesturesManager } from '../core/touch';
@@ -552,7 +552,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     constructor(
         protected selectionService: IgxGridSelectionService,
         protected crudService: IgxGridCRUDService,
-        public gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>,
+        public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         public cdr: ChangeDetectorRef,
         private element: ElementRef,
         protected zone: NgZone,

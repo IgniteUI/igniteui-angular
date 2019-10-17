@@ -5,7 +5,7 @@ import {
 import { Navigate, ISelectionEventArgs } from './drop-down.common';
 import { IDropDownList } from './drop-down.common';
 import { DropDownActionKey } from './drop-down.common';
-import { IgxDropDownItemBase } from './drop-down-item.base';
+import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 
 let NEXT_ID = 0;
@@ -13,14 +13,14 @@ let NEXT_ID = 0;
 /**
  * An abstract class, defining a drop-down component, with:
  * Properties for display styles and classes
- * A collection items of type `IgxDropDownItemBase`
+ * A collection items of type `IgxDropDownItemBaseDirective`
  * Properties and methods for navigating (highlighting/focusing) items from the collection
  * Properties and methods for selecting items from the collection
  */
 @Directive({
     selector: '[igxDropDownBase]'
 })
-export class IgxDropDownBase extends DisplayDensityBase implements IDropDownList {
+export class IgxDropDownBaseDirective extends DisplayDensityBase implements IDropDownList {
     protected _width;
     protected _height;
     protected _focusedItem: any = null;
@@ -37,7 +37,7 @@ export class IgxDropDownBase extends DisplayDensityBase implements IDropDownList
      * @hidden
      * @internal
      */
-    public children: QueryList<IgxDropDownItemBase>;
+    public children: QueryList<IgxDropDownItemBaseDirective>;
 
     /**
      * Emitted when item selection is changing, before the selection completes
@@ -123,8 +123,8 @@ export class IgxDropDownBase extends DisplayDensityBase implements IDropDownList
      * let myDropDownItems = this.dropdown.items;
      * ```
      */
-    public get items(): IgxDropDownItemBase[] {
-        const items: IgxDropDownItemBase[] = [];
+    public get items(): IgxDropDownItemBaseDirective[] {
+        const items: IgxDropDownItemBaseDirective[] = [];
         if (this.children !== undefined) {
             for (const child of this.children.toArray()) {
                 if (!child.isHeader) {
@@ -143,8 +143,8 @@ export class IgxDropDownBase extends DisplayDensityBase implements IDropDownList
      * let myDropDownHeaderItems = this.dropdown.headers;
      * ```
      */
-    public get headers(): IgxDropDownItemBase[] {
-        const headers: IgxDropDownItemBase[] = [];
+    public get headers(): IgxDropDownItemBaseDirective[] {
+        const headers: IgxDropDownItemBaseDirective[] = [];
         if (this.children !== undefined) {
             for (const child of this.children.toArray()) {
                 if (child.isHeader) {
@@ -196,7 +196,7 @@ export class IgxDropDownBase extends DisplayDensityBase implements IDropDownList
      * @param newSelection the item selected
      * @param event the event that triggered the call
      */
-    public selectItem(newSelection?: IgxDropDownItemBase, event?: Event) {
+    public selectItem(newSelection?: IgxDropDownItemBaseDirective, event?: Event) {
         this.onSelection.emit({
             newSelection,
             oldSelection: null,
@@ -207,14 +207,14 @@ export class IgxDropDownBase extends DisplayDensityBase implements IDropDownList
     /**
      * @hidden @internal
      */
-    public get focusedItem(): IgxDropDownItemBase {
+    public get focusedItem(): IgxDropDownItemBaseDirective {
         return this._focusedItem;
     }
 
     /**
      * @hidden @internal
      */
-    public set focusedItem(item: IgxDropDownItemBase) {
+    public set focusedItem(item: IgxDropDownItemBaseDirective) {
         this._focusedItem = item;
     }
 
@@ -287,7 +287,7 @@ export class IgxDropDownBase extends DisplayDensityBase implements IDropDownList
         this.navigate(Navigate.Up);
     }
 
-    protected scrollToHiddenItem(newItem: IgxDropDownItemBase) {
+    protected scrollToHiddenItem(newItem: IgxDropDownItemBaseDirective) {
         const elementRect = newItem.element.nativeElement.getBoundingClientRect();
         const parentRect = this.scrollContainer.getBoundingClientRect();
         if (parentRect.top > elementRect.top) {

@@ -5,7 +5,7 @@ import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
 import { getNodeSizeViaRange, PlatformUtil } from '../../core/utils';
 import { DOCUMENT } from '@angular/common';
-import { IgxGridBaseComponent } from '../grid';
+import { IgxGridBaseDirective } from '../grid';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { HammerGesturesManager } from '../../core/touch';
 import { GridType } from '../common/grid.interface';
@@ -22,7 +22,7 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
     constructor(
                 selectionService: IgxGridSelectionService,
                 crudService: IgxGridCRUDService,
-                gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>,
+                gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
                 cdr: ChangeDetectorRef,
                 element: ElementRef,
                 protected zone: NgZone,

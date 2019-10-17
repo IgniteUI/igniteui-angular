@@ -21,7 +21,7 @@ import {
 } from '../../services/index';
 import { GridBaseAPIService } from '../api.service';
 import { IgxButtonDirective } from '../../directives/button/button.directive';
-import { IgxGridBaseComponent } from '../grid-base.component';
+import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxDropDownComponent } from '../../drop-down/drop-down.component';
 import { IgxColumnHidingComponent } from '../hiding/column-hiding.component';
 import { IgxColumnPinningComponent } from '../pinning/column-pinning.component';
@@ -158,7 +158,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const grid = this.igxGrid1.toolbar.grid;
      * ```
      */
-    public get grid(): IgxGridBaseComponent {
+    public get grid(): IgxGridBaseDirective {
         return this.gridAPI.grid;
     }
 
@@ -214,7 +214,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
         return this.getComponentDensityClass('igx-grid-toolbar');
     }
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>,
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         public cdr: ChangeDetectorRef,
         @Optional() public excelExporter: IgxExcelExporterService,
         @Optional() public csvExporter: IgxCsvExporterService,

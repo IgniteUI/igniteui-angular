@@ -15,11 +15,11 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxRowDragDirective } from '../row-drag.directive';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from '../common/events';
-import { IgxGridBaseComponent } from '../grid-base.component';
+import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IgxHierarchicalGridComponent, IgxHierarchicalGridModule, IgxRowComponent } from '../hierarchical-grid';
+import { IgxHierarchicalGridComponent, IgxHierarchicalGridModule, IgxRowDirective } from '../hierarchical-grid';
 import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';
 import { IgxTreeGridComponent, IgxTreeGridModule } from '../tree-grid';
 import { GridSelectionMode } from '../common/enums';
@@ -1137,8 +1137,8 @@ async function pointerUp(element: Element, startPoint: Point, fixture: Component
  * @param cancel Indicates weather the onRowDragStart event is cancelled. Default value is false.
  */
 function verifyRowDragStartEvent(
-    grid: IgxGridBaseComponent,
-    dragRow: IgxRowComponent<any>,
+    grid: IgxGridBaseDirective,
+    dragRow: IgxRowDirective<any>,
     dragDirective: IgxRowDragDirective,
     timesCalled: number = 1,
     cancel = false) {
@@ -1159,8 +1159,8 @@ function verifyRowDragStartEvent(
  * @param timesCalled The number of times the onRowDragEnd event has been emitted. Defaults to 1.
  */
 function verifyRowDragEndEvent(
-    grid: IgxGridBaseComponent,
-    dragRow: IgxRowComponent<any>,
+    grid: IgxGridBaseDirective,
+    dragRow: IgxRowDirective<any>,
     dragDirective: IgxRowDragDirective,
     animations: boolean,
     timesCalled: number = 1) {

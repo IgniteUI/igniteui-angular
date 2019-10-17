@@ -7,7 +7,7 @@ import { IgxDropDownComponent } from '../drop-down/drop-down.component';
 import { DropDownActionKey } from '../drop-down/drop-down.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
-import { IgxDropDownItemBase } from '../drop-down/drop-down-item.base';
+import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxComboItemComponent } from './combo-item.component';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
@@ -50,7 +50,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
      * @internal
      */
     @ContentChildren(IgxComboItemComponent, { descendants: true })
-    public children: QueryList<IgxDropDownItemBase> = null;
+    public children: QueryList<IgxDropDownItemBaseDirective> = null;
 
     /**
      * @hidden @internal
@@ -107,7 +107,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     /**
      * @hidden @internal
      */
-    public selectItem(item: IgxDropDownItemBase) {
+    public selectItem(item: IgxDropDownItemBaseDirective) {
         if (item === null || item === undefined) {
             return;
         }
@@ -127,10 +127,10 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         this.comboAPI.disableTransitions = true;
     }
 
-    protected get sortedChildren(): IgxDropDownItemBase[] {
+    protected get sortedChildren(): IgxDropDownItemBaseDirective[] {
         if (this.children !== undefined) {
             return this.children.toArray()
-                .sort((a: IgxDropDownItemBase, b: IgxDropDownItemBase) => {
+                .sort((a: IgxDropDownItemBaseDirective, b: IgxDropDownItemBaseDirective) => {
                     return a.index - b.index;
                 });
         }

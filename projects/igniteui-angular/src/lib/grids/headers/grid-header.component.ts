@@ -18,7 +18,7 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { GridBaseAPIService } from '../api.service';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
-import { IgxGridBaseComponent } from '../grid-base.component';
+import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/grid.excel-style-filtering.component';
@@ -125,7 +125,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     protected sortDirection = SortingDirection.None;
 
     constructor(
-        public gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>,
+        public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         public colResizingService: IgxColumnResizingService,
         public cdr: ChangeDetectorRef,
         public elementRef: ElementRef,

@@ -23,9 +23,9 @@ import {
 } from '../../data-operations/filtering-condition';
 import { ISortingStrategy, DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { DisplayDensity } from '../../core/displayDensity';
-import { IgxGridBaseComponent } from '../grid-base.component';
+import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxGridCellComponent } from '../cell.component';
-import { IgxRowComponent } from '../row.component';
+import { IgxRowDirective } from '../row.directive';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { GridBaseAPIService } from '../api.service';
 import { GridType } from '../common/grid.interface';
@@ -682,7 +682,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
-    public get grid(): IgxGridBaseComponent {
+    public get grid(): IgxGridBaseDirective {
         return this.gridAPI.grid;
     }
     /**
@@ -814,7 +814,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     get cells(): IgxGridCellComponent[] {
-        return this.grid.rowList.filter((row) => row instanceof IgxRowComponent)
+        return this.grid.rowList.filter((row) => row instanceof IgxRowDirective)
             .map((row) => {
                 if (row.cells) {
                     return row.cells.filter((cell) => cell.columnIndex === this.index);
@@ -1114,7 +1114,7 @@ export class IgxColumnComponent implements AfterContentInit {
     @ContentChild(IgxFilterCellTemplateDirective, { read: IgxFilterCellTemplateDirective, static: false })
     public filterCellTemplateDirective: IgxFilterCellTemplateDirective;
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>, public cdr: ChangeDetectorRef) { }
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, public cdr: ChangeDetectorRef) { }
 
     /**
      * @hidden

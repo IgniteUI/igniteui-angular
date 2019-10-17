@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { IgxGridBaseComponent } from 'igniteui-angular';
+import { IgxGridBaseDirective } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-search-box',
@@ -8,7 +8,7 @@ import { IgxGridBaseComponent } from 'igniteui-angular';
 })
 export class GridSearchBoxComponent {
     @Input()
-    public grid: IgxGridBaseComponent;
+    public grid: IgxGridBaseDirective;
 
     public searchText = '';
     public caseSensitive = false;

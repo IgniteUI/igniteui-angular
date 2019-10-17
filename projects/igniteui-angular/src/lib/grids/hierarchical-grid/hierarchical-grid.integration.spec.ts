@@ -15,7 +15,7 @@ import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { take } from 'rxjs/operators';
-import { IgxHierarchicalTransactionServiceFactory } from './hierarchical-grid-base.component';
+import { IgxHierarchicalTransactionServiceFactory } from './hierarchical-grid-base.directive';
 import { IgxIconModule } from '../../icon';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
 import { GridSelectionMode } from '../common/enums';

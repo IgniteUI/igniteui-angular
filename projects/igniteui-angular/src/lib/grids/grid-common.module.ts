@@ -4,7 +4,7 @@ import { IgxGridFooterComponent } from './grid-footer/grid-footer.component';
 import {
     IgxGridBodyDirective,
 } from './grid.common';
-import { IgxGridTransaction, IgxGridBaseComponent } from './grid-base.component';
+import { IgxGridTransaction, IgxGridBaseDirective } from './grid-base.directive';
 import { IgxBaseTransactionService } from '../services/transaction/base-transaction';
 import {
     IgxRowEditTemplateDirective,
@@ -28,14 +28,14 @@ import { IgxColumnPinningModule } from './pinning/pinning.module';
 import { IgxGridColumnModule } from './columns/column.module';
 import { IgxGridHeadersModule } from './headers/headers.module';
 import { IgxGridFilteringModule } from './filtering/base/filtering.module';
-import { IgxRowComponent } from './row.component';
+import { IgxRowDirective } from './row.directive';
 /**
  * @hidden
  */
 @NgModule({
     declarations: [
-        IgxGridBaseComponent,
-        IgxRowComponent,
+        IgxGridBaseDirective,
+        IgxRowDirective,
         IgxGridCellComponent,
         IgxRowEditTemplateDirective,
         IgxRowEditActionsDirective,

@@ -17,7 +17,7 @@ let warningShown = false;
 @Directive({
     selector: '[igxDropDownItemBase]'
 })
-export class IgxDropDownItemBase implements DoCheck {
+export class IgxDropDownItemBaseDirective implements DoCheck {
     /**
      * @hidden
      */
@@ -62,7 +62,7 @@ export class IgxDropDownItemBase implements DoCheck {
     public get index(): number {
         if (this._index === null) {
             warningShown = showMessage(
-                'IgxDropDownItemBase: Automatic index is deprecated.' +
+                'IgxDropDownItemBaseDirective: Automatic index is deprecated.' +
                 'Bind in the template instead using `<igx-drop-down-item [index]="i"` instead.`',
                 warningShown);
             return this.itemIndex;
@@ -156,7 +156,7 @@ export class IgxDropDownItemBase implements DoCheck {
      * @hidden @internal
      */
     @Input()
-    @DeprecateProperty(`IgxDropDownItemBase \`isSelected\` property is deprecated.\n` +
+    @DeprecateProperty(`IgxDropDownItemBaseDirective \`isSelected\` property is deprecated.\n` +
         `Use \`selected\` instead.`)
     get isSelected(): boolean {
         return this.selected;
@@ -197,7 +197,7 @@ export class IgxDropDownItemBase implements DoCheck {
     /**
      * @hidden @internal
      */
-    @DeprecateProperty(`IgxDropDownItemBase \`isFocused\` property is depracated.\n` +
+    @DeprecateProperty(`IgxDropDownItemBaseDirective \`isFocused\` property is depracated.\n` +
         `Use \`focused\` instead.`)
     get isFocused(): boolean {
         return this.focused;

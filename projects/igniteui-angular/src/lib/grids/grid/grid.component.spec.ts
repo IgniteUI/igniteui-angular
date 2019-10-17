@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { IgxRowComponent } from '../row.component';
+import { IgxRowDirective } from '../row.directive';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxGridModule } from './index';
@@ -599,7 +599,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             const rows = fix.componentInstance.grid.rowList.toArray();
             for (let i = 0; i < rows.length; i++) {
-                const row = rows[i] as IgxRowComponent<any>;
+                const row = rows[i] as IgxRowDirective<any>;
                 expect(row.cells.length).toEqual(4);
             }
         });
@@ -623,7 +623,7 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(16);
             const rows = fix.componentInstance.grid.dataRowList.toArray();
             for (let i = 0; i < rows.length; i++) {
-                const row = rows[i] as IgxRowComponent<any>;
+                const row = rows[i] as IgxRowDirective<any>;
                 expect(row.cells.length).toEqual(4);
             }
         });

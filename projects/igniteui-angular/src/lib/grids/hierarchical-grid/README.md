@@ -149,19 +149,19 @@ Calling CRUD API methods should still be done through each separate grid instanc
 Below is the list of all inputs that the developers may set to configure the grid look/behavior:
 
 
-- `IgxHierarchicalGridBaseComponent`
+- `IgxHierarchicalGridBaseDirective`
 
     | Name | Description | Type | Default value | Valid values |
     | ---- | ----------- | ---- | ------------- | ------------ |
     | hierarchicalState | An array of record identifiers with expand state that differs from the default.                 | `Array<any>` | `[]` | |
 
-- `IgxHierarchicalGrid` extends `IgxHierarchicalGridBaseComponent`
+- `IgxHierarchicalGrid` extends `IgxHierarchicalGridBaseDirective`
 
     | Name | Description | Type | Default value | Valid values |
     | ---- | ----------- | ---- | ------------- | ------------ |
     | data | The hierarchical grid data source | `Array<any>` | null |  |
 
-- `IgxRowIslandComponent` extends `IgxHierarchicalGridBaseComponent`
+- `IgxRowIslandComponent` extends `IgxHierarchicalGridBaseDirective`
 
     | Name | Description | Type | Default value | Valid values |
     | ---- | ----------- | ---- | ------------- | ------------ |

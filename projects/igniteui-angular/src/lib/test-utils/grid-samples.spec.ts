@@ -2,7 +2,7 @@ import { Component, TemplateRef, ViewChild, Input, AfterViewInit, ChangeDetector
 import { IgxGridCellComponent } from '../grids/cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/summaries/grid-summary';
 import { IGridCellEventArgs, IGridEditEventArgs } from '../grids/common/events';
-import { IgxGridTransaction } from '../grids/grid-base.component';
+import { IgxGridTransaction } from '../grids/grid-base.directive';
 import { BasicGridComponent, BasicGridSearchComponent, GridAutoGenerateComponent,
         GridNxMComponent, GridWithSizeComponent, PagingComponent } from './grid-base-components.spec';
 import { IGridSelection } from './grid-interfaces.spec';
