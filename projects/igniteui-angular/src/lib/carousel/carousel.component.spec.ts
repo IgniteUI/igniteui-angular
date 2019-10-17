@@ -50,9 +50,8 @@ describe('Carousel', () => {
         expect(carousel.id).toContain('igx-carousel-');
         expect(domCarousel.id).toContain('igx-carousel-');
         expect(carousel instanceof IgxCarouselComponent).toBe(true);
-        expect(carousel.slides[0] instanceof IgxSlideComponent).toBe(true);
+        expect(carousel.slides.first instanceof IgxSlideComponent).toBe(true);
 
-        expect(carousel.slides instanceof Array).toBe(true);
         expect(carousel.loop).toBe(true);
         expect(carousel.pause).toBe(true);
         expect(carousel.slides.length).toEqual(4);

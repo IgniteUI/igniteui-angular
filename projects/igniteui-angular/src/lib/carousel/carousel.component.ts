@@ -327,12 +327,9 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         requestAnimationFrame(() => {
             if (this._currentSlide) {
                 this._currentSlide.active = true;
-                this.slides.forEach(slide => {
-                    if (slide.active && slide.index !== this._currentSlide.index) {
-                        slide.active = false;
-                    }
-                });
-            } else {
+                const activeSlides = this.slides.filter(slide => slide.active && slide.index !== this._currentSlide.index);
+                activeSlides.forEach(slide => {slide.active = false; } );
+            } else if (this.total) {
                 this.slides.first.active = true;
             }
 
@@ -361,7 +358,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
                 this.onSlideRemoved.emit({ carousel: this, slide });
                 if (slide.active) {
                     slide.active = false;
-                    this._currentSlide = this.get(slide.index);
+                    this._currentSlide = this.get(slide.index < this.total ? slide.index : this.total - 1 );
                 }
             });
 
