@@ -20,7 +20,9 @@
     <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-right"></span>
 </ng-container>
 
-<ng-template #defaultColumn>{{column.header}}</ng-template>
+<ng-template #defaultColumn>
+    <span [attr.title]="column.header">{{column.header}}</span>
+</ng-template>
 
 <ng-container *ngIf="!grid.hasColumnLayouts && column.columnGroup">
     <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left"></span>
