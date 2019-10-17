@@ -155,6 +155,16 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      */
     @Input() public navigation = true;
 
+        /**
+     * Controls whether the carousel should support keyboard navigation.
+     * Default value is `true`.
+     * ```html
+     * <igx-carousel [keyBoardNavigation] = "false"></igx-carousel>
+     * ```
+     * @memberOf IgxCarouselComponent
+     */
+    @Input() public keyBoardNavigation = true;
+
     /**
      * Controls the maximum indexes that can be shown.
      * Default value is `5`.
@@ -397,7 +407,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     * @memberof IgxCarouselComponent
     */
     public get showIndicators(): boolean {
-        return this.navigation && this.total <= this.maximumIndicatorsCount && this.total > 0;
+        return this.total <= this.maximumIndicatorsCount && this.total > 0;
     }
 
     /**
@@ -405,7 +415,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     * @memberof IgxCarouselComponent
     */
     public get showIndicatorsLabel(): boolean {
-        return this.navigation && this.total > this.maximumIndicatorsCount;
+        return this.total > this.maximumIndicatorsCount;
     }
     /**
      * Returns the total number of `slides` in the carousel.
@@ -495,7 +505,9 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      */
     public remove(slide: IgxSlideComponent) {
         if (slide && slide === this.get(slide.index)) { // check if the requested slide for delete is present in the carousel
-            this.slides.reset(this.slides.toArray().splice(slide.index, 1));
+            const newSlides = this.slides.toArray();
+            newSlides.splice(slide.index, 1);
+            this.slides.reset(newSlides);
             this.slides.notifyOnChanges();
         }
     }
@@ -614,7 +626,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      */
     @HostListener('keydown.arrowright')
     public onKeydownArrowRight() {
-        if (this.navigation) {
+        if (this.keyBoardNavigation) {
             this.next();
             requestAnimationFrame(() => this.nativeElement.focus());
         }
@@ -624,7 +636,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      */
     @HostListener('keydown.arrowleft')
     public onKeydownArrowLeft() {
-        if (this.navigation) {
+        if (this.keyBoardNavigation) {
             this.prev();
             requestAnimationFrame(() => this.nativeElement.focus());
         }

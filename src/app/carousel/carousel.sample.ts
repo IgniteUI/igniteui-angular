@@ -19,9 +19,9 @@ export class CarouselSampleComponent {
 
     addNewSlide() {
         this.slides.push(
-            {image: 'assets/images/carousel/slide1@x2.jpg', active: true},
-            {image: 'assets/images/carousel/slide2@x2.jpg', active: true},
-            {image: 'assets/images/carousel/slide3@x2.jpg', active: true}
+            {image: 'assets/images/carousel/slide1@x2.jpg'},
+            {image: 'assets/images/carousel/slide2@x2.jpg'},
+            {image: 'assets/images/carousel/slide3@x2.jpg'}
         );
     }
 
