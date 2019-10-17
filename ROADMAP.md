@@ -4,13 +4,13 @@
 ## Milestone 10 (Due by December, 2019)
 
 1. Dock Manger [#5980](https://github.com/IgniteUI/igniteui-angular/issues/5980)
-2. Theming as a service
-3. Range Date Picker
+2. Theming as a service [#5999](https://github.com/IgniteUI/igniteui-angular/issues/5999)
+3. Range Date Picker[#5732](https://github.com/IgniteUI/igniteui-angular/issues/5732)
 4. igxGrid overlay components exposed for instantiation in arbitrary container [#5878](https://github.com/IgniteUI/igniteui-angular/issues/5878)
-5. RTL Support of Ignite UI
+5. RTL Support of Ignite UI [#5958](https://github.com/IgniteUI/igniteui-angular/issues/5958)
 6. Carousel slide animations/transitions [#4268](https://github.com/IgniteUI/igniteui-angular/issues/4268)
 7. Access all data when calculating summary per column [#5754](https://github.com/IgniteUI/igniteui-angular/issues/5754)
-8. Angular 9 support [#5849](https://github.com/IgniteUI/igniteui-angular/issues/5849)
+8. Angular 9 support [#5998](https://github.com/IgniteUI/igniteui-angular/issues/5998)
 9. Allow master-detail style visualization with igxHierarchicalGrid [#5880](https://github.com/IgniteUI/igniteui-angular/issues/5880)
 10. Collapsible column groups (column expansion state templates) [#3343](https://github.com/IgniteUI/igniteui-angular/issues/3343)
 
