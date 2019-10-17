@@ -200,8 +200,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
     }
 
     ngAfterViewInit(): void {
-        this.expressionsList = new Array<ExpressionUI>();
-
         requestAnimationFrame(() => {
             this.excelStyleSearch.searchInput.nativeElement.focus();
         });
@@ -209,12 +207,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
 
     private init() {
         this.expressionsList = new Array<ExpressionUI>();
-
         this.filteringService.generateExpressionsList(this.column.filteringExpressionsTree, this.grid.filteringLogic, this.expressionsList);
-        if (this.expressionsList && this.expressionsList.length &&
-            this.expressionsList[0].expression.condition.name !== 'in') {
-            this.customDialog.expressionsList = this.expressionsList;
-        }
         this.populateColumnData();
 
         this.isColumnPinnable = this.column.pinnable;
@@ -315,6 +308,11 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
     }
 
     public onSubMenuSelection(eventArgs: ISelectionEventArgs) {
+        if (this.expressionsList && this.expressionsList.length &&
+            this.expressionsList[0].expression.condition.name !== 'in') {
+            this.customDialog.expressionsList = this.expressionsList;
+        }
+
         this.customDialog.selectedOperator = eventArgs.newSelection.value;
         eventArgs.cancel = true;
         if (this.overlayComponentId) {
@@ -369,6 +367,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
 
     public populateColumnData() {
         if (this.grid.uniqueColumnValuesStrategy) {
+            this.cdr.detectChanges();
             this.renderColumnValuesRemotely();
         } else {
             this.renderColumnValuesFromData();
@@ -690,8 +689,10 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
                 }
             }
 
-            this.expressionsList = new Array<ExpressionUI>();
             this.filteringService.filterInternal(this.column.field, filterTree);
+            this.expressionsList = new Array<ExpressionUI>();
+            this.filteringService.generateExpressionsList(this.column.filteringExpressionsTree,
+                this.grid.filteringLogic, this.expressionsList);
         } else {
             this.filteringService.clearFilter(this.column.field);
         }
