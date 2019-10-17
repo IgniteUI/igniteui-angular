@@ -5,8 +5,8 @@ import { IgxDragDirective } from '../../directives/drag-drop/drag-drop.directive
 import { IGridDataBindable } from './grid.interface';
 import { IgxGridCellComponent } from '../cell.component';
 import { IgxColumnComponent } from '../columns/column.component';
-import { IgxGridBaseComponent } from '../grid-base.component';
-import { IgxRowComponent } from '../row.component';
+import { IgxGridBaseDirective } from '../grid-base.directive';
+import { IgxRowDirective } from '../row.directive';
 
 
 export interface IGridClipboardEvent {
@@ -69,7 +69,7 @@ export interface ISearchInfo {
 }
 
 export interface IGridToolbarExportEventArgs extends IBaseEventArgs {
-    grid: IgxGridBaseComponent;
+    grid: IgxGridBaseDirective;
     exporter: IgxBaseExporter;
     options: IgxExporterOptionsBase;
     cancel: boolean;
@@ -103,11 +103,11 @@ export interface ICellPosition {
 
 export interface IRowDragEndEventArgs extends IBaseEventArgs {
     dragDirective: IgxDragDirective;
-    dragData: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
+    dragData: IgxRowDirective<IgxGridBaseDirective & IGridDataBindable>;
     animation: boolean;
 }
 
 export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventArgs {
     dragDirective: IgxDragDirective;
-    dragData: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
+    dragData: IgxRowDirective<IgxGridBaseDirective & IGridDataBindable>;
 }

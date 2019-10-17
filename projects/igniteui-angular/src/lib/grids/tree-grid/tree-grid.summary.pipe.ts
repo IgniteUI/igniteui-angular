@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent } from '../grid-base.component';
+import { IgxGridBaseDirective } from '../grid-base.directive';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { ISummaryRecord } from '../summaries/grid-summary';
@@ -16,7 +16,7 @@ import { GridType } from '../common/grid.interface';
 export class IgxTreeGridSummaryPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>) {
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
         this.gridAPI = <IgxTreeGridAPIService>gridAPI;
      }
 

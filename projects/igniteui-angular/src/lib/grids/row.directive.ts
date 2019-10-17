@@ -17,7 +17,7 @@ import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxColumnComponent } from './columns/column.component';
 import { TransactionType } from '../services';
-import { IgxGridBaseComponent } from './grid-base.component';
+import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridSelectionService, IgxGridCRUDService, IgxRow } from './selection/selection.service';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { GridType } from './common/grid.interface';
@@ -25,7 +25,7 @@ import { GridType } from './common/grid.interface';
 @Directive({
     selector: '[igxRowBaseComponent]'
 })
-export class IgxRowComponent<T extends IgxGridBaseComponent & GridType> implements DoCheck {
+export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implements DoCheck {
 
     private _rowData: any;
     /**

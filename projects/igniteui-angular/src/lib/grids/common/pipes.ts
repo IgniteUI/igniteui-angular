@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, Inject, LOCALE_ID } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent } from '../grid-base.component';
+import { IgxGridBaseDirective } from '../grid-base.directive';
 import { DataUtil } from '../../data-operations/data-util';
 import { cloneArray } from '../../core/utils';
 import { GridType } from './grid.interface';
@@ -87,10 +87,10 @@ export class IgxGridFilterConditionPipe implements PipeTransform {
 })
 export class IgxGridTransactionPipe implements PipeTransform {
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>) { }
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
 
     transform(collection: any[], id: string, pipeTrigger: number) {
-        const grid: IgxGridBaseComponent = this.gridAPI.grid;
+        const grid: IgxGridBaseDirective = this.gridAPI.grid;
 
         if (collection && grid.transactions.enabled) {
             const result = DataUtil.mergeTransactions(

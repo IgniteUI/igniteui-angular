@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { IgxGridAPIService } from './grid-api.service';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent } from '../grid-base.component';
+import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxGridComponent } from './grid.component';
 import { ISummaryRecord } from '../summaries/grid-summary';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
@@ -22,7 +22,7 @@ interface ISkipRecord {
 export class IgxGridSummaryPipe implements PipeTransform {
     private gridAPI: IgxGridAPIService;
 
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>) {
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
         this.gridAPI = <IgxGridAPIService>gridAPI;
     }
 

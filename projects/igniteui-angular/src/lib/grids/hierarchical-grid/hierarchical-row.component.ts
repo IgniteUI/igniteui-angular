@@ -10,7 +10,7 @@ import {
     TemplateRef
 } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { IgxRowComponent } from '../row.component';
+import { IgxRowDirective } from '../row.directive';
 import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component';
 
 @Component({
@@ -18,9 +18,9 @@ import { IgxHierarchicalGridCellComponent } from './hierarchical-cell.component'
     preserveWhitespaces: false,
     selector: 'igx-hierarchical-grid-row',
     templateUrl: './hierarchical-row.component.html',
-    providers: [{ provide: IgxRowComponent, useExisting: forwardRef(() => IgxHierarchicalRowComponent) }]
+    providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxHierarchicalRowComponent) }]
 })
-export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchicalGridComponent> {
+export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchicalGridComponent> {
     /**
      * The rendered cells in the row component.
      *

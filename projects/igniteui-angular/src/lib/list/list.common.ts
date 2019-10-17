@@ -9,7 +9,7 @@ export interface IListChild {
 @Directive({
     selector: '[igxListBase]'
 })
-export class IgxListBase extends DisplayDensityBase {
+export class IgxListBaseDirective extends DisplayDensityBase {
     onItemClicked: EventEmitter<any>;
     allowLeftPanning: boolean;
     allowRightPanning: boolean;

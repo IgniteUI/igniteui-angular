@@ -2,7 +2,7 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxTreeGridComponent } from '../grids/tree-grid/tree-grid.component';
 import { SampleTestData } from './sample-test-data.spec';
 import { IgxNumberSummaryOperand, IgxSummaryResult } from '../grids';
-import { IgxGridTransaction } from '../grids/grid-base.component';
+import { IgxGridTransaction } from '../grids/grid-base.directive';
 import { IgxTransactionService } from '../services/transaction/igx-transaction';
 import { IgxHierarchicalTransactionService } from '../services/transaction/igx-hierarchical-transaction';
 import { DisplayDensity } from '../core/displayDensity';

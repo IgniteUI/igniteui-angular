@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IgxGridBaseComponent } from './grid-base.component';
+import { IgxGridBaseDirective } from './grid-base.directive';
 import { first } from 'rxjs/operators';
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxGridNavigationService } from './grid-navigation.service';
@@ -24,7 +24,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
 
     private startNavigationCell: IStartNavigationCell;
 
-    public grid: IgxGridBaseComponent;
+    public grid: IgxGridBaseDirective;
 
     /**
      * @hidden

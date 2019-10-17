@@ -15,7 +15,7 @@ import {
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent } from '../grid-base.component';
+import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
@@ -219,7 +219,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     }
 
     constructor(private cdr: ChangeDetectorRef,
-                public gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>,
+                public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
                 public element: ElementRef,
                 public colResizingService: IgxColumnResizingService,
                 public filteringService: IgxFilteringService) { }

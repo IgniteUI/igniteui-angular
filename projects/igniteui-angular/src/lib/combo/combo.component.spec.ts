@@ -14,7 +14,7 @@ import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { IgxDropDownItemBase } from '../drop-down/drop-down-item.base';
+import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
 import { DisplayDensity, DisplayDensityToken } from '../core/density';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/index';
 import { IgxInputState } from '../directives/input/input.directive';
@@ -1009,8 +1009,8 @@ describe('igxCombo', () => {
             expect(combo.collapsed).toEqual(false);
             expect(combo.dropdown.items.length).toEqual(9); // Virtualization
 
-            let targetItem: IgxDropDownItemBase;
-            targetItem = combo.dropdown.items[5] as IgxDropDownItemBase;
+            let targetItem: IgxDropDownItemBaseDirective;
+            targetItem = combo.dropdown.items[5] as IgxDropDownItemBaseDirective;
             expect(targetItem).toBeDefined();
             expect(targetItem.itemIndex).toEqual(5);
 

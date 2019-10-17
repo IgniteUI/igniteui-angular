@@ -1,20 +1,20 @@
 import { Directive, Optional, Self, Input, HostListener, Inject } from '@angular/core';
 import { IGX_DROPDOWN_BASE } from './drop-down.common';
 import { IDropDownNavigationDirective } from './drop-down.common';
-import { IgxDropDownBase } from './drop-down.base';
+import { IgxDropDownBaseDirective } from './drop-down.base';
 import { DropDownActionKey } from './drop-down.common';
 
 /**
- * Navigation Directive that handles keyboard events on its host and controls a targeted IgxDropDownBase component
+ * Navigation Directive that handles keyboard events on its host and controls a targeted IgxDropDownBaseDirective component
  */
 @Directive({
     selector: '[igxDropDownItemNavigation]'
 })
 export class IgxDropDownItemNavigationDirective implements IDropDownNavigationDirective {
 
-    protected _target: IgxDropDownBase = null;
+    protected _target: IgxDropDownBaseDirective = null;
 
-    constructor(@Self() @Optional() @Inject(IGX_DROPDOWN_BASE) public dropdown: IgxDropDownBase) { }
+    constructor(@Self() @Optional() @Inject(IGX_DROPDOWN_BASE) public dropdown: IgxDropDownBaseDirective) { }
 
     /**
      * Gets the target of the navigation directive;
@@ -26,11 +26,11 @@ export class IgxDropDownItemNavigationDirective implements IDropDownNavigationDi
      *  @ContentChild(IgxDropDownNavigationDirective)
      *  navDirective: IgxDropDownNavigationDirective = null
      *  ...
-     *  const navTarget: IgxDropDownBase = navDirective.navTarget
+     *  const navTarget: IgxDropDownBaseDirective = navDirective.navTarget
      * }
      * ```
      */
-    get target(): IgxDropDownBase {
+    get target(): IgxDropDownBaseDirective {
         return this._target;
     }
 
@@ -48,7 +48,7 @@ export class IgxDropDownItemNavigationDirective implements IDropDownNavigationDi
      * ```
      */
     @Input('igxDropDownItemNavigation')
-    set target(target: IgxDropDownBase) {
+    set target(target: IgxDropDownBaseDirective) {
         this._target = target ? target : this.dropdown;
     }
 

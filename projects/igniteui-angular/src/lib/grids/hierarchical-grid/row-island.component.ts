@@ -22,7 +22,7 @@ import {
     DoCheck
 } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { IgxGridTransaction, IgxGridBaseComponent } from '../grid-base.component';
+import { IgxGridTransaction, IgxGridBaseDirective } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { DOCUMENT } from '@angular/common';
@@ -30,7 +30,7 @@ import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { TransactionService, Transaction, State } from '../../services';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
+import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 
@@ -53,7 +53,7 @@ export interface IGridCreatedEventArgs extends IBaseEventArgs {
     template: ``,
     providers: [IgxRowIslandAPIService]
 })
-export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
+export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             implements AfterContentInit, AfterViewInit, OnChanges, OnInit, OnDestroy, DoCheck {
     /**
      * Sets the key of the row island by which child data would be taken from the row data if such is provided.
@@ -193,7 +193,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
         public selectionService: IgxGridSelectionService,
         crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
-        gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>,
+        gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         @Inject(IgxGridTransaction) protected transactionFactory: any,
         elementRef: ElementRef,
         zone: NgZone,

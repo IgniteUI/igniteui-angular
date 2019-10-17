@@ -12,7 +12,7 @@ import {
     TemplateRef,
     Directive
 } from '@angular/core';
-import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
+import { IgxGridBaseDirective, IgxGridTransaction } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
@@ -45,9 +45,9 @@ export interface IPathSegment {
 }
 
 @Directive({
-    selector: '[igxHGridBase]'
+    selector: '[igxHierarchicalGridBase]'
 })
-export class IgxHierarchicalGridBaseComponent extends IgxGridBaseComponent {
+export class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective {
     public rootGrid;
 
     @Input()
@@ -125,7 +125,7 @@ export class IgxHierarchicalGridBaseComponent extends IgxGridBaseComponent {
         public selectionService: IgxGridSelectionService,
         crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
-        gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>,
+        gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         @Inject(IgxGridTransaction) protected transactionFactory: any,
         elementRef: ElementRef,
         zone: NgZone,

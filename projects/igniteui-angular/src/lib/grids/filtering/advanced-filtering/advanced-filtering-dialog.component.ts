@@ -18,7 +18,7 @@ import { Subject } from 'rxjs';
 import { KEYS } from '../../../core/utils';
 import { AbsoluteScrollStrategy, AutoPositionStrategy } from '../../../services/index';
 import { IgxColumnComponent } from '../../columns/column.component';
-import { IgxGridBaseComponent } from '../../grid-base.component';
+import { IgxGridBaseDirective } from '../../grid-base.directive';
 
 /**
  *@hidden
@@ -250,7 +250,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         }
     }
 
-    get grid(): IgxGridBaseComponent {
+    get grid(): IgxGridBaseDirective {
         return this.filteringService.grid;
     }
 

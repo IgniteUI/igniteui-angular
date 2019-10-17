@@ -1,24 +1,38 @@
 # Roadmap - Ignite UI for Angular
 
 # Current Milestone
+## Milestone 10 (Due by December, 2019)
 
-## Milestone 9 (Due by September, 2019) 
-
-1. IgxGrid Advanced Filtering [#5496](https://github.com/IgniteUI/igniteui-angular/issues/5496)
-2. **[DONE]** IgxGrid row and cell selection modes [#4989](https://github.com/IgniteUI/igniteui-angular/issues/4989)
-3. **[DONE]** Fluent Theme [#5335](https://github.com/IgniteUI/igniteui-angular/issues/5335)
-4. **[DONE]** Drag and Drop enhancements [#5319](https://github.com/IgniteUI/igniteui-angular/issues/5319)
-5. Multi-View Calendar + Range DatePicker [#4282](https://github.com/IgniteUI/igniteui-angular/issues/4282)
-6. Custom grid row selector templates [#4998](https://github.com/IgniteUI/igniteui-angular/issues/4998)
-7. Per-column Filtering Strategies [#5323](https://github.com/IgniteUI/igniteui-angular/issues/5323)
+1. Dock Manger [#5980](https://github.com/IgniteUI/igniteui-angular/issues/5980)
+2. Theming service for Ignite UI for Angular
+3. Range Date Picker [#5732](https://github.com/IgniteUI/igniteui-angular/issues/5732)
+4. igxGrid overlay components exposed for instantiation in arbitrary container [#5878](https://github.com/IgniteUI/igniteui-angular/issues/5878)
+5. RTL Support across Ignite UI for Angular components [#5958](https://github.com/IgniteUI/igniteui-angular/issues/5958)
+6. Carousel slide animations/transitions [#4268](https://github.com/IgniteUI/igniteui-angular/issues/4268)
+7. Access all data when calculating summary per column [#5754](https://github.com/IgniteUI/igniteui-angular/issues/5754)
+8. Angular 9 support [#5849](https://github.com/IgniteUI/igniteui-angular/issues/5849)
+9. Allow master-detail style visualization with igxHierarchicalGrid [#5880](https://github.com/IgniteUI/igniteui-angular/issues/5880)
+10. Collapsible column groups (column expansion state templates) [#3343](https://github.com/IgniteUI/igniteui-angular/issues/3343)
 
 ## Going down the road
 
 1. Row-pinning
 2. Column Groups expand/collapse, with column grouping templates
-3. Visual Cell merging 
+3. Visual Cell merging
+4. Splitter
+5. PDF Integration
 
-# Previous Milestones
+# Previous Milestones 
+
+## Milestone 9 (Released September 26th, 2019) 
+
+1. **[DONE]** IgxGrid Advanced Filtering [#5496](https://github.com/IgniteUI/igniteui-angular/issues/5496)
+2. **[DONE]** IgxGrid row and cell selection modes [#4989](https://github.com/IgniteUI/igniteui-angular/issues/4989)
+3. **[DONE]** Fluent Theme [#5335](https://github.com/IgniteUI/igniteui-angular/issues/5335)
+4. **[DONE]** Drag and Drop enhancements [#5319](https://github.com/IgniteUI/igniteui-angular/issues/5319)
+5. **[DONE]** Multi-View Calendar + Range DatePicker [#4282](https://github.com/IgniteUI/igniteui-angular/issues/4282)
+6. **[DONE]** Custom grid row selector templates [#4998](https://github.com/IgniteUI/igniteui-angular/issues/4998)
+7. **[DONE]** Per-column Filtering Strategies [#5323](https://github.com/IgniteUI/igniteui-angular/issues/5323)
 
 ## Milestone 8 (Released July 22nd, 2019) 
 

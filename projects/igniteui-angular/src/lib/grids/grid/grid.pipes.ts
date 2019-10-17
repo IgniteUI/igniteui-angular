@@ -9,7 +9,7 @@ import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridComponent } from './grid.component';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent } from '../grid-base.component';
+import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridType } from '../common/grid.interface';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 
@@ -23,7 +23,7 @@ import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
 export class IgxGridSortingPipe implements PipeTransform {
     private gridAPI: IgxGridAPIService;
 
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>) {
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
         this.gridAPI = <IgxGridAPIService>gridAPI;
     }
 
@@ -52,7 +52,7 @@ export class IgxGridSortingPipe implements PipeTransform {
 export class IgxGridGroupingPipe implements PipeTransform {
     private gridAPI: IgxGridAPIService;
 
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>) {
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
         this.gridAPI = <IgxGridAPIService>gridAPI;
     }
 
@@ -94,7 +94,7 @@ export class IgxGridGroupingPipe implements PipeTransform {
 })
 export class IgxGridPagingPipe implements PipeTransform {
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>) { }
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
 
     public transform(collection: IGroupByResult, page = 0, perPage = 15, id: string, pipeTrigger: number): IGroupByResult {
 
@@ -129,7 +129,7 @@ export class IgxGridPagingPipe implements PipeTransform {
 })
 export class IgxGridFilteringPipe implements PipeTransform {
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & GridType>) { }
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
 
     public transform(collection: any[], expressionsTree: IFilteringExpressionsTree,
         filterStrategy: IFilteringStrategy,

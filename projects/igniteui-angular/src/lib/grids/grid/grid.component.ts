@@ -3,7 +3,7 @@ import {
     QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, AfterContentInit, HostBinding, forwardRef, OnInit
 } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent } from '../grid-base.component';
+import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridAPIService } from './grid-api.service';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
@@ -60,7 +60,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxGridSelectionService,
         IgxGridCRUDService,
         { provide: GridBaseAPIService, useClass: IgxGridAPIService },
-        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxGridComponent) },
+        { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxGridComponent) },
         IgxFilteringService,
         IgxColumnResizingService,
         IgxForOfSyncService
@@ -68,7 +68,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
 })
-export class IgxGridComponent extends IgxGridBaseComponent implements GridType, OnInit, DoCheck, AfterContentInit {
+export class IgxGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit {
     private _id = `igx-grid-${NEXT_ID++}`;
     /**
      * @hidden @internal

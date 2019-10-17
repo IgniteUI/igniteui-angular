@@ -6,8 +6,8 @@ import { CommonModule } from '@angular/common';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
-import { IgxDropDownBase } from './drop-down.base';
-import { IgxDropDownItemBase } from './drop-down-item.base';
+import { IgxDropDownBaseDirective } from './drop-down.base';
+import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 
 export * from './drop-down.component';
 export * from './drop-down-item.component';
@@ -22,9 +22,9 @@ export * from './drop-down-group.component';
  */
 @NgModule({
     declarations: [
-        IgxDropDownBase,
+        IgxDropDownBaseDirective,
         IgxDropDownComponent,
-        IgxDropDownItemBase,
+        IgxDropDownItemBaseDirective,
         IgxDropDownItemComponent,
         IgxDropDownGroupComponent,
         IgxDropDownItemNavigationDirective

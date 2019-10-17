@@ -21,7 +21,7 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 
 import { IgxListItemComponent } from './list-item.component';
 import {
-    IgxListBase,
+    IgxListBaseDirective,
     IgxDataLoadingTemplateDirective,
     IgxEmptyListTemplateDirective,
     IgxListPanState,
@@ -133,9 +133,9 @@ export class IgxListLineSubTitleDirective {
 @Component({
     selector: 'igx-list',
     templateUrl: 'list.component.html',
-    providers: [{ provide: IgxListBase, useExisting: IgxListComponent }]
+    providers: [{ provide: IgxListBaseDirective, useExisting: IgxListComponent }]
 })
-export class IgxListComponent extends IgxListBase {
+export class IgxListComponent extends IgxListBaseDirective {
 
     constructor(public element: ElementRef,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
@@ -454,7 +454,7 @@ export class IgxListComponent extends IgxListBase {
  */
 @NgModule({
     declarations: [
-        IgxListBase,
+        IgxListBaseDirective,
         IgxListComponent,
         IgxListItemComponent,
         IgxListThumbnailDirective,
