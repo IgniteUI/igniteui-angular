@@ -1,22 +1,18 @@
 import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Point, Util } from '../services/overlay/utilities';
-import { ConnectedPositioningStrategy } from '../services/overlay/position/connected-positioning-strategy';
 import { IPositionStrategy } from '../services/overlay/position';
 import { fadeOut, fadeIn } from '../animations/main';
 import { IgxSelectBase } from './select.common';
 import { isIE } from '../core/utils';
+import { BaseFitPositionStrategy, ConnectedFit } from '../services/overlay/position/base-fit-position-strategy';
 
-/** @hidden */
-enum Direction {
-    Top = -1,
-    Bottom = 1,
-    None = 0
-}
+// TODO Refactor: May replace all sizes taken from elements with the corresponding ClientRect.Bottom-ClientRect.Top
+// TODO Refactor: Remove itemHeight and replace it with the corresponding selectFit.targetRect.Bottom - selectFit.targetRect.Top
 
 /** @hidden @internal */
-export class SelectPositioningStrategy extends ConnectedPositioningStrategy implements IPositionStrategy {
+export class SelectPositioningStrategy extends BaseFitPositionStrategy implements IPositionStrategy {
 
     private _selectDefaultSettings = {
-        target: null,
+        target: this.select.getEditElement(), // add target so Util.getTargetRect can get details on the input
         horizontalDirection: HorizontalAlignment.Right,
         verticalDirection: VerticalAlignment.Bottom,
         horizontalStartPoint: HorizontalAlignment.Left,
@@ -31,201 +27,239 @@ export class SelectPositioningStrategy extends ConnectedPositioningStrategy impl
         this.settings = Object.assign({}, this._selectDefaultSettings, settings);
     }
 
-    private defaultWindowToListOffset = 5;
-    private viewPort = Util.getViewportRect(document);
-    private deltaY: number;
-    private deltaX: number;
-    private itemTextPadding: number;
-    private itemTextIndent: number;
-    private listContainerBoundRect: DOMRect;
-    private itemTextToInputTextDiff: number;
+    // private defaultWindowToListOffset = 5;             // in SelectFit
+    // private viewPort = Util.getViewportRect(document); // in SelectFit
+    // private deltaY: number;
+    // private deltaX: number;
+    // private itemTextPadding: number;                   // in SelectFit
+    // private itemTextIndent: number;                    // in SelectFit
+    // private outerContainerBoundRect: DOMRect;          // in SelectFit
+    // private itemTextToInputTextDiff: number;           // in SelectFit
 
-    private positionAndScrollBottom(contentElement: HTMLElement, outBoundsAmount: number) {
-        contentElement.style.top = `${this.viewPort.bottom - this.listContainerBoundRect.height - this.defaultWindowToListOffset}px`;
-        contentElement.firstElementChild.scrollTop -= outBoundsAmount - (this.defaultWindowToListOffset);
-        this.deltaY = this.viewPort.bottom - this.listContainerBoundRect.height -
-            this.defaultWindowToListOffset - (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top;
-    }
+    // get a reference to the actual items wrap container
+    private headerElementHeight = 0; //TODO expose from select component --> getHeaderContainer()
+    private footerElementHeight = 0; //TODO expose from select component --> getFooterContainer()
+    private ddl = this.select.getListItemsContainer();
+    private itemElement = this.getInteractionItemElement();
+    private itemBoundRect = this.itemElement.getBoundingClientRect() as DOMRect;
+    private itemHeight = this.itemBoundRect.height;
 
-    private positionNoScroll(contentElement: HTMLElement, CURRENT_POSITION_Y: number) {
-        contentElement.style.top = `${CURRENT_POSITION_Y - this.itemTextToInputTextDiff}px`;
-        this.deltaY = CURRENT_POSITION_Y -
-            (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top - this.itemTextToInputTextDiff;
-    }
 
-    private positionAndScrollTop(contentElement: HTMLElement, outBoundsAmount: number) {
-        contentElement.style.top = `${this.viewPort.top + this.defaultWindowToListOffset}px`;
-        contentElement.firstElementChild.scrollTop += outBoundsAmount + this.itemTextToInputTextDiff + this.defaultWindowToListOffset;
-        this.deltaY = this.viewPort.top + this.defaultWindowToListOffset -
-            (this.select.input.nativeElement.getBoundingClientRect() as DOMRect).top;
-    }
 
-    private getItemsOutOfView(contentElement: HTMLElement, itemHeight: number): {
-        'currentScroll': number,
-        'remainingScroll': number
-    } {
-        if (contentElement.firstElementChild.scrollHeight <= contentElement.firstElementChild.clientHeight) {
-            return {
-                'currentScroll': 0,
-                'remainingScroll': 0
-            };
-        }
-        const currentScroll = contentElement.firstElementChild.scrollTop;
-        const remainingScroll = this.select.items.length * itemHeight - currentScroll - this.listContainerBoundRect.height;
-        return {
-            'currentScroll': currentScroll,
-            'remainingScroll': remainingScroll
-        };
-    }
-
-    private listOutOfBounds(elementContainer: { top: number, bottom: number }, document: Document): {
-        Direction: Direction,
-        Amount: number
-    } {
-        const container = {
-            TOP: elementContainer.top,
-            BOTTOM: elementContainer.bottom,
-        };
-        const viewPort = Util.getViewportRect(document);
-        const documentElement = {
-            TOP: viewPort.top,
-            BOTTOM: viewPort.bottom
-        };
-        const returnVals = {
-            Direction: Direction.None,
-            Amount: 0
-        };
-        if (documentElement.TOP + this.defaultWindowToListOffset > container.TOP) {
-            returnVals.Direction = Direction.Top;
-            returnVals.Amount = documentElement.TOP - container.TOP;
-        } else if (documentElement.BOTTOM - this.defaultWindowToListOffset < container.BOTTOM) {
-            returnVals.Direction = Direction.Bottom;
-            returnVals.Amount = container.BOTTOM - documentElement.BOTTOM;
-        } else {
-            return null;
-        }
-        return returnVals;
-    }
 
     position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
-        const inputElement = this.select.input.nativeElement;
-        const inputRect = inputElement.getBoundingClientRect() as DOMRect;
-        this.listContainerBoundRect = contentElement.getBoundingClientRect() as DOMRect;
-        const LIST_HEIGHT = this.listContainerBoundRect.height;
-        if (!initialCall) {
-            this.deltaX = inputRect.left - this.itemTextPadding - this.itemTextIndent;
-            const point = new Point(this.deltaX, inputRect.top + this.deltaY);
-            this.settings.target = point;
-            super.position(contentElement, size);
-            return;
+        // Implement position without scrolling first. For example 3 items no h&f. take input height/itemHeight into account. When ready, implement header and footer checks.
+
+        // 1st method checking isItem fully visible. if need to scroll, check height above item&below and if can be scrolled..scroll.
+
+        // 2nd try position the container after the item is scrolled , taking header and footer into account.
+
+        // 3rd if unsuccessful, position 1st/last item on the input OR container edge(Top OR Bottom)
+
+        // 1 if !isItemFullyVisible() { this.scrollItemInView(calculateHowMuchToScroll())}
+
+        // is it OK to use a method for this and keeps all stuff in Obj, instead of global vars initialized on the go when needed?
+
+        const selectFit: SelectFit = {};
+        selectFit.viewPortRect = Util.getViewportRect(document);
+        this.calculateVariables(contentElement, selectFit);
+
+        // this._initialSettings = this._initialSettings || Object.assign({}, this.settings);
+        // this.settings = Object.assign({}, this._initialSettings);
+        // selectFit.viewPortRect = Util.getViewportRect(document);
+        // this.updateViewPortFit(selectFit);
+        // if (!selectFit.fitHorizontal || !selectFit.fitVertical) {
+             this.fitInViewport(contentElement, selectFit);
+        // }
+    }
+
+        // Choose/call position method based on calculations
+        fitInViewport(contentElement: HTMLElement, selectFit: SelectFit) {
+            const headerHeight = selectFit.dropDownList.getBoundingClientRect().top - selectFit.contentElementRect.top;
+            const footerHeight = selectFit.contentElementRect.bottom - selectFit.dropDownList.getBoundingClientRect().bottom;
+            const viewPortRect = selectFit.viewPortRect;
+            const ddlHeight = selectFit.dropDownList.getBoundingClientRect().bottom - selectFit.dropDownList.getBoundingClientRect().top;
+            const scrollDetails: object = this.getDDLScrollDetails();
+           // const ddlScrollHeight = selectFit.dropDownList.scrollHeight; use scrollDetailsObj
+
+           // make a lucky item position
+           const itemTopListOffset = selectFit.itemElement.getBoundingClientRect().top - selectFit.dropDownList.getBoundingClientRect().top;
+           let CURRENT_POSITION_Y = selectFit.targetRect.top - itemTopListOffset - headerHeight;
+           let CURRENT_POSITION_X = selectFit.targetRect.left - selectFit.styles.itemTextPadding + selectFit.styles.itemTextIndent;
+           contentElement.style.top = `${CURRENT_POSITION_Y - selectFit.styles.itemTextToInputTextDiff}px`;
+           contentElement.style.left = `${CURRENT_POSITION_X}px`;
+           contentElement.style.width = `${selectFit.styles.contentElementNewWidth}px`; // manage container based on paddings?
         }
 
-        const START = {
-            X: inputRect.left,
-            Y: inputRect.top
-        };
+        public positionItemOverInput() {}
+        public positionTopOverInput() {}
+        public positionBottomOverInput() {}
 
+    private calculateVariables(contentElement: HTMLElement, selectFit: SelectFit) {
+        const targetRect = Util.getTargetRect(this.settings);
+        const contentElementRect = contentElement.getBoundingClientRect();
+        const itemHeight = this.getInteractionItemElement().getBoundingClientRect().height;
+
+        //const selectStyles: SelectStyles = {};
+        selectFit.styles = {};
+        selectFit.itemElement = this.getInteractionItemElement();
+        selectFit.itemHeight = itemHeight;
+        selectFit.dropDownList = this.select.getListItemsContainer();
+        selectFit.targetRect = targetRect;
+        selectFit.contentElementRect = contentElementRect;
+        selectFit.inputElement = this._selectDefaultSettings.target;
+
+        // calculate related item-to-input text fit styles
+        this.calculateStyles(selectFit);
+
+    }
+
+    public calculateStyles(selectFit: SelectFit) {
+        const inputFontSize = window.getComputedStyle(selectFit.inputElement).fontSize;
+        const numericInputFontSize = parseInt(inputFontSize.slice(0, inputFontSize.indexOf('p')), 10) || 0;
+        const itemFontSize = window.getComputedStyle(selectFit.itemElement).fontSize;
+        const numericItemFontSize = parseInt(itemFontSize.slice(0, itemFontSize.indexOf('p')), 10) || 0;
+        const inputTextToInputTop = (selectFit.targetRect.bottom - selectFit.targetRect.top - numericInputFontSize) / 2;
+        const itemTextToItemTop = (selectFit.itemHeight - numericItemFontSize) / 2;
+
+        selectFit.styles.itemTextToInputTextDiff = itemTextToItemTop - inputTextToInputTop;
+
+        const selectItemPaddingHorizontal = 24; //maybe get this from styles directly instead of hardoding it //16px/20px/24px based on DisplayDensty // TODO: Get it dinamicaly from styles
+        const itemLeftPadding = window.getComputedStyle(selectFit.itemElement).paddingLeft;
+        const itemTextIndent = window.getComputedStyle(selectFit.itemElement).textIndent;
+        const numericLeftPadding = parseInt(itemLeftPadding.slice(0, itemLeftPadding.indexOf('p')), 10) || 0;
+        const numericTextIndent = parseInt(itemTextIndent.slice(0, itemTextIndent.indexOf('r')), 10) || 0;
+
+        selectFit.styles.itemTextPadding = numericLeftPadding;
+        selectFit.styles.itemTextIndent = numericTextIndent;
+        selectFit.styles.contentElementNewWidth = selectFit.targetRect.width + 24 + selectItemPaddingHorizontal * 2; // 24 is the input dd icon width
+        //#region TODO positioning related so compute elsewhere //maybe in positionItemOverInput as this is only related to match exact text
+            // contentElement.style.left += `${START.X - numericLeftPadding - numericTextIndent}px`;
+            // contentElement.style.width = inputRect.width + 24 + selectItemPaddingHorizontal * 2 + 'px';
+            // this.deltaX = START.X - numericLeftPadding - numericTextIndent;
+            // const currentScroll = this.getItemsOutOfView(contentElement, itemHeight)['currentScroll'];
+            // const remainingScroll = this.getItemsOutOfView(contentElement, itemHeight)['remainingScroll'];
+        //#endregion
+    }
+
+    //TODO Update this.select.getListItemsContainer() to use selectFit.dropDownList
+    private getDDLScrollDetails(): {
+        'currentScroll': number,
+        'remainingScroll': number,
+        'scrollHeight': number
+    } {
+        if (this.select.getListItemsContainer().scrollHeight <= this.select.getListItemsContainer().clientHeight) {
+            return {
+                'currentScroll': 0,
+                'remainingScroll': 0,
+                'scrollHeight': this.select.getListItemsContainer().scrollHeight
+            };
+        }
+        const currentScroll = this.ddl.scrollTop;
+        const remainingScroll = this.select.items.length * this.itemHeight - currentScroll - this.ddl.getBoundingClientRect().height;
+        return {
+            'currentScroll': currentScroll,
+            'remainingScroll': remainingScroll,
+            'scrollHeight': this.select.getListItemsContainer().scrollHeight
+        };
+    }
+
+    private isItemFullyVisible(): boolean {
+        // itemTop&&itemBottom are in the scrolled area
+
+        // this.ddl.getBoundingClientRect().height;
+        //const itemElement = this.getInteractionItemElement();
+        //const itemBoundRect = this.itemElement.getBoundingClientRect() as DOMRect;
+        //const itemHeight = itemBoundRect.height;
+        // currentScroll
+        // remainingScroll
+
+        if (this.itemBoundRect.top >= this.getDDLScrollDetails()['currentScroll'] &&
+            this.itemBoundRect.bottom <= this.getDDLScrollDetails()['remainingScroll']) {
+           return true;
+        } else {
+            return false;
+        }
+    }
+
+    private calculateHowMuchToScroll() {
+
+    }
+
+    // private scrollItemInView(getDDLScrollDetails(itemHeight)) {
+
+    // }
+
+    // private canScrollItemInView() {
+
+    // }
+
+    private getInteractionItemElement(): HTMLElement {
         let itemElement;
         if (this.select.selectedItem) {
             itemElement = this.select.selectedItem.element.nativeElement;
             // D.P. Feb 22 2019, #3921 Force item scroll before measuring in IE11, due to base scrollToItem delay
             if (isIE()) {
-                contentElement.firstElementChild.scrollTop = this.select.calculateScrollPosition(this.select.selectedItem);
+                this.select.getListItemsContainer().scrollTop = this.select.calculateScrollPosition(this.select.selectedItem);
             }
         } else {
             itemElement = this.select.getFirstItemElement();
         }
-        const inputHeight = inputRect.height;
-        const itemBoundRect = itemElement.getBoundingClientRect() as DOMRect;
-        const itemTopListOffset = itemBoundRect.top - this.listContainerBoundRect.top;
-        const itemHeight = itemBoundRect.height;
+        return itemElement;
+    }
 
-        const inputFontSize = window.getComputedStyle(inputElement).fontSize;
-        const numericInputFontSize = parseInt(inputFontSize.slice(0, inputFontSize.indexOf('p')), 10) || 0;
-        const itemFontSize = window.getComputedStyle(itemElement).fontSize;
-        const numericItemFontSize = parseInt(itemFontSize.slice(0, itemFontSize.indexOf('p')), 10) || 0;
-        const inputTextToInputTop = (inputHeight - numericInputFontSize) / 2;
-        const itemTextToItemTop = (itemHeight - numericItemFontSize) / 2;
-        this.itemTextToInputTextDiff = itemTextToItemTop - inputTextToInputTop;
 
-        let CURRENT_POSITION_Y = START.Y - itemTopListOffset;
-        const CURRENT_BOTTOM_Y = CURRENT_POSITION_Y + this.listContainerBoundRect.height;
+    protected calculateLeft(
+        targetRect: ClientRect,
+        elementRect: ClientRect,
+        startPoint: HorizontalAlignment,
+        direction: HorizontalAlignment): number {
+        return targetRect.right + targetRect.width * startPoint + elementRect.width * direction;
+    }
 
-        const OUT_OF_BOUNDS: {
-            Direction: Direction,
-            Amount: number
-        } = this.listOutOfBounds({ top: CURRENT_POSITION_Y, bottom: CURRENT_BOTTOM_Y }, document);
-        if (OUT_OF_BOUNDS) {
-            if (OUT_OF_BOUNDS.Direction === Direction.Top) {
-                CURRENT_POSITION_Y = START.Y;
-            } else {
-                CURRENT_POSITION_Y = -1 * (LIST_HEIGHT - (itemHeight - (itemHeight - inputHeight) / 2));
-                CURRENT_POSITION_Y += START.Y;
-            }
-        }
-        const selectItemPaddingHorizontal = 24;
-        const itemLeftPadding = window.getComputedStyle(itemElement).paddingLeft;
-        const itemTextIndent = window.getComputedStyle(itemElement).textIndent;
-        const numericLeftPadding = parseInt(itemLeftPadding.slice(0, itemLeftPadding.indexOf('p')), 10) || 0;
-        const numericTextIndent = parseInt(itemTextIndent.slice(0, itemTextIndent.indexOf('r')), 10) || 0;
-        this.itemTextPadding = numericLeftPadding;
-        this.itemTextIndent = numericTextIndent;
-        contentElement.style.left += `${START.X - numericLeftPadding - numericTextIndent}px`;
-        contentElement.style.width = inputRect.width + 24 + selectItemPaddingHorizontal * 2 + 'px';
-        this.deltaX = START.X - numericLeftPadding - numericTextIndent;
-        const currentScroll = this.getItemsOutOfView(contentElement, itemHeight)['currentScroll'];
-        const remainingScroll = this.getItemsOutOfView(contentElement, itemHeight)['remainingScroll'];
-
-        // (5 items or less) no scroll and respectively no remaining scroll
-        if (remainingScroll === 0 && currentScroll === 0) {
-            this.positionNoScroll(contentElement, CURRENT_POSITION_Y);
-        }
-        // (more than 5 items) there is scroll OR remaining scroll
-        if (remainingScroll !== 0 || currentScroll !== 0) {
-            if (remainingScroll !== 0 && !OUT_OF_BOUNDS) {
-                this.positionNoScroll(contentElement, CURRENT_POSITION_Y);
-            }
-            // (more than 5 items) and container getting out of the visible port
-            if (remainingScroll !== 0 && OUT_OF_BOUNDS) {
-                // if there is enough remaining scroll to scroll the item
-                if (remainingScroll > itemHeight) {
-                    if (OUT_OF_BOUNDS.Direction === Direction.Top) {
-                        this.positionAndScrollTop(contentElement, OUT_OF_BOUNDS.Amount);
-                        return;
-                    }
-                    if (OUT_OF_BOUNDS.Direction === Direction.Bottom) {
-                        // (more than 5 items) and no current scroll
-                        if (currentScroll === 0) {
-                            this.positionNoScroll(contentElement, CURRENT_POSITION_Y);
-                            return;
-                            // (more than 5 items) and current scroll
-                        } else {
-                            this.positionAndScrollBottom(contentElement, OUT_OF_BOUNDS.Amount);
-                            return;
-                        }
-                    }
-                }
-                // if there is no enough remaining scroll to scroll the item
-                if (remainingScroll < itemHeight) {
-                    if (OUT_OF_BOUNDS.Direction === Direction.Top) {
-                        this.positionNoScroll(contentElement, CURRENT_POSITION_Y);
-
-                    }
-                    if (OUT_OF_BOUNDS.Direction === Direction.Bottom) {
-                        this.positionAndScrollBottom(contentElement, OUT_OF_BOUNDS.Amount);
-                    }
-                }
-            }
-            // (more than 5 items) and no remaining scroll
-            if (remainingScroll === 0 && currentScroll !== 0) {
-                if (OUT_OF_BOUNDS) {
-                    if (OUT_OF_BOUNDS.Direction === Direction.Bottom) {
-                        this.positionAndScrollBottom(contentElement, OUT_OF_BOUNDS.Amount);
-                        return;
-                    }
-                }
-                this.positionNoScroll(contentElement, CURRENT_POSITION_Y);
-            }
-        }
+    /**
+     * Calculates the position of the top border of the element if it gets positioned
+     * with provided position settings related to the target
+     * @param targetRect Rectangle of the target where element is attached
+     * @param elementRect Rectangle of the element
+     * @param startPoint Start point of the target
+     * @param direction Direction in which to show the element
+     */
+    protected calculateTop(
+        targetRect: ClientRect, elementRect: ClientRect, startPoint: VerticalAlignment, direction: VerticalAlignment): number {
+        return targetRect.bottom + targetRect.height * startPoint + elementRect.height * direction;
     }
 }
+
+export interface SelectFit {
+    contentElementRect?: ClientRect;
+    targetRect?: ClientRect;  // input rectangle
+    viewPortRect?: ClientRect;
+    fitHorizontal?: boolean;
+    fitVertical?: boolean;
+    left?: number;
+    right?: number;
+    top?: number;
+    bottom?: number;
+    inputElement?: HTMLElement;
+   // inputRect: DOMRect; //this is targetRect?: ClientRect;
+    dropDownList?: HTMLElement;
+    defaultWindowToListOffset?: 5;
+
+    itemElement?: HTMLElement;
+    itemHeight?: number;
+    styles?: SelectStyles;
+
+
+}
+
+export interface SelectStyles {
+    // numericInputFontSize: number; // not needed
+    // numericItemFontSize: number;  // not needed
+
+    itemTextPadding?: number;
+    itemTextIndent?: number;
+    itemTextToInputTextDiff?: number;
+    contentElementNewWidth?: number;
+}
+

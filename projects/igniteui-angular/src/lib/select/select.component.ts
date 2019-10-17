@@ -31,6 +31,20 @@ import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 export class IgxSelectToggleIconDirective {
 }
 
+/** @hidden @internal */
+@Directive({
+    selector: '[igxSelectHeader]'
+})
+export class IgxSelectHeaderDirective {
+}
+
+/** @hidden @internal */
+@Directive({
+    selector: '[igxSelectFooter]'
+})
+export class IgxSelectFooterDirective {
+}
+
 const noop = () => { };
 
 /**
@@ -181,6 +195,52 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     @ContentChild(IgxSelectToggleIconDirective, { read: TemplateRef, static: false })
     public toggleIconTemplate: TemplateRef<any> = null;
 
+    /**
+     * The custom template, if any, that should be used when rendering the HEADER for the select items list
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.select.headerTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-select #select>
+     *      ...
+     *      <ng-template igxSelectHeader>
+     *          <div class="select__header">
+     *              This is a custom header
+     *          </div>
+     *      </ng-template>
+     *  </igx-select>
+     * ```
+     */
+    @ContentChild(IgxSelectHeaderDirective, { read: TemplateRef, static: false })
+    public headerTemplate: TemplateRef<any> = null;
+
+    /**
+     * The custom template, if any, that should be used when rendering the FOOTER for the select items list
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.select.footerTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-select #select>
+     *      ...
+     *      <ng-template igxSelectFooter>
+     *          <div class="select__footer">
+     *              This is a custom footer
+     *          </div>
+     *      </ng-template>
+     *  </igx-select>
+     * ```
+     */
+    @ContentChild(IgxSelectFooterDirective, { read: TemplateRef, static: false })
+    public footerTemplate: TemplateRef<any> = null;
+
     /** @hidden @internal */
     public get selectionValue() {
         const selectedItem = this.selectedItem;
@@ -252,6 +312,31 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         return this.children.first.element.nativeElement;
     }
 
+    /** @hidden @internal */
+    public getListItemsContainer(): HTMLElement {
+        return this.getFirstItemElement().parentElement;
+    }
+
+    /** @hidden @internal */
+    public getHeaderContainer(): HTMLElement {
+        return this.headerTemplate ? this.headerTemplate.elementRef.nativeElement : null;
+    }
+
+    /** @hidden @internal */
+    public getFooterContainer(): HTMLElement {
+        return this.footerTemplate ? this.footerTemplate.elementRef.nativeElement : null;
+    }
+
+    /** @hidden @internal */
+    public getHeaderTemplate(): TemplateRef<any> {
+        return this.headerTemplate ? this.headerTemplate : null;
+    }
+
+    /** @hidden @internal */
+    public getFooterTemplate(): TemplateRef<any> {
+        return this.footerTemplate ? this.footerTemplate : null;
+    }
+
     /**
      * Opens the select
      *
@@ -275,7 +360,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         this._overlayDefaults = {
             modal: false,
             closeOnOutsideClick: false,
-            positionStrategy: new SelectPositioningStrategy(this, { target: this.inputGroup.element.nativeElement }),
+            positionStrategy: new SelectPositioningStrategy(this, { target: this.getEditElement() }),
             scrollStrategy: new AbsoluteScrollStrategy(),
             excludePositionTarget: true
         };
