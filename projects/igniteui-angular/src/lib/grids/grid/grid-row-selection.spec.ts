@@ -678,6 +678,25 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid = fix.componentInstance.grid;
         }));
 
+        it('Header checkbox should NOT select/deselect all rows when selectionMode is single', () => {
+            spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, false);
+            GridSelectionFunctions.verifyRowsArraySelected([]);
+            expect(grid.selectedRows()).toEqual([]);
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
+
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
+            fix.detectChanges();
+
+            expect(grid.selectedRows()).toEqual([]);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, false);
+            GridSelectionFunctions.verifyRowsArraySelected([]);
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
+        });
+
         it('Should have checkbox on each row nd do not have header checkbox', (async () => {
             GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix, false);
             GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);

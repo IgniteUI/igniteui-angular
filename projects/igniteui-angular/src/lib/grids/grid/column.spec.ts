@@ -357,6 +357,23 @@ describe('IgxGrid - Column properties #grid', () => {
         expect(groupRows.length).toBe(0);
         expect(grid.columns.length).toBe(4);
     });
+
+    it('should apply custom CSS bindings to the grid cells', () => {
+        const fix = TestBed.createComponent(ColumnHaederClassesComponent);
+        fix.detectChanges();
+
+        const styles = {
+            background: 'black',
+            color: 'white'
+        };
+
+        const grid = fix.componentInstance.grid;
+        grid.columns.forEach(c => c.cellStyles = styles);
+        fix.detectChanges();
+
+        const row = grid.getRowByIndex(0);
+        row.cells.forEach(cell => expect(cell.nativeElement.getAttribute('style')).toMatch('background: black'));
+    });
 });
 
 @Component({

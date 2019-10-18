@@ -298,6 +298,28 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
         });
 
+        it('Header checkbox should NOT select/deselect all rows when selectionMode is single', () => {
+            spyOn(treeGrid.onRowSelectionChange, 'emit').and.callThrough();
+            treeGrid.rowSelection = GridSelectionMode.single;
+            fix.detectChanges();
+
+            TreeGridFunctions.clickHeaderRowSelectionCheckbox(fix);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [], false);
+            expect(treeGrid.selectedRows()).toEqual([]);
+            expect(treeGrid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
+
+            TreeGridFunctions.clickHeaderRowSelectionCheckbox(fix);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [], false);
+            expect(treeGrid.selectedRows()).toEqual([]);
+            expect(treeGrid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
+        });
+
         it('should be able to select row of any level', () => {
             TreeGridFunctions.clickRowSelectionCheckbox(fix, 0);
             fix.detectChanges();
