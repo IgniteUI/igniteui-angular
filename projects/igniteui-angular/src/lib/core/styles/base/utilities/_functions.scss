@@ -140,7 +140,7 @@
     @if type-of($color) == 'color' {
         $lightContrast: contrast($color, white);
         $darkContrast: contrast($color, black);
-        
+
         @if ($lightContrast > $darkContrast) {
             @return white;
         } @else {
@@ -224,7 +224,7 @@
 /// @returns {Map} - Returns a clean map.
 @function map-clean($map) {
     $result: ();
-    
+
     @each $key, $value in $map {
         @if($value) != null {
             $result: map-merge($result, (
@@ -232,7 +232,7 @@
             ));
         }
     }
-    
+
     @return $result;
 }
 
@@ -355,9 +355,9 @@
     @if map-has-key($map, $key) {
         @if $igx-legacy-support == false {
             @if not($fallback) {
-                @return unquote('var(--#{map-get($map, 'name')}-#{$key})')
+                @return var(--#{map-get($map, 'name')}-#{$key})
             }
-            @return unquote('var(--#{map-get($map, 'name')}-#{$key}, #{$fallback})')
+            @return var(--#{map-get($map, 'name')}-#{$key}, #{$fallback})
         } @else {
             @return map-get($map, $key);
         }
@@ -446,7 +446,7 @@
         @if type-of($value) == 'map' {
             $result: extend($result, (#{$key}: resolve-value($value, $palette)));
         } @else {
-            $result: extend($result, (#{$key}: #{$value}));
+            $result: extend($result, (#{$key}: $value));
         }
     }
     @return $result;
