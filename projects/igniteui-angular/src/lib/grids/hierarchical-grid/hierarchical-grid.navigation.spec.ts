@@ -1204,25 +1204,25 @@ describe('IgxHierarchicalGrid Specific Scenarios Navigation', () => {
         setupHierarchicalGridScrollDetection(fixture, hierarchicalGrid);
     }));
 
-    fit("should navigate to the first cell of next row using Tab from last cell in the row above when the first row is expanded",(async() =>{
-        const row=hierarchicalGrid.getRowByIndex(0);
+    it('should navigate to the first cell of next row using Tab from last cell in the row above', (async () => {
+        const row = hierarchicalGrid.getRowByIndex(0);
         (row as IgxHierarchicalRowComponent).toggle();
         await wait(100);
         fixture.detectChanges();
 
-        const cell=hierarchicalGrid.getCellByColumn(2,'ProductName');
+        const cell = hierarchicalGrid.getCellByColumn(2, 'ProductName');
         cell.nativeElement.focus();
         await wait(100);
         fixture.detectChanges();
 
-        const keyboardEvent=new KeyboardEvent('keydown',{
+        const keyboardEvent = new KeyboardEvent('keydown', {
             key: 'Tab'
-        })
+        });
         cell.dispatchEvent(keyboardEvent);
         await wait(100);
         fixture.detectChanges();
 
-        const currentCell=hierarchicalGrid.getCellByColumn(3,'ID');
+        const currentCell = hierarchicalGrid.getCellByColumn(3, 'ID');
         expect(currentCell.focused).toBe(true);
         expect(currentCell.rowIndex).toBe(3);
 
@@ -1336,10 +1336,10 @@ export class IgxHierarchicalGridSmallerChildComponent extends IgxHierarchicalGri
         </igx-row-island>
     </igx-hierarchical-grid>`
 })
-export class IgxHierarchicalGridSpecificScenarioComponent extends IgxHierarchicalGridTestBaseComponent{
-    constructor(){
+export class IgxHierarchicalGridSpecificScenarioComponent extends IgxHierarchicalGridTestBaseComponent {
+    constructor() {
         super();
-        this.data=this.generateData(20,2);
+        this.data = this.generateData(20, 2);
     }
     generateData(count: number, level: number) {
         const prods = [];
