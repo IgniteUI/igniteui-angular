@@ -9,7 +9,8 @@ import {
     IgxTreeGridWrappedInContComponent,
     IgxTreeGridAutoGenerateComponent,
     IgxTreeGridDefaultLoadingComponent,
-    IgxTreeGridCellSelectionComponent
+    IgxTreeGridCellSelectionComponent,
+    IgxTreeGridSummariesTransactionsComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { GridSelectionMode } from '../common/enums';
@@ -26,7 +27,8 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
                 IgxTreeGridWrappedInContComponent,
                 IgxTreeGridAutoGenerateComponent,
                 IgxTreeGridDefaultLoadingComponent,
-                IgxTreeGridCellSelectionComponent
+                IgxTreeGridCellSelectionComponent,
+                IgxTreeGridSummariesTransactionsComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxTreeGridModule]
@@ -203,6 +205,32 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(verticalScrollBar).not.toBeNull();
         }));
 
+    });
+
+    describe('Setting null data', () => {
+        it('should not throw error when data is null', () => {
+            let errorMessage = '';
+            fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
+            fix.componentInstance.data = null;
+            try {
+                fix.detectChanges();
+            } catch (ex) {
+                errorMessage = ex.message;
+            }
+            expect(errorMessage).toBe('');
+        });
+
+        it('should not throw error when data is null and transactions are enabled', () => {
+            let errorMessage = '';
+            fix = TestBed.createComponent(IgxTreeGridSummariesTransactionsComponent);
+            fix.componentInstance.data = null;
+            try {
+                fix.detectChanges();
+            } catch (ex) {
+                errorMessage = ex.message;
+            }
+            expect(errorMessage).toBe('');
+        });
     });
 
 });
