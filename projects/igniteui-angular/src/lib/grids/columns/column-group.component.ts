@@ -164,7 +164,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
             this._headerTemplate = this.headTemplate.toArray()[0].template;
         }
         // currently only ivy fixes the issue, we have to slice only if the first child is group
-        if (this.children.first.columnGroup) {
+        if (this.children.first === this) {
             this.children.reset(this.children.toArray().slice(1));
         }
         this.children.forEach(child => {
