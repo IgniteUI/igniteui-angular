@@ -279,7 +279,7 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
             if (aggregatedChanges.length > 0) {
                 const primaryKey = grid.primaryKey;
                 if (!primaryKey) {
-                    return collection ? collection : [];
+                    return collection;
                 }
 
                 const foreignKey = grid.foreignKey;
@@ -301,6 +301,6 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
                 }
             }
         }
-        return collection ? collection : [];
+        return collection;
     }
 }
