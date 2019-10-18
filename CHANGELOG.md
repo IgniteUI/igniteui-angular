@@ -4,7 +4,7 @@ All notable changes for each version of this project will be documented in this 
 
 ## 8.2.4
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
-- The header text of the columns and the column groups now has the `title` attribute set to it in order to expose a native browser tooltip.
+    - The header text of the columns and the column groups now has the `title` attribute set to it in order to expose a native browser tooltip.
 
 ### New Features
 
