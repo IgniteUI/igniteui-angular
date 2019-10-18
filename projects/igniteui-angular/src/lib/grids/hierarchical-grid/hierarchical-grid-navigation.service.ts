@@ -806,4 +806,8 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
         return null;
     }
+
+    protected getNextRowByIndex(nextIndex) {
+        return this.grid.dataRowList.filter(element => element.index === nextIndex)[0].element.nativeElement;
+   }
 }
