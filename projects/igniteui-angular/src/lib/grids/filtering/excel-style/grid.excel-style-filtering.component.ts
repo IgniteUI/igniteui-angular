@@ -81,7 +81,15 @@ export class IgxExcelStylePinningTemplateDirective {
 }
 
 /**
- * @hidden
+ * A component used for presenting Excel style filtering UI for a specific column.
+ * It is used internally in the Grid, but could also be hosted in a container outside of it.
+ *
+ * Example:
+ * ```html
+ * <igx-grid-excel-style-filtering
+ *     [column]="grid1.columns[0]">
+ * </igx-grid-excel-style-filtering>
+ * ```
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -101,12 +109,10 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
     private filterValues = new Set<any>();
     private _column: IgxColumnComponent;
 
-    protected columnMoving = new Subscription();
-
+    /**
+     * An @Input property that sets the column.
+     */
     @Input()
-    public get column(): IgxColumnComponent {
-        return this._column;
-    }
     public set column(value: IgxColumnComponent) {
         this._column = value;
         if (this._column) {
@@ -114,12 +120,34 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
         }
     }
 
+    /**
+     * Returns the current column.
+     */
+    public get column(): IgxColumnComponent {
+        return this._column;
+    }
+
+    /**
+     * @hidden @internal
+     */
     public get filteringService(): IgxFilteringService {
         return this.grid.filteringService;
     }
+    /**
+     * @hidden @internal
+     */
     public listData = new Array<FilterListItem>();
+    /**
+     * @hidden @internal
+     */
     public uniqueValues = [];
+    /**
+     * @hidden @internal
+     */
     public overlayService: IgxOverlayService;
+    /**
+     * @hidden @internal
+     */
     public overlayComponentId: string;
 
     private _subMenuPositionSettings = {
@@ -133,46 +161,88 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
         scrollStrategy: new AbsoluteScrollStrategy()
     };
 
+    /**
+     * @hidden @internal
+     */
     @HostBinding('class.igx-excel-filter')
     className = 'igx-excel-filter';
 
+    /**
+     * @hidden @internal
+     */
     @ViewChild('dropdown', { read: ElementRef, static: false })
     public mainDropdown: ElementRef;
 
+    /**
+     * @hidden @internal
+     */
     @ViewChild('subMenu', { read: IgxDropDownComponent, static: false })
     public subMenu: IgxDropDownComponent;
 
+    /**
+     * @hidden @internal
+     */
     @ViewChild('customDialog', { read: IgxExcelStyleCustomDialogComponent, static: false })
     public customDialog: IgxExcelStyleCustomDialogComponent;
 
+    /**
+     * @hidden @internal
+     */
     @ViewChild('excelStyleSearch', { read: IgxExcelStyleSearchComponent, static: false })
     public excelStyleSearch: IgxExcelStyleSearchComponent;
 
+    /**
+     * @hidden @internal
+     */
     @ViewChild('excelStyleSorting', { read: IgxExcelStyleSortingComponent, static: false })
     protected excelStyleSorting: IgxExcelStyleSortingComponent;
 
+    /**
+     * @hidden @internal
+     */
     @ViewChild('defaultExcelStyleSortingTemplate', { read: TemplateRef, static: false })
     protected defaultExcelStyleSortingTemplate: TemplateRef<any>;
 
+    /**
+     * @hidden @internal
+     */
     @ViewChild('defaultExcelStyleHidingTemplate', { read: TemplateRef, static: false })
     protected defaultExcelStyleHidingTemplate: TemplateRef<any>;
 
+    /**
+     * @hidden @internal
+     */
     @ViewChild('defaultExcelStyleMovingTemplate', { read: TemplateRef, static: false })
     protected defaultExcelStyleMovingTemplate: TemplateRef<any>;
 
+    /**
+     * @hidden @internal
+     */
     @ViewChild('defaultExcelStylePinningTemplate', { read: TemplateRef, static: false })
     protected defaultExcelStylePinningTemplate: TemplateRef<any>;
 
+    /**
+     * @hidden @internal
+     */
     public isColumnPinnable: boolean;
 
+    /**
+     * @hidden @internal
+     */
     get grid(): IgxGridBaseComponent {
         return this.column.grid;
     }
 
+    /**
+     * @hidden @internal
+     */
     get conditions() {
         return this.column.filters.conditionList();
     }
 
+    /**
+     * @hidden @internal
+     */
     get subMenuText() {
         switch (this.column.dataType) {
             case DataType.Boolean:
@@ -188,17 +258,26 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
 
     constructor(public cdr: ChangeDetectorRef) {}
 
+    /**
+     * @hidden @internal
+     */
     ngOnInit() {
         if (this.column) {
             this.isColumnPinnable = this.column.pinnable;
         }
     }
 
+    /**
+     * @hidden @internal
+     */
     ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
     }
 
+    /**
+     * @hidden @internal
+     */
     ngAfterViewInit(): void {
         requestAnimationFrame(() => {
             this.excelStyleSearch.searchInput.nativeElement.focus();
@@ -221,6 +300,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
         });
     }
 
+    /**
+     * @hidden @internal
+     */
     public clearFilterClass() {
         if (this.column.filteringExpressionsTree) {
             return 'igx-excel-filter__actions-clear';
@@ -229,10 +311,16 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
         return 'igx-excel-filter__actions-clear--disabled';
     }
 
+    /**
+     * @hidden @internal
+     */
     public pinClass() {
         return this.isColumnPinnable ? 'igx-excel-filter__actions-pin' : 'igx-excel-filter__actions-pin--disabled';
     }
 
+    /**
+     * @hidden @internal
+     */
     public initialize(column: IgxColumnComponent, overlayService: IgxOverlayService,
         overlayComponentId: string) {
         this.column = column;
@@ -241,36 +329,45 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
 
         this._subMenuOverlaySettings.outlet = (this.grid as any).outlet;
 
-        this.columnMoving = this.grid.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
+        this.grid.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.closeDropdown();
         });
     }
 
     /**
-     * Returns the filtering operation condition for a given value.
+     * @hidden @internal
      */
     public getCondition(value: string): IFilteringOperation {
         return this.column.filters.condition(value);
     }
 
     /**
-     * Returns the translated condition name for a given value.
+     * @hidden @internal
      */
     public translateCondition(value: string): string {
         return this.grid.resourceStrings[`igx_grid_filter_${this.getCondition(value).name}`] || value;
     }
 
+    /**
+     * @hidden @internal
+     */
     public onPin() {
         this.column.pinned = !this.column.pinned;
         this.closeDropdown();
     }
 
+    /**
+     * @hidden @internal
+     */
     public onHideToggle() {
         this.column.hidden = !this.column.hidden;
         this.grid.onColumnVisibilityChanged.emit({ column: this.column, newValue: this.column.hidden });
         this.closeDropdown();
     }
 
+    /**
+     * @hidden @internal
+     */
     public onTextFilterClick(eventArgs) {
         if (this.shouldOpenSubMenu) {
             this._subMenuOverlaySettings.positionStrategy.settings.target = eventArgs.currentTarget;
@@ -295,18 +392,27 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
         }
     }
 
+    /**
+     * @hidden @internal
+     */
     public onTextFilterKeyDown(eventArgs) {
         if (eventArgs.key === KEYS.ENTER) {
             this.onTextFilterClick(eventArgs);
         }
     }
 
+    /**
+     * @hidden @internal
+     */
     public onSubMenuClosed() {
         requestAnimationFrame(() => {
             this.shouldOpenSubMenu = true;
         });
     }
 
+    /**
+     * @hidden @internal
+     */
     public onSubMenuSelection(eventArgs: ISelectionEventArgs) {
         if (this.expressionsList && this.expressionsList.length &&
             this.expressionsList[0].expression.condition.name !== 'in') {
@@ -365,7 +471,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
         return false;
     }
 
-    public populateColumnData() {
+    private populateColumnData() {
         if (this.grid.uniqueColumnValuesStrategy) {
             this.cdr.detectChanges();
             this.renderColumnValuesRemotely();
@@ -388,7 +494,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
         });
     }
 
-    public renderColumnValuesFromData() {
+    private renderColumnValuesFromData() {
         let data = this.column.gridAPI.get_all_data((this.grid as any).id);
         const expressionsTree = this.getColumnFilterExpressionsTree();
 
@@ -600,6 +706,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
 
     // TODO: sort members by access modifier
 
+    /**
+     * @hidden @internal
+     */
     get sortingTemplate() {
         if (this.grid.excelStyleSortingTemplateDirective) {
             return this.grid.excelStyleSortingTemplateDirective.template;
@@ -608,6 +717,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
         }
     }
 
+    /**
+     * @hidden @internal
+     */
     get movingTemplate() {
         if (this.grid.excelStyleMovingTemplateDirective) {
             return this.grid.excelStyleMovingTemplateDirective.template;
@@ -616,6 +728,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
         }
     }
 
+    /**
+     * @hidden @internal
+     */
     get pinningTemplate() {
         if (this.grid.excelStylePinningTemplateDirective) {
             return this.grid.excelStylePinningTemplateDirective.template;
@@ -624,6 +739,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
         }
     }
 
+    /**
+     * @hidden @internal
+     */
     get hidingTemplate() {
         if (this.grid.excelStyleHidingTemplateDirective) {
             return this.grid.excelStyleHidingTemplateDirective.template;
@@ -632,11 +750,17 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
         }
     }
 
+    /**
+     * @hidden @internal
+     */
     get applyButtonDisabled() {
         return  (this.excelStyleSearch && this.excelStyleSearch.filteredData && this.excelStyleSearch.filteredData.length === 0) ||
                 (this.listData[0] && !this.listData[0].isSelected && !this.listData[0].indeterminate);
     }
 
+    /**
+     * @hidden @internal
+     */
     public applyFilter() {
         const filterTree = new FilteringExpressionsTree(FilteringLogic.Or, this.column.field);
         const selectedItems = this.listData.slice(1, this.listData.length).filter(el => el.isSelected === true);
@@ -700,6 +824,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
         this.closeDropdown();
     }
 
+    /**
+     * @hidden @internal
+     */
     public closeDropdown() {
         if (this.overlayComponentId) {
             this.overlayService.hide(this.overlayComponentId);
@@ -707,6 +834,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
         }
     }
 
+    /**
+     * @hidden @internal
+     */
     public onKeyDown(eventArgs) {
         if (eventArgs.key === KEYS.ESCAPE || eventArgs.key === KEYS.ESCAPE_IE) {
             this.closeDropdown();
@@ -714,17 +844,26 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
         eventArgs.stopPropagation();
     }
 
+    /**
+     * @hidden @internal
+     */
     public clearFilter() {
         this.filteringService.clearFilter(this.column.field);
         this.selectAllFilterItems();
     }
 
+    /**
+     * @hidden @internal
+     */
     public onClearFilterKeyDown(eventArgs) {
         if (eventArgs.key === KEYS.ENTER) {
             this.clearFilter();
         }
     }
 
+    /**
+     * @hidden @internal
+     */
     public showCustomFilterItem(): boolean {
         const exprTree = this.column.filteringExpressionsTree;
         return exprTree && exprTree.filteringOperands && exprTree.filteringOperands.length &&
