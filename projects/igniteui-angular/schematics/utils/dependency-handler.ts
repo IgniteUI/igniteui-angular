@@ -4,6 +4,8 @@ import { getWorkspace } from '@schematics/angular/utility/config';
 import { Options } from '../interfaces/options';
 import { WorkspaceProject, ProjectType, WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 
+const schematicsPackage = '@igniteui/angular-schematics';
+
 function logIncludingDependency(context: SchematicContext, pkg: string, version: string): void {
     context.logger.info(`Including ${pkg} - Version: ${version}`);
 }
@@ -65,7 +67,7 @@ export function addDependencies(options: Options): Rule {
             }
         });
 
-        addPackageToPkgJson(tree, 'igniteui-cli', pkgJson.devDependencies['igniteui-cli'], devDependencies);
+        addPackageToPkgJson(tree, schematicsPackage, pkgJson.devDependencies[schematicsPackage], devDependencies);
         return tree;
     };
 }
