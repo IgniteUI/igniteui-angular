@@ -22,6 +22,24 @@ Currently the following components have only partial RTL support:
 
  We plan on adding support for the aforementioned components in the upcoming releases.
 
+## 8.2.4
+
+### New Features
+
+- Columns now expose the `cellStyles` property which allows conditional styling of the column cells. Similar to `cellClasses` it accepts an object literal where the keys are style properties and the values are expressions for evaluation.
+```typescript
+styles = {
+    color: '#123456',
+    'font-family': 'monospace'
+    'font-weight': (_, __, value) => value.startsWith('!') : 'red' : 'inherit'
+};
+```
+The callback signature for both `cellStyles` and `cellClasses` is now changed to
+
+```typescript
+(rowData: any, columnKey: string, cellValue: any, rowIndex: number) => boolean
+```
+
 ## 8.2.3
 - `IgxTextHighlightDirective` - The default highlight directive styles have been moved to a Sass theme - `igx-highlight-theme`; You can modify the resting and active background and text color styles of the directive by passing the respective properties to the Sass theme. You can still pass your own CSS classes to the highlight directive via the cssClass and activeCssClass inputs.
 
@@ -30,10 +48,10 @@ Currently the following components have only partial RTL support:
 
 ## 8.2.0
 ### New theme
-Ignite UI for angular now have a new theme that mimics Microsoft "Fluent" design system.  
-Depending on your use case you can use one of the following mixins:  
-`igx-fluent-theme` and `igx-fluent-dark-theme`  
-  
+Ignite UI for angular now have a new theme that mimics Microsoft "Fluent" design system.
+Depending on your use case you can use one of the following mixins:
+`igx-fluent-theme` and `igx-fluent-dark-theme`
+
 We also added two new pallets that go with the new theme, `$fluent-word-palette` and `$fluent-excel-palette`.
 
 Next example shows how you can use the Fluent theme.
@@ -53,7 +71,7 @@ Next example shows how you can use the Fluent theme.
 ### Theme Changes
 `igx-badge-theme` - Removed the `$disable-shadow` property to mitigate confusion when specifying `$shadow` explicitly.
 
-For more information about the theming please read our [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/index.html)  
+For more information about the theming please read our [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/index.html)
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
@@ -147,7 +165,7 @@ For more information about the theming please read our [documentation](https://w
     - **Breaking Change** Interfaces `IgxDropEventArgs` is renamed to `IDropDroppedEventArgs`.
     - **Breaking Change** Outputs `enter`, `over`, `leave`(former `onEnter`, `onOver`, `onLeave`) now have arguments of type `IDropBaseEventArgs`
     - **Breaking Change** Output `dropped` (former `onDrop`) now have arguments of type `IDropDroppedEventArgs`
-    
+
 ## 8.1.4
 - `IgxDialog` new @Input `positionSettings` is now available. It provides the ability to get/set both position and animation settings of the Dialog component.
 
