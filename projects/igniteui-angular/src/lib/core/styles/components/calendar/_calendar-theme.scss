@@ -295,6 +295,17 @@
     $cal-row-margin: em(2px) 0;
     $selected-hover-color: text-contrast(map-get($theme, 'date-selected-background'));
 
+    $current-color-variant: map-get((
+        material: --var($theme, 'date-selected-background'),
+        fluent:--var($theme, 'date-current-bg-color')
+    ), map-get($theme, variant));
+
+    $current-text-color-variant: map-get((
+        material: --var($theme, 'date-selected-text-color'),
+        fluent:--var($theme, 'date-current-text-color')
+    ), map-get($theme, variant));
+
+
     %cal-display {
         display: flex;
         flex-flow: column nowrap;
@@ -303,6 +314,10 @@
         overflow: hidden;
         outline: none;
         border-radius: --var($theme, 'border-radius');
+    }
+
+    %cal-display + %cal-display {
+        margin-left: 1rem;
     }
 
     %cal-display--vertical {
@@ -344,6 +359,11 @@
         justify-content: space-between;
         align-items: center;
         padding-bottom: $cal-picker-padding;
+        position: relative;
+
+        div {
+            text-align: center;
+        }
     }
 
     %cal-picker-arrow {
@@ -353,7 +373,10 @@
         user-select: none;
         outline: none;
         cursor: pointer;
-        flex-basis: 14.28%; /* equals the width of a single date 100% / 7 (days) */
+        position: absolute;
+        height: calc(100% - #{$cal-picker-padding});
+        align-items: center;
+        top: 0;
 
         &:focus,
         &:hover {
@@ -361,8 +384,16 @@
         }
 
         [dir='rtl'] & {
-            transform: scaleX(-1);
+            transform: scaleX(-1)
         }
+    }
+
+    %cal-picker-prev {
+        left: 0
+    }
+
+    %cal-picker-next {
+        right: 0
     }
 
     %cal-picker-date {
@@ -418,6 +449,7 @@
         justify-content: center;
         align-items: center;
         flex-grow: 1;
+        flex-basis: 14.28%;
         color: --var($theme, 'content-text-color');
         cursor: pointer;
         outline: none;
@@ -455,6 +487,8 @@
         color: --var($theme, 'inactive-text-color');
         cursor: default;
         border-radius: 0;
+        flex-basis: 14.28%;
+        // 100 divided by the number of weekdays
     }
 
     %cal-value--weekend {
@@ -462,12 +496,9 @@
     }
 
     %cal-value--year {
-        display: flex;
         margin: 0;
-        justify-content: center;
-        align-items: center;
         min-width: 8ch;
-        height: rem(52px);
+        line-height: rem(52px);
     }
 
     %cal-value--year-current {
@@ -520,20 +551,6 @@
         color: --var($theme, 'inactive-text-color');
     }
 
-    %cal-value--current {
-        color: --var($theme, 'date-current-text-color');
-        background: --var($theme, 'date-current-bg-color')!important;
-        font-weight: $cal-value-fw !important;
-
-        &:hover {
-            background: --var($theme, 'date-current-bg-color')!important;
-        }
-
-        &:focus {
-            background: --var($theme, 'date-current-bg-color')!important;
-        }
-    }
-
     %cal-value--special {
         %cal-value-content {
             background: --var($theme, 'date-special-background');
@@ -549,6 +566,37 @@
         %cal-value-content {
             color: --var($theme, 'date-selected-text-color');
             background: --var($theme, 'date-selected-background') ;
+        }
+    }
+
+    %cal-value--current {
+        %cal-value-content {
+            color: --var($theme, 'date-current-text-color');
+            font-weight: $cal-value-fw ;
+            background: --var($theme, 'date-current-bg-color');
+
+            &:hover {
+                background: --var($theme, 'date-current-bg-color');
+            }
+
+            &:focus {
+                background: --var($theme, 'date-current-bg-color');
+            }
+        }
+    }
+
+    %cal-value--current--selected {
+        %cal-value-content {
+            color: $current-text-color-variant;
+            background: $current-color-variant;
+
+            &:hover {
+                background: $current-color-variant;
+            }
+
+            &:focus {
+                background: $current-color-variant;
+            }
         }
     }
 
@@ -586,6 +634,45 @@
         }
     }
 
+    %cal-value--hidden%cal-value--disabled-range {
+        background: transparent !important;
+
+        &::after,
+        &::before {
+            background: transparent !important;
+        }
+    }
+
+    %cal-value--range%cal-value--inactive%cal-value--selected {
+        background: transparent !important;
+
+        %cal-value-content {
+            color: --var($theme, 'date-disabled-text-color');
+            background: transparent !important;
+        }
+    }
+
+    %cal-value--range%cal-value--inactive%cal-value--selected%cal-value--single {
+        background: transparent !important;
+
+        %cal-value-content {
+            color: --var($theme, 'date-selected-text-color');
+            background: --var($theme, 'date-selected-background') !important;
+        }
+    }
+
+    %cal-value--inactive%cal-value--selected%cal-value--first {
+        &::after {
+            background: transparent !important;
+        }
+    }
+
+    %cal-value--inactive%cal-value--selected%cal-value--last {
+        &::before {
+            background: transparent !important;
+        }
+    }
+
     %cal-value--first {
         position: relative;
         background: transparent;
@@ -619,6 +706,12 @@
             z-index: -1;
         }
     }
+
+    %cal-value--hidden {
+        %cal-value-content {
+            visibility: hidden;
+        }
+    }
 }
 
 /// Adds typography styles for the igx-calendar component.
@@ -639,37 +732,35 @@
     $picker-date: map-get($categories, 'picker-date');
     $content: map-get($categories, 'content');
 
-    @include igx-scope('.igx-typography') {
-        %cal-header-year {
-            @include igx-type-style($type-scale, $header-year) {
-                margin: 0;
-            }
+    %cal-header-year {
+        @include igx-type-style($type-scale, $header-year) {
+            margin: 0;
         }
+    }
 
-        %cal-header-date {
-            @include igx-type-style($type-scale, $header-date) {
-                line-height: rem(42px);
-                margin: 0;
-            }
+    %cal-header-date {
+        @include igx-type-style($type-scale, $header-date) {
+            line-height: rem(42px);
+            margin: 0;
         }
+    }
 
-        %cal-picker-date {
-            @include igx-type-style($type-scale, $picker-date) {
-                margin: 0;
-            }
+    %cal-picker-date {
+        @include igx-type-style($type-scale, $picker-date) {
+            margin: 0;
         }
+    }
 
-        %cal-value {
-            @include igx-type-style($type-scale, $content) {
-                margin: 0;
-            }
+    %cal-value {
+        @include igx-type-style($type-scale, $content) {
+            margin: 0;
         }
+    }
 
-        %cal-value--year-current {
-            @include igx-type-style($type-scale, $content) {
-                font-size: rem(24px);
-                margin: 0;
-            }
+    %cal-value--year-current {
+        @include igx-type-style($type-scale, $content) {
+            font-size: rem(24px);
+            margin: 0;
         }
     }
 }

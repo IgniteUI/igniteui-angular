@@ -3,14 +3,14 @@
     <span>{{ getFormattedDate().monthday }}</span>
 </ng-template>
 
-<ng-template let-result #defaultMonth>
-    <span tabindex="0" #monthsBtn (keydown)="activeViewYearKB($event)" (click)="activeViewYear()"
+<ng-template let-result #defaultMonth let-obj>
+    <span tabindex="0" #monthsBtn (keydown)="activeViewYearKB(getViewDate(obj.index), $event)" (click)="activeViewYear(getViewDate(obj.index), $event)"
         class="igx-calendar-picker__date">
-        {{ formattedMonth(viewDate) }}
+        {{ formattedMonth(getViewDate(obj.index)) }}
     </span>
-    <span tabindex="0" #yearsBtn (keydown)="activeViewDecadeKB($event)" (click)="activeViewDecade()"
+    <span tabindex="0" #yearsBtn (keydown)="activeViewDecadeKB($event, getViewDate(obj.index))" (click)="activeViewDecade(getViewDate(obj.index))"
         class="igx-calendar-picker__date">
-        {{ formattedYear(viewDate) }}
+        {{ formattedYear(getViewDate(obj.index)) }}
     </span>
 </ng-template>
 
@@ -26,33 +26,36 @@
     (swipeleft)="nextMonth()">
     <div class="igx-calendar-picker">
         <div tabindex="0" class="igx-calendar-picker__prev" #prevMonthBtn
-            igxCalendarScrollMonth [startScroll]="startPrevMonthScroll" [stopScroll]="stopMonthScroll">
+            igxCalendarScrollMonth [startScroll]="startPrevMonthScroll" [stopScroll]="stopMonthScroll" [ngStyle]="{'min-width.%': 100/(monthsViewNumber*7)}">
             <igx-icon fontSet="material">keyboard_arrow_left</igx-icon>
         </div>
-        <div>
-            <ng-container *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultMonth; context: context">
+        <div *ngFor="let view of dayViews; index as i;" [style.width.%]="100/monthsViewNumber" [attr.data-month]="getMonth(i)">
+            <ng-container *ngTemplateOutlet="subheaderTemplate ? subheaderTemplate : defaultMonth; context: getContext(i)">
             </ng-container>
         </div>
-        <div tabindex="0" class="igx-calendar-picker__next" #nextMonthBtn
-            igxCalendarScrollMonth [startScroll]="startNextMonthScroll" [stopScroll]="stopMonthScroll">
+        <div tabindex="0" class="igx-calendar-picker__next" #nextMonthBtn 
+            igxCalendarScrollMonth [startScroll]="startNextMonthScroll" [stopScroll]="stopMonthScroll" [ngStyle]="{'min-width.%': 100/(monthsViewNumber*7)}">
             <igx-icon fontSet="material">keyboard_arrow_right</igx-icon>
         </div>
     </div>
 
-    <igx-days-view [changeDaysView]="true" #days
-                   [animationAction]="monthAction"
-                   [locale]="locale"
-                   [value]="value"
-                   [viewDate]="viewDate"
-                   [weekStart]="weekStart"
-                   [formatOptions]="formatOptions"
-                   [formatViews]="formatViews"
-                   [selection]="selection"
-                   [disabledDates]="disabledDates"
-                   [specialDates]="specialDates"
-                   (onViewChanged)="viewChanged($event)"
-                   (onDateSelection)="childClicked($event)">
-    </igx-days-view>
+    <div style="display: flex">
+        <igx-days-view *ngFor="let view of dayViews; index as i;" [changeDaysView]="true" #days
+                [animationAction]="monthAction"
+                [locale]="locale"
+                [value]="value"
+                [viewDate]="getViewDate(i)"
+                [weekStart]="weekStart"
+                [formatOptions]="formatOptions"
+                [formatViews]="formatViews"
+                [selection]="selection"
+                [disabledDates]="disabledDates"
+                [specialDates]="specialDates"
+                [hideOutsideDays]="hideOutsideDays"
+                (onViewChanged)="viewChanged($event)"
+                (onDateSelection)="childClicked($event)">
+        </igx-days-view>
+    </div>
 </div>
 
 <igx-months-view *ngIf="isYearView" [@animateView]="activeView" #months 

@@ -21,12 +21,12 @@ import {
     IChipEnterDragAreaEventArgs,
     IBaseChipEventArgs
 } from './chip.component';
-import { IDropBaseEventArgs } from '../directives/drag-drop/drag-drop.directive';
+import { IDropBaseEventArgs, IDragBaseEventArgs } from '../directives/drag-drop/drag-drop.directive';
 import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs/internal/Subject';
+import { Subject } from 'rxjs';
 
 export interface IBaseChipsAreaEventArgs {
-    originalEvent: PointerEvent | MouseEvent | TouchEvent | KeyboardEvent | IDropBaseEventArgs;
+    originalEvent: IDragBaseEventArgs | IDropBaseEventArgs | KeyboardEvent | MouseEvent | TouchEvent;
     owner: IgxChipsAreaComponent;
 }
 
@@ -152,7 +152,6 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
 
     private modifiedChipsArray: IgxChipComponent[];
     private _differ: IterableDiffer<IgxChipComponent> | null = null;
-    private selectedChips: IgxChipComponent[] = [];
     protected destroy$ = new Subject<boolean>();
 
     constructor(public cdr: ChangeDetectorRef, public element: ElementRef,
@@ -166,11 +165,11 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
     public ngAfterViewInit() {
         // If we have initially selected chips through their inputs, we need to get them, because we cannot listen to their events yet.
         if (this.chipsList.length) {
-            this.selectedChips = this.chipsList.filter((item: IgxChipComponent) => item.selected);
-            if (this.selectedChips.length) {
+            const selectedChips = this.chipsList.filter((item: IgxChipComponent) => item.selected);
+            if (selectedChips.length) {
                 this.onSelection.emit({
                     originalEvent: null,
-                    newSelection: this.selectedChips,
+                    newSelection: selectedChips,
                     owner: this
                 });
             }
@@ -268,7 +267,6 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
      * @hidden
      */
     protected onChipDragEnter(event: IChipEnterDragAreaEventArgs) {
-        const dropChipRect = event.owner.elementRef.nativeElement.getBoundingClientRect();
         const dropChipIndex = this.chipsList.toArray().findIndex((el) => el === event.owner);
         const dragChipIndex = this.chipsList.toArray().findIndex((el) => el === event.dragChip);
         if (dragChipIndex < dropChipIndex) {
@@ -325,16 +323,17 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
      * @hidden
      */
     protected onChipSelectionChange(event: IChipSelectEventArgs) {
-        if (event.selected) {
-            this.selectedChips.push(event.owner);
-        } else if (!event.selected) {
-            this.selectedChips = this.selectedChips.filter((chip) => {
+        let selectedChips = this.chipsList.filter((chip) => chip.selected);
+        if (event.selected && !selectedChips.includes(event.owner)) {
+            selectedChips.push(event.owner);
+        } else if (!event.selected && selectedChips.includes(event.owner)) {
+            selectedChips = selectedChips.filter((chip) => {
                 return chip.id !== event.owner.id;
             });
         }
         this.onSelection.emit({
             originalEvent: event.originalEvent,
-            newSelection: this.selectedChips,
+            newSelection: selectedChips,
             owner: this
         });
     }

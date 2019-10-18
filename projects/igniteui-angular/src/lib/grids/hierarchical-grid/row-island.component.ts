@@ -39,6 +39,7 @@ import { takeUntil } from 'rxjs/operators';
 import { IgxColumnComponent } from '../column.component';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IBaseEventArgs } from '../../core/utils';
+import { IgxColumnResizingService } from '../grid-column-resizing.service';
 export interface IGridCreatedEventArgs extends IBaseEventArgs {
     owner: IgxRowIslandComponent;
     parentID: any;
@@ -190,6 +191,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
     constructor(
         public selectionService: IgxGridSelectionService,
         crudService: IgxGridCRUDService,
+        public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
         @Inject(IgxGridTransaction) protected transactionFactory: any,
         elementRef: ElementRef,
@@ -208,6 +210,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
         super(
             selectionService,
             crudService,
+            colResizingService,
             gridAPI,
             typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
             elementRef,

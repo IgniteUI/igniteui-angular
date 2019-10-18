@@ -5,12 +5,12 @@ import {
     ViewChild,
     TemplateRef,
     ContentChild,
-    AfterContentInit,
     OnDestroy,
     HostListener,
     ViewChildren,
     QueryList,
-    ChangeDetectorRef
+    ChangeDetectorRef,
+    AfterContentChecked
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { EditorProvider } from '../core/edit-provider';
@@ -25,6 +25,7 @@ import { SliderHandle,
     SliderType,
     ISliderValueChangeEventArgs
 } from './slider.common';
+import { IgxThumbLabelComponent } from './label/thumb-label.component';
 
 
 const noop = () => {
@@ -62,7 +63,7 @@ export class IgxSliderComponent implements
     EditorProvider,
     OnInit,
     AfterViewInit,
-    AfterContentInit,
+    AfterContentChecked,
     OnDestroy {
 
     // Limit handle travel zone
@@ -110,12 +111,26 @@ export class IgxSliderComponent implements
     @ViewChildren(IgxSliderThumbComponent)
     private thumbs: QueryList<IgxSliderThumbComponent> = new QueryList<IgxSliderThumbComponent>();
 
+    /**
+     * @hidden
+     */
+    @ViewChildren(IgxThumbLabelComponent)
+    private labelRefs: QueryList<IgxThumbLabelComponent> = new QueryList<IgxThumbLabelComponent>();
+
     private get thumbFrom(): IgxSliderThumbComponent {
         return this.thumbs.find(thumb => thumb.type === SliderHandle.FROM);
     }
 
     private get thumbTo(): IgxSliderThumbComponent {
         return this.thumbs.find(thumb => thumb.type === SliderHandle.TO);
+    }
+
+    private get labelFrom(): IgxThumbLabelComponent {
+        return this.labelRefs.find(label => label.type === SliderHandle.FROM);
+    }
+
+    private get labelTo(): IgxThumbLabelComponent {
+        return this.labelRefs.find(label => label.type === SliderHandle.TO);
     }
 
     /**
@@ -642,7 +657,7 @@ export class IgxSliderComponent implements
      * @hidden
      */
     @HostListener('pointerdown', ['$event'])
-    public onPointerDown($event) {
+    public onPointerDown($event: PointerEvent) {
         this.findClosestThumb($event);
 
         if (!this.thumbTo.isActive && this.thumbFrom === undefined) {
@@ -651,8 +666,9 @@ export class IgxSliderComponent implements
 
         const activeThumb = this.thumbTo.isActive ? this.thumbTo : this.thumbFrom;
         activeThumb.nativeElement.setPointerCapture($event.pointerId);
-        this.showThumbsIndicators();
+        this.showSliderIndicators();
 
+        $event.preventDefault();
     }
 
 
@@ -665,7 +681,10 @@ export class IgxSliderComponent implements
             return;
         }
 
-        this.hideThumbsIndicators();
+        const activeThumb = this.thumbTo.isActive ? this.thumbTo : this.thumbTo;
+        activeThumb.nativeElement.releasePointerCapture($event.pointerId);
+
+        this.hideSliderIndicators();
     }
 
     /**
@@ -673,7 +692,7 @@ export class IgxSliderComponent implements
      */
     @HostListener('focus')
     public onFocus() {
-        this.toggleThumbLabels();
+        this.toggleSliderIndicators();
     }
 
     /**
@@ -686,20 +705,12 @@ export class IgxSliderComponent implements
 
     @HostListener('panstart')
     public onPanStart() {
-        this.showThumbsIndicators();
+        this.showSliderIndicators();
     }
 
     @HostListener('panend')
     public onPanEnd() {
-        this.hideThumbsIndicators();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('tap', ['$event'])
-    public onTapListener($event) {
-        this.onTap($event);
+        this.hideSliderIndicators();
     }
 
     /**
@@ -848,9 +859,10 @@ export class IgxSliderComponent implements
         this.subscribeTo(this.thumbTo, this.thumbChanged.bind(this));
 
         this.thumbs.changes.pipe(takeUntil(this._destroyer$)).subscribe(change => {
-            const t = change.find((thumb: IgxSliderThumbComponent) => thumb.type === SliderHandle.FROM);
-            this.positionHandle(t, this.lowerValue);
-            this.subscribeTo(t, this.thumbChanged.bind(this));
+            const thumbFrom = change.find((thumb: IgxSliderThumbComponent) => thumb.type === SliderHandle.FROM);
+            const labelFrom = this.labelRefs.find((label: IgxThumbLabelComponent) => label.type === SliderHandle.FROM);
+            this.positionHandle(thumbFrom, labelFrom, this.lowerValue);
+            this.subscribeTo(thumbFrom, this.thumbChanged.bind(this));
             this.changeThumbFocusableState(this.disabled);
         });
     }
@@ -858,7 +870,7 @@ export class IgxSliderComponent implements
     /**
      * @hidden
      */
-    public ngAfterContentInit() {
+    public ngAfterContentChecked() {
         // Calculates the distance between every step in pixels.
         this.stepDistance = this.calculateStepDistance();
     }
@@ -904,13 +916,6 @@ export class IgxSliderComponent implements
         return this.isRange ? this.thumbFrom.nativeElement : this.thumbTo.nativeElement;
     }
 
-    /**
-     *
-     * @hidden
-     */
-    public onTap($event) {
-        this.update($event.srcEvent.clientX);
-    }
     /**
      *
      * @hidden
@@ -969,11 +974,11 @@ export class IgxSliderComponent implements
      * @hidden
      */
     public onThumbChange() {
-        this.toggleThumbLabels();
+        this.toggleSliderIndicators();
     }
 
     public onHoverChange(state: boolean) {
-        return state ? this.showThumbsIndicators() : this.hideThumbsIndicators();
+        return state ? this.showSliderIndicators() : this.hideSliderIndicators();
     }
 
     private swapThumb(value: IRangeSliderValue) {
@@ -990,9 +995,9 @@ export class IgxSliderComponent implements
         return value;
     }
 
-    private findClosestThumb(event) {
+    private findClosestThumb(event: PointerEvent) {
         if (this.isRange) {
-            this.closestHandle(event.clientX);
+            this.closestHandle(event);
         } else {
             this.thumbTo.nativeElement.focus();
         }
@@ -1049,34 +1054,40 @@ export class IgxSliderComponent implements
         )` : interval;
     }
 
-    private positionHandle(handle: ElementRef, position: number) {
-        if (!handle) {
+    private positionHandle(thumbHandle: ElementRef, labelHandle: ElementRef, position: number) {
+        if (!thumbHandle) {
             return;
         }
 
-        handle.nativeElement.style.left = `${this.valueToFraction(position) * 100}%`;
+        const positionLeft = `${this.valueToFraction(position) * 100}%`;
+        thumbHandle.nativeElement.style.left = positionLeft;
+        labelHandle.nativeElement.style.left = positionLeft;
     }
 
     private positionHandlesAndUpdateTrack() {
         if (!this.isRange) {
-            this.positionHandle(this.thumbTo, this.value as number);
+            this.positionHandle(this.thumbTo, this.labelTo, this.value as number);
         } else {
-            this.positionHandle(this.thumbTo, (this.value as IRangeSliderValue).upper);
-            this.positionHandle(this.thumbFrom, (this.value as IRangeSliderValue).lower);
+            this.positionHandle(this.thumbTo, this.labelTo, (this.value as IRangeSliderValue).upper);
+            this.positionHandle(this.thumbFrom, this.labelFrom, (this.value as IRangeSliderValue).lower);
         }
 
         this.updateTrack();
     }
 
-    private closestHandle(mouseX) {
+    private closestHandle(event: PointerEvent) {
         const fromOffset = this.thumbFrom.nativeElement.offsetLeft + this.thumbFrom.nativeElement.offsetWidth / 2;
         const toOffset = this.thumbTo.nativeElement.offsetLeft + this.thumbTo.nativeElement.offsetWidth / 2;
-        const xPointer = mouseX - this._el.nativeElement.getBoundingClientRect().left;
+        const xPointer = event.clientX - this._el.nativeElement.getBoundingClientRect().left;
         const match = this.closestTo(xPointer, [fromOffset, toOffset]);
 
-        if (match === fromOffset) {
+        if (fromOffset === toOffset && toOffset < xPointer) {
+            this.thumbTo.nativeElement.focus();
+        } else if (fromOffset === toOffset && toOffset > xPointer ) {
             this.thumbFrom.nativeElement.focus();
-        } else if (match === toOffset) {
+        } else if (match === fromOffset) {
+            this.thumbFrom.nativeElement.focus();
+        } else {
             this.thumbTo.nativeElement.focus();
         }
     }
@@ -1098,7 +1109,7 @@ export class IgxSliderComponent implements
         this.renderer.setStyle(this.ticks.nativeElement, 'background', renderCallbackExecution);
     }
 
-    private showThumbsIndicators() {
+private showSliderIndicators() {
         if (this.disabled) {
             return;
         }
@@ -1109,13 +1120,18 @@ export class IgxSliderComponent implements
         }
 
         this.thumbTo.showThumbIndicators();
+        this.labelTo.active = true;
         if (this.thumbFrom) {
             this.thumbFrom.showThumbIndicators();
         }
 
+        if (this.labelFrom) {
+            this.labelFrom.active = true;
+        }
+
     }
 
-    private hideThumbsIndicators() {
+    private hideSliderIndicators() {
         if (this.disabled) {
             return;
         }
@@ -1123,15 +1139,20 @@ export class IgxSliderComponent implements
         this._indicatorsTimer = timer(this.thumbLabelVisibilityDuration);
         this._indicatorsTimer.pipe(takeUntil(this._indicatorsDestroyer$)).subscribe(() => {
             this.thumbTo.hideThumbIndicators();
+            this.labelTo.active = false;
             if (this.thumbFrom) {
                 this.thumbFrom.hideThumbIndicators();
+            }
+
+            if (this.labelFrom) {
+                this.labelFrom.active = false;
             }
         });
     }
 
-    private toggleThumbLabels() {
-        this.showThumbsIndicators();
-        this.hideThumbsIndicators();
+    private toggleSliderIndicators() {
+        this.showSliderIndicators();
+        this.hideSliderIndicators();
     }
 
     private changeThumbFocusableState(state: boolean) {
@@ -1240,8 +1261,18 @@ export class IgxSliderComponent implements
  * @hidden
  */
 @NgModule({
-    declarations: [IgxSliderComponent, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective, IgxSliderThumbComponent],
-    exports: [IgxSliderComponent, IgxThumbFromTemplateDirective, IgxThumbToTemplateDirective, IgxSliderThumbComponent],
+    declarations: [
+        IgxSliderComponent,
+        IgxThumbFromTemplateDirective,
+        IgxThumbToTemplateDirective,
+        IgxSliderThumbComponent,
+        IgxThumbLabelComponent],
+    exports: [
+        IgxSliderComponent,
+        IgxThumbFromTemplateDirective,
+        IgxThumbToTemplateDirective,
+        IgxSliderThumbComponent,
+        IgxThumbLabelComponent],
     imports: [CommonModule]
 })
 export class IgxSliderModule {

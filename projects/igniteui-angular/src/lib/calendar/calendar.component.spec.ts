@@ -1040,7 +1040,6 @@ describe('IgxCalendar', () => {
 
             selectedDates.forEach(d => {
                 expect(d.selected).toBe(true);
-                expect(d.isSelectedCSS).toBe(true);
             });
 
             const notSelectedDates = calendar.daysView.dates.toArray().filter(d => {
@@ -1051,7 +1050,6 @@ describe('IgxCalendar', () => {
 
             notSelectedDates.forEach(d => {
                 expect(d.selected).toBe(false);
-                expect(d.isSelectedCSS).toBe(false);
             });
         });
     });
@@ -1070,7 +1068,6 @@ describe('IgxCalendar', () => {
 
         specialDates.forEach(d => {
             expect(d.isSpecial).toBe(true);
-            expect(d.isSpecialCSS).toBe(true);
         });
 
         let disabledDates = calendar.daysView.dates.toArray().filter(d => {
@@ -1098,7 +1095,6 @@ describe('IgxCalendar', () => {
 
         specialDates.forEach(d => {
             expect(d.isSpecial).toBe(true);
-            expect(d.isSpecialCSS).toBe(true);
         });
 
         disabledDates = calendar.daysView.dates.toArray().filter(d => {
@@ -1804,6 +1800,8 @@ describe('IgxCalendar', () => {
             fixture.detectChanges();
 
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+            fixture.detectChanges();
+            await wait(400);
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
@@ -1818,6 +1816,8 @@ describe('IgxCalendar', () => {
             fixture.detectChanges();
 
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+            fixture.detectChanges();
+            await wait(400);
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
             fixture.detectChanges();
             await wait(400);
@@ -1851,6 +1851,8 @@ describe('IgxCalendar', () => {
             fixture.detectChanges();
 
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
+            fixture.detectChanges();
+            await wait(400);
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
             fixture.detectChanges();
             await wait(400);
@@ -1859,6 +1861,8 @@ describe('IgxCalendar', () => {
             expect(date.nativeElement).toBe(document.activeElement);
 
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
+            fixture.detectChanges();
+            await wait(400);
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
             fixture.detectChanges();
             await wait(400);
@@ -1892,6 +1896,8 @@ describe('IgxCalendar', () => {
             fixture.detectChanges();
 
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
+            fixture.detectChanges();
+            await wait(400);
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
             fixture.detectChanges();
@@ -1902,6 +1908,8 @@ describe('IgxCalendar', () => {
 
             date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 7, 5).getTime());
             date.nativeElement.focus();
+            fixture.detectChanges();
+            await wait(400);
 
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
             fixture.detectChanges();
@@ -2060,7 +2068,6 @@ class DateTester {
     static testDatesSpeciality(dates: IgxDayItemComponent[], special: boolean): void {
         for (const date of dates) {
             expect(date.isSpecial).toBe(special);
-            expect(date.isSpecialCSS).toBe(special);
         }
     }
 }

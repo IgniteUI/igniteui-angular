@@ -6,7 +6,7 @@
         "name": "Ignite UI for Angular",
         "version": "6.1.x"
     },
-    "theme": "./extras/docs/themes/sassdoc",
+    "theme": "./node_modules/igniteui-sassdoc-theme/sassdoc/",
     "autofill": ["throws", "content"],
     "groups": {
         "undefined": "general"

@@ -42,6 +42,7 @@
 @import '../components/grid-summary/grid-summary-component';
 @import '../components/grid-paginator/grid-paginator-component';
 @import '../components/grid-toolbar/grid-toolbar-component';
+@import '../components/highlight/highlight-component';
 @import '../components/icon/icon-component';
 @import '../components/input/input-group-component';
 @import '../components/list/list-component';
@@ -70,7 +71,7 @@
     }
 }
 
-@mixin igx-core($print-layout:true) {
+@mixin igx-core($print-layout: true) {
     @include igx-typography();
 
     @if $print-layout == true {

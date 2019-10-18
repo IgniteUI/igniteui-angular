@@ -1,4 +1,4 @@
-<igx-grid-toolbar role="rowgroup" [style.width.px]='outerWidth' *ngIf="showToolbar" [gridID]="id"
+<igx-grid-toolbar role="rowgroup" [style.flex-basis.px]='outerWidth' *ngIf="showToolbar" [gridID]="id"
     [displayDensity]="displayDensity" #toolbar>
 </igx-grid-toolbar>
 
@@ -20,12 +20,16 @@
                     </div>
                 </div>
             </ng-container>
-            <ng-container *ngIf="showRowCheckboxes">
-                <div class="igx-grid__cbx-selection" (click)="onHeaderSelectorClick($event)" #headerCheckboxContainer [ngClass]="{
-                    'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible
-                }">
-                    <igx-checkbox [checked]="selectionService.areAllRowSelected()" [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
-                        (click)="$event.preventDefault()" disableRipple="true" [indeterminate]="selectionService.hasSomeRowSelected()" [aria-label]="headerCheckboxAriaLabel" #headerCheckbox></igx-checkbox>
+            <ng-container *ngIf="showRowSelectors">
+                <div class="igx-grid__cbx-selection" (click)="onHeaderSelectorClick($event)" #headerSelectorContainer [ngClass]="{
+                    'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible }">
+                    <ng-template #headSelector
+                        *ngTemplateOutlet="
+                        this.headSelectorTemplate ? this.headSelectorTemplate : headSelectorBaseTemplate;
+                        context: { $implicit: {
+                                        selectedCount: this.selectionService.filteredSelectedRowIds.length,
+                                        totalCount: this.totalRowsCountAfterFilter }}">
+                    </ng-template>
                 </div>
             </ng-container>
             <ng-container *ngIf="pinnedColumns.length > 0">
@@ -46,6 +50,10 @@
             [column]="filteringService.filteredColumn"></igx-grid-filtering-row>
     </div>
     <div class="igx-grid__thead-thumb" [hidden]='!hasVerticalSroll()' [style.width.px]="scrollWidth"></div>
+    <div [style.display]="shouldOverlayLoading ? 'flex' : 'none'" #loadingOverlay>
+        <igx-circular-bar [indeterminate]="true">
+        </igx-circular-bar>
+    </div>
     <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="parentVirtDir" [attr.droppable]="true"
         id="right" class="igx-grid__scroll-on-drag-right"></span>
 </div>
@@ -66,7 +74,7 @@
         | treeGridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
         | treeGridHierarchizing:primaryKey:foreignKey:childDataKey:id:pipeTrigger
-        | treeGridFiltering:filteringExpressionsTree:id:pipeTrigger
+        | treeGridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger
         | treeGridSorting:sortingExpressions:id:pipeTrigger
         | treeGridFlattening:id:expansionDepth:expansionStates:pipeTrigger
         | treeGridPaging:page:perPage:id:pipeTrigger
@@ -101,7 +109,7 @@
     </div>
 </div>
 
-<div class="igx-grid__tfoot" [style.width.px]='outerWidth' role="rowgroup" [style.height.px]='summariesHeight' #tfoot>
+<div class="igx-grid__tfoot" role="rowgroup" [style.height.px]='summariesHeight' #tfoot>
     <igx-grid-summary-row [style.width.px]='calcWidth' [style.height.px]='summariesHeight'
         *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id"
         [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="0"
@@ -187,5 +195,20 @@
     <igx-icon fontSet="material">drag_indicator</igx-icon>
 </ng-template>
 
+<ng-template #headSelectorBaseTemplate igxHeadSelector let-context>
+    <div class="igx-grid__cbx-padding">
+        <igx-checkbox
+            [checked]="context.selectedCount > 0 && context.totalCount === context.selectedCount"
+            [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
+            [readonly]="true"
+            disableRipple="true"
+            [indeterminate]="context.selectedCount > 0 && context.selectedCount !== context.totalCount"
+            [aria-label]="headSelectorBaseAriaLabel"
+            #headerCheckbox>
+        </igx-checkbox>
+    </div>
+</ng-template>
+
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>
+<div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>
 <div class="igx-grid__outlet" #igxFilteringOverlayOutlet igxOverlayOutlet></div>

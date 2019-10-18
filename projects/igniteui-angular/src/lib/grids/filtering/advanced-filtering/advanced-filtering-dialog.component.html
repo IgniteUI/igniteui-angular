@@ -1,0 +1,350 @@
+<article
+    class="igx-advanced-filter"
+    igxDrag
+    [ghost]="false"
+    [dragTolerance]="0"
+    (dragStart)="dragStart($event)"
+    (dragEnd)="dragEnd($event)"
+    (keydown)="onKeyDown($event)"
+    [ngClass]="{
+        'igx-advanced-filter--cosy': grid.displayDensity === 'cosy',
+        'igx-advanced-filter--compact': grid.displayDensity === 'compact'
+    }"
+>
+    <header class="igx-advanced-filter__header" igxDragHandle>
+        <h4 class="igx-typography__h6" style="pointer-events: none;">
+            {{ grid.resourceStrings.igx_grid_advanced_filter_title }}
+        </h4>
+        <div class="igx-filter-legend">
+            <div class="igx-filter-legend__item--and">
+                <span>{{ grid.resourceStrings.igx_grid_advanced_filter_and_label }}</span>
+            </div>
+            <div class="igx-filter-legend__item--or">
+                <span>{{ grid.resourceStrings.igx_grid_advanced_filter_or_label }}</span>
+            </div>
+        </div>
+    </header>
+
+    <article #expressionsContainer
+             class="igx-advanced-filter__main"
+             (scroll)="onExpressionsScrolled()">
+        <ng-container *ngIf="!rootGroup">
+
+            <button #addRootAndGroupButton
+                igxButton="outlined"
+                [displayDensity]="displayDensity"
+                (click)="addAndGroup()"
+            >
+                <igx-icon fontSet="material">add</igx-icon>
+                <span>{{grid.resourceStrings.igx_grid_advanced_filter_and_group}}</span>
+            </button>
+
+            <button igxButton="outlined" [displayDensity]="displayDensity" (click)="addOrGroup()">
+                <igx-icon fontSet="material">add</igx-icon>
+                <span>{{grid.resourceStrings.igx_grid_advanced_filter_or_group}}</span>
+            </button>
+
+            <div class="igx-filter-empty">
+                <h6 class="igx-filter-empty__title">
+                    {{grid.resourceStrings.igx_grid_advanced_filter_initial_text}}
+                </h6>
+            </div>
+        </ng-container>
+
+        <ng-template #addExpressionsTemplate let-expressionItem let-afterExpression="afterExpression">
+            <button #addConditionButton
+                    igxButton="outlined"
+                    [displayDensity]="displayDensity"
+                    [disabled]="editedExpression"
+                    (click)="addCondition(expressionItem, afterExpression)"
+            >
+                <igx-icon fontSet="material">add</igx-icon>
+                <span>{{grid.resourceStrings.igx_grid_advanced_filter_add_condition}}</span>
+            </button>
+
+            <button igxButton="outlined"
+                    [displayDensity]="displayDensity"
+                    [disabled]="editedExpression"
+                    (click)="addAndGroup(expressionItem, afterExpression)">
+                <igx-icon fontSet="material">add</igx-icon>
+                <span>{{grid.resourceStrings.igx_grid_advanced_filter_and_group}}</span>
+            </button>
+
+            <button igxButton="outlined"
+                    [displayDensity]="displayDensity"
+                    [disabled]="editedExpression"
+                    (click)="addOrGroup(expressionItem, afterExpression)">
+                <igx-icon fontSet="material">add</igx-icon>
+                <span>{{grid.resourceStrings.igx_grid_advanced_filter_or_group}}</span>
+            </button>
+
+        </ng-template>
+
+        <ng-template #filterOperandTemplate let-expressionItem>
+            <div *ngIf="!expressionItem.inEditMode"
+                class="igx-filter-tree__expression-item"
+                (mouseenter)="expressionItem.hovered = true"
+                (mouseleave)="expressionItem.hovered = false"
+                >
+                <igx-chip [data]="expressionItem"
+                          [displayDensity]="displayDensity === 'compact' ? 'cosy' : displayDensity"
+                          [removable]="true"
+                          [selected]="expressionItem.selected"
+                          (keydown)="invokeClick($event)"
+                          (click)="onChipClick(expressionItem)"
+                          (dblclick)="onChipDblClick(expressionItem)"
+                          (onRemove)="onChipRemove(expressionItem)"
+                          (onSelectionDone)="onChipSelectionEnd()"
+                    >
+                    <span igxPrefix class="igx-filter-tree__expression-column">{{ expressionItem.expression.fieldName }}</span>
+                    <igx-icon
+                        igxPrefix
+                        fontSet="filtering-icons"
+                        [name]="expressionItem.expression.condition.iconName"
+                    >
+                    </igx-icon>
+                    <span class="igx-filter-tree__expression-condition">
+                        {{ getConditionFriendlyName(expressionItem.expression.condition.name) }}
+                    </span>
+                    <span igxSuffix *ngIf="!expressionItem.expression.condition.isUnary">
+                        {{ isDate(expressionItem.expression.searchVal) ? (expressionItem.expression.searchVal | igxdate:grid.locale) : expressionItem.expression.searchVal }}
+                    </span>
+                </igx-chip>
+                <div class="igx-filter-tree__expression-actions"
+                *ngIf="(expressionItem.selected && selectedExpressions.length === 1) || expressionItem.hovered">
+                    <igx-icon
+                        tabindex="0"
+                        (keydown)="invokeClick($event)"
+                        (click)="enterExpressionEdit(expressionItem)">
+                        edit
+                    </igx-icon>
+                    <igx-icon
+                        tabindex="0"
+                        (keydown)="invokeClick($event)"
+                        (click)="enterExpressionAdd(expressionItem)"
+                        *ngIf="!expressionItem.inAddMode && (expressionItem.parent !== currentGroup || expressionItem !== currentGroup.children[currentGroup.children.length - 1])"
+                    >
+                        add
+                    </igx-icon>
+                </div>
+            </div>
+
+            <div *ngIf="expressionItem.inEditMode"
+                #editingInputsContainer
+                class="igx-filter-tree__inputs"
+            >
+                <igx-select #columnSelect
+                            type="box"
+                            [displayDensity]="'compact'"
+                            [overlaySettings]="columnSelectOverlaySettings"
+                            [placeholder]="grid.resourceStrings.igx_grid_advanced_filter_column_placeholder"
+                            [(ngModel)]="selectedColumn">
+                    <igx-select-item *ngFor="let column of filterableColumns" [value]="column">
+                        {{column.header || column.field}}
+                    </igx-select-item>
+                </igx-select>
+
+                <igx-select #conditionSelect
+                            type="box"
+                            [displayDensity]="'compact'"
+                            [overlaySettings]="conditionSelectOverlaySettings"
+                            [placeholder]="grid.resourceStrings.igx_grid_filter_condition_placeholder"
+                            [(ngModel)]="selectedCondition"
+                            [disabled]="!selectedColumn">
+                    <igx-icon *ngIf="selectedColumn && conditionSelect.value && selectedColumn.filters.condition(conditionSelect.value)"
+                              igxPrefix
+                              fontSet="filtering-icons"
+                              [name]="selectedColumn.filters.condition(conditionSelect.value).iconName">
+                    </igx-icon>
+                    <igx-select-item *ngFor="let condition of getConditionList()" [value]="condition">
+                        <igx-icon fontSet="filtering-icons"
+                                  [name]="selectedColumn.filters.condition(condition).iconName">
+                        </igx-icon>
+                        <span>{{getConditionFriendlyName(condition)}}</span>
+                    </igx-select-item>
+                </igx-select>
+
+                <igx-input-group *ngIf="!selectedColumn || selectedColumn.dataType !== 'date'"
+                                 type="box"
+                                 [disabled]="!selectedColumn || !selectedCondition || (selectedColumn && selectedColumn.filters.condition(selectedCondition).isUnary)"
+                                 [displayDensity]="'compact'">
+                    <input #searchValueInput
+                           igxInput
+                           [type]="selectedColumn && selectedColumn.dataType === 'number' ? 'number' : 'text'"
+                           [placeholder]="grid.resourceStrings.igx_grid_advanced_filter_value_placeholder"
+                           [(ngModel)]="searchValue"/>
+                </igx-input-group>
+
+                <igx-date-picker *ngIf="selectedColumn && selectedColumn.dataType === 'date'"
+                                 mode="dropdown"
+                                 [(ngModel)]="searchValue"
+                                 [locale]="grid.locale"
+                                 [outlet]="grid.outletDirective">
+                    <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value">
+                        <igx-input-group #dropDownTarget type="box" [displayDensity]="'compact'" [supressInputAutofocus]="true">
+                            <input #searchValueInput
+                                    igxInput
+                                    tabindex="0"
+                                    (keydown)="invokeClick($event)"
+                                    (click)="openDialog(dropDownTarget.element.nativeElement)"
+                                    [placeholder]="grid.resourceStrings.igx_grid_filter_row_date_placeholder"
+                                    autocomplete="off"
+                                    [value]="value | igxdate: grid.locale"
+                                    [readonly]="true"
+                                    [disabled]="!selectedColumn || !selectedCondition || (selectedColumn && selectedColumn.filters.condition(selectedCondition).isUnary)"/>
+                        </igx-input-group>
+                    </ng-template>
+                </igx-date-picker>
+
+                <div class="igx-filter-tree__inputs-actions">
+                    <button igxButton="icon"
+                            [displayDensity]="displayDensity"
+                            [disabled]="!operandCanBeCommitted()"
+                            (click)="commitOperandEdit()">
+                        <igx-icon fontSet="material">check</igx-icon>
+                    </button>
+                    <button igxButton="icon"
+                            [displayDensity]="displayDensity"
+                            (click)="cancelOperandEdit()">
+                        <igx-icon fontSet="material">close</igx-icon>
+                    </button>
+                </div>
+            </div>
+
+            <div *ngIf="expressionItem.inAddMode"
+                #addModeContainer
+                class="igx-filter-tree__buttons"
+            >
+                <ng-container *ngTemplateOutlet="addExpressionsTemplate; context: context(expressionItem.parent, expressionItem)"></ng-container>
+                <button igxButton="icon"
+                        [displayDensity]="displayDensity"
+                        (click)="cancelOperandAdd()">
+                    <igx-icon fontSet="material">close</igx-icon>
+                </button>
+            </div>
+
+        </ng-template>
+
+        <ng-template #expressionTreeTemplate let-expressionItem>
+            <div class="igx-filter-tree">
+                <div tabindex="0"
+                     class="igx-filter-tree__line"
+                     [ngClass]="{
+                         'igx-filter-tree__line--and': expressionItem.operator === 0,
+                         'igx-filter-tree__line--or': expressionItem.operator === 1,
+                         'igx-filter-tree__line--selected': expressionItem.selected
+                     }"
+                     (keydown)="invokeClick($event)"
+                     (click)="onGroupClick(expressionItem)"
+                ></div>
+
+                <div class="igx-filter-tree__expression">
+                    <ng-container *ngFor="let expr of expressionItem.children">
+                        <ng-container *ngTemplateOutlet="isExpressionGroup(expr) ? expressionTreeTemplate : filterOperandTemplate; context: context(expr)"></ng-container>
+                    </ng-container>
+                    <div *ngIf="currentGroup === expressionItem"
+                        #currentGroupButtonsContainer
+                        class="igx-filter-tree__buttons">
+                        <ng-container *ngTemplateOutlet="addExpressionsTemplate; context: context(expressionItem)"></ng-container>
+                        <button igxButton="outlined"
+                                *ngIf="expressionItem !== rootGroup"
+                                [displayDensity]="displayDensity"
+                                [disabled]="editedExpression || expressionItem.children.length < 2"
+                                (click)="endGroup(expressionItem)">
+                            <span>{{grid.resourceStrings.igx_grid_advanced_filter_end_group}}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </ng-template>
+
+        <ng-container *ngIf="rootGroup">
+            <ng-container *ngTemplateOutlet="expressionTreeTemplate; context: context(rootGroup)"></ng-container>
+        </ng-container>
+
+        <div igxToggle
+            class="igx-filter-contextual-menu"
+            (keydown)="onKeyDown($event)"
+            [ngClass]="{
+                'igx-filter-contextual-menu--cosy': displayDensity === 'cosy',
+                'igx-filter-contextual-menu--compact': displayDensity === 'compact'
+            }"
+        >
+            <button igxButton="icon"
+                    class="igx-filter-contextual-menu__close-btn"
+                    (click)="clearSelection()"
+            >
+                <igx-icon>close</igx-icon>
+            </button>
+
+            <ng-container *ngIf="contextualGroup">
+                <igx-buttongroup [displayDensity]="displayDensity"
+                                 [multiSelection]="false"
+                                 [values]="filteringLogics"
+                                 type="outline"
+                                 (onSelect)="selectFilteringLogic($event)">
+                </igx-buttongroup>
+
+                <button
+                    igxButton="outlined"
+                    [displayDensity]="displayDensity"
+                    [disabled]="!contextualGroup.parent"
+                    (click)="ungroup()"
+                >
+                    <igx-icon fontSet="filtering-icons" name="ungroup"></igx-icon>
+                    <span>{{grid.resourceStrings.igx_grid_advanced_filter_ungroup}}</span>
+                </button>
+                <button
+                    igxButton="outlined"
+                    [displayDensity]="displayDensity"
+                    (click)="deleteGroup()"
+                    class="igx-filter-contextual-menu__delete-btn"
+                >
+                    <igx-icon>delete</igx-icon>
+                    <span>{{grid.resourceStrings.igx_grid_advanced_filter_delete}}</span>
+                </button>
+            </ng-container>
+            <ng-container *ngIf="!contextualGroup">
+                <button
+                    igxButton="outlined"
+                    [displayDensity]="displayDensity"
+                    (click)="createAndGroup()"
+                >
+                    {{grid.resourceStrings.igx_grid_advanced_filter_create_and_group}}
+                </button>
+                <button
+                    igxButton="outlined"
+                    [displayDensity]="displayDensity"
+                    (click)="createOrGroup()"
+                >
+                    {{grid.resourceStrings.igx_grid_advanced_filter_create_or_group}}
+                </button>
+                <button
+                    igxButton="outlined"
+                    [displayDensity]="displayDensity"
+                    (click)="deleteFilters()"
+                    class="igx-filter-contextual-menu__delete-btn"
+                >
+                    {{grid.resourceStrings.igx_grid_advanced_filter_delete_filters}}
+                </button>
+            </ng-container>
+        </div>
+    </article>
+
+    <footer class="igx-excel-filter__secondary-footer">
+        <button igxButton [displayDensity]="displayDensity" (click)="onClearButtonClick()">{{ grid.resourceStrings.igx_grid_excel_custom_dialog_clear }}</button>
+
+        <div>
+            <button igxButton [displayDensity]="displayDensity" (click)="closeDialog()">{{ grid.resourceStrings.igx_grid_excel_cancel }}</button>
+            <button igxButton="raised" [displayDensity]="displayDensity" (click)="onApplyButtonClick()">
+                {{ grid.resourceStrings.igx_grid_excel_apply }}
+            </button>
+        </div>
+    </footer>
+</article>
+<div #overlayOutlet
+     igxOverlayOutlet
+     class="igx-advanced-filter__outlet"
+     (pointerdown)="onOutletPointerDown($event)">
+</div>

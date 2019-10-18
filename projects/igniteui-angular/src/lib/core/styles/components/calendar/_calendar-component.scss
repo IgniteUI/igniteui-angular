@@ -64,6 +64,18 @@
         @extend %cal-value--current !optional;
     }
 
+    @include e(date, 'hidden') {
+        @extend %cal-value--hidden !optional;
+    }
+
+    @include e(date, 'range') {
+        @extend %cal-value--range !optional;
+    }
+
+    @include e(date, $mods: ('selected', 'current')) {
+        @extend %cal-value--current--selected !optional;
+    }
+
     @include e(date, 'weekend') {
         @extend %cal-value !optional;
         @extend %cal-value--weekend !optional;
@@ -172,9 +184,11 @@
 
     @include e(prev) {
         @extend %cal-picker-arrow !optional;
+        @extend %cal-picker-prev !optional;
     }
 
     @include e(next) {
         @extend %cal-picker-arrow !optional;
+        @extend %cal-picker-next !optional;
     }
 }

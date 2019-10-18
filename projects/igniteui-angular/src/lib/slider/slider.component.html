@@ -3,7 +3,15 @@
     <div #ticks class="igx-slider__track-ticks"></div>
 </div>
 <div class="igx-slider__thumbs">
-    <igx-thumb *ngIf="isRange"
+    <igx-thumb-label
+        *ngIf="isRange"
+        [type]="0"
+        [value]="lowerLabel"
+        [templateRef]="thumbFromTemplateRef"
+        [continuous]="continuous"
+        [context]="context"></igx-thumb-label>
+
+        <igx-thumb *ngIf="isRange"
         #thumbFrom
         [type]="0"
         [value]="lowerLabel"
@@ -17,7 +25,15 @@
         (onChange)="onThumbChange()"
         (onHoverChange)="onHoverChange($event)"
         [thumbLabelVisibilityDuration]="thumbLabelVisibilityDuration"></igx-thumb>
-    <igx-thumb
+
+    <igx-thumb-label
+        [value]="upperLabel"
+        [type]="1"
+        [templateRef]="thumbToTemplateRef"
+        [continuous]="continuous"
+        [context]="context"></igx-thumb-label>
+
+        <igx-thumb
         #thumbTo
         [type]="1"
         [value]="upperLabel"
@@ -31,4 +47,5 @@
         (onChange)="onThumbChange()"
         (onHoverChange)="onHoverChange($event)"
         [thumbLabelVisibilityDuration]="thumbLabelVisibilityDuration"></igx-thumb>
+
 </div>

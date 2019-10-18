@@ -12,7 +12,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DataType } from '../../data-operations/data-util';
-import { setupGridScrollDetection, resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
+import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 
 describe('IgxGrid - search API #grid', () => {
     configureTestSuite();
@@ -528,7 +528,6 @@ describe('IgxGrid - search API #grid', () => {
         });
 
         it('Highlight should be updated when a column is hidden and there are other hidden columns', () => {
-            pending('Related to the bug 3691');
             grid.columns[1].hidden = true;
             fix.detectChanges();
 
@@ -835,7 +834,6 @@ describe('IgxGrid - search API #grid', () => {
     /* ScrollableGrid */
     describe('', () => {
         beforeEach(async () => {
-            resizeObserverIgnoreError();
             fix = TestBed.createComponent(ScrollableGridSearchComponent);
             fix.detectChanges();
 
@@ -1010,7 +1008,6 @@ describe('IgxGrid - search API #grid', () => {
     /* GroupableGrid */
     describe('', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
-            resizeObserverIgnoreError();
             fix = TestBed.createComponent(GroupableGridSearchComponent);
             fix.detectChanges();
 

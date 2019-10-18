@@ -151,12 +151,12 @@ export class IgxGridCRUDService {
     }
 
     begin(cell): void {
-        this.cell = this.createCell(cell);
-        this.cell.primaryKey = this.primaryKey;
+        const newCell = this.createCell(cell);
+        newCell.primaryKey = this.primaryKey;
         const args = {
-            cellID: this.cell.id,
-            rowID: this.cell.id.rowID,
-            oldValue: this.cell.value,
+            cellID: newCell.id,
+            rowID: newCell.id.rowID,
+            oldValue: newCell.value,
             cancel: false
         };
 
@@ -167,20 +167,22 @@ export class IgxGridCRUDService {
             return;
         }
 
-
         if (this.rowEditing) {
+            if (this.row && !this.sameRow(newCell.id.rowID)) {
+                this.grid.endEdit(true);
+                this.cell = newCell;
+                this.beginRowEdit();
+                return;
+            }
+
+            this.cell = newCell;
+
             if (!this.row) {
                 this.beginRowEdit();
                 return;
             }
-
-            if (this.row && !this.sameRow(this.cell.id.rowID)) {
-                this.grid.endEdit(true);
-                this.cell = this.createCell(cell);
-                this.beginRowEdit();
-                return;
-            }
         } else {
+            this.cell = newCell;
             this.endRowEdit();
         }
     }
@@ -272,11 +274,11 @@ export class IgxGridSelectionService {
      * Adds a single node.
      * Single clicks | Ctrl + single clicks on cells is the usual case.
      */
-    add(node: ISelectionNode): void {
+    add(node: ISelectionNode, addToRange = true): void {
         this.selection.has(node.row) ? this.selection.get(node.row).add(node.column) :
             this.selection.set(node.row, new Set<number>()).get(node.row).add(node.column);
 
-        this._ranges.add(JSON.stringify(this.generateRange(node)));
+        if (addToRange) { this._ranges.add(JSON.stringify(this.generateRange(node))); }
     }
 
     /**
@@ -307,10 +309,10 @@ export class IgxGridSelectionService {
         return (this.isActiveNode(node) && this.grid.isCellSelectable) || this.isInMap(node);
     }
 
-    isActiveNode(node: ISelectionNode, mrl = false): boolean {
+    isActiveNode(node: ISelectionNode): boolean {
         if (this.activeElement) {
             const isActive = this.activeElement.column === node.column && this.activeElement.row === node.row;
-            if (mrl) {
+            if (this.grid.hasColumnLayouts) {
                 const layout = this.activeElement.layout;
                 return isActive && this.isActiveLayout(layout, node.layout);
             }
@@ -559,7 +561,7 @@ export class IgxGridSelectionService {
     selectAllRows(event?) {
         const allRowIDs = this.getRowIDs(this.allData);
         const addedRows =  allRowIDs.filter((rID) => !this.isRowSelected(rID));
-        const newSelection = this.rowSelection.size ? allRowIDs.concat(this.getSelectedRows()) : addedRows;
+        const newSelection = this.rowSelection.size ? this.getSelectedRows().concat(addedRows) : addedRows;
 
         this.emitRowSelectionEvent(newSelection, addedRows, [], event);
     }
@@ -633,6 +635,12 @@ export class IgxGridSelectionService {
         const filteredData = this.isFilteringApplied() ?
             this.getRowIDs(this.grid.filteredData).some(rID => this.isRowSelected(rID)) : true;
         return this.rowSelection.size > 0 && filteredData && !this.areAllRowSelected();
+    }
+
+    public get filteredSelectedRowIds(): any[] {
+        return this.isFilteringApplied() ?
+            this.getRowIDs(this.allData).filter(rowID => this.isRowSelected(rowID)) :
+            this.getSelectedRows().filter(rowID => !this.isRowDeleted(rowID));
     }
 
     public emitRowSelectionEvent(newSelection, added, removed, event?): boolean {

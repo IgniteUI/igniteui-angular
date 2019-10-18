@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { IgxGridBaseComponent, FilterMode } from './grid-base.component';
 import { first } from 'rxjs/operators';
 import { IgxColumnComponent } from './column.component';
 import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';
 import { ISelectionNode } from '../core/grid-selection';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
+import { GridType } from './common/grid.interface';
+import { FilterMode } from './common/enums';
 
 enum MoveDirection {
     LEFT = 'left',
@@ -14,14 +15,14 @@ enum MoveDirection {
 /** @hidden */
 @Injectable()
 export class IgxGridNavigationService {
-    public grid: IgxGridBaseComponent;
+    public grid: GridType;
 
     get displayContainerWidth() {
         return Math.round(this.grid.parentVirtDir.dc.instance._viewContainer.element.nativeElement.offsetWidth);
     }
 
     get displayContainerScrollLeft() {
-        return Math.round(this.grid.parentVirtDir.getHorizontalScroll().scrollLeft);
+        return Math.ceil(this.grid.parentVirtDir.getHorizontalScroll().scrollLeft);
     }
 
     get verticalDisplayContainerElement() {
@@ -116,7 +117,7 @@ export class IgxGridNavigationService {
     public getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummary = false) {
         const cellSelector = this.getCellSelector(visibleColumnIndex, isSummary);
         return this.grid.nativeElement.querySelector(
-            `${cellSelector}[data-rowindex="${rowIndex}"][data-visibleIndex="${visibleColumnIndex}"]`);
+            `${cellSelector}[data-rowindex="${rowIndex}"][data-visibleIndex="${visibleColumnIndex}"]`) as HTMLElement;
     }
 
     public onKeydownArrowRight(element, selectedNode: ISelectionNode) {
@@ -243,7 +244,7 @@ export class IgxGridNavigationService {
         if (verticalScroll.scrollTop === 0) {
             const cells = this.grid.nativeElement.querySelectorAll(
                 `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
-            cells[0].focus();
+            (cells[0] as HTMLElement).focus();
         } else {
            this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
             this.grid.verticalScrollContainer.scrollTo(0);
@@ -251,7 +252,7 @@ export class IgxGridNavigationService {
                 .pipe(first()).subscribe(() => {
                     const cells = this.grid.nativeElement.querySelectorAll(
                         `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
-                    if (cells.length > 0) { cells[0].focus(); }
+                    if (cells.length > 0) { (cells[0] as HTMLElement).focus(); }
                 });
         }
     }
@@ -263,15 +264,17 @@ export class IgxGridNavigationService {
             verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
             const cells = this.grid.nativeElement.querySelectorAll(
                 `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
-            cells[cells.length - 1].focus();
+            (cells[cells.length - 1] as HTMLElement).focus();
         } else {
            this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
-            this.grid.verticalScrollContainer.scrollTo(this.grid.verticalScrollContainer.igxForOf.length - 1);
+            this.grid.verticalScrollContainer.scrollTo(this.grid.dataView.length - 1);
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first()).subscribe(() => {
                     const cells = this.grid.nativeElement.querySelectorAll(
                         `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
-                    if (cells.length > 0) { cells[cells.length - 1].focus(); }
+                    if (cells.length > 0) {
+                        (cells[cells.length - 1] as HTMLElement).focus();
+                    }
                 });
         }
     }
@@ -312,7 +315,7 @@ export class IgxGridNavigationService {
     public navigateDown(rowElement, selectedNode: ISelectionNode) {
         const currentRowIndex = selectedNode.row;
         const visibleColumnIndex = selectedNode.column;
-        if (currentRowIndex === this.grid.verticalScrollContainer.igxForOf.length - 1 ||
+        if (currentRowIndex === this.grid.dataView.length - 1 ||
             (currentRowIndex === 0 && rowElement.tagName.toLowerCase() === 'igx-grid-summary-row')) {
             // check if this is rootSummary row
             return;
@@ -386,7 +389,7 @@ export class IgxGridNavigationService {
             this.onKeydownEnd(rowIndex);
         } else {
            this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
-            this.grid.verticalScrollContainer.scrollTo(this.grid.verticalScrollContainer.igxForOf.length - 1);
+            this.grid.verticalScrollContainer.scrollTo(this.grid.dataView.length - 1);
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first()).subscribe(() => {
                     const rows = this.getAllRows();
@@ -402,8 +405,8 @@ export class IgxGridNavigationService {
         const verticalScroll = this.grid.verticalScrollContainer.getVerticalScroll();
         if (verticalScroll.scrollHeight === 0 ||
             verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
-            const rowIndex = this.grid.verticalScrollContainer.igxForOf.length - 1;
-            const row = this.grid.nativeElement.querySelector(`[data-rowindex="${rowIndex}"]`);
+            const rowIndex = this.grid.dataView.length - 1;
+            const row = this.grid.nativeElement.querySelector(`[data-rowindex="${rowIndex}"]`) as HTMLElement;
             if (row && row.tagName.toLowerCase() === 'igx-grid-groupby-row') {
                 row.focus();
                 return;
@@ -411,11 +414,11 @@ export class IgxGridNavigationService {
             const isSummary = (row && row.tagName.toLowerCase() === 'igx-grid-summary-row') ? true : false;
             this.onKeydownEnd(rowIndex, isSummary);
         } else {
-            this.grid.verticalScrollContainer.scrollTo(this.grid.verticalScrollContainer.igxForOf.length - 1);
+            this.grid.verticalScrollContainer.scrollTo(this.grid.dataView.length - 1);
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first()).subscribe(() => {
-                    const rowIndex = this.grid.verticalScrollContainer.igxForOf.length - 1;
-                    const row = this.grid.nativeElement.querySelector(`[data-rowindex="${rowIndex}"]`);
+                    const rowIndex = this.grid.dataView.length - 1;
+                    const row = this.grid.nativeElement.querySelector(`[data-rowindex="${rowIndex}"]`) as HTMLElement;
                     if (row && row.tagName.toLowerCase() === 'igx-grid-groupby-row') {
                         row.focus();
                         return;
@@ -444,7 +447,7 @@ export class IgxGridNavigationService {
             const rowEl = this.grid.rowList.find(row => row.index === rowIndex + 1) ?
                 this.grid.rowList.find(row => row.index === rowIndex + 1) :
                 this.grid.summariesRowList.find(row => row.index === rowIndex + 1);
-            if (rowIndex === this.grid.verticalScrollContainer.igxForOf.length - 1 && this.grid.rootSummariesEnabled) {
+            if (rowIndex === this.grid.dataView.length - 1 && this.grid.rootSummariesEnabled) {
                 this.onKeydownHome(0, true);
                 return;
             }
@@ -625,7 +628,7 @@ export class IgxGridNavigationService {
 
     protected getNextRowByIndex(nextIndex) {
         return this.grid.tbody.nativeElement.querySelector(
-            `[data-rowindex="${nextIndex}"]`);
+            `[data-rowindex="${nextIndex}"][data-gridid="${this.grid.id}"]`);
     }
 
     private getAllRows() {

@@ -1,10 +1,9 @@
 import {
     Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
-    QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, NgZone, ChangeDetectorRef, ComponentFactoryResolver,
-    IterableDiffers, ViewContainerRef, Inject, AfterContentInit, HostBinding, forwardRef, OnInit, Optional
+    QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, AfterContentInit, HostBinding, forwardRef, OnInit
 } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent, IgxGridTransaction, IGridDataBindable, FilterMode } from '../grid-base.component';
+import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridAPIService } from './grid-api.service';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
@@ -12,12 +11,9 @@ import { cloneArray, IBaseEventArgs } from '../../core/utils';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IgxGroupByRowTemplateDirective } from './grid.directives';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
-import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../../chips/chip.component';
 import { IChipsAreaReorderEventArgs } from '../../chips/chips-area.component';
-import { TransactionService, Transaction, State } from '../../services/transaction/transaction';
-import { DOCUMENT } from '@angular/common';
 import { IgxColumnComponent } from '../column.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -25,10 +21,10 @@ import { IGroupingExpression } from '../../data-operations/grouping-expression.i
 import { IgxColumnResizingService } from '../grid-column-resizing.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
-import { IgxOverlayService } from '../../services/index';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
+import { FilterMode } from '../common/enums';
 
 let NEXT_ID = 0;
 
@@ -57,10 +53,16 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
-    providers: [IgxGridNavigationService, IgxGridSummaryService, IgxGridSelectionService, IgxGridCRUDService,
+    providers: [
+        IgxGridNavigationService,
+        IgxGridSummaryService,
+        IgxGridSelectionService,
+        IgxGridCRUDService,
         { provide: GridBaseAPIService, useClass: IgxGridAPIService },
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxGridComponent) },
-        IgxFilteringService, IgxColumnResizingService, IgxForOfSyncService
+        IgxFilteringService,
+        IgxColumnResizingService,
+        IgxForOfSyncService
     ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
@@ -210,32 +212,10 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         return this.verticalScrollContainer.totalItemCount;
     }
 
-    private _gridAPI: IgxGridAPIService;
-    private _filteredData = null;
-
-    constructor(
-        selectionService: IgxGridSelectionService,
-        crudService: IgxGridCRUDService,
-        public colResizingService: IgxColumnResizingService,
-        gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-        @Inject(IgxGridTransaction) _transactions: TransactionService<Transaction, State>,
-        elementRef: ElementRef,
-        zone: NgZone,
-        @Inject(DOCUMENT) public document,
-        cdr: ChangeDetectorRef,
-        resolver: ComponentFactoryResolver,
-        differs: IterableDiffers,
-        viewRef: ViewContainerRef,
-        navigation: IgxGridNavigationService,
-        filteringService: IgxFilteringService,
-        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-            super(selectionService,
-                  crudService, gridAPI, _transactions, elementRef, zone, document, cdr, resolver, differs, viewRef, navigation,
-                  filteringService, overlayService, summaryService, _displayDensityOptions);
-            this._gridAPI = <IgxGridAPIService>gridAPI;
+    private get _gridAPI(): IgxGridAPIService {
+        return this.gridAPI as IgxGridAPIService;
     }
+    private _filteredData = null;
 
     /**
      * Returns the group by state of the `IgxGridComponent`.
@@ -259,6 +239,11 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      *     ignoreCase: false
      * }];
      * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-grid #grid [data]="Data" [autoGenerate]="true" [(groupingExpressions)]="model.groupingExpressions"></igx-grid>
+     * ```
 	 * @memberof IgxGridComponent
      */
     set groupingExpressions(value: IGroupingExpression[]) {
@@ -268,6 +253,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         const oldExpressions: IGroupingExpression[] = this.groupingExpressions;
         const newExpressions: IGroupingExpression[] = value;
         this._groupingExpressions = cloneArray(value);
+        this.groupingExpressionsChange.emit(this._groupingExpressions);
         this.chipsGoupingExpressions = cloneArray(value);
         if (this._gridAPI.grid) {
             /* grouping should work in conjunction with sorting
@@ -309,6 +295,12 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     }
 
     /**
+     *@hidden
+     */
+    @Output()
+    public groupingExpressionsChange = new EventEmitter<IGroupingExpression[]>();
+
+    /**
      * Returns a list of expansion states for group rows.
      * Includes only states that differ from the default one (controlled through groupsExpanded and states that the user has changed.
      * Contains the expansion state (expanded: boolean) and the unique identifier for the group row (Array).
@@ -331,12 +323,28 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      *   }];
      * // You can use DataUtil.getHierarchy(groupRow) to get the group `IgxGridRowComponent` hierarchy.
      * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-grid #grid [data]="Data" [autoGenerate]="true" [(groupingExpansionState)]="model.groupingExpansionState"></igx-grid>
+     * ```
 	 * @memberof IgxGridComponent
      */
     set groupingExpansionState(value) {
-        this._groupingExpandState = cloneArray(value);
-        this.cdr.detectChanges();
+        if (value !== this._groupingExpandState) {
+            this.groupingExpansionStateChange.emit(value);
+        }
+        this._groupingExpandState = value;
+        if (this.gridAPI.grid) {
+            this.cdr.detectChanges();
+        }
     }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public groupingExpansionStateChange = new EventEmitter<IGroupByExpandState[]>();
 
     /**
      * An @Input property that determines whether created groups are rendered expanded or collapsed.
@@ -414,7 +422,6 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
      * <igx-grid [dropAreaTemplate]="dropAreaRef">
      *      <igx-column [groupable]="true" field="ID"></igx-column>
      * </igx-grid>
-     *
      * <ng-template #myDropArea>
      *      <span> Custom drop area! </span>
      * </ng-template>
@@ -585,8 +592,10 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
 	 * @memberof IgxGridComponent
      */
     public groupBy(expression: IGroupingExpression | Array<IGroupingExpression>): void {
+        if (this.checkIfNoColumnField(expression)) {
+            return;
+        }
         this.endEdit(true);
-        this._gridAPI.submit_value();
         if (expression instanceof Array) {
             this._gridAPI.groupBy_multiple(expression);
         } else {
@@ -895,6 +904,16 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         const column = this.getColumnByName(expression.fieldName);
         return (column && column.header) || expression.fieldName;
     }
+    /**
+     * @hidden
+     */
+    public get iconTemplate() {
+        if (this.groupsExpanded) {
+            return this.headerExpandIndicatorTemplate || this.defaultExpandedTemplate;
+        } else {
+            return this.headerCollapseIndicatorTemplate || this.defaultCollapsedTemplate;
+        }
+    }
 
     /**
      * @hidden
@@ -963,7 +982,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
 
             };
 
-            this.verticalScrollContainer.igxForOf.forEach(process);
+            this.dataView.forEach(process);
             return this.extractDataFromSelection(source, formatters, headers);
         } else {
             return super.getSelectedData(formatters, headers);
@@ -976,4 +995,17 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
             this.navigation.grid = this;
         }
     }
+
+    private checkIfNoColumnField(expression: IGroupingExpression | Array<IGroupingExpression> | any): boolean {
+        if (expression instanceof Array) {
+            for (const singleExpression of expression) {
+                if (!singleExpression.fieldName) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return !expression.fieldName;
+    }
+
 }

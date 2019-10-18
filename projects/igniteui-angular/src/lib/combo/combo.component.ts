@@ -670,7 +670,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Input()
-    public placeholder = '';
+    public placeholder;
 
     /**
      * @hidden @internal
@@ -1108,14 +1108,14 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
     /** Contains key-value pairs of the selected valueKeys and their resp. displayKeys */
     private registerRemoteEntries(ids: any[], add = true) {
-        const selection = this.getValueDisplayPairs(ids);
         if (add) {
+            const selection = this.getValueDisplayPairs(ids);
             for (const entry of selection) {
                 this._remoteSelection[entry[this.valueKey]] = entry[this.displayKey];
             }
         } else {
-            for (const entry of selection) {
-                delete this._remoteSelection[entry[this.valueKey]];
+            for (const entry of ids) {
+                delete this._remoteSelection[entry];
             }
         }
     }
@@ -1549,6 +1549,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
                     this.registerRemoteEntries(addedItems);
                     this.registerRemoteEntries(removedItems, false);
                     value = Object.keys(this._remoteSelection).map(e => this._remoteSelection[e]).join(', ');
+                } else {
+                    // If new selection is empty, clear all items
+                    this.registerRemoteEntries(args.oldSelection, false);
                 }
             } else {
                 value = this.displayKey !== null && this.displayKey !== undefined ?

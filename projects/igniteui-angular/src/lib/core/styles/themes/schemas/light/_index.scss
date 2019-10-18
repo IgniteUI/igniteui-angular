@@ -26,6 +26,7 @@
 @import './grid-pagination';
 @import './grid-summary';
 @import './grid-toolbar';
+@import './highlight';
 @import './icon';
 @import './input-group';
 @import './list';
@@ -67,6 +68,7 @@
 /// @property {Map} igx-grid-paginator [$_light-grid-pagination]
 /// @property {Map} igx-grid-summary [$_light-grid-summary]
 /// @property {Map} igx-grid-toolbar [$_light-grid-toolbar]
+/// @property {Map} igx-highlight [$_light-highlight]
 /// @property {Map} igx-icon [$_light-icon]
 /// @property {Map} igx-input-group [$_light-input-group]
 /// @property {Map} igx-list [$_light-list]
@@ -110,6 +112,7 @@ $light-schema: (
     igx-grid-paginator: $_light-grid-pagination,
     igx-grid-summary: $_light-grid-summary,
     igx-grid-toolbar: $_light-grid-toolbar,
+    igx-highlight: $_light-highlight,
     igx-icon: $_light-icon,
     igx-input-group: $_light-input-group,
     igx-list: $_light-list,
@@ -153,6 +156,7 @@ $light-fluent-schema: (
     igx-grid-paginator: $_fluent-grid-pagination,
     igx-grid-summary: $_fluent-grid-summary,
     igx-grid-toolbar: $_fluent-grid-toolbar,
+    igx-highlight: $_fluent-highlight,
     igx-icon: $_fluent-icon,
     igx-input-group: $_fluent-input-group,
     igx-list: $_fluent-list,

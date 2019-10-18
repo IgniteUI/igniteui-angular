@@ -32,6 +32,7 @@ import { IgxInputGroupModule, IgxInputDirective, IgxInputGroupComponent } from '
 import { Subject, fromEvent, animationFrameScheduler, interval } from 'rxjs';
 import { filter, takeUntil, throttle } from 'rxjs/operators';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { IgxTextSelectionModule} from '../directives/text-selection/text-selection.directive';
 import {
     OverlaySettings,
     IgxOverlayService,
@@ -188,6 +189,32 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     public get formatOptions(): IFormatOptions {
         return this._formatOptions;
     }
+
+    /**
+     * Sets/gets whether the inactive dates (dates that are out of the current month) will be hidden.
+     * Default value is `false`.
+     * ```html
+     * <igx-date-picker [hideOutsideDays]="true"></igx-date-picker>
+     * ```
+     * ```typescript
+     * let hideOutsideDays = this.datePicker.hideOutsideDays;
+     * ```
+     */
+    @Input()
+    public hideOutsideDays: boolean;
+
+    /**
+     * Sets/gets the number of month views displayed.
+     * Default value is `1`.
+     * ```html
+     * <igx-date-picker [monthsViewNumber]="2"></igx-date-picker>
+     * ```
+     * ```typescript
+     * let monthViewsDisplayed = this.datePicker.monthsViewNumber;
+     * ```
+     */
+    @Input()
+    public monthsViewNumber = 1;
 
     /**
      *Sets the format options of the `IgxDatePickerComponent`.
@@ -1259,6 +1286,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this.calendar.disabledDates = this.disabledDates;
         this.calendar.headerTemplate = this.headerTemplate;
         this.calendar.subheaderTemplate = this.subheaderTemplate;
+        this.calendar.hideOutsideDays = this.hideOutsideDays;
+        this.calendar.monthsViewNumber = this.monthsViewNumber;
         this.calendar.onSelection.pipe(takeUntil(this._destroy$)).subscribe((ev: Date) => this.handleSelection(ev));
 
         if (this.value) {
@@ -1351,7 +1380,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         IgxDatePickerTemplateDirective, DatePickerDisplayValuePipe, DatePickerInputValuePipe],
     exports: [IgxDatePickerComponent, IgxDatePickerTemplateDirective, IgxDatePickerActionsDirective,
         DatePickerDisplayValuePipe, DatePickerInputValuePipe],
-    imports: [CommonModule, IgxIconModule, IgxInputGroupModule, IgxCalendarModule, IgxButtonModule, IgxRippleModule, IgxMaskModule],
+    imports: [CommonModule, IgxIconModule, IgxInputGroupModule, IgxCalendarModule, IgxButtonModule,
+                IgxRippleModule, IgxMaskModule, IgxTextSelectionModule],
     entryComponents: [IgxCalendarContainerComponent]
 })
 export class IgxDatePickerModule { }
