@@ -244,12 +244,24 @@
         $row-odd-background: $content-background;
     }
 
-    @if not($row-even-background) and $content-background {
-        $row-even-background: $content-background;
+    @if $row-odd-background and alpha($row-odd-background) != 1 {
+        $cbg: if($content-background, $content-background, map-get($theme, 'content-background'));
+
+        $row-odd-background: hexrgba($row-odd-background, $cbg);
     }
 
     @if not($row-odd-text-color) and $row-odd-background {
         $row-odd-text-color: text-contrast($row-odd-background);
+    }
+
+    @if not($row-even-background) and $content-background {
+        $row-even-background: $content-background;
+    }
+
+    @if $row-even-background and alpha($row-even-background) != 1 {
+        $cbg: if($content-background, $content-background, map-get($theme, 'content-background'));
+
+        $row-even-background: hexrgba($row-even-background, $cbg);
     }
 
     @if not($row-even-text-color) and $row-even-background {
@@ -258,7 +270,7 @@
 
     @if not($row-hover-background) and $content-background {
         @if type-of($content-background) == 'color' {
-            $row-hover-background: rgba(text-contrast($content-background), .08)
+            $row-hover-background: hexrgba(rgba(text-contrast($content-background), .08), $content-background)
         }
     }
 
