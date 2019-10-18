@@ -136,7 +136,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     }
 
     public set data(value: any[]) {
-        this._data = value;
+        this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
             this.setupColumns();
