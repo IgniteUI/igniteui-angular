@@ -16,7 +16,7 @@ const CELL_CSS_CLASS = '.igx-grid__td';
 const ROW_CSS_CLASS = '.igx-grid__tr';
 const CELL_BLOCK = '.igx-grid__mrl-block';
 
-fdescribe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
+describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
     configureTestSuite();
 
     beforeEach(async(() => {
