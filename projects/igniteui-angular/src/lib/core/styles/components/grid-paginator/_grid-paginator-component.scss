@@ -26,6 +26,10 @@
         @extend %igx-grid-paginator__pager !optional;
     }
 
+    @include e(pager-text) {
+        @extend %igx-grid-paginator__pager-text !optional;
+    }
+
     @include m(cosy) {
         @extend %igx-grid-paginator !optional;
         @extend %igx-grid-paginator--cosy !optional;

@@ -20,6 +20,12 @@
     align-items: center;
 }
 
+[dir='rtl'] .listItemLeftPanningStyle,
+[dir='rtl'].listItemLeftPanningStyle {
+    justify-content: flex-end;
+}
+
+
 .listItemRightPanningStyle {
     display: flex;
     flex-direction: row;
@@ -29,6 +35,12 @@
     padding-left: 10px;
     align-items: center;
 }
+
+[dir='rtl'] .listItemRightPanningStyle,
+[dir='rtl'].listItemRightPanningStyle {
+    justify-content: flex-end;
+}
+
 
 .listItemLeftPanningStyle2 {
     display: flex;
@@ -40,6 +52,11 @@
     align-items: center;
 }
 
+[dir='rtl'] .listItemLeftPanningStyle2,
+[dir='rtl'].listItemLeftPanningStyle2 {
+    justify-content: flex-end;
+}
+
 .listItemRightPanningStyle2 {
     display: flex;
     flex-direction: row;
@@ -48,6 +65,11 @@
     width: 100%;
     padding-left: 10px;
     align-items: center;
+}
+
+[dir='rtl'] .listItemRightPanningStyle2,
+[dir='rtl'].listItemRightPanningStyle2 {
+    justify-content: flex-end;
 }
 
 .list-sample {
