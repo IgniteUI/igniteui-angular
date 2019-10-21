@@ -606,524 +606,645 @@ describe('igxSelect', () => {
         }));
     });
     describe('Selection tests: ', () => {
-        beforeEach(async(() => {
-            fixture = TestBed.createComponent(IgxSelectSimpleComponent);
-            select = fixture.componentInstance.select;
-            fixture.detectChanges();
-            inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
-            selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
-        }));
-        it('should select item with mouse click', fakeAsync(() => {
-            let selectedItemIndex = 5;
+        describe('Using simple select component', () => {
+            beforeEach(async(() => {
+                fixture = TestBed.createComponent(IgxSelectSimpleComponent);
+                select = fixture.componentInstance.select;
+                fixture.detectChanges();
+                inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
+                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
+            }));
+            it('should select item with mouse click', fakeAsync(() => {
+                let selectedItemIndex = 5;
 
-            select.toggle();
-            tick();
-            fixture.detectChanges();
-            selectList.children[selectedItemIndex].nativeElement.click();
-            tick();
-            fixture.detectChanges();
-            verifySelectedItem(selectedItemIndex);
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                selectList.children[selectedItemIndex].nativeElement.click();
+                tick();
+                fixture.detectChanges();
+                verifySelectedItem(selectedItemIndex);
 
-            selectedItemIndex = 15;
-            select.toggle();
-            tick();
-            fixture.detectChanges();
-            selectList.children[selectedItemIndex].nativeElement.click();
-            tick();
-            fixture.detectChanges();
-            verifySelectedItem(selectedItemIndex);
-        }));
-        it('should select item with API selectItem() method', fakeAsync(() => {
-            let selectedItemIndex = 15;
-            select.selectItem(select.items[selectedItemIndex]);
-            tick();
-            fixture.detectChanges();
-            verifySelectedItem(selectedItemIndex);
+                selectedItemIndex = 15;
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                selectList.children[selectedItemIndex].nativeElement.click();
+                tick();
+                fixture.detectChanges();
+                verifySelectedItem(selectedItemIndex);
+            }));
+            it('should select item with API selectItem() method', fakeAsync(() => {
+                let selectedItemIndex = 15;
+                select.selectItem(select.items[selectedItemIndex]);
+                tick();
+                fixture.detectChanges();
+                verifySelectedItem(selectedItemIndex);
 
-            selectedItemIndex = 1;
-            select.selectItem(select.items[selectedItemIndex]);
-            tick();
-            fixture.detectChanges();
-            verifySelectedItem(selectedItemIndex);
-        }));
-        it('should select item on setting value property', fakeAsync(() => {
-            let selectedItemIndex = 7;
-            select.value = select.items[selectedItemIndex].value.toString();
-            fixture.detectChanges();
-            tick();
-            verifySelectedItem(selectedItemIndex);
+                selectedItemIndex = 1;
+                select.selectItem(select.items[selectedItemIndex]);
+                tick();
+                fixture.detectChanges();
+                verifySelectedItem(selectedItemIndex);
+            }));
+            it('should select item on setting value property', fakeAsync(() => {
+                let selectedItemIndex = 7;
+                select.value = select.items[selectedItemIndex].value.toString();
+                fixture.detectChanges();
+                tick();
+                verifySelectedItem(selectedItemIndex);
 
-            selectedItemIndex = 12;
-            select.value = select.items[selectedItemIndex].value.toString();
-            fixture.detectChanges();
-            tick();
-            verifySelectedItem(selectedItemIndex);
-        }));
-        it('should select item on setting item\'s selected property', () => {
-            let selectedItemIndex = 9;
-            select.items[selectedItemIndex].selected = true;
-            fixture.detectChanges();
-            verifySelectedItem(selectedItemIndex);
+                selectedItemIndex = 12;
+                select.value = select.items[selectedItemIndex].value.toString();
+                fixture.detectChanges();
+                tick();
+                verifySelectedItem(selectedItemIndex);
+            }));
+            it('should select item on setting item\'s selected property', () => {
+                let selectedItemIndex = 9;
+                select.items[selectedItemIndex].selected = true;
+                fixture.detectChanges();
+                verifySelectedItem(selectedItemIndex);
 
-            selectedItemIndex = 14;
-            select.items[selectedItemIndex].selected = true;
-            fixture.detectChanges();
-            verifySelectedItem(selectedItemIndex);
-        });
-        it('should select item with ENTER/SPACE keys', fakeAsync(() => {
-            let selectedItemIndex = 2;
-            select.toggle();
-            tick();
-            fixture.detectChanges();
-            inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
-            inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
-            inputElement.triggerEventHandler('keydown', spaceKeyEvent);
-            tick();
-            fixture.detectChanges();
-            verifySelectedItem(selectedItemIndex);
+                selectedItemIndex = 14;
+                select.items[selectedItemIndex].selected = true;
+                fixture.detectChanges();
+                verifySelectedItem(selectedItemIndex);
+            });
+            it('should select item with ENTER/SPACE keys', fakeAsync(() => {
+                let selectedItemIndex = 2;
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
+                inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
+                inputElement.triggerEventHandler('keydown', spaceKeyEvent);
+                tick();
+                fixture.detectChanges();
+                verifySelectedItem(selectedItemIndex);
 
-            selectedItemIndex = 4;
-            select.toggle();
-            tick();
-            fixture.detectChanges();
-            inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
-            inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
-            inputElement.triggerEventHandler('keydown', enterKeyEvent);
-            tick();
-            fixture.detectChanges();
-            verifySelectedItem(selectedItemIndex);
-        }));
-        it('should allow single selection only', fakeAsync(() => {
-            let selectedItemIndex = 5;
-            select.toggle();
-            tick();
-            fixture.detectChanges();
-            selectList.children[selectedItemIndex].nativeElement.click();
-            tick();
-            fixture.detectChanges();
-            verifySelectedItem(selectedItemIndex);
+                selectedItemIndex = 4;
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
+                inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
+                inputElement.triggerEventHandler('keydown', enterKeyEvent);
+                tick();
+                fixture.detectChanges();
+                verifySelectedItem(selectedItemIndex);
+            }));
+            it('should allow single selection only', fakeAsync(() => {
+                let selectedItemIndex = 5;
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                selectList.children[selectedItemIndex].nativeElement.click();
+                tick();
+                fixture.detectChanges();
+                verifySelectedItem(selectedItemIndex);
 
-            selectedItemIndex = 15;
-            select.selectItem(select.items[selectedItemIndex]);
-            tick();
-            fixture.detectChanges();
-            verifySelectedItem(selectedItemIndex);
+                selectedItemIndex = 15;
+                select.selectItem(select.items[selectedItemIndex]);
+                tick();
+                fixture.detectChanges();
+                verifySelectedItem(selectedItemIndex);
 
-            selectedItemIndex = 8;
-            select.value = select.items[selectedItemIndex].value.toString();
-            fixture.detectChanges();
-            tick();
-            verifySelectedItem(selectedItemIndex);
-        }));
-        it('should clear selection when value property does not match any item', fakeAsync(() => {
-            const selectedItemIndex = 5;
-            select.value = select.items[selectedItemIndex].value.toString();
-            fixture.detectChanges();
-            tick();
-            verifySelectedItem(selectedItemIndex);
-
-            select.value = 'Ghost city';
-            tick();
-            fixture.detectChanges();
-            const selectedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED_ITEM));
-            expect(selectedItems.length).toEqual(0);
-            expect(select.selectedItem).toBeUndefined();
-            expect(select.input.value).toEqual('');
-        }));
-        it('should focus first item in dropdown if there is not selected item', fakeAsync(() => {
-            const focusedItemIndex = 0;
-            const selectedItemIndex = 8;
-            select.toggle();
-            tick();
-            fixture.detectChanges();
-            verifyFocusedItem(focusedItemIndex);
-
-            selectList.children[selectedItemIndex].nativeElement.click();
-            tick();
-            fixture.detectChanges();
-            verifySelectedItem(selectedItemIndex);
-            expect(select.items[focusedItemIndex].focused).toBeFalsy();
-
-            // Unselect selected item
-            select.value = '';
-            fixture.detectChanges();
-
-            select.toggle();
-            tick();
-            fixture.detectChanges();
-            verifyFocusedItem(focusedItemIndex);
-        }));
-        it('should populate the input box with the selected item value', fakeAsync(() => {
-            let selectedItemIndex = 5;
-            let selectedItemValue = select.items[selectedItemIndex].value;
-
-            const checkInputValue = function () {
-                expect(select.selectedItem.value).toEqual(selectedItemValue);
-                expect(select.value).toEqual(selectedItemValue);
-                expect(inputElement.nativeElement.value.toString().trim()).toEqual(selectedItemValue);
-            };
-
-            // There is not a selected item initially
-            const selectedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED_ITEM));
-            expect(selectedItems.length).toEqual(0);
-            expect(select.value).toBeUndefined();
-            expect(select.input.value).toEqual('');
-            expect(inputElement.nativeElement.value).toEqual('');
-
-            // Select item - mouse click
-            select.toggle();
-            tick();
-            fixture.detectChanges();
-            selectList.children[selectedItemIndex].nativeElement.click();
-            tick();
-            fixture.detectChanges();
-            checkInputValue();
-
-            // Select item - selectItem method
-            selectedItemIndex = 0;
-            selectedItemValue = select.items[selectedItemIndex].value;
-            select.selectItem(select.items[selectedItemIndex]);
-            tick();
-            fixture.detectChanges();
-            select.toggle();
-            tick();
-            fixture.detectChanges();
-            checkInputValue();
-
-            // Select item - item selected property
-            selectedItemIndex = 12;
-            selectedItemValue = select.items[selectedItemIndex].value;
-            select.items[selectedItemIndex].selected = true;
-            fixture.detectChanges();
-            tick();
-            fixture.detectChanges();
-            checkInputValue();
-
-            // Select item - value property
-            selectedItemIndex = 8;
-            selectedItemValue = select.items[selectedItemIndex].value;
-            select.value = select.items[selectedItemIndex].value.toString();
-            fixture.detectChanges();
-            tick();
-            fixture.detectChanges();
-            checkInputValue();
-        }));
-        it('should not append any text to the input box when no item is selected and value is not set or does not match any item',
-            fakeAsync(() => {
-                // There is not a selected item initially
-                expect(select.selectedItem).toBeUndefined();
-                expect(select.value).toBeUndefined();
-                expect(select.input.value).toEqual('');
-                expect(inputElement.nativeElement.textContent).toEqual('');
+                selectedItemIndex = 8;
+                select.value = select.items[selectedItemIndex].value.toString();
+                fixture.detectChanges();
+                tick();
+                verifySelectedItem(selectedItemIndex);
+            }));
+            it('should clear selection when value property does not match any item', fakeAsync(() => {
+                const selectedItemIndex = 5;
+                select.value = select.items[selectedItemIndex].value.toString();
+                fixture.detectChanges();
+                tick();
+                verifySelectedItem(selectedItemIndex);
 
                 select.value = 'Ghost city';
                 tick();
                 fixture.detectChanges();
+                const selectedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED_ITEM));
+                expect(selectedItems.length).toEqual(0);
+                expect(select.selectedItem).toBeUndefined();
+                expect(select.input.value).toEqual('');
+            }));
+            it('should focus first item in dropdown if there is not selected item', fakeAsync(() => {
+                const focusedItemIndex = 0;
+                const selectedItemIndex = 8;
                 select.toggle();
                 tick();
                 fixture.detectChanges();
-                expect(select.selectedItem).toBeUndefined();
+                verifyFocusedItem(focusedItemIndex);
+
+                selectList.children[selectedItemIndex].nativeElement.click();
+                tick();
+                fixture.detectChanges();
+                verifySelectedItem(selectedItemIndex);
+                expect(select.items[focusedItemIndex].focused).toBeFalsy();
+
+                // Unselect selected item
+                select.value = '';
+                fixture.detectChanges();
+
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                verifyFocusedItem(focusedItemIndex);
+            }));
+            it('should populate the input box with the selected item value', fakeAsync(() => {
+                let selectedItemIndex = 5;
+                let selectedItemValue = select.items[selectedItemIndex].value;
+
+                const checkInputValue = function () {
+                    expect(select.selectedItem.value).toEqual(selectedItemValue);
+                    expect(select.value).toEqual(selectedItemValue);
+                    expect(inputElement.nativeElement.value.toString().trim()).toEqual(selectedItemValue);
+                };
+
+                // There is not a selected item initially
+                const selectedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED_ITEM));
+                expect(selectedItems.length).toEqual(0);
+                expect(select.value).toBeUndefined();
                 expect(select.input.value).toEqual('');
                 expect(inputElement.nativeElement.value).toEqual('');
-                const selectedItems = fixture.debugElement.nativeElement.querySelectorAll('.' + CSS_CLASS_SELECTED_ITEM);
-                expect(selectedItems.length).toEqual(0);
-            }));
-        it('should not append any text to the input box when an item is focused but not selected',
-            fakeAsync(() => {
-                let focusedItem = select.items[2];
-                const navigationStep = focusedItem.index;
 
-                const navigateDropdownItems = function (keydownEvent: KeyboardEvent) {
-                    for (let index = 0; index < navigationStep; index++) {
-                        inputElement.triggerEventHandler('keydown', keydownEvent);
+                // Select item - mouse click
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                selectList.children[selectedItemIndex].nativeElement.click();
+                tick();
+                fixture.detectChanges();
+                checkInputValue();
+
+                // Select item - selectItem method
+                selectedItemIndex = 0;
+                selectedItemValue = select.items[selectedItemIndex].value;
+                select.selectItem(select.items[selectedItemIndex]);
+                tick();
+                fixture.detectChanges();
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                checkInputValue();
+
+                // Select item - item selected property
+                selectedItemIndex = 12;
+                selectedItemValue = select.items[selectedItemIndex].value;
+                select.items[selectedItemIndex].selected = true;
+                fixture.detectChanges();
+                tick();
+                fixture.detectChanges();
+                checkInputValue();
+
+                // Select item - value property
+                selectedItemIndex = 8;
+                selectedItemValue = select.items[selectedItemIndex].value;
+                select.value = select.items[selectedItemIndex].value.toString();
+                fixture.detectChanges();
+                tick();
+                fixture.detectChanges();
+                checkInputValue();
+            }));
+            it('should populate the input with the selected item text', fakeAsync(() => {
+                let selectedItemIndex = 0;
+
+                const checkInputValue = function () {
+                    expect(select.selectedItem.text).toEqual(select.input.value);
+                    expect(inputElement.nativeElement.value.toString().trim()).toEqual(select.selectedItem.text);
+                };
+
+                // There is not a selected item initially
+                const selectedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED_ITEM));
+                expect(selectedItems.length).toEqual(0);
+                expect(select.value).toBeUndefined();
+                expect(select.input.value).toEqual('');
+                expect(inputElement.nativeElement.value).toEqual('');
+
+                // Select item - mouse click
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                selectList.children[selectedItemIndex].nativeElement.click();
+                tick();
+                fixture.detectChanges();
+                checkInputValue();
+
+                // Select item - selectItem method
+                selectedItemIndex = 1;
+                select.selectItem(select.items[selectedItemIndex]);
+                tick();
+                fixture.detectChanges();
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                checkInputValue();
+
+                // Select item - item selected property
+                selectedItemIndex = 2;
+                select.items[selectedItemIndex].selected = true;
+                fixture.detectChanges();
+                tick();
+                fixture.detectChanges();
+                checkInputValue();
+            }));
+
+            it('should not append any text to the input box when no item is selected and value is not set or does not match any item',
+                fakeAsync(() => {
+                    // There is not a selected item initially
+                    expect(select.selectedItem).toBeUndefined();
+                    expect(select.value).toBeUndefined();
+                    expect(select.input.value).toEqual('');
+                    expect(inputElement.nativeElement.textContent).toEqual('');
+
+                    select.value = 'Ghost city';
+                    tick();
+                    fixture.detectChanges();
+                    select.toggle();
+                    tick();
+                    fixture.detectChanges();
+                    expect(select.selectedItem).toBeUndefined();
+                    expect(select.input.value).toEqual('');
+                    expect(inputElement.nativeElement.value).toEqual('');
+                    const selectedItems = fixture.debugElement.nativeElement.querySelectorAll('.' + CSS_CLASS_SELECTED_ITEM);
+                    expect(selectedItems.length).toEqual(0);
+                }));
+            it('should not append any text to the input box when an item is focused but not selected',
+                fakeAsync(() => {
+                    let focusedItem = select.items[2];
+                    const navigationStep = focusedItem.index;
+
+                    const navigateDropdownItems = function (keydownEvent: KeyboardEvent) {
+                        for (let index = 0; index < navigationStep; index++) {
+                            inputElement.triggerEventHandler('keydown', keydownEvent);
+                        }
+                        tick();
+                        fixture.detectChanges();
+                    };
+
+                    const verifyFocusedItemIsNotSelected = function () {
+                        expect(focusedItem.element.nativeElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeTruthy();
+                        expect(focusedItem.element.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeFalsy();
+                        expect(select.focusedItem).toEqual(focusedItem);
+                        if (selectedItem) {
+                            expect(selectedItem.element.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeTruthy();
+                            expect(select.selectedItem).toEqual(selectedItem);
+                            expect(select.value).toEqual(selectedItem.value);
+                            expect(select.input.value).toEqual(selectedItem.value);
+                        }
+                    };
+
+                    // Focus item when there is not a selected item
+                    select.toggle();
+                    tick();
+                    fixture.detectChanges();
+                    navigateDropdownItems(arrowDownKeyEvent);
+                    expect(select.value).toBeUndefined();
+                    expect(select.input.value).toEqual('');
+                    verifyFocusedItemIsNotSelected();
+
+                    // Focus item when there is a selected item
+                    const selectedItem = select.items[13] as IgxSelectItemComponent;
+                    selectedItem.element.nativeElement.click();
+                    tick();
+                    fixture.detectChanges();
+                    select.toggle();
+                    tick();
+                    fixture.detectChanges();
+                    navigateDropdownItems(arrowUpKeyEvent);
+                    focusedItem = select.items[selectedItem.index - navigationStep];
+                    verifyFocusedItemIsNotSelected();
+
+                    // Change focused item when there is a selected item
+                    navigateDropdownItems(arrowUpKeyEvent);
+                    focusedItem = select.items[selectedItem.index - navigationStep * 2];
+                    verifyFocusedItemIsNotSelected();
+                }));
+            it('should not select disabled item', () => {
+                const disabledItem = select.items[2];
+                disabledItem.disabled = true;
+                fixture.detectChanges();
+                disabledItem.selected = true;
+                fixture.detectChanges();
+
+                expect(select.value).toBeUndefined();
+                expect(select.input.value).toEqual('');
+                expect(inputElement.nativeElement.value).toEqual('');
+                expect(disabledItem.element.nativeElement.classList.contains(CSS_CLASS_DISABLED_ITEM)).toBeTruthy();
+                expect(disabledItem.element.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeFalsy();
+            });
+            it('should remove selection if option has been removed', fakeAsync(() => {
+                const selectedItemIndex = 2;
+                select.items[selectedItemIndex].selected = true;
+                tick();
+                fixture.detectChanges();
+                verifySelectedItem(selectedItemIndex);
+
+                fixture.componentInstance.items = [];
+                fixture.detectChanges();
+                tick();
+                expect(select.selectedItem).toBeUndefined();
+            }));
+            it('should select first match out of duplicated values', fakeAsync(() => {
+                fixture.componentInstance.items = ['Paris', 'London', 'Paris', 'Hamburg', 'London'];
+                fixture.detectChanges();
+
+                let selectedItemIndex = 4;
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+
+                select.items[selectedItemIndex].element.nativeElement.click();
+                tick();
+                fixture.detectChanges();
+                verifySelectedItem(selectedItemIndex);
+
+                const previousItem = select.items[selectedItemIndex];
+                selectedItemIndex = 1;
+                select.items[selectedItemIndex].element.nativeElement.click();
+                tick();
+                fixture.detectChanges();
+                verifySelectedItem(selectedItemIndex);
+                expect(previousItem.focused).toBeFalsy();
+            }));
+            it('should not change selection when setting value to non-existing item', fakeAsync(() => {
+                const selectedItemEl = selectList.children[2];
+                const selectedItem = select.items[2] as IgxSelectItemComponent;
+
+                inputElement.nativeElement.click();
+                tick();
+                fixture.detectChanges();
+                selectedItemEl.nativeElement.click();
+                tick();
+                fixture.detectChanges();
+                expect(selectedItem.selected).toBeTruthy();
+                expect(select.value).toEqual(selectedItem.value);
+                expect(select.input.value.toString().trim()).toEqual(selectedItem.value);
+                expect(select.selectedItem).toEqual(selectedItem);
+                expect(selectedItemEl.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeTruthy();
+
+                // Throws an error 'Cannot read property disabled of null'
+                select.selectItem(null);
+                fixture.detectChanges();
+                expect(selectedItem.selected).toBeTruthy();
+                expect(select.value).toEqual(selectedItem.value);
+                expect(select.input.value.toString().trim()).toEqual(selectedItem.value);
+                expect(select.selectedItem).toEqual(selectedItem);
+                expect(selectedItemEl.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeTruthy();
+                const selectedItems = fixture.debugElement.nativeElement.querySelectorAll('.' + CSS_CLASS_SELECTED_ITEM);
+                expect(selectedItems.length).toEqual(1);
+            }));
+            it('should properly emit onSelection event on item click', fakeAsync(() => {
+                let selectedItemEl = selectList.children[5];
+                let selectedItem = select.items[5];
+                spyOn(select.onSelection, 'emit');
+                spyOn(select, 'selectItem').and.callThrough();
+                const args: ISelectionEventArgs = {
+                    oldSelection: undefined,
+                    newSelection: selectedItem,
+                    cancel: false
+                };
+
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                selectedItemEl.nativeElement.click();
+                tick();
+                fixture.detectChanges();
+                expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
+                expect(select.selectItem).toHaveBeenCalledTimes(1);
+                expect(select.onSelection.emit).toHaveBeenCalledWith(args);
+
+                args.oldSelection = selectedItem;
+                selectedItem = select.items[10];
+                selectedItemEl = selectList.children[10];
+                args.newSelection = selectedItem;
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                selectedItemEl.nativeElement.click();
+                tick();
+                fixture.detectChanges();
+                expect(select.onSelection.emit).toHaveBeenCalledTimes(2);
+                expect(select.selectItem).toHaveBeenCalledTimes(2);
+                expect(select.onSelection.emit).toHaveBeenCalledWith(args);
+            }));
+            it('should properly emit onSelection event on item selected property setting', () => {
+                let selectedItem = select.items[3];
+                spyOn(select.onSelection, 'emit');
+                spyOn(select, 'selectItem').and.callThrough();
+                const args: ISelectionEventArgs = {
+                    oldSelection: undefined,
+                    newSelection: selectedItem,
+                    cancel: false
+                };
+
+                selectedItem.selected = true;
+                fixture.detectChanges();
+                expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
+                expect(select.selectItem).toHaveBeenCalledTimes(1);
+                expect(select.onSelection.emit).toHaveBeenCalledWith(args);
+
+                args.oldSelection = selectedItem;
+                selectedItem = select.items[9];
+                selectedItem.selected = true;
+                args.newSelection = selectedItem;
+                fixture.detectChanges();
+                expect(select.onSelection.emit).toHaveBeenCalledTimes(2);
+                expect(select.selectItem).toHaveBeenCalledTimes(2);
+                expect(select.onSelection.emit).toHaveBeenCalledWith(args);
+            });
+            it('should properly emit onSelection/Close events on key interaction', fakeAsync(() => {
+                let selectedItem = select.items[3];
+                spyOn(select.onClosing, 'emit');
+                spyOn(select.onClosed, 'emit');
+                spyOn(select, 'close').and.callThrough();
+                spyOn(select.onSelection, 'emit');
+                spyOn(select, 'selectItem').and.callThrough();
+                const args: ISelectionEventArgs = {
+                    oldSelection: undefined,
+                    newSelection: selectedItem,
+                    cancel: false
+                };
+
+                const navigateDropdownItems = function (selectEvent: KeyboardEvent) {
+                    inputElement.triggerEventHandler('keydown', altArrowDownKeyEvent);
+                    tick();
+                    fixture.detectChanges();
+                    for (let itemIndex = 0; itemIndex < selectedItem.index; itemIndex++) {
+                        inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
                     }
+                    inputElement.triggerEventHandler('keydown', selectEvent);
                     tick();
                     fixture.detectChanges();
                 };
 
-                const verifyFocusedItemIsNotSelected = function () {
-                    expect(focusedItem.element.nativeElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeTruthy();
-                    expect(focusedItem.element.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeFalsy();
-                    expect(select.focusedItem).toEqual(focusedItem);
-                    if (selectedItem) {
-                        expect(selectedItem.element.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeTruthy();
-                        expect(select.selectedItem).toEqual(selectedItem);
-                        expect(select.value).toEqual(selectedItem.value);
-                        expect(select.input.value).toEqual(selectedItem.value);
-                    }
+                navigateDropdownItems(enterKeyEvent);
+                expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
+                expect(select.selectItem).toHaveBeenCalledTimes(1);
+                expect(select.onSelection.emit).toHaveBeenCalledWith(args);
+                expect(select.onClosing.emit).toHaveBeenCalledTimes(1);
+                expect(select.onClosed.emit).toHaveBeenCalledTimes(1);
+                expect(select.close).toHaveBeenCalledTimes(1);
+
+                args.oldSelection = selectedItem;
+                selectedItem = select.items[9];
+                args.newSelection = selectedItem;
+                navigateDropdownItems(spaceKeyEvent);
+                expect(select.onSelection.emit).toHaveBeenCalledTimes(2);
+                expect(select.selectItem).toHaveBeenCalledTimes(2);
+                // expect(select.onSelection.emit).toHaveBeenCalledWith(args);
+                expect(select.onClosing.emit).toHaveBeenCalledTimes(2);
+                expect(select.onClosed.emit).toHaveBeenCalledTimes(2);
+                expect(select.close).toHaveBeenCalledTimes(2);
+            }));
+            it('should properly emit onSelection event on value setting', fakeAsync(() => {
+                spyOn(select.onSelection, 'emit');
+                spyOn(select, 'selectItem').and.callThrough();
+
+                // select.value = select.items[4].value.toString();
+                // fixture.detectChanges();
+                // tick();
+                // expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
+                // expect(select.selectItem).toHaveBeenCalledTimes(1);
+                // expect(select.onSelection.emit).toHaveBeenCalledWith(null);
+
+                // select.value = 'Padua';
+                // fixture.detectChanges();
+                // expect(select.onSelection.emit).toHaveBeenCalledTimes(2);
+                // expect(select.selectItem).toHaveBeenCalledTimes(2);
+                // expect(select.onSelection.emit).toHaveBeenCalledWith(null);
+
+                // // onSelection should not be fired when value is set to non-existing item
+                // select.value = 'Ghost city';
+                // fixture.detectChanges();
+                // expect(select.onSelection.emit).toHaveBeenCalledTimes(2);
+                // expect(select.selectItem).toHaveBeenCalledTimes(2);
+            }));
+            it('should properly emit onSelection event using selectItem method', () => {
+                let selectedItem = select.items[4];
+                spyOn(select.onSelection, 'emit');
+                const args: ISelectionEventArgs = {
+                    oldSelection: undefined,
+                    newSelection: selectedItem,
+                    cancel: false
                 };
 
-                // Focus item when there is not a selected item
-                select.toggle();
-                tick();
+                select.selectItem(selectedItem);
                 fixture.detectChanges();
-                navigateDropdownItems(arrowDownKeyEvent);
+                expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
+                expect(select.onSelection.emit).toHaveBeenCalledWith(args);
+
+                args.oldSelection = selectedItem;
+                selectedItem = select.items[14];
+                args.newSelection = selectedItem;
+                select.selectItem(selectedItem);
+                fixture.detectChanges();
+                expect(select.onSelection.emit).toHaveBeenCalledTimes(2);
+                expect(select.onSelection.emit).toHaveBeenCalledWith(args);
+            });
+
+            it('should not emit onSelection when selection does not change', () => {
+                const item = select.items[5];
+                spyOn(select.onSelection, 'emit');
+                select.selectItem(item);
+                expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
+                select.selectItem(item);
+                expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
+                select.selectItem(item);
+                expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
+                select.selectItem(item);
+                expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
+            });
+
+            it('should not select header items passed through selectItem method', () => {
+                const item = select.items[5];
+                spyOn(select.onSelection, 'emit');
+                expect(select.selectedItem).toBeFalsy();
+                item.isHeader = true;
+                select.selectItem(item);
+                expect(select.selectedItem).toBeFalsy();
+                expect(select.onSelection.emit).not.toHaveBeenCalled();
+            });
+        });
+
+        describe('Using more complex select component', () => {
+            beforeEach(async(() => {
+                fixture = TestBed.createComponent(IgxSelectGroupsComponent);
+                select = fixture.componentInstance.select;
+                fixture.detectChanges();
+                inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
+                selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
+            }));
+
+            it('should populate the input with the specified selected item text @input, instead of the selected item element innerText',
+            fakeAsync(() => {
+                let selectedItemIndex = 1;
+                const groupIndex = 0;
+                const groupElement = selectList.children[groupIndex];
+                const itemElementToSelect = groupElement.children[selectedItemIndex].nativeElement;
+
+                const checkInputValue = function () {
+                    expect(select.selectedItem.text).toEqual(select.input.value);
+                    expect(inputElement.nativeElement.value.toString().trim()).toEqual(select.selectedItem.text);
+                };
+
+                // There is not a selected item initially
+                const selectedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED_ITEM));
+                expect(selectedItems.length).toEqual(0);
                 expect(select.value).toBeUndefined();
                 expect(select.input.value).toEqual('');
-                verifyFocusedItemIsNotSelected();
+                expect(inputElement.nativeElement.value).toEqual('');
 
-                // Focus item when there is a selected item
-                const selectedItem = select.items[13] as IgxSelectItemComponent;
-                selectedItem.element.nativeElement.click();
+                // Select item - mouse click
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                itemElementToSelect.click();
+                fixture.detectChanges();
+                checkInputValue();
+
+                // Select item - selectItem method
+                selectedItemIndex = 2;
+                select.selectItem(select.items[selectedItemIndex]);
                 tick();
                 fixture.detectChanges();
                 select.toggle();
                 tick();
                 fixture.detectChanges();
-                navigateDropdownItems(arrowUpKeyEvent);
-                focusedItem = select.items[selectedItem.index - navigationStep];
-                verifyFocusedItemIsNotSelected();
+                checkInputValue();
 
-                // Change focused item when there is a selected item
-                navigateDropdownItems(arrowUpKeyEvent);
-                focusedItem = select.items[selectedItem.index - navigationStep * 2];
-                verifyFocusedItemIsNotSelected();
+                // Select item - item selected property
+                selectedItemIndex = 3;
+                select.items[selectedItemIndex].selected = true;
+                fixture.detectChanges();
+                checkInputValue();
             }));
-        it('should not select disabled item', () => {
-            const disabledItem = select.items[2];
-            disabledItem.disabled = true;
-            fixture.detectChanges();
-            disabledItem.selected = true;
-            fixture.detectChanges();
 
-            expect(select.value).toBeUndefined();
-            expect(select.input.value).toEqual('');
-            expect(inputElement.nativeElement.value).toEqual('');
-            expect(disabledItem.element.nativeElement.classList.contains(CSS_CLASS_DISABLED_ITEM)).toBeTruthy();
-            expect(disabledItem.element.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeFalsy();
-        });
-        it('should remove selection if option has been removed', fakeAsync(() => {
-            const selectedItemIndex = 2;
-            select.items[selectedItemIndex].selected = true;
-            tick();
-            fixture.detectChanges();
-            verifySelectedItem(selectedItemIndex);
+            it('Should populate the input with the selected item element innerText, when text @Input is undefined(not set)',
+            fakeAsync(() => {
+                const selectedItemIndex = 2;
+                // const groupIndex = 0;
+                // const groupElement = selectList.children[groupIndex];
+                // const itemElementToSelect = groupElement.children[selectedItemIndex].nativeElement;
+                const expectedInputText = 'Paris star';
 
-            fixture.componentInstance.items = [];
-            fixture.detectChanges();
-            tick();
-            expect(select.selectedItem).toBeUndefined();
-        }));
-        it('should select first match out of duplicated values', fakeAsync(() => {
-            fixture.componentInstance.items = ['Paris', 'London', 'Paris', 'Hamburg', 'London'];
-            fixture.detectChanges();
+                const checkInputValue = function () {
+                    expect(select.selectedItem.itemText).toEqual(expectedInputText);
+                    expect(select.selectedItem.itemText).toEqual(select.input.value);
+                    expect(inputElement.nativeElement.value.toString().trim()).toEqual(select.selectedItem.itemText);
+                };
 
-            let selectedItemIndex = 4;
-            select.toggle();
-            tick();
-            fixture.detectChanges();
-
-            select.items[selectedItemIndex].element.nativeElement.click();
-            tick();
-            fixture.detectChanges();
-            verifySelectedItem(selectedItemIndex);
-
-            const previousItem = select.items[selectedItemIndex];
-            selectedItemIndex = 1;
-            select.items[selectedItemIndex].element.nativeElement.click();
-            tick();
-            fixture.detectChanges();
-            verifySelectedItem(selectedItemIndex);
-            expect(previousItem.focused).toBeFalsy();
-        }));
-        it('should not change selection when setting value to non-existing item', fakeAsync(() => {
-            const selectedItemEl = selectList.children[2];
-            const selectedItem = select.items[2] as IgxSelectItemComponent;
-
-            inputElement.nativeElement.click();
-            tick();
-            fixture.detectChanges();
-            selectedItemEl.nativeElement.click();
-            tick();
-            fixture.detectChanges();
-            expect(selectedItem.selected).toBeTruthy();
-            expect(select.value).toEqual(selectedItem.value);
-            expect(select.input.value.toString().trim()).toEqual(selectedItem.value);
-            expect(select.selectedItem).toEqual(selectedItem);
-            expect(selectedItemEl.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeTruthy();
-
-            // Throws an error 'Cannot read property disabled of null'
-            select.selectItem(null);
-            fixture.detectChanges();
-            expect(selectedItem.selected).toBeTruthy();
-            expect(select.value).toEqual(selectedItem.value);
-            expect(select.input.value.toString().trim()).toEqual(selectedItem.value);
-            expect(select.selectedItem).toEqual(selectedItem);
-            expect(selectedItemEl.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeTruthy();
-            const selectedItems = fixture.debugElement.nativeElement.querySelectorAll('.' + CSS_CLASS_SELECTED_ITEM);
-            expect(selectedItems.length).toEqual(1);
-        }));
-        it('should properly emit onSelection event on item click', fakeAsync(() => {
-            let selectedItemEl = selectList.children[5];
-            let selectedItem = select.items[5];
-            spyOn(select.onSelection, 'emit');
-            spyOn(select, 'selectItem').and.callThrough();
-            const args: ISelectionEventArgs = {
-                oldSelection: undefined,
-                newSelection: selectedItem,
-                cancel: false
-            };
-
-            select.toggle();
-            tick();
-            fixture.detectChanges();
-            selectedItemEl.nativeElement.click();
-            tick();
-            fixture.detectChanges();
-            expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
-            expect(select.selectItem).toHaveBeenCalledTimes(1);
-            expect(select.onSelection.emit).toHaveBeenCalledWith(args);
-
-            args.oldSelection = selectedItem;
-            selectedItem = select.items[10];
-            selectedItemEl = selectList.children[10];
-            args.newSelection = selectedItem;
-            select.toggle();
-            tick();
-            fixture.detectChanges();
-            selectedItemEl.nativeElement.click();
-            tick();
-            fixture.detectChanges();
-            expect(select.onSelection.emit).toHaveBeenCalledTimes(2);
-            expect(select.selectItem).toHaveBeenCalledTimes(2);
-            expect(select.onSelection.emit).toHaveBeenCalledWith(args);
-        }));
-        it('should properly emit onSelection event on item selected property setting', () => {
-            let selectedItem = select.items[3];
-            spyOn(select.onSelection, 'emit');
-            spyOn(select, 'selectItem').and.callThrough();
-            const args: ISelectionEventArgs = {
-                oldSelection: undefined,
-                newSelection: selectedItem,
-                cancel: false
-            };
-
-            selectedItem.selected = true;
-            fixture.detectChanges();
-            expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
-            expect(select.selectItem).toHaveBeenCalledTimes(1);
-            expect(select.onSelection.emit).toHaveBeenCalledWith(args);
-
-            args.oldSelection = selectedItem;
-            selectedItem = select.items[9];
-            selectedItem.selected = true;
-            args.newSelection = selectedItem;
-            fixture.detectChanges();
-            expect(select.onSelection.emit).toHaveBeenCalledTimes(2);
-            expect(select.selectItem).toHaveBeenCalledTimes(2);
-            expect(select.onSelection.emit).toHaveBeenCalledWith(args);
-        });
-        it('should properly emit onSelection/Close events on key interaction', fakeAsync(() => {
-            let selectedItem = select.items[3];
-            spyOn(select.onClosing, 'emit');
-            spyOn(select.onClosed, 'emit');
-            spyOn(select, 'close').and.callThrough();
-            spyOn(select.onSelection, 'emit');
-            spyOn(select, 'selectItem').and.callThrough();
-            const args: ISelectionEventArgs = {
-                oldSelection: undefined,
-                newSelection: selectedItem,
-                cancel: false
-            };
-
-            const navigateDropdownItems = function (selectEvent: KeyboardEvent) {
-                inputElement.triggerEventHandler('keydown', altArrowDownKeyEvent);
-                tick();
+                // Select item - no select-item text. Should set item;s element innerText as input value.
+                (select.items[selectedItemIndex] as IgxSelectItemComponent).text = undefined;
+                select.items[selectedItemIndex].selected = true;
                 fixture.detectChanges();
-                for (let itemIndex = 0; itemIndex < selectedItem.index; itemIndex++) {
-                    inputElement.triggerEventHandler('keydown', arrowDownKeyEvent);
-                }
-                inputElement.triggerEventHandler('keydown', selectEvent);
                 tick();
-                fixture.detectChanges();
-            };
-
-            navigateDropdownItems(enterKeyEvent);
-            expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
-            expect(select.selectItem).toHaveBeenCalledTimes(1);
-            expect(select.onSelection.emit).toHaveBeenCalledWith(args);
-            expect(select.onClosing.emit).toHaveBeenCalledTimes(1);
-            expect(select.onClosed.emit).toHaveBeenCalledTimes(1);
-            expect(select.close).toHaveBeenCalledTimes(1);
-
-            args.oldSelection = selectedItem;
-            selectedItem = select.items[9];
-            args.newSelection = selectedItem;
-            navigateDropdownItems(spaceKeyEvent);
-            expect(select.onSelection.emit).toHaveBeenCalledTimes(2);
-            expect(select.selectItem).toHaveBeenCalledTimes(2);
-            // expect(select.onSelection.emit).toHaveBeenCalledWith(args);
-            expect(select.onClosing.emit).toHaveBeenCalledTimes(2);
-            expect(select.onClosed.emit).toHaveBeenCalledTimes(2);
-            expect(select.close).toHaveBeenCalledTimes(2);
-        }));
-        it('should properly emit onSelection event on value setting', fakeAsync(() => {
-            spyOn(select.onSelection, 'emit');
-            spyOn(select, 'selectItem').and.callThrough();
-
-            // select.value = select.items[4].value.toString();
-            // fixture.detectChanges();
-            // tick();
-            // expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
-            // expect(select.selectItem).toHaveBeenCalledTimes(1);
-            // expect(select.onSelection.emit).toHaveBeenCalledWith(null);
-
-            // select.value = 'Padua';
-            // fixture.detectChanges();
-            // expect(select.onSelection.emit).toHaveBeenCalledTimes(2);
-            // expect(select.selectItem).toHaveBeenCalledTimes(2);
-            // expect(select.onSelection.emit).toHaveBeenCalledWith(null);
-
-            // // onSelection should not be fired when value is set to non-existing item
-            // select.value = 'Ghost city';
-            // fixture.detectChanges();
-            // expect(select.onSelection.emit).toHaveBeenCalledTimes(2);
-            // expect(select.selectItem).toHaveBeenCalledTimes(2);
-        }));
-        it('should properly emit onSelection event using selectItem method', () => {
-            let selectedItem = select.items[4];
-            spyOn(select.onSelection, 'emit');
-            const args: ISelectionEventArgs = {
-                oldSelection: undefined,
-                newSelection: selectedItem,
-                cancel: false
-            };
-
-            select.selectItem(selectedItem);
-            fixture.detectChanges();
-            expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
-            expect(select.onSelection.emit).toHaveBeenCalledWith(args);
-
-            args.oldSelection = selectedItem;
-            selectedItem = select.items[14];
-            args.newSelection = selectedItem;
-            select.selectItem(selectedItem);
-            fixture.detectChanges();
-            expect(select.onSelection.emit).toHaveBeenCalledTimes(2);
-            expect(select.onSelection.emit).toHaveBeenCalledWith(args);
-        });
-
-        it('should not emit onSelection when selection does not change', () => {
-            const item = select.items[5];
-            spyOn(select.onSelection, 'emit');
-            select.selectItem(item);
-            expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
-            select.selectItem(item);
-            expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
-            select.selectItem(item);
-            expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
-            select.selectItem(item);
-            expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
-        });
-
-        it('should not select header items passed through selectItem method', () => {
-            const item = select.items[5];
-            spyOn(select.onSelection, 'emit');
-            expect(select.selectedItem).toBeFalsy();
-            item.isHeader = true;
-            select.selectItem(item);
-            expect(select.selectedItem).toBeFalsy();
-            expect(select.onSelection.emit).not.toHaveBeenCalled();
+                checkInputValue();
+            }));
         });
     });
     describe('Grouped items tests: ', () => {
@@ -2251,8 +2372,8 @@ describe('igxSelect', () => {
 @Component({
     template: `
     <igx-select #select [width]="'300px'" [height]="'200px'" [placeholder]="'Choose a city'" [(ngModel)]="value">
-    <igx-select-item *ngFor="let item of items" [value]="item">
-        {{ item }}
+    <igx-select-item *ngFor="let item of items" [value]="item" [text]="item">
+        {{ item }} {{'©'}}
     </igx-select-item>
     </igx-select>
 `
@@ -2289,8 +2410,8 @@ class IgxSelectSimpleComponent {
     template: `
     <igx-select #select [width]="'300px'" [height]="'500px'" [placeholder]="'Choose location'" [(ngModel)]="value">
     <igx-select-item-group *ngFor="let location of locations" [label]="location.continent"> {{location.continent}}
-            <igx-select-item *ngFor="let capital of location.capitals" [value]="capital">
-                {{ capital }}
+            <igx-select-item *ngFor="let capital of location.capitals" [value]="capital" [text]="capital">
+                {{ capital }} <igx-icon>star</igx-icon>
             </igx-select-item>
     </igx-select-item-group>
     </igx-select>
