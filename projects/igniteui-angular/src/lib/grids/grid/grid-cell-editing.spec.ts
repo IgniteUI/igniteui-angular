@@ -694,7 +694,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.value).toEqual('New Name');
         });
 
-        fit(`Should not update data in grid with transactions, when row is updated in onCellEdit and onCellEdit is canceled`, () => {
+        it(`Should not update data in grid with transactions, when row is updated in onCellEdit and onCellEdit is canceled`, () => {
             fixture = TestBed.createComponent(SelectionWithTransactionsComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
@@ -707,26 +707,26 @@ describe('IgxGrid - Cell Editing #grid', () => {
             grid.onCellEdit.subscribe((e: IGridEditEventArgs) => {
                 const rowIndex: number = e.cellID.rowIndex;
                 const row = grid.getRowByIndex(rowIndex);
-                if (row) {
-                    grid.updateRow({[row.columns[e.cellID.columnID].field]: e.newValue}, row.rowID);
-                    e.cancel = true;
-                }
+                grid.updateRow({[row.columns[e.cellID.columnID].field]: e.newValue}, row.rowID);
+                e.cancel = true;
             });
 
             const cell = grid.getCellByColumn(0, 'Name');
             const initialValue = cell.value;
+            const firstNewValue = 'New Value';
+            const secondNewValue = 'Very New Value';
 
-            cell.update('New Name');
+            cell.update(firstNewValue);
             fixture.detectChanges();
-            expect(cell.value).toBe('New Name');
+            expect(cell.value).toBe(firstNewValue);
 
-            cell.update('Very New Name');
+            cell.update(secondNewValue);
             fixture.detectChanges();
-            expect(cell.value).toBe('Very New Name');
+            expect(cell.value).toBe(secondNewValue);
 
             grid.transactions.undo();
             fixture.detectChanges();
-            expect(cell.value).toBe('New Name');
+            expect(cell.value).toBe(firstNewValue);
 
             grid.transactions.undo();
             fixture.detectChanges();
