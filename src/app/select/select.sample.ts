@@ -36,7 +36,7 @@ export class SelectSampleComponent implements OnInit {
     public items: any[] = [];
     public value: 'opt1';
     public disabledItemValue: 'InsideGroup1';
-    public fruits: string[] = ['Orange', 'Apple', 'Banana', 'Mango'];
+    public fruits: string[] = ['Orange', 'Apple', 'Banana', 'Mango', 'Pear', 'Lemon', 'Peach', 'Apricot', 'Grapes', 'Cactus'];
     public selected: string;
     public selectRequired = true;
 
@@ -146,5 +146,9 @@ export class SelectSampleComponent implements OnInit {
 
     setDensity(density: DisplayDensity) {
         this.selectDisplayDensity.displayDensity = density;
+    }
+
+    addItem() {
+        // TODO
     }
 }

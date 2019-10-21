@@ -17,5 +17,5 @@ export interface IgxSelectBase extends IgxDropDownBase {
     getFooterContainer(): HTMLElement;
     getHeaderTemplate(): TemplateRef<any> ;
     getFooterTemplate(): TemplateRef<any> ;
-    getEditElement(): HTMLElement;
+    getEditElement(): HTMLElement; // returns input HTMLElement
 }

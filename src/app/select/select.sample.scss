@@ -97,3 +97,11 @@
 .warn {
     color: darkorange;
 }
+
+.custom-select-header,
+.custom-select-footer {
+    padding: 4px 8px;
+    background: #777;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
+}

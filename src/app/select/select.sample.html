@@ -2,6 +2,33 @@
     Several select components with a variety of setups and API interaction.
 </app-page-header>
 
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
 <div class="sampleWrapper">
     <h4 class="sample-title">Select with ngModel, set items OnInit</h4>
     <igx-select #displayDensitySelect
@@ -23,6 +50,17 @@
         <igx-select-item *ngFor="let item of items; let inx=index" [value]="item.field">
             {{ item.field }}
         </igx-select-item>
+        <ng-template igxSelectHeader>
+            <div class="custom-select-header">
+                I AM a HEADER
+            </div>
+        </ng-template>
+        <ng-template igxSelectFooter>
+                <div class="custom-select-footer">
+                        <igx-icon fontSet="material">add</igx-icon>
+                        <button igxButton="raised" (click)="addItem()">addItem</button>
+                </div>
+            </ng-template>
     </igx-select>
 
     <div>

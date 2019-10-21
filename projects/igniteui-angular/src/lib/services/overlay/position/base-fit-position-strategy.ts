@@ -34,7 +34,8 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
             connectedFit.targetRect,
             connectedFit.contentElementRect,
             this.settings.horizontalStartPoint,
-            this.settings.horizontalDirection);
+            this.settings.horizontalDirection,
+            connectedFit.xOffset);
         connectedFit.right = connectedFit.left + connectedFit.contentElementRect.width;
         connectedFit.fitHorizontal =
             connectedFit.viewPortRect.left < connectedFit.left && connectedFit.right < connectedFit.viewPortRect.right;
@@ -43,7 +44,8 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
             connectedFit.targetRect,
             connectedFit.contentElementRect,
             this.settings.verticalStartPoint,
-            this.settings.verticalDirection);
+            this.settings.verticalDirection,
+            connectedFit.yOffset);
         connectedFit.bottom = connectedFit.top + connectedFit.contentElementRect.height;
         connectedFit.fitVertical =
             connectedFit.viewPortRect.top < connectedFit.top && connectedFit.bottom < connectedFit.viewPortRect.bottom;
@@ -58,8 +60,9 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
      * @param direction Direction in which to show the element
      */
     protected calculateLeft(
-        targetRect: ClientRect, elementRect: ClientRect, startPoint: HorizontalAlignment, direction: HorizontalAlignment): number {
-        return targetRect.right + targetRect.width * startPoint + elementRect.width * direction;
+        targetRect: ClientRect, elementRect: ClientRect, startPoint: HorizontalAlignment, direction: HorizontalAlignment, offset?: number):
+        number {
+        return targetRect.right + targetRect.width * startPoint + elementRect.width * direction + offset;
     }
 
     /**
@@ -71,8 +74,9 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
      * @param direction Direction in which to show the element
      */
     protected calculateTop(
-        targetRect: ClientRect, elementRect: ClientRect, startPoint: VerticalAlignment, direction: VerticalAlignment): number {
-        return targetRect.bottom + targetRect.height * startPoint + elementRect.height * direction;
+        targetRect: ClientRect, elementRect: ClientRect, startPoint: VerticalAlignment, direction: VerticalAlignment, offset?: number):
+        number {
+        return targetRect.bottom + targetRect.height * startPoint + elementRect.height * direction + offset;
     }
 
     /**
@@ -95,4 +99,7 @@ export interface ConnectedFit {
     right?: number;
     top?: number;
     bottom?: number;
+    xOffset?: number;
+    yOffset?: number;
 }
+
