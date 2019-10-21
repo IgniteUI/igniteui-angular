@@ -722,8 +722,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
             // update scrBar heights/widths
             if (this.igxForScrollOrientation === 'horizontal') {
-                const totalWidth = parseInt(this.scrollComponent.nativeElement.children[0].style.width, 10) + totalDiff;
-                this.scrollComponent.nativeElement.children[0].style.width = totalWidth + 'px';
+                const totalWidth = this.scrollComponent.size + totalDiff;
+                this.scrollComponent.size = totalWidth;
             }
             const reducer = (acc, val) => acc + val;
             if (this.igxForScrollOrientation === 'vertical') {
@@ -856,7 +856,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     protected onHScroll(event) {
         /* in certain situations this may be called when no scrollbar is visible */
-        if (!parseInt(this.scrollComponent.nativeElement.children[0].style.width, 10)) {
+        if (!this.scrollComponent.size) {
             return;
         }
         const prevStartIndex = this.state.startIndex;
@@ -1107,7 +1107,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         if (this.igxForScrollOrientation === 'horizontal') {
             const totalWidth = this.igxForContainerSize ? this.initSizesCache(this.igxForOf) : 0;
             this.scrollComponent.nativeElement.style.width = this.igxForContainerSize + 'px';
-            this.scrollComponent.nativeElement.children[0].style.width = totalWidth + 'px';
+            this.scrollComponent.size = totalWidth;
             if (totalWidth <= parseInt(this.igxForContainerSize, 10)) {
                 this.scrollPosition = 0;
             }
@@ -1512,7 +1512,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
     onHScroll(scrollAmount) {
         /* in certain situations this may be called when no scrollbar is visible */
-        if (!this.scrollComponent || !parseInt(this.scrollComponent.nativeElement.children[0].style.width, 10)) {
+        if (!this.scrollComponent || !this.scrollComponent.size) {
             return;
         }
         // Updating horizontal chunks
