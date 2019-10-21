@@ -4,6 +4,6 @@
             "name": "$disable-button-shadow",
             "replaceWith": "$button-shadow",
             "owner": "igx-carousel-theme"
-        },
+        }
     ]
 }
