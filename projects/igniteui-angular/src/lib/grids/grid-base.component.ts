@@ -955,6 +955,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     set filterMode(value) {
         this._filterMode = value;
+
+        if (this.filteringService.isFilterRowVisible) {
+            this.filteringRow.close();
+        }
+        this.notifyChanges(true);
     }
 
     /**
