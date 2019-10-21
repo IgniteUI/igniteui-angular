@@ -77,7 +77,7 @@ export class IgxGridTransactionPipe implements PipeTransform {
     transform(collection: any[], id: string, pipeTrigger: number) {
         const grid: IgxGridBaseComponent = this.gridAPI.grid;
 
-        if (collection && grid.transactions.enabled) {
+        if (grid.transactions.enabled) {
             const result = DataUtil.mergeTransactions(
                 cloneArray(collection),
                 grid.transactions.getAggregatedChanges(true),
