@@ -1,7 +1,8 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
-## 8.2.1
+## 8.2.4
+
 ### RTL Support
 Most of the components in the framework now have full right-to-left (RTL) support via the newly included RTL themes. 
 
@@ -21,9 +22,7 @@ Currently the following components have only partial RTL support:
  - Circular Progress Indicator (igx-circular-bar)
 
  We plan on adding support for the aforementioned components in the upcoming releases.
-
-## 8.2.4
-
+ 
 ### New Features
 
 - Columns now expose the `cellStyles` property which allows conditional styling of the column cells. Similar to `cellClasses` it accepts an object literal where the keys are style properties and the values are expressions for evaluation.
