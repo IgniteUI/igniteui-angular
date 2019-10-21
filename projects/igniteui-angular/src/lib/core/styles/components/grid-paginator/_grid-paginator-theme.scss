@@ -61,6 +61,9 @@
         compact: rem(44px)
     );
 
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
+
     %igx-grid-paginator {
         display: flex;
         justify-content: space-between;
@@ -74,7 +77,7 @@
         padding: map-get($paginator-padding, 'comfortable');
         height: map-get($paginator-height, 'comfortable');
         width: 100%;
-        
+
         &:empty {
             padding: 0;
         }
@@ -92,7 +95,7 @@
 
 
     %igx-grid-paginator__label {
-        margin-right: 8px;
+        margin-#{$right}: 8px;
         @include ellipsis();
     }
 
@@ -110,8 +113,18 @@
         flex: 1;
 
         > * {
-            margin-left: rem(8px);
+            margin-#{$left}: rem(8px);
         }
+
+        @include if-rtl() {
+            igx-icon {
+                transform: scaleX(-1);
+            }
+        }
+    }
+
+    %igx-grid-paginator__pager-text {
+        display: flex;
     }
 
     %igx-grid-paginator__select-input {

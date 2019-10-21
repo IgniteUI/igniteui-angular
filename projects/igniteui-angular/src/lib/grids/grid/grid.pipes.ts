@@ -105,7 +105,7 @@ export class IgxGridPagingPipe implements PipeTransform {
             index: page,
             recordsPerPage: perPage
         };
-        DataUtil.correctPagingState(state, collection.data ? collection.data.length : 0);
+        DataUtil.correctPagingState(state, collection.data.length);
 
         const result = {
             data: DataUtil.page(cloneArray(collection.data), state),

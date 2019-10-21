@@ -185,7 +185,7 @@ describe('IgxGrid - Summaries #grid', () => {
             fixture.componentInstance.data = undefined;
             fixture.detectChanges();
 
-            expect(grid.data).toEqual(undefined);
+            expect(grid.data).toEqual([]);
             expect(() => {
                 grid.enableSummaries(idColumn.field);
                 fixture.detectChanges();

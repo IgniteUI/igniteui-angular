@@ -1,11 +1,12 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 const CURRENT_VIEW = 'Ignite UI for Angular Samples';
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     selector: 'app-navbar-sample',
-    styleUrls: [ 'navbar.sample.css'],
+    styleUrls: ['navbar.sample.css'],
     templateUrl: 'navbar.sample.html'
 })
 export class NavbarSampleComponent implements OnInit {

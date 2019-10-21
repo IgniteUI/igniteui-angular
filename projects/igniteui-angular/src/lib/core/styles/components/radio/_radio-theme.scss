@@ -68,8 +68,9 @@
     @include scale-in-out($start-scale: .9);
 
     $label-margin: em(8px);
-
     $size: em(20px);
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
 
     $border-width: map-get((
         material: 2px,
@@ -208,29 +209,18 @@
     }
 
     %radio-label--after {
-        margin-left: $label-margin;
-
-        [dir='rtl'] & {
-            margin-left: initial;
-            margin-right: $label-margin;
-
-            &:empty {
-                margin: 0;
-            }
-        }
+        margin-#{$left}: $label-margin;
     }
 
     %radio-label--before {
         order: -1;
-        margin-right: $label-margin;
+        margin-#{$right}: $label-margin;
+    }
 
-        [dir='rtl'] & {
-            margin-right: initial;
-            margin-left: $label-margin;
-
-            &:empty {
-                margin: 0;
-            }
+    %radio-label--before,
+    %radio-label--after {
+        &:empty {
+            margin: 0;
         }
     }
 

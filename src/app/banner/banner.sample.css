@@ -1,3 +1,7 @@
 .banner-border {
     border-bottom: 2px solid #d3d3d3;
 }
+
+.igx-typography__subtitle-1 {
+    margin-top: 0;
+}
