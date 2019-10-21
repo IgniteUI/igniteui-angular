@@ -301,3 +301,31 @@
         }
     }
 }
+
+/// Compiles the passed content to CSS only if
+/// the global $direction variable is set to 'ltr'.
+/// @example scss Include content only if $direction is set to ltr (default)
+///    @include if-ltr {
+///      margin-right: 8px;
+///    }
+@mixin if-ltr {
+    $dir: if(global-variable-exists('direction'), $direction, 'ltr');
+
+    @if $dir != 'rtl' {
+        @content;
+    }
+}
+
+/// Compiles the passed content to CSS only if
+/// the global $direction variable is set to 'rtl'.
+/// @example scss Include content only if $direction is set to rtl
+///    @include if-rtl {
+///      margin-left: 8px;
+///    }
+@mixin if-rtl {
+    $dir: if(global-variable-exists('direction'), $direction, 'ltr');
+
+    @if $dir == 'rtl' {
+        @content;
+    }
+}

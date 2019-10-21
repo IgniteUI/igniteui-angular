@@ -140,7 +140,7 @@
     @if type-of($color) == 'color' {
         $lightContrast: contrast($color, white);
         $darkContrast: contrast($color, black);
-        
+
         @if ($lightContrast > $darkContrast) {
             @return white;
         } @else {
@@ -224,7 +224,7 @@
 /// @returns {Map} - Returns a clean map.
 @function map-clean($map) {
     $result: ();
-    
+
     @each $key, $value in $map {
         @if($value) != null {
             $result: map-merge($result, (
@@ -232,7 +232,7 @@
             ));
         }
     }
-    
+
     @return $result;
 }
 
@@ -355,9 +355,9 @@
     @if map-has-key($map, $key) {
         @if $igx-legacy-support == false {
             @if not($fallback) {
-                @return unquote('var(--#{map-get($map, 'name')}-#{$key})')
+                @return var(--#{map-get($map, 'name')}-#{$key})
             }
-            @return unquote('var(--#{map-get($map, 'name')}-#{$key}, #{$fallback})')
+            @return var(--#{map-get($map, 'name')}-#{$key}, #{$fallback})
         } @else {
             @return map-get($map, $key);
         }
@@ -446,7 +446,7 @@
         @if type-of($value) == 'map' {
             $result: extend($result, (#{$key}: resolve-value($value, $palette)));
         } @else {
-            $result: extend($result, (#{$key}: #{$value}));
+            $result: extend($result, (#{$key}: $value));
         }
     }
     @return $result;
@@ -538,4 +538,34 @@
         @return darken($color, $amount);
     }
     @return $color;
+}
+
+/// Returns $if param when global variable $directory
+/// is set to ltr otherwise returns $else.
+/// @param {*} $if - The value to be returned when $direction is set to ltr;
+/// @param {*} $else - The value to be returned when $direction is set to rtl;
+/// @example scss Set variable values based on $direction
+///    $left: if-ltr(left, right);
+///    $right: if-ltr(right, left);
+/// @requires $direction
+@function if-ltr($if, $else: null) {
+    $dir: if(global-variable-exists('direction'), $direction, 'ltr');
+
+    @if $dir != rtl {
+        @return $if;
+    } @else {
+        @return $else;
+    }
+}
+
+/// Returns $if param when global variable $directory
+/// is set to rtl otherwise returns $else.
+/// @param {*} $if - The value to be returned when $direction is set to rtl;
+/// @param {*} $else - The value to be returned when $direction is set to ltr;
+/// @example scss Set variable values based on $direction
+///    $left: if-rtl(left, right);
+///    $right: if-rtl(right, left);
+/// @requires $direction
+@function if-rtl($if, $else: null) {
+    @return if-ltr($else, $if);
 }
