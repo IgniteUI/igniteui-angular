@@ -16,7 +16,7 @@ const CELL_CSS_CLASS = '.igx-grid__td';
 const ROW_CSS_CLASS = '.igx-grid__tr';
 const CELL_BLOCK = '.igx-grid__mrl-block';
 
-describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
+fdescribe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
     configureTestSuite();
 
     beforeEach(async(() => {
@@ -3071,6 +3071,8 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         grid.navigateTo(10, col.visibleIndex);
         await wait(DEBOUNCETIME);
         fix.detectChanges();
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
 
         // cell should be at right edge of grid
         cell =  grid.getCellByColumn(10, 'City');
@@ -3082,6 +3084,8 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
         // navigate left to cell in column that is in DOM but is not in view
         col = grid.getColumnByName('CompanyName');
         grid.navigateTo(10, col.visibleIndex);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
         await wait(DEBOUNCETIME);
         fix.detectChanges();
 
@@ -3096,6 +3100,8 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation', () => {
 
         col = grid.getColumnByName('ID');
         grid.navigateTo(9, col.visibleIndex);
+        await wait(DEBOUNCETIME);
+        fix.detectChanges();
         await wait(DEBOUNCETIME);
         fix.detectChanges();
 
