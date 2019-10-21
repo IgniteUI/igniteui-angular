@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
     IgxCardComponent,
     IgxCardActionsComponent,
@@ -66,8 +66,9 @@ function detailsFactory(params: any): Idetails {
 }
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     selector: 'app-card-sample',
-    styleUrls: ['card.sample.css'],
+    styleUrls: ['card.sample.scss'],
     templateUrl: 'card.sample.html'
 })
 export class CardSampleComponent {

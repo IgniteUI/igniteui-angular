@@ -276,13 +276,6 @@
         //}
     }
 
-    [dir='rtl'] {
-        %igx-drop-down__item {
-            justify-content: flex-end;
-            text-align: right;
-        }
-    }
-
     %igx-drop-down__header {
         color: --var($theme, 'header-text-color');
         pointer-events: none;

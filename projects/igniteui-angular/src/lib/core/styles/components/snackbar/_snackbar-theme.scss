@@ -89,6 +89,7 @@
     $snackbar-button-left-margin: rem(24px);
     $snackbar-button-line-height: rem(16px);
     $snackbar-button-font-weight: 600;
+    $left: if-ltr(left, right);
 
     %igx-snackbar-display {
         position: relative;
@@ -111,7 +112,7 @@
         color: --var($theme, 'button-color');
         border: 0;
         line-height: $snackbar-button-line-height;
-        margin-left: $snackbar-button-left-margin;
+        margin-#{$left}: $snackbar-button-left-margin;
         text-transform: uppercase;
         user-select: none;
         font-weight: $snackbar-button-font-weight;
