@@ -694,7 +694,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.value).toEqual('New Name');
         });
 
-        fit(`Should not update data in grid with transactions, when row is updated in onCellEdit and onCellEdit is canceled`, () =>{
+        fit(`Should not update data in grid with transactions, when row is updated in onCellEdit and onCellEdit is canceled`, () => {
             fixture = TestBed.createComponent(SelectionWithTransactionsComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
