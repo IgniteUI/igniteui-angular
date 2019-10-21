@@ -83,6 +83,9 @@
 @mixin igx-grid-summary($theme) {
     @include igx-root-css-vars($theme);
 
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
+
     $cell-pin: (
         style: --var($theme, 'pinned-border-width') --var($theme, 'pinned-border-style'),
         color: --var($theme, 'pinned-border-color')
@@ -142,7 +145,7 @@
     }
 
     %igx-grid-summary--pinned-last {
-        border-right: map-get($cell-pin, 'style') map-get($cell-pin, 'color');
+        border-#{$right}: map-get($cell-pin, 'style') map-get($cell-pin, 'color');
         @media print {
             border-right: map-get($cell-pin, 'style') #999;
         }
@@ -167,7 +170,7 @@
     %igx-grid-summary__label {
         color: --var($theme, 'label-color');
         min-width: rem(30px);
-        margin-right: rem(3px);
+        margin-#{$right}: rem(3px);
 
         &:hover {
             color: --var($theme, 'label-hover-color');
@@ -178,7 +181,7 @@
         color: --var($theme, 'result-color');
         font-weight: 600;
         flex: 1 1 auto;
-        text-align: right;
+        text-align: #{$right};
     }
 
     %igx-grid-summary__label,

@@ -33,7 +33,7 @@ describe('IgxDatePicker', () => {
                 IgxDatePickerOpeningComponent
             ],
             imports: [IgxDatePickerModule, FormsModule, NoopAnimationsModule, IgxInputGroupModule, IgxCalendarModule,
-                        IgxButtonModule, IgxTextSelectionModule]
+                IgxButtonModule, IgxTextSelectionModule]
         })
             .compileComponents();
     }));
@@ -101,7 +101,7 @@ describe('IgxDatePicker', () => {
             spyOn(datePicker.onSelection, 'emit');
             spyOn(datePicker.valueChange, 'emit');
             const newDate: Date = new Date(2016, 4, 6);
-                    datePicker.selectDate(newDate);
+            datePicker.selectDate(newDate);
             fixture.detectChanges();
 
             expect(datePicker.onSelection.emit).toHaveBeenCalled();
@@ -279,7 +279,8 @@ describe('IgxDatePicker', () => {
         expect(formattedHeaderText).toBe('10/20/19');
 
         const picker = document.getElementsByClassName('igx-calendar-picker');
-        const formattedSubHeaderText = (picker[0].children[1] as HTMLElement).innerText;
+        const formattedSubHeaderText = (picker[0].children[1] as HTMLElement).textContent.trim();
+
         expect(formattedSubHeaderText).toBe('2019/Oct');
 
         const buttons = document.getElementsByClassName('igx-button--flat');
@@ -301,7 +302,7 @@ describe('IgxDatePicker', () => {
         fixture.detectChanges();
 
         const picker = document.getElementsByClassName('igx-calendar-picker');
-        const formattedSubHeaderText = (picker[0].children[1] as HTMLElement).innerText;
+        const formattedSubHeaderText = (picker[0].children[1] as HTMLElement).textContent.trim();
         expect(formattedSubHeaderText).toBe('2019/Oct');
 
         const buttons = document.getElementsByClassName('igx-button--flat');
@@ -931,7 +932,7 @@ describe('IgxDatePicker', () => {
 
         it('should reset value on clear button click - dropdown mode', () => {
             spyOn(datePicker.valueChange, 'emit');
-                   const input = fixture.debugElement.query(By.directive(IgxInputDirective));
+            const input = fixture.debugElement.query(By.directive(IgxInputDirective));
             const dom = fixture.debugElement;
             const clear = dom.queryAll(By.css('.igx-icon'))[1];
             UIInteractions.clickElement(clear);
