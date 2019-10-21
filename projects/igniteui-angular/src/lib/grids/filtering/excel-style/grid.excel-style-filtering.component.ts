@@ -108,6 +108,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
     private selectAllIndeterminate = false;
     private filterValues = new Set<any>();
     private _column: IgxColumnComponent;
+    private _columnPinning = new Subscription();
+    private _columnVisibilityChanged = new Subscription();
 
     /**
      * An @Input property that sets the column.
@@ -115,8 +117,24 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
     @Input()
     public set column(value: IgxColumnComponent) {
         this._column = value;
+
+        if (this._columnPinning) {
+            this._columnPinning.unsubscribe();
+        }
+
+        if (this._columnVisibilityChanged) {
+            this._columnVisibilityChanged.unsubscribe();
+        }
+
         if (this._column) {
             this.init();
+
+            this._columnPinning = this.grid.onColumnPinning.pipe(takeUntil(this.destroy$)).subscribe(() => {
+                this.cdr.detectChanges();
+            });
+            this._columnVisibilityChanged = this.grid.onColumnVisibilityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+                this.cdr.detectChanges();
+            });
         }
     }
 
@@ -290,14 +308,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
         this.populateColumnData();
 
         this.isColumnPinnable = this.column.pinnable;
-
-        this.grid.onColumnPinning.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.cdr.detectChanges();
-        });
-
-        this.grid.onColumnVisibilityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.cdr.detectChanges();
-        });
     }
 
     /**
@@ -827,7 +837,14 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
     /**
      * @hidden @internal
      */
-    public closeDropdown() {
+    public cancel() {
+        if (!this.overlayComponentId) {
+            this.init();
+        }
+        this.closeDropdown();
+    }
+
+    private closeDropdown() {
         if (this.overlayComponentId) {
             this.overlayService.hide(this.overlayComponentId);
             this.overlayComponentId = null;

@@ -845,7 +845,9 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     }
 
     public cancelChanges() {
-        this.advancedFilteringExpressionsTree = this.grid.advancedFilteringExpressionsTree;
+        if (!this.overlayComponentId) {
+            this.advancedFilteringExpressionsTree = this.grid.advancedFilteringExpressionsTree;
+        }
         this.closeDialog();
     }
 

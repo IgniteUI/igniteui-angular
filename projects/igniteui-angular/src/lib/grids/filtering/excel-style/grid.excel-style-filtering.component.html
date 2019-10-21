@@ -130,7 +130,7 @@
     </igx-excel-style-search>
 
     <footer class="igx-excel-filter__menu-footer">
-        <button igxButton [displayDensity]="grid.displayDensity" (click)="closeDropdown()">{{ grid.resourceStrings.igx_grid_excel_cancel }}</button>
+        <button igxButton [displayDensity]="grid.displayDensity" (click)="cancel()">{{ grid.resourceStrings.igx_grid_excel_cancel }}</button>
         <button igxButton="raised" [displayDensity]="grid.displayDensity" [disabled]="applyButtonDisabled" (click)="applyFilter()">{{ grid.resourceStrings.igx_grid_excel_apply }}</button>
     </footer>
 </article>
