@@ -3418,6 +3418,34 @@ describe('IgxGrid - Filtering Row UI actions', () => {
             tick(100);
             expect(chip.componentInstance.selected).toBeTruthy();
     }));
+
+    it('Should close filterRow when changing filterMode from \'quickFilter\' to \'excelStyleFilter\'', (async () => {
+        GridFunctions.clickFilterCellChip(fix, 'ProductName');
+        fix.detectChanges();
+
+        // Add a condition chip without submitting it.
+        GridFunctions.typeValueInFilterRowInput('a', fix);
+        await wait(16);
+
+        // Change filterMode to 'excelStyleFilter`
+        grid.filterMode = FilterMode.excelStyleFilter;
+        fix.detectChanges();
+
+        // Verify the the filterRow is closed.
+        const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+        expect(filterUIRow).toBeNull('filterRow is visible');
+
+        // Verify the ESF icons are visible.
+        const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
+        const thead = gridNativeElement.querySelector('.igx-grid__thead-wrapper');
+        const filterIcons = thead.querySelectorAll('.igx-excel-filter__icon');
+        expect(filterIcons.length).toEqual(4, 'incorrect esf filter icons count');
+
+        // Verify the condition was submitted.
+        const header = GridFunctions.getColumnHeader('ProductName', fix);
+        const activeFilterIcon = header.nativeElement.querySelector('.igx-excel-filter__icon--filtered');
+        expect(activeFilterIcon).toBeDefined('no active filter icon was found');
+    }));
 });
     describe(null, () => {
         let fix, grid;
