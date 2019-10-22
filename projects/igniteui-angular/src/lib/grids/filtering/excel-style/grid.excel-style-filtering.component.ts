@@ -9,7 +9,6 @@ import {
     OnDestroy,
     AfterViewInit,
     ElementRef,
-    OnInit,
     Input
 } from '@angular/core';
 import {
@@ -97,7 +96,7 @@ export class IgxExcelStylePinningTemplateDirective {
     selector: 'igx-grid-excel-style-filtering',
     templateUrl: './grid.excel-style-filtering.component.html'
 })
-export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, AfterViewInit {
+export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterViewInit {
     private static readonly filterOptimizationThreshold = 2;
 
     private shouldOpenSubMenu = true;
@@ -108,8 +107,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
     private selectAllIndeterminate = false;
     private filterValues = new Set<any>();
     private _column: IgxColumnComponent;
-    private _columnPinning = new Subscription();
-    private _columnVisibilityChanged = new Subscription();
+    private _columnPinning: Subscription;
+    private _columnVisibilityChanged: Subscription;
+    private _filteringChanged: Subscription;
 
     /**
      * An @Input property that sets the column.
@@ -126,14 +126,25 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
             this._columnVisibilityChanged.unsubscribe();
         }
 
+        if (this._filteringChanged) {
+            this._filteringChanged.unsubscribe();
+        }
+
         if (this._column) {
+            this.isColumnPinnable = this.column.pinnable;
             this.init();
 
             this._columnPinning = this.grid.onColumnPinning.pipe(takeUntil(this.destroy$)).subscribe(() => {
-                this.cdr.detectChanges();
+                requestAnimationFrame(() => {
+                    this.isColumnPinnable = this.column.pinnable;
+                    this.cdr.detectChanges();
+                });
             });
             this._columnVisibilityChanged = this.grid.onColumnVisibilityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
                 this.cdr.detectChanges();
+            });
+            this._filteringChanged = this.grid.filteringExpressionsTreeChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
+                this.init();
             });
         }
     }
@@ -279,15 +290,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
     /**
      * @hidden @internal
      */
-    ngOnInit() {
-        if (this.column) {
-            this.isColumnPinnable = this.column.pinnable;
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
     ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
@@ -306,8 +308,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, OnInit, A
         this.expressionsList = new Array<ExpressionUI>();
         this.filteringService.generateExpressionsList(this.column.filteringExpressionsTree, this.grid.filteringLogic, this.expressionsList);
         this.populateColumnData();
-
-        this.isColumnPinnable = this.column.pinnable;
     }
 
     /**

@@ -15,7 +15,7 @@ import { CloseScrollStrategy } from '../../../services/overlay/scroll/close-scro
 import { IgxToggleDirective, IgxOverlayOutletDirective } from '../../../directives/toggle/toggle.directive';
 import { IButtonGroupEventArgs } from '../../../buttonGroup/buttonGroup.component';
 import { takeUntil, first } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { KEYS } from '../../../core/utils';
 import { AbsoluteScrollStrategy, AutoPositionStrategy } from '../../../services/index';
 
@@ -58,7 +58,15 @@ class ExpressionOperandItem extends ExpressionItem {
 }
 
 /**
- * @hidden
+ * A component used for presenting advanced filtering UI for a Grid.
+ * It is used internally in the Grid, but could also be hosted in a container outside of it.
+ *
+ * Example:
+ * ```html
+ * <igx-advanced-filtering-dialog
+ *     [grid]="grid1">
+ * </igx-advanced-filtering-dialog>
+ * ```
  */
 @Component({
     selector: 'igx-advanced-filtering-dialog',
@@ -204,7 +212,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     private _addModeContainer: ElementRef;
     private _currentGroupButtonsContainer: ElementRef;
     private _grid: IgxGridBaseComponent;
-    private _advancedFilteringExpressionsTree: IFilteringExpressionsTree;
+    private _filteringChange: Subscription;
 
     constructor(private element: ElementRef, public cdr: ChangeDetectorRef) { }
 
@@ -253,22 +261,19 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
 
     set grid(grid: IgxGridBaseComponent) {
         this._grid = grid;
-        if (this._grid) {
-            this.init();
+
+        if (this._filteringChange) {
+            this._filteringChange.unsubscribe();
         }
-    }
 
-    @Input()
-    get advancedFilteringExpressionsTree(): IFilteringExpressionsTree {
-        return this._advancedFilteringExpressionsTree;
-    }
+        if (this._grid) {
+            this.filteringService.registerSVGIcons();
 
-    set advancedFilteringExpressionsTree(value: IFilteringExpressionsTree) {
-        this._advancedFilteringExpressionsTree = value;
+            this._filteringChange = this._grid.advancedFilteringExpressionsTreeChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
+                this.init();
+            });
 
-        if (this._advancedFilteringExpressionsTree) {
-            this.rootGroup = this.createExpressionGroupItem(this._advancedFilteringExpressionsTree);
-            this.currentGroup = this.rootGroup;
+            this.init();
         }
     }
 
@@ -565,7 +570,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
                     }
                 ];
             }
-        } else {
+        } else if (this.contextMenuToggle) {
             this.contextMenuToggle.close();
         }
     }
@@ -813,8 +818,11 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     }
 
     private init() {
-        this.filteringService.registerSVGIcons();
-        this.advancedFilteringExpressionsTree = this.grid.advancedFilteringExpressionsTree;
+        this.clearSelection();
+        this.cancelOperandAdd();
+        this.cancelOperandEdit();
+        this.rootGroup = this.createExpressionGroupItem(this.grid.advancedFilteringExpressionsTree);
+        this.currentGroup = this.rootGroup;
     }
 
     public context(expression: ExpressionItem, afterExpression?: ExpressionItem) {
@@ -825,12 +833,8 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     }
 
     public onClearButtonClick() {
-        this.clearSelection();
-        this.cancelOperandAdd();
-        this.cancelOperandEdit();
-        this.currentGroup = null;
-        this.rootGroup = null;
         this.grid.advancedFilteringExpressionsTree = null;
+        this.init();
     }
 
     public closeDialog() {
@@ -846,7 +850,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
 
     public cancelChanges() {
         if (!this.overlayComponentId) {
-            this.advancedFilteringExpressionsTree = this.grid.advancedFilteringExpressionsTree;
+            this.init();
         }
         this.closeDialog();
     }

@@ -410,6 +410,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public filteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
 
     /**
+     *@hidden
+     */
+    @Output()
+    public advancedFilteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
+
+    /**
      * Returns the advanced filtering state of `IgxGridComponent`.
      * ```typescript
      * let advancedFilteringExpressionsTree = this.grid.advancedFilteringExpressionsTree;
@@ -452,6 +458,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         } else {
             this._advancedFilteringExpressionsTree = null;
         }
+        this.advancedFilteringExpressionsTreeChange.emit(this._advancedFilteringExpressionsTree);
 
         if (this.filteringService.isFilteringExpressionsTreeEmpty() && !this.advancedFilteringExpressionsTree) {
             this.filteredData = null;
