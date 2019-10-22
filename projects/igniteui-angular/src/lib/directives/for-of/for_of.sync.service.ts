@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Component } from '@angular/core';
 import { IgxGridForOfDirective } from './for_of.directive';
+import { VirtualHelperBaseDirective } from './base.helper.component';
 
 @Injectable({
     providedIn: 'root',
@@ -44,5 +45,19 @@ export class IgxForOfSyncService {
      */
     public chunkSize(dir: string): number {
         return this._master.get(dir).state.chunkSize;
+    }
+}
+
+@Injectable({
+    providedIn: 'root',
+})
+export class IgxForOfScrollSyncService {
+    private _masterScroll: Map<string, VirtualHelperBaseDirective> = new Map<string, any>();
+    public setScrollMaster(dir: string, scroll: VirtualHelperBaseDirective) {
+        this._masterScroll.set(dir, scroll);
+    }
+
+    public getScrollMaster(dir: string) {
+        return this._masterScroll.get(dir);
     }
 }

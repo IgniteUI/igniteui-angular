@@ -128,6 +128,17 @@ export abstract class IgxRowComponent<T extends IgxGridBaseComponent & IGridData
 
     /**
      * @hidden
+     * @internal
+     */
+    get viewIndex(): number {
+        if ((this.grid as any).groupingExpressions.length) {
+            return this.grid.filteredSortedData.indexOf(this.rowData);
+        }
+        return this.index + this.grid.page * this.grid.perPage;
+    }
+
+    /**
+     * @hidden
      */
     get pinnedColumns(): IgxColumnComponent[] {
         return this.grid.pinnedColumns;
