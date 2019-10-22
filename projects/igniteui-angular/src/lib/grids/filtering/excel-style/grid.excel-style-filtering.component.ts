@@ -110,6 +110,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
     private _columnPinning: Subscription;
     private _columnVisibilityChanged: Subscription;
     private _filteringChanged: Subscription;
+    private _densityChanged: Subscription;
 
     /**
      * An @Input property that sets the column.
@@ -130,6 +131,10 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
             this._filteringChanged.unsubscribe();
         }
 
+        if (this._densityChanged) {
+            this._densityChanged.unsubscribe();
+        }
+
         if (this._column) {
             this.isColumnPinnable = this.column.pinnable;
             this.init();
@@ -145,6 +150,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
             });
             this._filteringChanged = this.grid.filteringExpressionsTreeChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
                 this.init();
+            });
+            this._densityChanged = this.grid.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+                this.cdr.detectChanges();
             });
         }
     }
