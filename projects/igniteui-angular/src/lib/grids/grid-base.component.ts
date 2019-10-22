@@ -2028,7 +2028,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
     */
     @ViewChildren(IgxTemplateOutletDirective, { read: IgxTemplateOutletDirective })
-    public tmpOutlets: QueryList<any>;
+    public tmpOutlets: QueryList<any> = new QueryList<any>();
 
 
     /**
@@ -2784,7 +2784,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     protected _allowAdvancedFiltering = false;
     protected _filterMode = FilterMode.quickFilter;
 
-    protected observer: ResizeObserver;
+    protected observer: ResizeObserver = new ResizeObserver(() => {});
 
     protected resizeNotify = new Subject();
 
