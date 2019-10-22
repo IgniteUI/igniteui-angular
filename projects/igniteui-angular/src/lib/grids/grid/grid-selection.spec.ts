@@ -413,7 +413,7 @@ describe('IgxGrid - Row Selection', () => {
             expect(checkboxInputElement).toBeDefined();
         }
 
-        const horScroll = grid.parentVirtDir.getHorizontalScroll();
+        const horScroll = grid.headerContainer.getScroll();
         horScroll.scrollLeft = 1000;
         await wait(100);
         fix.detectChanges();

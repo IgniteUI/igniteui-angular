@@ -581,7 +581,7 @@ describe('IgxGrid - multi-column headers', () => {
             gridHeadersDepth * grid.defaultRowHeight, componentInstance.firstGroupTitle,
             'firstGroupColumn', firstGroupChildrenCount);
 
-        let horizontalScroll = grid.parentVirtDir.getHorizontalScroll();
+        let horizontalScroll = grid.headerContainer.getScroll();
         let scrollToNextGroup = firstGroupChildrenCount * columnWidthPx + columnWidthPx;
         horizontalScroll.scrollLeft = scrollToNextGroup;
 
@@ -604,7 +604,7 @@ describe('IgxGrid - multi-column headers', () => {
                 secondSubGroupHeadersDepth * grid.defaultRowHeight, componentInstance.secondSubGroupTitle,
                 'secondSubGroupColumn', secondSubGroupChildrenCount);
 
-            horizontalScroll = grid.parentVirtDir.getHorizontalScroll();
+            horizontalScroll = grid.headerContainer.getScroll();
             scrollToNextGroup = horizontalScroll.scrollLeft +
                 secondSubGroupHeadersDepth * secondSubGroupChildrenCount * columnWidthPx;
 
