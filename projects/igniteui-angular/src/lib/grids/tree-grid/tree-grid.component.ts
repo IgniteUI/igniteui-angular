@@ -106,7 +106,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     }
 
     public set data(value: any[]) {
-        this._data = value;
+        this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
             this.setupColumns();

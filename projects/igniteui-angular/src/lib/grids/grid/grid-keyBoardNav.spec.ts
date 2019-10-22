@@ -844,6 +844,23 @@ describe('IgxGrid - Keyboard navigation', () => {
             expect(target.focused).toBe(true);
         });
 
+        it('Custom KB navigation: should be able to scroll horizontally and vertically to a cell in the grid', async () => {
+            fix.componentInstance.columns = fix.componentInstance.generateCols(100);
+            fix.componentInstance.data = fix.componentInstance.generateData(100);
+
+            fix.detectChanges();
+
+            grid.navigateTo(50, 50, (args) => { args.target.nativeElement.focus(); });
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            const target = grid.getCellByColumn(50, '50');
+            expect(target).toBeDefined();
+            expect(target.focused).toBe(true);
+        });
+
         it('Custom KB navigation: onGridKeydown should be emitted', async () => {
             fix.componentInstance.columns = fix.componentInstance.generateCols(25);
             fix.componentInstance.data = fix.componentInstance.generateData(25);
