@@ -3953,7 +3953,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             // If developer set this parameter to true we should call notifyChanges(true), and
             // vise-versa if developer set it to false we should call notifyChanges(false).
             // The parameter should default to false
-            this.notifyChanges(false);
+            this.notifyChanges();
         }
     }
 
