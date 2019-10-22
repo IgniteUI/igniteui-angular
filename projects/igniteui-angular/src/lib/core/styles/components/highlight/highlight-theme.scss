@@ -30,7 +30,15 @@
     $active-color: null,
 ) {
     $name: 'igx-highlight';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $highlight-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $highlight-schema: map-get($schema, $name);
+    } @else {
+        $highlight-schema: $schema;
+    }
+
+    $theme: apply-palette($highlight-schema, $palette);
 
     @if not($resting-color) and $resting-background {
         $resting-color: text-contrast($resting-background);
