@@ -146,6 +146,9 @@
 @mixin igx-navdrawer($theme) {
     @include igx-root-css-vars($theme);
 
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
+
     %animation {
         transition: flex-basis;
         transition-duration: .3s;
@@ -161,12 +164,12 @@
         background: --var($theme, 'background');
         top: 0;
         bottom: 0;
-        left: 0;
+        #{$left}: 0;
         z-index: 999;
         transition: width, transform;
         transition-timing-function: $ease-out-quad, $ease-out-quad;
         box-shadow: --var($theme, 'shadow');
-        border-right: 1px solid --var($theme, 'border-color');
+        border-#{$right}: 1px solid --var($theme, 'border-color');
         border-radius: --var($theme, 'border-radius');
     }
 
@@ -195,15 +198,22 @@
     }
 
     %aside--collapsed {
-        transform: translate3d(-300px, 0, 0);
+        @include if-ltr() {
+            transform: translate3d(-300px, 0, 0);
+        }
+
+        @include if-rtl() {
+            transform: translate3d(300px, 0, 0);
+        }
+
         box-shadow: none;
     }
 
     %aside--right {
         left: auto;
         right: 0;
-        border-right: none;
-        border-left: 1px solid --var($theme, 'border-color');
+        border-#{$right}: none;
+        border-#{$left}: 1px solid --var($theme, 'border-color');
     }
 
     %aside--mini {
@@ -228,7 +238,7 @@
         transition-timing-function: ease-in, step-start;
         transition-delay: 0s, 0s;
         position: absolute;
-        left: 0;
+        #{$left}: 0;
         top: 0;
         width: 100%;
         height: 100%;
@@ -269,13 +279,7 @@
         margin: rem(8px) rem(8px);
 
         > igx-icon + span {
-            margin-left: rem(32px);
-        }
-
-        &[dir='rtl'] {
-            > igx-icon + span {
-                margin-right: rem(32px);
-            }
+            margin-#{$left}: rem(32px);
         }
 
         igx-icon {

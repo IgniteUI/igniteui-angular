@@ -4,11 +4,6 @@
     margin: 10px;
 }
 
-.chip-holder {
-    display: flex;
-    margin-bottom: 10px
-}
-
 .chip-label {
     display: block;
     margin-bottom: 10px;
@@ -18,13 +13,22 @@
     line-height: 23px;
 }
 
-.chip-holder .igx-chip {
-    flex: 1 0 0%;
-    margin-left: 10px;
-}
+.chip-holder {
+    display: flex;
+    margin-bottom: 10px;
 
-.chip-holder .igx-chip:first-of-type {
-    margin-left: 0;
+    igx-chip {
+        flex: 1 0 0%;
+
+        + igx-chip {
+            margin-left: 8px;
+
+            [dir='rtl'] & {
+                margin-left: initial;
+                margin-right: 8px;
+            }
+        }
+    }
 }
 
 .in-content-devider {
@@ -158,6 +162,11 @@
 
 .w_details__icon {
     margin-right: 10px;
+
+    [dir='rtl'] & {
+        margin-left: 10px;
+        margin-right: initial;
+    }
 }
 
 .isSunny {
@@ -175,4 +184,9 @@ article {
     min-width: 320px;
     max-width: 320px;
     margin: 10px;
+}
+
+.bidirectional-icon[dir='rtl'],
+[dir='rtl'] .bidirectional-icon {
+    transform: scaleX(-1);
 }
