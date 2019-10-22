@@ -23,7 +23,8 @@ import {
     OnDestroy,
     DoCheck,
     EventEmitter,
-    Output
+    Output,
+    ContentChild
 } from '@angular/core';
 import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
@@ -32,7 +33,7 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity } from '../../core/displayDensity';
-import { IGridDataBindable, IgxColumnComponent, } from '../grid/index';
+import { IGridDataBindable, IgxColumnComponent, IgxChildDetailsDirective, } from '../grid/index';
 import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
@@ -259,6 +260,15 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     @ViewChild('headerHierarchyExpander', { read: ElementRef, static: true })
     protected headerHierarchyExpander: ElementRef;
 
+    @ViewChild('child_detail_template', { read: TemplateRef, static: true })
+    protected childDetailsContainerTemplate: TemplateRef<any>;
+
+    /**
+    * The custom template, if any, that should be used when rendering a a custom row details in the child container.
+    */
+   @ContentChild(IgxChildDetailsDirective, { read: TemplateRef, static: false })
+   public childDetailsTemplate: TemplateRef<any> = null;
+
     /**
      * @hidden
      */
@@ -275,7 +285,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      * @hidden
      */
     get hasExpandableChildren() {
-        return !!this.childLayoutKeys.length;
+        return !!this.childLayoutKeys.length || this.hasChildDetails;
     }
 
     /**
@@ -591,7 +601,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      */
     public isChildGridRecord(record: any): boolean {
         // Can be null when there is defined layout but no child data was found
-        return record.childGridsData !== undefined;
+        return record.childGridsData !== undefined || record.details;
     }
 
     /**
@@ -659,6 +669,34 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         } else {
             return this.headerExpandIndicatorTemplate || this.defaultExpandedTemplate;
         }
+    }
+
+    /**
+     * @hidden
+    */
+    public getRowTemplate(rowData) {
+        if (this.isHierarchicalRecord(rowData)) {
+            return this.hierarchicalRecordTemplate;
+        } else if (this.isChildGridRecord(rowData) && this.isExpanded(rowData)) {
+            if (this.hasChildDetails) {
+                return this.childDetailsContainerTemplate;
+            } else {
+               return this.childTemplate;
+            }
+        } else {
+            return this.hierarchicalRecordTemplate;
+        }
+    }
+
+    public get hasChildDetails() {
+        return !!this.childDetailsTemplate;
+    }
+
+    public getDetailsContext(rowData, index){
+        return {
+            $implicit: rowData.data,
+            index: index
+        };
     }
 
     /**
@@ -732,14 +770,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
      */
     public isExpanded(record: any): boolean {
         let inState;
-        if (record.childGridsData !== undefined) {
+        if (record.childGridsData !== undefined || record.details) {
             inState = !!this.hierarchicalState.find(v => v.rowID === record.rowID);
         } else {
             inState = !!this.hierarchicalState.find(v => {
                 return this.primaryKey ? v.rowID === record[this.primaryKey] : v.rowID === record;
             });
         }
-        return inState && this.childLayoutList.length !== 0;
+        return inState && (this.childLayoutList.length !== 0 || this.hasChildDetails);
     }
 
     /**

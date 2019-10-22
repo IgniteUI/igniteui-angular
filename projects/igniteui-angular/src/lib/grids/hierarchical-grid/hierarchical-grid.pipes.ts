@@ -21,18 +21,17 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
         id: string,
         primaryKey: any,
         childKeys: string[],
+        hasChildDetails: boolean,
         pipeTrigger: number
         ): any[] {
-        if (childKeys.length === 0) {
+        if (childKeys.length === 0 && !hasChildDetails) {
             return collection;
         }
         const grid: IgxHierarchicalGridComponent = this.gridAPI.grid;
-        const result = this.addHierarchy(grid, cloneArray(collection), state, primaryKey, childKeys);
-
+        const result = this.addHierarchy(grid, cloneArray(collection), state, primaryKey, childKeys, hasChildDetails);
         return result;
     }
-
-    public addHierarchy<T>(grid, data: T[], state, primaryKey, childKeys: string[]): T[] {
+    public addHierarchy<T>(grid, data: T[], state, primaryKey, childKeys: string[], hasChildDetails): T[] {
         const result = [];
 
         data.forEach((v) => {
@@ -42,8 +41,11 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
                 const childData = v[childKey] ? v[childKey] : null;
                 childGridsData[childKey] = childData;
             });
-            if (grid.isExpanded(v)) {
+            if (grid.isExpanded(v) && childKeys.length > 0) {
                 result.push({ rowID: primaryKey ? v[primaryKey] : v, childGridsData: childGridsData});
+            } else if (grid.isExpanded(v) && hasChildDetails) {
+                const detailsObj = {rowID: primaryKey ? v[primaryKey] : v, data: v, details: hasChildDetails};
+                result.push(detailsObj);
             }
         });
         return result;

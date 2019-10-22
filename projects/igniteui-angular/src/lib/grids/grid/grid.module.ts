@@ -7,7 +7,8 @@ import {
     IgxRowExpandedIndicatorDirective,
     IgxRowCollapsedIndicatorDirective,
     IgxHeaderExpandIndicatorDirective,
-    IgxHeaderCollapseIndicatorDirective
+    IgxHeaderCollapseIndicatorDirective,
+    IgxChildDetailsDirective
 } from './grid.directives';
 import { IgxGridComponent } from './grid.component';
 import {
@@ -36,6 +37,7 @@ import { IgxSelectModule } from '../../select/index';
     IgxRowExpandedIndicatorDirective,
     IgxRowCollapsedIndicatorDirective,
     IgxHeaderExpandIndicatorDirective,
+    IgxChildDetailsDirective,
     IgxHeaderCollapseIndicatorDirective,
     IgxGroupAreaDropDirective,
     IgxGridGroupingPipe,
@@ -52,6 +54,7 @@ import { IgxSelectModule } from '../../select/index';
     IgxRowExpandedIndicatorDirective,
     IgxRowCollapsedIndicatorDirective,
     IgxHeaderExpandIndicatorDirective,
+    IgxChildDetailsDirective,
     IgxHeaderCollapseIndicatorDirective,
     IgxGroupAreaDropDirective,
     IgxGridCommonModule,

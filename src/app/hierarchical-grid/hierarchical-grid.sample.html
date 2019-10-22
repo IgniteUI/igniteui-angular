@@ -109,4 +109,18 @@
     </igx-hierarchical-grid>
 
 
+    <h4 class="sample-title">Sample 5 - Master-Detail grid</h4>
+    <igx-hierarchical-grid [data]="localData" [autoGenerate]="false" [height]="'600px'" [width]="'800px'" #hGrid2>
+            <igx-column field="ID" [resizable]="true" [filterable]='true'></igx-column>
+            <igx-column field="ChildLevels" [resizable]="true" [groupable]='true'></igx-column>
+            <igx-column field="ProductName" hasSummary='true'></igx-column>
+            <ng-template igxChildDetails let-dataItem>
+                <div *ngIf="dataItem.Category">
+                  <header>{{dataItem.Category?.CategoryName}}</header>
+                  <span>{{dataItem.Category?.Description}}</span>
+                </div>
+              </ng-template>
+    </igx-hierarchical-grid>
+
+
 </div>

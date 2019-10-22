@@ -49,6 +49,15 @@ export class IgxHeaderExpandIndicatorDirective {
  * @hidden
  */
 @Directive({
+    selector: '[igxChildDetails]'
+})
+export class IgxChildDetailsDirective {
+}
+
+/**
+ * @hidden
+ */
+@Directive({
     selector: '[igxHeaderCollapsedIndicator]'
 })
 export class IgxHeaderCollapseIndicatorDirective {

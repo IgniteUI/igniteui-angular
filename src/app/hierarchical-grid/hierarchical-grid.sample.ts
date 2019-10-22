@@ -92,6 +92,11 @@ export class HierarchicalGridSampleComponent {
             }
             prods.push({
                 ID: rowID,
+                Category: {
+                    CategoryID: i,
+                    CategoryName: 'Beverages ' + i,
+                    Description: 'Soft drinks, coffees, teas, beers, and ales'
+                },
                 ChildLevels: currLevel,
                 ProductName: 'Product: A' + i,
                 Col1: i,

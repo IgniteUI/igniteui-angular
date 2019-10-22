@@ -86,12 +86,12 @@
         | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger
         | gridSort:sortingExpressions:id:pipeTrigger
         | gridHierarchicalPaging:page:perPage:id:pipeTrigger
-        | gridHierarchical:hierarchicalState:id:primaryKey:childLayoutKeys:pipeTrigger" let-rowIndex="index"
+        | gridHierarchical:hierarchicalState:id:primaryKey:childLayoutKeys:hasChildDetails:pipeTrigger" let-rowIndex="index"
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" [igxForTrackBy]='trackChanges'
             #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
             <ng-template
-                [igxTemplateOutlet]='(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template))'
+                [igxTemplateOutlet]='getRowTemplate(rowData)'
                 [igxTemplateOutletContext]='getContext(rowData)' (onViewCreated)='viewCreatedHandler($event)'
                 (onViewMoved)='viewMovedHandler($event)' (onCachedViewLoaded)='cachedViewLoaded($event)'></ng-template>
             <!-- <ng-container *igxTemplateOutlet="(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template)); context: getContext(rowData)"></ng-container> -->
@@ -109,6 +109,21 @@
                 <igx-child-grid-row *ngFor="let layout of childLayoutList" [parentGridID]="id" [index]="rowIndex"
                     [rowData]="rowData" [layout]='layout' #row>
                 </igx-child-grid-row>
+            </div>
+        </ng-template>
+
+        <ng-template #child_detail_template let-rowIndex="index" let-rowData>
+            <div style="overflow:auto;width: 100%;" [attr.data-rowindex]='rowIndex'
+                [ngClass]="{
+                'igx-grid__tr-container': true
+            }">
+                <div class="igx-grid__hierarchical-indent">
+                    <!-- <ng-container *ngTemplateOutlet="childDetailsTemplate; context: rowData.data"></ng-container> -->
+                        <ng-template
+                    [igxTemplateOutlet]='childDetailsTemplate'
+                    [igxTemplateOutletContext]='getDetailsContext(rowData, rowIndex)'>
+                    </ng-template>
+                </div>
             </div>
         </ng-template>
         <ng-template #summary_template let-rowIndex="index" let-rowData>

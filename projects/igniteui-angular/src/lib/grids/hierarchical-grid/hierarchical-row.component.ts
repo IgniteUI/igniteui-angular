@@ -71,7 +71,7 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
     }
 
     public get hasChildren() {
-        return  !!this.grid.childLayoutKeys.length;
+        return  !!this.grid.childLayoutKeys.length || this.grid.hasChildDetails;
     }
 
     /**
