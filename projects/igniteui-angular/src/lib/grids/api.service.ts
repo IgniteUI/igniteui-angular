@@ -201,7 +201,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         } else if (this.grid.transactions.enabled) {
             const state = grid.transactions.getState(row.id);
             const lastCommittedValue = state ? state.value : null;
-            row.data = Object.assign({}, row.data, lastCommittedValue);
+            row.data = state ? Object.assign({}, row.data,  state.value) : row.data;
         }
     }
 
