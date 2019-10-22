@@ -93,6 +93,9 @@
 @mixin igx-expansion-panel($theme) {
     @include igx-root-css-vars($theme);
 
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
+
     $panel-padding: em(16px, 16px);
     $panel-compact-padding: em(16px, 16px);
     $panel-cosy-padding: em(8px, 16px);
@@ -106,7 +109,7 @@
 
     %igx-expansion-panel__header-title {
         color: --var($theme, 'header-title-color');
-        margin-right: rem(16px, 16px);
+        margin-#{$right}: rem(16px, 16px);
     }
 
     %igx-expansion-panel__header-description {
@@ -145,12 +148,12 @@
 
     %igx-expansion-panel__header-icon--end {
         order: 1;
-        margin-left: rem(16px, 16px);
+        margin-#{$left}: rem(16px, 16px);
     }
 
     %igx-expansion-panel__header-icon--start {
         order: -1;
-        margin-right: rem(16px, 16px);
+        margin-#{$right}: rem(16px, 16px);
     }
 
     %igx-expansion-panel__header-icon--none {
