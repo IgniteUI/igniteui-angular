@@ -199,9 +199,9 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
             row.data = { ...row.data, ...rowInEditMode.transactionState };
         // TODO: Workaround for updating a row in edit mode through the API
         } else if (this.grid.transactions.enabled) {
-            const lastCommitedValue = grid.transactions.getState(row.id) ?
-                grid.transactions.getState(row.id).value : null;
-            row.data = lastCommitedValue ? Object.assign(row.data, lastCommitedValue) : row.data;
+            const state = grid.transactions.getState(row.id);
+            const lastCommittedValue = state ? state.value : null;
+            row.data = Object.assign({}, row.data, lastCommittedValue);
         }
     }
 
