@@ -3657,6 +3657,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridFilteringComponent);
+            fix.detectChanges();
             grid = fix.componentInstance.grid;
             grid.filterMode = FilterMode.excelStyleFilter;
             fix.detectChanges();

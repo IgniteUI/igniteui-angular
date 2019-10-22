@@ -1077,7 +1077,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this.filteringService.isFilterRowVisible) {
             this.filteringRow.close();
         }
-        this.reflow();
+        this.notifyChanges(true);
     }
 
     /**
@@ -4455,17 +4455,36 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    protected getFilterRowHeight(): number {
+        let filterRowHeight = 0;
+        if (this.filteringRow) {
+            filterRowHeight = this.filteringRow.element.nativeElement.offsetHeight;
+        } else {
+            const headerGroupNativeEl = (this.headerGroupsList.length !== 0) ?
+                                         this.headerGroupsList[0].element.nativeElement : null;
+            const filterCellNativeEl = (headerGroupNativeEl) ?
+                                        headerGroupNativeEl.querySelector('igx-grid-filtering-cell') : null;
+            filterRowHeight = (filterCellNativeEl) ? filterCellNativeEl.offsetHeight : 0;
+        }
+        return filterRowHeight;
+    }
+
+    /**
+     * @hidden
+     */
     protected _calculateGridBodyHeight(): number {
         if (!this._height) {
             return null;
         }
 
-
+        const actualTheadRow = (this.allowFiltering && this.filterMode !== FilterMode.quickFilter) ?
+                                 this.theadRow.nativeElement.offsetHeight - this.getFilterRowHeight() :
+                                 this.theadRow.nativeElement.offsetHeight;
         const footerHeight = this.summariesHeight || this.tfoot.nativeElement.offsetHeight - this.tfoot.nativeElement.clientHeight;
         const toolbarHeight = this.getToolbarHeight();
         const pagingHeight = this.getPagingHeight();
         const groupAreaHeight = this.getGroupAreaHeight();
-        const renderedHeight = toolbarHeight + this.theadRow.nativeElement.offsetHeight +
+        const renderedHeight = toolbarHeight + actualTheadRow +
             footerHeight + pagingHeight + groupAreaHeight +
             this.scr.nativeElement.clientHeight;
 
