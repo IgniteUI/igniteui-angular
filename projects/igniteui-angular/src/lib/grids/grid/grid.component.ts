@@ -21,7 +21,7 @@ import { IGroupingExpression } from '../../data-operations/grouping-expression.i
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
-import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
+import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 import { FilterMode } from '../common/enums';
@@ -63,7 +63,8 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxGridComponent) },
         IgxFilteringService,
         IgxColumnResizingService,
-        IgxForOfSyncService
+        IgxForOfSyncService,
+        IgxForOfScrollSyncService
     ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
@@ -137,7 +138,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     public set data(value: any[]) {
-        this._data = value;
+        this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
             this.setupColumns();

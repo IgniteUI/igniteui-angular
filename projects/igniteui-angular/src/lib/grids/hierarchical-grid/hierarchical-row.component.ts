@@ -35,6 +35,10 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
     @ViewChild('expander', { read: ElementRef, static: false })
     public expander: ElementRef<HTMLElement>;
 
+    get viewIndex(): number {
+        return this.index + this.grid.page * this.grid.perPage;
+    }
+
     /**
     * @hidden
     */

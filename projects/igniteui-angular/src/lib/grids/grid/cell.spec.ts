@@ -250,7 +250,7 @@ describe('IgxGrid - Cell component #grid', () => {
         await wait(16);
     }));
 
-     it('should fit last cell in the available display container when there is vertical scroll.', async(() => {
+    it('should fit last cell in the available display container when there is vertical scroll.', async(() => {
         const fix = TestBed.createComponent(VirtualGridComponent);
         fix.detectChanges();
         const rows = fix.componentInstance.instance.rowList;
@@ -346,7 +346,7 @@ describe('IgxGrid - Cell component #grid', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
 
-        const scrollbar = grid.parentVirtDir.getHorizontalScroll();
+        const scrollbar = grid.headerContainer.getScroll();
         scrollbar.scrollLeft = 10000;
         fix.detectChanges();
 
@@ -486,11 +486,11 @@ export class VirtualGridComponent {
     }
 
     public scrollTop(newTop: number) {
-        this.instance.verticalScrollContainer.getVerticalScroll().scrollTop = newTop;
+        this.instance.verticalScrollContainer.getScroll().scrollTop = newTop;
     }
 
     public scrollLeft(newLeft: number) {
-        this.instance.parentVirtDir.getHorizontalScroll().scrollLeft = newLeft;
+        this.instance.headerContainer.getScroll().scrollLeft = newLeft;
     }
 }
 

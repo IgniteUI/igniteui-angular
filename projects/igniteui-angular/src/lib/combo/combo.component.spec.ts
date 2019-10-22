@@ -2076,12 +2076,12 @@ describe('igxCombo', () => {
             expect(combo.collapsed).toEqual(false);
             expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(1);
             expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(1);
-            let vContainerScrollHeight = (combo as any).virtDir.getVerticalScroll().scrollHeight;
-            expect((combo as any).virtDir.getVerticalScroll().scrollTop).toEqual(0);
+            let vContainerScrollHeight = (combo as any).virtDir.getScroll().scrollHeight;
+            expect((combo as any).virtDir.getScroll().scrollTop).toEqual(0);
             expect(vContainerScrollHeight).toBeGreaterThan(combo.itemHeight);
-            (combo as any).virtDir.getVerticalScroll().scrollTop = Math.floor(vContainerScrollHeight / 2);
+            (combo as any).virtDir.getScroll().scrollTop = Math.floor(vContainerScrollHeight / 2);
             await wait(30);
-            expect((combo as any).virtDir.getVerticalScroll().scrollTop).toBeGreaterThan(0);
+            expect((combo as any).virtDir.getScroll().scrollTop).toBeGreaterThan(0);
             document.documentElement.dispatchEvent(new Event('click'));
             await wait(30);
             expect(combo.collapsed).toEqual(true);
@@ -2092,8 +2092,8 @@ describe('igxCombo', () => {
             expect(combo.collapsed).toEqual(false);
             expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(2);
             expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(2);
-            vContainerScrollHeight = (combo as any).virtDir.getVerticalScroll().scrollHeight;
-            expect((combo as any).virtDir.getVerticalScroll().scrollTop).toEqual(vContainerScrollHeight / 2);
+            vContainerScrollHeight = (combo as any).virtDir.getScroll().scrollHeight;
+            expect((combo as any).virtDir.getScroll().scrollTop).toEqual(vContainerScrollHeight / 2);
         }));
         it('Should not display vertical scrollbar when items fit into the container', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboScrollTestComponent);

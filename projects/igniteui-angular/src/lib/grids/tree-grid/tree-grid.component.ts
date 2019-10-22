@@ -28,7 +28,7 @@ import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/select
 import { mergeObjects } from '../../core/utils';
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
-import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
+import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { GridType } from '../common/grid.interface';
@@ -65,7 +65,8 @@ let NEXT_ID = 0;
         { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
         { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxTreeGridComponent) },
         IgxFilteringService,
-        IgxForOfSyncService
+        IgxForOfSyncService,
+        IgxForOfScrollSyncService
     ]
 })
 export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit {
@@ -103,7 +104,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     public set data(value: any[]) {
-        this._data = value;
+        this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
             this.setupColumns();

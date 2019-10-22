@@ -270,12 +270,12 @@ export class VirtualSummaryColumnComponent extends BasicGridComponent {
     public dateSummary = new IgxDateSummaryOperand();
 
     public scrollTop(newTop: number) {
-        const vScrollbar = this.grid.verticalScrollContainer.getVerticalScroll();
+        const vScrollbar = this.grid.verticalScrollContainer.getScroll();
         vScrollbar.scrollTop = newTop;
     }
 
     public scrollLeft(newLeft: number) {
-        const hScrollbar = this.grid.parentVirtDir.getHorizontalScroll();
+        const hScrollbar = this.grid.headerContainer.getScroll();
         hScrollbar.scrollLeft = newLeft;
     }
 }
@@ -316,7 +316,7 @@ export class DefaultSizeAndSummaryComponent extends BasicGridComponent {
     }
 
     public isHorizonatScrollbarVisible() {
-        const scrollbar = this.grid.parentVirtDir.getHorizontalScroll();
+        const scrollbar = this.grid.headerContainer.getScroll();
         return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
     }
 }
@@ -872,10 +872,10 @@ export class VirtualGridComponent extends BasicGridComponent {
         this.selectedCell = event.cell;
     }
      public scrollTop(newTop: number) {
-        this.grid.verticalScrollContainer.getVerticalScroll().scrollTop = newTop;
+        this.grid.verticalScrollContainer.getScroll().scrollTop = newTop;
     }
      public scrollLeft(newLeft: number) {
-        this.grid.parentVirtDir.getHorizontalScroll().scrollLeft = newLeft;
+        this.grid.headerContainer.getScroll().scrollLeft = newLeft;
     }
 }
  @Component({

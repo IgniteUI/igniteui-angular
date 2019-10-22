@@ -1882,7 +1882,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ViewChild('headerContainer', { read: IgxGridForOfDirective, static: false })
+    @ViewChild('hContainer', { read: IgxGridForOfDirective, static: true })
     public headerContainer: IgxGridForOfDirective<any>;
 
     /**
@@ -1951,7 +1951,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
     */
     @ViewChildren(IgxTemplateOutletDirective, { read: IgxTemplateOutletDirective })
-    public tmpOutlets: QueryList<any>;
+    public tmpOutlets: QueryList<any> = new QueryList<any>();
 
 
     /**
@@ -2707,7 +2707,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _allowAdvancedFiltering = false;
     protected _filterMode = FilterMode.quickFilter;
 
-    protected observer: ResizeObserver;
+    protected observer: ResizeObserver = new ResizeObserver(() => {});
 
     protected resizeNotify = new Subject();
 
@@ -3046,8 +3046,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public _zoneBegoneListeners() {
         this.zone.runOutsideAngular(() => {
             this.nativeElement.addEventListener('keydown', this.keydownHandler);
-            this.verticalScrollContainer.getVerticalScroll().addEventListener('scroll', this.verticalScrollHandler);
-            this.parentVirtDir.getHorizontalScroll().addEventListener('scroll', this.horizontalScrollHandler);
+            this.verticalScrollContainer.getScroll().addEventListener('scroll', this.verticalScrollHandler);
+            this.headerContainer.getScroll().addEventListener('scroll', this.horizontalScrollHandler);
 
             this.observer = new ResizeObserver(() => this.resizeNotify.next());
             this.observer.observe(this.nativeElement);
@@ -3120,8 +3120,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.zone.runOutsideAngular(() => {
             this.observer.disconnect();
             this.nativeElement.removeEventListener('keydown', this.keydownHandler);
-            this.verticalScrollContainer.getVerticalScroll().removeEventListener('scroll', this.verticalScrollHandler);
-            this.parentVirtDir.getHorizontalScroll().removeEventListener('scroll', this.horizontalScrollHandler);
+            this.verticalScrollContainer.getScroll().removeEventListener('scroll', this.verticalScrollHandler);
+            this.headerContainer.getScroll().removeEventListener('scroll', this.horizontalScrollHandler);
             const vertScrDC = this.verticalScrollContainer.displayContainer;
             vertScrDC.removeEventListener('scroll', this.scrollHandler);
             vertScrDC.removeEventListener('wheel', () => this.wheelHandler());
@@ -4896,6 +4896,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     public onHeaderSelectorClick(event) {
+        if (!this.isMultiRowSelectionEnabled) { return; }
         this.selectionService.areAllRowSelected() ?
             this.selectionService.clearRowSelection(event) : this.selectionService.selectAllRows(event);
     }
@@ -5016,8 +5017,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     dragScroll(dir: DragScrollDirection): void {
         const scrollDelta = 48;
-        const horizontal = this.parentVirtDir.getHorizontalScroll();
-        const vertical = this.verticalScrollContainer.getVerticalScroll();
+        const horizontal = this.headerContainer.getScroll();
+        const vertical = this.verticalScrollContainer.getScroll();
         switch (dir) {
             case DragScrollDirection.LEFT:
                 horizontal.scrollLeft -= scrollDelta;
@@ -5160,8 +5161,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     public scrollHandler = (event) => {
-        this.parentVirtDir.getHorizontalScroll().scrollLeft += event.target.scrollLeft;
-        this.verticalScrollContainer.getVerticalScroll().scrollTop += event.target.scrollTop;
+        this.headerContainer.scrollPosition += event.target.scrollLeft;
+        this.verticalScrollContainer.scrollPosition += event.target.scrollTop;
         event.target.scrollLeft = 0;
         event.target.scrollTop = 0;
     }
@@ -5229,16 +5230,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.dataView.slice(rowIndex, rowIndex + 1).find(rec => rec.expression || rec.childGridsData)) {
             visibleColIndex = -1;
         }
-        if (visibleColIndex === -1 || this.navigation.isColumnFullyVisible(visibleColIndex)) {
-            if (this.navigation.shouldPerformVerticalScroll(rowIndex, visibleColIndex)) {
-                this.navigation.performVerticalScrollToCell(rowIndex, visibleColIndex,
-                    () => { this.executeCallback(rowIndex, visibleColIndex, cb); });
-            } else {
-                this.executeCallback(rowIndex, visibleColIndex, cb);
-            }
-        } else {
+        const shouldScrollVertically = this.navigation.shouldPerformVerticalScroll(rowIndex, visibleColIndex);
+        const shouldScrollHorizontally = visibleColIndex !== -1 && !this.navigation.isColumnFullyVisible(visibleColIndex);
+        if (shouldScrollVertically) {
+            this.navigation.performVerticalScrollToCell(rowIndex, visibleColIndex,
+                () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
+        } else if (shouldScrollHorizontally) {
             this.navigation.performHorizontalScrollToCell(rowIndex, visibleColIndex, false,
-                () => { this.executeCallback(rowIndex, visibleColIndex, cb); });
+                     () => { this.navigateTo(rowIndex, visibleColIndex, cb); });
+        } else {
+            this.executeCallback(rowIndex, visibleColIndex, cb);
         }
     }
 
@@ -5843,7 +5844,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         // check virtualization state of data record added from cache
         // in case state is no longer valid - update it.
         const rowForOf = row.virtDirRow;
-        const gridScrLeft = rowForOf.getHorizontalScroll().scrollLeft;
+        const gridScrLeft = rowForOf.getScroll().scrollLeft;
         const left = -parseInt(rowForOf.dc.instance._viewContainer.element.nativeElement.style.left, 10);
         const actualScrollLeft = left + rowForOf.getColumnScrollLeft(rowForOf.state.startIndex);
         if (gridScrLeft !== actualScrollLeft) {

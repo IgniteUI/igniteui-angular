@@ -6,6 +6,7 @@ import {
     IgxGridNotGroupedPipe,
     IgxGridTopLevelColumns,
     IgxGridCellStylesPipe,
+    IgxGridCellStyleClassesPipe,
     IgxGridPaginatorOptionsPipe,
     IgxHasVisibleColumnsPipe,
     IgxDatePipeComponent,
@@ -21,6 +22,7 @@ import {
         IgxGridNotGroupedPipe,
         IgxGridTopLevelColumns,
         IgxGridCellStylesPipe,
+        IgxGridCellStyleClassesPipe,
         IgxGridPaginatorOptionsPipe,
         IgxHasVisibleColumnsPipe
     ],
@@ -32,6 +34,7 @@ import {
         IgxGridNotGroupedPipe,
         IgxGridTopLevelColumns,
         IgxGridCellStylesPipe,
+        IgxGridCellStyleClassesPipe,
         IgxGridPaginatorOptionsPipe,
         IgxHasVisibleColumnsPipe
     ],
