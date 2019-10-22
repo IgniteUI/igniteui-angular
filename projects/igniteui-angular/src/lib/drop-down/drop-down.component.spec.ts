@@ -1369,7 +1369,7 @@ describe('IgxDropDown ', () => {
             let lastItemElement = fixture.componentInstance.dropdownItems.last.element.nativeElement;
             expect(lastItemElement.textContent.trim()).toEqual('Item 11');
             expect(firstItemElement.textContent.trim()).toEqual('Item 1');
-            scroll.getVerticalScroll().scrollTop = scroll.getVerticalScroll().scrollHeight;
+            scroll.getScroll().scrollTop = scroll.getScroll().scrollHeight;
             fixture.detectChanges();
             await wait(200);
             firstItemElement = fixture.componentInstance.dropdownItems.first.element.nativeElement;
@@ -1453,7 +1453,7 @@ describe('IgxDropDown ', () => {
                     const expectedScroll = virtualScroll.getScrollForIndex(selectedItem.index)
                         - (itemsInView / 2 - 1) * virtualScroll.igxForItemSize;
                     const acceptableDelta = virtualScroll.igxForItemSize;
-                    const scrollTop = virtualScroll.getVerticalScroll().scrollTop;
+                    const scrollTop = virtualScroll.getScroll().scrollTop;
                     expect(expectedScroll - acceptableDelta < scrollTop && expectedScroll + acceptableDelta > scrollTop).toBe(true);
                     done();
                 }, 100);

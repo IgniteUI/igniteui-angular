@@ -7,7 +7,7 @@
     <div class="igx-grid__cbx-selection" (click)="onRowSelectorClick($event)">
         <ng-template *ngTemplateOutlet="
             this.grid.rowSelectorTemplate ? this.grid.rowSelectorTemplate : rowSelectorBaseTemplate;
-            context: { $implicit: {index: this.index + this.grid.page * this.grid.perPage, rowID: rowID, selected: selected }}">
+            context: { $implicit: { index: viewIndex, rowID: rowID, selected: selected }}">
         </ng-template>
     </div>
 </ng-container>
@@ -17,7 +17,8 @@
             <igx-grid-cell
                 class="igx-grid__td igx-grid__td--fw igx-grid__td--pinned"
                 [class.igx-grid__td--number]="col.dataType === 'number'"
-                [ngClass]="col.cellClasses | igxCellStyles:rowData[col.field]:rowData:col.field"
+                [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex"
+                [ngStyle]="col.cellStyles | igxCellStyles:rowData[col.field]:rowData:col.field:viewIndex"
                 [editMode]="col.editable && crudService.isInEditMode(index, col.index)"
                 [column]="col"
                 [formatter]="col.formatter"
@@ -38,7 +39,8 @@
             <igx-tree-grid-cell
                 class="igx-grid__td igx-grid__td--fw igx-grid__td--tree-cell igx-grid__td--pinned"
                 [class.igx-grid__td--number]="col.dataType === 'number' && col.visibleIndex !== 0"
-                [ngClass]="col.cellClasses | igxCellStyles:rowData[col.field]:rowData:col.field"
+                [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex"
+                [ngStyle]="col.cellStyles | igxCellStyles:rowData[col.field]:rowData:col.field:viewIndex"
                 [level]="treeRow.level"
                 [expanded]="treeRow.expanded"
                 [showIndicator]="showIndicator"
@@ -67,7 +69,8 @@
         <igx-grid-cell
             class="igx-grid__td igx-grid__td--fw"
             [class.igx-grid__td--number]="col.dataType === 'number'"
-            [ngClass]="col.cellClasses | igxCellStyles:rowData[col.field]:rowData:col.field"
+            [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex"
+            [ngStyle]="col.cellStyles | igxCellStyles:rowData[col.field]:rowData:col.field:viewIndex"
             [editMode]="col.editable && crudService.isInEditMode(index, col.index)"
             [column]="col"
             [formatter]="col.formatter"
@@ -87,7 +90,8 @@
         <igx-tree-grid-cell
             class="igx-grid__td igx-grid__td--fw igx-grid__td--tree-cell"
             [class.igx-grid__td--number]="col.dataType === 'number' && col.visibleIndex !== 0"
-            [ngClass]="col.cellClasses | igxCellStyles:rowData[col.field]:rowData:col.field"
+            [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex"
+            [ngStyle]="col.cellStyles | igxCellStyles:rowData[col.field]:rowData:col.field:viewIndex"
             [level]="treeRow.level"
             [expanded]="treeRow.expanded"
             [showIndicator]="showIndicator"

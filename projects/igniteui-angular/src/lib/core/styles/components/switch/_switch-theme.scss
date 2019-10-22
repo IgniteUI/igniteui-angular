@@ -166,7 +166,7 @@
     ), map-get($theme, variant));
 
     $switch-off-offset: map-get((
-        material: -1px,
+        material: 1px,
         fluent: $switch-thumb-width / 3
     ), map-get($theme, variant));
 
@@ -202,6 +202,9 @@
     $ripple-theme: igx-ripple-theme(
         $color: --var($theme, 'thumb-on-color')
     );
+
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
 
     %switch-display {
         position: relative;
@@ -263,7 +266,14 @@
         background: --var($theme, 'thumb-off-color');
         box-shadow: $thumb-resting-shadow;
         transition: $input-transition;
-        transform: translateX(rem($switch-off-offset));
+
+        @include if-ltr() {
+            transform: translateX(-#{rem($switch-off-offset)});
+        }
+
+        @include if-rtl() {
+            transform: translateX(#{rem($switch-off-offset)});
+        }
 
         &:hover {
             box-shadow: $thumb-hover-shadow;
@@ -271,10 +281,13 @@
     }
 
     %switch-composite-thumb--x {
-        transform: translateX(#{rem($switch-width) - rem($switch-thumb-width) - rem($switch-on-offset)});
         background: --var($theme, 'thumb-on-color');
 
-        [dir='rtl'] & {
+        @include if-ltr() {
+            transform: translateX(#{rem($switch-width) - rem($switch-thumb-width) - rem($switch-on-offset)});
+        }
+
+        @include if-rtl() {
             transform: translateX(-#{rem($switch-width) - rem($switch-thumb-width) - rem($switch-on-offset)});
         }
     }
@@ -322,31 +335,20 @@
         }
     }
 
+    %switch-label--before,
     %switch-label--after {
-        margin-left: $label-margin;
-
-        [dir='rtl'] & {
-            margin-left: initial;
-            margin-right: $label-margin;
-
-            &:empty {
-                margin: 0;
-            }
+        &:empty {
+            margin: 0;
         }
+    }
+
+    %switch-label--after {
+        margin-#{$left}: $label-margin;
     }
 
     %switch-label--before {
         order: -1;
-        margin-right: $label-margin;
-
-        [dir='rtl'] & {
-            margin-right: initial;
-            margin-left: $label-margin;
-
-            &:empty {
-                margin: 0;
-            }
-        }
+        margin-#{$right}: $label-margin;
     }
 
     %switch-label--disabled {

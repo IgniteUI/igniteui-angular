@@ -408,7 +408,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * value is either a callback function that returns a boolean,
      * or boolean, like so:
      * ```typescript
-     * callback = (rowData, columnKey) => { return rowData[columnKey] > 6; }
+     * callback = (rowData, columnKey, cellValue, rowIndex) => { return rowData[columnKey] > 6; }
      * cellClasses = { 'className' : this.callback };
      * ```
      * ```html
@@ -420,6 +420,27 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @notifyChanges()
     @Input()
     public cellClasses: any;
+
+    /**
+     * Sets conditional style properties on the column cells.
+     * Similar to `ngStyle` it accepts an object literal where the keys are
+     * the style properties and the value is the expression to be evaluated.
+     * As with `cellClasses` it accepts a callback function.
+     * ```typescript
+     * styles = {
+     *  background: 'royalblue',
+     *  color: (rowData, columnKey, cellValue, rowIndex) => value.startsWith('Important') : 'red': 'inherit'
+     * }
+     * ```
+     * ```html
+     * <igx-column [cellStyles]="styles"></igx-column>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @notifyChanges()
+    @Input()
+    cellStyles = null;
     /**
      * Gets the column index.
      * ```typescript
