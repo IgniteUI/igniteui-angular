@@ -87,6 +87,7 @@
     $navbar-title-fz: em(18px, 16px);
     $navbar-title-lh: em(18px, 16px);
     $navbar-title-margin: 0;
+    $left: if-ltr(left, right);
 
     %igx-navbar-display {
         display: flex;
@@ -113,7 +114,7 @@
         user-select: none;
 
         > * + * {
-            margin-left: 16px;
+            margin-#{$left}: 16px;
         }
     }
 
