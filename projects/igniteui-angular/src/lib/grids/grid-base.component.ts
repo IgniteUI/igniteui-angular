@@ -1077,7 +1077,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         if (this.filteringService.isFilterRowVisible) {
             this.filteringRow.close();
         }
-        this.notifyChanges(true);
+        this.reflow();
     }
 
     /**
