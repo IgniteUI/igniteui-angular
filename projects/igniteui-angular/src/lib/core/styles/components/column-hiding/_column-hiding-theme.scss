@@ -29,7 +29,15 @@
     $background-color: null
 ) {
     $name: 'igx-column-hiding';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $column-hiding-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $column-hiding-schema: map-get($schema, $name);
+    } @else {
+        $column-hiding-schema: $schema;
+    }
+
+    $theme: apply-palette($column-hiding-schema, $palette);
 
     @if not($title-color) and $background-color {
         $title-color: text-contrast($background-color);

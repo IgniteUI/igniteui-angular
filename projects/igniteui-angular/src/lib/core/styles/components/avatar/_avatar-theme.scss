@@ -34,7 +34,13 @@
     $image-background: null
 ) {
     $name: 'igx-avatar';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $theme: ();
+
+    @if map-has-key($schema, $name) {
+        $theme: apply-palette(map-get($schema, $name), $palette);
+    } @else {
+        $theme: apply-palette($schema, $palette);
+    }
 
     @if not($icon-color) and $icon-background {
         $icon-color: text-contrast($icon-background);

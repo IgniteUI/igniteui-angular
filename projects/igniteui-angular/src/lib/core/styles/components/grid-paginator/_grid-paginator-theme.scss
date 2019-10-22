@@ -31,7 +31,15 @@
     $border-color: null
 ) {
     $name: 'igx-grid-paginator';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $grid-paginator-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $grid-paginator-schema: map-get($schema, $name);
+    } @else {
+        $grid-paginator-schema: $schema;
+    }
+
+    $theme: apply-palette($grid-paginator-schema, $palette);
 
     @return extend($theme, (
         name: $name,
