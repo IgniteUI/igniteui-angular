@@ -1397,7 +1397,7 @@ export class GridFunctions {
         let advFilteringDialog = gridNativeElement.querySelector('igx-advanced-filtering-dialog');
 
         if (!advFilteringDialog) {
-            advFilteringDialog = fix.nativeElement.querySelector('igx-advanced-filtering-dialog');;
+            advFilteringDialog = fix.nativeElement.querySelector('igx-advanced-filtering-dialog');
         }
         const outlet = advFilteringDialog.querySelector('.igx-advanced-filter__outlet');
         return outlet;
