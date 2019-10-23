@@ -36,6 +36,7 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
     public get treeRow(): ITreeGridRecord {
         return this._treeRow;
     }
+
     public set treeRow(value: ITreeGridRecord) {
         if (this._treeRow !== value) {
             this._treeRow = value;
@@ -72,6 +73,14 @@ export class IgxTreeGridRowComponent extends IgxRowComponent<IgxTreeGridComponen
      * @hidden
      */
     public isLoading: boolean;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    get viewIndex(): number {
+        return this.index + this.grid.page * this.grid.perPage;
+    }
 
     /**
      * @hidden

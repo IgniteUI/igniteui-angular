@@ -28,6 +28,9 @@
 /// @param {color} $focus-selected-background [null] - The selected chip focus background color.
 /// @param {color} $focus-selected-border-color [null] - The selected chip focus border color.
 ///
+/// @param {color} $remove-icon-color [null] - The remove icon color for the chip.
+/// @param {color} $remove-icon-color-focus [null] - The remove icon color on focus for the chip.
+///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
@@ -71,6 +74,8 @@
     $focus-selected-border-color: null,
 
     $ghost-shadow: null,
+    $remove-icon-color: null,
+    $remove-icon-color-focus: null,
 ) {
     $name: 'igx-chip';
     $chip-schema: map-get($schema, $name);
@@ -204,6 +209,8 @@
         focus-selected-border-color: $focus-selected-border-color,
 
         ghost-shadow: $ghost-shadow,
+        remove-icon-color: $remove-icon-color,
+        remove-icon-color-focus: $remove-icon-color-focus,
     ));
 }
 
@@ -253,6 +260,9 @@
         cosy: rem(18px),
         compact: rem(16px)
     );
+
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
 
     %igx-chip-area {
         display: flex;
@@ -348,29 +358,19 @@
         + igx-suffix,
         + [igxSuffix],
         + %igx-chip__remove {
-            margin-left: rem(4px);
-
-            [dir='rtl'] & {
-                margin-left: 0;
-                margin-right: rem(4px);
-            }
+            margin-#{$left}: rem(4px);
         }
     }
 
     %igx-chip__prefix {
         + igx-prefix,
         + [igxPrefix] {
-            margin-left: rem(4px);
+            margin-#{$left}: rem(4px);
 
             &%igx-avatar-display {
                 max-height: 100%;
                 max-width: 100%;
-                margin-left: $chip-avatar-inset!important;
-            }
-
-            [dir='rtl'] & {
-                margin-left: 0;
-                margin-right: rem(4px);
+                margin-#{$left}: $chip-avatar-inset!important;
             }
         }
     }
@@ -395,8 +395,8 @@
 
     %igx-chip__remove {
         display: inline-flex;
-        color: currentColor;
-        margin-right: rem(4px);
+        margin-#{$right}: rem(4px);
+        color: --var($theme, 'remove-icon-color', currentColor);
 
         &:empty {
             display: none;
@@ -408,7 +408,8 @@
             outline-style: none;
 
             igx-icon {
-                color: igx-color(map-get($theme, 'palette'), error);
+                outline-style: none;
+                color: --var($theme, 'remove-icon-color-focus');
             }
         }
 
@@ -416,11 +417,6 @@
             &:focus{
                 outline-style: none;
             }
-        }
-
-        [dir='rtl'] & {
-            margin-right: 0;
-            margin-left: rem(4px) !important;
         }
     }
 
@@ -438,12 +434,7 @@
 
         + igx-prefix,
         + [igxPrefix] {
-            margin-left: rem(4px);
-
-            [dir='rtl'] & {
-                margin-left: 0;
-                margin-right: rem(4px);
-            }
+            margin-#{$left}: rem(4px);
         }
     }
 
@@ -457,11 +448,7 @@
 
         + igx-prefix,
         + [igxPrefix] {
-            margin-left: 0;
-
-            [dir='rtl'] & {
-                margin-right: 0;
-            }
+            margin-#{$left}: 0;
         }
     }
 
