@@ -35,27 +35,7 @@ $_light-grid-toolbar: (
         igx-color: ('grays', 600)
     ),
 
-    button-background: (
-        igx-color: ('grays', 100)
-    ),
-
     button-text-color: (
-        igx-color: ('grays', 600)
-    ),
-
-    button-hover-background: (
-        igx-color: ('grays', 100)
-    ),
-
-    button-hover-text-color: (
-        igx-color: ('grays', 600)
-    ),
-
-    button-focus-background: (
-        igx-color: ('grays', 100)
-    ),
-
-    button-focus-text-color: (
         igx-color: ('grays', 600)
     ),
 
@@ -79,7 +59,7 @@ $_light-grid-toolbar: (
 
     item-focus-text-color: (
         igx-color: ('grays', 600)
-    )
+    ),
 );
 
 /// Generates a fluent grid-toolbar schema.
@@ -95,10 +75,6 @@ $_fluent-grid-toolbar: extend(
     (
         background-color: (
             igx-color: 'surface'
-        ),
-
-        button-hover-text-color: (
-            igx-color: ('primary', 500)
         ),
     )
 );
