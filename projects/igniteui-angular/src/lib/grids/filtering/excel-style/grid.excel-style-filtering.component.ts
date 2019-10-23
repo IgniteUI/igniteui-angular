@@ -9,7 +9,8 @@ import {
     OnDestroy,
     AfterViewInit,
     ElementRef,
-    Input
+    Input,
+    ViewRef
 } from '@angular/core';
 import {
     HorizontalAlignment,
@@ -142,7 +143,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
             this._columnPinning = this.grid.onColumnPinning.pipe(takeUntil(this.destroy$)).subscribe(() => {
                 requestAnimationFrame(() => {
                     this.isColumnPinnable = this.column.pinnable;
-                    this.cdr.detectChanges();
+                    if (!(this.cdr as ViewRef).destroyed) {
+                       this.cdr.detectChanges();
+                    }
                 });
             });
             this._columnVisibilityChanged = this.grid.onColumnVisibilityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
