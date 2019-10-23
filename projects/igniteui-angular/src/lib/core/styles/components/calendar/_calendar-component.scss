@@ -37,7 +37,7 @@
     }
 
     @include e(body-column) {
-        @extend %cal-column-display !optional;
+        @extend %cal-column-year !optional;
     }
 
     @include e(label) {
