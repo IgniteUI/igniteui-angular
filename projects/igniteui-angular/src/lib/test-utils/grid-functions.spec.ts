@@ -1087,7 +1087,11 @@ export class GridFunctions {
 
     public static getAdvancedFilteringComponent(fix: ComponentFixture<any>) {
         const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
-        const advFilterDialog = gridNativeElement.querySelector('.igx-advanced-filter');
+        let advFilterDialog = gridNativeElement.querySelector('.igx-advanced-filter');
+
+        if (!advFilterDialog) {
+            advFilterDialog = fix.nativeElement.querySelector('.igx-advanced-filter');
+        }
         return advFilterDialog;
     }
 
@@ -1390,7 +1394,11 @@ export class GridFunctions {
 
     public static getAdvancedFilteringOutlet(fix: ComponentFixture<any>) {
         const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
-        const advFilteringDialog = gridNativeElement.querySelector('igx-advanced-filtering-dialog');
+        let advFilteringDialog = gridNativeElement.querySelector('igx-advanced-filtering-dialog');
+
+        if (!advFilteringDialog) {
+            advFilteringDialog = fix.nativeElement.querySelector('igx-advanced-filtering-dialog');;
+        }
         const outlet = advFilteringDialog.querySelector('.igx-advanced-filter__outlet');
         return outlet;
     }
