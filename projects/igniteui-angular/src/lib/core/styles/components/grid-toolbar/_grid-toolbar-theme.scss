@@ -10,6 +10,7 @@
 ///
 /// @param {Color} $background-color [null] - The toolbar background color.
 /// @param {Color} $title-text-color [null] - The toolbar title text color.
+/// @param {Color} $dropdown-background [null] - The toolbar drop-down background color.
 /// @param {Color} $item-text-color [null] - The toolbar drop-down item text color.
 /// @param {Color} $item-hover-background [null] - The toolbar drop-down item hover background color.
 /// @param {Color} $item-hover-text-color [null] - The toolbar drop-down item hover text color.
@@ -76,7 +77,7 @@
 
         background-color: $background-color,
         title-text-color: $title-text-color,
-        
+
         item-text-color: $item-text-color,
         dropdown-background: $dropdown-background,
         item-hover-background: $item-hover-background,
