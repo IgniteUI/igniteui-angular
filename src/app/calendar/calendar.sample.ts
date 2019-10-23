@@ -9,12 +9,14 @@ import { IgxCalendarComponent, DateRangeDescriptor, DateRangeType } from 'ignite
 export class CalendarSampleComponent implements OnInit {
     @ViewChild('calendar', { static: true }) calendar: IgxCalendarComponent;
     @ViewChild('calendar1', { read: IgxCalendarComponent, static: true }) calendar1: IgxCalendarComponent;
+    public model = null;
+    // public model = null;
 
     ngOnInit() {
         this.calendar.disabledDates = [{
             type: DateRangeType.Specific, dateRange: [
-                new Date(2019, 5, 13),
-                new Date(2019, 5, 27),
+                new Date(2019, 10, 13),
+                new Date(2019, 10, 27),
                 new Date(2019, 5, 30),
                 new Date(2019, 6, 1),
                 new Date(2019, 5, 1),
