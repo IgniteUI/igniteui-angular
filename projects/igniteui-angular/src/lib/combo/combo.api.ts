@@ -1,8 +1,10 @@
 import { IgxComboBase } from './combo.common';
+import { Injectable } from '@angular/core';
 
 /**
  * @hidden
  */
+@Injectable()
 export class IgxComboAPIService {
     protected combo: IgxComboBase;
 

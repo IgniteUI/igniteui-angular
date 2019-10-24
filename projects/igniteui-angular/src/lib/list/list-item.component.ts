@@ -13,7 +13,7 @@ import {
 import {
     IgxListPanState,
     IListChild,
-    IgxListBase
+    IgxListBaseDirective
 } from './list.common';
 
 import { HammerGesturesManager } from '../core/touch';
@@ -79,7 +79,7 @@ export class IgxListItemComponent implements IListChild {
     public rightPanningTemplateElement;
 
     constructor(
-        public list: IgxListBase,
+        public list: IgxListBaseDirective,
         private elementRef: ElementRef,
         private _renderer: Renderer2) {
     }

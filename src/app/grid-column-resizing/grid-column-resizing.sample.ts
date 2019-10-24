@@ -18,7 +18,7 @@ export class GridColumnResizingSampleComponent implements OnInit {
     ngOnInit(): void {
         this.columns = [
             { field: 'ID', width: 100, resizable: true, maxWidth: 200, minWidth: 70 },
-            { field: 'CompanyName', width: 300, resizable: true },
+            { field: 'CompanyName', width: '300px', resizable: true },
             { field: 'ContactName', width: 200, resizable: true },
             { field: 'ContactTitle', width: 200, resizable: true },
             { field: 'Address', width: 300, resizable: true },
