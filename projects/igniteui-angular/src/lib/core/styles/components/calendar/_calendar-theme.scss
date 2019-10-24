@@ -453,6 +453,12 @@
         align-items: center;
     }
 
+    %cal-column-year {
+        %cal-value--year {
+            flex: 1 0 0;
+        }
+    }
+
     %cal-value {
         position: relative;
         display: flex;
