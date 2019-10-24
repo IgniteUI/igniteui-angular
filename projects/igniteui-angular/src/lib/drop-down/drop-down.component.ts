@@ -18,14 +18,14 @@ import {
 } from '@angular/core';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
-import { IgxDropDownBase } from './drop-down.base';
+import { IgxDropDownBaseDirective } from './drop-down.base';
 import { DropDownActionKey, Navigate } from './drop-down.common';
 import { IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down.common';
 import { ISelectionEventArgs } from './drop-down.common';
 import { CancelableEventArgs, CancelableBrowserEventArgs, isIE, IBaseEventArgs } from '../core/utils';
 import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
-import { IgxDropDownItemBase } from './drop-down-item.base';
+import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 import { OverlaySettings } from '../services';
 import { IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { take } from 'rxjs/operators';
@@ -52,7 +52,7 @@ import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
     templateUrl: './drop-down.component.html',
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }]
 })
-export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBase, OnInit, OnDestroy, AfterViewInit {
+export class IgxDropDownComponent extends IgxDropDownBaseDirective implements IDropDownBase, OnInit, OnDestroy, AfterViewInit {
     protected destroy$ = new Subject<boolean>();
     protected _scrollPosition: number;
 
@@ -67,7 +67,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * @internal
      */
     @ContentChildren(forwardRef(() => IgxDropDownItemComponent), { descendants: true })
-    public children: QueryList<IgxDropDownItemBase>;
+    public children: QueryList<IgxDropDownItemBaseDirective>;
 
     /**
      * Emitted before the dropdown is opened
@@ -133,7 +133,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     /**
      * @hidden @internal
      */
-    public get focusedItem(): IgxDropDownItemBase {
+    public get focusedItem(): IgxDropDownItemBaseDirective {
         if (this.virtDir) {
             return this._focusedItem && this._focusedItem.index !== -1 ?
             (this.children.find(e => e.index === this._focusedItem.index) || null) :
@@ -142,7 +142,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         return this._focusedItem;
     }
 
-    public set focusedItem(value: IgxDropDownItemBase) {
+    public set focusedItem(value: IgxDropDownItemBaseDirective) {
         if (!value) {
             this.selection.clear(`${this.id}-active`);
             this._focusedItem = null;
@@ -153,7 +153,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
             this._focusedItem = {
                 value: value.value,
                 index: value.index
-            } as IgxDropDownItemBase;
+            } as IgxDropDownItemBaseDirective;
         }
         this.selection.set(`${this.id}-active`, new Set([this._focusedItem]));
     }
@@ -183,7 +183,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * let currentItem = this.dropdown.selectedItem;
      * ```
      */
-    public get selectedItem(): IgxDropDownItemBase {
+    public get selectedItem(): IgxDropDownItemBaseDirective {
         const selectedItem = this.selection.first_item(this.id);
         if (selectedItem) {
             return selectedItem;
@@ -266,12 +266,12 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         if (index < 0 || index >= this.items.length) {
             return;
         }
-        let newSelection: IgxDropDownItemBase;
+        let newSelection: IgxDropDownItemBaseDirective;
         if (this.virtDir) {
             newSelection = {
                 value: this.virtDir.igxForOf[index],
                 index
-            } as IgxDropDownItemBase;
+            } as IgxDropDownItemBaseDirective;
         } else {
             newSelection = this.items[index];
         }
@@ -293,7 +293,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
             this.focusedItem = {
                 value: this.virtDir.igxForOf[index],
                 index: index
-            } as IgxDropDownItemBase;
+            } as IgxDropDownItemBaseDirective;
             if (subRequired) {
                 this.virtDir.scrollTo(index);
             }
@@ -412,7 +412,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         this.selection.clear(`${this.id}-active`);
     }
 
-    protected scrollToItem(item: IgxDropDownItemBase) {
+    protected scrollToItem(item: IgxDropDownItemBaseDirective) {
         const itemPosition = this.calculateScrollPosition(item);
 
         //  in IE11 setting sctrollTop is somehow slow and forces dropdown
@@ -429,7 +429,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     }
 
     /** @hidden @internal */
-    public calculateScrollPosition(item: IgxDropDownItemBase): number {
+    public calculateScrollPosition(item: IgxDropDownItemBaseDirective): number {
         if (!item) {
             return 0;
         }
@@ -517,7 +517,7 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
      * @param newSelection
      * @param event
      */
-    public selectItem(newSelection?: IgxDropDownItemBase, event?: Event) {
+    public selectItem(newSelection?: IgxDropDownItemBaseDirective, event?: Event) {
         const oldSelection = this.selectedItem;
         if (!newSelection) {
             newSelection = this.focusedItem;
@@ -525,14 +525,14 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         if (newSelection === null) {
             return;
         }
-        if (newSelection instanceof IgxDropDownItemBase && newSelection.isHeader) {
+        if (newSelection instanceof IgxDropDownItemBaseDirective && newSelection.isHeader) {
             return;
         }
         if (this.virtDir) {
             newSelection = {
                 value: newSelection.value,
                 index: newSelection.index
-            } as IgxDropDownItemBase;
+            } as IgxDropDownItemBaseDirective;
         }
         const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false };
         this.onSelection.emit(args);

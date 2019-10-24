@@ -16,14 +16,14 @@ import {
     IgxStringFilteringOperand
 } from '../../data-operations/filtering-condition';
 import { IgxDatePickerComponent } from '../../date-picker/date-picker.component';
-import { IgxGridFilteringCellComponent } from '../filtering/grid-filtering-cell.component';
-import { IgxGridHeaderComponent } from '../grid-header.component';
-import { IgxGridFilteringRowComponent } from '../filtering/grid-filtering-row.component';
+import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
+import { IgxGridHeaderComponent } from '../headers/grid-header.component';
+import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxBadgeComponent } from '../../badge/badge.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
-import { IgxGridHeaderGroupComponent } from '../grid-header-group.component';
+import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { changei18n, getCurrentResourceStrings } from '../../core/i18n/resources';
 import { registerLocaleData } from '@angular/common';
 import localeDE from '@angular/common/locales/de';

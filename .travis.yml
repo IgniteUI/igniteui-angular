@@ -39,7 +39,7 @@ before_deploy:
 - cd dist/igniteui-angular
 # update package versions
 - npm version "${TRAVIS_TAG}" --no-git-tag-version --save
-- if [[ "${TRAVIS_TAG}" == *"beta"* || "${TRAVIS_TAG}" == *"rc"* ]]; then export NPM_TAG="next"; else export NPM_TAG="latest"; fi
+- if [[ "${TRAVIS_TAG}" == *"alpha"* || "${TRAVIS_TAG}" == *"beta"* || "${TRAVIS_TAG}" == *"rc"* ]]; then export NPM_TAG="next"; else export NPM_TAG="latest"; fi
 
 # copy readme
 - cp ../../README.md README.md

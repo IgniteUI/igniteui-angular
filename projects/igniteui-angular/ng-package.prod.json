@@ -2,7 +2,11 @@
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../dist/igniteui-angular",
   "lib": {
-    "entryFile": "src/public_api.ts"
+    "entryFile": "src/public_api.ts",
+    "umdModuleIds": {
+      "jszip/dist/jszip": "JSZip",
+      "resize-observer-polyfill": "ResizeObserver"
+    }
   },
   "whitelistedNonPeerDependencies": [
       "@types/hammerjs",
