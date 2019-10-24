@@ -203,7 +203,7 @@ describe('IgxGrid - Column properties', () => {
         headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         headers.forEach((header) => expect(header.nativeElement.className.indexOf(COLUMN_NUMBER_CLASS)).toBeGreaterThan(-1));
         expect(headers[2].nativeElement.className.indexOf('headerAlignSyle')).toBeGreaterThan(-1);
-        grid.parentVirtDir.getHorizontalScroll().scrollLeft = 200;
+        grid.headerContainer.getScroll().scrollLeft = 200;
         setTimeout(() => {
             fix.detectChanges();
             headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
@@ -214,7 +214,7 @@ describe('IgxGrid - Column properties', () => {
             allCells.forEach((cell) => expect(cell.nativeElement.className.indexOf(CELL_NUMBER_CLASS)).toBeGreaterThan(-1));
             expect(allCells[1].nativeElement.className.indexOf('headerAlignSyle')).toBeGreaterThan(-1);
 
-            grid.parentVirtDir.getHorizontalScroll().scrollLeft = 0;
+            grid.headerContainer.getScroll().scrollLeft = 0;
             setTimeout(() => {
                 fix.detectChanges();
                 headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));

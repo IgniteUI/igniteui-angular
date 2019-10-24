@@ -46,12 +46,12 @@ export class GridFunctions {
     }
 
     public static scrollLeft(grid: IgxGridComponent, newLeft: number) {
-        const hScrollbar = grid.parentVirtDir.getHorizontalScroll();
+        const hScrollbar = grid.headerContainer.getScroll();
         hScrollbar.scrollLeft = newLeft;
     }
 
     public static scrollRight(grid: IgxGridComponent, newRight: number) {
-        const hScrollbar = grid.parentVirtDir.getHorizontalScroll();
+        const hScrollbar = grid.parentVirtDir.getScroll();
         hScrollbar.scrollRight = newRight;
     }
 

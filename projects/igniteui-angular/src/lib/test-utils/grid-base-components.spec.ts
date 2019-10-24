@@ -45,7 +45,7 @@ export class GridWithSizeComponent extends GridAutoGenerateComponent {
     public height = '100%';
 
     public scrollTop(newTop: number) {
-        this.grid.verticalScrollContainer.getVerticalScroll().scrollTop = newTop;
+        this.grid.verticalScrollContainer.getScroll().scrollTop = newTop;
     }
 }
 
@@ -71,7 +71,7 @@ export class GridNxMComponent extends GridWithSizeComponent implements OnInit {
     }
 
     public isHorizonatScrollbarVisible() {
-        const scrollbar = this.grid.parentVirtDir.getHorizontalScroll();
+        const scrollbar = this.grid.headerContainer.getScroll();
         return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
     }
 }
