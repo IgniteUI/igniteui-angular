@@ -355,7 +355,7 @@ describe('IgxGrid - Advanced Filtering', () => {
             GridFunctions.clickAdvancedFilteringApplyButton(fix);
 
             // Verify that the advanced filtering button icon indicates there are filters.
-            advFilterIcon = GridFunctions.getAdvancedFilteringButton(fix).querySelector('igx-icon');
+            advFilterIcon = GridFunctions.getAdvancedFilteringButton(fix).querySelector('igx-button--outlined');
             expect(advFilterIcon.classList.contains(ADVANCED_FILTERING_TOOLBAR_ICON_BUTTON_FILTERED_CSS_CLASS))
                 .toBe(true, 'Button icon indicates there is no active filtering.');
 
@@ -372,7 +372,7 @@ describe('IgxGrid - Advanced Filtering', () => {
             fix.detectChanges();
 
             // Verify that the advanced filtering button icon indicates there are no filters.
-            advFilterIcon = GridFunctions.getAdvancedFilteringButton(fix).querySelector('igx-icon');
+            advFilterIcon = GridFunctions.getAdvancedFilteringButton(fix).querySelector('igx-button--outlined');
             expect(advFilterIcon.classList.contains(ADVANCED_FILTERING_TOOLBAR_ICON_BUTTON_FILTERED_CSS_CLASS))
                 .toBe(false, 'Button icon indicates there is active filtering.');
         }));
