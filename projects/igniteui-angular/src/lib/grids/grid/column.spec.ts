@@ -233,19 +233,19 @@ describe('IgxGrid - Column properties #grid', () => {
         fix.detectChanges();
 
         expect(grid.calcWidth).toBe(600);
-        expect(grid.columns[0].width).toBe('300');
+        expect(grid.columns[0].width).toBe('300px');
         expect(!grid.columns[0].widthSetByUser);
-        expect(grid.columns[1].width).toBe('300');
+        expect(grid.columns[1].width).toBe('300px');
         expect(!grid.columns[1].widthSetByUser);
         grid.columns[0].hidden = true;
         fix.detectChanges();
 
-        expect(grid.columns[1].width).toBe('600');
+        expect(grid.columns[1].width).toBe('600px');
         grid.columns[0].hidden = false;
         fix.detectChanges();
 
-        expect(grid.columns[0].width).toBe('300');
-        expect(grid.columns[1].width).toBe('300');
+        expect(grid.columns[0].width).toBe('300px');
+        expect(grid.columns[1].width).toBe('300px');
     });
 
     it('should support passing templates through the markup as an input property', () => {
