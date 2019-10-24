@@ -5,26 +5,25 @@ import { DataUtil, DataType } from '../data-operations/data-util';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from './cell.component';
-import { IgxColumnComponent } from './column.component';
-import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
-import { IgxRowComponent } from './row.component';
+import { IgxGridBaseDirective } from './grid-base.directive';
+import { IgxRowDirective } from './row.directive';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType, State } from '../services/transaction/transaction';
-import { IgxCell, IgxRow } from '../core/grid-selection';
+import { IgxCell, IgxRow } from './selection/selection.service';
+import { GridType } from './common/grid.interface';
+import { ColumnType } from './common/column.interface';
 /**
  *@hidden
  */
 @Injectable()
-export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBindable> {
+export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
     grid: T;
-    protected editCellState: Map<string, any> = new Map<string, any>();
-    protected editRowState: Map<string, { rowID: any, rowIndex: number }> = new Map();
     protected destroyMap: Map<string, Subject<boolean>> = new Map<string, Subject<boolean>>();
 
-    public get_column_by_name(name: string): IgxColumnComponent {
-        return this.grid.columnList.find((col) => col.field === name);
+    public get_column_by_name(name: string): ColumnType {
+        return this.grid.columnList.find((col: ColumnType) => col.field === name);
     }
 
     public get_summary_data() {
@@ -73,7 +72,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
     }
 
     public get_row_index_in_data(rowID: any): number {
-        const grid = this.grid as IgxGridBaseComponent;
+        const grid = this.grid as IgxGridBaseDirective;
         if (!grid) {
             return -1;
         }
@@ -81,7 +80,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         return grid.primaryKey ? data.findIndex(record => record[grid.primaryKey] === rowID) : data.indexOf(rowID);
     }
 
-    public get_row_by_key(rowSelector: any): IgxRowComponent<IgxGridBaseComponent & IGridDataBindable> {
+    public get_row_by_key(rowSelector: any): IgxRowDirective<IgxGridBaseDirective & GridType> {
         const primaryKey = this.grid.primaryKey;
         if (primaryKey !== undefined && primaryKey !== null) {
             return this.grid.dataRowList.find((row) => row.rowData[primaryKey] === rowSelector);
@@ -90,7 +89,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         }
     }
 
-    public get_row_by_index(rowIndex: number): IgxRowComponent<IgxGridBaseComponent & IGridDataBindable> {
+    public get_row_by_index(rowIndex: number): IgxRowDirective<IgxGridBaseDirective & GridType> {
         return this.grid.rowList.find((row) => row.index === rowIndex);
     }
 
@@ -422,7 +421,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
     public clear_groupby(name?: string | Array<string>) {
     }
 
-    public should_apply_number_style(column: IgxColumnComponent): boolean {
+    public should_apply_number_style(column: ColumnType): boolean {
         return column.dataType === DataType.Number;
     }
 
@@ -537,7 +536,7 @@ export class GridBaseAPIService <T extends IgxGridBaseComponent & IGridDataBinda
         return false;
     }
 
-    public atInexistingPage(): Boolean {
+    public atInexistingPage(): boolean {
         return this.grid.totalPages - 1 > this.grid.page;
     }
 }

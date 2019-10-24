@@ -18,7 +18,7 @@ import {
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridSelectionMode } from '../common/enums';
-import { IgxRowSelectorsModule } from '../igx-row-selectors.module';
+import { IgxGridSelectionModule } from '../selection/selection.module';
 
 const DEBOUNCETIME = 30;
 
@@ -39,7 +39,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             imports: [
                 NoopAnimationsModule,
                 IgxGridModule,
-                IgxRowSelectorsModule
+                IgxGridSelectionModule
             ]
         })
             .compileComponents();

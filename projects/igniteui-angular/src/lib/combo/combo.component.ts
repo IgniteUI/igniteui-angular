@@ -2,7 +2,7 @@ import { ConnectedPositioningStrategy } from './../services/overlay/position/con
 import { CommonModule } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, HostListener,
-    Input, NgModule, OnInit, OnDestroy, Output, TemplateRef, ViewChild, Optional, Inject, Injector, forwardRef, Type
+    Input, NgModule, OnInit, OnDestroy, Output, TemplateRef, ViewChild, Optional, Inject, Injector, Type
 } from '@angular/core';
 import {
     IgxComboItemDirective,
@@ -127,7 +127,7 @@ const noop = () => { };
     providers: [
         IgxComboAPIService,
         { provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent },
-        { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => IgxComboComponent), multi: true }
+        { provide: NG_VALUE_ACCESSOR, useExisting: IgxComboComponent, multi: true }
     ]
 })
 export class IgxComboComponent extends DisplayDensityBase implements IgxComboBase, AfterViewInit, ControlValueAccessor, OnInit,
@@ -1638,6 +1638,5 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         IgxComboClearIconDirective],
     imports: [IgxRippleModule, CommonModule, IgxInputGroupModule, FormsModule, ReactiveFormsModule,
         IgxForOfModule, IgxToggleModule, IgxCheckboxModule, IgxDropDownModule, IgxButtonModule, IgxIconModule],
-    providers: [IgxSelectionAPIService]
 })
 export class IgxComboModule { }
