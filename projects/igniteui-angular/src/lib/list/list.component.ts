@@ -149,7 +149,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      * @memberof IgxListComponent
      */
-    @ContentChildren(forwardRef(() => IgxListItemComponent))
+    @ContentChildren(forwardRef(() => IgxListItemComponent), { descendants: true })
     public children: QueryList<IgxListItemComponent>;
 
     /**
