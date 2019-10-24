@@ -37,7 +37,7 @@ import { Subscription, Subject } from 'rxjs';
 import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
 import { takeUntil } from 'rxjs/operators';
 import { ISelectionEventArgs, IgxDropDownComponent } from '../../../drop-down';
-import { IgxColumnComponent } from '../../column.component';
+import { IgxColumnComponent } from '../../columns/column.component';
 
 /**
  *@hidden

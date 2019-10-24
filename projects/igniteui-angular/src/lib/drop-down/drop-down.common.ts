@@ -1,7 +1,7 @@
 import { CancelableEventArgs, CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
-import { IgxDropDownItemBase } from './drop-down-item.base';
+import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 import { IToggleView } from '../core/navigation/IToggleView';
-import { EventEmitter } from '@angular/core';
+import { EventEmitter, InjectionToken } from '@angular/core';
 import { DisplayDensityBase } from '../core/density';
 
 /** @hidden */
@@ -22,8 +22,8 @@ export enum DropDownActionKey {
  * @export
  */
 export interface ISelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {
-    oldSelection: IgxDropDownItemBase;
-    newSelection: IgxDropDownItemBase;
+    oldSelection: IgxDropDownItemBaseDirective;
+    newSelection: IgxDropDownItemBaseDirective;
 }
 
 /**
@@ -39,7 +39,7 @@ export interface IDropDownNavigationDirective {
     onHomeKeyDown(event?: KeyboardEvent): void;
 }
 
-export const IGX_DROPDOWN_BASE = 'IgxDropDownBaseToken';
+export const IGX_DROPDOWN_BASE = new InjectionToken<IDropDownBase>('IgxDropDownBaseToken');
 
 /**
  * @hidden
@@ -51,9 +51,9 @@ export interface IDropDownList extends DisplayDensityBase {
     id: string;
     maxHeight: string;
     collapsed: boolean;
-    items: IgxDropDownItemBase[];
-    headers: IgxDropDownItemBase[];
-    focusedItem: IgxDropDownItemBase;
+    items: IgxDropDownItemBaseDirective[];
+    headers: IgxDropDownItemBaseDirective[];
+    focusedItem: IgxDropDownItemBaseDirective;
     navigateFirst(): void;
     navigateLast(): void;
     navigateNext(): void;
@@ -73,6 +73,6 @@ export interface IDropDownBase extends IDropDownList, IToggleView {
     onClosed: EventEmitter<void>;
     allowItemsFocus?: boolean;
     setSelectedItem(index: number): void;
-    selectItem(item: IgxDropDownItemBase, event?: Event): void;
+    selectItem(item: IgxDropDownItemBaseDirective, event?: Event): void;
 }
 
