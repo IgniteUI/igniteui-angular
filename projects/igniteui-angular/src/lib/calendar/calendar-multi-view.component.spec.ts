@@ -16,7 +16,7 @@ describe('Multi-View Calendar - ', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [MultiViewCalendarSampleComponent, MultiViewDatePickerSampleComponent],
+            declarations: [MultiViewCalendarSampleComponent, MultiViewDatePickerSampleComponent, MultiViewNgModelSampleComponent],
             imports: [IgxCalendarModule, IgxDatePickerModule, FormsModule, NoopAnimationsModule]
         }).compileComponents();
     }));
@@ -978,7 +978,7 @@ describe('Multi-View Calendar - ', () => {
             expect(HelperTestFunctions.getMonthViewSelectedDates(fixture, 2).length).toBe(0);
         });
 
-        it('Multi Selecion - Select/Deselect date from one view should also select/deselect the date in the another', () => {
+        it('Multi Selection - Select/Deselect date from one view should also select/deselect the date in the another', () => {
             spyOn(calendar.onSelection, 'emit');
             expect(calendar.hideOutsideDays).toBe(false);
             calendar.selection = 'multi';
@@ -1186,6 +1186,37 @@ describe('Multi-View Calendar - ', () => {
             HelperTestFunctions.getMonthViewSelectedDates(fixture, 2).forEach((el) => {
                 expect(el.classList.contains(HelperTestFunctions.RANGE_CSSCLASS)).toBeTruthy();
             });
+        });
+    });
+
+    describe('Selection tests with ngModel - ', () => {
+        beforeEach(fakeAsync(() => {
+            fixture = TestBed.createComponent(MultiViewNgModelSampleComponent);
+            fixture.detectChanges();
+            calendar = fixture.componentInstance.calendar;
+            calendar.viewDate = new Date(2019, 8, 1); // 1st September 2019
+            tick();
+            fixture.detectChanges();
+        }));
+
+        it('Should be able to select/deselect dates in multi mode', () => {
+            const secondMonthDates = HelperTestFunctions.getMonthViewDates(fixture, 1);
+            UIInteractions.simulateClickEvent(secondMonthDates[16]);
+
+            fixture.detectChanges();
+            expect(calendar.value[0].getTime()).toEqual(new Date(2019, 9, 10).getTime());
+            expect(calendar.daysView.value[0].getTime()).toEqual(new Date(2019, 9, 10).getTime());
+
+            UIInteractions.simulateClickEvent(secondMonthDates[17]);
+
+            fixture.detectChanges();
+            expect(calendar.value[0].getTime()).toEqual(new Date(2019, 9, 10).getTime());
+            expect(calendar.value[1].getTime()).toEqual(new Date(2019, 9, 17).getTime());
+            expect(calendar.value[2].getTime()).toEqual(new Date(2019, 9, 18).getTime());
+
+            expect(calendar.daysView.value[0].getTime()).toEqual(new Date(2019, 9, 10).getTime());
+            expect(calendar.daysView.value[1].getTime()).toEqual(new Date(2019, 9, 17).getTime());
+            expect(calendar.daysView.value[2].getTime()).toEqual(new Date(2019, 9, 18).getTime());
         });
     });
 
@@ -1415,4 +1446,15 @@ export class MultiViewDatePickerSampleComponent {
     @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
     public date = new Date('2019-09-15');
     public monthViews = 3;
+}
+
+@Component({
+    template: `
+        <igx-calendar [monthsViewNumber]="monthViews" selection="multi" [(ngModel)]="model"></igx-calendar>
+    `
+})
+export class MultiViewNgModelSampleComponent {
+    @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
+    public monthViews = 3;
+    public model = new Date(2019, 9, 10);
 }

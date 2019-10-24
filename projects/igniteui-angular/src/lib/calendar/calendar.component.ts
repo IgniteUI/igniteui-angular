@@ -458,7 +458,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
 
         // generally the scrolling is built on the calendar component
         // and all start/stop scrolling methods are called on the calendar
-        // if we change below lines to call stopMonthScroll$ on the calendar instead of on the veiws,
+        // if we change below lines to call stopMonthScroll$ on the calendar instead of on the views,
         // strange bug is introduced --> after changing number of months, continuous scrolling on mouse click does not happen
         this.daysView.stopMonthScroll$.next(true);
         this.daysView.stopMonthScroll$.complete();
@@ -610,24 +610,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
      */
     private deselectDateInMonthViews(value: Date) {
         this.monthViews.forEach(m => {
-            this.deselectMultipleInMonth(m, value);
+            m.deselectMultipleInMonth(value);
          });
-    }
-
-    /**
-     * @hidden
-     */
-    private deselectMultipleInMonth(monthView: IgxDaysViewComponent, value: Date) {
-        const mDates = monthView.selectedDates.map(v => this.getDateOnly(v).getTime());
-        const selDates = this.selectedDates.map(v => this.getDateOnly(v).getTime());
-
-        if (JSON.stringify(mDates) === JSON.stringify(selDates)) {
-            return;
-        }
-        const valueDateOnly = this.getDateOnly(value);
-        monthView.selectedDates = monthView.selectedDates.filter(
-            (date: Date) => date.getTime() !== valueDateOnly.getTime()
-        );
     }
 
     /**
