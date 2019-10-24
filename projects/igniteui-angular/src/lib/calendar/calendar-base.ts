@@ -421,6 +421,7 @@ export class IgxCalendarBase implements ControlValueAccessor {
                 this.selectedDates = this.selectedDates.concat(newSelection);
             }
         }
+        this.selectedDates = this.selectedDates.filter(d => !this.isDateDisabled(d));
         this.selectedDates.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
         this._onChangeCallback(this.selectedDates);
     }
@@ -501,6 +502,18 @@ export class IgxCalendarBase implements ControlValueAccessor {
     }
 
     /**
+     * Performs deselection of a single value, when selection is multi
+     * Usually performed by the selectMultiple method, but leads to bug when multiple months are in view
+     * @hidden
+     */
+    public deselectMultipleInMonth(value: Date) {
+        const valueDateOnly = this.getDateOnly(value);
+        this.selectedDates = this.selectedDates.filter(
+            (date: Date) => date.getTime() !== valueDateOnly.getTime()
+        );
+    }
+
+    /**
      * Performs a range deselection.
      * @hidden
      */
@@ -561,7 +574,7 @@ export class IgxCalendarBase implements ControlValueAccessor {
      * @hidden
      */
     public writeValue(value: Date | Date[]) {
-        this.selectedDates = value;
+        this.selectDate(value as Date);
     }
 
     /**
@@ -586,7 +599,7 @@ export class IgxCalendarBase implements ControlValueAccessor {
 
         switch (this.selection) {
             case CalendarSelection.SINGLE:
-                if (isDate(value)) {
+                if (isDate(value) && !this.isDateDisabled(value as Date)) {
                     this.selectSingle(value as Date);
                 }
                 break;
@@ -634,10 +647,7 @@ export class IgxCalendarBase implements ControlValueAccessor {
         switch (this.selection) {
             case CalendarSelection.SINGLE:
             case CalendarSelection.MULTI:
-                if (!this.isDateDisabled(value)) {
-                    this.selectDate(value);
-                }
-
+                this.selectDate(value);
                 break;
             case CalendarSelection.RANGE:
                 this.selectRange(value, true);
