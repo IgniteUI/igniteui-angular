@@ -328,7 +328,7 @@ describe('IgxGrid - Advanced Filtering', () => {
         it('Should update the Advanced Filtering button in toolbar when (filtering)/(clear filtering).',
         fakeAsync(() => {
             // Verify that the advanced filtering button indicates there are no filters.
-            let advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix).querySelector('.igx-button--outlined');
+            let advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix);
             expect(advFilterBtn.classList.contains(ADVANCED_FILTERING_TOOLBAR_BUTTON_FILTERED_CSS_CLASS))
                 .toBe(false, 'Button indicates there is active filtering.');
 
@@ -355,7 +355,7 @@ describe('IgxGrid - Advanced Filtering', () => {
             GridFunctions.clickAdvancedFilteringApplyButton(fix);
 
             // Verify that the advanced filtering button indicates there are filters.
-            advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix).querySelector('.igx-button--outlined');
+            advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix);
             expect(advFilterBtn.classList.contains(ADVANCED_FILTERING_TOOLBAR_BUTTON_FILTERED_CSS_CLASS))
                 .toBe(true, 'Button icon indicates there is no active filtering.');
 
@@ -372,7 +372,7 @@ describe('IgxGrid - Advanced Filtering', () => {
             fix.detectChanges();
 
             // Verify that the advanced filtering button indicates there are no filters.
-            advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix).querySelector('.igx-button--outlined');
+            advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix);
             expect(advFilterBtn.classList.contains(ADVANCED_FILTERING_TOOLBAR_BUTTON_FILTERED_CSS_CLASS))
                 .toBe(false, 'Button icon indicates there is active filtering.');
         }));
