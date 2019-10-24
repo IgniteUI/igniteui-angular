@@ -4455,18 +4455,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected getFilterRowHeight(): number {
-        let filterRowHeight = 0;
-        if (this.filteringRow) {
-            filterRowHeight = this.filteringRow.element.nativeElement.offsetHeight;
-        } else {
-            const headerGroupNativeEl = (this.headerGroupsList.length !== 0) ?
-                                         this.headerGroupsList[0].element.nativeElement : null;
-            const filterCellNativeEl = (headerGroupNativeEl) ?
-                                        headerGroupNativeEl.querySelector('igx-grid-filtering-cell') : null;
-            filterRowHeight = (filterCellNativeEl) ? filterCellNativeEl.offsetHeight : 0;
-        }
-        return filterRowHeight;
+    protected getFilterCellHeight(): number {
+        const headerGroupNativeEl = (this.headerGroupsList.length !== 0) ?
+                                        this.headerGroupsList[0].element.nativeElement : null;
+        const filterCellNativeEl = (headerGroupNativeEl) ?
+                                    headerGroupNativeEl.querySelector('igx-grid-filtering-cell') : null;
+        return (filterCellNativeEl) ? filterCellNativeEl.offsetHeight : 0;
     }
 
     /**
@@ -4478,7 +4472,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
 
         const actualTheadRow = (!this.allowFiltering || (this.allowFiltering && this.filterMode !== FilterMode.quickFilter)) ?
-                                 this.theadRow.nativeElement.offsetHeight - this.getFilterRowHeight() :
+                                 this.theadRow.nativeElement.offsetHeight - this.getFilterCellHeight() :
                                  this.theadRow.nativeElement.offsetHeight;
         const footerHeight = this.summariesHeight || this.tfoot.nativeElement.offsetHeight - this.tfoot.nativeElement.clientHeight;
         const toolbarHeight = this.getToolbarHeight();
