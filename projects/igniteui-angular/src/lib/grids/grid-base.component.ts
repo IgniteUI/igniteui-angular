@@ -4477,7 +4477,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             return null;
         }
 
-        const actualTheadRow = (this.allowFiltering && this.filterMode !== FilterMode.quickFilter) ?
+        const actualTheadRow = (!this.allowFiltering || (this.allowFiltering && this.filterMode !== FilterMode.quickFilter)) ?
                                  this.theadRow.nativeElement.offsetHeight - this.getFilterRowHeight() :
                                  this.theadRow.nativeElement.offsetHeight;
         const footerHeight = this.summariesHeight || this.tfoot.nativeElement.offsetHeight - this.tfoot.nativeElement.clientHeight;
