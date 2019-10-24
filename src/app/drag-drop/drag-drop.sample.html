@@ -5,7 +5,7 @@
                 <h4 class="sample-title">No ghost dragging:</h4>
                 <div [style.height.px]="100">
                     <div [igxDrag]="{ dragged: false }" [ghost]="false" class="dialog" [dragChannel]="['Suspect']"
-                        (dragStart)="draggedElem = true" (dragEnd)="draggedElem = false" (dragClick)="dragClick($event)">
+                        (dragStart)="draggedElem = true" (dragEnd)="draggedElem = false" (dragClick)="dragClick()">
                         <span *ngIf="!draggedElem">Drag me</span>
                         <span *ngIf="draggedElem">Weeeee</span>
                     </div>
@@ -15,7 +15,7 @@
                 <div #ghostHost [style.height.px]="100">
                     <div [igxDrag]="{ id: 'customGhost'}" [dragChannel]="'Suspect'"  [ghostTemplate]="dragGhost"
                         [ngClass]="customDragged ? 'dragWithGhostPlaceholder' : 'dragWithGhostDefault'"
-                        (dragStart)="customDragged = true" (dragEnd)="customDragged = false"  (dragClick)="dragClick($event)">
+                        (dragStart)="customDragged = true" (dragEnd)="customDragged = false"  (dragClick)="dragClick()">
                         <span *ngIf="!customDragged">Drag me</span>
                         <ng-template #dragGhost>
                             <div class="customGhost">

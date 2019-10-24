@@ -11,6 +11,9 @@
 /// @requires rem
 /// @requires --var
 @mixin _excel-filtering($theme, $palette) {
+    $left: if-left(left, right);
+    $right: if-left(right, left);
+
     %grid-excel-filter {
         display: block;
     }
@@ -67,10 +70,10 @@
 
     %grid-excel-menu__header-actions {
         display: flex;
-        margin-left: auto;
+        margin-#{$left}: auto;
 
         [igxButton] + [igxButton] {
-            margin-left: rem(4px);
+            margin-#{$left}: rem(4px);
         }
     }
 
@@ -83,7 +86,7 @@
             flex-grow: 1;
 
             + [igxButton] {
-                margin-left: rem(16px);
+                margin-#{$left}: rem(16px);
             }
         }
     }
@@ -103,15 +106,22 @@
             height: rem(18px);
             margin-right: rem(8px);
         }
+
+        @include if-rtl() {
+            igx-icon {
+                margin-left: rem(8px);
+            }
+        }
     }
 
     %grid-excel-action--compact {
         display: flex;
         align-items: center;
+        justify-content: space-between;
 
         header {
             color: igx-color($palette, 'grays', 700);
-            margin-right: auto;
+            margin-#{$right}: auto;
         }
     }
 
@@ -135,6 +145,20 @@
         [igxButton] {
             flex-grow: 1;
             width: rem(104px);
+
+            @include if-rtl() {
+                &:last-of-type {
+                    order: -1;
+                }
+
+                &:last-of-type > igx-icon {
+                    order: -1;
+                }
+
+                &:first-of-type > igx-icon {
+                    order: 2;
+                }
+            }
         }
 
         igx-icon {
@@ -163,6 +187,12 @@
         &:focus {
             background: igx-color($palette, 'grays', 100);
         }
+
+        @include if-rtl() {
+            igx-icon {
+                transform: scaleX(-1);
+            }
+        }
     }
 
     %grid-excel-actions__action--disabled {
@@ -183,6 +213,7 @@
 
     %grid-excel-menu--cosy {
         %grid-excel-menu__header {
+            justify-content: space-between;
             padding: rem(8px);
         }
 
@@ -214,6 +245,7 @@
 
     %grid-excel-menu--compact {
         %grid-excel-menu__header {
+            justify-content: space-between;
             padding: rem(4px);
         }
 
@@ -226,7 +258,7 @@
                 width: rem(208px);
 
                 [igxButton] > igx-icon + span {
-                    margin-left: rem(8px);
+                    margin-#{$left}: rem(8px);
                 }
             }
         }
@@ -332,12 +364,12 @@
 
             ~ igx-input-group,
             ~ igx-date-picker {
-                margin-left: rem(16px);
+                margin-#{$left}: rem(16px);
             }
         }
 
         [igxButton='icon'] {
-            margin-left: rem(16px);
+            margin-#{$left}: rem(16px);
         }
     }
 
@@ -348,7 +380,7 @@
             width: rem(18px);
             height: rem(18px);
             font-size: rem(18px);
-            margin-right: rem(8px);
+            margin-#{$right}: rem(8px);
         }
     }
 }

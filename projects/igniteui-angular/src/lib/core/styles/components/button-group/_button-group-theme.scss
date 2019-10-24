@@ -150,6 +150,7 @@
     $group-item-border-thickness: 1px;
     $group-items-margin: rem(10px, 16px);
     $transition: all 140ms $ease-in-out-quad;
+    $palette: map-get($theme, 'palette');
 
     %igx-group-display {
         display: flex;
@@ -240,6 +241,20 @@
             color: --var($theme, 'item-selected-text-color');
             background: --var($theme, 'item-selected-hover-background');
         }
+
+        &%igx-button--disabled {
+            position: relative;
+
+            &::before {
+                position: absolute;
+                content: '';
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                background: rgba(igx-color($palette, 'grays', 500), .06);
+            }
+        }
     }
 
     %igx-group-vertical {
@@ -258,3 +273,4 @@
         }
     }
 }
+
