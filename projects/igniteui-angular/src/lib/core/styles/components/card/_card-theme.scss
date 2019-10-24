@@ -132,6 +132,8 @@
     $card-subtitle-margin: 0;
     $card-tgroup-margin: 0 em(16px);
     $card-transitions: box-shadow .3s cubic-bezier(.25, .8, .25, 1);
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
 
     %igx-card-display {
         display: flex;
@@ -188,7 +190,7 @@
             display: flex;
             justify-content: center;
             align-self: unset;
-            margin-right: 0;
+            margin-#{$right}: 0;
             margin-bottom: rem(16px);
         }
     }
@@ -199,7 +201,7 @@
 
     %igx-card-header-thumbnail {
         align-self: flex-start;
-        margin-right: rem(16px);
+        margin-#{$right}: rem(16px);
 
         &:empty {
             display: none;
@@ -255,7 +257,7 @@
 
     %igx-card-media--right {
         width: auto;
-        margin-left: auto;
+        margin-#{$left}: auto;
         order: 9999;
     }
 
@@ -268,12 +270,16 @@
         padding: $card-actions-padding;
 
         [igxButton] ~ [igxButton] {
-            margin-left: rem(8px);
+            margin-#{$left}: rem(8px);
         }
     }
 
     %igx-card-actions--vertical {
         flex-direction: column;
+
+        @include if-rtl() {
+            order: -1;
+        }
     }
 
     %igx-card-actions__icons {
@@ -281,7 +287,7 @@
         align-items: center;
         order: 1;
         color: --var($theme, 'actions-text-color');
-        margin-left: auto;
+        margin-#{$left}: auto;
 
         &:empty {
             display: none;
@@ -313,24 +319,24 @@
         flex-direction: column;
 
         [igxButton] ~ [igxButton] {
-            margin-left: 0;
+            margin-#{$left}: 0;
             margin-top: rem(8px);
         }
     }
 
     %igx-card-actions__icons--vertical {
         margin-top: auto;
-        margin-left: 0;
+        margin-#{$left}: 0;
     }
 
     %igx-card-actions__icons--reverse {
         order: 0;
-        margin-left: 0;
+        margin-#{$left}: 0;
     }
 
     %igx-card-actions__buttons--reverse {
         order: 1;
-        margin-left: auto;
+        margin-#{$left}: auto;
     }
 
     %igx-card-actions__icons--vertical-reverse {
@@ -348,7 +354,7 @@
         flex-flow: row nowrap;
 
         [igxButton] ~ [igxButton] {
-            margin-left: 8px;
+            margin-#{$left}: 8px;
         }
     }
 
@@ -362,11 +368,11 @@
     }
 
     %igx-card-actions-igroup--start {
-        margin-right: auto;
+        margin-#{$right}: auto;
     }
 
     %igx-card-actions-igroup--end {
-        margin-left: auto;
+        margin-#{$left}: auto;
     }
 }
 

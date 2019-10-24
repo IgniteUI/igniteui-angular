@@ -10,7 +10,8 @@ import {
     ElementRef,
     HostBinding,
     HostListener,
-    ChangeDetectionStrategy
+    ChangeDetectionStrategy,
+    ViewRef
 } from '@angular/core';
 import { DataType } from '../../data-operations/data-util';
 import { IgxColumnComponent } from '../column.component';
@@ -437,11 +438,15 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Event handler for focusout on the input group.
      */
     public onInputGroupFocusout() {
-        if (!this.value && this.value !== 0) {
+        if (!this.value && this.value !== 0 &&
+            this.expression.condition && !this.expression.condition.isUnary) {
             return;
         }
         requestAnimationFrame(() => {
             const focusedElement = document.activeElement;
+            if (focusedElement.className === 'igx-chip__remove') {
+                return;
+            }
             if (!(focusedElement && this.inputGroup.nativeElement.contains(focusedElement))
                 && this.dropDownConditions.collapsed) {
                 this.commitInput();
@@ -481,7 +486,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     /*
     * noop
     */
-    public noop() {}
+    public noop() { }
 
     /**
      *  Event handler for date picker's selection.
@@ -531,7 +536,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
     public onChipPointerdown(args, chip: IgxChipComponent) {
         const activeElement = document.activeElement;
-        this._cancelChipClick = chip.selected && activeElement && this.inputGroup.nativeElement.contains(activeElement);
+        this._cancelChipClick = chip.selected && activeElement &&
+            this.inputGroup.nativeElement.contains(activeElement);
     }
 
     public onChipClick(args, item: ExpressionUI) {
@@ -648,7 +654,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
                 this.showArrows = this.chipsAreaWidth >= containerWidth && this.isColumnFiltered;
 
                 // TODO: revise the cdr.detectChanges() usage here
-                this.cdr.detectChanges();
+                if (!(this.cdr as ViewRef).destroyed) {
+                this.cdr.detectChanges(); }
             }
         });
     }

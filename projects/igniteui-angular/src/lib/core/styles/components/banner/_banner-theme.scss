@@ -57,10 +57,13 @@
 @mixin igx-banner($theme) {
     @include igx-root-css-vars($theme);
 
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
+
     $banner-padding: (
-        comfortable: rem(8) rem(8) rem(8) 0,
-        cosy: rem(8) rem(8) rem(8) 0,
-        compact: rem(8) rem(8) rem(8) 0
+        comfortable: rem(8),
+        cosy: rem(8),
+        compact: rem(8)
     );
 
     %igx-banner,
@@ -71,7 +74,10 @@
     }
 
     %igx-banner {
-        padding: map-get($banner-padding, 'comfortable');
+        padding-#{$right}: map-get($banner-padding, 'comfortable');
+        padding-#{$left}: 0;
+        padding-top: map-get($banner-padding, 'comfortable');
+        padding-bottom: map-get($banner-padding, 'comfortable');
         background: --var($theme, 'banner-background');
         align-items: center;
         position: relative;
@@ -84,7 +90,7 @@
         width: rem(40);
         min-width: rem(40);
         height: rem(40);
-        margin-left: rem(16);
+        margin-#{$left}: rem(16);
         color: --var($theme, 'banner-illustration-color');
     }
 
@@ -101,7 +107,7 @@
     %igx-banner__text {
         color: --var($theme, 'banner-message-color');
         flex: 1 0 0%;
-        margin-left: rem(24);
+        margin-#{$left}: rem(24);
     }
 
     %igx-banner--cosy {
@@ -115,7 +121,7 @@
     %igx-banner__message {
         min-width: rem(220);
         flex: 1 0 0%;
-        margin-right: rem(90);
+        margin-#{$right}: rem(90);
     }
 
     %igx-banner__row {

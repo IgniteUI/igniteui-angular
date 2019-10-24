@@ -1,26 +1,31 @@
-%vhelper-display {
-    display: block;
-    overflow: auto;
-    z-index: 10001;
-}
+@mixin igx-vhelper {
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
 
-%vhelper--vertical {
-    position: absolute;
-    width: 18px;
-    top: 0;
-    right: 0;
-}
+    %vhelper-display {
+        display: block;
+        overflow: auto;
+        z-index: 10001;
+    }
 
-%vhelper--horizontal {
-    width: 100%;
-}
+    %vhelper--vertical {
+        position: absolute;
+        width: 18px;
+        top: 0;
+        #{$right}: 0;
+    }
 
-%vhelper-content--vertical {
-    width: 1px;
-}
+    %vhelper--horizontal {
+        width: 100%;
+    }
 
-%vhelper-content--horizontal {
-    height: 1px;
+    %vhelper-content--vertical {
+        width: 1px;
+    }
+
+    %vhelper-content--horizontal {
+        height: 1px;
+    }
 }
 
 @include b(igx-vhelper) {
