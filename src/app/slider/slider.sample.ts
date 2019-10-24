@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SliderType } from 'igniteui-angular';
+import { SliderType, TickLabelsOrientation } from 'igniteui-angular';
 
 class Task {
     title: string;
@@ -18,6 +18,7 @@ class Task {
 })
 export class SliderSampleComponent {
     sliderType: SliderType = SliderType.RANGE;
+    labelOrientaion = TickLabelsOrientation.vertical;
 
     rangeValue = {
         lower: 30,
@@ -28,6 +29,14 @@ export class SliderSampleComponent {
         lower: 2,
         upper: 5
     };
+
+    changeLabelOrientation() {
+        if (this.labelOrientaion === TickLabelsOrientation.vertical) {
+            this.labelOrientaion = TickLabelsOrientation.horizontal;
+        } else {
+            this.labelOrientaion = TickLabelsOrientation.vertical;
+        };
+    }
 
     task: Task = new Task('Implement new app', 30);
 }
