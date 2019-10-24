@@ -698,7 +698,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture = TestBed.createComponent(SelectionWithTransactionsComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-            grid.ngAfterViewInit();
 
             grid.primaryKey = 'ID';
             fixture.detectChanges();
