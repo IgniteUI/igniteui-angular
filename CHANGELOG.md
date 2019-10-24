@@ -1,10 +1,27 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+
+## 9.0.0
+
+### General
+- Added support for the Ivy renderer.
+- **Breaking Changes** The following classes have been renamed. Using `ng update` will apply automatically migrate your project to use the new names.
+    - `IgxDropDownBase` -> `IgxDropDownBaseDirective`
+    - `IgxDropDownItemBase` -> `IgxDropDownBaseDirective`
+    - `IgxGridBaseComponent` -> `IgxGridBaseDirective`
+    - `IgxRowComponent` -> `IgxRowDirective`
+    - `IgxHierarchicalGridBaseComponent` -> `IgxHierarchicalGridBaseDirective`
+
+
 ## 8.2.6
+
 ### New Features
 - `IgxSelectItem`
     - `text` input is added. By default, the select component will use the selected item's element innerText to be displayed in the input field. In cases with more complex item templates where more than just text interpolation is used, set the text property to specify what to display in the input field when this item is selected.
+
+
+## 8.2.4
 
 ### RTL Support
 Most of the components in the framework now have full right-to-left (RTL) support via the newly included RTL themes. 

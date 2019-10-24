@@ -1,4 +1,4 @@
-import { InjectionToken, Input, Output, EventEmitter, DoCheck, OnInit } from '@angular/core';
+import { InjectionToken, Input, Output, EventEmitter, DoCheck, OnInit, Directive, NgModule, Optional, Inject } from '@angular/core';
 import { IBaseEventArgs } from './utils';
 
 
@@ -31,6 +31,10 @@ export const DisplayDensityToken = new InjectionToken<IDisplayDensityOptions>('D
 /**
  * Base class containing all logic required for implementing DisplayDensity.
  */
+@Directive({
+    selector: '[igxDisplayDensityBase]'
+})
+// tslint:disable-next-line: directive-class-suffix
 export class DisplayDensityBase implements DoCheck, OnInit {
     protected _displayDensity: DisplayDensity;
 
@@ -76,7 +80,7 @@ export class DisplayDensityBase implements DoCheck, OnInit {
     protected oldDisplayDensityOptions: IDisplayDensityOptions = { displayDensity: DisplayDensity.comfortable };
 
 
-    constructor(protected displayDensityOptions: IDisplayDensityOptions) {
+    constructor(@Optional() @Inject(DisplayDensityToken) protected displayDensityOptions: IDisplayDensityOptions) {
         Object.assign(this.oldDisplayDensityOptions, displayDensityOptions);
     }
 
@@ -115,3 +119,13 @@ export class DisplayDensityBase implements DoCheck, OnInit {
         }
     }
 }
+
+@NgModule({
+    declarations: [
+        DisplayDensityBase
+    ],
+    exports: [
+        DisplayDensityBase
+    ]
+})
+export class IgxDisplayDensityModule {}

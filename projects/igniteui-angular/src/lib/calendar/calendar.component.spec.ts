@@ -1273,6 +1273,26 @@ describe('IgxCalendar', () => {
         );
     });
 
+    it('Should not select date from model, if it is part of disabled dates', async () => {
+        const fixture = TestBed.createComponent(IgxCalendarDisabledSpecialDatesComponent);
+        const calendar = fixture.componentInstance.calendar;
+        fixture.detectChanges();
+        await (500);
+
+        expect(calendar.value).toBeFalsy();
+    });
+
+    it('Should not select date from model in range selection, if model passes null', async () => {
+        const fixture = TestBed.createComponent(IgxCalendarDisabledSpecialDatesComponent);
+        const calendar = fixture.componentInstance.calendar;
+        calendar.selection = 'range';
+        fixture.componentInstance.model = null;
+        fixture.detectChanges();
+        await (500);
+
+        expect((calendar.value as Date[]).length).toEqual(0);
+    });
+
     describe('Select and deselect dates', () => {
         configureTestSuite();
         let fixture;
@@ -2046,7 +2066,7 @@ export class IgxCalendaRangeComponent {
     `
 })
 export class IgxCalendarDisabledSpecialDatesComponent {
-    public model: Date | Date[] = new Date(2017, 5, 13);
+    public model: Date | Date[] = new Date(2017, 5, 23);
     public viewDate = new Date(2017, 5, 13);
     public specialDates = [{type: DateRangeType.Between, dateRange: [new Date(2017, 5, 1), new Date(2017, 5, 6)]}];
     public disabledDates = [{type: DateRangeType.Between, dateRange: [new Date(2017, 5, 23), new Date(2017, 5, 29)]}];

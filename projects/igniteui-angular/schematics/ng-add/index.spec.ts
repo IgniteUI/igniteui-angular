@@ -106,8 +106,8 @@ describe('ng-add schematics', () => {
     runner.runSchematic('ng-add', { normalizeCss: false }, tree);
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
 
-    expect(pkgJsonData.devDependencies['igniteui-cli']).toBeTruthy();
-    expect(pkgJsonData.dependencies['igniteui-cli']).toBeFalsy();
+    expect(pkgJsonData.devDependencies['@igniteui/angular-schematics']).toBeTruthy();
+    expect(pkgJsonData.dependencies['@igniteui/angular-schematics']).toBeFalsy();
   });
 
   it('should properly add polyfills', () => {

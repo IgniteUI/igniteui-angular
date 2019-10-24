@@ -8,7 +8,7 @@ import {
     TemplateRef,
     Directive
 } from '@angular/core';
-import { IgxColumnComponent } from '../../column.component';
+import { IgxColumnComponent } from '../../columns/column.component';
 import { IChangeCheckboxEventArgs } from '../../../checkbox/checkbox.component';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
 import { DisplayDensity } from '../../../core/density';
