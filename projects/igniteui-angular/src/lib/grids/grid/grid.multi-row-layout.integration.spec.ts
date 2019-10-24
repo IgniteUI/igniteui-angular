@@ -468,23 +468,6 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(grid.getColumnByName('ContactTitle').pinned).toBeTruthy();
         });
 
-        it('should not allow pinning if group width exceeds max allowed.', () => {
-            // pin the other group
-            fixture.componentInstance.colGroups[1].pinned = true;
-            fixture.detectChanges();
-
-            // group 1 should still be pinned - all child columns should be pinned
-            expect(grid.getColumnByName('PostalCode').pinned).toBeTruthy();
-            expect(grid.getColumnByName('City').pinned).toBeTruthy();
-            expect(grid.getColumnByName('Country').pinned).toBeTruthy();
-            expect(grid.getColumnByName('Address').pinned).toBeTruthy();
-            // group 2 should not be pinned as it will exceed unpinnedAreaMinWidth
-            expect(grid.getColumnByName('ID').pinned).toBeFalsy();
-            expect(grid.getColumnByName('CompanyName').pinned).toBeFalsy();
-            expect(grid.getColumnByName('ContactName').pinned).toBeFalsy();
-            expect(grid.getColumnByName('ContactTitle').pinned).toBeFalsy();
-        });
-
         it('should emit onColumnPinning event with correct parameters', () => {
             let allArgs = [];
             grid.onColumnPinning.subscribe((args) => {

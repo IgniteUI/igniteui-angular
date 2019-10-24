@@ -533,13 +533,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                 }
 
                 if (!this.cms.column.pinned && this.column.pinned) {
-                    const nextPinnedWidth = this.column.grid.getPinnedWidth(true) + parseFloat(this.cms.column.width);
-
-                    if (nextPinnedWidth <= this.column.grid.calcPinnedContainerMaxWidth) {
-                        this.cms.icon.innerText = 'lock';
-                    } else {
-                        this.cms.icon.innerText = 'block';
-                    }
+                    this.cms.icon.innerText = 'lock';
                 }
             } else {
                 this.cms.icon.innerText = 'block';
@@ -593,20 +587,6 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
                 source: this.cms.column,
                 target: this.column
             };
-
-            let nextPinnedWidth;
-            if (this.column.pinned && !this.cms.column.pinned) {
-                nextPinnedWidth = this.column.grid.getPinnedWidth(true) + parseFloat(this.cms.column.width);
-            }
-
-            if ((nextPinnedWidth && nextPinnedWidth > this.column.grid.calcPinnedContainerMaxWidth) ||
-                this.column.level !== this.cms.column.level ||
-                this.column.parent !== this.cms.column.parent ||
-                this.cms.cancelDrop) {
-                    this.cms.cancelDrop = false;
-                    this.column.grid.onColumnMovingEnd.emit(args);
-                    return;
-            }
 
             this.column.grid.moveColumn(this.cms.column, this.column, this._dropPos);
 

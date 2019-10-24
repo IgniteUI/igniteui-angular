@@ -1694,9 +1694,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *@hidden
     */
     public get pinnable() {
-        const gridUnpinnedWidth = (this.grid as any).getUnpinnedWidth(true);
-        const elementWidth = this.parent ? parseInt(this.topLevelParent.width, 10) : parseInt(this.width, 10);
-        return (this.grid as any)._init || !((gridUnpinnedWidth - elementWidth) < this.grid.unpinnedAreaMinWidth);
+        return (this.grid as any)._init || !this.pinned;
     }
 
     /**

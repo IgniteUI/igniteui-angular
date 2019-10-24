@@ -742,51 +742,6 @@ describe('IgxGrid - multi-column headers #grid', () => {
         });
     }));
 
-    it('column pinning - Try to pin column or group which exceeds the pinned area width.', fakeAsync(() => {
-        const fixture = TestBed.createComponent(ColumnGroupFourLevelTestComponent);
-        fixture.detectChanges();
-        const ci = fixture.componentInstance;
-        const grid = ci.grid;
-        expect(grid.pinnedColumns.length).toEqual(0);
-        expect(grid.unpinnedColumns.length).toEqual(18);
-
-        // Try to pin top group
-        ci.addrInfoColGroup.pinned = true;
-        fixture.detectChanges();
-        tick();
-
-        // Verify group and all its children are not pinned
-        testColumnPinning(ci.addrInfoColGroup, false);
-        testColumnsOrder(ci.colsAndGroupsNaturalOrder);
-
-        expect(grid.pinnedColumns.length).toEqual(0);
-        expect(grid.unpinnedColumns.length).toEqual(18);
-
-        // Try to pin a column
-        ci.faxCol.pinned = true;
-        fixture.detectChanges();
-        tick();
-
-        // Verify group and all its children are not pinned
-        testColumnPinning(ci.addrInfoColGroup, false);
-        testColumnsOrder(ci.colsAndGroupsNaturalOrder);
-
-        expect(grid.pinnedColumns.length).toEqual(0);
-        expect(grid.unpinnedColumns.length).toEqual(18);
-
-        // Try to pin child group
-        ci.contactInfoColGroup.pinned = true;
-        fixture.detectChanges();
-        tick();
-
-        // Verify group and all its children are not pinned
-        testColumnPinning(ci.addrInfoColGroup, false);
-        testColumnsOrder(ci.colsAndGroupsNaturalOrder);
-
-        expect(grid.pinnedColumns.length).toEqual(0);
-        expect(grid.unpinnedColumns.length).toEqual(18);
-    }));
-
     it('column pinning - Verify pin a not fully visble group', fakeAsync(() => {
         const fixture = TestBed.createComponent(ColumnGroupTwoGroupsTestComponent);
         fixture.detectChanges();
