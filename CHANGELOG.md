@@ -1,7 +1,10 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
-## 8.2.4
+## 8.2.6
+### New Features
+- `IgxSelectItem`
+    - `text` input is added. By default, the select component will use the selected item's element innerText to be displayed in the input field. In cases with more complex item templates where more than just text interpolation is used, set the text property to specify what to display in the input field when selecting this item.
 
 ### RTL Support
 Most of the components in the framework now have full right-to-left (RTL) support via the newly included RTL themes. 
