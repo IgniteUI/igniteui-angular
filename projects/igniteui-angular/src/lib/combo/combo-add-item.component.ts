@@ -1,5 +1,5 @@
 import { IgxComboItemComponent } from './combo-item.component';
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 
 /**
  * @hidden
@@ -16,8 +16,12 @@ export class IgxComboAddItemComponent extends IgxComboItemComponent {
     set selected(value: boolean) {
     }
 
-    clicked(event?) {
+    @HostListener('click')
+    handleClick() {
         this.comboAPI.disableTransitions = false;
         this.comboAPI.add_custom_item();
+    }
+
+    clicked(event?) {
     }
 }
