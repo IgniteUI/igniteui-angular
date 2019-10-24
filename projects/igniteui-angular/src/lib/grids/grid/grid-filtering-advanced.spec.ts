@@ -40,7 +40,7 @@ describe('IgxGrid - Advanced Filtering', () => {
         UIInteractions.clearOverlay();
     });
 
-    fdescribe('', () => {
+    describe('', () => {
         let fix, grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
