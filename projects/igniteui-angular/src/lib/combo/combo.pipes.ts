@@ -1,4 +1,4 @@
-import { Inject, Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, Inject } from '@angular/core';
 import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
@@ -16,15 +16,11 @@ import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
     name: 'comboFiltering'
 })
 export class IgxComboFilteringPipe implements PipeTransform {
-
-    constructor(@Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase) { }
-
     public transform(collection: any[], expressions: IFilteringExpression[],
                      logic: FilteringLogic) {
         const filteringExpressionsTree =  new FilteringExpressionsTree(logic);
         filteringExpressionsTree.filteringOperands = expressions;
         const state: IFilteringState = { expressionsTree: filteringExpressionsTree, strategy: new SimpleFilteringStrategy()};
-        state.expressionsTree.filteringOperands = this.combo.filteringExpressions;
 
         if (!state.expressionsTree.filteringOperands.length) {
             return collection;
@@ -52,8 +48,6 @@ export class SimpleFilteringStrategy extends FilteringStrategy {
     pure: true
 })
 export class IgxComboSortingPipe implements PipeTransform {
-    constructor() { }
-
     public transform(collection: any[], expressions: ISortingExpression []) {
         if (!expressions.length) {
             return collection;
@@ -73,7 +67,7 @@ export class IgxComboGroupingPipe implements PipeTransform {
 
     constructor(@Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase) { }
 
-    public transform(collection: any[], groupKey: any) {
+    public transform(collection: any[], groupKey: any, valueKey: any) {
         this.combo.filteredData = collection;
         if ((!groupKey && groupKey !== 0) || !collection.length) {
             return collection;
@@ -89,28 +83,13 @@ export class IgxComboGroupingPipe implements PipeTransform {
             }
             if (insertFlag) {
                 data.splice(i + inserts, 0, {
-                    [this.combo.valueKey]: currentHeader,
-                    [this.combo.groupKey]: currentHeader,
+                    [valueKey]: currentHeader,
+                    [groupKey]: currentHeader,
                     isHeader: true
                 });
                 inserts++;
             }
         }
         return data;
-    }
-}
-
-/**
- * @hidden
- */
-@Pipe({
-    name: 'filterCondition',
-    pure: true
-})
-
-export class IgxComboFilterConditionPipe implements PipeTransform {
-
-    public transform(value: string): string {
-        return value.split(/(?=[A-Z])/).join(' ');
     }
 }

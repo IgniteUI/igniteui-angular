@@ -30,7 +30,7 @@ import { IgxDropDownModule } from '../drop-down/index';
 import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
-import { IgxComboFilterConditionPipe, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboSortingPipe } from './combo.pipes';
+import { IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboSortingPipe } from './combo.pipes';
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -1617,7 +1617,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
  * @hidden
  */
 @NgModule({
-    declarations: [IgxComboComponent, IgxComboItemComponent, IgxComboFilterConditionPipe, IgxComboGroupingPipe,
+    declarations: [IgxComboComponent, IgxComboItemComponent, IgxComboGroupingPipe,
         IgxComboFilteringPipe, IgxComboSortingPipe, IgxComboDropDownComponent, IgxComboAddItemComponent,
         IgxComboItemDirective,
         IgxComboEmptyDirective,
@@ -1637,6 +1637,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         IgxComboToggleIconDirective,
         IgxComboClearIconDirective],
     imports: [IgxRippleModule, CommonModule, IgxInputGroupModule, FormsModule, ReactiveFormsModule,
-        IgxForOfModule, IgxToggleModule, IgxCheckboxModule, IgxDropDownModule, IgxButtonModule, IgxIconModule],
+        IgxForOfModule, IgxToggleModule, IgxCheckboxModule, IgxDropDownModule, IgxButtonModule, IgxIconModule]
 })
 export class IgxComboModule { }
