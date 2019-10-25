@@ -113,7 +113,7 @@
         </ng-template>
 
         <ng-template #child_detail_template let-rowIndex="index" let-rowData>
-            <div style="overflow:auto;width: 100%;" [attr.data-rowindex]='rowIndex'
+            <div style="overflow:auto;width: 100%;" tabindex="0" (keydown)='detailsKeyboardHandler($event, rowIndex)' [attr.data-rowindex]='rowIndex'
                 [ngClass]="{
                 'igx-grid__tr-container': true
             }">

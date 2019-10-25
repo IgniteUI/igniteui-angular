@@ -671,6 +671,20 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         }
     }
 
+    public detailsKeyboardHandler(event, rowIndex) {
+        const colIndex = this.selectionService.activeElement ? this.selectionService.activeElement.column : 0;
+        const key = event.key.toLowerCase();
+        if (key === 'tab') {
+            event.stopPropagation();
+        } else if (key === "arrowup") {
+            this.navigateTo(rowIndex - 1, colIndex,
+                (args)=> args.target.nativeElement.focus());
+        } else if (key === "arrowdown") {
+            this.navigateTo(rowIndex + 1, colIndex,
+                (args)=> args.target.nativeElement.focus());
+        }
+    }
+
     /**
      * @hidden
     */

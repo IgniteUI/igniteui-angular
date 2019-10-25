@@ -54,12 +54,6 @@ export class IgxHierarchicalRowComponent extends IgxRowComponent<IgxHierarchical
    protected defaultCollapsedTemplate: TemplateRef<any>;
 
     /**
-     * @hidden
-     */
-    @HostBinding('attr.tabindex')
-    public tabindex = 0;
-
-        /**
      * Returns whether the row is expanded.
      * ```typescript
      * const RowExpanded = this.grid1.rowList.first.expanded;

@@ -83,8 +83,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                     this._navigateUpInChild(rowElement, currentRowIndex, visibleColumnIndex);
                 }  else if (this.grid.hasChildDetails &&
                     this.grid.isChildGridRecord(this.grid.dataView[selectedNode.row - 1])) {
-                       selectedNode.row -= 1;
-                       super.navigateUp(prevElem, selectedNode);
+                        prevElem.focus();
                } else {
                     super.navigateUp(rowElement, selectedNode);
                 }
@@ -124,8 +123,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                     this._navigateDownInChild(rowElement, currentRowIndex, visibleColumnIndex);
                 } else if (this.grid.hasChildDetails &&
                      this.grid.isChildGridRecord(this.grid.dataView[selectedNode.row + 1])) {
-                        selectedNode.row += 1;
-                        super.navigateDown(nextElem, selectedNode);
+                        nextElem.focus();
                 } else {
                     super.navigateDown(rowElement, selectedNode);
                 }
@@ -340,7 +338,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     private focusNextChildDOMElem(currentRowEl, grid) {
         const gridElem = currentRowEl.nextElementSibling.querySelector('igx-hierarchical-grid');
         if (!gridElem) {
-            return true;
+            return currentRowEl.nextElementSibling.focus();
         }
         const childGridID = gridElem.getAttribute('id');
         const childGrid = this.getChildGrid(childGridID, grid);
