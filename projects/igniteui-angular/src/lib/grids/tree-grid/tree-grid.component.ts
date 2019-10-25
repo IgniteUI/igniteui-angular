@@ -15,7 +15,7 @@ import {
     DoCheck
 } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
-import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
+import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IRowToggleEventArgs } from './tree-grid.interfaces';
@@ -24,14 +24,15 @@ import { IgxHierarchicalTransactionService } from '../../services/index';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxTreeGridNavigationService } from './tree-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { mergeObjects } from '../../core/utils';
-import { IgxColumnComponent } from '../column.component';
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 import { IgxGridNavigationService } from '../grid-navigation.service';
+import { GridType } from '../common/grid.interface';
+import { IgxColumnComponent } from '../columns/column.component';
 
 let NEXT_ID = 0;
 
@@ -62,13 +63,13 @@ let NEXT_ID = 0;
         IgxGridSummaryService,
         { provide: IgxGridNavigationService, useClass: IgxTreeGridNavigationService },
         { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
-        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) },
+        { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxTreeGridComponent) },
         IgxFilteringService,
         IgxForOfSyncService,
         IgxForOfScrollSyncService
     ]
 })
-export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit, DoCheck, AfterContentInit {
+export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit {
     private _id = `igx-tree-grid-${NEXT_ID++}`;
     private _data;
     private _rowLoadingIndicatorTemplate: TemplateRef<any>;

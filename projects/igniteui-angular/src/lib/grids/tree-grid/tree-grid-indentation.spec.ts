@@ -7,7 +7,7 @@ import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condi
 import { TreeGridFunctions, NUMBER_CELL_CSS_CLASS } from '../../test-utils/tree-grid-functions.spec';
 import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { DropPosition } from '../grid';
+import { DropPosition } from '../moving/moving.service';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
