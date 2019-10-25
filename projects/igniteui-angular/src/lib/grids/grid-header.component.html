@@ -1,5 +1,5 @@
 <ng-template #defaultColumn>
-    {{ column.header || column.field }}
+    <span [attr.title]="column.header || column.field">{{ column.header || column.field }}</span>
 </ng-template>
 
 <span class="igx-grid__th-title">

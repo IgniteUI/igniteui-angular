@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { isIE } from '../../core/utils';
 import { IgxDayItemComponent } from './day-item.component';
 import { IgxDaysViewComponent } from './days-view.component';
 import { ScrollMonth } from '../calendar-base';
@@ -11,6 +10,8 @@ enum Direction {
     Right = 'ArrowRight',
 }
 
+const ARROW = 'Arrow';
+
 /** @hidden */
 @Injectable()
 export class IgxDaysViewNavigationService {
@@ -20,9 +21,8 @@ export class IgxDaysViewNavigationService {
      * @hidden
      */
     public focusNextDate(target: HTMLElement, key: string, nextView = false) {
-        if (isIE()) {
-            target = target.parentElement;
-        }
+        if (target.childElementCount === 0) { target = target.parentElement; }
+        if (key.indexOf('Arrow') === -1) { key = ARROW.concat(key); }
         const monthView = this.monthView;
         const node = monthView.dates.find((date) => date.nativeElement === target);
         let dates = monthView.dates.toArray(),
