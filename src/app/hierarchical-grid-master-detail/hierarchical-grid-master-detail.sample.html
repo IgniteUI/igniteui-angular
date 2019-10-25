@@ -1,0 +1,45 @@
+<div class="hgrid-sample">
+
+    <h4 class="sample-title">Basic Master-Detail</h4>
+    <igx-hierarchical-grid [data]="localData" [autoGenerate]="false" [height]="'600px'" [width]="'800px'" #hGrid2>
+            <igx-column field="ID" [resizable]="true" [filterable]='true'></igx-column>
+            <igx-column field="ProductName" hasSummary='true'></igx-column>
+            <ng-template igxChildDetails let-dataItem>
+                    <ng-container *ngTemplateOutlet="dataItem.Category ? itemTemplate : emptyTemplate"></ng-container>
+                    <ng-template #emptyTemplate>
+                        <div>
+                            No data for this item!
+                        </div>
+                    </ng-template>
+                    <ng-template #itemTemplate>
+                        <div *ngIf="dataItem.Category">
+                                <header>{{dataItem.Category?.CategoryName}}</header>
+                                <span>{{dataItem.Category?.Description}}</span>
+                        </div>
+                    </ng-template>
+              </ng-template>
+    </igx-hierarchical-grid>
+
+
+
+
+    <h4 class="sample-title">Master-Detail with expansio panel</h4>
+    <igx-hierarchical-grid [data]="localData" [autoGenerate]="false" [height]="'600px'" [width]="'800px'" #hGrid2>
+            <igx-column field="ID" [resizable]="true" [filterable]='true'></igx-column>
+            <igx-column field="ProductName" hasSummary='true'></igx-column>
+            <ng-template igxChildDetails let-dataItem>
+                <div *ngIf="dataItem.Suppliers">
+                    <igx-expansion-panel *ngFor="let supplier of dataItem.Suppliers">
+                            <igx-expansion-panel-header>
+                                    <igx-expansion-panel-title>
+                                        {{supplier.Name}}
+                                    </igx-expansion-panel-title>
+                            </igx-expansion-panel-header>
+                            <igx-expansion-panel-body>
+                                <p>{{supplier.Details}}</p>
+                            </igx-expansion-panel-body>
+                    </igx-expansion-panel>
+                </div>
+              </ng-template>
+    </igx-hierarchical-grid>
+</div>

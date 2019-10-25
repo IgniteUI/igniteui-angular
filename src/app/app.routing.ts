@@ -65,6 +65,7 @@ import { AutocompleteSampleComponent } from './autocomplete/autocomplete.sample'
 import { SelectSampleComponent } from './select/select.sample';
 import { TreeGridLoadOnDemandSampleComponent } from './tree-grid-load-on-demand/tree-grid-load-on-demand.sample';
 import { GridAutoSizeSampleComponent } from './grid-auto-size/grid-auto-size.sample';
+import { HierarchicalGridMasterDetailSampleComponent } from './hierarchical-grid-master-detail/hierarchical-grid-master-detail.sample';
 
 const appRoutes = [
     {
@@ -300,6 +301,9 @@ const appRoutes = [
     }, {
         path: 'hierarchicalGrid',
         component: HierarchicalGridSampleComponent
+    }, {
+        path: 'hierarchicalGridMasterDetail',
+        component: HierarchicalGridMasterDetailSampleComponent
     }, {
         path: 'hierarchicalGridRemote',
         component: HierarchicalGridRemoteSampleComponent

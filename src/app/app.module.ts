@@ -90,6 +90,8 @@ import { GridWithTransactionsComponent } from './grid-row-edit/grid-with-transac
 import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
 import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
 import { HierarchicalGridSampleComponent } from './hierarchical-grid/hierarchical-grid.sample';
+import { HierarchicalGridMasterDetailSampleComponent } from './hierarchical-grid-master-detail/hierarchical-grid-master-detail.sample';
+
 import { HierarchicalGridRemoteSampleComponent } from './hierarchical-grid-remote/hierarchical-grid-remote.sample';
 import { HierarchicalGridUpdatingSampleComponent } from './hierarchical-grid-updating/hierarchical-grid-updating.sample';
 import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
@@ -201,6 +203,7 @@ const components = [
     RadioSampleComponent,
     TooltipSampleComponent,
     HierarchicalGridSampleComponent,
+    HierarchicalGridMasterDetailSampleComponent,
     HierarchicalGridRemoteSampleComponent,
     HierarchicalGridUpdatingSampleComponent,
     DisplayFormatPipe,

@@ -88,6 +88,7 @@ import { GridAutoSizeSampleComponent } from './grid-auto-size/grid-auto-size.sam
 import { GridFlexSampleComponent } from './grid-flex-layout/grid-flex.sample';
 import { GridEsfLoadOnDemandComponent } from './grid-esf-load-on-demand/grid-esf-load-on-demand.component';
 import { GridFilteringComponent } from './grid-filtering/grid-filtering.sample';
+import { HierarchicalGridMasterDetailSampleComponent } from './hierarchical-grid-master-detail/hierarchical-grid-master-detail.sample';
 
 const appRoutes = [
     {
@@ -406,6 +407,9 @@ const appRoutes = [
     }, {
         path: 'hierarchicalGrid',
         component: HierarchicalGridSampleComponent
+    }, {
+        path: 'hierarchicalGridMasterDetail',
+        component: HierarchicalGridMasterDetailSampleComponent
     }, {
         path: 'hierarchicalGridRemote',
         component: HierarchicalGridRemoteSampleComponent
