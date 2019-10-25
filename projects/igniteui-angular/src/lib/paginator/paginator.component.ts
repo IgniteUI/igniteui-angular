@@ -205,6 +205,10 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         return Array.from(new Set([...values, newOption])).sort((a, b) => a - b);
     }
 
+    /**
+     * Sets DisplayDensity for the <select> inside the paginator
+     * @hidden
+     */
     public paginatorSelectDisplayDensity(): string {
         if (this.displayDensity === DisplayDensity.comfortable) {
             return DisplayDensity.cosy;

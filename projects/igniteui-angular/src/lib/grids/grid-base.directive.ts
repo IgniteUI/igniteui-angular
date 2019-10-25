@@ -3231,13 +3231,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
-    public paginatorSelectDisplayDensity(): string {
-        if (this.displayDensity === DisplayDensity.comfortable) {
-            return DisplayDensity.cosy;
-        }
-        return DisplayDensity.compact;
-    }
-
     /**
      * Returns the current width of the container for the pinned `IgxColumnComponent`s.
      * ```typescript
