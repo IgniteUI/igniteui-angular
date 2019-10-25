@@ -13,7 +13,8 @@ All notable changes for each version of this project will be documented in this 
     - `IgxGridBaseComponent` -> `IgxGridBaseDirective`
     - `IgxRowComponent` -> `IgxRowDirective`
     - `IgxHierarchicalGridBaseComponent` -> `IgxHierarchicalGridBaseDirective`
-    - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - Pinning columns is no longer automatically prevented when the pinning area would exceed the size of the grid.
 
 
