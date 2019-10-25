@@ -3223,11 +3223,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public paginatorClassName(): string {
         switch (this.displayDensity) {
             case DisplayDensity.cosy:
-                return 'igx-grid-paginator--cosy';
+                return 'igx-paginator--cosy';
             case DisplayDensity.compact:
-                return 'igx-grid-paginator--compact';
+                return 'igx-paginator--compact';
             default:
-                return 'igx-grid-paginator';
+                return 'igx-paginator';
         }
     }
 

@@ -605,7 +605,7 @@ describe('Column Hiding UI #grid', () => {
             let fixEl = fix.nativeElement, gridEl = grid.nativeElement;
             let tHeadItems = fixEl.querySelector('igx-grid-header-group');
             let gridRows = fixEl.querySelector('igx-grid-row');
-            let paging = fixEl.querySelector('.igx-grid-paginator');
+            let paging = fixEl.querySelector('.igx-paginator');
             let rowSelectors = gridEl.querySelector('.igx-checkbox');
             let dragIndicators = gridEl.querySelector('.igx-grid__drag-indicator');
             let verticalScrollBar = gridEl.querySelector('.igx-grid__tbody-scrollbar[hidden]');
@@ -624,7 +624,7 @@ describe('Column Hiding UI #grid', () => {
 
             tHeadItems = fixEl.querySelector('igx-grid-header-group');
             gridRows = fixEl.querySelector('igx-grid-row');
-            paging = fixEl.querySelector('.igx-grid-paginator');
+            paging = fixEl.querySelector('.igx-paginator');
             rowSelectors = gridEl.querySelector('.igx-checkbox');
             dragIndicators = gridEl.querySelector('.igx-grid__drag-indicator');
             verticalScrollBar = gridEl.querySelector('.igx-grid__tbody-scrollbar[hidden]');
