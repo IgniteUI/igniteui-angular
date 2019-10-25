@@ -1,5 +1,5 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
-import { IgxGridComponent, DropPosition } from 'igniteui-angular';
+import { Component, ViewChild } from '@angular/core';
+import { IgxGridComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-mrl-custom-navigation-sample',

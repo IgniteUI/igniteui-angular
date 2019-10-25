@@ -11,7 +11,7 @@ import {
 } from './index';
 import { IgxGridComponent } from './grid.component';
 import { DataParent } from '../../test-utils/sample-test-data.spec';
-import { IGridCellEventArgs } from '../grid-base.component';
+import { IGridCellEventArgs } from '../common/events';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
