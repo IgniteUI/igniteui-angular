@@ -15,7 +15,6 @@ import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.
 import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../../chips/chip.component';
 import { IChipsAreaReorderEventArgs } from '../../chips/chips-area.component';
 import { IgxColumnComponent } from '../columns/column.component';
-import { takeUntil } from 'rxjs/operators';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
@@ -945,7 +944,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     public ngOnInit() {
         super.ngOnInit();
-        this.onGroupingDone.pipe(takeUntil(this.destroy$)).subscribe((args) => {
+        this.onGroupingDone.pipe(this.destructor).subscribe((args) => {
             this.endEdit(true);
             this.summaryService.updateSummaryCache(args);
         });

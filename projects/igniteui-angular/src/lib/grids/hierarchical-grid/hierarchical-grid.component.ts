@@ -380,7 +380,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this.cdr.detectChanges();
         }
 
-        this.verticalScrollContainer.onBeforeViewDestroyed.pipe(takeUntil(this.destroy$)).subscribe((view) => {
+        this.verticalScrollContainer.onBeforeViewDestroyed.pipe(this.destructor).subscribe((view) => {
             const rowData = view.context.$implicit;
             if (this.isChildGridRecord(rowData)) {
                 const cachedData = this.childGridTemplates.get(rowData.rowID);
@@ -393,7 +393,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
         if (this.parent) {
             this._displayDensity = this.rootGrid._displayDensity;
-            this.rootGrid.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.rootGrid.onDensityChanged.pipe(this.destructor).subscribe(() => {
                 this._displayDensity = this.rootGrid._displayDensity;
                 this.notifyChanges(true);
                 this.cdr.markForCheck();
@@ -457,11 +457,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     ngAfterContentInit() {
         this.updateColumnList(false);
         this.childLayoutKeys = this.parent ?
-        this.parentIsland.children.map((item) => item.key) :
-        this.childLayoutKeys = this.childLayoutList.map((item) => item.key);
+            this.parentIsland.children.map((item) => item.key) :
+            this.childLayoutKeys = this.childLayoutList.map((item) => item.key);
         this.childLayoutList.notifyOnChanges();
-        this.childLayoutList.changes.pipe(takeUntil(this.destroy$))
-        .subscribe(() => this.onRowIslandChange());
+        this.childLayoutList.changes.pipe(this.destructor)
+            .subscribe(() => this.onRowIslandChange());
         super.ngAfterContentInit();
     }
 

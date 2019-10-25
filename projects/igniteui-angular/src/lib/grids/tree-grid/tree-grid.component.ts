@@ -26,7 +26,7 @@ import { IgxTreeGridNavigationService } from './tree-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { mergeObjects } from '../../core/utils';
-import { first, takeUntil } from 'rxjs/operators';
+import { first } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
@@ -419,7 +419,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public ngOnInit() {
         super.ngOnInit();
 
-        this.onRowToggle.pipe(takeUntil(this.destroy$)).subscribe((args) => {
+        this.onRowToggle.pipe(this.destructor).subscribe((args) => {
             this.loadChildrenOnRowExpansion(args);
         });
     }

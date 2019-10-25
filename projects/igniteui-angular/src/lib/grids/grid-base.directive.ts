@@ -27,10 +27,9 @@ import {
     DoCheck,
     Directive
 } from '@angular/core';
-import ResizeObserver from 'resize-observer-polyfill';
-import { Subject, combineLatest, pipe } from 'rxjs';
+import { Subject, combineLatest, pipe, fromEvent } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map } from 'rxjs/operators';
-import { cloneArray, isEdge, isNavigationKey, flatten, mergeObjects, isIE } from '../core/utils';
+import { cloneArray, isEdge, isNavigationKey, flatten, mergeObjects, isIE, resizeObservable } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
@@ -169,7 +168,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     private overlayIDs = [];
     private _filteringStrategy: IFilteringStrategy;
 
-    private _hostWidth;
     private _advancedFilteringOverlayId: string;
     private _advancedFilteringPositionSettings: PositionSettings = {
         verticalDirection: VerticalAlignment.Middle,
@@ -674,7 +672,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     */
     @HostBinding('style.width')
     get hostWidth() {
-        return this._width || this._hostWidth;
+        return this._width;
     }
     /**
      * Returns the width of the `IgxGridComponent`.
@@ -2632,6 +2630,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     protected destroy$ = new Subject<any>();
+    protected destructor = takeUntil<any>(this.destroy$);
+    protected initialized = filter<any>(() => !this._init);
 
     /**
      * @hidden
@@ -2707,10 +2707,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _allowAdvancedFiltering = false;
     protected _filterMode = FilterMode.quickFilter;
 
-    protected observer: ResizeObserver = new ResizeObserver(() => {});
-
-    protected resizeNotify = new Subject();
-
 
     private columnListDiffer;
     private _hiddenColumnsText = '';
@@ -2759,7 +2755,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     private verticalScrollHandler = (event) => {
         this.verticalScrollContainer.onScroll(event);
-        if (isEdge()) { this.wheelHandler(false); }
+        if (isEdge()) { this.wheelHandler(null, false); }
         this.disableTransitions = true;
 
         this.zone.run(() => {
@@ -2778,7 +2774,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     private horizontalScrollHandler = (event) => {
         const scrollLeft = event.target.scrollLeft;
-        if (isEdge()) { this.wheelHandler(true); }
+        if (isEdge()) { this.wheelHandler(null, true); }
         this.headerContainer.onHScroll(scrollLeft);
         this._horizontalForOfs.forEach(vfor => vfor.onHScroll(scrollLeft));
         this.cdr.markForCheck();
@@ -2799,11 +2795,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public hideOverlays() {
         this.overlayIDs.forEach(overlayID => {
             this.overlayService.hide(overlayID);
-            this.overlayService.onClosed.pipe(
-                filter(o => o.id === overlayID),
-                takeUntil(this.destroy$)).subscribe(() => {
-                    this.nativeElement.focus();
-                });
+            this.overlayService.onClosed.pipe(this.destructor, filter(o => o.id === overlayID))
+                .subscribe(() => this.nativeElement.focus());
         });
     }
 
@@ -2853,15 +2846,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     _setupListeners() {
-        const destructor = takeUntil<any>(this.destroy$);
 
-        this.onRowAdded.pipe(destructor).subscribe(args => this.refreshGridState(args));
-        this.onRowDeleted.pipe(destructor).subscribe(args => {
+        this.onRowAdded.pipe(this.destructor).subscribe(args => this.refreshGridState(args));
+        this.onRowDeleted.pipe(this.destructor).subscribe(args => {
             this.summaryService.deleteOperation = true;
             this.summaryService.clearSummaryCache(args);
         });
 
-        this.transactions.onStateUpdate.pipe(destructor).subscribe(() => {
+        this.transactions.onStateUpdate.pipe(this.destructor).subscribe(() => {
             this.selectionService.clearHeaderCBState();
             this.summaryService.clearSummaryCache();
             this._pipeTrigger++;
@@ -2874,22 +2866,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             }
         });
 
-        this.resizeNotify.pipe(destructor, filter(() => !this._init), throttleTime(100))
-            .subscribe(() => {
-                this.zone.run(() => {
-                    this.notifyChanges(true);
-                });
-            });
-
-        this.onPagingDone.pipe(destructor).subscribe(() => {
+        this.onPagingDone.pipe(this.destructor).subscribe(() => {
             this.endEdit(true);
             this.selectionService.clear(true);
         });
 
-        this.onColumnMoving.pipe(destructor).subscribe(() => this.endEdit(true));
-        this.onColumnResized.pipe(destructor).subscribe(() => this.endEdit(true));
+        this.onColumnMoving.pipe(this.destructor).subscribe(() => this.endEdit(true));
+        this.onColumnResized.pipe(this.destructor).subscribe(() => this.endEdit(true));
 
-        this.overlayService.onOpening.pipe(destructor).subscribe((event) => {
+        this.overlayService.onOpening.pipe(this.destructor).subscribe((event) => {
             if (this._advancedFilteringOverlayId === event.id) {
                 const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
                 if (instance) {
@@ -2898,7 +2883,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             }
         });
 
-        this.overlayService.onOpened.pipe(destructor).subscribe((event) => {
+        this.overlayService.onOpened.pipe(this.destructor).subscribe((event) => {
             // do not hide the advanced filtering overlay on scroll
             if (this._advancedFilteringOverlayId === event.id) {
                 return;
@@ -2910,7 +2895,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             }
         });
 
-        this.overlayService.onClosed.pipe(destructor, filter(() => !this._init)).subscribe((event) => {
+        this.overlayService.onClosed.pipe(this.destructor, this.initialized).subscribe((event) => {
             if (this._advancedFilteringOverlayId === event.id) {
                 this._advancedFilteringOverlayId = null;
                 return;
@@ -2922,18 +2907,18 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             }
         });
 
-        this.verticalScrollContainer.onDataChanging.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
+        this.verticalScrollContainer.onDataChanging.pipe(this.destructor, this.initialized).subscribe(($event) => {
             this.calculateGridHeight();
             $event.containerSize = this.calcHeight;
             this.evaluateLoadingState();
             this.notifyChanges(true);
         });
 
-        this.verticalScrollContainer.onContentSizeChange.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
+        this.verticalScrollContainer.onContentSizeChange.pipe(this.destructor, this.initialized).subscribe(() => {
             this.calculateGridSizes();
         });
 
-        this.onDensityChanged.pipe(destructor).subscribe(() => {
+        this.onDensityChanged.pipe(this.destructor).subscribe(() => {
             this.summaryService.summaryHeight = 0;
             this.endEdit(true);
             this.cdr.markForCheck();
@@ -2962,7 +2947,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.columnListDiffer.diff(this.columnList);
 
         this.columnList.changes
-            .pipe(takeUntil(this.destroy$))
+            .pipe(this.destructor)
             .subscribe((change: QueryList<IgxColumnComponent>) => { this.onColumnsChanged(change); });
     }
 
@@ -3034,7 +3019,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         const rowListObserver = extractForOfs(this._dataRowList.changes);
         const summaryRowObserver = extractForOfs(this._summaryRowList.changes);
 
-        combineLatest([rowListObserver, summaryRowObserver]).pipe(takeUntil(this.destroy$))
+        combineLatest([rowListObserver, summaryRowObserver]).pipe(this.destructor)
             .subscribe(([row, summary]) => this._horizontalForOfs = [...row, ...summary]);
 
         this._horizontalForOfs = [
@@ -3045,12 +3030,18 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     public _zoneBegoneListeners() {
         this.zone.runOutsideAngular(() => {
-            this.nativeElement.addEventListener('keydown', this.keydownHandler);
-            this.verticalScrollContainer.getScroll().addEventListener('scroll', this.verticalScrollHandler);
-            this.headerContainer.getScroll().addEventListener('scroll', this.horizontalScrollHandler);
+            fromEvent(this.nativeElement, 'keydown').pipe(this.destructor).subscribe(this.keydownHandler);
 
-            this.observer = new ResizeObserver(() => this.resizeNotify.next());
-            this.observer.observe(this.nativeElement);
+            fromEvent(this.verticalScrollContainer.getScroll(), 'scroll').pipe(this.destructor)
+                .subscribe(this.verticalScrollHandler);
+
+            fromEvent(this.headerContainer.getScroll(), 'scroll').pipe(this.destructor)
+                .subscribe(this.horizontalScrollHandler);
+
+            resizeObservable(this.nativeElement).pipe(this.destructor, throttleTime(40)).subscribe(() => {
+                const callback = () => this.notifyChanges(true);
+                NgZone.isInAngularZone() ? callback() : this.zone.run(callback);
+            });
         });
     }
 
@@ -3066,8 +3057,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this._zoneBegoneListeners();
 
         const vertScrDC = this.verticalScrollContainer.displayContainer;
-        vertScrDC.addEventListener('scroll', this.scrollHandler);
-        vertScrDC.addEventListener('wheel', () => this.wheelHandler());
+        fromEvent(vertScrDC, 'scroll').pipe(this.destructor).subscribe(this.scrollHandler);
+        fromEvent(vertScrDC, 'wheel').pipe(this.destructor).subscribe(this.wheelHandler);
 
     }
 
@@ -3116,16 +3107,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this._advancedFilteringOverlayId) {
             this.overlayService.hide(this._advancedFilteringOverlayId);
         }
-
-        this.zone.runOutsideAngular(() => {
-            this.observer.disconnect();
-            this.nativeElement.removeEventListener('keydown', this.keydownHandler);
-            this.verticalScrollContainer.getScroll().removeEventListener('scroll', this.verticalScrollHandler);
-            this.headerContainer.getScroll().removeEventListener('scroll', this.horizontalScrollHandler);
-            const vertScrDC = this.verticalScrollContainer.displayContainer;
-            vertScrDC.removeEventListener('scroll', this.scrollHandler);
-            vertScrDC.removeEventListener('wheel', () => this.wheelHandler());
-        });
     }
 
     /**
@@ -4623,23 +4604,20 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden
+     * @internal
      */
     protected calculateGridSizes() {
-        /*
-            TODO: (R.K.) This layered lasagne should be refactored
-            ASAP. The reason I have to reset the caches so many times is because
-            after teach `detectChanges` call they are filled with invalid
-            state. Of course all of this happens midway through the grid
-            sizing process which of course, uses values from the caches, thus resulting
-            in a broken layout.
-        */
         this.resetCaches();
-        this.cdr.detectChanges();
-        const hasScroll = this.hasVerticalSroll();
+        /**
+         * R.K.
+         * Explore the option to extract the column sizing logic from
+         * the `calculateGridWidth` call and run it after the grid is sized
+         * horizontally and a detection cycle has passed.
+         */
         this.calculateGridWidth();
-        this.resetCaches();
         this.cdr.detectChanges();
         this.calculateGridHeight();
+        this.cdr.detectChanges();
 
         if (this.rowEditable) {
             this.repositionRowEditingOverlay(this.rowInEditMode);
@@ -4648,40 +4626,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.filteringService.isFilterRowVisible) {
             this.filteringRow.resetChipsArea();
         }
-
-        this.cdr.detectChanges();
-        // in case scrollbar has appeared recalc to size correctly.
-        if (hasScroll !== this.hasVerticalSroll()) {
-            this.calculateGridWidth();
-            this.cdr.detectChanges();
-        }
-        if (this.zone.isStable) {
-            this.zone.run(() => {
-                this._applyWidthHostBinding();
-                this.cdr.detectChanges();
-            });
-        } else {
-            this.zone.onStable.pipe(first()).subscribe(() => {
-                this.zone.run(() => {
-                    this._applyWidthHostBinding();
-                });
-            });
-        }
-        this.resetCaches();
-    }
-
-    private _applyWidthHostBinding() {
-        let width = this._width;
-        if (width === null) {
-            let currentWidth = this.calcWidth;
-            if (this.hasVerticalSroll()) {
-                currentWidth += this.scrollWidth;
-            }
-            width = currentWidth + 'px';
-            this.resetCaches();
-        }
-        this._hostWidth = width;
-        this.cdr.markForCheck();
     }
 
 
@@ -5364,8 +5308,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden
+     * @internal
      */
-    public wheelHandler = (isScroll = false) => {
+    public wheelHandler = (_?: any, isScroll = false) => {
         if (this.document.activeElement &&
             // tslint:disable-next-line:no-bitwise
             (this.document.activeElement.compareDocumentPosition(this.tbody.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS ||
