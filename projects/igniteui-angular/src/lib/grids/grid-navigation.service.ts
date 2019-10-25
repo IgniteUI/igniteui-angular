@@ -628,7 +628,7 @@ export class IgxGridNavigationService {
 
     protected getNextRowByIndex(nextIndex) {
         return this.grid.tbody.nativeElement.querySelector(
-            `[data-rowindex="${nextIndex}"][data-gridid="${this.grid.id}"]`);
+            `[data-rowindex="${nextIndex}"]`);
     }
 
     private getAllRows() {
