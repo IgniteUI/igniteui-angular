@@ -9,7 +9,8 @@
     (keydown)="onKeyDown($event)"
     [ngClass]="{
         'igx-advanced-filter--cosy': grid.displayDensity === 'cosy',
-        'igx-advanced-filter--compact': grid.displayDensity === 'compact'
+        'igx-advanced-filter--compact': grid.displayDensity === 'compact',
+        'igx-advanced-filter--inline': inline
     }"
 >
     <header class="igx-advanced-filter__header" igxDragHandle>

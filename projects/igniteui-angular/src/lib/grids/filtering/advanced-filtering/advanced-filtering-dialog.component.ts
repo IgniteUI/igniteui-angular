@@ -76,6 +76,10 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
+    public inline: boolean;
+    /**
+     * @hidden @internal
+     */
     public rootGroup: ExpressionGroupItem;
 
     /**
@@ -1010,6 +1014,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      */
     public initialize(grid: IgxGridBaseComponent, overlayService: IgxOverlayService,
         overlayComponentId: string) {
+        this.inline = true;
         this.grid = grid;
         this._overlayService = overlayService;
         this._overlayComponentId = overlayComponentId;
