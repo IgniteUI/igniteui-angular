@@ -2940,38 +2940,20 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const leftArrowButton = GridFunctions.getFilterRowLeftArrowButton(fix).nativeElement;
             leftArrowButton.click();
             fix.detectChanges();
-            await wait(100);
+            await wait(150);
             leftArrowButton.click();
             fix.detectChanges();
-            await wait(100);
+            await wait(150);
             verifyMultipleChipsVisibility(fix, [false, true, false]);
-
-            // Click left arrow 2 times.
-            leftArrowButton.click();
-            fix.detectChanges();
-            await wait(100);
-            leftArrowButton.click();
-            fix.detectChanges();
-            await wait(100);
-            verifyMultipleChipsVisibility(fix, [true, false, false]);
 
             // Click right arrow 2 times.
             const rightArrowButton = GridFunctions.getFilterRowRightArrowButton(fix).nativeElement;
             rightArrowButton.click();
             fix.detectChanges();
-            await wait(100);
+            await wait(150);
             rightArrowButton.click();
             fix.detectChanges();
-            await wait(100);
-            verifyMultipleChipsVisibility(fix, [false, true, false]);
-
-            // Click right arrow 2 times.
-            rightArrowButton.click();
-            fix.detectChanges();
-            await wait(100);
-            rightArrowButton.click();
-            fix.detectChanges();
-            await wait(100);
+            await wait(150);
             verifyMultipleChipsVisibility(fix, [false, false, true]);
         }));
 
@@ -3408,8 +3390,38 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(fix.debugElement.query(By.css(FILTER_UI_ROW))).toBeNull();
             GridFunctions.verifyColumnIsHidden(prodNameCol, true, 5);
         }));
-    });
 
+        it('Unary conditions should be committable', fakeAsync (() => {
+            grid.height = '700px';
+            fix.detectChanges();
+
+            const prodNameCol = grid.columns.find((col) => col.field === 'ProductName');
+            GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            fix.detectChanges();
+
+            // Check that the filterRow is opened
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            GridFunctions.openFilterDD(fix.debugElement);
+            const dropdownList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+            GridFunctions.selectFilteringCondition('Empty', dropdownList);
+            fix.detectChanges();
+            tick(16);
+
+            const chip = filterUIRow.query(By.directive(IgxChipComponent));
+            const input = filterUIRow.query(By.directive(IgxInputDirective));
+            expect(chip.componentInstance.selected).toBeTruthy();
+
+            clickElemAndBlur(chip, input);
+            fix.detectChanges();
+            tick(100);
+            expect(chip.componentInstance.selected).toBeFalsy();
+
+            GridFunctions.clickChip(chip);
+            fix.detectChanges();
+            tick(100);
+            expect(chip.componentInstance.selected).toBeTruthy();
+    }));
+});
     describe(null, () => {
         let fix, grid;
         beforeEach(fakeAsync(() => {
@@ -3543,7 +3555,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(emptyFilterHeader.componentInstance.column.field).toEqual('Downloads');
 
             // Scroll to the right
-            grid.parentVirtDir.getHorizontalScroll().scrollLeft = 300;
+            grid.headerContainer.getScroll().scrollLeft = 300;
             await wait();
             fix.detectChanges();
 
@@ -5048,7 +5060,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             await wait(16);
 
             // Scroll a bit to the right, so the ProductName column is not fully visible.
-            grid.parentVirtDir.getHorizontalScroll().scrollLeft = 500;
+            grid.headerContainer.getScroll().scrollLeft = 500;
             await wait(100);
             fix.detectChanges();
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
@@ -6440,8 +6452,8 @@ function clickElemAndBlur(clickElem, blurElem) {
     const elementRect = clickElem.nativeElement.getBoundingClientRect();
     UIInteractions.simulatePointerEvent('pointerdown', clickElem.nativeElement, elementRect.left, elementRect.top);
     blurElem.nativeElement.blur();
-    blurElem.nativeElement.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
     (clickElem as DebugElement).nativeElement.focus();
+    blurElem.nativeElement.dispatchEvent(new FocusEvent('focusout', {bubbles: true}));
     UIInteractions.simulatePointerEvent('pointerup', clickElem.nativeElement, elementRect.left, elementRect.top);
     UIInteractions.simulateMouseEvent('click', clickElem.nativeElement, 10, 10);
 }
