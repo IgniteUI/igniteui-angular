@@ -4,7 +4,7 @@ All notable changes for each version of this project will be documented in this 
 ## 8.2.6
 ### New Features
 - `IgxSelectItem`
-    - `text` @Input is added. By default, the select component will use the selected item's element innerText to be displayed in the input field. In cases with more complex item templates where more than just text interpolation is used, set the text property to specify what to display in the input field when this item is selected.
+    - `text` input is added. By default, the Select component will display the selected item's element inner text. In cases with a more complex item template, where more than just text interpolation is used, set the text property to specify what to display in the select field when the item is selected.
 
 ## 8.2.4
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
