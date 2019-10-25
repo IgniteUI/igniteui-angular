@@ -67,24 +67,10 @@ export class IgxColumnResizingService {
      */
     get restrictResizeMax(): number {
         const actualWidth = this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
-
-        if (this.column.pinned) {
-            const pinnedMaxWidth = this.pinnedMaxWidth =
-                this.column.grid.calcPinnedContainerMaxWidth - this.column.grid.getPinnedWidth(true) + actualWidth;
-
-            if (this.column.maxWidth && parseFloat(this.column.maxWidth) < pinnedMaxWidth) {
-                this.pinnedMaxWidth = this.column.maxWidth;
-
-                return parseFloat(this.column.maxWidth) - actualWidth;
-            } else {
-                return pinnedMaxWidth - actualWidth;
-            }
+        if (this.column.maxWidth) {
+            return parseFloat(this.column.maxWidth) - actualWidth;
         } else {
-            if (this.column.maxWidth) {
-                return parseFloat(this.column.maxWidth) - actualWidth;
-            } else {
-                return Number.MAX_SAFE_INTEGER;
-            }
+            return Number.MAX_SAFE_INTEGER;
         }
     }
 
@@ -99,14 +85,7 @@ export class IgxColumnResizingService {
         const currentColWidth = this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
 
         const size = this.column.getLargestCellWidth();
-
-        if (this.column.pinned) {
-            const newPinnedWidth = this.column.grid.getPinnedWidth(true) - currentColWidth + parseFloat(size);
-
-            if (newPinnedWidth <= this.column.grid.calcPinnedContainerMaxWidth) {
-                this.column.width = size;
-            }
-        } else if (this.column.maxWidth && (parseFloat(size) > parseFloat(this.column.maxWidth))) {
+        if (this.column.maxWidth && (parseFloat(size) > parseFloat(this.column.maxWidth))) {
             this.column.width = parseFloat(this.column.maxWidth) + 'px';
         } else if (parseFloat(size) < parseFloat(this.column.minWidth)) {
             this.column.width = this.column.minWidth + 'px';
@@ -177,15 +156,6 @@ export class IgxColumnResizingService {
     protected resizeColumnLayoutFor(column: IgxColumnComponent, diff: number) {
         const relativeColumns = column.getResizableColUnderEnd();
         const combinedSpan = relativeColumns.reduce((acc, col) =>  acc + col.spanUsed, 0);
-
-        if (column.pinned) {
-            const pinnedWidth = this.column.grid.getPinnedWidth(true);
-            const maxPinnedWidth = this.column.grid.calcPinnedContainerMaxWidth;
-
-            if (pinnedWidth + diff > maxPinnedWidth) {
-                diff = maxPinnedWidth - pinnedWidth;
-            }
-        }
 
         // Resize first those who might reach min/max width
         let columnsToResize = [...relativeColumns];

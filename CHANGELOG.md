@@ -13,6 +13,8 @@ All notable changes for each version of this project will be documented in this 
     - `IgxGridBaseComponent` -> `IgxGridBaseDirective`
     - `IgxRowComponent` -> `IgxRowDirective`
     - `IgxHierarchicalGridBaseComponent` -> `IgxHierarchicalGridBaseDirective`
+    - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Behavioral Change** - Pinning columns is no longer automatically prevented when the pinning area would exceed the size of the grid.
 
 
 ## 8.2.6
@@ -23,7 +25,6 @@ All notable changes for each version of this project will be documented in this 
 
 
 ## 8.2.4
-
 
 ### RTL Support
 Most of the components in the framework now have full right-to-left (RTL) support via the newly included RTL themes. 
