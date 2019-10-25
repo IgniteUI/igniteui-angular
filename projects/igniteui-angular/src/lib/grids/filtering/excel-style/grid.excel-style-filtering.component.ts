@@ -38,8 +38,8 @@ import { Subscription, Subject } from 'rxjs';
 import { IgxExcelStyleSortingComponent } from './excel-style-sorting.component';
 import { takeUntil } from 'rxjs/operators';
 import { ISelectionEventArgs, IgxDropDownComponent } from '../../../drop-down';
-import { IgxColumnComponent } from '../../column.component';
-import { IgxGridBaseComponent } from '../../grid';
+import { IgxColumnComponent } from '../../columns/column.component';
+import { IgxGridBaseDirective } from '../../grid-base.directive';
 
 /**
  *@hidden
@@ -273,7 +273,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
     /**
      * @hidden @internal
      */
-    get grid(): IgxGridBaseComponent {
+    get grid(): IgxGridBaseDirective {
         return this.column.grid;
     }
 

@@ -1,6 +1,21 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+
+## 9.0.0
+
+### General
+- Added support for the Ivy renderer.
+- **Breaking Changes** The following classes have been renamed. Using `ng update` will apply automatically migrate your project to use the new names.
+    - `IgxDropDownBase` -> `IgxDropDownBaseDirective`
+    - `IgxDropDownItemBase` -> `IgxDropDownBaseDirective`
+    - `IgxGridBaseComponent` -> `IgxGridBaseDirective`
+    - `IgxRowComponent` -> `IgxRowDirective`
+    - `IgxHierarchicalGridBaseComponent` -> `IgxHierarchicalGridBaseDirective`
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Behavioral Change** - Pinning columns is no longer automatically prevented when the pinning area would exceed the size of the grid.
+
 ## 8.2.4
 
 ### RTL Support

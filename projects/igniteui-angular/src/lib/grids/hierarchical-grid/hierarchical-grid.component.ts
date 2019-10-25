@@ -25,24 +25,25 @@ import {
     EventEmitter,
     Output
 } from '@angular/core';
-import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
+import { IgxGridBaseDirective, IgxGridTransaction } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity } from '../../core/displayDensity';
-import { IGridDataBindable, IgxColumnComponent, } from '../grid/index';
+import { IgxColumnComponent, } from '../columns/column.component';
 import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
+import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
 import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { IgxOverlayService } from '../../services/index';
-import { IgxColumnResizingService } from '../grid-column-resizing.service';
+import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
+import { GridType } from '../common/grid.interface';
 
 let NEXT_ID = 0;
 
@@ -59,7 +60,7 @@ export interface HierarchicalStateRecord {
         IgxGridSelectionService,
         IgxGridCRUDService,
         { provide: GridBaseAPIService, useClass: IgxHierarchicalGridAPIService },
-        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxHierarchicalGridComponent) },
+        { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxHierarchicalGridComponent) },
         IgxGridSummaryService,
         IgxFilteringService,
         IgxHierarchicalGridNavigationService,
@@ -67,8 +68,8 @@ export interface HierarchicalStateRecord {
         IgxForOfScrollSyncService
     ]
 })
-export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseComponent
-    implements IGridDataBindable, AfterViewInit, AfterContentInit, OnInit, OnDestroy, DoCheck {
+export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirective
+    implements GridType, AfterViewInit, AfterContentInit, OnInit, OnDestroy, DoCheck {
 
     /**
      * Sets the value of the `id` attribute. If not provided it will be automatically generated.
@@ -313,7 +314,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         public selectionService: IgxGridSelectionService,
         crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
-        gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
+        gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         @Inject(IgxGridTransaction) protected transactionFactory: any,
         elementRef: ElementRef,
         zone: NgZone,

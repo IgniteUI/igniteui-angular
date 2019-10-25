@@ -3,9 +3,10 @@ import { DebugElement } from '@angular/core';
 import { TestBed, async, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnPinningComponent, IgxColumnPinningModule } from '../column-pinning.component';
+import { IgxColumnPinningComponent } from '../pinning/column-pinning.component';
+import { IgxColumnPinningModule } from '../pinning/pinning.module';
 import { IgxGridComponent } from './grid.component';
-import { IPinColumnEventArgs } from '../grid-base.component';
+import { IPinColumnEventArgs } from '../common/events';
 import { IgxGridModule } from './index';
 import { IgxButtonModule } from '../../directives/button/button.directive';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
@@ -224,40 +225,16 @@ describe('Column Pinning UI #grid', () => {
             expect(currentArgs.isPinned).toBe(false);
         }));
 
-        it('doesn\'t pin columns if unpinned area width will become less than the defined minimum.', async(() => {
+        it('does pin columns if unpinned area width will become less than the defined minimum.', async(() => {
             const checkboxes = GridFunctions.getCheckboxInputs(columnChooserElement);
             checkboxes[0].click();
             checkboxes[1].click();
             checkboxes[2].click();
 
-            verifyColumnIsPinned(grid.columns[0], true, 2);
-            verifyColumnIsPinned(grid.columns[1], true, 2);
-            verifyColumnIsPinned(grid.columns[2], false, 2);
+            verifyColumnIsPinned(grid.columns[0], true, 3);
+            verifyColumnIsPinned(grid.columns[1], true, 3);
+            verifyColumnIsPinned(grid.columns[2], true, 3);
 
-        }));
-
-        it('doesn\'t pin columns if unpinned area width does not allow it even after hiding a pinned column.', async(() => {
-            let checkboxes = GridFunctions.getCheckboxInputs(columnChooserElement);
-            checkboxes[0].click();
-            checkboxes[1].click();
-
-            grid.columns[1].hidden = true;
-            fix.detectChanges();
-
-            expect(grid.pinnedColumns.length).toBe(1);
-
-            checkboxes = GridFunctions.getCheckboxInputs(columnChooserElement);
-            checkboxes[2].click();
-            verifyColumnIsPinned(grid.columns[2], false, 1);
-
-            checkboxes[0].click();
-            verifyColumnIsPinned(grid.columns[0], false, 0);
-
-            grid.columns[1].hidden = false;
-            fix.detectChanges();
-
-            verifyCheckbox('ProductName', true, false, columnChooserElement, fix);
-            verifyColumnIsPinned(grid.columns[1], true, 1);
         }));
 
         it('- should size cells correctly when there is a large pinned templated column', fakeAsync(/** height/width setter rAF */() => {

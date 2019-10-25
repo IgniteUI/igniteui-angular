@@ -273,7 +273,8 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
 
         for (let index = months.indexOf(node) - 1; index >= 0; index--) {
             const nextNodeRect = months[index].nativeElement.getBoundingClientRect();
-            if (nodeRect.top !== nextNodeRect.top && nodeRect.left === nextNodeRect.left) {
+            const tolerance = 6;
+            if (nodeRect.top !== nextNodeRect.top && (nextNodeRect.left - nodeRect.left) < tolerance) {
                 months[index].nativeElement.focus();
                 break;
             }
@@ -298,7 +299,8 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
 
         for (let index = months.indexOf(node) + 1; index < months.length; index++) {
             const nextNodeRect = months[index].nativeElement.getBoundingClientRect();
-            if (nodeRect.top !== nextNodeRect.top && nodeRect.left === nextNodeRect.left) {
+            const tolerance = 6;
+            if (nextNodeRect.top !== nodeRect.top && (nodeRect.left - nextNodeRect.left) < tolerance ) {
                 months[index].nativeElement.focus();
                 break;
             }
