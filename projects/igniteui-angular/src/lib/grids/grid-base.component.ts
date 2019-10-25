@@ -3308,13 +3308,6 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         }
     }
 
-    public paginatorSelectDisplayDensity(): string {
-        if (this.displayDensity === DisplayDensity.comfortable) {
-            return DisplayDensity.cosy;
-        }
-        return DisplayDensity.compact;
-    }
-
     /**
      * Returns the maximum width of the container for the pinned `IgxColumnComponent`s.
      * The width is 80% of the total grid width.
