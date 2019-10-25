@@ -674,22 +674,23 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     /**
      * @hidden
     */
-    public getRowTemplate(rowData) {
-        if (this.isHierarchicalRecord(rowData)) {
-            return this.hierarchicalRecordTemplate;
-        } else if (this.isChildGridRecord(rowData) && this.isExpanded(rowData)) {
-            if (this.hasChildDetails) {
-                return this.childDetailsContainerTemplate;
-            } else {
-               return this.childTemplate;
-            }
-        } else {
-            return this.hierarchicalRecordTemplate;
-        }
+   public getRowTemplate(rowData) {
+    const isChild = this.isChildGridRecord(rowData) && this.isExpanded(rowData);
+    const isChildDetail = isChild && this.hasChildDetails;
+    const isChildRI = isChild && !this.hasChildDetails;
+    if (this.isHierarchicalRecord(rowData)) {
+        return this.hierarchicalRecordTemplate;
+    }  else if (isChildRI) {
+        return this.childTemplate;
+    } else if (isChildDetail) {
+            return this.childDetailsContainerTemplate;
+    } else {
+        return this.hierarchicalRecordTemplate;
     }
+}
 
     public get hasChildDetails() {
-        return !!this.childDetailsTemplate;
+        return !!this.childDetailsTemplate && this.childLayoutList.length === 0;
     }
 
     public getDetailsContext(rowData, index){
