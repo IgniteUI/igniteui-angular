@@ -28,17 +28,17 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * Sets the class of the IgxPaginatorComponent based
      * on the provided displayDensity.
      */
-    @HostBinding('class.igx-grid-paginator--cosy')
+    @HostBinding('class.igx-paginator--cosy')
     public get classCosy(): boolean {
         return this.displayDensity === DisplayDensity.cosy;
     }
 
-    @HostBinding('class.igx-grid-paginator--compact')
+    @HostBinding('class.igx-paginator--compact')
     public get classCompact(): boolean {
         return this.displayDensity === DisplayDensity.compact;
     }
 
-    @HostBinding('class.igx-grid-paginator')
+    @HostBinding('class.igx-paginator')
     public get classComfortable(): boolean {
         return this.displayDensity === DisplayDensity.comfortable;
     }
@@ -163,7 +163,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     * @memberof IgxPaginatorComponent
     */
     @Input()
-    public selectLabel = CurrentResourceStrings.GridResStrings.igx_grid_paginator_label;
+    public selectLabel = CurrentResourceStrings.PaginatorResStrings.igx_paginator_label;
 
     /**
      *An event that is emitted when the select in the `IgxPaginatorComponent` changes its value.

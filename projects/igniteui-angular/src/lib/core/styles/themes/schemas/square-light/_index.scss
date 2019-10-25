@@ -23,7 +23,7 @@
 @import '../light/expansion-panel';
 @import '../light/grid';
 @import '../light/grid-filtering';
-@import '../light/grid-pagination';
+@import '../light/pagination';
 @import '../light/grid-summary';
 @import '../light/grid-toolbar';
 @import '../light/highlight';
@@ -65,7 +65,7 @@
 /// @property {Map} igx-expansion-panel [$_light-expansion-panel]
 /// @property {Map} igx-grid [$_light-grid]
 /// @property {Map} igx-grid-filtering [$_light-grid-filtering]
-/// @property {Map} igx-grid-paginator [$_light-grid-pagination]
+/// @property {Map} igx-paginator [$_light-pagination]
 /// @property {Map} igx-grid-summary [$_light-grid-summary]
 /// @property {Map} igx-grid-toolbar [$_light-grid-toolbar]
 /// @property {Map} igx-highlight [$_light-highlight]
@@ -107,7 +107,7 @@ $light-square-schema: (
     igx-expansion-panel: extend($_light-expansion-panel, $_square-shape-expansion-panel),
     igx-grid: extend($_light-grid, $_square-shape-grid),
     igx-grid-filtering: extend($_light-grid-filtering, $_square-shape-grid-filtering),
-    igx-grid-paginator: extend($_light-grid-pagination, $_square-shape-grid-pagination),
+    igx-paginator: extend($_light-pagination, $_square-shape-pagination),
     igx-grid-summary: extend($_light-grid-summary, $_square-shape-grid-summary),
     igx-grid-toolbar: extend($_light-grid-toolbar, $_square-shape-tooltip),
     igx-highlight: $_light-highlight,
