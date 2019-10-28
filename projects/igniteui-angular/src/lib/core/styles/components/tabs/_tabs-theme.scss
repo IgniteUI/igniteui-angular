@@ -69,7 +69,15 @@
     $disable-shadow: true
 ) {
     $name: 'igx-tabs';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $tabs-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $tabs-schema: map-get($schema, $name);
+    } @else {
+        $tabs-schema: $schema;
+    }
+
+    $theme: apply-palette($tabs-schema, $palette);
 
     $tab-area-shadow: if($disable-shadow == true, none, igx-elevation($elevations, 1));
 
