@@ -1,42 +1,10 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { IgxBadgeModule } from '../badge/badge.component';
-import { IgxCheckboxModule } from '../checkbox/checkbox.component';
-import { IgxSelectionAPIService } from '../core/selection';
-import { IgxDatePickerModule } from '../date-picker/date-picker.component';
-import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxFocusModule } from '../directives/focus/focus.directive';
-import { IgxForOfModule } from '../directives/for-of/for_of.directive';
-import { IgxTemplateOutletModule } from '../directives/template-outlet/template_outlet.directive';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { IgxTextHighlightModule } from '../directives/text-highlight/text-highlight.directive';
-import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
-import { IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { IgxDropDownModule } from '../drop-down/index';
-import { IgxIconModule } from '../icon/index';
-import { IgxInputGroupModule } from '../input-group/input-group.component';
 import { IgxGridCellComponent } from './cell.component';
-import { IgxColumnComponent, IgxColumnGroupComponent, IgxColumnLayoutComponent } from './column.component';
-import { IgxColumnHidingModule } from './column-hiding.component';
-import { IgxGridHeaderComponent } from './grid-header.component';
-import { IgxGridToolbarComponent } from './grid-toolbar.component';
-import { IgxGridFilteringCellComponent } from './filtering/grid-filtering-cell.component';
-import { IgxGridFilteringRowComponent } from './filtering/grid-filtering-row.component';
 import { IgxGridFooterComponent } from './grid-footer/grid-footer.component';
 import {
-    IgxColumnResizerDirective,
-    IgxColumnMovingDragDirective,
-    IgxColumnMovingDropDirective,
     IgxGridBodyDirective,
-    IgxColumnMovingService,
-    IgxResizeHandleDirective
 } from './grid.common';
-import { IgxGridTransaction } from './grid-base.component';
-import { IgxChipsModule } from '../chips/chips.module';
-import { IgxDragDropModule } from '../directives/drag-drop/drag-drop.directive';
-import { IgxButtonGroupModule } from '../buttonGroup/buttonGroup.component';
-import { IgxColumnPinningModule } from './column-pinning.component';
+import { IgxGridTransaction, IgxGridBaseDirective } from './grid-base.directive';
 import { IgxBaseTransactionService } from '../services/transaction/base-transaction';
 import {
     IgxRowEditTemplateDirective,
@@ -44,172 +12,85 @@ import {
     IgxRowEditTextDirective,
     IgxRowEditTabStopDirective
 } from './grid.rowEdit.directive';
-import { IgxGridNavigationService } from './grid-navigation.service';
-import { IgxGridHeaderGroupComponent } from './grid-header-group.component';
-import { IgxColumnResizingService } from './grid-column-resizing.service';
-import { IgxGridToolbarCustomContentDirective } from './grid-toolbar.component';
-import { IgxSummaryRowComponent } from './summaries/summary-row.component';
-import { IgxSummaryCellComponent } from './summaries/summary-cell.component';
-import { IgxSummaryDataPipe } from './summaries/grid-root-summary.pipe';
-import { IgxGridSelectionService } from '../core/grid-selection';
-import { IgxGridSummaryService } from './summaries/grid-summary.service';
-import { IgxProgressBarModule } from '../progressbar/progressbar.component';
 import { IgxPaginatorModule } from '../paginator/paginator.component';
-import { IgxFilterModule } from '../directives/filter/filter.directive';
-import { IgxGridPipesModule } from './grid-pipes.module';
+import { IgxGridPipesModule } from './common/grid-pipes.module';
 import { IgxGridExcelStyleFilteringModule } from './filtering/excel-style/grid.excel-style-filtering.module';
-import { IgxGridDragSelectDirective } from './drag-select.directive';
-import { IgxGridColumnResizerComponent } from './grid-column-resizer.component';
 import { IgxRowDragModule } from './row-drag.directive';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
-import { IgxSelectModule } from '../select/select.module';
-import {
-    IgxCellFooterTemplateDirective,
-    IgxCellHeaderTemplateDirective,
-    IgxCellEditorTemplateDirective,
-    IgxCellTemplateDirective,
-    IgxFilterCellTemplateDirective
-} from './common/templates';
-import { IgxRowSelectorsModule } from './igx-row-selectors.module';
+import { IgxGridSelectionModule } from './selection/selection.module';
+import { IgxGridResizingModule } from './resizing/resize.module';
+import { IgxColumnMovingModule } from './moving/moving.module';
+import { IgxGridSharedModules } from './common/shared.module';
+import { IgxGridSummaryModule } from './summaries/summary.module';
+import { IgxGridToolbarModule } from './toolbar/toolbar.module';
+import { IgxColumnHidingModule } from './hiding/hiding.module';
+import { IgxColumnPinningModule } from './pinning/pinning.module';
+import { IgxGridColumnModule } from './columns/column.module';
+import { IgxGridHeadersModule } from './headers/headers.module';
+import { IgxGridFilteringModule } from './filtering/base/filtering.module';
+import { IgxRowDirective } from './row.directive';
 /**
  * @hidden
  */
 @NgModule({
     declarations: [
+        IgxGridBaseDirective,
+        IgxRowDirective,
         IgxGridCellComponent,
-        IgxColumnComponent,
-        IgxColumnGroupComponent,
-        IgxColumnLayoutComponent,
-        IgxGridHeaderComponent,
-        IgxGridToolbarComponent,
-        IgxGridToolbarCustomContentDirective,
-        IgxCellFooterTemplateDirective,
-        IgxCellHeaderTemplateDirective,
-        IgxCellEditorTemplateDirective,
-        IgxCellTemplateDirective,
         IgxRowEditTemplateDirective,
         IgxRowEditActionsDirective,
         IgxRowEditTextDirective,
         IgxRowEditTabStopDirective,
-        IgxColumnResizerDirective,
-        IgxResizeHandleDirective,
-        IgxColumnMovingDragDirective,
-        IgxColumnMovingDropDirective,
         IgxGridBodyDirective,
-        IgxGridFilteringCellComponent,
-        IgxGridFilteringRowComponent,
-        IgxSummaryDataPipe,
-        IgxGridHeaderGroupComponent,
-        IgxSummaryRowComponent,
-        IgxSummaryCellComponent,
-        IgxGridDragSelectDirective,
-        IgxGridColumnResizerComponent,
-        IgxFilterCellTemplateDirective,
         IgxGridFooterComponent,
         IgxAdvancedFilteringDialogComponent
     ],
     entryComponents: [
-        IgxColumnComponent,
-        IgxColumnGroupComponent,
-        IgxColumnLayoutComponent,
         IgxAdvancedFilteringDialogComponent
     ],
     exports: [
         IgxGridCellComponent,
-        IgxColumnComponent,
-        IgxColumnGroupComponent,
-        IgxColumnLayoutComponent,
-        IgxGridHeaderComponent,
-        IgxGridToolbarComponent,
-        IgxGridToolbarCustomContentDirective,
-        IgxCellFooterTemplateDirective,
-        IgxCellHeaderTemplateDirective,
-        IgxCellEditorTemplateDirective,
-        IgxCellTemplateDirective,
         IgxRowEditTemplateDirective,
         IgxRowEditActionsDirective,
         IgxRowEditTextDirective,
         IgxRowEditTabStopDirective,
-        IgxColumnResizerDirective,
-        IgxColumnMovingDragDirective,
-        IgxColumnMovingDropDirective,
         IgxGridBodyDirective,
-        IgxSummaryDataPipe,
-        IgxButtonModule,
-        IgxDatePickerModule,
-        IgxIconModule,
-        IgxRippleModule,
-        IgxInputGroupModule,
-        IgxToggleModule,
-        IgxForOfModule,
-        IgxTemplateOutletModule,
-        IgxFocusModule,
-        IgxTextHighlightModule,
-        IgxTextSelectionModule,
-        IgxCheckboxModule,
-        IgxBadgeModule,
-        IgxChipsModule,
-        IgxDragDropModule,
         IgxColumnHidingModule,
-        IgxDropDownModule,
-        IgxButtonGroupModule,
         IgxColumnPinningModule,
-        IgxProgressBarModule,
-        IgxGridFilteringCellComponent,
-        IgxGridFilteringRowComponent,
-        IgxGridHeaderGroupComponent,
-        IgxSummaryRowComponent,
-        IgxSummaryCellComponent,
-        IgxGridDragSelectDirective,
-        IgxGridColumnResizerComponent,
-        IgxFilterModule,
+        IgxGridColumnModule,
+        IgxGridHeadersModule,
         IgxGridPipesModule,
+        IgxGridFilteringModule,
         IgxGridExcelStyleFilteringModule,
-        IgxFilterCellTemplateDirective,
         IgxRowDragModule,
         IgxPaginatorModule,
         IgxGridFooterComponent,
+        IgxGridResizingModule,
+        IgxColumnMovingModule,
+        IgxGridSelectionModule,
+        IgxGridSummaryModule,
+        IgxGridToolbarModule,
         IgxAdvancedFilteringDialogComponent,
-        IgxRowSelectorsModule
+        IgxGridSharedModules
     ],
     imports: [
-        CommonModule,
-        FormsModule,
-        IgxButtonModule,
-        IgxDatePickerModule,
-        IgxIconModule,
-        IgxRippleModule,
-        IgxInputGroupModule,
-        IgxToggleModule,
-        IgxForOfModule,
-        IgxTemplateOutletModule,
-        IgxFocusModule,
-        IgxTextHighlightModule,
-        IgxTextSelectionModule,
-        IgxCheckboxModule,
-        IgxBadgeModule,
-        IgxChipsModule,
-        IgxDragDropModule,
-        IgxColumnHidingModule,
-        IgxDropDownModule,
-        IgxButtonGroupModule,
+        IgxGridColumnModule,
+        IgxGridHeadersModule,
+        IgxColumnMovingModule,
+        IgxGridResizingModule,
         IgxColumnPinningModule,
-        IgxProgressBarModule,
-        IgxFilterModule,
+        IgxGridSelectionModule,
+        IgxGridSummaryModule,
+        IgxGridToolbarModule,
+        IgxColumnHidingModule,
         IgxGridPipesModule,
+        IgxGridFilteringModule,
         IgxGridExcelStyleFilteringModule,
         IgxRowDragModule,
-        IgxSelectModule,
         IgxPaginatorModule,
-        IgxRowSelectorsModule
+        IgxGridSharedModules
     ],
     providers: [
-        IgxGridSelectionService,
-        IgxSelectionAPIService,
-        IgxColumnMovingService,
-        IgxGridNavigationService,
-        IgxColumnResizingService,
-        IgxGridSummaryService,
         { provide: IgxGridTransaction, useClass: IgxBaseTransactionService }
     ]
 })

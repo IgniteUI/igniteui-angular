@@ -385,7 +385,9 @@ export class IgxSliderComponent implements
      */
     public set continuous(continuous: boolean) {
         this._continuous = continuous;
-        this.setTickInterval(null);
+        if (this._hasViewInit) {
+            this.setTickInterval(null);
+        }
     }
 
     /**
@@ -453,7 +455,9 @@ export class IgxSliderComponent implements
         // recalculate step distance.
         this.stepDistance = this.calculateStepDistance();
         this.positionHandlesAndUpdateTrack();
-        this.setTickInterval(null);
+        if (this._hasViewInit) {
+            this.setTickInterval(null);
+        }
     }
 
     /**
@@ -499,7 +503,9 @@ export class IgxSliderComponent implements
         // Recalculate step distance.
         this.stepDistance = this.calculateStepDistance();
         this.positionHandlesAndUpdateTrack();
-        this.setTickInterval(null);
+        if (this._hasViewInit) {
+            this.setTickInterval(null);
+        }
     }
 
     /**
@@ -1070,7 +1076,9 @@ export class IgxSliderComponent implements
             this.positionHandle(this.thumbFrom, this.labelFrom, (this.value as IRangeSliderValue).lower);
         }
 
-        this.updateTrack();
+        if (this._hasViewInit) {
+            this.updateTrack();
+        }
     }
 
     private closestHandle(event: PointerEvent) {

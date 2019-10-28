@@ -27,3 +27,8 @@ export enum GridSelectionMode {
     single = 'single',
     multiple = 'multiple',
 }
+
+export enum ColumnDisplayOrder {
+    Alphabetical = 'Alphabetical',
+    DisplayOrder = 'DisplayOrder'
+}
