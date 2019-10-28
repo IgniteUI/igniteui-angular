@@ -47,7 +47,15 @@
     $base-track-hover-color: null
 ) {
     $name: 'igx-slider';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $slider-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $slider-schema: map-get($schema, $name);
+    } @else {
+        $slider-schema: $schema;
+    }
+
+    $theme: apply-palette($slider-schema, $palette);
 
     @if not($label-text-color) and $label-background-color {
         $label-text-color: text-contrast($label-background-color);

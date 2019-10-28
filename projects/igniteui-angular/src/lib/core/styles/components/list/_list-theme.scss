@@ -80,7 +80,14 @@
     $item-thumbnail-color-active: null
 ) {
     $name: 'igx-list';
-    $list-schema: map-get($schema, $name);
+    $list-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $list-schema: map-get($schema, $name);
+    } @else {
+        $list-schema: $schema;
+    }
+
     $theme: apply-palette($list-schema, $palette);
 
     $border-radius: round-borders(
