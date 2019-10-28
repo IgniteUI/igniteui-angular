@@ -2,7 +2,6 @@ import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewCh
 import { async, TestBed, ComponentFixture, tick, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboComponent, IgxComboModule, IComboSelectionChangeEventArgs, IgxComboState } from './combo.component';
@@ -12,13 +11,13 @@ import { IForOfState } from '../directives/for-of/for_of.directive';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
 import { DisplayDensity, DisplayDensityToken } from '../core/density';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/index';
 import { IgxInputState } from '../directives/input/input.directive';
 import { IgxComboFilteringPipe } from './combo.pipes';
+import { IgxComboAddItemComponent } from './combo-add-item.component';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -323,7 +322,7 @@ describe('igxCombo', () => {
             expect(dropdown.navigatePrev).toHaveBeenCalledTimes(1);
         }));
 
-        it('Should properly call dropdown navigateNext with virutal items', (async () => {
+        it('Should properly call dropdown navigateNext with virtual items', (async () => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
             fix.detectChanges();
             const combo = fix.componentInstance.combo;
@@ -335,18 +334,17 @@ describe('igxCombo', () => {
             const mockClick = jasmine.createSpyObj('event', ['preventDefault', 'stopPropagation']);
             const virtualMockUP = spyOn<any>(dropdown, 'navigatePrev').and.callThrough();
             const virtualMockDOWN = spyOn<any>(dropdown, 'navigateNext').and.callThrough();
-            // expect(mockFn).toThrow();
             expect(dropdown.focusedItem).toEqual(null);
             expect(combo.collapsed).toBeTruthy();
             combo.toggle();
             await wait(30);
             fix.detectChanges();
-            // expect(mockObj.focus).toHaveBeenCalledTimes(1);
             expect(combo.collapsed).toBeFalsy();
             (combo as any).virtDir.scrollTo(51);
             await wait(30);
             fix.detectChanges();
-            const lastItem = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM))[8].componentInstance;
+            let items = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
+            let lastItem = items[items.length - 1].componentInstance;
             expect(lastItem).toBeDefined();
             lastItem.clicked(mockClick);
             await wait(30);
@@ -365,22 +363,18 @@ describe('igxCombo', () => {
             fix.detectChanges();
             expect(virtualMockDOWN).toHaveBeenCalledTimes(1);
             combo.searchValue = 'New';
-            await wait(30);
-            lastItem.clicked(mockClick);
+            combo.handleInputChange();
             fix.detectChanges();
-            expect(dropdown.focusedItem).toEqual(lastItem);
-            fix.detectChanges();
-            expect(combo.customValueFlag && combo.searchValue !== '').toBeTruthy();
-            dropdown.navigateNext();
             await wait(30);
-            expect(virtualMockDOWN).toHaveBeenCalledTimes(2);
-            lastItem.value = (combo as any).virtDir.igxForOf[(combo as any).virtDir.igxForOf.length - 1];
-            lastItem.clicked(mockClick);
-            await wait(30);
+            items = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
+            lastItem = items[items.length - 1].componentInstance;
+            (lastItem as IgxComboAddItemComponent).handleClick();
             fix.detectChanges();
-            expect(dropdown.focusedItem).toEqual(lastItem);
-            dropdown.navigateNext();
-            expect(virtualMockDOWN).toHaveBeenCalledTimes(3);
+            // After `Add Item` is clicked, the input is focused and the item is added to the list
+            expect(dropdown.focusedItem).toEqual(null);
+            expect(document.activeElement).toEqual(combo.searchInput.nativeElement);
+            expect(combo.customValueFlag).toBeFalsy();
+            expect(combo.searchInput.nativeElement.value).toBeTruthy();
 
             // TEST move from first item
             (combo as any).virtDir.scrollTo(0);
@@ -396,13 +390,11 @@ describe('igxCombo', () => {
             dropdown.navigateFirst();
             await wait(30);
             fix.detectChanges();
-            expect(virtualMockDOWN).toHaveBeenCalledTimes(3);
             dropdown.navigatePrev();
             await wait(30);
             fix.detectChanges();
             // Called once before the `await` and called once more, because item @ index 0 is a header
             expect(virtualMockUP).toHaveBeenCalledTimes(2);
-            expect(virtualMockDOWN).toHaveBeenCalledTimes(3);
         }));
         it('Should call toggle properly', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboSampleComponent);
@@ -2360,12 +2352,12 @@ describe('igxCombo', () => {
             fix.detectChanges();
             expect(combo.groupKey).toEqual('region');
             expect(combo.dropdown.items[0].value.field === combo.data[0].field).toBeFalsy();
-            expect(combo.sortingExpressions[0]).toEqual({
-                fieldName: 'region',
-                dir: SortingDirection.Asc,
-                ignoreCase: true,
-                strategy: DefaultSortingStrategy.instance()
-            });
+            // expect(combo.sortingExpressions[0]).toEqual({
+            //     fieldName: 'region',
+            //     dir: SortingDirection.Asc,
+            //     ignoreCase: true,
+            //     strategy: DefaultSortingStrategy.instance()
+            // });
             const listItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
             const listHeaders = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_HEADERITEM));
             expect(listItems.length).toBeGreaterThan(0);
@@ -2381,19 +2373,8 @@ describe('igxCombo', () => {
             fix.detectChanges();
             expect(combo.groupKey).toEqual('region');
             expect(combo.dropdown.items[0].value.field === combo.data[0].field).toBeFalsy();
-            expect(combo.sortingExpressions.length).toEqual(1);
-            expect(combo.sortingExpressions[0]).toEqual({
-                fieldName: 'region',
-                dir: SortingDirection.Asc,
-                ignoreCase: true,
-                strategy: DefaultSortingStrategy.instance()
-            });
             combo.groupKey = '';
 
-            fix.detectChanges();
-            expect(combo.groupKey).toEqual('');
-            expect(combo.sortingExpressions.length).toEqual(0);
-            expect(combo.sortingExpressions[0]).toBeUndefined();
             fix.detectChanges();
             expect(combo.dropdown.items[0].value).toEqual(combo.data[0]);
         }));
@@ -2487,7 +2468,6 @@ describe('igxCombo', () => {
             expect(combo.filteredData.length).toEqual(initialData.length);
             expect(combo.filteredData.length).toBeGreaterThan(firstFilter.length);
             expect(filterSpy).toHaveBeenCalledTimes(3);
-            combo.filteringExpressions = [];
             tick();
             fix.detectChanges();
             expect(combo.filteredData.length).toEqual(initialData.length);
@@ -2528,62 +2508,30 @@ describe('igxCombo', () => {
             fix.detectChanges();
             expect(combo.selectedItems().length).toEqual(0);
         }));
-        it('Should properly sort filteredData', fakeAsync(() => {
-            const fix = TestBed.createComponent(IgxComboSampleComponent);
-            fix.detectChanges();
-            const combo = fix.componentInstance.combo;
-            spyOn(combo, 'sort').and.callThrough();
-            const clearSpy = spyOn<any>(combo, 'clearSorting').and.callThrough();
-            combo.toggle();
-            tick();
-            fix.detectChanges();
-            expect(combo.sort).toHaveBeenCalledTimes(0);
-            expect(combo.sortingExpressions.length).toEqual(1);
-            expect(combo.sortingExpressions[0].fieldName).toEqual('region');
-            expect(combo.groupKey).toEqual('region');
-            const initialFirstItem = '' + combo.filteredData[0].field;
-            combo.groupKey = '';
-            tick();
-            fix.detectChanges();
-            expect(combo.sort).toHaveBeenCalledTimes(1);
-            expect(combo.groupKey).toEqual('');
-            expect(combo.sortingExpressions.length).toEqual(0);
-            expect(combo.sortingExpressions[0]).toBeUndefined();
-            expect(combo.filteredData[0].field !== initialFirstItem).toBeTruthy();
-            expect(clearSpy).toHaveBeenCalledTimes(1);
-            combo.groupKey = null;
-            tick();
-            fix.detectChanges();
-            expect(combo.sort).toHaveBeenCalledTimes(2);
-            expect(combo.groupKey).toEqual(null);
-            expect(combo.sortingExpressions.length).toEqual(0);
-            expect(combo.sortingExpressions[0]).toBeUndefined();
-            expect(combo.filteredData[0].field !== initialFirstItem).toBeTruthy();
-            expect(clearSpy).toHaveBeenCalledTimes(2);
-        }));
+
         it('Should properly handleInputChange', () => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
             fix.detectChanges();
             const combo = fix.componentInstance.combo;
-            const filterSpy = spyOn(IgxComboFilteringPipe.prototype, 'transform').and.callThrough();
+            const matchSpy = spyOn<any>(combo, 'checkMatch').and.callThrough();
             spyOn(combo.onSearchInput, 'emit');
 
             combo.handleInputChange();
 
             fix.detectChanges();
-            expect(filterSpy).toHaveBeenCalledTimes(1);
+            expect(matchSpy).toHaveBeenCalledTimes(1);
             expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(0);
 
             combo.handleInputChange('Fake');
 
             fix.detectChanges();
-            expect(filterSpy).toHaveBeenCalledTimes(2);
+            expect(matchSpy).toHaveBeenCalledTimes(2);
             expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(1);
             expect(combo.onSearchInput.emit).toHaveBeenCalledWith('Fake');
 
             combo.handleInputChange('');
             fix.detectChanges();
-            expect(filterSpy).toHaveBeenCalledTimes(3);
+            expect(matchSpy).toHaveBeenCalledTimes(3);
             expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(2);
             expect(combo.onSearchInput.emit).toHaveBeenCalledWith('');
 
@@ -2591,7 +2539,7 @@ describe('igxCombo', () => {
             fix.detectChanges();
 
             combo.handleInputChange();
-            expect(filterSpy).toHaveBeenCalledTimes(3);
+            expect(matchSpy).toHaveBeenCalledTimes(4);
             expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(2);
         });
         it('Should properly handle addItemToCollection calls (Complex data)', fakeAsync(() => {
