@@ -18,7 +18,7 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - Grid Paging #grid', () => {
     configureTestSuite();
-    const PAGER_CLASS = '.igx-grid-paginator__pager';
+    const PAGER_CLASS = '.igx-paginator__pager';
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -500,7 +500,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         if (pagerText != null) {
             expect(gridElement.querySelector(PAGER_CLASS)).toBeDefined();
             expect(gridElement.querySelectorAll('igx-select').length).toEqual(1);
-            expect(gridElement.querySelector('.igx-grid-paginator__pager > div').textContent).toMatch(pagerText);
+            expect(gridElement.querySelector('.igx-paginator__pager > div').textContent).toMatch(pagerText);
         }
         if (buttonsVisibility != null && buttonsVisibility.length === 4) {
             const pagingButtons = GridFunctions.getPagingButtons(gridElement);
