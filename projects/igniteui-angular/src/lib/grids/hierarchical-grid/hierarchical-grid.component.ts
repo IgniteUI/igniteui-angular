@@ -44,6 +44,7 @@ import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-sel
 import { IgxOverlayService } from '../../services/index';
 import { IgxColumnResizingService } from '../grid-column-resizing.service';
 import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
+import { IgxHierarchicalGridMasterDetailNavigationService } from './hierarchical-grid-master-detail-navigation.service';
 
 let NEXT_ID = 0;
 
@@ -470,6 +471,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         this.childLayoutList.notifyOnChanges();
         this.childLayoutList.changes.pipe(takeUntil(this.destroy$))
         .subscribe(() => this.onRowIslandChange());
+        this._setupNavigationService();
         super.ngAfterContentInit();
     }
 
@@ -673,15 +675,22 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
 
     public detailsKeyboardHandler(event, rowIndex) {
         const colIndex = this.selectionService.activeElement ? this.selectionService.activeElement.column : 0;
+        const shift = event.shiftKey;
         const key = event.key.toLowerCase();
         if (key === 'tab') {
             event.stopPropagation();
-        } else if (key === "arrowup") {
+            if (shift) {
+                event.preventDefault();
+                const lastColIndex = this.unpinnedColumns[this.unpinnedColumns.length - 1].visibleIndex;
+                this.navigateTo(rowIndex - 1, lastColIndex,
+                    (args) => args.target.nativeElement.focus());
+            }
+        } else if (key === 'arrowup') {
             this.navigateTo(rowIndex - 1, colIndex,
-                (args)=> args.target.nativeElement.focus());
-        } else if (key === "arrowdown") {
+                (args) => args.target.nativeElement.focus());
+        } else if (key === 'arrowdown') {
             this.navigateTo(rowIndex + 1, colIndex,
-                (args)=> args.target.nativeElement.focus());
+                (args) => args.target.nativeElement.focus());
         }
     }
 
@@ -712,6 +721,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
             $implicit: rowData.data,
             index: index
         };
+    }
+
+    private _setupNavigationService() {
+        if (this.hasChildDetails) {
+            this.navigation = new IgxHierarchicalGridMasterDetailNavigationService();
+            this.navigation.grid = this;
+        }
     }
 
     /**

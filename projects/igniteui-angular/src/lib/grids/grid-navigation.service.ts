@@ -622,7 +622,7 @@ export class IgxGridNavigationService {
     }
 
     protected getRowByIndex(index, selector = this.getRowSelector()) {
-        return this.grid.nativeElement.querySelector(
+        return this.grid.tbody.nativeElement.querySelector(
             `${selector}[data-rowindex="${index}"]`);
     }
 

@@ -117,7 +117,7 @@
                 [ngClass]="{
                 'igx-grid__tr-container': true
             }">
-                <div class="igx-grid__hierarchical-indent">
+                <div class="igx-grid__hierarchical-indent" (keydown)='$event.stopPropagation()'>
                     <!-- <ng-container *ngTemplateOutlet="childDetailsTemplate; context: rowData.data"></ng-container> -->
                         <ng-template
                     [igxTemplateOutlet]='childDetailsTemplate'
