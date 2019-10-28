@@ -65,10 +65,18 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
                 transactions = transactions.filter(t => t.id === id);
             }
             DataUtil.mergeHierarchicalTransactions(data, transactions, childDataKey, primaryKey, true);
+            this.clear(id);
         } else {
-            super.commit(data, id);
+            if (id !== undefined) {
+                super.commit(data, id);
+            } else {
+                this._states.forEach((s: S, key: any) => {
+                    if (this.updateRecord(data, s)) {
+                        super.clear(key);
+                    }
+                });
+            }
         }
-        this.clear(id);
     }
 
     //  TODO: remove this method. Force cloning to strip child arrays when needed instead
