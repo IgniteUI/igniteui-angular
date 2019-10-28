@@ -70,9 +70,9 @@ export class IgxHierarchicalTransactionService<T extends HierarchicalTransaction
             if (id !== undefined) {
                 super.commit(data, id);
             } else {
-                this._states.forEach((s: S, id: any) => {
+                this._states.forEach((s: S, key: any) => {
                     if (this.updateRecord(data, s)) {
-                        super.clear(id);
+                        super.clear(key);
                     }
                 });
             }
