@@ -673,13 +673,15 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         }
     }
 
-    public detailsKeyboardHandler(event, rowIndex) {
+    public detailsKeyboardHandler(event, rowIndex, container) {
         const colIndex = this.selectionService.activeElement ? this.selectionService.activeElement.column : 0;
         const shift = event.shiftKey;
         const key = event.key.toLowerCase();
+        const target = event.target;
         if (key === 'tab') {
             event.stopPropagation();
-            if (shift) {
+            if (shift && target === container) {
+                // shift + tab from details to data row
                 event.preventDefault();
                 const lastColIndex = this.unpinnedColumns[this.unpinnedColumns.length - 1].visibleIndex;
                 this.navigateTo(rowIndex - 1, lastColIndex,
@@ -716,7 +718,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         return !!this.childDetailsTemplate && this.childLayoutList.length === 0;
     }
 
-    public getDetailsContext(rowData, index){
+    public getDetailsContext(rowData, index) {
         return {
             $implicit: rowData.data,
             index: index

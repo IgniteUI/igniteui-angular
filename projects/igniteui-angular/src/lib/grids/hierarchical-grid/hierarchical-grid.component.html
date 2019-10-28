@@ -113,11 +113,11 @@
         </ng-template>
 
         <ng-template #child_detail_template let-rowIndex="index" let-rowData>
-            <div style="overflow:auto;width: 100%;" tabindex="0" (keydown)='detailsKeyboardHandler($event, rowIndex)' [attr.data-rowindex]='rowIndex'
+            <div detail='true' style="overflow:auto;width: 100%;" tabindex="0" #detailsContainer (keydown)='detailsKeyboardHandler($event, rowIndex, detailsContainer)' [attr.data-rowindex]='rowIndex'
                 [ngClass]="{
                 'igx-grid__tr-container': true
             }">
-                <div class="igx-grid__hierarchical-indent" (keydown)='$event.stopPropagation()'>
+                <div class="igx-grid__hierarchical-indent">
                     <!-- <ng-container *ngTemplateOutlet="childDetailsTemplate; context: rowData.data"></ng-container> -->
                         <ng-template
                     [igxTemplateOutlet]='childDetailsTemplate'

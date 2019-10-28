@@ -16,7 +16,7 @@ export class IgxHierarchicalGridMasterDetailNavigationService extends IgxGridNav
         if (this.grid.isChildGridRecord(this.grid.dataView[selectedNode.row - 1])) {
                 this.focusDetailsRow(selectedNode.row - 1);
         } else {
-            super.navigateDown(rowElement, selectedNode);
+            super.navigateUp(rowElement, selectedNode);
         }
     }
 
@@ -29,6 +29,7 @@ export class IgxHierarchicalGridMasterDetailNavigationService extends IgxGridNav
     }
 
     protected focusDetailsRow(index, lastChild?) {
+        this.grid.wheelHandler();
         if (this.shouldPerformVerticalScroll(index, -1)) {
             this.performVerticalScrollToCell(index, -1,
                 () => {
