@@ -42,12 +42,10 @@
     <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'"
         [style.maxHeight.px]="itemsMaxHeight" [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()"
         [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
-        <igx-combo-item *igxFor="let item of data | comboFiltering:searchValue:displayKey
-        | comboSorting:sortingExpressions
+        <igx-combo-item *igxFor="let item of data | comboFiltering:searchValue:displayKey:filterable
         | comboGrouping:groupKey:valueKey;
         index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
-            [itemHeight]='itemHeight' [value]="item" [isHeader]="item.isHeader" role="option" [index]="rowIndex"
-            (onChunkPreload)="dataLoading($event)">
+            [itemHeight]='itemHeight' [value]="item" [isHeader]="item.isHeader" role="option" [index]="rowIndex">
             <ng-container *ngIf="item.isHeader">
                 <ng-container
                     *ngTemplateOutlet="headerItemTemplate ? headerItemTemplate : headerItemBase;

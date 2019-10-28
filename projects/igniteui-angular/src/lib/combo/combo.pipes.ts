@@ -1,10 +1,9 @@
 import { Pipe, PipeTransform, Inject } from '@angular/core';
 import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
-import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
-import { ISortingExpression } from '../data-operations/sorting-expression.interface';
-import { FilteringStrategy } from '../data-operations/filtering-strategy';
+import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
+import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 
 
 /**
@@ -14,46 +13,20 @@ import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
     name: 'comboFiltering'
 })
 export class IgxComboFilteringPipe implements PipeTransform {
-    public transform(collection: any[], searchValue: any, displayKey: any) {
+    public transform(collection: any[], searchValue: any, displayKey: any, shouldFilter: boolean) {
         if (!collection) {
             return [];
         }
-        if (!searchValue) {
+        if (!searchValue || !shouldFilter) {
             return collection;
         } else {
             const searchTerm = searchValue.toLowerCase().trim();
             if (displayKey != null) {
                 return collection.filter(e => e[displayKey].toLowerCase().includes(searchTerm));
             } else {
-                return collection.filter(e => e.includes(searchTerm));
+                return collection.filter(e => e.toLowerCase().includes(searchTerm));
             }
         }
-    }
-}
-
-/** @hidden */
-export class SimpleFilteringStrategy extends FilteringStrategy {
-    public findMatchByExpression(rec: object, expr: IFilteringExpression): boolean {
-        const cond = expr.condition;
-        const val = expr.fieldName === undefined ? rec : rec[expr.fieldName];
-        return cond.logic(val, expr.searchVal, expr.ignoreCase);
-    }
-}
-
-/**
- * @hidden
- */
-@Pipe({
-    name: 'comboSorting',
-    pure: true
-})
-export class IgxComboSortingPipe implements PipeTransform {
-    public transform(collection: any[], expressions: ISortingExpression []) {
-        if (!expressions.length) {
-            return collection;
-        }
-        const result = DataUtil.sort(cloneArray(collection), expressions);
-        return result;
     }
 }
 
@@ -72,13 +45,19 @@ export class IgxComboGroupingPipe implements PipeTransform {
         if ((!groupKey && groupKey !== 0) || !collection.length) {
             return collection;
         }
-        const data = cloneArray(collection);
+        const sorted = DataUtil.sort(cloneArray(collection), [{
+            fieldName: groupKey,
+            dir: SortingDirection.Asc,
+            ignoreCase: true,
+            strategy: DefaultSortingStrategy.instance()
+        }]);
+        const data = cloneArray(sorted);
         let inserts = 0;
         let currentHeader = null;
-        for (let i = 0; i < collection.length; i++) {
+        for (let i = 0; i < sorted.length; i++) {
             let insertFlag = 0;
-            if (currentHeader !== collection[i][groupKey]) {
-                currentHeader = collection[i][groupKey];
+            if (currentHeader !== sorted[i][groupKey]) {
+                currentHeader = sorted[i][groupKey];
                 insertFlag = 1;
             }
             if (insertFlag) {

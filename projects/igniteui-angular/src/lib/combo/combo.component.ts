@@ -30,17 +30,15 @@ import { IgxDropDownModule } from '../drop-down/index';
 import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
-import { IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboSortingPipe } from './combo.pipes';
+import { IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
 import { EditorProvider } from '../core/edit-provider';
-import { take } from 'rxjs/operators';
 import { IgxInputState, IgxInputDirective } from '../directives/input/input.directive';
 
 /**
@@ -142,9 +140,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public defaultFallbackGroup = 'Other';
     protected stringFilters = IgxStringFilteringOperand;
     protected booleanFilters = IgxBooleanFilteringOperand;
-    protected _filteringLogic = FilteringLogic.Or;
-    protected _filteringExpressions: IFilteringExpression[] = [];
-    protected _sortingExpressions: ISortingExpression[] = [];
     protected _groupKey = '';
     protected _displayKey: string;
     protected _prevInputValue = '';
@@ -763,9 +758,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     @Input()
     public set groupKey(val: string) {
-        this.clearSorting(this._groupKey);
         this._groupKey = val;
-        this.sort(this._groupKey);
     }
 
     /**
@@ -783,7 +776,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * An @Input property that enabled/disables filtering in the list. The default is `true`.
      * ```html
-     *<igx-combo [filterable]="'false'">
+     *<igx-combo [filterable]="false">
      * ```
      */
     @Input()
@@ -912,50 +905,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     set totalItemCount(count: number) {
         this.virtDir.totalItemCount = count;
-        this.cdr.detectChanges();
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get filteringExpressions(): IFilteringExpression[] {
-        return this.filterable ? this._filteringExpressions : [];
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public set filteringExpressions(value: IFilteringExpression[]) {
-        this._filteringExpressions = value;
-        this.cdr.markForCheck();
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get sortingExpressions(): ISortingExpression[] {
-        return this._sortingExpressions;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public set sortingExpressions(value: ISortingExpression[]) {
-        this._sortingExpressions = value;
-        this.cdr.markForCheck();
-    }
-
-    protected clearSorting(field?: string | number) {
-        if (field === undefined || field === null) {
-            this.sortingExpressions = [];
-            return;
-        }
-        const currentState = cloneArray(this.sortingExpressions);
-        const index = currentState.findIndex((expr) => expr.fieldName === field);
-        if (index > -1) {
-            currentState.splice(index, 1);
-            this.sortingExpressions = currentState;
-        }
     }
 
     /**
@@ -1022,41 +971,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden @internal
      */
     public handleInputChange(event?: string) {
-        this.onSearchInput.emit(event);
-        if (this.filterable) {
-            this.checkMatch();
+        if (event !== undefined) {
+            this.onSearchInput.emit(event);
         }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public sort(fieldName: string, dir: SortingDirection = SortingDirection.Asc, ignoreCase: boolean = true,
-        strategy: ISortingStrategy = DefaultSortingStrategy.instance()): void {
-        if (!fieldName) {
-            return;
-        }
-        const sortingState = cloneArray(this.sortingExpressions, true);
-
-        this.prepare_sorting_expression(sortingState, fieldName, dir, ignoreCase, strategy);
-        this.sortingExpressions = sortingState;
-    }
-
-    protected prepare_sorting_expression(state: ISortingExpression[], fieldName: string, dir: SortingDirection, ignoreCase: boolean,
-        strategy: ISortingStrategy) {
-
-        if (dir === SortingDirection.None) {
-            state.splice(state.findIndex((expr) => expr.fieldName === fieldName), 1);
-            return;
-        }
-
-        const expression = state.find((expr) => expr.fieldName === fieldName);
-
-        if (!expression) {
-            state.push({ fieldName, dir, ignoreCase, strategy });
-        } else {
-            Object.assign(expression, { fieldName, dir, ignoreCase });
-        }
+        this.checkMatch();
     }
 
     /**
@@ -1235,6 +1153,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             this.manageRequiredAsterisk();
             this.cdr.detectChanges();
         }
+        this.virtDir.onChunkPreload.pipe(takeUntil(this.destroy$)).subscribe((e) => {
+            this.onDataPreLoad.emit(e);
+        });
     }
 
     /**
@@ -1245,13 +1166,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         this.destroy$.complete();
         this.comboAPI.clear();
         this.selection.clear(this.id);
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public dataLoading(event) {
-        this.onDataPreLoad.emit(event);
     }
 
     /**
@@ -1556,7 +1470,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
  */
 @NgModule({
     declarations: [IgxComboComponent, IgxComboItemComponent, IgxComboGroupingPipe,
-        IgxComboFilteringPipe, IgxComboSortingPipe, IgxComboDropDownComponent, IgxComboAddItemComponent,
+        IgxComboFilteringPipe, IgxComboDropDownComponent, IgxComboAddItemComponent,
         IgxComboItemDirective,
         IgxComboEmptyDirective,
         IgxComboHeaderItemDirective,
