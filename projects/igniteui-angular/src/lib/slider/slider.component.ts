@@ -10,7 +10,8 @@ import {
     ViewChildren,
     QueryList,
     ChangeDetectorRef,
-    AfterContentChecked
+    AfterContentChecked,
+    NgZone
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { EditorProvider } from '../core/edit-provider';
@@ -26,7 +27,15 @@ import { SliderHandle,
     ISliderValueChangeEventArgs
 } from './slider.common';
 import { IgxThumbLabelComponent } from './label/thumb-label.component';
+import ResizeObserver from 'resize-observer-polyfill';
 
+/**
+ * Slider Tick labels Orientation
+ */
+export enum TickLabelsOrientation {
+    horizontal,
+    vertical
+}
 
 const noop = () => {
 };
@@ -81,6 +90,8 @@ export class IgxSliderComponent implements
     private _continuous = false;
     private _disabled = false;
     private _step = 1;
+    private _primaryTicks = 0;
+    private _secondaryTicks = 0;
 
     private _labels = new Array<number|string|boolean|null|undefined>();
     private _type = SliderType.SLIDER;
@@ -88,7 +99,8 @@ export class IgxSliderComponent implements
     private _destroyer$ = new Subject<boolean>();
     private _indicatorsDestroyer$ = new Subject<boolean>();
     private _indicatorsTimer: Observable<any>;
-
+    private _observer: ResizeObserver;
+    private _resizeNotify = new Subject();
 
     private _onChangeCallback: (_: any) => void = noop;
     private _onTouchedCallback: () => void = noop;
@@ -132,6 +144,11 @@ export class IgxSliderComponent implements
     private get labelTo(): IgxThumbLabelComponent {
         return this.labelRefs.find(label => label.type === SliderHandle.TO);
     }
+
+    /**
+     * hidden
+     */
+    public width: number;
 
     /**
      * @hidden
@@ -638,6 +655,45 @@ export class IgxSliderComponent implements
         }
     }
 
+    @Input()
+    public get primaryTicks() {
+        return this._primaryTicks;
+    }
+
+    public set primaryTicks(val: number) {
+        if (val <= 0) {
+            return;
+        }
+
+        this._primaryTicks = val;
+    }
+
+    @Input()
+    public get secondaryTicks() {
+        return this._secondaryTicks;
+    }
+
+    public set secondaryTicks(val: number) {
+        if (val <= 0 ) {
+            return;
+        }
+
+        this._secondaryTicks = val;
+    }
+
+    @Input()
+    public primaryTickLabels = true;
+
+    @Input()
+    public secondaryTickLabels = false;
+
+    @Input()
+    public tickLabelsOrientation = TickLabelsOrientation.horizontal;
+
+    public get isVertical() {
+        return this.tickLabelsOrientation === TickLabelsOrientation.vertical;
+    }
+
     /**
      * This event is emitted when user has stopped interacting the thumb and value is changed.
      * ```typescript
@@ -653,7 +709,11 @@ export class IgxSliderComponent implements
     public onValueChange = new EventEmitter<ISliderValueChangeEventArgs>();
 
 
-    constructor(private renderer: Renderer2, private _el: ElementRef, private _cdr: ChangeDetectorRef) { }
+    constructor(
+        private renderer: Renderer2,
+        private _el: ElementRef,
+        private _cdr: ChangeDetectorRef,
+        private _zone: NgZone) { }
 
     /**
      * @hidden
@@ -840,9 +900,30 @@ export class IgxSliderComponent implements
     /**
      * @hidden
      */
+    public get ticksStep() {
+        return this.width ? (this.width / this.ticksLength) +
+            (this.width / this.ticksLength / (this.ticksLength - 1)) : 0;
+    }
+
+    /**
+     * @hidden
+     */
+    public get ticksLength() {
+        return this.primaryTicks > 0 ? (this.primaryTicks * this.secondaryTicks) + this.primaryTicks + 1 :
+            this.secondaryTicks > 0 ? this.secondaryTicks + 1 : 0;
+    }
+
+    /**
+     * @hidden
+     */
     public ngOnInit() {
         this.sliderSetup();
-
+        this._resizeNotify.pipe(takeUntil(this._destroyer$))
+            .subscribe(() => {
+                this._zone.run(() => {
+                    this.notifyChanges();
+                });
+            });
         // Set track travel zone
         this._pMin = this.valueToFraction(this.lowerBound) || 0;
         this._pMax = this.valueToFraction(this.upperBound) || 1;
@@ -867,6 +948,11 @@ export class IgxSliderComponent implements
             this.subscribeTo(thumbFrom, this.thumbChanged.bind(this));
             this.changeThumbFocusableState(this.disabled);
         });
+
+        this._zone.runOutsideAngular(() => {
+            this._observer = new ResizeObserver(() => this._resizeNotify.next());
+            this._observer.observe(this._el.nativeElement);
+        })
     }
 
     /**
@@ -979,8 +1065,50 @@ export class IgxSliderComponent implements
         this.toggleSliderIndicators();
     }
 
+    /**
+     * @hidden
+     */
     public onHoverChange(state: boolean) {
         return state ? this.showSliderIndicators() : this.hideSliderIndicators();
+    }
+
+    /**
+     * @hidden
+     */
+    public tickIndention(idx: number) {
+        let indention = idx * this.ticksStep;
+        if (indention === this.width) {
+            indention -= 1;
+        }
+        return this.ticksStep * idx === 0 ? 1 : indention;
+    }
+
+    /**
+     * @hidden
+     */
+    public tickPosition(idx: number) {
+        const primaryTicksPosition = 17.5;
+        const secondaryTicksPosition = 10;
+        return this.primaryTicks <= 0 ? secondaryTicksPosition :
+            idx % (this.secondaryTicks + 1) === 0 ? primaryTicksPosition : secondaryTicksPosition;
+    }
+
+    /**
+     * @hidden
+     */
+    public tickWidth(idx: number) {
+        const primaryTicksWidth = 25;
+        const secondaryTicksWidth = 10;
+        return this.primaryTicks <= 0 ? secondaryTicksWidth :
+            idx % (this.secondaryTicks + 1) === 0 ? primaryTicksWidth : secondaryTicksWidth;
+    }
+
+    /**
+     * @hidden
+     */
+    public tickLabel(idx: number) {
+        const labelStep = this.maxValue / (this.ticksLength - 1);
+        return (labelStep * idx).toFixed(2);
     }
 
     private swapThumb(value: IRangeSliderValue) {
@@ -1260,6 +1388,15 @@ export class IgxSliderComponent implements
 
     private emitValueChanged(oldValue: number | IRangeSliderValue) {
         this.onValueChange.emit({ oldValue, value: this.value });
+    }
+
+    /**
+     * @hidden
+     * resizeObesrver callback
+     */
+    private notifyChanges() {
+        this.width = this._el.nativeElement.getBoundingClientRect().width;
+        this._cdr.markForCheck();
     }
 }
 

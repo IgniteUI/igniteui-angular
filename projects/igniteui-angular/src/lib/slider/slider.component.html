@@ -1,6 +1,18 @@
 <div class="igx-slider__track">
     <div #track class="igx-slider__track-fill"></div>
     <div #ticks class="igx-slider__track-ticks"></div>
+    <svg id="svg" xmlns="http://www.w3.org/2000/svg" version="1.1" [ngStyle]="{ 'width': width, 'height': '100px', 'overflow': 'visible' }">
+        <line id="stroke" x2="1" stroke="black" stroke-dasharray="1, 1" />
+        <g *ngFor="let n of [].constructor(ticksLength); let idx=index" [attr.stroke-width]="tickWidth(idx)">
+            <use href="#stroke"
+                [attr.x]="tickIndention(idx)"
+                [attr.y]="tickPosition(idx)"></use>
+            <text [attr.x]="isVertical ? tickPosition(idx) * 3 + 5 : tickIndention(idx)"
+                [attr.transform]="isVertical ? 'rotate(90)' : 'rotate(0)'"thun
+                [attr.y]="isVertical ? - (tickIndention(idx) - 3) : tickPosition(idx) * 3"
+                text-anchor="middle">{{tickLabel(idx)}}</text>
+        </g>
+  </svg>
 </div>
 <div class="igx-slider__thumbs">
     <igx-thumb-label

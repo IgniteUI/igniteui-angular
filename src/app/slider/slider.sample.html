@@ -1,17 +1,20 @@
-<div class="sample-wrapper">
+<!-- <div class="sample-wrapper">
     <app-page-header title="Slider">
         Allows the user to set value/values within a given range.
     </app-page-header>
     <section class="sample-content">
-        <div>
+        <div> -->
             <article class="sample-column">
                 <h4 class="sample-title">Slider</h4>
-                <igx-slider #slider [(ngModel)]="task.percentCompleted" [step]="5" [lowerBound]="20">
+                <igx-slider #slider [value]="80" [step]="5" [lowerBound]="20" [tickLabelsOrientation]="labelOrientaion" [primaryTicks]="6" [secondaryTicks]="7">
                 </igx-slider>
+            </article>
+            <article style="padding-top: 100px">
+                <button igxButton (click)="changeLabelOrientation()">change label orientaiton</button>
             </article>
 
 
-            <article class="sample-column">
+            <!-- <article class="sample-column">
                 <h4 class="sample-title">Range slider</h4>
                 <igx-slider #slider2 [type]="sliderType" [disabled]="true" [(ngModel)]="rangeValue" [minValue]="0" [maxValue]="100">
                 </igx-slider>
@@ -31,16 +34,16 @@
             </article>
 
             <article class="sample-column" class="flex-row">
-                <!-- <h4 class="sample-title">Range label slider</h4> -->
+                <h4 class="sample-title">Range label slider</h4>
                 <span class="outer-label">{{getLowerVal}}</span>
                 <igx-slider style="width: 60%;" #slider3 [type]="sliderType" (onValueChange)="valueChange($event)"
                     [labels]="labels" [continuous]="true">
                 </igx-slider>
                 <span class="outer-label">{{getUpperVal}}</span>
             </article>
-        </div>
+        </div> -->
 
-        <div>
+        <!-- <div>
             <article class="sample-column">
                 <h3>Task</h3>
                 <div>name: {{task.title}}</div>
@@ -62,6 +65,6 @@
                 <input type="text" [(ngModel)]="rangeLabel.lower">
                 <input type="text" [(ngModel)]="rangeLabel.upper">
             </article>
-        </div>
-    </section>
-</div>
+        </div> -->
+    <!-- </section>
+</div> -->

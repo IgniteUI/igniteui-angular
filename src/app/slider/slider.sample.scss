@@ -14,5 +14,13 @@
 .outer-label {
     width: 20%;
     text-align: center;
-    padding-top: 10px
+    padding-top: 10px;
+}
+.sample-component {
+    position: relative;
+    width: 100%;
+}
+
+igx-slider {
+    width: 50%;
 }
