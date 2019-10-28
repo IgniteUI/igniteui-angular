@@ -357,7 +357,7 @@ describe('IgxGrid - Advanced Filtering', () => {
             // Verify that the advanced filtering button indicates there are filters.
             advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix);
             expect(advFilterBtn.classList.contains(ADVANCED_FILTERING_TOOLBAR_BUTTON_FILTERED_CSS_CLASS))
-                .toBe(true, 'Button icon indicates there is no active filtering.');
+                .toBe(true, 'Button indicates there is no active filtering.');
 
             // Open Advanced Filtering dialog.
             GridFunctions.clickAdvancedFilteringButton(fix);
@@ -374,7 +374,7 @@ describe('IgxGrid - Advanced Filtering', () => {
             // Verify that the advanced filtering button indicates there are no filters.
             advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix);
             expect(advFilterBtn.classList.contains(ADVANCED_FILTERING_TOOLBAR_BUTTON_FILTERED_CSS_CLASS))
-                .toBe(false, 'Button icon indicates there is active filtering.');
+                .toBe(false, 'Button indicates there is active filtering.');
         }));
 
         it('Should correctly filter by a \'string\' column through UI.', fakeAsync(() => {
