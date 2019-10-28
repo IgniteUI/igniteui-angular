@@ -43,7 +43,6 @@ const TYPEDOC_THEME = {
 
 module.exports.buildStyle =  (cb) => {
     const prefixer = postcss([autoprefixer({
-        browsers: ['last 5 versions', '> 3%'],
         cascade: false,
         grid: true
     })]);
