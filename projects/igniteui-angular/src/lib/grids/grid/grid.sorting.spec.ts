@@ -10,7 +10,7 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { DefaultSortingStrategy, ISortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxGridCellComponent } from '../cell.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxGridFilteringRowComponent } from '../filtering/grid-filtering-row.component';
+import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
 import { IgxChipComponent } from '../../chips/chip.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 

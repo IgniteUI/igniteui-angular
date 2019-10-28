@@ -7,8 +7,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
-import { IgxRowComponent } from '../row.component';
-import { IgxColumnComponent } from '../column.component';
+import { IgxRowDirective } from '../row.directive';
+import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxGridModule } from './index';
 import { DisplayDensity } from '../../core/displayDensity';
@@ -599,7 +599,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             const rows = fix.componentInstance.grid.rowList.toArray();
             for (let i = 0; i < rows.length; i++) {
-                const row = rows[i] as IgxRowComponent<any>;
+                const row = rows[i] as IgxRowDirective<any>;
                 expect(row.cells.length).toEqual(4);
             }
         });
@@ -623,7 +623,7 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(16);
             const rows = fix.componentInstance.grid.dataRowList.toArray();
             for (let i = 0; i < rows.length; i++) {
-                const row = rows[i] as IgxRowComponent<any>;
+                const row = rows[i] as IgxRowDirective<any>;
                 expect(row.cells.length).toEqual(4);
             }
         });
@@ -1331,8 +1331,8 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
 
             const grid = fix.componentInstance.grid;
-            expect(grid.columns[1].width).toEqual('150');
-            expect(grid.columns[2].width).toEqual('150');
+            expect(grid.columns[1].width).toEqual('150px');
+            expect(grid.columns[2].width).toEqual('150px');
 
             const hScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
             expect(hScroll.nativeElement.hidden).toBe(true);
@@ -1638,7 +1638,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.cdr.detectChanges();
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
-            const paging = fix.debugElement.query(By.css('.igx-grid-paginator__pager'));
+            const paging = fix.debugElement.query(By.css('.igx-paginator__pager'));
             const summaries = fix.debugElement.queryAll(By.css('igx-grid-summary-cell'));
             expect(headers.length).toBe(4);
             expect(summaries.length).toBe(4);
@@ -1658,7 +1658,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.cdr.detectChanges();
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
-            const paging = fix.debugElement.query(By.css('.igx-grid-paginator__pager'));
+            const paging = fix.debugElement.query(By.css('.igx-paginator__pager'));
             expect(headers.length).toBe(4);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(204);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);

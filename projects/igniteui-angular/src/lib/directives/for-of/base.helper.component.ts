@@ -5,18 +5,25 @@ import {
     ElementRef,
     ChangeDetectorRef,
     OnDestroy,
-    Directive
+    Directive,
+    AfterViewInit
 } from '@angular/core';
 
 @Directive({
     selector: '[igxVirtualHelperBase]'
 })
-export class VirtualHelperBaseDirective implements OnDestroy {
+export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
     public scrollAmount = 0;
 
     public _size = 0;
 
     public destroyed;
+
+    private _afterViewInit = false;
+
+    ngAfterViewInit() {
+        this._afterViewInit = true;
+    }
 
     @HostListener('scroll', ['$event'])
     onScroll(event) {
@@ -37,7 +44,9 @@ export class VirtualHelperBaseDirective implements OnDestroy {
             return;
         }
         this._size = value;
-        this.cdr.detectChanges();
+        if (this._afterViewInit) {
+            this.cdr.detectChanges();
+        }
     }
 
     public get size() {

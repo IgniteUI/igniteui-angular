@@ -12,9 +12,10 @@ import {
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { DataType } from '../../data-operations/data-util';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
-import { IgxGridSelectionService, ISelectionNode } from '../../core/grid-selection';
+import { IgxGridBaseDirective } from '../grid-base.directive';
+import { IgxGridSelectionService, ISelectionNode } from '../selection/selection.service';
 import { ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS } from '../../core/utils';
+import { GridType } from '../common/grid.interface';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,7 +25,7 @@ import { ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS } from '../../core/u
 })
 export class IgxGridGroupByRowComponent {
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         private gridSelection: IgxGridSelectionService,
         public element: ElementRef,
         public cdr: ChangeDetectorRef) { }
