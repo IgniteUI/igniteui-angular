@@ -16,6 +16,7 @@ export interface IGridDataBindable {
 export interface GridType extends IGridDataBindable {
     id: string;
     displayDensity: DisplayDensity | string;
+    locale: string;
     resourceStrings: IGridResourceStrings;
     nativeElement: HTMLElement;
     rowEditable: boolean;
@@ -29,6 +30,7 @@ export interface GridType extends IGridDataBindable {
     selectionService: any;
     navigation: any;
     filteringService: any;
+    outletDirective: any;
 
     calcHeight: number;
 
