@@ -1376,12 +1376,33 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
  * @hidden
  */
 @NgModule({
-    declarations: [IgxDatePickerComponent, IgxCalendarContainerComponent, IgxDatePickerActionsDirective,
-        IgxDatePickerTemplateDirective, DatePickerDisplayValuePipe, DatePickerInputValuePipe],
-    exports: [IgxDatePickerComponent, IgxDatePickerTemplateDirective, IgxDatePickerActionsDirective,
-        DatePickerDisplayValuePipe, DatePickerInputValuePipe],
-    imports: [CommonModule, IgxIconModule, IgxInputGroupModule, IgxCalendarModule, IgxButtonModule,
-                IgxRippleModule, IgxMaskModule, IgxTextSelectionModule],
-    entryComponents: [IgxCalendarContainerComponent]
+    declarations: [
+        IgxDatePickerComponent,
+        IgxCalendarContainerComponent,
+        IgxDatePickerActionsDirective,
+        IgxDatePickerTemplateDirective,
+        DatePickerDisplayValuePipe,
+        DatePickerInputValuePipe
+    ],
+    entryComponents: [
+        IgxCalendarContainerComponent
+    ],
+    exports: [
+        IgxDatePickerComponent,
+        IgxDatePickerTemplateDirective,
+        IgxDatePickerActionsDirective,
+        DatePickerDisplayValuePipe,
+        DatePickerInputValuePipe
+    ],
+    imports: [
+        CommonModule,
+        IgxIconModule,
+        IgxInputGroupModule,
+        IgxCalendarModule,
+        IgxButtonModule,
+        IgxRippleModule,
+        IgxMaskModule,
+        IgxTextSelectionModule
+    ]
 })
 export class IgxDatePickerModule { }

@@ -746,7 +746,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const diffs = [];
         let totalDiff = 0;
         const l = this._embeddedViews.length;
-        const rNodes = this._embeddedViews.map(view => view.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE));
+        const rNodes = this._embeddedViews.map(view =>
+            view.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE) || view.rootNodes[0].nextElementSibling);
         for (let i = 0; i < l; i++) {
             const rNode = rNodes[i];
             if (rNode) {
@@ -1209,6 +1210,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     protected removeLastElem() {
         const oldElem = this._embeddedViews.pop();
         this.onBeforeViewDestroyed.emit(oldElem);
+        // also detach from ViewContainerRef to make absolutely sure this is removed from the view container.
+        this.dc.instance._vcr.detach(this.dc.instance._vcr.length - 1);
         oldElem.destroy();
 
         this.state.chunkSize--;
@@ -1558,6 +1561,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
         this.recalcUpdateSizes();
+        this.cdr.markForCheck();
     }
 
     onHScroll(scrollAmount) {

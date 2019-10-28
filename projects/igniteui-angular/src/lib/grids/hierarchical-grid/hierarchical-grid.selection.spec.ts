@@ -13,7 +13,7 @@ import {
     IgxHierarchicalGridCustomSelectorsComponent,
     IgxHierarchicalGridRowSelectionNoTransactionsComponent
 } from '../../test-utils/hierarhical-grid-components.spec';
-import { IgxRowSelectorsModule } from '../igx-row-selectors.module';
+import { IgxGridSelectionModule } from '../selection/selection.module';
 import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 
@@ -36,7 +36,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
                 NoopAnimationsModule,
                 IgxHierarchicalGridModule,
                 IgxIconModule,
-                IgxRowSelectorsModule]
+                IgxGridSelectionModule]
         }).compileComponents();
     }));
 

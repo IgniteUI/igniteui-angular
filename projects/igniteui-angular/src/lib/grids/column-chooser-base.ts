@@ -4,11 +4,7 @@ import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-ope
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { FilteringStrategy } from '../data-operations/filtering-strategy';
 import { ColumnChooserItemBase } from './column-chooser-item-base';
-
-export enum ColumnDisplayOrder {
-    Alphabetical = 'Alphabetical',
-    DisplayOrder = 'DisplayOrder'
-}
+import { ColumnDisplayOrder } from './common/enums';
 
 class CustomFilteringStrategy extends FilteringStrategy {
     public filter(data: any[], expressionsTree: IFilteringExpressionsTree): any[] {

@@ -18,16 +18,16 @@ export class GridColumnPinningSampleComponent implements OnInit {
 
     ngOnInit(): void {
         this.columns = [
-            { field: 'ID', width: 100, hidden: true },
-            { field: 'CompanyName', width: 300 },
-            { field: 'ContactName', width: 200, pinned: true },
-            { field: 'ContactTitle', width: 200, pinned: true },
-            { field: 'Address', width: 300 },
-            { field: 'City', width: 100 },
-            { field: 'Region', width: 100 },
-            { field: 'PostalCode', width: 100 },
-            { field: 'Phone', width: 150 },
-            { field: 'Fax', width: 150 }
+            { field: 'ID', width: '5%', hidden: false },
+            { field: 'CompanyName', width: '5%' },
+            { field: 'ContactName', width: '5%', pinned: false },
+            { field: 'ContactTitle', width: '25%', pinned: false },
+            { field: 'Address', width: '10%' },
+            { field: 'City', width: '10%' },
+            { field: 'Region', width: '10%' },
+            { field: 'PostalCode', width: '10%' },
+            { field: 'Phone', width: '10%' },
+            { field: 'Fax', width: '10%' }
         ];
 
         this.data = [
