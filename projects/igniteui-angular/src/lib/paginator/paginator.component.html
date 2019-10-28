@@ -1,6 +1,6 @@
-<div class="igx-grid-paginator__select" [hidden]="dropdownHidden">
-    <label class="igx-grid-paginator__label">{{ selectLabel }}</label>
-    <div class="igx-grid-paginator__select-input">
+<div class="igx-paginator__select" [hidden]="dropdownHidden">
+    <label class="igx-paginator__label">{{ selectLabel }}</label>
+    <div class="igx-paginator__select-input">
         <igx-select [(ngModel)]="perPage" [displayDensity]="paginatorSelectDisplayDensity()" type="border"
             [disabled]="!dropdownEnabled">
             <igx-select-item [value]="val" *ngFor="let val of selectOptions">
@@ -9,14 +9,14 @@
         </igx-select>
     </div>
 </div>
-<div class="igx-grid-paginator__pager" [hidden]="pagerHidden">
+<div class="igx-paginator__pager" [hidden]="pagerHidden">
     <button [disabled]="isFirstPage || !pagerEnabled ? true: false" (click)="paginate(0)" igxButton="icon" igxRipple igxRippleCentered="true">
         <igx-icon fontSet="material">first_page</igx-icon>
     </button>
     <button [disabled]="isFirstPage || !pagerEnabled ? true: false" (click)="previousPage()" igxButton="icon" igxRipple igxRippleCentered="true">
         <igx-icon fontSet="material">chevron_left</igx-icon>
     </button>
-    <div class='igx-grid-paginator__pager-text'>
+    <div class='igx-paginator__pager-text'>
         <span>{{ page + 1 }}</span>
         <span>&nbsp;of&nbsp;</span>
         <span>{{ totalPages }}</span>
