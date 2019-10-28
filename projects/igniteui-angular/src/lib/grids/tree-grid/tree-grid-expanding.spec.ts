@@ -1422,9 +1422,9 @@ function verifyGridPager(fix, rowsCount, firstCellValue, pagerText, buttonsVisib
     expect(grid.rowList.length).toEqual(rowsCount, 'Invalid number of rows initialized');
 
     if (pagerText != null) {
-        expect(gridElement.querySelector('.igx-grid-paginator__pager')).toBeDefined();
+        expect(gridElement.querySelector('.igx-paginator__pager')).toBeDefined();
         expect(gridElement.querySelectorAll('igx-select').length).toEqual(1);
-        expect(gridElement.querySelector('.igx-grid-paginator__pager-text').textContent).toMatch(pagerText);
+        expect(gridElement.querySelector('.igx-paginator__pager-text').textContent).toMatch(pagerText);
     }
     if (buttonsVisibility != null && buttonsVisibility.length === 4) {
         const pagingButtons = GridFunctions.getPagingButtons(gridElement);
