@@ -140,7 +140,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
             const state = this.getState(id);
             if (state) {
                 this.updateRecord(data, state);
-            }            
+            }  
         } else {
             this._states.forEach((s: S) => {
                 this.updateRecord(data, s);
@@ -328,7 +328,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
      * @param data Data source to update
      * @param state State to update data from
      */
-    protected updateRecord(data: any[], state: S):boolean {
+    protected updateRecord(data: any[], state: S): boolean {
         const index = data.findIndex(i => JSON.stringify(i) === JSON.stringify(state.recordRef || {}));
         switch (state.type) {
             case TransactionType.ADD:
