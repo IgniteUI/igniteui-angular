@@ -826,18 +826,18 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * let valid = this.combo.valid;
      * ```
      * */
-     public get valid(): IgxComboState {
+    public get valid(): IgxComboState {
         return this._valid;
     }
 
-     /**
-     * Sets if control is valid, when used in a form
-     *
-     * ```typescript
-     * // set
-     * this.combo.valid = IgxComboState.INVALID;
-     * ```
-    */
+    /**
+    * Sets if control is valid, when used in a form
+    *
+    * ```typescript
+    * // set
+    * this.combo.valid = IgxComboState.INVALID;
+    * ```
+   */
     public set valid(valid: IgxComboState) {
         this._valid = valid;
         this.comboInput.valid = IgxInputState[IgxComboState[valid]];
@@ -1022,36 +1022,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden @internal
      */
     public handleInputChange(event?: string) {
-        let cdrFlag = false;
-        const vContainer = this.virtDir;
-        if (event !== undefined && this._prevInputValue === event) {
-            // Nothing has changed
-            return;
-        } else {
-            this._prevInputValue = event !== undefined ? event : '';
-        }
-        if (event !== undefined) {
-            // Do not scroll if not scrollable
-            if (vContainer.isScrollable()) {
-                vContainer.scrollTo(0);
-            } else {
-                cdrFlag = true;
-            }
-            this.onSearchInput.emit(event);
-        } else {
-            cdrFlag = true;
-        }
+        this.onSearchInput.emit(event);
         if (this.filterable) {
-            this.filter();
-            // If there was no scroll before filtering, check if there is after and detect changes
-            if (cdrFlag) {
-                vContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
-                    if (vContainer.isScrollable()) {
-                        this.cdr.detectChanges();
-                    }
-                });
-            }
-        } else {
             this.checkMatch();
         }
     }
@@ -1195,7 +1167,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         this.customValueFlag = false;
         this.searchInput.nativeElement.focus();
         this.dropdown.focusedItem = null;
-        this.handleInputChange();
+        this.virtDir.scrollTo(0);
     }
 
     /**
@@ -1214,35 +1186,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         }
     }
 
-
-    protected prepare_filtering_expression(searchVal, condition, ignoreCase, fieldName?) {
-        const newArray = [...this.filteringExpressions];
-        const expression = newArray.find((expr) => expr.fieldName === fieldName);
-        const newExpression = { fieldName, searchVal, condition, ignoreCase };
-        if (!expression) {
-            newArray.push(newExpression);
-        } else {
-            Object.assign(expression, newExpression);
-        }
-        if (this.groupKey) {
-            const expression2 = newArray.find((expr) => expr.fieldName === 'isHeader');
-            const headerExpression = {
-                fieldName: 'isHeader', searchVale: '',
-                condition: IgxBooleanFilteringOperand.instance().condition('true'), ignoreCase: true
-            };
-            if (!expression2) {
-                newArray.push(headerExpression);
-            } else {
-                Object.assign(expression2, headerExpression);
-            }
-        }
-        this.filteringExpressions = newArray;
-    }
-
     protected onStatusChanged = () => {
         if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
             (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
-                this.valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
+            this.valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
         }
         this.manageRequiredAsterisk();
     }
@@ -1262,18 +1209,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         if (this.collapsed) {
             if (this.ngControl && !this.ngControl.valid) {
                 this.valid = IgxComboState.INVALID;
-           } else {
+            } else {
                 this.valid = IgxComboState.INITIAL;
-           }
+            }
         }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public filter() {
-        this.prepare_filtering_expression(this.searchValue.trim(), IgxStringFilteringOperand.instance().condition('contains'),
-            true, this.dataType === DataTypes.PRIMITIVE ? undefined : this.displayKey);
     }
 
     /**
@@ -1581,7 +1520,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         if (event.cancel) {
             return;
         }
-        this.handleInputChange();
     }
 
     /**

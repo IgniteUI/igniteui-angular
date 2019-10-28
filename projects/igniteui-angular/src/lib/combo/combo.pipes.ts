@@ -1,11 +1,9 @@
 import { Pipe, PipeTransform, Inject } from '@angular/core';
 import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
-import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
+import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
-import { IFilteringState } from '../data-operations/filtering-state.interface';
 import { FilteringStrategy } from '../data-operations/filtering-strategy';
-import { FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
 
 
@@ -16,18 +14,20 @@ import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
     name: 'comboFiltering'
 })
 export class IgxComboFilteringPipe implements PipeTransform {
-    public transform(collection: any[], expressions: IFilteringExpression[],
-                     logic: FilteringLogic) {
-        const filteringExpressionsTree =  new FilteringExpressionsTree(logic);
-        filteringExpressionsTree.filteringOperands = expressions;
-        const state: IFilteringState = { expressionsTree: filteringExpressionsTree, strategy: new SimpleFilteringStrategy()};
-
-        if (!state.expressionsTree.filteringOperands.length) {
-            return collection;
+    public transform(collection: any[], searchValue: any, displayKey: any) {
+        if (!collection) {
+            return [];
         }
-
-        const result = DataUtil.filter(cloneArray(collection), state);
-        return result;
+        if (!searchValue) {
+            return collection;
+        } else {
+            const searchTerm = searchValue.toLowerCase().trim();
+            if (displayKey != null) {
+                return collection.filter(e => e[displayKey].toLowerCase().includes(searchTerm));
+            } else {
+                return collection.filter(e => e.includes(searchTerm));
+            }
+        }
     }
 }
 

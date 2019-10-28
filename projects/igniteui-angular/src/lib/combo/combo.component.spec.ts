@@ -18,6 +18,7 @@ import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
 import { DisplayDensity, DisplayDensityToken } from '../core/density';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/index';
 import { IgxInputState } from '../directives/input/input.directive';
+import { IgxComboFilteringPipe } from './combo.pipes';
 
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
@@ -2408,12 +2409,12 @@ describe('igxCombo', () => {
             expect(combo.collapsed).toBeFalsy();
             expect(combo.dropdown.headers).toBeDefined();
             expect(combo.dropdown.headers.length).toEqual(2);
-            combo.dropdown.headers[0].clicked(null);
+            (combo.dropdown.headers[0] as IgxComboItemComponent).clicked(null);
             fix.detectChanges();
 
             const mockObj = jasmine.createSpyObj('nativeElement', ['focus']);
             spyOnProperty(combo.dropdown, 'focusedItem', 'get').and.returnValue({ element: { nativeElement: mockObj } });
-            combo.dropdown.headers[0].clicked(null);
+            (combo.dropdown.headers[0] as IgxComboItemComponent).clicked(null);
             fix.detectChanges();
             expect(mockObj.focus).not.toHaveBeenCalled(); // Focus only if `allowItemFocus === true`
 
@@ -2465,12 +2466,12 @@ describe('igxCombo', () => {
             const initialData = [...combo.filteredData];
             let firstFilter;
             expect(combo.searchValue).toEqual('');
-            spyOn(combo, 'filter').and.callThrough();
+            const filterSpy = spyOn(IgxComboFilteringPipe.prototype, 'transform').and.callThrough();
             combo.searchValue = 'New ';
             combo.handleInputChange();
             tick();
             fix.detectChanges();
-            expect(combo.filter).toHaveBeenCalledTimes(1);
+            expect(filterSpy).toHaveBeenCalledTimes(1);
             expect(combo.filteredData.length).toBeLessThan(initialData.length);
             firstFilter = [...combo.filteredData];
             combo.searchValue += '  ';
@@ -2478,19 +2479,19 @@ describe('igxCombo', () => {
             tick();
             fix.detectChanges();
             expect(combo.filteredData.length).toBeLessThan(initialData.length);
-            expect(combo.filter).toHaveBeenCalledTimes(2);
+            expect(filterSpy).toHaveBeenCalledTimes(2);
             combo.searchValue = '';
             combo.handleInputChange();
             tick();
             fix.detectChanges();
             expect(combo.filteredData.length).toEqual(initialData.length);
             expect(combo.filteredData.length).toBeGreaterThan(firstFilter.length);
-            expect(combo.filter).toHaveBeenCalledTimes(3);
+            expect(filterSpy).toHaveBeenCalledTimes(3);
             combo.filteringExpressions = [];
             tick();
             fix.detectChanges();
             expect(combo.filteredData.length).toEqual(initialData.length);
-            expect(combo.filter).toHaveBeenCalledTimes(3);
+            expect(filterSpy).toHaveBeenCalledTimes(3);
         }));
         it('Should properly select/deselect filteredData', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
@@ -2502,12 +2503,12 @@ describe('igxCombo', () => {
             const initialData = [...combo.filteredData];
 
             expect(combo.searchValue).toEqual('');
-            spyOn(combo, 'filter').and.callThrough();
+            const filterSpy = spyOn(IgxComboFilteringPipe.prototype, 'transform').and.callThrough();
             combo.searchValue = 'New ';
             combo.handleInputChange();
             tick();
             fix.detectChanges();
-            expect(combo.filter).toHaveBeenCalledTimes(1);
+            expect(filterSpy).toHaveBeenCalledTimes(1);
             expect(combo.filteredData.length).toBeLessThan(initialData.length);
             expect(combo.filteredData.length).toEqual(4);
 
@@ -2564,25 +2565,25 @@ describe('igxCombo', () => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
             fix.detectChanges();
             const combo = fix.componentInstance.combo;
-            spyOn(combo, 'filter');
+            const filterSpy = spyOn(IgxComboFilteringPipe.prototype, 'transform').and.callThrough();
             spyOn(combo.onSearchInput, 'emit');
 
             combo.handleInputChange();
 
             fix.detectChanges();
-            expect(combo.filter).toHaveBeenCalledTimes(1);
+            expect(filterSpy).toHaveBeenCalledTimes(1);
             expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(0);
 
             combo.handleInputChange('Fake');
 
             fix.detectChanges();
-            expect(combo.filter).toHaveBeenCalledTimes(2);
+            expect(filterSpy).toHaveBeenCalledTimes(2);
             expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(1);
             expect(combo.onSearchInput.emit).toHaveBeenCalledWith('Fake');
 
             combo.handleInputChange('');
             fix.detectChanges();
-            expect(combo.filter).toHaveBeenCalledTimes(3);
+            expect(filterSpy).toHaveBeenCalledTimes(3);
             expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(2);
             expect(combo.onSearchInput.emit).toHaveBeenCalledWith('');
 
@@ -2590,7 +2591,7 @@ describe('igxCombo', () => {
             fix.detectChanges();
 
             combo.handleInputChange();
-            expect(combo.filter).toHaveBeenCalledTimes(3);
+            expect(filterSpy).toHaveBeenCalledTimes(3);
             expect(combo.onSearchInput.emit).toHaveBeenCalledTimes(2);
         });
         it('Should properly handle addItemToCollection calls (Complex data)', fakeAsync(() => {
