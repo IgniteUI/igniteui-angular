@@ -3,7 +3,6 @@ import {
 } from '@angular/core';
 import { VerticalAlignment, HorizontalAlignment, Point, OverlaySettings } from '../../../services/overlay/utilities';
 import { ConnectedPositioningStrategy } from '../../../services/overlay/position/connected-positioning-strategy';
-import { IgxFilteringService } from '../grid-filtering.service';
 import { IgxOverlayService } from '../../../services/overlay/overlay';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { FilteringLogic, IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
@@ -18,7 +17,7 @@ import { Subject, Subscription } from 'rxjs';
 import { KEYS } from '../../../core/utils';
 import { AbsoluteScrollStrategy, AutoPositionStrategy } from '../../../services/index';
 import { IgxColumnComponent } from '../../columns/column.component';
-import { IgxGridBaseDirective } from '../../grid-base.directive';
+import { GridType } from '../../common/grid.interface';
 
 /**
  *@hidden
@@ -295,7 +294,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     private _editingInputsContainer: ElementRef;
     private _addModeContainer: ElementRef;
     private _currentGroupButtonsContainer: ElementRef;
-    private _grid: IgxGridBaseDirective;
+    private _grid: GridType;
     private _filteringChange: Subscription;
 
     constructor(private element: ElementRef, public cdr: ChangeDetectorRef) { }
@@ -357,7 +356,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * An @Input property that sets the grid.
      */
     @Input()
-    set grid(grid: IgxGridBaseDirective) {
+    set grid(grid: GridType) {
         this._grid = grid;
 
         if (this._filteringChange) {
@@ -378,7 +377,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * Returns the grid.
      */
-    get grid(): IgxGridBaseDirective {
+    get grid(): GridType {
         return this._grid;
     }
 
@@ -1013,7 +1012,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    public initialize(grid: IgxGridBaseDirective, overlayService: IgxOverlayService,
+    public initialize(grid: GridType, overlayService: IgxOverlayService,
         overlayComponentId: string) {
         this.inline = true;
         this.grid = grid;

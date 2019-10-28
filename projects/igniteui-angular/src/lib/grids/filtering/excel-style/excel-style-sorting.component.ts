@@ -13,7 +13,7 @@ import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.compon
 import { DisplayDensity } from '../../../core/density';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { IgxGridBaseDirective } from '../../grid-base.directive';
+import { GridType } from '../../common/grid.interface';
 
 /**
  * @hidden
@@ -31,7 +31,7 @@ export class IgxExcelStyleSortingComponent implements AfterViewInit, OnDestroy, 
     public column: IgxColumnComponent;
 
     @Input()
-    public grid: IgxGridBaseDirective;
+    public grid: GridType;
 
     @Input()
     public displayDensity: DisplayDensity;
