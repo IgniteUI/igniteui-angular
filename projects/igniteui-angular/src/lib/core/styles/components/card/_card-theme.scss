@@ -54,7 +54,14 @@
     $card-border-color: null
 ) {
     $name: 'igx-card';
-    $card-schema: map-get($schema, $name);
+    $card-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $card-schema: map-get($schema, $name);
+    } @else {
+        $card-schema: $schema;
+    }
+
     $theme: apply-palette($card-schema, $palette);
 
     $border-radius: round-borders(
