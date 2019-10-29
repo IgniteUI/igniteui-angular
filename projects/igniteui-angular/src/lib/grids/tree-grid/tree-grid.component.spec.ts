@@ -9,7 +9,8 @@ import {
     IgxTreeGridWrappedInContComponent,
     IgxTreeGridAutoGenerateComponent,
     IgxTreeGridDefaultLoadingComponent,
-    IgxTreeGridCellSelectionComponent
+    IgxTreeGridCellSelectionComponent,
+    IgxTreeGridSummariesTransactionsComponent
 } from '../../test-utils/tree-grid-components.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { GridSelectionMode } from '../common/enums';
@@ -26,7 +27,8 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
                 IgxTreeGridWrappedInContComponent,
                 IgxTreeGridAutoGenerateComponent,
                 IgxTreeGridDefaultLoadingComponent,
-                IgxTreeGridCellSelectionComponent
+                IgxTreeGridCellSelectionComponent,
+                IgxTreeGridSummariesTransactionsComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxTreeGridModule]
@@ -171,7 +173,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             let fixEl = fix.nativeElement, gridEl = grid.nativeElement;
             let tHeadItems = fixEl.querySelector('igx-grid-header-group');
             let gridRows = fixEl.querySelector('igx-tree-grid-row');
-            let paging = fixEl.querySelector('.igx-grid-paginator');
+            let paging = fixEl.querySelector('.igx-paginator');
             let rowSelectors = gridEl.querySelector('.igx-checkbox');
             let dragIndicators = gridEl.querySelector('.igx-grid__drag-indicator');
             let verticalScrollBar = gridEl.querySelector('.igx-grid__tbody-scrollbar[hidden]');
@@ -190,7 +192,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
 
             tHeadItems = fixEl.querySelector('igx-grid-header-group');
             gridRows = fixEl.querySelector('igx-tree-grid-row');
-            paging = fixEl.querySelector('.igx-grid-paginator');
+            paging = fixEl.querySelector('.igx-paginator');
             rowSelectors = gridEl.querySelector('.igx-checkbox');
             dragIndicators = gridEl.querySelector('.igx-grid__drag-indicator');
             verticalScrollBar = gridEl.querySelector('.igx-grid__tbody-scrollbar[hidden]');
@@ -203,6 +205,32 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(verticalScrollBar).not.toBeNull();
         }));
 
+    });
+
+    describe('Setting null data', () => {
+        it('should not throw error when data is null', () => {
+            let errorMessage = '';
+            fix = TestBed.createComponent(IgxTreeGridCellSelectionComponent);
+            fix.componentInstance.data = null;
+            try {
+                fix.detectChanges();
+            } catch (ex) {
+                errorMessage = ex.message;
+            }
+            expect(errorMessage).toBe('');
+        });
+
+        it('should not throw error when data is null and transactions are enabled', () => {
+            let errorMessage = '';
+            fix = TestBed.createComponent(IgxTreeGridSummariesTransactionsComponent);
+            fix.componentInstance.data = null;
+            try {
+                fix.detectChanges();
+            } catch (ex) {
+                errorMessage = ex.message;
+            }
+            expect(errorMessage).toBe('');
+        });
     });
 
 });

@@ -1,0 +1,5 @@
+@import '../index';
+
+// Generate a palette
+@include igx-core($direction: rtl);
+@include igx-theme($default-palette);

@@ -14,7 +14,7 @@ import { take } from 'rxjs/operators';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { IgxDropDownItemBase } from '../drop-down/drop-down-item.base';
+import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
 import { DisplayDensity, DisplayDensityToken } from '../core/density';
 import { AbsoluteScrollStrategy, ConnectedPositioningStrategy } from '../services/index';
 import { IgxInputState } from '../directives/input/input.directive';
@@ -1009,8 +1009,8 @@ describe('igxCombo', () => {
             expect(combo.collapsed).toEqual(false);
             expect(combo.dropdown.items.length).toEqual(9); // Virtualization
 
-            let targetItem: IgxDropDownItemBase;
-            targetItem = combo.dropdown.items[5] as IgxDropDownItemBase;
+            let targetItem: IgxDropDownItemBaseDirective;
+            targetItem = combo.dropdown.items[5] as IgxDropDownItemBaseDirective;
             expect(targetItem).toBeDefined();
             expect(targetItem.itemIndex).toEqual(5);
 
@@ -2076,12 +2076,12 @@ describe('igxCombo', () => {
             expect(combo.collapsed).toEqual(false);
             expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(1);
             expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(1);
-            let vContainerScrollHeight = (combo as any).virtDir.getVerticalScroll().scrollHeight;
-            expect((combo as any).virtDir.getVerticalScroll().scrollTop).toEqual(0);
+            let vContainerScrollHeight = (combo as any).virtDir.getScroll().scrollHeight;
+            expect((combo as any).virtDir.getScroll().scrollTop).toEqual(0);
             expect(vContainerScrollHeight).toBeGreaterThan(combo.itemHeight);
-            (combo as any).virtDir.getVerticalScroll().scrollTop = Math.floor(vContainerScrollHeight / 2);
+            (combo as any).virtDir.getScroll().scrollTop = Math.floor(vContainerScrollHeight / 2);
             await wait(30);
-            expect((combo as any).virtDir.getVerticalScroll().scrollTop).toBeGreaterThan(0);
+            expect((combo as any).virtDir.getScroll().scrollTop).toBeGreaterThan(0);
             document.documentElement.dispatchEvent(new Event('click'));
             await wait(30);
             expect(combo.collapsed).toEqual(true);
@@ -2092,8 +2092,8 @@ describe('igxCombo', () => {
             expect(combo.collapsed).toEqual(false);
             expect(combo.dropdown.onToggleOpening).toHaveBeenCalledTimes(2);
             expect(combo.dropdown.onToggleOpened).toHaveBeenCalledTimes(2);
-            vContainerScrollHeight = (combo as any).virtDir.getVerticalScroll().scrollHeight;
-            expect((combo as any).virtDir.getVerticalScroll().scrollTop).toEqual(vContainerScrollHeight / 2);
+            vContainerScrollHeight = (combo as any).virtDir.getScroll().scrollHeight;
+            expect((combo as any).virtDir.getScroll().scrollTop).toEqual(vContainerScrollHeight / 2);
         }));
         it('Should not display vertical scrollbar when items fit into the container', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxComboScrollTestComponent);

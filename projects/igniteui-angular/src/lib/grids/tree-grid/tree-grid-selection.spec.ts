@@ -21,7 +21,7 @@ import {
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { IgxRowSelectorsModule } from '../igx-row-selectors.module';
+import { IgxGridSelectionModule } from '../selection/selection.module';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 
@@ -40,7 +40,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                 IgxTreeGridRowEditingTransactionComponent,
                 IgxTreeGridCustomRowSelectorsComponent
             ],
-            imports: [IgxTreeGridModule, NoopAnimationsModule, IgxRowSelectorsModule]
+            imports: [IgxTreeGridModule, NoopAnimationsModule, IgxGridSelectionModule]
         })
             .compileComponents();
     }));
@@ -296,6 +296,28 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyDataRowsSelection(fix, [], true);
             TreeGridFunctions.verifyDataRowsSelection(fix, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], false);
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+        });
+
+        it('Header checkbox should NOT select/deselect all rows when selectionMode is single', () => {
+            spyOn(treeGrid.onRowSelectionChange, 'emit').and.callThrough();
+            treeGrid.rowSelection = GridSelectionMode.single;
+            fix.detectChanges();
+
+            TreeGridFunctions.clickHeaderRowSelectionCheckbox(fix);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [], false);
+            expect(treeGrid.selectedRows()).toEqual([]);
+            expect(treeGrid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
+
+            TreeGridFunctions.clickHeaderRowSelectionCheckbox(fix);
+            fix.detectChanges();
+
+            TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
+            TreeGridFunctions.verifyDataRowsSelection(fix, [], false);
+            expect(treeGrid.selectedRows()).toEqual([]);
+            expect(treeGrid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
         });
 
         it('should be able to select row of any level', () => {
@@ -816,14 +838,14 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             fix.detectChanges();
 
             // scroll down 150 pixels
-            treeGrid.verticalScrollContainer.getVerticalScroll().scrollTop = 150;
-            treeGrid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
+            treeGrid.verticalScrollContainer.getScroll().scrollTop = 150;
+            treeGrid.headerContainer.getScroll().dispatchEvent(new Event('scroll'));
             await wait(100);
             fix.detectChanges();
 
             // then scroll back to top
-            treeGrid.verticalScrollContainer.getVerticalScroll().scrollTop = 0;
-            treeGrid.parentVirtDir.getHorizontalScroll().dispatchEvent(new Event('scroll'));
+            treeGrid.verticalScrollContainer.getScroll().scrollTop = 0;
+            treeGrid.headerContainer.getScroll().dispatchEvent(new Event('scroll'));
             await wait(100);
             fix.detectChanges();
 
@@ -950,14 +972,14 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             const context = { index: 0, rowID: 1, selected: false };
             const contextUnselect = { index: 0, rowID: 1, selected: true };
             spyOn(fix.componentInstance, 'onRowCheckboxClick').and.callThrough();
-            firstCheckbox.click();
+            (firstCheckbox as HTMLElement).click();
             fix.detectChanges();
 
             expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledTimes(1);
             expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), context);
 
             // Verify correct properties when unselecting a row
-            firstCheckbox.click();
+            (firstCheckbox as HTMLElement).click();
             fix.detectChanges();
 
             expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledTimes(2);

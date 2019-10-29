@@ -36,8 +36,8 @@ $_light-button-group: extend(
         item-background: #fff,
 
         item-border-color: (
-            igx-color: ('grays', 300),
-            hexrgba: #fff
+            igx-color: ('grays', 50),
+            hexrgba: (#ccc)
         ),
 
         item-text-color: (
@@ -49,7 +49,7 @@ $_light-button-group: extend(
         ),
 
         item-hover-background: (
-            igx-color: ('grays', 400)
+            igx-color: ('grays', 300)
         ),
 
         item-selected-text-color: (
@@ -65,8 +65,8 @@ $_light-button-group: extend(
         ),
 
         item-selected-border-color: (
-            igx-color: ('grays', 300),
-            hexrgba: #fff
+            igx-color: ('grays', 400),
+            hexrgba: (#ccc)
         ),
 
         disabled-text-color: (
@@ -78,8 +78,8 @@ $_light-button-group: extend(
         ),
 
         item-disabled-border: (
-            igx-color: ('grays', 300),
-            hexrgba: #fff
+            igx-color: ('grays', 50),
+            hexrgba: (#ccc)
         ),
     )
 );

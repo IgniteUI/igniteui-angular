@@ -1,0 +1,136 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Grid Paging Theme
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Color} $text-color [currentColor] - The text color.
+/// @param {Color} $background-color [rgba(0, 0, 0, .04)] - The background color of the paging panel.
+/// @param {Color} $border-color [rgba(0, 0, 0, .26)] - The border color of the paging panel.
+///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
+/// @requires extend
+///
+/// @example scss Change the stripes color
+///   $my-paginator-theme: igx-paginator-theme(
+///     $stripes-color: orange
+///   );
+///   // Pass the theme to the igx-paginator component mixin
+///   @include igx-paginator($my-paginator-theme);
+@function igx-paginator-theme(
+    $palette: $default-palette,
+    $schema: $light-schema,
+
+    $text-color: null,
+    $background-color: null,
+    $border-color: null
+) {
+    $name: 'igx-paginator';
+    $theme: apply-palette(map-get($schema, $name), $palette);
+
+    @return extend($theme, (
+        name: $name,
+        palette: $palette,
+        text-color: $text-color,
+        background-color: $background-color,
+        border-color: $border-color
+    ));
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-root-css-vars
+/// @requires rem
+/// @requires --var
+@mixin igx-paginator($theme) {
+    @include igx-root-css-vars($theme);
+
+    $paginator-padding: (
+        comfortable: 0 rem(24px),
+        cosy: 0 rem(16px),
+        compact: 0 rem(12px)
+    );
+
+    $paginator-height: (
+        comfortable: rem(56px),
+        cosy: rem(48px),
+        compact: rem(44px)
+    );
+
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
+
+    %igx-paginator {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: --var($theme, 'text-color');
+        background: --var($theme, 'background-color');
+        // ??
+        grid-row: 7;
+        font-size: 12px;
+        border-top: 1px solid --var($theme, 'border-color');
+        z-index: 1;
+        padding: map-get($paginator-padding, 'comfortable');
+        height: map-get($paginator-height, 'comfortable');
+        width: 100%;
+
+        &:empty {
+            padding: 0;
+        }
+    }
+
+    %igx-paginator--cosy {
+        padding: map-get($paginator-padding, 'cosy');
+        height: map-get($paginator-height, 'cosy');
+    }
+
+    %igx-paginator--compact {
+        padding: map-get($paginator-padding, 'compact');
+        height: map-get($paginator-height, 'compact');
+    }
+
+
+    %igx-paginator__label {
+        margin-#{$right}: 8px;
+        @include ellipsis();
+    }
+
+    %igx-paginator__select {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex: 1;
+    }
+
+    %igx-paginator__pager {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        flex: 1;
+
+        > * {
+            margin-#{$left}: rem(8px);
+        }
+
+        @include if-rtl() {
+            igx-icon {
+                transform: scaleX(-1);
+            }
+        }
+    }
+
+    %igx-paginator__pager-text {
+        display: flex;
+    }
+
+    %igx-paginator__select-input {
+        display: flex;
+        max-width: 90px;
+        min-width: 80px;
+    }
+}
