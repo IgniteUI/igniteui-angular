@@ -1,6 +1,5 @@
 import { ElementRef, EventEmitter, InjectionToken } from '@angular/core';
 import { CancelableEventArgs, CancelableBrowserEventArgs } from '../core/utils';
-import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 
 export const IGX_COMBO_COMPONENT = new InjectionToken<IgxComboBase>('IgxComboComponentToken');
 
@@ -12,7 +11,6 @@ export interface IgxComboBase {
     groupKey: string;
     isRemote: boolean;
     filteredData: any[];
-    filteringExpressions: IFilteringExpression[];
     totalItemCount: number;
     itemsMaxHeight: number;
     itemHeight: number;
