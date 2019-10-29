@@ -3266,43 +3266,12 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public paginatorClassName(): string {
         switch (this.displayDensity) {
             case DisplayDensity.cosy:
-                return 'igx-grid-paginator--cosy';
+                return 'igx-paginator--cosy';
             case DisplayDensity.compact:
-                return 'igx-grid-paginator--compact';
+                return 'igx-paginator--compact';
             default:
-                return 'igx-grid-paginator';
+                return 'igx-paginator';
         }
-    }
-
-    public paginatorSelectDisplayDensity(): string {
-        if (this.displayDensity === DisplayDensity.comfortable) {
-            return DisplayDensity.cosy;
-        }
-        return DisplayDensity.compact;
-    }
-
-    /**
-     * Returns the maximum width of the container for the pinned `IgxColumnComponent`s.
-     * The width is 80% of the total grid width.
-     * ```typescript
-     * const maxPinnedColWidth = this.grid.calcPinnedContainerMaxWidth;
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
-    get calcPinnedContainerMaxWidth(): number {
-        return (this.calcWidth * 80) / 100;
-    }
-
-    /**
-     * Returns the minimum width of the container for the unpinned `IgxColumnComponent`s.
-     * The width is 20% of the total grid width.
-     * ```typescript
-     * const minUnpinnedColWidth = this.grid.unpinnedAreaMinWidth;
-     * ```
-	 * @memberof IgxGridBaseDirective
-     */
-    get unpinnedAreaMinWidth(): number {
-        return (this.calcWidth * 20) / 100;
     }
 
     /**
@@ -3913,7 +3882,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             }
             const row = new IgxRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector));
             this.gridAPI.update_row(row, value);
-            this.cdr.detectChanges();
+
+            // TODO: fix for #5934 and probably break for #5763
+            // consider adding of third optional boolean parameter in updateRow.
+            // If developer set this parameter to true we should call notifyChanges(true), and
+            // vise-versa if developer set it to false we should call notifyChanges(false).
+            // The parameter should default to false
+            this.notifyChanges();
         }
     }
 
@@ -5519,7 +5494,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         let currentPinnedWidth = 0;
         const pinnedColumns = [];
         const unpinnedColumns = [];
-        const newUnpinnedCols = [];
 
         this.calculateGridWidth();
         this.resetCaches();
@@ -5540,16 +5514,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             if (this._columns[i].pinned && !this._columns[i].parent) {
                 // Pinned column. Check if with it the unpinned min width is exceeded.
                 const colWidth = parseInt(this._columns[i].width, 10);
-                if (currentPinnedWidth + colWidth > this.calcWidth - this.unpinnedAreaMinWidth) {
-                    // unpinned min width is exceeded. Unpin the columns and add it to the unpinned collection.
-                    this._columns[i].pinned = false;
-                    unpinnedColumns.push(this._columns[i]);
-                    newUnpinnedCols.push(this._columns[i]);
-                } else {
-                    // unpinned min width is not exceeded. Keep it pinned and add it to the pinned collection.
-                    currentPinnedWidth += colWidth;
-                    pinnedColumns.push(this._columns[i]);
-                }
+                currentPinnedWidth += colWidth;
+                pinnedColumns.push(this._columns[i]);
             } else if (this._columns[i].pinned && this._columns[i].parent) {
                 if (this._columns[i].topLevelParent.pinned) {
                     pinnedColumns.push(this._columns[i]);
@@ -5560,14 +5526,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             } else {
                 unpinnedColumns.push(this._columns[i]);
             }
-        }
-
-        if (newUnpinnedCols.length) {
-            console.warn(
-                'igxGrid - The pinned area exceeds maximum pinned width. ' +
-                'The following columns were unpinned to prevent further issues:' +
-                newUnpinnedCols.map(col => '"' + col.header + '"').toString() + '. For more info see our documentation.'
-            );
         }
 
         // Assign the applicaple collections.
