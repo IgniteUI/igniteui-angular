@@ -399,6 +399,10 @@
             }
         }
 
+        %advanced-filter--inline {
+            min-width: 480px;
+        }
+
         %filter-tree__inputs {
             + %filter-tree,
             + %filter-tree__expression-item {
