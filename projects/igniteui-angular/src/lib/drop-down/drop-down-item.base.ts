@@ -317,13 +317,6 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
         @Optional() @Inject(IgxSelectionAPIService) protected selection?: IgxSelectionAPIService
     ) { }
 
-    /**
-     * @hidden @internal
-     */
-    @HostListener('click', ['$event'])
-    clicked(event) {
-    }
-
     ngDoCheck(): void {
         if (this._selected) {
             const dropDownSelectedItem = this.dropDown.selectedItem;
