@@ -6,6 +6,8 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxOverlayService`:
     - `setOffset` method added. It repositions the component in the horizontal and vertical directions.
+- `IgxToggleDirective`:
+    - `setOffset` method added. It repositions the component in the horizontal and vertical directions.
 
 ## 8.2.3
 - `IgxTextHighlightDirective` - The default highlight directive styles have been moved to a Sass theme - `igx-highlight-theme`; You can modify the resting and active background and text color styles of the directive by passing the respective properties to the Sass theme. You can still pass your own CSS classes to the highlight directive via the cssClass and activeCssClass inputs.
