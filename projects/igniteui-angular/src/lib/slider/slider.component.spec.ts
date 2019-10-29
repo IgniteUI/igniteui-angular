@@ -1121,6 +1121,7 @@ describe('IgxSlider', () => {
             expect(customTemplates.length).toBe(1);
 
         });
+
         it('should draw tick marks', () => {
             const fixture = TestBed.createComponent(SliderInitializeTestComponent);
             const ticks = fixture.nativeElement.querySelector('.igx-slider__track-ticks');
@@ -1133,6 +1134,26 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
 
             expect(ticks.style.background).toBeTruthy();
+        });
+
+        it('should hide tick marks', () => {
+            const fixture = TestBed.createComponent(SliderInitializeTestComponent);
+            fixture.detectChanges();
+
+            const ticks = fixture.nativeElement.querySelector('.igx-slider__track-ticks');
+            const slider = fixture.componentInstance.slider;
+
+            expect(ticks.style.background).toBeFalsy();
+
+            slider.step = 10;
+            fixture.detectChanges();
+
+            expect(ticks.style.background).toBeTruthy();
+
+            slider.continuous = true;
+            fixture.detectChanges();
+
+            expect(ticks.style.background).toBeFalsy();
         });
 
         it(`When setting min and max value for range slider,

@@ -13,7 +13,7 @@ import {
     IgxHierarchicalGridCustomSelectorsComponent,
     IgxHierarchicalGridRowSelectionNoTransactionsComponent
 } from '../../test-utils/hierarhical-grid-components.spec';
-import { IgxRowSelectorsModule } from '../igx-row-selectors.module';
+import { IgxGridSelectionModule } from '../selection/selection.module';
 import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 
@@ -36,7 +36,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
                 NoopAnimationsModule,
                 IgxHierarchicalGridModule,
                 IgxIconModule,
-                IgxRowSelectorsModule]
+                IgxGridSelectionModule]
         }).compileComponents();
     }));
 
@@ -826,7 +826,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.detectChanges();
 
             const childGrid = hGrid.hgridAPI.getChildGrids(false)[0];
-            GridSelectionFunctions.clickHeaderRowCheckbox(childGrid);
+            GridSelectionFunctions.headerCheckboxClick(childGrid);
             fix.detectChanges();
 
             expect(childGrid.selectionService.areAllRowSelected()).toBeTruthy();
@@ -849,13 +849,12 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.detectChanges();
 
             const childGrid = hGrid.hgridAPI.getChildGrids(false)[0];
-
-            GridSelectionFunctions.clickHeaderRowCheckbox(childGrid);
+            GridSelectionFunctions.headerCheckboxClick(childGrid);
             fix.detectChanges();
             GridSelectionFunctions.verifyHeaderRowCheckboxState(childGrid, true, false);
             expect(childGrid.selectionService.areAllRowSelected()).toBeTruthy();
 
-            GridSelectionFunctions.clickHeaderRowCheckbox(childGrid);
+            GridSelectionFunctions.headerCheckboxClick(childGrid);
             fix.detectChanges();
             GridSelectionFunctions.verifyHeaderRowCheckboxState(childGrid, false, false);
             expect(childGrid.selectionService.areAllRowSelected()).toBeFalsy();

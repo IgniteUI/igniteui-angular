@@ -80,6 +80,9 @@
 /// @requires --var
 @mixin igx-dialog($theme) {
     @include igx-root-css-vars($theme);
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
+
     $dialog-min-width: map-get((
         material: rem(280px),
         fluent: rem(288px)
@@ -87,7 +90,7 @@
     
     $dialog-title-padding: map-get((
         material: rem(24px) rem(24px) rem(12px) rem(24px),
-        fluent: rem(16px) rem(46px) rem(24px) rem(24px)
+        fluent: rem(16px) rem(24px) rem(24px) rem(24px)
     ), map-get($theme, variant));
     
     $dialog-message-padding: map-get((
@@ -142,8 +145,8 @@
         justify-content: flex-end;
         padding: $dialog-actions-padding;
 
-        button ~ button {
-            margin-left: rem(8px);
+        button + button {
+            margin-#{$left}: rem(8px);
         }
     }
 }

@@ -73,7 +73,6 @@ export interface IGridResourceStrings {
     igx_grid_excel_date_filter?: string;
     igx_grid_excel_boolean_filter?: string;
     igx_grid_excel_custom_filter?: string;
-    igx_grid_paginator_label?: string;
     igx_grid_advanced_filter_title?: string;
     igx_grid_advanced_filter_and_group?: string;
     igx_grid_advanced_filter_or_group?: string;
@@ -166,7 +165,6 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_excel_date_filter: 'Date filter',
     igx_grid_excel_boolean_filter: 'Boolean filter',
     igx_grid_excel_custom_filter: 'Custom filter...',
-    igx_grid_paginator_label: 'Items per page',
     igx_grid_advanced_filter_title: 'Advanced Filtering',
     igx_grid_advanced_filter_and_group: '"And" Group',
     igx_grid_advanced_filter_or_group: '"Or" Group',

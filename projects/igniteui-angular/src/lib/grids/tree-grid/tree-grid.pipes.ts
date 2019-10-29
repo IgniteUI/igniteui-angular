@@ -5,8 +5,9 @@ import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
 import { IgxTreeGridComponent } from './tree-grid.component';
 import { ITreeGridRecord } from './tree-grid.interfaces';
-import { IgxGridBaseComponent, IGridDataBindable } from '../grid';
+import { IgxGridBaseDirective } from '../grid';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
+import { GridType } from '../common/grid.interface';
 
 /**
  *@hidden
@@ -18,7 +19,7 @@ import { ISortingExpression } from '../../data-operations/sorting-expression.int
 export class IgxTreeGridHierarchizingPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) {
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
         this.gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
@@ -131,7 +132,7 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
 export class IgxTreeGridFlatteningPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) {
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
         this.gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
@@ -191,7 +192,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
 export class IgxTreeGridSortingPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) {
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
         this.gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
@@ -233,7 +234,7 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
 export class IgxTreeGridPagingPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) {
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
         this.gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
@@ -267,13 +268,14 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
 
     private gridAPI: IgxTreeGridAPIService;
 
-    constructor(gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>) {
+    constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
         this.gridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 
     transform(collection: any[], id: string, pipeTrigger: number): any[] {
         const grid: IgxTreeGridComponent = this.gridAPI.grid;
-        if (collection && grid.transactions.enabled) {
+
+        if (grid.transactions.enabled) {
             const aggregatedChanges = grid.transactions.getAggregatedChanges(true);
             if (aggregatedChanges.length > 0) {
                 const primaryKey = grid.primaryKey;
@@ -300,7 +302,6 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
                 }
             }
         }
-
         return collection;
     }
 }

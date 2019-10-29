@@ -1,4 +1,5 @@
 @import '../shape/carousel';
+@import '../elevation/carousel';
 
 ////
 /// @group schemas
@@ -19,8 +20,10 @@
 ///
 /// @requires {function} extend
 /// @requires {map} $_default-shape-carousel
+/// @requires {map} $_default-elevation-carousel
 $_light-carousel: extend(
     $_default-shape-carousel,
+    $_default-elevation-carousel,
     (
         button-background: #fff,
         button-hover-background: #fff,
@@ -43,5 +46,7 @@ $_light-carousel: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires {map} $_light-carousel
+/// @requires {map} $_fluent-shape-carousel
+/// @requires {map} $_fluent-elevation-carousel
 /// @see $default-palette
-$_fluent-carousel: extend($_light-carousel, $_fluent-shape-carousel);
+$_fluent-carousel: extend($_light-carousel, $_fluent-shape-carousel, $_fluent-elevation-carousel);
