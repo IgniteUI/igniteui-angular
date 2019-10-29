@@ -5884,7 +5884,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
         }));
 
-        fit('Should allow hosting Excel Style filtering component outside of the grid.', fakeAsync(() => {
+        it('Should allow hosting Excel Style filtering component outside of the grid.', fakeAsync(() => {
             // sort
             const excelMenu = fix.nativeElement.querySelector('.igx-excel-filter__menu');
             const sortComponent = excelMenu.querySelector('.igx-excel-filter__sort');
