@@ -112,7 +112,14 @@
     $date-disabled-background: null,
 ) {
     $name: 'igx-calendar';
-    $calendar-schema: map-get($schema, $name);
+    $calendar-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $calendar-schema: map-get($schema, $name);
+    } @else {
+        $calendar-schema: $schema;
+    }
+
     $theme: apply-palette($calendar-schema, $palette);
 
     $border-radius: round-borders(
@@ -451,6 +458,12 @@
         flex-flow: column nowrap;
         justify-content: space-between;
         align-items: center;
+    }
+
+    %cal-column-year {
+        %cal-value--year {
+            flex: 1 0 0;
+        }
     }
 
     %cal-value {

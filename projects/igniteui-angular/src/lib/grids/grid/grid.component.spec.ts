@@ -118,7 +118,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(rows.length).toEqual(10);
 
             const verticalScroll = fix.componentInstance.instance.verticalScrollContainer;
-            const elem = verticalScroll['vh'].instance.elementRef.nativeElement;
+            const elem = verticalScroll['scrollComponent'].elementRef.nativeElement;
 
             // scroll down
             expect(() => {
@@ -588,10 +588,10 @@ describe('IgxGrid Component Tests #grid', () => {
                 { field: 'detail', header: 'detail', dataType: 'number', width: '400px', hasSummary: false }
             );
             fix.detectChanges();
-            fix.componentInstance.grid.verticalScrollContainer.getVerticalScroll().scrollTop = 100;
+            fix.componentInstance.grid.verticalScrollContainer.getScroll().scrollTop = 100;
             await wait(100);
             fix.detectChanges();
-            fix.componentInstance.grid.verticalScrollContainer.getVerticalScroll().scrollTop = 250;
+            fix.componentInstance.grid.verticalScrollContainer.getScroll().scrollTop = 250;
             await wait(100);
             fix.detectChanges();
             fix.componentInstance.grid.width = '1300px';
@@ -1265,7 +1265,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 fix.detectChanges();
                 await wait(16);
                 expect(fix.componentInstance.isHorizonatScrollbarVisible()).toBe(true);
-                const scrollbar = grid.parentVirtDir.getHorizontalScroll();
+                const scrollbar = grid.headerContainer.getScroll();
                 scrollbar.scrollLeft = 10000;
                 grid.width = '1500px';
 
@@ -1638,7 +1638,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.cdr.detectChanges();
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
-            const paging = fix.debugElement.query(By.css('.igx-grid-paginator__pager'));
+            const paging = fix.debugElement.query(By.css('.igx-paginator__pager'));
             const summaries = fix.debugElement.queryAll(By.css('igx-grid-summary-cell'));
             expect(headers.length).toBe(4);
             expect(summaries.length).toBe(4);
@@ -1658,7 +1658,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.cdr.detectChanges();
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
-            const paging = fix.debugElement.query(By.css('.igx-grid-paginator__pager'));
+            const paging = fix.debugElement.query(By.css('.igx-paginator__pager'));
             expect(headers.length).toBe(4);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(204);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);
@@ -1965,7 +1965,7 @@ export class IgxGridTestComponent {
     }
 
     public isHorizontalScrollbarVisible() {
-        const scrollbar = this.grid.parentVirtDir.getHorizontalScroll();
+        const scrollbar = this.grid.headerContainer.getScroll();
         if (scrollbar) {
             return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
         }
@@ -1974,7 +1974,7 @@ export class IgxGridTestComponent {
     }
 
     public getVerticalScrollHeight() {
-        const scrollbar = this.grid.verticalScrollContainer.getVerticalScroll();
+        const scrollbar = this.grid.verticalScrollContainer.getScroll();
         if (scrollbar) {
             return parseInt(scrollbar.style.height, 10);
         }
@@ -1983,7 +1983,7 @@ export class IgxGridTestComponent {
     }
 
     public isVerticalScrollbarVisible() {
-        const scrollbar = this.grid.verticalScrollContainer.getVerticalScroll();
+        const scrollbar = this.grid.verticalScrollContainer.getScroll();
         if (scrollbar && scrollbar.offsetHeight > 0) {
             return scrollbar.offsetHeight < scrollbar.children[0].offsetHeight;
         }
@@ -2042,7 +2042,7 @@ export class IgxGridDefaultRenderingComponent {
     }
 
     public isHorizonatScrollbarVisible() {
-        const scrollbar = this.grid.parentVirtDir.getHorizontalScroll();
+        const scrollbar = this.grid.headerContainer.getScroll();
         return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
     }
 
@@ -2466,11 +2466,11 @@ export class IgxGridPerformanceComponent implements AfterViewInit, OnInit {
     public groupingExpressions: Array<ISortingExpression> = [];
 
     public get verticalScroll() {
-        return this.grid.verticalScrollContainer.getVerticalScroll();
+        return this.grid.verticalScrollContainer.getScroll();
     }
 
     public get horizontalScroll() {
-        return this.grid.parentVirtDir.getHorizontalScroll();
+        return this.grid.headerContainer.getScroll();
     }
 
     public ngOnInit() {

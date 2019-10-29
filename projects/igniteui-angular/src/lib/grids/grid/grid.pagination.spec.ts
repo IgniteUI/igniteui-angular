@@ -18,7 +18,7 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - Grid Paging #grid', () => {
     configureTestSuite();
-    const PAGER_CLASS = '.igx-grid-paginator__pager';
+    const PAGER_CLASS = '.igx-paginator__pager';
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -220,7 +220,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         grid.perPage = 5;
         await wait();
         fix.detectChanges();
-        let vScrollBar = grid.verticalScrollContainer.getVerticalScroll();
+        let vScrollBar = grid.verticalScrollContainer.getScroll();
         expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(1);
         verifyGridPager(fix, 5, '1', '1\xA0of\xA02', [true, true, false, false]);
         expect(vScrollBar.scrollHeight).toBeGreaterThanOrEqual(250);
@@ -230,7 +230,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         grid.perPage = 33;
         await wait();
         fix.detectChanges();
-        vScrollBar = grid.verticalScrollContainer.getVerticalScroll();
+        vScrollBar = grid.verticalScrollContainer.getScroll();
         // onPagingDone should be emitted only if we have a change in the page number
         expect(grid.onPagingDone.emit).toHaveBeenCalledTimes(1);
         verifyGridPager(fix, 5, '1', '1\xA0of\xA01', [true, true, true, true]);
@@ -500,7 +500,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
         if (pagerText != null) {
             expect(gridElement.querySelector(PAGER_CLASS)).toBeDefined();
             expect(gridElement.querySelectorAll('igx-select').length).toEqual(1);
-            expect(gridElement.querySelector('.igx-grid-paginator__pager > div').textContent).toMatch(pagerText);
+            expect(gridElement.querySelector('.igx-paginator__pager > div').textContent).toMatch(pagerText);
         }
         if (buttonsVisibility != null && buttonsVisibility.length === 4) {
             const pagingButtons = GridFunctions.getPagingButtons(gridElement);
