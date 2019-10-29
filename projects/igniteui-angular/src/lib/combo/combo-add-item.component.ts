@@ -1,5 +1,5 @@
 import { IgxComboItemComponent } from './combo-item.component';
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 
 /**
  * @hidden
@@ -16,8 +16,19 @@ export class IgxComboAddItemComponent extends IgxComboItemComponent {
     set selected(value: boolean) {
     }
 
-    clicked(event?) {
+    /**
+     * @hidden
+     * @internal
+     * This is related to https://github.com/angular/angular/issues/33300
+     * When the above is fixed, we can remove the @HostListener decorator and move
+     * the body of the `handleClick` method back under `clicked`
+     */
+    @HostListener('click')
+    handleClick() {
         this.comboAPI.disableTransitions = false;
         this.comboAPI.add_custom_item();
+    }
+
+    clicked(event?) {
     }
 }
