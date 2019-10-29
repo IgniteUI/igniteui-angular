@@ -96,7 +96,7 @@ this.overlay.show(component, overlaySettings);
 |hide             | Remove the provided native element of for the component with provided id        |id               |
 |hideAll          | Remove the all native elements and hides the overlay                            |-                |
 |reposition       | Repositions the native element of the component with provided id                |id               |
-|setOffset        | Repositions the component in the horizontal and/or vertical directions.       |id, deltaX, deltaY |
+|setOffset        | Repositions the content in the horizontal and/or vertical directions.          |id, deltaX, deltaY |
 
 ###### IPositionStrategy
 

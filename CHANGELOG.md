@@ -18,9 +18,9 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 - `IgxOverlayService`:
-    - `setOffset` method added. It repositions the component in the horizontal and vertical directions.
+    - `setOffset` method added. It repositions the content in the horizontal and vertical directions.
 - `IgxToggleDirective`:
-    - `setOffset` method added. It repositions the component in the horizontal and vertical directions.
+    - `setOffset` method added. It repositions the content in the horizontal and vertical directions.
 
 ## 8.2.6
 
