@@ -19,6 +19,11 @@ $hamburger-theme: igx-button-theme(
 
     .hamburger {
         margin-right: 32px;
+
+        [dir='rtl'] & {
+            margin-left: 32px;
+            margin-right: initial;
+        }
     }
 }
 

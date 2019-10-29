@@ -8,7 +8,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
-import { IgxDropDownItemBase } from '../drop-down/index';
+import { IgxDropDownItemBaseDirective } from '../drop-down/index';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 
 import { IgxDropDownComponent } from './../drop-down/drop-down.component';
@@ -224,7 +224,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     }
 
     /** @hidden @internal */
-    public selectItem(newSelection: IgxDropDownItemBase, event?) {
+    public selectItem(newSelection: IgxDropDownItemBaseDirective, event?) {
         const oldSelection = this.selectedItem;
 
         if (event) {
@@ -310,7 +310,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             this.cdr.markForCheck();
         }
     }
-    private setSelection(item: IgxDropDownItemBase) {
+    private setSelection(item: IgxDropDownItemBaseDirective) {
         if (item && item.value !== undefined && item.value !== null) {
             this.selection.set(this.id, new Set([item]));
         } else {

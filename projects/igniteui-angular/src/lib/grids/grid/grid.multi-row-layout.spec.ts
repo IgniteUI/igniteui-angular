@@ -3,7 +3,7 @@ import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxColumnLayoutComponent } from '../column.component';
+import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { By } from '@angular/platform-browser';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -947,7 +947,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
         expect(horizontalVirtualization.getSizeAt(3)).toBe(4 * 200);
 
         // check total widths sum - unique col groups col span 10 in total * 200px default witdth * 3 times repeated
-        const horizonatalScrElem = horizontalVirtualization.getHorizontalScroll();
+        const horizonatalScrElem = horizontalVirtualization.getScroll();
         const totalExpected = 10 * 200 * 3;
         expect(parseInt(horizonatalScrElem.children[0].style.width, 10)).toBe(totalExpected);
         // check groups are rendered correctly

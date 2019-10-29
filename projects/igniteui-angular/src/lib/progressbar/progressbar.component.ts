@@ -374,17 +374,17 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
     @Input()
     public type = 'default';
 
-     /**
-     *Returns value that indicates the current `IgxLinearProgressBarComponent` position.
-     *```typescript
-     *@ViewChild("MyProgressBar")
-     *public progressBar: IgxLinearProgressBarComponent;
-     *public getValue(event) {
-     *    let value = this.progressBar.value;
-     *    alert(value);
-     *}
-     *```
-     */
+    /**
+    *Returns value that indicates the current `IgxLinearProgressBarComponent` position.
+    *```typescript
+    *@ViewChild("MyProgressBar")
+    *public progressBar: IgxLinearProgressBarComponent;
+    *public getValue(event) {
+    *    let value = this.progressBar.value;
+    *    alert(value);
+    *}
+    *```
+    */
     @HostBinding('attr.aria-valuenow')
     @Input()
     get value(): number {
@@ -740,6 +740,7 @@ export class IgxCircularProgressBarComponent extends BaseProgress {
     }
 
     private getProgress(percentage: number) {
+        // Reverse the sign here: '-' should become '+' in RTL mode
         return this._circumference - (percentage * this._circumference / 100);
     }
 }

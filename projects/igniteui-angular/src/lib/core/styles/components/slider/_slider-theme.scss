@@ -78,6 +78,9 @@
 @mixin igx-slider($theme) {
     @include igx-root-css-vars($theme);
 
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
+
     $slider-height: 48px;
 
     $slider-track-height: map-get((
@@ -186,7 +189,7 @@
         width: 100%;
         height: inherit;
         background: --var($theme, 'track-color');
-        transform-origin: left center;
+        transform-origin: #{$left} center;
         transform: scaleX(0);
     }
 

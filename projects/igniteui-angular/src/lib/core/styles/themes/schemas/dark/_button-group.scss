@@ -10,7 +10,22 @@
 /// @type {Map}
 /// @prop {Color} item-background [#222] - The background color for button group items .
 $_base-dark-button-group: (
-    item-background: #222
+    item-background: #222,
+
+    item-border-color: (
+        igx-color: ('grays', 400),
+        hexrgba: (#222)
+    ),
+
+    item-selected-border-color: (
+        igx-color: ('grays', 500),
+        hexrgba: (#222)
+    ),
+
+    item-disabled-border: (
+        igx-color: ('grays', 400),
+        hexrgba: (#222)
+    ),
 );
 
 /// Generates a dark button-group schema based on a mix of $_light-button-group and $_base-dark-button-group
