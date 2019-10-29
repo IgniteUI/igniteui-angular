@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform, Inject } from '@angular/core';
+import { Inject, Pipe, PipeTransform} from '@angular/core';
 import { cloneArray } from '../core/utils';
 import { DataUtil } from '../data-operations/data-util';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';

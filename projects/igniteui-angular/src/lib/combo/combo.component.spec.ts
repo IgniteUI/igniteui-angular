@@ -2352,19 +2352,13 @@ describe('igxCombo', () => {
             fix.detectChanges();
             expect(combo.groupKey).toEqual('region');
             expect(combo.dropdown.items[0].value.field === combo.data[0].field).toBeFalsy();
-            // expect(combo.sortingExpressions[0]).toEqual({
-            //     fieldName: 'region',
-            //     dir: SortingDirection.Asc,
-            //     ignoreCase: true,
-            //     strategy: DefaultSortingStrategy.instance()
-            // });
             const listItems = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
             const listHeaders = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_HEADERITEM));
             expect(listItems.length).toBeGreaterThan(0);
             expect(listHeaders.length).toBeGreaterThan(0);
             expect(listHeaders[0].nativeElement.innerHTML).toContain('East North Central');
         }));
-        it('Should sort items correctly', fakeAsync(() => {
+        it('Should group items correctly', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboInputTestComponent);
             fix.detectChanges();
             const combo = fix.componentInstance.combo;
@@ -2372,10 +2366,12 @@ describe('igxCombo', () => {
             tick();
             fix.detectChanges();
             expect(combo.groupKey).toEqual('region');
+            // First item is group header
             expect(combo.dropdown.items[0].value.field === combo.data[0].field).toBeFalsy();
             combo.groupKey = '';
 
             fix.detectChanges();
+            // First item is regular item
             expect(combo.dropdown.items[0].value).toEqual(combo.data[0]);
         }));
 

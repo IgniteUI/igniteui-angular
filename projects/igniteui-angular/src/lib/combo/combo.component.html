@@ -18,14 +18,17 @@
         <ng-container *ngIf="clearIconTemplate">
             <ng-container *ngTemplateOutlet="clearIconTemplate"></ng-container>
         </ng-container>
-        <igx-icon *ngIf="!clearIconTemplate" fontSet="material">clear</igx-icon>
+        <igx-icon *ngIf="!clearIconTemplate" fontSet="material">
+            clear
+        </igx-icon>
     </igx-suffix>
     <igx-suffix igxButton="icon" class="igx-combo__toggle-button" igxRipple>
         <ng-container *ngIf="toggleIconTemplate">
             <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: this.collapsed}"></ng-container>
         </ng-container>
         <igx-icon *ngIf="!toggleIconTemplate" fontSet="material">
-            {{ dropdown.collapsed ? 'arrow_drop_down' : 'arrow_drop_up'}}</igx-icon>
+            {{ dropdown.collapsed ? 'arrow_drop_down' : 'arrow_drop_up'}}
+        </igx-icon>
     </igx-suffix>
 </igx-input-group>
 <igx-combo-drop-down #igxComboDropDown class="igx-combo__drop-down" [displayDensity]="displayDensity"
@@ -42,10 +45,12 @@
     <div #dropdownItemContainer class="igx-combo__content" [style.overflow]="'hidden'"
         [style.maxHeight.px]="itemsMaxHeight" [igxDropDownItemNavigation]="dropdown" (focus)="dropdown.onFocus()"
         [tabindex]="dropdown.collapsed ? -1 : 0" role="listbox" [attr.id]="dropdown.id">
-        <igx-combo-item *igxFor="let item of data | comboFiltering:searchValue:displayKey:filterable
-        | comboGrouping:groupKey:valueKey;
-        index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
-            [itemHeight]='itemHeight' [value]="item" [isHeader]="item.isHeader" role="option" [index]="rowIndex">
+        <igx-combo-item role="option" [itemHeight]='itemHeight'
+            *igxFor="let item of data
+            | comboFiltering:searchValue:displayKey:filterable
+            | comboGrouping:groupKey:valueKey;
+            index as rowIndex; containerSize: itemsMaxHeight; scrollOrientation: 'vertical'; itemSize: itemHeight"
+            [value]="item" [isHeader]="item.isHeader" [index]="rowIndex">
             <ng-container *ngIf="item.isHeader">
                 <ng-container
                     *ngTemplateOutlet="headerItemTemplate ? headerItemTemplate : headerItemBase;
