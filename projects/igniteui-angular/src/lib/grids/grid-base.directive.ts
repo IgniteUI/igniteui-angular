@@ -131,6 +131,7 @@ import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/r
 import { IgxGridToolbarCustomContentDirective } from './toolbar/toolbar.directive';
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
+import { IGridSortingStrategy } from '../data-operations/sorting-strategy';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -168,6 +169,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public _destroyed = false;
     private overlayIDs = [];
     private _filteringStrategy: IFilteringStrategy;
+    private _sortingStrategy: IGridSortingStrategy;
 
     private _hostWidth;
     private _advancedFilteringOverlayId: string;
@@ -327,7 +329,18 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     *@hidden
+     * Emitted before filtering is performed through the UI.
+     * Returns the filtering expressions tree of the column for which filtering was performed.
+     * ```typescript
+     * filteringExprTreeChange(event: IFilteringExpressionsTree){
+     *     const filteringTree = event;
+     * }
+     * ```
+     * ```html
+     * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true"
+     *              (filteringExpressionsTreeChange)="filteringExprTreeChange($event)"></igx-grid>
+     * ```
+     * @memberof IgxGridBaseDirective
      */
     @Output()
     public filteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
@@ -1071,6 +1084,27 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     set filterStrategy(classRef: IFilteringStrategy) {
         this._filteringStrategy = classRef;
+    }
+
+    /**
+     * Gets the sorting strategy of the grid.
+     * ```typescript
+     *  let sortStrategy = this.grid.sortStrategy
+     * ```
+     */
+    @Input()
+    get sortStrategy(): IGridSortingStrategy {
+        return this._sortingStrategy;
+    }
+
+    /**
+     * Sets the sorting strategy of the grid.
+     * ```html
+     *  <igx-grid #grid [data]="localData" [sortStrategy]="sortStrategy"></igx-grid>
+     * ```
+     */
+    set sortStrategy(classRef: IGridSortingStrategy) {
+        this._sortingStrategy = classRef;
     }
 
     /**
@@ -2150,7 +2184,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     *@hidden
+     * Emitted before sorting is performed through the UI. Returns the sorting expressions.
+     * ```html
+     * <igx-grid #grid [data]="localData" [autoGenerate]="true" (sortingExpressionsChange)="sortingExprChange($event)"></igx-grid>
+     * ```
+     * ```typescript
+     * sortingExprChange(event: ISortingExpression[]){
+     *     const sortingExpressions = event;
+     * }
+     * ```
+     * @memberof IgxGridBaseDirective
      */
     @Output()
     public sortingExpressionsChange = new EventEmitter<ISortingExpression[]>();
