@@ -16,6 +16,7 @@ import { IFilteringExpressionsTree } from '../data-operations/filtering-expressi
 import { FilteringStrategy } from '../data-operations/filtering-strategy';
 import { IgxGridComponent } from '../grids/grid';
 import { IgxRowEditTabStopDirective } from '../grids/grid.rowEdit.directive';
+import { IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/grid.excel-style-filtering.component';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -956,6 +957,44 @@ export class IgxGridFilteringComponent extends BasicGridComponent {
     public activateFiltering(activate: boolean) {
         this.grid.allowFiltering = activate;
         this.grid.cdr.markForCheck();
+    }
+}
+
+@Component({
+    template: `
+    <igx-grid-excel-style-filtering #esf>
+    </igx-grid-excel-style-filtering>
+    <igx-grid #grid1 [data]="data" height="500px">
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
+            [filterable]="false" [resizable]="resizable"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" [sortable]="true"
+            [filterable]="filterable" [resizable]="resizable" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [filterable]="filterable" [resizable]="resizable" dataType="boolean"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+            [filterable]="filterable" [resizable]="resizable" dataType="date">
+        </igx-column>
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
+            dataType="string" [filters]="customFilter">
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridExternalESFComponent extends BasicGridComponent implements AfterViewInit {
+    public customFilter = CustomFilter.instance();
+    public resizable = false;
+    public filterable = true;
+
+    public data = SampleTestData.excelFilteringData();
+
+    @ViewChild('esf', { read: IgxGridExcelStyleFilteringComponent, static: true })
+    public esf: IgxGridExcelStyleFilteringComponent;
+
+    constructor(private cdr: ChangeDetectorRef) {
+        super();
+    }
+
+    ngAfterViewInit(): void {
+        this.esf.column = this.grid.getColumnByName('ProductName');
     }
 }
 

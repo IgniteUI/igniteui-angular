@@ -41,7 +41,8 @@ import {
     IgxGridFilteringTemplateComponent,
     IgxGridFilteringESFTemplatesComponent,
     IgxGridFilteringESFLoadOnDemandComponent,
-    CustomFilteringStrategyComponent
+    CustomFilteringStrategyComponent,
+    IgxGridExternalESFComponent
 } from '../../test-utils/grid-samples.spec';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { GridSelectionMode, FilterMode } from '../common/enums';
@@ -3611,6 +3612,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 IgxGridFilteringESFTemplatesComponent,
                 IgxGridFilteringESFLoadOnDemandComponent,
                 IgxGridFilteringMCHComponent,
+                IgxGridExternalESFComponent,
                 CustomFilteringStrategyComponent
             ],
             imports: [
@@ -5782,6 +5784,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.verifyColumnIsPinned(column, true, 8);
         }));
     });
+
     describe('IgxGrid - Custom Filtering Strategy #grid', () => {
         let fix;
         let grid;
@@ -5870,6 +5873,45 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 { ID: 7, Name: { FirstName: 'Debra', LastName: 'Morton' } ,
                     JobTitle: 'Associate Software Developer', Company: 'Company B' },
                 { ID: 10, Name: { FirstName: 'Eduardo', LastName: 'Ramirez' }, JobTitle: 'Manager', Company: 'Company E' }]);
+        }));
+    });
+
+    describe('External Excel Style Filtering', () => {
+        let fix, grid;
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridExternalESFComponent);
+            grid = fix.componentInstance.grid;
+            fix.detectChanges();
+        }));
+
+        fit('Should allow hosting Excel Style filtering component outside of the grid.', fakeAsync(() => {
+            // sort
+            const excelMenu = fix.nativeElement.querySelector('.igx-excel-filter__menu');
+            const sortComponent = excelMenu.querySelector('.igx-excel-filter__sort');
+            const sortAsc = sortComponent.lastElementChild.children[0].children[0];
+            sortAsc.click();
+            fix.detectChanges();
+            expect(grid.sortingExpressions[0].fieldName).toEqual('ProductName');
+            expect(grid.sortingExpressions[0].dir).toEqual(SortingDirection.Asc);
+
+            // pin
+            const pinComponent = excelMenu.querySelector('.igx-excel-filter__actions-pin');
+            pinComponent.click();
+            fix.detectChanges();
+            expect(grid.pinnedColumns[0].field).toEqual('ProductName');
+
+            // filter
+            verifyExcelStyleFilterAvailableOptions(fix, [ 'Select All', '(Blanks)', 'Ignite UI for Angular',
+                'Ignite UI for JavaScript', 'NetAdvantage', 'Some other item with Script' ],
+                [ true, true, true, true, true, true ]);
+            toggleExcelStyleFilteringItems(fix, fix, true, 1, 4);
+            expect(grid.rowList.length).toBe(3);
+
+            // hide
+            const hideComponent = excelMenu.querySelector('.igx-excel-filter__actions-hide');
+            hideComponent.click();
+            fix.detectChanges();
+            expect(grid.columns[1].hidden).toBeTruthy();
         }));
     });
 });

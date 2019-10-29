@@ -244,25 +244,25 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
     /**
      * @hidden @internal
      */
-    @ViewChild('defaultExcelStyleSortingTemplate', { read: TemplateRef, static: false })
+    @ViewChild('defaultExcelStyleSortingTemplate', { read: TemplateRef, static: true })
     protected defaultExcelStyleSortingTemplate: TemplateRef<any>;
 
     /**
      * @hidden @internal
      */
-    @ViewChild('defaultExcelStyleHidingTemplate', { read: TemplateRef, static: false })
+    @ViewChild('defaultExcelStyleHidingTemplate', { read: TemplateRef, static: true })
     protected defaultExcelStyleHidingTemplate: TemplateRef<any>;
 
     /**
      * @hidden @internal
      */
-    @ViewChild('defaultExcelStyleMovingTemplate', { read: TemplateRef, static: false })
+    @ViewChild('defaultExcelStyleMovingTemplate', { read: TemplateRef, static: true })
     protected defaultExcelStyleMovingTemplate: TemplateRef<any>;
 
     /**
      * @hidden @internal
      */
-    @ViewChild('defaultExcelStylePinningTemplate', { read: TemplateRef, static: false })
+    @ViewChild('defaultExcelStylePinningTemplate', { read: TemplateRef, static: true })
     protected defaultExcelStylePinningTemplate: TemplateRef<any>;
 
     /**

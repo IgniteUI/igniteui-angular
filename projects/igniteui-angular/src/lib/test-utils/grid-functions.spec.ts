@@ -801,7 +801,10 @@ export class GridFunctions {
 
     public static getExcelStyleFilteringComponent(fix) {
         const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
-        const excelMenu = gridNativeElement.querySelector('.igx-excel-filter__menu');
+        let excelMenu = gridNativeElement.querySelector('.igx-excel-filter__menu');
+        if (!excelMenu) {
+            excelMenu = fix.nativeElement.querySelector('.igx-excel-filter__menu');
+        }
         return excelMenu;
     }
 
