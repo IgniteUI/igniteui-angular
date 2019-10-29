@@ -7,7 +7,7 @@ import { IgxGridModule } from './grid.module';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { ViewChild, Component } from '@angular/core';
 import { verifyLayoutHeadersAreAligned, verifyDOMMatchesLayoutSettings, HelperUtils } from '../../test-utils/helper-utils.spec';
-import { IgxColumnLayoutComponent } from './../column.component';
+import { IgxColumnLayoutComponent } from '../columns/column-layout.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
@@ -466,23 +466,6 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(grid.getColumnByName('CompanyName').pinned).toBeTruthy();
             expect(grid.getColumnByName('ContactName').pinned).toBeTruthy();
             expect(grid.getColumnByName('ContactTitle').pinned).toBeTruthy();
-        });
-
-        it('should not allow pinning if group width exceeds max allowed.', () => {
-            // pin the other group
-            fixture.componentInstance.colGroups[1].pinned = true;
-            fixture.detectChanges();
-
-            // group 1 should still be pinned - all child columns should be pinned
-            expect(grid.getColumnByName('PostalCode').pinned).toBeTruthy();
-            expect(grid.getColumnByName('City').pinned).toBeTruthy();
-            expect(grid.getColumnByName('Country').pinned).toBeTruthy();
-            expect(grid.getColumnByName('Address').pinned).toBeTruthy();
-            // group 2 should not be pinned as it will exceed unpinnedAreaMinWidth
-            expect(grid.getColumnByName('ID').pinned).toBeFalsy();
-            expect(grid.getColumnByName('CompanyName').pinned).toBeFalsy();
-            expect(grid.getColumnByName('ContactName').pinned).toBeFalsy();
-            expect(grid.getColumnByName('ContactTitle').pinned).toBeFalsy();
         });
 
         it('should emit onColumnPinning event with correct parameters', () => {
