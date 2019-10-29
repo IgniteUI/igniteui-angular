@@ -31,7 +31,7 @@ export function WatchChanges(): PropertyDecorator {
     };
 }
 
-export function WatchColChanges(): PropertyDecorator {
+export function WatchColumnChanges(): PropertyDecorator {
     return (target: any, key: string, propDesc?: PropertyDescriptor) => {
         const privateKey = '_' + key.toString();
         propDesc = propDesc || {
