@@ -2,6 +2,7 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+
 ## 9.0.0
 
 ### General
@@ -16,7 +17,17 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - Pinning columns is no longer automatically prevented when the pinning area would exceed the size of the grid.
 
+
+## 8.2.6
+
+### New Features
+- `IgxSelectItem`
+    - `text` input is added. By default, the Select component will display the selected item's element inner text. In cases with a more complex item template, where more than just text interpolation is used, set the text property to specify what to display in the select field when the item is selected.
+
+
 ## 8.2.4
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - The header text of the columns and the column groups now has the `title` attribute set to it in order to expose a native browser tooltip.
 
 ### RTL Support
 Most of the components in the framework now have full right-to-left (RTL) support via the newly included RTL themes. 

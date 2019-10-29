@@ -157,10 +157,10 @@ describe('IgxPaginator with custom settings', () => {
         const fix = TestBed.createComponent(HiddenPaginatorComponent);
         fix.detectChanges();
 
-        const select = fix.debugElement.query(By.css('.igx-grid-paginator__select')).nativeElement;
+        const select = fix.debugElement.query(By.css('.igx-paginator__select')).nativeElement;
         const selectHidden = select.hasAttribute('hidden');
 
-        const pager = fix.debugElement.query(By.css('.igx-grid-paginator__pager')).nativeElement;
+        const pager = fix.debugElement.query(By.css('.igx-paginator__pager')).nativeElement;
         const pagerHidden = pager.hasAttribute('hidden');
 
         expect(selectHidden).toBeTruthy();
