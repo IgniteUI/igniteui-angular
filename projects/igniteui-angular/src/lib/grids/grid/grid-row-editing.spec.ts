@@ -4,8 +4,8 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridAPIService } from './grid-api.service';
 import { IgxGridComponent } from './grid.component';
-import { IGridEditEventArgs } from '../grid-base.component';
-import { IgxColumnComponent } from '../column.component';
+import { IGridEditEventArgs } from '../common/events';
+import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridModule } from './index';
 import { DisplayDensity } from '../../core/displayDensity';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
@@ -424,7 +424,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             cell = grid.getCellByColumn(0, 'Test');
             expect(cell.editMode).toBeTruthy();
-            expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(0);
+            expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(0);
 
             // move to Cancel
             UIInteractions.triggerKeyDownEvtUponElem('tab', cell, true);
@@ -444,7 +444,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             cell = grid.getCellByColumn(0, 'Downloads');
             expect(cell.editMode).toBeTruthy();
-            expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toEqual(0);
+            expect(grid.headerContainer.getScroll().scrollLeft).toEqual(0);
         }));
 
         it(`Should skip non-editable columns`, fakeAsync(() => {
@@ -701,7 +701,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             const currentEditCell = grid.getCellByColumn(0, 'Test');
             expect(currentEditCell.editMode).toBeTruthy();
-            expect(grid.parentVirtDir.getHorizontalScroll().scrollLeft).toBeGreaterThan(0);
+            expect(grid.headerContainer.getScroll().scrollLeft).toBeGreaterThan(0);
 
             // change last editable cell value
             currentEditCell.editValue = 'No test';

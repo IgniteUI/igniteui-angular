@@ -20,7 +20,10 @@
             [hasSummary]="col.hasSummary"
             [density]="grid.displayDensity"
             [style.max-height.px]="minHeight"
-            [style.min-height.px]="minHeight">
+            [style.min-height.px]="minHeight"
+            [style.min-width]="col.getCellWidth()"
+            [style.max-width]="col.getCellWidth()"
+            [style.flex-basis]="col.getCellWidth()">
         </igx-grid-summary-cell>
     </ng-container>
     <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]="grid.unpinnedWidth" [igxForTrackBy]="grid.trackColumnChanges" [igxForSizePropName]='"calcPixelWidth"' #igxDirRef>
@@ -36,7 +39,10 @@
             [hasSummary]="col.hasSummary"
             [density]="grid.displayDensity"
             [style.max-height.px]="minHeight"
-            [style.min-height.px]="minHeight">
+            [style.min-height.px]="minHeight"
+            [style.min-width]="col.getCellWidth()"
+            [style.max-width]="col.getCellWidth()"
+            [style.flex-basis]="col.getCellWidth()">
         </igx-grid-summary-cell>
     </ng-template>
 </ng-container>

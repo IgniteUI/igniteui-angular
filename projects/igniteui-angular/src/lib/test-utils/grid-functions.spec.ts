@@ -4,11 +4,11 @@ import { By } from '@angular/platform-browser';
 import { take } from 'rxjs/operators';
 import { ComponentFixture, tick } from '@angular/core/testing';
 import { IgxInputDirective } from '../input-group';
-import { IgxGridHeaderComponent } from '../grids/grid-header.component';
+import { IgxGridHeaderComponent } from '../grids/headers/grid-header.component';
 import { IgxChipComponent } from '../chips';
 import { IgxGridComponent } from '../grids/grid/grid.component';
-import { IgxColumnGroupComponent } from '../grids/column.component';
-import { IgxGridHeaderGroupComponent } from '../grids/grid-header-group.component';
+import { IgxColumnGroupComponent } from '../grids/columns/column-group.component';
+import { IgxGridHeaderGroupComponent } from '../grids/headers/grid-header-group.component';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
@@ -24,7 +24,7 @@ const BANNER_CLASS = '.igx-banner';
 const BANNER_TEXT_CLASS = '.igx-banner__text';
 const BANNER_ROW_CLASS = '.igx-banner__row';
 const EDIT_OVERLAY_CONTENT = '.igx-overlay__content';
-const PAGER_BUTTONS = '.igx-grid-paginator__pager > button';
+const PAGER_BUTTONS = '.igx-paginator__pager > button';
 const ACTIVE_GROUP_ROW_CLASS = 'igx-grid__group-row--active';
 const CELL_SELECTED_CSS_CLASS = 'igx-grid__td--selected';
 const ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS = '.igx-grid__cbx-selection';
@@ -65,17 +65,17 @@ export class GridFunctions {
     }
 
     public static scrollLeft(grid: IgxGridComponent, newLeft: number) {
-        const hScrollbar = grid.parentVirtDir.getHorizontalScroll();
+        const hScrollbar = grid.headerContainer.getScroll();
         hScrollbar.scrollLeft = newLeft;
     }
 
     public static scrollRight(grid: IgxGridComponent, newRight: number) {
-        const hScrollbar = grid.parentVirtDir.getHorizontalScroll();
+        const hScrollbar = grid.parentVirtDir.getScroll();
         hScrollbar.scrollRight = newRight;
     }
 
     public static scrollTop(grid: IgxGridComponent, newTop: number) {
-        const vScrollbar = grid.verticalScrollContainer.getVerticalScroll();
+        const vScrollbar = grid.verticalScrollContainer.getScroll();
         vScrollbar.scrollTop = newTop;
     }
 
@@ -558,8 +558,10 @@ export class GridFunctions {
 
         const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
         this.selectFilteringCondition(condition, ddList);
-
-       this.applyFilter(value, fix);
+        // fix.detectChanges();
+        tick(100);
+        this.applyFilter(value, fix);
+        tick(100);
     }
 
     public static typeValueInFilterRowInput(value: string, fix) {
@@ -1693,7 +1695,7 @@ export class GridSelectionFunctions {
         const headerDiv = GridSelectionFunctions.getRowCheckboxDiv(GridSelectionFunctions.getHeaderRow(grid));
         const firstRowDiv = GridSelectionFunctions.getRowCheckboxDiv(grid.rowList.first.nativeElement);
         const scrollStartElement = grid.nativeElement.querySelector(SCROLL_START_CSS_CLASS);
-        const hScrollbar = grid.parentVirtDir.getHorizontalScroll();
+        const hScrollbar = grid.headerContainer.getScroll();
 
         expect(headerDiv.offsetWidth).toEqual(firstRowDiv.offsetWidth);
         expect(headerDiv.offsetLeft).toEqual(firstRowDiv.offsetLeft);

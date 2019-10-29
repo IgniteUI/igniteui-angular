@@ -1,6 +1,6 @@
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxGridNavigationService } from '../grid-navigation.service';
-import { ISelectionNode } from '../../core/grid-selection';
+import { ISelectionNode } from '../selection/selection.service';
 
 export class IgxHierarchicalGridMasterDetailNavigationService extends IgxGridNavigationService {
     public grid: IgxHierarchicalGridComponent;

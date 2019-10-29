@@ -123,6 +123,9 @@
         $color: --var($theme, 'fill-color')
     );
 
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
+
     @include scale-in-center();
 
     %cbx-display {
@@ -245,31 +248,20 @@
         }
     }
 
+    %cbx-label-pos--before,
     %cbx-label-pos--after {
-        margin-left: $label-margin;
-
-        [dir='rtl'] & {
-            margin-left: initial;
-            margin-right: $label-margin;
-
-            &:empty {
-                margin: 0;
-            }
+        &:empty {
+            margin: 0;
         }
     }
 
+    %cbx-label-pos--after {
+        margin-#{$left}: $label-margin;
+    }
+
     %cbx-label-pos--before {
-        margin-right: $label-margin;
+        margin-#{$right}: $label-margin;
         order: -1;
-
-        [dir='rtl'] & {
-            margin-right: initial;
-            margin-left: $label-margin;
-
-            &:empty {
-                margin: 0;
-            }
-        }
     }
 
     %cbx-label--disabled {
