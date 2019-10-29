@@ -1,6 +1,6 @@
 import { IFilteringState } from './filtering-state.interface';
 
-import { IgxSorting, IgxDataRecordSorting } from './sorting-strategy';
+import { IgxSorting, IgxDataRecordSorting, IGridSortingStrategy } from './sorting-strategy';
 import { IgxGrouping } from './grouping-strategy';
 import { IGroupByResult } from './grouping-result.interface';
 
@@ -30,24 +30,31 @@ export enum DataType {
  * @hidden
  */
 export class DataUtil {
-    public static sort<T>(data: T[], expressions: ISortingExpression[], sorting: IgxSorting = new IgxSorting()): T[] {
+    public static sort<T>(data: T[], expressions: ISortingExpression[], sorting?: IGridSortingStrategy): T[] {
+        if (!sorting) {
+            sorting = new IgxSorting();
+        }
         return sorting.sort(data, expressions);
     }
 
     public static treeGridSort(hierarchicalData: ITreeGridRecord[],
         expressions: ISortingExpression[],
-        parent?: ITreeGridRecord): ITreeGridRecord[] {
+        parent?: ITreeGridRecord,
+        sorting?: IGridSortingStrategy): ITreeGridRecord[] {
         let res: ITreeGridRecord[] = [];
         hierarchicalData.forEach((hr: ITreeGridRecord) => {
             const rec: ITreeGridRecord = DataUtil.cloneTreeGridRecord(hr);
             rec.parent = parent;
             if (rec.children) {
-                rec.children = DataUtil.treeGridSort(rec.children, expressions, rec);
+                rec.children = DataUtil.treeGridSort(rec.children, expressions, rec, sorting);
             }
             res.push(rec);
         });
 
-        res = DataUtil.sort(res, expressions, new IgxDataRecordSorting());
+        if (!sorting) {
+            sorting = new IgxDataRecordSorting();
+        }
+        res = DataUtil.sort(res, expressions, sorting);
 
         return res;
     }
