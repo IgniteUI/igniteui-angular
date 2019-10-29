@@ -31,9 +31,9 @@ All notable changes for each version of this project will be documented in this 
     - The header text of the columns and the column groups now has the `title` attribute set to it in order to expose a native browser tooltip.
 
 ### RTL Support
-Most of the components in the framework now have full right-to-left (RTL) support via the newly included RTL themes. 
+Most of the components in the framework now have full right-to-left (RTL) support via the newly included RTL themes.
 
-For CSS-based projects add `node_modules/igniteui-angular/styles/igniteui-angular-rtl.css` to your angular.json styles collection. 
+For CSS-based projects add `node_modules/igniteui-angular/styles/igniteui-angular-rtl.css` to your angular.json styles collection.
 
 For Sass-based projects pass `$direction` to the `igx-core` mixin in your root stylesheet.
 
@@ -49,7 +49,7 @@ Currently the following components have only partial RTL support:
  - Circular Progress Indicator (igx-circular-bar)
 
  We plan on adding support for the aforementioned components in the upcoming releases.
- 
+
 ### New Features
 
 - Columns now expose the `cellStyles` property which allows conditional styling of the column cells. Similar to `cellClasses` it accepts an object literal where the keys are style properties and the values are expressions for evaluation.
@@ -71,6 +71,20 @@ The callback signature for both `cellStyles` and `cellClasses` is now changed to
 
 - `IgxChip`
     - **Breaking Change** The `originalEvent` property for the events `onMoveStart`, `onMoveEnd`, `onClick` and `onSelection` now provides the events, passed from the `igxDrag` directive. The passed original events are in other words the previous events that triggered the `igxChip` ones. They also have original events until a browser event is reached.
+- `IgxGrid` - Now you can access all grid data inside the custom column summary. Two additional optional parameters are introduced in the IgxSummaryOperand `operate` method.
+
+```typescript
+class MySummary extends IgxNumberSummaryOperand {
+    constructor() {
+        super();
+    }
+    operate(columnData: any[], allGridData = [], fieldName?): IgxSummaryResult[] {
+        const result = super.operate(allData.map(r => r[fieldName]));
+        result.push({ key: 'test', label: 'Total Discounted', summaryResult: allData.filter((rec) => rec.Discontinued).length });
+        return result;
+    }
+}
+```
 
 ## 8.2.0
 ### New theme
