@@ -39,7 +39,15 @@
 
 ) {
     $name: 'igx-radio';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $radio-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $radio-schema: map-get($schema, $name);
+    } @else {
+        $radio-schema: $schema;
+    }
+
+    $theme: apply-palette($radio-schema, $palette);
 
     @return extend($theme, (
         name: $name,
