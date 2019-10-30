@@ -83,7 +83,6 @@ export class IgxGridGroupByRowComponent {
      * ```
      */
     @Input()
-    @HostBinding('attr.data-gridID')
     public gridID: string;
 
     /**
