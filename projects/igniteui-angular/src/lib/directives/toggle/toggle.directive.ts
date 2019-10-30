@@ -277,6 +277,13 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     }
 
     /**
+     * Repositions the content in the horizontal and/or vertical directions.
+     */
+    setOffset(deltaX: number, deltaY: number) {
+        this.overlayService.setOffset(this._overlayId, deltaX, deltaY);
+    }
+
+    /**
      * @hidden
      */
     public ngOnInit() {
