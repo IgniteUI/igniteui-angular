@@ -1103,8 +1103,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      *  <igx-grid #grid [data]="localData" [sortStrategy]="sortStrategy"></igx-grid>
      * ```
      */
-    set sortStrategy(classRef: IGridSortingStrategy) {
-        this._sortingStrategy = classRef;
+    set sortStrategy(value: IGridSortingStrategy) {
+        this._sortingStrategy = value;
     }
 
     /**
