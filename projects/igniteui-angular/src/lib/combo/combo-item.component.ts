@@ -4,8 +4,7 @@ import {
     HostBinding,
     Inject,
     Input,
-    DoCheck,
-    HostListener
+    DoCheck
 } from '@angular/core';
 import { IgxDropDownItemComponent } from '../drop-down/drop-down-item.component';
 import { IGX_DROPDOWN_BASE, IDropDownBase, Navigate } from '../drop-down/drop-down.common';
@@ -85,7 +84,6 @@ export class IgxComboItemComponent extends IgxDropDownItemComponent implements D
         return rect.y >= parentDiv.y;
     }
 
-    @HostListener('click', ['$event'])
     clicked(event) {
         this.comboAPI.disableTransitions = false;
         if (this.disabled || this.isHeader) {
