@@ -18,7 +18,7 @@ import { EditorProvider } from '../core/edit-provider';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IgxSliderThumbComponent } from './thumb/thumb-slider.component';
 import { Subject, merge, Observable, timer } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, retry } from 'rxjs/operators';
 import { SliderHandle,
     IgxThumbFromTemplateDirective,
     IgxThumbToTemplateDirective,
@@ -35,6 +35,15 @@ import ResizeObserver from 'resize-observer-polyfill';
 export enum TickLabelsOrientation {
     horizontal,
     vertical
+}
+
+/**
+ * Slider Ticks orientation
+ */
+export enum TicksOrientation {
+    top,
+    bottom,
+    mirror
 }
 
 const noop = () => {
@@ -90,8 +99,14 @@ export class IgxSliderComponent implements
     private _continuous = false;
     private _disabled = false;
     private _step = 1;
+
+    // ticks
     private _primaryTicks = 0;
     private _secondaryTicks = 0;
+    private _ticksContainer = 0;
+    private _primaryTicksWidth = 16;
+    private _secondaryTicksWidth = 8;
+    private _defaultTickYOffset = 4;
 
     private _labels = new Array<number|string|boolean|null|undefined>();
     private _type = SliderType.SLIDER;
@@ -146,9 +161,11 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * hidden
+     * @hidden
      */
-    public width: number;
+    public get ticksContainer() {
+        return this._ticksContainer;
+    }
 
     /**
      * @hidden
@@ -688,10 +705,23 @@ export class IgxSliderComponent implements
     public secondaryTickLabels = false;
 
     @Input()
+    public ticksOrientation: TicksOrientation = TicksOrientation.bottom;
+
+    @Input()
     public tickLabelsOrientation = TickLabelsOrientation.horizontal;
 
-    public get isVertical() {
-        return this.tickLabelsOrientation === TickLabelsOrientation.vertical;
+    /**
+     * @hidden
+     */
+    public get isHorizontal() {
+        return this.tickLabelsOrientation === TickLabelsOrientation.horizontal;
+    }
+
+    /**
+     * @hidden
+     */
+    public get tickLabelOrientation() {
+        return this.isHorizontal ? 'rotate(0)' : 'rotate(90)';
     }
 
     /**
@@ -901,16 +931,20 @@ export class IgxSliderComponent implements
      * @hidden
      */
     public get ticksStep() {
-        return this.width ? (this.width / this.ticksLength) +
-            (this.width / this.ticksLength / (this.ticksLength - 1)) : 0;
+        const ticksStep = this.ticksContainer / this.ticksLength;
+        const stepUnit = ticksStep / (this.ticksLength - 1);
+        return this.ticksContainer ?
+                ticksStep + stepUnit
+                : 0;
     }
 
     /**
      * @hidden
      */
     public get ticksLength() {
-        return this.primaryTicks > 0 ? (this.primaryTicks * this.secondaryTicks) + this.primaryTicks + 1 :
-            this.secondaryTicks > 0 ? this.secondaryTicks + 1 : 0;
+        return this.primaryTicks > 0 ?
+                (this.primaryTicks * this.secondaryTicks) + this.primaryTicks + 1 :
+                this.secondaryTicks > 0 ? this.secondaryTicks + 1 : 0;
     }
 
     /**
@@ -1075,32 +1109,27 @@ export class IgxSliderComponent implements
     /**
      * @hidden
      */
-    public tickIndention(idx: number) {
-        let indention = idx * this.ticksStep;
-        if (indention === this.width) {
-            indention -= 1;
-        }
-        return this.ticksStep * idx === 0 ? 1 : indention;
+    public tickXOffset(idx: number) {
+        return idx * this.ticksStep - 1;
     }
 
     /**
      * @hidden
      */
-    public tickPosition(idx: number) {
-        const primaryTicksPosition = 17.5;
-        const secondaryTicksPosition = 10;
-        return this.primaryTicks <= 0 ? secondaryTicksPosition :
-            idx % (this.secondaryTicks + 1) === 0 ? primaryTicksPosition : secondaryTicksPosition;
+    public tickYOffset(idx: number) {
+        const trackHeight = this.track.nativeElement.offsetHeight;
+        const primaryTickOffset = this._primaryTicksWidth / 2 + trackHeight + this._defaultTickYOffset;
+        const secondaryTickOffset = this._secondaryTicksWidth / 2 + trackHeight + this._defaultTickYOffset;
+        return this.primaryTicks <= 0 ? secondaryTickOffset :
+            idx % (this.secondaryTicks + 1) === 0 ? primaryTickOffset : secondaryTickOffset;
     }
 
     /**
      * @hidden
      */
-    public tickWidth(idx: number) {
-        const primaryTicksWidth = 25;
-        const secondaryTicksWidth = 10;
-        return this.primaryTicks <= 0 ? secondaryTicksWidth :
-            idx % (this.secondaryTicks + 1) === 0 ? primaryTicksWidth : secondaryTicksWidth;
+    public strokeWidth(idx: number) {
+        return this.primaryTicks <= 0 ? `${this._secondaryTicksWidth}px` :
+                idx % (this.secondaryTicks + 1) === 0 ? `${this._primaryTicksWidth}px` : `${this._secondaryTicksWidth}px`;
     }
 
     /**
@@ -1109,6 +1138,24 @@ export class IgxSliderComponent implements
     public tickLabel(idx: number) {
         const labelStep = this.maxValue / (this.ticksLength - 1);
         return (labelStep * idx).toFixed(2);
+    }
+
+    /**
+     * @hidden
+     */
+    public tickLabelXOffset(index: number) {
+        // return this.isHorizontal ? this.tickXOffset(index) : this.tickYOffset(index) * 3;
+        return this.tickXOffset(index);
+    }
+
+    /**
+     * @hidden
+     */
+    public tickLabelYOffset(index: number) {
+        // const labelOffset = index % (this.secondaryTicks + 1) === 0 ? 8 : 16;
+        // return this.isHorizontal ? this.tickYOffset(index) + this._primaryTicksWidth + labelOffset : - (this.tickXOffset(index) - 5);
+        const labelOffset = index % (this.secondaryTicks + 1) === 0 ? 0 : this._defaultTickYOffset;
+        return this.tickYOffset(index) + this._primaryTicksWidth + 8 + labelOffset;
     }
 
     private swapThumb(value: IRangeSliderValue) {
@@ -1395,7 +1442,7 @@ export class IgxSliderComponent implements
      * resizeObesrver callback
      */
     private notifyChanges() {
-        this.width = this._el.nativeElement.getBoundingClientRect().width;
+        this._ticksContainer = this._el.nativeElement.getBoundingClientRect().width;
         this._cdr.markForCheck();
     }
 }

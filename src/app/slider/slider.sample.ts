@@ -20,9 +20,10 @@ export class SliderSampleComponent {
     private _lowerValue: Date;
     private _upperValue: Date;
 
-    public labelOrientaion = TickLabelsOrientation.vertical;
+    public labelOrientaion = TickLabelsOrientation.horizontal;
     public sliderType: SliderType = SliderType.RANGE;
     public labels = new Array<Date>();
+    public task: Task = new Task('Implement new app', 30);
 
     public rangeValue = {
         lower: 30,
@@ -55,14 +56,12 @@ export class SliderSampleComponent {
         this._lowerValue = this.labels[(evt.value as IRangeSliderValue).lower];
         this._upperValue = this.labels[(evt.value as IRangeSliderValue).upper];
     }
-
     public changeLabelOrientation() {
         if (this.labelOrientaion === TickLabelsOrientation.vertical) {
             this.labelOrientaion = TickLabelsOrientation.horizontal;
         } else {
             this.labelOrientaion = TickLabelsOrientation.vertical;
-        };
+        }
     }
 
-    task: Task = new Task('Implement new app', 30);
 }
