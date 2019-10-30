@@ -102,6 +102,8 @@ export interface OverlayInfo {
     openAnimationInnerPlayer?: any;
     closeAnimationInnerPlayer?: any;
     ngZone: NgZone;
+    transformX?: number;
+    transformY?: number;
 }
 
 /** @hidden */

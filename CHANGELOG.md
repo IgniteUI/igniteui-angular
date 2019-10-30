@@ -2,7 +2,6 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-
 ## 9.0.0
 
 ### General
@@ -18,13 +17,17 @@ All notable changes for each version of this project will be documented in this 
     - **Behavioral Change** - Pinning columns is no longer automatically prevented when the pinning area would exceed the size of the grid.
 
 ### New Features
-- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`:
     - `sortStrategy` input is added, which can be used to set a global sorting strategy for the entire grid.
         (**NOTE**: The grid's `sortStrategy` is of different type compared to the column's `sortStrategy`.)
     - `NoopSortingStrategy` is added, which can be used to disable the default sorting of the grid by assigning its instance to the grid's `sortStrategy` input. (Useful for remote sorting.)
     - `NoopFilteringStrategy` is added, which can be used to disable the default filtering of the grid by assigning its instance to the grid's `filterStrategy` input. (Useful for remote filtering.)
     - `sortingExpressionsChange` event emitter is added, which is fired whenever a change to the UI sorting has occurred (prior to performing the actual sorting).
     - `filteringExpressionsTreeChange` event emitter is added, which is fired whenever a change to the UI filtering has occurred (prior to performing the actual filtering).
+- `IgxOverlayService`:
+    - `setOffset` method added. It repositions the content in the horizontal and vertical directions.
+- `IgxToggleDirective`:
+    - `setOffset` method added. It repositions the content in the horizontal and vertical directions.
 
 ## 8.2.6
 

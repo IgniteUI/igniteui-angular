@@ -15,7 +15,7 @@ Basic initialization
 </div>
 ```
 
-Opne/Close toggle through public methods that are provided by exporting the directive with name **toggle**.
+Open/Close toggle through public methods that are provided by exporting the directive with name **toggle**.
 ```html
 <button (click)="toggleRef.open()">Open</button>
 <button (click)="toggleRef.close()">Close</button>
@@ -49,6 +49,8 @@ handlers when the toggle is opened and respectively closed.
 | `close` | --- | `void` | Closes the toggle. |
 | `toggle` | overlaySettings?: `OverlaySettings` | `void` | Closes the toggle. |
 | `reposition` | --- | `void` | Repositions the toggle. |
+| `setOffset`  | Repositions the content in the horizontal and/or vertical directions. |deltaX, deltaY |
+
 
 
 # IgxToggleAction Directive
