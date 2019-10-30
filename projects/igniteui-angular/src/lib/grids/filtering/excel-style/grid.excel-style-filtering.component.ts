@@ -176,7 +176,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
     /**
      * @hidden @internal
      */
-    public inline: boolean;
+    public inline = true;
     /**
      * @hidden @internal
      */
@@ -348,7 +348,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
      */
     public initialize(column: IgxColumnComponent, overlayService: IgxOverlayService,
         overlayComponentId: string) {
-        this.inline = true;
+        this.inline = false;
         this.column = column;
         this.overlayService = overlayService;
         this.overlayComponentId = overlayComponentId;
