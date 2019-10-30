@@ -62,7 +62,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     @HostBinding('class.igx-grid__filtering-cell')
     public cssClass = 'igx-grid__filtering-cell';
 
-    constructor(public cdr: ChangeDetectorRef, public filteringService: IgxFilteringService, public element: ElementRef) {
+    constructor(public cdr: ChangeDetectorRef, public filteringService: IgxFilteringService) {
         this.filteringService.subscribeToEvents();
     }
 
