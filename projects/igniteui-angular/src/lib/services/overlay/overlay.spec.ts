@@ -515,13 +515,17 @@ describe('igxOverlay', () => {
             tick();
 
             overlayInstance.setOffset(id, 40, 40);
-            const overlayContent = document.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0];
+            const overlayContent: Element = document.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0];
             const component = document.getElementsByClassName('simpleRef')[0];
             const contentRectOverlay = overlayContent.getBoundingClientRect();
             const componentRectOverlay = component.getBoundingClientRect();
+            let overlayContentTransform = (<any>overlayContent).style.transform;
+            const firstTransform = 'translate(40px, 40px)';
+            const secondTransform = 'translate(30px, 60px)';
 
             expect(contentRectOverlay.top).toEqual(componentRectOverlay.top);
             expect(contentRectOverlay.left).toEqual(componentRectOverlay.left);
+            expect(overlayContentTransform).toEqual(firstTransform);
 
             // Set the offset again and verify it is changed correctly
             overlayInstance.setOffset(id, -10, 20);
@@ -529,6 +533,7 @@ describe('igxOverlay', () => {
             tick();
             const contentRectOverlayNew = overlayContent.getBoundingClientRect();
             const componentRectOverlayNew = component.getBoundingClientRect();
+            overlayContentTransform = (<any>overlayContent).style.transform;
 
             expect(contentRectOverlayNew.top).toEqual(componentRectOverlayNew.top);
             expect(contentRectOverlayNew.left).toEqual(componentRectOverlayNew.left);
@@ -538,6 +543,7 @@ describe('igxOverlay', () => {
 
             expect(componentRectOverlayNew.top).not.toEqual(componentRectOverlay.top);
             expect(componentRectOverlayNew.left).not.toEqual(componentRectOverlay.left);
+            expect(overlayContentTransform).toEqual(secondTransform);
         }));
 
         it('fix for #1690 - click on second filter does not close first one.', fakeAsync(() => {

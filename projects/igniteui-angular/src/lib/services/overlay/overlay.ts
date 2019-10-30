@@ -261,7 +261,11 @@ export class IgxOverlayService implements OnDestroy {
         info.transformX += deltaX;
         info.transformY += deltaY;
 
-        info.elementRef.nativeElement.parentElement.style.transform = 'translate(' + info.transformX + 'px, ' + info.transformY + 'px)';
+        const transformX = info.transformX;
+        const transformY = info.transformY;
+
+        const translate = `translate(${transformX}px, ${transformY}px)`;
+        info.elementRef.nativeElement.parentElement.style.transform = translate;
     }
 
     private _show(info: OverlayInfo) {
