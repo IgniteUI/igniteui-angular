@@ -200,7 +200,14 @@
     $sortable-header-icon-hover-color: null
 ) {
     $name: 'igx-grid';
-    $grid-schema: map-get($schema, $name);
+    $grid-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $grid-schema: map-get($schema, $name);
+    } @else {
+        $grid-schema: $schema;
+    }
+
     $theme: apply-palette($grid-schema, $palette);
 
     $drop-area-border-radius: round-borders(
