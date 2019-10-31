@@ -66,7 +66,14 @@
     $shadow: null
 ) {
     $name: 'igx-navdrawer';
-    $navdrawer-schema: map-get($schema, $name);
+    $navdrawer-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $navdrawer-schema: map-get($schema, $name);
+    } @else {
+        $navdrawer-schema: $schema;
+    }
+
     $theme: apply-palette($navdrawer-schema, $palette);
 
     $border-radius: round-borders(
