@@ -18,6 +18,24 @@
         display: block;
     }
 
+    %grid-excel-filter--inline {
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+
+        %grid-excel-menu {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            box-shadow: none;
+
+            %grid-excel-main {
+                flex-grow: 1;
+            }
+        }
+    }
+
     %igx-excel-filter__loading {
         display: flex;
         justify-content: center;
