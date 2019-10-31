@@ -27,6 +27,43 @@ describe('Update 8.2.6', () => {
         appTree.create('/angular.json', JSON.stringify(configJson));
     });
 
+    it('should update igx-carousel-theme prop', done => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.scss',
+            `$my-toolbar-theme: igx-grid-toolbar-theme(
+                $background-color: null,
+                $button-background: null,
+                $title-text-color: null,
+                $button-text-color: null,
+                $button-hover-background: null,
+                $button-hover-text-color: null,
+                $button-focus-background: null,
+                $button-focus-text-color: null,
+                $dropdown-background: null,
+                $item-text-color: null,
+                $item-hover-background: null,
+                $item-hover-text-color: null,
+                $item-focus-background: null,
+                $item-focus-text-color: null
+              );`
+        );
+        const tree = schematicRunner.runSchematic('migration-12', {}, appTree);
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss'))
+        .toEqual(
+            `$my-toolbar-theme: igx-grid-toolbar-theme(
+                $background-color: null,
+                $title-text-color: null,
+                $dropdown-background: null,
+                $item-text-color: null,
+                $item-hover-background: null,
+                $item-hover-text-color: null,
+                $item-focus-background: null,
+                $item-focus-text-color: null
+              );`
+        );
+        done();
+    });
+
     it('should update igx-grid-paginator-theme', done => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.scss',

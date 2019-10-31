@@ -75,6 +75,7 @@ export * from './lib/list/index';
 export * from './lib/expansion-panel/index';
 export * from './lib/navbar/navbar.component';
 export * from './lib/navigation-drawer/index';
+export * from './lib/paginator/paginator.component';
 export * from './lib/progressbar/progressbar.component';
 export * from './lib/radio/radio.component';
 export * from './lib/slider/index';
@@ -85,7 +86,6 @@ export * from './lib/tabs/index';
 export * from './lib/time-picker/time-picker.component';
 export * from './lib/toast/toast.component';
 export * from './lib/select/index';
-
 
 /**
  * Exporter services, classes, interfaces and enums
