@@ -329,7 +329,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Emitted before filtering is performed through the UI.
+     * Emitted before filtering is performed.
      * Returns the filtering expressions tree of the column for which filtering was performed.
      * ```typescript
      * filteringExprTreeChange(event: IFilteringExpressionsTree){
@@ -2184,7 +2184,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Emitted before sorting is performed through the UI. Returns the sorting expressions.
+     * Emitted before sorting is performed. Returns the sorting expressions.
      * ```html
      * <igx-grid #grid [data]="localData" [autoGenerate]="true" (sortingExpressionsChange)="sortingExprChange($event)"></igx-grid>
      * ```

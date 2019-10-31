@@ -30,30 +30,24 @@ export enum DataType {
  * @hidden
  */
 export class DataUtil {
-    public static sort<T>(data: T[], expressions: ISortingExpression[], sorting?: IGridSortingStrategy): T[] {
-        if (!sorting) {
-            sorting = new IgxSorting();
-        }
+    public static sort<T>(data: T[], expressions: ISortingExpression[], sorting: IGridSortingStrategy = new IgxSorting()): T[] {
         return sorting.sort(data, expressions);
     }
 
     public static treeGridSort(hierarchicalData: ITreeGridRecord[],
         expressions: ISortingExpression[],
-        parent?: ITreeGridRecord,
-        sorting?: IGridSortingStrategy): ITreeGridRecord[] {
+        sorting: IGridSortingStrategy = new IgxDataRecordSorting(),
+        parent?: ITreeGridRecord): ITreeGridRecord[] {
         let res: ITreeGridRecord[] = [];
         hierarchicalData.forEach((hr: ITreeGridRecord) => {
             const rec: ITreeGridRecord = DataUtil.cloneTreeGridRecord(hr);
             rec.parent = parent;
             if (rec.children) {
-                rec.children = DataUtil.treeGridSort(rec.children, expressions, rec, sorting);
+                rec.children = DataUtil.treeGridSort(rec.children, expressions, sorting, rec);
             }
             res.push(rec);
         });
 
-        if (!sorting) {
-            sorting = new IgxDataRecordSorting();
-        }
         res = DataUtil.sort(res, expressions, sorting);
 
         return res;
