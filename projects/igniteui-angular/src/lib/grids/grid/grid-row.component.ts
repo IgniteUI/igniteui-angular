@@ -28,4 +28,17 @@ export class IgxGridRowComponent extends IgxRowDirective<IgxGridComponent> {
     get hasColumnLayouts(): boolean {
         return this.grid.hasColumnLayouts;
     }
+
+    getContext(col, row) {
+        return {
+            $implicit: col,
+            row: row
+        };
+    }
+
+    get expanded() {
+        const pk = this.grid.primaryKey;
+        const rowID = pk ? this.rowData[pk] : this.rowData;
+        return this.grid.expansionStates.get(rowID);
+    }
 }

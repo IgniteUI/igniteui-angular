@@ -115,6 +115,9 @@ export class GridGroupBySampleComponent implements OnInit {
         console.log("onGroupingDone: ");
         console.log(event);
     }
+    getData(item) {
+    console.log(item);
+    }
 
     groupMultiple() {
         const expr = [

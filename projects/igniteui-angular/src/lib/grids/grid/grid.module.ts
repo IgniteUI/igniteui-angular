@@ -5,7 +5,8 @@ import {
     IgxRowExpandedIndicatorDirective,
     IgxRowCollapsedIndicatorDirective,
     IgxHeaderExpandIndicatorDirective,
-    IgxHeaderCollapseIndicatorDirective
+    IgxHeaderCollapseIndicatorDirective,
+    IgxGridDetailTemplateDirective
 } from './grid.directives';
 import { IgxGridComponent } from './grid.component';
 import {
@@ -18,6 +19,8 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxGridCommonModule } from '../grid-common.module';
 import { IgxGridSummaryPipe } from './grid.summary.pipe';
+import { IgxGridDetailsPipe } from './grid.details.pipe';
+import { IgGridExpandableCellComponent } from './expandable-cell.component';
 
 /**
  * @hidden
@@ -28,22 +31,7 @@ import { IgxGridSummaryPipe } from './grid.summary.pipe';
     IgxGridRowComponent,
     IgxGridGroupByRowComponent,
     IgxGroupByRowTemplateDirective,
-    IgxRowExpandedIndicatorDirective,
-    IgxRowCollapsedIndicatorDirective,
-    IgxHeaderExpandIndicatorDirective,
-    IgxHeaderCollapseIndicatorDirective,
-    IgxGroupAreaDropDirective,
-    IgxGridGroupingPipe,
-    IgxGridPagingPipe,
-    IgxGridSortingPipe,
-    IgxGridFilteringPipe,
-    IgxGridSummaryPipe
-  ],
-  exports: [
-    IgxGridComponent,
-    IgxGridGroupByRowComponent,
-    IgxGridRowComponent,
-    IgxGroupByRowTemplateDirective,
+    IgxGridDetailTemplateDirective,
     IgxRowExpandedIndicatorDirective,
     IgxRowCollapsedIndicatorDirective,
     IgxHeaderExpandIndicatorDirective,
@@ -54,6 +42,27 @@ import { IgxGridSummaryPipe } from './grid.summary.pipe';
     IgxGridSortingPipe,
     IgxGridFilteringPipe,
     IgxGridSummaryPipe,
+    IgxGridDetailsPipe,
+    IgGridExpandableCellComponent
+  ],
+  exports: [
+    IgxGridComponent,
+    IgGridExpandableCellComponent,
+    IgxGridGroupByRowComponent,
+    IgxGridRowComponent,
+    IgxGroupByRowTemplateDirective,
+    IgxGridDetailTemplateDirective,
+    IgxRowExpandedIndicatorDirective,
+    IgxRowCollapsedIndicatorDirective,
+    IgxHeaderExpandIndicatorDirective,
+    IgxHeaderCollapseIndicatorDirective,
+    IgxGroupAreaDropDirective,
+    IgxGridGroupingPipe,
+    IgxGridPagingPipe,
+    IgxGridSortingPipe,
+    IgxGridFilteringPipe,
+    IgxGridSummaryPipe,
+    IgxGridDetailsPipe,
     IgxGridCommonModule
   ],
   imports: [
