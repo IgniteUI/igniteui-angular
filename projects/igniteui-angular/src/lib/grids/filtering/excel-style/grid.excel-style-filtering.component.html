@@ -49,8 +49,7 @@
     class="igx-excel-filter__menu"
     [ngClass]="{
         'igx-excel-filter__menu--cosy': grid.displayDensity === 'cosy',
-        'igx-excel-filter__menu--compact': grid.displayDensity === 'compact',
-        'igx-excel-filter__menu--inline': inline
+        'igx-excel-filter__menu--compact': grid.displayDensity === 'compact'
     }"
     [id]="overlayComponentId"
     (keydown)="onKeyDown($event)">

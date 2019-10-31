@@ -173,10 +173,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
     public get filteringService(): IgxFilteringService {
         return this.grid.filteringService;
     }
-    /**
-     * @hidden @internal
-     */
-    public inline = true;
+
     /**
      * @hidden @internal
      */
@@ -210,6 +207,12 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
      */
     @HostBinding('class.igx-excel-filter')
     className = 'igx-excel-filter';
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('class.igx-excel-filter--inline')
+    public inline = true;
 
     /**
      * @hidden @internal
