@@ -62,7 +62,6 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * @hidden
      */
     @Input()
-    @HostBinding('attr.data-gridID')
     public gridID: string;
 
     /**
