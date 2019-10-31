@@ -32,6 +32,7 @@ import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives'
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 import { IgxGridNavigationService } from '../grid-navigation.service';
+import { IgxRowIslandAPIService } from '../hierarchical-grid/row-island-api.service';
 
 let NEXT_ID = 0;
 
@@ -65,7 +66,8 @@ let NEXT_ID = 0;
         { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) },
         IgxFilteringService,
         IgxForOfSyncService,
-        IgxForOfScrollSyncService
+        IgxForOfScrollSyncService,
+        IgxRowIslandAPIService
     ]
 })
 export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit, DoCheck, AfterContentInit {
