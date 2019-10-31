@@ -916,6 +916,33 @@ describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
             expect(lastCell.rowIndex).toBe(4);
 
         }));
+
+        it('should navigate to the first cell of next row using Tab from last cell in the row above', (async () => {
+            hierarchicalGrid.expandChildren = false;
+            hierarchicalGrid.height = '600px';
+            hierarchicalGrid.width = '1000px';
+            fixture.componentInstance.rowIsland.height = '350px';
+            fixture.detectChanges();
+            await wait(100);
+
+            const row = hierarchicalGrid.getRowByIndex(0);
+            (row as IgxHierarchicalRowComponent).toggle();
+            await wait(100);
+            fixture.detectChanges();
+
+            const cell = hierarchicalGrid.getCellByColumn(2, 'childData2');
+            cell.nativeElement.dispatchEvent(new Event('focus'));
+            await wait(100);
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
+            await wait(100);
+            fixture.detectChanges();
+
+            const currentCell = hierarchicalGrid.getCellByColumn(3, 'ID');
+            expect(currentCell.focused).toBe(true);
+            expect(currentCell.rowIndex).toBe(3);
+        }));
 });
 
 describe('IgxHierarchicalGrid Multi-layout Navigation #hGrid', () => {

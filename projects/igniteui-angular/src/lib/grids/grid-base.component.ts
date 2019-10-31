@@ -1073,6 +1073,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     set filterMode(value) {
         this._filterMode = value;
+
+        if (this.filteringService.isFilterRowVisible) {
+            this.filteringRow.close();
+        }
+        this.notifyChanges(true);
     }
 
     /**
@@ -3300,19 +3305,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public paginatorClassName(): string {
         switch (this.displayDensity) {
             case DisplayDensity.cosy:
-                return 'igx-grid-paginator--cosy';
+                return 'igx-paginator--cosy';
             case DisplayDensity.compact:
-                return 'igx-grid-paginator--compact';
+                return 'igx-paginator--compact';
             default:
-                return 'igx-grid-paginator';
+                return 'igx-paginator';
         }
-    }
-
-    public paginatorSelectDisplayDensity(): string {
-        if (this.displayDensity === DisplayDensity.comfortable) {
-            return DisplayDensity.cosy;
-        }
-        return DisplayDensity.compact;
     }
 
     /**
@@ -3947,7 +3945,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
             const row = new IgxRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector));
             this.gridAPI.update_row(row, value);
-            this.cdr.detectChanges();
+
+            // TODO: fix for #5934 and probably break for #5763
+            // consider adding of third optional boolean parameter in updateRow.
+            // If developer set this parameter to true we should call notifyChanges(true), and
+            // vise-versa if developer set it to false we should call notifyChanges(false).
+            // The parameter should default to false
+            this.notifyChanges();
         }
     }
 
@@ -4450,17 +4454,30 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    protected getFilterCellHeight(): number {
+        const headerGroupNativeEl = (this.headerGroupsList.length !== 0) ?
+                                        this.headerGroupsList[0].element.nativeElement : null;
+        const filterCellNativeEl = (headerGroupNativeEl) ?
+                                    headerGroupNativeEl.querySelector('igx-grid-filtering-cell') : null;
+        return (filterCellNativeEl) ? filterCellNativeEl.offsetHeight : 0;
+    }
+
+    /**
+     * @hidden
+     */
     protected _calculateGridBodyHeight(): number {
         if (!this._height) {
             return null;
         }
 
-
+        const actualTheadRow = (!this.allowFiltering || (this.allowFiltering && this.filterMode !== FilterMode.quickFilter)) ?
+                                 this.theadRow.nativeElement.offsetHeight - this.getFilterCellHeight() :
+                                 this.theadRow.nativeElement.offsetHeight;
         const footerHeight = this.summariesHeight || this.tfoot.nativeElement.offsetHeight - this.tfoot.nativeElement.clientHeight;
         const toolbarHeight = this.getToolbarHeight();
         const pagingHeight = this.getPagingHeight();
         const groupAreaHeight = this.getGroupAreaHeight();
-        const renderedHeight = toolbarHeight + this.theadRow.nativeElement.offsetHeight +
+        const renderedHeight = toolbarHeight + actualTheadRow +
             footerHeight + pagingHeight + groupAreaHeight +
             this.scr.nativeElement.clientHeight;
 

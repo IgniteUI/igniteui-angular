@@ -11,8 +11,8 @@
 /// @requires rem
 /// @requires --var
 @mixin _excel-filtering($theme, $palette) {
-    $left: if-left(left, right);
-    $right: if-left(right, left);
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
 
     %grid-excel-filter {
         display: block;
