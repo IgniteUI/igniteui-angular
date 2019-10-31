@@ -8,22 +8,33 @@
         <section style="width: 100%">
             <article>
                 <h4 class="sample-title">Desktop</h4>
+
                 <igx-switch [(ngModel)]="car.navigation">navigation</igx-switch>
                 <igx-switch [(ngModel)]="car.keyBoardNavigation">keyBoardNavigation</igx-switch>
                 <igx-switch [(ngModel)]="loop">loop</igx-switch>
-                 <button igxButton="raised" (click)="changeSlides()">Change slides add</button>
+                <button igxButton="raised" [igxToggleAction]="dropDownAnimation" [igxDropDownItemNavigation]="dropDownAnimation" displayDensity="comfortable">Animation Type: {{car.animationType}}</button>
+                <igx-drop-down #dropDownAnimation (onSelection)="onAnimationSelection($event)"  displayDensity="comfortable">
+                    <igx-drop-down-item *ngFor="let item of animationModes">
+                            {{ item }}
+                    </igx-drop-down-item>
+                </igx-drop-down>
+
+                <button igxButton="raised" (click)="changeSlides()">Change slides add</button>
                 <button igxButton="raised" (click)="changeSlidesRemove()">Change slides remove</button>
                  <button igxButton="raised" (click)="changeOrientation()">changeOrientation</button>
-                <igx-carousel #car [interval]="interval" [pause]="pause" [loop]="loop">
-                    <igx-slide *ngFor="let slide of slides;" [active]="slide.active">
-                        <img [src]="slide.image">
-                    </igx-slide>
+                 <div style="height: 800px;">
+                    <igx-carousel #car>
+                        <igx-slide *ngFor="let slide of slides;" [active]="slide.active">
+                            <img [src]="slide.image">
+                        </igx-slide>
 
-                    <ng-template igxCarouselIndicator let-slide>
-                        <igx-icon *ngIf="slide.active" fontSet="material">brightness_7</igx-icon>
-                        <igx-icon *ngIf="!slide.active" fontSet="material">brightness_5</igx-icon>
-                    </ng-template>
-                </igx-carousel>
+                        <ng-template igxCarouselIndicator let-slide>
+                            <igx-icon *ngIf="slide.active" fontSet="material">brightness_7</igx-icon>
+                            <igx-icon *ngIf="!slide.active" fontSet="material">brightness_5</igx-icon>
+                        </ng-template>
+                    </igx-carousel>
+                 </div>
+
             </article>
         </section>
     </div>
