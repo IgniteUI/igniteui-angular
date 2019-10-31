@@ -38,7 +38,13 @@
     $shadow: null
 ) {
     $name: 'igx-bottom-nav';
-    $bottom-nav-schema: map-get($schema, $name);
+    $bottom-nav-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $bottom-nav-schema: map-get($schema, $name);
+    } @else {
+        $bottom-nav-schema: $schema;
+    }
 
     $theme: apply-palette($bottom-nav-schema, $palette);
 

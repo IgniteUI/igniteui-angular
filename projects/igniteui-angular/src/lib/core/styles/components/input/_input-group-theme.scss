@@ -119,7 +119,14 @@
     $input-suffix-background: null
 ) {
     $name: 'igx-input-group';
-    $input-group-schema: map-get($schema, $name);
+    $input-group-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $input-group-schema: map-get($schema, $name);
+    } @else {
+        $input-group-schema: $schema;
+    }
+
     $theme: apply-palette($input-group-schema, $palette);
 
     $box-border-radius: round-borders(
