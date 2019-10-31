@@ -33,6 +33,10 @@
             %grid-excel-main {
                 flex-grow: 1;
             }
+
+            %grid-excel-main igx-list {
+                height: initial;
+            }
         }
     }
 
