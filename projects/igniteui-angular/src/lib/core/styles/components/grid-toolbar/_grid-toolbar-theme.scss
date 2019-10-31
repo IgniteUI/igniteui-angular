@@ -45,7 +45,15 @@
     $item-focus-text-color: null
 ) {
     $name: 'igx-grid-toolbar';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $grid-toolbar-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $grid-toolbar-schema: map-get($schema, $name);
+    } @else {
+        $grid-toolbar-schema: $schema;
+    }
+
+    $theme: apply-palette($grid-toolbar-schema, $palette);
 
     @if not($title-text-color) and $background-color {
         $title-text-color: text-contrast($background-color);

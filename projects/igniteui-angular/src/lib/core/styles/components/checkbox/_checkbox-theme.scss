@@ -43,7 +43,14 @@
     $border-radius-ripple: null
 ) {
     $name: 'igx-checkbox';
-    $checkbox-schema: map-get($schema, $name);
+    $checkbox-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $checkbox-schema: map-get($schema, $name);
+    } @else {
+        $checkbox-schema: $schema;
+    }
+
     $theme: apply-palette($checkbox-schema, $palette);
 
     $border-radius: round-borders(
@@ -53,7 +60,6 @@
     $border-radius-ripple: round-borders(
         if($border-radius-ripple, $border-radius-ripple, map-get($checkbox-schema, 'border-radius-ripple')), 0, 24px
     );
-
 
     @return extend($theme, (
         name: $name,
