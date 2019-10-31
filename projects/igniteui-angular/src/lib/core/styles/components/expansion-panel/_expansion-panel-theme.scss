@@ -44,7 +44,14 @@
     $disabled-color: null
 ) {
     $name: 'igx-expansion-panel';
-    $expansion-panel-schema: map-get($schema, $name);
+    $expansion-panel-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $expansion-panel-schema: map-get($schema, $name);
+    } @else {
+        $expansion-panel-schema: $schema;
+    }
+
     $theme: apply-palette($expansion-panel-schema, $palette);
 
     $border-radius: round-borders(

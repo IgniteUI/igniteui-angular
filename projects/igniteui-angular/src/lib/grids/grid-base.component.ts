@@ -3300,19 +3300,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public paginatorClassName(): string {
         switch (this.displayDensity) {
             case DisplayDensity.cosy:
-                return 'igx-grid-paginator--cosy';
+                return 'igx-paginator--cosy';
             case DisplayDensity.compact:
-                return 'igx-grid-paginator--compact';
+                return 'igx-paginator--compact';
             default:
-                return 'igx-grid-paginator';
+                return 'igx-paginator';
         }
-    }
-
-    public paginatorSelectDisplayDensity(): string {
-        if (this.displayDensity === DisplayDensity.comfortable) {
-            return DisplayDensity.cosy;
-        }
-        return DisplayDensity.compact;
     }
 
     /**
@@ -3947,7 +3940,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             }
             const row = new IgxRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector));
             this.gridAPI.update_row(row, value);
-            this.cdr.detectChanges();
+
+            // TODO: fix for #5934 and probably break for #5763
+            // consider adding of third optional boolean parameter in updateRow.
+            // If developer set this parameter to true we should call notifyChanges(true), and
+            // vise-versa if developer set it to false we should call notifyChanges(false).
+            // The parameter should default to false
+            this.notifyChanges();
         }
     }
 

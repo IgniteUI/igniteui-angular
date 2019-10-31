@@ -2,8 +2,8 @@
 # For additional information regarding the format and rule options, please see:
 # https://github.com/browserslist/browserslist#queries
 # For IE 9-11 support, please uncomment the last line of the file and adjust as needed
-> 0.5%
-last 2 versions
+> 3%
+last 5 versions
 Firefox ESR
 not dead
 # IE 9-11
