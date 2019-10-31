@@ -46,7 +46,15 @@
     $label-hover-color: null
 ) {
     $name: 'igx-grid-summary';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $grid-summary-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $grid-summary-schema: map-get($schema, $name);
+    } @else {
+        $grid-summary-schema: $schema;
+    }
+
+    $theme: apply-palette($grid-summary-schema, $palette);
 
     @if not($result-color) and $background-color {
         $result-color: text-contrast($background-color);
