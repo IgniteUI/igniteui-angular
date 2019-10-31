@@ -23,7 +23,15 @@
     $color: null
 ) {
     $name: 'igx-divider';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $divider-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $divider-schema: map-get($schema, $name);
+    } @else {
+        $divider-schema: $schema;
+    }
+
+    $theme: apply-palette($divider-schema, $palette);
 
     @return extend($theme, (
         name: $name,

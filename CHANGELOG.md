@@ -18,9 +18,9 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 - `IgxOverlayService`:
-    - `setOffset` method added. It repositions the content in the horizontal and vertical directions.
+    - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
 - `IgxToggleDirective`:
-    - `setOffset` method added. It repositions the content in the horizontal and vertical directions.
+    - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
 
 ## 8.2.6
 

@@ -75,7 +75,14 @@
     $shadow: null
 ) {
     $name: 'igx-drop-down';
-    $drop-down-schema: map-get($schema, 'igx-drop-down');
+    $drop-down-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $drop-down-schema: map-get($schema, $name);
+    } @else {
+        $drop-down-schema: $schema;
+    }
+
     $theme: apply-palette($drop-down-schema, $palette);
 
     $border-radius: round-borders(

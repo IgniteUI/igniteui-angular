@@ -54,10 +54,16 @@
     $disable-border: true
 ) {
     $name: 'igx-badge';
-    $badge-schema: map-get($schema, $name);
-    $border-width: if($disable-border == true, 0, rem(1px));
-    $theme: apply-palette($badge-schema, $palette);
+    $badge-schema: ();
 
+    @if map-has-key($schema, $name) {
+        $badge-schema: map-get($schema, $name);
+    } @else {
+        $badge-schema: $schema;
+    }
+
+    $theme: apply-palette($badge-schema, $palette);
+    $border-width: if($disable-border == true, 0, rem(1px));
     $border-radius: round-borders(
         if($border-radius, $border-radius, map-get($badge-schema, 'border-radius')), 0, 11px
     );
