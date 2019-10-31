@@ -534,7 +534,6 @@ export class GridFilteringComponent implements OnInit, AfterViewInit {
         const filterMode = this.filterModes[event.index].value as FilterMode;
         if (filterMode !== this.grid1.filterMode) {
             this.grid1.filterMode = filterMode;
-            this.grid1.reflow();
         }
     }
 
@@ -552,6 +551,5 @@ export class GridFilteringComponent implements OnInit, AfterViewInit {
 
     public onAllowFilteringChanged(event: IChangeCheckboxEventArgs) {
         this.grid1.allowFiltering = event.checked;
-        this.grid1.reflow();
     }
 }
