@@ -22,7 +22,7 @@ import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
-import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
+import { IgxDragIndicatorIconDirective, IgxDragCustomGhostDirective } from '../row-drag.directive';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 import { FilterMode } from '../common/enums';
 import { GridType } from '../common/grid.interface';
@@ -490,6 +490,27 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef, static: false })
     public dragIndicatorIconTemplate: TemplateRef<any> = null;
+
+    /**
+     * The custom drag ghost, if any, that should be used when rendering the drag ghost
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomGhostTemplate: TemplateRef<any> = myComponent.customGhostTemplate;
+     * myComponent.dragGhostCustomTemplate = myCustomGhostTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-grid #grid>
+     *      ...
+     *      <ng-template igxDragCustomGhost>
+     *          <div class="dragGhost">Custom drag ghost!</div>
+     *      </ng-template>
+     *  </igx-grid>
+     * ```
+     */
+    @ContentChild(IgxDragCustomGhostDirective, { read: TemplateRef, static: false })
+    public dragGhostCustomTemplate: TemplateRef<any> = null;
 
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
     private _groupsRowList: QueryList<IgxGridGroupByRowComponent>;

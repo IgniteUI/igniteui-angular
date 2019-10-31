@@ -100,6 +100,11 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     protected createGhost(pageX, pageY) {
         this.row.grid.endEdit(true);
         this.row.grid.markForCheck();
+        this.ghostContext = {
+            $implicit: this.row.rowData,
+            data: this.row.rowData,
+            grid: this.row.grid
+        };
         super.createGhost(pageX, pageY, this.row.nativeElement);
 
         const ghost = this.ghostElement;
@@ -152,10 +157,20 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 export class IgxDragIndicatorIconDirective {
 }
 
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxDragCustomGhost]'
+})
+
+export class IgxDragCustomGhostDirective {
+}
+
 @NgModule({
-    declarations: [IgxRowDragDirective, IgxDragIndicatorIconDirective],
+    declarations: [IgxRowDragDirective, IgxDragIndicatorIconDirective, IgxDragCustomGhostDirective],
     entryComponents: [],
-    exports: [IgxRowDragDirective, IgxDragIndicatorIconDirective],
+    exports: [IgxRowDragDirective, IgxDragIndicatorIconDirective, IgxDragCustomGhostDirective],
     imports: []
 })
 
