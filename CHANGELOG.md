@@ -2,7 +2,6 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-
 ## 9.0.0
 
 ### General
@@ -17,6 +16,11 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - Pinning columns is no longer automatically prevented when the pinning area would exceed the size of the grid.
 
+### New Features
+- `IgxOverlayService`:
+    - `setOffset` method added. It repositions the content in the horizontal and vertical directions.
+- `IgxToggleDirective`:
+    - `setOffset` method added. It repositions the content in the horizontal and vertical directions.
 
 ## 8.2.6
 
