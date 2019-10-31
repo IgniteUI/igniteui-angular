@@ -24,27 +24,13 @@ import { SliderHandle,
     IgxThumbToTemplateDirective,
     IRangeSliderValue,
     SliderType,
-    ISliderValueChangeEventArgs
+    ISliderValueChangeEventArgs,
+    TicksOrientation,
+    TickLabelsOrientation
 } from './slider.common';
 import { IgxThumbLabelComponent } from './label/thumb-label.component';
 import ResizeObserver from 'resize-observer-polyfill';
-
-/**
- * Slider Tick labels Orientation
- */
-export enum TickLabelsOrientation {
-    horizontal,
-    vertical
-}
-
-/**
- * Slider Ticks orientation
- */
-export enum TicksOrientation {
-    top,
-    bottom,
-    mirror
-}
+import { IgxTicksComponent } from './ticks/ticks.component';
 
 const noop = () => {
 };
@@ -104,9 +90,6 @@ export class IgxSliderComponent implements
     private _primaryTicks = 0;
     private _secondaryTicks = 0;
     private _ticksContainer = 0;
-    private _primaryTicksWidth = 16;
-    private _secondaryTicksWidth = 8;
-    private _defaultTickYOffset = 4;
 
     private _labels = new Array<number|string|boolean|null|undefined>();
     private _type = SliderType.SLIDER;
@@ -119,12 +102,6 @@ export class IgxSliderComponent implements
 
     private _onChangeCallback: (_: any) => void = noop;
     private _onTouchedCallback: () => void = noop;
-
-    /**
-     * @hidden
-     */
-    @ViewChild('track', { static: true })
-    private track: ElementRef;
 
     /**
      * @hidden
@@ -159,6 +136,13 @@ export class IgxSliderComponent implements
     private get labelTo(): IgxThumbLabelComponent {
         return this.labelRefs.find(label => label.type === SliderHandle.TO);
     }
+
+    /**
+     * @hidden
+     */
+    @ViewChild('track', { static: true })
+    public trackRef: ElementRef;
+
 
     /**
      * @hidden
@@ -711,20 +695,6 @@ export class IgxSliderComponent implements
     public tickLabelsOrientation = TickLabelsOrientation.horizontal;
 
     /**
-     * @hidden
-     */
-    public get isHorizontal() {
-        return this.tickLabelsOrientation === TickLabelsOrientation.horizontal;
-    }
-
-    /**
-     * @hidden
-     */
-    public get tickLabelOrientation() {
-        return this.isHorizontal ? 'rotate(0)' : 'rotate(90)';
-    }
-
-    /**
      * This event is emitted when user has stopped interacting the thumb and value is changed.
      * ```typescript
      * public change(event){
@@ -930,17 +900,6 @@ export class IgxSliderComponent implements
     /**
      * @hidden
      */
-    public get ticksStep() {
-        const ticksStep = this.ticksContainer / this.ticksLength;
-        const stepUnit = ticksStep / (this.ticksLength - 1);
-        return this.ticksContainer ?
-                ticksStep + stepUnit
-                : 0;
-    }
-
-    /**
-     * @hidden
-     */
     public get ticksLength() {
         return this.primaryTicks > 0 ?
                 (this.primaryTicks * this.secondaryTicks) + this.primaryTicks + 1 :
@@ -1106,57 +1065,7 @@ export class IgxSliderComponent implements
         return state ? this.showSliderIndicators() : this.hideSliderIndicators();
     }
 
-    /**
-     * @hidden
-     */
-    public tickXOffset(idx: number) {
-        return idx * this.ticksStep - 1;
-    }
 
-    /**
-     * @hidden
-     */
-    public tickYOffset(idx: number) {
-        const trackHeight = this.track.nativeElement.offsetHeight;
-        const primaryTickOffset = this._primaryTicksWidth / 2 + trackHeight + this._defaultTickYOffset;
-        const secondaryTickOffset = this._secondaryTicksWidth / 2 + trackHeight + this._defaultTickYOffset;
-        return this.primaryTicks <= 0 ? secondaryTickOffset :
-            idx % (this.secondaryTicks + 1) === 0 ? primaryTickOffset : secondaryTickOffset;
-    }
-
-    /**
-     * @hidden
-     */
-    public strokeWidth(idx: number) {
-        return this.primaryTicks <= 0 ? `${this._secondaryTicksWidth}px` :
-                idx % (this.secondaryTicks + 1) === 0 ? `${this._primaryTicksWidth}px` : `${this._secondaryTicksWidth}px`;
-    }
-
-    /**
-     * @hidden
-     */
-    public tickLabel(idx: number) {
-        const labelStep = this.maxValue / (this.ticksLength - 1);
-        return (labelStep * idx).toFixed(2);
-    }
-
-    /**
-     * @hidden
-     */
-    public tickLabelXOffset(index: number) {
-        // return this.isHorizontal ? this.tickXOffset(index) : this.tickYOffset(index) * 3;
-        return this.tickXOffset(index);
-    }
-
-    /**
-     * @hidden
-     */
-    public tickLabelYOffset(index: number) {
-        // const labelOffset = index % (this.secondaryTicks + 1) === 0 ? 8 : 16;
-        // return this.isHorizontal ? this.tickYOffset(index) + this._primaryTicksWidth + labelOffset : - (this.tickXOffset(index) - 5);
-        const labelOffset = index % (this.secondaryTicks + 1) === 0 ? 0 : this._defaultTickYOffset;
-        return this.tickYOffset(index) + this._primaryTicksWidth + 8 + labelOffset;
-    }
 
     private swapThumb(value: IRangeSliderValue) {
         if (this.thumbFrom.isActive) {
@@ -1385,9 +1294,9 @@ export class IgxSliderComponent implements
                 trackLeftIndention = Math.round((1 / positionGap * fromPosition) * 100);
             }
 
-            this.renderer.setStyle(this.track.nativeElement, 'transform', `scaleX(${positionGap}) translateX(${trackLeftIndention}%)`);
+            this.renderer.setStyle(this.trackRef.nativeElement, 'transform', `scaleX(${positionGap}) translateX(${trackLeftIndention}%)`);
         } else {
-            this.renderer.setStyle(this.track.nativeElement, 'transform', `scaleX(${toPosition})`);
+            this.renderer.setStyle(this.trackRef.nativeElement, 'transform', `scaleX(${toPosition})`);
         }
     }
 
@@ -1456,13 +1365,15 @@ export class IgxSliderComponent implements
         IgxThumbFromTemplateDirective,
         IgxThumbToTemplateDirective,
         IgxSliderThumbComponent,
-        IgxThumbLabelComponent],
+        IgxThumbLabelComponent,
+        IgxTicksComponent],
     exports: [
         IgxSliderComponent,
         IgxThumbFromTemplateDirective,
         IgxThumbToTemplateDirective,
         IgxSliderThumbComponent,
-        IgxThumbLabelComponent],
+        IgxThumbLabelComponent,
+        IgxTicksComponent],
     imports: [CommonModule]
 })
 export class IgxSliderModule {

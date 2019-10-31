@@ -58,3 +58,20 @@ export interface ISliderValueChangeEventArgs extends IBaseEventArgs {
     oldValue: number | IRangeSliderValue;
     value: number | IRangeSliderValue;
 }
+
+/**
+ * Slider Tick labels Orientation
+ */
+export enum TickLabelsOrientation {
+    horizontal,
+    vertical
+}
+
+/**
+ * Slider Ticks orientation
+ */
+export enum TicksOrientation {
+    top,
+    bottom,
+    mirror
+}

@@ -13,20 +13,16 @@
     </svg> -->
     <div #track class="igx-slider__track-fill"></div>
     <div #ticks class="igx-slider__track-ticks"></div>
-    <svg id="svg1" xmlns="http://www.w3.org/2000/svg" version="1.1" [ngStyle]="{ 'width': ticksContainer, 'height': '100px', 'overflow': 'visible' }">
-        <line id="stroke" x2="2" />
-        <g *ngFor="let n of [].constructor(ticksLength); let idx=index">
-            <use href="#stroke"
-                stroke="black"
-                [attr.stroke-width]="strokeWidth(idx)"
-                [attr.x]="tickXOffset(idx)"
-                [attr.y]="tickYOffset(idx)"></use>
-                <text [attr.transform]="tickLabelOrientation"
-                [attr.x]="tickLabelXOffset(idx, false)"
-                [attr.y]="tickLabelYOffset(idx, false)"
-                text-anchor="middle">{{tickLabel(idx)}}</text>
-        </g>
-  </svg>
+        <igx-ticks
+            [primaryTicks]="primaryTicks"
+            [secondaryTicks]="secondaryTicks"
+            [primaryTickLabels]="primaryTickLabels"
+            [secondaryTickLabels]="secondaryTickLabels"
+            [ticksOrientation]="ticksOrientation"
+            [tickLabelsOrientation]="tickLabelsOrientation"
+            [ticksContainer]="ticksContainer"
+            [track]="trackRef"
+            [maxValue]="maxValue"></igx-ticks>
 </div>
 <div class="igx-slider__thumbs">
     <igx-thumb-label

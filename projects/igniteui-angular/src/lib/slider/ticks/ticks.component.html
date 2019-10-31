@@ -1,0 +1,15 @@
+<svg id="svg1" xmlns="http://www.w3.org/2000/svg" version="1.1" [ngStyle]="{'overflow': 'visible', 'height': '100px', 'width': ticksContainer}">
+    <line id="stroke" x2="2" />
+    <g *ngFor="let n of [].constructor(ticksLength); let idx=index">
+        <use href="#stroke"
+            stroke="black"
+            [attr.stroke-width]="strokeWidth(idx)"
+            [attr.x]="tickXOffset(idx)"
+            [attr.y]="tickYOffset(idx)"></use>
+            <text [attr.transform]="tickLabelOrientation"
+            [ngStyle]="{ 'font-size': '.75rem' }"
+            [attr.x]="tickLabelXOffset(idx, false)"
+            [attr.y]="tickLabelYOffset(idx, false)"
+            text-anchor="middle">{{tickLabel(idx)}}</text>
+    </g>
+</svg>
