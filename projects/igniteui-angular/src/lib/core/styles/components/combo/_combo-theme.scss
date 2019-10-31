@@ -23,7 +23,15 @@
     $empty-list-background: null
 ) {
     $name: 'igx-combo';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $combo-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $combo-schema: map-get($schema, $name);
+    } @else {
+        $combo-schema: $schema;
+    }
+
+    $theme: apply-palette($combo-schema, $palette);
 
     @return extend($theme, (
         name: $name,
