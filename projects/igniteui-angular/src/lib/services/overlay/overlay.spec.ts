@@ -504,6 +504,48 @@ describe('igxOverlay', () => {
             expect(BaseFitPositionStrategy.prototype.position).toHaveBeenCalledTimes(3);
         });
 
+        it('Should properly call setOffset method', fakeAsync(() => {
+            const fix = TestBed.createComponent(WidthTestOverlayComponent);
+            const overlayInstance = fix.componentInstance.overlay;
+            const id = fix.componentInstance.overlay.attach(SimpleRefComponent);
+
+            overlayInstance.show(id);
+
+            fix.detectChanges();
+            tick();
+
+            overlayInstance.setOffset(id, 40, 40);
+            const overlayContent: Element = document.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0];
+            const component = document.getElementsByClassName('simpleRef')[0];
+            const contentRectOverlay = overlayContent.getBoundingClientRect();
+            const componentRectOverlay = component.getBoundingClientRect();
+            let overlayContentTransform = (<any>overlayContent).style.transform;
+            const firstTransform = 'translate(40px, 40px)';
+            const secondTransform = 'translate(30px, 60px)';
+
+            expect(contentRectOverlay.top).toEqual(componentRectOverlay.top);
+            expect(contentRectOverlay.left).toEqual(componentRectOverlay.left);
+            expect(overlayContentTransform).toEqual(firstTransform);
+
+            // Set the offset again and verify it is changed correctly
+            overlayInstance.setOffset(id, -10, 20);
+            fix.detectChanges();
+            tick();
+            const contentRectOverlayNew = overlayContent.getBoundingClientRect();
+            const componentRectOverlayNew = component.getBoundingClientRect();
+            overlayContentTransform = (<any>overlayContent).style.transform;
+
+            expect(contentRectOverlayNew.top).toEqual(componentRectOverlayNew.top);
+            expect(contentRectOverlayNew.left).toEqual(componentRectOverlayNew.left);
+
+            expect(contentRectOverlayNew.top).not.toEqual(contentRectOverlay.top);
+            expect(contentRectOverlayNew.left).not.toEqual(contentRectOverlay.left);
+
+            expect(componentRectOverlayNew.top).not.toEqual(componentRectOverlay.top);
+            expect(componentRectOverlayNew.left).not.toEqual(componentRectOverlay.left);
+            expect(overlayContentTransform).toEqual(secondTransform);
+        }));
+
         it('fix for #1690 - click on second filter does not close first one.', fakeAsync(() => {
             const fixture = TestBed.createComponent(TwoButtonsComponent);
             const button1 = fixture.nativeElement.getElementsByClassName('buttonOne')[0];
@@ -3451,7 +3493,7 @@ export class SimpleDynamicComponent {
 }
 
 @Component({
-    template: `<div #item style='position: absolute; width:100px; height: 100px; background-color: red'></div>`
+    template: `<div #item class="simpleRef" style='position: absolute; width:100px; height: 100px; background-color: red'></div>`
 })
 export class SimpleRefComponent {
     @ViewChild('item', { static: true })
