@@ -35,6 +35,10 @@
                 flex-direction: column;
                 flex-grow: 1;
             }
+
+            %grid-excel-main igx-list {
+                flex-grow: 1;
+            }
         }
     }
 
