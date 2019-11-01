@@ -49,7 +49,7 @@ handlers when the toggle is opened and respectively closed.
 | `close` | --- | `void` | Closes the toggle. |
 | `toggle` | overlaySettings?: `OverlaySettings` | `void` | Closes the toggle. |
 | `reposition` | --- | `void` | Repositions the toggle. |
-| `setOffset`  | Repositions the content in the horizontal and/or vertical directions. |deltaX, deltaY |
+| `setOffset`  | Offsets the content along the corresponding axis by the provided amount. |deltaX, deltaY |
 
 
 

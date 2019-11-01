@@ -34,7 +34,15 @@
     $banner-illustration-color: null
 ) {
     $name: 'igx-banner';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $banner-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $banner-schema: map-get($schema, $name);
+    } @else {
+        $banner-schema: $schema;
+    }
+
+    $theme: apply-palette($banner-schema, $palette);
 
     @if not($banner-message-color) and $banner-background {
         $banner-message-color: text-contrast($banner-background);
