@@ -9,6 +9,7 @@ import {IgxCarouselComponent, IgxCarouselModule, IgxSlideComponent, ISlideEventA
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('Carousel', () => {
     configureTestSuite();
@@ -18,7 +19,7 @@ describe('Carousel', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [CarouselTestComponent],
-            imports: [IgxCarouselModule]
+            imports: [IgxCarouselModule, NoopAnimationsModule]
         })
         .compileComponents();
     }));
@@ -293,7 +294,7 @@ describe('Carousel', () => {
 
 @Component({
     template: `
-        <igx-carousel #carousel [loop]="loop" [pause]="pause" [interval]="interval">
+        <igx-carousel #carousel [loop]="loop" [pause]="pause" [interval]="interval" [animationType]="'none'">
             <igx-slide><h3>Slide1</h3></igx-slide>
             <igx-slide><h3>Slide2</h3></igx-slide>
             <igx-slide><h3>Slide3</h3></igx-slide>

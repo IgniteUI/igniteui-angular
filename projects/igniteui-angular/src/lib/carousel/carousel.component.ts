@@ -25,8 +25,9 @@ import { IBaseEventArgs } from '../core/utils';
 import { Subject, merge } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxCarouselIndicatorDirective } from './carousel.directives';
-import { useAnimation, AnimationBuilder, AnimationPlayer } from '@angular/animations';
-import { CarouselAnimationSettings, slideLeft, slideRight, slideFade, slideGrow } from './carousel.animations';
+import { useAnimation, AnimationBuilder, AnimationPlayer, AnimationReferenceMetadata } from '@angular/animations';
+import { slideInLeft, fadeIn, rotateInCenter } from 'igniteui-angular';
+import { EaseOut } from '../animations/easings';
 
 let NEXT_ID = 0;
 
@@ -43,6 +44,10 @@ export enum CarouselAnimationType {
     grow = 'grow'
 }
 
+export interface CarouselAnimationSettings {
+    enterAnimation: AnimationReferenceMetadata;
+    leaveAnimation: AnimationReferenceMetadata;
+}
 /**
  * **Ignite UI for Angular Carousel** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/carousel.html)
@@ -108,6 +113,28 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     public ariaLabel = 'carousel';
 
     /**
+     * Returns the `tabIndex` of the carousel component.
+     * ```typescript
+     * let tabIndex =  this.carousel.tabIndex;
+     * ```
+     * @memberof IgxCarouselComponent
+     */
+    @HostBinding('attr.tabindex')
+    get tabIndex() {
+        return 0;
+    }
+
+    /**
+     * Returns the class of the carousel component.
+     * ```typescript
+     * let class =  this.carousel.cssClass;
+     * ```
+     * @memberof IgxCarouselComponent
+     */
+    @HostBinding('class.igx-carousel')
+    public cssClass = 'igx-carousel';
+
+    /**
      * Sets whether the carousel should `loop` back to the first slide after reaching the last slide.
      * Default value is `true`.
      * ```html
@@ -151,27 +178,6 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         this._interval = +value;
         this._restartInterval();
     }
-    /**
-     * Returns the `tabIndex` of the carousel component.
-     * ```typescript
-     * let tabIndex =  this.carousel.tabIndex;
-     * ```
-     * @memberof IgxCarouselComponent
-     */
-    @HostBinding('attr.tabindex')
-    get tabIndex() {
-        return 0;
-    }
-
-    /**
-     * Returns the class of the carousel component.
-     * ```typescript
-     * let class =  this.carousel.cssClass;
-     * ```
-     * @memberof IgxCarouselComponent
-     */
-    @HostBinding('class.igx-carousel')
-    public cssClass = 'igx-carousel';
 
     /**
      * Controls whether the carousel should render the left/right `navigation` buttons.
@@ -187,11 +193,11 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     * Controls whether the carousel should support keyboard navigation.
     * Default value is `true`.
     * ```html
-    * <igx-carousel [keyBoardNavigation] = "false"></igx-carousel>
+    * <igx-carousel [keyBoardSupport] = "false"></igx-carousel>
     * ```
     * @memberOf IgxCarouselComponent
     */
-    @Input() public keyBoardNavigation = true;
+    @Input() public keyBoardSupport = true;
 
     /**
      * Controls the maximum indexes that can be shown.
@@ -262,6 +268,16 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     @ContentChild(IgxCarouselIndicatorDirective, { read: TemplateRef, static: false })
     public indicatorTemplate: TemplateRef<any> = null;
 
+     /**
+     * The collection of `slides` currently in the carousel.
+     * ```typescript
+     * let slides: QueryList<IgxSlideComponent> = this.carousel.slides;
+     * ```
+     * @memberOf IgxCarouselComponent
+     */
+    @ContentChildren(forwardRef(() => IgxSlideComponent))
+    public slides: QueryList<IgxSlideComponent>;
+
     /**
      * An event that is emitted after a slide transition has happened.
      * Provides references to the `IgxCarouselComponent` and `IgxSlideComponent` as event arguments.
@@ -311,17 +327,6 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * @memberOf IgxCarouselComponent
      */
     @Output() public onCarouselPlaying = new EventEmitter<IgxCarouselComponent>();
-
-    /**
-     * The collection of `slides` currently in the carousel.
-     * ```typescript
-     * let slides: QueryList<IgxSlideComponent> = this.carousel.slides;
-     * ```
-     * @memberOf IgxCarouselComponent
-     */
-    @ContentChildren(forwardRef(() => IgxSlideComponent))
-    public slides: QueryList<IgxSlideComponent>;
-
 
     private _interval: number;
     private _lastInterval: any;
@@ -378,18 +383,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
             }
 
             if (this.currentSlide) {
-                let animationWasStarted = false;
-                if (this.leaveAnimationPlayer) {
-                    animationWasStarted = true;
-                    if (this.previousSlide) {
-                        this.previousSlide.previous = false;
-                    }
-                    this.leaveAnimationPlayer.finish();
-                }
-                if (this.enterAnimationPlayer) {
-                    animationWasStarted = true;
-                    this.enterAnimationPlayer.finish();
-                }
+                const animationWasStarted = this.finishAnimations();
                 this.currentSlide.direction = slide.direction;
                 this.currentSlide.active = false;
 
@@ -407,7 +401,6 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
                         this.playEnterAnimation();
                     }
                 }
-
             } else {
                 this.currentSlide = slide;
             }
@@ -416,48 +409,113 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         }
     }
 
+    private finishAnimations(): boolean {
+        let  animationWasStarted = false;
+        if (this.previousSlide && this.previousSlide.previous) {
+            this.previousSlide.previous = false;
+        }
+        if (this.leaveAnimationPlayer) {
+            animationWasStarted = true;
+            this.leaveAnimationPlayer.finish();
+        }
+        if (this.enterAnimationPlayer) {
+            animationWasStarted = true;
+            this.enterAnimationPlayer.finish();
+        }
+        return animationWasStarted;
+    }
+
     private getAnimation(): CarouselAnimationSettings {
         switch (this.animationType) {
             case CarouselAnimationType.slide:
-                if (this.currentSlide.direction === 2) {
-                    return slideLeft;
-                } else {
-                    return slideRight;
-                }
+                return {
+                    enterAnimation: useAnimation(slideInLeft,
+                        {
+                            params: {
+                                delay: '0s',
+                                duration: `${this.animationDuration}ms`,
+                                easing: EaseOut.sine,
+                                endOpacity: 1,
+                                startOpacity: 1,
+                                fromPosition: `translateX(${this.currentSlide.direction === 1 ? 100 : -100}%)`,
+                                toPosition: 'translateX(0%)'
+                            }
+                        }),
+                    leaveAnimation: useAnimation(slideInLeft,
+                        {
+                            params: {
+                                delay: '0s',
+                                duration: `${this.animationDuration}ms`,
+                                easing: EaseOut.sine,
+                                endOpacity: 1,
+                                startOpacity: 1,
+                                fromPosition: `translateX(0%)`,
+                                toPosition: `translateX(${this.currentSlide.direction === 1 ? -100 : 100}%)`,
+                            }
+                        })
+                };
             case CarouselAnimationType.fade:
-                return slideFade;
+                return {
+                    enterAnimation: useAnimation(fadeIn, { params: { duration: `${this.animationDuration}ms` } }),
+                    leaveAnimation: null
+                };
             case CarouselAnimationType.grow:
-                return slideGrow;
+                return {
+                    enterAnimation: useAnimation(rotateInCenter, {
+                        params: {
+                            delay: '0s',
+                            duration: `${this.animationDuration}ms`,
+                            easing: EaseOut.quad,
+                            endAngle: 0,
+                            endOpacity: 1,
+                            rotateX: 0,
+                            rotateY: 1,
+                            rotateZ: 0,
+                            startAngle: `${this.currentSlide.direction === 1 ? 180 : -180}`,
+                            startOpacity: 0,
+                            xPos: `${this.currentSlide.direction === 1 ? 'right' : 'left'}`,
+                            yPos: 'center'
+                        }
+                    }),
+                    leaveAnimation: null
+                };
+
         }
-        return null;
+        return  {
+            enterAnimation: null,
+            leaveAnimation: null
+        };
     }
+
     private playEnterAnimation() {
         const animationBuilder = this.builder.build(this.getAnimation().enterAnimation);
 
-        this.enterAnimationPlayer = animationBuilder.create(this.currentSlide.nativeElement,  { params: {duration: '2000ms'}});
+        this.enterAnimationPlayer = animationBuilder.create(this.currentSlide.nativeElement);
 
         this.enterAnimationPlayer.onDone(() => {
             if (this.enterAnimationPlayer) {
                 this.enterAnimationPlayer.reset();
                 this.enterAnimationPlayer = null;
             }
+            this.previousSlide.previous = false;
         });
+        this.previousSlide.previous = true;
         this.enterAnimationPlayer.play();
     }
 
     private playLeaveAnimation() {
-        const animationBuilder = this.builder.build(this.getAnimation().leaveAnimation);
-        this.leaveAnimationPlayer = animationBuilder.create(this.previousSlide.nativeElement);
+        if (this.getAnimation().leaveAnimation) {
+            const animationBuilder = this.builder.build(this.getAnimation().leaveAnimation);
+            this.leaveAnimationPlayer = animationBuilder.create(this.previousSlide.nativeElement);
 
-        this.leaveAnimationPlayer.onDone(() => {
-            if (this.leaveAnimationPlayer) {
-                this.leaveAnimationPlayer.reset();
-                this.leaveAnimationPlayer = null;
-            }
-            this.previousSlide.previous = false;
-        });
-        this.previousSlide.previous = true;
-        this.leaveAnimationPlayer.play();
+            this.leaveAnimationPlayer.onDone(() => {
+                if (this.leaveAnimationPlayer) {
+                    this.leaveAnimationPlayer.reset();
+                    this.leaveAnimationPlayer = null;
+                }
+            });
+            this.leaveAnimationPlayer.play();
+        }
     }
 
     private updateSlidesSelection() {
@@ -753,7 +811,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      */
     @HostListener('keydown.arrowright')
     public onKeydownArrowRight() {
-        if (this.keyBoardNavigation) {
+        if (this.keyBoardSupport) {
             this.next();
             requestAnimationFrame(() => this.nativeElement.focus());
         }
@@ -763,7 +821,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      */
     @HostListener('keydown.arrowleft')
     public onKeydownArrowLeft() {
-        if (this.keyBoardNavigation) {
+        if (this.keyBoardSupport) {
             this.prev();
             requestAnimationFrame(() => this.nativeElement.focus());
         }
@@ -940,8 +998,6 @@ export class IgxSlideComponent implements OnDestroy {
      *@hidden
      */
     @Output() public activeChange = new EventEmitter<boolean>();
-
-
 
     constructor(private elementRef: ElementRef) { }
 

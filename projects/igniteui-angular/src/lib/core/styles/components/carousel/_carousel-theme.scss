@@ -247,6 +247,11 @@
         transform: translateX(-50%);
     }
 
+    %igx-carousel-indicators-label {
+        align-items: center;
+        font-size: rem(15px);
+    }
+
     %igx-carousel-slide {
         position: absolute;
         width: 100%;
