@@ -158,7 +158,14 @@
     $disabled-background: null
 ) {
     $name: 'igx-button';
-    $button-schema: map-get($schema, $name);
+    $button-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $button-schema: map-get($schema, $name);
+    } @else {
+        $button-schema: $schema;
+    }
+
     $theme: apply-palette($button-schema, $palette);
 
     $flat-border-radius: round-borders(
@@ -409,35 +416,35 @@
         cosy: rem(6px, 16px) rem(16px, 16px),
         compact: rem(3px, 16px) rem(16px, 16px)
     );
-    
+
     $button-padding-fluent: (
         comfortable: 0 rem(16px, 16px),
         cosy: 0 rem(16px, 16px),
         compact: 0 rem(16px, 16px)
     );
-    
+
     $button-padding: map-get((
         material: $button-padding-material,
         fluent: $button-padding-fluent
     ), map-get($theme, variant));
-    
+
     $button--size-material: (
         comfortable: rem(36px),
         cosy: rem(30px),
         compact: rem(24px)
     );
-    
+
     $button--size-fluent: (
         comfortable: rem(32px),
         cosy: rem(28px),
         compact: rem(24px)
     );
-    
+
     $button-size: map-get((
         material: $button--size-material,
         fluent: $button--size-fluent
     ), map-get($theme, variant));
-    
+
 
     $button-floating-padding: (
         comfortable: rem(15px),
@@ -564,13 +571,13 @@
             color: --var($theme, 'raised-hover-text-color');
             background: --var($theme, 'raised-hover-background');
             box-shadow: --var($theme, 'raised-hover-shadow');
-            
-            
+
+
             %igx-icon-display {
                 color: --var($theme, 'raised-hover-icon-color')
             }
         }
-        
+
         &:active {
             color: --var($theme, 'raised-focus-text-color');
             background: --var($theme, 'raised-focus-background');

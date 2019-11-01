@@ -10,8 +10,8 @@
 <div class="igx-grid-toolbar__actions">
     <div *ngIf="grid.allowAdvancedFiltering">
         <button igxButton="outlined" [displayDensity]="grid.displayDensity" #advancedFilteringButton name="btnAdvancedFiltering" igxRipple
-            (click)="showAdvancedFilteringUI()"
-                [ngClass]="grid.advancedFilteringExpressionsTree ? 'igx-grid-toolbar__adv-filter--filtered' : 'igx-grid-toolbar__adv-filter'">
+            [ngClass]="grid.advancedFilteringExpressionsTree ? 'igx-grid-toolbar__adv-filter--filtered' : 'igx-grid-toolbar__adv-filter'"
+            (click)="showAdvancedFilteringUI()">
             <div class="igx-grid-toolbar__button-space">
                 <igx-icon>
                     filter_list
