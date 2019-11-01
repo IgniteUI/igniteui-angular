@@ -1,6 +1,6 @@
 import {
     Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
-    QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, AfterContentInit, HostBinding, forwardRef, OnInit
+    QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, AfterContentInit, HostBinding, forwardRef, OnInit, AfterViewInit
 } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -69,7 +69,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
 })
-export class IgxGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit {
+export class IgxGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit, AfterViewInit {
     private _id = `igx-grid-${NEXT_ID++}`;
     /**
      * @hidden @internal
@@ -1123,6 +1123,19 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this._setGroupColsVisibility(this.hideGroupedColumns);
         }
         this._setupNavigationService();
+    }
+    public ngAfterViewInit() {
+        super.ngAfterViewInit();
+        this.verticalScrollContainer.onBeforeViewDestroyed.pipe(takeUntil(this.destroy$)).subscribe((view) => {
+            const rowData = view.context.$implicit;
+            if (this.isDetailRecord(rowData)) {
+                const cachedData = this.childDetailTemplates.get(rowData.detailsData);
+                if (cachedData) {
+                    const tmlpOutlet = cachedData.owner;
+                    tmlpOutlet._viewContainerRef.detach(0);
+                }
+            }
+        });
     }
 
     public ngOnInit() {
