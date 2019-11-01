@@ -45,6 +45,7 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { GridSelectionMode, FilterMode } from '../common/enums';
+import { NoopFilteringStrategy } from '../../data-operations/filtering-strategy';
 
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
@@ -3421,6 +3422,26 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick(100);
             expect(chip.componentInstance.selected).toBeTruthy();
     }));
+
+    it('Should disable filtering feature when using NoopFilteringStrategy.', (async () => {
+        // Use the NoopFilteringStrategy.
+        grid.filterStrategy = NoopFilteringStrategy.instance();
+        fix.detectChanges();
+
+        GridFunctions.clickFilterCellChip(fix, 'ProductName');
+        fix.detectChanges();
+
+        // Add first chip.
+        GridFunctions.typeValueInFilterRowInput('some value', fix);
+        await wait(16);
+        GridFunctions.submitFilterRowInput(fix);
+        await wait(100);
+
+        // Verify the grid is not filtered, because of the noop filter strategy.
+        expect(grid.rowList.length).toBe(8);
+        expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+        expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('NetAdvantage');
+      }));
 
     it('Should close filterRow when changing filterMode from \'quickFilter\' to \'excelStyleFilter\'', (async () => {
         GridFunctions.clickFilterCellChip(fix, 'ProductName');
