@@ -52,7 +52,14 @@
     $indicator-active-border-color: null,
 ){
     $name: 'igx-carousel';
-    $carousel-schema: map-get($schema, $name);
+    $carousel-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $carousel-schema: map-get($schema, $name);
+    } @else {
+        $carousel-schema: $schema;
+    }
+
     $theme: apply-palette($carousel-schema, $palette);
 
     $border-radius: round-borders(
@@ -101,6 +108,9 @@
 /// @requires --var
 @mixin igx-carousel($theme) {
     @include igx-root-css-vars($theme);
+
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
 
     @include scale-in-center();
     @include scale-out-center();
@@ -169,11 +179,20 @@
     }
 
     %igx-carousel-arrow--next {
-        right: 0;
+        #{$right}: 0;
     }
 
     %igx-carousel-arrow--prev {
-        left: 0;
+        #{$left}: 0;
+    }
+
+    %igx-carousel-arrow--next,
+    %igx-carousel-arrow--prev {
+        @include if-rtl() {
+            igx-icon {
+                transform: scaleX(-1);
+            }
+        }
     }
 
     %igx-carousel-indicators {
@@ -184,6 +203,17 @@
         position: absolute;
         list-style: none;
         z-index: 10;
+        bottom: 0;
+        #{$left}: 50%;
+
+        @include if-ltr() {
+            transform: translateX(-50%);
+        }
+
+        @include if-rtl() {
+            transform: translateX(50%);
+        }
+
         padding: $carousel-indicators-padding;
 
         .default-indicator-item {
@@ -205,8 +235,8 @@
                 position: absolute;
                 top: 1px;
                 bottom: 1px;
-                left: 1px;
-                right: 1px;
+                #{$left}: 1px;
+                #{$right}: 1px;
                 border-radius: inherit;
                 background: --var($theme, 'indicator-dot-color');
                 @include animation('scale-out-center' .15s $ease-out-quad forwards);

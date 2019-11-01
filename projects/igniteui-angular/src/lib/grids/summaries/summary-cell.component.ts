@@ -1,8 +1,8 @@
 import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, ElementRef } from '@angular/core';
 import { IgxSummaryResult } from './grid-summary';
-import { IgxColumnComponent } from '../column.component';
+import { IgxColumnComponent } from '../columns/column.component';
 import { DataType } from '../../data-operations/data-util';
-import { ISelectionNode } from '../../core/grid-selection';
+import { ISelectionNode } from '../selection/selection.service';
 import { SUPPORTED_KEYS } from '../../core/utils';
 
 @Component({
@@ -128,9 +128,6 @@ export class IgxSummaryCellComponent {
         }
     }
 
-    @HostBinding('style.min-width')
-    @HostBinding('style.max-width')
-    @HostBinding('style.flex-basis')
     get width() {
         return this.column.getCellWidth();
     }

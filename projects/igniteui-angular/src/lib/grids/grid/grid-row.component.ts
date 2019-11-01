@@ -1,17 +1,17 @@
 import { Component, forwardRef, ChangeDetectionStrategy, ElementRef, ChangeDetectorRef, HostBinding } from '@angular/core';
 import { IgxGridComponent } from './grid.component';
-import { IgxRowComponent } from '../row.component';
+import { IgxRowDirective } from '../row.directive';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-grid-row',
     templateUrl: './grid-row.component.html',
-    providers: [{ provide: IgxRowComponent, useExisting: forwardRef(() => IgxGridRowComponent) }]
+    providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxGridRowComponent) }]
 })
-export class IgxGridRowComponent extends IgxRowComponent<IgxGridComponent> {
+export class IgxGridRowComponent extends IgxRowDirective<IgxGridComponent> {
 
     // R.K. TODO: Remove
     constructor(

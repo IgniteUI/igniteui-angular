@@ -1,13 +1,14 @@
 import { Component, TemplateRef, ViewChild, Input, AfterViewInit, ChangeDetectorRef, QueryList, ViewChildren, OnInit } from '@angular/core';
 import { IgxGridCellComponent } from '../grids/cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/summaries/grid-summary';
-import { IGridCellEventArgs, IGridEditEventArgs, IgxGridTransaction } from '../grids/grid-base.component';
+import { IGridCellEventArgs, IGridEditEventArgs } from '../grids/common/events';
+import { IgxGridTransaction } from '../grids/grid-base.directive';
 import { BasicGridComponent, BasicGridSearchComponent, GridAutoGenerateComponent,
         GridNxMComponent, GridWithSizeComponent, PagingComponent } from './grid-base-components.spec';
 import { IGridSelection } from './grid-interfaces.spec';
 import { SampleTestData, DataParent } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions } from './template-strings.spec';
-import { IgxColumnComponent } from '../grids/column.component';
+import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxTransactionService } from '../services';
 import { IgxFilteringOperand } from '../data-operations/filtering-condition';
 import { ExpressionUI } from '../grids/filtering/grid-filtering.service';
@@ -269,12 +270,12 @@ export class VirtualSummaryColumnComponent extends BasicGridComponent {
     public dateSummary = new IgxDateSummaryOperand();
 
     public scrollTop(newTop: number) {
-        const vScrollbar = this.grid.verticalScrollContainer.getVerticalScroll();
+        const vScrollbar = this.grid.verticalScrollContainer.getScroll();
         vScrollbar.scrollTop = newTop;
     }
 
     public scrollLeft(newLeft: number) {
-        const hScrollbar = this.grid.parentVirtDir.getHorizontalScroll();
+        const hScrollbar = this.grid.headerContainer.getScroll();
         hScrollbar.scrollLeft = newLeft;
     }
 }
@@ -315,7 +316,7 @@ export class DefaultSizeAndSummaryComponent extends BasicGridComponent {
     }
 
     public isHorizonatScrollbarVisible() {
-        const scrollbar = this.grid.parentVirtDir.getHorizontalScroll();
+        const scrollbar = this.grid.headerContainer.getScroll();
         return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
     }
 }
@@ -871,10 +872,10 @@ export class VirtualGridComponent extends BasicGridComponent {
         this.selectedCell = event.cell;
     }
      public scrollTop(newTop: number) {
-        this.grid.verticalScrollContainer.getVerticalScroll().scrollTop = newTop;
+        this.grid.verticalScrollContainer.getScroll().scrollTop = newTop;
     }
      public scrollLeft(newLeft: number) {
-        this.grid.parentVirtDir.getHorizontalScroll().scrollLeft = newLeft;
+        this.grid.headerContainer.getScroll().scrollLeft = newLeft;
     }
 }
  @Component({

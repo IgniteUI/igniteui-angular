@@ -1,7 +1,7 @@
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { RunSchematicTask, NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 
-const extSchematicModule = 'igniteui-cli';
+const extSchematicModule = '@igniteui/angular-schematics';
 const schematicName = 'cli-config';
 
 export function installPackageJsonDependencies(options: any): Rule {
