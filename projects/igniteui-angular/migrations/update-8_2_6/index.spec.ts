@@ -1,5 +1,4 @@
 import * as path from 'path';
-
 // tslint:disable:no-implicit-dependencies
 import { virtualFs } from '@angular-devkit/core';
 import { EmptyTree } from '@angular-devkit/schematics';
@@ -62,6 +61,29 @@ describe('Update 8.2.6', () => {
                 $item-focus-text-color: null
               );`
             );
+        done();
+    });
+
+    it('should update igx-grid-paginator-theme', done => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.scss',
+            `$dark-grid-paginator: igx-grid-paginator-theme($color: black);
+            @include igx-grid-paginator($dark-grid-paginator);
+            .igx-grid-paginator__pager {
+                @include igx-button($dark-button);
+            }
+            $dark-grid-paginator-schema: extend($_dark-grid-pagination,());`
+        );
+        const tree = schematicRunner.runSchematic('migration-12', {}, appTree);
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss'))
+        .toEqual(
+            `$dark-grid-paginator: igx-paginator-theme($color: black);
+            @include igx-paginator($dark-grid-paginator);
+            .igx-grid-paginator__pager {
+                @include igx-button($dark-button);
+            }
+            $dark-grid-paginator-schema: extend($_dark-pagination,());`
+        );
         done();
     });
 });
