@@ -995,6 +995,28 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     @Input() colStart: number;
 
+    @Input()
+    set openOnGroupCollapsed(value: boolean) {
+        this._openOnGroupCollapsed = value;
+    }
+
+    get openOnGroupCollapsed(): boolean {
+        if (!this.parent) { return false; }
+        return this._openOnGroupCollapsed;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public collapsible = false;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public expanded = true;
+
     /**
      * hidden
      */
@@ -1106,6 +1128,11 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      */
     protected _editable: boolean;
+    /**
+     * @hidden
+     */
+    protected _openOnGroupCollapsed;
+
     /**
      * @hidden
      */
