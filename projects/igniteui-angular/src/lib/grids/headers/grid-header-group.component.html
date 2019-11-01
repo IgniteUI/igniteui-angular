@@ -32,6 +32,10 @@
         [ghostHost]="grid.outletDirective.nativeElement"
         [attr.droppable]="true"
         [igxColumnMovingDrop]="column">
+        <ng-container  *ngIf="column.collapsible">
+            <igx-icon [attr.draggable]="false" (click)="column.expanded = !column.expanded">
+            {{column.expanded ? 'expand_less' : 'expand_more'}} </igx-icon>
+        </ng-container>
         <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column, column: column}">
         </ng-container>
     </div>
