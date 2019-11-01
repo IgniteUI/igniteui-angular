@@ -203,7 +203,6 @@
         position: absolute;
         list-style: none;
         z-index: 10;
-        bottom: 0;
         #{$left}: 50%;
 
         @include if-ltr() {
@@ -267,15 +266,11 @@
 
     %igx-carousel-indicators--bottom {
         bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
     }
 
     %igx-carousel-indicators--top {
         top: 0;
-        left: 50%;
-        transform: translateX(-50%);
-    }
+     }
 
     %igx-carousel-indicators-label {
         align-items: center;
