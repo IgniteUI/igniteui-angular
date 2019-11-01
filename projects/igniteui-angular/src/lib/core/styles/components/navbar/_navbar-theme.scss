@@ -41,7 +41,14 @@
     $disable-shadow: false
 ) {
     $name: 'igx-navbar';
-    $navbar-schema: map-get($schema, $name);
+    $navbar-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $navbar-schema: map-get($schema, $name);
+    } @else {
+        $navbar-schema: $schema;
+    }
+
     $theme: apply-palette($navbar-schema, $palette);
 
     @if not($text-color) and $background {

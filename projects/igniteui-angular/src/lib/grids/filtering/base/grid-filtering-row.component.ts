@@ -477,7 +477,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
         this.filteringService.filteredColumn = null;
         this.filteringService.selectedExpression = null;
-        this.cdr.detectChanges();
 
         this.chipAreaScrollOffset = 0;
         this.transform(this.chipAreaScrollOffset);

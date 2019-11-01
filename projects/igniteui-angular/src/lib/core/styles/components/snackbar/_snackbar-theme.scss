@@ -44,7 +44,14 @@
     $shadow: null
 ) {
     $name: 'igx-snackbar';
-    $snackbar-schema: map-get($schema, $name);
+    $snackbar-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $snackbar-schema: map-get($schema, $name);
+    } @else {
+        $snackbar-schema: $schema;
+    }
+
     $theme: apply-palette($snackbar-schema, $palette);
 
     $border-radius: round-borders(

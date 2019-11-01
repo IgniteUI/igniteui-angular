@@ -35,7 +35,7 @@ describe('Update 9.0.0', () => {
                 IgxRowComponent, IgxHierarchicalGridBaseComponent } from 'igniteui-angular';
             `);
 
-        const tree = schematicRunner.runSchematic('migration-12', {}, appTree);
+        const tree = schematicRunner.runSchematic('migration-13', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
             .toEqual(
             `import { IgxDropDownBaseDirective, IgxDropDownItemBaseDirective, IgxGridBaseDirective,

@@ -12,6 +12,7 @@ import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridType } from '../common/grid.interface';
 import { IFilteringStrategy } from '../../data-operations/filtering-strategy';
+import { IGridSortingStrategy } from '../../data-operations/sorting-strategy';
 
 /**
  *@hidden
@@ -27,14 +28,15 @@ export class IgxGridSortingPipe implements PipeTransform {
         this.gridAPI = <IgxGridAPIService>gridAPI;
     }
 
-    public transform(collection: any[], expressions: ISortingExpression[], id: string, pipeTrigger: number): any[] {
+    public transform(collection: any[], expressions: ISortingExpression[], sorting: IGridSortingStrategy,
+                     id: string, pipeTrigger: number): any[] {
         const grid = this.gridAPI.grid;
         let result: any[];
 
         if (!expressions.length) {
             result = collection;
         } else {
-            result = DataUtil.sort(cloneArray(collection), expressions);
+            result = DataUtil.sort(cloneArray(collection), expressions, sorting);
         }
         grid.filteredSortedData = result;
 
