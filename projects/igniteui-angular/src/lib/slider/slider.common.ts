@@ -64,7 +64,8 @@ export interface ISliderValueChangeEventArgs extends IBaseEventArgs {
  */
 export enum TickLabelsOrientation {
     horizontal,
-    vertical
+    toptobottom,
+    bottomtotop
 }
 
 /**

@@ -6,10 +6,11 @@
             [attr.stroke-width]="strokeWidth(idx)"
             [attr.x]="tickXOffset(idx)"
             [attr.y]="tickYOffset(idx)"></use>
-            <text [attr.transform]="tickLabelOrientation"
+        <text #txt [attr.transform]="tickLabelOrientation"
             [ngStyle]="{ 'font-size': '.75rem' }"
-            [attr.x]="tickLabelXOffset(idx, false)"
-            [attr.y]="tickLabelYOffset(idx, false)"
-            text-anchor="middle">{{tickLabel(idx)}}</text>
+            [attr.x]="tickLabelXOffset(idx)"
+            [attr.y]="tickLabelYOffset(idx)"
+            [attr.text-anchor]="textAnchor()"
+            [attr.dominant-baseline]="dominantBaseline()">{{tickLabel(idx)}}</text>
     </g>
 </svg>

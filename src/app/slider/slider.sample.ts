@@ -57,10 +57,12 @@ export class SliderSampleComponent {
         this._upperValue = this.labels[(evt.value as IRangeSliderValue).upper];
     }
     public changeLabelOrientation() {
-        if (this.labelOrientaion === TickLabelsOrientation.vertical) {
-            this.labelOrientaion = TickLabelsOrientation.horizontal;
+        if (this.labelOrientaion === TickLabelsOrientation.horizontal) {
+            this.labelOrientaion = TickLabelsOrientation.toptobottom;
+        } else if (this.labelOrientaion === TickLabelsOrientation.toptobottom) {
+            this.labelOrientaion = TickLabelsOrientation.bottomtotop;
         } else {
-            this.labelOrientaion = TickLabelsOrientation.vertical;
+            this.labelOrientaion = TickLabelsOrientation.horizontal;
         }
     }
 

@@ -29,10 +29,10 @@ export class IgxTicksComponent {
     public secondaryTickLabels = false;
 
     @Input()
-    public ticksOrientation: TicksOrientation = TicksOrientation.bottom;
+    public ticksOrientation: TicksOrientation;
 
     @Input()
-    public tickLabelsOrientation = TickLabelsOrientation.horizontal;
+    public tickLabelsOrientation: TickLabelsOrientation;
 
     @Input()
     public ticksContainer: number;
@@ -49,23 +49,30 @@ export class IgxTicksComponent {
     public get ticksStep() {
         const ticksStep = this.ticksContainer / this.ticksLength;
         const stepUnit = ticksStep / (this.ticksLength - 1);
+
         return this.ticksContainer ?
-                ticksStep + stepUnit
-                : 0;
+                ticksStep + stepUnit : 0;
     }
 
     /**
      * @hidden
      */
-    public get isHorizontal() {
+    public get horizontalLabel() {
         return this.tickLabelsOrientation === TickLabelsOrientation.horizontal;
     }
 
     /**
      * @hidden
      */
+    public get toToBottomLabel() {
+        return this.tickLabelsOrientation === TickLabelsOrientation.toptobottom;
+    }
+
+    /**
+     * @hidden
+     */
     public get tickLabelOrientation() {
-        return this.isHorizontal ? 'rotate(0)' : 'rotate(90)';
+        return `rotate(${this.horizontalLabel ? 0 : this.toToBottomLabel ? -90 : 90})`;
     }
 
     /**
@@ -99,8 +106,8 @@ export class IgxTicksComponent {
      * @hidden
      */
     public strokeWidth(idx: number) {
-        return this.primaryTicks <= 0 ? `${this._secondaryTicksWidth}px` :
-                idx % (this.secondaryTicks + 1) === 0 ? `${this._primaryTicksWidth}px` : `${this._secondaryTicksWidth}px`;
+        return this.primaryTicks <= 0 ? this._secondaryTicksWidth :
+                idx % (this.secondaryTicks + 1) === 0 ? this._primaryTicksWidth : this._secondaryTicksWidth;
     }
 
     /**
@@ -108,27 +115,45 @@ export class IgxTicksComponent {
      */
     public tickLabel(idx: number) {
         const labelStep = this.maxValue / (this.ticksLength - 1);
-        return (labelStep * idx).toFixed(2);
+        const labelVal = labelStep * idx;
+
+        return labelVal % 10 === 0 ? labelVal : labelVal.toFixed(2);
     }
 
     /**
      * @hidden
      */
     public tickLabelXOffset(index: number) {
-        // return this.isHorizontal ? this.tickXOffset(index) : this.tickYOffset(index) * 3;
         const diffTicksOffset = index % (this.secondaryTicks + 1) === 0 ? 0 : this._defaultTickYOffset;
-        return this.isHorizontal ? this.tickXOffset(index) : this.tickYOffset(index) + this._primaryTicksWidth + 8 + diffTicksOffset;
+        const verticalDir = this.toToBottomLabel ? -1 : 1;
+        return this.horizontalLabel ?
+            this.tickXOffset(index) :
+            (this.tickYOffset(index) + this._primaryTicksWidth + diffTicksOffset) * verticalDir;
     }
 
     /**
      * @hidden
      */
     public tickLabelYOffset(index: number) {
-        // const labelOffset = index % (this.secondaryTicks + 1) === 0 ? 8 : 16;
-        // return this.isHorizontal ? this.tickYOffset(index) + this._primaryTicksWidth + labelOffset : - (this.tickXOffset(index) - 5);
         const diffTicksOffset = index % (this.secondaryTicks + 1) === 0 ? 0 : this._defaultTickYOffset;
-        // const direction = this.isHorizontal ? this.tickYOffset(index) : this.tickXOffset(index);
-        return this.isHorizontal ? this.tickYOffset(index) + this._primaryTicksWidth + 8 + diffTicksOffset : -this.tickXOffset(index);
+        const verticalDir = this.toToBottomLabel ? -1 : 1;
+        return this.horizontalLabel ?
+            this.tickYOffset(index) + this._primaryTicksWidth + diffTicksOffset :
+            (-this.tickXOffset(index)) * verticalDir;
+    }
+
+    /**
+     * @hidden
+     */
+    public textAnchor() {
+        return this.horizontalLabel ? 'middle' : this.toToBottomLabel ? 'end' : 'start';
+    }
+
+    /**
+     * @hidden
+     */
+    public dominantBaseline() {
+        return this.horizontalLabel ? 'hanging' : this.toToBottomLabel ? 'central' : 'middle';
     }
 
 }
