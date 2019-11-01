@@ -50,7 +50,7 @@ function readInput(options: Options): Rule {
     if (options.polyfills) {
       const workspace = getWorkspace(tree);
       const targetProperty = 'es5BrowserSupport';
-      const polyfillsFile = 'src/polyfills.ts';
+      const polyfillsFile = workspace.projects[workspace.defaultProject].sourceRoot + '/polyfills.ts';
       const propertyExists = propertyExistsInWorkspace(targetProperty, workspace);
       let polyfillsData = tree.read(polyfillsFile).toString();
       if (propertyExists) {
