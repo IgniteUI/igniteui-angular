@@ -88,6 +88,7 @@ import { GridAutoSizeSampleComponent } from './grid-auto-size/grid-auto-size.sam
 import { GridFlexSampleComponent } from './grid-flex-layout/grid-flex.sample';
 import { GridEsfLoadOnDemandComponent } from './grid-esf-load-on-demand/grid-esf-load-on-demand.component';
 import { GridFilteringComponent } from './grid-filtering/grid-filtering.sample';
+import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-master-detail.sample';
 
 const appRoutes = [
     {
@@ -383,6 +384,10 @@ const appRoutes = [
     {
         path: 'gridGroupBy',
         component: GridGroupBySampleComponent
+    },
+    {
+        path: 'gridMasterDetail',
+        component: GridMasterDetailSampleComponent
     },
     {
         path: 'gridRowEdit',

@@ -589,7 +589,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * </ng-template>
      * </igx-grid>
      * ```
-	 * @memberof IgxTreeGridComponent
+	 * @memberof IgxGridComponent
      */
     public set expansionStates(value) {
         this._expansionStates = this.cloneMap(value);
@@ -598,6 +598,60 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this.cdr.detectChanges();
         }
     }
+
+   /**
+     * Expands all master rows.
+     * ```typescript
+     * this.grid.expandAll();
+     * ```
+	 * @memberof IgxGridComponent
+    */
+    public expandAll() {
+        const expandedStates = this.expansionStates;
+        this.data.forEach((rec) => {
+            expandedStates.set(this.primaryKey ? rec[this.primaryKey] : rec, true);
+        });
+        this.expansionStates = expandedStates;
+    }
+
+   /**
+     * Collapses all master rows.
+     * ```typescript
+     * this.grid.collapseAll();
+     * ```
+	 * @memberof IgxGridComponent
+    */
+    public collapseAll() {
+        this.expansionStates = new Map<any, boolean>();
+    }
+
+    /**
+     * Expands the master row by its id. ID is either the primaryKey value or the data record instance.
+     * ```typescript
+     * this.grid.expand(rowID);
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    public expand(rowID: any) {
+        const expandedStates = this.expansionStates;
+        expandedStates.set(rowID, true);
+        this.expansionStates = expandedStates;
+    }
+
+    /**
+     * Collapses the master row by its id. ID is either the primaryKey value or the data record instance.
+     * ```typescript
+     * this.grid.collapse(rowID);
+     * ```
+	 * @memberof IgxGridComponent
+    */
+    public collapse(rowID: any) {
+        const expandedStates = this.expansionStates;
+        expandedStates.set(rowID, false);
+        this.expansionStates = expandedStates;
+    }
+
+
 
     public getDetailsContext(rowData, index) {
         return {
