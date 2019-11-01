@@ -157,7 +157,7 @@
                         <p style="color: crimson"></p>
                     </ng-template>
                     <ng-template igxCell let-item="item" let-ri="rowIndex" let-column="column">
-                        <igx-checkbox [checked]="item" (change)="grid2.updateCell(ri, $event.target.checked)"></igx-checkbox>
+                        <igx-checkbox [checked]="item" (change)="grid2.updateCell(ri, column?.field, $event.target.checked)"></igx-checkbox>
                     </ng-template>
                 </igx-column>
             </igx-grid>
