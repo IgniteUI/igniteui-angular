@@ -164,13 +164,13 @@ export class IgxDragIndicatorIconDirective {
     selector: '[igxDragCustomGhost]'
 })
 
-export class IgxDragCustomGhostDirective {
+export class IgxRowDragGhost  {
 }
 
 @NgModule({
-    declarations: [IgxRowDragDirective, IgxDragIndicatorIconDirective, IgxDragCustomGhostDirective],
+    declarations: [IgxRowDragDirective, IgxDragIndicatorIconDirective, IgxRowDragGhost ],
     entryComponents: [],
-    exports: [IgxRowDragDirective, IgxDragIndicatorIconDirective, IgxDragCustomGhostDirective],
+    exports: [IgxRowDragDirective, IgxDragIndicatorIconDirective, IgxRowDragGhost ],
     imports: []
 })
 

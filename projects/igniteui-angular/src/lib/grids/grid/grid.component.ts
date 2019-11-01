@@ -22,7 +22,7 @@ import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
-import { IgxDragIndicatorIconDirective, IgxDragCustomGhostDirective } from '../row-drag.directive';
+import { IgxDragIndicatorIconDirective, IgxRowDragGhost  } from '../row-drag.directive';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 import { FilterMode } from '../common/enums';
 import { GridType } from '../common/grid.interface';
@@ -509,7 +509,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      *  </igx-grid>
      * ```
      */
-    @ContentChild(IgxDragCustomGhostDirective, { read: TemplateRef, static: false })
+    @ContentChild(IgxRowDragGhost , { read: TemplateRef, static: false })
     public dragGhostCustomTemplate: TemplateRef<any> = null;
 
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
