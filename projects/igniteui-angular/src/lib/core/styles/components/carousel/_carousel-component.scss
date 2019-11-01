@@ -30,7 +30,7 @@
     }
 
     @include e(label) {
-        @extend%igx-carousel-indicators-label !optional;
+        @extend %igx-carousel-indicators-label !optional;
     }
 
     @include e(arrow) {

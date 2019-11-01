@@ -128,8 +128,7 @@
         width: 100%;
         height: 100%;
         align-items: center;
-       flex-flow: column nowrap;
-       //transform-style: preserve-3d;
+        flex-flow: column nowrap;
     }
 
     %igx-carousel-slide-wrapper {
@@ -167,6 +166,7 @@
         background: --var($theme, 'button-background');
         box-shadow: --var($theme, 'button-shadow');
         z-index: 3;
+
         span {
             display: flex;
             align-items: center;
@@ -270,7 +270,7 @@
 
     %igx-carousel-indicators--top {
         top: 0;
-     }
+    }
 
     %igx-carousel-indicators-label {
         align-items: center;
