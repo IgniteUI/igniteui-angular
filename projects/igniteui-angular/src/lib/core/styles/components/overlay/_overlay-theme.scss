@@ -25,7 +25,15 @@
     $background-color: null
 ) {
     $name: 'igx-overlay';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $overlay-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $overlay-schema: map-get($schema, $name);
+    } @else {
+        $overlay-schema: $schema;
+    }
+
+    $theme: apply-palette($overlay-schema, $palette);
 
     @return extend($theme, (
         name: $name,

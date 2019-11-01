@@ -8,6 +8,7 @@ import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IgxGridBaseDirective } from '../grid';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { GridType } from '../common/grid.interface';
+import { IGridSortingStrategy } from '../../data-operations/sorting-strategy';
 
 /**
  *@hidden
@@ -199,6 +200,7 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
     public transform(
         hierarchicalData: ITreeGridRecord[],
         expressions: ISortingExpression[],
+        sorting: IGridSortingStrategy,
         id: string,
         pipeTrigger: number): ITreeGridRecord[] {
         const grid = this.gridAPI.grid;
@@ -207,7 +209,7 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
         if (!expressions.length) {
             result = hierarchicalData;
         } else {
-            result = DataUtil.treeGridSort(hierarchicalData, expressions);
+            result = DataUtil.treeGridSort(hierarchicalData, expressions, sorting);
         }
         const filteredSortedData = [];
         this.flattenTreeGridRecords(result, filteredSortedData);

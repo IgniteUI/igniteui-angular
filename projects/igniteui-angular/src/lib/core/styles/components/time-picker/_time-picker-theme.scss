@@ -60,7 +60,13 @@
     $dropdown-shadow: null
 ) {
     $name: 'igx-time-picker';
-    $time-picker-schema: map-get($schema, $name);
+    $time-picker-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $time-picker-schema: map-get($schema, $name);
+    } @else {
+        $time-picker-schema: $schema;
+    }
 
     $theme: apply-palette($time-picker-schema, $palette);
 

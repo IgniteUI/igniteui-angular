@@ -1,0 +1,35 @@
+{
+    "$schema": "../../common/schema/theme-props.schema.json",
+    "changes": [
+        {
+            "name": "$button-background",
+            "remove": true,
+            "owner": "igx-grid-toolbar-theme"
+        },
+        {
+            "name": "$button-text-color",
+            "remove": true,
+            "owner": "igx-grid-toolbar-theme"
+        },
+        {
+            "name": "$button-hover-background",
+            "remove": true,
+            "owner": "igx-grid-toolbar-theme"
+        },
+        {
+            "name": "$button-hover-text-color",
+            "remove": true,
+            "owner": "igx-grid-toolbar-theme"
+        },
+        {
+            "name": "$button-focus-background",
+            "remove": true,
+            "owner": "igx-grid-toolbar-theme"
+        },
+        {
+            "name": "$button-focus-text-color",
+            "remove": true,
+            "owner": "igx-grid-toolbar-theme"
+        }
+    ]
+}

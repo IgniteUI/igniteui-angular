@@ -78,7 +78,14 @@
     $remove-icon-color-focus: null,
 ) {
     $name: 'igx-chip';
-    $chip-schema: map-get($schema, $name);
+    $chip-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $chip-schema: map-get($schema, $name);
+    } @else {
+        $chip-schema: $schema;
+    }
+
     $theme: apply-palette($chip-schema, $palette);
 
     $border-radius: round-borders(

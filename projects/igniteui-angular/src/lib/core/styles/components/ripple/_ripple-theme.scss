@@ -25,7 +25,15 @@
     $color: null
 ) {
     $name: 'igx-ripple';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $ripple-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $ripple-schema: map-get($schema, $name);
+    } @else {
+        $ripple-schema: $schema;
+    }
+
+    $theme: apply-palette($ripple-schema, $palette);
 
     @return extend($theme, (
         name: $name,
