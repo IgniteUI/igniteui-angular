@@ -26,7 +26,7 @@ import { Subject, merge } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxCarouselIndicatorDirective } from './carousel.directives';
 import { useAnimation, AnimationBuilder, AnimationPlayer, AnimationReferenceMetadata } from '@angular/animations';
-import { slideInLeft, fadeIn, rotateInCenter } from 'igniteui-angular';
+import { slideInLeft, fadeIn, rotateInCenter } from '../animations/main';
 
 let NEXT_ID = 0;
 
@@ -217,7 +217,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     * ```
     * @memberOf IgxSlideComponent
     */
-    @Input() public indicatorsOrientation = CarouselIndicatorsOrientation.bottom;
+    @Input() public indicatorsOrientation: CarouselIndicatorsOrientation = CarouselIndicatorsOrientation.bottom;
 
     /**
    * Gets/sets the animation type of carousel.
