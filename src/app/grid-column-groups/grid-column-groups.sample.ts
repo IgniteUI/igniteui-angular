@@ -7,6 +7,7 @@ import { IgxGridComponent, IgxButtonDirective, IgxColumnGroupComponent } from 'i
     templateUrl: 'grid-column-groups.sample.html'
 })
 export class GridColumnGroupsSampleComponent implements AfterViewInit {
+    public collapse = true;
 
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
@@ -58,10 +59,19 @@ export class GridColumnGroupsSampleComponent implements AfterViewInit {
     }
 
     hideGroup() {
-        const col = this.grid.columnList.filter(c => c.header === 'Person Details')[0];
+/*         const col = this.grid.columnList.filter(c => c.header === 'Person Details')[0];
         col.hidden = !col.hidden;
         this.grid.getColumnByName('CompanyName').hidden = true;
-        console.log(this.grid.getColumnByName('CompanyName').parent);
+        console.log(this.grid.getColumnByName('CompanyName').parent); */
+        this.grid.columnList.filter(c => c.header === 'Person Details')[0].expanded =
+        !this.grid.columnList.filter(c => c.header === 'Person Details')[0].expanded;
+
+    }
+
+    toggleCollapsible() {
+        this.collapse = !this.collapse;
+/*         this.grid.columnList.filter(c => c.header === 'General Information')[0].collapsible =
+        !this.grid.columnList.filter(c => c.header === 'General Information')[0].collapsible; */
     }
 
     ngAfterViewInit() {
