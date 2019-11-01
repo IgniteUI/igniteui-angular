@@ -27,7 +27,6 @@ import { takeUntil } from 'rxjs/operators';
 import { IgxCarouselIndicatorDirective } from './carousel.directives';
 import { useAnimation, AnimationBuilder, AnimationPlayer, AnimationReferenceMetadata } from '@angular/animations';
 import { slideInLeft, fadeIn, rotateInCenter } from 'igniteui-angular';
-import { EaseOut } from '../animations/easings';
 
 let NEXT_ID = 0;
 
@@ -338,7 +337,6 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     private currentSlide: IgxSlideComponent;
     private previousSlide: IgxSlideComponent;
 
-
     /**
     * @hidden
     */
@@ -434,7 +432,6 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
                             params: {
                                 delay: '0s',
                                 duration: `${this.animationDuration}ms`,
-                                easing: EaseOut.sine,
                                 endOpacity: 1,
                                 startOpacity: 1,
                                 fromPosition: `translateX(${this.currentSlide.direction === 1 ? 100 : -100}%)`,
@@ -446,7 +443,6 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
                             params: {
                                 delay: '0s',
                                 duration: `${this.animationDuration}ms`,
-                                easing: EaseOut.sine,
                                 endOpacity: 1,
                                 startOpacity: 1,
                                 fromPosition: `translateX(0%)`,
@@ -465,7 +461,6 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
                         params: {
                             delay: '0s',
                             duration: `${this.animationDuration}ms`,
-                            easing: EaseOut.quad,
                             endAngle: 0,
                             endOpacity: 1,
                             rotateX: 0,
