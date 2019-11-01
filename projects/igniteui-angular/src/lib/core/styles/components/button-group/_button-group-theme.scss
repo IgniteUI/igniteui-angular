@@ -70,7 +70,14 @@
     $item-selected-hover-background: null
 ) {
     $name: 'igx-button-group';
-    $button-group-schema: map-get($schema, $name);
+    $button-group-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $button-group-schema: map-get($schema, $name);
+    } @else {
+        $button-group-schema: $schema;
+    }
+
     $theme: apply-palette($button-group-schema, $palette);
 
     $border: 1px solid map-get($theme, 'item-selected-border-color');

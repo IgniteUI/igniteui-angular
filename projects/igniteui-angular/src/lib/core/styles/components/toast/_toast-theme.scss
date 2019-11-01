@@ -37,7 +37,14 @@
     $text-color: null
 ) {
     $name: 'igx-toast';
-    $toast-schema: map-get($schema, $name);
+    $toast-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $toast-schema: map-get($schema, $name);
+    } @else {
+        $toast-schema: $schema;
+    }
+
     $theme: apply-palette($toast-schema, $palette);
 
     $border-radius: round-borders(
