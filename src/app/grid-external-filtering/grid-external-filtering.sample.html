@@ -17,7 +17,7 @@
                             {{column.field}}
                         </igx-select-item>
                     </igx-select>
-                    <igx-grid-excel-style-filtering 
+                    <igx-grid-excel-style-filtering style="height: 800px;"
                         [column]="grid1.getColumnByName(columnSelect.value)">
                     </igx-grid-excel-style-filtering>
                 </div>
@@ -32,7 +32,7 @@
                         [rowSelectable]="true"
                         [paging]="false"
                         [width]="'980px'"
-                        [height]="'410px'" 
+                        [height]="'450px'" 
                         [showToolbar]="true"
                         [columnHiding]="true" 
                         [columnPinning]="true"
@@ -59,6 +59,7 @@
                     </igx-grid>
 
                     <igx-advanced-filtering-dialog
+                        style="height: 400px;"
                         [grid]="grid1">
                     </igx-advanced-filtering-dialog>
                 </div>
