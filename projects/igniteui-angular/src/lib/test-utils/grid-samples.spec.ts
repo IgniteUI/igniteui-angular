@@ -962,7 +962,7 @@ export class IgxGridFilteringComponent extends BasicGridComponent {
 
 @Component({
     template: `
-    <igx-grid-excel-style-filtering #esf>
+    <igx-grid-excel-style-filtering #esf style="height: 700px; width: 350px">
     </igx-grid-excel-style-filtering>
     <igx-grid #grid1 [data]="data" height="500px">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
