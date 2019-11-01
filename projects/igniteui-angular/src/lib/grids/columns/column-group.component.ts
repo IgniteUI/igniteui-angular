@@ -23,9 +23,39 @@ import { flatten } from '../../core/utils';
     template: ``
 })
 export class IgxColumnGroupComponent extends IgxColumnComponent implements AfterContentInit {
+    private _collapsible = false;
+    private _expanded = true;
 
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     children = new QueryList<IgxColumnComponent>();
+
+    @Input()
+    public set collapsible(value: boolean) {
+        this._collapsible = value;
+        if (this.children) {
+            if (value) {
+                this.setExpandCollapseState();
+            } else {
+                this.children.forEach(child => child.hidden = false);
+            }
+        }
+    }
+    public get collapsible() {
+        return this._collapsible;
+    }
+
+    @Input()
+    public get expanded() {
+        return this._expanded;
+    }
+    public set expanded(value: boolean) {
+        this._expanded = value;
+        if (!this.collapsible) { return; }
+        if (!this.hidden && this.children) {
+            this.setExpandCollapseState();
+        }
+    }
+
     /**
      * Gets the column group `summaries`.
      * ```typescript
@@ -143,7 +173,14 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     set hidden(value: boolean) {
         this._hidden = value;
         this.hiddenChange.emit(this._hidden);
-        this.children.forEach(child => child.hidden = value);
+        if (value || !this.collapsible) {
+            this.children.forEach(child => child.hidden = value);
+        } else {
+            this.children.forEach(c =>  {
+                if (c.openOnGroupCollapsed === undefined) {c.hidden = false; return; }
+                c.hidden = this.expanded ? c.openOnGroupCollapsed : !c.openOnGroupCollapsed;
+            });
+        }
     }
 
     /**
@@ -170,6 +207,14 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         this.children.forEach(child => {
             child.parent = this;
         });
+        if (this.collapsible) {
+            const cols = this.children.map(child => child.openOnGroupCollapsed);
+            if (!(cols.some(c => c === true) && cols.some(c => c === false))) {
+                this.collapsible = false;
+                return;
+            }
+            this.setExpandCollapseState();
+        }
     }
     /**
      * Returns the children columns collection.
@@ -224,6 +269,12 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     }
 
     set width(val) { }
+
+    private setExpandCollapseState() {
+        this.children.filter(col => (col.openOnGroupCollapsed !== undefined)).forEach(c =>  {
+            c.hidden = this._expanded ? c.openOnGroupCollapsed : !c.openOnGroupCollapsed;
+        });
+    }
 
     // constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & IGridDataBindable>, public cdr: ChangeDetectorRef) {
     //     // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
