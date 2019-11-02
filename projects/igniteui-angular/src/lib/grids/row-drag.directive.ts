@@ -161,7 +161,7 @@ export class IgxDragIndicatorIconDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxDragCustomGhost]'
+    selector: '[igxRowDragGhost]'
 })
 
 export class IgxRowDragGhost  {
