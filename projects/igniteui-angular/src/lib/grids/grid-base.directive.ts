@@ -132,6 +132,7 @@ import { IgxGridToolbarCustomContentDirective } from './toolbar/toolbar.directiv
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGridSortingStrategy } from '../data-operations/sorting-strategy';
+import { IgxRowDragGhostDirective  } from './row-drag.directive';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -1893,6 +1894,25 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @ContentChildren(IgxRowSelectorDirective, { read: IgxRowSelectorDirective, descendants: false })
     public rowSelectorsTemplates: QueryList<IgxRowSelectorDirective>;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get dragGhostCustomTemplate(): TemplateRef<IgxRowDragGhostDirective> {
+        if (this.dragGhostCustomTemplates && this.dragGhostCustomTemplates.first) {
+            return this.dragGhostCustomTemplates.first.templateRef;
+        }
+
+        return null;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ContentChildren(IgxRowDragGhostDirective, { read: IgxRowDragGhostDirective, descendants: false })
+    public dragGhostCustomTemplates: QueryList<IgxRowDragGhostDirective>;
 
     /**
      * @hidden

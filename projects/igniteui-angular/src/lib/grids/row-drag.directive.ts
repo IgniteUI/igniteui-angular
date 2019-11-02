@@ -1,4 +1,4 @@
-import { Directive, Input, OnDestroy, NgModule } from '@angular/core';
+import { Directive, Input, OnDestroy, NgModule, TemplateRef } from '@angular/core';
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { KEYS } from '../core/utils';
 import { fromEvent, Subscription } from 'rxjs';
@@ -164,13 +164,14 @@ export class IgxDragIndicatorIconDirective {
     selector: '[igxRowDragGhost]'
 })
 
-export class IgxRowDragGhost  {
+export class IgxRowDragGhostDirective  {
+    constructor(public templateRef: TemplateRef<any>) { }
 }
 
 @NgModule({
-    declarations: [IgxRowDragDirective, IgxDragIndicatorIconDirective, IgxRowDragGhost ],
+    declarations: [IgxRowDragDirective, IgxDragIndicatorIconDirective, IgxRowDragGhostDirective],
     entryComponents: [],
-    exports: [IgxRowDragDirective, IgxDragIndicatorIconDirective, IgxRowDragGhost ],
+    exports: [IgxRowDragDirective, IgxDragIndicatorIconDirective, IgxRowDragGhostDirective],
     imports: []
 })
 
