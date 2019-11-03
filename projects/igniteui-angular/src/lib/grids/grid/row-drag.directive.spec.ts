@@ -44,6 +44,7 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridRowDraggableComponent,
+                IgxGridRowCustomGhostDraggableComponent,
                 IgxGridFeaturesRowDragComponent,
                 IgxHierarchicalGridTestComponent,
                 IgxTreeGridTestComponent
@@ -188,6 +189,27 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
             await pointerUp(dragIndicatorElement, dropPoint, fixture);
             ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
             expect(ghostElements.length).toEqual(0);
+        }));
+        it('should correctly create custom ghost element', (async () => {
+            fixture = TestBed.createComponent(IgxGridRowCustomGhostDraggableComponent);
+            grid = fixture.componentInstance.instance;
+            fixture.detectChanges();
+            dragIndicatorElements = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
+            dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
+            const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+            const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
+            const movePoint: Point = UIInteractions.getPointFromElement(rows[4].nativeElement);
+            const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
+            let ghostElements: HTMLCollection;
+
+            await pointerDown(dragIndicatorElement, startPoint, fixture);
+            await pointerMove(dragIndicatorElement, movePoint, fixture);
+            await pointerMove(dragIndicatorElement, dropPoint, fixture);
+            ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
+            expect(ghostElements.length).toEqual(1);
+
+            const ghostText = document.getElementsByClassName(CSS_CLASS_GHOST_ROW)[0].textContent;
+            expect(ghostText).toEqual(' Moving a row! ');
         }));
         it('should apply drag class to row upon row dragging', (async () => {
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
@@ -927,6 +949,65 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
     `
 })
 export class IgxGridRowDraggableComponent extends DataParent {
+    public width = '800px';
+    public height = null;
+
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public instance: IgxGridComponent;
+
+    @ViewChild('dropArea', { read: IgxDropDirective, static: true })
+    public dropArea: IgxDropDirective;
+
+    public enableSorting = false;
+    public enableFiltering = false;
+    public enableResizing = false;
+    public enableEditing = true;
+    public enableGrouping = true;
+    public enableRowEditing = true;
+    public enableRowDraggable = true;
+    public currentSortExpressions;
+
+    public columnsCreated(column: IgxColumnComponent) {
+        column.sortable = this.enableSorting;
+        column.filterable = this.enableFiltering;
+        column.resizable = this.enableResizing;
+        column.editable = this.enableEditing;
+        column.groupable = this.enableGrouping;
+    }
+    public onGroupingDoneHandler(sortExpr) {
+        this.currentSortExpressions = sortExpr;
+    }
+    public onRowDrop(args) {
+        args.cancel = true;
+    }
+}
+
+@Component({
+    template: `
+        <igx-grid #grid
+            [width]='width'
+            [height]='height'
+            primaryKey="ID"
+            [data]="data"
+            [autoGenerate]="true" (onColumnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)"
+            [rowEditable]="true" [rowDraggable]="enableRowDraggable"
+            >
+            <ng-template let-data igxRowDragGhost>
+                <div class="dragGhost">
+                    <igx-icon fontSet="material"></igx-icon> 
+                        Moving a row!
+                </div>
+            </ng-template>
+        </igx-grid>
+        <div #dropArea class="droppable-area" igxDrop (dropped)="onRowDrop($event)"
+        [ngStyle]="{width:'100px', height:'100px', backgroundColor:'red'}">
+        </div>
+        <div #nonDroppableArea class="non-droppable-area"
+        [ngStyle]="{width:'100px', height:'100px', backgroundColor:'yellow'}">
+        </div>
+    `
+})
+export class IgxGridRowCustomGhostDraggableComponent extends DataParent {
     public width = '800px';
     public height = null;
 
