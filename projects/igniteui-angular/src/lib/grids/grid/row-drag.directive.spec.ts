@@ -190,27 +190,6 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
             ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
             expect(ghostElements.length).toEqual(0);
         }));
-        it('should correctly create custom ghost element', (async () => {
-            fixture = TestBed.createComponent(IgxGridRowCustomGhostDraggableComponent);
-            grid = fixture.componentInstance.instance;
-            fixture.detectChanges();
-            dragIndicatorElements = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
-            dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
-            const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
-            const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
-            const movePoint: Point = UIInteractions.getPointFromElement(rows[4].nativeElement);
-            const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
-            let ghostElements: HTMLCollection;
-
-            await pointerDown(dragIndicatorElement, startPoint, fixture);
-            await pointerMove(dragIndicatorElement, movePoint, fixture);
-            await pointerMove(dragIndicatorElement, dropPoint, fixture);
-            ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
-            expect(ghostElements.length).toEqual(1);
-
-            const ghostText = document.getElementsByClassName(CSS_CLASS_GHOST_ROW)[0].textContent;
-            expect(ghostText).toEqual(' Moving a row! ');
-        }));
         it('should apply drag class to row upon row dragging', (async () => {
             const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
             const row = rows[1];
@@ -405,6 +384,28 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
             expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(0);
             const ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
             expect(ghostElements.length).toEqual(0);
+        }));
+
+        it('should correctly create custom ghost element', (async () => {
+            fixture = TestBed.createComponent(IgxGridRowCustomGhostDraggableComponent);
+            grid = fixture.componentInstance.instance;
+            fixture.detectChanges();
+            dragIndicatorElements = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
+            dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
+            const dragIndicatorElement = dragIndicatorElements[2].nativeElement;
+            const startPoint: Point = UIInteractions.getPointFromElement(dragIndicatorElement);
+            const movePoint: Point = UIInteractions.getPointFromElement(rows[4].nativeElement);
+            const dropPoint: Point = UIInteractions.getPointFromElement(dropAreaElement);
+            let ghostElements: HTMLCollection;
+
+            await pointerDown(dragIndicatorElement, startPoint, fixture);
+            await pointerMove(dragIndicatorElement, movePoint, fixture);
+            await pointerMove(dragIndicatorElement, dropPoint, fixture);
+            ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
+            expect(ghostElements.length).toEqual(1);
+
+            const ghostText = document.getElementsByClassName(CSS_CLASS_GHOST_ROW)[0].textContent;
+            expect(ghostText).toEqual(' Moving a row! ');
         }));
     });
     describe('Grid Features Integration Tests', () => {
