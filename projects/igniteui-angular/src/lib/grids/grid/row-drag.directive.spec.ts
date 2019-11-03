@@ -658,8 +658,8 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
             expect(row.grid.rowDragging).toBeTruthy();
 
             const ghostElements = document.getElementsByClassName(CSS_CLASS_GHOST_ROW);
-            const ghostElement = ghostElements[0];
-            expect(ghostElements.length).toEqual(1);
+            const ghostElement = ghostElements[1];
+            expect(ghostElements.length).toEqual(2);
             expect(ghostElement.classList.contains(CSS_CLASS_SELECTED_ROW)).toBeFalsy();
 
             await pointerMove(dragIndicatorElement, dropPoint, fixture);
