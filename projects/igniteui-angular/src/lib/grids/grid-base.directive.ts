@@ -346,7 +346,18 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public filteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
 
     /**
-     *@hidden
+     * Emitted before advanced filtering is performed.
+     * Returns the advanced filtering expressions tree.
+     * ```typescript
+     * advancedFilteringExprTreeChange(event: IFilteringExpressionsTree){
+     *     const filteringTree = event;
+     * }
+     * ```
+     * ```html
+     * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true"
+     *           (advancedFilteringExpressionsTreeChange)="advancedFilteringExprTreeChange($event)"></igx-grid>
+     * ```
+     * @memberof IgxGridBaseDirective
      */
     @Output()
     public advancedFilteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
