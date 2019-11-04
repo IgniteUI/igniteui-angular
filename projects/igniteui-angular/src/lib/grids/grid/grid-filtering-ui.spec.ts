@@ -5934,7 +5934,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
         }));
 
-        fit('Should allow hosting Excel Style filtering component outside of the grid.', fakeAsync(() => {
+        it('Should allow hosting Excel Style filtering component outside of the grid.', fakeAsync(() => {
             // sort
             GridFunctions.clickSortAscInExcelStyleFiltering(fix);
             fix.detectChanges();
