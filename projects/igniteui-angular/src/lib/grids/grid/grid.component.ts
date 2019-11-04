@@ -522,7 +522,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         }
         const rList = this._groupsRowList.filter((item) => {
             return item.element.nativeElement.parentElement !== null;
-        });
+        }).sort((item1, item2) => item1.index - item2.index);
         res.reset(rList);
         return res;
     }
