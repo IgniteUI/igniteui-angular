@@ -18,11 +18,11 @@
 <ng-container *ngIf="!grid.hasColumnLayouts">
     <ng-container *ngIf="pinnedColumns.length > 0">
         <ng-template ngFor let-col [ngForOf]="pinnedColumns | igxNotGrouped">
-                <ng-container *ngTemplateOutlet="col.visibleIndex === 0 ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
+                <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
         </ng-template>
     </ng-container>
     <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForSizePropName]='"calcPixelWidth"' [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
-        <ng-container *ngTemplateOutlet="col.visibleIndex === 0 ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
+        <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
     </ng-template>
 </ng-container>
 
@@ -36,7 +36,7 @@
         '-ms-grid-rows':col.getGridTemplate(true, true),
         '-ms-grid-columns':col.getGridTemplate(false, true)}">
         <ng-template ngFor let-col [ngForOf]="col.children">
-                <ng-container *ngTemplateOutlet="col.visibleIndex === 0 ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
+                <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
         </ng-template>
         </div>
     </ng-container>
@@ -47,7 +47,7 @@
      '-ms-grid-rows':col.getGridTemplate(true, true),
      '-ms-grid-columns':col.getGridTemplate(false, true)}">
             <ng-template ngFor let-col [ngForOf]="col.children">
-                    <ng-container *ngTemplateOutlet="col.visibleIndex === 0 ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
+                    <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
             </ng-template>
         </div>
     </ng-template>
@@ -68,7 +68,8 @@
 
 <ng-template #cellTemplate let-col>
         <igx-grid-cell
-        class="igx-grid__td igx-grid__td--fw igx-grid__td--pinned"
+        class="igx-grid__td igx-grid__td--fw"
+        [class.igx-grid__td--pinned]="col.pinned"
         [class.igx-grid__td--number]="col.dataType === 'number'"
         [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex"
         [ngStyle]="col.cellStyles | igxCellStyles:rowData[col.field]:rowData:col.field:viewIndex"
@@ -92,6 +93,7 @@
 
 <ng-template #expandableCellTemplate let-col>
     <igx-expandable-grid-cell
+        [class.igx-grid__td--pinned]="col.pinned"
         class="igx-grid__td igx-grid__td--fw igx-grid__td--tree-cell"
         [class.igx-grid__td--number]="col.dataType === 'number' && col.visibleIndex !== 0"
         [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex"
