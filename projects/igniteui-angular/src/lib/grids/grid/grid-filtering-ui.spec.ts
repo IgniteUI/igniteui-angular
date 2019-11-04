@@ -5934,19 +5934,15 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
         }));
 
-        it('Should allow hosting Excel Style filtering component outside of the grid.', fakeAsync(() => {
+        fit('Should allow hosting Excel Style filtering component outside of the grid.', fakeAsync(() => {
             // sort
-            const excelMenu = fix.nativeElement.querySelector('.igx-excel-filter__menu');
-            const sortComponent = excelMenu.querySelector('.igx-excel-filter__sort');
-            const sortAsc = sortComponent.lastElementChild.children[0].children[0];
-            sortAsc.click();
+            GridFunctions.clickSortAscInExcelStyleFiltering(fix);
             fix.detectChanges();
             expect(grid.sortingExpressions[0].fieldName).toEqual('ProductName');
             expect(grid.sortingExpressions[0].dir).toEqual(SortingDirection.Asc);
 
             // pin
-            const pinComponent = excelMenu.querySelector('.igx-excel-filter__actions-pin');
-            pinComponent.click();
+            GridFunctions.clickPinIconInExcelStyleFiltering(fix, false);
             fix.detectChanges();
             expect(grid.pinnedColumns[0].field).toEqual('ProductName');
 
@@ -5958,8 +5954,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.rowList.length).toBe(3);
 
             // hide
-            const hideComponent = excelMenu.querySelector('.igx-excel-filter__actions-hide');
-            hideComponent.click();
+            GridFunctions.clickHideIconInExcelStyleFiltering(fix, false);
             fix.detectChanges();
             expect(grid.columns[1].hidden).toBeTruthy();
         }));
