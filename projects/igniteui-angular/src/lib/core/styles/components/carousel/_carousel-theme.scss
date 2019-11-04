@@ -292,6 +292,6 @@
     %igx-carousel-slide img {
         width: inherit;
         height: inherit;
-        //transform: scale(1.1);
+        object-fit: cover;
     }
 }
