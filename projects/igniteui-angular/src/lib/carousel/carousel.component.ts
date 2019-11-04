@@ -579,7 +579,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     * @memberof IgxCarouselComponent
     */
     public get indicatorsOrientationClass() {
-        return `igx-carousel__indicators--${this.indicatorsOrientation}`;
+        return `igx-carousel-indicators--${this.indicatorsOrientation}`;
     }
 
     /**
@@ -946,6 +946,20 @@ export class IgxSlideComponent implements OnDestroy {
     }
 
     /**
+     * Returns the class of the slide component.
+     * ```typescript
+     * let class =  this.slide.cssClass;
+     * ```
+     * @memberof IgxSlideComponent
+     */
+    @HostBinding('class.igx-slide')
+    public cssClass = 'igx-slide';
+
+    public get destroy(): Subject<boolean> {
+        return this._destroy$;
+    }
+
+    /**
      * Gets/sets the `active` state of the slide.
      * ```html
      * <igx-carousel>
@@ -961,33 +975,20 @@ export class IgxSlideComponent implements OnDestroy {
      * ```
      * @memberof IgxSlideComponent
      */
-    @HostBinding('class.active')
+    @HostBinding('class.igx-slide--current')
     @Input()
     public get active(): boolean {
         return this._active;
     }
+
     public set active(value) {
         this._active = !!value;
         this.activeChange.emit(this._active);
     }
 
 
-    @HostBinding('class.previous')
+    @HostBinding('class.igx-slide--previous')
     @Input() public previous = false;
-
-    /**
-     * Returns the class of the slide component.
-     * ```typescript
-     * let class =  this.slide.cssClass;
-     * ```
-     * @memberof IgxSlideComponent
-     */
-    @HostBinding('class.igx-slide')
-    public cssClass = 'igx-slide';
-
-    public get destroy(): Subject<boolean> {
-        return this._destroy$;
-    }
 
     /**
      *@hidden

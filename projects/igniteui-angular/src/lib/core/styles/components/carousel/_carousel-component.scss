@@ -15,20 +15,6 @@
         @extend %igx-carousel-slide-wrapper !optional;
     }
 
-    @include e(indicators) {
-        @extend %igx-carousel-indicators !optional;
-    }
-
-    @include e(indicators, $m: top) {
-        @extend %igx-carousel-indicators !optional;
-        @extend %igx-carousel-indicators--top !optional;
-    }
-
-    @include e(indicators, $m: bottom) {
-        @extend %igx-carousel-indicators !optional;
-        @extend %igx-carousel-indicators--bottom !optional;
-    }
-
     @include e(label) {
         @extend %igx-carousel-indicators-label !optional;
     }
@@ -56,6 +42,40 @@
     }
 }
 
+@include b(igx-carousel-indicators) {
+    @extend %igx-carousel-indicators !optional;
+
+    @include e(indicator) {
+        @extend %igx-carousel-indicator !optional;
+    }
+
+    @include m(top) {
+        @extend %igx-carousel-indicators !optional;
+        @extend %igx-carousel-indicators--top !optional;
+    }
+
+    @include m(bottom) {
+        @extend %igx-carousel-indicators !optional;
+        @extend %igx-carousel-indicators--bottom !optional;
+    }
+}
+
+@include b(igx-nav-dot) {
+    @extend %igx-nav-dot !optional;
+
+    @include m(active) {
+        @extend %igx-nav-dot--active !optional;
+    }
+}
+
 @include b(igx-slide) {
     @extend %igx-carousel-slide !optional;
+
+    @include m(current) {
+        @extend %igx-carousel-slide--current !optional;
+    }
+
+    @include m(previous) {
+        @extend %igx-carousel-slide--previous !optional;
+    }
 }

@@ -131,23 +131,6 @@
         flex-flow: column nowrap;
     }
 
-    %igx-carousel-slide-wrapper {
-        position: relative;
-        width: 100%;
-        height: inherit;
-        overflow: hidden;
-        outline-style: none;
-        border-radius: --var($theme, 'border-radius');
-
-        .previous {
-            z-index: 1;
-        }
-
-        .active {
-            z-index: 2;
-        }
-    }
-
     %igx-carousel-arrow {
         display: flex;
         margin: $carousel-arrow-margin;
@@ -196,11 +179,12 @@
     }
 
     %igx-carousel-indicators {
+        position: absolute;
         display: flex;
-        margin: $carousel-indicators-margin;
         justify-content: center;
         align-items: center;
-        position: absolute;
+        margin: $carousel-indicators-margin;
+        padding: $carousel-indicators-padding;
         list-style: none;
         z-index: 10;
         #{$left}: 50%;
@@ -211,56 +195,6 @@
 
         @include if-rtl() {
             transform: translateX(50%);
-        }
-
-        padding: $carousel-indicators-padding;
-
-        .default-indicator-item {
-            margin: $carousel-indicator-margin;
-            position: relative;
-            width: 12px;
-            height: 12px;
-            text-indent: -9999px;
-            cursor: pointer;
-            border: $indicator-border-style;
-            border-color: --var($theme, 'indicator-border-color');
-            border-radius: 50%;
-            transition: all .15s $ease-out-quad;
-            box-shadow: igx-elevation($elevations, 1);
-            opacity: .7;
-
-            &::after {
-                content: '';
-                position: absolute;
-                top: 1px;
-                bottom: 1px;
-                #{$left}: 1px;
-                #{$right}: 1px;
-                border-radius: inherit;
-                background: --var($theme, 'indicator-dot-color');
-                @include animation('scale-out-center' .15s $ease-out-quad forwards);
-                opacity: 0;
-            }
-
-            &.active {
-                border: $indicator-border-style;
-                border-color: --var($theme, 'indicator-active-border-color');
-                opacity: 1;
-            }
-
-            &.active::after {
-                opacity: 1;
-                @include animation('scale-in-center' .15s $ease-out-quad forwards);
-            }
-
-            &:hover {
-                opacity: 1;
-            }
-        }
-
-        .carousel-indicator {
-            margin: $carousel-indicator-margin;
-            position: relative;
         }
     }
 
@@ -274,7 +208,66 @@
 
     %igx-carousel-indicators-label {
         align-items: center;
-        font-size: rem(15px);
+        // TODO: this should be wrapped in carousel typogrpahy
+        font-size: rem(16px);
+    }
+
+    %igx-carousel-indicator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: $carousel-indicator-margin;
+        cursor: pointer;
+    }
+
+    %igx-nav-dot {
+        position: relative;
+        width: 12px;
+        height: 12px;
+        text-indent: -9999px;
+        border: $indicator-border-style;
+        border-color: --var($theme, 'indicator-border-color');
+        border-radius: 50%;
+        transition: all .15s $ease-out-quad;
+        box-shadow: igx-elevation($elevations, 1);
+        opacity: .7;
+
+        &::after {
+            @include animation('scale-out-center' .15s $ease-out-quad forwards);
+            content: '';
+            position: absolute;
+            top: 1px;
+            bottom: 1px;
+            #{$left}: 1px;
+            #{$right}: 1px;
+            border-radius: inherit;
+            background: --var($theme, 'indicator-dot-color');
+            opacity: 0;
+        }
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+    %igx-nav-dot--active {
+        border: $indicator-border-style;
+        border-color: --var($theme, 'indicator-active-border-color');
+        opacity: 1;
+
+        &::after {
+            opacity: 1;
+            @include animation('scale-in-center' .15s $ease-out-quad forwards);
+        }
+    }
+
+    %igx-carousel-slide-wrapper {
+        position: relative;
+        width: 100%;
+        height: inherit;
+        overflow: hidden;
+        outline-style: none;
+        border-radius: --var($theme, 'border-radius');
     }
 
     %igx-carousel-slide {
@@ -286,6 +279,14 @@
         right: 0;
         bottom: 0;
         z-index: -1;
+    }
+
+    %igx-carousel-slide--previous {
+        z-index: 1;
+    }
+
+    %igx-carousel-slide--current {
+        z-index: 2;
     }
 
     %igx-carousel-slide img {
