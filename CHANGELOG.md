@@ -36,7 +36,9 @@ All notable changes for each version of this project will be documented in this 
         <igx-column [field]="'ProductID'"></igx-column>
         <igx-column [field]="'UnitsInStock'"></igx-column>
         <ng-template let-data igxRowDragGhost>
-            Moving {{data.ProductName}}!
+            <div>
+                Moving {{data.ProductName}}!
+            </div>
         </ng-template>
     </igx-grid>
 ```
