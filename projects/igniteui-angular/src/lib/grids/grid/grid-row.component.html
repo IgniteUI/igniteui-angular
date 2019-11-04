@@ -22,9 +22,7 @@
         </ng-template>
     </ng-container>
     <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForSizePropName]='"calcPixelWidth"' [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
-        <ng-template ngFor let-col [ngForOf]="unpinnedColumns | igxNotGrouped">
-                    <ng-container *ngTemplateOutlet="col.visibleIndex === 0 ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
-        </ng-template>
+        <ng-container *ngTemplateOutlet="col.visibleIndex === 0 ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
     </ng-template>
 </ng-container>
 
@@ -88,7 +86,7 @@
         [visibleColumnIndex]="col.visibleIndex"
         [value]="rowData[col.field]"
         [cellTemplate]="col.bodyTemplate"
-        [cellSelectionMode]="grid.cellSelection">
+        [cellSelectionMode]="grid.cellSelection" #cell>
     </igx-grid-cell>
 </ng-template>
 
@@ -112,7 +110,7 @@
         [visibleColumnIndex]="col.visibleIndex"
         [value]="rowData[col.field]"
         [cellTemplate]="col.bodyTemplate"
-        [cellSelectionMode]="grid.cellSelection"  #treeCell>
+        [cellSelectionMode]="grid.cellSelection" #cell>
     </igx-expandable-grid-cell>
 </ng-template>
 

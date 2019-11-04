@@ -19,17 +19,9 @@ export class GridMasterDetailSampleComponent implements OnInit {
     constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions) {}
     public ngOnInit(): void {
         this.columns = [
-            { dataType: 'string', field: 'ID', width: 100, hidden: true },
-            { dataType: 'string', field: 'CompanyName', width: 300, groupable: true  },
-            { dataType: 'number', field: 'Salary', width: 200, pinned: true },
-            { dataType: 'string', field: 'ContactTitle', width: 200, pinned: true, groupable: true },
-            { dataType: 'string', field: 'Address', width: 300, groupable: true  },
-            { dataType: 'string', field: 'Country', width: 150, groupable: true },
-            { dataType: 'string', field: 'City', width: 150, groupable: true },
-            { dataType: 'string', field: 'Region', width: 150, groupable: true },
-            { dataType: 'string', field: 'PostalCode', width: 150, groupable: true  },
-            { dataType: 'string', field: 'Phone', width: 150, groupable: true  },
-            { dataType: 'string', field: 'Fax', width: 150, groupable: true  }
+            { dataType: 'string', field: 'ContactName', width: 200 },
+            { dataType: 'string', field: 'CompanyName', width: 300 },
+            { dataType: 'string', field: 'Salary', width: 300 }
         ];
 
         /* tslint:disable */

@@ -673,6 +673,15 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 const lastColIndex = this.unpinnedColumns[this.unpinnedColumns.length - 1].visibleIndex;
                 this.navigateTo(rowIndex - 1, lastColIndex,
                     (args) => args.target.nativeElement.focus());
+            } else if (!shift) {
+                const focusable = container
+                .querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                const lastFocusable = focusable[focusable.length - 1];
+                if (lastFocusable === target) {
+                    event.preventDefault();
+                    this.navigateTo(rowIndex + 1, 0,
+                        (args) => args.target.nativeElement.focus());
+                }
             }
         } else if (key === 'arrowup') {
             this.navigateTo(rowIndex - 1, colIndex,

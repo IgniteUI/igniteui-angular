@@ -42,6 +42,8 @@ export interface GridType extends IGridDataBindable {
 
     firstEditableColumnIndex: number;
     lastEditableColumnIndex: number;
+    hasDetails: boolean;
 
     endEdit(commit: boolean, event?: Event): void;
+    isDetailRecord(rec: any): boolean;
 }

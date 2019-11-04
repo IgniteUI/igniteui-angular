@@ -341,7 +341,7 @@ export class IgxGridNavigationService {
     }
 
     protected focusElem(rowElement, visibleColumnIndex) {
-        if (rowElement.tagName.toLowerCase() === 'igx-grid-groupby-row') {
+        if (rowElement.tagName.toLowerCase() === 'igx-grid-groupby-row' || rowElement.className === 'igx-grid__tr-container') {
             rowElement.focus();
         } else {
             const isSummaryRow = rowElement.tagName.toLowerCase() === 'igx-grid-summary-row';
@@ -433,8 +433,14 @@ export class IgxGridNavigationService {
         const rowIndex = selectedNode.row;
         const visibleColumnIndex = selectedNode.column;
         const isSummaryRow = selectedNode.isSummaryRow;
+        const nextIsDetailRow = this.grid.isDetailRecord(this.grid.dataView[rowIndex + 1]);
+        const isLastColumn = this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex;
         if (isSummaryRow && rowIndex === 0 &&
             this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
+            return;
+        }
+        if (nextIsDetailRow && isLastColumn) {
+            this.navigateDown(currentRowEl, { row: rowIndex, column: visibleColumnIndex });
             return;
         }
 
@@ -443,7 +449,7 @@ export class IgxGridNavigationService {
             return;
         }
 
-        if (this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
+        if (isLastColumn) {
             const rowEl = this.grid.rowList.find(row => row.index === rowIndex + 1) ?
                 this.grid.rowList.find(row => row.index === rowIndex + 1) :
                 this.grid.summariesRowList.find(row => row.index === rowIndex + 1);
@@ -556,6 +562,17 @@ export class IgxGridNavigationService {
             return;
         }
 
+        const prevIsDetailRow = rowIndex > 0 ? this.grid.isDetailRecord(this.grid.dataView[rowIndex - 1]) : false;
+        if (visibleColumnIndex === 0 && prevIsDetailRow) {
+            let target = currentRowEl.previousElementSibling;
+            const focusable = target.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+            if (focusable.length > 0 ) {
+                target =  focusable[focusable.length - 1];
+            }
+            target.focus({ preventScroll: true });
+            return;
+        }
+
         if (visibleColumnIndex === 0) {
             if (rowIndex === 0 && this.grid.allowFiltering && this.grid.filterMode === FilterMode.quickFilter) {
                 this.moveFocusToFilterCell();
@@ -637,6 +654,9 @@ export class IgxGridNavigationService {
     }
 
     protected getCellSelector(visibleIndex?: number, isSummary = false): string {
+        if (visibleIndex === 0 && this.grid.hasDetails) {
+            return 'igx-expandable-grid-cell';
+        }
         return isSummary ? 'igx-grid-summary-cell' : 'igx-grid-cell';
     }
 

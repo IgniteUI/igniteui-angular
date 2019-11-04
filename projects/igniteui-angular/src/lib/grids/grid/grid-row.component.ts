@@ -1,4 +1,4 @@
-import { Component, forwardRef, ChangeDetectionStrategy, ElementRef, ChangeDetectorRef, HostBinding } from '@angular/core';
+import { Component, forwardRef, ChangeDetectionStrategy, ElementRef, ChangeDetectorRef, HostBinding, ViewChildren, QueryList } from '@angular/core';
 import { IgxGridComponent } from './grid.component';
 import { IgxRowDirective } from '../row.directive';
 import { GridBaseAPIService } from '../api.service';
@@ -23,6 +23,9 @@ export class IgxGridRowComponent extends IgxRowDirective<IgxGridComponent> {
             // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
             super(gridAPI, crudService, selectionService, element, cdr);
         }
+
+    @ViewChildren('cell')
+    public cells: QueryList<any>;
 
     @HostBinding('class.igx-grid__tr--mrl')
     get hasColumnLayouts(): boolean {

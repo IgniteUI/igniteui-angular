@@ -1,11 +1,15 @@
 <div class="wrapper">
-    <igx-grid #grid1 [data]="data" [height]="'700px'" >
+    <igx-grid #grid1 [data]="data" [width]="'820px'" [height]="'700px'" [autoGenerate]='false' >
         <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"
             [hidden]='c.hidden' [sortable]='true' [movable]='true' [editable]="true" [hasSummary]="true" [dataType]='c.dataType'>
         </igx-column>
 
         <ng-template igxGridDetail let-dataItem>
-            <div>{{dataItem.CompanyName}}</div>
+            <div>
+                <div><span class='categoryStyle'>Country:</span> {{dataItem.Country}}</div>
+                <div><span class='categoryStyle'>City:</span> {{dataItem.City}}</div>
+                <div><span class='categoryStyle'>Address:</span> {{dataItem.Address}}</div>
+            </div>
         </ng-template>
     </igx-grid>
     <br />
