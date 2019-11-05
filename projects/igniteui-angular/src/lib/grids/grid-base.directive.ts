@@ -1899,9 +1899,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    public get dragGhostCustomTemplate(): TemplateRef<IgxRowDragGhostDirective> {
+    public get dragGhostCustomTemplate(): TemplateRef<any> {
         if (this.dragGhostCustomTemplates && this.dragGhostCustomTemplates.first) {
-            return this.dragGhostCustomTemplates.first.templateRef;
+            return this.dragGhostCustomTemplates.first;
         }
 
         return null;
@@ -1911,8 +1911,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    @ContentChildren(IgxRowDragGhostDirective, { read: IgxRowDragGhostDirective, descendants: false })
-    public dragGhostCustomTemplates: QueryList<IgxRowDragGhostDirective>;
+    @ContentChildren(IgxRowDragGhostDirective, { read: TemplateRef, descendants: false })
+    public dragGhostCustomTemplates: QueryList<TemplateRef<any>>;
 
     /**
      * @hidden

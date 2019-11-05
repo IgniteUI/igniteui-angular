@@ -666,6 +666,16 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
     */
+   public get dragGhostCustomTemplate(): TemplateRef<any> {
+        if (this.parentIsland) {
+            return this.parentIsland.dragGhostCustomTemplate;
+        }
+        return super.dragGhostCustomTemplate;
+    }
+
+    /**
+     * @hidden
+    */
     protected initColumns(collection: QueryList<IgxColumnComponent>, cb: Function = null) {
         if (this.hasColumnLayouts) {
             // invalid configuration - hierarchical grid should not allow column layouts
