@@ -677,7 +677,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 const focusable = container
                 .querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
                 const lastFocusable = focusable[focusable.length - 1];
-                if (lastFocusable === target) {
+                if (lastFocusable === target || (focusable.length === 0 && container === target)) {
                     event.preventDefault();
                     this.navigateTo(rowIndex + 1, 0,
                         (args) => args.target.nativeElement.focus());

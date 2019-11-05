@@ -433,7 +433,8 @@ export class IgxGridNavigationService {
         const rowIndex = selectedNode.row;
         const visibleColumnIndex = selectedNode.column;
         const isSummaryRow = selectedNode.isSummaryRow;
-        const nextIsDetailRow = this.grid.isDetailRecord(this.grid.dataView[rowIndex + 1]);
+        const nextIsDetailRow = rowIndex + 1 <= this.grid.dataView.length - 1 ?
+         this.grid.isDetailRecord(this.grid.dataView[rowIndex + 1]) : false;
         const isLastColumn = this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex;
         if (isSummaryRow && rowIndex === 0 &&
             this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
@@ -565,11 +566,22 @@ export class IgxGridNavigationService {
         const prevIsDetailRow = rowIndex > 0 ? this.grid.isDetailRecord(this.grid.dataView[rowIndex - 1]) : false;
         if (visibleColumnIndex === 0 && prevIsDetailRow) {
             let target = currentRowEl.previousElementSibling;
-            const focusable = target.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-            if (focusable.length > 0 ) {
-                target =  focusable[focusable.length - 1];
+            const applyFocusFunc = () => {
+                    target = this.getRowByIndex(rowIndex - 1, '');
+                    const focusable = target.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                    if (focusable.length > 0 ) {
+                        target =  focusable[focusable.length - 1];
+                    }
+                    target.focus({ preventScroll: true });
+            };
+            if (target) {
+                applyFocusFunc();
+            } else {
+                this.performVerticalScrollToCell(rowIndex - 1, visibleColumnIndex, () => {
+                    applyFocusFunc();
+                });
             }
-            target.focus({ preventScroll: true });
+
             return;
         }
 
