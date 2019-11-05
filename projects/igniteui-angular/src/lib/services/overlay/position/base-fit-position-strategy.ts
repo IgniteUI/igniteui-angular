@@ -9,6 +9,7 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
     position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
         const targetRect = Util.getTargetRect(this.settings);
         const contentElementRect = contentElement.getBoundingClientRect();
+        let exposedConnectedFit = {};
         if (initialCall) {
             const connectedFit: ConnectedFit = {};
             connectedFit.targetRect = targetRect;
@@ -20,8 +21,9 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
             if (!connectedFit.fitHorizontal || !connectedFit.fitVertical) {
                 this.fitInViewport(contentElement, connectedFit);
             }
+            exposedConnectedFit = connectedFit;
         }
-        this.setStyle(contentElement, targetRect, contentElementRect);
+        this.setStyle(contentElement, targetRect, contentElementRect, exposedConnectedFit);
     }
 
     /**

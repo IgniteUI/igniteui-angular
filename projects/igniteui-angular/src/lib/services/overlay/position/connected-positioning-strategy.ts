@@ -8,6 +8,7 @@ import {
   VerticalAlignment
 } from './../utilities';
 import { scaleInVerTop, scaleOutVerTop } from '../../../animations/main';
+import { ConnectedFit } from './base-fit-position-strategy';
 
 /**
  * Positions the element based on the directions and start point passed in trough PositionSettings.
@@ -33,11 +34,17 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
     this.settings = Object.assign({}, this._defaultSettings, settings);
   }
 
+    protected calculateElementRectangles(contentElement): { targetRect: ClientRect, elementRect: ClientRect } {
+        return {
+            targetRect: Util.getTargetRect(this.settings),
+            elementRect: contentElement.getBoundingClientRect() as ClientRect
+        };
+    }
+
   /** @inheritdoc */
   position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
-    const targetRect = Util.getTargetRect(this.settings);
-    const contentElementRect = contentElement.getBoundingClientRect();
-    this.setStyle(contentElement, targetRect, contentElementRect);
+    const rects =  this.calculateElementRectangles(contentElement);
+    this.setStyle(contentElement, rects.targetRect, rects.elementRect);
   }
 
   /**
@@ -56,10 +63,10 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
    * @param targetRect Bounding rectangle of strategy target
    * @param elementRect Bounding rectangle of the element
    */
-  protected setStyle(element: HTMLElement, targetRect: ClientRect, elementRect: ClientRect) {
+  protected setStyle(element: HTMLElement, targetRect: ClientRect, elementRect: ClientRect, connectedFit?: ConnectedFit) {
     const startPoint: Point = {
-      x: targetRect.right + targetRect.width * this.settings.horizontalStartPoint,
-      y: targetRect.bottom + targetRect.height * this.settings.verticalStartPoint,
+      x: targetRect.right + targetRect.width * this.settings.horizontalStartPoint + (connectedFit ? connectedFit.xOffset : 0),
+      y: targetRect.bottom + targetRect.height * this.settings.verticalStartPoint + (connectedFit ? connectedFit.yOffset : 0)
     };
     const wrapperRect: ClientRect = element.parentElement.getBoundingClientRect();
 
