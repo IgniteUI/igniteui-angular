@@ -149,13 +149,10 @@ export class SelectSampleComponent implements OnInit {
     }
 
     addItem() {
-        // TODO
+        console.log("addItem");
     }
 
     headerFootedClick(event) {
-        // Fires after select Blur()
-        // event.preventDefault();
-        // event.stopPropagation();
-        console.log("preventDefault()");
+        console.log("header/footer clicked", event);
     }
 }
