@@ -151,4 +151,11 @@ export class SelectSampleComponent implements OnInit {
     addItem() {
         // TODO
     }
+
+    headerFootedClick(event) {
+        // Fires after select Blur()
+        // event.preventDefault();
+        // event.stopPropagation();
+        console.log("preventDefault()");
+    }
 }
