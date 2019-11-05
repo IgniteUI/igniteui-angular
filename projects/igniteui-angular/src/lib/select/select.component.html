@@ -30,6 +30,7 @@
 
     <!-- Version 3 -->
     <div igxToggle class="igx-drop-down__list--select"
+    (mousedown)="mousedownHandler($event);"
     (onOpening)="onToggleOpening($event)" (onOpened)="onToggleOpened()"
     (onClosing)="onToggleClosing($event)" (onClosed)="onToggleClosed()">
         <ng-content *ngTemplateOutlet="headerTemplate">

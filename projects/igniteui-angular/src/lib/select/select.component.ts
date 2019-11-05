@@ -453,5 +453,13 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             this._statusChanges$.unsubscribe();
         }
     }
+
+    /**
+     * @hidden @internal
+     * Prevent input blur - closing the items container on Header/Footer Template click.
+     */
+   public mousedownHandler(event) {
+        event.preventDefault();
+    }
 }
 
