@@ -1,4 +1,5 @@
-import { Component, forwardRef, ChangeDetectionStrategy, ElementRef, ChangeDetectorRef, HostBinding, ViewChildren, QueryList } from '@angular/core';
+import { Component, forwardRef, ChangeDetectionStrategy,
+     ElementRef, ChangeDetectorRef, HostBinding, ViewChildren, QueryList } from '@angular/core';
 import { IgxGridComponent } from './grid.component';
 import { IgxRowDirective } from '../row.directive';
 import { GridBaseAPIService } from '../api.service';
