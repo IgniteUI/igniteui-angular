@@ -10,12 +10,6 @@
 ///
 /// @param {Color} $background-color [null] - The toolbar background color.
 /// @param {Color} $title-text-color [null] - The toolbar title text color.
-/// @param {Color} $button-background [null] - The toolbar button background color.
-/// @param {Color} $button-text-color [null] - The toolbar button text color.
-/// @param {Color} $button-hover-background [null] - The toolbar button hover background color.
-/// @param {Color} $button-hover-text-color [null] - The toolbar button hover text color.
-/// @param {Color} $button-focus-background [null] - The toolbar button focus background color.
-/// @param {Color} $button-focus-text-color [null] - The toolbar button focus text color.
 /// @param {Color} $dropdown-background [null] - The toolbar drop-down background color.
 /// @param {Color} $item-text-color [null] - The toolbar drop-down item text color.
 /// @param {Color} $item-hover-background [null] - The toolbar drop-down item hover background color.
@@ -41,14 +35,7 @@
     $schema: $light-schema,
 
     $background-color: null,
-    $button-background: null,
     $title-text-color: null,
-
-    $button-text-color: null,
-    $button-hover-background: null,
-    $button-hover-text-color: null,
-    $button-focus-background: null,
-    $button-focus-text-color: null,
 
     $dropdown-background: null,
     $item-text-color: null,
@@ -58,7 +45,15 @@
     $item-focus-text-color: null
 ) {
     $name: 'igx-grid-toolbar';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $grid-toolbar-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $grid-toolbar-schema: map-get($schema, $name);
+    } @else {
+        $grid-toolbar-schema: $schema;
+    }
+
+    $theme: apply-palette($grid-toolbar-schema, $palette);
 
     @if not($title-text-color) and $background-color {
         $title-text-color: text-contrast($background-color);
@@ -84,43 +79,12 @@
         $item-focus-text-color: text-contrast($item-focus-background);
     }
 
-    @if not($button-hover-background) and $background-color {
-        $button-hover-text-color: text-contrast($background-color);
-
-        @if type-of($background-color) == 'color' {
-            $button-hover-background: rgba(text-contrast($background-color), .2);
-        }
-    }
-
-    @if not($button-focus-background) and $background-color {
-        $button-focus-text-color: text-contrast($background-color);
-
-        @if type-of($background-color) == 'color' {
-            $button-focus-background: rgba(text-contrast($background-color), .2);
-        }
-    }
-
-    @if not($button-background) and $background-color {
-        $button-text-color: text-contrast($background-color);
-
-        @if type-of($background-color) == 'color' {
-            $button-background: rgba(text-contrast($background-color), .1);
-        }
-    }
-
     @return extend($theme, (
         name: $name,
         palette: $palette,
 
         background-color: $background-color,
-        button-background: $button-background,
         title-text-color: $title-text-color,
-
-        button-text-color: $button-text-color,
-        button-hover-background: $button-hover-background,
-        button-hover-text-color: $button-hover-text-color,
-        button-focus-background: $button-focus-background,
-        button-focus-text-color: $button-focus-text-color,
 
         item-text-color: $item-text-color,
         dropdown-background: $dropdown-background,
@@ -183,39 +147,11 @@
             padding: map-get($grid-toolbar-padding-rtl, 'comfortable');
         }
 
-        %igx-button--flat {
-            background: --var($theme, 'button-background');
-            color: --var($theme, 'button-text-color');
+        %igx-button--outlined,
+        %igx-button--raised,
+        %igx-button--flat,
+        %igx-button--icon{
             margin-#{$left}: rem(8);
-
-            &:hover {
-                background: --var($theme, 'button-hover-background');
-                color: --var($theme, 'button-hover-text-color');
-            }
-
-            &:focus,
-            &:active {
-                background: --var($theme, 'button-focus-background');
-                color: --var($theme, 'button-focus-text-color');
-            }
-        }
-
-        %igx-button--icon {
-            background: --var($theme, 'button-background');
-            color: --var($theme, 'button-text-color');
-            margin-#{$left}: rem(8);
-            border-radius: 0;
-
-            &:hover {
-                background: --var($theme, 'button-hover-background');
-                color: --var($theme, 'button-hover-text-color');
-            }
-
-            &:focus,
-            &:active {
-                background: --var($theme, 'button-focus-background');
-                color: --var($theme, 'button-focus-text-color');
-            }
         }
 
         %igx-grid-toolbar__button-space {
@@ -241,8 +177,10 @@
         &[dir='rtl'] {
             text-align: #{$right};
 
+            %igx-button--outlined,
+            %igx-button--raised,
             %igx-button--flat,
-            %igx-button--icon {
+            %igx-button--icon{
                 margin-#{$left}: 0;
                 margin-#{$right}: rem(8);
             }
@@ -313,7 +251,7 @@
     }
 
     %igx-grid-toolbar__adv-filter--filtered {
-        color: igx-color(map-get($theme, 'palette'), 'secondary') !important;
+        border-color: igx-color(map-get($theme, 'palette'), 'secondary') !important;
     }
 
     %igx-grid-toolbar__dropdown {
