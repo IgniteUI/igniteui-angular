@@ -275,11 +275,11 @@
         transition: $input-transition;
 
         @include if-ltr() {
-            transform: translateX(-#{rem($switch-off-offset)});
+            transform: translateX(#{rem($switch-off-offset)});
         }
 
         @include if-rtl() {
-            transform: translateX(#{rem($switch-off-offset)});
+            transform: translateX(-#{rem($switch-off-offset)});
         }
 
         &:hover {
