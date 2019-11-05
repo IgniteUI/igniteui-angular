@@ -654,7 +654,7 @@ export class IgxGridNavigationService {
     }
 
     protected getCellSelector(visibleIndex?: number, isSummary = false): string {
-        if (visibleIndex === 0 && this.grid.hasDetails) {
+        if (visibleIndex === 0 && this.grid.hasDetails && !isSummary) {
             return 'igx-expandable-grid-cell';
         }
         return isSummary ? 'igx-grid-summary-cell' : 'igx-grid-cell';
