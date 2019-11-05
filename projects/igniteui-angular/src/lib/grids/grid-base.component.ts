@@ -1073,6 +1073,11 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      */
     set filterMode(value) {
         this._filterMode = value;
+
+        if (this.filteringService.isFilterRowVisible) {
+            this.filteringRow.close();
+        }
+        this.notifyChanges(true);
     }
 
     /**
@@ -4449,17 +4454,30 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    protected getFilterCellHeight(): number {
+        const headerGroupNativeEl = (this.headerGroupsList.length !== 0) ?
+                                        this.headerGroupsList[0].element.nativeElement : null;
+        const filterCellNativeEl = (headerGroupNativeEl) ?
+                                    headerGroupNativeEl.querySelector('igx-grid-filtering-cell') : null;
+        return (filterCellNativeEl) ? filterCellNativeEl.offsetHeight : 0;
+    }
+
+    /**
+     * @hidden
+     */
     protected _calculateGridBodyHeight(): number {
         if (!this._height) {
             return null;
         }
 
-
+        const actualTheadRow = (!this.allowFiltering || (this.allowFiltering && this.filterMode !== FilterMode.quickFilter)) ?
+                                 this.theadRow.nativeElement.offsetHeight - this.getFilterCellHeight() :
+                                 this.theadRow.nativeElement.offsetHeight;
         const footerHeight = this.summariesHeight || this.tfoot.nativeElement.offsetHeight - this.tfoot.nativeElement.clientHeight;
         const toolbarHeight = this.getToolbarHeight();
         const pagingHeight = this.getPagingHeight();
         const groupAreaHeight = this.getGroupAreaHeight();
-        const renderedHeight = toolbarHeight + this.theadRow.nativeElement.offsetHeight +
+        const renderedHeight = toolbarHeight + actualTheadRow +
             footerHeight + pagingHeight + groupAreaHeight +
             this.scr.nativeElement.clientHeight;
 
