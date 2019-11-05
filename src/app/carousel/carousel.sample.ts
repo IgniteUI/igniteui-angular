@@ -7,7 +7,7 @@ import { IgxCarouselComponent, CarouselIndicatorsOrientation } from 'igniteui-an
 })
 export class CarouselSampleComponent {
     @ViewChild('car', { static: true }) car: IgxCarouselComponent;
-    animationModes = ['none', 'slide', 'fade', 'grow'];
+    animationModes = ['none', 'slide', 'fade'];
     slides = [];
     interval = 3000;
     pause = true;

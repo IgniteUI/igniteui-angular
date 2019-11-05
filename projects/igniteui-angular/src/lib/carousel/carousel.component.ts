@@ -230,18 +230,6 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
    */
     @Input() public animationType = CarouselAnimationType.slide;
 
-    /**
-      * Sets/gets the animation duration(in milliseconds).
-      * Default value is `320`.
-      * ```html
-      * <igx-carousel animationDuration='100'>
-     * <igx-carousel>
-     * ```
-     * @memberOf IgxSlideComponent
-     */
-    @Input()
-    public animationDuration = 320;
-
     @ViewChild('defaultIndicator', { read: TemplateRef, static: true })
     protected defaultIndicator: TemplateRef<any>;
 
@@ -336,6 +324,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     private leaveAnimationPlayer?: AnimationPlayer;
     private currentSlide: IgxSlideComponent;
     private previousSlide: IgxSlideComponent;
+    private animationDuration = 320;
 
     /**
     * @hidden
@@ -455,26 +444,6 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
                     enterAnimation: useAnimation(fadeIn, { params: { duration: `${this.animationDuration}ms` } }),
                     leaveAnimation: null
                 };
-            case CarouselAnimationType.grow:
-                return {
-                    enterAnimation: useAnimation(rotateInCenter, {
-                        params: {
-                            delay: '0s',
-                            duration: `${this.animationDuration}ms`,
-                            endAngle: 0,
-                            endOpacity: 1,
-                            rotateX: 0,
-                            rotateY: 1,
-                            rotateZ: 0,
-                            startAngle: `${this.currentSlide.direction === 1 ? 180 : -180}`,
-                            startOpacity: 0,
-                            xPos: `${this.currentSlide.direction === 1 ? 'right' : 'left'}`,
-                            yPos: 'center'
-                        }
-                    }),
-                    leaveAnimation: null
-                };
-
         }
         return  {
             enterAnimation: null,
