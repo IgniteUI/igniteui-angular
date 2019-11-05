@@ -201,7 +201,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     /** @hidden  @internal */
-    @HostListener('input', ['$event'])
+    @HostListener('input')
     onInput() {
         this.open();
     }
@@ -217,8 +217,8 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     /** @hidden  @internal */
-    @HostListener('keydown.Tab', ['$event'])
-    @HostListener('keydown.Shift.Tab', [`$event`])
+    @HostListener('keydown.Tab')
+    @HostListener('keydown.Shift.Tab')
     onTab() {
         this.close();
     }
