@@ -67,7 +67,8 @@ describe('Update 8.2.6', () => {
     it('should update igx-grid-paginator-theme', done => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.scss',
-            `$dark-grid-paginator: igx-grid-paginator-theme($color: black);
+            `@import '~igniteui-angular/lib/core/styles/components/grid-paginator/grid-paginator-component';
+            @import '~igniteui-angular/lib/core/styles/components/grid-paginator/grid-paginator-theme';
             @include igx-grid-paginator($dark-grid-paginator);
             .igx-grid-paginator__pager {
                 @include igx-button($dark-button);
@@ -77,7 +78,8 @@ describe('Update 8.2.6', () => {
         const tree = schematicRunner.runSchematic('migration-12', {}, appTree);
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.scss'))
         .toEqual(
-            `$dark-grid-paginator: igx-paginator-theme($color: black);
+            `@import '~igniteui-angular/lib/core/styles/components/paginator/paginator-component';
+            @import '~igniteui-angular/lib/core/styles/components/paginator/paginator-theme';
             @include igx-paginator($dark-grid-paginator);
             .igx-grid-paginator__pager {
                 @include igx-button($dark-button);
