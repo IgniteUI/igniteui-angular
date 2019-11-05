@@ -25,7 +25,8 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent implements 
     }
 
     public set selected(value: any) {
-        if (value && !this.isHeader && !this.disabled) {
+        if (value && !this.isHeader && !this.disabled) { // TODO: Refactor: inherited isHeader is regarding group items
+                                                         // not an actual(select) header.
             this.dropDown.selectItem(this);
         }
     }
