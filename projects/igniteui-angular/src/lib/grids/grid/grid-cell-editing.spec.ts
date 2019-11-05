@@ -694,6 +694,44 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.value).toEqual('New Name');
         });
 
+        it(`Should not update data in grid with transactions, when row is updated in onCellEdit and onCellEdit is canceled`, () => {
+            fixture = TestBed.createComponent(SelectionWithTransactionsComponent);
+            fixture.detectChanges();
+            grid = fixture.componentInstance.grid;
+
+            grid.primaryKey = 'ID';
+            fixture.detectChanges();
+
+            // update the cell value via updateRow and cancel the event
+            grid.onCellEdit.subscribe((e: IGridEditEventArgs) => {
+                const rowIndex: number = e.cellID.rowIndex;
+                const row = grid.getRowByIndex(rowIndex);
+                grid.updateRow({[row.columns[e.cellID.columnID].field]: e.newValue}, row.rowID);
+                e.cancel = true;
+            });
+
+            const cell = grid.getCellByColumn(0, 'Name');
+            const initialValue = cell.value;
+            const firstNewValue = 'New Value';
+            const secondNewValue = 'Very New Value';
+
+            cell.update(firstNewValue);
+            fixture.detectChanges();
+            expect(cell.value).toBe(firstNewValue);
+
+            cell.update(secondNewValue);
+            fixture.detectChanges();
+            expect(cell.value).toBe(secondNewValue);
+
+            grid.transactions.undo();
+            fixture.detectChanges();
+            expect(cell.value).toBe(firstNewValue);
+
+            grid.transactions.undo();
+            fixture.detectChanges();
+            expect(cell.value).toBe(initialValue);
+        });
+
         it(`Should properly emit 'onCellEditCancel' event`, () => {
             spyOn(grid.onCellEditCancel, 'emit').and.callThrough();
             const cell = grid.getCellByColumn(0, 'fullName');

@@ -16,12 +16,34 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - Pinning columns is no longer automatically prevented when the pinning area would exceed the size of the grid.
 
+### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`:
+    - `sortStrategy` input is added, which can be used to set a global sorting strategy for the entire grid.
+        (**NOTE**: The grid's `sortStrategy` is of different type compared to the column's `sortStrategy`.)
+    - `NoopSortingStrategy` is added, which can be used to disable the default sorting of the grid by assigning its instance to the grid's `sortStrategy` input. (Useful for remote sorting.)
+    - `NoopFilteringStrategy` is added, which can be used to disable the default filtering of the grid by assigning its instance to the grid's `filterStrategy` input. (Useful for remote filtering.)
+    - `sortingExpressionsChange` event emitter is added, which is fired whenever a change to the sorting expressions has occurred (prior to performing the actual sorting).
+    - `filteringExpressionsTreeChange` event emitter is added, which is fired whenever a change to the filtering expressions has occurred (prior to performing the actual filtering).
+- `IgxOverlayService`:
+    - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
+- `IgxToggleDirective`:
+    - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
+
+## 8.2.6
+
+### New Features
+- `IgxSelectItem`
+    - `text` input is added. By default, the Select component will display the selected item's element inner text. In cases with a more complex item template, where more than just text interpolation is used, set the text property to specify what to display in the select field when the item is selected.
+
+
 ## 8.2.4
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - The header text of the columns and the column groups now has the `title` attribute set to it in order to expose a native browser tooltip.
 
 ### RTL Support
-Most of the components in the framework now have full right-to-left (RTL) support via the newly included RTL themes. 
+Most of the components in the framework now have full right-to-left (RTL) support via the newly included RTL themes.
 
-For CSS-based projects add `node_modules/igniteui-angular/styles/igniteui-angular-rtl.css` to your angular.json styles collection. 
+For CSS-based projects add `node_modules/igniteui-angular/styles/igniteui-angular-rtl.css` to your angular.json styles collection.
 
 For Sass-based projects pass `$direction` to the `igx-core` mixin in your root stylesheet.
 
@@ -37,7 +59,7 @@ Currently the following components have only partial RTL support:
  - Circular Progress Indicator (igx-circular-bar)
 
  We plan on adding support for the aforementioned components in the upcoming releases.
- 
+
 ### New Features
 
 - Columns now expose the `cellStyles` property which allows conditional styling of the column cells. Similar to `cellClasses` it accepts an object literal where the keys are style properties and the values are expressions for evaluation.
@@ -59,6 +81,20 @@ The callback signature for both `cellStyles` and `cellClasses` is now changed to
 
 - `IgxChip`
     - **Breaking Change** The `originalEvent` property for the events `onMoveStart`, `onMoveEnd`, `onClick` and `onSelection` now provides the events, passed from the `igxDrag` directive. The passed original events are in other words the previous events that triggered the `igxChip` ones. They also have original events until a browser event is reached.
+- `IgxGrid` - Now you can access all grid data inside the custom column summary. Two additional optional parameters are introduced in the IgxSummaryOperand `operate` method.
+
+```typescript
+class MySummary extends IgxNumberSummaryOperand {
+    constructor() {
+        super();
+    }
+    operate(columnData: any[], allGridData = [], fieldName?): IgxSummaryResult[] {
+        const result = super.operate(allData.map(r => r[fieldName]));
+        result.push({ key: 'test', label: 'Total Discounted', summaryResult: allData.filter((rec) => rec.Discontinued).length });
+        return result;
+    }
+}
+```
 
 ## 8.2.0
 ### New theme

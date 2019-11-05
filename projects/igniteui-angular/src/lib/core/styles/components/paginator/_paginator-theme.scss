@@ -17,12 +17,12 @@
 /// @requires extend
 ///
 /// @example scss Change the stripes color
-///   $my-grid-paginator-theme: igx-grid-paginator-theme(
+///   $my-paginator-theme: igx-paginator-theme(
 ///     $stripes-color: orange
 ///   );
-///   // Pass the theme to the igx-grid-paginator component mixin
-///   @include igx-grid-paginator($my-grid-paginator-theme);
-@function igx-grid-paginator-theme(
+///   // Pass the theme to the igx-paginator component mixin
+///   @include igx-paginator($my-paginator-theme);
+@function igx-paginator-theme(
     $palette: $default-palette,
     $schema: $light-schema,
 
@@ -30,8 +30,16 @@
     $background-color: null,
     $border-color: null
 ) {
-    $name: 'igx-grid-paginator';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $name: 'igx-paginator';
+    $grid-paginator-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $grid-paginator-schema: map-get($schema, $name);
+    } @else {
+        $grid-paginator-schema: $schema;
+    }
+
+    $theme: apply-palette($grid-paginator-schema, $palette);
 
     @return extend($theme, (
         name: $name,
@@ -46,7 +54,7 @@
 /// @requires {mixin} igx-root-css-vars
 /// @requires rem
 /// @requires --var
-@mixin igx-grid-paginator($theme) {
+@mixin igx-paginator($theme) {
     @include igx-root-css-vars($theme);
 
     $paginator-padding: (
@@ -64,7 +72,7 @@
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
-    %igx-grid-paginator {
+    %igx-paginator {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -83,30 +91,30 @@
         }
     }
 
-    %igx-grid-paginator--cosy {
+    %igx-paginator--cosy {
         padding: map-get($paginator-padding, 'cosy');
         height: map-get($paginator-height, 'cosy');
     }
 
-    %igx-grid-paginator--compact {
+    %igx-paginator--compact {
         padding: map-get($paginator-padding, 'compact');
         height: map-get($paginator-height, 'compact');
     }
 
 
-    %igx-grid-paginator__label {
+    %igx-paginator__label {
         margin-#{$right}: 8px;
         @include ellipsis();
     }
 
-    %igx-grid-paginator__select {
+    %igx-paginator__select {
         display: flex;
         justify-content: flex-start;
         align-items: center;
         flex: 1;
     }
 
-    %igx-grid-paginator__pager {
+    %igx-paginator__pager {
         display: flex;
         justify-content: flex-end;
         align-items: center;
@@ -123,11 +131,11 @@
         }
     }
 
-    %igx-grid-paginator__pager-text {
+    %igx-paginator__pager-text {
         display: flex;
     }
 
-    %igx-grid-paginator__select-input {
+    %igx-paginator__select-input {
         display: flex;
         max-width: 90px;
         min-width: 80px;

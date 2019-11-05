@@ -33,7 +33,6 @@ export class IgxSummaryRowComponent implements DoCheck  {
     public summaries: Map<string, IgxSummaryResult[]>;
 
     @Input()
-    @HostBinding('attr.data-gridID')
     public gridID;
 
     @Input()

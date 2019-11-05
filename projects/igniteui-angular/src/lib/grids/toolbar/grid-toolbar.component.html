@@ -9,10 +9,11 @@
 
 <div class="igx-grid-toolbar__actions">
     <div *ngIf="grid.allowAdvancedFiltering">
-        <button igxButton="flat" [displayDensity]="grid.displayDensity" #advancedFilteringButton name="btnAdvancedFiltering" igxButton igxRipple
-            (click)="showAdvancedFilteringUI()">
+        <button igxButton="outlined" [displayDensity]="grid.displayDensity" #advancedFilteringButton name="btnAdvancedFiltering" igxRipple
+            (click)="showAdvancedFilteringUI()"
+                [ngClass]="grid.advancedFilteringExpressionsTree ? 'igx-grid-toolbar__adv-filter--filtered' : 'igx-grid-toolbar__adv-filter'">
             <div class="igx-grid-toolbar__button-space">
-                <igx-icon [ngClass]="grid.advancedFilteringExpressionsTree ? 'igx-grid-toolbar__adv-filter--filtered' : 'igx-grid-toolbar__adv-filter'">
+                <igx-icon>
                     filter_list
                 </igx-icon>
                 <span>{{grid.resourceStrings.igx_grid_advanced_filter_title}}</span>
@@ -21,7 +22,7 @@
     </div>
 
     <div *ngIf="grid.columnHiding">
-        <button igxButton="flat" [displayDensity]="grid.displayDensity" #columnHidingButton name="btnColumnHiding" igxButton igxRipple
+        <button igxButton="outlined" [displayDensity]="grid.displayDensity" #columnHidingButton name="btnColumnHiding" igxRipple
             (click)="toggleColumnHidingUI()">
             <div  class="igx-grid-toolbar__button-space">
                 <igx-icon *ngIf="grid.hiddenColumnsCount > 0">visibility_off</igx-icon>
@@ -41,7 +42,7 @@
         </igx-drop-down>
     </div>
     <div *ngIf="grid.columnPinning">
-        <button igxButton="flat" [displayDensity]="grid.displayDensity" #columnPinningButton name="btnColumnPinning" igxButton igxRipple
+        <button igxButton="outlined" [displayDensity]="grid.displayDensity" #columnPinningButton name="btnColumnPinning" igxRipple
             (click)="toggleColumnPinningUI()">
             <div  class="igx-grid-toolbar__button-space">
                 <igx-icon *ngIf="pinnedColumnsCount > 0">lock</igx-icon>
@@ -61,7 +62,7 @@
     </div>
 
     <div class="igx-grid-toolbar__dropdown" *ngIf="shouldShowExportButton" id="btnExport">
-        <button igxButton="flat" [displayDensity]="grid.displayDensity" igxRipple #btnExport
+        <button igxButton="outlined" [displayDensity]="grid.displayDensity" igxRipple #btnExport
                 (click)="exportClicked()">
             <span class="igx-grid-toolbar__button-space">
                 <igx-icon fontSet="material">import_export</igx-icon>

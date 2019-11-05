@@ -34,7 +34,14 @@
     $text-color: null
 ) {
     $name: 'igx-tooltip';
-    $tooltip-schema: map-get($schema, $name);
+    $tooltip-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $tooltip-schema: map-get($schema, $name);
+    } @else {
+        $tooltip-schema: $schema;
+    }
+
     $theme: apply-palette($tooltip-schema, $palette);
 
     $border-radius: round-borders(
