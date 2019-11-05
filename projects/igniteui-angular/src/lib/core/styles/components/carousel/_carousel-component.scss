@@ -5,6 +5,55 @@
 /// @requires {mixin} bem-elem
 /// @requires {mixin} bem-mod
 ////
+
+/// @access private
+@mixin _igx-carousel-indicators-partial {
+    @include b(igx-carousel-indicators) {
+        @extend %igx-carousel-indicators !optional;
+
+        @include e(indicator) {
+            @extend %igx-carousel-indicator !optional;
+        }
+
+        @include m(top) {
+            @extend %igx-carousel-indicators !optional;
+            @extend %igx-carousel-indicators--top !optional;
+        }
+
+        @include m(bottom) {
+            @extend %igx-carousel-indicators !optional;
+            @extend %igx-carousel-indicators--bottom !optional;
+        }
+    }
+}
+
+/// @access private
+@mixin _igx-carousel-naviation-partial {
+    @include b(igx-nav-dot) {
+        @extend %igx-nav-dot !optional;
+
+        @include m(active) {
+            @extend %igx-nav-dot--active !optional;
+        }
+    }
+}
+
+/// @access private
+@mixin _igx-carousel-slide-partial {
+    @include b(igx-slide) {
+        @extend %igx-carousel-slide !optional;
+
+        @include m(current) {
+            @extend %igx-carousel-slide--current !optional;
+        }
+
+        @include m(previous) {
+            @extend %igx-carousel-slide--previous !optional;
+        }
+    }
+}
+
+/// @access public
 @include b(igx-carousel) {
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
@@ -40,42 +89,9 @@
             @extend %igx-carousel-arrow--hover !optional;
         }
     }
+
+    @include _igx-carousel-indicators-partial();
+    @include _igx-carousel-naviation-partial();
+    @include _igx-carousel-slide-partial();
 }
 
-@include b(igx-carousel-indicators) {
-    @extend %igx-carousel-indicators !optional;
-
-    @include e(indicator) {
-        @extend %igx-carousel-indicator !optional;
-    }
-
-    @include m(top) {
-        @extend %igx-carousel-indicators !optional;
-        @extend %igx-carousel-indicators--top !optional;
-    }
-
-    @include m(bottom) {
-        @extend %igx-carousel-indicators !optional;
-        @extend %igx-carousel-indicators--bottom !optional;
-    }
-}
-
-@include b(igx-nav-dot) {
-    @extend %igx-nav-dot !optional;
-
-    @include m(active) {
-        @extend %igx-nav-dot--active !optional;
-    }
-}
-
-@include b(igx-slide) {
-    @extend %igx-carousel-slide !optional;
-
-    @include m(current) {
-        @extend %igx-carousel-slide--current !optional;
-    }
-
-    @include m(previous) {
-        @extend %igx-carousel-slide--previous !optional;
-    }
-}
