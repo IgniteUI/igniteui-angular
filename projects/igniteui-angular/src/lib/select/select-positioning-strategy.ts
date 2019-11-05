@@ -6,19 +6,12 @@ import { fadeOut, fadeIn } from '../animations/main';
 import { IgxSelectBase } from './select.common';
 import { isIE } from '../core/utils';
 import { BaseFitPositionStrategy, ConnectedFit } from '../services/overlay/position/base-fit-position-strategy';
-
-// TODO Refactor: May replace all sizes taken from elements with the corresponding ClientRect.Bottom-ClientRect.Top
-// TODO Refactor: Remove itemHeight and replace it with the corresponding selectFit.targetRect.Bottom - selectFit.targetRect.Top
+import { DisplayDensity } from '../core/density';
 
 /** @hidden @internal */
 export class SelectPositioningStrategy extends BaseFitPositionStrategy implements IPositionStrategy {
 
     private _selectDefaultSettings = {
-       // target: this.select.getEditElement(), // add target so Util.getTargetRect can get details on the input // Set Point after calculations
-        // target: (this.select.getEditElement().getBoundingClientRect().bottom -
-        //         this.select.getEditElement().getBoundingClientRect().top) / 2,
-        // target: this.select.getEditElement().getBoundingClientRect().top + ((this.select.getEditElement().getBoundingClientRect().bottom -
-        // this.select.getEditElement().getBoundingClientRect().top) / 2),
         target: this.select.getEditElement().getBoundingClientRect().top, // ** Use top target here and top item for positioning bellow **
         horizontalDirection: HorizontalAlignment.Right,
         verticalDirection: VerticalAlignment.Bottom,
@@ -34,111 +27,175 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         this.settings = Object.assign({}, this._selectDefaultSettings, settings);
     }
 
-    // private defaultWindowToListOffset = 5;             // in SelectFit
-    // private viewPort = Util.getViewportRect(document); // in SelectFit
-    // private deltaY: number;
-    // private deltaX: number;
-    // private itemTextPadding: number;                   // in SelectFit
-    // private itemTextIndent: number;                    // in SelectFit
-    // private outerContainerBoundRect: DOMRect;          // in SelectFit
-    // private itemTextToInputTextDiff: number;           // in SelectFit
-
-    // get a reference to the actual items wrap container
-    private headerElementHeight = 0; //TODO expose from select component --> getHeaderContainer()
-    private footerElementHeight = 0; //TODO expose from select component --> getFooterContainer()
-    // private ddl = this.select.getListItemsContainer();          // in SelectFit
+    // TODO: Get this dynamically from styles?
+    private get getItemPaddingBasedOnDisplayDensity(): number {
+        switch (this.select.displayDensity) {
+            case DisplayDensity.compact:
+                return 16;
+            case DisplayDensity.cosy:
+                return 20;
+            case DisplayDensity.comfortable:
+                return 24;
+            default: return 24;
+        }
+    }
+    // private viewPort = Util.getViewportRect(document);           // in SelectFit
+    // private ddl = this.select.getListItemsContainer();           // in SelectFit
     private itemElement = this.getInteractionItemElement();
     private itemBoundRect = this.itemElement.getBoundingClientRect() as DOMRect;
     private itemHeight = this.itemBoundRect.height;
 
+    private nyOffset = 0;
+    private nxOffset = 0;
+    private nstyles: SelectStyles = { };
+    private nInitialCall: boolean;
+
     position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
-        // Implement position without scrolling first. For example 3 items no h&f. take input height/itemHeight into account. When ready, implement header and footer checks.
-        // 1st method checking isItem fully visible. if need to scroll, check height above item&below and if can be scrolled..scroll.
-        // 2nd try position the container after the item is scrolled , taking header and footer into account.
-        // 3rd if unsuccessful, position 1st/last item on the input OR container edge(Top OR Bottom)
-        // 1 if !isItemFullyVisible() { this.scrollItemInView(calculateHowMuchToScroll())}
+        // 1st: Check if the interaction item is visible. If NO it should be scrolled in view. Adjust the new container position with the scrolled amount and store it.
+        // 2nd: Try position the container after the item is scrolled.
+        // 3rd: If unsuccessful, position the overlay container on TOP/ABOVE or BOTTOM/BELLOW of the input. BOTTOM/BELLOW is preferred.
 
         // is it OK to use a method for this and keeps all stuff in Obj, instead of global vars initialized on the go when needed?
-        if (initialCall) {
-            const selectFit: SelectFit = {};
-            selectFit.viewPortRect = Util.getViewportRect(document);
-            this.calculateVariables(contentElement, selectFit);
+        const rects = super.calculateElementRectangles(contentElement);
 
-            // this._initialSettings = this._initialSettings || Object.assign({}, this.settings);
-            // this.settings = Object.assign({}, this._initialSettings);
+        const selectFit: SelectFit = {
+            yOffset: this.nyOffset, xOffset: this.nxOffset, targetRect: rects.targetRect,
+            contentElementRect: rects.elementRect, styles: this.nstyles
+        };
+
+        this.nInitialCall = false;
+        if (initialCall) {
+            this.nInitialCall = true;
             selectFit.viewPortRect = Util.getViewportRect(document);
-           // this.updateViewPortFit(selectFit); //use inherited method instead
-           // calculate/pass yOffset with
+
+            // Fill in the required selectFit object properties.
+            this.calculateVariables(contentElement, selectFit);
+            selectFit.viewPortRect = Util.getViewportRect(document);
+
+            // Calculate how much to offset the overlay container.
             this.calculateYoffset(selectFit);
             this.calculateXoffset(selectFit);
+
+            // Scroll if the selected item is not fully visible and adjust the contentElement Y position with the scrolled amount
+            this.manageScrollToItem(selectFit);
+
             super.updateViewPortFit(selectFit);
-            if (!selectFit.fitHorizontal || !selectFit.fitVertical) {
-                 // this.fitInViewport(contentElement, selectFit);
+            if (!selectFit.fitVertical) {
+                this.fitInViewport(contentElement, selectFit); // TODO: Cleanup Not really using contentElement
             }
-            this.setStyles(contentElement, selectFit);
+        }
+        this.setStyles(contentElement, selectFit);
+    }
+
+    // TODO: can be a getter but needs access to an exposed selectFit object //can't be passed as a param
+    public itemIsInvisible(selectFit: SelectFit) {
+        return selectFit.itemElement.getBoundingClientRect().top >= selectFit.dropDownList.getBoundingClientRect().bottom ||
+               selectFit.itemElement.getBoundingClientRect().bottom <= selectFit.dropDownList.getBoundingClientRect().top;
+    }
+
+    private manageScrollToItem(selectFit: SelectFit) {
+        // Scroll and compensate the item's container position, when the selected item is not visible.
+        if (this.itemIsInvisible(selectFit)) {
+            const compensation = this.scrollToItem(selectFit);
+            this.compensateYScroll(selectFit, compensation);
         }
     }
 
-        // Choose/call position method based on calculations
-        fitInViewport(contentElement: HTMLElement, selectFit: SelectFit) {
-        //#region InitialImpl
-            let canPositionItemOverInput: boolean;   //where best put these
-            let canPositionTopOverInput: boolean;    //where best put these
-            let canPositionBottomOverInput: boolean; //where best put these
-            const headerHeight = selectFit.dropDownList.getBoundingClientRect().top - selectFit.contentElementRect.top; //calculateTop()
-            const footerHeight = selectFit.contentElementRect.bottom - selectFit.dropDownList.getBoundingClientRect().bottom;
-            const viewPortRect = selectFit.viewPortRect;
-            const ddlHeight = selectFit.dropDownList.getBoundingClientRect().bottom - selectFit.dropDownList.getBoundingClientRect().top;
-            const scrollDetails: object = this.getDDLScrollDetails(selectFit.dropDownList);
-            // const ddlScrollHeight = selectFit.dropDownList.scrollHeight; use scrollDetailsObj
+    private scrollToItem(selectFit: SelectFit): number {
+        const itemPosition = this.calculateScrollPosition(selectFit);
+        if (isIE()) {
+            setTimeout(() => {
+                selectFit.dropDownList.scrollTop = (itemPosition);
+            }, 1);
+        } else {
+            selectFit.dropDownList.scrollTop = (itemPosition);
+        }
+        return itemPosition;
+    }
 
-            // make a lucky item position
-            const itemTopListOffset = selectFit.itemElement.getBoundingClientRect().top - selectFit.dropDownList.getBoundingClientRect().top;//calculateTop()
-            let CURRENT_POSITION_Y = selectFit.targetRect.top - itemTopListOffset - headerHeight;                                     //calculateLeft()
-            let CURRENT_POSITION_X = selectFit.targetRect.left - selectFit.styles.itemTextPadding + selectFit.styles.itemTextIndent;  //calculateTop()
-            this.setStyles(contentElement, selectFit); //OR directly use the SelectFit to set these in there&not pass as method parameters
-
-            // TODO more like what is in the base fitInViewPort method
-        //#endregion
+    private calculateScrollPosition(selectFit: SelectFit): number {
+        if (!selectFit.itemElement) { // this check may not be necessary
+            return 0;
         }
 
-        protected setStyles(contentElement: HTMLElement, selectFit: SelectFit) {
-            if (this.canPositionItemOverInput()) {
-                // contentElement.style.top = `${CURRENT_POSITION_Y - selectFit.styles.itemTextToInputTextDiff}px`;
-                // contentElement.style.left = `${CURRENT_POSITION_X}px`;
-                // contentElement.style.width = `${selectFit.styles.contentElementNewWidth}px`; // manage container based on paddings?
-                contentElement.style.top = `${selectFit.top}px`;
-                contentElement.style.left = `${selectFit.left}px`;
-                contentElement.style.width = `${selectFit.styles.contentElementNewWidth}px`; // manage container based on paddings?
-            } else if (this.canPositionTopOverInput()) {
-                //TODO position header over input
-            } else {
-                //TODO position footer over input
-            }
+        const elementRect = selectFit.itemElement.getBoundingClientRect();
+        const parentRect = selectFit.dropDownList.getBoundingClientRect();
+        const scrollPosition = elementRect.bottom - parentRect.bottom;
+        return Math.floor(scrollPosition);
+    }
+
+    // This method can be scrambled and combined in manageScrollToItem()
+    private compensateYScroll(selectFit: SelectFit, compensation: number ) {
+        selectFit.yOffset += compensation;
+        this.nyOffset = selectFit.yOffset;
+    }
+
+    // Position the items outer container Below or Above the input.
+    fitInViewport(contentElement: HTMLElement, selectFit: SelectFit) {
+        // Position Select component's container below target/input as preferred positioning over above target/input
+        if (this.canFitBelowInput(selectFit) && this.canFitAboveInput(selectFit) ||
+            !this.canFitAboveInput(selectFit)) {
+                // Calculate container starting point;
+                selectFit.top = selectFit.targetRect.top - selectFit.styles.itemTextToInputTextDiff; // TODO: modify the yOffset instead & use one call to super.setStyle
+
+        } else { // Position Select component's container above target/input
+            selectFit.top = selectFit.targetRect.bottom + selectFit.styles.itemTextToInputTextDiff -
+                selectFit.contentElementRect.height; // TODO: modify the yOffset instead & use one call to super.setStyle
         }
-        public canPositionItemOverInput(): boolean { return true; }   // OR use flags
-        public canPositionTopOverInput(): boolean { return true; }    // OR use flags
-        public canPositionBottomOverInput(): boolean { return true; } // OR use flags
+    }
+
+    protected canFitBelowInput(selectFit: SelectFit): boolean {
+        selectFit.top = selectFit.targetRect.top - selectFit.styles.itemTextToInputTextDiff;
+        return selectFit.targetRect.top - selectFit.styles.itemTextToInputTextDiff + selectFit.contentElementRect.height < selectFit.viewPortRect.bottom;
+    }
+
+    protected canFitAboveInput(selectFit: SelectFit): boolean {
+            return selectFit.targetRect.bottom + selectFit.styles.itemTextToInputTextDiff -
+            selectFit.contentElementRect.height > selectFit.viewPortRect.top;
+    }
+
+    protected setStyles(contentElement: HTMLElement, selectFit: SelectFit) {
+        // The Select component's container is about to be displayed. Set its position.
+        if (this.nInitialCall) {
+            contentElement.style.top = `${selectFit.top}px`;
+            contentElement.style.left = `${selectFit.left}px`;
+        // Page's View Window container is scrolled. Reposition Select's container.
+        } else if (this.nInitialCall === false) {
+            super.setStyle(contentElement, selectFit.targetRect, selectFit.contentElementRect, selectFit); // TODO Cleanup? passing too much stuff;
+        }
+
+        this.nstyles.contentElementNewWidth = selectFit.styles.contentElementNewWidth;
+        contentElement.style.width = `${selectFit.styles.contentElementNewWidth}px`; // manage container based on paddings?
+    }
 
     private calculateVariables(contentElement: HTMLElement, selectFit: SelectFit) {
         const targetRect = Util.getTargetRect(this.settings);
         const contentElementRect = contentElement.getBoundingClientRect();
         const itemHeight = this.getInteractionItemElement().getBoundingClientRect().height;
-
-        //const selectStyles: SelectStyles = {};
         selectFit.styles = {};
         selectFit.itemElement = this.getInteractionItemElement();
         selectFit.itemHeight = itemHeight;
         selectFit.dropDownList = this.select.getListItemsContainer();
         selectFit.targetRect = targetRect;
         selectFit.contentElementRect = contentElementRect;
-       // selectFit.inputElement = this._selectDefaultSettings.target; // Get TODO as Point target is used update to getEditElement();
+       // selectFit.inputElement = this._selectDefaultSettings.target; // TODO Get as Point target is used update to getEditElement();
         selectFit.inputElement = this.select.getEditElement();
-        // calculate related item-to-input text fit styles
+        // Calculate input and selected item elements style related variables
         this.calculateStyles(selectFit);
 
     }
 
+    // private getItemPaddingBasedOnDisplayDensity(): number {
+    //     switch (this.select.displayDensity) {
+    //         case DisplayDensity.compact:
+    //             return 16;
+    //         case DisplayDensity.cosy:
+    //             return 20;
+    //         case DisplayDensity.comfortable:
+    //             return 24;
+    //         default: return 24;
+    //     }
+    // }
     public calculateStyles(selectFit: SelectFit) {
         const inputFontSize = window.getComputedStyle(selectFit.inputElement).fontSize;
         const numericInputFontSize = parseFloat(inputFontSize);
@@ -146,10 +203,14 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         const numericItemFontSize = parseFloat(itemFontSize);
         const inputTextToInputTop = (selectFit.targetRect.bottom - selectFit.targetRect.top - numericInputFontSize) / 2;
         const itemTextToItemTop = (selectFit.itemHeight - numericItemFontSize) / 2;
+         // Adjust for input top padding
+        const negateInputPaddings = (
+                parseFloat(window.getComputedStyle(selectFit.inputElement).paddingTop) -
+                parseFloat(window.getComputedStyle(selectFit.inputElement).paddingBottom)
+            ) / 2;
+        selectFit.styles.itemTextToInputTextDiff = Math.ceil(itemTextToItemTop - inputTextToInputTop + negateInputPaddings);
 
-        selectFit.styles.itemTextToInputTextDiff = itemTextToItemTop - inputTextToInputTop;
-
-        const selectItemPaddingHorizontal = 24; //maybe get this from styles directly instead of hardoding it //16px/20px/24px based on DisplayDensty // TODO: Get it dinamicaly from styles
+        const selectItemPaddingHorizontal = this.getItemPaddingBasedOnDisplayDensity; //24; //maybe get this from styles directly instead of hardoding it //16px/20px/24px based on DisplayDensty // TODO: Get it dinamicaly from styles
         const itemLeftPadding = window.getComputedStyle(selectFit.itemElement).paddingLeft;
         const itemTextIndent = window.getComputedStyle(selectFit.itemElement).textIndent;
         const numericLeftPadding = parseFloat(itemLeftPadding);
@@ -158,68 +219,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         selectFit.styles.itemTextPadding = numericLeftPadding;
         selectFit.styles.itemTextIndent = numericTextIndent;
         selectFit.styles.contentElementNewWidth = selectFit.targetRect.width + 24 + selectItemPaddingHorizontal * 2; // 24 is the input dd icon width
-        //#region TODO positioning related so compute elsewhere //maybe in positionItemOverInput as this is only related to match exact text
-            // contentElement.style.left += `${START.X - numericLeftPadding - numericTextIndent}px`;
-            // contentElement.style.width = inputRect.width + 24 + selectItemPaddingHorizontal * 2 + 'px';
-            // this.deltaX = START.X - numericLeftPadding - numericTextIndent;
-            // const currentScroll = this.getItemsOutOfView(contentElement, itemHeight)['currentScroll'];
-            // const remainingScroll = this.getItemsOutOfView(contentElement, itemHeight)['remainingScroll'];
-        //#endregion
     }
-
-    //DONE 1)Update this.select.getListItemsContainer() to use selectFit.dropDownList 2)Update this.ddl to selectFit.dropDownList
-    private getDDLScrollDetails(dropDownList: HTMLElement): {
-        'currentScroll': number,
-        'remainingScroll': number,
-        'scrollHeight': number
-    } {
-        if (dropDownList.scrollHeight <= dropDownList.clientHeight) {
-            return {
-                'currentScroll': 0,
-                'remainingScroll': 0,
-                'scrollHeight': dropDownList.scrollHeight
-            };
-        }
-        const currentScroll = dropDownList.scrollTop;
-        const remainingScroll = this.select.items.length * this.itemHeight - currentScroll - dropDownList.getBoundingClientRect().height;
-        return {
-            'currentScroll': currentScroll,
-            'remainingScroll': remainingScroll,
-            'scrollHeight': dropDownList.scrollHeight
-        };
-    }
-
-    // TODO may pass only the dropDownList instead of the whole selectFit Obj
-    private isItemFullyVisible(selectFit: SelectFit): boolean {
-        // itemTop&&itemBottom are in the scrolled area
-
-        // selectFit.dropDownList.getBoundingClientRect().height;
-        //const itemElement = this.getInteractionItemElement();
-        //const itemBoundRect = this.itemElement.getBoundingClientRect() as DOMRect;
-        //const itemHeight = itemBoundRect.height;
-        // currentScroll
-        // remainingScroll
-
-        const dropDownList = selectFit.dropDownList;
-        if (this.itemBoundRect.top >= this.getDDLScrollDetails(dropDownList)['currentScroll'] &&
-            this.itemBoundRect.bottom <= this.getDDLScrollDetails(dropDownList)['remainingScroll']) {
-           return true;
-        } else {
-            return false;
-        }
-    }
-
-    private calculateHowMuchToScroll() {
-
-    }
-
-    // private scrollItemInView(getDDLScrollDetails(itemHeight)) {
-
-    // }
-
-    // private canScrollItemInView() {
-
-    // }
 
     private getInteractionItemElement(): HTMLElement {
         let itemElement;
@@ -235,56 +235,21 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         return itemElement;
     }
 
-    // // OVERRIDE
-    // protected updateViewPortFit(selectFit: SelectFit) {
-    //     selectFit.left = this.calculateLeft(selectFit);
-    //     selectFit.right = selectFit.left + selectFit.contentElementRect.width;
-    //     selectFit.fitHorizontal =
-    //         selectFit.viewPortRect.left < selectFit.left && selectFit.right < selectFit.viewPortRect.right;
-
-    //     selectFit.top = this.calculateTop(selectFit);
-    //     selectFit.bottom = selectFit.top + selectFit.contentElementRect.height;
-    //     selectFit.fitVertical =
-    //         selectFit.viewPortRect.top < selectFit.top && selectFit.bottom < selectFit.viewPortRect.bottom;
-    // }
-
-    // // OVERRIDE - use selectFit param only
-    // protected calculateLeft(selectFit: SelectFit): number {
-    //     return selectFit.targetRect.left - selectFit.styles.itemTextPadding + selectFit.styles.itemTextIndent;
-    // }
-    // // OVERRIDE
-    // protected calculateTop(selectFit: SelectFit): number {
-    //     // TODO maybe handle scroll cases here as well (calculate how much to scroll(+direction), scroll, and adjust Y(direction))
-    //     const itemTopListOffset = selectFit.itemElement.getBoundingClientRect().top - selectFit.dropDownList.getBoundingClientRect().top;
-    //     const headerHeight = selectFit.dropDownList.getBoundingClientRect().top - selectFit.contentElementRect.top;
-    //     return selectFit.targetRect.top - itemTopListOffset - headerHeight - selectFit.styles.itemTextToInputTextDiff; // OR + itemTextToInputTextDiff if positionAndScrollTop
-    // }
-
-    // This method is basically the above OVERRIDE protected calculateTop(selectFit: SelectFit): number
     protected calculateYoffset(selectFit: SelectFit) {
-        // itemToContainerHeight + header + calculateForTheScrollInDDL
-        const headerHeight = selectFit.dropDownList.getBoundingClientRect().top - selectFit.contentElementRect.top;
-        const itemMiddleLeftPointY = selectFit.itemElement.getBoundingClientRect().top + (selectFit.itemHeight / 2);
-        const ddlTopLeftPointY = selectFit.dropDownList.getBoundingClientRect().top;    // 1)Use all elements in calc
-        // selectFit.yOffset =  itemMiddleLeftPointY - ddlTopLeftPointY - headerHeight;  // 1)Use all elements in calc
-        const contentElementTopLeftPointY = selectFit.contentElementRect.top;           ///6 2)Use only container inst of (ddl+header)
-        // selectFit.yOffset =  -(itemMiddleLeftPointY - contentElementTopLeftPointY + selectFit.styles.itemTextToInputTextDiff) + 21;     //2)Use only container inst of (ddl+header)
-        // 21.0625 diff????
-        //compact=16.266(14fix? OK) (itemHeight28) /cosy=19.938(16fix OK) (itemHeight32)/ comfortable=25(21fix OK) (itemHeight40) /
-
-        selectFit.yOffset =  -(selectFit.itemElement.getBoundingClientRect().top - contentElementTopLeftPointY + selectFit.styles.itemTextToInputTextDiff);     //2)Use only container inst of (ddl+header) + // ** Use top target above and top item for positioning here **
+        const contentElementTopLeftPointY = selectFit.contentElementRect.top;
+        selectFit.yOffset =  -(selectFit.itemElement.getBoundingClientRect().top - contentElementTopLeftPointY + selectFit.styles.itemTextToInputTextDiff);
+        this.nyOffset = selectFit.yOffset;
     }
 
-    // This method is basically the above OVERRIDE protected calculateLeft(selectFit: SelectFit): number
     protected calculateXoffset(selectFit: SelectFit) {
-        // selectFit.xOffset = -(selectFit.targetRect.left - selectFit.targetRect.left - selectFit.styles.itemTextPadding + selectFit.styles.itemTextIndent);                                                        //1) The whole calculation
-        selectFit.xOffset = selectFit.styles.itemTextIndent - selectFit.styles.itemTextPadding;  //2) partial calculation. itemTextIndent may need to be with (-)
+        selectFit.xOffset = selectFit.styles.itemTextIndent - selectFit.styles.itemTextPadding;
+        this.nxOffset = selectFit.xOffset;
     }
 }
 
 export interface SelectFit extends ConnectedFit {
     contentElementRect?: ClientRect;
-    targetRect?: ClientRect;  // input rectangle
+    targetRect?: ClientRect;
     viewPortRect?: ClientRect;
     fitHorizontal?: boolean;
     fitVertical?: boolean;
@@ -295,23 +260,19 @@ export interface SelectFit extends ConnectedFit {
     xOffset?: number;
     yOffset?: number;
 
+    // New properties
     inputElement?: HTMLElement;
-   // inputRect: DOMRect; //this is targetRect?: ClientRect;
     dropDownList?: HTMLElement;
-    defaultWindowToListOffset?: 5;
-
     itemElement?: HTMLElement;
-    itemHeight?: number;
+    itemHeight?: number; // TODO: Can reduce code and use inputElement directly, Yet code is more readable with itemHeight
     styles?: SelectStyles;
 }
 
 export interface SelectStyles {
-    // numericInputFontSize: number; // not needed
-    // numericItemFontSize: number;  // not needed
-
     itemTextPadding?: number;
     itemTextIndent?: number;
     itemTextToInputTextDiff?: number;
     contentElementNewWidth?: number;
+    displayDensity?: DisplayDensity | string;
 }
 
