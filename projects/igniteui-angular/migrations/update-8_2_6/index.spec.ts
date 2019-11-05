@@ -69,6 +69,7 @@ describe('Update 8.2.6', () => {
             '/testSrc/appPrefix/component/test.component.scss',
             `@import '~igniteui-angular/lib/core/styles/components/grid-paginator/grid-paginator-component';
             @import '~igniteui-angular/lib/core/styles/components/grid-paginator/grid-paginator-theme';
+            $dark-grid-paginator: igx-grid-paginator-theme($color: black);
             @include igx-grid-paginator($dark-grid-paginator);
             .igx-grid-paginator__pager {
                 @include igx-button($dark-button);
@@ -80,6 +81,7 @@ describe('Update 8.2.6', () => {
         .toEqual(
             `@import '~igniteui-angular/lib/core/styles/components/paginator/paginator-component';
             @import '~igniteui-angular/lib/core/styles/components/paginator/paginator-theme';
+            $dark-grid-paginator: igx-paginator-theme($color: black);
             @include igx-paginator($dark-grid-paginator);
             .igx-grid-paginator__pager {
                 @include igx-button($dark-button);
