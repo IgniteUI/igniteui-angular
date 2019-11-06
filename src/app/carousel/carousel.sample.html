@@ -28,10 +28,10 @@
                             <img [src]="slide.image">
                         </igx-slide>
 
-                        <!-- <ng-template igxCarouselIndicator let-slide>
-                            <igx-icon *ngIf="slide.active" fontSet="material">brightness_7</igx-icon>
-                            <igx-icon *ngIf="!slide.active" fontSet="material">brightness_5</igx-icon>
-                        </ng-template> -->
+                        <ng-template igxCarouselIndicator let-slide>
+                                <img *ngIf="!slide.active" [src]="slides[slide.index].image" style="width: 100px;  ">
+                                <img *ngIf="slide.active" [src]="slides[slide.index].image" style="width: 120px;  ">
+                        </ng-template>
                     </igx-carousel>
                 </div>
             </article>

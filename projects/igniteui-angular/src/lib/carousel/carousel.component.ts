@@ -765,6 +765,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     @HostListener('keydown.arrowright')
     public onKeydownArrowRight() {
         if (this.keyBoardSupport) {
+            event.preventDefault();
             this.next();
             requestAnimationFrame(() => this.nativeElement.focus());
         }
@@ -775,6 +776,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     @HostListener('keydown.arrowleft')
     public onKeydownArrowLeft() {
         if (this.keyBoardSupport) {
+            event.preventDefault();
             this.prev();
             requestAnimationFrame(() => this.nativeElement.focus());
         }
@@ -787,6 +789,30 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
             this.stop();
         } else {
             this.play();
+        }
+    }
+
+     /**
+     *@hidden
+     */
+    @HostListener('keydown.home')
+    public onKeydownHome() {
+        if (this.keyBoardSupport && this.slides.length > 0) {
+            event.preventDefault();
+            this.slides.first.active = true;
+            requestAnimationFrame(() => this.nativeElement.focus());
+        }
+    }
+
+/**
+     *@hidden
+     */
+    @HostListener('keydown.end')
+    public onKeydownEnd() {
+        if (this.keyBoardSupport && this.slides.length > 0) {
+            event.preventDefault();
+            this.slides.last.active = true;
+            requestAnimationFrame(() => this.nativeElement.focus());
         }
     }
 
