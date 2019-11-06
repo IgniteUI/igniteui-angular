@@ -690,7 +690,7 @@ export class IgxSliderComponent implements
     public primaryTickLabels = true;
 
     @Input()
-    public secondaryTickLabels = false;
+    public secondaryTickLabels = true;
 
     @Input()
     public ticksOrientation: TicksOrientation = TicksOrientation.bottom;

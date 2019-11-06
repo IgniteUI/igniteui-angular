@@ -8,6 +8,7 @@
             [attr.y]="tickYOffset(idx)"></use>
         <text #txt [attr.transform]="tickLabelOrientation"
             [ngStyle]="{ 'font-size': '.75rem' }"
+            [attr.hidden] = "!hiddenTickLabels(idx) || null"
             [attr.x]="tickLabelXOffset(idx)"
             [attr.y]="tickLabelYOffset(idx)"
             [attr.text-anchor]="textAnchor()"

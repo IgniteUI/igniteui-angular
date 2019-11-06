@@ -11,7 +11,7 @@ import { TicksOrientation, TickLabelsOrientation } from '../slider.common';
         }
     }`]
 })
-export class IgxTicksComponent implements AfterViewInit {
+export class IgxTicksComponent {
     private _primaryTicksWidth = 16;
     private _secondaryTicksWidth = 8;
     private _defaultTickYOffset = 4;
@@ -23,10 +23,10 @@ export class IgxTicksComponent implements AfterViewInit {
     public secondaryTicks: number;
 
     @Input()
-    public primaryTickLabels = true;
+    public primaryTickLabels: boolean;
 
     @Input()
-    public secondaryTickLabels = false;
+    public secondaryTickLabels: boolean;
 
     @Input()
     public ticksOrientation: TicksOrientation;
@@ -51,10 +51,6 @@ export class IgxTicksComponent implements AfterViewInit {
 
     @Input()
     public orientation: TicksOrientation;
-
-    public ngAfterViewInit() {
-
-    }
 
     /**
      * @hidden
@@ -111,18 +107,28 @@ export class IgxTicksComponent implements AfterViewInit {
         const trackHeight = this.track.nativeElement.offsetHeight;
         const primaryTickOffset = this._primaryTicksWidth / 2 + this._defaultTickYOffset + trackHeight;
         const secondaryTickOffset = this._secondaryTicksWidth / 2 + this._defaultTickYOffset + trackHeight;
-        const yOffset = this.primaryTicks <= 0 ? secondaryTickOffset :
-            idx % (this.secondaryTicks + 1) === 0 ? primaryTickOffset : secondaryTickOffset;
+        const yOffset = this.isPrimary(idx) ? primaryTickOffset : secondaryTickOffset;
 
         return this.orientation === TicksOrientation.top ? - (yOffset - trackHeight) : yOffset;
+    }
+
+    public hiddenTickLabels(idx: number) {
+        return this.isPrimary(idx) ? this.primaryTickLabels : this.secondaryTickLabels;
+    }
+
+    /**
+     * @hidden
+     */
+    public isPrimary(idx: number) {
+        return this.primaryTicks <= 0 ? false :
+            idx % (this.secondaryTicks + 1) === 0;
     }
 
     /**
      * @hidden
      */
     public strokeWidth(idx: number) {
-        return this.primaryTicks <= 0 ? this._secondaryTicksWidth :
-                idx % (this.secondaryTicks + 1) === 0 ? this._primaryTicksWidth : this._secondaryTicksWidth;
+        return this.isPrimary(idx) ? this._primaryTicksWidth : this._secondaryTicksWidth;
     }
 
     /**
