@@ -85,11 +85,4 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoC
         }
     }
 
-    /**
-     * @hidden @internal
-     */
-    @HostListener('mousedown', ['$event'])
-    mousedownHandler(event) {
-        event.preventDefault();
-    }
 }
