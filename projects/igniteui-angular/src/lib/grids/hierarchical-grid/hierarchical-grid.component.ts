@@ -665,12 +665,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     /**
      * @hidden
-    */
-   public get dragGhostCustomTemplate(): TemplateRef<any> {
+     * @internal
+     */
+    public getDragGhostCustomTemplate(): TemplateRef<any> {
         if (this.parentIsland) {
-            return this.parentIsland.dragGhostCustomTemplate;
+            return this.parentIsland.getDragGhostCustomTemplate();
         }
-        return super.dragGhostCustomTemplate;
+        return super.getDragGhostCustomTemplate();
     }
 
     /**
