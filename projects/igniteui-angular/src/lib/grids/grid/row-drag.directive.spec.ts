@@ -47,6 +47,7 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
                 IgxGridRowCustomGhostDraggableComponent,
                 IgxGridFeaturesRowDragComponent,
                 IgxHierarchicalGridTestComponent,
+                IgxHierarchicalGridCustomGhostTestComponent,
                 IgxTreeGridTestComponent
             ],
             imports: [
@@ -871,6 +872,12 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
         }));
 
         it('should correctly create custom ghost element', (async () => {
+            fixture = TestBed.createComponent(IgxHierarchicalGridCustomGhostTestComponent );
+            dragGrid = fixture.componentInstance.hDragGrid;
+            fixture.detectChanges();
+            dragIndicatorElements = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DRAG_INDICATOR));
+            dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
+
             // first level row
             let dragIndicatorElement: Element = dragIndicatorElements[1].nativeElement;
             let rowToDrag = dragGrid.getRowByIndex(0);
