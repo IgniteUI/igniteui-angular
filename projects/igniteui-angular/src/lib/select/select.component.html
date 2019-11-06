@@ -5,88 +5,42 @@
     <ng-container ngProjectAs="igx-prefix">
         <ng-content select="igx-prefix,[igxPrefix]"></ng-content>
     </ng-container>
-        <input #input class="input" type="text" igxInput [igxSelectItemNavigation]="this"
-            readonly="true"
-            [attr.placeholder]="this.placeholder"
-            [value]="this.selectionValue"
-            role="combobox"
-            aria-haspopup="listbox"
-            [attr.aria-labelledby]="this.label ? this.label.id : ''"
-            [attr.aria-expanded]="!this.collapsed"
-            [attr.aria-owns]="this.listId"
-            [attr.aria-activedescendant]="!this.collapsed ? this.focusedItem?.id : null"
-            (blur)="onBlur()"
-            />
-        <ng-container ngProjectAs="igx-suffix">
+    <input #input class="input" type="text" igxInput [igxSelectItemNavigation]="this"
+        readonly="true"
+        [attr.placeholder]="this.placeholder"
+        [value]="this.selectionValue"
+        role="combobox"
+        aria-haspopup="listbox"
+        [attr.aria-labelledby]="this.label ? this.label.id : ''"
+        [attr.aria-expanded]="!this.collapsed"
+        [attr.aria-owns]="this.listId"
+        [attr.aria-activedescendant]="!this.collapsed ? this.focusedItem?.id : null"
+        (blur)="onBlur()"
+    />
+    <ng-container ngProjectAs="igx-suffix">
             <ng-content select="igx-suffix,[igxSuffix]"></ng-content>
-        </ng-container>
-        <igx-suffix>
+    </ng-container>
+    <igx-suffix>
             <ng-container *ngIf="toggleIconTemplate">
                 <ng-container *ngTemplateOutlet="toggleIconTemplate; context: {$implicit: this.collapsed}"></ng-container>
                 </ng-container>
             <igx-icon *ngIf="!toggleIconTemplate" fontSet="material">{{ collapsed ? 'arrow_drop_down' : 'arrow_drop_up'}}</igx-icon>
-        </igx-suffix>
-    </igx-input-group>
+    </igx-suffix>
+</igx-input-group>
+<div igxToggle class="igx-drop-down-wrapper" (mousedown)="mousedownHandler($event);" (onOpening)="onToggleOpening($event)"
+    (onOpened)="onToggleOpened()" (onClosing)="onToggleClosing($event)" (onClosed)="onToggleClosed()">
 
-    <!-- Version 3 -->
-    <div igxToggle class="igx-drop-down__list--select"
-    (mousedown)="mousedownHandler($event);"
-    (onOpening)="onToggleOpening($event)" (onOpened)="onToggleOpened()"
-    (onClosing)="onToggleClosing($event)" (onClosed)="onToggleClosed()">
-        <ng-content *ngTemplateOutlet="headerTemplate">
-        </ng-content>
-
-        <div #scrollContainer class="igx-drop-down__list-inner--select" style="overflow-y: auto;" [style.maxHeight]="maxHeight" [attr.id]="this.listId" role="listbox">
-            <ng-content select="igx-select-item, igx-select-item-group">
-            </ng-content>
-        </div>
-
-        <ng-container *ngTemplateOutlet="footerTemplate">
-        </ng-container>
+    <div *ngIf="headerTemplate" class="igx-drop-down-wrapper__header">
+        <ng-content *ngTemplateOutlet="headerTemplate"></ng-content>
     </div>
 
-
-<!-- Version 2 -->
-    <!-- <div class="igx-drop-down__list--select" igxToggle [style.maxHeight]="maxHeight"
-    (onOpening)="onToggleOpening($event)" (onOpened)="onToggleOpened()"
-    (onClosing)="onToggleClosing($event)" (onClosed)="onToggleClosed()">
-        <ng-content *ngTemplateOutlet="headerTemplate">
-        </ng-content>
-
-        <div [attr.id]="this.listId" role="listbox">
-            <ng-content select="igx-select-item, igx-select-item-group">
-            </ng-content>
-        </div>
-
-        <ng-container *ngTemplateOutlet="footerTemplate">
-        </ng-container>
-    </div> -->
-
-
-
-<!-- Version 1 -->
-    <!-- <div class="igx-drop-down__list--select" igxToggle [style.maxHeight]="maxHeight"
-    (onOpening)="onToggleOpening($event)" (onOpened)="onToggleOpened()"
-    (onClosing)="onToggleClosing($event)" (onClosed)="onToggleClosed()">
-        <ng-container *ngIf="header">
-            <ng-container *ngTemplateOutlet="headerTemplate ? headerTemplate : headerBase;">
-            </ng-container>
-        </ng-container>
-
-        <div [attr.id]="this.listId" role="listbox">
+    <div #scrollContainer class="igx-drop-down__list--select" style="overflow-y: auto;"
+        [style.maxHeight]="maxHeight" [attr.id]="this.listId" role="listbox">
         <ng-content select="igx-select-item, igx-select-item-group">
         </ng-content>
-        </div>
-        <ng-container *ngIf="header">
-            <ng-container *ngTemplateOutlet="headerTemplate ? headerTemplate : headerBase;">
-            </ng-container>
-        </ng-container>
-    </div> -->
+    </div>
 
-
-
-<!-- Combo -->
-    <!-- <ng-container *ngTemplateOutlet="headerTemplate">
-        </ng-container>
-    <ng-container *ngTemplateOutlet="footerTemplate">
-        </ng-container> -->
+    <div *ngIf="footerTemplate" class="igx-drop-down-wrapper__footer">
+        <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
+    </div>
+</div>

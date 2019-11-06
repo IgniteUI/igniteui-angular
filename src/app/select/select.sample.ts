@@ -148,11 +148,11 @@ export class SelectSampleComponent implements OnInit {
         this.selectDisplayDensity.displayDensity = density;
     }
 
-    addItem() {
-        console.log("addItem");
+    btnClick() {
+        // console.log('clicked');
     }
 
     headerFootedClick(event) {
-        console.log("header/footer clicked", event);
+        // console.log('Header/Footer clicked', event);
     }
 }

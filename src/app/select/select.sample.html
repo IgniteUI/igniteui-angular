@@ -51,14 +51,12 @@
             {{ item.field }}
         </igx-select-item>
         <ng-template igxSelectHeader>
-            <div class="custom-select-header" (click)="headerFootedClick($event);">
-                I AM a HEADER
-            </div>
+            <div class="custom-select-header" (click)="headerFootedClick($event);">iHEADER</div>
         </ng-template>
         <ng-template igxSelectFooter>
             <div class="custom-select-footer" (click)="headerFootedClick($event);">
-                    <igx-icon fontSet="material">add</igx-icon>
-                    <button igxButton="raised" (click)="addItem()">addItem</button>
+                <div>iFOOTER</div>
+                <button igxButton="raised" (click)="btnClick()">Click Me!</button>
             </div>
         </ng-template>
     </igx-select>

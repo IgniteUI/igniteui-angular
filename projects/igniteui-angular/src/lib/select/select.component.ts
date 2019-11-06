@@ -317,26 +317,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         return this.getFirstItemElement().parentElement;
     }
 
-    /** @hidden @internal */
-    public getHeaderContainer(): HTMLElement {
-        return this.headerTemplate ? this.headerTemplate.elementRef.nativeElement : null;
-    }
-
-    /** @hidden @internal */
-    public getFooterContainer(): HTMLElement {
-        return this.footerTemplate ? this.footerTemplate.elementRef.nativeElement : null;
-    }
-
-    /** @hidden @internal */
-    public getHeaderTemplate(): TemplateRef<any> {
-        return this.headerTemplate ? this.headerTemplate : null;
-    }
-
-    /** @hidden @internal */
-    public getFooterTemplate(): TemplateRef<any> {
-        return this.footerTemplate ? this.footerTemplate : null;
-    }
-
     /**
      * Opens the select
      *
