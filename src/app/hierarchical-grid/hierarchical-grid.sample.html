@@ -29,6 +29,12 @@
                     <igx-column field="ChildLevels" [resizable]="true" [groupable]='true'></igx-column>
                     <igx-column field="ProductName" [resizable]="true" [groupable]='true'></igx-column>
                 </igx-column-group>
+                <ng-template let-data igxRowDragGhost>
+                    <div class="dragGhost">
+                        <igx-icon fontSet="material"></igx-icon> 
+                        Moving child {{data.ProductName}}!
+                    </div>
+                </ng-template>
             <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowSelectable]='isRowSelectable' [allowFiltering]='true' >
                     <igx-column field="ID" [hasSummary]='true'></igx-column>
                     <igx-column-group header="Information3">
@@ -56,7 +62,7 @@
         <ng-template let-data igxRowDragGhost>
             <div class="dragGhost">
                 <igx-icon fontSet="material"></igx-icon> 
-                Moving {{data.ProductName}}!
+                Moving parent {{data.ProductName}}!
             </div>
         </ng-template>
     </igx-hierarchical-grid>
