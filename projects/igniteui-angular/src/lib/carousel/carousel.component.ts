@@ -319,17 +319,13 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     private _lastInterval: any;
     private _playing: boolean;
     private _destroyed: boolean;
+    private destroy$ = new Subject<any>();
     private _differ: IterableDiffer<IgxSlideComponent> | null = null;
     private enterAnimationPlayer?: AnimationPlayer;
     private leaveAnimationPlayer?: AnimationPlayer;
     private currentSlide: IgxSlideComponent;
     private previousSlide: IgxSlideComponent;
     private animationDuration = 320;
-
-    /**
-    * @hidden
-    */
-    protected destroy$ = new Subject<any>();
 
     constructor(private element: ElementRef, private _iterableDiffers: IterableDiffers, private builder: AnimationBuilder) {
         this._differ = this._iterableDiffers.find([]).create(null);
@@ -359,7 +355,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     }
 
     private unsubscriber(slide: IgxSlideComponent) {
-        return merge(this.destroy$, slide.destroy);
+        return merge(this.destroy$, slide.isDestroyed);
     }
 
     private onSlideActivated(slide: IgxSlideComponent) {
@@ -496,10 +492,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         });
     }
 
-    /**
-     * @hidden
-     */
-    protected initSlides(change: QueryList<IgxSlideComponent>) {
+    private initSlides(change: QueryList<IgxSlideComponent>) {
         const diff = this._differ.diff(change.toArray());
         if (diff) {
             this.slides.reduce((any, c, ind) => c.index = ind, 0); // reset slides indexes
@@ -526,7 +519,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     }
 
     /**
-     * @hidden @internal
+     * @hidden
      */
     public get getIndicatorTemplate(): TemplateRef<any> {
         if (this.indicatorTemplate) {
@@ -566,6 +559,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     public get showIndicatorsLabel(): boolean {
         return this.total > this.maximumIndicatorsCount;
     }
+
     /**
      * Returns the total number of `slides` in the carousel.
      * ```typescript
@@ -744,18 +738,13 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         }
     }
 
-    /**
-     *@hidden
-     */
     private _resetInterval() {
         if (this._lastInterval) {
             clearInterval(this._lastInterval);
             this._lastInterval = null;
         }
     }
-    /**
-     *@hidden
-     */
+
     private _restartInterval() {
         this._resetInterval();
 
@@ -924,10 +913,6 @@ export class IgxSlideComponent implements OnDestroy {
     @HostBinding('class.igx-slide')
     public cssClass = 'igx-slide';
 
-    public get destroy(): Subject<boolean> {
-        return this._destroy$;
-    }
-
     /**
      * Gets/sets the `active` state of the slide.
      * ```html
@@ -955,7 +940,6 @@ export class IgxSlideComponent implements OnDestroy {
         this.activeChange.emit(this._active);
     }
 
-
     @HostBinding('class.igx-slide--previous')
     @Input() public previous = false;
 
@@ -967,10 +951,17 @@ export class IgxSlideComponent implements OnDestroy {
     constructor(private elementRef: ElementRef) { }
 
     /**
-  * @hidden
-  */
+    * @hidden
+    */
     public get nativeElement() {
         return this.elementRef.nativeElement;
+    }
+
+    /**
+    * @hidden
+    */
+    public get isDestroyed(): Subject<boolean> {
+    return this._destroy$;
     }
 
     /**
