@@ -33,6 +33,16 @@ export class IgxThumbFromTemplateDirective {}
 })
 export class IgxThumbToTemplateDirective {}
 
+export interface IRangeSliderValue {
+    lower: number;
+    upper: number;
+}
+
+export interface ISliderValueChangeEventArgs extends IBaseEventArgs {
+    oldValue: number | IRangeSliderValue;
+    value: number | IRangeSliderValue;
+}
+
 export enum SliderType {
     /**
      * Slider with single thumb.
@@ -47,16 +57,6 @@ export enum SliderType {
 export enum SliderHandle {
     FROM,
     TO
-}
-
-export interface IRangeSliderValue {
-    lower: number;
-    upper: number;
-}
-
-export interface ISliderValueChangeEventArgs extends IBaseEventArgs {
-    oldValue: number | IRangeSliderValue;
-    value: number | IRangeSliderValue;
 }
 
 /**

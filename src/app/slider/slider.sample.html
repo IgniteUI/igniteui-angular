@@ -6,14 +6,16 @@
         <div> -->
             <h4 class="sample-title">Slider</h4>
             <article class="sample-column">
-                <igx-slider #slider [value]="80" [step]="25" [lowerBound]="0"
+                <igx-slider #slider [type]="sliderType" [value]="rangeValue" [step]="25" [lowerBound]="0"
+                    [labels]="labels"
                     [tickLabelsOrientation]="labelOrientaion"
                     [primaryTicks]="4"
-                    [secondaryTicks]="2">
+                    [secondaryTicks]="3">
                 </igx-slider>
             </article>
             <article style="padding-top: 50px">
                 <button igxButton (click)="changeLabelOrientation()">change label orientaiton</button>
+                <button igxButton (click)="changeLabels()">change labels</button>
             </article>
 
 

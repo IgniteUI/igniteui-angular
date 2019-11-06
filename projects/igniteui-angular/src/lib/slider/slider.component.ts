@@ -31,6 +31,7 @@ import { SliderHandle,
 import { IgxThumbLabelComponent } from './label/thumb-label.component';
 import ResizeObserver from 'resize-observer-polyfill';
 import { IgxTicksComponent } from './ticks/ticks.component';
+import { IgxTickLabelsPipe } from './ticks/tick.pipe';
 
 const noop = () => {
 };
@@ -642,11 +643,11 @@ export class IgxSliderComponent implements
     @Input()
     public set value(value: number | IRangeSliderValue) {
         if (!this.isRange) {
-            this.upperValue = value as number;
+            this.upperValue = value as number - (value as number % this.step);
         } else {
             value = this.validateInitialValue(value as IRangeSliderValue);
-            this.upperValue = (value as IRangeSliderValue).upper;
-            this.lowerValue = (value as IRangeSliderValue).lower;
+            this.upperValue = (value as IRangeSliderValue).upper - ((value as IRangeSliderValue).upper % this.step);
+            this.lowerValue = (value as IRangeSliderValue).lower - ((value as IRangeSliderValue).lower % this.step);
         }
 
         this._onChangeCallback(this.value);
@@ -658,6 +659,9 @@ export class IgxSliderComponent implements
 
     @Input()
     public get primaryTicks() {
+        if (this.labelsViewEnabled) {
+            return this._primaryTicks = this.labels.length - 1;
+        }
         return this._primaryTicks;
     }
 
@@ -1366,7 +1370,8 @@ export class IgxSliderComponent implements
         IgxThumbToTemplateDirective,
         IgxSliderThumbComponent,
         IgxThumbLabelComponent,
-        IgxTicksComponent],
+        IgxTicksComponent,
+        IgxTickLabelsPipe],
     exports: [
         IgxSliderComponent,
         IgxThumbFromTemplateDirective,

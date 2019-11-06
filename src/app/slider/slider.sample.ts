@@ -22,12 +22,13 @@ export class SliderSampleComponent {
 
     public labelOrientaion = TickLabelsOrientation.horizontal;
     public sliderType: SliderType = SliderType.RANGE;
-    public labels = new Array<Date>();
+    public labelsDates = new Array<Date>();
     public task: Task = new Task('Implement new app', 30);
+    public labels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
     public rangeValue = {
-        lower: 30,
-        upper: 60
+        lower: 34,
+        upper: 67
     };
 
     public rangeLabel = {
@@ -37,11 +38,11 @@ export class SliderSampleComponent {
 
     constructor() {
         for (let i = 0; i <= 500; i++) {
-            this.labels.push(new Date(2019, 10, i));
+            this.labelsDates.push(new Date(2019, 10, i));
         }
 
-        this._lowerValue = this.labels[0];
-        this._upperValue = this.labels[this.labels.length - 1];
+        this._lowerValue = this.labelsDates[0];
+        this._upperValue = this.labelsDates[this.labels.length - 1];
     }
 
     public get getLowerVal() {
@@ -53,9 +54,14 @@ export class SliderSampleComponent {
     }
 
     public valueChange(evt: ISliderValueChangeEventArgs) {
-        this._lowerValue = this.labels[(evt.value as IRangeSliderValue).lower];
-        this._upperValue = this.labels[(evt.value as IRangeSliderValue).upper];
+        this._lowerValue = this.labelsDates[(evt.value as IRangeSliderValue).lower];
+        this._upperValue = this.labelsDates[(evt.value as IRangeSliderValue).upper];
     }
+
+    public changeLabels() {
+        this.labels = new Array('asd', 'bsd');
+    }
+
     public changeLabelOrientation() {
         if (this.labelOrientaion === TickLabelsOrientation.horizontal) {
             this.labelOrientaion = TickLabelsOrientation.toptobottom;

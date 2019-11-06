@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, HostBinding } from '@angular/core';
+import { Component, Input, ElementRef, AfterViewInit } from '@angular/core';
 import { TicksOrientation, TickLabelsOrientation } from '../slider.common';
 
 @Component({
@@ -11,7 +11,7 @@ import { TicksOrientation, TickLabelsOrientation } from '../slider.common';
         }
     }`]
 })
-export class IgxTicksComponent {
+export class IgxTicksComponent implements AfterViewInit {
     private _primaryTicksWidth = 16;
     private _secondaryTicksWidth = 8;
     private _defaultTickYOffset = 4;
@@ -42,6 +42,19 @@ export class IgxTicksComponent {
 
     @Input()
     public maxValue: number;
+
+    @Input()
+    public labelsViewEnabled: boolean;
+
+    @Input()
+    public labels: Array<number | string | boolean | null | undefined>;
+
+    @Input()
+    public orientation: TicksOrientation;
+
+    public ngAfterViewInit() {
+
+    }
 
     /**
      * @hidden
@@ -96,10 +109,12 @@ export class IgxTicksComponent {
      */
     public tickYOffset(idx: number) {
         const trackHeight = this.track.nativeElement.offsetHeight;
-        const primaryTickOffset = this._primaryTicksWidth / 2 + trackHeight + this._defaultTickYOffset;
-        const secondaryTickOffset = this._secondaryTicksWidth / 2 + trackHeight + this._defaultTickYOffset;
-        return this.primaryTicks <= 0 ? secondaryTickOffset :
+        const primaryTickOffset = this._primaryTicksWidth / 2 + this._defaultTickYOffset + trackHeight;
+        const secondaryTickOffset = this._secondaryTicksWidth / 2 + this._defaultTickYOffset + trackHeight;
+        const yOffset = this.primaryTicks <= 0 ? secondaryTickOffset :
             idx % (this.secondaryTicks + 1) === 0 ? primaryTickOffset : secondaryTickOffset;
+
+        return this.orientation === TicksOrientation.top ? - (yOffset - trackHeight) : yOffset;
     }
 
     /**
@@ -114,10 +129,14 @@ export class IgxTicksComponent {
      * @hidden
      */
     public tickLabel(idx: number) {
+        if (this.labelsViewEnabled) {
+            return this.labels[idx];
+        }
+
         const labelStep = this.maxValue / (this.ticksLength - 1);
         const labelVal = labelStep * idx;
 
-        return labelVal % 10 === 0 ? labelVal : labelVal.toFixed(2);
+        return labelVal.toFixed(2);
     }
 
     /**
@@ -138,7 +157,7 @@ export class IgxTicksComponent {
         const diffTicksOffset = index % (this.secondaryTicks + 1) === 0 ? 0 : this._defaultTickYOffset;
         const verticalDir = this.toToBottomLabel ? -1 : 1;
         return this.horizontalLabel ?
-            this.tickYOffset(index) + this._primaryTicksWidth + diffTicksOffset :
+            Math.abs(this.tickYOffset(index)) + this._primaryTicksWidth + diffTicksOffset :
             (-this.tickXOffset(index)) * verticalDir;
     }
 
@@ -155,5 +174,4 @@ export class IgxTicksComponent {
     public dominantBaseline() {
         return this.horizontalLabel ? 'hanging' : this.toToBottomLabel ? 'central' : 'middle';
     }
-
 }

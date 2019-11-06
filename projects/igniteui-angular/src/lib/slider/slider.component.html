@@ -11,18 +11,35 @@
                 text-anchor="middle">{{tickLabel(idx)}}</text>
         </g>
     </svg> -->
+
+    <!-- <igx-ticks
+        [orientation]="0"
+        [primaryTicks]="primaryTicks"
+        [secondaryTicks]="secondaryTicks"
+        [primaryTickLabels]="primaryTickLabels"
+        [secondaryTickLabels]="secondaryTickLabels"
+        [ticksOrientation]="ticksOrientation"
+        [tickLabelsOrientation]="tickLabelsOrientation"
+        [ticksContainer]="ticksContainer"
+        [track]="trackRef"
+        [maxValue]="maxValue"></igx-ticks> -->
+
     <div #track class="igx-slider__track-fill"></div>
     <div #ticks class="igx-slider__track-ticks"></div>
-        <igx-ticks
-            [primaryTicks]="primaryTicks"
-            [secondaryTicks]="secondaryTicks"
-            [primaryTickLabels]="primaryTickLabels"
-            [secondaryTickLabels]="secondaryTickLabels"
-            [ticksOrientation]="ticksOrientation"
-            [tickLabelsOrientation]="tickLabelsOrientation"
-            [ticksContainer]="ticksContainer"
-            [track]="trackRef"
-            [maxValue]="maxValue"></igx-ticks>
+
+    <igx-ticks
+        [orientation]="1"
+        [primaryTicks]="primaryTicks"
+        [secondaryTicks]="secondaryTicks"
+        [primaryTickLabels]="primaryTickLabels"
+        [secondaryTickLabels]="secondaryTickLabels"
+        [ticksOrientation]="ticksOrientation"
+        [tickLabelsOrientation]="tickLabelsOrientation"
+        [ticksContainer]="ticksContainer"
+        [labelsViewEnabled]="labelsViewEnabled"
+        [labels]="labels | spreadTickLabels:secondaryTicks"
+        [track]="trackRef"
+        [maxValue]="maxValue"></igx-ticks>
 </div>
 <div class="igx-slider__thumbs">
     <igx-thumb-label
