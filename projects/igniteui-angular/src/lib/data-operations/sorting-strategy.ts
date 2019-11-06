@@ -71,7 +71,25 @@ export class DefaultSortingStrategy implements ISortingStrategy {
     }
 }
 
-export class IgxSorting {
+export interface IGridSortingStrategy {
+    sort(data: any[], expressions: ISortingExpression[]): any[];
+}
+
+export class NoopSortingStrategy implements IGridSortingStrategy {
+    private static _instance: NoopSortingStrategy = null;
+
+    private constructor() {  }
+
+    public static instance() {
+        return this._instance || (this._instance = new NoopSortingStrategy());
+    }
+
+    public sort(data: any[], expressions: ISortingExpression[]): any[] {
+        return data;
+    }
+}
+
+export class IgxSorting implements IGridSortingStrategy {
     public sort(data: any[], expressions: ISortingExpression[]): any[] {
         return this.sortDataRecursive(data, expressions);
     }

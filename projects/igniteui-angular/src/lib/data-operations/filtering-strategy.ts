@@ -5,6 +5,20 @@ export interface IFilteringStrategy {
     filter(data: any[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree): any[];
 }
 
+export class NoopFilteringStrategy implements IFilteringStrategy {
+    private static _instance: NoopFilteringStrategy = null;
+
+    private constructor() {  }
+
+    public static instance() {
+        return this._instance || (this._instance = new NoopFilteringStrategy());
+    }
+
+    public filter(data: any[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree): any[] {
+        return data;
+    }
+}
+
 export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
     public abstract filter(data: any[], expressionsTree: IFilteringExpressionsTree,
         advancedExpressionsTree?: IFilteringExpressionsTree): any[];

@@ -246,9 +246,9 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     /**
-     * Repositions the content in the horizontal and/or vertical directions.
+     * Offsets the content along the corresponding axis by the provided amount
      * ```typescript
-     * this.overlay.setOffset(id, x, y);
+     * this.overlay.setOffset(id, deltaX, deltaY);
      * ```
      */
     setOffset(id: string, deltaX: number, deltaY: number) {
