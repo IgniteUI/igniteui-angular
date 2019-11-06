@@ -1060,7 +1060,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
         this.emitValueChangeEvent(oldValue, this.value );
         this.calendar.viewDate = date;
-        this._onChangeCallback(date);
         this.closeCalendar();
         this.onSelection.emit(date);
     }
