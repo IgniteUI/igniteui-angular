@@ -24,17 +24,29 @@
     <span [attr.title]="column.header">{{column.header}}</span>
 </ng-template>
 
+<ng-template #defaultCollapseIndicator>
+    <igx-icon [attr.draggable]="false" >
+            {{column.expand ? 'expand_less' : 'expand_more'}} </igx-icon>
+</ng-template>
+
 <ng-container *ngIf="!grid.hasColumnLayouts && column.columnGroup">
     <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left"></span>
     <div class="igx-grid__thead-title"
+        role="columnheader"
+        [attr.aria-label]="column.header || column.field"
+        [attr.aria-expanded]="column.expand"
+        tabindex="0"
         [ngClass]="{'igx-grid__th--pinned-last': hasLastPinnedChildColumn}"
         [igxColumnMovingDrag]="column"
         [ghostHost]="grid.outletDirective.nativeElement"
         [attr.droppable]="true"
         [igxColumnMovingDrop]="column">
-        <ng-container  *ngIf="column.collapsible">
-            <igx-icon [attr.draggable]="false" (click)="column.expanded = !column.expanded">
-            {{column.expanded ? 'expand_less' : 'expand_more'}} </igx-icon>
+        <ng-container *ngIf="column.collapsible">
+            <div (click)="column.expand = !column.expand">
+                <ng-container
+                    *ngTemplateOutlet="column.collapsibleIndicatorTemplate ? column.collapsibleIndicatorTemplate : defaultCollapseIndicator; context: {$implicit: column, column: column}">
+                </ng-container>
+            </div>
         </ng-container>
         <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column, column: column}">
         </ng-container>

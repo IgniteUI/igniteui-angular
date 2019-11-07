@@ -115,7 +115,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnInit, OnDestroy {
     public hostRole = 'columnheader';
 
     @HostBinding('attr.tabindex')
-    public tabindex = -1;
+    public tabindex = 0;
 
     @HostBinding('attr.id')
     get headerID() {
