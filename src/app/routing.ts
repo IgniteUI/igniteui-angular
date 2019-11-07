@@ -88,6 +88,7 @@ import { GridAutoSizeSampleComponent } from './grid-auto-size/grid-auto-size.sam
 import { GridFlexSampleComponent } from './grid-flex-layout/grid-flex.sample';
 import { GridEsfLoadOnDemandComponent } from './grid-esf-load-on-demand/grid-esf-load-on-demand.component';
 import { GridFilteringComponent } from './grid-filtering/grid-filtering.sample';
+import { GridExternalFilteringComponent } from './grid-external-filtering/grid-external-filtering.sample';
 
 const appRoutes = [
     {
@@ -432,6 +433,10 @@ const appRoutes = [
     {
         path: 'gridFiltering',
         component: GridFilteringComponent
+    },
+    {
+        path: 'gridExternalFiltering',
+        component: GridExternalFilteringComponent
     }
 ];
 

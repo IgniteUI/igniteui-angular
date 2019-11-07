@@ -407,6 +407,23 @@
         }
     }
 
+    %advanced-filter--inline {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 100%;
+        height: inherit;
+        max-height: inherit;
+        min-width: 480px;
+        box-shadow: none;
+
+        %advanced-filter__main {
+            min-height: initial;
+            max-height: initial;
+            flex-grow: 1;
+        }
+    }
+
     %filter-con-menu--cosy {
         > [igxButton] + [igxButton],
         igx-buttongroup + [igxButton],
