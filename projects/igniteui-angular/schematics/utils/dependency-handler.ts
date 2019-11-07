@@ -26,6 +26,12 @@ function getTargetedProjectOptions(project: WorkspaceProject<ProjectType>, targe
     throw new SchematicsException(`Cannot determine the project's configuration for: ${target}`);
 }
 
+export function getDefaultProjectBuildOptions(tree: Tree) {
+    const workspace = getWorkspace(tree);
+    const project = workspace.projects[workspace.defaultProject];
+    return getTargetedProjectOptions(project, 'build');
+}
+
 function getMainFile(project: WorkspaceProject<ProjectType>): string {
     const buildOptions = getTargetedProjectOptions(project, 'build');
     if (!buildOptions.main) {
