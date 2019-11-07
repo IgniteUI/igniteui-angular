@@ -70,7 +70,14 @@
     $item-selected-hover-background: null
 ) {
     $name: 'igx-button-group';
-    $button-group-schema: map-get($schema, $name);
+    $button-group-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $button-group-schema: map-get($schema, $name);
+    } @else {
+        $button-group-schema: $schema;
+    }
+
     $theme: apply-palette($button-group-schema, $palette);
 
     $border: 1px solid map-get($theme, 'item-selected-border-color');
@@ -152,6 +159,9 @@
     $transition: all 140ms $ease-in-out-quad;
     $palette: map-get($theme, 'palette');
 
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
+
     %igx-group-display {
         display: flex;
         box-shadow: --var($theme, 'shadow');
@@ -185,15 +195,17 @@
         }
 
         &:not(:nth-child(0)) {
-            margin-left: -1px;
+            margin-#{$left}: -1px;
         }
 
         &:first-of-type {
-            border-radius: --var($theme, 'border-radius') 0 0 --var($theme, 'border-radius');
+            border-top-#{$left}-radius: --var($theme, 'border-radius');
+            border-bottom-#{$left}-radius: --var($theme, 'border-radius');
         }
 
         &:last-of-type {
-            border-radius: 0 --var($theme, 'border-radius') --var($theme, 'border-radius') 0;
+            border-top-#{$right}-radius: --var($theme, 'border-radius');
+            border-bottom-#{$right}-radius: --var($theme, 'border-radius');
         }
 
         &%igx-button--disabled {
@@ -217,15 +229,21 @@
     %igx-group-item-vertical {
         &:not(:nth-child(0)) {
             margin-top: -1px;
-            margin-left: 0;
+            margin-#{$left}: 0;
         }
 
         &:first-of-type {
-            border-radius: --var($theme, 'border-radius') --var($theme, 'border-radius') 0 0;
+            border-top-#{$left}-radius: --var($theme, 'border-radius');
+            border-top-#{$right}-radius: --var($theme, 'border-radius');
+            border-bottom-#{$left}-radius: 0;
+            border-bottom-#{$right}-radius: 0;
         }
 
         &:last-of-type {
-            border-radius: 0 0 --var($theme, 'border-radius') --var($theme, 'border-radius');
+            border-top-#{$left}-radius: 0;
+            border-top-#{$right}-radius: 0;
+            border-bottom-#{$left}-radius: --var($theme, 'border-radius');
+            border-bottom-#{$right}-radius: --var($theme, 'border-radius');
         }
     }
 
@@ -249,9 +267,9 @@
                 position: absolute;
                 content: '';
                 top: 0;
-                right: 0;
+                #{$right}: 0;
                 bottom: 0;
-                left: 0;
+                #{$left}: 0;
                 background: rgba(igx-color($palette, 'grays', 500), .06);
             }
         }
@@ -269,7 +287,7 @@
         text-align: center;
 
         * ~ * {
-            margin-left: $group-items-margin;
+            margin-#{$left}: $group-items-margin;
         }
     }
 }

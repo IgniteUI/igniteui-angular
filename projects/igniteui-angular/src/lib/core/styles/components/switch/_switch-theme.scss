@@ -69,7 +69,14 @@
     $border-on-hover-color: null
 ) {
     $name: 'igx-switch';
-    $switch-schema: map-get($schema, $name);
+    $switch-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $switch-schema: map-get($schema, $name);
+    } @else {
+        $switch-schema: $schema;
+    }
+
     $theme: apply-palette($switch-schema, $palette);
 
     $border-radius-track: round-borders(
@@ -268,7 +275,7 @@
         transition: $input-transition;
 
         @include if-ltr() {
-            transform: translateX(-#{rem($switch-off-offset)});
+            transform: translateX(#{rem($switch-off-offset)});
         }
 
         @include if-rtl() {

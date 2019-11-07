@@ -42,7 +42,15 @@
     $text-color: null
 ) {
     $name: 'igx-linear-bar';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $linear-bar-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $linear-bar-schema: map-get($schema, $name);
+    } @else {
+        $linear-bar-schema: $schema;
+    }
+
+    $theme: apply-palette($linear-bar-schema, $palette);
 
     @return extend($theme, (
         name: $name,
@@ -221,7 +229,15 @@
     $text-color: null
 ) {
     $name: 'igx-circular-bar';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $circular-bar-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $circular-bar-schema: map-get($schema, $name);
+    } @else {
+        $circular-bar-schema: $schema;
+    }
+
+    $theme: apply-palette($circular-bar-schema, $palette);
 
     @return extend($theme, (
         name: $name,
@@ -293,10 +309,6 @@
         font-size: $circular-value-fs;
         font-weight: $circular-value-fw;
         fill: --var($theme, 'text-color');
-    }
-
-    %circular-text--hidden {
-        visibility: hidden;
     }
 
     @include keyframes('indeterminate-accordion') {
