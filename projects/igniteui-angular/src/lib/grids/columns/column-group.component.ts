@@ -23,15 +23,22 @@ import { flatten } from '../../core/utils';
     template: ``
 })
 export class IgxColumnGroupComponent extends IgxColumnComponent implements AfterContentInit {
-    private _collapsible = false;
-    private _expanded = true;
 
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     children = new QueryList<IgxColumnComponent>();
 
+    /**
+     * Set if the column group is collapsible.
+     * Default value is `false`
+     * ```html
+     *  <igx-column-group [collapsible] = "true"></igx-column-group>
+     * ```
+     * @memberof IgxColumnGroupComponent
+     */
     @Input()
     public set collapsible(value: boolean) {
         this._collapsible = value;
+        this.collapsibleChange.emit(this._collapsible);
         if (this.children) {
             if (value) {
                 this.setExpandCollapseState();
@@ -44,16 +51,27 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         return this._collapsible;
     }
 
+    /**
+     * Set whether the group is expanded or collapsed initially.
+     * Applied only if the collapsible property is set to `true`
+     * Default value is `true`
+     * ```html
+     *  const state = false
+     *  <igx-column-group [(expand)] = "state"></igx-column-group>
+     * ```
+     * @memberof IgxColumnGroupComponent
+     */
     @Input()
-    public get expanded() {
-        return this._expanded;
-    }
-    public set expanded(value: boolean) {
-        this._expanded = value;
+    public set expand(value: boolean) {
         if (!this.collapsible) { return; }
+        this._expand = value;
+        this.expandChange.emit(this._expand);
         if (!this.hidden && this.children) {
             this.setExpandCollapseState();
         }
+    }
+    public get expand() {
+        return this._expand;
     }
 
     /**
@@ -124,6 +142,18 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     set bodyTemplate(template: TemplateRef<any>) { }
 
     /**
+     * Allows you to define a custom template for expand/collapse indicator
+     * @memberof IgxColumnGroupComponent
+     */
+    @Input()
+    get collapsibleIndicatorTemplate(): TemplateRef<any> {
+        return this._collapseIndicatorTemplate;
+    }
+    set collapsibleIndicatorTemplate(template: TemplateRef<any>) {
+        this._collapseIndicatorTemplate = template;
+    }
+
+    /**
      * Returns a reference to the inline editor template.
      * ```typescript
      * let inlineEditorTemplate = this.columnGroup.inlineEditorTemplate;
@@ -177,8 +207,8 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
             this.children.forEach(child => child.hidden = value);
         } else {
             this.children.forEach(c =>  {
-                if (c.openOnGroupCollapsed === undefined) {c.hidden = false; return; }
-                c.hidden = this.expanded ? c.openOnGroupCollapsed : !c.openOnGroupCollapsed;
+                if (c.visibleOnCollapse === undefined) {c.hidden = false; return; }
+                c.hidden = this.expand ? c.visibleOnCollapse : !c.visibleOnCollapse;
             });
         }
     }
@@ -200,6 +230,9 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         if (this.headTemplate && this.headTemplate.length) {
             this._headerTemplate = this.headTemplate.toArray()[0].template;
         }
+        if (this.collapseIndicatorTemplate) {
+            this._collapseIndicatorTemplate = this.collapseIndicatorTemplate.template;
+        }
         // currently only ivy fixes the issue, we have to slice only if the first child is group
         if (this.children.first === this) {
             this.children.reset(this.children.toArray().slice(1));
@@ -208,7 +241,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
             child.parent = this;
         });
         if (this.collapsible) {
-            const cols = this.children.map(child => child.openOnGroupCollapsed);
+            const cols = this.children.map(child => child.visibleOnCollapse);
             if (!(cols.some(c => c === true) && cols.some(c => c === false))) {
                 this.collapsible = false;
                 return;
@@ -271,8 +304,8 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     set width(val) { }
 
     private setExpandCollapseState() {
-        this.children.filter(col => (col.openOnGroupCollapsed !== undefined)).forEach(c =>  {
-            c.hidden = this._expanded ? c.openOnGroupCollapsed : !c.openOnGroupCollapsed;
+        this.children.filter(col => (col.visibleOnCollapse !== undefined)).forEach(c =>  {
+            c.hidden = this._expand ? c.visibleOnCollapse : !c.visibleOnCollapse;
         });
     }
 

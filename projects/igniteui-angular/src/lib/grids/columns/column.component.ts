@@ -38,6 +38,7 @@ import {
     IgxCellTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellEditorTemplateDirective,
+    IgxCollapsibleIndicatorTemplateDirective,
     IgxFilterCellTemplateDirective
 } from './templates.directive';
 import { MRLResizeColumnInfo, MRLColumnSizeInfo } from './interfaces';
@@ -249,6 +250,15 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     @Output()
     public hiddenChange = new EventEmitter<boolean>();
+
+    /** @hidden */
+    @Output()
+    public expandChange = new EventEmitter<boolean>();
+
+    /** @hidden */
+    @Output()
+    public collapsibleChange = new EventEmitter<boolean>();
+
     /**
      * Gets whether the hiding is disabled.
      * ```typescript
@@ -827,6 +837,10 @@ export class IgxColumnComponent implements AfterContentInit {
     set filterCellTemplate(template: TemplateRef<any>) {
         this._filterCellTemplate = template;
     }
+
+    /** @hidden */
+    @Input('collapsibleIndicatorTemplate')
+    public collapsibleIndicatorTemplate: TemplateRef<any>;
     /**
      * Gets the cells of the column.
      * ```typescript
@@ -995,14 +1009,23 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     @Input() colStart: number;
 
+    /**
+     * Indicates whether the column will be visible when its parent is collapsed.
+     * ```html
+     * <igx-column-group>
+     *   <igx-column [visibleOnCollapse]="true"></igx-column>
+     * </igx-column-group>
+     * ```
+     * @memberof IgxColumnComponent
+     */
     @Input()
-    set openOnGroupCollapsed(value: boolean) {
-        this._openOnGroupCollapsed = value;
+    set visibleOnCollapse(value: boolean) {
+        this._visibleOnCollapse = value;
     }
 
-    get openOnGroupCollapsed(): boolean {
+    get visibleOnCollapse(): boolean {
         if (!this.parent) { return false; }
-        return this._openOnGroupCollapsed;
+        return this._visibleOnCollapse;
     }
 
     /**
@@ -1015,7 +1038,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      * @internal
      */
-    public expanded = true;
+    public expand = true;
 
     /**
      * hidden
@@ -1087,6 +1110,10 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
+    protected _collapseIndicatorTemplate: TemplateRef<any>;
+    /**
+     *@hidden
+     */
     protected _summaries = null;
     /**
      *@hidden
@@ -1129,10 +1156,17 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     protected _editable: boolean;
     /**
+     *  @hidden
+    */
+    protected _visibleOnCollapse;
+    /**
      * @hidden
      */
-    protected _openOnGroupCollapsed;
-
+    protected _collapsible = false;
+    /**
+     * @hidden
+     */
+    protected _expand = true;
     /**
      * @hidden
      */
@@ -1161,6 +1195,11 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     @ContentChild(IgxFilterCellTemplateDirective, { read: IgxFilterCellTemplateDirective, static: false })
     public filterCellTemplateDirective: IgxFilterCellTemplateDirective;
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxCollapsibleIndicatorTemplateDirective, { read: IgxCollapsibleIndicatorTemplateDirective, static: false })
+    protected collapseIndicatorTemplate:  IgxCollapsibleIndicatorTemplateDirective;
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, public cdr: ChangeDetectorRef) { }
 
