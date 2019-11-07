@@ -19,10 +19,10 @@
     </igx-icon>
 </igx-input-group>
 
-<igx-list [displayDensity]="displayDensity" [style.height.px]="250" [isLoading]="isLoading">
+<igx-list #list [displayDensity]="displayDensity" [style.height.px]="listSize" [isLoading]="isLoading">
     <div [style.overflow]="'hidden'" [style.position]="'relative'">
         <igx-list-item
-            *igxFor="let item of data | excelStyleSearchFilter: searchValue; scrollOrientation : 'vertical'; containerSize: '250px'; itemSize: itemSize">
+            *igxFor="let item of data | excelStyleSearchFilter: searchValue; scrollOrientation : 'vertical'; containerSize: containerSize; itemSize: itemSize">
             <igx-checkbox
             [value]="item"
             tabindex="-1"
