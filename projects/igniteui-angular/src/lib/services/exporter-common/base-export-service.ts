@@ -67,7 +67,7 @@ export interface IColumnExportingEventArgs extends IBaseEventArgs {
 }
 
 @Directive()
-export abstract class IgxBaseExporter {
+export abstract class IgxBaseExporterDirective {
     private _columnList: any[];
     private flatRecords = [];
 

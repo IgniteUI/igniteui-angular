@@ -10,7 +10,7 @@ export interface IValueChangedEventArgs extends IBaseEventArgs {
  *@hidden
  */
 @Directive()
-export abstract class ItemPropertyValueChanged {
+export abstract class ItemPropertyValueChangedDirective {
     private _object: any;
     private _propName: string;
 
@@ -51,7 +51,7 @@ export abstract class ItemPropertyValueChanged {
 
 /** @hidden */
 @Directive()
-export class ColumnChooserItemBase extends ItemPropertyValueChanged {
+export class ColumnChooserItemBaseDirective extends ItemPropertyValueChangedDirective {
     @Input()
     get column() {
         return this.object;

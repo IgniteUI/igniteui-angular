@@ -3,13 +3,13 @@ import { IgxStringFilteringOperand } from '../data-operations/filtering-conditio
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { FilteringStrategy } from '../data-operations/filtering-strategy';
-import { ColumnChooserItemBase } from './column-chooser-item-base';
+import { ColumnChooserItemBaseDirective } from './column-chooser-item-base';
 import { ColumnDisplayOrder } from './common/enums';
 
 class CustomFilteringStrategy extends FilteringStrategy {
     public filter(data: any[], expressionsTree: IFilteringExpressionsTree): any[] {
-        const res: ColumnChooserItemBase[] = [];
-        data.forEach((item: ColumnChooserItemBase) => {
+        const res: ColumnChooserItemBaseDirective[] = [];
+        data.forEach((item: ColumnChooserItemBaseDirective) => {
             if (this.matchRecord(item, expressionsTree.filteringOperands[0] as IFilteringExpression)) {
                 res.push(item);
             } else if (item.column.columnGroup) {
@@ -27,13 +27,12 @@ class CustomFilteringStrategy extends FilteringStrategy {
 
 /** @hidden */
 @Directive()
-export abstract class ColumnChooserBase implements OnDestroy {
+export abstract class ColumnChooserBaseDirective implements OnDestroy {
     /**
      * Gets the grid columns that are going to be manipulated.
      * ```typescript
      * let gridColumns = this.columnHidingUI.columns;
      * ```
-     * @memberof ColumnChooserBase
      */
 
     @Input()
@@ -45,7 +44,6 @@ export abstract class ColumnChooserBase implements OnDestroy {
      * ```html
      * <igx-column-hiding [columns]="grid.columns"></igx-column-hiding>
      * ```
-     * @memberof ColumnChooserBase
      */
     set columns(value) {
         if (value) {
@@ -61,7 +59,6 @@ export abstract class ColumnChooserBase implements OnDestroy {
      * ```typescript
      * let title =  this.columnHidingUI.title;
      * ```
-     * @memberof ColumnChooserBase
      */
     @Input()
     get title() {
@@ -71,7 +68,6 @@ export abstract class ColumnChooserBase implements OnDestroy {
      * ```html
      * <igx-column-hiding [title]="'IgxColumnHidingComponent Title'"></igx-column-hiding>
      * ```
-     * @memberof ColumnChooserBase
      */
     set title(value) {
         this._title = (value) ? value : '';
@@ -81,7 +77,6 @@ export abstract class ColumnChooserBase implements OnDestroy {
      * ```typescript
      * let filterColumnsPrompt =  this.columnHidingUI.filterColumnsPrompt;
      * ```
-     * @memberof ColumnChooserBase
      */
     @Input()
     get filterColumnsPrompt() {
@@ -92,7 +87,6 @@ export abstract class ColumnChooserBase implements OnDestroy {
      * ```html
      * <igx-column-hiding [filterColumnsPrompt]="'Type here to search'"></igx-column-hiding>
      * ```
-     * @memberof ColumnChooserBase
      */
     set filterColumnsPrompt(value) {
         this._filterColumnsPrompt = (value) ? value : '';
@@ -107,7 +101,6 @@ export abstract class ColumnChooserBase implements OnDestroy {
      * ```typescript
      * let columnItems =  this.columnHidingUI.columnItems;
      * ```
-     * @memberof ColumnChooserBase
      */
     @Input()
     get columnItems() {
@@ -118,7 +111,6 @@ export abstract class ColumnChooserBase implements OnDestroy {
      * ```typescript
      * let filterCriteria =  this.columnHidingUI.filterCriteria;
      * ```
-     * @memberof ColumnChooserBase
      */
     @Input()
     get filterCriteria() {
@@ -130,7 +122,6 @@ export abstract class ColumnChooserBase implements OnDestroy {
      * ```html
      *  <igx-column-hiding [filterCriteria]="'ID'"></igx-column-hiding>
      * ```
-     * @memberof ColumnChooserBase
      */
     set filterCriteria(value) {
         if (!value || value.length === 0) {
@@ -151,7 +142,6 @@ export abstract class ColumnChooserBase implements OnDestroy {
      * ```typescript
      * let columnDisplayOrder  =  this.columnHidingUI.columnDisplayOrder;
      * ```
-     * @memberof ColumnChooserBase
      */
     @Input()
     get columnDisplayOrder() {
@@ -162,7 +152,6 @@ export abstract class ColumnChooserBase implements OnDestroy {
      * ```typescript
      * this.columnHidingUI.columnDisplayOrder = ColumnDisplayOrder.Alphabetical;
      * ```
-     * @memberof ColumnChooserBase
      */
     set columnDisplayOrder(value: ColumnDisplayOrder) {
         if (value !== undefined) {
@@ -186,7 +175,6 @@ export abstract class ColumnChooserBase implements OnDestroy {
      * ```html
      * <igx-column-hiding [columnsAreaMaxHeight]="200px"></igx-column-hiding>
      * ```
-     * @memberof ColumnChooserBase
      */
     @Input()
     public columnsAreaMaxHeight = '100%';
@@ -199,7 +187,6 @@ export abstract class ColumnChooserBase implements OnDestroy {
      * ```typescript
      * this.columnHidingUI.cssClass = 'column-chooser';
      * ```
-     * @memberof ColumnChooserBase
      */
     @HostBinding('attr.class')
     public cssClass = 'igx-column-hiding';
