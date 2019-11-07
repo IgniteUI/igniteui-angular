@@ -309,7 +309,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
      * @hidden
      */
-    @ContentChild(IgxRowLoadingIndicatorTemplateDirective, { read: IgxRowLoadingIndicatorTemplateDirective, static: false })
+    @ContentChild(IgxRowLoadingIndicatorTemplateDirective, { read: IgxRowLoadingIndicatorTemplateDirective })
     protected rowLoadingTemplate: IgxRowLoadingIndicatorTemplateDirective;
 
     /**
@@ -330,7 +330,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      *  </igx-grid>
      * ```
      */
-    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef, static: false })
+    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef })
     public dragIndicatorIconTemplate: TemplateRef<any> = null;
 
     /**

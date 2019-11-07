@@ -211,25 +211,25 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      * @hidden
      */
-    @ViewChild('months', { read: IgxMonthsViewComponent, static: false })
+    @ViewChild('months', { read: IgxMonthsViewComponent })
     public monthsView: IgxMonthsViewComponent;
 
     /**
      * @hidden
      */
-    @ViewChild('monthsBtn', { static: false })
+    @ViewChild('monthsBtn')
     public monthsBtn: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('decade', { read: IgxYearsViewComponent, static: false })
+    @ViewChild('decade', { read: IgxYearsViewComponent })
     public dacadeView: IgxYearsViewComponent;
 
     /**
      * @hidden
      */
-    @ViewChild('days', { read: IgxDaysViewComponent, static: false })
+    @ViewChild('days', { read: IgxDaysViewComponent })
     public daysView: IgxDaysViewComponent;
 
     /**
@@ -241,13 +241,13 @@ export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterVie
     /**
      * @hidden
      */
-    @ViewChild('prevMonthBtn', { static: false })
+    @ViewChild('prevMonthBtn')
     public prevMonthBtn: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('nextMonthBtn', { static: false })
+    @ViewChild('nextMonthBtn')
     public nextMonthBtn: ElementRef;
 
     /**

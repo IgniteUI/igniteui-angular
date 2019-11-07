@@ -69,19 +69,19 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
     /**
      * @hidden
      */
-    @ViewChild('months', { read: IgxMonthsViewComponent, static: false })
+    @ViewChild('months', { read: IgxMonthsViewComponent })
     public monthsView: IgxMonthsViewComponent;
 
     /**
      * @hidden
      */
-    @ViewChild('decade', { read: IgxYearsViewComponent, static: false })
+    @ViewChild('decade', { read: IgxYearsViewComponent })
     public dacadeView: IgxYearsViewComponent;
 
     /**
      * @hidden
      */
-    @ViewChild('days', { read: IgxDaysViewComponent, static: false })
+    @ViewChild('days', { read: IgxDaysViewComponent })
     public daysView: IgxDaysViewComponent;
 
     /**

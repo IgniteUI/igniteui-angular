@@ -1,5 +1,7 @@
 import { IgxGridNavigationService } from '../grid-navigation.service';
+import { Injectable } from "@angular/core";
 
+@Injectable()
 export class IgxTreeGridNavigationService extends IgxGridNavigationService {
 
     protected getCellSelector(visibleIndex?: number, isSummary = false): string {

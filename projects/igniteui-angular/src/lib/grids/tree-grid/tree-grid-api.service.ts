@@ -6,7 +6,9 @@ import { IRowToggleEventArgs } from './tree-grid.interfaces';
 import { IgxColumnComponent } from '../columns/column.component';
 import { HierarchicalTransaction, TransactionType, State } from '../../services';
 import { mergeObjects } from '../../core/utils';
+import { Injectable } from "@angular/core";
 
+@Injectable()
 export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridComponent> {
     public get_all_data(transactions?: boolean): any[] {
         const grid = this.grid;

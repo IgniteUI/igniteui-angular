@@ -178,7 +178,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      *  </igx-select>
      * ```
      */
-    @ContentChild(IgxSelectToggleIconDirective, { read: TemplateRef, static: false })
+    @ContentChild(IgxSelectToggleIconDirective, { read: TemplateRef })
     public toggleIconTemplate: TemplateRef<any> = null;
 
     /** @hidden @internal */

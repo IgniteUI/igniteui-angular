@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, HostBinding, Input, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, HostBinding, Input, OnDestroy, Directive } from '@angular/core';
 import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
@@ -26,6 +26,7 @@ class CustomFilteringStrategy extends FilteringStrategy {
 }
 
 /** @hidden */
+@Directive()
 export abstract class ColumnChooserBase implements OnDestroy {
     /**
      * Gets the grid columns that are going to be manipulated.

@@ -1,7 +1,9 @@
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowIslandComponent } from './row-island.component';
 import { Subject } from 'rxjs';
+import { Injectable } from "@angular/core";
 
+@Injectable()
 export class IgxRowIslandAPIService {
     public change: Subject<any> = new Subject<any>();
     protected state: Map<string, IgxRowIslandComponent> = new Map<string, IgxRowIslandComponent>();

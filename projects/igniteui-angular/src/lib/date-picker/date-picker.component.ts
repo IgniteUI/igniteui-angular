@@ -707,49 +707,49 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /*
      * @hidden
      */
-    @ViewChild(IgxInputGroupComponent, { static: false })
+    @ViewChild(IgxInputGroupComponent)
     protected inputGroup: IgxInputGroupComponent;
 
     /*
      * @hidden
      */
-    @ViewChild('editableInput', { read: ElementRef, static: false })
+    @ViewChild('editableInput', { read: ElementRef })
     protected editableInput: ElementRef;
 
     /*
     * @hidden
     */
-    @ViewChild('readonlyInput', { read: ElementRef, static: false })
+    @ViewChild('readonlyInput', { read: ElementRef })
     protected readonlyInput: ElementRef;
 
     /*
     * @hidden
     */
-    @ContentChild(IgxInputDirective, { static: false })
+    @ContentChild(IgxInputDirective)
     protected input: IgxInputDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxDatePickerTemplateDirective, { read: IgxDatePickerTemplateDirective, static: false })
+    @ContentChild(IgxDatePickerTemplateDirective, { read: IgxDatePickerTemplateDirective })
     protected datePickerTemplateDirective: IgxDatePickerTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxCalendarHeaderTemplateDirective, { read: IgxCalendarHeaderTemplateDirective, static: false })
+    @ContentChild(IgxCalendarHeaderTemplateDirective, { read: IgxCalendarHeaderTemplateDirective })
     public headerTemplate: IgxCalendarHeaderTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxCalendarSubheaderTemplateDirective, { read: IgxCalendarSubheaderTemplateDirective, static: false })
+    @ContentChild(IgxCalendarSubheaderTemplateDirective, { read: IgxCalendarSubheaderTemplateDirective })
     public subheaderTemplate: IgxCalendarSubheaderTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxDatePickerActionsDirective, { read: IgxDatePickerActionsDirective, static: false })
+    @ContentChild(IgxDatePickerActionsDirective, { read: IgxDatePickerActionsDirective })
     public datePickerActionsDirective: IgxDatePickerActionsDirective;
 
     public calendar: IgxCalendarComponent;

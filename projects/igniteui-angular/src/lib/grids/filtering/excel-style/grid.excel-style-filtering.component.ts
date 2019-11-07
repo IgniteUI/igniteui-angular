@@ -217,31 +217,31 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
     /**
      * @hidden @internal
      */
-    @ViewChild('dropdown', { read: ElementRef, static: false })
+    @ViewChild('dropdown', { read: ElementRef })
     public mainDropdown: ElementRef;
 
     /**
      * @hidden @internal
      */
-    @ViewChild('subMenu', { read: IgxDropDownComponent, static: false })
+    @ViewChild('subMenu', { read: IgxDropDownComponent })
     public subMenu: IgxDropDownComponent;
 
     /**
      * @hidden @internal
      */
-    @ViewChild('customDialog', { read: IgxExcelStyleCustomDialogComponent, static: false })
+    @ViewChild('customDialog', { read: IgxExcelStyleCustomDialogComponent })
     public customDialog: IgxExcelStyleCustomDialogComponent;
 
     /**
      * @hidden @internal
      */
-    @ViewChild('excelStyleSearch', { read: IgxExcelStyleSearchComponent, static: false })
+    @ViewChild('excelStyleSearch', { read: IgxExcelStyleSearchComponent })
     public excelStyleSearch: IgxExcelStyleSearchComponent;
 
     /**
      * @hidden @internal
      */
-    @ViewChild('excelStyleSorting', { read: IgxExcelStyleSortingComponent, static: false })
+    @ViewChild('excelStyleSorting', { read: IgxExcelStyleSortingComponent })
     protected excelStyleSorting: IgxExcelStyleSortingComponent;
 
     /**

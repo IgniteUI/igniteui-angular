@@ -14,11 +14,11 @@ import { DeprecateMethod } from '../core/deprecateDecorators';
 })
 export class IgxIconModule {
     @DeprecateMethod('IgxIconModule.forRoot method is deprecated. Use IgxIconModule instead.')
-    public static forRoot() {
-        return {
-            ngModule: IgxIconModule
-        };
-    }
+public static forRoot(): ModuleWithProviders<IgxIconModule> {
+    return {
+        ngModule: IgxIconModule
+    };
+}
 }
 
 export * from './icon.component';

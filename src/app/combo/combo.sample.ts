@@ -37,7 +37,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     private overlaySettings: OverlaySettings[] = [null, null, null];
     private width = '160px';
     @ViewChild(IgxComboComponent, { static: true }) public igxCombo: IgxComboComponent;
-    @ViewChild('comboTemplate', { read: IgxComboComponent, static: false }) public comboTemplate: IgxComboComponent;
+    @ViewChild('comboTemplate', { read: IgxComboComponent }) public comboTemplate: IgxComboComponent;
     @ViewChild(IgxComboComponent, { read: ElementRef, static: true }) private comboRef: ElementRef;
     public toggleItemState = false;
     private initData: any[] = [];

@@ -43,7 +43,7 @@ export class IgxExpansionPanelHeaderComponent {
     /**
      * @hidden
      */
-    @ContentChild(IgxExpansionPanelIconDirective, { static: false })
+    @ContentChild(IgxExpansionPanelIconDirective)
     public set iconTemplate(val: any) {
         this._iconTemplate = <boolean>val;
     }
