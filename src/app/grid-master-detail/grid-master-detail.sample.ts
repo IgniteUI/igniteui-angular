@@ -63,4 +63,8 @@ export class GridMasterDetailSampleComponent implements OnInit {
     public collapseFirstRow() {
         this.grid1.collapse(this.data[0]);
     }
+
+    public toggleFirstRow() {
+        this.grid1.toggleRow(this.data[0]);
+    }
 }

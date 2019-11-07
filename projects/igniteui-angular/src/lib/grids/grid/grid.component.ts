@@ -652,6 +652,19 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
 
+    /**
+     * Toggles the master row by its id. ID is either the primaryKey value or the data record instance.
+     * ```typescript
+     * this.grid.toggle(rowID);
+     * ```
+	 * @memberof IgxGridComponent
+    */
+    public toggleRow(rowID: any) {
+        const expandedStates = this.expansionStates;
+        const state = expandedStates.get(rowID);
+        expandedStates.set(rowID, !state);
+        this.expansionStates = expandedStates;
+    }
 
     public getDetailsContext(rowData, index) {
         return {
