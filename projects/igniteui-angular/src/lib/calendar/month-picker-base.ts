@@ -1,4 +1,4 @@
-import { IgxCalendarBase } from './calendar-base';
+import { IgxCalendarBaseDirective } from './calendar-base';
 import { ViewChild, ElementRef, HostBinding, Directive } from '@angular/core';
 import { KEYS } from '../core/utils';
 
@@ -10,8 +10,10 @@ export enum CalendarView {
     YEAR,
     DECADE
 }
-@Directive()
-export class IgxMonthPickerBase extends IgxCalendarBase {
+@Directive({
+    selector: '[igxMonthPickerBase]'
+})
+export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
 
     /**
      * @hidden

@@ -21,7 +21,7 @@ import {
 } from './calendar.directives';
 import { KEYS } from '../core/utils';
 import { ICalendarDate, monthRange } from './calendar';
-import { CalendarView, IgxMonthPickerBase } from './month-picker-base';
+import { CalendarView, IgxMonthPickerBaseDirective } from './month-picker-base';
 import { IgxMonthsViewComponent } from './months-view/months-view.component';
 import { IgxYearsViewComponent } from './years-view/years-view.component';
 import { IgxDaysViewComponent } from './days-view/days-view.component';
@@ -78,7 +78,7 @@ let NEXT_ID = 0;
     selector: 'igx-calendar',
     templateUrl: 'calendar.component.html'
 })
-export class IgxCalendarComponent extends IgxMonthPickerBase implements AfterViewInit, OnDestroy {
+export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements AfterViewInit, OnDestroy {
     /**
      * Sets/gets the `id` of the calendar.
      * If not set, the `id` will have value `"igx-calendar-0"`.

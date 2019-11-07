@@ -20,8 +20,10 @@ export enum ScrollMonth {
     NONE = 'none'
 }
 
-@Directive()
-export class IgxCalendarBase implements ControlValueAccessor {
+@Directive({
+    selector: '[igxCalendarBase]'
+})
+export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * Gets the start day of the week.
      * Can return a numeric or an enum representation of the week day.

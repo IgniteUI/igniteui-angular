@@ -1,5 +1,5 @@
 import { IToggleView } from './IToggleView';
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
 /**
  * Common service to be injected between components where those implementing common
