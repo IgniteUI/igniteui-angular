@@ -303,12 +303,6 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
 
     set width(val) { }
 
-    private setExpandCollapseState() {
-        this.children.filter(col => (col.visibleOnCollapse !== undefined)).forEach(c =>  {
-            c.hidden = this._expand ? c.visibleOnCollapse : !c.visibleOnCollapse;
-        });
-    }
-
     // constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & IGridDataBindable>, public cdr: ChangeDetectorRef) {
     //     // D.P. constructor duplication due to es6 compilation, might be obsolete in the future
     //     super(gridAPI, cdr);

@@ -1752,6 +1752,16 @@ export class IgxColumnComponent implements AfterContentInit {
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    protected setExpandCollapseState() {
+        this.children.filter(col => (col.visibleOnCollapse !== undefined)).forEach(c =>  {
+            c.hidden = this._expand ? c.visibleOnCollapse : !c.visibleOnCollapse;
+        });
+    }
+
+    /**
      *@hidden
     */
     public get pinnable() {
