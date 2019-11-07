@@ -9,6 +9,8 @@
         [ticksOrientation]="ticksOrientation"
         [tickLabelsOrientation]="tickLabelsOrientation"
         [ticksContainer]="ticksContainer"
+        [labelsViewEnabled]="labelsViewEnabled"
+        [labels]="labels | spreadTickLabels:secondaryTicks"
         [track]="trackRef"
         [maxValue]="maxValue"></igx-ticks>
 
