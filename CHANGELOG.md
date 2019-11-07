@@ -24,6 +24,12 @@ All notable changes for each version of this project will be documented in this 
     - `NoopFilteringStrategy` is added, which can be used to disable the default filtering of the grid by assigning its instance to the grid's `filterStrategy` input. (Useful for remote filtering.)
     - `sortingExpressionsChange` event emitter is added, which is fired whenever a change to the sorting expressions has occurred (prior to performing the actual sorting).
     - `filteringExpressionsTreeChange` event emitter is added, which is fired whenever a change to the filtering expressions has occurred (prior to performing the actual filtering).
+    - `collapsible` and `expand` properties are added to the IgxColumnGroupComponent; `collapsible` property identifies that certain column group is collapsible; `expand` identifies whether the group is expanded or collapsed initially;
+    - `collapsibleChange` and `expandChange` events are added to the IgxColumnGroupComponent which are emited whenever `collapsible` and `expand` properties are changed accordingly;
+    - `visibleOnCollapse` property has been added to the IgxColumnComponent; Allows you to set whether the column stay visible when its parrent is collapsed.
+    - `visibleOnCollapseChange` events is added to the IgxColumnComponent which are emited whenever `visibleOnCollapse`  property is changed;
+    - `collapsibleIndicatorTemplate` property is introduced to IgxColumnGroupComponent, which allows you to set a custom template for the expand collapse indicator;
+    - `igxCollapsibleIndicator` directive has been introduced, which allows you to set a custom template for the expand collapse indicator;
 - `IgxOverlayService`:
     - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
 - `IgxToggleDirective`:

@@ -1,5 +1,5 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
-import { IgxGridComponent, IgxButtonDirective, IgxColumnGroupComponent } from 'igniteui-angular';
+import { IgxGridComponent, IgxColumnGroupComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-column-groups-sample',
@@ -11,8 +11,9 @@ export class GridColumnGroupsSampleComponent implements AfterViewInit {
 
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
-
+    wid = '250px';
     columnGroupStates = new Map<IgxColumnGroupComponent, boolean>();
+    s = true;
 
     data: any[] = [
         // tslint:disable:max-line-length
@@ -58,20 +59,24 @@ export class GridColumnGroupsSampleComponent implements AfterViewInit {
         t.pinned = !t.pinned;
     }
 
+    log() {
+        console.log(this.s);
+    }
+
     hideGroup() {
 /*         const col = this.grid.columnList.filter(c => c.header === 'Person Details')[0];
         col.hidden = !col.hidden;
         this.grid.getColumnByName('CompanyName').hidden = true;
         console.log(this.grid.getColumnByName('CompanyName').parent); */
-        this.grid.columnList.filter(c => c.header === 'Person Details')[0].expanded =
-        !this.grid.columnList.filter(c => c.header === 'Person Details')[0].expanded;
+        (this.grid.columnList.filter(c => c.header === 'Address Information')[0] as any).expand =
+        !(this.grid.columnList.filter(c => c.header === 'Address Information')[0] as any).expand;
 
     }
 
     toggleCollapsible() {
-        this.collapse = !this.collapse;
-/*         this.grid.columnList.filter(c => c.header === 'General Information')[0].collapsible =
-        !this.grid.columnList.filter(c => c.header === 'General Information')[0].collapsible; */
+       // this.collapse = !this.collapse;
+        (this.grid.columnList.filter(c => c.header === 'Address Information')[0] as any).collapsible =
+        !(this.grid.columnList.filter(c => c.header === 'Address Information')[0] as any).collapsible;
     }
 
     ngAfterViewInit() {

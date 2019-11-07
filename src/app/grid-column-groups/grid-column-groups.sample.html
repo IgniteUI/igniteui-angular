@@ -1,23 +1,29 @@
 <div  class="sample-wrapper">
     <app-page-header title="Grid Column Groups"></app-page-header>
     <section style="height: 800px" class="sample-content">
-        <igx-grid [allowFiltering]="true" [rowSelectable]="false" #grid [data]="data" displayDensity="compact" [showToolbar]="true"[columnHiding]="true">
-            <igx-column [movable]="true" [hasSummary]="true" [resizable]="true" [pinned]="true" field="Missing"></igx-column>
-            <igx-column-group [movable]="true" [pinned]="false" header="General Information" [collapsible]="true">
-                <igx-column [movable]="true" [filterable]="false" sortable="true" resizable="true" field="CompanyName" width="200px" [openOnGroupCollapsed]="false"></igx-column>
+            <ng-template igxCollapsibleIndicator let-column="column" #ind >
+                <igx-icon [attr.draggable]="false">{{column.expand ? 'remove' : 'add'}} </igx-icon>
+            </ng-template>
+        <igx-grid [allowFiltering]="true" [rowSelectable]="false" #grid [data]="data" displayDensity="compact" [showToolbar]="true" [allowAdvancedFiltering]="true" [columnHiding]="true">
+            <igx-column [movable]="true"  [resizable]="true" [pinned]="true" field="Missing"></igx-column>
+            <igx-column-group [movable]="true" header="General Information" [collapsible]="true" [expand]="s" [hidden]="true">
+                <igx-column [movable]="true" [filterable]="false" [hidden]="true" sortable="true" resizable="true" field="CompanyName" width="200px" [visibleOnCollapse]="false"></igx-column>
                 <igx-column  field="Missing"></igx-column>
-                <igx-column-group [movable]="true" header="Person Details" [collapsible]="true" [expanded]="false" [openOnGroupCollapsed]="true">
-                    <igx-column [movable]="true" [openOnGroupCollapsed]="true" [pinned]="false" filterable="true" sortable="true" resizable="true" field="ContactName"></igx-column>
-                    <igx-column [movable]="true" [openOnGroupCollapsed]="false" [hasSummary]="true" filterable="true" sortable="true" resizable="true" field="ContactTitle"></igx-column>
+                <igx-column-group [movable]="true" header="Person Details" [collapsible]="true" [expand]="false" [visibleOnCollapse]="true">
+                    <igx-column [movable]="true" [visibleOnCollapse]="true" [hidden]="true" filterable="true" sortable="true" resizable="true" field="ContactName"></igx-column>
+                    <igx-column [movable]="true" [visibleOnCollapse]="false" [pinned]="true"  filterable="true" sortable="true" resizable="true" field="ContactTitle"></igx-column>
                 </igx-column-group>
+                <ng-template igxCollapsibleIndicator let-column="column" #ind >
+                    <igx-icon [attr.draggable]="false">{{column.expand ? 'remove' : 'add'}} </igx-icon>
+                </ng-template>
             </igx-column-group>
-            <igx-column [movable]="true" [hasSummary]="true" [resizable]="true" field="ID" editable="true"></igx-column>
-            <igx-column-group [movable]="true" header="Address Information" [collapsible]='collapse' [expanded]='false'>
-                <igx-column [movable]="true" filterable="true" sortable="true" resizable="true" field="Country" [openOnGroupCollapsed]= 'false'></igx-column>
-                <igx-column [movable]="true" filterable="true" sortable="true" resizable="true" field="Region" [openOnGroupCollapsed]= 'false'></igx-column>
-                <igx-column [movable]="true" filterable="true" sortable="true" resizable="true" field="City" [openOnGroupCollapsed]= 'false'></igx-column>
-                <igx-column [movable]="true" filterable="true" sortable="true" resizable="true" field="Address" [openOnGroupCollapsed]= 'false'></igx-column>
-                <igx-column [movable]="true" filterable="true" editable="true" sortable="true" resizable="true" width="250px" [openOnGroupCollapsed]= 'true'  [hidden]='true'  field="FullAddress"></igx-column>
+            <igx-column [movable]="true" [hidden]="s" [resizable]="true" field="ID" editable="true"></igx-column>
+            <igx-column-group [movable]="true" header="Address Information" [(collapsible)]='s' [expand]='true'>
+                <igx-column [movable]="true" filterable="true" sortable="true" resizable="true" field="Country" [visibleOnCollapse]= 'false'></igx-column>
+                <igx-column [movable]="true" filterable="true" sortable="true" resizable="true" field="Region" [visibleOnCollapse]= 'false'></igx-column>
+                <igx-column [movable]="true" filterable="true" sortable="true" resizable="true" field="City" [visibleOnCollapse]= 'false'></igx-column>
+                <igx-column [movable]="true" filterable="true" sortable="true" resizable="true" field="Address" [visibleOnCollapse]= 'false'></igx-column>
+                <igx-column [movable]="true" filterable="true" editable="true" sortable="true" [visibleOnCollapse]= 'true'  field="FullAddress"></igx-column>
             </igx-column-group>
             <igx-column  field="Missing"></igx-column>
             <igx-column  field="Missing"></igx-column>
@@ -50,8 +56,8 @@
                 <igx-column filterable="true" sortable="true" resizable="true" field="PostalCode"></igx-column>
             </igx-column-group>
         </igx-grid>
-        <span igxButton (click)="pinGroup()">Pin first group</span>
-        <span igxButton (click)="hideGroup()">Person Details - toggle expand</span>
-        <span igxButton (click)="toggleCollapsible()">Toggle collapsible - Address Information</span>
+        <span igxButton (click)="log()">Pin first group</span>
+        <span igxButton (click)="hideGroup()">Toggle expand - Address Information</span>
+        <span igxButton (click)="toggleCollapsible()">Toggle collapsible - General Information</span>
     </section>
 </div>
