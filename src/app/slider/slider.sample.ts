@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SliderType, ISliderValueChangeEventArgs, IRangeSliderValue, TickLabelsOrientation } from 'igniteui-angular';
+import { SliderType, ISliderValueChangeEventArgs, IRangeSliderValue, TickLabelsOrientation, TicksOrientation } from 'igniteui-angular';
 
 class Task {
     title: string;
@@ -21,6 +21,7 @@ export class SliderSampleComponent {
     private _upperValue: Date;
 
     public labelOrientaion = TickLabelsOrientation.horizontal;
+    public ticksOrientation = TicksOrientation.mirror;
     public sliderType: SliderType = SliderType.RANGE;
     public labelsDates = new Array<Date>();
     public task: Task = new Task('Implement new app', 30);
@@ -69,6 +70,16 @@ export class SliderSampleComponent {
             this.labelOrientaion = TickLabelsOrientation.bottomtotop;
         } else {
             this.labelOrientaion = TickLabelsOrientation.horizontal;
+        }
+    }
+
+    public changeTicksOrientation() {
+        if (this.ticksOrientation === TicksOrientation.mirror) {
+            this.ticksOrientation = TicksOrientation.top;
+        } else if (this.ticksOrientation === TicksOrientation.top) {
+            this.ticksOrientation = TicksOrientation.bottom;
+        } else {
+            this.ticksOrientation = TicksOrientation.mirror;
         }
     }
 

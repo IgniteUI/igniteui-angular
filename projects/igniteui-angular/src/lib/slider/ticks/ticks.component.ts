@@ -49,9 +49,6 @@ export class IgxTicksComponent {
     @Input()
     public labels: Array<number | string | boolean | null | undefined>;
 
-    @Input()
-    public orientation: TicksOrientation;
-
     /**
      * @hidden
      */
@@ -73,7 +70,7 @@ export class IgxTicksComponent {
     /**
      * @hidden
      */
-    public get toToBottomLabel() {
+    public get topToBottomLabel() {
         return this.tickLabelsOrientation === TickLabelsOrientation.toptobottom;
     }
 
@@ -81,7 +78,7 @@ export class IgxTicksComponent {
      * @hidden
      */
     public get tickLabelOrientation() {
-        return `rotate(${this.horizontalLabel ? 0 : this.toToBottomLabel ? -90 : 90})`;
+        return `rotate(${this.horizontalLabel ? 0 : this.topToBottomLabel ? 90 : -90})`;
     }
 
     /**
@@ -109,7 +106,7 @@ export class IgxTicksComponent {
         const secondaryTickOffset = this._secondaryTicksWidth / 2 + this._defaultTickYOffset + trackHeight;
         const yOffset = this.isPrimary(idx) ? primaryTickOffset : secondaryTickOffset;
 
-        return this.orientation === TicksOrientation.top ? - (yOffset - trackHeight) : yOffset;
+        return this.ticksOrientation === TicksOrientation.top ? - (yOffset - trackHeight) : yOffset;
     }
 
     public hiddenTickLabels(idx: number) {
@@ -149,35 +146,60 @@ export class IgxTicksComponent {
      * @hidden
      */
     public tickLabelXOffset(index: number) {
-        const diffTicksOffset = index % (this.secondaryTicks + 1) === 0 ? 0 : this._defaultTickYOffset;
-        const verticalDir = this.toToBottomLabel ? -1 : 1;
-        return this.horizontalLabel ?
-            this.tickXOffset(index) :
-            (this.tickYOffset(index) + this._primaryTicksWidth + diffTicksOffset) * verticalDir;
+        return this.ticksOrientation === TicksOrientation.top && !this.horizontalLabel ?
+            this.labelXOffset(index) * -1 :
+            this.labelXOffset(index);
     }
 
     /**
      * @hidden
      */
     public tickLabelYOffset(index: number) {
-        const diffTicksOffset = index % (this.secondaryTicks + 1) === 0 ? 0 : this._defaultTickYOffset;
-        const verticalDir = this.toToBottomLabel ? -1 : 1;
-        return this.horizontalLabel ?
-            Math.abs(this.tickYOffset(index)) + this._primaryTicksWidth + diffTicksOffset :
-            (-this.tickXOffset(index)) * verticalDir;
+        const trackHeight = this.track.nativeElement.offsetHeight;
+        return this.ticksOrientation === TicksOrientation.top && this.horizontalLabel ?
+            (this.labelYOffset(index) + trackHeight) * -1 :
+            this.labelYOffset(index);
     }
 
     /**
      * @hidden
      */
     public textAnchor() {
-        return this.horizontalLabel ? 'middle' : this.toToBottomLabel ? 'end' : 'start';
+        if (this.horizontalLabel) {
+            return 'middle';
+        }
+
+        if (this.ticksOrientation === TicksOrientation.top) {
+            return this.topToBottomLabel ? 'end' : 'start';
+        }
+
+        if (this.ticksOrientation === TicksOrientation.bottom) {
+            return this.topToBottomLabel ? 'start' : 'end';
+        }
     }
 
     /**
      * @hidden
      */
     public dominantBaseline() {
-        return this.horizontalLabel ? 'hanging' : this.toToBottomLabel ? 'central' : 'middle';
+        return this.ticksOrientation === TicksOrientation.top && this.horizontalLabel ? 'baseline' :
+            this.horizontalLabel ? 'hanging' : !this.topToBottomLabel ? 'central' : 'middle';
+    }
+
+    private labelXOffset(index: number) {
+        const diffTicksOffset = index % (this.secondaryTicks + 1) === 0 ? 0 : this._defaultTickYOffset;
+        const verticalDir = this.topToBottomLabel ? 1 : -1;
+        return this.horizontalLabel ?
+            this.tickXOffset(index) :
+            (Math.abs(this.tickYOffset(index)) + this._primaryTicksWidth + diffTicksOffset) * verticalDir;
+    }
+
+    private labelYOffset(index: number) {
+        const diffTicksOffset = index % (this.secondaryTicks + 1) === 0 ? 0 : this._defaultTickYOffset;
+        const verticalDir = this.topToBottomLabel ? 1 : -1;
+        return this.horizontalLabel ?
+            Math.abs(this.tickYOffset(index)) + this._primaryTicksWidth + diffTicksOffset :
+            (-this.tickXOffset(index)) * verticalDir;
+
     }
 }

@@ -1,19 +1,7 @@
 <div class="igx-slider__track">
-    <!-- <svg id="svg" xmlns="http://www.w3.org/2000/svg" version="1.1" [ngStyle]="{ 'width': ticksContainer, 'height': '100px', 'overflow': 'visible', 'position': 'absolute' }">
-        <line id="stroke" x2="1" stroke="black" stroke-dasharray="1, 1" />
-        <g *ngFor="let n of [].constructor(ticksLength); let idx=index" [attr.stroke-width]="tickWidth(idx)">
-            <use href="#stroke"
-                [attr.x]="tickXOffset(idx)"
-                [attr.y]="-tickYOffset(idx)"></use>
-            <text [attr.x]="tickLabelXOffset(idx, true)"
-                [attr.transform]="tickLabelOrientation"
-                [attr.y]="tickLabelYOffset(idx, true)"
-                text-anchor="middle">{{tickLabel(idx)}}</text>
-        </g>
-    </svg> -->
-
-    <!-- <igx-ticks
-        [orientation]="0"
+    <igx-ticks
+        *ngIf="showTopTicks"
+        [ticksOrientation]="0"
         [primaryTicks]="primaryTicks"
         [secondaryTicks]="secondaryTicks"
         [primaryTickLabels]="primaryTickLabels"
@@ -22,13 +10,14 @@
         [tickLabelsOrientation]="tickLabelsOrientation"
         [ticksContainer]="ticksContainer"
         [track]="trackRef"
-        [maxValue]="maxValue"></igx-ticks> -->
+        [maxValue]="maxValue"></igx-ticks>
 
     <div #track class="igx-slider__track-fill"></div>
     <div #ticks class="igx-slider__track-ticks"></div>
 
     <igx-ticks
-        [orientation]="1"
+        *ngIf="showBottomTicks"
+        [ticksOrientation]="1"
         [primaryTicks]="primaryTicks"
         [secondaryTicks]="secondaryTicks"
         [primaryTickLabels]="primaryTickLabels"

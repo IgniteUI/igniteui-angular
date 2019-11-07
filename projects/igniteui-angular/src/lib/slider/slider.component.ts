@@ -913,6 +913,22 @@ export class IgxSliderComponent implements
     /**
      * @hidden
      */
+    public get showTopTicks() {
+        return this.ticksOrientation === TicksOrientation.top ||
+            this.ticksOrientation === TicksOrientation.mirror;
+    }
+
+    /**
+     * @hidden
+     */
+    public get showBottomTicks() {
+        return this.ticksOrientation === TicksOrientation.bottom ||
+            this.ticksOrientation === TicksOrientation.mirror;
+    }
+
+    /**
+     * @hidden
+     */
     public ngOnInit() {
         this.sliderSetup();
         this._resizeNotify.pipe(takeUntil(this._destroyer$))

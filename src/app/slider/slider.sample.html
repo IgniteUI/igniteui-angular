@@ -8,12 +8,14 @@
             <article class="sample-column">
                 <igx-slider #slider [type]="sliderType" [value]="rangeValue" [step]="25" [lowerBound]="0"
                     [tickLabelsOrientation]="labelOrientaion"
+                    [ticksOrientation]="ticksOrientation"
                     [primaryTicks]="3"
                     [secondaryTicks]="1">
                 </igx-slider>
             </article>
             <article style="padding-top: 50px">
                 <button igxButton (click)="changeLabelOrientation()">change label orientaiton</button>
+                <button igxButton (click)="changeTicksOrientation()">change ticks orientation</button>
                 <button igxButton (click)="changeLabels()">change labels</button>
             </article>
 
