@@ -1136,7 +1136,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden @internal
      */
     public ngOnInit() {
-        this.ngControl = this._injector.get<NgControl>(NgControl as Type<NgControl>, null);
+        this.ngControl = this._injector.get<NgControl>(NgControl, null);
         this._overlaySettings.positionStrategy.settings.target = this.elementRef.nativeElement;
         this.selection.set(this.id, new Set());
     }
