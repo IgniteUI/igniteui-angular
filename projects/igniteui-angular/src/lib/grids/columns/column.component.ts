@@ -1021,10 +1021,18 @@ export class IgxColumnComponent implements AfterContentInit {
     @Input()
     set visibleOnCollapse(value: boolean) {
         this._visibleOnCollapse = value;
+        if (this.parent) {
+            const cols = this.parent.children.map(child => child.visibleOnCollapse);
+            if (!(cols.some(c => c === true) && cols.some(c => c === false))) {
+                this.parent.collapsible = false;
+            } else {
+                this.parent.collapsible = true;
+            }
+        }
     }
 
     get visibleOnCollapse(): boolean {
-        if (!this.parent) { return false; }
+        if (!this.parent) { return; }
         return this._visibleOnCollapse;
     }
 

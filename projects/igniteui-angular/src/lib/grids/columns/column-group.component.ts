@@ -39,7 +39,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     public set collapsible(value: boolean) {
         this._collapsible = value;
         this.collapsibleChange.emit(this._collapsible);
-        if (this.children) {
+        if (this.children && !this.hidden) {
             if (value) {
                 this.setExpandCollapseState();
             } else {
