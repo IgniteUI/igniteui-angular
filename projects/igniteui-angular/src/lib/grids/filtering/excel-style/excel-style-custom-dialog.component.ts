@@ -23,6 +23,7 @@ import {
 import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
 import {
     ConnectedPositioningStrategy,
+    AutoPositionStrategy,
     OverlaySettings,
     VerticalAlignment,
     PositionSettings,
@@ -59,7 +60,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     private _customDialogOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
         modal: false,
-        positionStrategy: new ConnectedPositioningStrategy(this._customDialogPositionSettings),
+        positionStrategy: new AutoPositionStrategy(this._customDialogPositionSettings),
         scrollStrategy: new AbsoluteScrollStrategy()
     };
 
@@ -129,9 +130,11 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         }
     }
 
-    public open() {
+    public open(esf) {
         this._customDialogOverlaySettings.positionStrategy.settings.target =
-            this.grid.rootGrid ? this.grid.rootGrid.nativeElement : this.grid.nativeElement;
+            this.overlayComponentId ?
+                this.grid.rootGrid ? this.grid.rootGrid.nativeElement : this.grid.nativeElement :
+                esf;
         this.toggle.open(this._customDialogOverlaySettings);
     }
 
@@ -144,6 +147,8 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     public closeDialog() {
         if (this.overlayComponentId) {
             this.overlayService.hide(this.overlayComponentId);
+        } else {
+            this.toggle.close();
         }
     }
 
