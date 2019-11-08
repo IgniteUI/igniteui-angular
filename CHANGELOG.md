@@ -15,6 +15,10 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - Pinning columns is no longer automatically prevented when the pinning area would exceed the size of the grid.
+- `IgxCarousel`:
+    - **Breaking Changes** -The carousel slides are no longer array, they are changed to QueryList.
+    - **Breaking Changes** -There is a limitation for visible indicators. When slides are more than 5, a label is previewed instead of indicators. The visible indicators can be changed with the input `maximumIndicatorsCount`
+
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`:
@@ -28,6 +32,12 @@ All notable changes for each version of this project will be documented in this 
     - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
 - `IgxToggleDirective`:
     - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
+- `IgxCarousel`:
+    - `keyboardSupport` input is added, which can be used to enable and disable keyboard navigation
+    - `maximumIndicatorsCount` input is added, which can be used to set the number of visible indicators
+    - `indicatorsOrientation` input is added, which can be used to set the position of indicators it can be top or bottom
+    - `animationType` input is added, which can be used to set animation when changing slides
+    - `indicatorTemplate` directive is added, which can be used to provide a custom indicator for carousel. If this property is not provided, a default indicator template will be used instead.
 
 ## 8.2.6
 

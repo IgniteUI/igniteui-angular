@@ -191,11 +191,11 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     * Controls whether the carousel should support keyboard navigation.
     * Default value is `true`.
     * ```html
-    * <igx-carousel [keyBoardSupport] = "false"></igx-carousel>
+    * <igx-carousel [keyboardSupport] = "false"></igx-carousel>
     * ```
     * @memberOf IgxCarouselComponent
     */
-    @Input() public keyBoardSupport = true;
+    @Input() public keyboardSupport = true;
 
     /**
      * Controls the maximum indexes that can be shown.
@@ -761,7 +761,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      */
     @HostListener('keydown.arrowright')
     public onKeydownArrowRight() {
-        if (this.keyBoardSupport) {
+        if (this.keyboardSupport) {
             event.preventDefault();
             this.next();
             requestAnimationFrame(() => this.nativeElement.focus());
@@ -772,7 +772,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      */
     @HostListener('keydown.arrowleft')
     public onKeydownArrowLeft() {
-        if (this.keyBoardSupport) {
+        if (this.keyboardSupport) {
             event.preventDefault();
             this.prev();
             requestAnimationFrame(() => this.nativeElement.focus());
@@ -794,7 +794,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      */
     @HostListener('keydown.home')
     public onKeydownHome() {
-        if (this.keyBoardSupport && this.slides.length > 0) {
+        if (this.keyboardSupport && this.slides.length > 0) {
             event.preventDefault();
             this.slides.first.active = true;
             requestAnimationFrame(() => this.nativeElement.focus());
@@ -806,7 +806,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      */
     @HostListener('keydown.end')
     public onKeydownEnd() {
-        if (this.keyBoardSupport && this.slides.length > 0) {
+        if (this.keyboardSupport && this.slides.length > 0) {
             event.preventDefault();
             this.slides.last.active = true;
             requestAnimationFrame(() => this.nativeElement.focus());

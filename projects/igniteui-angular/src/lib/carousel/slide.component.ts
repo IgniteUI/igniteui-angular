@@ -131,7 +131,11 @@ export class IgxSlideComponent implements OnDestroy {
     constructor(private elementRef: ElementRef) { }
 
     /**
-    * @hidden
+    * Returns a reference to the carousel element in the DOM.
+    * ```typescript
+    * let nativeElement =  this.slide.nativeElement;
+    * ```
+    * @memberof IgxSlideComponent
     */
     public get nativeElement() {
         return this.elementRef.nativeElement;

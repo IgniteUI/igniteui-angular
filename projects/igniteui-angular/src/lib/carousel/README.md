@@ -2,7 +2,7 @@
 
 A carousel component is used to browse or navigate through a collection of slides - galleries of images,
 cards, on-boarding tutorials or page-based interfaces. It can be used as a separate full screen element
-or inside another component.  
+or inside another component.
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/carousel.html)
 
 # API Summary `igx-carousel`
@@ -13,6 +13,10 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 | `pause` | boolean | Should the carousel stop playing on user interaction. Defaults to `true`.  |
 | `interval` | number | The amount of time in milliseconds between slides transition. |
 | `navigation` | boolean | Controls should the carousel render the left/right navigation buttons. Defaults to `true`. |
+| `keyboardSupport` | boolean | Controls should the keyboard navigation should be supported. Defaults to `true`. |
+| `maximumIndicatorsCount` | number | The number of visible indicators. Defaults to `5`. |
+| `indicatorsOrientation` | CarouselIndicatorsOrientation | Controls whether the indicators should be previewed on top or on bottom of carousel. Defaults to `bottom`. |
+| `animationType` | CarouselAnimationType | Controls what animation should be played when slides are changing. Defaults to `slide`. |
 | `total` | number | The number of slides the carousel currently has.  |
 | `current` | number | The index of the slide currently showing. |
 | `isPlaying` | boolean | Returns whether the carousel is paused/playing. |
@@ -30,6 +34,26 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 | `remove(slide: IgxSlide)` | void | Removes an existing slide from the carousel. Emits `onSlideRemoved` event. |
 | `get(index: Number)` | IgxSlide or void | Returns the slide with the given index or null. |
 | `select(slide: IgxSlide, direction: Direction)`| void | Selects the slide and the direction to transition to. Emits `onSlideChanged` event. |
+
+### Keyboard navigation
+When the **IgxCarousel** component is focused and keyboardSupport is true:
+- Arrow keys will navigate through the slides.
+- `Home` will focus the first slide inside the carousel view.
+- `End` will focus the last slide inside the carousel view.
+
+### Templates
+The **IgxCarousel** supports templating of its indicators
+
+#### Defining item template:
+```html
+<igx-carousel #carousel>
+        ...
+<ng-template igxCarouselIndicator let-slide>
+    <igx-icon *ngIf="slide.active"  fontSet="material">brightness_7</igx-icon>
+    <igx-icon *ngIf="!slide.active"  fontSet="material">brightness_5</igx-icon>
+</ng-template>
+</igx-carousel>
+```
 
 # API Summary `igx-slide`
 | Name   |      Type      |  Description |

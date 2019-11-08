@@ -7,6 +7,7 @@
 
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Color} $slide-background [null] - The slide background color.
 /// @param {Color} $button-background [null] - The previous/next buttons idle background color.
 /// @param {Color} $button-hover-background [null] - The previous/next buttons hover background color.
 /// @param {Color} $button-arrow-color [null] - The previous/next buttons idle arrow color.
@@ -41,6 +42,8 @@
 
     $border-radius: null,
     $button-shadow: null,
+
+    $slide-background: null,
 
     $button-background: null,
     $button-hover-background: null,
@@ -82,6 +85,8 @@
     @return extend($theme, (
         name: $name,
         palette: $palette,
+
+        slide-background: $slide-background,
 
         border-radius: $border-radius,
         button-shadow: $button-shadow,
@@ -279,6 +284,7 @@
         right: 0;
         bottom: 0;
         z-index: -1;
+        background: --var($theme, 'slide-background');
     }
 
     %igx-carousel-slide--previous {

@@ -2,18 +2,16 @@ import { Component, ViewChild } from '@angular/core';
 import {
     async,
     TestBed,
-    ComponentFixture
+    ComponentFixture,
+    fakeAsync,
+    tick
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxCarouselComponent, IgxCarouselModule,  ISlideEventArgs } from './carousel.component';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
-
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSlideComponent } from './slide.component';
-
-const NEXT_BUTTON_CLASS = '.igx-carousel__arrow--next';
-const PRIV_BUTTON_CLASS = '.igx-carousel__arrow--prev';
 
 describe('Carousel', () => {
     configureTestSuite();
@@ -28,7 +26,7 @@ describe('Carousel', () => {
             .compileComponents();
     }));
 
-    describe('Base Tests - ', () => {
+    describe('Base Tests: ', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(CarouselTestComponent);
             carousel = fixture.componentInstance.carousel;
@@ -50,8 +48,6 @@ describe('Carousel', () => {
 
         it('should initialize a carousel with four slides and then destroy it', () => {
             const domCarousel = fixture.debugElement.query(By.css('igx-carousel')).nativeElement;
-
-            fixture.detectChanges();
             expect(carousel).toBeDefined();
             expect(carousel.id).toContain('igx-carousel-');
             expect(domCarousel.id).toContain('igx-carousel-');
@@ -68,34 +64,31 @@ describe('Carousel', () => {
             expect(carousel.isDestroyed).toBe(true);
         });
 
-        it('Carousel disabled looping', () => {
-            const lastSlide = carousel.get(3);
-            const firstSlide = carousel.get(0);
-
+        it('disabled looping', () => {
             carousel.loop = false;
             fixture.detectChanges();
             carousel.next();
             carousel.next();
             carousel.next();
             fixture.detectChanges();
-            expect(carousel.current).toBe(lastSlide.index);
+            HelperTestFunctions.verifyActiveSlide(carousel, 3);
 
             carousel.next();
             fixture.detectChanges();
-            expect(carousel.current).toBe(lastSlide.index);
+            HelperTestFunctions.verifyActiveSlide(carousel, 3);
 
             carousel.prev();
             carousel.prev();
             carousel.prev();
             fixture.detectChanges();
-            expect(carousel.current).toBe(firstSlide.index);
+            HelperTestFunctions.verifyActiveSlide(carousel, 0);
 
             carousel.prev();
             fixture.detectChanges();
-            expect(carousel.current).toBe(firstSlide.index);
+            HelperTestFunctions.verifyActiveSlide(carousel, 0);
         });
 
-        it('Carousel getter/setter tests', () => {
+        it('getter/setter tests', () => {
             carousel.loop = false;
             carousel.pause = false;
             carousel.interval = 500;
@@ -109,7 +102,7 @@ describe('Carousel', () => {
             expect(carousel.navigation).toBe(false);
         });
 
-        it('Carousel add/remove slides tests', () => {
+        it('add/remove slides tests', () => {
             let currentSlide = carousel.get(carousel.current);
             carousel.remove(currentSlide);
 
@@ -132,7 +125,7 @@ describe('Carousel', () => {
             expect(carousel.total).toEqual(4);
         });
 
-        it('Carousel checking if a slide is not active when it gets removed', () => {
+        it('checking if a slide is not active when it gets removed', () => {
             const currentSlide = carousel.get(carousel.current);
             carousel.remove(currentSlide);
 
@@ -140,7 +133,7 @@ describe('Carousel', () => {
             expect(currentSlide.active).toBe(false);
         });
 
-        it('Carousel public methods', () => {
+        it('public methods', () => {
             carousel.stop();
 
             fixture.detectChanges();
@@ -159,7 +152,7 @@ describe('Carousel', () => {
             expect(carousel.get(0)).toBe(currentSlide);
         });
 
-        it('Carousel emit events', () => {
+        it('emit events', () => {
             spyOn(carousel.onSlideChanged, 'emit');
             carousel.next();
             fixture.detectChanges();
@@ -217,15 +210,9 @@ describe('Carousel', () => {
             expect(carousel.onCarouselPlaying.emit).toHaveBeenCalledWith(carousel);
         });
 
-        it('Carousel click handlers', () => {
-            let prevNav;
-            let nextNav;
-            let carouselNative;
-
-            carouselNative = fixture.debugElement;
-
-            prevNav = carouselNative.query(By.css('a.igx-carousel__arrow--prev')).nativeElement;
-            nextNav = carouselNative.query(By.css('a.igx-carousel__arrow--next')).nativeElement;
+        it('click handlers', () => {
+            const nextNav = HelperTestFunctions.getNextButton(fixture).nativeElement;
+            const prevNav = HelperTestFunctions.getPreviousButton(fixture).nativeElement;
 
             spyOn(carousel, 'prev');
             prevNav.dispatchEvent(new Event('click'));
@@ -238,65 +225,167 @@ describe('Carousel', () => {
             expect(carousel.next).toHaveBeenCalled();
         });
 
-        it('Carousel UI navigation test', () => {
-            let carouselNative;
-
-            carouselNative = fixture.debugElement.query(By.css('.igx-carousel'));
-
-            expect(carousel.current).toEqual(0);
+        it('keyboard navigation test', () => {
+            spyOn(carousel.onSlideChanged, 'emit');
             carousel.pause = true;
 
-            carousel.nativeElement.focus();
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement, true);
             fixture.detectChanges();
-            expect(carousel.current).toEqual(1);
-            expect(carousel.get(1).active).toBeTruthy();
+            HelperTestFunctions.verifyActiveSlide(carousel, 1);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement, true);
             fixture.detectChanges();
-            expect(carousel.current).toEqual(2);
-            expect(carousel.get(1).active).toBe(false);
-            expect(carousel.get(2).active).toBe(true);
+            HelperTestFunctions.verifyActiveSlide(carousel, 2);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement, true);
             fixture.detectChanges();
-            expect(carousel.current).toEqual(3);
+            HelperTestFunctions.verifyActiveSlide(carousel, 3);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement, true);
             fixture.detectChanges();
-            expect(carousel.current).toEqual(0);
+            HelperTestFunctions.verifyActiveSlide(carousel, 0);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', carousel.nativeElement, true);
             fixture.detectChanges();
-            expect(carousel.current).toEqual(3);
+            HelperTestFunctions.verifyActiveSlide(carousel, 3);
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', carousel.nativeElement, true);
             fixture.detectChanges();
-            expect(carousel.current).toEqual(2);
+            HelperTestFunctions.verifyActiveSlide(carousel, 2);
+
+            UIInteractions.triggerKeyDownEvtUponElem('Home', carousel.nativeElement, true);
+            fixture.detectChanges();
+            HelperTestFunctions.verifyActiveSlide(carousel, 0);
+
+            UIInteractions.triggerKeyDownEvtUponElem('End', carousel.nativeElement, true);
+            fixture.detectChanges();
+            HelperTestFunctions.verifyActiveSlide(carousel, 3);
+
+            expect(carousel.onSlideChanged.emit).toHaveBeenCalledTimes(8);
         });
 
-        it('Carousel navigation changes visibility of arrows', () => {
-            let carouselNative;
+        it('changing slides with navigation buttons', () => {
+            spyOn(carousel.onSlideChanged, 'emit');
+            carousel.pause = true;
 
-            carouselNative = fixture.debugElement.query(By.css('.igx-carousel'));
+            const prevNav = HelperTestFunctions.getPreviousButton(fixture).nativeElement;
+            const nextNav = HelperTestFunctions.getNextButton(fixture).nativeElement;
 
-            // carousel.navigation = true;
+            nextNav.dispatchEvent(new Event('click'));
             fixture.detectChanges();
-            expect(carouselNative.query(By.css('.igx-carousel__arrow--prev')) === null).toBe(false);
-            expect(carouselNative.query(By.css('.igx-carousel__arrow--next')) === null).toBe(false);
+
+            HelperTestFunctions.verifyActiveSlide(carousel, 1);
+
+            nextNav.dispatchEvent(new Event('click'));
+            fixture.detectChanges();
+
+            HelperTestFunctions.verifyActiveSlide(carousel, 2);
+
+            nextNav.dispatchEvent(new Event('click'));
+            fixture.detectChanges();
+
+            HelperTestFunctions.verifyActiveSlide(carousel, 3);
+
+            nextNav.dispatchEvent(new Event('click'));
+            fixture.detectChanges();
+
+            HelperTestFunctions.verifyActiveSlide(carousel, 0);
+
+            prevNav.dispatchEvent(new Event('click'));
+            fixture.detectChanges();
+
+            HelperTestFunctions.verifyActiveSlide(carousel, 3);
+
+            prevNav.dispatchEvent(new Event('click'));
+            fixture.detectChanges();
+
+            HelperTestFunctions.verifyActiveSlide(carousel, 2);
+
+            expect(carousel.onSlideChanged.emit).toHaveBeenCalledTimes(6);
+        });
+
+        it('navigation changes visibility of arrows', () => {
+            expect( HelperTestFunctions.getNextButton(fixture) === null).toBe(false);
+            expect(HelperTestFunctions.getPreviousButton(fixture) === null).toBe(false);
 
             carousel.navigation = false;
             fixture.detectChanges();
-            expect(carouselNative.query(By.css('.igx-carousel__arrow--prev')) === null).toBe(true);
-            expect(carouselNative.query(By.css('.igx-carousel__arrow--next')) === null).toBe(true);
+            expect(HelperTestFunctions.getNextButton(fixture) === null).toBe(true);
+            expect(HelperTestFunctions.getPreviousButton(fixture) === null).toBe(true);
 
             carousel.navigation = true;
             fixture.detectChanges();
-            expect(carouselNative.query(By.css('.igx-carousel__arrow--prev')) === null).toBe(false);
-            expect(carouselNative.query(By.css('.igx-carousel__arrow--next')) === null).toBe(false);
+            expect(HelperTestFunctions.getNextButton(fixture) === null).toBe(false);
+            expect(HelperTestFunctions.getPreviousButton(fixture) === null).toBe(false);
+        });
+
+        it('keyboardSupport changes support for keyboard navigation', () => {
+            carousel.keyboardSupport = false;
+            carousel.select(carousel.get(1));
+            fixture.detectChanges();
+
+            spyOn(carousel.onSlideChanged, 'emit');
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement, true);
+            fixture.detectChanges();
+            HelperTestFunctions.verifyActiveSlide(carousel, 1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', carousel.nativeElement, true);
+            fixture.detectChanges();
+            HelperTestFunctions.verifyActiveSlide(carousel, 1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('End', carousel.nativeElement, true);
+            fixture.detectChanges();
+            HelperTestFunctions.verifyActiveSlide(carousel, 1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('Home', carousel.nativeElement, true);
+            fixture.detectChanges();
+            HelperTestFunctions.verifyActiveSlide(carousel, 1);
+
+            expect(carousel.onSlideChanged.emit).toHaveBeenCalledTimes(0);
+            carousel.keyboardSupport = true;
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', carousel.nativeElement, true);
+            fixture.detectChanges();
+            HelperTestFunctions.verifyActiveSlide(carousel, 2);
+            expect(carousel.onSlideChanged.emit).toHaveBeenCalledTimes(1);
         });
     });
 });
+
+class HelperTestFunctions {
+    public static  NEXT_BUTTON_CLASS = '.igx-carousel__arrow--next';
+    public static  PRIV_BUTTON_CLASS = '.igx-carousel__arrow--prev';
+    public static  ACTIVE_SLIDE_CLASS = 'igx-slide--current';
+    public static  INDICATORS_TOP_CLASS = '.igx-carousel-indicators--top';
+    public static  INDICATORS_BOTTOM_CLASS = '.igx-carousel-indicators--bottom';
+
+    public static getNextButton(fixture) {
+        const carouselNative = fixture.debugElement;
+        return carouselNative.query(By.css(HelperTestFunctions.NEXT_BUTTON_CLASS));
+    }
+
+    public static getPreviousButton(fixture) {
+        const carouselNative = fixture.debugElement;
+        return carouselNative.query(By.css(HelperTestFunctions.PRIV_BUTTON_CLASS));
+    }
+
+    public static getIndicatorsContainer(fixture) {
+        const carouselNative = fixture.debugElement;
+        return carouselNative.query(By.css(HelperTestFunctions.PRIV_BUTTON_CLASS)).nativeElement;
+    }
+
+    public static verifyActiveSlide(carousel, index: number) {
+        const activeSlide = carousel.get(index);
+        expect(carousel.current).toEqual(index);
+        expect(activeSlide.active).toBeTruthy();
+        expect(activeSlide.nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
+        expect(carousel.slides.find((slide) => slide.active && slide.index !== index)).toBeUndefined();
+    }
+
+
+}
 @Component({
     template: `
         <igx-carousel #carousel [loop]="loop" [pause]="pause" [interval]="interval" [animationType]="'none'">
