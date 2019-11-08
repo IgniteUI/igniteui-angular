@@ -26,7 +26,7 @@
 
 <ng-template #defaultCollapseIndicator>
     <igx-icon [attr.draggable]="false" >
-            {{column.expand ? 'expand_less' : 'expand_more'}} </igx-icon>
+            {{column.expand ? 'expand_less' : 'chevron_right'}} </igx-icon>
 </ng-template>
 
 <ng-container *ngIf="!grid.hasColumnLayouts && column.columnGroup">

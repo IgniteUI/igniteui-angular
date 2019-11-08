@@ -55,8 +55,8 @@ export class GridColumnGroupsSampleComponent implements AfterViewInit {
     }
 
     pinGroup() {
-        const t = this.grid.getColumnByName('ContactTitle');
-        t.pinned = !t.pinned;
+        const t = this.grid.getColumnByName('ContactName');
+        t.visibleOnCollapse = !t.visibleOnCollapse;
     }
 
     log() {

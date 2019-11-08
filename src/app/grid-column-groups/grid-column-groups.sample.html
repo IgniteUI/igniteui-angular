@@ -6,11 +6,11 @@
             </ng-template>
         <igx-grid [allowFiltering]="true" [rowSelectable]="false" #grid [data]="data" displayDensity="compact" [showToolbar]="true" [allowAdvancedFiltering]="true" [columnHiding]="true">
             <igx-column [movable]="true"  [resizable]="true" [pinned]="true" field="Missing"></igx-column>
-            <igx-column-group [movable]="true" header="General Information" [collapsible]="true" [expand]="s" [hidden]="true">
+            <igx-column-group [movable]="true" header="General Information" [collapsible]="true" [expand]="true" [hidden]="true">
                 <igx-column [movable]="true" [filterable]="false" [hidden]="true" sortable="true" resizable="true" field="CompanyName" width="200px" [visibleOnCollapse]="false"></igx-column>
                 <igx-column  field="Missing"></igx-column>
                 <igx-column-group [movable]="true" header="Person Details" [collapsible]="true" [expand]="false" [visibleOnCollapse]="true">
-                    <igx-column [movable]="true" [visibleOnCollapse]="true" [hidden]="true" filterable="true" sortable="true" resizable="true" field="ContactName"></igx-column>
+                    <igx-column [movable]="true" [visibleOnCollapse]="false" [hidden]="true" filterable="true" sortable="true" resizable="true" field="ContactName"></igx-column>
                     <igx-column [movable]="true" [visibleOnCollapse]="false" [pinned]="true"  filterable="true" sortable="true" resizable="true" field="ContactTitle"></igx-column>
                 </igx-column-group>
                 <ng-template igxCollapsibleIndicator let-column="column" #ind >
@@ -57,7 +57,7 @@
             </igx-column-group>
         </igx-grid>
         <span igxButton (click)="log()">Pin first group</span>
-        <span igxButton (click)="hideGroup()">Toggle expand - Address Information</span>
+        <span igxButton (click)="pinGroup()">Toggle expand - Address Information</span>
         <span igxButton (click)="toggleCollapsible()">Toggle collapsible - General Information</span>
     </section>
 </div>
