@@ -103,6 +103,7 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IFilteringStrategy } from '../data-operations/filtering-strategy';
 import { IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,
      IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective } from './grid/grid.directives';
+import { IgxRowDragGhostDirective  } from './row-drag.directive';
 import { GridKeydownTargetType, GridSelectionMode, GridSummaryPosition, GridSummaryCalculationMode, FilterMode } from './common/enums';
 
 const MINIMUM_COLUMN_WIDTH = 136;
@@ -1939,6 +1940,13 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /**
      * @hidden
+     * @internal
+     */
+    @ContentChildren(IgxRowDragGhostDirective, { read: TemplateRef, descendants: false })
+    public dragGhostCustomTemplates: QueryList<TemplateRef<any>>;
+
+    /**
+     * @hidden
      */
     @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective, static: true })
     public verticalScrollContainer: IgxGridForOfDirective<any>;
@@ -3181,6 +3189,18 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this.resetNotifyChanges();
             this.cdr.detectChanges();
         }
+    }
+
+    /**
+     * @hidden
+     * @internal
+    */
+    public getDragGhostCustomTemplate() {
+        if (this.dragGhostCustomTemplates && this.dragGhostCustomTemplates.first) {
+            return this.dragGhostCustomTemplates.first;
+        }
+
+        return null;
     }
 
     /**
