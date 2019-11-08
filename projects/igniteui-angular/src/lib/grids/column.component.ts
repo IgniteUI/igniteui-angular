@@ -59,8 +59,7 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     selector: 'igx-column',
-    template: ``,
-    providers: [IgxRowIslandAPIService]
+    template: ``
 })
 export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     /**
