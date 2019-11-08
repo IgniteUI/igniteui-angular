@@ -12,6 +12,12 @@
             [attr.x]="tickLabelXOffset(idx)"
             [attr.y]="tickLabelYOffset(idx)"
             [attr.text-anchor]="textAnchor()"
-            [attr.dominant-baseline]="dominantBaseline()">{{tickLabel(idx)}}</text>
+            [attr.dominant-baseline]="dominantBaseline()">
+                <ng-container *ngTemplateOutlet="tickLabelTemplateRef ? tickLabelTemplateRef : tickLabelDefaultTemplate; context: context(idx)"></ng-container>
+            </text>
     </g>
 </svg>
+
+<ng-template #tickLabelDefaultTemplate let-value>
+    {{ value }}
+</ng-template>

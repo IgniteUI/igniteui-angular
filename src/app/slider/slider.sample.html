@@ -8,15 +8,21 @@
             <article class="sample-column">
                 <igx-slider #slider [type]="sliderType" [value]="rangeValue" [step]="25" [lowerBound]="0"
                     [tickLabelsOrientation]="labelOrientaion"
-                    [labels]="labels"
+                    [primaryTickLabels]="primaryTickLabels"
+                    [secondaryTickLabels]="secondaryTickLabels"
                     [ticksOrientation]="ticksOrientation"
                     [primaryTicks]="3"
                     [secondaryTicks]="1">
+                    <ng-template igxSliderTickLabel let-value let-primary="isPrimary" let-idx="index" let-labels="labels">
+                        {{ tickLabel(value, primary, idx, labels) }}
+                    </ng-template>
                 </igx-slider>
             </article>
             <article style="padding-top: 50px">
                 <button igxButton (click)="changeLabelOrientation()">change label orientaiton</button>
                 <button igxButton (click)="changeTicksOrientation()">change ticks orientation</button>
+                <button igxButton (click)="primaryTickLabels = !primaryTickLabels">show/hide primary labels</button>
+                <button igxButton (click)="secondaryTickLabels = !secondaryTickLabels">show/hide secondary labels</button>
                 <button igxButton (click)="changeLabels()">change labels</button>
             </article>
 

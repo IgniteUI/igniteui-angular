@@ -22,6 +22,8 @@ export class SliderSampleComponent {
 
     public labelOrientaion = TickLabelsOrientation.horizontal;
     public ticksOrientation = TicksOrientation.mirror;
+    public primaryTickLabels = true;
+    public secondaryTickLabels = true;
     public sliderType: SliderType = SliderType.RANGE;
     public labelsDates = new Array<Date>();
     public task: Task = new Task('Implement new app', 30);
@@ -81,6 +83,14 @@ export class SliderSampleComponent {
         } else {
             this.ticksOrientation = TicksOrientation.mirror;
         }
+    }
+
+    public tickLabel(value, primary, index, labels) {
+        if (primary) {
+            return Math.round(value);
+        }
+
+        return value;
     }
 
 }

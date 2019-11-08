@@ -33,6 +33,16 @@ export class IgxThumbFromTemplateDirective {}
 })
 export class IgxThumbToTemplateDirective {}
 
+/**
+ * Template directive allowing you to set a custom template represeting primary/secondary ticks of the {@link IgxSliderComponent}
+ *
+ * @context {@link IgxTicksComponent.context}
+ */
+@Directive({
+    selector: '[igxSliderTickLabel]'
+})
+export class IgxTickLabelTemplateDirective {}
+
 export interface IRangeSliderValue {
     lower: number;
     upper: number;

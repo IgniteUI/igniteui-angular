@@ -11,6 +11,7 @@
         [ticksContainer]="ticksContainer"
         [labelsViewEnabled]="labelsViewEnabled"
         [labels]="labels | spreadTickLabels:secondaryTicks"
+        [tickLabelTemplateRef]="tickLabelTemplateRef"
         [track]="trackRef"
         [maxValue]="maxValue"></igx-ticks>
 
@@ -29,6 +30,7 @@
         [ticksContainer]="ticksContainer"
         [labelsViewEnabled]="labelsViewEnabled"
         [labels]="labels | spreadTickLabels:secondaryTicks"
+        [tickLabelTemplateRef]="tickLabelTemplateRef"
         [track]="trackRef"
         [maxValue]="maxValue"></igx-ticks>
 </div>
@@ -39,7 +41,8 @@
         [value]="lowerLabel"
         [templateRef]="thumbFromTemplateRef"
         [continuous]="continuous"
-        [context]="context"></igx-thumb-label>
+        [context]="context"
+        [deactiveState]="deactivateThumbLabel"></igx-thumb-label>
 
     <igx-thumb *ngIf="isRange"
         #thumbFrom
@@ -54,6 +57,7 @@
         [context]="context"
         (onChange)="onThumbChange()"
         (onHoverChange)="onHoverChange($event)"
+        [deactiveState]="deactivateThumbLabel"
         [thumbLabelVisibilityDuration]="thumbLabelVisibilityDuration"></igx-thumb>
 
     <igx-thumb-label
@@ -61,7 +65,8 @@
         [type]="1"
         [templateRef]="thumbToTemplateRef"
         [continuous]="continuous"
-        [context]="context"></igx-thumb-label>
+        [context]="context"
+        [deactiveState]="deactivateThumbLabel"></igx-thumb-label>
 
     <igx-thumb
         #thumbTo
@@ -76,5 +81,6 @@
         [context]="context"
         (onChange)="onThumbChange()"
         (onHoverChange)="onHoverChange($event)"
+        [deactiveState]="deactivateThumbLabel"
         [thumbLabelVisibilityDuration]="thumbLabelVisibilityDuration"></igx-thumb>
 </div>

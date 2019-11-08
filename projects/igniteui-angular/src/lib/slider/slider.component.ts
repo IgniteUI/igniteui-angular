@@ -26,7 +26,8 @@ import { SliderHandle,
     SliderType,
     ISliderValueChangeEventArgs,
     TicksOrientation,
-    TickLabelsOrientation
+    TickLabelsOrientation,
+    IgxTickLabelTemplateDirective
 } from './slider.common';
 import { IgxThumbLabelComponent } from './label/thumb-label.component';
 import ResizeObserver from 'resize-observer-polyfill';
@@ -177,6 +178,12 @@ export class IgxSliderComponent implements
     /**
      * @hidden
      */
+    @ContentChild(IgxTickLabelTemplateDirective, { read: TemplateRef, static: false })
+    public tickLabelTemplateRef: TemplateRef<any>;
+
+    /**
+     * @hidden
+     */
     @HostBinding(`attr.role`)
     public role = 'slider';
 
@@ -305,9 +312,10 @@ export class IgxSliderComponent implements
      * Returns the template context corresponding
      * to {@link IgxThumbFromTemplateDirective} and {@link IgxThumbToTemplateDirective} templates.
      *
+     * ```typescript
      * return {
-     *  $implicit: {@link value},
-     *  labels: {@link labels}
+     *  $implicit // returns the value of the label,
+     *  labels // returns the labels collection the user has passed.
      * }
      * ```
      */
@@ -697,6 +705,11 @@ export class IgxSliderComponent implements
 
     @Input()
     public tickLabelsOrientation = TickLabelsOrientation.horizontal;
+
+    public get deactivateThumbLabel() {
+        return (this.primaryTickLabels || this.secondaryTickLabels) &&
+            (this.ticksOrientation === TicksOrientation.top || this.ticksOrientation === TicksOrientation.mirror);
+    }
 
     /**
      * This event is emitted when user has stopped interacting the thumb and value is changed.
@@ -1384,6 +1397,7 @@ export class IgxSliderComponent implements
         IgxSliderComponent,
         IgxThumbFromTemplateDirective,
         IgxThumbToTemplateDirective,
+        IgxTickLabelTemplateDirective,
         IgxSliderThumbComponent,
         IgxThumbLabelComponent,
         IgxTicksComponent,
@@ -1392,6 +1406,7 @@ export class IgxSliderComponent implements
         IgxSliderComponent,
         IgxThumbFromTemplateDirective,
         IgxThumbToTemplateDirective,
+        IgxTickLabelTemplateDirective,
         IgxSliderThumbComponent,
         IgxThumbLabelComponent,
         IgxTicksComponent],

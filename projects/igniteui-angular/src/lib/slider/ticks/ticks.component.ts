@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, Input, ElementRef, AfterViewInit, TemplateRef } from '@angular/core';
 import { TicksOrientation, TickLabelsOrientation } from '../slider.common';
 
 @Component({
@@ -48,6 +48,33 @@ export class IgxTicksComponent {
 
     @Input()
     public labels: Array<number | string | boolean | null | undefined>;
+
+    @Input()
+    public tickLabelTemplateRef: TemplateRef<any>;
+
+    /**
+     * Returns the template context corresponding to
+     * {@link IgxTickLabelTemplateDirective}
+     *
+     * ```typescript
+     * return {
+     *  $implicit //returns tick labels value
+     *  isPrimery //returns if the tick is primary.
+     *  labels // returns the labels collection.
+     *  index // returns the index of every tick on the tick series.
+     * }
+     * ```
+     *
+     * @param idx the index of the tick series that are rendered.
+     */
+    public context(idx: number): any {
+        return {
+            $implicit: this.tickLabel(idx),
+            isPrimary: this.isPrimary(idx),
+            labels: this.labels,
+            index: idx
+        };
+    }
 
     /**
      * @hidden
@@ -155,9 +182,8 @@ export class IgxTicksComponent {
      * @hidden
      */
     public tickLabelYOffset(index: number) {
-        const trackHeight = this.track.nativeElement.offsetHeight;
         return this.ticksOrientation === TicksOrientation.top && this.horizontalLabel ?
-            (this.labelYOffset(index) + trackHeight) * -1 :
+            this.labelYOffset(index) * -1 :
             this.labelYOffset(index);
     }
 
