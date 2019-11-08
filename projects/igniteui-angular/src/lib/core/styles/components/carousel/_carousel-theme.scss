@@ -52,7 +52,14 @@
     $indicator-active-border-color: null,
 ){
     $name: 'igx-carousel';
-    $carousel-schema: map-get($schema, $name);
+    $carousel-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $carousel-schema: map-get($schema, $name);
+    } @else {
+        $carousel-schema: $schema;
+    }
+
     $theme: apply-palette($carousel-schema, $palette);
 
     $border-radius: round-borders(

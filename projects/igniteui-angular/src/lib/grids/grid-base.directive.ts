@@ -131,6 +131,7 @@ import { IgxHeadSelectorDirective, IgxRowSelectorDirective } from './selection/r
 import { IgxGridToolbarCustomContentDirective } from './toolbar/toolbar.directive';
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
+import { IGridSortingStrategy } from '../data-operations/sorting-strategy';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -168,6 +169,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public _destroyed = false;
     private overlayIDs = [];
     private _filteringStrategy: IFilteringStrategy;
+    private _sortingStrategy: IGridSortingStrategy;
 
     private _hostWidth;
     private _advancedFilteringOverlayId: string;
@@ -327,10 +329,38 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     *@hidden
+     * Emitted before filtering is performed.
+     * Returns the filtering expressions tree of the column for which filtering was performed.
+     * ```typescript
+     * filteringExprTreeChange(event: IFilteringExpressionsTree){
+     *     const filteringTree = event;
+     * }
+     * ```
+     * ```html
+     * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true"
+     *              (filteringExpressionsTreeChange)="filteringExprTreeChange($event)"></igx-grid>
+     * ```
+     * @memberof IgxGridBaseDirective
      */
     @Output()
     public filteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
+
+    /**
+     * Emitted before advanced filtering is performed.
+     * Returns the advanced filtering expressions tree.
+     * ```typescript
+     * advancedFilteringExprTreeChange(event: IFilteringExpressionsTree){
+     *     const filteringTree = event;
+     * }
+     * ```
+     * ```html
+     * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true"
+     *           (advancedFilteringExpressionsTreeChange)="advancedFilteringExprTreeChange($event)"></igx-grid>
+     * ```
+     * @memberof IgxGridBaseDirective
+     */
+    @Output()
+    public advancedFilteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
 
     /**
      * Returns the advanced filtering state of `IgxGridComponent`.
@@ -375,6 +405,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         } else {
             this._advancedFilteringExpressionsTree = null;
         }
+        this.advancedFilteringExpressionsTreeChange.emit(this._advancedFilteringExpressionsTree);
 
         if (this.filteringService.isFilteringExpressionsTreeEmpty() && !this.advancedFilteringExpressionsTree) {
             this.filteredData = null;
@@ -996,6 +1027,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     set filterMode(value) {
         this._filterMode = value;
+
+        if (this.filteringService.isFilterRowVisible) {
+            this.filteringRow.close();
+        }
+        this.notifyChanges(true);
     }
 
     /**
@@ -1071,6 +1107,27 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     set filterStrategy(classRef: IFilteringStrategy) {
         this._filteringStrategy = classRef;
+    }
+
+    /**
+     * Gets the sorting strategy of the grid.
+     * ```typescript
+     *  let sortStrategy = this.grid.sortStrategy
+     * ```
+     */
+    @Input()
+    get sortStrategy(): IGridSortingStrategy {
+        return this._sortingStrategy;
+    }
+
+    /**
+     * Sets the sorting strategy of the grid.
+     * ```html
+     *  <igx-grid #grid [data]="localData" [sortStrategy]="sortStrategy"></igx-grid>
+     * ```
+     */
+    set sortStrategy(value: IGridSortingStrategy) {
+        this._sortingStrategy = value;
     }
 
     /**
@@ -2150,7 +2207,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     *@hidden
+     * Emitted before sorting is performed. Returns the sorting expressions.
+     * ```html
+     * <igx-grid #grid [data]="localData" [autoGenerate]="true" (sortingExpressionsChange)="sortingExprChange($event)"></igx-grid>
+     * ```
+     * ```typescript
+     * sortingExprChange(event: ISortingExpression[]){
+     *     const sortingExpressions = event;
+     * }
+     * ```
+     * @memberof IgxGridBaseDirective
      */
     @Output()
     public sortingExpressionsChange = new EventEmitter<ISortingExpression[]>();
@@ -2893,7 +2959,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             if (this._advancedFilteringOverlayId === event.id) {
                 const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
                 if (instance) {
-                    instance.initialize(this.filteringService, this.overlayService, event.id);
+                    instance.initialize(this, this.overlayService, event.id);
                 }
             }
         });
@@ -4348,17 +4414,30 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
+    protected getFilterCellHeight(): number {
+        const headerGroupNativeEl = (this.headerGroupsList.length !== 0) ?
+                                        this.headerGroupsList[0].element.nativeElement : null;
+        const filterCellNativeEl = (headerGroupNativeEl) ?
+                                    headerGroupNativeEl.querySelector('igx-grid-filtering-cell') : null;
+        return (filterCellNativeEl) ? filterCellNativeEl.offsetHeight : 0;
+    }
+
+    /**
+     * @hidden
+     */
     protected _calculateGridBodyHeight(): number {
         if (!this._height) {
             return null;
         }
 
-
+        const actualTheadRow = (!this.allowFiltering || (this.allowFiltering && this.filterMode !== FilterMode.quickFilter)) ?
+                                 this.theadRow.nativeElement.offsetHeight - this.getFilterCellHeight() :
+                                 this.theadRow.nativeElement.offsetHeight;
         const footerHeight = this.summariesHeight || this.tfoot.nativeElement.offsetHeight - this.tfoot.nativeElement.clientHeight;
         const toolbarHeight = this.getToolbarHeight();
         const pagingHeight = this.getPagingHeight();
         const groupAreaHeight = this.getGroupAreaHeight();
-        const renderedHeight = toolbarHeight + this.theadRow.nativeElement.offsetHeight +
+        const renderedHeight = toolbarHeight + actualTheadRow +
             footerHeight + pagingHeight + groupAreaHeight +
             this.scr.nativeElement.clientHeight;
 
