@@ -14,13 +14,14 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import {
     IgxGridAdvancedFilteringColumnGroupComponent,
-    IgxGridAdvancedFilteringComponent
+    IgxGridAdvancedFilteringComponent,
+    IgxGridExternalAdvancedFilteringComponent
 } from '../../test-utils/grid-samples.spec';
 
 const ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
 const ADVANCED_FILTERING_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
 const ADVANCED_FILTERING_OPERATOR_LINE_SELECTED_CSS_CLASS = 'igx-filter-tree__line--selected';
-const ADVANCED_FILTERING_TOOLBAR_ICON_BUTTON_FILTERED_CSS_CLASS = 'igx-grid-toolbar__adv-filter--filtered';
+const ADVANCED_FILTERING_TOOLBAR_BUTTON_FILTERED_CSS_CLASS = 'igx-grid-toolbar__adv-filter--filtered';
 
 describe('IgxGrid - Advanced Filtering', () => {
     configureTestSuite();
@@ -28,7 +29,8 @@ describe('IgxGrid - Advanced Filtering', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridAdvancedFilteringColumnGroupComponent,
-                IgxGridAdvancedFilteringComponent
+                IgxGridAdvancedFilteringComponent,
+                IgxGridExternalAdvancedFilteringComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -325,12 +327,12 @@ describe('IgxGrid - Advanced Filtering', () => {
             expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Ignite UI for Angular');
         }));
 
-        it('Should update the Advanced Filtering button icon in toolbar when (filtering)/(clear filtering).',
+        it('Should update the Advanced Filtering button in toolbar when (filtering)/(clear filtering).',
         fakeAsync(() => {
-            // Verify that the advanced filtering button icon indicates there are no filters.
-            let advFilterIcon = GridFunctions.getAdvancedFilteringButton(fix).querySelector('igx-icon');
-            expect(advFilterIcon.classList.contains(ADVANCED_FILTERING_TOOLBAR_ICON_BUTTON_FILTERED_CSS_CLASS))
-                .toBe(false, 'Button icon indicates there is active filtering.');
+            // Verify that the advanced filtering button indicates there are no filters.
+            let advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix);
+            expect(advFilterBtn.classList.contains(ADVANCED_FILTERING_TOOLBAR_BUTTON_FILTERED_CSS_CLASS))
+                .toBe(false, 'Button indicates there is active filtering.');
 
             // Open Advanced Filtering dialog.
             GridFunctions.clickAdvancedFilteringButton(fix);
@@ -354,10 +356,10 @@ describe('IgxGrid - Advanced Filtering', () => {
             // Apply the filters.
             GridFunctions.clickAdvancedFilteringApplyButton(fix);
 
-            // Verify that the advanced filtering button icon indicates there are filters.
-            advFilterIcon = GridFunctions.getAdvancedFilteringButton(fix).querySelector('igx-icon');
-            expect(advFilterIcon.classList.contains(ADVANCED_FILTERING_TOOLBAR_ICON_BUTTON_FILTERED_CSS_CLASS))
-                .toBe(true, 'Button icon indicates there is no active filtering.');
+            // Verify that the advanced filtering button indicates there are filters.
+            advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix);
+            expect(advFilterBtn.classList.contains(ADVANCED_FILTERING_TOOLBAR_BUTTON_FILTERED_CSS_CLASS))
+                .toBe(true, 'Button indicates there is no active filtering.');
 
             // Open Advanced Filtering dialog.
             GridFunctions.clickAdvancedFilteringButton(fix);
@@ -371,10 +373,10 @@ describe('IgxGrid - Advanced Filtering', () => {
             GridFunctions.clickAdvancedFilteringApplyButton(fix);
             fix.detectChanges();
 
-            // Verify that the advanced filtering button icon indicates there are no filters.
-            advFilterIcon = GridFunctions.getAdvancedFilteringButton(fix).querySelector('igx-icon');
-            expect(advFilterIcon.classList.contains(ADVANCED_FILTERING_TOOLBAR_ICON_BUTTON_FILTERED_CSS_CLASS))
-                .toBe(false, 'Button icon indicates there is active filtering.');
+            // Verify that the advanced filtering button indicates there are no filters.
+            advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix);
+            expect(advFilterBtn.classList.contains(ADVANCED_FILTERING_TOOLBAR_BUTTON_FILTERED_CSS_CLASS))
+                .toBe(false, 'Button indicates there is active filtering.');
         }));
 
         it('Should correctly filter by a \'string\' column through UI.', fakeAsync(() => {
@@ -2688,6 +2690,58 @@ describe('IgxGrid - Advanced Filtering', () => {
             const dropdownValues = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix).map((x: any) => x.innerText);
             const expectedValues = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'Another Field'];
             expect(expectedValues).toEqual(dropdownValues);
+        }));
+    });
+
+    describe('External', () => {
+        let fix, grid: IgxGridComponent;
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridExternalAdvancedFilteringComponent);
+            grid = fix.componentInstance.grid;
+            fix.detectChanges();
+        }));
+
+        it('Should allow hosting Advanced Filtering dialog outside of the grid.', fakeAsync(() => {
+            // Add a root 'and' group.
+            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            addAndGroupButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Populate edit inputs.
+            selectColumnInEditModeExpression(fix, 2); // Select 'Downloads' column.
+            selectOperatorInEditModeExpression(fix, 2); // Select 'Greater Than' operator.
+            let input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            sendInputNativeElement(fix, input, '100'); // Type filter value.
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Add new expression to the root group.
+            const addExpressionBtn = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[0];
+            addExpressionBtn.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Populate edit inputs.
+            selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            sendInputNativeElement(fix, input, 'ignite'); // Type filter value.
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Apply the filters.
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Verify the state of the grid after the filtering.
+            expect(grid.advancedFilteringExpressionsTree).toBeTruthy();
+            expect(grid.filteredData.length).toBe(1);
+            expect(grid.rowList.length).toBe(1);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
         }));
     });
 });

@@ -17,10 +17,19 @@ All notable changes for each version of this project will be documented in this 
     - **Behavioral Change** - Pinning columns is no longer automatically prevented when the pinning area would exceed the size of the grid.
 
 ### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`:
+    - `sortStrategy` input is added, which can be used to set a global sorting strategy for the entire grid.
+        (**NOTE**: The grid's `sortStrategy` is of different type compared to the column's `sortStrategy`.)
+    - `NoopSortingStrategy` is added, which can be used to disable the default sorting of the grid by assigning its instance to the grid's `sortStrategy` input. (Useful for remote sorting.)
+    - `NoopFilteringStrategy` is added, which can be used to disable the default filtering of the grid by assigning its instance to the grid's `filterStrategy` input. (Useful for remote filtering.)
+    - `sortingExpressionsChange` event emitter is added, which is fired whenever a change to the sorting expressions has occurred (prior to performing the actual sorting).
+    - `filteringExpressionsTreeChange` event emitter is added, which is fired whenever a change to the filtering expressions has occurred (prior to performing the actual filtering).
+    - `advancedFilteringExpressionsTreeChange` event emitter is added, which is fired whenever a change to the advanced filtering expressions has occurred (prior to performing the actual filtering).
+- `IgxGridExcelStyleFilteringComponent` and `IgxAdvancedFilteringDialogComponent` can now be hosted outside of the grid in order to provide the same experience as the built-in filtering UI.
 - `IgxOverlayService`:
-    - `setOffset` method added. It repositions the content in the horizontal and vertical directions.
+    - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
 - `IgxToggleDirective`:
-    - `setOffset` method added. It repositions the content in the horizontal and vertical directions.
+    - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
 
 ## 8.2.6
 
