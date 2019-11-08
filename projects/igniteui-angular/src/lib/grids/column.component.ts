@@ -296,8 +296,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * ```
      * @memberof IgxColumnComponent
      */
-    @notifyChanges()
     @WatchColumnChanges()
+    @notifyChanges()
     @Input()
     public movable = false;
     /**

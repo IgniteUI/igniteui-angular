@@ -44,8 +44,8 @@ export function WatchColumnChanges(): PropertyDecorator {
         propDesc.set = function (this: any, val: any) {
             const init = this._init;
             const oldValue = this[key];
+            originalSetter.call(this, val);
             if (val !== oldValue || (typeof val === 'object' && val === oldValue)) {
-                originalSetter.call(this, val);
                 if (this.rowIslandAPI.rowIsland) {
                     this.rowIslandAPI.rowIsland.updateColumnList();
                }
