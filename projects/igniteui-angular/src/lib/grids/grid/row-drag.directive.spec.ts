@@ -11,17 +11,17 @@ import { Point } from '../../services';
 
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
-import { IgxColumnComponent } from '../column.component';
+import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxRowDragDirective } from '../row-drag.directive';
-import { IRowDragStartEventArgs, IgxGridBaseComponent, IRowDragEndEventArgs } from '../grid-base.component';
+import { IRowDragStartEventArgs, IRowDragEndEventArgs } from '../common/events';
+import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
-import { IgxHierarchicalGridComponent, IgxHierarchicalGridModule, IgxRowComponent } from '../hierarchical-grid';
+import { IgxHierarchicalGridComponent, IgxHierarchicalGridModule, IgxRowDirective } from '../hierarchical-grid';
 import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';
 import { IgxTreeGridComponent, IgxTreeGridModule } from '../tree-grid';
-import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 import { GridSelectionMode } from '../common/enums';
 
 
@@ -70,7 +70,6 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
         let dragRows: DebugElement[];
         // configureTestSuite();
         beforeEach(async(() => {
-            resizeObserverIgnoreError();
             fixture = TestBed.createComponent(IgxGridRowDraggableComponent);
             grid = fixture.componentInstance.instance;
             dropArea = fixture.componentInstance.dropArea;
@@ -404,7 +403,6 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
             }
         }
         beforeEach(async(() => {
-            resizeObserverIgnoreError();
             fixture = TestBed.createComponent(IgxGridFeaturesRowDragComponent);
             dragGrid = fixture.componentInstance.dragGrid;
             dropGrid = fixture.componentInstance.dropGrid;
@@ -790,7 +788,6 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
         }));
 
         it('should be able to drag row on every hiearchical level', (async () => {
-            resizeObserverIgnoreError();
             // first level row
             let dragIndicatorElement: Element = dragIndicatorElements[1].nativeElement;
             let rowToDrag = dragGrid.getRowByIndex(0);
@@ -1140,8 +1137,8 @@ async function pointerUp(element: Element, startPoint: Point, fixture: Component
  * @param cancel Indicates weather the onRowDragStart event is cancelled. Default value is false.
  */
 function verifyRowDragStartEvent(
-    grid: IgxGridBaseComponent,
-    dragRow: IgxRowComponent<any>,
+    grid: IgxGridBaseDirective,
+    dragRow: IgxRowDirective<any>,
     dragDirective: IgxRowDragDirective,
     timesCalled: number = 1,
     cancel = false) {
@@ -1162,8 +1159,8 @@ function verifyRowDragStartEvent(
  * @param timesCalled The number of times the onRowDragEnd event has been emitted. Defaults to 1.
  */
 function verifyRowDragEndEvent(
-    grid: IgxGridBaseComponent,
-    dragRow: IgxRowComponent<any>,
+    grid: IgxGridBaseDirective,
+    dragRow: IgxRowDirective<any>,
     dragDirective: IgxRowDragDirective,
     animations: boolean,
     timesCalled: number = 1) {

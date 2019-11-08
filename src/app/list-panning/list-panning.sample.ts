@@ -1,10 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { IgxToastComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-list-panning-sample',
     styleUrls: ['list-panning.sample.css'],
-    templateUrl: 'list-panning.sample.html'
+    templateUrl: 'list-panning.sample.html',
+    encapsulation: ViewEncapsulation.None
 })
 export class ListPanningSampleComponent {
 

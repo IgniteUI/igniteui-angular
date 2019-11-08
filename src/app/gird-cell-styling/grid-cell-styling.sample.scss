@@ -6,6 +6,19 @@
     margin-left: 8px;
 }
 
+@keyframes popin {
+    from {
+        opacity: 0;
+        filter: blur(3px);
+        transform: scale3d(.75, .75, 1);
+    }
+    to {
+        opacity: 1;
+        filter: none;
+        transform: scale3d(1, 1, 1);
+    }
+}
+
 :host ::ng-deep {
     .test1 {
         color: red;

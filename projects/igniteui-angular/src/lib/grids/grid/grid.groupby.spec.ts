@@ -4,10 +4,10 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { ISortingExpression, SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { IgxColumnComponent } from '../column.component';
+import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridComponent } from './grid.component';
 import { IgxGroupAreaDropDirective } from './grid.directives';
-import { IgxColumnMovingDragDirective } from '../grid.common';
+import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 import { IgxGridModule } from './index';
 import { IgxGridRowComponent } from './grid-row.component';
 import { IgxChipComponent, IChipClickEventArgs } from '../../chips/chip.component';
@@ -40,6 +40,7 @@ describe('IgxGrid - GroupBy #grid', () => {
                 GroupableGridComponent,
                 CustomTemplateGridComponent,
                 GroupByDataMoreColumnsComponent,
+                GroupByEmptyColumnFieldComponent,
                 MultiColumnHeadersWithGroupingComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
@@ -715,7 +716,6 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     it('should allow grouping of already sorted column', async(() => {
-        resizeObserverIgnoreError();
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.enableSorting = true;
@@ -773,7 +773,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
-        const origScrollHeight = parseInt(grid.verticalScrollContainer.getVerticalScroll().children[0].style.height, 10);
+        const origScrollHeight = parseInt(grid.verticalScrollContainer.getScroll().children[0].style.height, 10);
 
         // collapse all group rows currently in the view
         const grRows = grid.groupsRowList.toArray();
@@ -787,7 +787,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(grid.rowList.toArray().length).toEqual(5);
 
         // verify scrollbar is updated - 4 rows x 51px are hidden.
-        expect(parseInt(grid.verticalScrollContainer.getVerticalScroll().children[0].style.height, 10))
+        expect(parseInt(grid.verticalScrollContainer.getScroll().children[0].style.height, 10))
             .toEqual(origScrollHeight - 204);
 
         grRows[0].toggle();
@@ -798,7 +798,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(grid.dataRowList.toArray().length).toEqual(2);
         expect(grid.rowList.toArray().length).toEqual(5);
 
-        expect(parseInt(grid.verticalScrollContainer.getVerticalScroll().children[0].style.height, 10))
+        expect(parseInt(grid.verticalScrollContainer.getScroll().children[0].style.height, 10))
             .toEqual(origScrollHeight);
     }));
 
@@ -826,12 +826,12 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         // scroll to bottom
-        grid.verticalScrollContainer.getVerticalScroll().scrollTop = 10000;
+        grid.verticalScrollContainer.getScroll().scrollTop = 10000;
         await wait(100);
         fix.detectChanges();
 
         // scroll back to the top
-        grid.verticalScrollContainer.getVerticalScroll().scrollTop = 0;
+        grid.verticalScrollContainer.getScroll().scrollTop = 0;
         await wait(100);
         fix.detectChanges();
 
@@ -856,7 +856,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         // scroll to bottom
-        grid.verticalScrollContainer.getVerticalScroll().scrollTop = 10000;
+        grid.verticalScrollContainer.getScroll().scrollTop = 10000;
         await wait(100);
         fix.detectChanges();
 
@@ -899,16 +899,16 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         // scroll to bottom
-        grid.verticalScrollContainer.getVerticalScroll().scrollTop = 10000;
+        grid.verticalScrollContainer.getScroll().scrollTop = 10000;
         await wait(100);
         fix.detectChanges();
 
         // verify virtualization states - should be in last chunk
         const virtState = grid.verticalScrollContainer.state;
-        expect(virtState.startIndex).toBe(grid.verticalScrollContainer.igxForOf.length - virtState.chunkSize);
+        expect(virtState.startIndex).toBe(grid.dataView.length - virtState.chunkSize);
 
         // verify last row is visible at bottom
-        const lastRow = grid.getRowByIndex(grid.verticalScrollContainer.igxForOf.length - 1);
+        const lastRow = grid.getRowByIndex(grid.dataView.length - 1);
         expect(lastRow.nativeElement.getBoundingClientRect().bottom).toBe(grid.tbody.nativeElement.getBoundingClientRect().bottom);
 
     });
@@ -930,7 +930,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
         const groupRow = grid.groupsRowList.toArray()[0];
         const origRect = groupRow.element.nativeElement.getBoundingClientRect();
-        grid.parentVirtDir.getHorizontalScroll().scrollLeft = 1000;
+        grid.headerContainer.getScroll().scrollLeft = 1000;
         await wait(100);
         fix.detectChanges();
 
@@ -1407,7 +1407,6 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     it('should update horizontal virtualization state correcly when data row views are re-used from cache.',   async () => {
-        resizeObserverIgnoreError();
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
@@ -1421,15 +1420,16 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         // scroll left
-        grid.parentVirtDir.getHorizontalScroll().scrollLeft = 1000;
+        grid.headerContainer.getScroll().scrollLeft = 1000;
         fix.detectChanges();
 
-        const gridScrLeft = grid.parentVirtDir.getHorizontalScroll().scrollLeft;
+        const gridScrLeft = grid.headerContainer.getScroll().scrollLeft;
         await wait(100);
         fix.detectChanges();
 
         grid.toggleAllGroupRows();
         fix.detectChanges();
+        await wait();
         // verify rows are scrolled to the right
         let dataRows = grid.dataRowList.toArray();
         dataRows.forEach(dr => {
@@ -1443,7 +1443,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         });
 
         // scroll down
-        grid.verticalScrollContainer.getVerticalScroll().scrollTop = 10000;
+        grid.verticalScrollContainer.getScroll().scrollTop = 10000;
         await wait(100);
         fix.detectChanges();
 
@@ -1597,7 +1597,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         // scroll to bottom
-        grid.verticalScrollContainer.getVerticalScroll().scrollTop = 10000;
+        grid.verticalScrollContainer.getScroll().scrollTop = 10000;
         fix.detectChanges();
         setTimeout(() => {
             const rows = grid.dataRowList.toArray();
@@ -1688,11 +1688,15 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(chips[1].querySelectorAll(CHIP_REMOVE_ICON).length).toEqual(1);
 
         // check click does not allow changing sort dir
-        chips[0].children[0].click();
+        chips[0].children[0].dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
+        tick();
+        chips[0].children[0].dispatchEvent(new PointerEvent('pointerup'));
         tick();
         fix.detectChanges();
 
-        chips[1].children[0].click();
+        chips[1].children[0].dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1 }));
+        tick();
+        chips[1].children[0].dispatchEvent(new PointerEvent('pointerup'));
         tick();
 
         fix.detectChanges();
@@ -1834,7 +1838,6 @@ describe('IgxGrid - GroupBy #grid', () => {
     }));
 
     it('should reorder groups when reordering chip', async () => {
-        resizeObserverIgnoreError();
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
@@ -2024,6 +2027,19 @@ describe('IgxGrid - GroupBy #grid', () => {
         }
         tick();
         expect(m).toBe('Maximum amount of grouped columns is 10.');
+    }));
+
+    it('should not allow grouping by column with no name', fakeAsync(() => {
+        const fix = TestBed.createComponent(GroupByEmptyColumnFieldComponent);
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        tick();
+        const expr = grid.columns.map(val => {
+            return { fieldName: val.field, dir: SortingDirection.Asc, ignoreCase: true };
+        });
+        grid.groupBy(expr);
+        tick();
+        expect(grid.groupsRowList.toArray().length).toBe(0);
     }));
 
     it('should display column header text in the grouping chip.', fakeAsync(() => {
@@ -2737,6 +2753,26 @@ export class GroupByDataMoreColumnsComponent extends DataParent {
         { field: 'N', width: 100 }
     ];
 
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public instance: IgxGridComponent;
+}
+
+@Component({
+    template: `
+        <igx-grid
+            [width]='width'
+            [autoGenerate]='false'
+            [data]='data'>
+            <igx-column [width]='width' [groupable]='true'>
+                <ng-template igxCell>
+                    <button>Dummy button</button>
+                </ng-template>
+            </igx-column>
+        </igx-grid>
+    `
+})
+export class GroupByEmptyColumnFieldComponent extends DataParent {
+    public width = '200px';
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 }

@@ -20,13 +20,14 @@ import {
     getNodeSizeViaRange, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, NAVIGATION_KEYS, isIE, isLeftClick, PlatformUtil
 } from '../core/utils';
 import { State } from '../services/index';
-import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
-import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../core/grid-selection';
+import { IgxGridBaseDirective } from './grid-base.directive';
+import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from './selection/selection.service';
 import { DeprecateProperty, DeprecateMethod } from '../core/deprecateDecorators';
 import { HammerGesturesManager } from '../core/touch';
 import { ColumnType } from './common/column.interface';
 import { RowType } from './common/row.interface';
 import { GridSelectionMode } from './common/enums';
+import { GridType } from './common/grid.interface';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -416,9 +417,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```
      * @memberof IgxGridCellComponent
      */
-    @HostBinding('style.min-width')
-    @HostBinding('style.max-width')
-    @HostBinding('style.flex-basis')
     @Input()
     width = '';
 
@@ -554,11 +552,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     constructor(
         protected selectionService: IgxGridSelectionService,
         protected crudService: IgxGridCRUDService,
-        public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
+        public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         public cdr: ChangeDetectorRef,
         private element: ElementRef,
         protected zone: NgZone,
-        private touchManager: HammerGesturesManager) { }
+        private touchManager: HammerGesturesManager,
+        protected platformUtil: PlatformUtil) { }
 
     private addPointerListeners(selection) {
         if (selection !== GridSelectionMode.multiple) { return; }
@@ -590,7 +589,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 this.nativeElement.addEventListener('compositionend', this.compositionEndHandler);
             }
         });
-        if (PlatformUtil.isIOS()) {
+        if (this.platformUtil.isIOS) {
             this.touchManager.addEventListener(this.nativeElement, 'doubletap', this.onDoubleClick, {
                 cssProps: { } /* don't disable user-select, etc */
             } as HammerOptions);

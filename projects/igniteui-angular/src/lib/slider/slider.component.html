@@ -11,7 +11,7 @@
         [continuous]="continuous"
         [context]="context"></igx-thumb-label>
 
-        <igx-thumb *ngIf="isRange"
+    <igx-thumb *ngIf="isRange"
         #thumbFrom
         [type]="0"
         [value]="lowerLabel"
@@ -33,7 +33,7 @@
         [continuous]="continuous"
         [context]="context"></igx-thumb-label>
 
-        <igx-thumb
+    <igx-thumb
         #thumbTo
         [type]="1"
         [value]="upperLabel"
@@ -47,5 +47,4 @@
         (onChange)="onThumbChange()"
         (onHoverChange)="onHoverChange($event)"
         [thumbLabelVisibilityDuration]="thumbLabelVisibilityDuration"></igx-thumb>
-
 </div>

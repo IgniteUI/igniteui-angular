@@ -1,10 +1,9 @@
 import {
     Component,
-    DoCheck,
     HostListener,
     HostBinding
 } from '@angular/core';
-import { IgxDropDownItemBase } from './drop-down-item.base';
+import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
 
 /**
  * The `<igx-drop-down-item>` is a container intended for row items in
@@ -14,7 +13,7 @@ import { IgxDropDownItemBase } from './drop-down-item.base';
     selector: 'igx-drop-down-item',
     templateUrl: 'drop-down-item.component.html'
 })
-export class IgxDropDownItemComponent extends IgxDropDownItemBase implements DoCheck {
+export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
     /**
      * @inheritdoc
      */

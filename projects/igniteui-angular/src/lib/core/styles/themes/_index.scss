@@ -27,8 +27,9 @@
 @import '../components/expansion-panel/expansion-panel-theme';
 @import '../components/grid/grid-theme';
 @import '../components/grid-summary/grid-summary-theme';
-@import '../components/grid-paginator/grid-paginator-theme';
+@import '../components/paginator/paginator-theme';
 @import '../components/grid-toolbar/grid-toolbar-theme';
+@import '../components/highlight/highlight-theme';
 @import '../components/overlay/overlay-theme';
 @import '../components/toast/toast-theme';
 @import '../components/tooltip/tooltip-theme';
@@ -70,7 +71,7 @@
 /// @requires {mixin} igx-expansion-panel
 /// @requires {mixin} igx-grid
 /// @requires {mixin} igx-grid-summary
-/// @requires {mixin} igx-grid-paginator
+/// @requires {mixin} igx-paginator
 /// @requires {mixin} igx-icon
 /// @requires {mixin} igx-input-group
 /// @requires {mixin} igx-list
@@ -192,7 +193,7 @@
             $palette,
             $schema,
             $border-radius: $roundness,
-            $disable-button-shadow: if($elevation == false, 0, true),
+            $button-shadow: if($elevation == false, 0, null),
         ));
     }
 
@@ -278,6 +279,10 @@
         @include igx-grid-toolbar(igx-grid-toolbar-theme($palette, $schema));
     }
 
+    @if not(index($exclude, 'igx-highlight')) {
+        @include igx-highlight(igx-highlight-theme($palette, $schema));
+    }
+
     @if not(index($exclude, 'igx-icon')) {
         @include igx-icon(igx-icon-theme($palette, $schema));
     }
@@ -326,8 +331,8 @@
         @include igx-overlay(igx-overlay-theme($palette, $schema));
     }
 
-    @if not(index($exclude, 'igx-grid-paginator')) {
-        @include igx-grid-paginator(igx-grid-paginator-theme($palette, $schema));
+    @if not(index($exclude, 'igx-paginator')) {
+        @include igx-paginator(igx-paginator-theme($palette, $schema));
     }
 
     @if not(index($exclude, 'igx-circular-bar')) {
@@ -481,7 +486,7 @@
 @mixin igx-fluent-theme(
     $palette,
     $exclude: (),
-    $legacy-support: true
+    $legacy-support: true,
 ) {
     $primary: igx-color($palette, 'primary');
     $secondary: igx-color($palette, 'secondary');
@@ -502,7 +507,7 @@
         ),
         $schema: $light-fluent-schema,
         $legacy-support: $legacy-support,
-        $exclude: $exclude
+        $exclude: $exclude,
     );
 }
 
@@ -513,7 +518,7 @@
 @mixin igx-fluent-dark-theme(
     $palette,
     $exclude: (),
-    $legacy-support: true
+    $legacy-support: true,
 ) {
     $primary: igx-color($palette, 'primary');
     $secondary: igx-color($palette, 'secondary');
@@ -534,6 +539,6 @@
         ),
         $schema: $dark-fluent-schema,
         $legacy-support: $legacy-support,
-        $exclude: $exclude
+        $exclude: $exclude,
     );
 }

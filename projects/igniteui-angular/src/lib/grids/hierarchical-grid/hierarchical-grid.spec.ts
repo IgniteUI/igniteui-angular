@@ -13,7 +13,6 @@ import { DisplayDensity } from '../../core/displayDensity';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IGridCellEventArgs } from '../grid';
 import { GridSelectionMode } from '../common/enums';
-import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
     configureTestSuite();
@@ -30,7 +29,6 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
     }));
 
     beforeEach(async(() => {
-        resizeObserverIgnoreError();
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
@@ -144,7 +142,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         fixture.detectChanges();
         expect(row.expanded).toBe(true);
         // scroll to bottom
-        hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
+        hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.dataView.length - 1);
         await wait(100);
         fixture.detectChanges();
         // scroll to top
@@ -170,7 +168,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         const gridWidth = hierarchicalGrid.nativeElement.offsetWidth;
         expect(cellLeftOffset).not.toBeGreaterThan(gridWidth);
 
-        const hScroll = hierarchicalGrid.parentVirtDir.getHorizontalScroll();
+        const hScroll = hierarchicalGrid.headerContainer.getScroll();
         expect(hScroll.children[0].offsetWidth).not.toBeGreaterThan(hScroll.offsetWidth);
     });
 
@@ -424,7 +422,6 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
     }));
 
     beforeEach(async(() => {
-        resizeObserverIgnoreError();
         fixture = TestBed.createComponent(IgxHierarchicalGridMultiLayoutComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
@@ -578,11 +575,11 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         expect(childGrid.nativeElement.style.width).toBe(ri1.width);
         // check virtualization state
         expect(childGrid.verticalScrollContainer.state.chunkSize).toBe(4);
-        expect(childGrid.verticalScrollContainer.getVerticalScroll().scrollHeight).toBe(357);
+        expect(childGrid.verticalScrollContainer.getScroll().scrollHeight).toBe(357);
 
         let hVirt = childGrid.getRowByIndex(0).virtDirRow;
         expect(hVirt.state.chunkSize).toBe(2);
-        expect(hVirt.getHorizontalScroll().scrollWidth).toBe(272);
+        expect(hVirt.getScroll().scrollWidth).toBe(272);
         // collapse row
         UIInteractions.clickElement(row.expander);
         fixture.detectChanges();
@@ -606,9 +603,9 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
          expect(childGrid.nativeElement.style.width).toBe(ri1.width);
          // check virtualization state
          expect(childGrid.verticalScrollContainer.state.chunkSize).toBe(11);
-         expect(childGrid.verticalScrollContainer.getVerticalScroll().scrollHeight).toBe(714);
+         expect(childGrid.verticalScrollContainer.getScroll().scrollHeight).toBe(714);
          hVirt = childGrid.getRowByIndex(0).virtDirRow;
-         expect(hVirt.getHorizontalScroll().scrollWidth).toBe(272);
+         expect(hVirt.getScroll().scrollWidth).toBe(272);
     }));
 
     it('should destroy cached instances of child grids when root grid is destroyed', (async () => {
@@ -622,7 +619,7 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         const child2 = children[1];
         expect(child1._destroyed).toBeFalsy();
         expect(child2._destroyed).toBeFalsy();
-        hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.verticalScrollContainer.igxForOf.length - 1);
+        hierarchicalGrid.verticalScrollContainer.scrollTo(hierarchicalGrid.dataView.length - 1);
         await wait(100);
         fixture.detectChanges();
 
@@ -1156,21 +1153,21 @@ describe('IgxHierarchicalGrid custom template', () => {
         let rows = hierarchicalGrid.dataRowList.toArray();
         for (const row of rows) {
             const expander =  row.nativeElement.querySelector('.igx-grid__hierarchical-expander');
-            expect(expander.innerText).toBe('COLLAPSED');
+            expect((expander as HTMLElement).innerText).toBe('COLLAPSED');
         }
         hierarchicalGrid.expandChildren = true;
         fixture.detectChanges();
         rows = hierarchicalGrid.dataRowList.toArray();
         for (const row of rows) {
             const expander =  row.nativeElement.querySelector('.igx-grid__hierarchical-expander');
-            expect(expander.innerText).toBe('EXPANDED');
+            expect((expander as HTMLElement).innerText).toBe('EXPANDED');
         }
 
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
         const childRows = childGrid.dataRowList.toArray();
         for (const row of childRows) {
             const expander =  row.nativeElement.querySelector('.igx-grid__hierarchical-expander');
-            expect(expander.innerText).toBe('COLLAPSED');
+            expect((expander as HTMLElement).innerText).toBe('COLLAPSED');
         }
 
         expect((hierarchicalGrid as any).headerHierarchyExpander.nativeElement.innerText).toBe('EXPANDED');

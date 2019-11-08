@@ -12,15 +12,16 @@ import {
     OnInit,
     Optional,
     Output,
-    Renderer,
     SimpleChange,
-    ViewChild
+    ViewChild,
+    Renderer2
 } from '@angular/core';
 import { fromEvent, interval, Subscription } from 'rxjs';
 import { debounce } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
 import { HammerGesturesManager } from '../core/touch';
 import { IgxNavDrawerMiniTemplateDirective, IgxNavDrawerTemplateDirective } from './navigation-drawer.directives';
+import { PlatformUtil } from '../core/utils';
 
 let NEXT_ID = 0;
 /**
@@ -415,9 +416,9 @@ export class IgxNavigationDrawerComponent implements
     constructor(
         @Inject(ElementRef) private elementRef: ElementRef,
         @Optional() private _state: IgxNavigationService,
-        // private animate: AnimationBuilder, TODO
-        protected renderer: Renderer,
-        private _touchManager: HammerGesturesManager) {
+        protected renderer: Renderer2,
+        private _touchManager: HammerGesturesManager,
+        private platformUtil: PlatformUtil) {
     }
 
     /**
@@ -588,11 +589,12 @@ export class IgxNavigationDrawerComponent implements
                 // } else {
                 if (this._widthCache.miniWidth === null) {
                     // force class for width calc. TODO?
-                    this.renderer.setElementClass(this.styleDummy, this.css.drawer, true);
-                    this.renderer.setElementClass(this.styleDummy, this.css.mini, true);
+                    // force class for width calc. TODO?
+                    this.renderer.addClass(this.styleDummy, this.css.drawer);
+                    this.renderer.addClass(this.styleDummy, this.css.mini);
                     this._widthCache.miniWidth = this.styleDummy.offsetWidth;
-                    this.renderer.setElementClass(this.styleDummy, this.css.drawer, false);
-                    this.renderer.setElementClass(this.styleDummy, this.css.mini, false);
+                    this.renderer.removeClass(this.styleDummy, this.css.drawer);
+                    this.renderer.removeClass(this.styleDummy, this.css.mini);
                 }
                 return this._widthCache.miniWidth;
             }
@@ -602,9 +604,10 @@ export class IgxNavigationDrawerComponent implements
             } else {
                 if (this._widthCache.width === null) {
                     // force class for width calc. TODO?
-                    this.renderer.setElementClass(this.styleDummy, this.css.drawer, true);
+                    // force class for width calc. TODO?
+                    this.renderer.addClass(this.styleDummy, this.css.drawer);
                     this._widthCache.width = this.styleDummy.offsetWidth;
-                    this.renderer.setElementClass(this.styleDummy, this.css.drawer, false);
+                    this.renderer.removeClass(this.styleDummy, this.css.drawer);
                 }
                 return this._widthCache.width;
             }
@@ -619,11 +622,15 @@ export class IgxNavigationDrawerComponent implements
      * Sets the drawer width.
      */
     private setDrawerWidth(width: string) {
-        requestAnimationFrame(() => {
-            if (this.drawer) {
-                this.renderer.setElementStyle(this.drawer, 'width', width);
-            }
-        });
+        if (this.platformUtil.isBrowser) {
+            requestAnimationFrame(() => {
+                if (this.drawer) {
+                    this.renderer.setStyle(this.drawer, 'width', width);
+                }
+            });
+        } else {
+            this.renderer.setStyle(this.drawer, 'width', width);
+        }
     }
 
     /**
@@ -649,7 +656,7 @@ export class IgxNavigationDrawerComponent implements
             this._touchManager.addGlobalEventListener('document', 'panmove', this.pan);
             this._touchManager.addGlobalEventListener('document', 'panend', this.panEnd);
         }
-        if (!this._resizeObserver) {
+        if (!this._resizeObserver && this.platformUtil.isBrowser) {
             this._resizeObserver = fromEvent(window, 'resize').pipe(debounce(() => interval(150)))
                 .subscribe((value) => {
                     this.checkPinThreshold(value);
@@ -667,6 +674,9 @@ export class IgxNavigationDrawerComponent implements
     }
 
     private checkPinThreshold = (evt?: Event) => {
+        if (!this.platformUtil.isBrowser) {
+            return;
+        }
         let windowWidth;
         if (this.pinThreshold) {
             windowWidth = this.getWindowWidth();
@@ -722,8 +732,8 @@ export class IgxNavigationDrawerComponent implements
             this._panStartWidth = this.getExpectedWidth(!this.isOpen);
             this._panLimit = this.getExpectedWidth(this.isOpen);
 
-            this.renderer.setElementClass(this.overlay, 'panning', true);
-            this.renderer.setElementClass(this.drawer, 'panning', true);
+            this.renderer.addClass(this.overlay, 'panning');
+            this.renderer.addClass(this.drawer, 'panning');
         }
     }
 
@@ -794,8 +804,9 @@ export class IgxNavigationDrawerComponent implements
     private resetPan() {
         this._panning = false;
         /* styles fail to apply when set on parent due to extra attributes, prob ng bug */
-        this.renderer.setElementClass(this.overlay, 'panning', false);
-        this.renderer.setElementClass(this.drawer, 'panning', false);
+        /* styles fail to apply when set on parent due to extra attributes, prob ng bug */
+        this.renderer.removeClass(this.overlay, 'panning');
+        this.renderer.removeClass(this.drawer, 'panning');
         this.setXSize(0, '');
     }
 
@@ -808,14 +819,13 @@ export class IgxNavigationDrawerComponent implements
         // Angular polyfills patches window.requestAnimationFrame, but switch to DomAdapter API (TODO)
         window.requestAnimationFrame(() => {
             if (this.hasAnimateWidth) {
-                this.renderer.setElementStyle(this.drawer, 'width', x ? Math.abs(x) + 'px' : '');
+                this.renderer.setStyle(this.drawer, 'width', x ? Math.abs(x) + 'px' : '');
             } else {
-                this.renderer.setElementStyle(this.drawer, 'transform', x ? 'translate3d(' + x + 'px,0,0)' : '');
-                this.renderer.setElementStyle(this.drawer, '-webkit-transform',
-                    x ? 'translate3d(' + x + 'px,0,0)' : '');
+                this.renderer.setStyle(this.drawer, 'transform', x ? 'translate3d(' + x + 'px,0,0)' : '');
+                this.renderer.setStyle(this.drawer, '-webkit-transform', x ? 'translate3d(' + x + 'px,0,0)' : '');
             }
             if (opacity !== undefined) {
-                this.renderer.setElementStyle(this.overlay, 'opacity', opacity);
+                this.renderer.setStyle(this.overlay, 'opacity', opacity);
             }
         });
     }

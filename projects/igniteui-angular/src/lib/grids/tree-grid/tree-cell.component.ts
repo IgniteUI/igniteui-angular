@@ -3,11 +3,12 @@ import { Component, ChangeDetectorRef, ElementRef, ViewChild, Inject,
 import { IgxGridCellComponent } from '../cell.component';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
-import { getNodeSizeViaRange } from '../../core/utils';
+import { getNodeSizeViaRange, PlatformUtil } from '../../core/utils';
 import { DOCUMENT } from '@angular/common';
-import { IgxGridBaseComponent, IGridDataBindable } from '../grid';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+import { IgxGridBaseDirective } from '../grid';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { HammerGesturesManager } from '../../core/touch';
+import { GridType } from '../common/grid.interface';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,13 +22,14 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
     constructor(
                 selectionService: IgxGridSelectionService,
                 crudService: IgxGridCRUDService,
-                gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
+                gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
                 cdr: ChangeDetectorRef,
                 element: ElementRef,
                 protected zone: NgZone,
                 touchManager: HammerGesturesManager,
-                @Inject(DOCUMENT) public document) {
-        super(selectionService, crudService, gridAPI, cdr, element, zone, touchManager);
+                @Inject(DOCUMENT) public document,
+                protected platformUtil: PlatformUtil) {
+        super(selectionService, crudService, gridAPI, cdr, element, zone, touchManager, platformUtil);
         this.treeGridAPI = <IgxTreeGridAPIService>gridAPI;
     }
 

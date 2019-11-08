@@ -1,5 +1,5 @@
 import { IgxDropDownItemComponent } from './../drop-down/drop-down-item.component';
-import { Component, DoCheck } from '@angular/core';
+import { Component, DoCheck, Input } from '@angular/core';
 
 @Component({
     selector: 'igx-select-item',
@@ -7,8 +7,36 @@ import { Component, DoCheck } from '@angular/core';
 })
 export class IgxSelectItemComponent extends IgxDropDownItemComponent implements DoCheck {
 
+    private _text: any;
+
+    /**
+     * An @Input property that gets/sets the item's text to be displayed in the select component's input when the item is selected.
+     *
+     * ```typescript
+     *  //get
+     *  let mySelectedItem = this.dropDown.selectedItem;
+     *  let selectedItemText = mySelectedItem.text;
+     * ```
+
+     * ```html
+     * // set
+     * <igx-select-item [text]="'London'"></igx-select-item>
+     * ```
+     */
+    @Input()
+    public get text(): string {
+        return this._text;
+    }
+
+    public set text(text: string) {
+        this._text = text;
+    }
+
     /** @hidden @internal */
     public get itemText() {
+        if (this._text !== undefined) {
+            return this._text;
+        }
         return this.elementRef.nativeElement.innerText.trim();
     }
 

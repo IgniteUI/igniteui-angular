@@ -1,5 +1,5 @@
 import { IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down.common';
-import { Input, HostBinding, HostListener, ElementRef, Optional, Inject, DoCheck, Output, EventEmitter } from '@angular/core';
+import { Directive, Input, HostBinding, HostListener, ElementRef, Optional, Inject, DoCheck, Output, EventEmitter } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
 import { DeprecateProperty, showMessage } from '../core/deprecateDecorators';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
@@ -14,7 +14,10 @@ let warningShown = false;
  * Parent component (has to be used under a parent with type `IDropDownBase`)
  * Method for handling click on Host()
  */
-export abstract class IgxDropDownItemBase implements DoCheck {
+@Directive({
+    selector: '[igxDropDownItemBase]'
+})
+export class IgxDropDownItemBaseDirective implements DoCheck {
     /**
      * @hidden
      */
@@ -59,7 +62,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     public get index(): number {
         if (this._index === null) {
             warningShown = showMessage(
-                'IgxDropDownItemBase: Automatic index is deprecated.' +
+                'IgxDropDownItemBaseDirective: Automatic index is deprecated.' +
                 'Bind in the template instead using `<igx-drop-down-item [index]="i"` instead.`',
                 warningShown);
             return this.itemIndex;
@@ -153,7 +156,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
      * @hidden @internal
      */
     @Input()
-    @DeprecateProperty(`IgxDropDownItemBase \`isSelected\` property is deprecated.\n` +
+    @DeprecateProperty(`IgxDropDownItemBaseDirective \`isSelected\` property is deprecated.\n` +
         `Use \`selected\` instead.`)
     get isSelected(): boolean {
         return this.selected;
@@ -194,7 +197,7 @@ export abstract class IgxDropDownItemBase implements DoCheck {
     /**
      * @hidden @internal
      */
-    @DeprecateProperty(`IgxDropDownItemBase \`isFocused\` property is depracated.\n` +
+    @DeprecateProperty(`IgxDropDownItemBaseDirective \`isFocused\` property is depracated.\n` +
         `Use \`focused\` instead.`)
     get isFocused(): boolean {
         return this.focused;
@@ -313,13 +316,6 @@ export abstract class IgxDropDownItemBase implements DoCheck {
         @Optional() protected group: IgxDropDownGroupComponent,
         @Optional() @Inject(IgxSelectionAPIService) protected selection?: IgxSelectionAPIService
     ) { }
-
-    /**
-     * @hidden @internal
-     */
-    @HostListener('click', ['$event'])
-    clicked(event) {
-    }
 
     ngDoCheck(): void {
         if (this._selected) {

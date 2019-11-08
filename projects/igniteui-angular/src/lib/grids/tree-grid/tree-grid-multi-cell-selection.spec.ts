@@ -127,7 +127,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
                 { ID: 17 }
             ];
 
-            treeGrid.verticalScrollContainer.scrollTo(treeGrid.verticalScrollContainer.igxForOf.length - 1);
+            treeGrid.verticalScrollContainer.scrollTo(treeGrid.dataView.length - 1);
             await wait(30);
             fix.detectChanges();
 
@@ -169,7 +169,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 
             GridSelectionFunctions.verifyCellSelected(firstCell);
 
-            treeGrid.verticalScrollContainer.scrollTo(treeGrid.verticalScrollContainer.igxForOf.length - 1);
+            treeGrid.verticalScrollContainer.scrollTo(treeGrid.dataView.length - 1);
             await wait(200);
             fix.detectChanges();
 

@@ -1,9 +1,9 @@
 import { Directive, ElementRef, Renderer2, NgZone, HostBinding, TemplateRef } from '@angular/core';
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
-import { IgxColumnMovingDragDirective } from '../grid.common';
-import { IgxColumnComponent } from '../column.component';
+import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridComponent } from './grid.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
+import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 
 /**
  * @hidden
@@ -78,7 +78,7 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
         }
         const grid = <IgxGridComponent>column.grid;
         const isGrouped = grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1;
-        if (column.groupable && !isGrouped && !column.columnGroup) {
+        if (column.groupable && !isGrouped && !column.columnGroup && !!column.field) {
             drag.icon.innerText = 'group_work';
             this.hovered = true;
         } else {
@@ -106,7 +106,7 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
             }
             const grid = <IgxGridComponent>column.grid;
             const isGrouped = grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1;
-            if (column.groupable && !isGrouped && !column.columnGroup) {
+            if (column.groupable && !isGrouped && !column.columnGroup && !!column.field) {
                 grid.groupBy({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase,
                     strategy: column.sortStrategy, groupingComparer: column.groupingComparer });
             }

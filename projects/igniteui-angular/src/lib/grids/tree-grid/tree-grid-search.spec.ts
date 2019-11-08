@@ -11,7 +11,6 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { wait } from '../../test-utils/ui-interactions.spec';
-import { resizeObserverIgnoreError } from '../../test-utils/helper-utils.spec';
 
 const HIGHLIGHT_CLASS = 'igx-highlight';
 const ACTIVE_CLASS = 'igx-highlight__active';
@@ -317,7 +316,6 @@ describe('IgxTreeGrid - search API #tGrid', () => {
 
     describe('Scrollable TreeGrid', () => {
         beforeEach(async() => {
-            resizeObserverIgnoreError();
             fix = TestBed.createComponent(IgxTreeGridSummariesScrollingComponent);
             fix.detectChanges();
             fixNativeElement = fix.debugElement.nativeElement;
@@ -335,7 +333,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
             for (let i = 0; i < 14; i++) {
                 const expectedValue = expectedValues[i % expectedValues.length];
                 const actualCount = treeGrid.findNext('an');
-                await wait(16);
+                await wait(50);
                 fix.detectChanges();
                 expect(actualCount).toBe(expectedValues.length);
                 verifyActiveCellValue(fixNativeElement, expectedValue);
@@ -346,7 +344,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
             for (let i = 13; i >= 0; i--) {
                 const expectedValue = expectedValues[i % expectedValues.length];
                 const actualCount = treeGrid.findPrev('an');
-                await wait(16);
+                await wait(50);
                 fix.detectChanges();
                 expect(actualCount).toBe(expectedValues.length);
                 verifyActiveCellValue(fixNativeElement, expectedValue);
@@ -357,7 +355,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
             treeGrid.expansionDepth = Infinity;
             treeGrid.perPage = 5;
             treeGrid.paging = true;
-            await wait(16);
+            await wait(50);
             fix.detectChanges();
 
             const expectedPages = [0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3];
@@ -366,7 +364,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
                 const index = i % expectedValues.length;
                 const expectedValue = expectedValues[index];
                 const actualCount = treeGrid.findNext('an');
-                await wait(16);
+                await wait(50);
                 fix.detectChanges();
 
                 expect(treeGrid.page).toBe(expectedPages[index]);
@@ -378,7 +376,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
         it('findNext should navigate search highlights with paging and collapsed rows', async() => {
             treeGrid.perPage = 5;
             treeGrid.paging = true;
-            await wait(16);
+            await wait(50);
             fix.detectChanges();
 
             const expectedPages = [0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3];
@@ -388,7 +386,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
                 const index = i % expectedValues.length;
                 const expectedValue = expectedValues[index];
                 const actualCount = treeGrid.findNext('an');
-                await wait(16);
+                await wait(50);
                 fix.detectChanges();
 
                 expect(treeGrid.page).toBe(expectedPages[index]);
