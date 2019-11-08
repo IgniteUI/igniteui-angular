@@ -664,6 +664,17 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
 
     /**
      * @hidden
+     * @internal
+     */
+    public getDragGhostCustomTemplate(): TemplateRef<any> {
+        if (this.parentIsland) {
+            return this.parentIsland.getDragGhostCustomTemplate();
+        }
+        return super.getDragGhostCustomTemplate();
+    }
+
+    /**
+     * @hidden
     */
     protected initColumns(collection: QueryList<IgxColumnComponent>, cb: Function = null) {
         if (this.hasColumnLayouts) {
