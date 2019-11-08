@@ -346,6 +346,23 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public filteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
 
     /**
+     * Emitted before advanced filtering is performed.
+     * Returns the advanced filtering expressions tree.
+     * ```typescript
+     * advancedFilteringExprTreeChange(event: IFilteringExpressionsTree){
+     *     const filteringTree = event;
+     * }
+     * ```
+     * ```html
+     * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true"
+     *           (advancedFilteringExpressionsTreeChange)="advancedFilteringExprTreeChange($event)"></igx-grid>
+     * ```
+     * @memberof IgxGridBaseDirective
+     */
+    @Output()
+    public advancedFilteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
+
+    /**
      * Returns the advanced filtering state of `IgxGridComponent`.
      * ```typescript
      * let advancedFilteringExpressionsTree = this.grid.advancedFilteringExpressionsTree;
@@ -388,6 +405,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         } else {
             this._advancedFilteringExpressionsTree = null;
         }
+        this.advancedFilteringExpressionsTreeChange.emit(this._advancedFilteringExpressionsTree);
 
         if (this.filteringService.isFilteringExpressionsTreeEmpty() && !this.advancedFilteringExpressionsTree) {
             this.filteredData = null;
@@ -2957,7 +2975,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             if (this._advancedFilteringOverlayId === event.id) {
                 const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
                 if (instance) {
-                    instance.initialize(this.filteringService, this.overlayService, event.id);
+                    instance.initialize(this, this.overlayService, event.id);
                 }
             }
         });
