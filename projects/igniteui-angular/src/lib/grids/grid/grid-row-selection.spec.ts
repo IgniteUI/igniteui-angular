@@ -18,7 +18,7 @@ import {
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridSelectionMode } from '../common/enums';
-import { IgxRowSelectorsModule } from '../igx-row-selectors.module';
+import { IgxGridSelectionModule } from '../selection/selection.module';
 
 const DEBOUNCETIME = 30;
 
@@ -39,7 +39,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             imports: [
                 NoopAnimationsModule,
                 IgxGridModule,
-                IgxRowSelectorsModule
+                IgxGridSelectionModule
             ]
         })
             .compileComponents();
@@ -677,6 +677,25 @@ describe('IgxGrid - Row Selection #grid', () => {
             fix.detectChanges();
             grid = fix.componentInstance.grid;
         }));
+
+        it('Header checkbox should NOT select/deselect all rows when selectionMode is single', () => {
+            spyOn(grid.onRowSelectionChange, 'emit').and.callThrough();
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, false);
+            GridSelectionFunctions.verifyRowsArraySelected([]);
+            expect(grid.selectedRows()).toEqual([]);
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
+
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
+            fix.detectChanges();
+
+            expect(grid.selectedRows()).toEqual([]);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, false);
+            GridSelectionFunctions.verifyRowsArraySelected([]);
+            expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(0);
+        });
 
         it('Should have checkbox on each row nd do not have header checkbox', (async () => {
             GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix, false);

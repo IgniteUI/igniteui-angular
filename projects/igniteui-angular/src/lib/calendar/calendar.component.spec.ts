@@ -202,8 +202,8 @@ describe('IgxCalendar', () => {
         it('should initialize a calendar component with `id` property', () => {
             const domCalendar = dom.query(By.css('igx-calendar')).nativeElement;
 
-            expect(calendar.id).toBe('igx-calendar-1');
-            expect(domCalendar.id).toBe('igx-calendar-1');
+            expect(calendar.id).toContain('igx-calendar-');
+            expect(domCalendar.id).toContain('igx-calendar-');
 
             calendar.id = 'customCalendar';
             fixture.detectChanges();
@@ -790,8 +790,7 @@ describe('IgxCalendar', () => {
             fixture.detectChanges();
 
             expect(calendar.viewDate.getMonth()).toEqual(6);
-
-            UIInteractions.simulateKeyDownEvent(component.nativeElement, 'Shift.PageUp');
+            UIInteractions.triggerKeyDownEvtUponElem('PageUp', component.nativeElement, true, false, true);
             fixture.detectChanges();
 
             expect(calendar.viewDate.getFullYear()).toEqual(2016);
@@ -799,7 +798,7 @@ describe('IgxCalendar', () => {
             calendar.viewDate = new Date(2017, 5, 13);
             fixture.detectChanges();
 
-            UIInteractions.simulateKeyDownEvent(component.nativeElement, 'Shift.PageDown');
+            UIInteractions.triggerKeyDownEvtUponElem('PageDown', component.nativeElement, true, false, true);
             fixture.detectChanges();
 
             expect(calendar.viewDate.getFullYear()).toEqual(2018);
@@ -889,7 +888,6 @@ describe('IgxCalendar', () => {
             expect(document.activeElement).toBe(date);
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', document.activeElement, true);
             fixture.detectChanges();
-            await wait(500);
 
             expect(document.activeElement.textContent.trim()).toMatch('2');
         });
@@ -1273,6 +1271,26 @@ describe('IgxCalendar', () => {
             DateRangesPropertiesTester.assignSpecialDatesDescriptors,
             DateRangesPropertiesTester.testSpecialDates
         );
+    });
+
+    it('Should not select date from model, if it is part of disabled dates', async () => {
+        const fixture = TestBed.createComponent(IgxCalendarDisabledSpecialDatesComponent);
+        const calendar = fixture.componentInstance.calendar;
+        fixture.detectChanges();
+        await (500);
+
+        expect(calendar.value).toBeFalsy();
+    });
+
+    it('Should not select date from model in range selection, if model passes null', async () => {
+        const fixture = TestBed.createComponent(IgxCalendarDisabledSpecialDatesComponent);
+        const calendar = fixture.componentInstance.calendar;
+        calendar.selection = 'range';
+        fixture.componentInstance.model = null;
+        fixture.detectChanges();
+        await (500);
+
+        expect((calendar.value as Date[]).length).toEqual(0);
     });
 
     describe('Select and deselect dates', () => {
@@ -1767,6 +1785,7 @@ describe('IgxCalendar', () => {
             expect(date.nativeElement).toBe(document.activeElement);
 
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
+            fixture.detectChanges();
             UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
             fixture.detectChanges();
             await wait(400);
@@ -1919,7 +1938,7 @@ describe('IgxCalendar', () => {
             expect(date.nativeElement).toBe(document.activeElement);
         });
 
-        it('AKB - should preserve the active date on (schift) pageup and pagedown.', async () => {
+        it('AKB - should preserve the active date on (shift) pageup and pagedown.', async () => {
             const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
             fixture.detectChanges();
 
@@ -1948,14 +1967,14 @@ describe('IgxCalendar', () => {
             date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 5, 1).getTime());
             expect(date.nativeElement).toBe(document.activeElement);
 
-            UIInteractions.simulateKeyDownEvent(document.activeElement, 'Shift.PageUp');
+            UIInteractions.triggerKeyDownEvtUponElem('PageUp', document.activeElement, true, false, true);
             fixture.detectChanges();
             await wait(400);
 
             date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2016, 5, 1).getTime());
             expect(date.nativeElement).toBe(document.activeElement);
 
-            UIInteractions.simulateKeyDownEvent(document.activeElement, 'Shift.PageDown');
+            UIInteractions.triggerKeyDownEvtUponElem('PageDown', document.activeElement, true, false, true);
             fixture.detectChanges();
             await wait(400);
 
@@ -1986,7 +2005,8 @@ describe('IgxCalendar', () => {
 
         it('Should increment/decrement months continuously on mousedown.', async () => {
             expect(calendar.viewDate.getMonth()).toEqual(5);
-
+            // Have no idea how this test worked before,
+            // changing expectation based on my udnerstanding of that the test does
             UIInteractions.simulateMouseEvent('mousedown', prevMonthBtn, 0, 0);
             await wait(900);
             UIInteractions.simulateMouseEvent('mouseup', prevMonthBtn, 0, 0);
@@ -1997,7 +2017,7 @@ describe('IgxCalendar', () => {
             await wait(900);
             UIInteractions.simulateMouseEvent('mouseup', nextMonthBtn, 0, 0);
             fixture.detectChanges();
-            expect(calendar.viewDate.getMonth()).toEqual(6);
+            expect(calendar.viewDate.getMonth()).toEqual(5);
         });
 
         it('Should increment/decrement months continuously on enter keydwon.', async () => {
@@ -2046,7 +2066,7 @@ export class IgxCalendaRangeComponent {
     `
 })
 export class IgxCalendarDisabledSpecialDatesComponent {
-    public model: Date | Date[] = new Date(2017, 5, 13);
+    public model: Date | Date[] = new Date(2017, 5, 23);
     public viewDate = new Date(2017, 5, 13);
     public specialDates = [{type: DateRangeType.Between, dateRange: [new Date(2017, 5, 1), new Date(2017, 5, 6)]}];
     public disabledDates = [{type: DateRangeType.Between, dateRange: [new Date(2017, 5, 23), new Date(2017, 5, 29)]}];

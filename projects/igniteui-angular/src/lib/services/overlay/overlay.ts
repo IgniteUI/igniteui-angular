@@ -245,6 +245,29 @@ export class IgxOverlayService implements OnDestroy {
             false);
     }
 
+    /**
+     * Offsets the content along the corresponding axis by the provided amount
+     * ```typescript
+     * this.overlay.setOffset(id, deltaX, deltaY);
+     * ```
+     */
+    setOffset(id: string, deltaX: number, deltaY: number) {
+        const info: OverlayInfo = this.getOverlayById(id);
+
+        if (!info) {
+           return;
+        }
+
+        info.transformX += deltaX;
+        info.transformY += deltaY;
+
+        const transformX = info.transformX;
+        const transformY = info.transformY;
+
+        const translate = `translate(${transformX}px, ${transformY}px)`;
+        info.elementRef.nativeElement.parentElement.style.transform = translate;
+    }
+
     private _show(info: OverlayInfo) {
         const eventArgs: OverlayCancelableEventArgs = { id: info.id, componentRef: info.componentRef, cancel: false };
         this.onOpening.emit(eventArgs);
@@ -334,7 +357,7 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private getOverlayInfo(component: any, moduleRef?: Pick<NgModuleRef<any>, 'injector' | 'componentFactoryResolver'>): OverlayInfo {
-        const info: OverlayInfo = { ngZone: this._zone };
+        const info: OverlayInfo = { ngZone: this._zone, transformX: 0, transformY: 0 };
         if (component instanceof ElementRef) {
             info.elementRef = <ElementRef>component;
         } else {

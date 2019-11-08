@@ -93,7 +93,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         await wait(100);
         fixture.detectChanges();
         // parent should scroll down so that cell in child is in view.
-        expect(hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop)
+        expect(hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop)
         .toBeGreaterThanOrEqual(childGrid.rowHeight);
     }));
 
@@ -107,7 +107,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         childCell.nativeElement.focus();
         await wait(100);
         fixture.detectChanges();
-        const prevScrTop = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
+        const prevScrTop = hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop;
 
         const keyboardEvent = new KeyboardEvent('keydown', {
             code: 'ArrowUp',
@@ -117,7 +117,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         await wait(100);
         fixture.detectChanges();
         // parent should scroll up so that cell in child is in view.
-        const currScrTop = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
+        const currScrTop = hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop;
         expect(prevScrTop - currScrTop).toBeGreaterThanOrEqual(childGrid.rowHeight);
     }));
 
@@ -253,7 +253,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         expect(childLastCell.rowIndex).toBe(9);
 
         // parent should be scrolled down
-        const currScrTop = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
+        const currScrTop = hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop;
         expect(currScrTop).toBeGreaterThanOrEqual(childGrid.rowHeight * 5);
     }));
 
@@ -283,7 +283,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         expect(childCell.columnIndex).toBe(0);
         expect(childCell.rowIndex).toBe(0);
 
-        const currScrTop = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
+        const currScrTop = hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop;
         const childGridOffset = childGrid.nativeElement.offsetTop;
         expect(currScrTop).toBeLessThanOrEqual(childGrid.rowHeight + 1 + childGridOffset);
     }));
@@ -302,7 +302,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         expect(childLastRowCell.columnIndex).toBe(0);
         expect(childLastRowCell.rowIndex).toBe(9);
 
-        const currScrTop = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
+        const currScrTop = hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop;
         expect(currScrTop).toBeGreaterThanOrEqual(childGrid.rowHeight * 5);
     }));
 
@@ -337,7 +337,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         expect(childLastRowCell.rowIndex).toBe(4);
         expect(document.activeElement).toEqual(childLastRowCell.nativeElement);
 
-        const currScrTop = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
+        const currScrTop = hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop;
         expect(currScrTop).toEqual(0);
     }));
 
@@ -359,7 +359,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         expect(childFirstRowCell.columnIndex).toBe(0);
         expect(childFirstRowCell.rowIndex).toBe(0);
 
-        const currScrTop = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
+        const currScrTop = hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop;
         const childGridOffset = childGrid.nativeElement.offsetTop;
         expect(currScrTop).toBeLessThanOrEqual(childGrid.rowHeight + 1 + childGridOffset);
     }));
@@ -379,7 +379,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         expect(childFirstRowCell.columnIndex).toBe(0);
         expect(childFirstRowCell.rowIndex).toBe(0);
 
-        const currScrTop = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
+        const currScrTop = hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop;
         expect(currScrTop).toBeGreaterThanOrEqual(2000);
     }));
 
@@ -392,7 +392,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         childGrid.verticalScrollContainer.scrollTo(9);
         await wait(100);
         fixture.detectChanges();
-        let currScrTop = childGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
+        let currScrTop = childGrid.verticalScrollContainer.getScroll().scrollTop;
         expect(currScrTop).toBeGreaterThan(0);
 
         const fCell = hierarchicalGrid.dataRowList.toArray()[0].cells.toArray()[0].nativeElement;
@@ -412,7 +412,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         expect(childFirstCell.focused).toBe(true);
         expect(childFirstCell.rowIndex).toBe(0);
 
-        currScrTop = childGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
+        currScrTop = childGrid.verticalScrollContainer.getScroll().scrollTop;
         expect(currScrTop).toBeLessThanOrEqual(10);
     }));
 
@@ -439,7 +439,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         await wait(100);
 
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
-        const vertScr = childGrid.verticalScrollContainer.getVerticalScroll();
+        const vertScr = childGrid.verticalScrollContainer.getScroll();
         const currScrTop = vertScr.scrollTop;
         // should be scrolled to bottom
         expect(currScrTop).toBe(vertScr.scrollHeight - vertScr.clientHeight);
@@ -522,11 +522,11 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         const parentCell = hierarchicalGrid.dataRowList.toArray()[0].cells.toArray()[0];
         parentCell.nativeElement.focus();
         fixture.detectChanges();
-        const prevScroll = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
+        const prevScroll = hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop;
         parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
         await wait(100);
         fixture.detectChanges();
-        expect(  hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop - prevScroll).toBeGreaterThanOrEqual(100);
+        expect(  hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop - prevScroll).toBeGreaterThanOrEqual(100);
     }));
 
     it('should expand/collapse hierarchical row using ALT+Arrow Right/ALT+Arrow Left.', () => {
@@ -650,14 +650,14 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         expect(sChildRowCell.selected).toBeTruthy();
         expect(sChildRowCell.focused).toBeTruthy();
 
-        expect(child1.verticalScrollContainer.getVerticalScroll().scrollTop).toBeGreaterThanOrEqual(150);
+        expect(child1.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThanOrEqual(150);
 
         sChildRowCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
         await wait(100);
         fixture.detectChanges();
         expect(fchildRowCell.selected).toBeTruthy();
         expect(fchildRowCell.focused).toBeTruthy();
-        expect(child1.verticalScrollContainer.getVerticalScroll().scrollTop).toBe(0);
+        expect(child1.verticalScrollContainer.getScroll().scrollTop).toBe(0);
 
     }));
 
@@ -820,7 +820,7 @@ describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
             const nestedChild = child.hgridAPI.getChildGrids(false)[0];
             const nestedChildCell = nestedChild.dataRowList.toArray()[1].cells.toArray()[0];
             nestedChildCell.nativeElement.focus();
-            let oldScrTop = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
+            let oldScrTop = hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop;
             await wait(100);
             fixture.detectChanges();
             // navigate up
@@ -833,7 +833,7 @@ describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
             fixture.detectChanges();
 
             let nextCell =  nestedChild.dataRowList.toArray()[0].cells.toArray()[0];
-            let currScrTop = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
+            let currScrTop = hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop;
             const elemHeight = nestedChildCell.row.nativeElement.offsetHeight;
             // check if parent of parent has been scroll up so that the focused cell is in view
             expect(oldScrTop - currScrTop).toEqual(elemHeight);
@@ -849,7 +849,7 @@ describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
             fixture.detectChanges();
 
             nextCell =  child.dataRowList.toArray()[0].cells.toArray()[0];
-            currScrTop = hierarchicalGrid.verticalScrollContainer.getVerticalScroll().scrollTop;
+            currScrTop = hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop;
             expect(oldScrTop - currScrTop).toBeGreaterThanOrEqual(100);
 
             expect(nextCell.selected).toBe(true);
@@ -875,7 +875,7 @@ describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
             await wait(100);
             fixture.detectChanges();
             // check if parent has scrolled down to show focused cell.
-            expect(child.verticalScrollContainer.getVerticalScroll().scrollTop).toBe(nestedChildCell.row.nativeElement.offsetHeight);
+            expect(child.verticalScrollContainer.getScroll().scrollTop).toBe(nestedChildCell.row.nativeElement.offsetHeight);
             const nextCell = nestedChild.dataRowList.toArray()[2].cells.toArray()[0];
 
             expect(nextCell.selected).toBe(true);
@@ -915,6 +915,33 @@ describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
             expect(lastCell.focused).toBe(true);
             expect(lastCell.rowIndex).toBe(4);
 
+        }));
+
+        it('should navigate to the first cell of next row using Tab from last cell in the row above', (async () => {
+            hierarchicalGrid.expandChildren = false;
+            hierarchicalGrid.height = '600px';
+            hierarchicalGrid.width = '1000px';
+            fixture.componentInstance.rowIsland.height = '350px';
+            fixture.detectChanges();
+            await wait(100);
+
+            const row = hierarchicalGrid.getRowByIndex(0);
+            (row as IgxHierarchicalRowComponent).toggle();
+            await wait(100);
+            fixture.detectChanges();
+
+            const cell = hierarchicalGrid.getCellByColumn(2, 'childData2');
+            cell.nativeElement.dispatchEvent(new Event('focus'));
+            await wait(100);
+            fixture.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('Tab', cell.nativeElement, true);
+            await wait(100);
+            fixture.detectChanges();
+
+            const currentCell = hierarchicalGrid.getCellByColumn(3, 'ID');
+            expect(currentCell.focused).toBe(true);
+            expect(currentCell.rowIndex).toBe(3);
         }));
 });
 

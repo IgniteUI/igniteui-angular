@@ -16,7 +16,7 @@ import { IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-e
 import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';
 import { IgxSelectionAPIService } from '../../../core/selection';
 import { FormsModule } from '@angular/forms';
-import { IgxGridPipesModule } from '../../grid-pipes.module';
+import { IgxGridPipesModule } from '../../common/grid-pipes.module';
 import { IgxButtonModule } from '../../../directives/button/button.directive';
 import { IgxButtonGroupModule } from '../../../buttonGroup/buttonGroup.component';
 import { IgxDatePickerModule } from '../../../date-picker/date-picker.component';

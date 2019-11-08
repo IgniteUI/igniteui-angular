@@ -8,12 +8,15 @@ import {
     TemplateRef,
     Directive
 } from '@angular/core';
-import { IgxColumnComponent } from '../../column.component';
+import { IgxColumnComponent } from '../../columns/column.component';
 import { IChangeCheckboxEventArgs } from '../../../checkbox/checkbox.component';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
 import { DisplayDensity } from '../../../core/density';
 import { IgxForOfDirective } from '../../../directives/for-of/for_of.directive';
 import { FilterListItem } from './grid.excel-style-filtering.component';
+import { IgxListComponent } from '../../../list';
+
+const SEARCH_LIST_HEIGHT = 250;
 
 @Directive({
     selector: '[igxExcelStyleLoading]'
@@ -54,6 +57,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
     @Input()
     public data: FilterListItem[];
 
+    @Input()
+    public inline: boolean;
+
     public filteredData: FilterListItem[];
 
     @Input()
@@ -61,6 +67,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
 
     @ViewChild('input', { read: IgxInputDirective, static: true })
     public searchInput: IgxInputDirective;
+
+    @ViewChild('list', { read: IgxListComponent, static: true })
+    public list: IgxListComponent;
 
     @Input()
     public displayDensity: DisplayDensity;
@@ -125,5 +134,13 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit {
             default: break;
         }
         return itemSize;
+    }
+
+    public get listSize() {
+        return this.inline ? null : SEARCH_LIST_HEIGHT;
+    }
+
+    public get containerSize() {
+        return this.inline ? this.list.element.nativeElement.offsetHeight : SEARCH_LIST_HEIGHT;
     }
 }

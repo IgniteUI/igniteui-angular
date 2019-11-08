@@ -1,0 +1,83 @@
+<span class="igx-grid-toolbar__title" *ngIf="getTitle()">
+    {{ getTitle() }}
+</span>
+
+<div class="igx-grid-toolbar__custom-content" *ngIf="customContentTemplate != null">
+    <ng-container *ngTemplateOutlet="customContentTemplate; context: context">
+    </ng-container>
+</div>
+
+<div class="igx-grid-toolbar__actions">
+    <div *ngIf="grid.allowAdvancedFiltering">
+        <button igxButton="outlined" [displayDensity]="grid.displayDensity" #advancedFilteringButton name="btnAdvancedFiltering" igxRipple
+            (click)="showAdvancedFilteringUI()"
+                [ngClass]="grid.advancedFilteringExpressionsTree ? 'igx-grid-toolbar__adv-filter--filtered' : 'igx-grid-toolbar__adv-filter'">
+            <div class="igx-grid-toolbar__button-space">
+                <igx-icon>
+                    filter_list
+                </igx-icon>
+                <span>{{grid.resourceStrings.igx_grid_advanced_filter_title}}</span>
+            </div>
+        </button>
+    </div>
+
+    <div *ngIf="grid.columnHiding">
+        <button igxButton="outlined" [displayDensity]="grid.displayDensity" #columnHidingButton name="btnColumnHiding" igxRipple
+            (click)="toggleColumnHidingUI()">
+            <div  class="igx-grid-toolbar__button-space">
+                <igx-icon *ngIf="grid.hiddenColumnsCount > 0">visibility_off</igx-icon>
+                <igx-icon *ngIf="grid.hiddenColumnsCount === 0">visibility</igx-icon>
+                <span>{{ grid.hiddenColumnsCount }}</span>
+                <span>{{ grid.hiddenColumnsText }}</span>
+            </div>
+        </button>
+        <igx-drop-down #columnHidingDropdown>
+            <igx-column-hiding
+                [columns]="grid.columns"
+                [title]="grid.columnHidingTitle"
+                [filterColumnsPrompt]="filterColumnsPrompt"
+                [columnsAreaMaxHeight]="defaultDropDownsMaxHeight"
+                (onColumnVisibilityChanged)="grid.toggleColumnVisibility($event)">
+            </igx-column-hiding>
+        </igx-drop-down>
+    </div>
+    <div *ngIf="grid.columnPinning">
+        <button igxButton="outlined" [displayDensity]="grid.displayDensity" #columnPinningButton name="btnColumnPinning" igxRipple
+            (click)="toggleColumnPinningUI()">
+            <div  class="igx-grid-toolbar__button-space">
+                <igx-icon *ngIf="pinnedColumnsCount > 0">lock</igx-icon>
+                <igx-icon *ngIf="pinnedColumnsCount === 0">lock_open</igx-icon>
+                <span>{{ pinnedColumnsCount }}</span>
+                <span>{{ grid.pinnedColumnsText }}</span>
+                <span></span>
+            </div>
+        </button>
+        <igx-drop-down #columnPinningDropdown>
+            <igx-column-pinning
+                [columns]="grid.columns"
+                [title]="grid.columnPinningTitle"
+                [filterColumnsPrompt]="filterColumnsPrompt"
+                [columnsAreaMaxHeight]="defaultDropDownsMaxHeight"></igx-column-pinning>
+        </igx-drop-down>
+    </div>
+
+    <div class="igx-grid-toolbar__dropdown" *ngIf="shouldShowExportButton" id="btnExport">
+        <button igxButton="outlined" [displayDensity]="grid.displayDensity" igxRipple #btnExport
+                (click)="exportClicked()">
+            <span class="igx-grid-toolbar__button-space">
+                <igx-icon fontSet="material">import_export</igx-icon>
+                <span>{{ getExportText() }}</span>
+                <igx-icon fontSet="material">arrow_drop_down</igx-icon>
+            </span>
+        </button>
+
+        <igx-drop-down #exportDropdown>
+            <ul class="igx-grid-toolbar__dd-list">
+                <li class="igx-grid-toolbar__dd-list-items" igxRipple *ngIf="shouldShowExportExcelButton" id="btnExportExcel"
+                (click)="exportToExcelClicked()">{{ getExportExcelText() }}</li>
+                <li class="igx-grid-toolbar__dd-list-items" igxRipple *ngIf="shouldShowExportCsvButton" id="btnExportCsv"
+                (click)="exportToCsvClicked()">{{ getExportCsvText() }}</li>
+            </ul>
+        </igx-drop-down>
+    </div>
+</div>

@@ -75,7 +75,14 @@
     $shadow: null
 ) {
     $name: 'igx-drop-down';
-    $drop-down-schema: map-get($schema, 'igx-drop-down');
+    $drop-down-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $drop-down-schema: map-get($schema, $name);
+    } @else {
+        $drop-down-schema: $schema;
+    }
+
     $theme: apply-palette($drop-down-schema, $palette);
 
     $border-radius: round-borders(
@@ -274,13 +281,6 @@
         //&%igx-drop-down__list--select {
         //    max-width: calc(100% + #{$item-padding-compact} * 2);
         //}
-    }
-
-    [dir='rtl'] {
-        %igx-drop-down__item {
-            justify-content: flex-end;
-            text-align: right;
-        }
     }
 
     %igx-drop-down__header {
