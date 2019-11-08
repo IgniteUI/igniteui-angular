@@ -1,4 +1,51 @@
+<ng-template #defaultExcelStyleSortingTemplate>
+    <igx-excel-style-sorting #excelStyleSorting
+        class="igx-excel-filter__sort"
+        [column]="column"
+        [grid]="grid"
+        [displayDensity]="grid.displayDensity">
+    </igx-excel-style-sorting>
+</ng-template>
+
+<ng-template #defaultExcelStyleMovingTemplate>
+    <igx-excel-style-column-moving
+        class="igx-excel-filter__move"
+        [column]="column"
+        [grid]="grid"
+        [isColumnPinnable]="isColumnPinnable"
+        [displayDensity]="grid.displayDensity">
+    </igx-excel-style-column-moving>
+</ng-template>
+
+<ng-template #defaultExcelStylePinningTemplate>
+    <div [ngClass]="pinClass()"
+        (click)="onPin()"
+        tabindex="0"
+        *ngIf="!column.pinned">
+        <span>{{ grid.resourceStrings.igx_grid_excel_pin }}</span>
+        <igx-icon fontSet="filtering-icons" name="pin"></igx-icon>
+    </div>
+
+    <div class="igx-excel-filter__actions-unpin"
+        (click)="onPin()"
+        tabindex="0"
+        *ngIf="column.pinned">
+        <span>{{ grid.resourceStrings.igx_grid_excel_unpin }}</span>
+        <igx-icon fontSet="filtering-icons" name="unpin"></igx-icon>
+    </div>
+</ng-template>
+
+<ng-template #defaultExcelStyleHidingTemplate>
+    <div class="igx-excel-filter__actions-hide"
+        tabindex="0"
+        (click)="onHideToggle()">
+        <span>{{ column.hidden ? grid.resourceStrings.igx_grid_excel_show : grid.resourceStrings.igx_grid_excel_hide }}</span>
+        <igx-icon>{{ column.hidden ? 'visibility' : 'visibility_off' }}</igx-icon>
+    </div>
+</ng-template>
+
 <article #dropdown
+    *ngIf="column"
     class="igx-excel-filter__menu"
     [ngClass]="{
         'igx-excel-filter__menu--cosy': grid.displayDensity === 'cosy',
@@ -29,20 +76,11 @@
                 igxButton="icon"
                 [displayDensity]="grid.displayDensity"
                 tabindex="0"
-                (click)="onHide()">
-                <igx-icon>visibility_off</igx-icon>
+                (click)="onHideToggle()">
+                <igx-icon>{{ column.hidden ? 'visibility' : 'visibility_off' }}</igx-icon>
             </button>
         </div>
     </header>
-
-    <ng-template #defaultExcelStyleSortingTemplate>
-        <igx-excel-style-sorting #excelStyleSorting
-            class="igx-excel-filter__sort"
-            [column]="column"
-            [grid]="grid"
-            [displayDensity]="grid.displayDensity">
-        </igx-excel-style-sorting>
-    </ng-template>
 
     <div *ngIf="column.sortable">
         <ng-container *ngTemplateOutlet="sortingTemplate"></ng-container>
@@ -50,50 +88,13 @@
 
     <section class="igx-excel-filter__actions">
 
-        <ng-template #defaultExcelStyleMovingTemplate>
-            <igx-excel-style-column-moving
-                class="igx-excel-filter__move"
-                [column]="column"
-                [grid]="grid"
-                [isColumnPinnable]="isColumnPinnable"
-                [displayDensity]="grid.displayDensity">
-            </igx-excel-style-column-moving>
-        </ng-template>
-
         <div *ngIf="column.movable">
             <ng-container *ngTemplateOutlet="movingTemplate"></ng-container>
         </div>
 
-        <ng-template #defaultExcelStylePinningTemplate>
-            <div [ngClass]="pinClass()"
-                (click)="onPin()"
-                tabindex="0"
-                *ngIf="!column.pinned">
-                <span>{{ grid.resourceStrings.igx_grid_excel_pin }}</span>
-                <igx-icon fontSet="filtering-icons" name="pin"></igx-icon>
-            </div>
-
-            <div class="igx-excel-filter__actions-unpin"
-                (click)="onPin()"
-                tabindex="0"
-                *ngIf="column.pinned">
-                <span>{{ grid.resourceStrings.igx_grid_excel_unpin }}</span>
-                <igx-icon fontSet="filtering-icons" name="unpin"></igx-icon>
-            </div>
-        </ng-template>
-
         <div *ngIf="!column.disablePinning && grid.displayDensity==='comfortable'">
             <ng-container *ngTemplateOutlet="pinningTemplate"></ng-container>
         </div>
-
-        <ng-template #defaultExcelStyleHidingTemplate>
-            <div class="igx-excel-filter__actions-hide"
-                tabindex="0"
-                (click)="onHide()">
-                <span>{{ grid.resourceStrings.igx_grid_excel_hide }}</span>
-                <igx-icon>visibility_off</igx-icon>
-            </div>
-        </ng-template>
 
         <div *ngIf="!column.disableHiding && grid.displayDensity==='comfortable'">
             <ng-container *ngTemplateOutlet="hidingTemplate"></ng-container>
@@ -125,16 +126,23 @@
         [column]="column"
         [data]="listData"
         [grid]="grid"
+        [inline]="inline"
         [displayDensity]="grid.displayDensity">
     </igx-excel-style-search>
 
     <footer class="igx-excel-filter__menu-footer">
-        <button igxButton [displayDensity]="grid.displayDensity" (click)="closeDropdown()">{{ grid.resourceStrings.igx_grid_excel_cancel }}</button>
+        <button igxButton [displayDensity]="grid.displayDensity" (click)="cancel()">{{ grid.resourceStrings.igx_grid_excel_cancel }}</button>
         <button igxButton="raised" [displayDensity]="grid.displayDensity" [disabled]="applyButtonDisabled" (click)="applyFilter()">{{ grid.resourceStrings.igx_grid_excel_apply }}</button>
     </footer>
 </article>
 
-<igx-drop-down [maxHeight]="'397px'" [displayDensity]="grid.displayDensity" #subMenu (onSelection)="onSubMenuSelection($event)" (onClosed)="onSubMenuClosed()">
+<igx-drop-down 
+    *ngIf="column"
+    #subMenu
+    [maxHeight]="'397px'"
+    [displayDensity]="grid.displayDensity"
+    (onSelection)="onSubMenuSelection($event)"
+    (onClosed)="onSubMenuClosed()">
     <div>
         <igx-drop-down-item
             *ngFor="let condition of conditions"
@@ -150,6 +158,7 @@
 </igx-drop-down>
 
 <igx-excel-style-custom-dialog
+    *ngIf="column"
     #customDialog
     [column]="column"
     [filteringService]="filteringService"

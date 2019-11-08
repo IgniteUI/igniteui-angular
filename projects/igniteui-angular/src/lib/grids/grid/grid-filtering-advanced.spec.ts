@@ -14,7 +14,8 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import {
     IgxGridAdvancedFilteringColumnGroupComponent,
-    IgxGridAdvancedFilteringComponent
+    IgxGridAdvancedFilteringComponent,
+    IgxGridExternalAdvancedFilteringComponent
 } from '../../test-utils/grid-samples.spec';
 
 const ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
@@ -28,7 +29,8 @@ describe('IgxGrid - Advanced Filtering', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridAdvancedFilteringColumnGroupComponent,
-                IgxGridAdvancedFilteringComponent
+                IgxGridAdvancedFilteringComponent,
+                IgxGridExternalAdvancedFilteringComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -2688,6 +2690,58 @@ describe('IgxGrid - Advanced Filtering', () => {
             const dropdownValues = GridFunctions.getAdvancedFilteringSelectDropdownItems(fix).map((x: any) => x.innerText);
             const expectedValues = ['ID', 'ProductName', 'Downloads', 'Released', 'ReleaseDate', 'Another Field'];
             expect(expectedValues).toEqual(dropdownValues);
+        }));
+    });
+
+    describe('External', () => {
+        let fix, grid: IgxGridComponent;
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridExternalAdvancedFilteringComponent);
+            grid = fix.componentInstance.grid;
+            fix.detectChanges();
+        }));
+
+        it('Should allow hosting Advanced Filtering dialog outside of the grid.', fakeAsync(() => {
+            // Add a root 'and' group.
+            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            addAndGroupButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Populate edit inputs.
+            selectColumnInEditModeExpression(fix, 2); // Select 'Downloads' column.
+            selectOperatorInEditModeExpression(fix, 2); // Select 'Greater Than' operator.
+            let input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            sendInputNativeElement(fix, input, '100'); // Type filter value.
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Add new expression to the root group.
+            const addExpressionBtn = GridFunctions.getAdvancedFilteringTreeRootGroupButtons(fix, 0)[0];
+            addExpressionBtn.click();
+            tick(100);
+            fix.detectChanges();
+
+            // Populate edit inputs.
+            selectColumnInEditModeExpression(fix, 1); // Select 'ProductName' column.
+            selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            sendInputNativeElement(fix, input, 'ignite'); // Type filter value.
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Apply the filters.
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            // Verify the state of the grid after the filtering.
+            expect(grid.advancedFilteringExpressionsTree).toBeTruthy();
+            expect(grid.filteredData.length).toBe(1);
+            expect(grid.rowList.length).toBe(1);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
         }));
     });
 });
