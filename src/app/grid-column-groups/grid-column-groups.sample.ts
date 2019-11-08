@@ -75,8 +75,8 @@ export class GridColumnGroupsSampleComponent implements AfterViewInit {
 
     toggleCollapsible() {
        // this.collapse = !this.collapse;
-        (this.grid.columnList.filter(c => c.header === 'Address Information')[0] as any).collapsible =
-        !(this.grid.columnList.filter(c => c.header === 'Address Information')[0] as any).collapsible;
+        (this.grid.columnList.filter(c => c.header === 'General Information')[0] as any).collapsible =
+        !(this.grid.columnList.filter(c => c.header === 'General Information')[0] as any).collapsible;
     }
 
     ngAfterViewInit() {
