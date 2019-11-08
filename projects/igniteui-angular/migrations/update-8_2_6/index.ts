@@ -29,10 +29,16 @@ export default function(): Rule {
         '$_square-shape-pagination'];
 
         let globalStyleExt: string;
+        const gridPaginatorComponentImport = '~igniteui-angular/lib/core/styles/components/grid-paginator/grid-paginator-component';
+        const gridPaginatorThemeImport = '~igniteui-angular/lib/core/styles/components/grid-paginator/grid-paginator-theme';
+        const paginatorComponentImport = '~igniteui-angular/lib/core/styles/components/paginator/paginator-component';
+        const paginatorThemeImport = '~igniteui-angular/lib/core/styles/components/paginator/paginator-theme';
         const config = getWorkspace(host);
         const projects = getProjects(config);
 
         context.logger.info(`Applying migration for Ignite UI for Angular to version ${version}`);
+
+        const update = new UpdateChanges(__dirname, host, context);
 
         if (config.schematics && config.schematics['@schematics/angular:component']) {
             // updated projects have global prefix rather than per-project:
@@ -56,12 +62,19 @@ export default function(): Rule {
                             content = content.split(n).join(newThemes[i]);
                         }
                     });
+                    if (content.indexOf(gridPaginatorComponentImport) !== -1) {
+                        content = content.replace(gridPaginatorComponentImport, paginatorComponentImport);
+                        host.overwrite(path, content);
+                    }
+                    if (content.indexOf(gridPaginatorThemeImport) !== -1) {
+                        content = content.replace(gridPaginatorThemeImport, paginatorThemeImport);
+                        host.overwrite(path, content);
+                    }
                     host.overwrite(path, content);
                 }
             });
         }
 
-        const update = new UpdateChanges(__dirname, host, context);
         update.applyChanges();
     };
 }
