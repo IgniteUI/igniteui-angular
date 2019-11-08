@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, TemplateRef } from '@angular/core';
 import {
     async,
     TestBed,
@@ -7,20 +7,31 @@ import {
     tick
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { IgxCarouselComponent, IgxCarouselModule,  ISlideEventArgs } from './carousel.component';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import {
+    IgxCarouselComponent,
+    IgxCarouselModule,
+    ISlideEventArgs,
+    CarouselIndicatorsOrientation,
+    CarouselAnimationType
+} from './carousel.component';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSlideComponent } from './slide.component';
 
 describe('Carousel', () => {
     configureTestSuite();
-    let fixture: ComponentFixture<CarouselTestComponent>;
+    let fixture;
     let carousel: IgxCarouselComponent;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [CarouselTestComponent],
+            declarations: [
+                CarouselTestComponent,
+                CarouselTemplateSetInMarkupTestComponent,
+                CarouselTemplateSetInTypescriptTestComponent,
+                CarouselAnimationsComponent
+            ],
             imports: [IgxCarouselModule, NoopAnimationsModule]
         })
             .compileComponents();
@@ -211,8 +222,8 @@ describe('Carousel', () => {
         });
 
         it('click handlers', () => {
-            const nextNav = HelperTestFunctions.getNextButton(fixture).nativeElement;
-            const prevNav = HelperTestFunctions.getPreviousButton(fixture).nativeElement;
+            const nextNav = HelperTestFunctions.getNextButton(fixture);
+            const prevNav = HelperTestFunctions.getPreviousButton(fixture);
 
             spyOn(carousel, 'prev');
             prevNav.dispatchEvent(new Event('click'));
@@ -268,8 +279,8 @@ describe('Carousel', () => {
             spyOn(carousel.onSlideChanged, 'emit');
             carousel.pause = true;
 
-            const prevNav = HelperTestFunctions.getPreviousButton(fixture).nativeElement;
-            const nextNav = HelperTestFunctions.getNextButton(fixture).nativeElement;
+            const prevNav = HelperTestFunctions.getPreviousButton(fixture);
+            const nextNav = HelperTestFunctions.getNextButton(fixture);
 
             nextNav.dispatchEvent(new Event('click'));
             fixture.detectChanges();
@@ -304,8 +315,28 @@ describe('Carousel', () => {
             expect(carousel.onSlideChanged.emit).toHaveBeenCalledTimes(6);
         });
 
+        it('changing slides with indicators buttons', () => {
+            spyOn(carousel.onSlideChanged, 'emit');
+            carousel.pause = true;
+
+            const indicators = HelperTestFunctions.getIndicators(fixture);
+            expect(indicators.length).toBe(4);
+
+            indicators[3].dispatchEvent(new Event('click'));
+            fixture.detectChanges();
+
+            HelperTestFunctions.verifyActiveSlide(carousel, 3);
+
+            indicators[1].dispatchEvent(new Event('click'));
+            fixture.detectChanges();
+
+            HelperTestFunctions.verifyActiveSlide(carousel, 1);
+
+            expect(carousel.onSlideChanged.emit).toHaveBeenCalledTimes(2);
+        });
+
         it('navigation changes visibility of arrows', () => {
-            expect( HelperTestFunctions.getNextButton(fixture) === null).toBe(false);
+            expect(HelperTestFunctions.getNextButton(fixture) === null).toBe(false);
             expect(HelperTestFunctions.getPreviousButton(fixture) === null).toBe(false);
 
             carousel.navigation = false;
@@ -317,6 +348,49 @@ describe('Carousel', () => {
             fixture.detectChanges();
             expect(HelperTestFunctions.getNextButton(fixture) === null).toBe(false);
             expect(HelperTestFunctions.getPreviousButton(fixture) === null).toBe(false);
+        });
+
+        it('maximumIndicatorsCount changes visibility of indicators', () => {
+            expect(HelperTestFunctions.getIndicators(fixture).length).toBe(4);
+            expect(HelperTestFunctions.getIndicatorsDots(fixture).length).toBe(4);
+            expect(HelperTestFunctions.getIndicatorsLabel(fixture)).toBeNull();
+
+            carousel.maximumIndicatorsCount = 3;
+            fixture.detectChanges();
+            expect(carousel.maximumIndicatorsCount).toBe(3);
+            expect(HelperTestFunctions.getIndicators(fixture).length).toBe(0);
+            expect(HelperTestFunctions.getIndicatorsDots(fixture).length).toBe(0);
+            const label = HelperTestFunctions.getIndicatorsLabel(fixture);
+            expect(label).toBeDefined();
+            expect(label.innerHTML).toBe('1 of 4');
+
+            carousel.maximumIndicatorsCount = 6;
+            fixture.detectChanges();
+            expect(carousel.maximumIndicatorsCount).toBe(6);
+            expect(HelperTestFunctions.getIndicators(fixture).length).toBe(4);
+            expect(HelperTestFunctions.getIndicatorsDots(fixture).length).toBe(4);
+            expect(HelperTestFunctions.getIndicatorsLabel(fixture)).toBeNull();
+        });
+
+        it('indicatorsOrientation changes the position of indicators', () => {
+            let indicatorsContainer = HelperTestFunctions.getIndicatorsContainer(fixture);
+            expect(indicatorsContainer).toBeDefined();
+
+            carousel.indicatorsOrientation = CarouselIndicatorsOrientation.top;
+            fixture.detectChanges();
+
+            indicatorsContainer = HelperTestFunctions.getIndicatorsContainer(fixture);
+            expect(indicatorsContainer).toBeNull();
+            indicatorsContainer = HelperTestFunctions.getIndicatorsContainer(fixture, CarouselIndicatorsOrientation.top);
+            expect(indicatorsContainer).toBeDefined();
+
+            carousel.indicatorsOrientation = CarouselIndicatorsOrientation.bottom;
+            fixture.detectChanges();
+
+            indicatorsContainer = HelperTestFunctions.getIndicatorsContainer(fixture, CarouselIndicatorsOrientation.top);
+            expect(indicatorsContainer).toBeNull();
+            indicatorsContainer = HelperTestFunctions.getIndicatorsContainer(fixture, CarouselIndicatorsOrientation.bottom);
+            expect(indicatorsContainer).toBeDefined();
         });
 
         it('keyboardSupport changes support for keyboard navigation', () => {
@@ -351,29 +425,191 @@ describe('Carousel', () => {
             HelperTestFunctions.verifyActiveSlide(carousel, 2);
             expect(carousel.onSlideChanged.emit).toHaveBeenCalledTimes(1);
         });
+
+        it('should stop/play on mouse enter/leave', () => {
+            carousel.interval = 1000;
+            carousel.play();
+            fixture.detectChanges();
+
+            spyOn(carousel.onCarouselPaused, 'emit');
+            spyOn(carousel.onCarouselPlaying, 'emit');
+
+            expect(carousel.isPlaying).toBeTruthy();
+
+            UIInteractions.hoverElement(carousel.nativeElement, true);
+            fixture.detectChanges();
+
+            expect(carousel.isPlaying).toBeFalsy();
+            expect(carousel.onCarouselPaused.emit).toHaveBeenCalledTimes(1);
+
+            UIInteractions.unhoverElement(carousel.nativeElement, true);
+            fixture.detectChanges();
+
+            expect(carousel.isPlaying).toBeTruthy();
+            expect(carousel.onCarouselPlaying.emit).toHaveBeenCalledTimes(1);
+            expect(carousel.onCarouselPaused.emit).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe('Templates Tests: ', () => {
+        it('verify that template can be defined in the markup', () => {
+            fixture = TestBed.createComponent(CarouselTemplateSetInMarkupTestComponent);
+            carousel = fixture.componentInstance.carousel;
+            fixture.detectChanges();
+
+            expect(HelperTestFunctions.getIndicators(fixture).length).toBe(4);
+            expect(HelperTestFunctions.getIndicatorsDots(fixture).length).toBe(0);
+            for (let index = 0; index < 4; index++) {
+                const indicator = HelperTestFunctions.getIndicators(fixture)[index] as HTMLElement;
+                expect(indicator.innerText).toEqual(index.toString());
+            }
+        });
+
+        it('verify that template can be changed', () => {
+            fixture = TestBed.createComponent(CarouselTemplateSetInTypescriptTestComponent);
+            carousel = fixture.componentInstance.carousel;
+            fixture.detectChanges();
+
+            carousel.select(carousel.get(1));
+            fixture.detectChanges();
+
+            expect(HelperTestFunctions.getIndicators(fixture).length).toBe(4);
+            expect(HelperTestFunctions.getIndicatorsDots(fixture).length).toBe(4);
+
+            carousel.indicatorTemplate = fixture.componentInstance.customIndicatorTemplate1;
+            fixture.detectChanges();
+
+            expect(HelperTestFunctions.getIndicators(fixture).length).toBe(4);
+            expect(HelperTestFunctions.getIndicatorsDots(fixture).length).toBe(0);
+            for (let index = 0; index < 4; index++) {
+                const indicator = HelperTestFunctions.getIndicators(fixture)[index] as HTMLElement;
+                expect(indicator.innerText).toEqual(index.toString());
+            }
+
+            carousel.indicatorTemplate = fixture.componentInstance.customIndicatorTemplate2;
+            fixture.detectChanges();
+
+            expect(HelperTestFunctions.getIndicators(fixture).length).toBe(4);
+            expect(HelperTestFunctions.getIndicatorsDots(fixture).length).toBe(0);
+
+            for (let index = 0; index < 4; index++) {
+                const indicator = HelperTestFunctions.getIndicators(fixture)[index] as HTMLElement;
+                if (index === 1) {
+                    expect(indicator.innerText).toEqual('1: Active');
+                } else {
+                    expect(indicator.innerText).toEqual(index.toString());
+                }
+            }
+
+            carousel.indicatorTemplate = null;
+            fixture.detectChanges();
+
+            expect(HelperTestFunctions.getIndicators(fixture).length).toBe(4);
+            expect(HelperTestFunctions.getIndicatorsDots(fixture).length).toBe(4);
+        });
+    });
+
+    describe('Animations Tests: ', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(CarouselAnimationsComponent);
+            fixture.detectChanges();
+            carousel = fixture.componentInstance.carousel;
+        });
+
+        it('Test slide animation', async () => {
+            await wait();
+            expect(carousel.get(0).active).toBeTruthy();
+            expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
+            expect(carousel.animationType).toBe(CarouselAnimationType.slide);
+            carousel.next();
+            fixture.detectChanges();
+            await wait(200);
+
+            expect(carousel.get(1).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
+            expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.PREVIOUS_SLIDE_CLASS)).toBeTruthy();
+            await wait(200);
+            fixture.detectChanges();
+
+            expect(carousel.get(1).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
+            expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.PREVIOUS_SLIDE_CLASS)).toBeFalsy();
+            carousel.prev();
+            fixture.detectChanges();
+            await wait(230);
+
+            expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
+            expect(carousel.get(1).nativeElement.classList.contains(HelperTestFunctions.PREVIOUS_SLIDE_CLASS)).toBeTruthy();
+            await wait(200);
+            fixture.detectChanges();
+
+            expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
+            expect(carousel.get(1).nativeElement.classList.contains(HelperTestFunctions.PREVIOUS_SLIDE_CLASS)).toBeFalsy();
+        });
+
+        it('Test fade animation', async () => {
+            await wait();
+            carousel.animationType = CarouselAnimationType.fade;
+            fixture.detectChanges();
+
+            expect(carousel.get(0).active).toBeTruthy();
+            expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
+            expect(carousel.animationType).toBe(CarouselAnimationType.fade);
+            carousel.next();
+            fixture.detectChanges();
+            await wait(200);
+
+            expect(carousel.get(1).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
+            expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.PREVIOUS_SLIDE_CLASS)).toBeTruthy();
+            await wait(200);
+            fixture.detectChanges();
+
+            expect(carousel.get(1).nativeElement.classList.contains(HelperTestFunctions.ACTIVE_SLIDE_CLASS)).toBeTruthy();
+            expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.PREVIOUS_SLIDE_CLASS)).toBeFalsy();
+        });
     });
 });
 
 class HelperTestFunctions {
-    public static  NEXT_BUTTON_CLASS = '.igx-carousel__arrow--next';
-    public static  PRIV_BUTTON_CLASS = '.igx-carousel__arrow--prev';
-    public static  ACTIVE_SLIDE_CLASS = 'igx-slide--current';
-    public static  INDICATORS_TOP_CLASS = '.igx-carousel-indicators--top';
-    public static  INDICATORS_BOTTOM_CLASS = '.igx-carousel-indicators--bottom';
+    public static NEXT_BUTTON_CLASS = '.igx-carousel__arrow--next';
+    public static PRIV_BUTTON_CLASS = '.igx-carousel__arrow--prev';
+    public static ACTIVE_SLIDE_CLASS = 'igx-slide--current';
+    public static PREVIOUS_SLIDE_CLASS = 'igx-slide--previous';
+    public static INDICATORS_TOP_CLASS = '.igx-carousel-indicators--top';
+    public static INDICATORS_BOTTOM_CLASS = '.igx-carousel-indicators--bottom';
+    public static INDICATORS_LABEL_CLASS = '.igx-carousel__label';
+    public static INDICATOR_CLASS = '.igx-carousel-indicators__indicator';
+    public static INDICATOR_DOT_CLASS = '.igx-nav-dot';
+    public static INDICATOR_ACTIVE_DOT_CLASS = '.igx-nav-dot--active';
 
-    public static getNextButton(fixture) {
-        const carouselNative = fixture.debugElement;
-        return carouselNative.query(By.css(HelperTestFunctions.NEXT_BUTTON_CLASS));
+    public static getNextButton(fixture): HTMLElement {
+        return fixture.nativeElement.querySelector(HelperTestFunctions.NEXT_BUTTON_CLASS);
     }
 
-    public static getPreviousButton(fixture) {
-        const carouselNative = fixture.debugElement;
-        return carouselNative.query(By.css(HelperTestFunctions.PRIV_BUTTON_CLASS));
+    public static getPreviousButton(fixture): HTMLElement {
+        return fixture.nativeElement.querySelector(HelperTestFunctions.PRIV_BUTTON_CLASS);
     }
 
-    public static getIndicatorsContainer(fixture) {
-        const carouselNative = fixture.debugElement;
-        return carouselNative.query(By.css(HelperTestFunctions.PRIV_BUTTON_CLASS)).nativeElement;
+    public static getIndicatorsContainer(fixture, position = CarouselIndicatorsOrientation.bottom): HTMLElement {
+        const carouselNative = fixture.nativeElement;
+        if (position === CarouselIndicatorsOrientation.bottom) {
+            return carouselNative.querySelector(HelperTestFunctions.INDICATORS_BOTTOM_CLASS);
+        } else {
+            return carouselNative.querySelector(HelperTestFunctions.INDICATORS_TOP_CLASS);
+        }
+    }
+
+    public static getIndicatorsLabel(fixture, position = CarouselIndicatorsOrientation.bottom) {
+        const indContainer = HelperTestFunctions.getIndicatorsContainer(fixture, position);
+        return indContainer.querySelector(HelperTestFunctions.INDICATORS_LABEL_CLASS);
+    }
+
+    public static getIndicators(fixture, position = CarouselIndicatorsOrientation.bottom) {
+        const indContainer = HelperTestFunctions.getIndicatorsContainer(fixture, position);
+        return indContainer.querySelectorAll(HelperTestFunctions.INDICATOR_CLASS);
+    }
+
+    public static getIndicatorsDots(fixture, position = CarouselIndicatorsOrientation.bottom) {
+        const indContainer = HelperTestFunctions.getIndicatorsContainer(fixture, position);
+        return indContainer.querySelectorAll(HelperTestFunctions.INDICATOR_DOT_CLASS);
     }
 
     public static verifyActiveSlide(carousel, index: number) {
@@ -397,10 +633,73 @@ class HelperTestFunctions {
     `
 })
 class CarouselTestComponent {
-
     @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
 
     public loop = true;
     public pause = true;
     public interval = 2500;
+}
+
+@Component({
+    template: `
+        <igx-carousel #carousel>
+            <igx-slide [active]="true"><h3>Slide1</h3></igx-slide>
+            <igx-slide><h3>Slide2</h3></igx-slide>
+            <igx-slide><h3>Slide3</h3></igx-slide>
+            <igx-slide><h3>Slide4</h3></igx-slide>
+        </igx-carousel>
+    `
+})
+class CarouselAnimationsComponent {
+    @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
+
+    public loop = true;
+    public pause = true;
+    public interval = 2500;
+}
+
+
+@Component({
+    template: `
+        <igx-carousel #carousel [animationType]="'none'">
+            <igx-slide><h3>Slide1</h3></igx-slide>
+            <igx-slide><h3>Slide2</h3></igx-slide>
+            <igx-slide><h3>Slide3</h3></igx-slide>
+            <igx-slide><h3>Slide4</h3></igx-slide>
+
+            <ng-template igxCarouselIndicator let-slide>
+                <span> {{slide.index}} </span>
+            </ng-template>
+        </igx-carousel>
+    `
+})
+class CarouselTemplateSetInMarkupTestComponent {
+    @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
+}
+
+@Component({
+    template: `
+        <ng-template #customIndicatorTemplate1 let-slide>
+            <span> {{slide.index}} </span>
+        </ng-template>
+
+        <ng-template #customIndicatorTemplate2 let-slide>
+            <span *ngIf="!slide.active"> {{slide.index}}  </span>
+            <span *ngIf="slide.active"> {{slide.index}}: Active  </span>
+        </ng-template>
+
+        <igx-carousel #carousel [animationType]="'none'">
+            <igx-slide><h3>Slide1</h3></igx-slide>
+            <igx-slide><h3>Slide2</h3></igx-slide>
+            <igx-slide><h3>Slide3</h3></igx-slide>
+            <igx-slide><h3>Slide4</h3></igx-slide>
+        </igx-carousel>
+    `
+})
+class CarouselTemplateSetInTypescriptTestComponent {
+    @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
+    @ViewChild('customIndicatorTemplate1', { read: TemplateRef, static: false })
+    public customIndicatorTemplate1;
+    @ViewChild('customIndicatorTemplate2', { read: TemplateRef, static: false })
+    public customIndicatorTemplate2;
 }
