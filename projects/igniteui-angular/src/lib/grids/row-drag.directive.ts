@@ -1,4 +1,4 @@
-import { Directive, Input, OnDestroy, NgModule } from '@angular/core';
+import { Directive, Input, OnDestroy, NgModule, TemplateRef } from '@angular/core';
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { KEYS } from '../core/utils';
 import { fromEvent, Subscription } from 'rxjs';
@@ -100,6 +100,11 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     protected createGhost(pageX, pageY) {
         this.row.grid.endEdit(true);
         this.row.grid.markForCheck();
+        this.ghostContext = {
+            $implicit: this.row.rowData,
+            data: this.row.rowData,
+            grid: this.row.grid
+        };
         super.createGhost(pageX, pageY, this.row.nativeElement);
 
         const ghost = this.ghostElement;
@@ -152,10 +157,21 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 export class IgxDragIndicatorIconDirective {
 }
 
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxRowDragGhost]'
+})
+
+export class IgxRowDragGhostDirective  {
+    constructor(public templateRef: TemplateRef<any>) { }
+}
+
 @NgModule({
-    declarations: [IgxRowDragDirective, IgxDragIndicatorIconDirective],
+    declarations: [IgxRowDragDirective, IgxDragIndicatorIconDirective, IgxRowDragGhostDirective],
     entryComponents: [],
-    exports: [IgxRowDragDirective, IgxDragIndicatorIconDirective],
+    exports: [IgxRowDragDirective, IgxDragIndicatorIconDirective, IgxRowDragGhostDirective],
     imports: []
 })
 

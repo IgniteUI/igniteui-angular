@@ -137,6 +137,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy, AfterView
         }
 
         if (this._column) {
+            this._column.grid.filteringService.registerSVGIcons();
             this.isColumnPinnable = this.column.pinnable;
             this.init();
 
