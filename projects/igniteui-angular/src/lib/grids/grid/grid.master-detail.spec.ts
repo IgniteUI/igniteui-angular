@@ -6,20 +6,22 @@ import { By } from '@angular/platform-browser';
 import { UIInteractions, wait} from '../../test-utils/ui-interactions.spec';
 import { IgxGridModule } from './index';
 import { IgxGridComponent } from './grid.component';
-import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { IgxGridRowComponent } from './grid-row.component';
+import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { IgxGridExpandableCellComponent } from './expandable-cell.component';
 
 const COLLAPSED_ICON_NAME = 'chevron_right';
 const EXPANDED_ICON_NAME = 'expand_more';
 const DEBOUNCETIME = 30;
 
-describe('IgxGrid Master Detail', () => {
+describe('IgxGrid Master Detail #grid', () => {
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
 
+    configureTestSuite();
+
     describe('Basic', () => {
-        configureTestSuite();
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -132,7 +134,6 @@ describe('IgxGrid Master Detail', () => {
     });
 
     describe('Keyboard Navigation ', () => {
-        configureTestSuite();
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -232,7 +233,6 @@ describe('IgxGrid Master Detail', () => {
     });
 
     describe('Integration', () => {
-        configureTestSuite();
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -277,12 +277,70 @@ describe('IgxGrid Master Detail', () => {
                 expect(checkbox.nativeElement.attributes['aria-checked'].value).toEqual('true');
             });
         });
+
+        describe('Hiding', () => {
+            it('Should set the expand/collapse icon to the new first visible column when hiding the first column.', () => {
+                fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
+                grid = fix.componentInstance.grid;
+                fix.detectChanges();
+                grid.columnList.first.hidden = true;
+                fix.detectChanges();
+                expect(grid.rowList.first.cells.first instanceof IgxGridExpandableCellComponent).toBeTruthy();
+            });
+        });
+
+        describe('Pinning', () => {
+            it('Should keep/move the expand/collapse icon to the correct column when pinning the first column or another one.', () => {
+                fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
+                grid = fix.componentInstance.grid;
+                fix.detectChanges();
+                grid.columnList.last.pin();
+                fix.detectChanges();
+                expect(grid.rowList.first.cells.first instanceof IgxGridExpandableCellComponent).toBeTruthy();
+                grid.pinnedColumns[0].unpin();
+                fix.detectChanges();
+                expect(grid.rowList.first.cells.first instanceof IgxGridExpandableCellComponent).toBeTruthy();
+            });
+
+            it('Should render detail view correctly when expanding a master row and there are pinned columns.', () => {
+                fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
+                grid = fix.componentInstance.grid;
+                fix.detectChanges();
+                grid.columnList.last.pin();
+                grid.expand(fix.componentInstance.data[0].ID);
+                fix.detectChanges();
+                const firstRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.first);
+
+                expect(firstRowDetail.querySelector('.addressArea').innerText).toEqual('Obere Str. 57');
+                expect(firstRowDetail.querySelector('.igx-grid__hierarchical-indent')).toBeDefined();
+            });
+        });
+
+        describe('Column Moving', () => {
+            it('Should keep the expand/collapse icon in the first column, even when moving a column in first place.', () => {
+                fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
+                grid = fix.componentInstance.grid;
+                fix.detectChanges();
+                grid.moveColumn(grid.columnList.last, grid.columnList.first);
+                fix.detectChanges();
+                expect(grid.rowList.first.cells.first instanceof IgxGridExpandableCellComponent).toBeTruthy();
+            });
+            it('Should keep the expand/collapse icon in the first column, even when moving a column out of first place.', () => {
+                fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
+                grid = fix.componentInstance.grid;
+                fix.detectChanges();
+                grid.moveColumn(grid.columnList.first, grid.columnList.last);
+                fix.detectChanges();
+                expect(grid.rowList.first.cells.first instanceof IgxGridExpandableCellComponent).toBeTruthy();
+            });
+        });
     });
 });
 
 @Component({
     template: `
-        <igx-grid [data]="data" [width]="width" [height]="height" [primaryKey]="'ID'" [paging]="paging" [perPage]="perPage" [rowSelectable]="rowSelectable">
+        <igx-grid [data]="data" [width]="width" [height]="height" [primaryKey]="'ID'"
+        [paging]="paging" [perPage]="perPage" [rowSelectable]="rowSelectable">
             <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width" [dataType]='c.dataType'
                 [hidden]='c.hidden' [sortable]="c.sortable" [movable]='c.movable' [groupable]='c.groupable' [editable]="c.editable"
                 [hasSummary]="c.hasSummary" [pinned]='c.pinned'>
@@ -314,12 +372,14 @@ export class DefaultGridMasterDetailComponent {
     public perPage = 15;
     public rowSelectable = false;
 
-    public onCheckboxClicked = () => {};
-
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
 
     public checkboxChanged: EventEmitter<any>;
+
+    public onCheckboxClicked() {
+
+    }
 
     public checkboxClicked(event, context) {
         this.checkboxChanged.emit({ event: event, context: context });

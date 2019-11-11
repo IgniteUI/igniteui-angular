@@ -171,10 +171,10 @@ export class GridFunctions {
         grid.expansionStates = allExpanded;
     }
 
-    public static elementInGridView(grid, element) : boolean {
+    public static elementInGridView(grid, element): boolean {
         const gridBottom = grid.tbody.nativeElement.getBoundingClientRect().bottom;
         const gridTop = grid.tbody.nativeElement.getBoundingClientRect().top;
-        return element.getBoundingClientRect().top >= gridTop &&  element.getBoundingClientRect().bottom <= gridBottom;
+        return element.getBoundingClientRect().top >= gridTop && element.getBoundingClientRect().bottom <= gridBottom;
     }
 
     public static expandMasterRowByClick = (fix, row: IgxGridRowComponent) => new Promise(async (resolve, reject) => {
@@ -494,13 +494,13 @@ export class GridFunctions {
 
     public static getAdvancedFilteringButton(fix: ComponentFixture<any>) {
         const button = GridFunctions.getToolbar(fix).queryAll(By.css('button'))
-        .find((b) => b.nativeElement.name === 'btnAdvancedFiltering');
+            .find((b) => b.nativeElement.name === 'btnAdvancedFiltering');
         return button ? button.nativeElement : undefined;
     }
 
     public static getColumnHidingButton(fixture) {
         const button = GridFunctions.getToolbar(fixture).queryAll(By.css('button'))
-        .find((b) => b.nativeElement.name === 'btnColumnHiding');
+            .find((b) => b.nativeElement.name === 'btnColumnHiding');
         return button ? button.nativeElement : undefined;
     }
 
@@ -1217,7 +1217,7 @@ export class GridFunctions {
     * The returned element is the one that has been gotten last.
     */
     public static getAdvancedFilteringTreeItem(fix: ComponentFixture<any>,
-                                               path: number[]) {
+        path: number[]) {
         let node = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
         for (let index = 0; index < path.length; index++) {
             const pos = path[index];
@@ -1357,21 +1357,21 @@ export class GridFunctions {
     public static getAdvancedFilteringClearFilterButton(fix: ComponentFixture<any>) {
         const footer = GridFunctions.getAdvancedFilteringFooter(fix);
         const clearFilterButton: any = Array.from(footer.querySelectorAll('button'))
-                                       .find((b: any) => b.innerText.toLowerCase() === 'clear filter');
+            .find((b: any) => b.innerText.toLowerCase() === 'clear filter');
         return clearFilterButton;
     }
 
     public static getAdvancedFilteringCancelButton(fix: ComponentFixture<any>) {
         const footer = GridFunctions.getAdvancedFilteringFooter(fix);
         const cancelFilterButton: any = Array.from(footer.querySelectorAll('button'))
-                                        .find((b: any) => b.innerText.toLowerCase() === 'cancel');
+            .find((b: any) => b.innerText.toLowerCase() === 'cancel');
         return cancelFilterButton;
     }
 
     public static getAdvancedFilteringApplyButton(fix: ComponentFixture<any>) {
         const footer = GridFunctions.getAdvancedFilteringFooter(fix);
         const applyFilterButton: any = Array.from(footer.querySelectorAll('button'))
-                                       .find((b: any) => b.innerText.toLowerCase() === 'apply');
+            .find((b: any) => b.innerText.toLowerCase() === 'apply');
         return applyFilterButton;
     }
 
@@ -1398,8 +1398,8 @@ export class GridFunctions {
     public static getAdvancedFilteringValueInput(fix: ComponentFixture<any>, dateType: boolean = false) {
         const editModeContainer = GridFunctions.getAdvancedFilteringEditModeContainer(fix);
         const input = dateType ?
-                    editModeContainer.querySelector('igx-date-picker').querySelector('input') :
-                    GridFunctions.sortNativeElementsHorizontally(Array.from(editModeContainer.querySelectorAll('igx-input-group')))[2];
+            editModeContainer.querySelector('igx-date-picker').querySelector('input') :
+            GridFunctions.sortNativeElementsHorizontally(Array.from(editModeContainer.querySelectorAll('igx-input-group')))[2];
         return input;
     }
 

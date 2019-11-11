@@ -20,7 +20,7 @@ import { IgxGridRowComponent } from './grid-row.component';
 import { IgxGridCommonModule } from '../grid-common.module';
 import { IgxGridSummaryPipe } from './grid.summary.pipe';
 import { IgxGridDetailsPipe } from './grid.details.pipe';
-import { IgGridExpandableCellComponent } from './expandable-cell.component';
+import { IgxGridExpandableCellComponent } from './expandable-cell.component';
 
 /**
  * @hidden
@@ -43,11 +43,11 @@ import { IgGridExpandableCellComponent } from './expandable-cell.component';
     IgxGridFilteringPipe,
     IgxGridSummaryPipe,
     IgxGridDetailsPipe,
-    IgGridExpandableCellComponent
+    IgxGridExpandableCellComponent
   ],
   exports: [
     IgxGridComponent,
-    IgGridExpandableCellComponent,
+    IgxGridExpandableCellComponent,
     IgxGridGroupByRowComponent,
     IgxGridRowComponent,
     IgxGroupByRowTemplateDirective,

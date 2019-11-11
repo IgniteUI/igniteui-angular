@@ -15,7 +15,7 @@ import { GridType } from '../common/grid.interface';
     templateUrl: 'expandable-cell.component.html',
     providers: [HammerGesturesManager]
 })
-export class IgGridExpandableCellComponent extends IgxGridCellComponent implements OnInit {
+export class IgxGridExpandableCellComponent extends IgxGridCellComponent implements OnInit {
 
     constructor(
                 selectionService: IgxGridSelectionService,
