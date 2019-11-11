@@ -24,10 +24,26 @@ All notable changes for each version of this project will be documented in this 
     - `NoopFilteringStrategy` is added, which can be used to disable the default filtering of the grid by assigning its instance to the grid's `filterStrategy` input. (Useful for remote filtering.)
     - `sortingExpressionsChange` event emitter is added, which is fired whenever a change to the sorting expressions has occurred (prior to performing the actual sorting).
     - `filteringExpressionsTreeChange` event emitter is added, which is fired whenever a change to the filtering expressions has occurred (prior to performing the actual filtering).
+    - `advancedFilteringExpressionsTreeChange` event emitter is added, which is fired whenever a change to the advanced filtering expressions has occurred (prior to performing the actual filtering).
+- `IgxGridExcelStyleFilteringComponent` and `IgxAdvancedFilteringDialogComponent` can now be hosted outside of the grid in order to provide the same experience as the built-in filtering UI.
 - `IgxOverlayService`:
     - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
 - `IgxToggleDirective`:
     - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
+- `IgxRowDragGhost` directive is added. It allows providing a custom template for the drag ghost when dragging a row.
+```html
+    <igx-grid #grid1 [data]="remote | async" primaryKey="ProductID"
+        [rowDraggable]="true">
+        <igx-column field="ProductName"></igx-column>
+        <igx-column field="ProductID"></igx-column>
+        <igx-column field="UnitsInStock"></igx-column>
+        <ng-template let-data igxRowDragGhost>
+            <div>
+                Moving {{data.ProductName}}!
+            </div>
+        </ng-template>
+    </igx-grid>
+```
 
 ## 8.2.6
 
