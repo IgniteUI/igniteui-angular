@@ -292,10 +292,6 @@
         fill: --var($theme, 'text-color');
     }
 
-    %circular-text--hidden {
-        visibility: hidden;
-    }
-
     @include keyframes('indeterminate-accordion') {
         50% {
             stroke-dashoffset: 260;
