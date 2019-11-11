@@ -89,6 +89,7 @@ import { GridFlexSampleComponent } from './grid-flex-layout/grid-flex.sample';
 import { GridEsfLoadOnDemandComponent } from './grid-esf-load-on-demand/grid-esf-load-on-demand.component';
 import { GridFilteringComponent } from './grid-filtering/grid-filtering.sample';
 import { GridExternalFilteringComponent } from './grid-external-filtering/grid-external-filtering.sample';
+import { DateRangeSampleComponent } from './date-range/date-range.sample';
 
 const appRoutes = [
     {
@@ -437,6 +438,10 @@ const appRoutes = [
     {
         path: 'gridExternalFiltering',
         component: GridExternalFilteringComponent
+    },
+    {
+        path: 'dateRange',
+        component: DateRangeSampleComponent
     }
 ];
 
