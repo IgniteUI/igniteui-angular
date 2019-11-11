@@ -20,7 +20,7 @@
 
 <div class="igx-tick__group" *ngFor="let n of [].constructor(ticksLength); let idx=index" [ngClass]="{ 'igx-tick__primary-group': isPrimary(idx)}">
     <div class="igx-tick"></div>
-    <span class="igx-tick__label">
+    <span class="igx-tick__label igx-tick__label" [ngClass]="{ 'igx-tick__label--hidden': !hiddenTickLabels(idx)}">
         <ng-container *ngTemplateOutlet="tickLabelTemplateRef ? tickLabelTemplateRef : tickLabelDefaultTemplate; context: context(idx)"></ng-container>
     </span>
 </div>

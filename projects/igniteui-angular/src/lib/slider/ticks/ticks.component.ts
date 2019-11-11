@@ -65,6 +65,14 @@ export class IgxTicksComponent {
     }
 
     /**
+     * @hidden
+     */
+    @HostBinding('class')
+    public get labelsOrientationClass() {
+        return `igx-ticks__label--${TickLabelsOrientation[this.tickLabelsOrientation]}`;
+    }
+
+    /**
      * Returns the template context corresponding to
      * {@link IgxTickLabelTemplateDirective}
      *
@@ -148,9 +156,9 @@ export class IgxTicksComponent {
     //     return this.ticksOrientation === TicksOrientation.top ? - (yOffset - trackHeight) : yOffset;
     // }
 
-    // public hiddenTickLabels(idx: number) {
-    //     return this.isPrimary(idx) ? this.primaryTickLabels : this.secondaryTickLabels;
-    // }
+    public hiddenTickLabels(idx: number) {
+        return this.isPrimary(idx) ? this.primaryTickLabels : this.secondaryTickLabels;
+    }
 
     /**
      * @hidden
