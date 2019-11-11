@@ -171,6 +171,12 @@ export class GridFunctions {
         grid.expansionStates = allExpanded;
     }
 
+    public static elementInGridView(grid, element) : boolean {
+        const gridBottom = grid.tbody.nativeElement.getBoundingClientRect().bottom;
+        const gridTop = grid.tbody.nativeElement.getBoundingClientRect().top;
+        return element.getBoundingClientRect().top >= gridTop &&  element.getBoundingClientRect().bottom <= gridBottom;
+    }
+
     public static expandMasterRowByClick = (fix, row: IgxGridRowComponent) => new Promise(async (resolve, reject) => {
         const icon = row.element.nativeElement.querySelector('igx-icon');
         UIInteractions.clickElement(icon.parentElement);
