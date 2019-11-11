@@ -129,11 +129,59 @@ describe('IgxGrid Master Detail', () => {
             });
         });
     });
+
+    describe('Integration', () => {
+        configureTestSuite();
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    DefaultGridMasterDetailComponent
+                ],
+                imports: [IgxGridModule, NoopAnimationsModule]
+            }).compileComponents();
+        }));
+
+        describe('Paging', () => {
+            it('Should not take into account expanded detail views as additional records.', () => {
+                fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
+                fix.componentInstance.paging = true;
+                grid = fix.componentInstance.grid;
+                fix.detectChanges();
+                const initialTotalRecords = grid.pagingState.metadata.countRecords;
+                grid.expand(fix.componentInstance.data[0].ID);
+                fix.detectChanges();
+                expect(grid.pagingState.metadata.countRecords).toEqual(initialTotalRecords);
+            });
+
+            it('Should persist template state after paging to a page with fewer records and paging back.', () => {
+                fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
+                fix.componentInstance.paging = true;
+                fix.componentInstance.perPage = 5;
+                grid = fix.componentInstance.grid;
+                fix.detectChanges();
+                grid.expand(fix.componentInstance.data[4].ID);
+                fix.detectChanges();
+                // click the template checkbox
+                let checkbox = fix.debugElement.query(By.css('.igx-checkbox__input'));
+                checkbox.nativeElement.click();
+                fix.detectChanges();
+                // go to last page that doesn't contain this view
+                grid.page = grid.pagingState.metadata.countPages - 1;
+                fix.detectChanges();
+                // go back to first page
+                grid.page = 0;
+                fix.detectChanges();
+                // check checkbox state
+                checkbox = fix.debugElement.query(By.css('.igx-checkbox__input'));
+                expect(checkbox.nativeElement.attributes['aria-checked'].value).toEqual('true');
+            });
+        });
+    });
 });
 
 @Component({
     template: `
-        <igx-grid [data]="data" [width]="width" [height]="height" [primaryKey]="'ID'" [paging]="paging" [rowSelectable]="rowSelectable">
+        <igx-grid [data]="data" [width]="width" [height]="height" [primaryKey]="'ID'" [paging]="paging" [perPage]="perPage" [rowSelectable]="rowSelectable">
             <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width" [dataType]='c.dataType'
                 [hidden]='c.hidden' [sortable]="c.sortable" [movable]='c.movable' [groupable]='c.groupable' [editable]="c.editable"
                 [hasSummary]="c.hasSummary" [pinned]='c.pinned'>
@@ -162,7 +210,10 @@ export class DefaultGridMasterDetailComponent {
         { field: 'CompanyName', width: 400, dataType: 'string' }
     ];
     public paging = false;
+    public perPage = 15;
     public rowSelectable = false;
+
+    public onCheckboxClicked = () => {};
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
