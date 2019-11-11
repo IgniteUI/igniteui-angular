@@ -140,9 +140,9 @@ import 'core-js/es6/set';
 import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
 `;
 
-    tree.create('testSrc/polyfills.ts', polyfills);
+    tree.create(`${sourceRoot}/polyfills.ts`, polyfills);
     runner.runSchematic('ng-add', { polyfills: true, normalizeCss: false }, tree);
-    expect(tree.readContent('testSrc/polyfills.ts').replace(/\r\n/g, '\n')).toEqual(result.replace(/\r\n/g, '\n'));
+    expect(tree.readContent(`${sourceRoot}/polyfills.ts`).replace(/\r\n/g, '\n')).toEqual(result.replace(/\r\n/g, '\n'));
   });
 
   it('should properly add css reset', () => {
@@ -204,7 +204,7 @@ import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
    * that is built with AngularCLI v7.3 or above. All else are considered below v7.3.
    */
   it('should enable es5BrowserSupport on projects with ng cli version >= 7.3', () => {
-    tree.create('testSrc/polyfills.ts', '');
+    tree.create(`${sourceRoot}/polyfills.ts`, '');
     const newJson: any = JSON.parse(tree.read('/angular.json').toString());
     newJson.projects['testProj'].architect.build.options['es5BrowserSupport'] = false;
     tree.overwrite('/angular.json', JSON.stringify(newJson));
@@ -228,11 +228,11 @@ import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
 import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
     `;
 
-    tree.create('testSrc/polyfills.ts', polyfills);
+    tree.create(`${sourceRoot}/polyfills.ts`, polyfills);
     const newJson: any = JSON.parse(tree.read('/angular.json').toString());
     newJson.projects['testProj'].architect.build.options['es5BrowserSupport'] = false;
     tree.overwrite('/angular.json', JSON.stringify(newJson));
     runner.runSchematic('ng-add', { polyfills: true }, tree);
-    expect(tree.readContent('testSrc/polyfills.ts').replace(/\r\n/g, '\n')).toEqual(result.replace(/\r\n/g, '\n'));
+    expect(tree.readContent(`${sourceRoot}/polyfills.ts`).replace(/\r\n/g, '\n')).toEqual(result.replace(/\r\n/g, '\n'));
   });
 });
