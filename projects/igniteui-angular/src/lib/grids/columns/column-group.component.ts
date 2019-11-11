@@ -207,8 +207,8 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
             this.children.forEach(child => child.hidden = value);
         } else {
             this.children.forEach(c =>  {
-                if (c.visibleOnCollapse === undefined) {c.hidden = false; return; }
-                c.hidden = this.expand ? c.visibleOnCollapse : !c.visibleOnCollapse;
+                if (c.visibleWhenCollapse === undefined) {c.hidden = false; return; }
+                c.hidden = this.expand ? c.visibleWhenCollapse : !c.visibleWhenCollapse;
             });
         }
     }
@@ -241,7 +241,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
             child.parent = this;
         });
         if (this.collapsible) {
-            const cols = this.children.map(child => child.visibleOnCollapse);
+            const cols = this.children.map(child => child.visibleWhenCollapse);
             if (!(cols.some(c => c === true) && cols.some(c => c === false))) {
                 this.collapsible = false;
                 return;
