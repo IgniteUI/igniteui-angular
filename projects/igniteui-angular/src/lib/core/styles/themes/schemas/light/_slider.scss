@@ -27,6 +27,18 @@ $_light-slider: extend(
     (
         variant: 'material',
 
+        tick-color:  (
+            igx-color: ('grays', 400)
+        ),
+
+        tick-label-color:  (
+            igx-color: ('grays', 400)
+        ),
+
+        tick-label-color-tall:  (
+            igx-color: ('grays', 800)
+        ),
+
         track-color: (
             igx-color: ('secondary', 500)
         ),

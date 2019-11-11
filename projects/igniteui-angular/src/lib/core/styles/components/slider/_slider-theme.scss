@@ -44,7 +44,10 @@
     $thumb-disabled-border-color: null,
     $track-hover-color: null,
     $thumb-hover-color: null,
-    $base-track-hover-color: null
+    $base-track-hover-color: null,
+    $tick-label-color: null,
+    $tick-label-color-tall: null,
+    $tick-color: null,
 ) {
     $name: 'igx-slider';
     $slider-schema: ();
@@ -75,7 +78,10 @@
         disabled-base-track-color: $disabled-base-track-color,
         thumb-border-color: $thumb-border-color,
         thumb-disabled-border-color: $thumb-disabled-border-color,
-        base-track-hover-color: $base-track-hover-color
+        base-track-hover-color: $base-track-hover-color,
+        tick-label-color: $tick-label-color,
+        tick-label-color-tall: $tick-label-color-tall,
+        tick-color: $tick-color,
     ));
 }
 
@@ -95,6 +101,13 @@
         material: 2px,
         fluent: 4px
     ), map-get($theme, variant));
+
+    // Slide ticks
+    $tick-push: rem(4px);
+    $base-tick-height: rem(8px);
+    $tick-height: $base-tick-height;
+    $tick-height--tall: $base-tick-height * 2;
+    $tick-width: rem(2px);
 
     $thumb-border-width: map-get((
         material: 0,
@@ -167,7 +180,7 @@
     }
 
     %igx-slider-track {
-        position: absolute;
+        position: relative;
         width: 100%;
         height: rem($slider-track-height);
         background: --var($theme, 'base-track-color');
@@ -176,20 +189,6 @@
 
     %igx-slider-track--disabled {
         background: --var($theme, 'disabled-base-track-color');
-    }
-
-    %igx-slider-track-ticks {
-        position: absolute;
-        width: 100%;
-        height: rem($slider-track-height);
-        background-size: 100% em($slider-track-height);
-        opacity: .85;
-        transition: opacity .2s $ease-out-quad;
-        z-index: 1;
-    }
-
-    %igx-slider-track-ticks--disabled {
-        visibility: hidden;
     }
 
     %igx-slider-track-fill {
@@ -204,6 +203,80 @@
     %igx-slider-track-fill--disabled {
         visibility: hidden;
     }
+
+    %igx-slider__ticks {
+        width: 100%;
+        display: flex;
+        position: absolute;
+        top: $tick-push;
+        justify-content: space-between;
+        z-index: 1;
+
+        &%igx-slider__ticks--top {
+            bottom: $tick-push;
+            top: auto;
+            align-items: flex-end;
+        }
+    }
+
+    %igx-slider__ticks-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+    }
+
+    %igx-slider__ticks-label {
+        color: --var($theme, 'tick-label-color');
+        position: absolute;
+        top: calc(#{$tick-height} + #{rem(2px)});
+    }
+
+    %igx-slider__ticks-tick {
+        background: --var($theme, 'tick-color');
+        height: $tick-height;
+        width: $tick-width;
+    }
+
+    %igx-slider__ticks--tall {
+        %igx-slider__ticks-label {
+            top: calc(#{$tick-height--tall} + #{rem(2px)});
+        }
+    }
+
+    %igx-slider__ticks-group--tall {
+        %igx-slider__ticks-tick {
+            height: $tick-height--tall;
+        }
+
+        %igx-slider__ticks-label {
+            color: --var($theme, 'tick-label-color-tall');
+        }
+    }
+
+
+    %igx-slider__ticks--top {
+        %igx-slider__ticks-label {
+            bottom: calc(#{$tick-height} + #{rem(2px)});
+            top: auto;
+        }
+
+        &%igx-slider__ticks--tall {
+            %igx-slider__ticks-label {
+                bottom: calc(#{$tick-height--tall} + #{rem(2px)});
+                top: auto;
+            }
+        }
+    }
+
+    %igx-slider__ticks--disabled {
+        visibility: hidden;
+    }
+
+
+
+
+
 
     %igx-thumb-display {
         position: absolute;

@@ -4,12 +4,6 @@ import { TicksOrientation, TickLabelsOrientation } from '../slider.common';
 @Component({
     selector: 'igx-ticks',
     templateUrl: 'ticks.component.html',
-    styles: [`
-        :host {
-            position: absolute;
-            height: 100px;
-        }
-    }`]
 })
 export class IgxTicksComponent {
     @Input()
@@ -45,13 +39,13 @@ export class IgxTicksComponent {
     /**
      * @hidden
      */
-    @HostBinding('class.igx-ticks')
+    @HostBinding('class.igx-slider__ticks')
     public ticksClass = true;
 
     /**
      * @hidden
      */
-    @HostBinding('class.igx-ticks__top')
+    @HostBinding('class.igx-slider__ticks--top')
     public get ticksTopClass() {
         return this.ticksOrientation === TicksOrientation.top;
     }
@@ -59,7 +53,7 @@ export class IgxTicksComponent {
     /**
      * @hidden
      */
-    @HostBinding('class.igx-ticks__has-primary')
+    @HostBinding('class.igx-slider__ticks--tall')
     public get hasPrimaryClass() {
         return this.primaryTicks > 0;
     }
@@ -67,9 +61,25 @@ export class IgxTicksComponent {
     /**
      * @hidden
      */
-    @HostBinding('class')
-    public get labelsOrientationClass() {
-        return `igx-ticks__label--${TickLabelsOrientation[this.tickLabelsOrientation]}`;
+    @HostBinding('class.igx-slider__tick-labels--horizontal')
+    public get labelsHorizontalClass() {
+        return this.tickLabelsOrientation === TickLabelsOrientation.horizontal;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-slider__tick-labels--toptobottom')
+    public get labelsTopToBottomClass() {
+        return this.tickLabelsOrientation === TickLabelsOrientation.toptobottom;
+    }
+
+    /**
+     * @hidden
+     */
+    @HostBinding('class.igx-slider__tick-labels--bottomtotop')
+    public get labelsBottomToTopClass() {
+        return this.tickLabelsOrientation === TickLabelsOrientation.bottomtotop;
     }
 
     /**
