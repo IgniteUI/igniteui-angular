@@ -73,8 +73,10 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     }
 
     public itemIsInvisible(selectFit: SelectFit) {
-        return selectFit.itemElement.getBoundingClientRect().top >= selectFit.dropDownList.getBoundingClientRect().bottom ||
-               selectFit.itemElement.getBoundingClientRect().bottom <= selectFit.dropDownList.getBoundingClientRect().top;
+        return Math.round(selectFit.itemElement.getBoundingClientRect().top * 100) / 100 >=
+        Math.round(selectFit.dropDownList.getBoundingClientRect().bottom * 100) / 100 ||
+        Math.round(selectFit.itemElement.getBoundingClientRect().bottom * 100) / 100 <=
+        Math.round(selectFit.dropDownList.getBoundingClientRect().top * 100) / 100 ;
     }
 
     private manageScrollToItem(selectFit: SelectFit) {
