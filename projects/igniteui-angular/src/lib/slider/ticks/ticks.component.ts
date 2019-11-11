@@ -12,10 +12,6 @@ import { TicksOrientation, TickLabelsOrientation } from '../slider.common';
     }`]
 })
 export class IgxTicksComponent {
-    private _primaryTicksWidth = 16;
-    private _secondaryTicksWidth = 8;
-    private _defaultTickYOffset = 4;
-
     @Input()
     public primaryTicks: number;
 
@@ -33,12 +29,6 @@ export class IgxTicksComponent {
 
     @Input()
     public tickLabelsOrientation: TickLabelsOrientation;
-
-    @Input()
-    public ticksContainer: number;
-
-    @Input()
-    public track: ElementRef;
 
     @Input()
     public maxValue: number;
