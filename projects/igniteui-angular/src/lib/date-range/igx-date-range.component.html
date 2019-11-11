@@ -1,0 +1,24 @@
+<!-- TODO: remove all styling -->
+<div igxToggle>
+    <igx-calendar #calendar (keydown)="onKeyDown($event)" selection="range" [weekStart]="weekStart"
+        [hideOutsideDays]="hideOutsideDays" [monthsViewNumber]="monthsViewNumber"
+        (onSelection)="handleSelection($event)"></igx-calendar>
+    <div>
+        <button igxButton (click)="showToday($event)">Today</button>
+    </div>
+</div>
+
+<ng-container *ngTemplateOutlet="defTemplate"></ng-container>
+
+<ng-template #defTemplate>
+    <div (click)="showCalendar($event)">
+        <div class="content-wrap">
+            <div style="display: flex; flex-flow: row;">
+                <ng-content select="igx-input-group"></ng-content>
+            </div>
+            <ng-content select="[igxDateRangeStart]"></ng-content>
+            <ng-content select="[igxDateRangeEnd]"></ng-content>
+            <ng-content select="[igxDateRange]"></ng-content>
+        </div>
+    </div>
+</ng-template>
