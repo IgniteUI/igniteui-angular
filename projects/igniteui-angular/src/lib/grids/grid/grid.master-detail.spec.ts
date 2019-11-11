@@ -295,8 +295,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(targetCellElement.focused).toBeTruthy();
          });
 
-        // TODO: fix bug
-        xit(`Should expand and collapse using Alt + Right/Down and Alt + Left/Up
+        it(`Should expand and collapse using Alt + Right/Down and Alt + Left/Up
             at the bottom of the grid without losing focus.`, async() => {
             // navigate to last
             grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
