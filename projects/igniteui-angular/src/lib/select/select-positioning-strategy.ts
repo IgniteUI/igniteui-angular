@@ -73,10 +73,16 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     }
 
     public itemIsInvisible(selectFit: SelectFit) {
+        // selected item is completely invisible
         return Math.round(selectFit.itemElement.getBoundingClientRect().top * 100) / 100 >=
         Math.round(selectFit.dropDownList.getBoundingClientRect().bottom * 100) / 100 ||
         Math.round(selectFit.itemElement.getBoundingClientRect().bottom * 100) / 100 <=
-        Math.round(selectFit.dropDownList.getBoundingClientRect().top * 100) / 100 ;
+        Math.round(selectFit.dropDownList.getBoundingClientRect().top * 100) / 100 ||
+        // selected item is partially invisible at ddl bottom
+        Math.round(selectFit.itemElement.getBoundingClientRect().top * 100) / 100 <=
+        (selectFit.dropDownList.getBoundingClientRect().bottom * 100) / 100 &&
+        Math.round(selectFit.itemElement.getBoundingClientRect().bottom * 100) / 100 >=
+        (selectFit.dropDownList.getBoundingClientRect().bottom * 100) / 100;
     }
 
     private manageScrollToItem(selectFit: SelectFit) {
