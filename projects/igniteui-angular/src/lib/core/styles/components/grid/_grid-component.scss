@@ -205,6 +205,18 @@
         @extend %grid-cell-header !optional;
     }
 
+    @include e(th-expander) {
+        @extend %igx-grid__th-expander !optional
+    }
+
+    @include e(th-group-title) {
+        @extend %igx-grid__th-group-title !optional
+    }
+
+    @include e(th, $m: collapsible) {
+        @extend %igx-grid__th--collapsible !optional;
+    }
+
     @include e(th, $m: sortable) {
         @extend %igx-grid__th--sortable !optional;
     }
