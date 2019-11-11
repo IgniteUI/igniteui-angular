@@ -132,6 +132,7 @@ import { IgxGridToolbarCustomContentDirective } from './toolbar/toolbar.directiv
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGridSortingStrategy } from '../data-operations/sorting-strategy';
+import { IgxRowDragGhostDirective  } from './row-drag.directive';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -346,6 +347,23 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public filteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
 
     /**
+     * Emitted before advanced filtering is performed.
+     * Returns the advanced filtering expressions tree.
+     * ```typescript
+     * advancedFilteringExprTreeChange(event: IFilteringExpressionsTree){
+     *     const filteringTree = event;
+     * }
+     * ```
+     * ```html
+     * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true"
+     *           (advancedFilteringExpressionsTreeChange)="advancedFilteringExprTreeChange($event)"></igx-grid>
+     * ```
+     * @memberof IgxGridBaseDirective
+     */
+    @Output()
+    public advancedFilteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
+
+    /**
      * Returns the advanced filtering state of `IgxGridComponent`.
      * ```typescript
      * let advancedFilteringExpressionsTree = this.grid.advancedFilteringExpressionsTree;
@@ -388,6 +406,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         } else {
             this._advancedFilteringExpressionsTree = null;
         }
+        this.advancedFilteringExpressionsTreeChange.emit(this._advancedFilteringExpressionsTree);
 
         if (this.filteringService.isFilteringExpressionsTreeEmpty() && !this.advancedFilteringExpressionsTree) {
             this.filteredData = null;
@@ -1896,6 +1915,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden
+     * @internal
+     */
+    @ContentChildren(IgxRowDragGhostDirective, { read: TemplateRef, descendants: false })
+    public dragGhostCustomTemplates: QueryList<TemplateRef<any>>;
+
+    /**
+     * @hidden
      */
     @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective, static: true })
     public verticalScrollContainer: IgxGridForOfDirective<any>;
@@ -2941,7 +2967,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             if (this._advancedFilteringOverlayId === event.id) {
                 const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
                 if (instance) {
-                    instance.initialize(this.filteringService, this.overlayService, event.id);
+                    instance.initialize(this, this.overlayService, event.id);
                 }
             }
         });
@@ -3147,6 +3173,18 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.resetNotifyChanges();
             this.cdr.detectChanges();
         }
+    }
+
+    /**
+     * @hidden
+     * @internal
+    */
+    public getDragGhostCustomTemplate() {
+        if (this.dragGhostCustomTemplates && this.dragGhostCustomTemplates.first) {
+            return this.dragGhostCustomTemplates.first;
+        }
+
+        return null;
     }
 
     /**

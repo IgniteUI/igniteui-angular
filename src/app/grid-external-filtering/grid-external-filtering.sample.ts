@@ -1,15 +1,15 @@
-import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { IgxGridComponent, FilteringExpressionsTree, IgxStringFilteringOperand,
     FilteringLogic, IgxCheckboxComponent, IChangeCheckboxEventArgs } from 'igniteui-angular';
 import { FilterMode } from 'projects/igniteui-angular/src/lib/grids/common/enums';
 
 @Component({
     providers: [],
-    selector: 'app-grid-filtering-sample',
-    styleUrls: ['grid-filtering.sample.css'],
-    templateUrl: 'grid-filtering.sample.html'
+    selector: 'app-grid-external-filtering-sample',
+    styleUrls: ['grid-external-filtering.sample.css'],
+    templateUrl: 'grid-external-filtering.sample.html'
 })
-export class GridFilteringComponent implements OnInit, AfterViewInit {
+export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
 
     public data: Array<any>;
     public columns: Array<any>;
@@ -22,6 +22,9 @@ export class GridFilteringComponent implements OnInit, AfterViewInit {
 
     @ViewChild('applyChangesCheckbox', { static: true })
     public applyChangesCheckbox: IgxCheckboxComponent;
+
+    constructor(private cdr: ChangeDetectorRef) {
+    }
 
     ngAfterViewInit(): void {
         const tree = new FilteringExpressionsTree(FilteringLogic.And);
@@ -53,6 +56,7 @@ export class GridFilteringComponent implements OnInit, AfterViewInit {
         });
 
         this.grid1.advancedFilteringExpressionsTree = tree;
+        this.cdr.detectChanges();
     }
 
     public ngOnInit(): void {
@@ -534,6 +538,7 @@ export class GridFilteringComponent implements OnInit, AfterViewInit {
         const filterMode = this.filterModes[event.index].value as FilterMode;
         if (filterMode !== this.grid1.filterMode) {
             this.grid1.filterMode = filterMode;
+            this.grid1.reflow();
         }
     }
 
@@ -551,5 +556,6 @@ export class GridFilteringComponent implements OnInit, AfterViewInit {
 
     public onAllowFilteringChanged(event: IChangeCheckboxEventArgs) {
         this.grid1.allowFiltering = event.checked;
+        this.grid1.reflow();
     }
 }

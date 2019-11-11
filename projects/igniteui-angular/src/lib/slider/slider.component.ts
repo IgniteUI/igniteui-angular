@@ -91,7 +91,6 @@ export class IgxSliderComponent implements
     // ticks
     private _primaryTicks = 0;
     private _secondaryTicks = 0;
-    private _ticksContainer = 0;
 
     private _labels = new Array<number|string|boolean|null|undefined>();
     private _type = SliderType.SLIDER;
@@ -99,8 +98,6 @@ export class IgxSliderComponent implements
     private _destroyer$ = new Subject<boolean>();
     private _indicatorsDestroyer$ = new Subject<boolean>();
     private _indicatorsTimer: Observable<any>;
-    private _observer: ResizeObserver;
-    private _resizeNotify = new Subject();
 
     private _onChangeCallback: (_: any) => void = noop;
     private _onTouchedCallback: () => void = noop;
@@ -144,14 +141,6 @@ export class IgxSliderComponent implements
      */
     @ViewChild('track', { static: true })
     public trackRef: ElementRef;
-
-
-    /**
-     * @hidden
-     */
-    public get ticksContainer() {
-        return this._ticksContainer;
-    }
 
     /**
      * @hidden
@@ -944,12 +933,7 @@ export class IgxSliderComponent implements
      */
     public ngOnInit() {
         this.sliderSetup();
-        this._resizeNotify.pipe(takeUntil(this._destroyer$))
-            .subscribe(() => {
-                this._zone.run(() => {
-                    this.notifyChanges();
-                });
-            });
+
         // Set track travel zone
         this._pMin = this.valueToFraction(this.lowerBound) || 0;
         this._pMax = this.valueToFraction(this.upperBound) || 1;
@@ -974,11 +958,6 @@ export class IgxSliderComponent implements
             this.subscribeTo(thumbFrom, this.thumbChanged.bind(this));
             this.changeThumbFocusableState(this.disabled);
         });
-
-        this._zone.runOutsideAngular(() => {
-            this._observer = new ResizeObserver(() => this._resizeNotify.next());
-            this._observer.observe(this._el.nativeElement);
-        })
     }
 
     /**
@@ -1377,15 +1356,6 @@ export class IgxSliderComponent implements
 
     private emitValueChanged(oldValue: number | IRangeSliderValue) {
         this.onValueChange.emit({ oldValue, value: this.value });
-    }
-
-    /**
-     * @hidden
-     * resizeObesrver callback
-     */
-    private notifyChanges() {
-        this._ticksContainer = this._el.nativeElement.getBoundingClientRect().width;
-        this._cdr.markForCheck();
     }
 }
 
