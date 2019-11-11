@@ -34,6 +34,10 @@
         @include m('compact') {
             @extend %advanced-filter--compact !optional;
         }
+
+        @include m('inline') {
+            @extend %advanced-filter--inline !optional;
+        }
     }
 }
 
