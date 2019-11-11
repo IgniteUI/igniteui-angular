@@ -842,7 +842,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     */
     @HostListener('swiperight')
     public swipeRight() {
-        this.next();
+        this.prev();
     }
 }
 

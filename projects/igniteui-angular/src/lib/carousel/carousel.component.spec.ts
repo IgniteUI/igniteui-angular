@@ -30,7 +30,8 @@ describe('Carousel', () => {
                 CarouselTestComponent,
                 CarouselTemplateSetInMarkupTestComponent,
                 CarouselTemplateSetInTypescriptTestComponent,
-                CarouselAnimationsComponent
+                CarouselAnimationsComponent,
+                CarouselDynamicSlidesComponent
             ],
             imports: [IgxCarouselModule, NoopAnimationsModule]
         })
@@ -426,7 +427,7 @@ describe('Carousel', () => {
             expect(carousel.onSlideChanged.emit).toHaveBeenCalledTimes(1);
         });
 
-        it('should stop/play on mouse enter/leave', () => {
+        it('should stop/play on mouse enter/leave and on tab key', () => {
             carousel.interval = 1000;
             carousel.play();
             fixture.detectChanges();
@@ -448,6 +449,18 @@ describe('Carousel', () => {
             expect(carousel.isPlaying).toBeTruthy();
             expect(carousel.onCarouselPlaying.emit).toHaveBeenCalledTimes(1);
             expect(carousel.onCarouselPaused.emit).toHaveBeenCalledTimes(1);
+
+            UIInteractions.triggerKeyDownEvtUponElem('Tab', carousel.nativeElement, true);
+            fixture.detectChanges();
+
+            expect(carousel.isPlaying).toBeFalsy();
+            expect(carousel.onCarouselPaused.emit).toHaveBeenCalledTimes(2);
+
+            UIInteractions.triggerKeyDownEvtUponElem('Tab', carousel.nativeElement, true);
+            fixture.detectChanges();
+            expect(carousel.isPlaying).toBeTruthy();
+            expect(carousel.onCarouselPlaying.emit).toHaveBeenCalledTimes(2);
+            expect(carousel.onCarouselPaused.emit).toHaveBeenCalledTimes(2);
         });
     });
 
@@ -566,6 +579,96 @@ describe('Carousel', () => {
             expect(carousel.get(0).nativeElement.classList.contains(HelperTestFunctions.PREVIOUS_SLIDE_CLASS)).toBeFalsy();
         });
     });
+
+    describe('Dynamic Slides: ', () => {
+        let slides;
+        beforeEach(() => {
+            fixture = TestBed.createComponent(CarouselDynamicSlidesComponent);
+            fixture.detectChanges();
+            carousel = fixture.componentInstance.carousel;
+            slides = fixture.componentInstance.slides;
+        });
+
+        it('should activate slide when change its property active', fakeAsync(() => {
+            tick();
+            // Verify 3th slide is active
+            HelperTestFunctions.verifyActiveSlide(carousel, 2);
+
+            // Change active slide
+            slides[0].active = true;
+            fixture.detectChanges();
+
+            HelperTestFunctions.verifyActiveSlide(carousel, 0);
+        }));
+
+        it('should add slides to the carousel when collection is changed',  fakeAsync(() => {
+            tick();
+            spyOn(carousel.onSlideAdded, 'emit');
+
+            // add a slide
+            slides.push({text: 'Slide 5'});
+            fixture.detectChanges();
+
+            HelperTestFunctions.verifyActiveSlide(carousel, 2);
+            expect(carousel.total).toEqual(5);
+
+            // add an active slide
+            slides.push({text: 'Slide 6', active: true});
+            fixture.detectChanges();
+            tick(100);
+
+            HelperTestFunctions.verifyActiveSlide(carousel, 5);
+            expect(carousel.total).toEqual(6);
+
+            expect(carousel.onSlideAdded.emit).toHaveBeenCalledTimes(2);
+        }));
+
+        it('should remove slides in the carousel',  fakeAsync(() => {
+            tick();
+            spyOn(carousel.onSlideRemoved, 'emit');
+
+            // remove a slide
+            slides.pop();
+            fixture.detectChanges();
+
+            HelperTestFunctions.verifyActiveSlide(carousel, 2);
+            expect(carousel.total).toEqual(3);
+
+            // remove active slide
+            slides.pop();
+            fixture.detectChanges();
+            tick(200);
+            fixture.detectChanges();
+
+            expect(carousel.total).toEqual(2);
+            HelperTestFunctions.verifyActiveSlide(carousel, 1);
+
+            expect(carousel.onSlideRemoved.emit).toHaveBeenCalledTimes(2);
+        }));
+
+        it('should not render navigation buttons and indicators when carousel does not have slides',  fakeAsync(() => {
+            fixture.componentInstance.removeAllSlides();
+            fixture.detectChanges();
+            tick(200);
+
+            expect(carousel.total).toEqual(0);
+            expect(HelperTestFunctions.getIndicatorsContainer(fixture)).toBeNull();
+            expect(HelperTestFunctions.getIndicatorsContainer(fixture, CarouselIndicatorsOrientation.top)).toBeNull();
+            expect(HelperTestFunctions.getNextButton(fixture).hidden).toBeTruthy();
+            expect(HelperTestFunctions.getPreviousButton(fixture).hidden).toBeTruthy();
+
+             // add a slide
+             fixture.componentInstance.addSlides();
+             fixture.detectChanges();
+             tick(200);
+
+             expect(carousel.total).toEqual(2);
+             expect(HelperTestFunctions.getIndicatorsContainer(fixture)).toBeDefined();
+            expect(HelperTestFunctions.getIndicatorsContainer(fixture, CarouselIndicatorsOrientation.top)).toBeDefined();
+            expect(HelperTestFunctions.getNextButton(fixture).hidden).toBeFalsy();
+            expect(HelperTestFunctions.getPreviousButton(fixture).hidden).toBeFalsy();
+        }));
+    });
 });
 
 class HelperTestFunctions {
@@ -652,10 +755,6 @@ class CarouselTestComponent {
 })
 class CarouselAnimationsComponent {
     @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
-
-    public loop = true;
-    public pause = true;
-    public interval = 2500;
 }
 
 
@@ -702,4 +801,44 @@ class CarouselTemplateSetInTypescriptTestComponent {
     public customIndicatorTemplate1;
     @ViewChild('customIndicatorTemplate2', { read: TemplateRef, static: false })
     public customIndicatorTemplate2;
+}
+
+@Component({
+    template: `
+        <igx-carousel #carousel [loop]="loop" [animationType]="'none'">
+            <igx-slide *ngFor="let slide of slides;" [active]="slide.active">
+               <igx-slide><h3>{{slide.text}}</h3></igx-slide>
+            </igx-slide>
+        </igx-carousel>
+    `
+})
+class CarouselDynamicSlidesComponent {
+    @ViewChild('carousel', { static: true }) public carousel: IgxCarouselComponent;
+
+    public loop = true;
+    public slides = [];
+
+    constructor() {
+        this.addNewSlide();
+    }
+
+    addNewSlide() {
+        this.slides.push(
+            {text: 'Slide 1', active: false},
+            {text: 'Slide 2', active: false},
+            {text: 'Slide 3', active: true},
+            {text: 'Slide 4', active: false}
+        );
+    }
+
+    public removeAllSlides() {
+        this.slides = [];
+    }
+
+    public addSlides() {
+        this.slides.push(
+            {text: 'Slide 1'},
+            {text: 'Slide 2'}
+        );
+    }
 }
