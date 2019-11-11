@@ -1,9 +1,10 @@
 import { Directive, Input, OnDestroy, NgModule } from '@angular/core';
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
-import { IRowDragEndEventArgs, IRowDragStartEventArgs } from './grid-base.component';
 import { KEYS } from '../core/utils';
 import { fromEvent, Subscription } from 'rxjs';
-import { IgxRowComponent, IgxGridBaseComponent, IGridDataBindable } from './grid';
+import { IgxRowDirective, IgxGridBaseDirective } from './grid';
+import { IRowDragStartEventArgs, IRowDragEndEventArgs } from './common/events';
+import { GridType } from './common/grid.interface';
 
 
 const ghostBackgroundClass = 'igx-grid__tr--ghost';
@@ -19,7 +20,7 @@ const cellActiveClass = 'igx-grid__td--active';
     selector: '[igxRowDrag]'
 })
 export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
-    private row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
+    private row: IgxRowDirective<IgxGridBaseDirective & GridType>;
     private subscription$: Subscription;
     private _rowDragStarted = false;
 

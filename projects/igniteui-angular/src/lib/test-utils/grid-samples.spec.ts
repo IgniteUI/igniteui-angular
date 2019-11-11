@@ -1,13 +1,14 @@
 import { Component, TemplateRef, ViewChild, Input, AfterViewInit, ChangeDetectorRef, QueryList, ViewChildren, OnInit } from '@angular/core';
 import { IgxGridCellComponent } from '../grids/cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/summaries/grid-summary';
-import { IGridCellEventArgs, IGridEditEventArgs, IgxGridTransaction } from '../grids/grid-base.component';
+import { IGridCellEventArgs, IGridEditEventArgs } from '../grids/common/events';
+import { IgxGridTransaction } from '../grids/grid-base.directive';
 import { BasicGridComponent, BasicGridSearchComponent, GridAutoGenerateComponent,
         GridNxMComponent, GridWithSizeComponent, PagingComponent } from './grid-base-components.spec';
 import { IGridSelection } from './grid-interfaces.spec';
 import { SampleTestData, DataParent } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions } from './template-strings.spec';
-import { IgxColumnComponent } from '../grids/column.component';
+import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxTransactionService } from '../services';
 import { IgxFilteringOperand } from '../data-operations/filtering-condition';
 import { ExpressionUI } from '../grids/filtering/grid-filtering.service';
@@ -15,6 +16,7 @@ import { IFilteringExpressionsTree } from '../data-operations/filtering-expressi
 import { FilteringStrategy } from '../data-operations/filtering-strategy';
 import { IgxGridComponent } from '../grids/grid';
 import { IgxRowEditTabStopDirective } from '../grids/grid.rowEdit.directive';
+import { IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/grid.excel-style-filtering.component';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -269,12 +271,12 @@ export class VirtualSummaryColumnComponent extends BasicGridComponent {
     public dateSummary = new IgxDateSummaryOperand();
 
     public scrollTop(newTop: number) {
-        const vScrollbar = this.grid.verticalScrollContainer.getVerticalScroll();
+        const vScrollbar = this.grid.verticalScrollContainer.getScroll();
         vScrollbar.scrollTop = newTop;
     }
 
     public scrollLeft(newLeft: number) {
-        const hScrollbar = this.grid.parentVirtDir.getHorizontalScroll();
+        const hScrollbar = this.grid.headerContainer.getScroll();
         hScrollbar.scrollLeft = newLeft;
     }
 }
@@ -315,7 +317,7 @@ export class DefaultSizeAndSummaryComponent extends BasicGridComponent {
     }
 
     public isHorizonatScrollbarVisible() {
-        const scrollbar = this.grid.parentVirtDir.getHorizontalScroll();
+        const scrollbar = this.grid.headerContainer.getScroll();
         return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
     }
 }
@@ -871,10 +873,10 @@ export class VirtualGridComponent extends BasicGridComponent {
         this.selectedCell = event.cell;
     }
      public scrollTop(newTop: number) {
-        this.grid.verticalScrollContainer.getVerticalScroll().scrollTop = newTop;
+        this.grid.verticalScrollContainer.getScroll().scrollTop = newTop;
     }
      public scrollLeft(newLeft: number) {
-        this.grid.parentVirtDir.getHorizontalScroll().scrollLeft = newLeft;
+        this.grid.headerContainer.getScroll().scrollLeft = newLeft;
     }
 }
  @Component({
@@ -955,6 +957,44 @@ export class IgxGridFilteringComponent extends BasicGridComponent {
     public activateFiltering(activate: boolean) {
         this.grid.allowFiltering = activate;
         this.grid.cdr.markForCheck();
+    }
+}
+
+@Component({
+    template: `
+    <igx-grid-excel-style-filtering #esf style="height: 700px; width: 350px">
+    </igx-grid-excel-style-filtering>
+    <igx-grid #grid1 [data]="data" height="500px">
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
+            [filterable]="false" [resizable]="resizable"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" [sortable]="true"
+            [filterable]="filterable" [resizable]="resizable" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [filterable]="filterable" [resizable]="resizable" dataType="boolean"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+            [filterable]="filterable" [resizable]="resizable" dataType="date">
+        </igx-column>
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
+            dataType="string" [filters]="customFilter">
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridExternalESFComponent extends BasicGridComponent implements AfterViewInit {
+    public customFilter = CustomFilter.instance();
+    public resizable = false;
+    public filterable = true;
+
+    public data = SampleTestData.excelFilteringData();
+
+    @ViewChild('esf', { read: IgxGridExcelStyleFilteringComponent, static: true })
+    public esf: IgxGridExcelStyleFilteringComponent;
+
+    constructor(private cdr: ChangeDetectorRef) {
+        super();
+    }
+
+    ngAfterViewInit(): void {
+        this.esf.column = this.grid.getColumnByName('ProductName');
     }
 }
 
@@ -1196,6 +1236,28 @@ export class IgxGridAdvancedFilteringComponent extends BasicGridComponent {
         this.grid.allowFiltering = activate;
         this.grid.cdr.markForCheck();
     }
+}
+
+@Component({
+    template: `
+    <igx-grid #grid1 [data]="data" height="400px">
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'Released'" dataType="boolean"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" dataType="date" headerClasses="header-release-date"></igx-column>
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" dataType="string" [filters]="customFilter">
+        </igx-column>
+    </igx-grid>
+    <igx-advanced-filtering-dialog [grid]="grid1">
+    </igx-advanced-filtering-dialog>`
+})
+export class IgxGridExternalAdvancedFilteringComponent extends BasicGridComponent {
+    public customFilter = CustomFilter.instance();
+    public resizable = false;
+    public filterable = true;
+
+    public data = SampleTestData.excelFilteringData();
 }
 
 @Component({

@@ -41,7 +41,14 @@
     $disable-shadow: false
 ) {
     $name: 'igx-navbar';
-    $navbar-schema: map-get($schema, $name);
+    $navbar-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $navbar-schema: map-get($schema, $name);
+    } @else {
+        $navbar-schema: $schema;
+    }
+
     $theme: apply-palette($navbar-schema, $palette);
 
     @if not($text-color) and $background {
@@ -87,6 +94,7 @@
     $navbar-title-fz: em(18px, 16px);
     $navbar-title-lh: em(18px, 16px);
     $navbar-title-margin: 0;
+    $left: if-ltr(left, right);
 
     %igx-navbar-display {
         display: flex;
@@ -113,7 +121,7 @@
         user-select: none;
 
         > * + * {
-            margin-left: 16px;
+            margin-#{$left}: 16px;
         }
     }
 

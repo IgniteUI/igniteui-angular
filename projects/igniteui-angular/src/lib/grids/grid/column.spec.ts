@@ -198,7 +198,7 @@ describe('IgxGrid - Column properties #grid', () => {
         headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
         headers.forEach((header) => expect(header.nativeElement.className.indexOf(COLUMN_NUMBER_CLASS)).toBeGreaterThan(-1));
         expect(headers[2].nativeElement.className.indexOf('headerAlignSyle')).toBeGreaterThan(-1);
-        grid.parentVirtDir.getHorizontalScroll().scrollLeft = 200;
+        grid.headerContainer.getScroll().scrollLeft = 200;
         setTimeout(() => {
             fix.detectChanges();
             headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
@@ -209,7 +209,7 @@ describe('IgxGrid - Column properties #grid', () => {
             allCells.forEach((cell) => expect(cell.nativeElement.className.indexOf(CELL_NUMBER_CLASS)).toBeGreaterThan(-1));
             expect(allCells[1].nativeElement.className.indexOf('headerAlignSyle')).toBeGreaterThan(-1);
 
-            grid.parentVirtDir.getHorizontalScroll().scrollLeft = 0;
+            grid.headerContainer.getScroll().scrollLeft = 0;
             setTimeout(() => {
                 fix.detectChanges();
                 headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
@@ -233,19 +233,19 @@ describe('IgxGrid - Column properties #grid', () => {
         fix.detectChanges();
 
         expect(grid.calcWidth).toBe(600);
-        expect(grid.columns[0].width).toBe('300');
+        expect(grid.columns[0].width).toBe('300px');
         expect(!grid.columns[0].widthSetByUser);
-        expect(grid.columns[1].width).toBe('300');
+        expect(grid.columns[1].width).toBe('300px');
         expect(!grid.columns[1].widthSetByUser);
         grid.columns[0].hidden = true;
         fix.detectChanges();
 
-        expect(grid.columns[1].width).toBe('600');
+        expect(grid.columns[1].width).toBe('600px');
         grid.columns[0].hidden = false;
         fix.detectChanges();
 
-        expect(grid.columns[0].width).toBe('300');
-        expect(grid.columns[1].width).toBe('300');
+        expect(grid.columns[0].width).toBe('300px');
+        expect(grid.columns[1].width).toBe('300px');
     });
 
     it('should support passing templates through the markup as an input property', () => {
@@ -356,6 +356,23 @@ describe('IgxGrid - Column properties #grid', () => {
 
         expect(groupRows.length).toBe(0);
         expect(grid.columns.length).toBe(4);
+    });
+
+    it('should apply custom CSS bindings to the grid cells', () => {
+        const fix = TestBed.createComponent(ColumnHaederClassesComponent);
+        fix.detectChanges();
+
+        const styles = {
+            background: 'black',
+            color: 'white'
+        };
+
+        const grid = fix.componentInstance.grid;
+        grid.columns.forEach(c => c.cellStyles = styles);
+        fix.detectChanges();
+
+        const row = grid.getRowByIndex(0);
+        row.cells.forEach(cell => expect(cell.nativeElement.getAttribute('style')).toMatch('background: black'));
     });
 });
 

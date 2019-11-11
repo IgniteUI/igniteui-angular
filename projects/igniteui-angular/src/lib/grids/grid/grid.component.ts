@@ -3,7 +3,7 @@ import {
     QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, AfterContentInit, HostBinding, forwardRef, OnInit
 } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
-import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
+import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { IgxGridAPIService } from './grid-api.service';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
@@ -14,17 +14,18 @@ import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../../chips/chip.component';
 import { IChipsAreaReorderEventArgs } from '../../chips/chips-area.component';
-import { IgxColumnComponent } from '../column.component';
+import { IgxColumnComponent } from '../columns/column.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
-import { IgxColumnResizingService } from '../grid-column-resizing.service';
+import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
-import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
+import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 import { FilterMode } from '../common/enums';
+import { GridType } from '../common/grid.interface';
 
 let NEXT_ID = 0;
 
@@ -59,15 +60,16 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxGridSelectionService,
         IgxGridCRUDService,
         { provide: GridBaseAPIService, useClass: IgxGridAPIService },
-        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxGridComponent) },
+        { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxGridComponent) },
         IgxFilteringService,
         IgxColumnResizingService,
-        IgxForOfSyncService
+        IgxForOfSyncService,
+        IgxForOfScrollSyncService
     ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
 })
-export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit, DoCheck, AfterContentInit {
+export class IgxGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit {
     private _id = `igx-grid-${NEXT_ID++}`;
     /**
      * @hidden @internal
@@ -136,7 +138,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
     }
 
     public set data(value: any[]) {
-        this._data = value;
+        this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
             this.setupColumns();

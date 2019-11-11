@@ -47,7 +47,15 @@
     $base-track-hover-color: null
 ) {
     $name: 'igx-slider';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $slider-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $slider-schema: map-get($schema, $name);
+    } @else {
+        $slider-schema: $schema;
+    }
+
+    $theme: apply-palette($slider-schema, $palette);
 
     @if not($label-text-color) and $label-background-color {
         $label-text-color: text-contrast($label-background-color);
@@ -77,6 +85,9 @@
 /// @requires --var
 @mixin igx-slider($theme) {
     @include igx-root-css-vars($theme);
+
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
 
     $slider-height: 48px;
 
@@ -186,7 +197,7 @@
         width: 100%;
         height: inherit;
         background: --var($theme, 'track-color');
-        transform-origin: left center;
+        transform-origin: #{$left} center;
         transform: scaleX(0);
     }
 

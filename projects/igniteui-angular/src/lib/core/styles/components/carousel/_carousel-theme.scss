@@ -14,7 +14,7 @@
 /// @param {Color} $indicator-dot-color [null] - The active indicator dot color.
 /// @param {Color} $indicator-border-color [null] - The idle indicator border color.
 /// @param {Color} $indicator-active-border-color [null] - The active indicator border color.
-/// @param {Bool} $disable-button-shadow [true] - Show shadow underneath the previous/next buttons.
+/// @param {box-shadow} $button-shadow [null] - Shadow underneath the previous/next buttons.
 ///
 /// @param {border-radius} $border-radius [null] - The border radius used for carousel component.
 ///
@@ -37,8 +37,10 @@
 @function igx-carousel-theme(
     $palette: $default-palette,
     $schema: $light-schema,
+    $elevations: $elevations,
 
     $border-radius: null,
+    $button-shadow: null,
 
     $button-background: null,
     $button-hover-background: null,
@@ -48,18 +50,26 @@
     $indicator-dot-color: null,
     $indicator-border-color: null,
     $indicator-active-border-color: null,
-
-    $disable-button-shadow: true
 ){
     $name: 'igx-carousel';
-    $carousel-schema: map-get($schema, $name);
+    $carousel-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $carousel-schema: map-get($schema, $name);
+    } @else {
+        $carousel-schema: $schema;
+    }
+
     $theme: apply-palette($carousel-schema, $palette);
 
     $border-radius: round-borders(
         if($border-radius, $border-radius, map-get($carousel-schema, 'border-radius')),0 ,36px
     );
 
-    $button-shadow: if($disable-button-shadow == true, none, igx-elevation($elevations, 1));
+    @if not($button-shadow) {
+        $button-elevation: map-get($carousel-schema, 'button-elevation');
+        $button-shadow: igx-elevation($elevations, $button-elevation);
+    }
 
     @if not($button-arrow-color) and $button-background {
         $button-arrow-color: text-contrast($button-background);
@@ -72,18 +82,18 @@
     @return extend($theme, (
         name: $name,
         palette: $palette,
+
         border-radius: $border-radius,
+        button-shadow: $button-shadow,
+
         button-background: $button-background,
         button-hover-background: $button-hover-background,
         button-arrow-color: $button-arrow-color,
         button-hover-arrow-color: $button-hover-arrow-color,
-        button-shadow: $button-shadow,
 
         indicator-dot-color: $indicator-dot-color,
         indicator-border-color: $indicator-border-color,
         indicator-active-border-color: $indicator-active-border-color,
-
-        disable-button-shadow: $disable-button-shadow
     ));
 }
 
@@ -98,6 +108,9 @@
 /// @requires --var
 @mixin igx-carousel($theme) {
     @include igx-root-css-vars($theme);
+
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
 
     @include scale-in-center();
     @include scale-out-center();
@@ -162,11 +175,20 @@
     }
 
     %igx-carousel-arrow--next {
-        right: 0;
+        #{$right}: 0;
     }
 
     %igx-carousel-arrow--prev {
-        left: 0;
+        #{$left}: 0;
+    }
+
+    %igx-carousel-arrow--next,
+    %igx-carousel-arrow--prev {
+        @include if-rtl() {
+            igx-icon {
+                transform: scaleX(-1);
+            }
+        }
     }
 
     %igx-carousel-indicators {
@@ -178,8 +200,16 @@
         list-style: none;
         z-index: 10;
         bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
+        #{$left}: 50%;
+
+        @include if-ltr() {
+            transform: translateX(-50%);
+        }
+
+        @include if-rtl() {
+            transform: translateX(50%);
+        }
+
         padding: $carousel-indicators-padding;
 
         li {
@@ -201,8 +231,8 @@
                 position: absolute;
                 top: 1px;
                 bottom: 1px;
-                left: 1px;
-                right: 1px;
+                #{$left}: 1px;
+                #{$right}: 1px;
                 border-radius: inherit;
                 background: --var($theme, 'indicator-dot-color');
                 @include animation('scale-out-center' .15s $ease-out-quad forwards);

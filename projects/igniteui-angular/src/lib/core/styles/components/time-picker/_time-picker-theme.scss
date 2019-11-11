@@ -60,7 +60,13 @@
     $dropdown-shadow: null
 ) {
     $name: 'igx-time-picker';
-    $time-picker-schema: map-get($schema, $name);
+    $time-picker-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $time-picker-schema: map-get($schema, $name);
+    } @else {
+        $time-picker-schema: $schema;
+    }
 
     $theme: apply-palette($time-picker-schema, $palette);
 
@@ -131,6 +137,9 @@
 @mixin igx-time-picker($theme) {
     @include igx-root-css-vars($theme);
 
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
+
     $vertical-header-width: rem(168px);
 
     %time-picker-display {
@@ -180,17 +189,28 @@
     }
 
     %time-picker__hourList {
-        text-align: right;
+        text-align: #{$right};
+
+        @include if-rtl() {
+            order: 2;
+        }
     }
 
     %time-picker__minuteList {
         text-align: center;
+        @include if-rtl() {
+            order: 1;
+        }
     }
 
     %time-picker__ampmList {
         display: flex;
         flex-direction: column;
         padding-top: rem(48px);
+
+        @include if-rtl() {
+            order: 3;
+        }
     }
 
     %time-picker__column {
@@ -255,6 +275,11 @@
     %time-picker__header-hour {
         display: flex;
         color: --var($theme, 'header-hour-text-color');
+
+        @include if-rtl() {
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
     }
 
     %time-picker__header-ampm,
@@ -269,7 +294,7 @@
         padding: rem(8px);
 
         [igxButton] + [igxButton] {
-            margin-left: rem(8px);
+            margin-#{$left}: rem(8px);
         }
     }
 }

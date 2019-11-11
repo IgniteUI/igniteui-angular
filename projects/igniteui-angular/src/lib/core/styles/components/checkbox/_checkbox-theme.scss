@@ -43,7 +43,14 @@
     $border-radius-ripple: null
 ) {
     $name: 'igx-checkbox';
-    $checkbox-schema: map-get($schema, $name);
+    $checkbox-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $checkbox-schema: map-get($schema, $name);
+    } @else {
+        $checkbox-schema: $schema;
+    }
+
     $theme: apply-palette($checkbox-schema, $palette);
 
     $border-radius: round-borders(
@@ -53,7 +60,6 @@
     $border-radius-ripple: round-borders(
         if($border-radius-ripple, $border-radius-ripple, map-get($checkbox-schema, 'border-radius-ripple')), 0, 24px
     );
-
 
     @return extend($theme, (
         name: $name,
@@ -122,6 +128,9 @@
     $ripple-theme: igx-ripple-theme(
         $color: --var($theme, 'fill-color')
     );
+
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
 
     @include scale-in-center();
 
@@ -245,31 +254,20 @@
         }
     }
 
+    %cbx-label-pos--before,
     %cbx-label-pos--after {
-        margin-left: $label-margin;
-
-        [dir='rtl'] & {
-            margin-left: initial;
-            margin-right: $label-margin;
-
-            &:empty {
-                margin: 0;
-            }
+        &:empty {
+            margin: 0;
         }
     }
 
+    %cbx-label-pos--after {
+        margin-#{$left}: $label-margin;
+    }
+
     %cbx-label-pos--before {
-        margin-right: $label-margin;
+        margin-#{$right}: $label-margin;
         order: -1;
-
-        [dir='rtl'] & {
-            margin-right: initial;
-            margin-left: $label-margin;
-
-            &:empty {
-                margin: 0;
-            }
-        }
     }
 
     %cbx-label--disabled {

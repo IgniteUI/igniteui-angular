@@ -378,18 +378,16 @@ export class IgxSliderComponent implements
     /**
      * An @Input property that marks the {@link IgxSliderComponent} as continuous.
      * By default is considered that the {@link IgxSliderComponent} is discrete.
-     * Discrete {@link IgxSliderComponent} does not have ticks and does not shows bubble labels for values.
+     * Discrete {@link IgxSliderComponent} does not have ticks and does not show bubble labels for values.
      * ```html
      * <igx-slider #slider [continuous]="'true'" [(ngModel)]="task.percentCompleted" [step]="5" [lowerBound]="20">
      * ```
      */
     public set continuous(continuous: boolean) {
-        if (this.labelsViewEnabled) {
-            return;
-        }
-
         this._continuous = continuous;
-        this.setTickInterval(null);
+        if (this._hasViewInit) {
+            this.setTickInterval(null);
+        }
     }
 
     /**
@@ -457,7 +455,9 @@ export class IgxSliderComponent implements
         // recalculate step distance.
         this.stepDistance = this.calculateStepDistance();
         this.positionHandlesAndUpdateTrack();
-        this.setTickInterval(null);
+        if (this._hasViewInit) {
+            this.setTickInterval(null);
+        }
     }
 
     /**
@@ -503,7 +503,9 @@ export class IgxSliderComponent implements
         // Recalculate step distance.
         this.stepDistance = this.calculateStepDistance();
         this.positionHandlesAndUpdateTrack();
-        this.setTickInterval(null);
+        if (this._hasViewInit) {
+            this.setTickInterval(null);
+        }
     }
 
     /**
@@ -1055,13 +1057,15 @@ export class IgxSliderComponent implements
     }
 
     private positionHandle(thumbHandle: ElementRef, labelHandle: ElementRef, position: number) {
-        if (!thumbHandle) {
-            return;
+        const positionLeft = `${this.valueToFraction(position) * 100}%`;
+
+        if (thumbHandle) {
+            thumbHandle.nativeElement.style.left = positionLeft;
         }
 
-        const positionLeft = `${this.valueToFraction(position) * 100}%`;
-        thumbHandle.nativeElement.style.left = positionLeft;
-        labelHandle.nativeElement.style.left = positionLeft;
+        if (labelHandle) {
+            labelHandle.nativeElement.style.left = positionLeft;
+        }
     }
 
     private positionHandlesAndUpdateTrack() {
@@ -1072,7 +1076,9 @@ export class IgxSliderComponent implements
             this.positionHandle(this.thumbFrom, this.labelFrom, (this.value as IRangeSliderValue).lower);
         }
 
-        this.updateTrack();
+        if (this._hasViewInit) {
+            this.updateTrack();
+        }
     }
 
     private closestHandle(event: PointerEvent) {
@@ -1109,7 +1115,7 @@ export class IgxSliderComponent implements
         this.renderer.setStyle(this.ticks.nativeElement, 'background', renderCallbackExecution);
     }
 
-private showSliderIndicators() {
+    private showSliderIndicators() {
         if (this.disabled) {
             return;
         }

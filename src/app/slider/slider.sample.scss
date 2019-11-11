@@ -4,3 +4,15 @@
     @include ellipsis();
     max-width: 50px;
 }
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    width: 700px
+}
+
+.outer-label {
+    width: 20%;
+    text-align: center;
+    padding-top: 10px
+}
