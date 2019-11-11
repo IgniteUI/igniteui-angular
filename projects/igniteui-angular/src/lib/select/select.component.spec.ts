@@ -92,7 +92,8 @@ fdescribe('igxSelect', () => {
                 IgxSelectBottomComponent,
                 IgxSelectAffixComponent,
                 IgxSelectReactiveFormComponent,
-                IgxSelectTemplateFormComponent
+                IgxSelectTemplateFormComponent,
+                IgxSelectHeaderFooterComponent
             ],
             imports: [
                 FormsModule,
@@ -2382,6 +2383,44 @@ fdescribe('igxSelect', () => {
             expect(selectInstance.getEditElement()).toEqual(inputElement);
         });
     });
+    describe('Header & Footer', () => {
+        beforeEach(fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSelectHeaderFooterComponent);
+            select = fixture.componentInstance.select;
+            fixture.detectChanges();
+            tick();
+            selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
+            selectListWrapper = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_WRAPPER));
+        }));
+        it('Should render header and footer elements where expected', () => {
+            const selectHeader = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_WRAPPER_HEADER));
+            const selectFooter = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_WRAPPER_FOOTER));
+            // elements exist
+            expect(selectHeader).toBeDefined();
+            expect(selectFooter).toBeDefined();
+            // elements structure is correct
+            expect(selectListWrapper.nativeElement.firstElementChild).toHaveClass(CSS_CLASS_DROPDOWN_WRAPPER_HEADER);
+            expect(selectListWrapper.nativeElement.lastElementChild).toHaveClass(CSS_CLASS_DROPDOWN_WRAPPER_FOOTER);
+            expect(selectList.nativeElement.previousElementSibling).toHaveClass(CSS_CLASS_DROPDOWN_WRAPPER_HEADER);
+            expect(selectList.nativeElement.nextElementSibling).toHaveClass(CSS_CLASS_DROPDOWN_WRAPPER_FOOTER);
+        });
+        it('Should NOT render header and footer elements, if template is not defined', fakeAsync(() => {
+            select.headerTemplate = null;
+            select.footerTemplate = null;
+            fixture.detectChanges();
+            tick();
+            const selectHeader = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_WRAPPER_HEADER));
+            const selectFooter = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_WRAPPER_FOOTER));
+            // elements do not exist
+            expect(selectHeader).toBeNull();
+            expect(selectFooter).toBeNull();
+            // elements structure is correct
+            expect(selectListWrapper.nativeElement.firstElementChild).toHaveClass(CSS_CLASS_DROPDOWN_LIST);
+            expect(selectListWrapper.nativeElement.lastElementChild).toHaveClass(CSS_CLASS_DROPDOWN_LIST);
+            expect(selectList.nativeElement.previousElementSibling).toBeNull();
+            expect(selectList.nativeElement.nextElementSibling).toBeNull();
+        }));
+    });
 });
 
 @Component({
@@ -2654,4 +2693,52 @@ class IgxSelectTemplateFormComponent {
 
     onSubmit() { }
 }
+@Component({
+    template: `
+        <h4 class="sample-title">Select with ngModel, set items OnInit</h4>
+        <igx-select #headerFooterSelect
+        [required]="true"
+        [placeholder]="'Pick One'"
+        [(ngModel)]="value"
+        [displayDensity]="'cosy'">
+            <label igxLabel>Sample Label</label>
+            <igx-prefix igxPrefix>
+                <igx-icon fontSet="material">alarm</igx-icon>
+            </igx-prefix>
+            <igx-select-item>None</igx-select-item>
+            <igx-select-item *ngFor="let item of items; let inx=index" [value]="item.field">
+                {{ item.field }}
+            </igx-select-item>
+            <ng-template igxSelectHeader>
+                <div class="custom-select-header">iHEADER</div>
+            </ng-template>
+            <ng-template igxSelectFooter>
+                <div class="custom-select-footer">
+                    <div>iFOOTER</div>
+                    <button igxButton="raised" (click)="btnClick()">Click Me!</button>
+                </div>
+            </ng-template>
+        </igx-select>
+        `,
+    styles: [`
+        .custom-select-header,
+        .custom-select-footer {
+            padding: 4px 8px;
+            background:  gray;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
+            }
+        `]
+    })
+class IgxSelectHeaderFooterComponent implements OnInit {
+    @ViewChild('headerFooterSelect', { read: IgxSelectComponent, static: true })
+    public select: IgxSelectComponent;
 
+    public items: any[] = [];
+    public ngOnInit() {
+        for (let i = 1; i < 10; i++) {
+            const item = { field: 'opt' + i };
+            this.items.push(item);
+        }
+    }
+}
