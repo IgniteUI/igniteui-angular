@@ -17,7 +17,7 @@
 </div>
 
 <div *ngIf="showIndicatorsLabel" [ngClass]="indicatorsOrientationClass">
-    <span class="igx-carousel__label">{{ current + 1 }} of {{ total }}</span>
+    <span class="igx-carousel__label">{{getCarouselLabel}}</span>
 </div>
 
 <div class="igx-carousel__inner" role="list">

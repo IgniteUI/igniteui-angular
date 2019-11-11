@@ -27,6 +27,8 @@ import { IgxCarouselIndicatorDirective } from './carousel.directives';
 import { useAnimation, AnimationBuilder, AnimationPlayer, AnimationReferenceMetadata } from '@angular/animations';
 import { slideInLeft, fadeIn, rotateInCenter } from '../animations/main';
 import { IgxSlideComponent, Direction } from './slide.component';
+import { ICarouselResourceStrings } from '../core/i18n/carousel-resources';
+import { CurrentResourceStrings } from '../core/i18n/resources';
 
 let NEXT_ID = 0;
 
@@ -229,6 +231,22 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
    */
     @Input() public animationType = CarouselAnimationType.slide;
 
+    /**
+    * An accessor that sets the resource strings.
+    * By default it uses EN resources.
+    */
+   @Input()
+   set resourceStrings(value: ICarouselResourceStrings) {
+       this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+   }
+
+   /**
+    * An accessor that returns the resource strings.
+   */
+   get resourceStrings(): ICarouselResourceStrings {
+       return this._resourceStrings;
+   }
+
     @ViewChild('defaultIndicator', { read: TemplateRef, static: true })
     protected defaultIndicator: TemplateRef<any>;
 
@@ -318,6 +336,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     private _lastInterval: any;
     private _playing: boolean;
     private _destroyed: boolean;
+    private _resourceStrings = CurrentResourceStrings.CarouselResStrings;
     private destroy$ = new Subject<any>();
     private _differ: IterableDiffer<IgxSlideComponent> | null = null;
     private enterAnimationPlayer?: AnimationPlayer;
@@ -555,6 +574,14 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     */
     public get showIndicatorsLabel(): boolean {
         return this.total > this.maximumIndicatorsCount;
+    }
+
+     /**
+     * @hidden
+     * @memberof IgxCarouselComponent
+     */
+    public get getCarouselLabel() {
+        return `${this.current + 1} ${this.resourceStrings.igx_carousel_of} ${this.total}`;
     }
 
     /**
