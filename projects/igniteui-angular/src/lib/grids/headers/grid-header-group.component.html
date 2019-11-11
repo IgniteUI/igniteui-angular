@@ -36,7 +36,7 @@
         [attr.aria-label]="column.header || column.field"
         [attr.aria-expanded]="column.expand"
         tabindex="0"
-        [ngClass]="{'igx-grid__th--pinned-last': hasLastPinnedChildColumn}"
+        [ngClass]="{'igx-grid__th--pinned-last': hasLastPinnedChildColumn, 'igx-grid__th--collapsible': column.collapsible}"
         [igxColumnMovingDrag]="column"
         [ghostHost]="grid.outletDirective.nativeElement"
         [attr.droppable]="true"
