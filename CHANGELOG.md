@@ -17,7 +17,7 @@ All notable changes for each version of this project will be documented in this 
     - **Behavioral Change** - Pinning columns is no longer automatically prevented when the pinning area would exceed the size of the grid.
 - `IgxCarousel`:
     - **Breaking Changes** -The carousel slides are no longer array, they are changed to QueryList.
-    - **Breaking Changes** -There is a limitation for visible indicators. When slides are more than 5, a label is previewed instead of indicators. The visible indicators can be changed with the input `maximumIndicatorsCount`
+    - **Behavioural change** - When slides are more than 5, a label is shown instead of the indicators. The count limit of visible indicators can be changed with the input `maximumIndicatorsCount`
 
 
 ### New Features

@@ -36,7 +36,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 | `select(slide: IgxSlide, direction: Direction)`| void | Selects the slide and the direction to transition to. Emits `onSlideChanged` event. |
 
 ### Keyboard navigation
-When the **IgxCarousel** component is focused and keyboardSupport is true:
+Keyboard navigation will be enabled when the **IgxCarousel** component is focused and `keyboardSupport` property is set to `true`:
 - Arrow keys will navigate through the slides.
 - `Home` will focus the first slide inside the carousel view.
 - `End` will focus the last slide inside the carousel view.
