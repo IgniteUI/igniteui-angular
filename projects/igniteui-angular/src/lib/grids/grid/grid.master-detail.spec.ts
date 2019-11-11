@@ -1,4 +1,4 @@
-import { Component, ViewChild, EventEmitter } from '@angular/core';
+import { Component, ViewChild, EventEmitter, OnInit } from '@angular/core';
 import { async, TestBed, ComponentFixture } from '@angular/core/testing';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,6 +12,7 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 const COLLAPSED_ICON_NAME = 'chevron_right';
 const EXPANDED_ICON_NAME = 'expand_more';
+const DEBOUNCETIME = 30;
 
 describe('IgxGrid Master Detail', () => {
     let fix: ComponentFixture<any>;
@@ -129,6 +130,106 @@ describe('IgxGrid Master Detail', () => {
             });
         });
     });
+
+    describe('Keyboard Navigation ', () => {
+        configureTestSuite();
+        beforeEach(async(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    AllExpandedGridMasterDetailComponent
+                ],
+                imports: [IgxGridModule, NoopAnimationsModule]
+            }).compileComponents();
+        }));
+
+        beforeEach(async(() => {
+            fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid;
+        }));
+
+        it('Should navigate down through a detail view by focusing the whole row and continuing onto the next with arrow down.',
+        async() => {
+            const targetCellElement = grid.getCellByColumn(0, 'ContactName');
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', targetCellElement, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            const firstRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.first);
+            expect(document.activeElement).toBe(firstRowDetail);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', firstRowDetail, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            expect(grid.getCellByColumn(2, 'ContactName').selected).toBeTruthy();
+        });
+
+        it('Should navigate down through a detail view partially out of view by scrolling it so it becomes fully visible.', async() => {
+            const row = grid.getRowByIndex(4) as IgxGridRowComponent;
+            const targetCellElement = grid.getCellByColumn(4, 'ContactName');
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', targetCellElement, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            const detailRow = GridFunctions.getMasterRowDetail(row);
+            expect(document.activeElement).toBe(detailRow);
+            expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
+        });
+        it('Should navigate down through a detail view completely out of view by scrolling to it.', async() => {
+            grid.navigateTo(6, 0);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            const row = grid.getRowByIndex(6) as IgxGridRowComponent;
+            const targetCellElement = grid.getCellByColumn(6, 'ContactName');
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', targetCellElement, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            const detailRow = GridFunctions.getMasterRowDetail(row);
+            expect(document.activeElement).toBe(detailRow);
+            expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
+        });
+
+        it('Should navigate up through a detail view by focusing the whole row and continuing onto the next with arrow up.', async() => {
+            const prevRow = grid.getRowByIndex(0) as IgxGridRowComponent;
+            const targetCellElement = grid.getCellByColumn(2, 'ContactName');
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', targetCellElement, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            const detailRow = GridFunctions.getMasterRowDetail(prevRow);
+            expect(document.activeElement).toBe(detailRow);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', detailRow, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            expect(prevRow.cells.toArray()[0].selected).toBeTruthy();
+        });
+
+        it('Should navigate up through a detail view partially out of view by scrolling it so it becomes fully visible.', async() => {
+            grid.verticalScrollContainer.addScrollTop(90);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            const row = grid.getRowByIndex(2);
+            const targetCellElement = grid.getCellByColumn(2, 'ContactName');
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', targetCellElement, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            const detailRow = row.element.nativeElement.previousElementSibling;
+            expect(document.activeElement).toBe(detailRow);
+            expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
+        });
+
+        it('Should navigate up through a detail view completely out of view by scrolling to it.', async() => {
+            grid.verticalScrollContainer.addScrollTop(170);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            const row = grid.getRowByIndex(2);
+            const targetCellElement = grid.getCellByColumn(2, 'ContactName');
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', targetCellElement, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            const detailRow = row.element.nativeElement.previousElementSibling;
+            expect(document.activeElement).toBe(detailRow);
+            expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
+        });
+
+
+    });
 });
 
 @Component({
@@ -172,4 +273,39 @@ export class DefaultGridMasterDetailComponent {
     public checkboxClicked(event, context) {
         this.checkboxChanged.emit({ event: event, context: context });
     }
+}
+
+@Component({
+    template: `
+        <igx-grid [data]="data" [expansionStates]='expStates'
+         [width]="width" [height]="height" [primaryKey]="'ID'" [paging]="paging" [rowSelectable]="rowSelectable">
+            <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [width]="c.width" [dataType]='c.dataType'
+                [hidden]='c.hidden' [sortable]="c.sortable" [movable]='c.movable' [groupable]='c.groupable' [editable]="c.editable"
+                [hasSummary]="c.hasSummary" [pinned]='c.pinned'>
+            </igx-column>
+
+            <ng-template igxGridDetail let-dataItem>
+                <div>
+                    <div class="checkboxArea">
+                        <igx-checkbox (change)="onCheckboxClicked($event, dataItem)" [disableRipple]="true"></igx-checkbox>
+                        <span style="font-weight: 600">Available</span>
+                    </div>
+                    <div class="addressArea">{{dataItem.Address}}</div>
+                    <div class="inputArea"><input type="text" name="Comment"></div>
+                </div>
+            </ng-template>
+        </igx-grid>
+    `
+})
+export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetailComponent implements OnInit {
+    public expStates = new Map<any, boolean>();
+    ngOnInit(): void {
+        const allExpanded = new Map<any, boolean>();
+        this.data.forEach(item => {
+            allExpanded.set(item['ID'], true);
+        });
+        this.expStates = allExpanded;
+    }
+
+
 }
