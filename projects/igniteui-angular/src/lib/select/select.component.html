@@ -34,8 +34,7 @@
         <ng-content *ngTemplateOutlet="headerTemplate"></ng-content>
     </div>
 
-    <div #scrollContainer class="igx-drop-down__list--select" style="overflow-y: auto;"
-        [style.maxHeight]="maxHeight" [attr.id]="this.listId" role="listbox">
+    <div #scrollContainer class="igx-drop-down__list--select" [style.maxHeight]="maxHeight" [attr.id]="this.listId" role="listbox">
         <ng-content select="igx-select-item, igx-select-item-group">
         </ng-content>
     </div>

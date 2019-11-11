@@ -27,9 +27,10 @@ export class IgxDropDownBaseDirective extends DisplayDensityBase implements IDro
     protected _id = `igx-drop-down-${NEXT_ID++}`;
 
     /**
+     * @hidden @internal
      * Get dropdown's html element of its scroll container
      */
-    protected get scrollContainer() {
+    public get scrollContainer() {
         return this.element;
     }
 

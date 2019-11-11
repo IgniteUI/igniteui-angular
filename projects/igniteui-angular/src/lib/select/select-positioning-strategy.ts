@@ -170,7 +170,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         selectFit.styles = {};
         selectFit.itemElement = this.getInteractionItemElement();
         selectFit.itemHeight = itemHeight;
-        selectFit.dropDownList = this.select.getListItemsContainer();
+        selectFit.dropDownList = this.select.scrollContainer;
         selectFit.targetRect = targetRect;
         selectFit.contentElementRect = contentElementRect;
         selectFit.inputElement = this.select.getEditElement();
@@ -209,7 +209,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
             itemElement = this.select.selectedItem.element.nativeElement;
             // D.P. Feb 22 2019, #3921 Force item scroll before measuring in IE11, due to base scrollToItem delay
             if (isIE()) {
-                this.select.getListItemsContainer().scrollTop = this.select.calculateScrollPosition(this.select.selectedItem);
+                this.select.scrollContainer.scrollTop = this.select.calculateScrollPosition(this.select.selectedItem);
             }
         } else {
             itemElement = this.select.getFirstItemElement();
