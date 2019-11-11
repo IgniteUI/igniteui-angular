@@ -1,9 +1,9 @@
-import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Point, Util } from '../services/overlay/utilities';
+import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Util, ConnectedFit  } from '../services/overlay/utilities';
 import { IPositionStrategy } from '../services/overlay/position';
 import { fadeOut, fadeIn } from '../animations/main';
 import { IgxSelectBase } from './select.common';
 import { isIE } from '../core/utils';
-import { BaseFitPositionStrategy, ConnectedFit } from '../services/overlay/position/base-fit-position-strategy';
+import { BaseFitPositionStrategy } from '../services/overlay/position/base-fit-position-strategy';
 import { DisplayDensity } from '../core/density';
 
 /** @hidden @internal */
@@ -44,7 +44,8 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         const rects = super.calculateElementRectangles(contentElement);
         // selectFit obj, to be used for both cases of initialCall and !initialCall(page scroll/overlay repositionAll)
         const selectFit: SelectFit = {
-            yOffset: this.global_yOffset, xOffset: this.global_xOffset,
+            verticalOffset: this.global_yOffset,
+            horizontalOffset: this.global_xOffset,
             targetRect: rects.targetRect,
             contentElementRect: rects.elementRect,
             styles: this.global_styles
@@ -54,7 +55,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
             selectFit.viewPortRect = Util.getViewportRect(document);
 
             // Fill in the required selectFit object properties.
-            this.calculateVariables(contentElement, selectFit);
+            this.calculateVariables(selectFit);
             selectFit.viewPortRect = Util.getViewportRect(document);
 
             // Calculate how much to offset the overlay container.
@@ -118,8 +119,8 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
 
     // This method can be scrambled and combined in manageScrollToItem()
     private compensateYScroll(selectFit: SelectFit, compensation: number ) {
-        selectFit.yOffset += compensation;
-        this.global_yOffset = selectFit.yOffset;
+        selectFit.verticalOffset += compensation;
+        this.global_yOffset = selectFit.verticalOffset;
     }
 
     // Position the items outer container Below or Above the input.
@@ -163,16 +164,12 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         this.global_styles.contentElementNewWidth = selectFit.styles.contentElementNewWidth;
     }
 
-    private calculateVariables(contentElement: HTMLElement, selectFit: SelectFit) {
-        const targetRect = Util.getTargetRect(this.settings);
-        const contentElementRect = contentElement.getBoundingClientRect();
+    private calculateVariables(selectFit: SelectFit) {
         const itemHeight = this.getInteractionItemElement().getBoundingClientRect().height;
         selectFit.styles = {};
         selectFit.itemElement = this.getInteractionItemElement();
         selectFit.itemHeight = itemHeight;
         selectFit.dropDownList = this.select.scrollContainer;
-        selectFit.targetRect = targetRect;
-        selectFit.contentElementRect = contentElementRect;
         selectFit.inputElement = this.select.getEditElement();
         // Calculate input and selected item elements style related variables
         this.calculateStyles(selectFit);
@@ -219,14 +216,14 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
 
     protected calculateYoffset(selectFit: SelectFit) {
         const contentElementTopLeftPointY = selectFit.contentElementRect.top;
-        selectFit.yOffset =
+        selectFit.verticalOffset =
             -(selectFit.itemElement.getBoundingClientRect().top - contentElementTopLeftPointY + selectFit.styles.itemTextToInputTextDiff);
-        this.global_yOffset = selectFit.yOffset;
+        this.global_yOffset = selectFit.verticalOffset;
     }
 
     protected calculateXoffset(selectFit: SelectFit) {
-        selectFit.xOffset = selectFit.styles.itemTextIndent - selectFit.styles.itemTextPadding;
-        this.global_xOffset = selectFit.xOffset;
+        selectFit.horizontalOffset = selectFit.styles.itemTextIndent - selectFit.styles.itemTextPadding;
+        this.global_xOffset = selectFit.horizontalOffset;
     }
 }
 
@@ -240,8 +237,8 @@ export interface SelectFit extends ConnectedFit {
     right?: number;
     top?: number;
     bottom?: number;
-    xOffset?: number;
-    yOffset?: number;
+    horizontalOffset?: number;
+    verticalOffset?: number;
 
     // New properties
     inputElement?: HTMLElement;

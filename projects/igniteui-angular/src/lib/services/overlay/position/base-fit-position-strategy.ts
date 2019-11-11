@@ -1,5 +1,5 @@
 import { ConnectedPositioningStrategy } from './connected-positioning-strategy';
-import { HorizontalAlignment, VerticalAlignment, PositionSettings, Size, Util } from '../utilities';
+import { HorizontalAlignment, VerticalAlignment, PositionSettings, Size, Util, ConnectedFit } from '../utilities';
 
 export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrategy {
     protected _initialSize: Size;
@@ -7,9 +7,8 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
 
     /** @inheritdoc */
     position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
-        const targetRect = Util.getTargetRect(this.settings);
+        const targetRect = super.calculateElementRectangles(contentElement).targetRect;
         const contentElementRect = contentElement.getBoundingClientRect();
-        // let exposedConnectedFit = {};
         const connectedFit: ConnectedFit = {};
         if (initialCall) {
             connectedFit.targetRect = targetRect;
@@ -21,9 +20,7 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
             if (!connectedFit.fitHorizontal || !connectedFit.fitVertical) {
                 this.fitInViewport(contentElement, connectedFit);
             }
-            //exposedConnectedFit = connectedFit;
         }
-        // this.setStyle(contentElement, targetRect, contentElementRect, exposedConnectedFit);
         this.setStyle(contentElement, targetRect, contentElementRect, connectedFit);
     }
 
@@ -38,7 +35,7 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
             connectedFit.contentElementRect,
             this.settings.horizontalStartPoint,
             this.settings.horizontalDirection,
-            connectedFit.xOffset);
+            connectedFit.horizontalOffset);
         connectedFit.right = connectedFit.left + connectedFit.contentElementRect.width;
         connectedFit.fitHorizontal =
             connectedFit.viewPortRect.left < connectedFit.left && connectedFit.right < connectedFit.viewPortRect.right;
@@ -48,7 +45,7 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
             connectedFit.contentElementRect,
             this.settings.verticalStartPoint,
             this.settings.verticalDirection,
-            connectedFit.yOffset);
+            connectedFit.verticalOffset);
         connectedFit.bottom = connectedFit.top + connectedFit.contentElementRect.height;
         connectedFit.fitVertical =
             connectedFit.viewPortRect.top < connectedFit.top && connectedFit.bottom < connectedFit.viewPortRect.bottom;
@@ -92,17 +89,4 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
         connectedFit: ConnectedFit);
 }
 
-export interface ConnectedFit {
-    contentElementRect?: ClientRect;
-    targetRect?: ClientRect;
-    viewPortRect?: ClientRect;
-    fitHorizontal?: boolean;
-    fitVertical?: boolean;
-    left?: number;
-    right?: number;
-    top?: number;
-    bottom?: number;
-    xOffset?: number;
-    yOffset?: number;
-}
 

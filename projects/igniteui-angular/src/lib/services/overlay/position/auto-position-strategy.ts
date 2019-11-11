@@ -1,5 +1,5 @@
-import { VerticalAlignment, HorizontalAlignment } from './../utilities';
-import { BaseFitPositionStrategy, ConnectedFit } from './base-fit-position-strategy';
+import { VerticalAlignment, HorizontalAlignment, ConnectedFit } from './../utilities';
+import { BaseFitPositionStrategy } from './base-fit-position-strategy';
 
 /**
  * Positions the element as in **Connected** positioning strategy and re-positions the element in

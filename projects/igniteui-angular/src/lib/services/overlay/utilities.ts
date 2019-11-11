@@ -107,6 +107,21 @@ export interface OverlayInfo {
 }
 
 /** @hidden */
+export interface ConnectedFit {
+    contentElementRect?: ClientRect;
+    targetRect?: ClientRect;
+    viewPortRect?: ClientRect;
+    fitHorizontal?: boolean;
+    fitVertical?: boolean;
+    left?: number;
+    right?: number;
+    top?: number;
+    bottom?: number;
+    horizontalOffset?: number;
+    verticalOffset?: number;
+}
+
+/** @hidden */
 export class Util {
     /**
      * @hidden
