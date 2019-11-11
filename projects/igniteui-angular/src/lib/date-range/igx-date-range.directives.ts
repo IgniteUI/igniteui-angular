@@ -22,8 +22,8 @@ export class IgxDateRangeDirective extends IgxDateRangeBaseDirective {
             this.setNgControlValue(value);
             return;
         }
-        const start = value[0];
-        const end = value[value.length - 1];
+        const start = value[0] ? value[0] : '';
+        const end = value[value.length - 1] ? [value[value.length - 1]] : '';
         this.nativeElement.value = `${start} - ${end}`;
         this.setNgControlValue(this.nativeElement.value);
     }

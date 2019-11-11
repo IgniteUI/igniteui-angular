@@ -26,7 +26,7 @@
 
             <div class="date-range-wrapper">
                 <div *ngIf="!showSingleInput; else singleInput">
-                    <igx-date-range [weekStart]="1" [monthsViewNumber]="1" [hideOutsideDays]="true" [mode]="'dropdown'">
+                    <igx-date-range [weekStart]="1" [todayButtonText]="'Show Today'" [monthsViewNumber]="1" [hideOutsideDays]="true" [mode]="'dialog'">
                         <igx-input-group>
                             <input #startDate igxDateRangeStart igxInput formControlName="startDate" type="text">
                             <label for="startDate" igxLabel>Check-in Date</label>
@@ -46,7 +46,7 @@
             </div>
 
             <ng-template #singleInput>
-                <igx-date-range [formatter]="formatter" [mode]="'dropdown'">
+                <igx-date-range [mode]="'dropdown'">
                     <igx-input-group>
                         <input #singleInput igxInput igxDateRange type="text" formControlName="fullRange">
                         <label igxLabel for="singleInput">Input Date</label>

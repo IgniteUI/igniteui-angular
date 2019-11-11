@@ -32,6 +32,12 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
     @Input()
     public formatter: (val: Date) => string;
 
+    @Input()
+    public todayButtonText: string;
+
+    @Input()
+    public doneButtonText: string;
+
     /**
      * @hidden
      */
@@ -71,6 +77,8 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
         this.monthsViewNumber = 1;
         this.weekStart = WEEKDAYS.SUNDAY;
         this.locale = 'en';
+        this.todayButtonText = 'Today';
+        this.doneButtonText = 'Done';
         this.destroy = new Subject<boolean>();
     }
 
@@ -78,6 +86,15 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
         const today = new Date();
         event.stopPropagation();
         this.calendar.selectDate(today);
+        this.handleSelection(this.calendar.selectedDates);
+        if (this.startInput && !this.startInput.value) {
+            this.startInput.setFocus();
+        } else if (this.startInput && this.startInput.value &&
+            this.endInput && this.endInput.value) {
+            this.startInput.setFocus();
+        } else if (this.endInput && !this.endInput.value) {
+            this.endInput.setFocus();
+        }
     }
 
     public selectRange(startDate: Date, endDate: Date): void {
@@ -163,7 +180,6 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
             case KEYS.ESCAPE:
             case KEYS.ESCAPE_IE:
                 this.hideCalendar(event);
-                this.clearSelection();
                 break;
         }
     }
@@ -173,9 +189,17 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
      */
     public handleSelection(selectionData: Date[]): void {
         if (selectionData.length > 1) {
+            // range selection
             this.startInput || this.endInput ?
                 this.handleTwoInputSelection(selectionData) :
                 this.handleSingleInputSelection(selectionData);
+            this.startInput.setFocus();
+        } else {
+            // first selection in range
+            this.startInput || this.endInput ?
+                this.handleTwoInputSelection([selectionData[0], null]) :
+                this.handleSingleInputSelection([selectionData[0], null]);
+            this.endInput.setFocus();
         }
     }
 
@@ -197,19 +221,25 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
     }
 
     /**
-   * @hidden
-   */
-    protected clearSelection(): void {
-        this.calendar.deselectDate();
-        if (this.startInput) {
-            this.startInput.value = null;
+     * @hidden
+     */
+    public hideCalendar(event: MouseEvent | KeyboardEvent) {
+        event.stopPropagation();
+        event.preventDefault();
+        if (!this.toggle.collapsed) {
+            const element = event.target as HTMLElement;
+            this.toggle.close();
+            element.focus();
         }
-        if (this.endInput) {
-            this.endInput.value = null;
-        }
-        if (this.singleInput) {
-            this.singleInput.value = null;
-        }
+    }
+
+    /**
+     * @hidden
+     */
+    public onOpened(): void {
+        requestAnimationFrame(() => {
+            this.calendar.daysView.focusActiveDate();
+        });
     }
 
     /**
@@ -265,13 +295,13 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
     }
 
     private applyLocaleToDate(value: Date): string {
-        if (isIE()) {
+        if (isIE() && value) {
             const localeDateStrIE = new Date(value.getFullYear(), value.getMonth(), value.getDate(),
                 value.getHours(), value.getMinutes(), value.getSeconds(), value.getMilliseconds());
             return localeDateStrIE.toLocaleDateString(this.locale);
         }
 
-        return value.toLocaleDateString(this.locale);
+        return value ? value.toLocaleDateString(this.locale) : null;
     }
 
     private extractRange(selection: Date[]): string[] {
@@ -281,16 +311,6 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
     private activateToggleOpen(overlaySettings: OverlaySettings): void {
         if (this.toggle.collapsed) {
             this.toggle.open(overlaySettings);
-        }
-    }
-
-    private hideCalendar(event: MouseEvent | KeyboardEvent) {
-        event.stopPropagation();
-        event.preventDefault();
-        if (!this.toggle.collapsed) {
-            const element = event.target as HTMLElement;
-            this.toggle.close();
-            element.focus();
         }
     }
 
