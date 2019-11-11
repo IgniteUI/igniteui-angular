@@ -636,7 +636,7 @@ describe('IgxSlider', () => {
         });
 
         it('tick marks(steps) should be shown equally spread based on labels length', () => {
-            const ticks = fixture.nativeElement.querySelector('.igx-slider__track-ticks');
+            const ticks = fixture.nativeElement.querySelector('.igx-slider__ticks');
             const sliderWidth = parseInt(fixture.nativeElement.querySelector('igx-slider').clientWidth, 10);
 
             expect(slider.type).toBe(SliderType.SLIDER);
@@ -920,7 +920,7 @@ describe('IgxSlider', () => {
         });
 
         it('tick marks(steps) should be shown equally spread based on labels length', () => {
-            const ticks = fixture.nativeElement.querySelector('.igx-slider__track-ticks');
+            const ticks = fixture.nativeElement.querySelector('.igx-slider__ticks');
             const sliderWidth = parseInt(fixture.nativeElement.querySelector('igx-slider').clientWidth, 10);
 
             expect(slider.type).toBe(SliderType.RANGE);
@@ -1124,7 +1124,7 @@ describe('IgxSlider', () => {
 
         it('should draw tick marks', () => {
             const fixture = TestBed.createComponent(SliderInitializeTestComponent);
-            const ticks = fixture.nativeElement.querySelector('.igx-slider__track-ticks');
+            const ticks = fixture.nativeElement.querySelector('.igx-slider__ticks');
 
             // Slider steps <= 1. No marks should be drawn;
             expect(ticks.style.background).toBeFalsy();
@@ -1140,7 +1140,7 @@ describe('IgxSlider', () => {
             const fixture = TestBed.createComponent(SliderInitializeTestComponent);
             fixture.detectChanges();
 
-            const ticks = fixture.nativeElement.querySelector('.igx-slider__track-ticks');
+            const ticks = fixture.nativeElement.querySelector('.igx-slider__ticks');
             const slider = fixture.componentInstance.slider;
 
             expect(ticks.style.background).toBeFalsy();

@@ -18,9 +18,9 @@
     </g>
 </svg> -->
 
-<div class="igx-tick__group" *ngFor="let n of [].constructor(ticksLength); let idx=index" [ngClass]="{ 'igx-tick__primary-group': isPrimary(idx)}">
-    <div class="igx-tick"></div>
-    <span class="igx-tick__label">
+<div class="igx-slider__ticks-group" *ngFor="let n of [].constructor(ticksLength); let idx=index" [ngClass]="{ 'igx-slider__ticks-group--tall': isPrimary(idx)}">
+    <div class="igx-slider__ticks-tick"></div>
+    <span class="igx-slider__ticks-label">
         <ng-container *ngTemplateOutlet="tickLabelTemplateRef ? tickLabelTemplateRef : tickLabelDefaultTemplate; context: context(idx)"></ng-container>
     </span>
 </div>

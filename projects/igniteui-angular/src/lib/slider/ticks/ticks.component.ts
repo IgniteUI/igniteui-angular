@@ -4,12 +4,6 @@ import { TicksOrientation, TickLabelsOrientation } from '../slider.common';
 @Component({
     selector: 'igx-ticks',
     templateUrl: 'ticks.component.html',
-    styles: [`
-        :host {
-            position: absolute;
-            height: 100px;
-        }
-    }`]
 })
 export class IgxTicksComponent {
     private _primaryTicksWidth = 16;
@@ -55,13 +49,13 @@ export class IgxTicksComponent {
     /**
      * @hidden
      */
-    @HostBinding('class.igx-ticks')
+    @HostBinding('class.igx-slider__ticks')
     public ticksClass = true;
 
     /**
      * @hidden
      */
-    @HostBinding('class.igx-ticks__top')
+    @HostBinding('class.igx-slider__ticks--top')
     public get ticksTopClass() {
         return this.ticksOrientation === TicksOrientation.top;
     }
@@ -69,7 +63,7 @@ export class IgxTicksComponent {
     /**
      * @hidden
      */
-    @HostBinding('class.igx-ticks__has-primary')
+    @HostBinding('class.igx-slider__ticks--tall')
     public get hasPrimaryClass() {
         return this.primaryTicks > 0;
     }

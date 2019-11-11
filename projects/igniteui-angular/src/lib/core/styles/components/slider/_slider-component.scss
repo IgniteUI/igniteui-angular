@@ -22,8 +22,32 @@
         @extend %igx-slider-track-fill !optional;
     }
 
-    @include e(track-ticks) {
-        @extend %igx-slider-track-ticks !optional;
+    @include e(ticks) {
+        @extend %igx-slider__ticks !optional;
+    }
+
+    @include e(ticks, $m: tall) {
+        @extend %igx-slider__ticks--tall !optional;
+    }
+
+    @include e(ticks, $m: top) {
+        @extend %igx-slider__ticks--top !optional;
+    }
+
+    @include e(ticks-group) {
+        @extend %igx-slider__ticks-group !optional;
+    }
+
+    @include e(ticks-group, $m: tall) {
+        @extend %igx-slider__ticks-group--tall !optional;
+    }
+
+    @include e(ticks-tick) {
+        @extend %igx-slider__ticks-tick !optional;
+    }
+
+    @include e(ticks-label) {
+        @extend %igx-slider__ticks-label !optional;
     }
 
     @include e(thumbs) {
@@ -89,9 +113,9 @@
             @extend %igx-slider-track-fill--disabled !optional;
         }
 
-        @include e(track-ticks) {
-            @extend %igx-slider-track-ticks !optional;
-            @extend %igx-slider-track-ticks--disabled !optional;
+        @include e(ticks) {
+            @extend %igx-slider__ticks !optional;
+            @extend %igx-slider__ticks--disabled !optional;
         }
 
         @each $t in $thumbs {
