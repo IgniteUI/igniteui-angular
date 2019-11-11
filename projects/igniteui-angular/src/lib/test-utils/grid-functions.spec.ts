@@ -163,6 +163,14 @@ export class GridFunctions {
         return null;
     }
 
+    public static setAllExpanded(grid, data) {
+        const allExpanded = new Map<any, boolean>();
+        data.forEach(item => {
+            allExpanded.set(item['ID'], true);
+        });
+        grid.expansionStates = allExpanded;
+    }
+
     public static expandMasterRowByClick = (fix, row: IgxGridRowComponent) => new Promise(async (resolve, reject) => {
         const icon = row.element.nativeElement.querySelector('igx-icon');
         UIInteractions.clickElement(icon.parentElement);
