@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import {
     IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
-    IgxGridTransaction, IgxTransactionService, IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule, IgxIconService} from 'igniteui-angular';
+    IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule, IgxIconService} from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 import { IgxDragDropModule } from '../../projects/igniteui-angular/src/lib/directives/drag-drop/drag-drop.directive';
@@ -112,7 +112,8 @@ import { GridFlexSampleComponent } from './grid-flex-layout/grid-flex.sample';
 import { GridEsfLoadOnDemandComponent } from './grid-esf-load-on-demand/grid-esf-load-on-demand.component';
 import { GridFilteringComponent } from './grid-filtering/grid-filtering.sample';
 import { GridExternalFilteringComponent } from './grid-external-filtering/grid-external-filtering.sample';
-
+import { AboutComponent } from './grid-state/about.component';
+import { GridSaveStateComponent } from './grid-state/grid-state.component';
 
 
 
@@ -216,7 +217,9 @@ const components = [
     GridFlexSampleComponent,
     GridEsfLoadOnDemandComponent,
     GridFilteringComponent,
-    GridExternalFilteringComponent
+    GridExternalFilteringComponent,
+    GridSaveStateComponent,
+    AboutComponent
 ];
 
 @NgModule({
