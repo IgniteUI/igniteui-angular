@@ -230,6 +230,120 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(document.activeElement).toBe(detailRow);
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
         });
+
+        it(`Should focus detail row first, then continue to the focusable elements in
+         it and continue onto the next row when using Tab.`, async() => {
+            const row = grid.getRowByIndex(0) as IgxGridRowComponent;
+            const targetCellElement = grid.getCellByColumn(0, 'CompanyName');
+            UIInteractions.triggerKeyDownEvtUponElem('tab', targetCellElement, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            const detailRow = GridFunctions.getMasterRowDetail(row);
+            expect(document.activeElement).toBe(detailRow);
+            const lastTabbable = detailRow.querySelector('input[name="Comment"]');
+            UIInteractions.triggerKeyDownEvtUponElem('tab', lastTabbable, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            expect(document.activeElement).toBe(grid.getCellByColumn(2, 'ContactName').nativeElement)
+         });
+
+         it(`Should focus the last focusable element in detail first
+         and go in reverse order of all elements when tabbing through detail view using Shift+Tab.`, async() => {
+            const prevRow = grid.getRowByIndex(0) as IgxGridRowComponent;
+            const targetCellElement = grid.getCellByColumn(2, 'ContactName');
+            UIInteractions.triggerKeyDownEvtUponElem('tab', targetCellElement, true, false, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            const detailRow = GridFunctions.getMasterRowDetail(prevRow);
+            const lastTabbable = detailRow.querySelector('input[name="Comment"]');
+            expect(document.activeElement).toBe(lastTabbable);
+            UIInteractions.triggerKeyDownEvtUponElem('tab', detailRow, true, false, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            expect(document.activeElement).toBe(grid.getCellByColumn(0, 'CompanyName').nativeElement)
+         });
+
+         it('Should expand and collapse using Alt + Right/Down and Alt + Left/Up without losing focus on current row.', async() => {
+            const row = grid.getRowByIndex(0) as IgxGridRowComponent;
+            const targetCellElement = grid.getCellByColumn(0, 'ContactName');
+            UIInteractions.clickElement(targetCellElement);
+            fix.detectChanges();
+            expect(targetCellElement.focused).toBeTruthy();
+            // collapse with alt + arrowup
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', targetCellElement, true, true, false);
+            fix.detectChanges();
+            expect(row.expanded).toBeFalsy();
+            expect(targetCellElement.focused).toBeTruthy();
+
+            // expand with alt + arrowdown
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', targetCellElement, true, true, false);
+            fix.detectChanges();
+            expect(row.expanded).toBeTruthy();
+            expect(targetCellElement.focused).toBeTruthy();
+
+             // collapse with alt + arrowleft
+             UIInteractions.triggerKeyDownEvtUponElem('arrowleft', targetCellElement, true, true, false);
+             fix.detectChanges();
+             expect(row.expanded).toBeFalsy();
+             expect(targetCellElement.focused).toBeTruthy();
+
+            // expand with alt + arrowright
+            UIInteractions.triggerKeyDownEvtUponElem('arrowright', targetCellElement, true, true, false);
+            fix.detectChanges();
+            expect(row.expanded).toBeTruthy();
+            expect(targetCellElement.focused).toBeTruthy();
+         });
+
+        // TODO: fix bug
+        xit(`Should expand and collapse using Alt + Right/Down and Alt + Left/Up
+            at the bottom of the grid without losing focus.`, async() => {
+            // navigate to last
+            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            const row = grid.getRowByIndex(52) as IgxGridRowComponent;
+            let targetCellElement = grid.getCellByColumn(52, 'ContactName');
+            UIInteractions.clickElement(targetCellElement);
+            fix.detectChanges();
+            expect(targetCellElement.focused).toBeTruthy();
+
+            // collapse with alt + arrowup
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', targetCellElement, true, true, false);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            await wait(DEBOUNCETIME);
+            expect(row.expanded).toBeFalsy();
+            targetCellElement = grid.getCellByColumn(52, 'ContactName');
+            expect(targetCellElement.focused).toBeTruthy();
+
+            // expand with alt + arrowdown
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', targetCellElement, true, true, false);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            await wait(DEBOUNCETIME);
+            expect(row.expanded).toBeTruthy();
+            targetCellElement = grid.getCellByColumn(52, 'ContactName');
+            expect(targetCellElement.focused).toBeTruthy();
+        });
+
+        it('Should navigate to the correct row/cell when using the navigateTo method in a grid with expanded detail views.', async() => {
+            grid.navigateTo(20, 0);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            let row = grid.getRowByIndex(20) as IgxGridRowComponent;
+            expect(row).not.toBeNull();
+            expect(GridFunctions.elementInGridView(grid, row.nativeElement)).toBeTruthy();
+            grid.navigateTo(21, 0);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            row = grid.getRowByIndex(20) as IgxGridRowComponent;
+            const detailRow = GridFunctions.getMasterRowDetail(row);
+            expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
+
+         });
     });
 
     describe('Integration', () => {
