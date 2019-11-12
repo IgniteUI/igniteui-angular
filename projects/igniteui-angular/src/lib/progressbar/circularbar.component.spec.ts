@@ -450,6 +450,9 @@ describe('IgCircularBar', () => {
             fix.detectChanges();
 
             expect(bar.classList.contains(CIRCULAR_INDETERMINATE_CLASS)).toEqual(true);
+
+            // Expect text in indeterminate bar to be hidden;
+            expect(getComputedStyle(bar.querySelector('text').firstElementChild).visibility).toEqual('hidden');
         });
     });
 });

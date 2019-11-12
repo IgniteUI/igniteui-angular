@@ -746,6 +746,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const diffs = [];
         let totalDiff = 0;
         const l = this._embeddedViews.length;
+        this._embeddedViews.filter(view => !view.destroyed).forEach(view => view.detectChanges());
         const rNodes = this._embeddedViews.map(view => view.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE));
         for (let i = 0; i < l; i++) {
             const rNode = rNodes[i];
