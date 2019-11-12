@@ -147,7 +147,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
      * }
      * ```
      */
-    @ContentChildren(IgxChipComponent)
+    @ContentChildren(IgxChipComponent, { descendants: true })
     public chipsList: QueryList<IgxChipComponent>;
 
     private modifiedChipsArray: IgxChipComponent[];
