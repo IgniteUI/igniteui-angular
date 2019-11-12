@@ -46,13 +46,13 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         };
 
         if (initialCall) {
-            selectFit.viewPortRect = Util.getViewportRect(document);
-
             // Fill in the required selectFit object properties.
-            this.calculateVariables(selectFit);
+            selectFit.viewPortRect = Util.getViewportRect(document);
+            selectFit.itemRect = this.getInteractionItemElement().getBoundingClientRect();
+            selectFit.itemElement = this.getInteractionItemElement();
+
             // Calculate input and selected item elements style related variables
             selectFit.styles = this.calculateStyles(selectFit);
-            selectFit.viewPortRect = Util.getViewportRect(document);
 
             // Calculate how much to offset the overlay container.
             this.calculateYoffset(selectFit);
@@ -100,17 +100,6 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         return scrollAmount;
     }
 
-    private calculateScrollPosition(selectFit: SelectFit): number {
-        if (!selectFit.itemElement) { // this check may not be necessary
-            return 0;
-        }
-
-        const elementRect = selectFit.itemRect;
-        const parentRect = this.select.scrollContainer.getBoundingClientRect();
-        const scrollPosition = elementRect.bottom - parentRect.bottom;
-        return Math.floor(scrollPosition);
-    }
-
     // Position the items outer container Below or Above the input.
     fitInViewport(contentElement: HTMLElement, selectFit: SelectFit) {
         // Position Select component's container below target/input as preferred positioning over above target/input
@@ -121,12 +110,10 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         // Position Select component's container below target/input as preferred positioning over above target/input
         if (canFitBelowInput || !canFitAboveInput) {
                 // Calculate container starting point;
-                // TODO: modify the yOffset instead & use one call to super.setStyle
                 selectFit.top = selectFit.targetRect.top - selectFit.styles.itemTextToInputTextDiff;
 
         } else {
             // Position Select component's container above target/input
-            // TODO: modify the yOffset instead & use one call to super.setStyle
             selectFit.top = selectFit.targetRect.bottom + selectFit.styles.itemTextToInputTextDiff -
                 selectFit.contentElementRect.height;
             }
@@ -146,28 +133,25 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         this.global_styles.contentElementNewWidth = selectFit.styles.contentElementNewWidth;
     }
 
-    private calculateVariables(selectFit: SelectFit) {
-        selectFit.itemRect = this.getInteractionItemElement().getBoundingClientRect();
-        selectFit.itemElement = this.getInteractionItemElement();
-      }
-
     public calculateStyles(selectFit: SelectFit): SelectStyles  {
         const styles: SelectStyles = {};
-        const inputFontSize = window.getComputedStyle(this.settings.target as Element).fontSize;
+        const inputElementStyles = window.getComputedStyle(this.settings.target as Element);
+        const itemElementStyles = window.getComputedStyle(selectFit.itemElement);
+        const inputFontSize = inputElementStyles.fontSize;
         const numericInputFontSize = parseFloat(inputFontSize);
-        const itemFontSize = window.getComputedStyle(selectFit.itemElement).fontSize;
+        const itemFontSize = itemElementStyles.fontSize;
         const numericItemFontSize = parseFloat(itemFontSize);
         const inputTextToInputTop = (selectFit.targetRect.bottom - selectFit.targetRect.top - numericInputFontSize) / 2;
         const itemTextToItemTop = (selectFit.itemRect.height - numericItemFontSize) / 2;
          // Adjust for input top padding
         const negateInputPaddings = (
-                parseFloat(window.getComputedStyle(this.settings.target as Element).paddingTop) -
-                parseFloat(window.getComputedStyle(this.settings.target as Element).paddingBottom)
+                parseFloat(inputElementStyles.paddingTop) -
+                parseFloat(inputElementStyles.paddingBottom)
             ) / 2;
         styles.itemTextToInputTextDiff = Math.ceil(itemTextToItemTop - inputTextToInputTop + negateInputPaddings);
 
-        const itemLeftPadding = window.getComputedStyle(selectFit.itemElement).paddingLeft;
-        const itemTextIndent = window.getComputedStyle(selectFit.itemElement).textIndent;
+        const itemLeftPadding = itemElementStyles.paddingLeft;
+        const itemTextIndent = itemElementStyles.textIndent;
         const numericLeftPadding = parseFloat(itemLeftPadding);
         const numericTextIndent = parseFloat(itemTextIndent);
 
