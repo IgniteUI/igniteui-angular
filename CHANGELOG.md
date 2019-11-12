@@ -30,6 +30,20 @@ All notable changes for each version of this project will be documented in this 
     - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
 - `IgxToggleDirective`:
     - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
+- `IgxRowDragGhost` directive is added. It allows providing a custom template for the drag ghost when dragging a row.
+```html
+    <igx-grid #grid1 [data]="remote | async" primaryKey="ProductID"
+        [rowDraggable]="true">
+        <igx-column field="ProductName"></igx-column>
+        <igx-column field="ProductID"></igx-column>
+        <igx-column field="UnitsInStock"></igx-column>
+        <ng-template let-data igxRowDragGhost>
+            <div>
+                Moving {{data.ProductName}}!
+            </div>
+        </ng-template>
+    </igx-grid>
+```
 - `IgxSelect`- adding `IgxSelectHeaderDirective` and `IgxSelectFooterDirective`. These can be used to provide a custom header, respectively footer templates for the `igxSelect` drop-down list. If there are no templates marked with these directives - no default templates will be used so the drop-down list will not have header or footer.
 
 ## 8.2.6
