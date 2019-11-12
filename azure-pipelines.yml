@@ -2,6 +2,11 @@ pool:
   vmImage: 'Ubuntu 16.04'
 
 steps:
+- task: UseNode@1
+  inputs:
+    version: '11.x'
+  displayName: 'Install Node.js'
+
 - script: npm install
   displayName: 'Install dependencies'
   env:
