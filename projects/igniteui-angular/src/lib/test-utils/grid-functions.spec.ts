@@ -177,10 +177,10 @@ export class GridFunctions {
         return element.getBoundingClientRect().top >= gridTop && element.getBoundingClientRect().bottom <= gridBottom;
     }
 
-    public static expandMasterRowByClick = (fix, row: IgxGridRowComponent) => new Promise(async (resolve, reject) => {
+    public static toggleMasterRowByClick = (fix, row: IgxGridRowComponent, debounceTime) => new Promise(async (resolve, reject) => {
         const icon = row.element.nativeElement.querySelector('igx-icon');
         UIInteractions.clickElement(icon.parentElement);
-        await wait();
+        await wait(debounceTime);
         fix.detectChanges();
 
         resolve();

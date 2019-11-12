@@ -12,6 +12,7 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridExpandableCellComponent } from './expandable-cell.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxInputGroupComponent } from '../../input-group';
 
 const COLLAPSED_ICON_NAME = 'chevron_right';
 const EXPANDED_ICON_NAME = 'expand_more';
@@ -22,7 +23,6 @@ describe('IgxGrid Master Detail #grid', () => {
     let grid: IgxGridComponent;
 
     configureTestSuite();
-
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -32,7 +32,6 @@ describe('IgxGrid Master Detail #grid', () => {
             imports: [IgxGridModule, NoopAnimationsModule]
         }).compileComponents();
     }));
-
 
     describe('Basic', () => {
         beforeEach(async(() => {
@@ -52,17 +51,185 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(grid.rowList.length).toEqual(expandIcons.length);
         });
 
-        it('Should correctly expand a basic detail view, update expansionStates and the context proved should be correct', (async() => {
-            await GridFunctions.expandMasterRowByClick(fix, grid.rowList.first);
+        it('Should correctly expand a basic detail view, update expansionStates and the context provided should be correct', (async() => {
+            await GridFunctions.toggleMasterRowByClick(fix, grid.rowList.first, DEBOUNCETIME);
 
             const firstRowIcon = grid.rowList.first.element.nativeElement.querySelector('igx-icon');
             const firstRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.first);
-
             expect(grid.expansionStates.size).toEqual(1);
             expect(grid.expansionStates.has(grid.rowList.first.rowID)).toBeTruthy();
             expect(grid.expansionStates.get(grid.rowList.first.rowID)).toBeTruthy();
             expect(firstRowIcon.innerText).toEqual(EXPANDED_ICON_NAME);
             expect(firstRowDetail.querySelector('.addressArea').innerText).toEqual('Obere Str. 57');
+        }));
+
+        it('Should render a detail view with dynamic elements and they should be clickable/focusable.', (async() => {
+            await GridFunctions.toggleMasterRowByClick(fix, grid.rowList.first, DEBOUNCETIME);
+
+            const firstRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.first);
+            const checkboxElem = firstRowDetail.querySelector('igx-checkbox');
+            const checkboxPos = checkboxElem.getBoundingClientRect();
+            const inputElem = firstRowDetail.querySelector('.igxInputGroup');
+            const inputElemPos = inputElem.getBoundingClientRect();
+
+            const tracedCheckbox: any =
+                document.elementFromPoint(checkboxPos.left + checkboxPos.height / 2, checkboxPos.top + checkboxPos.height / 2);
+            const tracedInput: any =
+                document.elementFromPoint(inputElemPos.left + inputElemPos.height / 2, inputElemPos.top + inputElemPos.height / 2);
+
+            checkboxElem.querySelector('.igx-checkbox__input').click();
+            fix.detectChanges();
+
+            expect(checkboxElem.contains(tracedCheckbox)).toBeTruthy();
+            expect(checkboxElem.firstElementChild.getAttribute('aria-checked')).toEqual('true');
+
+            UIInteractions.clickElement(inputElem);
+            fix.detectChanges();
+
+            expect(inputElem.contains(tracedInput)).toBeTruthy();
+            expect(document.activeElement).toEqual(tracedInput);
+        }));
+
+        it(`Should persist state of rendered templates, such as expansion state of expansion panel,
+            checkbox state, etc. after scrolling them in and out of view.`, (async() => {
+            await GridFunctions.toggleMasterRowByClick(fix, grid.rowList.first, DEBOUNCETIME);
+
+            let firstRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.first);
+            let checkboxElem = firstRowDetail.querySelector('igx-checkbox');
+            let inputGroup = fix.debugElement.query(By.directive(IgxInputGroupComponent)).componentInstance;
+
+            expect(grid.rowList.first.rowID).toEqual('ALFKI');
+            expect(checkboxElem.checked).toBeFalsy();
+            expect(inputGroup.input.value).toEqual('');
+            expect(firstRowDetail.querySelector('.addressArea').innerText).toEqual('Obere Str. 57');
+
+            inputGroup.input.value = 'Test value';
+            checkboxElem.firstElementChild.click();
+            fix.detectChanges();
+
+            grid.navigateTo(20);
+            await wait(200);
+            fix.detectChanges();
+
+            expect(grid.rowList.first.rowID).toEqual('CENTC');
+
+            grid.navigateTo(0);
+            await wait(200);
+            fix.detectChanges();
+
+            firstRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.first);
+            checkboxElem = firstRowDetail.querySelector('igx-checkbox');
+            inputGroup = fix.debugElement.query(By.directive(IgxInputGroupComponent)).componentInstance;
+
+            expect(grid.rowList.first.rowID).toEqual('ALFKI');
+            expect(checkboxElem.firstElementChild.getAttribute('aria-checked')).toEqual('true');
+            expect(inputGroup.input.value).toEqual('Test value');
+            expect(firstRowDetail.querySelector('.addressArea').innerText).toEqual('Obere Str. 57');
+        }));
+
+        it(`Should persist state of rendered templates, such as expansion state of expansion panel,
+            checkbox state, etc. after scrolling them in and out of view.`, (async() => {
+            await GridFunctions.toggleMasterRowByClick(fix, grid.rowList.first, DEBOUNCETIME);
+
+            let firstRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.first);
+            let checkboxElem = firstRowDetail.querySelector('igx-checkbox');
+            let inputGroup = fix.debugElement.query(By.directive(IgxInputGroupComponent)).componentInstance;
+
+            expect(grid.rowList.first.rowID).toEqual('ALFKI');
+            expect(checkboxElem.checked).toBeFalsy();
+            expect(inputGroup.input.value).toEqual('');
+            expect(firstRowDetail.querySelector('.addressArea').innerText).toEqual('Obere Str. 57');
+
+            inputGroup.input.value = 'Test value';
+            checkboxElem.firstElementChild.click();
+            fix.detectChanges();
+
+            await GridFunctions.toggleMasterRowByClick(fix, grid.rowList.first, DEBOUNCETIME);
+            fix.detectChanges();
+
+            await GridFunctions.toggleMasterRowByClick(fix, grid.rowList.first, DEBOUNCETIME);
+            fix.detectChanges();
+
+            firstRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.first);
+            checkboxElem = firstRowDetail.querySelector('igx-checkbox');
+            inputGroup = fix.debugElement.query(By.directive(IgxInputGroupComponent)).componentInstance;
+
+            expect(grid.rowList.first.rowID).toEqual('ALFKI');
+            expect(checkboxElem.firstElementChild.getAttribute('aria-checked')).toEqual('true');
+            expect(inputGroup.input.value).toEqual('Test value');
+            expect(firstRowDetail.querySelector('.addressArea').innerText).toEqual('Obere Str. 57');
+        }));
+
+        it(`Should persist state of rendered templates, such as expansion state of expansion panel,
+            checkbox state, etc. after scrolling them in and out of view.`, (async() => {
+
+            const verticalScrollbar = grid.verticalScrollContainer.getScroll();
+            const verticalSrollHeight = verticalScrollbar.firstChild.offsetHeight;
+
+            grid.navigateTo(26);
+            await wait(200);
+            fix.detectChanges();
+
+            await GridFunctions.toggleMasterRowByClick(fix, grid.rowList.last, DEBOUNCETIME);
+            await wait();
+            fix.detectChanges();
+
+            const lastRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.last);
+            expect(grid.expansionStates.size).toEqual(1);
+            expect(grid.expansionStates.has(grid.rowList.last.rowID)).toBeTruthy();
+            expect(grid.expansionStates.get(grid.rowList.last.rowID)).toBeTruthy();
+            expect(lastRowDetail.querySelector('.addressArea').innerText).toEqual('Via Monte Bianco 34');
+            expect(verticalSrollHeight + lastRowDetail.offsetHeight).toEqual(verticalScrollbar.firstChild.offsetHeight);
+        }));
+
+        it('Should update view when setting a new expansionState object.', (async() => {
+            const newExpanded = new Map<any, boolean>();
+            newExpanded.set('ALFKI', true);
+            newExpanded.set('ANTON', true);
+            newExpanded.set('AROUT', true);
+
+            expect(grid.tbody.nativeElement.firstElementChild.children.length).toEqual(grid.rowList.length);
+
+            grid.expansionStates = newExpanded;
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            const gridRows = grid.rowList.toArray();
+            const firstDetail = GridFunctions.getMasterRowDetail(gridRows[0]);
+            const secondDetail = GridFunctions.getMasterRowDetail(gridRows[2]);
+            const thirdDetail = GridFunctions.getMasterRowDetail(gridRows[3]);
+            expect(grid.tbody.nativeElement.firstElementChild.children.length).toEqual(grid.rowList.length + 3);
+            expect(firstDetail.querySelector('.addressArea').innerText).toEqual('Obere Str. 57');
+            expect(secondDetail.querySelector('.addressArea').innerText).toEqual('Mataderos 2312');
+            expect(thirdDetail.querySelector('.addressArea').innerText).toEqual('120 Hanover Sq.');
+        }));
+
+        it('Should update rendered detail templates after grid data is changed.', (async() => {
+            const newExpanded = new Map<any, boolean>();
+            newExpanded.set('ALFKI', true);
+            newExpanded.set('ANTON', true);
+            newExpanded.set('AROUT', true);
+
+            expect(grid.tbody.nativeElement.firstElementChild.children.length).toEqual(grid.rowList.length);
+
+            grid.expansionStates = newExpanded;
+            fix.detectChanges();
+
+            const newData = [...grid.data].slice(0, 4);
+            newData.splice(1, 1);
+
+            grid.data = newData;
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            const gridRows = grid.rowList.toArray();
+            const firstDetail = GridFunctions.getMasterRowDetail(gridRows[0]);
+            const secondDetail = GridFunctions.getMasterRowDetail(gridRows[1]);
+            const thirdDetail = GridFunctions.getMasterRowDetail(gridRows[2]);
+            expect(grid.tbody.nativeElement.firstElementChild.children.length).toEqual(grid.rowList.length + 3);
+            expect(firstDetail.querySelector('.addressArea').innerText).toEqual('Obere Str. 57');
+            expect(secondDetail.querySelector('.addressArea').innerText).toEqual('Mataderos 2312');
+            expect(thirdDetail.querySelector('.addressArea').innerText).toEqual('120 Hanover Sq.');
         }));
 
         it('Should expand and collapse a row in view by using the expand(rowID) and collapse(rowID) methods.', () => {
@@ -138,7 +305,6 @@ describe('IgxGrid Master Detail #grid', () => {
     });
 
     describe('Keyboard Navigation ', () => {
-
         beforeEach(async(() => {
             fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
             fix.detectChanges();
@@ -439,7 +605,6 @@ describe('IgxGrid Master Detail #grid', () => {
     });
 
     describe('Integration', () => {
-
         describe('Paging', () => {
             it('Should not take into account expanded detail views as additional records.', () => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
@@ -583,7 +748,7 @@ describe('IgxGrid Master Detail #grid', () => {
                     fix.detectChanges();
                     // check row can be expanded
                     const lastRow = grid.rowList.last;
-                    await GridFunctions.expandMasterRowByClick(fix, lastRow);
+                    await GridFunctions.toggleMasterRowByClick(fix, lastRow, DEBOUNCETIME);
                     await wait(DEBOUNCETIME);
                     fix.detectChanges();
                     expect(lastRow.expanded).toBeTruthy();
@@ -660,11 +825,13 @@ describe('IgxGrid Master Detail #grid', () => {
             <ng-template igxGridDetail let-dataItem>
                 <div>
                     <div class="checkboxArea">
-                        <igx-checkbox (change)="onCheckboxClicked($event, dataItem)" [disableRipple]="true"></igx-checkbox>
+                    <igx-checkbox [disableRipple]="true"></igx-checkbox>
                         <span style="font-weight: 600">Available</span>
                     </div>
                     <div class="addressArea">{{dataItem.Address}}</div>
-                    <div class="inputArea"><input type="text" name="Comment"></div>
+                    <igx-input-group class="igxInputGroup">
+                        <input igxInput />
+                    </igx-input-group>
                 </div>
             </ng-template>
         </igx-grid>
@@ -685,16 +852,6 @@ export class DefaultGridMasterDetailComponent {
 
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public grid: IgxGridComponent;
-
-    public checkboxChanged: EventEmitter<any>;
-
-    public onCheckboxClicked() {
-
-    }
-
-    public checkboxClicked(event, context) {
-        this.checkboxChanged.emit({ event: event, context: context });
-    }
 }
 
 @Component({
@@ -709,7 +866,7 @@ export class DefaultGridMasterDetailComponent {
             <ng-template igxGridDetail let-dataItem>
                 <div>
                     <div class="checkboxArea">
-                        <igx-checkbox (change)="onCheckboxClicked($event, dataItem)" [disableRipple]="true"></igx-checkbox>
+                        <igx-checkbox [disableRipple]="true"></igx-checkbox>
                         <span style="font-weight: 600">Available</span>
                     </div>
                     <div class="addressArea">{{dataItem.Address}}</div>
