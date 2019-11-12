@@ -16,6 +16,7 @@
                 [data]="data"
                 [displayDensity]="density"
                 [allowFiltering]="true"
+                [filterMode]="'excelStyleFilter'"
                 [allowAdvancedFiltering]="true"
                 [rowSelectable]="true"
                 [paging]="false"
@@ -44,6 +45,7 @@
                                                     [dataType]="c.type">
                 </igx-column>
             </igx-grid>
+
             <div class="sample-buttons">
                 <igx-checkbox [checked]="grid1.allowFiltering" (change)="onAllowFilteringChanged($event)">Allow Filtering</igx-checkbox>
                 <igx-buttongroup [multiSelection]="false" [values]="filterModes" (onSelect)="selectFilterMode($event)"></igx-buttongroup>

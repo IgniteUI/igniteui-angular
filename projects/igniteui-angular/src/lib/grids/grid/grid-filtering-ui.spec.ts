@@ -41,7 +41,8 @@ import {
     IgxGridFilteringTemplateComponent,
     IgxGridFilteringESFTemplatesComponent,
     IgxGridFilteringESFLoadOnDemandComponent,
-    CustomFilteringStrategyComponent
+    CustomFilteringStrategyComponent,
+    IgxGridExternalESFComponent
 } from '../../test-utils/grid-samples.spec';
 import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { GridSelectionMode, FilterMode } from '../common/enums';
@@ -3660,6 +3661,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 IgxGridFilteringESFTemplatesComponent,
                 IgxGridFilteringESFLoadOnDemandComponent,
                 IgxGridFilteringMCHComponent,
+                IgxGridExternalESFComponent,
                 CustomFilteringStrategyComponent
             ],
             imports: [
@@ -3693,6 +3695,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
             filterIcon.click();
+            tick(100);
             fix.detectChanges();
 
             const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
@@ -3716,6 +3719,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
             filterIcon.click();
+            tick(100);
             fix.detectChanges();
 
             const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
@@ -3737,6 +3741,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const filterIcon = headerResArea.query(By.css('.igx-excel-filter__icon')).nativeElement;
             filterIcon.click();
+            tick(100);
             fix.detectChanges();
 
             const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
@@ -3774,6 +3779,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
             filterIcon.click();
+            tick(100);
             fix.detectChanges();
 
             const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
@@ -3794,6 +3800,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
             filterIcon.click();
+            tick(100);
             fix.detectChanges();
 
             const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
@@ -3810,6 +3817,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const headerResArea = headers[2].children[0].nativeElement;
             const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon');
             filterIcon.click();
+            tick(100);
             fix.detectChanges();
 
             const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
@@ -3839,6 +3847,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon--filtered');
             filterIcon.click();
+            tick(100);
             fix.detectChanges();
 
             expect(grid.filteredData.length).toEqual(1);
@@ -3865,6 +3874,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon--filtered');
             filterIcon.click();
+            tick(100);
             fix.detectChanges();
 
             expect(grid.filteredData.length).toEqual(2);
@@ -3891,6 +3901,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon--filtered');
             filterIcon.click();
+            tick(100);
             fix.detectChanges();
 
             expect(grid.filteredData.length).toEqual(2);
@@ -3918,6 +3929,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon--filtered');
             filterIcon.click();
+            tick(100);
             fix.detectChanges();
 
             expect(grid.filteredData.length).toEqual(2);
@@ -3962,6 +3974,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon--filtered');
             filterIcon.click();
+            tick(100);
             fix.detectChanges();
 
             expect(grid.filteredData.length).toEqual(2);
@@ -4006,6 +4019,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon--filtered');
             filterIcon.click();
+            tick(100);
             fix.detectChanges();
 
             expect(grid.filteredData.length).toEqual(2);
@@ -4051,6 +4065,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             const filterIcon = headerResArea.querySelector('.igx-excel-filter__icon--filtered');
             filterIcon.click();
+            tick(100);
             fix.detectChanges();
 
             const excelMenu = grid.nativeElement.querySelector('.igx-excel-filter__menu');
@@ -4269,6 +4284,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Open excel style filtering component and pin 'ProductName' column through header icon
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
             fix.detectChanges();
             GridFunctions.clickPinIconInExcelStyleFiltering(fix);
             tick(200);
@@ -4279,6 +4295,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Open excel style filtering component and UNpin 'ProductName' column through header icon
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
             fix.detectChanges();
             GridFunctions.clickPinIconInExcelStyleFiltering(fix);
             tick(200);
@@ -4297,6 +4314,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Open excel style filtering component and hide 'ProductName' column through header icon
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
             fix.detectChanges();
             GridFunctions.clickHideIconInExcelStyleFiltering(fix);
             tick(200);
@@ -4460,6 +4478,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Open excel style filtering component and verify its display density
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
             fix.detectChanges();
             verifyExcelStyleFilteringDisplayDensity(gridNativeElement, DisplayDensity.comfortable);
             GridFunctions.clickApplyExcelStyleFiltering(fix);
@@ -4471,6 +4490,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Open excel style filtering component and verify its display density
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
             fix.detectChanges();
             verifyExcelStyleFilteringDisplayDensity(gridNativeElement, DisplayDensity.compact);
             GridFunctions.clickApplyExcelStyleFiltering(fix);
@@ -4482,6 +4502,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Open excel style filtering component and verify its display density
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
             fix.detectChanges();
             verifyExcelStyleFilteringDisplayDensity(gridNativeElement, DisplayDensity.cosy);
             GridFunctions.clickApplyExcelStyleFiltering(fix);
@@ -4497,6 +4518,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Open excel style custom filtering dialog and verify its display density
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
             fix.detectChanges();
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
@@ -4512,6 +4534,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Open excel style custom filtering dialog and verify its display density
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
             fix.detectChanges();
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
@@ -4527,6 +4550,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Open excel style custom filtering dialog and verify its display density
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
             fix.detectChanges();
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
@@ -4542,6 +4566,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Open excel style cascade operators dropdown and verify its display density
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
             fix.detectChanges();
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
@@ -4555,6 +4580,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Open excel style cascade operators dropdown and verify its display density
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
             fix.detectChanges();
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
@@ -4568,6 +4594,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Open excel style cascade operators dropdown and verify its display density
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
             fix.detectChanges();
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
@@ -4582,6 +4609,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
                 // Open excel style custom filtering dialog.
                 GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+                tick(100);
                 fix.detectChanges();
                 GridFunctions.clickExcelFilterCascadeButton(fix);
                 fix.detectChanges();
@@ -4608,6 +4636,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
                 // Open excel style custom filtering dialog.
                 GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+                tick(100);
                 fix.detectChanges();
                 GridFunctions.clickExcelFilterCascadeButton(fix);
                 fix.detectChanges();
@@ -4634,6 +4663,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
                 // Open excel style custom filtering dialog.
                 GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+                tick(100);
                 fix.detectChanges();
                 GridFunctions.clickExcelFilterCascadeButton(fix);
                 fix.detectChanges();
@@ -4660,6 +4690,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
                 // Open excel style custom filtering dialog.
                 GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+                tick(100);
                 fix.detectChanges();
                 GridFunctions.clickExcelFilterCascadeButton(fix);
                 fix.detectChanges();
@@ -4683,6 +4714,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should include \'false\' value in results when searching.', fakeAsync(() => {
             // Open excel style custom filtering dialog.
             GridFunctions.clickExcelFilterIcon(fix, 'Released');
+            tick(100);
             fix.detectChanges();
 
             // Type string in search box.
@@ -4822,6 +4854,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Open excel style filtering component
             try {
                 GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+                tick(100);
                 fix.detectChanges();
             } catch (ex) { expect(ex).toBeNull(); }
         }));
@@ -4829,6 +4862,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('should keep newly added filter expression in view', fakeAsync(() => {
             // Open excel style custom filter dialog.
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
             fix.detectChanges();
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
@@ -5244,6 +5278,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should add/remove expressions in custom filter dialog through UI correctly.', fakeAsync(() => {
             // Open excel style custom filtering dialog.
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
             fix.detectChanges();
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
@@ -5293,6 +5328,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should keep selected operator of custom expression the same when clicking it.', fakeAsync(() => {
             // Open excel style custom filtering dialog.
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
             fix.detectChanges();
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
@@ -5323,6 +5359,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should select the button operator in custom expression when pressing \'Enter\' on it.', fakeAsync(() => {
             // Open excel style custom filtering dialog.
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
             fix.detectChanges();
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
@@ -5355,6 +5392,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should open conditions dropdown of custom expression with \'Alt + Arrow Down\'.', fakeAsync(() => {
             // Open excel style custom filtering dialog.
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
             fix.detectChanges();
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
@@ -5392,6 +5430,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should open calendar when clicking date-picker of custom expression.', fakeAsync(() => {
             // Open excel style custom filtering dialog.
             GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
             fix.detectChanges();
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
@@ -5429,6 +5468,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should filter grid through custom date filter dialog.', fakeAsync(() => {
             // Open excel style custom filtering dialog.
             GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
+            tick(100);
             fix.detectChanges();
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
@@ -5613,6 +5653,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should clear filter when pressing \'Enter\' on the clear filter button in ESF.', fakeAsync(() => {
             // Open excel style custom filtering dialog.
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
             fix.detectChanges();
             GridFunctions.clickExcelFilterCascadeButton(fix);
             fix.detectChanges();
@@ -5638,6 +5679,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Open excel style custom filtering dialog.
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
             fix.detectChanges();
 
             // Press 'Enter' on the 'Clear Filter' button.
@@ -5722,8 +5764,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Verify unique values are loaded correctly in ESF search component.', fakeAsync(() => {
             // Open excel style custom filtering dialog and wait a bit.
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
-            fix.detectChanges();
             tick(400);
+            fix.detectChanges();
 
             // Verify items in search have not loaded yet and that the loading indicator is visible.
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
@@ -5771,6 +5813,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Pin the 'General Information' group by pinning its child 'ProductName' column.
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
+            tick(100);
             fix.detectChanges();
             GridFunctions.clickPinIconInExcelStyleFiltering(fix, false);
             tick(200);
@@ -5781,6 +5824,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Try to pin the 'AnotherField' column by moving it to the left.
             GridFunctions.clickExcelFilterIcon(fix, 'AnotherField');
+            tick(100);
             fix.detectChanges();
             GridFunctions.clickMoveLeftInExcelStyleFiltering(fix);
             tick(200);
@@ -5790,6 +5834,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.verifyColumnIsPinned(column, true, 8);
         }));
     });
+
     describe('IgxGrid - Custom Filtering Strategy #grid', () => {
         let fix;
         let grid;
@@ -5878,6 +5923,40 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 { ID: 7, Name: { FirstName: 'Debra', LastName: 'Morton' } ,
                     JobTitle: 'Associate Software Developer', Company: 'Company B' },
                 { ID: 10, Name: { FirstName: 'Eduardo', LastName: 'Ramirez' }, JobTitle: 'Manager', Company: 'Company E' }]);
+        }));
+    });
+
+    describe('External Excel Style Filtering', () => {
+        let fix, grid;
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridExternalESFComponent);
+            grid = fix.componentInstance.grid;
+            fix.detectChanges();
+        }));
+
+        it('Should allow hosting Excel Style filtering component outside of the grid.', fakeAsync(() => {
+            // sort
+            GridFunctions.clickSortAscInExcelStyleFiltering(fix);
+            fix.detectChanges();
+            expect(grid.sortingExpressions[0].fieldName).toEqual('ProductName');
+            expect(grid.sortingExpressions[0].dir).toEqual(SortingDirection.Asc);
+
+            // pin
+            GridFunctions.clickPinIconInExcelStyleFiltering(fix, false);
+            fix.detectChanges();
+            expect(grid.pinnedColumns[0].field).toEqual('ProductName');
+
+            // filter
+            verifyExcelStyleFilterAvailableOptions(fix, [ 'Select All', '(Blanks)', 'Ignite UI for Angular',
+                'Ignite UI for JavaScript', 'NetAdvantage', 'Some other item with Script' ],
+                [ true, true, true, true, true, true ]);
+            toggleExcelStyleFilteringItems(fix, fix, true, 1, 4);
+            expect(grid.rowList.length).toBe(3);
+
+            // hide
+            GridFunctions.clickHideIconInExcelStyleFiltering(fix, false);
+            fix.detectChanges();
+            expect(grid.columns[1].hidden).toBeTruthy();
         }));
     });
 });
