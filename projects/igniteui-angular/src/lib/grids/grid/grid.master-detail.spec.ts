@@ -338,6 +338,70 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
 
          });
+
+         it('Should navigate to the last data cell in the grid using Ctrl + End.', async() => {
+            const targetCellElement = grid.getCellByColumn(0, 'ContactName');
+            UIInteractions.triggerKeyDownEvtUponElem('end', targetCellElement, true, false, false, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            const lastRow = grid.getRowByIndex(52);
+            expect(lastRow).not.toBeUndefined();
+            expect(GridFunctions.elementInGridView(grid, lastRow.nativeElement)).toBeTruthy();
+            expect(document.activeElement).toBe(lastRow.cells.last.nativeElement);
+         });
+
+         it('Should navigate to the first data cell in the grid using Ctrl + Home.', async() => {
+            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            const targetCellElement = grid.getCellByColumn(52, 'ContactName');
+            UIInteractions.triggerKeyDownEvtUponElem('home', targetCellElement, true, false, false, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            const fRow = grid.getRowByIndex(0);
+            expect(fRow).not.toBeUndefined();
+            expect(GridFunctions.elementInGridView(grid, fRow.nativeElement)).toBeTruthy();
+            expect(document.activeElement).toBe(fRow.cells.first.nativeElement);
+         });
+
+         it('Should navigate to the last data row using Ctrl + ArrowDown when all rows are expanded.', async() => {
+            const targetCellElement = grid.getCellByColumn(0, 'ContactName');
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', targetCellElement, true, false, false, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            const lastRow = grid.getRowByIndex(52);
+            expect(lastRow).not.toBeUndefined();
+            expect(GridFunctions.elementInGridView(grid, lastRow.nativeElement)).toBeTruthy();
+            expect(document.activeElement).toBe(lastRow.cells.first.nativeElement);
+         });
+
+         it('Should navigate to the first data row using Ctrl + ArrowUp when all rows are expanded.', async() => {
+            grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            const targetCellElement = grid.getCellByColumn(52, 'CompanyName');
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', targetCellElement, true, false, false, true);
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+
+            const fRow = grid.getRowByIndex(0);
+            expect(fRow).not.toBeUndefined();
+            expect(GridFunctions.elementInGridView(grid, fRow.nativeElement)).toBeTruthy();
+            expect(document.activeElement).toBe(fRow.cells.last.nativeElement);
+         });
     });
 
     describe('Integration', () => {

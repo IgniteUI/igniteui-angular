@@ -273,7 +273,7 @@ export class IgxGridNavigationService {
                     const cells = this.grid.nativeElement.querySelectorAll(
                         `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
                     if (cells.length > 0) {
-                        (cells[cells.length - 1] as HTMLElement).focus();
+                        (cells[cells.length - 1] as HTMLElement).focus({preventScroll: true});
                     }
                 });
         }
