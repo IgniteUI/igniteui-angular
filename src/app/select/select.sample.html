@@ -2,35 +2,12 @@
     Several select components with a variety of setups and API interaction.
 </app-page-header>
 
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-
 <div class="sampleWrapper">
     <h4 class="sample-title">Select with ngModel, set items OnInit</h4>
+    <div class="sample-actions">
+        <button igxButton="raised" (click)="btnAddBr()">+ white space</button>
+        <button igxButton="raised" (click)="btnRemoveBr()">- white space</button>
+    </div>
     <igx-select #displayDensitySelect
     [required]="true"
     [placeholder]="'Pick One'"
