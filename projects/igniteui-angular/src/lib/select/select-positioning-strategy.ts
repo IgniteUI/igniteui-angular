@@ -25,10 +25,6 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         this.settings = Object.assign({}, this._selectDefaultSettings, settings);
     }
 
-    // private itemElement = this.getInteractionItemElement();
-    // private itemBoundRect = this.itemElement.getBoundingClientRect() as DOMRect;
-
-
     // Global variables required for cases of !initialCall (page scroll/overlay repositionAll)
     private global_yOffset = 0;
     private global_xOffset = 0;
@@ -56,6 +52,8 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
 
             // Fill in the required selectFit object properties.
             this.calculateVariables(selectFit);
+            // Calculate input and selected item elements style related variables
+            selectFit.styles = this.calculateStyles(selectFit);
             selectFit.viewPortRect = Util.getViewportRect(document);
 
             // Calculate how much to offset the overlay container.
@@ -75,14 +73,14 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
 
     public itemIsInvisible(selectFit: SelectFit) {
         // selected item is completely invisible
-        return Math.round(selectFit.itemElement.getBoundingClientRect().top * 100) / 100 >=
+        return Math.round(selectFit.itemRect.top * 100) / 100 >=
         Math.round(selectFit.dropDownList.getBoundingClientRect().bottom * 100) / 100 ||
-        Math.round(selectFit.itemElement.getBoundingClientRect().bottom * 100) / 100 <=
+        Math.round(selectFit.itemRect.bottom * 100) / 100 <=
         Math.round(selectFit.dropDownList.getBoundingClientRect().top * 100) / 100 ||
         // selected item is partially invisible at ddl bottom
-        Math.round(selectFit.itemElement.getBoundingClientRect().top * 100) / 100 <=
+        Math.round(selectFit.itemRect.top * 100) / 100 <=
         (selectFit.dropDownList.getBoundingClientRect().bottom * 100) / 100 &&
-        Math.round(selectFit.itemElement.getBoundingClientRect().bottom * 100) / 100 >=
+        Math.round(selectFit.itemRect.bottom * 100) / 100 >=
         (selectFit.dropDownList.getBoundingClientRect().bottom * 100) / 100;
     }
 
@@ -111,7 +109,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
             return 0;
         }
 
-        const elementRect = selectFit.itemElement.getBoundingClientRect();
+        const elementRect = selectFit.itemRect;
         const parentRect = selectFit.dropDownList.getBoundingClientRect();
         const scrollPosition = elementRect.bottom - parentRect.bottom;
         return Math.floor(scrollPosition);
@@ -126,8 +124,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     // Position the items outer container Below or Above the input.
     fitInViewport(contentElement: HTMLElement, selectFit: SelectFit) {
         // Position Select component's container below target/input as preferred positioning over above target/input
-        if (this.canFitBelowInput(selectFit) && this.canFitAboveInput(selectFit) ||
-            !this.canFitAboveInput(selectFit)) {
+        if (this.canFitBelowInput(selectFit) || !this.canFitAboveInput(selectFit)) {
                 // Calculate container starting point;
                 // TODO: modify the yOffset instead & use one call to super.setStyle
                 selectFit.top = selectFit.targetRect.top - selectFit.styles.itemTextToInputTextDiff;
@@ -165,39 +162,38 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     }
 
     private calculateVariables(selectFit: SelectFit) {
-        const itemHeight = this.getInteractionItemElement().getBoundingClientRect().height;
-        selectFit.styles = {};
+        selectFit.itemRect = this.getInteractionItemElement().getBoundingClientRect();
         selectFit.itemElement = this.getInteractionItemElement();
-        selectFit.itemHeight = itemHeight;
         selectFit.dropDownList = this.select.scrollContainer;
         selectFit.inputElement = this.select.getEditElement();
-        // Calculate input and selected item elements style related variables
-        this.calculateStyles(selectFit);
     }
 
-    public calculateStyles(selectFit: SelectFit) {
+    public calculateStyles(selectFit: SelectFit): SelectStyles  {
+        const styles: SelectStyles = {};
         const inputFontSize = window.getComputedStyle(selectFit.inputElement).fontSize;
         const numericInputFontSize = parseFloat(inputFontSize);
         const itemFontSize = window.getComputedStyle(selectFit.itemElement).fontSize;
         const numericItemFontSize = parseFloat(itemFontSize);
         const inputTextToInputTop = (selectFit.targetRect.bottom - selectFit.targetRect.top - numericInputFontSize) / 2;
-        const itemTextToItemTop = (selectFit.itemHeight - numericItemFontSize) / 2;
+        const itemTextToItemTop = (selectFit.itemRect.height - numericItemFontSize) / 2;
          // Adjust for input top padding
         const negateInputPaddings = (
                 parseFloat(window.getComputedStyle(selectFit.inputElement).paddingTop) -
                 parseFloat(window.getComputedStyle(selectFit.inputElement).paddingBottom)
             ) / 2;
-        selectFit.styles.itemTextToInputTextDiff = Math.ceil(itemTextToItemTop - inputTextToInputTop + negateInputPaddings);
+        styles.itemTextToInputTextDiff = Math.ceil(itemTextToItemTop - inputTextToInputTop + negateInputPaddings);
 
         const itemLeftPadding = window.getComputedStyle(selectFit.itemElement).paddingLeft;
         const itemTextIndent = window.getComputedStyle(selectFit.itemElement).textIndent;
         const numericLeftPadding = parseFloat(itemLeftPadding);
         const numericTextIndent = parseFloat(itemTextIndent);
 
-        selectFit.styles.itemTextPadding = numericLeftPadding;
-        selectFit.styles.itemTextIndent = numericTextIndent;
+        styles.itemTextPadding = numericLeftPadding;
+        styles.itemTextIndent = numericTextIndent;
         // 24 is the input's toggle ddl icon width
-        selectFit.styles.contentElementNewWidth = selectFit.targetRect.width + 24 + numericLeftPadding * 2;
+        styles.contentElementNewWidth = selectFit.targetRect.width + 24 + numericLeftPadding * 2;
+
+        return styles;
     }
 
     private getInteractionItemElement(): HTMLElement {
@@ -217,7 +213,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     protected calculateYoffset(selectFit: SelectFit) {
         const contentElementTopLeftPointY = selectFit.contentElementRect.top;
         selectFit.verticalOffset =
-            -(selectFit.itemElement.getBoundingClientRect().top - contentElementTopLeftPointY + selectFit.styles.itemTextToInputTextDiff);
+            -(selectFit.itemRect.top - contentElementTopLeftPointY + selectFit.styles.itemTextToInputTextDiff);
         this.global_yOffset = selectFit.verticalOffset;
     }
 
@@ -244,7 +240,7 @@ export interface SelectFit extends ConnectedFit {
     inputElement?: HTMLElement;
     dropDownList?: HTMLElement;
     itemElement?: HTMLElement;
-    itemHeight?: number;
+    itemRect?: ClientRect;
     styles?: SelectStyles;
 }
 
