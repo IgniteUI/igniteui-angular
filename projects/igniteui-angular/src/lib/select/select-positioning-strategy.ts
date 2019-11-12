@@ -69,37 +69,35 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         this.setStyles(contentElement, selectFit, initialCall);
     }
 
-    public itemIsInvisible(selectFit: SelectFit) {
-        // selected item is completely invisible
-        return Math.round(selectFit.itemRect.top * 100) / 100 >=
-        Math.round(this.select.scrollContainer.getBoundingClientRect().bottom * 100) / 100 ||
-        Math.round(selectFit.itemRect.bottom * 100) / 100 <=
-        Math.round(this.select.scrollContainer.getBoundingClientRect().top * 100) / 100 ||
-        // selected item is partially invisible at ddl bottom
-        Math.round(selectFit.itemRect.top * 100) / 100 <=
-        (this.select.scrollContainer.getBoundingClientRect().bottom * 100) / 100 &&
-        Math.round(selectFit.itemRect.bottom * 100) / 100 >=
-        (this.select.scrollContainer.getBoundingClientRect().bottom * 100) / 100;
-    }
-
     private manageScrollToItem(selectFit: SelectFit) {
         // Scroll and compensate the item's container position, when the selected item is not visible.
-        if (this.itemIsInvisible(selectFit)) {
-            const compensation = this.scrollToItem(selectFit);
-            this.compensateYScroll(selectFit, compensation);
+        // selected item is completely invisible
+            const itemTop = Math.round(selectFit.itemRect.top * 100) / 100;
+            const itemBottom = Math.round(selectFit.itemRect.bottom * 100) / 100;
+            const scrollContainerRect = this.select.scrollContainer.getBoundingClientRect();
+            const scrollContainerBottom = Math.round(scrollContainerRect.bottom * 100) / 100;
+            const scrollContainerTop = Math.round(scrollContainerRect.top * 100) / 100;
+            const itemIsNotCompletelyVisible =
+                itemTop >= scrollContainerBottom || itemBottom <= scrollContainerTop ||
+                // selected item is partially invisible at ddl bottom
+                itemTop <= scrollContainerBottom && itemBottom >= scrollContainerBottom;
+        if (itemIsNotCompletelyVisible) {
+            const scrollAmount = selectFit.itemElement ? Math.floor(itemBottom - scrollContainerBottom) : 0;
+            this.scrollToItem(scrollAmount);
+            selectFit.verticalOffset += scrollAmount;
+            this.global_yOffset = selectFit.verticalOffset;
         }
     }
 
-    private scrollToItem(selectFit: SelectFit): number {
-        const itemPosition = this.calculateScrollPosition(selectFit);
+    private scrollToItem(scrollAmount: number): number {
         if (isIE()) {
             setTimeout(() => {
-                this.select.scrollContainer.scrollTop = (itemPosition);
+                this.select.scrollContainer.scrollTop = (scrollAmount);
             }, 1);
         } else {
-            this.select.scrollContainer.scrollTop = (itemPosition);
+            this.select.scrollContainer.scrollTop = (scrollAmount);
         }
-        return itemPosition;
+        return scrollAmount;
     }
 
     private calculateScrollPosition(selectFit: SelectFit): number {
@@ -113,16 +111,15 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         return Math.floor(scrollPosition);
     }
 
-    // This method can be scrambled and combined in manageScrollToItem()
-    private compensateYScroll(selectFit: SelectFit, compensation: number ) {
-        selectFit.verticalOffset += compensation;
-        this.global_yOffset = selectFit.verticalOffset;
-    }
-
     // Position the items outer container Below or Above the input.
     fitInViewport(contentElement: HTMLElement, selectFit: SelectFit) {
         // Position Select component's container below target/input as preferred positioning over above target/input
-        if (this.canFitBelowInput(selectFit) || !this.canFitAboveInput(selectFit)) {
+        const canFitBelowInput = selectFit.targetRect.top - selectFit.styles.itemTextToInputTextDiff + selectFit.contentElementRect.height <
+            selectFit.viewPortRect.bottom;
+        const canFitAboveInput = selectFit.targetRect.bottom + selectFit.styles.itemTextToInputTextDiff -
+            selectFit.contentElementRect.height > selectFit.viewPortRect.top;
+        // Position Select component's container below target/input as preferred positioning over above target/input
+        if (canFitBelowInput || !canFitAboveInput) {
                 // Calculate container starting point;
                 // TODO: modify the yOffset instead & use one call to super.setStyle
                 selectFit.top = selectFit.targetRect.top - selectFit.styles.itemTextToInputTextDiff;
@@ -133,16 +130,6 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
             selectFit.top = selectFit.targetRect.bottom + selectFit.styles.itemTextToInputTextDiff -
                 selectFit.contentElementRect.height;
             }
-    }
-
-    protected canFitBelowInput(selectFit: SelectFit): boolean {
-        return selectFit.targetRect.top - selectFit.styles.itemTextToInputTextDiff + selectFit.contentElementRect.height <
-        selectFit.viewPortRect.bottom;
-    }
-
-    protected canFitAboveInput(selectFit: SelectFit): boolean {
-            return selectFit.targetRect.bottom + selectFit.styles.itemTextToInputTextDiff -
-            selectFit.contentElementRect.height > selectFit.viewPortRect.top;
     }
 
     protected setStyles(contentElement: HTMLElement, selectFit: SelectFit, initialCall?: boolean) {
