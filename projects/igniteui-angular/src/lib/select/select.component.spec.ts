@@ -2022,8 +2022,9 @@ fdescribe('igxSelect', () => {
         };
         const verifyListPositioning = function () {
             expect(listRect.left).toBeCloseTo(inputRect.left - defaultItemLeftPadding, 0);
-            expect(listRect.top).toEqual(listTop);
-            expect(listRect.bottom).toEqual(listBottom);
+            // check with precision of 2 digits after decimal point, as it is the meaningful portion anyways.
+            expect(listRect.top).toBeCloseTo(listTop, 2);
+            expect(listRect.bottom).toBeCloseTo(listBottom, 2);
         };
 
         describe('Ample space to open positioning tests: ', () => {
@@ -2034,7 +2035,7 @@ fdescribe('igxSelect', () => {
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
                 selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
             }));
-            xit('should display selected item over input and all other items without scroll', fakeAsync(() => {
+            it('should display selected item over input and all other items without scroll', fakeAsync(() => {
                 hasScroll = false;
                 visibleItems = 3;
                 selectedItemIndex = 1;
