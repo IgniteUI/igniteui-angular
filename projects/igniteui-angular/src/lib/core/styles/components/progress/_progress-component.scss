@@ -113,15 +113,15 @@
         @extend %circular-text !optional;
     }
 
-    @include e(text, $m: hidden) {
-        @extend %circular-text !optional;
-    }
-
     @include m(indeterminate) {
         @extend %circular-display--indeterminate !optional;
 
         @include e(outer) {
             @extend %circular-outer--indeterminate !optional;
+        }
+
+        @include e(text) {
+            @extend %circular-text--hidden !optional;
         }
     }
 }
