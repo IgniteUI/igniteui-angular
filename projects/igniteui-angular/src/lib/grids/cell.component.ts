@@ -862,6 +862,15 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             }
             this.grid.expansionStates = expandedStates;
             this.grid.notifyChanges();
+            const isVirtualized = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
+            // persist focused cell
+            const el = this.grid.selectionService.activeElement;
+            if (isVirtualized && el) {
+                const cell = this.grid.gridAPI.get_cell_by_visible_index(el.row, el.column);
+                if (cell) {
+                    cell.nativeElement.focus();
+                }
+            }
         }
     }
 
