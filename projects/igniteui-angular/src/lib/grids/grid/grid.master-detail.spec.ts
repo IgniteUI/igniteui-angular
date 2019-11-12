@@ -21,16 +21,18 @@ describe('IgxGrid Master Detail #grid', () => {
 
     configureTestSuite();
 
-    describe('Basic', () => {
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    DefaultGridMasterDetailComponent
-                ],
-                imports: [IgxGridModule, NoopAnimationsModule]
-            }).compileComponents();
-        }));
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                DefaultGridMasterDetailComponent,
+                AllExpandedGridMasterDetailComponent
+            ],
+            imports: [IgxGridModule, NoopAnimationsModule]
+        }).compileComponents();
+    }));
 
+
+    describe('Basic', () => {
         beforeEach(async(() => {
             fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
             fix.detectChanges();
@@ -134,15 +136,6 @@ describe('IgxGrid Master Detail #grid', () => {
     });
 
     describe('Keyboard Navigation ', () => {
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    DefaultGridMasterDetailComponent,
-                    AllExpandedGridMasterDetailComponent
-                ],
-                imports: [IgxGridModule, NoopAnimationsModule]
-            }).compileComponents();
-        }));
 
         beforeEach(async(() => {
             fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
@@ -346,14 +339,6 @@ describe('IgxGrid Master Detail #grid', () => {
     });
 
     describe('Integration', () => {
-        beforeEach(async(() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    DefaultGridMasterDetailComponent
-                ],
-                imports: [IgxGridModule, NoopAnimationsModule]
-            }).compileComponents();
-        }));
 
         describe('Paging', () => {
             it('Should not take into account expanded detail views as additional records.', () => {
