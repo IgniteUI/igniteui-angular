@@ -244,7 +244,7 @@ describe('IgxGrid Master Detail #grid', () => {
             UIInteractions.triggerKeyDownEvtUponElem('tab', lastTabbable, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-            expect(document.activeElement).toBe(grid.getCellByColumn(2, 'ContactName').nativeElement)
+            expect(document.activeElement).toBe(grid.getCellByColumn(2, 'ContactName').nativeElement);
          });
 
          it(`Should focus the last focusable element in detail first
@@ -261,7 +261,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            expect(document.activeElement).toBe(grid.getCellByColumn(0, 'CompanyName').nativeElement)
+            expect(document.activeElement).toBe(grid.getCellByColumn(0, 'CompanyName').nativeElement);
          });
 
          it('Should expand and collapse using Alt + Right/Down and Alt + Left/Up without losing focus on current row.', async() => {
