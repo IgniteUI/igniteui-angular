@@ -11,6 +11,5 @@ export interface IgxSelectBase extends IgxDropDownBaseDirective {
     toggle(overlaySettings?: OverlaySettings);
     calculateScrollPosition(item: IgxDropDownItemBaseDirective): number;
     getFirstItemElement(): HTMLElement;
-    getListItemsContainer(): HTMLElement;
     getEditElement(): HTMLElement; // returns input HTMLElement
 }

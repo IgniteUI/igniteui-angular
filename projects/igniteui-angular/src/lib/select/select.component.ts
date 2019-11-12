@@ -312,11 +312,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         return this.children.first.element.nativeElement;
     }
 
-    /** @hidden @internal */
-    public getListItemsContainer(): HTMLElement {
-        return this.getFirstItemElement().parentElement;
-    }
-
     /**
      * Opens the select
      *

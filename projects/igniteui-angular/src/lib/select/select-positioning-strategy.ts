@@ -4,13 +4,11 @@ import { fadeOut, fadeIn } from '../animations/main';
 import { IgxSelectBase } from './select.common';
 import { isIE } from '../core/utils';
 import { BaseFitPositionStrategy } from '../services/overlay/position/base-fit-position-strategy';
-import { DisplayDensity } from '../core/density';
 
 /** @hidden @internal */
 export class SelectPositioningStrategy extends BaseFitPositionStrategy implements IPositionStrategy {
 
     private _selectDefaultSettings = {
-        target: this.select.getEditElement().getBoundingClientRect().top, // ** Use top target here and top item for positioning bellow **
         horizontalDirection: HorizontalAlignment.Right,
         verticalDirection: VerticalAlignment.Bottom,
         horizontalStartPoint: HorizontalAlignment.Left,
@@ -74,14 +72,14 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     public itemIsInvisible(selectFit: SelectFit) {
         // selected item is completely invisible
         return Math.round(selectFit.itemRect.top * 100) / 100 >=
-        Math.round(selectFit.dropDownList.getBoundingClientRect().bottom * 100) / 100 ||
+        Math.round(this.select.scrollContainer.getBoundingClientRect().bottom * 100) / 100 ||
         Math.round(selectFit.itemRect.bottom * 100) / 100 <=
-        Math.round(selectFit.dropDownList.getBoundingClientRect().top * 100) / 100 ||
+        Math.round(this.select.scrollContainer.getBoundingClientRect().top * 100) / 100 ||
         // selected item is partially invisible at ddl bottom
         Math.round(selectFit.itemRect.top * 100) / 100 <=
-        (selectFit.dropDownList.getBoundingClientRect().bottom * 100) / 100 &&
+        (this.select.scrollContainer.getBoundingClientRect().bottom * 100) / 100 &&
         Math.round(selectFit.itemRect.bottom * 100) / 100 >=
-        (selectFit.dropDownList.getBoundingClientRect().bottom * 100) / 100;
+        (this.select.scrollContainer.getBoundingClientRect().bottom * 100) / 100;
     }
 
     private manageScrollToItem(selectFit: SelectFit) {
@@ -96,10 +94,10 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         const itemPosition = this.calculateScrollPosition(selectFit);
         if (isIE()) {
             setTimeout(() => {
-                selectFit.dropDownList.scrollTop = (itemPosition);
+                this.select.scrollContainer.scrollTop = (itemPosition);
             }, 1);
         } else {
-            selectFit.dropDownList.scrollTop = (itemPosition);
+            this.select.scrollContainer.scrollTop = (itemPosition);
         }
         return itemPosition;
     }
@@ -110,7 +108,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         }
 
         const elementRect = selectFit.itemRect;
-        const parentRect = selectFit.dropDownList.getBoundingClientRect();
+        const parentRect = this.select.scrollContainer.getBoundingClientRect();
         const scrollPosition = elementRect.bottom - parentRect.bottom;
         return Math.floor(scrollPosition);
     }
@@ -164,13 +162,11 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     private calculateVariables(selectFit: SelectFit) {
         selectFit.itemRect = this.getInteractionItemElement().getBoundingClientRect();
         selectFit.itemElement = this.getInteractionItemElement();
-        selectFit.dropDownList = this.select.scrollContainer;
-        selectFit.inputElement = this.select.getEditElement();
-    }
+      }
 
     public calculateStyles(selectFit: SelectFit): SelectStyles  {
         const styles: SelectStyles = {};
-        const inputFontSize = window.getComputedStyle(selectFit.inputElement).fontSize;
+        const inputFontSize = window.getComputedStyle(this.settings.target as Element).fontSize;
         const numericInputFontSize = parseFloat(inputFontSize);
         const itemFontSize = window.getComputedStyle(selectFit.itemElement).fontSize;
         const numericItemFontSize = parseFloat(itemFontSize);
@@ -178,8 +174,8 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         const itemTextToItemTop = (selectFit.itemRect.height - numericItemFontSize) / 2;
          // Adjust for input top padding
         const negateInputPaddings = (
-                parseFloat(window.getComputedStyle(selectFit.inputElement).paddingTop) -
-                parseFloat(window.getComputedStyle(selectFit.inputElement).paddingBottom)
+                parseFloat(window.getComputedStyle(this.settings.target as Element).paddingTop) -
+                parseFloat(window.getComputedStyle(this.settings.target as Element).paddingBottom)
             ) / 2;
         styles.itemTextToInputTextDiff = Math.ceil(itemTextToItemTop - inputTextToInputTop + negateInputPaddings);
 
@@ -224,21 +220,6 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
 }
 
 export interface SelectFit extends ConnectedFit {
-    contentElementRect?: ClientRect;
-    targetRect?: ClientRect;
-    viewPortRect?: ClientRect;
-    fitHorizontal?: boolean;
-    fitVertical?: boolean;
-    left?: number;
-    right?: number;
-    top?: number;
-    bottom?: number;
-    horizontalOffset?: number;
-    verticalOffset?: number;
-
-    // New properties
-    inputElement?: HTMLElement;
-    dropDownList?: HTMLElement;
     itemElement?: HTMLElement;
     itemRect?: ClientRect;
     styles?: SelectStyles;
@@ -249,7 +230,6 @@ export interface SelectStyles {
     itemTextIndent?: number;
     itemTextToInputTextDiff?: number;
     contentElementNewWidth?: number;
-    displayDensity?: DisplayDensity | string;
     numericLeftPadding?: number;
 }
 

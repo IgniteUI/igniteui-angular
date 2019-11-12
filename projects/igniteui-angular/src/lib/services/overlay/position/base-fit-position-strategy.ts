@@ -7,12 +7,11 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
 
     /** @inheritdoc */
     position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
-        const targetRect = super.calculateElementRectangles(contentElement).targetRect;
-        const contentElementRect = contentElement.getBoundingClientRect();
+        const rects = super.calculateElementRectangles(contentElement);
         const connectedFit: ConnectedFit = {};
         if (initialCall) {
-            connectedFit.targetRect = targetRect;
-            connectedFit.contentElementRect = contentElementRect;
+            connectedFit.targetRect = rects.targetRect;
+            connectedFit.contentElementRect = rects.elementRect;
             this._initialSettings = this._initialSettings || Object.assign({}, this.settings);
             this.settings = Object.assign({}, this._initialSettings);
             connectedFit.viewPortRect = Util.getViewportRect(document);
@@ -21,7 +20,7 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
                 this.fitInViewport(contentElement, connectedFit);
             }
         }
-        this.setStyle(contentElement, targetRect, contentElementRect, connectedFit);
+        this.setStyle(contentElement, rects.targetRect, rects.elementRect, connectedFit);
     }
 
     /**
