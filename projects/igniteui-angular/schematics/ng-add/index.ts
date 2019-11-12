@@ -1,10 +1,11 @@
 import { chain, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { Options } from '../interfaces/options';
 import { installPackageJsonDependencies } from '../utils/package-handler';
-import { logSuccess, addDependencies, overwriteJsonFile, getPropertyFromWorkspace } from '../utils/dependency-handler';
+import { logSuccess, addDependencies, overwriteJsonFile,
+    getPropertyFromWorkspace, getConfigFile } from '../utils/dependency-handler';
 
 import { addResetCss } from './add-normalize';
-import { getWorkspace } from '@schematics/angular/utility/config';
+import { getWorkspace, getConfig } from '@schematics/angular/utility/config';
 import { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 
 
@@ -17,7 +18,9 @@ function propertyExistsInWorkspace(targetProp: string, workspace: WorkspaceSchem
 }
 
 function enablePolyfills(tree: Tree, context: SchematicContext): string {
-  const targetFile = 'src/polyfills.ts';
+  const workspace = getWorkspace(tree);
+  const project = workspace.projects[workspace.defaultProject];
+  const targetFile = getConfigFile(project, 'polyfills');
   if (!tree.exists(targetFile)) {
     context.logger.warn(`${targetFile} not found. You may need to update polyfills.ts manually.`);
     return;
@@ -50,7 +53,8 @@ function readInput(options: Options): Rule {
     if (options.polyfills) {
       const workspace = getWorkspace(tree);
       const targetProperty = 'es5BrowserSupport';
-      const polyfillsFile = 'src/polyfills.ts';
+      const project = workspace.projects[workspace.defaultProject];
+      const polyfillsFile = getConfigFile(project, 'polyfills');
       const propertyExists = propertyExistsInWorkspace(targetProperty, workspace);
       let polyfillsData = tree.read(polyfillsFile).toString();
       if (propertyExists) {
