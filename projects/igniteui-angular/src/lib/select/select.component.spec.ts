@@ -1,5 +1,5 @@
 import { IgxInputState } from './../directives/input/input.directive';
-import { Component, ViewChild, DebugElement, OnInit } from '@angular/core';
+import { Component, ViewChild, DebugElement } from '@angular/core';
 import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { FormsModule, FormGroup, FormBuilder, FormControl, Validators, ReactiveFormsModule, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -10,16 +10,10 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSelectComponent } from './select.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { ISelectionEventArgs } from '../drop-down/drop-down.common';
-import { IgxDatePickerComponent, IgxDatePickerModule } from '../date-picker/date-picker.component';
-import { IgxTimePickerComponent, IgxTimePickerModule } from '../time-picker/time-picker.component';
-import { IgxToggleModule, IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../services';
 import { IgxSelectModule } from './select.module';
-import { wait } from '../test-utils/ui-interactions.spec';
-import { truncate } from 'fs-extra';
-import { createTrue } from 'typescript';
-
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
@@ -103,8 +97,6 @@ describe('igxSelect', () => {
                 IgxInputGroupModule,
                 IgxSelectModule,
                 IgxToggleModule,
-                IgxDatePickerModule,
-                IgxTimePickerModule,
                 NoopAnimationsModule
             ]
         }).compileComponents();
@@ -618,14 +610,9 @@ describe('igxSelect', () => {
             fix.detectChanges();
             const formGroup: FormGroup = fix.componentInstance.reactiveForm;
             const selectComp = fix.componentInstance.select;
-            const datePickerComp = fix.componentInstance.datePicker;
-            const timePickerComp = fix.componentInstance.timePicker;
-            const inputGroups = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_INPUT_GROUP));
-            const selectInputGroup = inputGroups[0];
-            const dateInputGroup = inputGroups[1];
-            const iconTime = fix.debugElement.queryAll(By.css('.igx-icon'))[2];
+            const inputGroup = fix.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
 
-            selectInputGroup.nativeElement.click();
+            inputGroup.nativeElement.click();
             tick();
             fix.detectChanges();
             expect(selectComp.collapsed).toBeFalsy();
@@ -633,42 +620,14 @@ describe('igxSelect', () => {
             selectComp.close();
             fix.detectChanges();
 
-            dateInputGroup.nativeElement.click();
-            tick();
-            fix.detectChanges();
-            expect(datePickerComp.collapsed).toBeFalsy();
-
-            datePickerComp.closeCalendar();
-            fix.detectChanges();
-
-            iconTime.nativeElement.click();
-            tick();
-            fix.detectChanges();
-            const timeDropDown = fix.debugElement.query(By.css('.igx-time-picker--dropdown'));
-            expect(timeDropDown.properties.hidden).toBeFalsy();
-
-            timePickerComp.close();
-            fix.detectChanges();
-
             formGroup.disable();
             tick();
             fix.detectChanges();
 
-            selectInputGroup.nativeElement.click();
+            inputGroup.nativeElement.click();
             tick();
             fix.detectChanges();
             expect(selectComp.collapsed).toBeTruthy();
-
-            dateInputGroup.nativeElement.click();
-            tick();
-            fix.detectChanges();
-            const dateDropDown = document.getElementsByClassName('igx-date-picker--dropdown');
-            expect(dateDropDown.length).toEqual(0);
-
-            iconTime.nativeElement.click();
-            tick();
-            fix.detectChanges();
-            expect(timeDropDown.properties).toEqual({});
         }));
     });
     describe('Selection tests: ', () => {
@@ -2612,10 +2571,6 @@ class IgxSelectAffixComponent {
     </igx-select>
     </p>
     <p>
-        <igx-date-picker #datePickerReactive></igx-date-picker>
-        <igx-time-picker #timePickerReactive mode="dropdown"></igx-time-picker>
-    </p>
-    <p>
     <button type="submit" [disabled]="!reactiveForm.valid">Submit</button>
     </p>
 </form>
@@ -2624,10 +2579,6 @@ class IgxSelectAffixComponent {
 class IgxSelectReactiveFormComponent {
     @ViewChild('selectReactive', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
-    @ViewChild('datePickerReactive', { read: IgxDatePickerComponent, static: true })
-    public datePicker: IgxDatePickerComponent;
-    @ViewChild('timePickerReactive', { read: IgxTimePickerComponent, static: true })
-    public timePicker: IgxTimePickerComponent;
     reactiveForm: FormGroup;
     public items: string[] = [
         'Option 1',
