@@ -8,7 +8,7 @@ import { IgxGridModule } from './index';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridExpandableCellComponent } from './expandable-cell.component';
 
 const COLLAPSED_ICON_NAME = 'chevron_right';
@@ -325,6 +325,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 fix.detectChanges();
                 expect(grid.rowList.first.cells.first instanceof IgxGridExpandableCellComponent).toBeTruthy();
             });
+
             it('Should keep the expand/collapse icon in the first column, even when moving a column out of first place.', () => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
@@ -332,6 +333,49 @@ describe('IgxGrid Master Detail #grid', () => {
                 grid.moveColumn(grid.columnList.first, grid.columnList.last);
                 fix.detectChanges();
                 expect(grid.rowList.first.cells.first instanceof IgxGridExpandableCellComponent).toBeTruthy();
+            });
+        });
+
+        describe('Cell Selection', () => {
+            it('Should exclude expanded detail views when doing range cell selection', () => {
+                fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
+                grid = fix.componentInstance.grid;
+                fix.detectChanges();
+                grid.expand(fix.componentInstance.data[2].ID);
+                const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+                const startCell =  grid.getCellByColumn(1, 'ContactName');
+                const endCell =  grid.getCellByColumn(6, 'CompanyName');
+                const range = { rowStart: 1, rowEnd: 6, columnStart: 0, columnEnd: 1 };
+
+                UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement);
+                startCell.nativeElement.dispatchEvent(new Event('focus'));
+                grid.cdr.detectChanges();
+
+                expect(startCell.focused).toBe(true);
+
+                const rowDetail = GridFunctions.getMasterRowDetail(grid.rowList.toArray()[2]);
+
+                for (let i = 2; i < 6; i++) {
+                    const cell = grid.getCellByColumn(i, 'ContactName');
+                    if (!cell) {
+                        UIInteractions.simulatePointerOverCellEvent('pointerenter',
+                            fix.debugElement.query(By.css('.addressArea')).nativeElement);
+                        continue;
+                    }
+                    UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
+                    grid.cdr.detectChanges();
+                }
+                UIInteractions.simulatePointerOverCellEvent('pointerenter', endCell.nativeElement);
+                UIInteractions.simulatePointerOverCellEvent('pointerup', endCell.nativeElement);
+                GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 2, 0, 1, true);
+                GridSelectionFunctions.verifyCellsRegionSelected(grid, 4, 5, 0, 1, true);
+                grid.cdr.detectChanges();
+
+                expect(startCell.focused).toBe(true);
+
+                expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+                expect(selectionChangeSpy).toHaveBeenCalledWith(range);
+                expect(rowDetail.querySelector('[class*="selected"]')).toBeNull();
             });
         });
     });
