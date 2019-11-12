@@ -1571,20 +1571,28 @@ describe('IgxGrid - multi-column headers #grid', () => {
         expect(grid.columnList.length).toEqual(9);
 
         expect(() => {
+            // Delete all column
+            fixture.componentInstance.columnGroups[0].columns.splice(0, 2);
+            fixture.detectChanges();
+        }).not.toThrow();
+
+        expect(grid.columnList.length).toEqual(7);
+
+        expect(() => {
             // Add column
             fixture.componentInstance.columnGroups[0].columns.push({ field: 'Fax', type: 'string' });
             fixture.detectChanges();
         }).not.toThrow();
 
-        expect(grid.columnList.length).toEqual(10);
+        expect(grid.columnList.length).toEqual(8);
 
         expect(() => {
             // Update column
-            fixture.componentInstance.columnGroups[0].columns[1] = { field: 'City', type: 'string' };
+            fixture.componentInstance.columnGroups[0].columns[0] = { field: 'City', type: 'string' };
             fixture.detectChanges();
         }).not.toThrow();
 
-        expect(grid.columnList.length).toEqual(10);
+        expect(grid.columnList.length).toEqual(8);
     });
 });
 
@@ -1965,15 +1973,15 @@ export class DynamicColGroupsGridComponent {
             { columnHeader: 'First', columns: [
                 { field: 'ID', type: 'string' },
                 { field: 'CompanyName', type: 'string' },
-                { field: 'ContactName', type: 'string' },
+                { field: 'ContactName', type: 'string' }
             ]},
             { columnHeader: 'Second', columns: [
                 { field: 'ContactTitle', type: 'string' },
-                { field: 'Address', type: 'string' },
+                { field: 'Address', type: 'string' }
             ]},
             { columnHeader: 'Third', columns: [
                 { field: 'PostlCode', type: 'string' },
-                { field: 'Contry', type: 'string' },
+                { field: 'Contry', type: 'string' }
             ]},
         ];
     }
