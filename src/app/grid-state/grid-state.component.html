@@ -24,13 +24,39 @@
                 <igx-switch [(ngModel)]="options.sorting" (change)="onChange($event, 'sorting')">Sorting</igx-switch>
             </div>
             <div class="control-item">
-                <igx-switch [(ngModel)]="options.groupby" (change)="onChange($event, 'sorting')">Sorting</igx-switch>
+                <igx-switch [(ngModel)]="options.groupby" (change)="onChange($event, 'groupby')">Grouping</igx-switch>
             </div>
             <div class="control-item">
                 <igx-switch [(ngModel)]="options.columns" (change)="onChange($event, 'columns')">Columns</igx-switch>
             </div>
             <div class="control-item">
-                <button igxButton="raised" (click)="restoreGridState()">Restore</button>
+                <igx-switch [(ngModel)]="serialize" (change)="onSerializeChange($event)">Serialize</igx-switch>
+            </div>
+        </div>
+        <div class="switches" style="min-width: inherit">
+            <div class="control-item">
+                <button igxButton="raised" (click)="restoreGridState()">Restore All</button>
+            </div>
+            <div class="control-item">
+                <button igxButton="raised" (click)="restoreColumns()">Columns</button>
+            </div>
+            <div class="control-item">
+                <button igxButton="raised" (click)="restoreFiltering()">Filtering</button>
+            </div>
+            <div class="control-item">
+                <button igxButton="raised" (click)="restoreSorting()">Sorting</button>
+            </div>
+            <div class="control-item">
+                <button igxButton="raised" (click)="restoreGroupby()">GroupBy</button>
+            </div>
+            <div class="control-item">
+                <button igxButton="raised" (click)="restoreSelection">Selection</button>
+            </div>
+            <div class="control-item">
+                <button igxButton="raised" (click)="restorePaging()">Paging</button>
+            </div>
+            <div class="control-item">
+                <button igxButton="raised" (click)="resetGridState()">Reset</button>
             </div>
             <div class="control-item">
                 <span class="clear-button" (click)="clearStorage(toast)" #target="tooltipTarget" [igxTooltipTarget]="clear"><igx-icon>delete</igx-icon></span>
@@ -42,16 +68,14 @@
     </div>
 
     <igx-grid [id]="gridId" #grid1 [igxGridState]="options" [data]="localData" [primaryKey]="'ProductID'" width="1200px" height="550px"
-        [rowEditable]="true" [allowFiltering]="true" [allowAdvancedFiltering]="true" [rowSelectable]="true"
+        [rowEditable]="false" [allowFiltering]="true" [allowAdvancedFiltering]="true"
         [paging]="true" [showToolbar]="true" [columnPinning]="true" [columnHiding]="true"
         [filterMode]="'excelStyleFilter'" [displayDensity]="'cosy'">
-        <igx-column *ngFor="let c of columns" [sortable]="true" [movable]="true" [filterable]="true"
+        <igx-column *ngFor="let c of columns" [sortable]="c.sortable" [movable]="c.movable" [editable]="true" [filterable]="c.filterable" [groupable]="c.groupable"
             [field]="c.field" [header]="c.header" [dataType]="c.dataType" [pinned]="c.pinned" [hidden]="c.hidden">
         </igx-column>
         </igx-grid>
 
     <div #clear="tooltip" igxTooltip>Clear the state from localStorage.</div>
     <div #reload="tooltip" igxTooltip>Reload the page.</div>
-
-    <igx-toast #toast message="Grid state data has been cleared from localStorage."></igx-toast>
 </div>

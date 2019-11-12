@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { IgxToastComponent, IgxGridComponent } from 'igniteui-angular';
+import { IgxToastComponent, IgxGridComponent, FilteringExpressionsTree, FilteringLogic } from 'igniteui-angular';
 import { employeesData } from './localData';
 import { take } from 'rxjs/operators';
 import { NavigationStart, Router } from '@angular/router';
@@ -9,6 +9,7 @@ interface IColumnState {
     field: string;
     header: string;
     width?: string;
+    groupable?: boolean;
     dataType?: string;
     pinned?: boolean;
     sortable?: boolean;
@@ -23,12 +24,13 @@ interface IColumnState {
   templateUrl: './grid-state.component.html'
 })
 
-export class GridSaveStateComponent implements OnInit {
+export class GridSaveStateComponent implements OnInit, AfterViewInit {
   public localData: any[];
   public columns: IColumnState[];
   public gridId = 'grid1';
   public stateKey = this.gridId + '-state';
   public gridState: IGridState;
+  public serialize = true;
 
   public options = {
     selection: false,
@@ -44,12 +46,14 @@ export class GridSaveStateComponent implements OnInit {
   @ViewChild(IgxGridComponent, { static: true }) public grid;
 
   public initialColumns: IColumnState[] = [
-    { field: 'FirstName', header: 'First Name', width: '150px', dataType: 'string', pinned: true},
-    { field: 'LastName', header: 'Last Name', width: '150px', dataType: 'string', pinned: true },
-    { field: 'Country', header: 'Country', width: '140px', dataType: 'string' },
-    { field: 'Age', header: 'Age', width: '110px', dataType: 'number'},
-    { field: 'RegistererDate', header: 'Registerer Date', width: '180px', dataType: 'date' },
-    { field: 'IsActive', header: 'Is Active', width: '140px', dataType: 'boolean' }
+    // tslint:disable:max-line-length
+    { field: 'FirstName', header: 'First Name', width: '150px', dataType: 'string', pinned: true, movable: true, sortable: true, filterable: true},
+    { field: 'LastName', header: 'Last Name', width: '150px', dataType: 'string', pinned: true, movable: true, sortable: true, filterable: true },
+    { field: 'Country', header: 'Country', width: '140px', dataType: 'string', groupable: true, movable: true, sortable: true, filterable: true },
+    { field: 'Age', header: 'Age', width: '110px', dataType: 'number', movable: true, sortable: true, filterable: true},
+    { field: 'RegistererDate', header: 'Registerer Date', width: '180px', dataType: 'date', movable: true, sortable: true, filterable: true },
+    { field: 'IsActive', header: 'Is Active', width: '140px', dataType: 'boolean', groupable: true, movable: true, sortable: true, filterable: true }
+    // tslint:enable:max-line-length
   ];
 
   constructor(private router: Router) {
@@ -63,21 +67,101 @@ export class GridSaveStateComponent implements OnInit {
         this.saveGridState();
     });
 
-    this.restoreGridState();
+    // this.restoreGridState();
   }
 
+  public ngAfterViewInit() {
+    // const gridFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+    // const productFilteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
+    // const productExpression = {
+    //     condition: IgxStringFilteringOperand.instance().condition('contains'),
+    //     fieldName: 'FirstName',
+    //     ignoreCase: true,
+    //     searchVal: 'c'
+    // };
+    // productFilteringExpressionsTree.filteringOperands.push(productExpression);
+    // gridFilteringExpressionsTree.filteringOperands.push(productFilteringExpressionsTree);
+
+    // this.grid.filteringExpressionsTree = gridFilteringExpressionsTree;
+}
+
   public saveGridState() {
-    const state = this.state.getState();
-    window.localStorage.setItem(this.stateKey, state);
+      const state = this.state.getState(this.serialize);
+      if (typeof state === 'string') {
+        window.localStorage.setItem(this.stateKey, state);
+      } else {
+        window.localStorage.setItem(this.stateKey, JSON.stringify(state));
+      }
   }
 
   public restoreGridState() {
       const state = window.localStorage.getItem(this.stateKey);
-      this.state.setState(state);
+      if (state) {
+        this.state.setState(state);
+      }
+  }
+
+  public restoreColumns() {
+    let state = window.localStorage.getItem(this.stateKey);
+    state = JSON.parse(state)['columns'];
+    if (state) {
+      this.state.setState({ columns: state });
+    }
+  }
+
+  public restoreFiltering() {
+    let state = window.localStorage.getItem(this.stateKey);
+    state = JSON.parse(state)['filtering'];
+    if (state) {
+      this.state.setState({ filtering: state });
+    }
+  }
+
+  public restoreSorting() {
+    let state = window.localStorage.getItem(this.stateKey);
+    state = JSON.parse(state)['sorting'];
+    if (state) {
+      this.state.setState({ sorting: state });
+    }
+  }
+
+  public restoreGroupby() {
+    let state = window.localStorage.getItem(this.stateKey);
+    state = JSON.parse(state)['groupby'];
+    if (state) {
+      this.state.setState({ groupby: state });
+    }
+  }
+
+  public restoreSelection() {
+    let state = window.localStorage.getItem(this.stateKey);
+    state = JSON.parse(state)['selection'];
+    if (state) {
+      this.state.setState({ selection: state });
+    }
+  }
+
+  public restorePaging() {
+    let state = window.localStorage.getItem(this.stateKey);
+    state = JSON.parse(state)['paging'];
+    if (state) {
+      this.state.setState({ paging: state });
+    }
+  }
+
+  public resetGridState() {
+    this.grid.filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And);
+    this.grid.advancedFilteringExpressionTree = new FilteringExpressionsTree(FilteringLogic.And);
+    this.grid.sortingExpressions = [];
+    this.grid.groupbyExpressions = [];
   }
 
   public onChange(event: any, action: string) {
     this.state.options[action] = event.checked;
+  }
+
+  public onSerializeChange(event: any) {
+    // this.serialize = !!event.checked;
   }
 
   public clearStorage(toast: IgxToastComponent) {
@@ -87,11 +171,4 @@ export class GridSaveStateComponent implements OnInit {
   public reloadPage() {
       window.location.reload();
   }
-
-  // public getStoredState(action: string, gridId?: string, parseCb?: (key, val) => any): any {
-  //   gridId = gridId ? gridId : this.grid.id;
-  //   const actionKey = action + "-" + gridId;
-  //   const item = JSON.parse(window.localStorage.getItem(actionKey), parseCb);
-  //   return item ? item[action] : null;
-  // }
 }

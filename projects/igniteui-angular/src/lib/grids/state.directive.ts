@@ -1,4 +1,4 @@
-import { Directive, Optional, Self, Input, NgModule, Inject, AfterViewInit } from '@angular/core';
+import { Directive, Optional, Self, Input, NgModule, Inject } from '@angular/core';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
@@ -7,6 +7,9 @@ import { INTERFACE_TOKEN } from './grid/grid.component';
 import { IgxColumnComponent } from './columns/column.component';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { IPagingState } from '../data-operations/paging-state.interface';
+import { DataType } from '../data-operations/data-util';
+import { IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
+    IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 
 export interface IGridState {
     columns: IColumnState[];
@@ -32,6 +35,8 @@ interface IColumnState {
     pinned: boolean;
     sortable: boolean;
     filterable: boolean;
+    editable: boolean;
+    groupable: boolean;
     movable: boolean;
     hidden: boolean;
     dataType: string;
@@ -56,7 +61,7 @@ const ACTION_SELECTION = 'selection';
 @Directive({
     selector: '[igxGridState]'
 })
-export class IgxGridStateDirective implements AfterViewInit {
+export class IgxGridStateDirective {
 
     private _options: IGridStateOptions = {
         columns: true,
@@ -74,9 +79,11 @@ export class IgxGridStateDirective implements AfterViewInit {
     /**
      *  An object with options determining if a certain feature state should be saved.
      *
+     * ```html
+     * <igx-grid [igxGridState]="options"></igx-grid>
+     * ```
      * ```typescript
-     * // get the row data for the first selected row
-     * let saveSortingState = this.grid.state.options.sorting;
+     * public options = {selection: false, advancedFiltering: false};
      * ```
      */
     @Input('igxGridState')
@@ -84,17 +91,25 @@ export class IgxGridStateDirective implements AfterViewInit {
        return this._options;
     }
 
-    public set options(val: IGridStateOptions) {
-        Object.assign(this._options, val);
+    public set options(value: IGridStateOptions) {
+        Object.assign(this._options, value);
     }
 
     constructor(@Inject(INTERFACE_TOKEN) @Self() @Optional() private grid) { }
 
-    public ngAfterViewInit() {
-        this.restoreGridState(this.state);
-        // this.grid.cdr.detectChanges();
-    }
-
+    /**
+     * Sets the state of a feature or states of all grid features, depending on the state object passed as an argument.
+     * Pass an IGridState object to set the state for all features, or IPagingState object to set the paging state only.
+     * returns an object containing all grid features states that are enabled through the `options` property.
+     * ```html
+     * <igx-grid [igxGridState]="options"></igx-grid>
+     * ```
+     * ```typescript
+     * @ViewChild(IgxGridStateDirective, { static: true }) public state;
+     * const gridState = window.localStorage.getItem(key);
+     * this.state.setState(gridState);
+     * ```
+     */
     public setState(state: IGridState |
         IColumnState |
         IFilteringExpressionsTree |
@@ -106,9 +121,23 @@ export class IgxGridStateDirective implements AfterViewInit {
         }
         this.state = state as IGridState | IColumnState | IFilteringExpressionsTree |
             ISortingExpression | IGroupingExpression | IPagingState;
+        this.restoreGridState(this.state);
     }
 
-    public getState(feature?: string | string[], serialize = true): IGridState |
+    /**
+     * Gets the state of a feature or states of all grid features.
+     * If a feature name is not passed as an argument,
+     * returns an object containing all grid features states that are enabled through the `options` property.
+     * The optional `serialize` argument determines whether the returned object will be serialized to a JSON string. Default value is false.
+     * ```html
+     * <igx-grid [igxGridState]="options"></igx-grid>
+     * ```
+     * ```typescript
+     * @ViewChild(IgxGridStateDirective, { static: true }) public state;
+     * let state =  this.state.getState();
+     * ```
+     */
+    public getState(serialize = true, feature?: string | string[]): IGridState |
         IColumnState |
         IFilteringExpressionsTree |
         ISortingExpression |
@@ -123,17 +152,25 @@ export class IgxGridStateDirective implements AfterViewInit {
         if (feature) {
             if (Array.isArray(feature)) {
                 feature.forEach(f => {
-                    state[f] = this.getGridFeature(f, serialize);
+                    state[f] = this.getGridFeature(f);
                 });
             } else {
-                state[feature] = this.getGridFeature(feature, serialize);
+                state[feature] = this.getGridFeature(feature);
             }
         } else {
-            state = this.getAllGridFeatures(serialize) as IGridState;
+            state = this.getAllGridFeatures() as IGridState;
         }
-        return state;
+        if (serialize) {
+            state = JSON.stringify(state, this.stringifyCallback);
+            return state as string;
+        } else {
+            return state as IGridState;
+        }
     }
 
+    /**
+     * Helper method that creates a new array with the current grid columns.
+     */
     public restoreGridState(state) {
         for (const key of Object.keys(state)) {
             this.restoreFeature(key, state[key]);
@@ -141,7 +178,7 @@ export class IgxGridStateDirective implements AfterViewInit {
     }
 
     /**
-     * Applies the state for a given feature.
+     * Restores the state of a feature.
      */
     private restoreFeature(feature: string, state: any) {
         switch (feature) {
@@ -176,7 +213,10 @@ export class IgxGridStateDirective implements AfterViewInit {
          }
     }
 
-    private getAllGridFeatures(serialize = false): IGridState | string {
+    /**
+     * Returns an object containing all grid features state.
+     */
+    private getAllGridFeatures(): IGridState {
         let gridState = {};
 
         for (const key of Object.keys(this.options)) {
@@ -187,15 +227,14 @@ export class IgxGridStateDirective implements AfterViewInit {
         }
 
         gridState = Object.assign({}, gridState);
-        if (serialize) {
-            gridState = JSON.stringify(gridState, this.stringifyCallback);
-            return gridState as string;
-        } else {
-            return gridState as IGridState;
-        }
+        return gridState as IGridState;
     }
 
-    private getGridFeature(feature: string, serialize = false) {
+    /**
+     * Restores an object containing the state for a grid feature.
+     * `serialize` param determines whether the returned object will be serialized to a JSON string. Default value is false.,
+     */
+    private getGridFeature(feature: string) {
         let state = null;
         switch (feature) {
             case ACTION_COLUMNS: {
@@ -227,12 +266,7 @@ export class IgxGridStateDirective implements AfterViewInit {
                 break;
               }
          }
-         if (serialize) {
-            state = JSON.stringify(state, this.stringifyCallback);
-            return state as string;
-        } else {
-            return state;
-        }
+         return state;
     }
 
     /**
@@ -244,6 +278,7 @@ export class IgxGridStateDirective implements AfterViewInit {
                 pinned: c.pinned,
                 sortable: c.sortable,
                 filterable: c.filterable,
+                editable: c.editable,
                 movable: c.movable,
                 hidden: c.hidden,
                 dataType: c.dataType,
@@ -278,7 +313,7 @@ export class IgxGridStateDirective implements AfterViewInit {
     }
 
     private getGroupBy() {
-        const groupingState = this.grid.groupbyExpressions;
+        const groupingState = this.grid.groupingExpressions;
         return { groupby: groupingState };
     }
 
@@ -288,7 +323,7 @@ export class IgxGridStateDirective implements AfterViewInit {
     }
 
     /**
-     * This method modifies the grid column list to restore the columns.
+     * Restores the grid columns by modifying the `columnList` collection of the grid.
      */
     private restoreColumns(columns: IColumnState[]): void {
         const newColumns = [];
@@ -298,6 +333,8 @@ export class IgxGridStateDirective implements AfterViewInit {
             ref.instance.field = col.field;
             ref.instance.dataType = col.dataType;
             ref.instance.sortable = col.sortable;
+            ref.instance.groupable = col.groupable;
+            ref.instance.editable = col.editable;
             ref.instance.filterable = col.filterable;
             ref.instance.resizable = col.resizable;
             ref.instance.movable = col.movable;
@@ -314,15 +351,25 @@ export class IgxGridStateDirective implements AfterViewInit {
         this.grid.columnList.notifyOnChanges();
     }
 
+    /**
+     * Restores the grid filtering state, i.e. sets the `filteringExpressionsTree` property value.
+     */
     private restoreFiltering(state: FilteringExpressionsTree) {
         const filterTree = this.createExpressionsTreeFromObject(state);
         this.grid.filteringExpressionsTree = filterTree;
     }
 
+    /**
+     * Restores the grid advanced filtering state, i.e. sets the `advancedFilteringExpressionsTree` property value.
+     */
     private restoreAdvancedFiltering(state) {
         const advFilterTree = this.createExpressionsTreeFromObject(state.advancedFiltering);
         this.grid.advancedFilteringExpressionsTree = advFilterTree;
     }
+
+    /**
+     * Restores the grid sorting state, i.e. sets the `sortingExpressions` property value.
+     */
     private restoreSorting(state: ISortingExpression | ISortingExpression[]) {
         const strategy = DefaultSortingStrategy.instance();
 
@@ -335,6 +382,9 @@ export class IgxGridStateDirective implements AfterViewInit {
         this.grid.sortingExpressions = state;
     }
 
+    /**
+     * Restores the grid grouping state, i.e. sets the `groupbyExpressions` property value.
+     */
     private restoreGroupBy(state: IGroupingExpression | IGroupingExpression[]) {
         const strategy = DefaultSortingStrategy.instance();
 
@@ -344,9 +394,12 @@ export class IgxGridStateDirective implements AfterViewInit {
             (state as IGroupingExpression).strategy = strategy;
         }
 
-        this.grid.groupbyExpressions = state;
+        this.grid.groupingExpressions = state;
     }
 
+    /**
+     * Restores the grid paging state, i.e. sets the `perPage` property value and paginate to index.
+     */
     private restorePaging(state: IPagingState) {
         if (this.grid.perPage !== state.recordsPerPage) {
             this.grid.perPage = state.recordsPerPage;
@@ -378,14 +431,37 @@ export class IgxGridStateDirective implements AfterViewInit {
                 expressionsTree.filteringOperands.push(subTree);
             } else {
                 const expr = item as IFilteringExpression;
-                const column = this.grid.getColumnByName(expr.fieldName);
-                expr.condition = column.filters.condition(expr.condition.name);
-                expr.searchVal = (column.dataType === 'date') ? new Date(Date.parse(expr.searchVal)) : expr.searchVal;
+                const dataType = this.state[ACTION_COLUMNS].find(c => c.field === expr.fieldName).dataType;
+                expr.condition = this.generateFilteringCondition(dataType, expr.condition.name);
+                expr.searchVal = (dataType === 'date') ? new Date(Date.parse(expr.searchVal)) : expr.searchVal;
                 expressionsTree.filteringOperands.push(expr);
             }
         }
 
         return expressionsTree;
+    }
+
+    /**
+     * Returns the filtering logic function for a given dataType and condition (contains, greaterThan, etc.)
+     */
+    private generateFilteringCondition(dataType: string, name: string): any {
+        let filters;
+        switch (dataType) {
+            case DataType.Boolean:
+                filters = IgxBooleanFilteringOperand.instance();
+                break;
+            case DataType.Number:
+                filters = IgxNumberFilteringOperand.instance();
+                break;
+            case DataType.Date:
+                filters = IgxDateFilteringOperand.instance();
+                break;
+            case DataType.String:
+            default:
+                filters = IgxStringFilteringOperand.instance();
+                break;
+        }
+        return filters.condition(name);
     }
 
     private stringifyCallback(key: string, val: any) {
