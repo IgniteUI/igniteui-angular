@@ -132,6 +132,7 @@ import { IgxGridToolbarCustomContentDirective } from './toolbar/toolbar.directiv
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGridSortingStrategy } from '../data-operations/sorting-strategy';
+import { IgxRowDragGhostDirective  } from './row-drag.directive';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -1914,6 +1915,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden
+     * @internal
+     */
+    @ContentChildren(IgxRowDragGhostDirective, { read: TemplateRef, descendants: false })
+    public dragGhostCustomTemplates: QueryList<TemplateRef<any>>;
+
+    /**
+     * @hidden
      */
     @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective, static: true })
     public verticalScrollContainer: IgxGridForOfDirective<any>;
@@ -3165,6 +3173,18 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.resetNotifyChanges();
             this.cdr.detectChanges();
         }
+    }
+
+    /**
+     * @hidden
+     * @internal
+    */
+    public getDragGhostCustomTemplate() {
+        if (this.dragGhostCustomTemplates && this.dragGhostCustomTemplates.first) {
+            return this.dragGhostCustomTemplates.first;
+        }
+
+        return null;
     }
 
     /**
