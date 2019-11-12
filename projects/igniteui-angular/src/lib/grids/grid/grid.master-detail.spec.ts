@@ -742,6 +742,36 @@ describe('IgxGrid Master Detail #grid', () => {
             });
         });
 
+        describe('Row Selection', () => {
+            it('Should not render row selection checkbox for detail views.', () => {
+                fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
+                grid = fix.componentInstance.grid;
+                fix.componentInstance.rowSelectable = true;
+                fix.detectChanges();
+                grid.expand(fix.componentInstance.data[2].ID);
+                const rowDetail = GridFunctions.getMasterRowDetail(grid.rowList.toArray()[2]);
+                expect(rowDetail.querySelector('[class*="__cbx-selection"]')).toBeNull();
+            });
+
+            it('Should highlight only the master row when selecting it and not the detail row.', () => {
+                fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
+                grid = fix.componentInstance.grid;
+                fix.componentInstance.rowSelectable = true;
+                fix.detectChanges();
+                grid.expand(fix.componentInstance.data[2].ID);
+
+                const row = grid.rowList.toArray()[2];
+                const checkbox = row.nativeElement.querySelector('.igx-checkbox__composite');
+                checkbox.click();
+                fix.detectChanges();
+
+                const rowDetail = GridFunctions.getMasterRowDetail(row);
+                expect(row.nativeElement.classList).toContain('igx-grid__tr--selected');
+                expect(rowDetail.classList).not.toContain('--selected');
+                expect(rowDetail.querySelector('[class*="--selected"]')).toBeNull();
+            });
+        });
+
         describe('Search', () => {
             beforeEach(async(() => {
                 fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
