@@ -151,6 +151,8 @@ export class IgxDragLocation {
 })
 export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
+    protected ghostContext: any = null;
+
     /**
      * - Save data inside the `igxDrag` directive. This can be set when instancing `igxDrag` on an element.
      * ```html
@@ -1099,7 +1101,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
         let dynamicGhostRef;
         if (this.ghostTemplate) {
-            dynamicGhostRef = this.viewContainer.createEmbeddedView(this.ghostTemplate);
+            dynamicGhostRef = this.viewContainer.createEmbeddedView(this.ghostTemplate, this.ghostContext);
             this.ghostElement = dynamicGhostRef.rootNodes[0];
         } else {
             this.ghostElement = node ? node.cloneNode(true) : this.element.nativeElement.cloneNode(true);

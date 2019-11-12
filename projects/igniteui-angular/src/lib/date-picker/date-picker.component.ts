@@ -958,7 +958,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
         this.emitValueChangeEvent(oldValue, this.value );
         this.onSelection.emit(date);
-        this._onChangeCallback(date);
     }
 
     /**
@@ -979,7 +978,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         if (this.calendar) {
             this.calendar.deselectDate();
         }
-        this._onChangeCallback(null);
     }
 
     /**
@@ -1065,7 +1063,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
         this.emitValueChangeEvent(oldValue, this.value );
         this.calendar.viewDate = date;
-        this._onChangeCallback(date);
         this.closeCalendar();
         this.onSelection.emit(date);
     }
@@ -1210,7 +1207,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
                         this.emitValueChangeEvent(oldValue, this.value );
                         this.invalidDate = '';
-                        this._onChangeCallback(newValue);
                 } else {
                     const args: IDatePickerDisabledDateEventArgs = {
                         datePicker: this,
