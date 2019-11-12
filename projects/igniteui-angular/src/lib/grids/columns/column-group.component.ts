@@ -62,16 +62,16 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     @Input()
-    public set expand(value: boolean) {
+    public set expanded(value: boolean) {
         if (!this.collapsible) { return; }
-        this._expand = value;
-        this.expandChange.emit(this._expand);
+        this._expanded = value;
+        this.expandedChange.emit(this._expanded);
         if (!this.hidden && this.children) {
             this.setExpandCollapseState();
         }
     }
-    public get expand() {
-        return this._expand;
+    public get expanded() {
+        return this._expanded;
     }
 
     /**
@@ -208,7 +208,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         } else {
             this.children.forEach(c =>  {
                 if (c.visibleWhenCollapse === undefined) {c.hidden = false; return; }
-                c.hidden = this.expand ? c.visibleWhenCollapse : !c.visibleWhenCollapse;
+                c.hidden = this.expanded ? c.visibleWhenCollapse : !c.visibleWhenCollapse;
             });
         }
     }

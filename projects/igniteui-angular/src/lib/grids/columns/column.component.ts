@@ -253,7 +253,7 @@ export class IgxColumnComponent implements AfterContentInit {
 
     /** @hidden */
     @Output()
-    public expandChange = new EventEmitter<boolean>();
+    public expandedChange = new EventEmitter<boolean>();
 
     /** @hidden */
     @Output()
@@ -1050,7 +1050,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @hidden
      * @internal
      */
-    public expand = true;
+    public expanded = true;
 
     /**
      * hidden
@@ -1178,7 +1178,7 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      * @hidden
      */
-    protected _expand = true;
+    protected _expanded = true;
     /**
      * @hidden
      */
@@ -1769,7 +1769,7 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     protected setExpandCollapseState() {
         this.children.filter(col => (col.visibleWhenCollapse !== undefined)).forEach(c =>  {
-            c.hidden = this._expand ? c.visibleWhenCollapse : !c.visibleWhenCollapse;
+            c.hidden = this._expanded ? c.visibleWhenCollapse : !c.visibleWhenCollapse;
         });
     }
 

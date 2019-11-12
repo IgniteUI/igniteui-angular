@@ -68,8 +68,8 @@ export class GridColumnGroupsSampleComponent implements AfterViewInit {
         col.hidden = !col.hidden;
         this.grid.getColumnByName('CompanyName').hidden = true;
         console.log(this.grid.getColumnByName('CompanyName').parent); */
-        (this.grid.columnList.filter(c => c.header === 'Address Information')[0] as any).expand =
-        !(this.grid.columnList.filter(c => c.header === 'Address Information')[0] as any).expand;
+        (this.grid.columnList.filter(c => c.header === 'Address Information')[0] as any).expanded =
+        !(this.grid.columnList.filter(c => c.header === 'Address Information')[0] as any).expanded;
 
     }
 
