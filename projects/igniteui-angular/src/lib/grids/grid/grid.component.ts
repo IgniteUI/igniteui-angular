@@ -676,6 +676,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public detailsKeyboardHandler(event, rowIndex, container) {
         const colIndex = this.selectionService.activeElement ? this.selectionService.activeElement.column : 0;
         const shift = event.shiftKey;
+        const ctrl = event.ctrlKey;
         const key = event.key.toLowerCase();
         const target = event.target;
         if (key === 'tab') {
@@ -696,12 +697,16 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                         (args) => args.target.nativeElement.focus());
                 }
             }
-        } else if (key === 'arrowup') {
+        } else if (key === 'arrowup' && !ctrl && target === container) {
             this.navigateTo(rowIndex - 1, colIndex,
                 (args) => args.target.nativeElement.focus());
-        } else if (key === 'arrowdown') {
+        } else if (key === 'arrowup' && ctrl && target === container) {
+            this.navigation.navigateTop(colIndex);
+        } else if (key === 'arrowdown' && !ctrl && target === container) {
             this.navigateTo(rowIndex + 1, colIndex,
                 (args) => args.target.nativeElement.focus());
+        } else if (key === 'arrowdown' && ctrl && target === container) {
+            this.navigation.navigateBottom(colIndex);
         }
     }
 

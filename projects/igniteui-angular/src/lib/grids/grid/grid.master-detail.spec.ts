@@ -402,6 +402,40 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(GridFunctions.elementInGridView(grid, fRow.nativeElement)).toBeTruthy();
             expect(document.activeElement).toBe(fRow.cells.last.nativeElement);
          });
+
+         it(`Should navigate to the first/last row when using Ctrl+ArrowUp/ArrowDown
+                and focus is on the detail row container.`, async() => {
+                    let detailRow = GridFunctions.getMasterRowDetail(grid.rowList.first);
+                    UIInteractions.triggerKeyDownEvtUponElem('arrowdown', detailRow, true, false, false, true);
+                    await wait(DEBOUNCETIME);
+                    fix.detectChanges();
+                    await wait(DEBOUNCETIME);
+                    fix.detectChanges();
+                    let row = grid.getRowByIndex(52) as IgxGridRowComponent;
+                    expect(row).not.toBeUndefined();
+                    expect(GridFunctions.elementInGridView(grid, row.nativeElement)).toBeTruthy();
+                    expect(document.activeElement).toBe(row.cells.first.nativeElement);
+                    detailRow = GridFunctions.getMasterRowDetail(row);
+                    UIInteractions.triggerKeyDownEvtUponElem('arrowup', detailRow, true, false, false, true);
+                    await wait(DEBOUNCETIME);
+                    fix.detectChanges();
+                    await wait(DEBOUNCETIME);
+                    fix.detectChanges();
+                    row = grid.getRowByIndex(0) as IgxGridRowComponent;
+                    expect(row).not.toBeUndefined();
+                    expect(GridFunctions.elementInGridView(grid, row.nativeElement)).toBeTruthy();
+                    expect(document.activeElement).toBe(row.cells.first.nativeElement);
+            });
+        it('Should not navigate if keydown is done on an element inside the details template.', async() => {
+            const detailRow = GridFunctions.getMasterRowDetail(grid.rowList.first);
+            const input = detailRow.querySelector('input[name="Comment"]');
+            input.focus();
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', input, true, false, false, false);
+            fix.detectChanges();
+            await wait(DEBOUNCETIME);
+            fix.detectChanges();
+            expect(document.activeElement).toBe(input);
+        });
     });
 
     describe('Integration', () => {
