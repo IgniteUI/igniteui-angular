@@ -30,6 +30,7 @@ All notable changes for each version of this project will be documented in this 
     - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
 - `IgxToggleDirective`:
     - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
+- `IgxSelect`- adding `IgxSelectHeaderDirective` and `IgxSelectFooterDirective`. These can be used to provide a custom header, respectively footer templates for the `igxSelect` drop-down list. If there are no templates marked with these directives - no default templates will be used so the drop-down list will not have header or footer.
 
 ## 8.2.6
 
