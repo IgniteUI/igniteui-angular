@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { async, fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, FormGroup, FormBuilder, FormControl, ReactiveFormsModule} from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxDatePickerComponent, IgxDatePickerModule } from './date-picker.component';
@@ -30,9 +30,10 @@ describe('IgxDatePicker', () => {
                 IgxDatePickerEditableComponent,
                 IgxDatePickerCustomizedComponent,
                 IgxDropDownDatePickerRetemplatedComponent,
-                IgxDatePickerOpeningComponent
+                IgxDatePickerOpeningComponent,
+                IgxDatePickerReactiveFormComponent
             ],
-            imports: [IgxDatePickerModule, FormsModule, NoopAnimationsModule, IgxInputGroupModule, IgxCalendarModule,
+            imports: [IgxDatePickerModule, FormsModule, ReactiveFormsModule, NoopAnimationsModule, IgxInputGroupModule, IgxCalendarModule,
                 IgxButtonModule, IgxTextSelectionModule]
         })
             .compileComponents();
@@ -1114,6 +1115,42 @@ describe('IgxDatePicker', () => {
             expect(input.value.substring(input.selectionStart, input.selectionEnd)).toEqual(input.value);
         }));
     });
+
+    describe('Reactive form', () => {
+        let fixture: ComponentFixture<IgxDatePickerReactiveFormComponent>;
+        let datePicker: IgxDatePickerComponent;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(IgxDatePickerReactiveFormComponent);
+            datePicker = fixture.componentInstance.datePicker;
+            fixture.detectChanges();
+        });
+
+        // Bug #6025 Date picker does not disable in reactive form
+        it('Should disable when form is disabled', fakeAsync(() => {
+            fixture.detectChanges();
+            const formGroup: FormGroup = fixture.componentInstance.reactiveForm;
+            const inputGroup = fixture.debugElement.query(By.css('.igx-input-group'));
+
+            inputGroup.nativeElement.click();
+            tick();
+            fixture.detectChanges();
+            expect(datePicker.collapsed).toBeFalsy();
+
+            datePicker.closeCalendar();
+            fixture.detectChanges();
+
+            formGroup.disable();
+            tick();
+            fixture.detectChanges();
+
+            inputGroup.nativeElement.click();
+            tick();
+            fixture.detectChanges();
+            const dateDropDown = document.getElementsByClassName('igx-date-picker--dropdown');
+            expect(dateDropDown.length).toEqual(0);
+        }));
+    });
 });
 
 @Component({
@@ -1258,4 +1295,26 @@ export class IgxDatePickerCustomizedComponent {
 })
 export class IgxDatePickerOpeningComponent {
     @ViewChild(IgxDatePickerComponent, { static: true }) public datePicker: IgxDatePickerComponent;
+}
+
+@Component({
+    template: `
+    <form [formGroup]="reactiveForm">
+    <p>
+        <igx-date-picker formControlName="datePickerReactive" #datePickerReactive></igx-date-picker>
+    </p>
+</form>
+`
+})
+class IgxDatePickerReactiveFormComponent {
+    @ViewChild('datePickerReactive', { read: IgxDatePickerComponent, static: true })
+    public datePicker: IgxDatePickerComponent;
+    reactiveForm: FormGroup;
+
+    constructor(fb: FormBuilder) {
+        this.reactiveForm = fb.group({
+            datePickerReactive: new FormControl(''),
+        });
+    }
+    onSubmitReactive() { }
 }
