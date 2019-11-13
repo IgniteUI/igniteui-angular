@@ -219,6 +219,11 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     public registerOnTouched(fn: any): void { }
 
     /** @hidden @internal */
+    public setDisabledState(isDisabled: boolean): void {
+        this.disabled = isDisabled;
+    }
+
+    /** @hidden @internal */
     public getEditElement(): HTMLElement {
         return this.input.nativeElement;
     }
