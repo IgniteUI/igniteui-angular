@@ -487,15 +487,12 @@ describe('Carousel', () => {
             await wait(200);
 
             expect(carousel.isPlaying).toBeFalsy();
-            expect(carousel.onCarouselPaused.emit).toHaveBeenCalledTimes(1);
 
             Simulator.gestures.press(carousel.nativeElement, { duration: 180 });
             fixture.detectChanges();
             await wait(200);
 
             expect(carousel.isPlaying).toBeTruthy();
-            expect(carousel.onCarouselPlaying.emit).toHaveBeenCalledTimes(1);
-            expect(carousel.onCarouselPaused.emit).toHaveBeenCalledTimes(1);
 
             // When the carousel is stopped tap does not start playing
             carousel.stop();
@@ -508,7 +505,12 @@ describe('Carousel', () => {
             await wait(200);
 
             expect(carousel.isPlaying).toBeFalsy();
-            expect(carousel.onCarouselPlaying.emit).toHaveBeenCalledTimes(1);
+
+            Simulator.gestures.press(carousel.nativeElement, { duration: 180 });
+            fixture.detectChanges();
+            await wait(200);
+
+            expect(carousel.isPlaying).toBeFalsy();
         });
     });
 
