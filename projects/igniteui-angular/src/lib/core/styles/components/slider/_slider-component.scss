@@ -34,6 +34,18 @@
         @extend %igx-slider__ticks--top !optional;
     }
 
+    @include e(tick-labels, $m: horizontal) {
+        @extend %igx-slider__tick-labels--horizontal !optional;
+    }
+
+    @include e(tick-labels, $m: top-bottom) {
+        @extend %igx-slider__tick-labels--top-bottom !optional;
+    }
+
+    @include e(tick-labels, $m: bottom-top) {
+        @extend %igx-slider__tick-labels--bottom-top !optional;
+    }
+
     @include e(ticks-group) {
         @extend %igx-slider__ticks-group !optional;
     }

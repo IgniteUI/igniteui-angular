@@ -69,7 +69,7 @@ export class IgxTicksComponent {
     /**
      * @hidden
      */
-    @HostBinding('class.igx-slider__tick-labels--toptobottom')
+    @HostBinding('class.igx-slider__tick-labels--top-bottom')
     public get labelsTopToBottomClass() {
         return this.tickLabelsOrientation === TickLabelsOrientation.toptobottom;
     }
@@ -77,7 +77,7 @@ export class IgxTicksComponent {
     /**
      * @hidden
      */
-    @HostBinding('class.igx-slider__tick-labels--bottomtotop')
+    @HostBinding('class.igx-slider__tick-labels--bottom-top')
     public get labelsBottomToTopClass() {
         return this.tickLabelsOrientation === TickLabelsOrientation.bottomtotop;
     }
