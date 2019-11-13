@@ -113,6 +113,10 @@
         }
     }
 
+    @include e(track-steps) {
+        @extend %igx-slider-track-steps !optional;
+    }
+
     @include m(disabled) {
         @extend %igx-slider-display !optional;
 
@@ -122,7 +126,7 @@
         }
 
         @include e(track-steps) {
-            @extend %igx-slider-track-steps !optional;
+            @extend %igx-slider-track-steps--disabled !optional;
         }
 
         @include e(track-fill) {
