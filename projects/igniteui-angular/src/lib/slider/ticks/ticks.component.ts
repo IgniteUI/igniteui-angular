@@ -61,14 +61,6 @@ export class IgxTicksComponent {
     /**
      * @hidden
      */
-    @HostBinding('class.igx-slider__tick-labels--horizontal')
-    public get labelsHorizontalClass() {
-        return this.tickLabelsOrientation === TickLabelsOrientation.horizontal;
-    }
-
-    /**
-     * @hidden
-     */
     @HostBinding('class.igx-slider__tick-labels--top-bottom')
     public get labelsTopToBottomClass() {
         return this.tickLabelsOrientation === TickLabelsOrientation.toptobottom;
