@@ -21,7 +21,7 @@ export class SliderSampleComponent {
     private _upperValue: Date;
 
     public labelOrientaion = TickLabelsOrientation.horizontal;
-    public ticksOrientation = TicksOrientation.mirror;
+    public ticksOrientation = TicksOrientation.bottom;
     public primaryTickLabels = true;
     public secondaryTickLabels = true;
     public sliderType: SliderType = SliderType.RANGE;

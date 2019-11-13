@@ -11,11 +11,12 @@
                     [primaryTickLabels]="primaryTickLabels"
                     [secondaryTickLabels]="secondaryTickLabels"
                     [ticksOrientation]="ticksOrientation"
-                    [primaryTicks]="3"
+                    [labels]="labels"
+                    [primaryTicks]="0"
                     [secondaryTicks]="3">
-                    <ng-template igxSliderTickLabel let-value let-primary="isPrimary" let-idx="index" let-labels="labels">
+                    <!-- <ng-template igxSliderTickLabel let-value let-primary="isPrimary" let-idx="index" let-labels="labels">
                         {{ tickLabel(value, primary, idx, labels) }}
-                    </ng-template>
+                    </ng-template> -->
                 </igx-slider>
             </article>
             <article style="padding-top: 50px">
@@ -24,6 +25,7 @@
                 <button igxButton (click)="primaryTickLabels = !primaryTickLabels">show/hide primary labels</button>
                 <button igxButton (click)="secondaryTickLabels = !secondaryTickLabels">show/hide secondary labels</button>
                 <button igxButton (click)="changeLabels()">change labels</button>
+                <button igxButton (click)="sliderType = sliderType === 0 ? 1 : 0">change type</button>
             </article>
 
 

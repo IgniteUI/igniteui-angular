@@ -98,6 +98,7 @@ export class IgxSliderComponent implements
     private _destroyer$ = new Subject<boolean>();
     private _indicatorsDestroyer$ = new Subject<boolean>();
     private _indicatorsTimer: Observable<any>;
+    private _onTypeChanged: Subject<SliderType> = new Subject();
 
     private _onChangeCallback: (_: any) => void = noop;
     private _onTouchedCallback: () => void = noop;
@@ -262,6 +263,9 @@ export class IgxSliderComponent implements
         if (this._hasViewInit) {
             this.updateTrack();
         }
+
+        this._cdr.detectChanges();
+        this._onTypeChanged.next(type);
     }
 
     /**
@@ -951,13 +955,22 @@ export class IgxSliderComponent implements
         this.subscribeTo(this.thumbFrom, this.thumbChanged.bind(this));
         this.subscribeTo(this.thumbTo, this.thumbChanged.bind(this));
 
-        this.thumbs.changes.pipe(takeUntil(this._destroyer$)).subscribe(change => {
-            const thumbFrom = change.find((thumb: IgxSliderThumbComponent) => thumb.type === SliderHandle.FROM);
+        // Implementing a workaround in regards of the following bug: https://github.com/angular/angular/issues/30088
+        // this.thumbs.changes.pipe(takeUntil(this._destroyer$)).subscribe(change => {
+        //     const thumbFrom = change.find((thumb: IgxSliderThumbComponent) => thumb.type === SliderHandle.FROM);
+        //     const labelFrom = this.labelRefs.find((label: IgxThumbLabelComponent) => label.type === SliderHandle.FROM);
+        //     this.positionHandle(thumbFrom, labelFrom, this.lowerValue);
+        //     // this.subscribeTo(thumbFrom, this.thumbChanged.bind(this));
+        //     this.changeThumbFocusableState(this.disabled);
+        // });
+
+        this._onTypeChanged.pipe(takeUntil(this._destroyer$)).subscribe((type: SliderType) => {
+            const thumbFrom = this.thumbs.find((thumb: IgxSliderThumbComponent) => thumb.type === SliderHandle.FROM);
             const labelFrom = this.labelRefs.find((label: IgxThumbLabelComponent) => label.type === SliderHandle.FROM);
             this.positionHandle(thumbFrom, labelFrom, this.lowerValue);
             this.subscribeTo(thumbFrom, this.thumbChanged.bind(this));
             this.changeThumbFocusableState(this.disabled);
-        });
+        })
     }
 
     /**
