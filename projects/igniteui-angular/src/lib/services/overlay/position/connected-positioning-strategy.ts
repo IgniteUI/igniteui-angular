@@ -34,12 +34,16 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
     this.settings = Object.assign({}, this._defaultSettings, settings);
   }
 
-    protected calculateElementRectangles(contentElement): { targetRect: ClientRect, elementRect: ClientRect } {
-        return {
-            targetRect: Util.getTargetRect(this.settings),
-            elementRect: contentElement.getBoundingClientRect() as ClientRect
-        };
-    }
+  /**
+   * Obtains the ClientRect objects for the required elements - target and element to position
+   * @returns target and element ClientRect objects
+   */
+  protected calculateElementRectangles(contentElement): { targetRect: ClientRect, elementRect: ClientRect } {
+      return {
+          targetRect: Util.getTargetRect(this.settings),
+          elementRect: contentElement.getBoundingClientRect() as ClientRect
+      };
+  }
 
   /** @inheritdoc */
   position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {

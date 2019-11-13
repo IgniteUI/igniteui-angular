@@ -16,6 +16,8 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         openAnimation: fadeIn,
         closeAnimation: fadeOut
     };
+
+    /** @inheritdoc */
     public settings: PositionSettings;
 
     constructor(public select: IgxSelectBase, settings?: PositionSettings) {
@@ -28,6 +30,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     private global_xOffset = 0;
     private global_styles: SelectStyles = {};
 
+    /** @inheritdoc */
     position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
         // 1st: Check if the interaction item is visible. If NO it should be scrolled in view.
         //      Adjust the new container position with the scrolled amount.
@@ -69,6 +72,10 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         this.setStyles(contentElement, selectFit, initialCall);
     }
 
+    /**
+     * Computing the necessary scrolling amount and vertical offset
+     * @param selectFit selectFit to use for computation
+     */
     private manageScrollToItem(selectFit: SelectFit) {
         // Scroll and compensate the item's container position, when the selected item is not visible.
         // selected item is completely invisible
@@ -89,6 +96,10 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         }
     }
 
+    /**
+     * Scroll the container to a particular item, based on passed scrollAmount
+     * @param scrollAmount amount of pixels to scroll.
+     */
     private scrollToItem(scrollAmount: number): number {
         if (isIE()) {
             setTimeout(() => {
@@ -100,8 +111,11 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         return scrollAmount;
     }
 
-    // Position the items outer container Below or Above the input.
-    fitInViewport(contentElement: HTMLElement, selectFit: SelectFit) {
+    /**
+     * Position the items outer container Below or Above the input
+     * @param selectFit selectFit to use for computation.
+     */
+    protected fitInViewport(contentElement: HTMLElement, selectFit: SelectFit) {
         // Position Select component's container below target/input as preferred positioning over above target/input
         const canFitBelowInput = selectFit.targetRect.top - selectFit.styles.itemTextToInputTextDiff + selectFit.contentElementRect.height <
             selectFit.viewPortRect.bottom;
@@ -119,6 +133,13 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
             }
     }
 
+
+    /**
+     * Sets element's style which effectively positions the provided element
+     * @param element Element to position
+     * @param selectFit selectFit to use for computation.
+     * @param initialCall should be true if this is the initial call to the position method calling setStyles
+     */
     protected setStyles(contentElement: HTMLElement, selectFit: SelectFit, initialCall?: boolean) {
         // The Select component's container is about to be displayed. Set its position.
         if (initialCall) {
@@ -133,7 +154,12 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         this.global_styles.contentElementNewWidth = selectFit.styles.contentElementNewWidth;
     }
 
-    public calculateStyles(selectFit: SelectFit): SelectStyles  {
+    /**
+     * Calculate the necessary input and selected item styles to be used for positioning item text over input text.
+     * Calculate & Set default items container width.
+     * @param selectFit selectFit to use for computation.
+     */
+    private calculateStyles(selectFit: SelectFit): SelectStyles  {
         const styles: SelectStyles = {};
         const inputElementStyles = window.getComputedStyle(this.settings.target as Element);
         const itemElementStyles = window.getComputedStyle(selectFit.itemElement);
@@ -163,6 +189,9 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         return styles;
     }
 
+    /**
+     * Obtain the selected item if there is such one or otherwise use the first one
+     */
     private getInteractionItemElement(): HTMLElement {
         let itemElement;
         if (this.select.selectedItem) {
@@ -177,25 +206,33 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         return itemElement;
     }
 
-    protected calculateYoffset(selectFit: SelectFit) {
+    /**
+     * Calculate how much to offset the overlay container for Y-axis.
+     */
+    private calculateYoffset(selectFit: SelectFit) {
         const contentElementTopLeftPointY = selectFit.contentElementRect.top;
         selectFit.verticalOffset =
             -(selectFit.itemRect.top - contentElementTopLeftPointY + selectFit.styles.itemTextToInputTextDiff);
         this.global_yOffset = selectFit.verticalOffset;
     }
 
-    protected calculateXoffset(selectFit: SelectFit) {
+    /**
+     * Calculate how much to offset the overlay container for X-axis.
+     */
+    private calculateXoffset(selectFit: SelectFit) {
         selectFit.horizontalOffset = selectFit.styles.itemTextIndent - selectFit.styles.itemTextPadding;
         this.global_xOffset = selectFit.horizontalOffset;
     }
 }
 
+/** @hidden */
 export interface SelectFit extends ConnectedFit {
     itemElement?: HTMLElement;
     itemRect?: ClientRect;
     styles?: SelectStyles;
 }
 
+/** @hidden */
 export interface SelectStyles {
     itemTextPadding?: number;
     itemTextIndent?: number;
@@ -203,4 +240,3 @@ export interface SelectStyles {
     contentElementNewWidth?: number;
     numericLeftPadding?: number;
 }
-
