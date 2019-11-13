@@ -247,6 +247,7 @@
         position: absolute;
         top: calc(#{$tick-height} + #{rem(2px)});
         transform: translate(-50%);
+        opacity: 1;
     }
 
     %igx-slider__ticks-tick {
@@ -288,6 +289,11 @@
 
     %igx-slider__ticks--disabled {
         visibility: hidden;
+    }
+
+    %igx-slider__tick-label--hidden {
+        opacity: 0;
+        transition: opacity .2s $ease-in-out-quad;
     }
 
     %igx-slider__tick-labels--horizontal,

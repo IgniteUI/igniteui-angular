@@ -19,10 +19,11 @@
 </svg> -->
 
 <div class="igx-slider__ticks-group" *ngFor="let n of [].constructor(ticksLength); let idx=index" [ngClass]="{ 'igx-slider__ticks-group--tall': isPrimary(idx)}">
-    <div class="igx-slider__ticks-tick"></div>
-    <span class="igx-slider__ticks-label" [ngClass]="{ 'igx-slider__tick-label--hidden': !hiddenTickLabels(idx)}">
-        <ng-container *ngTemplateOutlet="tickLabelTemplateRef ? tickLabelTemplateRef : tickLabelDefaultTemplate; context: context(idx)"></ng-container>
-    </span>
+    <div class="igx-slider__ticks-tick">
+        <span class="igx-slider__ticks-label" [ngClass]="{ 'igx-slider__tick-label--hidden': !hiddenTickLabels(idx)}">
+            <ng-container *ngTemplateOutlet="tickLabelTemplateRef ? tickLabelTemplateRef : tickLabelDefaultTemplate; context: context(idx)"></ng-container>
+        </span>
+    </div>
 </div>
 
 <ng-template #tickLabelDefaultTemplate let-value>
