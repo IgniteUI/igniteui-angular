@@ -27,7 +27,8 @@ describe('IgxGrid Master Detail #grid', () => {
         TestBed.configureTestingModule({
             declarations: [
                 DefaultGridMasterDetailComponent,
-                AllExpandedGridMasterDetailComponent
+                AllExpandedGridMasterDetailComponent,
+                MRLMasterDetailComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
         }).compileComponents();
@@ -809,6 +810,97 @@ describe('IgxGrid Master Detail #grid', () => {
                     expect(checkbox.nativeElement.attributes['aria-checked'].value).toEqual('true');
                 });
             });
+
+            describe('Multi-row layout', () => {
+                beforeEach(async(() => {
+                    fix = TestBed.createComponent(MRLMasterDetailComponent);
+                    fix.detectChanges();
+                    grid = fix.componentInstance.grid;
+                }));
+
+                it('Should render expand/collapse icon in the column with visible index 0.', async() => {
+                    const cell = grid.getCellByKey('ALFKI', 'CompanyName');
+                    expect(cell instanceof IgxGridExpandableCellComponent).toBeTruthy();
+                    let icon = cell.nativeElement.querySelector('igx-icon');
+                    expect(icon.textContent).toEqual(COLLAPSED_ICON_NAME);
+                    await GridFunctions.toggleMasterRowByClick(fix, grid.rowList.first, DEBOUNCETIME);
+                    fix.detectChanges();
+                    icon = cell.nativeElement.querySelector('igx-icon');
+                    expect(icon.textContent).toEqual(EXPANDED_ICON_NAME);
+                    const firstRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.first);
+                    expect(firstRowDetail.querySelector('.addressArea').innerText).toEqual('Obere Str. 57');
+                });
+
+                it('Should expand detail view without breaking multi-row layout.', async() => {
+                    await GridFunctions.toggleMasterRowByClick(fix, grid.rowList.first, DEBOUNCETIME);
+                    fix.detectChanges();
+
+                    // check row order
+                    const rows = fix.debugElement.queryAll(By.css('igx-grid-row'));
+                    const detailViews = fix.debugElement.queryAll(By.css('div[detail="true"]'));
+                    expect(detailViews.length).toBe(1);
+
+                    expect(rows[0].context.index).toBe(0);
+                    expect(detailViews[0].context.index).toBe(1);
+                    expect(rows[1].context.index).toBe(2);
+                });
+
+                it(`Should navigate down through a detail view by focusing the whole row and continuing
+                onto the next with arrow down in multi-row layout grid.`, async() => {
+                    await GridFunctions.toggleMasterRowByClick(fix, grid.rowList.first, DEBOUNCETIME);
+                    fix.detectChanges();
+
+                    let targetCellElement = grid.getCellByColumn(0, 'ContactName');
+                    UIInteractions.triggerKeyDownEvtUponElem('arrowdown', targetCellElement, true);
+                    await wait(DEBOUNCETIME);
+                    fix.detectChanges();
+
+                    targetCellElement = grid.getCellByColumn(0, 'Address');
+                    expect(targetCellElement.focused).toBeTruthy();
+
+                    UIInteractions.triggerKeyDownEvtUponElem('arrowdown', targetCellElement, true);
+                    await wait(DEBOUNCETIME);
+                    fix.detectChanges();
+
+                    const firstRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.first);
+                    expect(document.activeElement).toBe(firstRowDetail);
+
+                    UIInteractions.triggerKeyDownEvtUponElem('arrowdown', firstRowDetail, true);
+                    await wait(DEBOUNCETIME);
+                    fix.detectChanges();
+
+                    targetCellElement = grid.getCellByColumn(2, 'CompanyName');
+                    expect(targetCellElement.focused).toBeTruthy();
+                });
+
+                it(`Should navigate up through a detail view by
+                 focusing the whole row and continuing onto the next with arrow up in multi-row layout grid.`, async() => {
+                    await GridFunctions.toggleMasterRowByClick(fix, grid.rowList.first, DEBOUNCETIME);
+                    fix.detectChanges();
+
+                    let targetCellElement = grid.getCellByColumn(2, 'ContactName');
+                    UIInteractions.triggerKeyDownEvtUponElem('arrowup', targetCellElement, true);
+                    await wait(DEBOUNCETIME);
+                    fix.detectChanges();
+
+                    targetCellElement = grid.getCellByColumn(2, 'CompanyName');
+                    expect(targetCellElement.focused).toBeTruthy();
+
+                    UIInteractions.triggerKeyDownEvtUponElem('arrowup', targetCellElement, true);
+                    await wait(DEBOUNCETIME);
+                    fix.detectChanges();
+
+                    const firstRowDetail = GridFunctions.getMasterRowDetail(grid.rowList.first);
+                    expect(document.activeElement).toBe(firstRowDetail);
+
+                    UIInteractions.triggerKeyDownEvtUponElem('arrowup', firstRowDetail, true);
+                    await wait(DEBOUNCETIME);
+                    fix.detectChanges();
+
+                    targetCellElement = grid.getCellByColumn(0, 'Address');
+                    expect(targetCellElement.focused).toBeTruthy();
+                });
+            });
         });
     });
 });
@@ -886,3 +978,35 @@ export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetai
         this.expStates = allExpanded;
     }
 }
+
+@Component({
+    template: `
+        <igx-grid [data]="data"
+         [width]="width" [height]="height" [primaryKey]="'ID'" [paging]="paging" [rowSelectable]="rowSelectable">
+        <igx-column-layout field='group2'>
+            <igx-column [rowStart]="1" [colStart]="1" [colEnd]="3" field="CompanyName" [width]="'300px'"></igx-column>
+            <igx-column [rowStart]="2" [colStart]="1" field="ContactName" [width]="'100px'"></igx-column>
+            <igx-column [rowStart]="2" [colStart]="2" field="ContactTitle" [width]="'200px'"></igx-column>
+            <igx-column [rowStart]="3" [colStart]="1" [colEnd]="3" field="Address" [width]="'300px'"></igx-column>
+        </igx-column-layout>
+        <igx-column-layout>
+            <igx-column [rowStart]="1" [colStart]="1" [colEnd]="3" [rowEnd]="3" field="City" [width]="'300px'"></igx-column>
+            <igx-column [rowStart]="3" [colStart]="1"  [colEnd]="3" field="Region" [width]='"300px"'></igx-column>
+        </igx-column-layout>
+        <igx-column-layout field='group1'>
+            <igx-column  [rowStart]="1" [colStart]="1" [rowEnd]="4" field="ID"></igx-column>
+        </igx-column-layout>
+            <ng-template igxGridDetail let-dataItem>
+                <div>
+                    <div class="checkboxArea">
+                        <igx-checkbox [disableRipple]="true"></igx-checkbox>
+                        <span style="font-weight: 600">Available</span>
+                    </div>
+                    <div class="addressArea">{{dataItem.Address}}</div>
+                    <div class="inputArea"><input type="text" name="Comment"></div>
+                </div>
+            </ng-template>
+        </igx-grid>
+    `
+})
+export class MRLMasterDetailComponent extends DefaultGridMasterDetailComponent {}

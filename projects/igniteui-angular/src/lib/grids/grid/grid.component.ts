@@ -698,13 +698,11 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 }
             }
         } else if (key === 'arrowup' && !ctrl && target === container) {
-            this.navigateTo(rowIndex - 1, colIndex,
-                (args) => args.target.nativeElement.focus());
+            this.navigation.navigateUp(container, {row: rowIndex, column: colIndex});
         } else if (key === 'arrowup' && ctrl && target === container) {
             this.navigation.navigateTop(colIndex);
         } else if (key === 'arrowdown' && !ctrl && target === container) {
-            this.navigateTo(rowIndex + 1, colIndex,
-                (args) => args.target.nativeElement.focus());
+            this.navigation.navigateDown(container, {row: rowIndex, column: colIndex});
         } else if (key === 'arrowdown' && ctrl && target === container) {
             this.navigation.navigateBottom(colIndex);
         }

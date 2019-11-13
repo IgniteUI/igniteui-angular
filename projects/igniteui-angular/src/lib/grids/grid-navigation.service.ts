@@ -605,13 +605,12 @@ export class IgxGridNavigationService {
 
     public shouldPerformVerticalScroll(targetRowIndex: number, visibleColumnIndex: number): boolean {
         const containerTopOffset = parseInt(this.verticalDisplayContainerElement.style.top, 10);
-        const targetRow = this.grid.summariesRowList.filter(s => s.index !== 0)
-            .concat(this.grid.rowList.toArray()).find(r => r.index === targetRowIndex);
+        const targetRow = this.getRowByIndex(targetRowIndex, '') as any;
         const rowHeight = this.grid.verticalScrollContainer.getSizeAt(targetRowIndex);
         const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
-        const targetEndTopOffset = targetRow ? targetRow.nativeElement.offsetTop + rowHeight + containerTopOffset :
+        const targetEndTopOffset = targetRow ? targetRow.offsetTop + rowHeight + containerTopOffset :
             containerHeight + rowHeight;
-        if (!targetRow || targetRow.nativeElement.offsetTop < Math.abs(containerTopOffset)
+        if (!targetRow || targetRow.offsetTop < Math.abs(containerTopOffset)
             || containerHeight && containerHeight < targetEndTopOffset) {
             return true;
         } else {
