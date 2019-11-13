@@ -1025,10 +1025,7 @@ export class IgxColumnComponent implements AfterContentInit {
     set visibleWhenCollapsed(value: boolean) {
         this._visibleWhenCollapsed = value;
         this.visibleWhenCollapsedChange.emit(this._visibleWhenCollapsed);
-        if (this.parent) {
-            if (!this.parent.collapsible) { this.hidden = this.parent.hidden; return; }
-            this.hidden = this.parent.expanded ? this._visibleWhenCollapsed : !this._visibleWhenCollapsed;
-        }
+        if (this.parent) { this.parent.setExpandCollapseState(); }
         if (this.grid) {
             this.grid.notifyChanges(true);
         }
@@ -1768,6 +1765,7 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     protected setExpandCollapseState() {
         this.children.filter(col => (col.visibleWhenCollapsed !== undefined)).forEach(c =>  {
+            if (!this.collapsible) { c.hidden = this.parent.hidden; return; }
             c.hidden = this._expanded ? c.visibleWhenCollapsed : !c.visibleWhenCollapsed;
         });
     }

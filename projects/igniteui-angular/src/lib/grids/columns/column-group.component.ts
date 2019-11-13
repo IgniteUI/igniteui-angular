@@ -240,7 +240,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         this.children.forEach(child => {
             child.parent = this;
         });
-        if (this._collapsible && this.checkCollapsibleState()) {
+        if (this.collapsible) {
             this.setExpandCollapseState();
         }
     }
