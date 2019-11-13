@@ -7,9 +7,11 @@
 
 /// Generates the base dark carousel schema.
 /// @type {Map}
+/// @prop {Color} slide-background [#222] - The slide background color.
 /// @prop {Color} button-background [#222] - The previous/next buttons idle background color.
 /// @prop {Color} button-hover-background [#222] - The previous/next buttons hover background color.
 $_base-dark-carousel: (
+    slide-background: #222,
     button-background: #222,
     button-hover-background: #222,
 );

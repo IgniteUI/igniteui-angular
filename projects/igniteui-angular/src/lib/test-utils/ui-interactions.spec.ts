@@ -240,4 +240,12 @@ export class UIInteractions {
                 y: elementRect.bottom + vAlign * elementRect.height
             };
     }
+
+    public static hoverElement(element: HTMLElement, bubbles: boolean = false) {
+        element.dispatchEvent(new MouseEvent('mouseenter', { bubbles: bubbles }));
+    }
+
+    public static unhoverElement(element: HTMLElement, bubbles: boolean = false) {
+        element.dispatchEvent(new MouseEvent('mouseleave', { bubbles: bubbles }));
+    }
 }
