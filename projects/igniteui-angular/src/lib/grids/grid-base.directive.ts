@@ -3748,7 +3748,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
             if (this.pinnedColumns.indexOf(column) === -1 && this.pinnedColumns.indexOf(dropTarget) === -1) {
                 list = this._unpinnedColumns;
-            } else { 
+            } else {
                 list = this._pinnedColumns;
             }
 
