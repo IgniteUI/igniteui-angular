@@ -38,23 +38,14 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
     @Input()
     public doneButtonText: string;
 
-    /**
-     * @hidden
-     */
     @ContentChild(IgxDateRangeStartDirective, { read: IgxDateRangeStartDirective, static: false })
-    protected startInput: IgxDateRangeStartDirective;
+    public startInput: IgxDateRangeStartDirective;
 
-    /**
-     * @hidden
-     */
     @ContentChild(IgxDateRangeEndDirective, { read: IgxDateRangeEndDirective, static: false })
-    protected endInput: IgxDateRangeEndDirective;
+    public endInput: IgxDateRangeEndDirective;
 
-    /**
-     * @hidden
-     */
     @ContentChild(IgxDateRangeDirective, { read: IgxDateRangeDirective, static: false })
-    protected singleInput: IgxDateRangeDirective;
+    public singleInput: IgxDateRangeDirective;
 
     /**
      * @hidden
@@ -80,6 +71,10 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
         this.todayButtonText = 'Today';
         this.doneButtonText = 'Done';
         this.destroy = new Subject<boolean>();
+    }
+
+    public open() {
+        this.showCalendar();
     }
 
     public showToday(event: KeyboardEvent): void {
@@ -206,7 +201,7 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
     /**
      * @hidden
      */
-    public showCalendar(event: MouseEvent): void {
+    public showCalendar(event?: MouseEvent): void {
         switch (this.mode) {
             case InteractionMode.Dialog:
                 this.showDialog(event);
@@ -245,18 +240,22 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
     /**
      *  @hidden
      */
-    protected showDialog(event: MouseEvent | KeyboardEvent): void {
-        event.stopPropagation();
-        event.preventDefault();
+    protected showDialog(event?: MouseEvent | KeyboardEvent): void {
+        if (event) {
+            event.stopPropagation();
+            event.preventDefault();
+        }
         this.activateToggleOpen(this.dialogOverlaySettings);
     }
 
     /**
      * @hidden
      */
-    protected showDropDown(event: MouseEvent | KeyboardEvent): void {
-        event.stopPropagation();
-        event.preventDefault();
+    protected showDropDown(event?: MouseEvent | KeyboardEvent): void {
+        if (event) {
+            event.stopPropagation();
+            event.preventDefault();
+        }
         this.activateToggleOpen(this.dropDownOverlaySettings);
     }
 
