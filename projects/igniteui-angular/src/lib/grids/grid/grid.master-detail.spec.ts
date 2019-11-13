@@ -13,6 +13,7 @@ import { IgxGridExpandableCellComponent } from './expandable-cell.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxInputGroupComponent } from '../../input-group';
+import { GridSummaryCalculationMode, GridSummaryPosition } from '../common/enums';
 
 const COLLAPSED_ICON_NAME = 'chevron_right';
 const EXPANDED_ICON_NAME = 'expand_more';
@@ -883,13 +884,13 @@ describe('IgxGrid Master Detail #grid', () => {
                 checkbox = fix.debugElement.query(By.css('.igx-checkbox__input'));
                 expect(checkbox.nativeElement.attributes['aria-checked'].value).toEqual('true');
             });
-
-            describe('Multi-row layout', () => {
-                beforeEach(async(() => {
+        });
+        describe('Multi-row layout', () => {
+            beforeEach(async(() => {
                     fix = TestBed.createComponent(MRLMasterDetailComponent);
                     fix.detectChanges();
                     grid = fix.componentInstance.grid;
-                }));
+            }));
 
                 it('Should render expand/collapse icon in the column with visible index 0.', async() => {
                     const cell = grid.getCellByKey('ALFKI', 'CompanyName');
@@ -973,7 +974,88 @@ describe('IgxGrid Master Detail #grid', () => {
                     targetCellElement = grid.getCellByColumn(0, 'Address');
                     expect(targetCellElement.focused).toBeTruthy();
                 });
+        });
+
+        describe('GroupBy', () => {
+            beforeEach(async(() => {
+                fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
+                fix.componentInstance.columns[0].hasSummary = true;
+                fix.detectChanges();
+                grid = fix.componentInstance.grid;
+                grid.summaryCalculationMode = GridSummaryCalculationMode.childLevelsOnly;
+                grid.groupingExpressions =
+                [{ fieldName: 'CompanyName', dir: SortingDirection.Asc, ignoreCase: false }];
+                fix.detectChanges();
+            }));
+
+            it(`Should correctly position summary rows when summary row position is bottom
+             after grouping by and detail views for the group rows are expanded.`, () => {
+                grid.expandAll();
+                fix.detectChanges();
+                const allRows = grid.tbody.nativeElement
+                .querySelectorAll('igx-grid-row, igx-grid-summary-row, igx-grid-groupby-row, div[detail="true"]');
+                expect(allRows.length).toBe(8);
+                expect(allRows[0].tagName.toLowerCase()).toBe('igx-grid-groupby-row');
+                expect(allRows[1].tagName.toLowerCase()).toBe('igx-grid-row');
+                expect(allRows[2].tagName.toLowerCase()).toBe('div');
+                expect(allRows[3].tagName.toLowerCase()).toBe('igx-grid-summary-row');
+                expect(allRows[4].tagName.toLowerCase()).toBe('igx-grid-groupby-row');
+                expect(allRows[5].tagName.toLowerCase()).toBe('igx-grid-row');
+                expect(allRows[6].tagName.toLowerCase()).toBe('div');
+                expect(allRows[7].tagName.toLowerCase()).toBe('igx-grid-summary-row');
             });
+
+            it(`Should correctly position summary rows when summary row position is top
+            after grouping by and detail views for the group rows are expanded.`, () => {
+               grid.expandAll();
+               grid.summaryPosition = GridSummaryPosition.top;
+               fix.detectChanges();
+               const allRows = grid.tbody.nativeElement
+               .querySelectorAll('igx-grid-row, igx-grid-summary-row, igx-grid-groupby-row, div[detail="true"]');
+               expect(allRows.length).toBe(8);
+               expect(allRows[0].tagName.toLowerCase()).toBe('igx-grid-groupby-row');
+               expect(allRows[1].tagName.toLowerCase()).toBe('igx-grid-summary-row');
+               expect(allRows[2].tagName.toLowerCase()).toBe('igx-grid-row');
+               expect(allRows[3].tagName.toLowerCase()).toBe('div');
+               expect(allRows[4].tagName.toLowerCase()).toBe('igx-grid-groupby-row');
+               expect(allRows[5].tagName.toLowerCase()).toBe('igx-grid-summary-row');
+               expect(allRows[6].tagName.toLowerCase()).toBe('igx-grid-row');
+               expect(allRows[7].tagName.toLowerCase()).toBe('div');
+           });
+
+           it(`Should correctly position summary rows when summary row position is top
+            after grouping by and detail views for the group rows are collapsed.`, () => {
+                grid.summaryPosition = GridSummaryPosition.top;
+                fix.detectChanges();
+                const allRows = grid.tbody.nativeElement
+               .querySelectorAll('igx-grid-row, igx-grid-summary-row, igx-grid-groupby-row, div[detail="true"]');
+               expect(allRows.length).toBe(9);
+               expect(allRows[0].tagName.toLowerCase()).toBe('igx-grid-groupby-row');
+               expect(allRows[1].tagName.toLowerCase()).toBe('igx-grid-summary-row');
+               expect(allRows[2].tagName.toLowerCase()).toBe('igx-grid-row');
+               expect(allRows[3].tagName.toLowerCase()).toBe('igx-grid-groupby-row');
+               expect(allRows[4].tagName.toLowerCase()).toBe('igx-grid-summary-row');
+               expect(allRows[5].tagName.toLowerCase()).toBe('igx-grid-row');
+               expect(allRows[6].tagName.toLowerCase()).toBe('igx-grid-groupby-row');
+               expect(allRows[7].tagName.toLowerCase()).toBe('igx-grid-summary-row');
+               expect(allRows[8].tagName.toLowerCase()).toBe('igx-grid-row');
+           });
+
+           it(`Should correctly position summary rows when summary
+           row position is bottom after grouping by and detail views for the group rows are collapsed.`, () => {
+                const allRows = grid.tbody.nativeElement
+                .querySelectorAll('igx-grid-row, igx-grid-summary-row, igx-grid-groupby-row, div[detail="true"]');
+                expect(allRows.length).toBe(9);
+                expect(allRows[0].tagName.toLowerCase()).toBe('igx-grid-groupby-row');
+                expect(allRows[1].tagName.toLowerCase()).toBe('igx-grid-row');
+                expect(allRows[2].tagName.toLowerCase()).toBe('igx-grid-summary-row');
+                expect(allRows[3].tagName.toLowerCase()).toBe('igx-grid-groupby-row');
+                expect(allRows[4].tagName.toLowerCase()).toBe('igx-grid-row');
+                expect(allRows[5].tagName.toLowerCase()).toBe('igx-grid-summary-row');
+                expect(allRows[6].tagName.toLowerCase()).toBe('igx-grid-groupby-row');
+                expect(allRows[7].tagName.toLowerCase()).toBe('igx-grid-row');
+                expect(allRows[8].tagName.toLowerCase()).toBe('igx-grid-summary-row');
+           });
         });
     });
 });
