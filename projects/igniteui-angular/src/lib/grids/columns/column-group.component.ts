@@ -48,7 +48,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         }
     }
     public get collapsible() {
-        return this._collapsible;
+        return this._collapsible && this.checkCollapsibleState();
     }
 
     /**
@@ -240,15 +240,11 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         this.children.forEach(child => {
             child.parent = this;
         });
-        if (this.collapsible) {
-            const cols = this.children.map(child => child.visibleWhenCollapsed);
-            if (!(cols.some(c => c === true) && cols.some(c => c === false))) {
-                this.collapsible = false;
-                return;
-            }
+        if (this._collapsible && this.checkCollapsibleState()) {
             this.setExpandCollapseState();
         }
     }
+
     /**
      * Returns the children columns collection.
      * ```typescript
