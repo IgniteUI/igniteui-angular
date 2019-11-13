@@ -547,6 +547,7 @@ export class IgxColumnComponent implements AfterContentInit {
             /* No grid/width available at initialization. `initPinning` in the grid
                will re-init the group (if present)
             */
+            this._unpinnedIndex = this.grid.columns.filter(x => !x.pinned).indexOf(this);
             this._pinned = value;
             this.pinnedChange.emit(this._pinned);
         }
