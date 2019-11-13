@@ -296,7 +296,21 @@
         opacity: 0;
     }
 
-    %igx-slider__tick-labels--horizontal,
+    %igx-slider-track-steps {
+        position: absolute;
+        width: 100%;
+        height: rem($slider-track-height);
+        background-size: 100% em($slider-track-height);
+        opacity: .85;
+        transition: opacity .2s $ease-out-quad;
+        z-index: 1;
+    }
+
+    %igx-slider-track-steps--disabled {
+        visibility: hidden;
+    }
+
+
     %igx-slider__tick-labels--top-bottom {
         %igx-slider__ticks-group {
             display: block;

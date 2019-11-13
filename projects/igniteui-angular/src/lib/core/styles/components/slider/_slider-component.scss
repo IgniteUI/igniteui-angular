@@ -38,17 +38,14 @@
         @extend %igx-slider__tick-label--hidden !optional;
     }
 
-    @include e(tick-labels, $m: horizontal) {
-        @extend %igx-slider__tick-labels--horizontal !optional;
-    }
-
     @include e(tick-labels, $m: top-bottom) {
         @extend %igx-slider__tick-labels--top-bottom !optional;
     }
 
-    @include e(tick-labels, $m: bottom-top) {
-        @extend %igx-slider__tick-labels--bottom-top !optional;
-    }
+    // TODO find a way to flipt the direction
+    //@include e(tick-labels, $m: bottom-top) {
+    //    @extend %igx-slider__tick-labels--bottom-top !optional;
+    //}
 
     @include e(ticks-group) {
         @extend %igx-slider__ticks-group !optional;
@@ -122,6 +119,10 @@
         @include e(track) {
             @extend %igx-slider-track !optional;
             @extend %igx-slider-track--disabled !optional;
+        }
+
+        @include e(track-steps) {
+            @extend %igx-slider-track-steps !optional;
         }
 
         @include e(track-fill) {

@@ -68,8 +68,6 @@ export class SliderSampleComponent {
     public changeLabelOrientation() {
         if (this.labelOrientaion === TickLabelsOrientation.horizontal) {
             this.labelOrientaion = TickLabelsOrientation.toptobottom;
-        } else if (this.labelOrientaion === TickLabelsOrientation.toptobottom) {
-            this.labelOrientaion = TickLabelsOrientation.bottomtotop;
         } else {
             this.labelOrientaion = TickLabelsOrientation.horizontal;
         }
