@@ -1339,6 +1339,11 @@ export class IgxTimePickerComponent implements
     public registerOnChange(fn: (_: Date) => void) { this._onChangeCallback = fn; }
 
     /**
+     *@hidden
+     */
+    public setDisabledState(isDisabled: boolean): void { this.disabled = isDisabled; }
+
+    /**
      * @hidden
      */
     public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
