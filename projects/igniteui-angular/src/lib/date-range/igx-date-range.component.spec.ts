@@ -1,46 +1,30 @@
 import { IgxDateRangeComponent } from './igx-date-range.component';
 import { ComponentFixture, async, TestBed } from '@angular/core/testing';
-import { Component, OnInit, Optional } from '@angular/core';
+import { Component, OnInit, ViewChild, wtfStartTimeRange, NgModule } from '@angular/core';
 import { IgxInputGroupModule } from '../input-group/index';
-import {
-    IgxDateRangeModule, IgxDateRangeStartDirective, IgxDateRangeEndDirective,
-    IgxDateRangeDirective, IgxDateRangeBaseDirective
-} from './index';
 import { InteractionMode } from '../core/enums';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { IgxIconModule } from '../icon';
+import { IgxCalendarModule } from '../calendar/index';
+import { IgxButtonModule } from '../directives/button/button.directive';
+import { IgxDateRangeModule } from './igx-date-range.module';
+import { noop } from 'rxjs';
 
-describe('IgxDateRangeComponent', () => {
-    let component: IgxDateRangeComponent;
-    let fixture: ComponentFixture<IgxDateRangeComponent>;
+// tslint:disable: no-use-before-declare
+describe('IgxDateRange', () => {
+    let singleInputRange: DateRangeTwoInputsTestComponent;
+    let twoInputsRange: DateRangeTwoInputsTestComponent;
+    let fixture: ComponentFixture<DateRangeTestComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [
-                IgxDateRangeComponent,
-                IgxDateRangeBaseDirective,
-                IgxDateRangeStartDirective,
-                IgxDateRangeEndDirective,
-                IgxDateRangeDirective
-            ],
-            imports: [
-                IgxInputGroupModule,
-                IgxDateRangeModule
-            ]
-        })
-            .compileComponents();
+            imports: [DateRangeTestingModule]
+        }).compileComponents();
     }));
 
-    beforeEach(() => {
-        fixture = TestBed.createComponent(IgxDateRangeComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
-
-    describe('IgxDateRange - Focus', () => {
+    describe('Focus', () => {
         it('Should move focus to the calendar on open', () => {
-            // TODO
-        });
-
-        it('Should not change focus when the calendar is closed', () => {
             // TODO
         });
 
@@ -57,7 +41,7 @@ describe('IgxDateRangeComponent', () => {
         });
     });
 
-    describe('IgxDateRange - API', () => {
+    describe('API', () => {
         it('Should select today properly', () => {
             // TODO
         });
@@ -82,7 +66,7 @@ describe('IgxDateRangeComponent', () => {
         });
     });
 
-    describe('IgxDateRange - Keyboard Navigation', () => {
+    describe('Keyboard Navigation', () => {
         it('Should open the calendar on mouse click', () => {
             // TODO
         });
@@ -100,7 +84,7 @@ describe('IgxDateRangeComponent', () => {
         });
     });
 
-    describe('IgxDateRange - Two Inputs', () => {
+    describe('Two Inputs', () => {
         it('Should update the start input on first date selection', () => {
             // TODO
         });
@@ -126,7 +110,7 @@ describe('IgxDateRangeComponent', () => {
         });
     });
 
-    describe('IgxDateRange - Single Input', () => {
+    describe('Single Input', () => {
         /* The single input's text looks like this -> START_DATE - END_DATE */
 
         it('Should set the first part of the input properly on first date selection', () => {
@@ -154,6 +138,24 @@ describe('IgxDateRangeComponent', () => {
 });
 
 @Component({
+    selector: 'igx-date-range-test',
+    template: ''
+})
+export class DateRangeTestComponent implements OnInit {
+    public todayButtonText: string;
+    public doneButtonText: string;
+    public mode: InteractionMode;
+
+    @ViewChild(IgxDateRangeComponent, { read: IgxDateRangeComponent, static: true })
+    public dateRange: IgxDateRangeComponent;
+
+    public ngOnInit(): void {
+        this.todayButtonText = 'Today';
+        this.doneButtonText = 'Done';
+    }
+}
+
+@Component({
     selector: 'igx-date-range-single-input-test',
     template: `
     <igx-input-group>
@@ -164,34 +166,24 @@ describe('IgxDateRangeComponent', () => {
         </igx-prefix>
     </igx-input-group>
     <igx-date-range [todayButtonText]="todayButtonText" [doneButtonText]="doneButtonText" [mode]="mode">
-    <igx-input-group>
-        <input #startDate igxDateRangeStart igxInput type="text">
-        <label for="startDate" igxLabel>Check-in Date</label>
-        <igx-prefix>
-            <igx-icon>today</igx-icon>
-        </igx-prefix>
-    </igx-input-group>
-    <igx-input-group>
-        <input #endDate igxDateRangeEnd igxInput type="text">
-        <label for="endDate" igxLabel>Check-out Date</label>
-        <igx-prefix>
-            <igx-icon>today</igx-icon>
-        </igx-prefix>
-    </igx-input-group>
-</igx-date-range>
+        <igx-input-group>
+            <input #startDate igxDateRangeStart igxInput type="text">
+            <label for="startDate" igxLabel>Check-in Date</label>
+            <igx-prefix>
+                <igx-icon>today</igx-icon>
+            </igx-prefix>
+        </igx-input-group>
+        <igx-input-group>
+            <input #endDate igxDateRangeEnd igxInput type="text">
+            <label for="endDate" igxLabel>Check-out Date</label>
+            <igx-prefix>
+                <igx-icon>today</igx-icon>
+            </igx-prefix>
+        </igx-input-group>
+    </igx-date-range>
 `
 })
-export class DateRangeSingleInputTestComponent implements OnInit {
-    public todayButtonText: string;
-    public doneButtonText: string;
-
-    constructor(public mode?: InteractionMode) { }
-
-    public ngOnInit(): void {
-        this.todayButtonText = 'Today';
-        this.doneButtonText = 'Done';
-    }
-}
+export class DateRangeTwoInputsTestComponent extends DateRangeTestComponent { }
 
 @Component({
     selector: 'igx-date-range-two-inputs-test',
@@ -214,14 +206,29 @@ export class DateRangeSingleInputTestComponent implements OnInit {
     </igx-date-range>
 `
 })
-export class DateRangeTwoInputsTestComponent implements OnInit {
-    public todayButtonText: string;
-    public doneButtonText: string;
+export class DateRangeSingleInputTestComponent extends DateRangeTestComponent { }
 
-    constructor(public mode?: InteractionMode) { }
-
-    public ngOnInit(): void {
-        this.todayButtonText = 'Today';
-        this.doneButtonText = 'Done';
-    }
-}
+@NgModule({
+    declarations: [
+        DateRangeSingleInputTestComponent,
+        DateRangeTwoInputsTestComponent,
+        DateRangeTestComponent
+    ],
+    imports: [
+        IgxDateRangeModule,
+        NoopAnimationsModule,
+        IgxInputGroupModule,
+        ReactiveFormsModule,
+        IgxIconModule,
+        IgxCalendarModule,
+        IgxButtonModule,
+        IgxInputGroupModule,
+        FormsModule
+    ],
+    exports: [
+        DateRangeSingleInputTestComponent,
+        DateRangeTwoInputsTestComponent,
+        DateRangeTestComponent
+    ]
+})
+export class DateRangeTestingModule { }
