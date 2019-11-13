@@ -4,7 +4,8 @@ import {
     TestBed,
     ComponentFixture,
     fakeAsync,
-    tick
+    tick,
+    flush
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
@@ -18,6 +19,8 @@ import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSlideComponent } from './slide.component';
+
+declare var Simulator: any;
 
 describe('Carousel', () => {
     configureTestSuite();
@@ -427,7 +430,7 @@ describe('Carousel', () => {
             expect(carousel.onSlideChanged.emit).toHaveBeenCalledTimes(1);
         });
 
-        it('should stop/play on mouse enter/leave and on tab key', () => {
+        it('should stop/play on mouse enter/leave ', () => {
             carousel.interval = 1000;
             carousel.play();
             fixture.detectChanges();
@@ -450,17 +453,62 @@ describe('Carousel', () => {
             expect(carousel.onCarouselPlaying.emit).toHaveBeenCalledTimes(1);
             expect(carousel.onCarouselPaused.emit).toHaveBeenCalledTimes(1);
 
-            UIInteractions.triggerKeyDownEvtUponElem('Tab', carousel.nativeElement, true);
+            // When the carousel is stopped mouseleave does not start playing
+            carousel.stop();
             fixture.detectChanges();
 
             expect(carousel.isPlaying).toBeFalsy();
+            expect(carousel.onCarouselPlaying.emit).toHaveBeenCalledTimes(1);
             expect(carousel.onCarouselPaused.emit).toHaveBeenCalledTimes(2);
 
-            UIInteractions.triggerKeyDownEvtUponElem('Tab', carousel.nativeElement, true);
+            UIInteractions.hoverElement(carousel.nativeElement, true);
             fixture.detectChanges();
+
+            expect(carousel.isPlaying).toBeFalsy();
+
+            UIInteractions.unhoverElement(carousel.nativeElement, true);
+            fixture.detectChanges();
+            expect(carousel.isPlaying).toBeFalsy();
+            expect(carousel.onCarouselPlaying.emit).toHaveBeenCalledTimes(1);
+        });
+
+        it('should stop/play on tap ', async () => {
+            carousel.interval = 1000;
+            carousel.play();
+            fixture.detectChanges();
+
+            spyOn(carousel.onCarouselPaused, 'emit');
+            spyOn(carousel.onCarouselPlaying, 'emit');
+
             expect(carousel.isPlaying).toBeTruthy();
-            expect(carousel.onCarouselPlaying.emit).toHaveBeenCalledTimes(2);
-            expect(carousel.onCarouselPaused.emit).toHaveBeenCalledTimes(2);
+
+            Simulator.gestures.press(carousel.nativeElement, { duration: 180 });
+            fixture.detectChanges();
+            await wait(200);
+
+            expect(carousel.isPlaying).toBeFalsy();
+            expect(carousel.onCarouselPaused.emit).toHaveBeenCalledTimes(1);
+
+            Simulator.gestures.press(carousel.nativeElement, { duration: 180 });
+            fixture.detectChanges();
+            await wait(200);
+
+            expect(carousel.isPlaying).toBeTruthy();
+            expect(carousel.onCarouselPlaying.emit).toHaveBeenCalledTimes(1);
+            expect(carousel.onCarouselPaused.emit).toHaveBeenCalledTimes(1);
+
+            // When the carousel is stopped tap does not start playing
+            carousel.stop();
+            fixture.detectChanges();
+
+            expect(carousel.isPlaying).toBeFalsy();
+
+            Simulator.gestures.press(carousel.nativeElement, { duration: 180 });
+            fixture.detectChanges();
+            await wait(200);
+
+            expect(carousel.isPlaying).toBeFalsy();
+            expect(carousel.onCarouselPlaying.emit).toHaveBeenCalledTimes(1);
         });
     });
 
@@ -601,19 +649,19 @@ describe('Carousel', () => {
             HelperTestFunctions.verifyActiveSlide(carousel, 0);
         }));
 
-        it('should add slides to the carousel when collection is changed',  fakeAsync(() => {
+        it('should add slides to the carousel when collection is changed', fakeAsync(() => {
             tick();
             spyOn(carousel.onSlideAdded, 'emit');
 
             // add a slide
-            slides.push({text: 'Slide 5'});
+            slides.push({ text: 'Slide 5' });
             fixture.detectChanges();
 
             HelperTestFunctions.verifyActiveSlide(carousel, 2);
             expect(carousel.total).toEqual(5);
 
             // add an active slide
-            slides.push({text: 'Slide 6', active: true});
+            slides.push({ text: 'Slide 6', active: true });
             fixture.detectChanges();
             tick(100);
 
@@ -623,7 +671,7 @@ describe('Carousel', () => {
             expect(carousel.onSlideAdded.emit).toHaveBeenCalledTimes(2);
         }));
 
-        it('should remove slides in the carousel',  fakeAsync(() => {
+        it('should remove slides in the carousel', fakeAsync(() => {
             tick();
             spyOn(carousel.onSlideRemoved, 'emit');
 
@@ -646,7 +694,7 @@ describe('Carousel', () => {
             expect(carousel.onSlideRemoved.emit).toHaveBeenCalledTimes(2);
         }));
 
-        it('should not render navigation buttons and indicators when carousel does not have slides',  fakeAsync(() => {
+        it('should not render navigation buttons and indicators when carousel does not have slides', fakeAsync(() => {
             fixture.componentInstance.removeAllSlides();
             fixture.detectChanges();
             tick(200);
@@ -657,13 +705,13 @@ describe('Carousel', () => {
             expect(HelperTestFunctions.getNextButton(fixture).hidden).toBeTruthy();
             expect(HelperTestFunctions.getPreviousButton(fixture).hidden).toBeTruthy();
 
-             // add a slide
-             fixture.componentInstance.addSlides();
-             fixture.detectChanges();
-             tick(200);
+            // add a slide
+            fixture.componentInstance.addSlides();
+            fixture.detectChanges();
+            tick(200);
 
-             expect(carousel.total).toEqual(2);
-             expect(HelperTestFunctions.getIndicatorsContainer(fixture)).toBeDefined();
+            expect(carousel.total).toEqual(2);
+            expect(HelperTestFunctions.getIndicatorsContainer(fixture)).toBeDefined();
             expect(HelperTestFunctions.getIndicatorsContainer(fixture, CarouselIndicatorsOrientation.top)).toBeDefined();
             expect(HelperTestFunctions.getNextButton(fixture).hidden).toBeFalsy();
             expect(HelperTestFunctions.getPreviousButton(fixture).hidden).toBeFalsy();
@@ -824,10 +872,10 @@ class CarouselDynamicSlidesComponent {
 
     addNewSlide() {
         this.slides.push(
-            {text: 'Slide 1', active: false},
-            {text: 'Slide 2', active: false},
-            {text: 'Slide 3', active: true},
-            {text: 'Slide 4', active: false}
+            { text: 'Slide 1', active: false },
+            { text: 'Slide 2', active: false },
+            { text: 'Slide 3', active: true },
+            { text: 'Slide 4', active: false }
         );
     }
 
@@ -837,8 +885,8 @@ class CarouselDynamicSlidesComponent {
 
     public addSlides() {
         this.slides.push(
-            {text: 'Slide 1'},
-            {text: 'Slide 2'}
+            { text: 'Slide 1' },
+            { text: 'Slide 2' }
         );
     }
 }
