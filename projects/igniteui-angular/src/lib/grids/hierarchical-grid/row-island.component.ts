@@ -235,6 +235,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      */
     ngOnInit() {
         this.rootGrid = this.hgridAPI.grid;
+        this.rowIslandAPI.rowIsland = this;
     }
 
     /**
