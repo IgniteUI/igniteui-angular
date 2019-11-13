@@ -8,7 +8,7 @@ import { IgxGridModule } from './index';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridRowComponent } from './grid-row.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridExpandableCellComponent } from './expandable-cell.component';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -689,6 +689,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 fix.detectChanges();
                 expect(grid.rowList.first.cells.first instanceof IgxGridExpandableCellComponent).toBeTruthy();
             });
+
             it('Should keep the expand/collapse icon in the first column, even when moving a column out of first place.', () => {
                 fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
                 grid = fix.componentInstance.grid;
@@ -696,6 +697,79 @@ describe('IgxGrid Master Detail #grid', () => {
                 grid.moveColumn(grid.columnList.first, grid.columnList.last);
                 fix.detectChanges();
                 expect(grid.rowList.first.cells.first instanceof IgxGridExpandableCellComponent).toBeTruthy();
+            });
+        });
+
+        describe('Cell Selection', () => {
+            it('Should exclude expanded detail views when doing range cell selection', () => {
+                fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
+                grid = fix.componentInstance.grid;
+                fix.detectChanges();
+                grid.expand(fix.componentInstance.data[2].ID);
+                const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+                const startCell =  grid.getCellByColumn(1, 'ContactName');
+                const endCell =  grid.getCellByColumn(6, 'CompanyName');
+                const range = { rowStart: 1, rowEnd: 6, columnStart: 0, columnEnd: 1 };
+
+                UIInteractions.simulatePointerOverCellEvent('pointerdown', startCell.nativeElement);
+                startCell.nativeElement.dispatchEvent(new Event('focus'));
+                grid.cdr.detectChanges();
+
+                expect(startCell.focused).toBe(true);
+
+                const rowDetail = GridFunctions.getMasterRowDetail(grid.rowList.toArray()[2]);
+
+                for (let i = 2; i < 6; i++) {
+                    const cell = grid.getCellByColumn(i, 'ContactName');
+                    if (!cell) {
+                        UIInteractions.simulatePointerOverCellEvent('pointerenter',
+                            fix.debugElement.query(By.css('.addressArea')).nativeElement);
+                        continue;
+                    }
+                    UIInteractions.simulatePointerOverCellEvent('pointerenter', cell.nativeElement);
+                    grid.cdr.detectChanges();
+                }
+                UIInteractions.simulatePointerOverCellEvent('pointerenter', endCell.nativeElement);
+                UIInteractions.simulatePointerOverCellEvent('pointerup', endCell.nativeElement);
+                GridSelectionFunctions.verifyCellsRegionSelected(grid, 1, 2, 0, 1, true);
+                GridSelectionFunctions.verifyCellsRegionSelected(grid, 4, 5, 0, 1, true);
+                grid.cdr.detectChanges();
+
+                expect(startCell.focused).toBe(true);
+
+                expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+                expect(selectionChangeSpy).toHaveBeenCalledWith(range);
+                expect(rowDetail.querySelector('[class*="selected"]')).toBeNull();
+            });
+        });
+
+        describe('Row Selection', () => {
+            it('Should not render row selection checkbox for detail views.', () => {
+                fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
+                grid = fix.componentInstance.grid;
+                fix.componentInstance.rowSelectable = true;
+                fix.detectChanges();
+                grid.expand(fix.componentInstance.data[2].ID);
+                const rowDetail = GridFunctions.getMasterRowDetail(grid.rowList.toArray()[2]);
+                expect(rowDetail.querySelector('[class*="__cbx-selection"]')).toBeNull();
+            });
+
+            it('Should highlight only the master row when selecting it and not the detail row.', () => {
+                fix = TestBed.createComponent(DefaultGridMasterDetailComponent);
+                grid = fix.componentInstance.grid;
+                fix.componentInstance.rowSelectable = true;
+                fix.detectChanges();
+                grid.expand(fix.componentInstance.data[2].ID);
+
+                const row = grid.rowList.toArray()[2];
+                const checkbox = row.nativeElement.querySelector('.igx-checkbox__composite');
+                checkbox.click();
+                fix.detectChanges();
+
+                const rowDetail = GridFunctions.getMasterRowDetail(row);
+                expect(row.nativeElement.classList).toContain('igx-grid__tr--selected');
+                expect(rowDetail.classList).not.toContain('--selected');
+                expect(rowDetail.querySelector('[class*="--selected"]')).toBeNull();
             });
         });
 
@@ -720,95 +794,94 @@ describe('IgxGrid Master Detail #grid', () => {
                 expect(row).not.toBeNull();
                 GridFunctions.elementInGridView(grid, row.nativeElement);
             });
+        });
 
-            describe('Updating', () => {
-                beforeEach(async(() => {
-                    fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
-                    fix.detectChanges();
-                    grid = fix.componentInstance.grid;
-                }));
-                it('Should remove expanded detail view after deleting its parent row.', async() => {
-                    let detailViews = fix.debugElement.queryAll(By.css('div[detail="true"]'));
-                    expect(detailViews[0].context.index).toBe(1);
-                    grid.deleteRow('ALFKI');
-                    fix.detectChanges();
-                    const row = grid.getRowByKey('ALFKI');
-                    expect(row).toBeUndefined();
-                    detailViews = fix.debugElement.queryAll(By.css('div[detail="true"]'));
-                    expect(detailViews[0].context.index).toBe(3);
-                });
-
-                it('Should be able to expand detail view of newly added row.', async() => {
-                    grid.addRow({ 'ID': '123', 'CompanyName': 'Test', 'ContactName': 'Test', 'Address': 'Test Address'});
-                    fix.detectChanges();
-                    // scroll to bottom
-                    grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
-                    await wait(DEBOUNCETIME);
-                    fix.detectChanges();
-                    await wait(DEBOUNCETIME);
-                    fix.detectChanges();
-                    // check row can be expanded
-                    const lastRow = grid.rowList.last;
-                    await GridFunctions.toggleMasterRowByClick(fix, lastRow, DEBOUNCETIME);
-                    await wait(DEBOUNCETIME);
-                    fix.detectChanges();
-                    expect(lastRow.expanded).toBeTruthy();
-                    const lastRowDetail =  GridFunctions.getMasterRowDetail( grid.rowList.last);
-                    expect(lastRowDetail.querySelector('.addressArea').innerText).toEqual('Test Address');
-                });
-
+        describe('Updating', () => {
+            beforeEach(async(() => {
+                fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
+                fix.detectChanges();
+                grid = fix.componentInstance.grid;
+            }));
+            it('Should remove expanded detail view after deleting its parent row.', async() => {
+                let detailViews = fix.debugElement.queryAll(By.css('div[detail="true"]'));
+                expect(detailViews[0].context.index).toBe(1);
+                grid.deleteRow('ALFKI');
+                fix.detectChanges();
+                const row = grid.getRowByKey('ALFKI');
+                expect(row).toBeUndefined();
+                detailViews = fix.debugElement.queryAll(By.css('div[detail="true"]'));
+                expect(detailViews[0].context.index).toBe(3);
             });
 
-            describe('Sorting', () => {
-                beforeEach(async(() => {
-                    fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
-                    fix.detectChanges();
-                    grid = fix.componentInstance.grid;
-                }));
-
-                it('Should rearrange detail views to their correct parents after sorting.', () => {
-                    grid.sort({fieldName: 'ContactName', dir: SortingDirection.Desc, ignoreCase: true});
-                    fix.detectChanges();
-
-                    let row = grid.rowList.first;
-                    let detailRow = GridFunctions.getMasterRowDetail(row);
-
-                    expect(row.rowData['ContactName']).toBe('Yang Wang');
-                    expect(detailRow.querySelector('.addressArea').innerText).toEqual(row.rowData['Address']);
-
-
-                    row = grid.rowList.toArray()[1];
-                    detailRow = GridFunctions.getMasterRowDetail(row);
-                    expect(row.rowData['ContactName']).toBe('Victoria Ashworth');
-                    expect(detailRow.querySelector('.addressArea').innerText).toEqual(row.rowData['Address']);
-                });
+            it('Should be able to expand detail view of newly added row.', async() => {
+                grid.addRow({ 'ID': '123', 'CompanyName': 'Test', 'ContactName': 'Test', 'Address': 'Test Address'});
+                fix.detectChanges();
+                // scroll to bottom
+                grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
+                await wait(DEBOUNCETIME);
+                fix.detectChanges();
+                await wait(DEBOUNCETIME);
+                fix.detectChanges();
+                // check row can be expanded
+                const lastRow = grid.rowList.last;
+                await GridFunctions.toggleMasterRowByClick(fix, lastRow, DEBOUNCETIME);
+                await wait(DEBOUNCETIME);
+                fix.detectChanges();
+                expect(lastRow.expanded).toBeTruthy();
+                const lastRowDetail =  GridFunctions.getMasterRowDetail( grid.rowList.last);
+                expect(lastRowDetail.querySelector('.addressArea').innerText).toEqual('Test Address');
             });
 
+        });
 
-            describe('Filtering', () => {
-                beforeEach(async(() => {
-                    fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
-                    fix.detectChanges();
-                    grid = fix.componentInstance.grid;
-                }));
+        describe('Sorting', () => {
+            beforeEach(async(() => {
+                fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
+                fix.detectChanges();
+                grid = fix.componentInstance.grid;
+            }));
 
-                it('Should persist template state after filtering out the whole data and removing the filter.', () => {
-                    let checkbox = fix.debugElement.query(By.css('.igx-checkbox__input'));
-                    checkbox.nativeElement.click();
-                    fix.detectChanges();
-                    // check checkbox state
-                    checkbox = fix.debugElement.query(By.css('.igx-checkbox__input'));
-                    expect(checkbox.nativeElement.attributes['aria-checked'].value).toEqual('true');
-                    grid.filter('ContactName', 'NonExistingName',
-                            IgxStringFilteringOperand.instance().condition('equals'), true);
-                    fix.detectChanges();
-                    expect(grid.rowList.length).toBe(0);
-                    grid.clearFilter();
-                    fix.detectChanges();
-                    // check checkbox state is persisted.
-                    checkbox = fix.debugElement.query(By.css('.igx-checkbox__input'));
-                    expect(checkbox.nativeElement.attributes['aria-checked'].value).toEqual('true');
-                });
+            it('Should rearrange detail views to their correct parents after sorting.', () => {
+                grid.sort({fieldName: 'ContactName', dir: SortingDirection.Desc, ignoreCase: true});
+                fix.detectChanges();
+
+                let row = grid.rowList.first;
+                let detailRow = GridFunctions.getMasterRowDetail(row);
+
+                expect(row.rowData['ContactName']).toBe('Yang Wang');
+                expect(detailRow.querySelector('.addressArea').innerText).toEqual(row.rowData['Address']);
+
+
+                row = grid.rowList.toArray()[1];
+                detailRow = GridFunctions.getMasterRowDetail(row);
+                expect(row.rowData['ContactName']).toBe('Victoria Ashworth');
+                expect(detailRow.querySelector('.addressArea').innerText).toEqual(row.rowData['Address']);
+            });
+        });
+
+        describe('Filtering', () => {
+            beforeEach(async(() => {
+                fix = TestBed.createComponent(AllExpandedGridMasterDetailComponent);
+                fix.detectChanges();
+                grid = fix.componentInstance.grid;
+            }));
+
+            it('Should persist template state after filtering out the whole data and removing the filter.', () => {
+                let checkbox = fix.debugElement.query(By.css('.igx-checkbox__input'));
+                checkbox.nativeElement.click();
+                fix.detectChanges();
+                // check checkbox state
+                checkbox = fix.debugElement.query(By.css('.igx-checkbox__input'));
+                expect(checkbox.nativeElement.attributes['aria-checked'].value).toEqual('true');
+                grid.filter('ContactName', 'NonExistingName',
+                        IgxStringFilteringOperand.instance().condition('equals'), true);
+                fix.detectChanges();
+                expect(grid.rowList.length).toBe(0);
+                grid.clearFilter();
+                fix.detectChanges();
+                // check checkbox state is persisted.
+                checkbox = fix.debugElement.query(By.css('.igx-checkbox__input'));
+                expect(checkbox.nativeElement.attributes['aria-checked'].value).toEqual('true');
             });
 
             describe('Multi-row layout', () => {
