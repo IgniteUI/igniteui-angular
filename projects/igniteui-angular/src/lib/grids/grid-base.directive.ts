@@ -412,7 +412,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.selectionService.clearHeaderCBState();
         this.summaryService.clearSummaryCache();
-        this.markForCheck();
+        this.notifyChanges();
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
         requestAnimationFrame(() => this.onFilteringDone.emit(this._advancedFilteringExpressionsTree));
@@ -581,9 +581,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     set columnHiding(value) {
         if (this._columnHiding !== value) {
             this._columnHiding = value;
-            if (!this._init) {
-                this.notifyChanges(true);
-            }
+            this.notifyChanges(true);
         }
     }
 
@@ -921,9 +919,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     set columnPinning(value) {
         if (this._columnPinning !== value) {
             this._columnPinning = value;
-            if (!this._init) {
-                this.notifyChanges(true);
-            }
+            this.notifyChanges(true);
         }
     }
 
@@ -998,9 +994,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this._allowAdvancedFiltering = value;
             this.filteringService.registerSVGIcons();
 
-            if (!this._init) {
-                this.notifyChanges(true);
-            }
+            this.notifyChanges(true);
         }
     }
 
@@ -2368,9 +2362,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public set showToolbar(newValue: boolean) {
         if (this._showToolbar !== newValue) {
             this._showToolbar = newValue;
-            if (!this._init) {
-                this.notifyChanges(true);
-            }
+            this.notifyChanges(true);
         }
     }
 
@@ -2397,9 +2389,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public set toolbarTitle(newValue: string) {
         if (this._toolbarTitle !== newValue) {
             this._toolbarTitle = newValue;
-            if (!this._init) {
-                this.notifyChanges(true);
-            }
+            this.notifyChanges(true);
         }
     }
 
@@ -2426,9 +2416,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public set exportExcel(newValue: boolean) {
         if (this._exportExcel !== newValue) {
             this._exportExcel = newValue;
-            if (!this._init) {
-                this.notifyChanges(true);
-            }
+            this.notifyChanges(true);
         }
     }
 
@@ -2455,9 +2443,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public set exportCsv(newValue: boolean) {
         if (this._exportCsv !== newValue) {
             this._exportCsv = newValue;
-            if (!this._init) {
-                this.notifyChanges(true);
-            }
+            this.notifyChanges(true);
         }
     }
 
@@ -2484,9 +2470,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public set exportText(newValue: string) {
         if (this._exportText !== newValue) {
             this._exportText = newValue;
-            if (!this._init) {
-                this.notifyChanges(true);
-            }
+            this.notifyChanges(true);
         }
     }
 
@@ -2513,9 +2497,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public set exportExcelText(newValue: string) {
         if (this._exportExcelText !== newValue) {
             this._exportExcelText = newValue;
-            if (!this._init) {
-                this.notifyChanges(true);
-            }
+            this.notifyChanges(true);
         }
     }
 
@@ -2542,9 +2524,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public set exportCsvText(newValue: string) {
         if (this._exportCsvText !== newValue) {
             this._exportCsvText = newValue;
-            if (!this._init) {
-                this.notifyChanges(true);
-            }
+            this.notifyChanges(true);
         }
     }
 
@@ -2908,6 +2888,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
             super(_displayDensityOptions);
             this.cdr.detach();
+            this.zone.onStable.pipe(this.destructor, this.initialized).subscribe(this.checkOnStable);
     }
 
     _setupServices() {
@@ -2989,13 +2970,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.verticalScrollContainer.onContentSizeChange.pipe(this.destructor, this.initialized).subscribe(() => {
-            this.calculateGridSizes();
+            this.notifyChanges(true);
         });
 
         this.onDensityChanged.pipe(this.destructor).subscribe(() => {
             this.summaryService.summaryHeight = 0;
             this.endEdit(true);
-            this.cdr.markForCheck();
+            this.notifyChanges();
         });
     }
 
@@ -3147,12 +3128,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this._cdrRequests = false;
     }
 
-    public ngDoCheck() {
-        super.ngDoCheck();
-        if (this._init) {
-            return;
-        }
-
+    protected checkOnStable = () => {
         if (this._cdrRequestRepaint) {
             this.resetNotifyChanges();
             this.calculateGridSizes();
@@ -3164,6 +3140,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.resetNotifyChanges();
             this.cdr.detectChanges();
         }
+    }
+
+    public ngDoCheck() {
+        super.ngDoCheck();
     }
 
     /**
@@ -4586,7 +4566,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if ((Number.isFinite(width) || width === null) && width !== this.calcWidth) {
             this.calcWidth = width;
         }
-        this._derivePossibleWidth();
     }
 
     private getColumnWidthSum(): number {
@@ -4603,6 +4582,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!colSum) {
             return null;
         }
+        // TODO: Is that really needed ??
         this.cdr.detectChanges();
         colSum += this.getFeatureColumnsWidth();
         return colSum;
@@ -4690,6 +4670,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
          */
         this.calculateGridWidth();
         this.cdr.detectChanges();
+        this._derivePossibleWidth();
         this.calculateGridHeight();
         this.cdr.detectChanges();
 
