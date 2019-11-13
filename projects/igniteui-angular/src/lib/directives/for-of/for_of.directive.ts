@@ -32,7 +32,7 @@ import { VirtualHelperComponent } from './virtual.helper.component';
 import { IgxScrollInertiaModule } from './../scroll-inertia/scroll_inertia.directive';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from './for_of.sync.service';
 import { Subject } from 'rxjs';
-import { takeUntil, filter, throttleTime } from 'rxjs/operators';
+import { takeUntil, filter, throttleTime, first } from 'rxjs/operators';
 import ResizeObserver from 'resize-observer-polyfill';
 import { IBaseEventArgs } from '../../core/utils';
 import { VirtualHelperBaseDirective } from './base.helper.component';
@@ -746,8 +746,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         const diffs = [];
         let totalDiff = 0;
         const l = this._embeddedViews.length;
-        this._embeddedViews.filter(view => !view.destroyed).forEach(view => view.detectChanges());
-        const rNodes = this._embeddedViews.map(view => view.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE));
+        const rNodes = this._embeddedViews.map(view =>
+            view.rootNodes.find(node => node.nodeType === Node.ELEMENT_NODE) || view.rootNodes[0].nextElementSibling);
         for (let i = 0; i < l; i++) {
             const rNode = rNodes[i];
             if (rNode) {
@@ -1558,7 +1558,11 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         const scrollOffset = this.fixedUpdateAllElements(this._virtScrollTop);
 
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
-        this.recalcUpdateSizes();
+
+        this._zone.onStable.pipe(first()).subscribe( () => {
+            this.recalcUpdateSizes();
+        });
+        this.cdr.markForCheck();
     }
 
     onHScroll(scrollAmount) {

@@ -1901,7 +1901,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         */
         this.children.changes.pipe(takeUntil(this.destroy$))
             .subscribe((change) => {
-                if (change.length > 1 && change.first === this) {
+                if (change.first === this) {
                     this.children.reset(this.children.toArray().slice(1));
                     this.children.forEach(child => {
                         child.parent = this;
