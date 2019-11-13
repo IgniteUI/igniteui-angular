@@ -260,7 +260,7 @@ export class IgxColumnComponent implements AfterContentInit {
     public collapsibleChange = new EventEmitter<boolean>();
     /** @hidden */
     @Output()
-    public visibleWhenCollapseChange = new EventEmitter<boolean>();
+    public visibleWhenCollapsedChange = new EventEmitter<boolean>();
 
     /**
      * Gets whether the hiding is disabled.
@@ -1016,17 +1016,17 @@ export class IgxColumnComponent implements AfterContentInit {
      * Indicates whether the column will be visible when its parent is collapsed.
      * ```html
      * <igx-column-group>
-     *   <igx-column [visibleWhenCollapse]="true"></igx-column>
+     *   <igx-column [visibleWhenCollapsed]="true"></igx-column>
      * </igx-column-group>
      * ```
      * @memberof IgxColumnComponent
      */
     @Input()
-    set visibleWhenCollapse(value: boolean) {
-        this._visibleWhenCollapse = value;
-        this.visibleWhenCollapseChange.emit(this._visibleWhenCollapse);
+    set visibleWhenCollapsed(value: boolean) {
+        this._visibleWhenCollapsed = value;
+        this.visibleWhenCollapsedChange.emit(this._visibleWhenCollapsed);
         if (this.parent) {
-            const cols = this.parent.children.map(child => child.visibleWhenCollapse);
+            const cols = this.parent.children.map(child => child.visibleWhenCollapsed);
             if (!(cols.some(c => c === true) && cols.some(c => c === false))) {
                 this.parent.collapsible = false;
             } else {
@@ -1035,9 +1035,9 @@ export class IgxColumnComponent implements AfterContentInit {
         }
     }
 
-    get visibleWhenCollapse(): boolean {
+    get visibleWhenCollapsed(): boolean {
         if (!this.parent) { return; }
-        return this._visibleWhenCollapse;
+        return this._visibleWhenCollapsed;
     }
 
     /**
@@ -1170,7 +1170,7 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *  @hidden
     */
-    protected _visibleWhenCollapse;
+    protected _visibleWhenCollapsed;
     /**
      * @hidden
      */
@@ -1768,8 +1768,8 @@ export class IgxColumnComponent implements AfterContentInit {
      * @internal
      */
     protected setExpandCollapseState() {
-        this.children.filter(col => (col.visibleWhenCollapse !== undefined)).forEach(c =>  {
-            c.hidden = this._expanded ? c.visibleWhenCollapse : !c.visibleWhenCollapse;
+        this.children.filter(col => (col.visibleWhenCollapsed !== undefined)).forEach(c =>  {
+            c.hidden = this._expanded ? c.visibleWhenCollapsed : !c.visibleWhenCollapsed;
         });
     }
 
