@@ -650,13 +650,18 @@ export class IgxGridNavigationService {
     }
 
     protected getRowByIndex(index, selector = this.getRowSelector()) {
-        return this.grid.nativeElement.querySelector(
-            `${selector}[data-rowindex="${index}"]`);
-    }
+        const gridTag = this.grid.nativeElement.tagName.toLocaleLowerCase();
+        const row = Array.from(this.grid.nativeElement.querySelectorAll(
+            `${selector}[data-rowindex="${index}"]`))
+            .find(x => this.getClosestElemByTag(x, gridTag).getAttribute('id') === this.grid.id);
+            return row;
+        }
 
     protected getNextRowByIndex(nextIndex) {
-        return this.grid.tbody.nativeElement.querySelector(
-            `[data-rowindex="${nextIndex}"]`);
+        const gridTag = this.grid.nativeElement.tagName.toLocaleLowerCase();
+        const row = Array.from(this.grid.tbody.nativeElement.querySelectorAll(
+            `[data-rowindex="${nextIndex}"]`)).find(x => this.getClosestElemByTag(x, gridTag).getAttribute('id') === this.grid.id);
+        return row;
     }
 
     private getAllRows() {
@@ -673,5 +678,16 @@ export class IgxGridNavigationService {
 
     protected getRowSelector(): string {
         return 'igx-grid-row';
+    }
+
+    protected getClosestElemByTag(sourceElem, targetTag) {
+        let result = sourceElem;
+        while (result !== null && result.nodeType === 1) {
+            if (result.tagName.toLowerCase() === targetTag.toLowerCase()) {
+                return result;
+            }
+            result = result.parentNode;
+        }
+        return null;
     }
 }

@@ -23,6 +23,7 @@ export interface GridType extends IGridDataBindable {
     allowFiltering: boolean;
     rowDraggable: boolean;
     primaryKey: any;
+    id: string;
 
     filterMode: FilterMode;
 
