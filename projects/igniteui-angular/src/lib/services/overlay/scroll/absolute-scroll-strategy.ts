@@ -60,7 +60,13 @@ export class AbsoluteScrollStrategy extends ScrollStrategy {
         }
     }
 
-    private onScroll = () => {
-        this._overlayService.repositionAll();
+    private onScroll = (e: Event) => {
+        const overlayInfo = this._overlayService.getOverlayById(this._id);
+        if (!overlayInfo) {
+            return;
+        }
+        if (!overlayInfo.elementRef.nativeElement.contains(e.target)) {
+            this._overlayService.reposition(this._id);
+        }
     }
 }

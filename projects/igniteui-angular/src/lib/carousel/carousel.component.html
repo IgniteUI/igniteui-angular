@@ -1,22 +1,35 @@
-<div tabindex="0" aria-label="carousel" class="igx-carousel"
-        (mouseenter)="stop()"
-        (mouseleave)="play()"
-        (swipeleft)="next()"
-        (swiperight)="prev()"
-        (tap)="isPlaying ? stop() : play()">
-    <ul class="igx-carousel__indicators" [hidden]="slides.length <= 1">
-        <li *ngFor="let slide of slides" [attr.aria-label]="setAriaLabel(slide)" [attr.aria-selected]="slide.active" [class.active]="slide.active === true"
-            (click)="select(slide)"></li>
-    </ul>
-    <div class="igx-carousel__inner" role="list">
-        <ng-content></ng-content>
+<ng-template #defaultIndicator let-slide>
+    <div class="igx-nav-dot"
+        [class.igx-nav-dot--active]="slide.active"
+    >
     </div>
-    <div *ngIf="navigation">
-        <a role="button" tabindex="0" class="igx-carousel__arrow--prev" (click)="prev()" [hidden]="!slides.length">
-            <igx-icon fontSet="material">arrow_back</igx-icon>
-        </a>
-        <a role="button" tabindex="0" class="igx-carousel__arrow--next" (click)="next()" [hidden]="!slides.length">
-            <igx-icon fontSet="material">arrow_forward</igx-icon>
-        </a>
+</ng-template>
+
+
+<div *ngIf="showIndicators" [ngClass]="indicatorsOrientationClass">
+    <div *ngFor="let slide of slides"
+        class="igx-carousel-indicators__indicator"
+        (click)="select(slide)"
+        [attr.aria-label]="setAriaLabel(slide)"
+        [attr.aria-selected]="slide.active">
+        <ng-container *ngTemplateOutlet="getIndicatorTemplate; context: {$implicit: slide};"></ng-container>
     </div>
 </div>
+
+<div *ngIf="showIndicatorsLabel" [ngClass]="indicatorsOrientationClass">
+    <span class="igx-carousel__label">{{getCarouselLabel}}</span>
+</div>
+
+<div class="igx-carousel__inner" role="list">
+    <ng-content></ng-content>
+</div>
+
+<ng-container *ngIf="navigation">
+    <a role="button" tabindex="0" class="igx-carousel__arrow--prev" (click)="prev()" [hidden]="!slides.length">
+        <igx-icon fontSet="material">arrow_back</igx-icon>
+    </a>
+    <a role="button" tabindex="0" class="igx-carousel__arrow--next" (click)="next()" [hidden]="!slides.length">
+        <igx-icon fontSet="material">arrow_forward</igx-icon>
+    </a>
+</ng-container>
+
