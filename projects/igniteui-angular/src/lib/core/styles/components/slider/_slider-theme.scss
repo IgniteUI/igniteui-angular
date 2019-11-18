@@ -247,6 +247,7 @@
         position: absolute;
         top: calc(#{$tick-height} + #{rem(2px)});
         transform: translate(-50%);
+        line-height: .7;
         opacity: 1;
         transition: opacity .2s $ease-in-out-quad;
     }
@@ -255,7 +256,6 @@
         background: --var($theme, 'tick-color');
         height: $tick-height;
         width: $tick-width;
-        position: relative;
     }
 
     %igx-slider__ticks--tall {
@@ -319,7 +319,6 @@
         %igx-slider__ticks-label {
             writing-mode: vertical-rl;
             transform: translate(-50%) rotate(0deg);
-            left: rem(1px);
         }
 
         %igx-slider__ticks--tall {
