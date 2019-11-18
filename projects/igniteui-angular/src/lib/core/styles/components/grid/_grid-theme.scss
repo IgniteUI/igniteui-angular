@@ -1340,7 +1340,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-right: rem(8px);
+        margin-#{$right}: rem(8px);
         cursor: pointer;
 
         igx-icon {
