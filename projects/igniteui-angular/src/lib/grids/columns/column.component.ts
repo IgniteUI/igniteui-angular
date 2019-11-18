@@ -12,6 +12,8 @@ import {
     EventEmitter,
 } from '@angular/core';
 import { notifyChanges } from '../watch-changes';
+import { WatchColumnChanges } from '../watch-changes';
+import { IgxRowIslandAPIService } from '../hierarchical-grid/row-island-api.service';
 import { DataType } from '../../data-operations/data-util';
 import { DeprecateProperty } from '../../core/deprecateDecorators';
 import {
@@ -82,6 +84,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     public header = '';
     /**
@@ -95,6 +98,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
+    @WatchColumnChanges()
     @Input()
     public sortable = false;
     /**
@@ -109,6 +113,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges(true)
+    @WatchColumnChanges()
     @Input()
     groupable = false;
     /**
@@ -119,6 +124,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
+    @WatchColumnChanges()
     @Input()
     get editable(): boolean {
         // Updating the primary key when grid has transactions (incl. row edit)
@@ -161,6 +167,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     public filterable = true;
     /**
@@ -174,6 +181,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
+    @WatchColumnChanges()
     @Input()
     public resizable = false;
     /**
@@ -184,6 +192,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges(true)
+    @WatchColumnChanges()
     @Input()
     get hasSummary() {
         return this._hasSummary;
@@ -211,6 +220,7 @@ export class IgxColumnComponent implements AfterContentInit {
      *@memberof IgxColumnComponent
      */
     @notifyChanges(true)
+    @WatchColumnChanges()
     @Input()
     get hidden(): boolean {
         return this._hidden;
@@ -270,6 +280,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     disableHiding = false;
     /**
@@ -280,6 +291,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     disablePinning = false;
     /**
@@ -293,6 +305,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
+    @WatchColumnChanges()
     @notifyChanges()
     @Input()
     public movable = false;
@@ -304,6 +317,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges(true)
+    @WatchColumnChanges()
     @Input()
     public get width(): string {
         return this.widthSetByUser ? this._width : this.defaultWidth;
@@ -364,6 +378,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
+    @WatchColumnChanges()
     @Input()
     public maxWidth: string;
     /**
@@ -378,6 +393,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     public set minWidth(value: string) {
         const minVal = parseFloat(value);
@@ -399,6 +415,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     public headerClasses = '';
 
@@ -413,6 +430,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     public headerGroupClasses = '';
     /**
@@ -432,6 +450,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     public cellClasses: any;
 
@@ -453,6 +472,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     cellStyles = null;
     /**
@@ -486,6 +506,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     formatter: (value: any) => any;
     /**
@@ -499,6 +520,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
+    @WatchColumnChanges()
     @Input()
     public filteringIgnoreCase = true;
     /**
@@ -512,6 +534,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
+    @WatchColumnChanges()
     @Input()
     public sortingIgnoreCase = true;
     /**
@@ -534,6 +557,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
+    @WatchColumnChanges()
     @Input()
     public get pinned(): boolean {
         return this._pinned;
@@ -592,6 +616,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges(true)
+    @WatchColumnChanges()
     @Input()
     public get summaries(): any {
         return this._summaries;
@@ -624,6 +649,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     public searchable = true;
     /**
@@ -727,6 +753,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input('cellTemplate')
     get bodyTemplate(): TemplateRef<any> {
         return this._bodyTemplate;
@@ -758,6 +785,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     get headerTemplate(): TemplateRef<any> {
         return this._headerTemplate;
@@ -790,6 +818,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input('cellEditorTemplate')
     get inlineEditorTemplate(): TemplateRef<any> {
         return this._inlineEditorTemplate;
@@ -819,6 +848,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input('filterCellTemplate')
     get filterCellTemplate(): TemplateRef<any> {
         return this._filterCellTemplate;
@@ -1209,7 +1239,8 @@ export class IgxColumnComponent implements AfterContentInit {
     @ContentChild(IgxCollapsibleIndicatorTemplateDirective, { read: IgxCollapsibleIndicatorTemplateDirective, static: false })
     protected collapseIndicatorTemplate:  IgxCollapsibleIndicatorTemplateDirective;
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, public cdr: ChangeDetectorRef) { }
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, public cdr: ChangeDetectorRef,
+        public rowIslandAPI: IgxRowIslandAPIService) { }
 
     /**
      * @hidden
