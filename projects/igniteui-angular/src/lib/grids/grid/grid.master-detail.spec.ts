@@ -113,7 +113,8 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(200);
             fix.detectChanges();
 
-            expect(grid.rowList.first.rowID).toEqual('CENTC');
+            const row = grid.getRowByIndex(20);
+            expect(GridFunctions.elementInGridView(grid, row.nativeElement)).toBeTruthy();
 
             grid.navigateTo(0);
             await wait(200);
@@ -387,8 +388,8 @@ describe('IgxGrid Master Detail #grid', () => {
             const row = grid.getRowByIndex(2);
             const targetCellElement = grid.getCellByColumn(2, 'ContactName');
             UIInteractions.triggerKeyDownEvtUponElem('arrowup', targetCellElement, true);
-            await wait(DEBOUNCETIME);
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
             const detailRow = row.element.nativeElement.previousElementSibling;
             expect(document.activeElement).toBe(detailRow);
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
