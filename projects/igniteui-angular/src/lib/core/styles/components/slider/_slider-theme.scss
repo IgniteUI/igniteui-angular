@@ -278,13 +278,13 @@
 
     %igx-slider__ticks--top {
         %igx-slider__ticks-label {
-            bottom: calc(#{$tick-height} + #{rem(2px)});
+            bottom: calc(#{$tick-height} + #{$tick-height});
             top: auto;
         }
 
         &%igx-slider__ticks--tall {
             %igx-slider__ticks-label {
-                bottom: calc(#{$tick-height--tall} + #{rem(2px)});
+                bottom: calc(#{$tick-height--tall} + #{$tick-height});
                 top: auto;
             }
         }
