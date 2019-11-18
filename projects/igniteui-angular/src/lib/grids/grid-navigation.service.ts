@@ -294,13 +294,7 @@ export class IgxGridNavigationService {
                 .pipe(first())
                 .subscribe(() => {
                     const tag = rowElement.tagName.toLowerCase();
-                    const rowSelector = this.getRowSelector();
-                    if (tag === rowSelector || tag === 'igx-grid-summary-row') {
-                        rowElement = this.getRowByIndex(currentRowIndex, tag);
-                    } else {
-                        rowElement = this.grid.nativeElement.querySelector(
-                            `igx-grid-groupby-row[data-rowindex="${currentRowIndex}"]`);
-                    }
+                    rowElement = this.getRowByIndex(currentRowIndex, tag);
                     this.focusPreviousElement(rowElement, visibleColumnIndex);
                 });
         } else {
@@ -651,7 +645,7 @@ export class IgxGridNavigationService {
 
     protected getRowByIndex(index, selector = this.getRowSelector()) {
         const gridTag = this.grid.nativeElement.tagName.toLocaleLowerCase();
-        const row = Array.from(this.grid.nativeElement.querySelectorAll(
+        const row = Array.from(this.grid.tbody.nativeElement.querySelectorAll(
             `${selector}[data-rowindex="${index}"]`))
             .find(x => this.getClosestElemByTag(x, gridTag).getAttribute('id') === this.grid.id);
             return row;
