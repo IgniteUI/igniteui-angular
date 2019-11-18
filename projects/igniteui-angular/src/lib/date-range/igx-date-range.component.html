@@ -1,11 +1,10 @@
-<!-- TODO: remove all styling -->
 <div #toggle igxToggle (onOpened)="onOpened()">
     <igx-calendar #calendar (keydown)="onKeyDown($event)" selection="range" [weekStart]="weekStart"
         [hideOutsideDays]="hideOutsideDays" [monthsViewNumber]="monthsViewNumber"
         (onSelection)="handleSelection($event)"></igx-calendar>
-    <div style="display: flex; flex-flow: row; justify-content: space-between;" class="buttonsWrapper">
+    <div class="buttonsWrapper">
         <div class="todayButton">
-            <button igxButton  (click)="showToday($event)">{{todayButtonText}}</button>
+            <button igxButton (click)="showToday($event)">{{todayButtonText}}</button>
         </div>
         <div *ngIf="mode === 'dialog'" class="doneButton">
             <button igxButton (click)="hideCalendar($event)">{{doneButtonText}}</button>
@@ -18,9 +17,7 @@
 <ng-template #defTemplate>
     <div (click)="showCalendar($event)">
         <div class="content-wrap">
-            <div style="display: flex; flex-flow: row;">
-                <ng-content select="igx-input-group"></ng-content>
-            </div>
+            <ng-content select="igx-input-group"></ng-content>
             <ng-content select="[igxDateRangeStart]"></ng-content>
             <ng-content select="[igxDateRangeEnd]"></ng-content>
             <ng-content select="[igxDateRange]"></ng-content>

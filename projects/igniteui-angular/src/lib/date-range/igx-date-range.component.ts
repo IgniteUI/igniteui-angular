@@ -92,7 +92,7 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
         }
     }
 
-    public get value() {
+    public get value(): Date | Date[] {
         return this.calendar.value;
     }
 
@@ -317,7 +317,7 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
         }
     }
 
-    private validateNgContent() {
+    private validateNgContent(): void {
         if (this.startInput && !this.endInput || !this.startInput && this.endInput) {
             // TODO: better error message
             throw new Error('You must apply both igxDateRangeStart and igxDateRangeEnd if you are using two input elements.');

@@ -24,7 +24,7 @@ export class IgxDateRangeBaseDirective {
         }
     }
 
-    public get value() {
+    public get value(): string | string[] {
         return this.nativeElement.value;
     }
 

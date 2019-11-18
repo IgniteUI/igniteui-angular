@@ -14,9 +14,9 @@ import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 // tslint:disable: no-use-before-declare
 describe('IgxDateRange', () => {
-    let singleInputRange: DateRangeTwoInputsTestComponent;
-    let twoInputsRange: DateRangeTwoInputsTestComponent;
-    let fixture: ComponentFixture<DateRangeTestComponent>;
+    // let singleInputRange: DateRangeTwoInputsTestComponent;
+    // let twoInputsRange: DateRangeTwoInputsTestComponent;
+    // let fixture: ComponentFixture<DateRangeTestComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
