@@ -13,6 +13,12 @@
                 <igx-icon fontSet="material" [igxRowDrag]="cell.row">info</igx-icon>
             </ng-template>
         </igx-column>
+        <ng-template let-data igxRowDragGhost>
+            <div class="dragGhost">
+                    <igx-icon fontSet="material"></igx-icon> 
+                     Moving {{data.ProductName}}!
+                </div>
+        </ng-template>
     </igx-grid>
     <igx-grid #grid2 igxDrop [data]="newData" [primaryKey]="'ProductID'"
         [displayDensity]="density" [width]="'500px'" [height]="'600px'" [emptyGridTemplate]="dragHereTemplate"
