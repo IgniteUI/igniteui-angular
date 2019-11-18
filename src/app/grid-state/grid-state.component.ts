@@ -33,12 +33,13 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
   public serialize = true;
 
   public options = {
-    selection: false,
+    cellSelection: true,
+    rowSelection: true,
     filtering: true,
-    advancedFiltering: false,
+    advancedFiltering: true,
     paging: true,
     sorting: true,
-    groupby: false,
+    groupby: true,
     columns: true
   };
 
@@ -56,7 +57,15 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
     // tslint:enable:max-line-length
   ];
 
+  public selectionMode = 'multiple';
+  public selectionModes = [];
+
   constructor(private router: Router) {
+    this.selectionModes = [
+      { label: 'none', selected: this.selectionMode === 'none', togglable: true },
+      { label: 'single', selected: this.selectionMode === 'single', togglable: true },
+      { label: 'multiple', selected: this.selectionMode === 'multiple', togglable: true }
+  ];
   }
 
   public ngOnInit() {
@@ -87,6 +96,7 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
 
   public saveGridState() {
       const state = this.state.getState(this.serialize);
+      // const state = this.state.getState(this.serialize, ['sorting', 'filtering']);
       if (typeof state === 'string') {
         window.localStorage.setItem(this.stateKey, state);
       } else {
@@ -102,18 +112,32 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
   }
 
   public restoreColumns() {
-    let state = window.localStorage.getItem(this.stateKey);
-    state = JSON.parse(state)['columns'];
+    const state = this.getColumnsState();
     if (state) {
       this.state.setState({ columns: state });
     }
+  }
+
+  public getColumnsState(): any {
+    let state = window.localStorage.getItem(this.stateKey);
+    state = JSON.parse(state)['columns'];
+    return state;
   }
 
   public restoreFiltering() {
     let state = window.localStorage.getItem(this.stateKey);
     state = JSON.parse(state)['filtering'];
     if (state) {
-      this.state.setState({ filtering: state });
+      this.state.setState({ filtering: state, columns: this.getColumnsState() });
+    }
+  }
+
+  public restoreAdvancedFiltering() {
+    this.restoreColumns();
+    let state = window.localStorage.getItem(this.stateKey);
+    state = JSON.parse(state)['advancedFiltering'];
+    if (state) {
+      this.state.setState({ advancedFiltering: state, columns: this.getColumnsState() });
     }
   }
 
@@ -133,11 +157,19 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
     }
   }
 
-  public restoreSelection() {
+  public restoreRowSelection() {
     let state = window.localStorage.getItem(this.stateKey);
-    state = JSON.parse(state)['selection'];
+    state = JSON.parse(state)['rowSelection'];
     if (state) {
-      this.state.setState({ selection: state });
+      this.state.setState({ rowSelection: state });
+    }
+  }
+
+  public restoreCellSelection() {
+    let state = window.localStorage.getItem(this.stateKey);
+    state = JSON.parse(state)['cellSelection'];
+    if (state) {
+      this.state.setState({ cellSelection: state });
     }
   }
 
@@ -159,6 +191,10 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
   public onChange(event: any, action: string) {
     this.state.options[action] = event.checked;
   }
+
+  public selectCellSelectionMode(args) {
+    this.selectionMode = this.selectionModes[args.index].label;
+}
 
   public onSerializeChange(event: any) {
     // this.serialize = !!event.checked;

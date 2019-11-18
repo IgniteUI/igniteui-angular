@@ -7,9 +7,15 @@
                 <li>Use the <strong>delete</strong> and <strong>reload</strong> buttons to clear the localStorage content and reload the page with clear state.</li>
             </ul>
         </div>
+        <div class="switches" style="min-width: inherit">
+            <igx-buttongroup [values]="selectionModes" (onSelect)="selectCellSelectionMode($event)"></igx-buttongroup>
+        </div>
         <div class="switches">
             <div class="control-item">
-                <igx-switch [(ngModel)]="options.selection" (change)="onChange($event, 'selection')">Row Selection</igx-switch>
+                <igx-switch [(ngModel)]="options.rowSelection" (change)="onChange($event, 'rowSelection')">Row Selection</igx-switch>
+            </div>
+            <div class="control-item">
+                <igx-switch [(ngModel)]="options.cellSelection" (change)="onChange($event, 'cellSelection')">Cell Selection</igx-switch>
             </div>
             <div class="control-item">
                 <igx-switch [(ngModel)]="options.filtering" (change)="onChange($event, 'filtering')">Filtering</igx-switch>
@@ -44,13 +50,19 @@
                 <button igxButton="raised" (click)="restoreFiltering()">Filtering</button>
             </div>
             <div class="control-item">
+                <button igxButton="raised" (click)="restoreAdvancedFiltering()">Adv Filtering</button>
+            </div>
+            <div class="control-item">
                 <button igxButton="raised" (click)="restoreSorting()">Sorting</button>
             </div>
             <div class="control-item">
                 <button igxButton="raised" (click)="restoreGroupby()">GroupBy</button>
             </div>
             <div class="control-item">
-                <button igxButton="raised" (click)="restoreSelection">Selection</button>
+                <button igxButton="raised" (click)="restoreRowSelection()">Row Selection</button>
+            </div>
+            <div class="control-item">
+                <button igxButton="raised" (click)="restoreCellSelection()">Cell Selection</button>
             </div>
             <div class="control-item">
                 <button igxButton="raised" (click)="restorePaging()">Paging</button>
@@ -67,10 +79,10 @@
         </div>
     </div>
 
-    <igx-grid [id]="gridId" #grid1 [igxGridState]="options" [data]="localData" [primaryKey]="'ProductID'" width="1200px" height="550px"
+    <igx-grid [id]="gridId" #grid1 [igxGridState]="options" [data]="localData" [primaryKey]="'EmployeeID'" width="1200px" height="550px"
         [rowEditable]="false" [allowFiltering]="true" [allowAdvancedFiltering]="true"
         [paging]="true" [showToolbar]="true" [columnPinning]="true" [columnHiding]="true"
-        [filterMode]="'excelStyleFilter'" [displayDensity]="'cosy'">
+        [filterMode]="'excelStyleFilter'" [displayDensity]="'cosy'" [cellSelection]="selectionMode" [rowSelection]="'none'">
         <igx-column *ngFor="let c of columns" [sortable]="c.sortable" [movable]="c.movable" [editable]="true" [filterable]="c.filterable" [groupable]="c.groupable"
             [field]="c.field" [header]="c.header" [dataType]="c.dataType" [pinned]="c.pinned" [hidden]="c.hidden">
         </igx-column>

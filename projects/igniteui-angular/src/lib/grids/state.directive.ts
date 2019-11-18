@@ -12,13 +12,14 @@ import { IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFiltering
     IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 
 export interface IGridState {
-    columns: IColumnState[];
-    filtering: FilteringExpressionsTree;
-    advancedFiltering: FilteringExpressionsTree;
-    sorting: ISortingExpression[];
-    groupby: IGroupingExpression[];
-    paging: IPagingState;
-    selection: any[];
+    columns?: IColumnState[];
+    filtering?: FilteringExpressionsTree;
+    advancedFiltering?: FilteringExpressionsTree;
+    sorting?: ISortingExpression[];
+    groupby?: IGroupingExpression[];
+    paging?: IPagingState;
+    cellSelection?: any[];
+    rowSelection?: any[];
 }
 
 interface IGridStateOptions {
@@ -28,7 +29,8 @@ interface IGridStateOptions {
     sorting?: boolean;
     groupby?: boolean;
     paging?: boolean;
-    selection?: boolean;
+    cellSelection?: boolean;
+    rowSelection?: boolean;
 }
 
 interface IColumnState {
@@ -56,7 +58,8 @@ const ACTION_ADVANCED_FILTERING = 'advancedFiltering';
 const ACTION_SORTING = 'sorting';
 const ACTION_GROUPBY = 'groupby';
 const ACTION_PAGING = 'paging';
-const ACTION_SELECTION = 'selection';
+const ACTION_ROW_SELECTION = 'rowSelection';
+const ACTION_CELL_SELECTION = 'cellSelection';
 
 @Directive({
     selector: '[igxGridState]'
@@ -70,7 +73,8 @@ export class IgxGridStateDirective {
         sorting: true,
         groupby: true,
         paging: true,
-        selection: true,
+        cellSelection: true,
+        rowSelection: true
     };
 
     private state: IGridState | IColumnState | IFilteringExpressionsTree |
@@ -110,17 +114,11 @@ export class IgxGridStateDirective {
      * this.state.setState(gridState);
      * ```
      */
-    public setState(state: IGridState |
-        IColumnState |
-        IFilteringExpressionsTree |
-        ISortingExpression |
-        IGroupingExpression |
-        IPagingState | string) {
+    public setState(state: IGridState | string) {
         if (typeof state === 'string') {
             state = JSON.parse(state as string, this.parseCallback) as string;
         }
-        this.state = state as IGridState | IColumnState | IFilteringExpressionsTree |
-            ISortingExpression | IGroupingExpression | IPagingState;
+        this.state = state as IGridState;
         this.restoreGridState(this.state);
     }
 
@@ -137,25 +135,16 @@ export class IgxGridStateDirective {
      * let state =  this.state.getState();
      * ```
      */
-    public getState(serialize = true, feature?: string | string[]): IGridState |
-        IColumnState |
-        IFilteringExpressionsTree |
-        ISortingExpression |
-        IGroupingExpression |
-        IPagingState | string  {
-        let state: IGridState |
-            IColumnState |
-            IFilteringExpressionsTree |
-            ISortingExpression |
-            IGroupingExpression |
-            IPagingState | string;
+    public getState(serialize = true, feature?: string | string[]): IGridState | string  {
+        let state: IGridState | string;
         if (feature) {
+            state = {};
             if (Array.isArray(feature)) {
                 feature.forEach(f => {
-                    state[f] = this.getGridFeature(f);
+                    state = Object.assign(state, this.getGridFeature(f));
                 });
             } else {
-                state[feature] = this.getGridFeature(feature);
+                state = this.getGridFeature(feature);
             }
         } else {
             state = this.getAllGridFeatures() as IGridState;
@@ -191,7 +180,7 @@ export class IgxGridStateDirective {
                 break;
             }
             case ACTION_ADVANCED_FILTERING: {
-                state = this.getAdvancedFiltering();
+                state = this.restoreAdvancedFiltering(state);
                 break;
             }
             case ACTION_SORTING: {
@@ -206,8 +195,12 @@ export class IgxGridStateDirective {
                 this.restorePaging(state);
                 break;
               }
-              case ACTION_SELECTION: {
-                state = this.getSelection();
+              case ACTION_ROW_SELECTION: {
+                state = this.restoreRowSelection(state);
+                break;
+              }
+              case ACTION_CELL_SELECTION: {
+                state = this.restoreCellSelection(state);
                 break;
               }
          }
@@ -261,8 +254,12 @@ export class IgxGridStateDirective {
                 state = this.getPaging();
                 break;
               }
-              case ACTION_SELECTION: {
-                state = this.getSelection();
+              case ACTION_ROW_SELECTION: {
+                state = this.getRowSelection();
+                break;
+              }
+              case ACTION_CELL_SELECTION: {
+                state = this.getCellSelection();
                 break;
               }
          }
@@ -279,6 +276,7 @@ export class IgxGridStateDirective {
                 sortable: c.sortable,
                 filterable: c.filterable,
                 editable: c.editable,
+                groupable: c.groupable,
                 movable: c.movable,
                 hidden: c.hidden,
                 dataType: c.dataType,
@@ -317,9 +315,16 @@ export class IgxGridStateDirective {
         return { groupby: groupingState };
     }
 
-    private getSelection() {
+    private getRowSelection() {
         const selection = this.grid.selectedRows();
-        return { selection: selection };
+        return { rowSelection: selection };
+    }
+
+    private getCellSelection() {
+        const selection = this.grid.selectedCells.map(cell => {
+            return { row: cell.rowIndex, column: cell.columnIndex };
+        });
+        return { cellSelection: selection };
     }
 
     /**
@@ -363,7 +368,7 @@ export class IgxGridStateDirective {
      * Restores the grid advanced filtering state, i.e. sets the `advancedFilteringExpressionsTree` property value.
      */
     private restoreAdvancedFiltering(state) {
-        const advFilterTree = this.createExpressionsTreeFromObject(state.advancedFiltering);
+        const advFilterTree = this.createExpressionsTreeFromObject(state);
         this.grid.advancedFilteringExpressionsTree = advFilterTree;
     }
 
@@ -410,8 +415,15 @@ export class IgxGridStateDirective {
         }
     }
 
-    private restoreSelection(state: any[]) {
+    private restoreRowSelection(state: any[]) {
         this.grid.selectRows(state);
+    }
+
+    private restoreCellSelection(state: any[]) {
+        state.forEach(cell => {
+            const range = { rowStart: cell.row, rowEnd: cell.row, columnStart: cell.column, columnEnd: cell.column};
+            this.grid.selectRange(range);
+        });
     }
 
     /**
@@ -431,7 +443,12 @@ export class IgxGridStateDirective {
                 expressionsTree.filteringOperands.push(subTree);
             } else {
                 const expr = item as IFilteringExpression;
-                const dataType = this.state[ACTION_COLUMNS].find(c => c.field === expr.fieldName).dataType;
+                let dataType: string;
+                if (this.grid.columnList.length > 0) {
+                    dataType = this.grid.columnList.find(c => c.field === expr.fieldName).dataType;
+                } else {
+                    dataType = this.state[ACTION_COLUMNS].find(c => c.field === expr.fieldName).dataType;
+                }
                 expr.condition = this.generateFilteringCondition(dataType, expr.condition.name);
                 expr.searchVal = (dataType === 'date') ? new Date(Date.parse(expr.searchVal)) : expr.searchVal;
                 expressionsTree.filteringOperands.push(expr);
