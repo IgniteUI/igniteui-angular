@@ -92,6 +92,10 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
         }
     }
 
+    public get value() {
+        return this.calendar.value;
+    }
+
     public selectRange(startDate: Date, endDate: Date): void {
         const dateRange = [startDate, endDate];
         this.calendar.selectDate(dateRange);

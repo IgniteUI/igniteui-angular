@@ -1,6 +1,6 @@
 import { IgxDateRangeComponent } from './igx-date-range.component';
-import { ComponentFixture, async, TestBed } from '@angular/core/testing';
-import { Component, OnInit, ViewChild, wtfStartTimeRange, NgModule } from '@angular/core';
+import { ComponentFixture, async, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { Component, OnInit, ViewChild, NgModule } from '@angular/core';
 import { IgxInputGroupModule } from '../input-group/index';
 import { InteractionMode } from '../core/enums';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -9,7 +9,8 @@ import { IgxIconModule } from '../icon';
 import { IgxCalendarModule } from '../calendar/index';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxDateRangeModule } from './igx-date-range.module';
-import { noop } from 'rxjs';
+import { By } from '@angular/platform-browser';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 // tslint:disable: no-use-before-declare
 describe('IgxDateRange', () => {
@@ -23,21 +24,35 @@ describe('IgxDateRange', () => {
         }).compileComponents();
     }));
 
-    describe('Focus', () => {
-        it('Should move focus to the calendar on open', () => {
+    describe('UI Interactions', () => {
+        it('Should select today properly', fakeAsync(() => {
+            // TODO
+        }));
+
+        it('Should select a range when pressing "today" if a start date is selected', () => {
             // TODO
         });
 
-        it('Should move the focus to start input when "Today" is clicked and there isn\'t a value in start input', () => {
+        it('Should open the calendar on mouse click', () => {
             // TODO
         });
 
-        it('Should move the focus to end input when "Today" is clicked and there is a value in start input', () => {
-            // TODO
-        });
+        describe('Focus', () => {
+            it('Should move focus to the calendar on open', () => {
+                // TODO
+            });
 
-        it('Should move the focus to start input on close', () => {
-            // TODO
+            it('Should move the focus to start input when "Today" is clicked and there isn\'t a value in start input', () => {
+                // TODO
+            });
+
+            it('Should move the focus to end input when "Today" is clicked and there is a value in start input', () => {
+                // TODO
+            });
+
+            it('Should move the focus to start input on close', () => {
+                // TODO
+            });
         });
     });
 
@@ -67,10 +82,6 @@ describe('IgxDateRange', () => {
     });
 
     describe('Keyboard Navigation', () => {
-        it('Should open the calendar on mouse click', () => {
-            // TODO
-        });
-
         it('Should open the calendar with ALT + UP ARROW key', () => {
             // TODO
         });

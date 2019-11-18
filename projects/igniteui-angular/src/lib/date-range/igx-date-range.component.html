@@ -3,11 +3,11 @@
     <igx-calendar #calendar (keydown)="onKeyDown($event)" selection="range" [weekStart]="weekStart"
         [hideOutsideDays]="hideOutsideDays" [monthsViewNumber]="monthsViewNumber"
         (onSelection)="handleSelection($event)"></igx-calendar>
-    <div style="display: flex; flex-flow: row; justify-content: space-between;">
-        <div>
-            <button igxButton (click)="showToday($event)">{{todayButtonText}}</button>
+    <div style="display: flex; flex-flow: row; justify-content: space-between;" class="buttonsWrapper">
+        <div class="todayButton">
+            <button igxButton  (click)="showToday($event)">{{todayButtonText}}</button>
         </div>
-        <div *ngIf="mode === 'dialog'">
+        <div *ngIf="mode === 'dialog'" class="doneButton">
             <button igxButton (click)="hideCalendar($event)">{{doneButtonText}}</button>
         </div>
     </div>
