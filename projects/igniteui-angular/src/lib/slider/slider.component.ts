@@ -1130,8 +1130,8 @@ export class IgxSliderComponent implements
         /**
          * if {@link SliderType.SLIDER} than the initial value shold be the lowest one.
          */
-        if (!this.isRange && this.value === this.upperBound) {
-            this.value = this.lowerBound;
+        if (!this.isRange && this._upperValue === undefined) {
+            this._upperValue = this.lowerBound;
         }
     }
 

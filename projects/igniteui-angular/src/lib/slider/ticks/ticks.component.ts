@@ -1,6 +1,9 @@
 import { Component, Input, ElementRef, AfterViewInit, TemplateRef, HostBinding } from '@angular/core';
 import { TicksOrientation, TickLabelsOrientation } from '../slider.common';
 
+/**
+ * @hidden
+ */
 @Component({
     selector: 'igx-ticks',
     templateUrl: 'ticks.component.html',

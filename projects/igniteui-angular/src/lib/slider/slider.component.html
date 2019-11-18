@@ -40,7 +40,8 @@
         [context]="context"
         [deactiveState]="deactivateThumbLabel"></igx-thumb-label>
 
-    <igx-thumb *ngIf="isRange"
+    <igx-thumb
+        *ngIf="isRange"
         #thumbFrom
         [type]="0"
         [value]="lowerLabel"

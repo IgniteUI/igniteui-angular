@@ -6,13 +6,15 @@
         <div> -->
             <h4 class="sample-title">Slider</h4>
             <article class="sample-column">
-                <igx-slider #slider [type]="sliderType" [value]="rangeValue" [step]="10" [lowerBound]="0"
+                <igx-slider #slider [step]="10" [lowerBound]="20" [upperBound]="4"
                     [tickLabelsOrientation]="labelOrientaion"
+                    [continuous]="false"
+                    [type]="sliderType"
                     [primaryTickLabels]="primaryTickLabels"
                     [secondaryTickLabels]="secondaryTickLabels"
                     [ticksOrientation]="ticksOrientation"
                     [labels]="labels"
-                    [primaryTicks]="0"
+                    [primaryTicks]="3"
                     [secondaryTicks]="3">
                     <!-- <ng-template igxSliderTickLabel let-value let-primary="isPrimary" let-idx="index" let-labels="labels">
                         {{ tickLabel(value, primary, idx, labels) }}
