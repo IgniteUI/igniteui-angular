@@ -44,4 +44,12 @@ export class CarouselSampleComponent {
     public onAnimationSelection(event) {
         this.car.animationType = event.newSelection.element.nativeElement.textContent.trim();
     }
+
+    public pauseCar () {
+        this.car.stop();
+    }
+
+    public play() {
+        this.car.play();
+    }
 }
