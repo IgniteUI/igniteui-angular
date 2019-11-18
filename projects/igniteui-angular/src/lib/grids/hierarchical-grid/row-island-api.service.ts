@@ -3,6 +3,7 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { Subject } from 'rxjs';
 
 export class IgxRowIslandAPIService {
+    public rowIsland: IgxRowIslandComponent;
     public change: Subject<any> = new Subject<any>();
     protected state: Map<string, IgxRowIslandComponent> = new Map<string, IgxRowIslandComponent>();
     protected destroyMap: Map<string, Subject<boolean>> = new Map<string, Subject<boolean>>();
