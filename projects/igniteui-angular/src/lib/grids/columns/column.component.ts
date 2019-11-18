@@ -1796,7 +1796,7 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     protected setExpandCollapseState() {
         this.children.filter(col => (col.visibleWhenCollapsed !== undefined)).forEach(c =>  {
-            if (!this.collapsible) { c.hidden = this.parent.hidden; return; }
+            if (!this.collapsible) { c.hidden = this.hidden; return; }
             c.hidden = this._expanded ? c.visibleWhenCollapsed : !c.visibleWhenCollapsed;
         });
     }
