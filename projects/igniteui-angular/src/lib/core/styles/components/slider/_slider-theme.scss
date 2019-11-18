@@ -255,6 +255,7 @@
         background: --var($theme, 'tick-color');
         height: $tick-height;
         width: $tick-width;
+        position: relative;
     }
 
     %igx-slider__ticks--tall {
@@ -310,30 +311,14 @@
         visibility: hidden;
     }
 
-
     %igx-slider__tick-labels--top-bottom {
         %igx-slider__ticks-group {
             display: block;
         }
 
-        &%igx-slider__ticks--top {
-            %igx-slider__ticks-label {
-                transform: rotate(-90deg);
-                transform-origin: 0 center;
-                bottom: calc(#{$tick-height} + #{rem(2px)});
-            }
-
-            %igx-slider__ticks--tall {
-                %igx-slider__ticks-label {
-                    bottom: calc(#{$tick-height--tall} + #{rem(2px)});
-                }
-            }
-        }
-
         %igx-slider__ticks-label {
-            transform: rotate(90deg);
-            transform-origin: 0 center;
-            top: calc(#{$tick-height} + #{rem(2px)});
+            writing-mode: vertical-rl;
+            transform: translate(-50%) rotate(0deg);
             left: rem(1px);
         }
 
@@ -342,19 +327,45 @@
                 top: calc(#{$tick-height--tall} + #{rem(2px)});
             }
         }
+
+        &%igx-slider__ticks--top {
+            %igx-slider__ticks-label {
+                writing-mode: vertical-rl;
+                transform: translate(-50%) rotate(0deg);
+            }
+
+            %igx-slider__ticks--tall {
+                %igx-slider__ticks-label {
+                    bottom: calc(#{$tick-height--tall} + #{rem(2px)});
+                }
+            }
+        }
     }
 
-    //%igx-slider__tick-labels--bottom-top {
-    //    &%igx-slider__ticks--top {
-    //        %igx-slider__ticks-label {
-    //            transform: rotate(90deg);
-    //        }
-    //    }
-    //
-    //    %igx-slider__ticks-label {
-    //        transform: rotate(-90deg);
-    //    }
-    //}
+    %igx-slider__tick-labels--bottom-top {
+        %igx-slider__ticks-group {
+            display: block;
+        }
+
+
+        %igx-slider__ticks-label {
+            writing-mode: vertical-rl;
+            transform: translate(-50%) rotate(180deg);
+        }
+
+        &%igx-slider__ticks--top {
+            %igx-slider__ticks-label {
+                writing-mode: vertical-rl;
+                transform: translate(-50%) rotate(180deg);
+            }
+
+            %igx-slider__ticks--tall {
+                %igx-slider__ticks-label {
+                    bottom: calc(#{$tick-height--tall} + #{rem(2px)});
+                }
+            }
+        }
+    }
 
     %igx-thumb-display {
         position: absolute;

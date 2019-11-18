@@ -42,10 +42,9 @@
         @extend %igx-slider__tick-labels--top-bottom !optional;
     }
 
-    // TODO find a way to flipt the direction
-    //@include e(tick-labels, $m: bottom-top) {
-    //    @extend %igx-slider__tick-labels--bottom-top !optional;
-    //}
+    @include e(tick-labels, $m: bottom-top) {
+        @extend %igx-slider__tick-labels--bottom-top !optional;
+    }
 
     @include e(ticks-group) {
         @extend %igx-slider__ticks-group !optional;
