@@ -1051,15 +1051,12 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
+    @notifyChanges(true)
     @Input()
     set visibleWhenCollapsed(value: boolean) {
         this._visibleWhenCollapsed = value;
         this.visibleWhenCollapsedChange.emit(this._visibleWhenCollapsed);
         if (this.parent) { this.parent.setExpandCollapseState(); }
-        if (this.grid) {
-            this.grid.notifyChanges(true);
-        }
-
     }
 
     get visibleWhenCollapsed(): boolean {

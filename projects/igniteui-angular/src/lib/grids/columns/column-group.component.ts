@@ -40,7 +40,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         this._collapsible = value;
         this.collapsibleChange.emit(this._collapsible);
         if (this.children && !this.hidden) {
-            if (value) {
+            if (this._collapsible) {
                 this.setExpandCollapseState();
             } else {
                 this.children.forEach(child => child.hidden = false);
@@ -203,8 +203,8 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     set hidden(value: boolean) {
         this._hidden = value;
         this.hiddenChange.emit(this._hidden);
-        if (value || !this.collapsible) {
-            this.children.forEach(child => child.hidden = value);
+        if (this._hidden || !this.collapsible) {
+            this.children.forEach(child => child.hidden = this._hidden);
         } else {
             this.children.forEach(c =>  {
                 if (c.visibleWhenCollapsed === undefined) {c.hidden = false; return; }
