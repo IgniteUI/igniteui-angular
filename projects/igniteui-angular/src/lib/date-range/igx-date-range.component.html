@@ -1,4 +1,4 @@
-<div #toggle igxToggle (onOpened)="onOpened()">
+<div #toggle igxToggle (onOpened)="onCalendarOpened()">
     <igx-calendar #calendar (keydown)="onKeyDown($event)" selection="range" [weekStart]="weekStart"
         [hideOutsideDays]="hideOutsideDays" [monthsViewNumber]="monthsViewNumber"
         (onSelection)="handleSelection($event)"></igx-calendar>

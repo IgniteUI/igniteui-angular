@@ -1,4 +1,4 @@
-import { Component, Input, ContentChild, ViewChild, AfterViewInit, AfterContentInit, OnDestroy } from '@angular/core';
+import { Component, Input, ContentChild, ViewChild, AfterViewInit, AfterContentInit, OnDestroy, EventEmitter, Output } from '@angular/core';
 import { InteractionMode } from '../core/enums';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxCalendarComponent, WEEKDAYS } from '../calendar/index';
@@ -38,6 +38,15 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
     @Input()
     public doneButtonText: string;
 
+    @Output()
+    public rangeSelected: EventEmitter<IgxDateRangeComponent>;
+
+    @Output()
+    public onOpened: EventEmitter<IgxDateRangeComponent>;
+
+    @Output()
+    public onClosed: EventEmitter<IgxDateRangeComponent>;
+
     @ContentChild(IgxDateRangeStartDirective, { read: IgxDateRangeStartDirective, static: false })
     public startInput: IgxDateRangeStartDirective;
 
@@ -64,22 +73,29 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
     private destroy: Subject<boolean>;
 
     constructor() {
-        this.mode = InteractionMode.Dialog;
-        this.monthsViewNumber = 1;
-        this.weekStart = WEEKDAYS.SUNDAY;
         this.locale = 'en';
-        this.todayButtonText = 'Today';
+        this.monthsViewNumber = 1;
         this.doneButtonText = 'Done';
+        this.todayButtonText = 'Today';
+        this.weekStart = WEEKDAYS.SUNDAY;
+        this.mode = InteractionMode.Dialog;
         this.destroy = new Subject<boolean>();
+        this.onOpened = new EventEmitter<IgxDateRangeComponent>();
+        this.onClosed = new EventEmitter<IgxDateRangeComponent>();
+        this.rangeSelected = new EventEmitter<IgxDateRangeComponent>();
     }
 
     public open() {
         this.showCalendar();
     }
 
+    public close() {
+        this.hideCalendar();
+    }
+
     public showToday(event: KeyboardEvent): void {
-        const today = new Date();
         event.stopPropagation();
+        const today = new Date();
         this.calendar.selectDate(today);
         this.handleSelection(this.calendar.selectedDates);
     }
@@ -107,8 +123,8 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
             })
         };
         this.dialogOverlaySettings = {
-            closeOnOutsideClick: true,
             modal: true,
+            closeOnOutsideClick: true,
             positionStrategy: new GlobalPositionStrategy()
         };
     }
@@ -117,29 +133,14 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
      * @hidden
      */
     public ngAfterViewInit(): void {
-        if (this.mode === InteractionMode.DropDown) {
-            if (this.singleInput) {
-                fromEvent(this.singleInput.nativeElement, 'keydown').pipe(
-                    takeUntil(this.destroy)
-                ).subscribe((evt: KeyboardEvent) => this.onKeyDown(evt));
-
-                this.toggle.onClosed.pipe(
-                    takeUntil(this.destroy)
-                ).subscribe(() => this.singleInput.setFocus());
-            }
-            if (this.startInput && this.endInput) {
-                fromEvent(this.startInput.nativeElement, 'keydown').pipe(
-                    takeUntil(this.destroy)
-                ).subscribe((evt: KeyboardEvent) => this.onKeyDown(evt));
-
-                this.toggle.onClosed.pipe(
-                    takeUntil(this.destroy)
-                ).subscribe(() => this.startInput.setFocus());
-
-                fromEvent(this.endInput.nativeElement, 'keydown').pipe(
-                    takeUntil(this.destroy)
-                ).subscribe((evt: KeyboardEvent) => this.onKeyDown(evt));
-            }
+        switch (this.mode) {
+            case InteractionMode.DropDown:
+                this.attachOnKeydown();
+                this.applyFocusOnClose();
+                break;
+            case InteractionMode.Dialog:
+                this.applyFocusOnClose();
+                break;
         }
     }
 
@@ -159,18 +160,18 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
             case KEYS.UP_ARROW:
             case KEYS.UP_ARROW_IE:
                 if (event.altKey) {
-                    this.hideCalendar(event);
+                    this.hideCalendar();
                 }
                 break;
             case KEYS.DOWN_ARROW:
             case KEYS.DOWN_ARROW_IE:
                 if (event.altKey) {
-                    this.showDropDown(event);
+                    this.showDropDown();
                 }
                 break;
             case KEYS.ESCAPE:
             case KEYS.ESCAPE_IE:
-                this.hideCalendar(event);
+                this.hideCalendar();
                 break;
         }
     }
@@ -184,8 +185,9 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
             this.startInput || this.endInput ?
                 this.handleTwoInputSelection(selectionData) :
                 this.handleSingleInputSelection(selectionData);
+            this.rangeSelected.emit(this);
         } else {
-            // first selection in range
+            // first selection in the range
             this.startInput || this.endInput ?
                 this.handleTwoInputSelection([selectionData[0], null]) :
                 this.handleSingleInputSelection([selectionData[0], null]);
@@ -195,7 +197,7 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
     /**
      * @hidden
      */
-    public showCalendar(event?: MouseEvent): void {
+    public showCalendar(event?: MouseEvent | KeyboardEvent): void {
         switch (this.mode) {
             case InteractionMode.Dialog:
                 this.showDialog(event);
@@ -207,25 +209,25 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
                 // TODO: better error message
                 throw new Error('Unknown mode.');
         }
+        this.onOpened.emit(this);
     }
 
     /**
      * @hidden
      */
-    public hideCalendar(event: MouseEvent | KeyboardEvent) {
-        event.stopPropagation();
-        event.preventDefault();
+    public hideCalendar(): void {
         if (!this.toggle.collapsed) {
-            const element = event.target as HTMLElement;
             this.toggle.close();
-            element.focus();
+            this.startInput ? this.startInput.nativeElement.focus() :
+                this.singleInput.nativeElement.focus();
         }
+        this.onClosed.emit(this);
     }
 
     /**
      * @hidden
      */
-    public onOpened(): void {
+    public onCalendarOpened(): void {
         requestAnimationFrame(() => {
             this.calendar.daysView.focusActiveDate();
         });
@@ -253,13 +255,13 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
         this.activateToggleOpen(this.dropDownOverlaySettings);
     }
 
-    private handleSingleInputSelection(selectionData: Date[]) {
+    private handleSingleInputSelection(selectionData: Date[]): void {
         if (this.singleInput) {
             this.singleInput.value = this.extractRange(selectionData);
         }
     }
 
-    private handleTwoInputSelection(selectionData: Date[]) {
+    private handleTwoInputSelection(selectionData: Date[]): void {
         const selectionRange = this.extractRange(selectionData);
         if (this.startInput) {
             this.startInput.value = selectionRange[0];
@@ -308,9 +310,39 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
     }
 
     private validateNgContent(): void {
-        if (this.startInput && !this.endInput || !this.startInput && this.endInput) {
+        if (!this.singleInput && (!this.startInput || !this.endInput)) {
             // TODO: better error message
             throw new Error('You must apply both igxDateRangeStart and igxDateRangeEnd if you are using two input elements.');
+        }
+    }
+
+    private attachOnKeydown(): void {
+        if (this.singleInput) {
+            fromEvent(this.singleInput.nativeElement, 'keydown').pipe(
+                takeUntil(this.destroy)
+            ).subscribe((evt: KeyboardEvent) => this.onKeyDown(evt));
+        }
+        if (this.startInput && this.endInput) {
+            fromEvent(this.startInput.nativeElement, 'keydown').pipe(
+                takeUntil(this.destroy)
+            ).subscribe((evt: KeyboardEvent) => this.onKeyDown(evt));
+
+            fromEvent(this.endInput.nativeElement, 'keydown').pipe(
+                takeUntil(this.destroy)
+            ).subscribe((evt: KeyboardEvent) => this.onKeyDown(evt));
+        }
+    }
+
+    private applyFocusOnClose() {
+        if (this.singleInput) {
+            this.toggle.onClosed.pipe(
+                takeUntil(this.destroy)
+            ).subscribe(() => this.singleInput.setFocus());
+        }
+        if (this.startInput) {
+            this.toggle.onClosed.pipe(
+                takeUntil(this.destroy)
+            ).subscribe(() => this.startInput.setFocus());
         }
     }
 }
