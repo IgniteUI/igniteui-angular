@@ -82,14 +82,6 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
         event.stopPropagation();
         this.calendar.selectDate(today);
         this.handleSelection(this.calendar.selectedDates);
-        if (this.startInput && !this.startInput.value) {
-            this.startInput.setFocus();
-        } else if (this.startInput && this.startInput.value &&
-            this.endInput && this.endInput.value) {
-            this.startInput.setFocus();
-        } else if (this.endInput && !this.endInput.value) {
-            this.endInput.setFocus();
-        }
     }
 
     public get value(): Date | Date[] {
@@ -192,13 +184,11 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
             this.startInput || this.endInput ?
                 this.handleTwoInputSelection(selectionData) :
                 this.handleSingleInputSelection(selectionData);
-            this.startInput.setFocus();
         } else {
             // first selection in range
             this.startInput || this.endInput ?
                 this.handleTwoInputSelection([selectionData[0], null]) :
                 this.handleSingleInputSelection([selectionData[0], null]);
-            this.endInput.setFocus();
         }
     }
 
