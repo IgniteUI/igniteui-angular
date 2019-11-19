@@ -1,10 +1,10 @@
 import { Component, ViewChild, OnInit, Inject } from '@angular/core';
 
-import { IgxGridComponent,
-    SortingDirection,
-    ISortingExpression,
-    DefaultSortingStrategy } from 'igniteui-angular';
-import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken } from 'projects/igniteui-angular/src/lib/core/density';
+import {
+    IgxGridComponent, SortingDirection, ISortingExpression,
+    DefaultSortingStrategy, DisplayDensity, IDisplayDensityOptions, DisplayDensityToken
+} from 'igniteui-angular';
+
 @Component({
     providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact} }],
     selector: 'app-grid-sample',

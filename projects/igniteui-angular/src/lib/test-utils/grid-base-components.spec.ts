@@ -125,7 +125,7 @@ export class GridWithToolbarComponent extends GridWithSizeComponent {
     </div>`
 })
 export class ColumnHidingTestComponent extends GridWithSizeComponent implements OnInit, AfterViewInit {
-    @ViewChild(IgxColumnHidingComponent, { static: false }) public chooser: IgxColumnHidingComponent;
+    @ViewChild(IgxColumnHidingComponent) public chooser: IgxColumnHidingComponent;
     width = '500px';
     height = '500px';
     showInline = true;
@@ -162,7 +162,7 @@ export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
     </div>`
 })
 export class ColumnPinningTestComponent extends GridWithSizeComponent implements AfterViewInit, OnInit {
-    @ViewChild(IgxColumnPinningComponent, { static: false }) public chooser: IgxColumnPinningComponent;
+    @ViewChild(IgxColumnPinningComponent) public chooser: IgxColumnPinningComponent;
 
     height = '500px';
     width = '500px';

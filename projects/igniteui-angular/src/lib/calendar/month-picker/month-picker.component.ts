@@ -10,7 +10,7 @@ import { trigger, transition, useAnimation } from '@angular/animations';
 import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from '../../animations/main';
 import { KEYS } from '../../core/utils';
 import { IgxMonthsViewComponent } from '../months-view/months-view.component';
-import { IgxMonthPickerBase, CalendarView } from '../month-picker-base';
+import { IgxMonthPickerBaseDirective, CalendarView } from '../month-picker-base';
 import { IgxYearsViewComponent } from '../years-view/years-view.component';
 import { IgxDaysViewComponent } from '../days-view/days-view.component';
 
@@ -49,7 +49,7 @@ let NEXT_ID = 0;
     selector: 'igx-month-picker',
     templateUrl: 'month-picker.component.html'
 })
-export class IgxMonthPickerComponent extends IgxMonthPickerBase {
+export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     /**
      * Sets/gets the `id` of the month picker.
      * If not set, the `id` will have value `"igx-month-picker-0"`.
@@ -69,19 +69,19 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBase {
     /**
      * @hidden
      */
-    @ViewChild('months', { read: IgxMonthsViewComponent, static: false })
+    @ViewChild('months', { read: IgxMonthsViewComponent })
     public monthsView: IgxMonthsViewComponent;
 
     /**
      * @hidden
      */
-    @ViewChild('decade', { read: IgxYearsViewComponent, static: false })
+    @ViewChild('decade', { read: IgxYearsViewComponent })
     public dacadeView: IgxYearsViewComponent;
 
     /**
      * @hidden
      */
-    @ViewChild('days', { read: IgxDaysViewComponent, static: false })
+    @ViewChild('days', { read: IgxDaysViewComponent })
     public daysView: IgxDaysViewComponent;
 
     /**

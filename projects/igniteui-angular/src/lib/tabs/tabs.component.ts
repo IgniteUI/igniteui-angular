@@ -168,7 +168,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
-    @ViewChild('selectedIndicator', { static: false })
+    @ViewChild('selectedIndicator')
     public selectedIndicator: ElementRef;
 
     /**

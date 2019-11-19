@@ -1212,7 +1212,7 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    @ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective, static: false })
+    @ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective })
     protected cellTemplate: IgxCellTemplateDirective;
     /**
      *@hidden
@@ -1222,14 +1222,14 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective, static: false })
+    @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective })
     protected editorTemplate: IgxCellEditorTemplateDirective;
 
     protected _vIndex = NaN;
     /**
      *@hidden
      */
-    @ContentChild(IgxFilterCellTemplateDirective, { read: IgxFilterCellTemplateDirective, static: false })
+    @ContentChild(IgxFilterCellTemplateDirective, { read: IgxFilterCellTemplateDirective })
     public filterCellTemplateDirective: IgxFilterCellTemplateDirective;
     /**
      *@hidden
