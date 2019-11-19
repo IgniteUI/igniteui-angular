@@ -1,4 +1,4 @@
-import { Input, Output, EventEmitter } from '@angular/core';
+import { Input, Output, EventEmitter, Directive } from '@angular/core';
 import { WEEKDAYS, Calendar, isDateInRanges, IFormattingOptions, IFormattingViews } from './calendar';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
@@ -20,7 +20,11 @@ export enum ScrollMonth {
     NONE = 'none'
 }
 
-export class IgxCalendarBase implements ControlValueAccessor {
+/** @hidden @internal */
+@Directive({
+    selector: '[igxCalendarBase]'
+})
+export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * Gets the start day of the week.
      * Can return a numeric or an enum representation of the week day.

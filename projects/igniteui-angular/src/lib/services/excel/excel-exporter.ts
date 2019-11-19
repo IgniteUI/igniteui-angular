@@ -5,7 +5,7 @@ import { ExcelElementsFactory } from './excel-elements-factory';
 import { ExcelFolderTypes } from './excel-enums';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { IExcelFolder } from './excel-interfaces';
-import { IgxBaseExporter } from '../exporter-common/base-export-service';
+import { IgxBaseExporterDirective } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { WorksheetData } from './worksheet-data';
 import { IBaseEventArgs } from '../../core/utils';
@@ -36,7 +36,7 @@ export interface IExcelExportEndedEventArgs extends IBaseEventArgs {
  * ```
  */
 @Injectable()
-export class IgxExcelExporterService extends IgxBaseExporter {
+export class IgxExcelExporterService extends IgxBaseExporterDirective {
 
     private static ZIP_OPTIONS = { compression: 'DEFLATE', type: 'base64' };
     private _xlsx: JSZip;
