@@ -42,7 +42,7 @@ Keyboard navigation will be enabled when the **IgxCarousel** component is focuse
 - `End` will focus the last slide inside the carousel view.
 
 ### Templates
-The **IgxCarousel** supports templating of its indicators and next and previous buttons
+The **IgxCarousel** supports templating indicators and navigation buttons
 
 #### Defining item template:
 ```html
