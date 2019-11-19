@@ -30,7 +30,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     }
 
     /** @hidden @internal */
-   public get scrollContainer() {
+   public get scrollContainer(): HTMLElement {
         return this.virtDir.dc.location.nativeElement;
     }
 

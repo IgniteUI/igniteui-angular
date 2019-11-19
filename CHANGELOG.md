@@ -48,9 +48,8 @@ All notable changes for each version of this project will be documented in this 
         </ng-template>
     </igx-grid>
 
-
 - `IgxSelect`: 
-    - adding `IgxSelectHeaderDirective` and `IgxSelectFooterDirective`. These can be used to provide a custom header, respectively footer templates for the `igxSelect` drop-down list. If there are no templates marked with these directives - no default templates will be used so the drop-down list will not have header or footer.
+    - adding `IgxSelectHeaderDirective` and `IgxSelectFooterDirective`. These can be used to provide a custom header, respectively footer templates for the `igxSelect` drop-down list. If there are no templates marked with these directives - no default templates will be used so the drop-down list will not have header nor footer.
 
 - `IgxCarousel`:
     - `keyboardSupport` input is added, which can be used to enable and disable keyboard navigation

@@ -1,5 +1,5 @@
 import { IgxInputState } from './../directives/input/input.directive';
-import { Component, ViewChild, DebugElement } from '@angular/core';
+import { Component, ViewChild, DebugElement, OnInit } from '@angular/core';
 import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { FormsModule, FormGroup, FormBuilder, FormControl, Validators, ReactiveFormsModule, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';

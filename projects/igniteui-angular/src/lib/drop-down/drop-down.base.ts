@@ -30,7 +30,7 @@ export class IgxDropDownBaseDirective extends DisplayDensityBase implements IDro
      * @hidden @internal
      * Get dropdown's html element of its scroll container
      */
-    public get scrollContainer() {
+    public get scrollContainer(): HTMLElement {
         return this.element;
     }
 
