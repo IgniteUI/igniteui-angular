@@ -120,7 +120,12 @@
                 </igx-grid-row>
             </ng-template>
             <ng-template #group_template>
-                <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row>
+                <igx-grid-groupby-row
+                    class="igx-grid__group-row igx-grid__group-row--padding-level-{{rowData.level}}"
+                    [gridID]="id"
+                    [index]="rowIndex"
+                    [groupRow]="rowData"
+                    #row>
                 </igx-grid-groupby-row>
             </ng-template>
             <ng-template #summary_template>

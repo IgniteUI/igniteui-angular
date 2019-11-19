@@ -10,7 +10,9 @@
     ViewChild,
     NgZone,
     OnInit,
-    OnDestroy
+    OnDestroy,
+    OnChanges,
+    SimpleChanges
 } from '@angular/core';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
@@ -46,7 +48,7 @@ import { GridType } from './common/grid.interface';
     templateUrl: './cell.component.html',
     providers: [HammerGesturesManager]
 })
-export class IgxGridCellComponent implements OnInit, OnDestroy {
+export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     private _vIndex = -1;
 
     /**
@@ -650,6 +652,21 @@ export class IgxGridCellComponent implements OnInit, OnDestroy {
     @DeprecateMethod(`'isCellSelected' is deprecated. Use 'selected' property instead.`)
     public isCellSelected() {
         return this.selectionService.selected(this.selectionNode);
+    }
+
+    /**
+     *
+     * @hidden
+     * @internal
+     */
+    public ngOnChanges(changes: SimpleChanges) {
+        if (changes.value && !changes.value.firstChange) {
+            if (this.highlight) {
+                this.highlight.lastSearchInfo.searchedText = this.grid.lastSearchInfo.searchText;
+                this.highlight.lastSearchInfo.caseSensitive = this.grid.lastSearchInfo.caseSensitive;
+                this.highlight.lastSearchInfo.exactMatch = this.grid.lastSearchInfo.exactMatch;
+            }
+        }
     }
 
     /**

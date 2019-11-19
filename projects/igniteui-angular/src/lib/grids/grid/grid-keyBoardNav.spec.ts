@@ -15,7 +15,7 @@ import { IGridCellEventArgs } from '../common/events';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import { HelperUtils, setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
+import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     PinOnInitAndSelectionComponent, PinningComponent,
@@ -847,13 +847,15 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.componentInstance.data = fix.componentInstance.generateData(25);
             fix.detectChanges();
 
-            grid.navigateTo(15, 1, (args) => { args.target.nativeElement.focus(); });
-            await wait(DEBOUNCETIME);
-            fix.detectChanges();
+            grid.navigateTo(15, 1, async (args) => {
+                args.target.nativeElement.focus();
+                await fix.whenStable();
+                fix.detectChanges();
+                const target = grid.getCellByColumn(15, '1');
+                expect(target).toBeDefined();
+                expect(target.focused).toBe(true);
+            });
 
-            const target = grid.getCellByColumn(15, '1');
-            expect(target).toBeDefined();
-            expect(target.focused).toBe(true);
         });
 
         it('Custom KB navigation: should be able to scroll horizontally and vertically to a cell in the grid', async () => {
@@ -1010,8 +1012,8 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
                 expect(lastGroupRow.classList.contains('igx-grid__group-row--active')).toBeTruthy();
                 lastGroupRow.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', altKey: true }));
-
                 fix.detectChanges();
+
                 lastGroupRow = grid.nativeElement.querySelector(`igx-grid-groupby-row[data-rowindex="${lastGroupRowIndex}"]`);
                 expect(lastGroupRow).toBeDefined();
                 expect(lastGroupRow.classList.contains('igx-grid__group-row--active')).toBeTruthy();

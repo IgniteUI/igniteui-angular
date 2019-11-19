@@ -16,6 +16,7 @@ import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxGridSelectionService, ISelectionNode } from '../selection/selection.service';
 import { ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS } from '../../core/utils';
 import { GridType } from '../common/grid.interface';
+import { first } from 'rxjs/operators';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,15 +31,15 @@ export class IgxGridGroupByRowComponent {
         public element: ElementRef,
         public cdr: ChangeDetectorRef) { }
 
-    /**
-     * @hidden
-     */
-    protected defaultCssClass = 'igx-grid__group-row';
+    // /**
+    //  * @hidden
+    //  */
+    // protected defaultCssClass = 'igx-grid__group-row';
 
-    /**
-     * @hidden
-     */
-    protected paddingIndentationCssClass = 'igx-grid__group-row--padding-level';
+    // /**
+    //  * @hidden
+    //  */
+    // protected paddingIndentationCssClass = 'igx-grid__group-row--padding-level';
 
     /**
     * @hidden
@@ -64,6 +65,7 @@ export class IgxGridGroupByRowComponent {
      * let gridRowFocused = this.grid1.rowList.first.focused;
      * ```
      */
+    @HostBinding('class.igx-grid__group-row--active')
     get focused(): boolean {
         return this.isFocused;
     }
@@ -146,18 +148,6 @@ export class IgxGridGroupByRowComponent {
     }
 
     /**
-     * Returns the style classes applied to the group rows.
-     * ```typescript
-     * const groupCssStyles = this.grid1.rowList.first.styleClasses;
-     * ```
-     */
-    @HostBinding('class')
-    get styleClasses(): string {
-        return `${this.defaultCssClass} ` + `${this.paddingIndentationCssClass}-` + this.groupRow.level +
-            (this.focused ? ` ${this.defaultCssClass}--active` : '');
-    }
-
-    /**
      *@hidden
      */
     @HostListener('focus')
@@ -180,15 +170,22 @@ export class IgxGridGroupByRowComponent {
      * ```
      */
     public toggle() {
-        const isVirtualized = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
+        // const isVirtualized = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
         const groupRowIndex = this.index;
         this.grid.toggleGroup(this.groupRow);
-        if (isVirtualized) {
+        this.grid.zone.onStable.pipe(first()).subscribe(() => {
             const groupRow = this.grid.nativeElement.querySelector(`[data-rowIndex="${groupRowIndex}"]`);
             if (groupRow) {
                 groupRow.focus();
             }
-        }
+        });
+
+        // if (isVirtualized) {
+        //     const groupRow = this.grid.nativeElement.querySelector(`[data-rowIndex="${groupRowIndex}"]`);
+        //     if (groupRow) {
+        //         groupRow.focus();
+        //     }
+        // }
     }
 
     public get iconTemplate() {
