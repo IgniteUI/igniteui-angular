@@ -10,8 +10,10 @@
 /// @param {Color} $slide-background [null] - The slide background color.
 /// @param {Color} $button-background [null] - The previous/next buttons idle background color.
 /// @param {Color} $button-hover-background [null] - The previous/next buttons hover background color.
+/// @param {Color} $button-disabled-background [null] - The previous/next buttons disabled background color.
 /// @param {Color} $button-arrow-color [null] - The previous/next buttons idle arrow color.
 /// @param {Color} $button-hover-arrow-color [null] - The previous/next buttons hover arrow color.
+/// @param {Color} $button-disabled-arrow-color [null] - The previous/next buttons disabled arrow color.
 /// @param {Color} $indicator-dot-color [null] - The active indicator dot color.
 /// @param {Color} $indicator-border-color [null] - The idle indicator border color.
 /// @param {Color} $indicator-active-border-color [null] - The active indicator border color.
@@ -47,8 +49,10 @@
 
     $button-background: null,
     $button-hover-background: null,
+    $button-disabled-background: null,
     $button-arrow-color: null,
     $button-hover-arrow-color: null,
+    $button-disabled-arrow-color: null,
 
     $indicator-dot-color: null,
     $indicator-border-color: null,
@@ -82,6 +86,10 @@
         $button-hover-arrow-color: text-contrast($button-hover-background);
     }
 
+    @if not($button-disabled-arrow-color) and $button-disabled-background {
+        $button-disabled-arrow-color: text-contrast($button-disabled-background);
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
@@ -92,9 +100,11 @@
         button-shadow: $button-shadow,
 
         button-background: $button-background,
+        button-disabled-background: $button-disabled-background,
         button-hover-background: $button-hover-background,
         button-arrow-color: $button-arrow-color,
         button-hover-arrow-color: $button-hover-arrow-color,
+        button-disabled-arrow-color: $button-disabled-arrow-color,
 
         indicator-dot-color: $indicator-dot-color,
         indicator-border-color: $indicator-border-color,
@@ -136,16 +146,12 @@
         flex-flow: column nowrap;
     }
 
-    %igx-carousel-arrow {
+    %igx-nav-arrow {
         display: flex;
-        margin: $carousel-arrow-margin;
-        position: absolute;
         justify-content: center;
         align-items: center;
         width: 46px;
         height: 46px;
-        top: 50%;
-        transform: translateY(-50%);
         cursor: pointer;
         border-radius: 50%;
         outline-style: none;
@@ -153,17 +159,27 @@
         color: --var($theme, 'button-arrow-color');
         background: --var($theme, 'button-background');
         box-shadow: --var($theme, 'button-shadow');
-        z-index: 3;
-
-        span {
-            display: flex;
-            align-items: center;
-        }
     }
 
-    %igx-carousel-arrow--hover {
+    %igx-nav-arrow--disabled {
+        background: --var($theme, 'button-disabled-background');
+        color: --var($theme, 'button-disabled-arrow-color');
+        pointer-events: none;
+        box-shadow: none;
+    }
+
+    %igx-nav-arrow--hover {
         color: --var($theme, 'button-hover-arrow-color');
         background: --var($theme, 'button-hover-background');
+    }
+
+    %igx-carousel-arrow {
+        margin: $carousel-arrow-margin;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 3;
+        outline: none;
     }
 
     %igx-carousel-arrow--next {

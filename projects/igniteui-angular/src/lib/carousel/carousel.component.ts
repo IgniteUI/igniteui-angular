@@ -23,7 +23,7 @@ import { IgxIconModule } from '../icon/index';
 import { IBaseEventArgs } from '../core/utils';
 import { Subject, merge } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { IgxCarouselIndicatorDirective } from './carousel.directives';
+import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { useAnimation, AnimationBuilder, AnimationPlayer, AnimationReferenceMetadata } from '@angular/animations';
 import { slideInLeft, fadeIn, rotateInCenter } from '../animations/main';
 import { IgxSlideComponent, Direction } from './slide.component';
@@ -248,7 +248,13 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
    }
 
     @ViewChild('defaultIndicator', { read: TemplateRef, static: true })
-    protected defaultIndicator: TemplateRef<any>;
+    private defaultIndicator: TemplateRef<any>;
+
+    @ViewChild('defaultNextButton', { read: TemplateRef, static: true })
+    private defaultNextButton: TemplateRef<any>;
+
+    @ViewChild('defaultPrevButton', { read: TemplateRef, static: true })
+    private defaultPrevButton: TemplateRef<any>;
 
     /**
      * The custom template, if any, that should be used when rendering carousel indicators
@@ -271,6 +277,52 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      */
     @ContentChild(IgxCarouselIndicatorDirective, { read: TemplateRef, static: false })
     public indicatorTemplate: TemplateRef<any> = null;
+
+    /**
+     * The custom template, if any, that should be used when rendering carousel next button
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.carousel.nextButtonTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-carousel #carousel>
+     *      ...
+     *      <ng-template igxCarouselNextButton let-disabled>
+     *            <button igxButton="fab" igxRipple="white" [disabled]="disabled">
+     *                <igx-icon fontSet="material">add</igx-icon>
+     *           </button>
+     *      </ng-template>
+     *  </igx-carousel>
+     * ```
+     */
+    @ContentChild(IgxCarouselNextButtonDirective, { read: TemplateRef, static: false })
+    public nextButtonTemplate: TemplateRef<any> = null;
+
+    /**
+     * The custom template, if any, that should be used when rendering carousel previous button
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.carousel.nextButtonTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-carousel #carousel>
+     *      ...
+     *      <ng-template igxCarouselPrevButton let-disabled>
+     *            <button igxButton="fab" igxRipple="white" [disabled]="disabled">
+     *                <igx-icon fontSet="material">remove</igx-icon>
+     *           </button>
+     *      </ng-template>
+     *  </igx-carousel>
+     * ```
+     */
+    @ContentChild(IgxCarouselPrevButtonDirective, { read: TemplateRef, static: false })
+    public prevButtonTemplate: TemplateRef<any> = null;
 
      /**
      * The collection of `slides` currently in the carousel.
@@ -545,6 +597,26 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         return this.defaultIndicator;
     }
 
+     /**
+     * @hidden
+     */
+    public get getNextButtonTemplate(): TemplateRef<any> {
+        if (this.nextButtonTemplate) {
+            return this.nextButtonTemplate;
+        }
+        return this.defaultNextButton;
+    }
+
+     /**
+     * @hidden
+     */
+    public get getPrevButtonTemplate(): TemplateRef<any> {
+        if (this.prevButtonTemplate) {
+            return this.prevButtonTemplate;
+        }
+        return this.defaultPrevButton;
+    }
+
     /**
      * @hidden
      * @memberof IgxCarouselComponent
@@ -785,6 +857,22 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
             }, this.interval);
         }
     }
+
+    /**
+     *@hidden
+     */
+    public get nextButtonDisabled() {
+        return !this.loop && this.current === (this.total - 1);
+    }
+
+    /**
+     *@hidden
+     */
+    public get prevButtonDisabled() {
+        return !this.loop && this.current === 0;
+    }
+
+
     /**
      *@hidden
      */
@@ -894,8 +982,20 @@ export interface ISlideEventArgs extends IBaseEventArgs {
  * @hidden
  */
 @NgModule({
-    declarations: [IgxCarouselComponent, IgxSlideComponent, IgxCarouselIndicatorDirective],
-    exports: [IgxCarouselComponent, IgxSlideComponent, IgxCarouselIndicatorDirective],
+    declarations: [
+        IgxCarouselComponent,
+        IgxSlideComponent,
+        IgxCarouselIndicatorDirective,
+        IgxCarouselNextButtonDirective,
+        IgxCarouselPrevButtonDirective
+        ],
+    exports: [
+        IgxCarouselComponent,
+        IgxSlideComponent,
+        IgxCarouselIndicatorDirective,
+        IgxCarouselNextButtonDirective,
+        IgxCarouselPrevButtonDirective
+        ],
     imports: [CommonModule, IgxIconModule]
 })
 export class IgxCarouselModule {

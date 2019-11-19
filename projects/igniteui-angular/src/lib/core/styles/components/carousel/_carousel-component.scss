@@ -28,12 +28,24 @@
 }
 
 /// @access private
-@mixin _igx-carousel-naviation-partial {
+@mixin _igx-carousel-navigation-partial {
     @include b(igx-nav-dot) {
         @extend %igx-nav-dot !optional;
 
         @include m(active) {
             @extend %igx-nav-dot--active !optional;
+        }
+    }
+
+    @include b(igx-nav-arrow) {
+        @extend %igx-nav-arrow !optional;
+
+        @include m(disabled) {
+            @extend %igx-nav-arrow--disabled !optional;
+        }
+
+        &:hover {
+            @extend %igx-nav-arrow--hover !optional;
         }
     }
 }
@@ -76,22 +88,16 @@
         @extend %igx-carousel-arrow !optional;
         @extend %igx-carousel-arrow--prev !optional;
 
-        &:hover {
-            @extend %igx-carousel-arrow--hover !optional;
-        }
+
     }
 
     @include e(arrow, $m: next) {
         @extend %igx-carousel-arrow !optional;
         @extend %igx-carousel-arrow--next !optional;
-
-        &:hover {
-            @extend %igx-carousel-arrow--hover !optional;
-        }
     }
 
     @include _igx-carousel-indicators-partial();
-    @include _igx-carousel-naviation-partial();
+    @include _igx-carousel-navigation-partial();
     @include _igx-carousel-slide-partial();
 }
 

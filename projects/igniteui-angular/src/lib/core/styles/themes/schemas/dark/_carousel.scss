@@ -10,10 +10,18 @@
 /// @prop {Color} slide-background [#222] - The slide background color.
 /// @prop {Color} button-background [#222] - The previous/next buttons idle background color.
 /// @prop {Color} button-hover-background [#222] - The previous/next buttons hover background color.
+/// @prop {Map} button-disabled-background [igx-color: ('grays', 400)] - The previous/next buttons disabled background color.
+/// @prop {Map} button-disabled-arrow-color [[igx-color: ('grays' 500)]] - The previous/next buttons disabled color.
 $_base-dark-carousel: (
     slide-background: #222,
     button-background: #222,
     button-hover-background: #222,
+    button-disabled-background: (
+        igx-color: ('grays', 400)
+    ),
+    button-disabled-arrow-color:  (
+        igx-color: ('grays' 500)
+    ),
 );
 
 /// Generates a dark carousel schema based on a mix of $_light-carousel and $_base-dark-carousel
