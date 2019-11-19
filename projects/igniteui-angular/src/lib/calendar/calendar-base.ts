@@ -20,6 +20,7 @@ export enum ScrollMonth {
     NONE = 'none'
 }
 
+/** @hidden @internal */
 @Directive({
     selector: '[igxCalendarBase]'
 })

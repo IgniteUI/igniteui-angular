@@ -8,10 +8,12 @@ All notable changes for each version of this project will be documented in this 
 - Added support for the Ivy renderer.
 - **Breaking Changes** The following classes have been renamed. Using `ng update` will apply automatically migrate your project to use the new names.
     - `IgxDropDownBase` -> `IgxDropDownBaseDirective`
-    - `IgxDropDownItemBase` -> `IgxDropDownBaseDirective`
+    - `IgxDropDownItemBase` -> `IgxDropDownItemBaseDirective`
     - `IgxGridBaseComponent` -> `IgxGridBaseDirective`
     - `IgxRowComponent` -> `IgxRowDirective`
     - `IgxHierarchicalGridBaseComponent` -> `IgxHierarchicalGridBaseDirective`
+    - `IgxMonthPickerBase` -> `IgxMonthPickerBaseDirective`
+    - `IgxBaseExporter` -> `IgxBaseExporterDirective`
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - Pinning columns is no longer automatically prevented when the pinning area would exceed the size of the grid.
