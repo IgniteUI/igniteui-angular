@@ -87,8 +87,6 @@
     @include e(arrow, $m: prev) {
         @extend %igx-carousel-arrow !optional;
         @extend %igx-carousel-arrow--prev !optional;
-
-
     }
 
     @include e(arrow, $m: next) {
