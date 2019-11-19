@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { DisplayDensityToken, DisplayDensity, IDisplayDensityOptions } from 'projects/igniteui-angular/src/lib/core/displayDensity';
+import { DisplayDensityToken, DisplayDensity, IDisplayDensityOptions } from 'igniteui-angular';
 
 @Component({
     // tslint:disable-next-line:component-selector
