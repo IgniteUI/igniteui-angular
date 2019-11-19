@@ -176,7 +176,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      */
     set interval(value: number) {
         this._interval = +value;
-        this._restartInterval();
+        this.restartInterval();
     }
 
     /**
@@ -333,12 +333,13 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     @Output() public onCarouselPlaying = new EventEmitter<IgxCarouselComponent>();
 
     private _interval: number;
-    private _lastInterval: any;
-    private _playing: boolean;
-    private _destroyed: boolean;
     private _resourceStrings = CurrentResourceStrings.CarouselResStrings;
+    private lastInterval: any;
+    private playing: boolean;
+    private stoppedByInteraction: boolean;
+    private destroyed: boolean;
     private destroy$ = new Subject<any>();
-    private _differ: IterableDiffer<IgxSlideComponent> | null = null;
+    private differ: IterableDiffer<IgxSlideComponent> | null = null;
     private enterAnimationPlayer?: AnimationPlayer;
     private leaveAnimationPlayer?: AnimationPlayer;
     private currentSlide: IgxSlideComponent;
@@ -348,8 +349,8 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     private animationPosition = 0;
     private newDuration = 0;
 
-    constructor(private element: ElementRef, private _iterableDiffers: IterableDiffers, private builder: AnimationBuilder) {
-        this._differ = this._iterableDiffers.find([]).create(null);
+    constructor(private element: ElementRef, private iterableDiffers: IterableDiffers, private builder: AnimationBuilder) {
+        this.differ = this.iterableDiffers.find([]).create(null);
     }
 
     /**
@@ -369,9 +370,9 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     public ngOnDestroy() {
         this.destroy$.next(true);
         this.destroy$.complete();
-        this._destroyed = true;
-        if (this._lastInterval) {
-            clearInterval(this._lastInterval);
+        this.destroyed = true;
+        if (this.lastInterval) {
+            clearInterval(this.lastInterval);
         }
     }
 
@@ -408,7 +409,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
                 this.currentSlide = slide;
             }
             this.onSlideChanged.emit({ carousel: this, slide });
-            this._restartInterval();
+            this.restartInterval();
         }
     }
 
@@ -512,7 +513,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     }
 
     private initSlides(change: QueryList<IgxSlideComponent>) {
-        const diff = this._differ.diff(change.toArray());
+        const diff = this.differ.diff(change.toArray());
         if (diff) {
             this.slides.reduce((any, c, ind) => c.index = ind, 0); // reset slides indexes
             diff.forEachAddedItem((record: IterableChangeRecord<IgxSlideComponent>) => {
@@ -630,7 +631,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * @memberOf IgxCarouselComponent
      */
     public get isPlaying(): boolean {
-        return this._playing;
+        return this.playing;
     }
 
     /**
@@ -641,7 +642,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * @memberOf IgxCarouselComponent
      */
     public get isDestroyed(): boolean {
-        return this._destroyed;
+        return this.destroyed;
     }
     /**
      * Returns a reference to the carousel element in the DOM.
@@ -754,10 +755,11 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * @memberOf IgxCarouselComponent
      */
     public play() {
-        if (!this._playing) {
-            this._playing = true;
+        if (!this.playing) {
+            this.playing = true;
             this.onCarouselPlaying.emit(this);
-            this._restartInterval();
+            this.restartInterval();
+            this.stoppedByInteraction = false;
         }
     }
 
@@ -772,26 +774,26 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      */
     public stop() {
         if (this.pause) {
-            this._playing = false;
+            this.playing = false;
             this.onCarouselPaused.emit(this);
-            this._resetInterval();
+            this.resetInterval();
         }
     }
 
-    private _resetInterval() {
-        if (this._lastInterval) {
-            clearInterval(this._lastInterval);
-            this._lastInterval = null;
+    private resetInterval() {
+        if (this.lastInterval) {
+            clearInterval(this.lastInterval);
+            this.lastInterval = null;
         }
     }
 
-    private _restartInterval() {
-        this._resetInterval();
+    private restartInterval() {
+        this.resetInterval();
 
         if (!isNaN(this.interval) && this.interval > 0) {
-            this._lastInterval = setInterval(() => {
+            this.lastInterval = setInterval(() => {
                 const tick = +this.interval;
-                if (this._playing && this.total && !isNaN(tick) && tick > 0) {
+                if (this.playing && this.total && !isNaN(tick) && tick > 0) {
                     this.next();
                 } else {
                     this.stop();
@@ -824,11 +826,16 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
 
     /** @hidden */
     @HostListener('tap')
-    public onTab() {
+    public onTap() {
         if (this.isPlaying) {
+            if (this.pause && this.isPlaying) {
+                this.stoppedByInteraction = true;
+            }
             this.stop();
         } else {
-            this.play();
+            if (this.stoppedByInteraction) {
+                this.play();
+            }
         }
         console.log('tap');
     }
@@ -862,6 +869,9 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      */
     @HostListener('mouseenter')
     public onMouseEnter() {
+        if (this.pause && this.isPlaying) {
+            this.stoppedByInteraction = true;
+        }
         this.stop();
     }
 
@@ -870,7 +880,9 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      */
     @HostListener('mouseleave')
     public onMouseLeave() {
-        this.play();
+        if ( this.stoppedByInteraction ) {
+            this.play();
+       }
     }
 
     /**
