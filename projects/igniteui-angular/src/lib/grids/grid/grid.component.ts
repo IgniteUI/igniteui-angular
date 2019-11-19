@@ -471,7 +471,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden
      */
-    @ContentChild(IgxGroupByRowTemplateDirective, { read: IgxGroupByRowTemplateDirective, static: false })
+    @ContentChild(IgxGroupByRowTemplateDirective, { read: IgxGroupByRowTemplateDirective })
     protected groupTemplate: IgxGroupByRowTemplateDirective;
 
     /**
@@ -498,7 +498,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      *  </igx-grid>
      * ```
      */
-    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef, static: false })
+    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef })
     public dragIndicatorIconTemplate: TemplateRef<any> = null;
 
     @ViewChildren(IgxGridGroupByRowComponent, { read: IgxGridGroupByRowComponent })
@@ -532,7 +532,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden
      */
-    @ViewChild('groupArea', { static: false })
+    @ViewChild('groupArea')
     public groupArea: ElementRef;
 
     @ViewChild('record_template', { read: TemplateRef, static: true })

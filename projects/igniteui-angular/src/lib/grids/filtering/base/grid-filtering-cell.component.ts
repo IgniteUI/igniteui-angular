@@ -47,16 +47,16 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
     @ViewChild('complexFilter', { read: TemplateRef, static: true })
     protected complexFilter: TemplateRef<any>;
 
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: false })
+    @ViewChild('chipsArea', { read: IgxChipsAreaComponent })
     protected chipsArea: IgxChipsAreaComponent;
 
-    @ViewChild('moreIcon', { read: ElementRef, static: false })
+    @ViewChild('moreIcon', { read: ElementRef })
     protected moreIcon: ElementRef;
 
-    @ViewChild('ghostChip', { read: IgxChipComponent, static: false })
+    @ViewChild('ghostChip', { read: IgxChipComponent })
     protected ghostChip: IgxChipComponent;
 
-    @ViewChild('complexChip', { read: IgxChipComponent, static: false })
+    @ViewChild('complexChip', { read: IgxChipComponent })
     protected complexChip: IgxChipComponent;
 
     @HostBinding('class.igx-grid__filtering-cell')
