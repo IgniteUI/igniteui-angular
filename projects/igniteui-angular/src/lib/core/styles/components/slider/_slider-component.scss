@@ -133,9 +133,12 @@
             @extend %igx-slider-track-fill--disabled !optional;
         }
 
-        @include e(ticks) {
-            @extend %igx-slider__ticks !optional;
-            @extend %igx-slider__ticks--disabled !optional;
+        @include e(ticks-tick) {
+            @extend %igx-slider__tick--disabled !optional;
+        }
+
+        @include e(ticks-label) {
+            @extend %igx-slider__ticks-labels--disabled !optional;
         }
 
         @each $t in $thumbs {

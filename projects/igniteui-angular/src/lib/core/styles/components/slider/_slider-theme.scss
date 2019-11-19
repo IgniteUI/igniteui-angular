@@ -264,6 +264,14 @@
         }
     }
 
+    %igx-slider__tick--disabled {
+        background: --var($theme, 'disabled-base-track-color')!important;
+    }
+
+    %igx-slider__ticks-labels--disabled {
+        color: --var($theme, 'disabled-base-track-color')!important;
+    }
+
     %igx-slider__ticks-group--tall {
         %igx-slider__ticks-tick {
             height: $tick-height--tall;
@@ -288,10 +296,6 @@
                 top: auto;
             }
         }
-    }
-
-    %igx-slider__ticks--disabled {
-        visibility: hidden;
     }
 
     %igx-slider__tick-label--hidden {
