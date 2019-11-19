@@ -125,11 +125,13 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         if (canFitBelowInput || !canFitAboveInput) {
                 // Calculate container starting point;
                 selectFit.top = selectFit.targetRect.top - selectFit.styles.itemTextToInputTextDiff;
+                this.global_yOffset = 0;
 
         } else {
             // Position Select component's container above target/input
             selectFit.top = selectFit.targetRect.bottom + selectFit.styles.itemTextToInputTextDiff -
                 selectFit.contentElementRect.height;
+                this.global_yOffset = 0;
             }
     }
 
