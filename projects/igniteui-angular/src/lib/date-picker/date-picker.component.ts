@@ -831,6 +831,11 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      */
     public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
 
+    /**
+     *@hidden
+     */
+    public setDisabledState(isDisabled: boolean): void { this.disabled = isDisabled; }
+
     /** @hidden */
     public getEditElement() {
         const inputElement = this.editableInput || this.readonlyInput || this.input;
