@@ -26,6 +26,54 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
 
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
     children = new QueryList<IgxColumnComponent>();
+
+    /**
+     * Set if the column group is collapsible.
+     * Default value is `false`
+     * ```html
+     *  <igx-column-group [collapsible] = "true"></igx-column-group>
+     * ```
+     * @memberof IgxColumnGroupComponent
+     */
+    @Input()
+    public set collapsible(value: boolean) {
+        this._collapsible = value;
+        this.collapsibleChange.emit(this._collapsible);
+        if (this.children && !this.hidden) {
+            if (this._collapsible) {
+                this.setExpandCollapseState();
+            } else {
+                this.children.forEach(child => child.hidden = false);
+            }
+        }
+    }
+    public get collapsible() {
+        return this._collapsible && this.checkCollapsibleState();
+    }
+
+    /**
+     * Set whether the group is expanded or collapsed initially.
+     * Applied only if the collapsible property is set to `true`
+     * Default value is `true`
+     * ```html
+     *  const state = false
+     *  <igx-column-group [(expand)] = "state"></igx-column-group>
+     * ```
+     * @memberof IgxColumnGroupComponent
+     */
+    @Input()
+    public set expanded(value: boolean) {
+        if (!this.collapsible) { return; }
+        this._expanded = value;
+        this.expandedChange.emit(this._expanded);
+        if (!this.hidden && this.children) {
+            this.setExpandCollapseState();
+        }
+    }
+    public get expanded() {
+        return this._expanded;
+    }
+
     /**
      * Gets the column group `summaries`.
      * ```typescript
@@ -94,6 +142,18 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     set bodyTemplate(template: TemplateRef<any>) { }
 
     /**
+     * Allows you to define a custom template for expand/collapse indicator
+     * @memberof IgxColumnGroupComponent
+     */
+    @Input()
+    get collapsibleIndicatorTemplate(): TemplateRef<any> {
+        return this._collapseIndicatorTemplate;
+    }
+    set collapsibleIndicatorTemplate(template: TemplateRef<any>) {
+        this._collapseIndicatorTemplate = template;
+    }
+
+    /**
      * Returns a reference to the inline editor template.
      * ```typescript
      * let inlineEditorTemplate = this.columnGroup.inlineEditorTemplate;
@@ -143,7 +203,14 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     set hidden(value: boolean) {
         this._hidden = value;
         this.hiddenChange.emit(this._hidden);
-        this.children.forEach(child => child.hidden = value);
+        if (this._hidden || !this.collapsible) {
+            this.children.forEach(child => child.hidden = this._hidden);
+        } else {
+            this.children.forEach(c =>  {
+                if (c.visibleWhenCollapsed === undefined) {c.hidden = false; return; }
+                c.hidden = this.expanded ? c.visibleWhenCollapsed : !c.visibleWhenCollapsed;
+            });
+        }
     }
 
     /**
@@ -163,6 +230,9 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         if (this.headTemplate && this.headTemplate.length) {
             this._headerTemplate = this.headTemplate.toArray()[0].template;
         }
+        if (this.collapseIndicatorTemplate) {
+            this._collapseIndicatorTemplate = this.collapseIndicatorTemplate.template;
+        }
         // currently only ivy fixes the issue, we have to slice only if the first child is group
         if (this.children.first === this) {
             this.children.reset(this.children.toArray().slice(1));
@@ -170,7 +240,11 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         this.children.forEach(child => {
             child.parent = this;
         });
+        if (this.collapsible) {
+            this.setExpandCollapseState();
+        }
     }
+
     /**
      * Returns the children columns collection.
      * ```typescript
