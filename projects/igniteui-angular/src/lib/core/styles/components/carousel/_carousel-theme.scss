@@ -87,7 +87,9 @@
     }
 
     @if not($button-disabled-arrow-color) and $button-disabled-background {
-        $button-disabled-arrow-color: text-contrast($button-disabled-background);
+        @if type_of($button-disabled-background) == 'color' {
+            $button-disabled-arrow-color: rgba(text-contrast($button-disabled-background), .3);
+        }
     }
 
     @return extend($theme, (
@@ -166,6 +168,10 @@
         color: --var($theme, 'button-disabled-arrow-color');
         pointer-events: none;
         box-shadow: none;
+
+        igx-icon {
+            color: currentColor;
+        }
     }
 
     %igx-nav-arrow--hover {
