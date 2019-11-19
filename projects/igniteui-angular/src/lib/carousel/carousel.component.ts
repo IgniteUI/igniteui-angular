@@ -17,7 +17,8 @@ import {
     IterableChangeRecord,
     TemplateRef,
     ViewChild,
-    ContentChild
+    ContentChild,
+    Injectable
 } from '@angular/core';
 import { IgxIconModule } from '../icon/index';
 import { IBaseEventArgs } from '../core/utils';
@@ -29,6 +30,7 @@ import { slideInLeft, fadeIn, rotateInCenter } from '../animations/main';
 import { IgxSlideComponent, Direction } from './slide.component';
 import { ICarouselResourceStrings } from '../core/i18n/carousel-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
+import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 
 let NEXT_ID = 0;
 
@@ -47,6 +49,13 @@ export enum CarouselAnimationType {
 export interface CarouselAnimationSettings {
     enterAnimation: AnimationReferenceMetadata;
     leaveAnimation: AnimationReferenceMetadata;
+}
+
+@Injectable()
+export class CarouselHammerConfig extends HammerGestureConfig {
+    public overrides = {
+        pan: { direction: Hammer.DIRECTION_HORIZONTAL }
+    };
 }
 /**
  * **Ignite UI for Angular Carousel** -
@@ -70,6 +79,12 @@ export interface CarouselAnimationSettings {
  * ```
  */
 @Component({
+    providers: [
+        {
+            provide: HAMMER_GESTURE_CONFIG,
+            useClass: CarouselHammerConfig
+        }
+    ],
     selector: 'igx-carousel',
     templateUrl: 'carousel.component.html',
     styles: [`
@@ -198,6 +213,16 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     * @memberOf IgxCarouselComponent
     */
     @Input() public keyboardSupport = true;
+
+      /**
+    * Controls whether the carousel should support gestures.
+    * Default value is `true`.
+    * ```html
+    * <igx-carousel [gesturesSupport] = "false"></igx-carousel>
+    * ```
+    * @memberOf IgxCarouselComponent
+    */
+    @Input() public gesturesSupport = true;
 
     /**
      * Controls the maximum indexes that can be shown.
@@ -828,7 +853,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     @HostListener('tap')
     public onTap() {
         if (this.isPlaying) {
-            if (this.pause && this.isPlaying) {
+            if (this.pause) {
                 this.stoppedByInteraction = true;
             }
             this.stop();
@@ -880,16 +905,41 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      */
     @HostListener('mouseleave')
     public onMouseLeave() {
-        if ( this.stoppedByInteraction ) {
+        if (this.stoppedByInteraction) {
             this.play();
-       }
+        }
     }
 
-    /**
+
+ /**
      * @hidden
      */
-    @HostListener('pan', ['$event'])
+    @HostListener('panleft', ['$event'])
+    public onPanLeft(event) {
+        this.onPan(event);
+    }
+
+     /**
+     * @hidden
+     */
+    @HostListener('panright', ['$event'])
+    public onPanRight(event) {
+        this.onPan(event);
+    }
+
+
     public onPan(event) {
+        if (this.isPlaying) {
+            this.stoppedByInteraction = true;
+            this.stop();
+        }
+        // if (event.direction === 8 || event.direction === 16) {
+        //     return;
+        // }
+        if (this.isPlaying) {
+            this.stoppedByInteraction = true;
+            this.stop();
+        }
         event.preventDefault();
         this.finishAnimations();
         const slideWidth = this.currentSlide.nativeElement.offsetWidth;
@@ -934,6 +984,12 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      */
     @HostListener('panend', ['$event'])
     public onPanEnd(event) {
+        if (this.stoppedByInteraction) {
+            this.play();
+        }
+        if (event.direction === 8 || event.direction === 16) {
+            return;
+        }
         event.preventDefault();
         const slideWidth = this.currentSlide.nativeElement.offsetWidth;
         const panOffset = (slideWidth / 100);
