@@ -161,37 +161,37 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    @ViewChild('columnSelect', { read: IgxSelectComponent, static: false })
+    @ViewChild('columnSelect', { read: IgxSelectComponent })
     public columnSelect: IgxSelectComponent;
 
     /**
      * @hidden @internal
      */
-    @ViewChild('conditionSelect', { read: IgxSelectComponent, static: false })
+    @ViewChild('conditionSelect', { read: IgxSelectComponent })
     public conditionSelect: IgxSelectComponent;
 
     /**
      * @hidden @internal
      */
-    @ViewChild('searchValueInput', { read: ElementRef, static: false })
+    @ViewChild('searchValueInput', { read: ElementRef })
     public searchValueInput: ElementRef;
 
     /**
      * @hidden @internal
      */
-    @ViewChild('addRootAndGroupButton', { read: ElementRef, static: false })
+    @ViewChild('addRootAndGroupButton', { read: ElementRef })
     public addRootAndGroupButton: ElementRef;
 
     /**
      * @hidden @internal
      */
-    @ViewChild('addConditionButton', { read: ElementRef, static: false })
+    @ViewChild('addConditionButton', { read: ElementRef })
     public addConditionButton: ElementRef;
 
     /**
      * @hidden @internal
      */
-    @ViewChild('editingInputsContainer', { read: ElementRef, static: false })
+    @ViewChild('editingInputsContainer', { read: ElementRef })
     public set editingInputsContainer(value: ElementRef) {
         if ((value && !this._editingInputsContainer) ||
             (value && this._editingInputsContainer && this._editingInputsContainer.nativeElement !== value.nativeElement)) {
@@ -213,7 +213,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    @ViewChild('addModeContainer', { read: ElementRef, static: false })
+    @ViewChild('addModeContainer', { read: ElementRef })
     public set addModeContainer(value: ElementRef) {
         if ((value && !this._addModeContainer) ||
             (value && this._addModeContainer && this._addModeContainer.nativeElement !== value.nativeElement)) {
@@ -235,7 +235,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    @ViewChild('currentGroupButtonsContainer', { read: ElementRef, static: false })
+    @ViewChild('currentGroupButtonsContainer', { read: ElementRef })
     public set currentGroupButtonsContainer(value: ElementRef) {
         if ((value && !this._currentGroupButtonsContainer) ||
             (value && this._currentGroupButtonsContainer && this._currentGroupButtonsContainer.nativeElement !== value.nativeElement)) {
@@ -257,7 +257,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    @ViewChild(IgxToggleDirective, { static: false })
+    @ViewChild(IgxToggleDirective)
     public contextMenuToggle: IgxToggleDirective;
 
     /**
@@ -269,7 +269,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    @ViewChild('expressionsContainer', { static: false })
+    @ViewChild('expressionsContainer')
     protected expressionsContainer: ElementRef;
 
     /**

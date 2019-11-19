@@ -78,7 +78,7 @@ export class IgxTabItemComponent extends IgxTabItemBase implements AfterViewInit
     protected defaultTabTemplate: TemplateRef<any>;
 
     /**@hidden*/
-    @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective, static: false })
+    @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective })
     protected customTabTemplateDir: IgxTabItemTemplateDirective;
 
     private _nativeTabItem: ElementRef;

@@ -25,7 +25,7 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
     @ViewChild('textArea', { read: ElementRef, static: true })
     public textArea: ElementRef;
 
-    @ViewChild('grid', { read: IgxGridComponent, static: false })
+    @ViewChild('grid', { read: IgxGridComponent })
     public grid: IgxGridComponent;
 
     @ViewChildren('gridCell', { read: ElementRef })

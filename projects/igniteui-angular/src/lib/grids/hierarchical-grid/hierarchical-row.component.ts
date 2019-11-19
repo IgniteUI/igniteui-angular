@@ -32,7 +32,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
     @ViewChildren(forwardRef(() => IgxHierarchicalGridCellComponent), { read: IgxHierarchicalGridCellComponent })
     public cells: QueryList<IgxHierarchicalGridCellComponent>;
 
-    @ViewChild('expander', { read: ElementRef, static: false })
+    @ViewChild('expander', { read: ElementRef })
     public expander: ElementRef<HTMLElement>;
 
     get viewIndex(): number {

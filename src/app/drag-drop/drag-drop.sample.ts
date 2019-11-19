@@ -80,13 +80,13 @@ export class DragDropSampleComponent {
     @ViewChild('dragGhostAnim', { read: IgxDragDirective, static: true })
     public dragGhostAnim: IgxDragDirective;
 
-    @ViewChild('animationDuration', { static: false })
+    @ViewChild('animationDuration')
     public animationDuration: ElementRef;
 
-    @ViewChild('animationDelay', { static: false })
+    @ViewChild('animationDelay')
     public animationDelay: ElementRef;
 
-    @ViewChild('animationFunction', { static: false })
+    @ViewChild('animationFunction')
     public animationFunction: ElementRef;
 
     @ViewChild('startX', { static: true })

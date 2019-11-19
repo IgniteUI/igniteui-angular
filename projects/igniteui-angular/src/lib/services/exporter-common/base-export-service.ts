@@ -1,7 +1,4 @@
-import {
-    EventEmitter,
-    Output
-} from '@angular/core';
+import { EventEmitter, Output, Directive } from '@angular/core';
 
 import { cloneValue, IBaseEventArgs } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
@@ -69,7 +66,8 @@ export interface IColumnExportingEventArgs extends IBaseEventArgs {
     skipFormatter: boolean;
 }
 
-export abstract class IgxBaseExporter {
+@Directive()
+export abstract class IgxBaseExporterDirective {
     private _columnList: any[];
     private flatRecords = [];
 
