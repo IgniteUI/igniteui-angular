@@ -132,6 +132,7 @@ import { IgxGridToolbarCustomContentDirective } from './toolbar/toolbar.directiv
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGridSortingStrategy } from '../data-operations/sorting-strategy';
+import { IgxRowDragGhostDirective  } from './row-drag.directive';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -1914,6 +1915,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden
+     * @internal
+     */
+    @ContentChildren(IgxRowDragGhostDirective, { read: TemplateRef, descendants: false })
+    public dragGhostCustomTemplates: QueryList<TemplateRef<any>>;
+
+    /**
+     * @hidden
      */
     @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective, static: true })
     public verticalScrollContainer: IgxGridForOfDirective<any>;
@@ -3169,6 +3177,18 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden
+     * @internal
+    */
+    public getDragGhostCustomTemplate() {
+        if (this.dragGhostCustomTemplates && this.dragGhostCustomTemplates.first) {
+            return this.dragGhostCustomTemplates.first;
+        }
+
+        return null;
+    }
+
+    /**
+     * @hidden
      */
     public ngOnDestroy() {
         this.tmpOutlets.forEach((tmplOutlet) => {
@@ -3644,9 +3664,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected _reorderPinnedColumns(from: IgxColumnComponent, to: IgxColumnComponent, position: DropPosition) {
-        const pinned = this._pinnedColumns;
-        let dropIndex = pinned.indexOf(to);
+    protected _reorderColumns(from: IgxColumnComponent, to: IgxColumnComponent, position: DropPosition, columnCollection: any[]) {
+        let dropIndex = columnCollection.indexOf(to);
 
         if (to.columnGroup) {
             dropIndex += to.allChildren.length;
@@ -3660,9 +3679,8 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             dropIndex++;
         }
 
-        pinned.splice(dropIndex, 0, ...pinned.splice(pinned.indexOf(from), 1));
+        columnCollection.splice(dropIndex, 0, ...columnCollection.splice(columnCollection.indexOf(from), 1));
     }
-
     /**
      * @hidden
      */
@@ -3715,18 +3733,25 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         if (dropTarget.pinned && column.pinned) {
-            this._reorderPinnedColumns(column, dropTarget, position);
+            this._reorderColumns(column, dropTarget, position, this._pinnedColumns);
         }
 
         if (dropTarget.pinned && !column.pinned) {
             column.pin();
-            this._reorderPinnedColumns(column, dropTarget, position);
+            this._reorderColumns(column, dropTarget, position, this._pinnedColumns);
+
         }
 
         if (!dropTarget.pinned && column.pinned) {
             column.unpin();
+            let list = [];
 
-            const list = this.columnList.toArray();
+            if (this.pinnedColumns.indexOf(column) === -1 && this.pinnedColumns.indexOf(dropTarget) === -1) {
+                list = this._unpinnedColumns;
+            } else {
+                list = this._pinnedColumns;
+            }
+
             const fi = list.indexOf(column);
             const ti = list.indexOf(dropTarget);
 
@@ -3737,6 +3762,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             } else {
                 position = DropPosition.None;
             }
+        }
+
+        if (!dropTarget.pinned) {
+            this._reorderColumns(column, dropTarget, position, this._unpinnedColumns);
         }
 
         this._moveColumns(column, dropTarget, position);
@@ -4936,7 +4965,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     protected reinitPinStates() {
         this._pinnedColumns = (this.hasColumnGroups) ? this.columnList.filter((c) => c.pinned) :
             this.columnList.filter((c) => c.pinned).sort((a, b) => this._pinnedColumns.indexOf(a) - this._pinnedColumns.indexOf(b));
-        this._unpinnedColumns = this.columnList.filter((c) => !c.pinned);
+        this._unpinnedColumns = this.hasColumnGroups ? this.columnList.filter((c) => !c.pinned) :
+        this.columnList.filter((c) => !c.pinned)
+        .sort((a, b) => this._unpinnedColumns.indexOf(a) - this._unpinnedColumns.indexOf(b));
     }
 
     /**

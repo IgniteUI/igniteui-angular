@@ -915,6 +915,46 @@ describe('igxOverlay', () => {
             expect(scrollStrat.detach).toHaveBeenCalledTimes(1);
         }));
 
+        it('Should only call reposition once on scroll - Absolute.', fakeAsync(async () => {
+            TestBed.overrideComponent(EmptyPageComponent, {
+                set: {
+                    styles: [`button {
+                position: absolute,
+                bottom: 200%;
+            }`]
+                }
+            });
+            await TestBed.compileComponents();
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            fixture.detectChanges();
+
+            const scrollStrat = new AbsoluteScrollStrategy();
+            const overlaySettings: OverlaySettings = {
+                positionStrategy: new GlobalPositionStrategy(),
+                scrollStrategy: scrollStrat,
+                modal: false,
+                closeOnOutsideClick: false
+            };
+            const overlay = fixture.componentInstance.overlay;
+            const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
+            spyOn(overlay, 'reposition');
+            const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
+            overlay.show(id, overlaySettings);
+            tick();
+
+            const content = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
+            content.children[0].dispatchEvent(new Event('scroll'));
+            expect(scrollSpy).toHaveBeenCalledTimes(1);
+            expect(overlay.reposition).not.toHaveBeenCalled();
+
+            document.dispatchEvent(new Event('scroll'));
+            expect(scrollSpy).toHaveBeenCalledTimes(2);
+            expect(overlay.reposition).toHaveBeenCalledTimes(1);
+            expect(overlay.reposition).toHaveBeenCalledWith(id);
+
+            overlay.hide(id);
+        }));
+
         it('Should properly initialize Scroll Strategy - Close.', fakeAsync(async () => {
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
