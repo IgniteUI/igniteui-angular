@@ -42,16 +42,40 @@ Keyboard navigation will be enabled when the **IgxCarousel** component is focuse
 - `End` will focus the last slide inside the carousel view.
 
 ### Templates
-The **IgxCarousel** supports templating of its indicators
+The **IgxCarousel** supports templating of its indicators and next and previous buttons
 
 #### Defining item template:
 ```html
 <igx-carousel #carousel>
         ...
-<ng-template igxCarouselIndicator let-slide>
-    <igx-icon *ngIf="slide.active"  fontSet="material">brightness_7</igx-icon>
-    <igx-icon *ngIf="!slide.active"  fontSet="material">brightness_5</igx-icon>
-</ng-template>
+    <ng-template igxCarouselIndicator let-slide>
+        <igx-icon *ngIf="slide.active"  fontSet="material">brightness_7</igx-icon>
+        <igx-icon *ngIf="!slide.active"  fontSet="material">brightness_5</igx-icon>
+    </ng-template>
+</igx-carousel>
+```
+
+#### Defining next button template:
+```html
+<igx-carousel #carousel>
+        ...
+    <ng-template igxCarouselNextButton let-disabled>
+        <button igxButton="fab" igxRipple="white" [disabled]="disabled">
+            <igx-icon fontSet="material">add</igx-icon>
+        </button>
+    </ng-template>
+</igx-carousel>
+```
+
+#### Defining previous button template:
+```html
+<igx-carousel #carousel>
+        ...
+    <ng-template igxCarouselPrevButton let-disabled>
+        <button igxButton="fab" igxRipple="white" [disabled]="disabled">
+            <igx-icon fontSet="material">remove</igx-icon>
+        </button>
+    </ng-template>
 </igx-carousel>
 ```
 

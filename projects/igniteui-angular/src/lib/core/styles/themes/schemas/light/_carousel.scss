@@ -12,7 +12,7 @@
 /// @prop {Color} slide-background [#fff] - The slide background color.
 /// @prop {Color} button-background [#fff] - The previous/next buttons idle background color.
 /// @prop {Color} button-hover-background [#fff] - The previous/next buttons hover background color.
-/// @prop {Map} button-disabled-background [igx-color: ('grays', 400)] - The previous/next buttons disabled background color.
+/// @prop {Map} button-disabled-background [igx-color: ('grays', 500)] - The previous/next buttons disabled background color.
 /// @prop {Map} button-arrow-color [igx-color: ('grays', 700)] - The previous/next buttons idle arrow color.
 /// @prop {Map} button-hover-arrow-color [igx-color: ('grays', 900)] - The previous/next buttons hover arrow color.
 /// @prop {Map} button-disabled-arrow-color [[igx-color: ('grays' 500)]] - The previous/next buttons disabled color.
@@ -41,15 +41,17 @@ $_light-carousel: extend(
             igx-color: ('grays', 900)
         ),
 
+        button-disabled-background: (
+            igx-color: ('grays', 500)
+        ),
+
+        button-disabled-arrow-color:  (
+            igx-color: ('grays' 500)
+        ),
+
         indicator-dot-color: #fff,
         indicator-border-color: #fff,
         indicator-active-border-color: #fff,
-        button-disabled-background: (
-            igx-color: ('grays', 400)
-        ),
-        button-disabled-arrow-color:  (
-        igx-color: ('grays' 500)
-    ),
     )
 );
 
