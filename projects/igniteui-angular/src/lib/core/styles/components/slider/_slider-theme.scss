@@ -245,7 +245,7 @@
     %igx-slider__ticks-label {
         color: --var($theme, 'tick-label-color');
         position: absolute;
-        top: calc(#{$tick-height} + #{$tick-height});
+        top: $tick-height--tall;
         transform: translate(-50%);
         line-height: .7;
         opacity: 1;
@@ -260,7 +260,7 @@
 
     %igx-slider__ticks--tall {
         %igx-slider__ticks-label {
-            top: calc(#{$tick-height--tall} + #{rem(2px)});
+            top: calc(#{$tick-height--tall} + #{$tick-height});
         }
     }
 
