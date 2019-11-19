@@ -75,8 +75,6 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
     this.router.events.pipe(take(1)).subscribe((event: NavigationStart) => {
         this.saveGridState();
     });
-
-    // this.restoreGridState();
   }
 
   public ngAfterViewInit() {
@@ -92,6 +90,8 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
     // gridFilteringExpressionsTree.filteringOperands.push(productFilteringExpressionsTree);
 
     // this.grid.filteringExpressionsTree = gridFilteringExpressionsTree;
+    // this.restoreGridState();
+
 }
 
   public saveGridState() {
@@ -128,7 +128,7 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
     let state = window.localStorage.getItem(this.stateKey);
     state = JSON.parse(state)['filtering'];
     if (state) {
-      this.state.setState({ filtering: state, columns: this.getColumnsState() });
+      this.state.setState({ filtering: state });
     }
   }
 
@@ -137,7 +137,7 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
     let state = window.localStorage.getItem(this.stateKey);
     state = JSON.parse(state)['advancedFiltering'];
     if (state) {
-      this.state.setState({ advancedFiltering: state, columns: this.getColumnsState() });
+      this.state.setState({ advancedFiltering: state });
     }
   }
 
@@ -151,9 +151,9 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
 
   public restoreGroupby() {
     let state = window.localStorage.getItem(this.stateKey);
-    state = JSON.parse(state)['groupby'];
+    state = JSON.parse(state)['groupBy'];
     if (state) {
-      this.state.setState({ groupby: state });
+      this.state.setState({ groupBy: state });
     }
   }
 
@@ -195,10 +195,6 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
   public selectCellSelectionMode(args) {
     this.selectionMode = this.selectionModes[args.index].label;
 }
-
-  public onSerializeChange(event: any) {
-    // this.serialize = !!event.checked;
-  }
 
   public clearStorage(toast: IgxToastComponent) {
     window.localStorage.removeItem(this.stateKey);
