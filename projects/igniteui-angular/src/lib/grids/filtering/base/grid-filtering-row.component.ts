@@ -115,7 +115,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     @ViewChild('defaultDateUI', { read: TemplateRef, static: true })
     protected defaultDateUI: TemplateRef<any>;
 
-    @ViewChild('input', { read: ElementRef, static: false })
+    @ViewChild('input', { read: ElementRef })
     protected input: ElementRef;
 
     @ViewChild('inputGroupConditions', { read: IgxDropDownComponent, static: true })
@@ -127,16 +127,16 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     @ViewChildren('operators', { read: IgxDropDownComponent })
     protected dropDownOperators: QueryList<IgxDropDownComponent>;
 
-    @ViewChild('inputGroup', { read: ElementRef, static: false })
+    @ViewChild('inputGroup', { read: ElementRef })
     protected inputGroup: ElementRef;
 
-    @ViewChild('inputGroupPrefix', { read: ElementRef, static: false })
+    @ViewChild('inputGroupPrefix', { read: ElementRef })
     protected inputGroupPrefix: ElementRef;
 
     @ViewChild('container', { static: true })
     protected container: ElementRef;
 
-    @ViewChild('operand', { static: false })
+    @ViewChild('operand')
     protected operand: ElementRef;
 
     @ViewChild('closeButton', { static: true })

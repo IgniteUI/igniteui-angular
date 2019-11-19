@@ -14,7 +14,7 @@ import { ICalendarDate, isDateInRanges } from '../../calendar/calendar';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxDayItemComponent } from './day-item.component';
 import { DateRangeDescriptor, DateRangeType } from '../../core/dates';
-import { IgxCalendarBase, CalendarSelection } from '../calendar-base';
+import { IgxCalendarBaseDirective, CalendarSelection } from '../calendar-base';
 import { isEqual } from '../../core/utils';
 import { IViewChangingEventArgs } from './days-view.interface';
 import { IgxDaysViewNavigationService } from './daysview-navigation.service';
@@ -33,7 +33,7 @@ let NEXT_ID = 0;
     selector: 'igx-days-view',
     templateUrl: 'days-view.component.html'
 })
-export class IgxDaysViewComponent extends IgxCalendarBase implements DoCheck, OnInit {
+export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements DoCheck, OnInit {
     /**
      * Sets/gets the `id` of the days view.
      * If not set, the `id` will have value `"igx-days-view-0"`.

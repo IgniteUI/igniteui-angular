@@ -1673,7 +1673,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ViewChild(IgxGridColumnResizerComponent, { static: false })
+    @ViewChild(IgxGridColumnResizerComponent)
     public resizeLine: IgxGridColumnResizerComponent;
 
     /**
@@ -1697,25 +1697,25 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      *@hidden
      */
-    @ContentChild(IgxExcelStyleSortingTemplateDirective, { read: IgxExcelStyleSortingTemplateDirective, static: false })
+    @ContentChild(IgxExcelStyleSortingTemplateDirective, { read: IgxExcelStyleSortingTemplateDirective })
     public excelStyleSortingTemplateDirective: IgxExcelStyleSortingTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxExcelStyleMovingTemplateDirective, { read: IgxExcelStyleMovingTemplateDirective, static: false })
+    @ContentChild(IgxExcelStyleMovingTemplateDirective, { read: IgxExcelStyleMovingTemplateDirective })
     public excelStyleMovingTemplateDirective: IgxExcelStyleMovingTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxExcelStyleHidingTemplateDirective, { read: IgxExcelStyleHidingTemplateDirective, static: false })
+    @ContentChild(IgxExcelStyleHidingTemplateDirective, { read: IgxExcelStyleHidingTemplateDirective })
     public excelStyleHidingTemplateDirective: IgxExcelStyleHidingTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxExcelStylePinningTemplateDirective, { read: IgxExcelStylePinningTemplateDirective, static: false })
+    @ContentChild(IgxExcelStylePinningTemplateDirective, { read: IgxExcelStylePinningTemplateDirective })
     public excelStylePinningTemplateDirective: IgxExcelStylePinningTemplateDirective;
 
     /**
@@ -1941,7 +1941,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ViewChild('footer', { read: ElementRef, static: false })
+    @ViewChild('footer', { read: ElementRef })
     public footer: ElementRef;
 
     /**
@@ -1953,25 +1953,25 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ViewChild('headerSelectorContainer', { static: false })
+    @ViewChild('headerSelectorContainer')
     public headerSelectorContainer: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('headerDragContainer', { static: false })
+    @ViewChild('headerDragContainer')
     public headerDragContainer: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('headerGroupContainer', { static: false })
+    @ViewChild('headerGroupContainer')
     public headerGroupContainer: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('filteringRow', { read: IgxGridFilteringRowComponent, static: false })
+    @ViewChild('filteringRow', { read: IgxGridFilteringRowComponent })
     public filteringRow: IgxGridFilteringRowComponent;
 
     /**
@@ -2049,7 +2049,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ContentChild(IgxRowEditTemplateDirective, { read: TemplateRef, static: false })
+    @ContentChild(IgxRowEditTemplateDirective, { read: TemplateRef })
     public rowEditCustom: TemplateRef<any>;
 
     /** @hidden */
@@ -2057,36 +2057,36 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.rowEditCustom ? this.rowEditCustom : this.defaultRowEditTemplate;
     }
     /** @hidden */
-    @ContentChild(IgxRowEditTextDirective, { read: TemplateRef, static: false })
+    @ContentChild(IgxRowEditTextDirective, { read: TemplateRef })
     public rowEditText: TemplateRef<any>;
 
     /** @hidden */
-    @ContentChild(IgxRowEditActionsDirective, { read: TemplateRef, static: false })
+    @ContentChild(IgxRowEditActionsDirective, { read: TemplateRef })
     public rowEditActions: TemplateRef<any>;
 
 
     /**
     * The custom template, if any, that should be used when rendering a row expand indicator.
     */
-   @ContentChild(IgxRowExpandedIndicatorDirective, { read: TemplateRef, static: false })
+   @ContentChild(IgxRowExpandedIndicatorDirective, { read: TemplateRef })
    public rowExpandedIndicatorTemplate: TemplateRef<any> = null;
 
    /**
    * The custom template, if any, that should be used when rendering a row collapse indicator.
    */
-   @ContentChild(IgxRowCollapsedIndicatorDirective, { read: TemplateRef, static: false })
+   @ContentChild(IgxRowCollapsedIndicatorDirective, { read: TemplateRef })
    public rowCollapsedIndicatorTemplate: TemplateRef<any> = null;
 
     /**
     * The custom template, if any, that should be used when rendering a header expand indicator.
     */
-   @ContentChild(IgxHeaderExpandIndicatorDirective, { read: TemplateRef, static: false })
+   @ContentChild(IgxHeaderExpandIndicatorDirective, { read: TemplateRef })
    public headerExpandIndicatorTemplate: TemplateRef<any> = null;
 
    /**
    * The custom template, if any, that should be used when rendering a header collapse indicator.
    */
-   @ContentChild(IgxHeaderCollapseIndicatorDirective, { read: TemplateRef, static: false })
+   @ContentChild(IgxHeaderCollapseIndicatorDirective, { read: TemplateRef })
    public headerCollapseIndicatorTemplate: TemplateRef<any> = null;
 
     /**
@@ -2137,7 +2137,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    @ViewChild(IgxToggleDirective, { static: false })
+    @ViewChild(IgxToggleDirective)
     public rowEditingOverlay: IgxToggleDirective;
 
     /**
@@ -2341,10 +2341,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
 	 * @memberof IgxGridBaseDirective
      */
-    @ViewChild('toolbar', { read: IgxGridToolbarComponent, static: false })
+    @ViewChild('toolbar', { read: IgxGridToolbarComponent })
     public toolbar: IgxGridToolbarComponent = null;
 
-    @ViewChild('toolbar', { read: ElementRef, static: false })
+    @ViewChild('toolbar', { read: ElementRef })
     private toolbarHtml: ElementRef = null;
 
     /**

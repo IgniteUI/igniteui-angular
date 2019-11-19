@@ -4,9 +4,10 @@
         <div class="density-chooser" style="margin-bottom: 16px">
             <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
         </div>
-        <igx-grid [showToolbar]="true"  [columnHiding] = "true" [columnPinning]='true' [rowEditable]="true" [rowSelectable]="false" [primaryKey]="'PostalCode'" #grid [data]="data" [displayDensity]="density" [width]="'100%'" [height]="'500px'" [rowEditable]="true" >
+        <igx-grid #grid [data]="data"  [showToolbar]="true"  [columnHiding] = "true" [columnPinning]='true' [rowEditable]="true" [rowSelectable]="false"
+                primaryKey="PostalCode" [displayDensity]="density" [width]="'100%'" [height]="'500px'">
             <igx-column-layout field='group1'>
-                <igx-column [groupable]="true" [rowStart]="1" [colStart]="1" [rowEnd]="4" field="ID" [width]="'800px'"  [groupable]='true' ></igx-column>
+                <igx-column [groupable]="true" [rowStart]="1" [colStart]="1" [rowEnd]="4" field="ID" [width]="'800px'"></igx-column>
             </igx-column-layout>
             <igx-column-layout field='group2'>
                 <igx-column editable="true" [rowStart]="1" [colStart]="1" [colEnd]="3" field="CompanyName" [width]="'300px'"></igx-column>

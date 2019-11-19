@@ -12,7 +12,7 @@ import {
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../../core/displayDensity';
 import {
     CsvFileTypes,
-    IgxBaseExporter,
+    IgxBaseExporterDirective,
     IgxCsvExporterOptions,
     IgxCsvExporterService,
     IgxExcelExporterOptions,
@@ -86,7 +86,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const dropdownHiding = this.grid.toolbar.columnHidingDropdown;
      * ```
      */
-    @ViewChild('columnHidingDropdown', { read: IgxDropDownComponent, static: false })
+    @ViewChild('columnHidingDropdown', { read: IgxDropDownComponent })
     public columnHidingDropdown: IgxDropDownComponent;
 
     /**
@@ -95,7 +95,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const hidingUI = this.grid.toolbar.columnHidingUI;
      * ```
      */
-    @ViewChild(IgxColumnHidingComponent, { static: false })
+    @ViewChild(IgxColumnHidingComponent)
     public columnHidingUI: IgxColumnHidingComponent;
 
     /**
@@ -104,7 +104,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const hidingButton = this.grid.toolbar.columnHidingButton;
      * ```
      */
-    @ViewChild('columnHidingButton', { read: IgxButtonDirective, static: false })
+    @ViewChild('columnHidingButton', { read: IgxButtonDirective })
     public columnHidingButton: IgxButtonDirective;
 
     /**
@@ -113,7 +113,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const exportDropdown = this.grid.toolbar.exportDropdown;
      * ```
      */
-    @ViewChild('exportDropdown', { read: IgxDropDownComponent, static: false })
+    @ViewChild('exportDropdown', { read: IgxDropDownComponent })
     public exportDropdown: IgxDropDownComponent;
 
     /**
@@ -122,7 +122,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const exportBtn = this.grid.toolbar.exportButton;
      * ```
      */
-    @ViewChild('btnExport', { read: IgxButtonDirective, static: false })
+    @ViewChild('btnExport', { read: IgxButtonDirective })
     public exportButton: IgxButtonDirective;
 
     /**
@@ -131,7 +131,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const dropdownPinning = this.grid.toolbar.columnPinningDropdown;
      * ```
      */
-    @ViewChild('columnPinningDropdown', { read: IgxDropDownComponent, static: false })
+    @ViewChild('columnPinningDropdown', { read: IgxDropDownComponent })
     public columnPinningDropdown: IgxDropDownComponent;
 
     /**
@@ -140,7 +140,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const pinningUI = this.grid.toolbar.columnPinningDropdown;
      * ```
      */
-    @ViewChild(IgxColumnPinningComponent, { static: false })
+    @ViewChild(IgxColumnPinningComponent)
     public columnPinningUI: IgxColumnPinningComponent;
 
     /**
@@ -149,7 +149,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
      * const pinningButton = this.grid.toolbar.columnPinningButton;
      * ```
      */
-    @ViewChild('columnPinningButton', { read: IgxButtonDirective, static: false })
+    @ViewChild('columnPinningButton', { read: IgxButtonDirective })
     public columnPinningButton: IgxButtonDirective;
 
     /**
@@ -309,7 +309,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
         this.performExport(this.csvExporter, 'csv');
     }
 
-    private performExport(exp: IgxBaseExporter, exportType: string) {
+    private performExport(exp: IgxBaseExporterDirective, exportType: string) {
         this.exportClicked();
 
         const fileName = 'ExportedData';
