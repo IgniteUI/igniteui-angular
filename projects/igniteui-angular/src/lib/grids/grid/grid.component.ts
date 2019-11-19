@@ -23,6 +23,7 @@ import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/select
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
+import { IgxRowIslandAPIService } from '../hierarchical-grid/row-island-api.service';
 import { FilterMode } from '../common/enums';
 import { GridType } from '../common/grid.interface';
 
@@ -63,7 +64,8 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
         IgxFilteringService,
         IgxColumnResizingService,
         IgxForOfSyncService,
-        IgxForOfScrollSyncService
+        IgxForOfScrollSyncService,
+        IgxRowIslandAPIService
     ],
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
