@@ -40,6 +40,7 @@ import {
     IgxCellTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellEditorTemplateDirective,
+    IgxCollapsibleIndicatorTemplateDirective,
     IgxFilterCellTemplateDirective
 } from './templates.directive';
 import { MRLResizeColumnInfo, MRLColumnSizeInfo } from './interfaces';
@@ -259,6 +260,18 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     @Output()
     public hiddenChange = new EventEmitter<boolean>();
+
+    /** @hidden */
+    @Output()
+    public expandedChange = new EventEmitter<boolean>();
+
+    /** @hidden */
+    @Output()
+    public collapsibleChange = new EventEmitter<boolean>();
+    /** @hidden */
+    @Output()
+    public visibleWhenCollapsedChange = new EventEmitter<boolean>();
+
     /**
      * Gets whether the hiding is disabled.
      * ```typescript
@@ -858,6 +871,10 @@ export class IgxColumnComponent implements AfterContentInit {
     set filterCellTemplate(template: TemplateRef<any>) {
         this._filterCellTemplate = template;
     }
+
+    /** @hidden */
+    @Input('collapsibleIndicatorTemplate')
+    public collapsibleIndicatorTemplate: TemplateRef<any>;
     /**
      * Gets the cells of the column.
      * ```typescript
@@ -1027,6 +1044,39 @@ export class IgxColumnComponent implements AfterContentInit {
     @Input() colStart: number;
 
     /**
+     * Indicates whether the column will be visible when its parent is collapsed.
+     * ```html
+     * <igx-column-group>
+     *   <igx-column [visibleWhenCollapsed]="true"></igx-column>
+     * </igx-column-group>
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @notifyChanges(true)
+    @Input()
+    set visibleWhenCollapsed(value: boolean) {
+        this._visibleWhenCollapsed = value;
+        this.visibleWhenCollapsedChange.emit(this._visibleWhenCollapsed);
+        if (this.parent) { this.parent.setExpandCollapseState(); }
+    }
+
+    get visibleWhenCollapsed(): boolean {
+        return this._visibleWhenCollapsed;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public collapsible = false;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public expanded = true;
+
+    /**
      * hidden
      */
     public defaultWidth: string;
@@ -1096,6 +1146,10 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
+    protected _collapseIndicatorTemplate: TemplateRef<any>;
+    /**
+     *@hidden
+     */
     protected _summaries = null;
     /**
      *@hidden
@@ -1138,6 +1192,18 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     protected _editable: boolean;
     /**
+     *  @hidden
+    */
+    protected _visibleWhenCollapsed;
+    /**
+     * @hidden
+     */
+    protected _collapsible = false;
+    /**
+     * @hidden
+     */
+    protected _expanded = true;
+    /**
      * @hidden
      */
     protected get isPrimaryColumn(): boolean {
@@ -1165,6 +1231,11 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     @ContentChild(IgxFilterCellTemplateDirective, { read: IgxFilterCellTemplateDirective })
     public filterCellTemplateDirective: IgxFilterCellTemplateDirective;
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxCollapsibleIndicatorTemplateDirective, { read: IgxCollapsibleIndicatorTemplateDirective, static: false })
+    protected collapseIndicatorTemplate:  IgxCollapsibleIndicatorTemplateDirective;
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, public cdr: ChangeDetectorRef,
         public rowIslandAPI: IgxRowIslandAPIService) { }
@@ -1715,6 +1786,26 @@ export class IgxColumnComponent implements AfterContentInit {
             this._calcWidth = this.width;
         }
         this.calcPixelWidth = parseInt(this._calcWidth, 10);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    protected setExpandCollapseState() {
+        this.children.filter(col => (col.visibleWhenCollapsed !== undefined)).forEach(c =>  {
+            if (!this.collapsible) { c.hidden = this.hidden; return; }
+            c.hidden = this._expanded ? c.visibleWhenCollapsed : !c.visibleWhenCollapsed;
+        });
+    }
+     /**
+     * @hidden
+     * @internal
+     */
+    protected checkCollapsibleState() {
+        if (!this.children) { return false; }
+        const cols = this.children.map(child => child.visibleWhenCollapsed);
+        return (cols.some(c => c === true) && cols.some(c => c === false));
     }
 
     /**

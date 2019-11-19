@@ -68,7 +68,6 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         return this.column.colStart;
     }
 
-
     /**
      * Gets the column of the header group.
      * @memberof IgxGridHeaderGroupComponent

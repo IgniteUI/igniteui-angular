@@ -1335,6 +1335,33 @@
         }
     }
 
+
+    %igx-grid__th-expander {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-#{$right}: rem(8px);
+        cursor: pointer;
+
+        igx-icon {
+            color: --var($theme, 'expand-icon-color');
+        }
+
+        &:hover {
+            igx-icon {
+                color: --var($theme, 'expand-icon-hover-color');
+            }
+        }
+    }
+
+    %igx-grid__th-group-title {
+        @include ellipsis();
+    }
+
+    %igx-grid__th--collapsible {
+        justify-content: normal;
+    }
+
     %igx-grid__th--sortable {
         &:hover {
             cursor: pointer;
