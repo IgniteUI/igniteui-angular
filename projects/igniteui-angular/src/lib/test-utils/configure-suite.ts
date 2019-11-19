@@ -8,10 +8,6 @@ import { resizeObserverIgnoreError } from './helper-utils.spec';
  */
 export const configureTestSuite = () => {
 
-  beforeAll(() => {
-    resizeObserverIgnoreError();
-  });
-  return;
 
   let originReset;
   beforeAll(() => {
