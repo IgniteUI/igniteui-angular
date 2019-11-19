@@ -10,9 +10,10 @@ import { IgxDateRangeComponent } from 'igniteui-angular';
 export class DateRangeSampleComponent implements OnInit {
     @ViewChild(IgxDateRangeComponent, { read: IgxDateRangeComponent, static: false })
     public dateRange: IgxDateRangeComponent;
-    public date: Date = new Date(Date.now());
-    public form: FormGroup;
-    public showSingleInput: boolean;
+
+    public date: Date;
+    public twoInputForm: FormGroup;
+    public singleInputForm: FormGroup;
 
     private dayFormatter = new Intl.DateTimeFormat('en', { weekday: 'long' });
     private monthFormatter = new Intl.DateTimeFormat('en', { month: 'long' });
@@ -20,18 +21,28 @@ export class DateRangeSampleComponent implements OnInit {
     constructor(private fb: FormBuilder) { }
 
     public ngOnInit(): void {
-        this.form = this.fb.group({
+        this.date = new Date();
+        this.singleInputForm = this.fb.group({
+            fullName: [''],
+            phone: [''],
+            email: [''],
+            fullRange: ['']
+        });
+        this.twoInputForm = this.fb.group({
             fullName: [''],
             phone: [''],
             email: [''],
             startDate: [''],
             endDate: [''],
-            fullRange: ['']
         });
     }
 
-    public onSubmit(): void {
-        console.log(this.form);
+    public submitSingleInputForm(): void {
+        console.log(this.singleInputForm);
+    }
+
+    public submitTwoInputForm(): void {
+        console.log(this.twoInputForm);
     }
 
     public selectDateRange(): void {
@@ -44,7 +55,7 @@ export class DateRangeSampleComponent implements OnInit {
         return `${this.dayFormatter.format(date)}, ${date.getDate()} ${this.monthFormatter.format(date)}, ${date.getFullYear()}`;
     }
 
-    public toggleSingleInputDisplay(): void {
-        this.showSingleInput = !this.showSingleInput;
+    public onRangeSelected(): void {
+        this.dateRange.close();
     }
 }

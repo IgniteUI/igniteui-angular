@@ -7,7 +7,7 @@
             <button igxButton type="button" (click)="showToday($event)">{{todayButtonText}}</button>
         </div>
         <div *ngIf="mode === 'dialog'" class="doneButton">
-            <button igxButton (click)="hideCalendar($event)">{{doneButtonText}}</button>
+            <button igxButton (click)="hideCalendar()">{{doneButtonText}}</button>
         </div>
     </div>
 </div>
