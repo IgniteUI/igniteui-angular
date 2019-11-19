@@ -47,13 +47,13 @@
         [@animateChange]="animationAction"
         (@animateChange.done)="animationDone($event)">
         <igx-days-view *ngFor="let view of dayViews; index as i;" [changeDaysView]="true" #days
+                [selection]="selection"
                 [locale]="locale"
                 [value]="value"
                 [viewDate]="getViewDate(i)"
                 [weekStart]="weekStart"
                 [formatOptions]="formatOptions"
                 [formatViews]="formatViews"
-                [selection]="selection"
                 [disabledDates]="disabledDates"
                 [specialDates]="specialDates"
                 [hideOutsideDays]="hideOutsideDays"
