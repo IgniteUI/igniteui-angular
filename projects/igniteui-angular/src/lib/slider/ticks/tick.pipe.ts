@@ -11,7 +11,7 @@ export class IgxTickLabelsPipe implements PipeTransform {
             return;
         }
 
-        let result = [];
+        const result = [];
         labels.forEach(item => {
             result.push(item);
             for (let i = 0; i < secondaryTicks; i++) {

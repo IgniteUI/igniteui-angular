@@ -1,12 +1,12 @@
 import { Component, ViewChild} from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { async, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
+import { async, TestBed, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxSliderComponent, IgxSliderModule } from './slider.component';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { SliderType, IRangeSliderValue } from './slider.common';
+import { FormsModule } from '@angular/forms';
 
 declare var Simulator: any;
 const SLIDER_CLASS = '.igx-slider';
@@ -1124,7 +1124,7 @@ describe('IgxSlider', () => {
 
         it('should draw tick marks', () => {
             const fixture = TestBed.createComponent(SliderInitializeTestComponent);
-            const ticks = fixture.nativeElement.querySelector('.igx-slider__ticks');
+            const ticks = fixture.nativeElement.querySelector('.igx-slider__track-steps');
 
             // Slider steps <= 1. No marks should be drawn;
             expect(ticks.style.background).toBeFalsy();
@@ -1140,7 +1140,7 @@ describe('IgxSlider', () => {
             const fixture = TestBed.createComponent(SliderInitializeTestComponent);
             fixture.detectChanges();
 
-            const ticks = fixture.nativeElement.querySelector('.igx-slider__ticks');
+            const ticks = fixture.nativeElement.querySelector('.igx-slider__track-steps');
             const slider = fixture.componentInstance.slider;
 
             expect(ticks.style.background).toBeFalsy();

@@ -13,7 +13,7 @@ import {
     AfterContentChecked,
     NgZone
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { EditorProvider } from '../core/edit-provider';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IgxSliderThumbComponent } from './thumb/thumb-slider.component';
@@ -292,11 +292,13 @@ export class IgxSliderComponent implements
     public set labels(labels: Array<number|string|boolean|null|undefined>) {
         this._labels = labels;
 
-        this._pMax = 1;
+        this._pMax = this.valueToFraction(this.upperBound, 0, 1);
+        this._pMin = this.valueToFraction(this.lowerBound, 0, 1);
+
+        this.stepDistance = this.calculateStepDistance();
+        this.positionHandlesAndUpdateTrack();
 
         if (this._hasViewInit) {
-            this.stepDistance = this.calculateStepDistance();
-            this.positionHandlesAndUpdateTrack();
             this.setTickInterval(labels);
         }
     }
@@ -561,8 +563,8 @@ export class IgxSliderComponent implements
 
         this._lowerBound = this.valueInRange(value, this.minValue, this.maxValue);
 
-        // Refresh time travel zone.
-        this._pMin = this.valueToFraction(this._lowerBound) || 0;
+        // Refresh min travel zone.
+        this._pMin = this.valueToFraction(this._lowerBound, 0, 1);
         this.positionHandlesAndUpdateTrack();
     }
 
@@ -599,7 +601,7 @@ export class IgxSliderComponent implements
 
         this._upperBound = this.valueInRange(value, this.minValue, this.maxValue);
         // Refresh time travel zone.
-        this._pMax = this.valueToFraction(this._upperBound) || 1;
+        this._pMax = this.valueToFraction(this._upperBound, 0, 1);
         this.positionHandlesAndUpdateTrack();
     }
 
@@ -970,7 +972,7 @@ export class IgxSliderComponent implements
             this.positionHandle(thumbFrom, labelFrom, this.lowerValue);
             this.subscribeTo(thumbFrom, this.thumbChanged.bind(this));
             this.changeThumbFocusableState(this.disabled);
-        })
+        });
     }
 
     /**
@@ -1102,7 +1104,6 @@ export class IgxSliderComponent implements
         }
 
         this.toggleThumb();
-
         return value;
     }
 
@@ -1393,7 +1394,7 @@ export class IgxSliderComponent implements
         IgxSliderThumbComponent,
         IgxThumbLabelComponent,
         IgxTicksComponent],
-    imports: [CommonModule]
+    imports: [CommonModule, FormsModule]
 })
 export class IgxSliderModule {
 }
