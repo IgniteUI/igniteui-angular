@@ -5,7 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import {
     IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
-    IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule, IgxIconService,
     IgxDragDropModule, IgxDividerModule, IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule,
     IgxIconService, DisplayDensityToken, DisplayDensity
 } from 'igniteui-angular';
