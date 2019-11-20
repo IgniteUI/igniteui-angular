@@ -440,9 +440,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         this.differ = this.iterableDiffers.find([]).create(null);
     }
 
-    /**
-    * @hidden
-    */
+    /** @hidden */
     public ngAfterContentInit() {
         this.slides.changes
             .pipe(takeUntil(this.destroy$))
@@ -451,9 +449,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         this.initSlides(this.slides);
     }
 
-    /**
-    *@hidden
-    */
+    /** @hidden */
     public ngOnDestroy() {
         this.destroy$.next(true);
         this.destroy$.complete();
@@ -646,9 +642,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         });
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden */
     public get getIndicatorTemplate(): TemplateRef<any> {
         if (this.indicatorTemplate) {
             return this.indicatorTemplate;
@@ -656,9 +650,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         return this.defaultIndicator;
     }
 
-    /**
-    * @hidden
-    */
+    /** @hidden */
     public get getNextButtonTemplate(): TemplateRef<any> {
         if (this.nextButtonTemplate) {
             return this.nextButtonTemplate;
@@ -666,9 +658,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         return this.defaultNextButton;
     }
 
-    /**
-    * @hidden
-    */
+    /** @hidden */
     public get getPrevButtonTemplate(): TemplateRef<any> {
         if (this.prevButtonTemplate) {
             return this.prevButtonTemplate;
@@ -676,42 +666,27 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         return this.defaultPrevButton;
     }
 
-    /**
-     * @hidden
-     * @memberof IgxCarouselComponent
-     */
+    /** @hidden */
     public setAriaLabel(slide) {
         return `Item ${slide.index + 1} of ${this.total}`;
     }
 
-    /**
-    * @hidden
-    * @memberof IgxCarouselComponent
-    */
+    /** @hidden */
     public get indicatorsOrientationClass() {
         return `igx-carousel-indicators--${this.indicatorsOrientation}`;
     }
 
-    /**
-    * @hidden
-    * @memberof IgxCarouselComponent
-    */
+    /** @hidden */
     public get showIndicators(): boolean {
         return this.total <= this.maximumIndicatorsCount && this.total > 0;
     }
 
-    /**
-    * @hidden
-    * @memberof IgxCarouselComponent
-    */
+    /** @hidden */
     public get showIndicatorsLabel(): boolean {
         return this.total > this.maximumIndicatorsCount;
     }
 
-    /**
-    * @hidden
-    * @memberof IgxCarouselComponent
-    */
+    /** @hidden */
     public get getCarouselLabel() {
         return `${this.current + 1} ${this.resourceStrings.igx_carousel_of} ${this.total}`;
     }
@@ -924,24 +899,17 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         }
     }
 
-    /**
-     *@hidden
-     */
+    /** @hidden */
     public get nextButtonDisabled() {
         return !this.loop && this.current === (this.total - 1);
     }
 
-    /**
-     *@hidden
-     */
+    /** @hidden */
     public get prevButtonDisabled() {
         return !this.loop && this.current === 0;
     }
 
-
-    /**
-     *@hidden
-     */
+    /** @hidden */
     @HostListener('keydown.arrowright')
     public onKeydownArrowRight() {
         if (this.keyboardSupport) {
@@ -950,9 +918,8 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
             requestAnimationFrame(() => this.nativeElement.focus());
         }
     }
-    /**
-     *@hidden
-     */
+
+    /** @hidden */
     @HostListener('keydown.arrowleft')
     public onKeydownArrowLeft() {
         if (this.keyboardSupport) {
@@ -978,9 +945,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         }
     }
 
-    /**
-    *@hidden
-    */
+    /** @hidden */
     @HostListener('keydown.home')
     public onKeydownHome() {
         if (this.keyboardSupport && this.slides.length > 0) {
@@ -990,9 +955,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         }
     }
 
-    /**
-         *@hidden
-         */
+    /** @hidden */
     @HostListener('keydown.end')
     public onKeydownEnd() {
         if (this.keyboardSupport && this.slides.length > 0) {
@@ -1002,9 +965,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         }
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden */
     @HostListener('mouseenter')
     public onMouseEnter() {
         if (this.pause && this.isPlaying) {
@@ -1013,9 +974,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         this.stop();
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden */
     @HostListener('mouseleave')
     public onMouseLeave() {
         if (this.stoppedByInteraction) {
@@ -1023,17 +982,13 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         }
     }
 
-    /**
-    * @hidden
-    */
+    /** @hidden */
     @HostListener('panleft', ['$event'])
     public onPanLeft(event) {
         this.pan(event);
     }
 
-    /**
-    * @hidden
-    */
+    /** @hidden */
     @HostListener('panright', ['$event'])
     public onPanRight(event) {
         this.pan(event);
@@ -1087,8 +1042,8 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     }
 
     /**
-     * @hidden
-     */
+    * @hidden
+    */
     @HostListener('panend', ['$event'])
     public onPanEnd(event) {
         if (!this.gesturesSupport) {

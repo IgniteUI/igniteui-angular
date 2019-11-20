@@ -14,6 +14,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 | `interval` | number | The amount of time in milliseconds between slides transition. |
 | `navigation` | boolean | Controls should the carousel render the left/right navigation buttons. Defaults to `true`. |
 | `keyboardSupport` | boolean | Controls should the keyboard navigation should be supported. Defaults to `true`. |
+| `gesturesSupport` | boolean | Controls should the gestures should be supported. Defaults to `true`. |
 | `maximumIndicatorsCount` | number | The number of visible indicators. Defaults to `5`. |
 | `indicatorsOrientation` | CarouselIndicatorsOrientation | Controls whether the indicators should be previewed on top or on bottom of carousel. Defaults to `bottom`. |
 | `animationType` | CarouselAnimationType | Controls what animation should be played when slides are changing. Defaults to `slide`. |
