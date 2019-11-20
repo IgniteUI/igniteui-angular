@@ -1,6 +1,6 @@
 
 import { Directive } from '@angular/core';
-import { ColumnChooserItemBase } from '../column-chooser-item-base';
+import { ColumnChooserItemBaseDirective } from '../column-chooser-item-base';
 import { IBaseEventArgs } from '../../core/utils';
 
 export interface IColumnVisibilityChangedEventArgs extends IBaseEventArgs {
@@ -12,7 +12,7 @@ export interface IColumnVisibilityChangedEventArgs extends IBaseEventArgs {
 @Directive({
     selector: '[igxColumnHidingItem]'
 })
-export class IgxColumnHidingItemDirective extends ColumnChooserItemBase {
+export class IgxColumnHidingItemDirective extends ColumnChooserItemBaseDirective {
 
     constructor() {
         super('hidden');

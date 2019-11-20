@@ -21,7 +21,8 @@
             "igniteui-angular": [
                 "projects/igniteui-angular/src/public_api.ts"
             ]
-        }
+        },
+        "rootDir": "."
     },
     "exclude": [
         "dist"
@@ -41,5 +42,8 @@
         "preserveConstEnums": true,
         "stripInternal": true,
         "readme": "none"
+    },
+    "angularCompilerOptions": {
+        "generateDeepReexports": true
     }
 }

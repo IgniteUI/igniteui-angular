@@ -68,7 +68,6 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         return this.column.colStart;
     }
 
-
     /**
      * Gets the column of the header group.
      * @memberof IgxGridHeaderGroupComponent
@@ -86,13 +85,13 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     /**
      * @hidden
      */
-    @ViewChild(IgxGridHeaderComponent, { static: false })
+    @ViewChild(IgxGridHeaderComponent)
     public headerCell: IgxGridHeaderComponent;
 
     /**
      * @hidden
      */
-    @ViewChild(IgxGridFilteringCellComponent, { static: false })
+    @ViewChild(IgxGridFilteringCellComponent)
     public filterCell: IgxGridFilteringCellComponent;
 
     /**
