@@ -88,11 +88,13 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     }
 
     /**
-     * Position the items outer container Below or Above the input
+     * Position the items outer container so selected item text is positioned over input text and if header
+     * And/OR footer - both header/footer are visible
      * @param selectFit selectFit to use for computation.
      */
     protected fitInViewport(contentElement: HTMLElement, selectFit: SelectFit) {
-
+        const footer = selectFit.scrollContainer.getBoundingClientRect().bottom - selectFit.contentElementRect.bottom;
+        const lastItemFitSize = selectFit.targetRect.bottom + selectFit.styles.itemTextToInputTextDiff - footer;
         // out of viewPort on Top
         if (selectFit.fitVertical.back < 0) {
             const possibleScrollAmount = selectFit.scrollContainer.scrollHeight -
@@ -107,17 +109,22 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
             }
         // out of viewPort on Bottom
         } else if (selectFit.fitVertical.forward < 0) {
-            if (selectFit.scrollAmount + selectFit.fitVertical.forward > 0) {
+            if ( lastItemFitSize > selectFit.viewPortRect.bottom) {
+                this.positionAbove(selectFit);
+            } else if (selectFit.scrollAmount + selectFit.fitVertical.forward > 0) {
                 selectFit.scrollAmount += selectFit.fitVertical.forward;
                 selectFit.verticalOffset += selectFit.fitVertical.forward;
                 this.global_yOffset = selectFit.verticalOffset;
             } else {
-                selectFit.verticalOffset = -selectFit.contentElementRect.height + selectFit.targetRect.height;
-                this.global_yOffset = selectFit.verticalOffset;
+                this.positionAbove(selectFit);
             }
         }
     }
 
+    private positionAbove(selectFit: SelectFit) {
+        selectFit.verticalOffset = -selectFit.contentElementRect.height + selectFit.targetRect.height;
+        this.global_yOffset = selectFit.verticalOffset;
+    }
 
     /**
      * Sets element's style which effectively positions the provided element
