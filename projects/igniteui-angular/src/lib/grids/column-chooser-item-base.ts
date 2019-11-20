@@ -1,4 +1,4 @@
-import { EventEmitter, Input, Output } from '@angular/core';
+import { EventEmitter, Input, Output, Directive } from '@angular/core';
 import { IBaseEventArgs } from '../core/utils';
 
 export interface IValueChangedEventArgs extends IBaseEventArgs {
@@ -9,7 +9,8 @@ export interface IValueChangedEventArgs extends IBaseEventArgs {
 /**
  *@hidden
  */
-export abstract class ItemPropertyValueChanged {
+@Directive()
+export abstract class ItemPropertyValueChangedDirective {
     private _object: any;
     private _propName: string;
 
@@ -49,7 +50,8 @@ export abstract class ItemPropertyValueChanged {
 }
 
 /** @hidden */
-export class ColumnChooserItemBase extends ItemPropertyValueChanged {
+@Directive()
+export class ColumnChooserItemBaseDirective extends ItemPropertyValueChangedDirective {
     @Input()
     get column() {
         return this.object;

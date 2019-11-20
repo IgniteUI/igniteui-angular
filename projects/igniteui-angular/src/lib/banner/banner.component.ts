@@ -47,13 +47,13 @@ export class IgxBannerComponent implements IToggleView {
     @ViewChild('expansionPanel', { static: true })
     private _expansionPanel: IgxExpansionPanelComponent;
 
-    @ContentChild(IgxBannerActionsDirective, { static: false })
+    @ContentChild(IgxBannerActionsDirective)
     private _bannerActionTemplate: IgxBannerActionsDirective;
 
     /**
      * @hidden
      */
-    @ContentChild(IgxIconComponent, { static: false })
+    @ContentChild(IgxIconComponent)
     public bannerIcon: IgxIconComponent;
 
     /**
