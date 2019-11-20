@@ -149,6 +149,17 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     @HostBinding('class.igx-carousel')
     public cssClass = 'igx-carousel';
 
+     /**
+     * Gets the `touch-action` style of the `list item`.
+     * ```typescript
+     * let touchAction = this.listItem.touchAction;
+     * ```
+     */
+    @HostBinding('style.touch-action')
+    get touchAction() {
+        return this.gesturesSupport ? 'pan-y' : 'auto';
+    }
+
     /**
      * Sets whether the carousel should `loop` back to the first slide after reaching the last slide.
      * Default value is `true`.
@@ -503,6 +514,9 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     }
 
     private playEnterAnimation() {
+        if (this.getAnimation().enterAnimation) {
+            return;
+        }
         const animationBuilder = this.builder.build(this.getAnimation().enterAnimation);
 
         this.enterAnimationPlayer = animationBuilder.create(this.currentSlide.nativeElement);
@@ -522,6 +536,9 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
 
     private playLeaveAnimation() {
         if (this.getAnimation().leaveAnimation) {
+            return;
+        }
+
             const animationBuilder = this.builder.build(this.getAnimation().leaveAnimation);
             this.leaveAnimationPlayer = animationBuilder.create(this.previousSlide.nativeElement);
 
@@ -534,7 +551,6 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
                 this.newDuration = 0;
             });
             this.leaveAnimationPlayer.play();
-        }
     }
 
     private initSlides(change: QueryList<IgxSlideComponent>) {
@@ -916,7 +932,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      */
     @HostListener('panleft', ['$event'])
     public onPanLeft(event) {
-        if (!event.isFinal) {
+        if (this.gesturesSupport && !event.isFinal) {
             this.onPan(event);
         }
     }
@@ -926,13 +942,14 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      */
     @HostListener('panright', ['$event'])
     public onPanRight(event) {
-        if (!event.isFinal) {
+        if (this.gesturesSupport && !event.isFinal) {
             this.onPan(event);
         }
     }
 
 
     public onPan(event) {
+
         if (this.isPlaying) {
             this.stoppedByInteraction = true;
             this.stop();
@@ -985,11 +1002,11 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      */
     @HostListener('panend', ['$event'])
     public onPanEnd(event) {
+        if (!this.gesturesSupport) {
+            return;
+        }
         if (this.stoppedByInteraction) {
             this.play();
-        }
-        if (event.direction === 8 || event.direction === 16) {
-            return;
         }
         event.preventDefault();
         const slideWidth = this.currentSlide.nativeElement.offsetWidth;
