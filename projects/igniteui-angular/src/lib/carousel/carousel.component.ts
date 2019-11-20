@@ -40,8 +40,7 @@ export enum CarouselIndicatorsOrientation {
 export enum CarouselAnimationType {
     none = 'none',
     slide = 'slide',
-    fade = 'fade',
-    grow = 'grow'
+    fade = 'fade'
 }
 
 export interface CarouselAnimationSettings {
