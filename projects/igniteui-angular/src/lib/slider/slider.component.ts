@@ -57,12 +57,7 @@ let NEXT_ID = 0;
 @Component({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxSliderComponent, multi: true }],
     selector: 'igx-slider',
-    templateUrl: 'slider.component.html',
-    styles: [`
-        :host {
-            display: block;
-        }
-    `]
+    templateUrl: 'slider.component.html'
 })
 export class IgxSliderComponent implements
     ControlValueAccessor,
