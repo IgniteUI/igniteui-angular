@@ -11,7 +11,8 @@ import {
     QueryList,
     ChangeDetectorRef,
     AfterContentChecked,
-    NgZone
+    NgZone,
+    OnChanges
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { EditorProvider } from '../core/edit-provider';
@@ -64,6 +65,7 @@ export class IgxSliderComponent implements
     OnInit,
     AfterViewInit,
     AfterContentChecked,
+    OnChanges,
     OnDestroy {
 
     // Limit handle travel zone
@@ -937,6 +939,14 @@ export class IgxSliderComponent implements
         // Set track travel zone
         this._pMin = this.valueToFraction(this.lowerBound) || 0;
         this._pMax = this.valueToFraction(this.upperBound) || 1;
+    }
+
+    public ngOnChanges(changes) {
+        if (changes.minValue && changes.maxValue &&
+                changes.minValue.currentValue < changes.maxValue.currentValue) {
+            this._maxValue = changes.maxValue.currentValue;
+            this._minValue = changes.minValue.currentValue;
+        }
     }
 
     /**

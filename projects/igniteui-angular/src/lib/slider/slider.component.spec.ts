@@ -76,22 +76,22 @@ describe('IgxSlider', () => {
             expect(slider.maxValue).toBe(expectedMaxValue);
         });
 
-        it('should reduce minValue when greater than maxValue', () => {
+        it('should prevent setting minValue when greater than maxValue', () => {
             slider.maxValue = 6;
             slider.minValue = 10;
 
-            const expectedMinValue = slider.maxValue - 1;
+            const expectedMinValue = 0;
             fixture.detectChanges();
 
             expect(slider.minValue).toBe(expectedMinValue);
             expect(slider.minValue).toBeLessThan(slider.maxValue);
         });
 
-        it('should increase minValue when greater than maxValue', () => {
+        it('should prevent setting maxValue when lower than minValue', () => {
             slider.minValue = 3;
             slider.maxValue = -5;
 
-            const expectedMaxValue = slider.minValue + 1;
+            const expectedMaxValue = 100;
             fixture.detectChanges();
 
             expect(slider.maxValue).toBe(expectedMaxValue);
@@ -1365,7 +1365,7 @@ class SliderInitializeTestComponent {
 
 @Component({
     template: `
-        <igx-slider [minValue]='minValue' [maxValue]='maxValue'></igx-slider>
+        <igx-slider [maxValue]='maxValue' [minValue]='minValue'></igx-slider>
     `
 })
 export class SliderMinMaxComponent {
