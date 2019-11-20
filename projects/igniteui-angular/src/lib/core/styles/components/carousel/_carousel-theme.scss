@@ -184,6 +184,7 @@
         transform: translateY(-50%);
         z-index: 3;
         outline: none;
+        user-select: none;
     }
 
     %igx-carousel-arrow--next {
