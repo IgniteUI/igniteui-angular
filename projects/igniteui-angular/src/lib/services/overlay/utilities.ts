@@ -22,6 +22,10 @@ export class Point {
     constructor(public x: number, public y: number) { }
 }
 
+export class OutOfViewPort {
+    constructor(public back: number, public forward: number) { }
+}
+
 export interface PositionSettings {
     /** Attaching target for the component to show */
     target?: Point | HTMLElement;
@@ -111,8 +115,8 @@ export interface ConnectedFit {
     contentElementRect?: ClientRect;
     targetRect?: ClientRect;
     viewPortRect?: ClientRect;
-    fitHorizontal?: boolean;
-    fitVertical?: boolean;
+    fitHorizontal?: OutOfViewPort;
+    fitVertical?: OutOfViewPort;
     left?: number;
     right?: number;
     top?: number;

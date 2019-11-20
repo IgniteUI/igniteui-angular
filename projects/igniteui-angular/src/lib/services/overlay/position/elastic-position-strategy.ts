@@ -10,7 +10,7 @@ export class ElasticPositionStrategy extends BaseFitPositionStrategy {
     protected fitInViewport(element: HTMLElement, connectedFit: ConnectedFit) {
         element.classList.add('igx-overlay__content--elastic');
         const transformString: string[] = [];
-        if (!connectedFit.fitHorizontal) {
+        if (connectedFit.fitHorizontal.back < 0 || connectedFit.fitHorizontal.forward < 0) {
             const maxReduction = Math.max(0, connectedFit.contentElementRect.width - this.settings.minSize.width);
             const leftExtend = Math.max(0, connectedFit.viewPortRect.left - connectedFit.left);
             const rightExtend = Math.max(0, connectedFit.right - connectedFit.viewPortRect.right);
@@ -31,7 +31,7 @@ export class ElasticPositionStrategy extends BaseFitPositionStrategy {
             }
         }
 
-        if (!connectedFit.fitVertical) {
+        if (connectedFit.fitVertical.back < 0 || connectedFit.fitVertical.forward < 0) {
             const maxReduction = Math.max(0, connectedFit.contentElementRect.height - this.settings.minSize.height);
             const topExtend = Math.max(0, connectedFit.viewPortRect.top - connectedFit.top);
             const bottomExtend = Math.max(0, connectedFit.bottom - connectedFit.viewPortRect.bottom);

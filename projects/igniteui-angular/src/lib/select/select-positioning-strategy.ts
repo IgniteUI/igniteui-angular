@@ -32,11 +32,6 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
 
     /** @inheritdoc */
     position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
-        // 1st: Check if the interaction item is visible. If NO it should be scrolled in view.
-        //      Adjust the new container position with the scrolled amount.
-        // 2nd: Try position the container after the item is scrolled.
-        // 3rd: If unsuccessful, position the overlay container on TOP/ABOVE or BOTTOM/BELLOW of the input. BOTTOM/BELLOW is preferred.
-        // 4th: On page scroll, persist the ddl container position relative to its target element.
 
         const rects = super.calculateElementRectangles(contentElement);
         // selectFit obj, to be used for both cases of initialCall and !initialCall(page scroll/overlay repositionAll)
@@ -45,7 +40,8 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
             horizontalOffset: this.global_xOffset,
             targetRect: rects.targetRect,
             contentElementRect: rects.elementRect,
-            styles: this.global_styles
+            styles: this.global_styles,
+            scrollContainer: this.select.scrollContainer
         };
 
         if (initialCall) {
@@ -57,58 +53,38 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
             // Calculate input and selected item elements style related variables
             selectFit.styles = this.calculateStyles(selectFit);
 
+            selectFit.scrollAmount = this.calculateScrollPosition(selectFit.itemRect, selectFit.scrollContainer);
             // Calculate how much to offset the overlay container.
             this.calculateYoffset(selectFit);
             this.calculateXoffset(selectFit);
 
-            // Scroll if the selected item is not fully visible and adjust the contentElement Y position with the scrolled amount
-            this.manageScrollToItem(selectFit);
-
             super.updateViewPortFit(selectFit);
-            if (!selectFit.fitVertical) {
+            // container does not fit in viewPort and is out on Top or Bottom
+            if (selectFit.fitVertical.back < 0 || selectFit.fitVertical.forward < 0 ) {
                 this.fitInViewport(contentElement, selectFit);
             }
+            this.select.scrollContainer.scrollTop = selectFit.scrollAmount;
         }
-        this.setStyles(contentElement, selectFit, initialCall);
+        this.setStyles(contentElement, selectFit);
     }
 
     /**
-     * Computing the necessary scrolling amount and vertical offset
-     * @param selectFit selectFit to use for computation
+     * Calculate selected item scroll position.
      */
-    private manageScrollToItem(selectFit: SelectFit) {
-        // Scroll and compensate the item's container position, when the selected item is not visible.
-        // selected item is completely invisible
-            const itemTop = Math.round(selectFit.itemRect.top * 100) / 100;
-            const itemBottom = Math.round(selectFit.itemRect.bottom * 100) / 100;
-            const scrollContainerRect = this.select.scrollContainer.getBoundingClientRect();
-            const scrollContainerBottom = Math.round(scrollContainerRect.bottom * 100) / 100;
-            const scrollContainerTop = Math.round(scrollContainerRect.top * 100) / 100;
-            const itemIsNotCompletelyVisible =
-                itemTop >= scrollContainerBottom || itemBottom <= scrollContainerTop ||
-                // selected item is partially invisible at ddl bottom
-                itemTop <= scrollContainerBottom && itemBottom >= scrollContainerBottom;
-        if (itemIsNotCompletelyVisible) {
-            const scrollAmount = selectFit.itemElement ? Math.floor(itemBottom - scrollContainerBottom) : 0;
-            this.scrollToItem(scrollAmount);
-            selectFit.verticalOffset += scrollAmount;
-            this.global_yOffset = selectFit.verticalOffset;
+    public calculateScrollPosition(itemElementRect: ClientRect, scrollContainer: HTMLElement): number {
+        if (!itemElementRect) {
+            return 0;
         }
-    }
 
-    /**
-     * Scroll the container to a particular item, based on passed scrollAmount
-     * @param scrollAmount amount of pixels to scroll.
-     */
-    private scrollToItem(scrollAmount: number): number {
-        if (isIE()) {
-            setTimeout(() => {
-                this.select.scrollContainer.scrollTop = (scrollAmount);
-            }, 1);
-        } else {
-            this.select.scrollContainer.scrollTop = (scrollAmount);
-        }
-        return scrollAmount;
+        const scrollContainerRect = scrollContainer.getBoundingClientRect();
+        const scrollDelta = scrollContainerRect.top - itemElementRect.top;
+        let scrollPosition = scrollContainer.scrollTop - scrollDelta;
+
+        const dropDownHeight = scrollContainer.clientHeight;
+        scrollPosition -= dropDownHeight / 2;
+        scrollPosition += itemElementRect.height / 2;
+
+        return Math.floor(Math.min(Math.max(0, scrollPosition), scrollContainer.scrollHeight - scrollContainerRect.height));
     }
 
     /**
@@ -116,23 +92,30 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
      * @param selectFit selectFit to use for computation.
      */
     protected fitInViewport(contentElement: HTMLElement, selectFit: SelectFit) {
-        // Position Select component's container below target/input as preferred positioning over above target/input
-        const canFitBelowInput = selectFit.targetRect.top - selectFit.styles.itemTextToInputTextDiff + selectFit.contentElementRect.height <
-            selectFit.viewPortRect.bottom;
-        const canFitAboveInput = selectFit.targetRect.bottom + selectFit.styles.itemTextToInputTextDiff -
-            selectFit.contentElementRect.height > selectFit.viewPortRect.top;
-        // Position Select component's container below target/input as preferred positioning over above target/input
-        if (canFitBelowInput || !canFitAboveInput) {
-                // Calculate container starting point;
-                selectFit.top = selectFit.targetRect.top - selectFit.styles.itemTextToInputTextDiff;
-                this.global_yOffset = 0;
 
-        } else {
-            // Position Select component's container above target/input
-            selectFit.top = selectFit.targetRect.bottom + selectFit.styles.itemTextToInputTextDiff -
-                selectFit.contentElementRect.height;
+        // out of viewPort on Top
+        if (selectFit.fitVertical.back < 0) {
+            const possibleScrollAmount = selectFit.scrollContainer.scrollHeight -
+                selectFit.scrollContainer.getBoundingClientRect().height - selectFit.scrollAmount;
+            if (possibleScrollAmount + selectFit.fitVertical.back > 0) {
+                selectFit.scrollAmount -= selectFit.fitVertical.back;
+                selectFit.verticalOffset -= selectFit.fitVertical.back;
+                this.global_yOffset = selectFit.verticalOffset;
+            } else {
+                selectFit.verticalOffset = 0 ;
                 this.global_yOffset = 0;
             }
+        // out of viewPort on Bottom
+        } else if (selectFit.fitVertical.forward < 0) {
+            if (selectFit.scrollAmount + selectFit.fitVertical.forward > 0) {
+                selectFit.scrollAmount += selectFit.fitVertical.forward;
+                selectFit.verticalOffset += selectFit.fitVertical.forward;
+                this.global_yOffset = selectFit.verticalOffset;
+            } else {
+                selectFit.verticalOffset = -selectFit.contentElementRect.height + selectFit.targetRect.height;
+                this.global_yOffset = selectFit.verticalOffset;
+            }
+        }
     }
 
 
@@ -142,16 +125,8 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
      * @param selectFit selectFit to use for computation.
      * @param initialCall should be true if this is the initial call to the position method calling setStyles
      */
-    protected setStyles(contentElement: HTMLElement, selectFit: SelectFit, initialCall?: boolean) {
-        // The Select component's container is about to be displayed. Set its position.
-        if (initialCall) {
-            contentElement.style.top = `${selectFit.top}px`;
-            contentElement.style.left = `${selectFit.left}px`;
-        // Page's View Window container is scrolled. Reposition Select's container.
-        } else {
-            super.setStyle(contentElement, selectFit.targetRect, selectFit.contentElementRect, selectFit);
-        }
-
+    protected setStyles(contentElement: HTMLElement, selectFit: SelectFit) {
+        super.setStyle(contentElement, selectFit.targetRect, selectFit.contentElementRect, selectFit);
         contentElement.style.width = `${selectFit.styles.contentElementNewWidth}px`; // manage container based on paddings?
         this.global_styles.contentElementNewWidth = selectFit.styles.contentElementNewWidth;
     }
@@ -212,9 +187,8 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
      * Calculate how much to offset the overlay container for Y-axis.
      */
     private calculateYoffset(selectFit: SelectFit) {
-        const contentElementTopLeftPointY = selectFit.contentElementRect.top;
-        selectFit.verticalOffset =
-            -(selectFit.itemRect.top - contentElementTopLeftPointY + selectFit.styles.itemTextToInputTextDiff);
+        selectFit.verticalOffset = -(selectFit.itemRect.top - selectFit.contentElementRect.top +
+            selectFit.styles.itemTextToInputTextDiff - selectFit.scrollAmount);
         this.global_yOffset = selectFit.verticalOffset;
     }
 
@@ -230,8 +204,10 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
 /** @hidden */
 export interface SelectFit extends ConnectedFit {
     itemElement?: HTMLElement;
+    scrollContainer: HTMLElement;
     itemRect?: ClientRect;
     styles?: SelectStyles;
+    scrollAmount?: number;
 }
 
 /** @hidden */

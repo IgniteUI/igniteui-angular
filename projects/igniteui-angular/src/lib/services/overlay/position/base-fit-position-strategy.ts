@@ -1,5 +1,5 @@
 import { ConnectedPositioningStrategy } from './connected-positioning-strategy';
-import { HorizontalAlignment, VerticalAlignment, PositionSettings, Size, Util, ConnectedFit } from '../utilities';
+import { HorizontalAlignment, VerticalAlignment, PositionSettings, Size, Util, ConnectedFit, Point, OutOfViewPort } from '../utilities';
 
 export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrategy {
     protected _initialSize: Size;
@@ -16,7 +16,8 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
             this.settings = Object.assign({}, this._initialSettings);
             connectedFit.viewPortRect = Util.getViewportRect(document);
             this.updateViewPortFit(connectedFit);
-            if (!connectedFit.fitHorizontal || !connectedFit.fitVertical) {
+            if (connectedFit.fitHorizontal.back < 0 || connectedFit.fitHorizontal.forward < 0 ||
+                connectedFit.fitVertical.back < 0 || connectedFit.fitVertical.forward < 0) {
                 this.fitInViewport(contentElement, connectedFit);
             }
         }
@@ -37,7 +38,7 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
             connectedFit.horizontalOffset);
         connectedFit.right = connectedFit.left + connectedFit.contentElementRect.width;
         connectedFit.fitHorizontal =
-            connectedFit.viewPortRect.left < connectedFit.left && connectedFit.right < connectedFit.viewPortRect.right;
+            new OutOfViewPort(connectedFit.left - connectedFit.viewPortRect.left, connectedFit.viewPortRect.right - connectedFit.right);
 
         connectedFit.top = this.calculateTop(
             connectedFit.targetRect,
@@ -47,7 +48,7 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
             connectedFit.verticalOffset);
         connectedFit.bottom = connectedFit.top + connectedFit.contentElementRect.height;
         connectedFit.fitVertical =
-            connectedFit.viewPortRect.top < connectedFit.top && connectedFit.bottom < connectedFit.viewPortRect.bottom;
+            new OutOfViewPort(connectedFit.top - connectedFit.viewPortRect.top, connectedFit.viewPortRect.bottom - connectedFit.bottom);
     }
 
     /**

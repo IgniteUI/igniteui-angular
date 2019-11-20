@@ -10,7 +10,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
     /** @inheritdoc */
     protected fitInViewport(element: HTMLElement, connectedFit: ConnectedFit) {
         const transformString: string[] = [];
-        if (!connectedFit.fitHorizontal) {
+        if (connectedFit.fitHorizontal.back < 0 || connectedFit.fitHorizontal.forward < 0) {
             if (this.canFlipHorizontal(connectedFit)) {
                 this.flipHorizontal();
             } else {
@@ -19,7 +19,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
             }
         }
 
-        if (!connectedFit.fitVertical) {
+        if (connectedFit.fitVertical.back < 0 || connectedFit.fitVertical.forward < 0) {
             if (this.canFlipVertical(connectedFit)) {
                 this.flipVertical();
             } else {
