@@ -42,8 +42,7 @@ export enum CarouselIndicatorsOrientation {
 export enum CarouselAnimationType {
     none = 'none',
     slide = 'slide',
-    fade = 'fade',
-    grow = 'grow'
+    fade = 'fade'
 }
 
 export interface CarouselAnimationSettings {
@@ -149,12 +148,12 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     @HostBinding('class.igx-carousel')
     public cssClass = 'igx-carousel';
 
-     /**
-     * Gets the `touch-action` style of the `list item`.
-     * ```typescript
-     * let touchAction = this.listItem.touchAction;
-     * ```
-     */
+    /**
+    * Gets the `touch-action` style of the `list item`.
+    * ```typescript
+    * let touchAction = this.listItem.touchAction;
+    * ```
+    */
     @HostBinding('style.touch-action')
     get touchAction() {
         return this.gesturesSupport ? 'pan-y' : 'auto';
@@ -225,14 +224,14 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     */
     @Input() public keyboardSupport = true;
 
-      /**
-    * Controls whether the carousel should support gestures.
-    * Default value is `true`.
-    * ```html
-    * <igx-carousel [gesturesSupport] = "false"></igx-carousel>
-    * ```
-    * @memberOf IgxCarouselComponent
-    */
+    /**
+  * Controls whether the carousel should support gestures.
+  * Default value is `true`.
+  * ```html
+  * <igx-carousel [gesturesSupport] = "false"></igx-carousel>
+  * ```
+  * @memberOf IgxCarouselComponent
+  */
     @Input() public gesturesSupport = true;
 
     /**
@@ -433,12 +432,10 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
                 if (this.animationType !== CarouselAnimationType.none) {
                     if (animationWasStarted) {
                         requestAnimationFrame(() => {
-                            this.playLeaveAnimation();
-                            this.playEnterAnimation();
+                            this.playAnimations();
                         });
                     } else {
-                        this.playLeaveAnimation();
-                        this.playEnterAnimation();
+                        this.playAnimations();
                     }
                 }
             } else {
@@ -447,6 +444,11 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
             this.onSlideChanged.emit({ carousel: this, slide });
             this.restartInterval();
         }
+    }
+
+    private playAnimations() {
+        this.playLeaveAnimation();
+        this.playEnterAnimation();
     }
 
     private finishAnimations(): boolean {
@@ -514,7 +516,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     }
 
     private playEnterAnimation() {
-        if (this.getAnimation().enterAnimation) {
+        if (!this.getAnimation().enterAnimation) {
             return;
         }
         const animationBuilder = this.builder.build(this.getAnimation().enterAnimation);
@@ -535,22 +537,22 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     }
 
     private playLeaveAnimation() {
-        if (this.getAnimation().leaveAnimation) {
+        if (!this.getAnimation().leaveAnimation) {
             return;
         }
 
-            const animationBuilder = this.builder.build(this.getAnimation().leaveAnimation);
-            this.leaveAnimationPlayer = animationBuilder.create(this.previousSlide.nativeElement);
+        const animationBuilder = this.builder.build(this.getAnimation().leaveAnimation);
+        this.leaveAnimationPlayer = animationBuilder.create(this.previousSlide.nativeElement);
 
-            this.leaveAnimationPlayer.onDone(() => {
-                if (this.leaveAnimationPlayer) {
-                    this.leaveAnimationPlayer.reset();
-                    this.leaveAnimationPlayer = null;
-                }
-                this.animationPosition = 0;
-                this.newDuration = 0;
-            });
-            this.leaveAnimationPlayer.play();
+        this.leaveAnimationPlayer.onDone(() => {
+            if (this.leaveAnimationPlayer) {
+                this.leaveAnimationPlayer.reset();
+                this.leaveAnimationPlayer = null;
+            }
+            this.animationPosition = 0;
+            this.newDuration = 0;
+        });
+        this.leaveAnimationPlayer.play();
     }
 
     private initSlides(change: QueryList<IgxSlideComponent>) {
@@ -866,19 +868,19 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     }
 
     /** @hidden */
-    @HostListener('tap')
-    public onTap() {
-        if (this.isPlaying) {
-            if (this.pause) {
-                this.stoppedByInteraction = true;
-            }
-            this.stop();
-        } else {
-            if (this.stoppedByInteraction) {
+    @HostListener('tap', ['$event'])
+    public onTap(event) {
+        // play pause only when tap on slide
+        if (event.target && event.target.classList.contains('igx-slide')) {
+            if (this.isPlaying) {
+                if (this.pause) {
+                    this.stoppedByInteraction = true;
+                }
+                this.stop();
+            } else if (this.stoppedByInteraction) {
                 this.play();
             }
         }
-        console.log('tap');
     }
 
     /**
@@ -927,60 +929,60 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     }
 
 
- /**
-     * @hidden
-     */
+    /**
+        * @hidden
+        */
     @HostListener('panleft', ['$event'])
     public onPanLeft(event) {
-        if (this.gesturesSupport && !event.isFinal) {
-            this.onPan(event);
-        }
+        this.onPan(event);
     }
 
-     /**
-     * @hidden
-     */
+    /**
+    * @hidden
+    */
     @HostListener('panright', ['$event'])
     public onPanRight(event) {
-        if (this.gesturesSupport && !event.isFinal) {
-            this.onPan(event);
-        }
+        this.onPan(event);
     }
 
+    private resetSlideStyles(slide: IgxSlideComponent) {
+        slide.nativeElement.style.transform = '';
+        slide.nativeElement.style.opacity = '';
+    }
 
-    public onPan(event) {
-
-        if (this.isPlaying) {
-            this.stoppedByInteraction = true;
-            this.stop();
-        }
-        if (this.isPlaying) {
-            this.stoppedByInteraction = true;
-            this.stop();
-        }
-        event.preventDefault();
-        this.finishAnimations();
+    private onPan(event) {
         const slideWidth = this.currentSlide.nativeElement.offsetWidth;
-        const panOffset = (slideWidth / 100);
+        const panOffset = (slideWidth / 1000);
         const deltaX = event.deltaX;
-        if (Math.abs(deltaX) + panOffset >= slideWidth
-            || (!this.loop && ((this.current === 0 && deltaX > 0) || (this.current === this.total - 1 && deltaX < 0)))) {
+        let index, offset;
+
+        if (!this.gesturesSupport || event.isFinal || Math.abs(deltaX) + panOffset >= slideWidth) {
             return;
         }
-        let index;
-        let offset;
+
+        if (!this.loop && ((this.current === 0 && deltaX > 0) || (this.current === this.total - 1 && deltaX < 0))) {
+            this.incomingSlide = null;
+            return;
+        }
+
+        event.preventDefault();
+        if (this.isPlaying) {
+            this.stoppedByInteraction = true;
+            this.stop();
+        }
+        this.finishAnimations();
+
         if (deltaX < 0) {
             index = (this.current + 1) % this.total;
             offset = slideWidth + event.deltaX;
-
         } else {
             index = this.current - 1 < 0 ? this.total - 1 : this.current - 1;
             offset = -slideWidth + event.deltaX;
         }
+
         if (this.incomingSlide) {
             if (index !== this.incomingSlide.index) {
-                this.incomingSlide.nativeElement.style.transform = '';
-                this.incomingSlide.nativeElement.style.opacity = '';
+                this.resetSlideStyles(this.incomingSlide);
                 this.incomingSlide.previous = false;
                 this.incomingSlide = this.get(index);
             }
@@ -1005,22 +1007,17 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         if (!this.gesturesSupport) {
             return;
         }
-        if (this.stoppedByInteraction) {
-            this.play();
-        }
         event.preventDefault();
+
         const slideWidth = this.currentSlide.nativeElement.offsetWidth;
-        const panOffset = (slideWidth / 100);
+        const panOffset = (slideWidth / 1000);
         const deltaX = Math.abs(event.deltaX) + panOffset < slideWidth ? Math.abs(event.deltaX) : slideWidth - panOffset;
-        const direction = event.deltaX < 0 ? Direction.NEXT : Direction.PREV;
         const velocity = Math.abs(event.velocity);
-        this.currentSlide.nativeElement.style.transform = '';
-        this.currentSlide.nativeElement.style.opacity = '';
+        this.resetSlideStyles(this.currentSlide);
         if (this.incomingSlide) {
-            this.incomingSlide.nativeElement.style.transform = '';
-            this.incomingSlide.nativeElement.style.opacity = '';
-            if (slideWidth / 2 < deltaX) {
-                this.incomingSlide.direction = direction;
+            this.resetSlideStyles(this.incomingSlide);
+            if (slideWidth / 2 < deltaX || velocity > 1) {
+                this.incomingSlide.direction = event.deltaX < 0 ? Direction.NEXT : Direction.PREV;;
                 this.incomingSlide.previous = false;
 
                 this.animationPosition = this.animationType === CarouselAnimationType.fade ?
@@ -1030,22 +1027,18 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
                     this.newDuration = this.animationDuration / velocity;
                 }
                 this.incomingSlide.active = true;
-            } else if (velocity > 1) {
-                this.incomingSlide.direction = direction;
-                this.incomingSlide.previous = false;
-                this.animationPosition = this.animationType === CarouselAnimationType.fade ?
-                    deltaX / slideWidth : (slideWidth - deltaX) / slideWidth;
-                this.newDuration = this.animationDuration / velocity;
-                this.incomingSlide.active = true;
             } else {
-                this.currentSlide.direction = direction === Direction.PREV ? Direction.NEXT : Direction.PREV;
+                this.currentSlide.direction = event.deltaX > 0 ? Direction.NEXT : Direction.PREV;
                 this.previousSlide = this.incomingSlide;
                 this.previousSlide.previous = true;
                 this.animationPosition = this.animationType === CarouselAnimationType.fade ?
                     Math.abs((slideWidth - deltaX) / slideWidth) : deltaX / slideWidth;
-                this.playEnterAnimation();
-                this.playLeaveAnimation();
+                this.playAnimations();
             }
+        }
+
+        if (this.stoppedByInteraction) {
+            this.play();
         }
     }
 }
