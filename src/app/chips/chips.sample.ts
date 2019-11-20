@@ -1,6 +1,8 @@
-import { Component, ViewChild, ViewChildren, ChangeDetectorRef, ElementRef } from '@angular/core';
-import { IgxChipsAreaComponent, IgxChipComponent } from 'igniteui-angular';
-import { IChipSelectEventArgs, IChipsAreaReorderEventArgs, IBaseChipEventArgs } from 'projects/igniteui-angular/src/lib/chips';
+import { Component, ViewChild, ChangeDetectorRef, ElementRef } from '@angular/core';
+import {
+    IgxChipsAreaComponent, IgxChipComponent, IChipSelectEventArgs,
+    IChipsAreaReorderEventArgs, IBaseChipEventArgs
+} from 'igniteui-angular';
 
 @Component({
     selector: 'app-chips-sample',

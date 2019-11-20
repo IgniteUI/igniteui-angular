@@ -278,7 +278,7 @@ export class IgxNavigationDrawerComponent implements
     /**
      * @hidden
      */
-    @ContentChild(IgxNavDrawerMiniTemplateDirective, { read: IgxNavDrawerMiniTemplateDirective, static: false })
+    @ContentChild(IgxNavDrawerMiniTemplateDirective, { read: IgxNavDrawerMiniTemplateDirective })
     public set miniTemplate(v: IgxNavDrawerMiniTemplateDirective) {
         if (!this.isOpen) {
             this.setDrawerWidth(v ? this.miniWidth : '');
@@ -289,7 +289,7 @@ export class IgxNavigationDrawerComponent implements
     /**
      * @hidden
      */
-    @ContentChild(IgxNavDrawerTemplateDirective, { read: IgxNavDrawerTemplateDirective, static: false })
+    @ContentChild(IgxNavDrawerTemplateDirective, { read: IgxNavDrawerTemplateDirective })
     protected contentTemplate: IgxNavDrawerTemplateDirective;
 
     /**

@@ -1,10 +1,12 @@
 import { IToggleView } from './IToggleView';
+import { Injectable } from '@angular/core';
 
 /**
  * Common service to be injected between components where those implementing common
  * ToggleView interface can register and toggle directives can call their methods.
  * TODO: Track currently active? Events?
  */
+@Injectable()
 export class IgxNavigationService {
     private navs: { [id: string]: IToggleView; };
 

@@ -8,10 +8,12 @@ All notable changes for each version of this project will be documented in this 
 - Added support for the Ivy renderer.
 - **Breaking Changes** The following classes have been renamed. Using `ng update` will apply automatically migrate your project to use the new names.
     - `IgxDropDownBase` -> `IgxDropDownBaseDirective`
-    - `IgxDropDownItemBase` -> `IgxDropDownBaseDirective`
+    - `IgxDropDownItemBase` -> `IgxDropDownItemBaseDirective`
     - `IgxGridBaseComponent` -> `IgxGridBaseDirective`
     - `IgxRowComponent` -> `IgxRowDirective`
     - `IgxHierarchicalGridBaseComponent` -> `IgxHierarchicalGridBaseDirective`
+    - `IgxMonthPickerBase` -> `IgxMonthPickerBaseDirective`
+    - `IgxBaseExporter` -> `IgxBaseExporterDirective`
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - Pinning columns is no longer automatically prevented when the pinning area would exceed the size of the grid.
@@ -29,6 +31,12 @@ All notable changes for each version of this project will be documented in this 
     - `sortingExpressionsChange` event emitter is added, which is fired whenever a change to the sorting expressions has occurred (prior to performing the actual sorting).
     - `filteringExpressionsTreeChange` event emitter is added, which is fired whenever a change to the filtering expressions has occurred (prior to performing the actual filtering).
     - `advancedFilteringExpressionsTreeChange` event emitter is added, which is fired whenever a change to the advanced filtering expressions has occurred (prior to performing the actual filtering).
+    - `collapsible` and `expanded` properties are added to the IgxColumnGroupComponent; `collapsible` property identifies that certain column group is collapsible; `expanded` identifies whether the group is expanded or collapsed initially;
+    - `collapsibleChange` and `expandedChange` events are added to the IgxColumnGroupComponent which are emited whenever `collapsible` and `expanded` properties are changed accordingly;
+    - `visibleWhenCollapsed` property has been added to the IgxColumnComponent; Allows you to set whether the column stay visible when its parrent is collapsed.
+    - `visibleWhenCollapsedChange` events is added to the IgxColumnComponent which are emited whenever `visibleWhenCollapsed`  property is changed;
+    - `collapsibleIndicatorTemplate` property is introduced to IgxColumnGroupComponent, which allows you to set a custom template for the expand collapse indicator;
+    - `igxCollapsibleIndicator` directive has been introduced, which allows you to set a custom template for the expand collapse indicator;
     - `IgxGridExcelStyleFilteringComponent` and `IgxAdvancedFilteringDialogComponent` can now be hosted outside of the grid in order to provide the same experience as the built-in filtering UI.
     - `IgxOverlayService`:
         - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
@@ -54,6 +62,8 @@ All notable changes for each version of this project will be documented in this 
         - `indicatorsOrientation` input is added, which can be used to set the position of indicators it can be top or bottom
         - `animationType` input is added, which can be used to set animation when changing slides
         - `indicatorTemplate` directive is added, which can be used to provide a custom indicator for carousel. If this property is not provided, a default indicator template will be used instead.
+        - `nextButtonTemplate` directive is added, which is used to provide a custom next button template. If not provided, a default next button is used.
+        - `prevButtonTemplate` directive is added, which is used to provide a custom previous button template. If not provided, a default previous button is used.
 
 ## 8.2.6
 

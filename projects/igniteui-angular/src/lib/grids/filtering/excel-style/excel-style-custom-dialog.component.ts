@@ -91,10 +91,10 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     @ViewChild('toggle', { read: IgxToggleDirective, static: true })
     public toggle: IgxToggleDirective;
 
-    @ViewChild('defaultExpressionTemplate', { read: TemplateRef, static: false })
+    @ViewChild('defaultExpressionTemplate', { read: TemplateRef })
     protected defaultExpressionTemplate: TemplateRef<any>;
 
-    @ViewChild('dateExpressionTemplate', { read: TemplateRef, static: false })
+    @ViewChild('dateExpressionTemplate', { read: TemplateRef })
     protected dateExpressionTemplate: TemplateRef<any>;
 
     @ViewChild('expressionsContainer', { static: true })
