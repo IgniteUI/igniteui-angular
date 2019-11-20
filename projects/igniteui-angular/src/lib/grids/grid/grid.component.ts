@@ -594,7 +594,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 	 * @memberof IgxGridComponent
      */
     public set expansionStates(value) {
-        this._expansionStates = this.cloneMap(value);
+        this._expansionStates = new Map<any, boolean>(value);
         this.expansionStatesChange.emit(this._expansionStates);
         if (this.gridAPI.grid) {
             this.cdr.detectChanges();
@@ -708,17 +708,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         } else if (key === 'arrowdown' && ctrl && target === container) {
             this.navigation.navigateBottom(colIndex);
         }
-    }
-
-    private cloneMap(mapIn: Map<any, boolean>): Map<any, boolean> {
-        const mapCloned: Map<any, boolean> = new Map<any, boolean>();
-
-        mapIn.forEach((value: boolean, key: any, mapObj: Map<any, boolean>) => {
-
-            mapCloned.set(key, value);
-        });
-
-        return mapCloned;
     }
 
 
