@@ -916,7 +916,9 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      */
     @HostListener('panleft', ['$event'])
     public onPanLeft(event) {
-        this.onPan(event);
+        if (!event.isFinal) {
+            this.onPan(event);
+        }
     }
 
      /**
@@ -924,7 +926,9 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      */
     @HostListener('panright', ['$event'])
     public onPanRight(event) {
-        this.onPan(event);
+        if (!event.isFinal) {
+            this.onPan(event);
+        }
     }
 
 
@@ -933,9 +937,6 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
             this.stoppedByInteraction = true;
             this.stop();
         }
-        // if (event.direction === 8 || event.direction === 16) {
-        //     return;
-        // }
         if (this.isPlaying) {
             this.stoppedByInteraction = true;
             this.stop();
