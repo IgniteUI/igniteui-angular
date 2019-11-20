@@ -87,9 +87,7 @@
     }
 
     @if not($button-disabled-arrow-color) and $button-disabled-background {
-        @if type_of($button-disabled-background) == 'color' {
-            $button-disabled-arrow-color: rgba(text-contrast($button-disabled-background), .3);
-        }
+        $button-disabled-arrow-color: rgba(text-contrast($button-disabled-background), .3);
     }
 
     @return extend($theme, (
