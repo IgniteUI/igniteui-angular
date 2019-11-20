@@ -103,6 +103,7 @@
         [column]="col"
         [formatter]="col.formatter"
         [row]="this"
+        [lastPinned]="col.columnLayoutChild ? null : col.isLastPinned"
         [style.min-height.px]="grid.rowHeight || 32"
         [rowData]="rowData"
         [style.min-width]="col.columnLayoutChild ? null : col.width"
