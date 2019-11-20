@@ -58,9 +58,9 @@ export class IgxThumbLabelComponent {
 
     public set active(val: boolean) {
         if (this.continuous || this.deactiveState) {
-            return;
+            this._active = false;
+        } else {
+            this._active = val;
         }
-
-        this._active = val;
     }
 }
