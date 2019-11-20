@@ -1,6 +1,6 @@
 import { Component, ViewChild} from '@angular/core';
 import { async, TestBed, ComponentFixture } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+import { By, HammerModule } from '@angular/platform-browser';
 import { IgxSliderComponent, IgxSliderModule } from './slider.component';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,7 +12,6 @@ declare var Simulator: any;
 const SLIDER_CLASS = '.igx-slider';
 const THUMB_TO_CLASS = '.igx-slider__thumb-to';
 const THUMB_FROM_CLASS = '.igx-slider__thumb-from';
-
 describe('IgxSlider', () => {
     configureTestSuite();
     beforeEach(async(() => {
@@ -26,7 +25,7 @@ describe('IgxSlider', () => {
                 RangeSliderWithCustomTemplateComponent
             ],
             imports: [
-                IgxSliderModule, NoopAnimationsModule, FormsModule
+                IgxSliderModule, NoopAnimationsModule, FormsModule, HammerModule
             ]
         }).compileComponents();
     }));

@@ -31,6 +31,9 @@ export class IgxTicksComponent {
     public maxValue: number;
 
     @Input()
+    public minValue: number;
+
+    @Input()
     public labelsViewEnabled: boolean;
 
     @Input()
@@ -130,9 +133,9 @@ export class IgxTicksComponent {
             return this.labels[idx];
         }
 
-        const labelStep = this.maxValue / (this.ticksLength - 1);
+        const labelStep = (Math.max(this.minValue, this.maxValue) - Math.min(this.minValue, this.maxValue)) / (this.ticksLength - 1);
         const labelVal = labelStep * idx;
 
-        return labelVal.toFixed(2);
+        return (this.minValue + labelVal).toFixed(2);
     }
 }

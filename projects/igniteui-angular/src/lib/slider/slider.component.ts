@@ -30,7 +30,6 @@ import { SliderHandle,
     IgxTickLabelTemplateDirective
 } from './slider.common';
 import { IgxThumbLabelComponent } from './label/thumb-label.component';
-import ResizeObserver from 'resize-observer-polyfill';
 import { IgxTicksComponent } from './ticks/ticks.component';
 import { IgxTickLabelsPipe } from './ticks/tick.pipe';
 
@@ -437,52 +436,6 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Returns the maximum value for the {@link IgxSliderComponent}.
-     * ```typescript
-     *@ViewChild("slider")
-     *public slider: IgxSliderComponent;
-     *ngAfterViewInit(){
-     *    let sliderMax = this.slider.maxValue;
-     *}
-     * ```
-     */
-    public get maxValue(): number {
-        return this.labelsViewEnabled ?
-            this.labels.length - 1 :
-            this._maxValue;
-    }
-
-    /**
-     * Sets the maximal value for the `IgxSliderComponent`.
-     * The default maximum value is 100.
-     * ```html
-     * <igx-slider [type]="sliderType" [minValue]="56" [maxValue]="256">
-     * ```
-     */
-    @Input()
-    public set maxValue(value: number) {
-        if (value <= this._minValue) {
-            this._maxValue = this._minValue + 1;
-        } else {
-            this._maxValue = value;
-        }
-
-        if (value < this.lowerBound) {
-            this.updateLowerBoundAndMinTravelZone();
-            this.upperBound = value;
-        }
-
-        // refresh max travel zone limits.
-        this._pMax = 1;
-        // recalculate step distance.
-        this.stepDistance = this.calculateStepDistance();
-        this.positionHandlesAndUpdateTrack();
-        if (this._hasViewInit) {
-            this.setTickInterval(null);
-        }
-    }
-
-    /**
      *Returns the minimal value of the `IgxSliderComponent`.
      *```typescript
      *@ViewChild("slider2")
@@ -510,7 +463,7 @@ export class IgxSliderComponent implements
     @Input()
     public set minValue(value: number) {
         if (value >= this.maxValue) {
-            this._minValue = this.maxValue - 1;
+            return;
         } else {
             this._minValue = value;
         }
@@ -523,6 +476,52 @@ export class IgxSliderComponent implements
         // Refresh min travel zone limit.
         this._pMin = 0;
         // Recalculate step distance.
+        this.stepDistance = this.calculateStepDistance();
+        this.positionHandlesAndUpdateTrack();
+        if (this._hasViewInit) {
+            this.setTickInterval(null);
+        }
+    }
+
+        /**
+     * Returns the maximum value for the {@link IgxSliderComponent}.
+     * ```typescript
+     *@ViewChild("slider")
+     *public slider: IgxSliderComponent;
+     *ngAfterViewInit(){
+     *    let sliderMax = this.slider.maxValue;
+     *}
+     * ```
+     */
+    public get maxValue(): number {
+        return this.labelsViewEnabled ?
+            this.labels.length - 1 :
+            this._maxValue;
+    }
+
+    /**
+     * Sets the maximal value for the `IgxSliderComponent`.
+     * The default maximum value is 100.
+     * ```html
+     * <igx-slider [type]="sliderType" [minValue]="56" [maxValue]="256">
+     * ```
+     */
+    @Input()
+    public set maxValue(value: number) {
+        if (value <= this._minValue) {
+            return;
+        } else {
+            this._maxValue = value;
+        }
+
+        if (value < this.lowerBound) {
+            this.updateLowerBoundAndMinTravelZone();
+            this.upperBound = value;
+        }
+
+        // refresh max travel zone limits.
+        this._pMax = 1;
+        // recalculate step distance.
         this.stepDistance = this.calculateStepDistance();
         this.positionHandlesAndUpdateTrack();
         if (this._hasViewInit) {
@@ -682,7 +681,7 @@ export class IgxSliderComponent implements
     }
 
     public set secondaryTicks(val: number) {
-        if (val <= 0 ) {
+        if (val < 0 ) {
             return;
         }
 
