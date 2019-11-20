@@ -148,6 +148,7 @@
         display: flex;
         position: relative;
         height: rem($slider-height);
+        flex-grow: 1;
         align-items: center;
         transition: all .2s $ease-out-quad;
 
