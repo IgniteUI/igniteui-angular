@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { IgxToastComponent, IgxGridComponent, FilteringExpressionsTree, FilteringLogic,
+import { IgxGridComponent, FilteringExpressionsTree, FilteringLogic,
   IPagingState, IGroupingExpression, ISortingExpression } from 'igniteui-angular';
 import { employeesData } from './localData';
 import { take } from 'rxjs/operators';
@@ -203,7 +203,7 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
     this.selectionMode = this.selectionModes[args.index].label;
 }
 
-  public clearStorage(toast: IgxToastComponent) {
+  public clearStorage() {
     window.localStorage.removeItem(this.stateKey);
   }
 

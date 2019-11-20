@@ -36,7 +36,7 @@
                 <igx-switch [(ngModel)]="options.columns" (change)="onChange($event, 'columns')">Columns</igx-switch>
             </div>
             <div class="control-item">
-                <igx-switch [(ngModel)]="serialize" (change)="onSerializeChange($event)">Serialize</igx-switch>
+                <igx-switch [(ngModel)]="serialize">Serialize</igx-switch>
             </div>
         </div>
         <div class="switches" style="min-width: inherit">
@@ -71,7 +71,7 @@
                 <button igxButton="raised" (click)="resetGridState()">Reset</button>
             </div>
             <div class="control-item">
-                <span class="clear-button" (click)="clearStorage(toast)" #target="tooltipTarget" [igxTooltipTarget]="clear"><igx-icon>delete</igx-icon></span>
+                <span class="clear-button" (click)="clearStorage()" #target="tooltipTarget" [igxTooltipTarget]="clear"><igx-icon>delete</igx-icon></span>
             </div>
             <div class="control-item">
                 <span class="clear-button" (click)="reloadPage()" #target="tooltipTarget" [igxTooltipTarget]="reload"><igx-icon>refresh</igx-icon></span>
