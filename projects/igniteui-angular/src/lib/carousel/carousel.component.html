@@ -5,6 +5,22 @@
     </div>
 </ng-template>
 
+<ng-template #defaultNextButton let-disabled>
+    <a class="igx-nav-arrow"
+        [class.igx-nav-arrow--disabled]="disabled"
+    >
+        <igx-icon fontSet="material">arrow_forward</igx-icon>
+    </a>
+</ng-template>
+
+<ng-template #defaultPrevButton let-disabled>
+    <a class="igx-nav-arrow"
+        [class.igx-nav-arrow--disabled]="disabled"
+    >
+        <igx-icon fontSet="material">arrow_back</igx-icon>
+    </a>
+</ng-template>
+
 
 <div *ngIf="showIndicators" [ngClass]="indicatorsOrientationClass">
     <div *ngFor="let slide of slides"
@@ -24,12 +40,13 @@
     <ng-content></ng-content>
 </div>
 
-<ng-container *ngIf="navigation">
-    <a role="button" tabindex="0" class="igx-carousel__arrow--prev" (click)="prev()" [hidden]="!slides.length">
-        <igx-icon fontSet="material">arrow_back</igx-icon>
-    </a>
-    <a role="button" tabindex="0" class="igx-carousel__arrow--next" (click)="next()" [hidden]="!slides.length">
-        <igx-icon fontSet="material">arrow_forward</igx-icon>
-    </a>
-</ng-container>
+<div *ngIf="navigation && slides.length" role="button" tabindex="0" class="igx-carousel__arrow--prev" (click)="prev()">
+    <ng-container *ngTemplateOutlet="getPrevButtonTemplate; context: {$implicit: prevButtonDisabled};"></ng-container>
+</div>
+
+<div *ngIf="navigation && slides.length" role="button" tabindex="0" class="igx-carousel__arrow--next" (click)="next()">
+    <ng-container *ngTemplateOutlet="getNextButtonTemplate; context: {$implicit: nextButtonDisabled};"></ng-container>
+</div>
+
+
 
