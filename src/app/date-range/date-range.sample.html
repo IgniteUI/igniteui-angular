@@ -25,8 +25,7 @@
             </igx-input-group>
 
             <div class="date-range-wrapper">
-                <igx-date-range [weekStart]="1" [todayButtonText]="'Show Today'" [monthsViewNumber]="1"
-                    [hideOutsideDays]="true" [mode]="'dialog'">
+                <igx-date-range [weekStart]="1" [todayButtonText]="'Show Today'" [hideOutsideDays]="true" [mode]="'dropdown'">
                     <igx-input-group>
                         <input #startDate igxDateRangeStart igxInput formControlName="startDate" type="text">
                         <label for="startDate" igxLabel>Check-in Date</label>

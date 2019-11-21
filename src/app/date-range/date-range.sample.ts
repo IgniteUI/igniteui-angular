@@ -51,7 +51,7 @@ export class DateRangeSampleComponent implements OnInit {
         this.dateRange.selectRange(today, inFiveDays);
     }
 
-    public formatter = (date: Date) => {
+    public formatter(date: Date) {
         return `${this.dayFormatter.format(date)}, ${date.getDate()} ${this.monthFormatter.format(date)}, ${date.getFullYear()}`;
     }
 

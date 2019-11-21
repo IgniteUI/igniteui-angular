@@ -1,13 +1,13 @@
-<div #toggle igxToggle (onOpened)="onCalendarOpened()">
+<div #toggle igxToggle [style.width]="'600px'" (onOpened)="onCalendarOpened()">
     <igx-calendar #calendar (keydown)="onKeyDown($event)" selection="range" [weekStart]="weekStart"
         [hideOutsideDays]="hideOutsideDays" [monthsViewNumber]="monthsViewNumber"
         (onSelection)="handleSelection($event)"></igx-calendar>
     <div class="buttonsWrapper">
         <div class="todayButton">
-            <button igxButton type="button" (click)="showToday($event)">{{todayButtonText}}</button>
+            <button igxButton type="button" (click)="showToday($event)">{{ todayButtonText }}</button>
         </div>
         <div *ngIf="mode === 'dialog'" class="doneButton">
-            <button igxButton (click)="hideCalendar()">{{doneButtonText}}</button>
+            <button igxButton type="button" (click)="hideCalendar()">{{ doneButtonText }}</button>
         </div>
     </div>
 </div>
@@ -15,12 +15,10 @@
 <ng-container *ngTemplateOutlet="defTemplate"></ng-container>
 
 <ng-template #defTemplate>
-    <div (click)="showCalendar($event)">
-        <div class="content-wrap">
-            <ng-content select="igx-input-group"></ng-content>
-            <ng-content select="[igxDateRangeStart]"></ng-content>
-            <ng-content select="[igxDateRangeEnd]"></ng-content>
-            <ng-content select="[igxDateRange]"></ng-content>
-        </div>
+    <div (click)="showCalendar($event)" class="content-wrap">
+        <ng-content select="igx-input-group"></ng-content>
+        <ng-content select="[igxDateRangeStart]"></ng-content>
+        <ng-content select="[igxDateRangeEnd]"></ng-content>
+        <ng-content select="[igxDateRange]"></ng-content>
     </div>
 </ng-template>

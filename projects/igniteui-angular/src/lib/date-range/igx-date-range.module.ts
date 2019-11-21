@@ -29,6 +29,7 @@ import { IgxButtonModule } from '../directives/button/button.directive';
         IgxDateRangeBaseDirective,
         IgxDateRangeStartDirective,
         IgxDateRangeEndDirective,
-        IgxDateRangeDirective]
+        IgxDateRangeDirective
+    ]
 })
 export class IgxDateRangeModule { }

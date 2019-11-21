@@ -1,18 +1,22 @@
-import { Component, Input, ContentChild, ViewChild, AfterViewInit, AfterContentInit, OnDestroy, EventEmitter, Output } from '@angular/core';
+import {
+    Component, Input, ContentChild, ViewChild, AfterViewInit, OnDestroy, EventEmitter, Output
+} from '@angular/core';
 import { InteractionMode } from '../core/enums';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxCalendarComponent, WEEKDAYS } from '../calendar/index';
-import { OverlaySettings, ConnectedPositioningStrategy, GlobalPositionStrategy } from '../services/index';
+import { OverlaySettings, GlobalPositionStrategy, AutoPositionStrategy } from '../services/index';
 import { Subject, fromEvent } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { KEYS, isIE } from '../core/utils';
 import { IgxDateRangeStartDirective, IgxDateRangeEndDirective, IgxDateRangeDirective } from './igx-date-range.directives';
+import { PositionSettings } from '../services/overlay/utilities';
+import { fadeIn, fadeOut } from '../animations/fade';
 
 @Component({
     selector: 'igx-date-range',
     templateUrl: './igx-date-range.component.html'
 })
-export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, OnDestroy {
+export class IgxDateRangeComponent implements AfterViewInit, OnDestroy {
     // TODO: docs
     @Input()
     public mode: InteractionMode;
@@ -37,6 +41,9 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
 
     @Input()
     public doneButtonText: string;
+
+    @Input()
+    public overlaySettings: OverlaySettings;
 
     @Output()
     public rangeSelected: EventEmitter<IgxDateRangeComponent>;
@@ -68,18 +75,20 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
     @ViewChild(IgxToggleDirective, { read: IgxToggleDirective, static: false })
     protected toggle: IgxToggleDirective;
 
-    private dropDownOverlaySettings: OverlaySettings;
-    private dialogOverlaySettings: OverlaySettings;
-    private destroy: Subject<boolean>;
+    private _destroy: Subject<boolean>;
+    private _positionSettings: PositionSettings;
+    private _dialogOverlaySettings: OverlaySettings;
+    private _positionStrategy: AutoPositionStrategy;
+    private _dropDownOverlaySettings: OverlaySettings;
 
     constructor() {
         this.locale = 'en';
-        this.monthsViewNumber = 1;
+        this.monthsViewNumber = 2;
         this.doneButtonText = 'Done';
         this.todayButtonText = 'Today';
         this.weekStart = WEEKDAYS.SUNDAY;
         this.mode = InteractionMode.Dialog;
-        this.destroy = new Subject<boolean>();
+        this._destroy = new Subject<boolean>();
         this.onOpened = new EventEmitter<IgxDateRangeComponent>();
         this.onClosed = new EventEmitter<IgxDateRangeComponent>();
         this.rangeSelected = new EventEmitter<IgxDateRangeComponent>();
@@ -113,25 +122,6 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
     /**
      * @hidden
      */
-    public ngAfterContentInit(): void {
-        this.validateNgContent();
-        this.dropDownOverlaySettings = {
-            closeOnOutsideClick: true,
-            modal: false,
-            positionStrategy: new ConnectedPositioningStrategy({
-                target: this.getPositionTarget()
-            })
-        };
-        this.dialogOverlaySettings = {
-            modal: true,
-            closeOnOutsideClick: true,
-            positionStrategy: new GlobalPositionStrategy()
-        };
-    }
-
-    /**
-     * @hidden
-     */
     public ngAfterViewInit(): void {
         switch (this.mode) {
             case InteractionMode.DropDown:
@@ -142,14 +132,17 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
                 this.applyFocusOnClose();
                 break;
         }
+        this.validateNgContent();
+        this.configPositionStrategy();
+        this.initOverlaySettings();
     }
 
     /**
      * @hidden
      */
     public ngOnDestroy(): void {
-        this.destroy.next(true);
-        this.destroy.complete();
+        this._destroy.next(true);
+        this._destroy.complete();
     }
 
     /**
@@ -241,7 +234,7 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
             event.stopPropagation();
             event.preventDefault();
         }
-        this.activateToggleOpen(this.dialogOverlaySettings);
+        this.activateToggleOpen(this._dialogOverlaySettings);
     }
 
     /**
@@ -252,7 +245,7 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
             event.stopPropagation();
             event.preventDefault();
         }
-        this.activateToggleOpen(this.dropDownOverlaySettings);
+        this.activateToggleOpen(this._dropDownOverlaySettings);
     }
 
     private handleSingleInputSelection(selectionData: Date[]): void {
@@ -319,16 +312,16 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
     private attachOnKeydown(): void {
         if (this.singleInput) {
             fromEvent(this.singleInput.nativeElement, 'keydown').pipe(
-                takeUntil(this.destroy)
+                takeUntil(this._destroy)
             ).subscribe((evt: KeyboardEvent) => this.onKeyDown(evt));
         }
         if (this.startInput && this.endInput) {
             fromEvent(this.startInput.nativeElement, 'keydown').pipe(
-                takeUntil(this.destroy)
+                takeUntil(this._destroy)
             ).subscribe((evt: KeyboardEvent) => this.onKeyDown(evt));
 
             fromEvent(this.endInput.nativeElement, 'keydown').pipe(
-                takeUntil(this.destroy)
+                takeUntil(this._destroy)
             ).subscribe((evt: KeyboardEvent) => this.onKeyDown(evt));
         }
     }
@@ -336,13 +329,35 @@ export class IgxDateRangeComponent implements AfterViewInit, AfterContentInit, O
     private applyFocusOnClose() {
         if (this.singleInput) {
             this.toggle.onClosed.pipe(
-                takeUntil(this.destroy)
+                takeUntil(this._destroy)
             ).subscribe(() => this.singleInput.setFocus());
         }
         if (this.startInput) {
             this.toggle.onClosed.pipe(
-                takeUntil(this.destroy)
+                takeUntil(this._destroy)
             ).subscribe(() => this.startInput.setFocus());
         }
+    }
+
+    private configPositionStrategy(): void {
+        this._positionSettings = {
+            openAnimation: fadeIn,
+            closeAnimation: fadeOut,
+            target: this.getPositionTarget()
+        };
+        this._positionStrategy = new AutoPositionStrategy(this._positionSettings);
+    }
+
+    private initOverlaySettings(): void {
+        this._dropDownOverlaySettings = this.overlaySettings ? this.overlaySettings : {
+            closeOnOutsideClick: true,
+            modal: false,
+            positionStrategy: this._positionStrategy
+        };
+        this._dialogOverlaySettings = this.overlaySettings ? this.overlaySettings : {
+            closeOnOutsideClick: true,
+            modal: false,
+            positionStrategy: new GlobalPositionStrategy()
+        };
     }
 }
