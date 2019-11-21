@@ -53,7 +53,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
             // Calculate input and selected item elements style related variables
             selectFit.styles = this.calculateStyles(selectFit);
 
-            selectFit.scrollAmount = this.calculateScrollPosition(selectFit);
+            selectFit.scrollAmount = this.calculateScrollAmount(selectFit);
             // Calculate how much to offset the overlay container.
             this.calculateYoffset(selectFit);
             this.calculateXoffset(selectFit);
@@ -71,7 +71,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     /**
      * Calculate selected item scroll position.
      */
-    public calculateScrollPosition(selectFit: SelectFit): number {
+    private calculateScrollAmount(selectFit: SelectFit): number {
         const itemElementRect = selectFit.itemRect;
         const scrollContainer = selectFit.scrollContainer;
         const scrollContainerRect = selectFit.scrollContainerRect;
@@ -91,14 +91,14 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
      * @param selectFit selectFit to use for computation.
      */
     protected fitInViewport(contentElement: HTMLElement, selectFit: SelectFit) {
-        const footer = selectFit.scrollContainer.getBoundingClientRect().bottom - selectFit.contentElementRect.bottom;
-        const header = selectFit.scrollContainer.getBoundingClientRect().top - selectFit.contentElementRect.top;
+        const footer = selectFit.scrollContainerRect.bottom - selectFit.contentElementRect.bottom;
+        const header = selectFit.scrollContainerRect.top - selectFit.contentElementRect.top;
         const lastItemFitSize = selectFit.targetRect.bottom + selectFit.styles.itemTextToInputTextDiff - footer;
         const firstItemFitSize = selectFit.targetRect.top - selectFit.styles.itemTextToInputTextDiff - header;
         // out of viewPort on Top
         if (selectFit.fitVertical.back < 0) {
             const possibleScrollAmount = selectFit.scrollContainer.scrollHeight -
-                selectFit.scrollContainer.getBoundingClientRect().height - selectFit.scrollAmount;
+                selectFit.scrollContainerRect.height - selectFit.scrollAmount;
             if (possibleScrollAmount + selectFit.fitVertical.back > 0 && firstItemFitSize > selectFit.viewPortRect.top) {
                 selectFit.scrollAmount -= selectFit.fitVertical.back;
                 selectFit.verticalOffset -= selectFit.fitVertical.back;
@@ -142,8 +142,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         const inputElementStyles = window.getComputedStyle(this.settings.target as Element);
         const itemElementStyles = window.getComputedStyle(selectFit.itemElement);
         const numericInputFontSize = parseFloat(inputElementStyles.fontSize);
-        const itemFontSize = itemElementStyles.fontSize;
-        const numericItemFontSize = parseFloat(itemFontSize);
+        const numericItemFontSize = parseFloat(itemElementStyles.fontSize);
         const inputTextToInputTop = (selectFit.targetRect.bottom - selectFit.targetRect.top - numericInputFontSize) / 2;
         const itemTextToItemTop = (selectFit.itemRect.height - numericItemFontSize) / 2;
          // Adjust for input top padding
@@ -153,10 +152,8 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
             ) / 2;
         styles.itemTextToInputTextDiff = Math.ceil(itemTextToItemTop - inputTextToInputTop + negateInputPaddings);
 
-        const itemLeftPadding = itemElementStyles.paddingLeft;
-        const itemTextIndent = itemElementStyles.textIndent;
-        const numericLeftPadding = parseFloat(itemLeftPadding);
-        const numericTextIndent = parseFloat(itemTextIndent);
+        const numericLeftPadding = parseFloat(itemElementStyles.paddingLeft);
+        const numericTextIndent = parseFloat(itemElementStyles.textIndent);
 
         styles.itemTextPadding = numericLeftPadding;
         styles.itemTextIndent = numericTextIndent;

@@ -48,7 +48,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
   /** @inheritdoc */
   position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
     const rects =  this.calculateElementRectangles(contentElement);
-    this.setStyle(contentElement, rects.targetRect, rects.elementRect);
+    this.setStyle(contentElement, rects.targetRect, rects.elementRect, {});
   }
 
   /**
@@ -67,10 +67,12 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
    * @param targetRect Bounding rectangle of strategy target
    * @param elementRect Bounding rectangle of the element
    */
-  protected setStyle(element: HTMLElement, targetRect: ClientRect, elementRect: ClientRect, connectedFit?: ConnectedFit) {
+  protected setStyle(element: HTMLElement, targetRect: ClientRect, elementRect: ClientRect, connectedFit: ConnectedFit) {
+      const horizontalOffset = connectedFit.horizontalOffset ? connectedFit.horizontalOffset : 0;
+      const verticalOffset = connectedFit.verticalOffset ? connectedFit.verticalOffset : 0;
     const startPoint: Point = {
-      x: targetRect.right + targetRect.width * this.settings.horizontalStartPoint + (connectedFit ? connectedFit.horizontalOffset : 0),
-      y: targetRect.bottom + targetRect.height * this.settings.verticalStartPoint + (connectedFit ? connectedFit.verticalOffset : 0)
+      x: targetRect.right + targetRect.width * this.settings.horizontalStartPoint + horizontalOffset,
+      y: targetRect.bottom + targetRect.height * this.settings.verticalStartPoint + verticalOffset
     };
     const wrapperRect: ClientRect = element.parentElement.getBoundingClientRect();
 

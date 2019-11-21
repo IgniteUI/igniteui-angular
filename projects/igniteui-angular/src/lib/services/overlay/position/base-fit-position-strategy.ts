@@ -35,7 +35,7 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
             connectedFit.contentElementRect,
             this.settings.horizontalStartPoint,
             this.settings.horizontalDirection,
-            connectedFit.horizontalOffset);
+            connectedFit.horizontalOffset ? connectedFit.horizontalOffset : 0);
         connectedFit.right = connectedFit.left + connectedFit.contentElementRect.width;
         connectedFit.fitHorizontal = {
                 back: Math.floor(connectedFit.left - connectedFit.viewPortRect.left),
@@ -47,7 +47,7 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
             connectedFit.contentElementRect,
             this.settings.verticalStartPoint,
             this.settings.verticalDirection,
-            connectedFit.verticalOffset);
+            connectedFit.verticalOffset ? connectedFit.verticalOffset : 0);
         connectedFit.bottom = connectedFit.top + connectedFit.contentElementRect.height;
         connectedFit.fitVertical = {
             back: Math.floor(connectedFit.top - connectedFit.viewPortRect.top),
