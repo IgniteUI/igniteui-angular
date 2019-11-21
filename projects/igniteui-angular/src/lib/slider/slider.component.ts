@@ -294,13 +294,6 @@ export class IgxSliderComponent implements
         this.stepDistance = this.calculateStepDistance();
         this.positionHandlesAndUpdateTrack();
 
-        // Disable/Enable ticks
-        if (labels.length > 1) {
-            this.showTicks = false;
-        } else {
-            this.showTicks = true;
-        }
-
         if (this._hasViewInit) {
             this.setTickInterval(labels);
         }
@@ -652,8 +645,8 @@ export class IgxSliderComponent implements
             this.upperValue = value as number - (value as number % this.step);
         } else {
             value = this.validateInitialValue(value as IRangeSliderValue);
-            this.upperValue = (value as IRangeSliderValue).upper - ((value as IRangeSliderValue).upper % this.step);
-            this.lowerValue = (value as IRangeSliderValue).lower - ((value as IRangeSliderValue).lower % this.step);
+            this.upperValue = (value as IRangeSliderValue).upper;
+            this.lowerValue = (value as IRangeSliderValue).lower;
         }
 
         this._onChangeCallback(this.value);
@@ -666,7 +659,7 @@ export class IgxSliderComponent implements
     @Input()
     public get primaryTicks() {
         if (this.labelsViewEnabled) {
-            return this._primaryTicks = this.labels.length - 1;
+            return this._primaryTicks = this.labels.length;
         }
         return this._primaryTicks;
     }
@@ -693,7 +686,7 @@ export class IgxSliderComponent implements
     }
 
     @Input()
-    public showTicks = true;
+    public showTicks = false;
 
     @Input()
     public primaryTickLabels = true;

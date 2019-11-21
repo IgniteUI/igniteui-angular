@@ -635,7 +635,7 @@ describe('IgxSlider', () => {
         });
 
         it('tick marks(steps) should be shown equally spread based on labels length', () => {
-            const ticks = fixture.nativeElement.querySelector('.igx-slider__ticks');
+            const ticks = fixture.nativeElement.querySelector('.igx-slider__track-steps');
             const sliderWidth = parseInt(fixture.nativeElement.querySelector('igx-slider').clientWidth, 10);
 
             expect(slider.type).toBe(SliderType.SLIDER);
@@ -919,7 +919,7 @@ describe('IgxSlider', () => {
         });
 
         it('tick marks(steps) should be shown equally spread based on labels length', () => {
-            const ticks = fixture.nativeElement.querySelector('.igx-slider__ticks');
+            const ticks = fixture.nativeElement.querySelector('.igx-slider__track-steps');
             const sliderWidth = parseInt(fixture.nativeElement.querySelector('igx-slider').clientWidth, 10);
 
             expect(slider.type).toBe(SliderType.RANGE);
@@ -1315,6 +1315,14 @@ describe('IgxSlider', () => {
         });
     });
 
+    // describe('igxSlider ticks', () => {
+    //     let fixture: ComponentFixture<>;
+    //     let slider: IgxSliderComponent;
+
+    //     beforeEach(() => {
+    //     })
+    // })
+
     describe('EditorProvider', () => {
         it('Should return correct edit element (single)', () => {
             const fixture = TestBed.createComponent(SliderInitializeTestComponent);
@@ -1354,6 +1362,20 @@ describe('IgxSlider', () => {
         });
     }
 });
+
+@Component({
+    selector: 'igx-slider-ticks',
+    template: `
+        <igx-slider [primaryTicks]="primaryTicks" [secondaryTicks]="secondaryTicks"></igx-slider>
+    `
+})
+export class SliderTicksComponent {
+    @ViewChild(IgxSliderComponent)
+    public slider: IgxSliderComponent;
+
+    public primaryTicks = 0;
+    public secondaryTicks = 0;
+}
 @Component({
     selector: 'igx-slider-test-component',
     template: `<igx-slider #slider>
