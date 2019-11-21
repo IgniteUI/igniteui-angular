@@ -665,7 +665,7 @@ export class IgxSliderComponent implements
     }
 
     public set primaryTicks(val: number) {
-        if (val <= 0) {
+        if (val <= 1) {
             return;
         }
 
@@ -678,7 +678,7 @@ export class IgxSliderComponent implements
     }
 
     public set secondaryTicks(val: number) {
-        if (val < 0 ) {
+        if (val <= 1 ) {
             return;
         }
 
@@ -903,15 +903,6 @@ export class IgxSliderComponent implements
      */
     public get labelsViewEnabled(): boolean {
         return !!(this.labels && this.labels.length > 1);
-    }
-
-    /**
-     * @hidden
-     */
-    public get ticksLength() {
-        return this.primaryTicks > 0 ?
-                (this.primaryTicks * this.secondaryTicks) + this.primaryTicks + 1 :
-                this.secondaryTicks > 0 ? this.secondaryTicks + 1 : 0;
     }
 
     /**

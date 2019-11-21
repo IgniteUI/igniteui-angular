@@ -109,8 +109,8 @@ export class IgxTicksComponent {
      */
     public get ticksLength() {
         return this.primaryTicks > 0 ?
-                (this.primaryTicks * this.secondaryTicks) + this.primaryTicks + 1 :
-                this.secondaryTicks > 0 ? this.secondaryTicks + 1 : 0;
+                ((this.primaryTicks - 1) * this.secondaryTicks) + this.primaryTicks :
+                this.secondaryTicks > 0 ? this.secondaryTicks : 0;
     }
 
     public hiddenTickLabels(idx: number) {
