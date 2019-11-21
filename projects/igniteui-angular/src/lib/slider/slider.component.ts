@@ -656,6 +656,12 @@ export class IgxSliderComponent implements
         }
     }
 
+    /**
+     * Returns the number of the presented primary ticks.
+     * ```typescript
+     * const primaryTicks = this.slider.primaryTicks;
+     * ```
+     */
     @Input()
     public get primaryTicks() {
         if (this.labelsViewEnabled) {
@@ -664,6 +670,13 @@ export class IgxSliderComponent implements
         return this._primaryTicks;
     }
 
+    /**
+     * Sets the number of primary ticks. If {@link @labels} is enabled, this property won't function.
+     * Insted enable ticks by {@link showTicks} property.
+     * ```typescript
+     * this.slider.primaryTicks = 5;
+     * ```
+     */
     public set primaryTicks(val: number) {
         if (val <= 1) {
             return;
@@ -672,11 +685,24 @@ export class IgxSliderComponent implements
         this._primaryTicks = val;
     }
 
+    /**
+     * Returns the number of the presented secondary ticks.
+     * ```typescript
+     * const secondaryTicks = this.slider.secondaryTicks;
+     * ```
+     */
     @Input()
     public get secondaryTicks() {
         return this._secondaryTicks;
     }
 
+    /**
+     * Sets the number of secondary ticks. The property functions even when {@link labels} is enabled,
+     * but all secondary ticks won't present any tick labels.
+     * ```typescript
+     * this.slider.secondaryTicks = 5;
+     * ```
+     */
     public set secondaryTicks(val: number) {
         if (val <= 1 ) {
             return;
@@ -685,22 +711,60 @@ export class IgxSliderComponent implements
         this._secondaryTicks = val;
     }
 
+    /**
+     * Show/hide slider ticks
+     * ```html
+     * <igx-slier [showTicks]="true" [primaryTicks]="5"></igx-slier>
+     * ```
+     */
     @Input()
     public showTicks = false;
 
+    /**
+     * show/hide primary tick labels
+     * ```html
+     * <igx-slider [primaryTicks]="5" [primaryTickLabels]="false"></igx-slider>
+     * ```
+     */
     @Input()
     public primaryTickLabels = true;
 
+    /**
+     * show/hide secondary tick labels
+     * ```html
+     * <igx-slider [secondaryTicks]="5" [secondaryTickLabels]="false"></igx-slider>
+     * ```
+     */
     @Input()
     public secondaryTickLabels = true;
 
+    /**
+     * Changes ticks orientation:
+     * bottom - The default orienation, below the slider track.
+     * top - Above the slider track
+     * mirror - combines top and bottom orientation.
+     * ```html
+     * <igx-slider [primaryTicks]="5" [ticksOrientation]="ticksOrientation"></igx-slider>
+     * ```
+     */
     @Input()
     public ticksOrientation: TicksOrientation = TicksOrientation.bottom;
 
+    /**
+     * Changes tick labels rotation:
+     * horizontal - The default rotation
+     * toptobottom - Rotates tick labels vertically to 90deg
+     * bottomtotop - Rotate tick labels vertically to -90deg
+     * ```html
+     * <igx-slider [primaryTicks]="5" [secondaryTicks]="3" [tickLabelsOrientation]="tickLabelsOrientaiton"></igx-slider>
+     * ```
+     */
     @Input()
     public tickLabelsOrientation = TickLabelsOrientation.horizontal;
 
-
+    /**
+     * @hidden
+     */
     public get deactivateThumbLabel() {
         return (this.primaryTickLabels || this.secondaryTickLabels) &&
             (this.ticksOrientation === TicksOrientation.top || this.ticksOrientation === TicksOrientation.mirror);
@@ -776,11 +840,17 @@ export class IgxSliderComponent implements
         this.update($event.srcEvent.clientX);
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('panstart')
     public onPanStart() {
         this.showSliderIndicators();
     }
 
+    /**
+     * @hidden
+     */
     @HostListener('panend')
     public onPanEnd() {
         this.hideSliderIndicators();
