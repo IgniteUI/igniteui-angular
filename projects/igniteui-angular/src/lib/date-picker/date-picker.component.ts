@@ -707,49 +707,49 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /*
      * @hidden
      */
-    @ViewChild(IgxInputGroupComponent, { static: false })
+    @ViewChild(IgxInputGroupComponent)
     protected inputGroup: IgxInputGroupComponent;
 
     /*
      * @hidden
      */
-    @ViewChild('editableInput', { read: ElementRef, static: false })
+    @ViewChild('editableInput', { read: ElementRef })
     protected editableInput: ElementRef;
 
     /*
     * @hidden
     */
-    @ViewChild('readonlyInput', { read: ElementRef, static: false })
+    @ViewChild('readonlyInput', { read: ElementRef })
     protected readonlyInput: ElementRef;
 
     /*
     * @hidden
     */
-    @ContentChild(IgxInputDirective, { static: false })
+    @ContentChild(IgxInputDirective)
     protected input: IgxInputDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxDatePickerTemplateDirective, { read: IgxDatePickerTemplateDirective, static: false })
+    @ContentChild(IgxDatePickerTemplateDirective, { read: IgxDatePickerTemplateDirective })
     protected datePickerTemplateDirective: IgxDatePickerTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxCalendarHeaderTemplateDirective, { read: IgxCalendarHeaderTemplateDirective, static: false })
+    @ContentChild(IgxCalendarHeaderTemplateDirective, { read: IgxCalendarHeaderTemplateDirective })
     public headerTemplate: IgxCalendarHeaderTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxCalendarSubheaderTemplateDirective, { read: IgxCalendarSubheaderTemplateDirective, static: false })
+    @ContentChild(IgxCalendarSubheaderTemplateDirective, { read: IgxCalendarSubheaderTemplateDirective })
     public subheaderTemplate: IgxCalendarSubheaderTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxDatePickerActionsDirective, { read: IgxDatePickerActionsDirective, static: false })
+    @ContentChild(IgxDatePickerActionsDirective, { read: IgxDatePickerActionsDirective })
     public datePickerActionsDirective: IgxDatePickerActionsDirective;
 
     public calendar: IgxCalendarComponent;
@@ -830,6 +830,11 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      *@hidden
      */
     public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
+
+    /**
+     *@hidden
+     */
+    public setDisabledState(isDisabled: boolean): void { this.disabled = isDisabled; }
 
     /** @hidden */
     public getEditElement() {
@@ -953,7 +958,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
         this.emitValueChangeEvent(oldValue, this.value );
         this.onSelection.emit(date);
-        this._onChangeCallback(date);
     }
 
     /**
@@ -974,7 +978,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         if (this.calendar) {
             this.calendar.deselectDate();
         }
-        this._onChangeCallback(null);
     }
 
     /**
@@ -1060,7 +1063,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
         this.emitValueChangeEvent(oldValue, this.value );
         this.calendar.viewDate = date;
-        this._onChangeCallback(date);
         this.closeCalendar();
         this.onSelection.emit(date);
     }
@@ -1205,7 +1207,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
                         this.emitValueChangeEvent(oldValue, this.value );
                         this.invalidDate = '';
-                        this._onChangeCallback(newValue);
                 } else {
                     const args: IDatePickerDisabledDateEventArgs = {
                         datePicker: this,

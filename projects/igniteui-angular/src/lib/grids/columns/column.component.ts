@@ -12,6 +12,8 @@ import {
     EventEmitter,
 } from '@angular/core';
 import { notifyChanges } from '../watch-changes';
+import { WatchColumnChanges } from '../watch-changes';
+import { IgxRowIslandAPIService } from '../hierarchical-grid/row-island-api.service';
 import { DataType } from '../../data-operations/data-util';
 import { DeprecateProperty } from '../../core/deprecateDecorators';
 import {
@@ -38,6 +40,7 @@ import {
     IgxCellTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellEditorTemplateDirective,
+    IgxCollapsibleIndicatorTemplateDirective,
     IgxFilterCellTemplateDirective
 } from './templates.directive';
 import { MRLResizeColumnInfo, MRLColumnSizeInfo } from './interfaces';
@@ -81,6 +84,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     public header = '';
     /**
@@ -94,6 +98,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
+    @WatchColumnChanges()
     @Input()
     public sortable = false;
     /**
@@ -108,6 +113,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges(true)
+    @WatchColumnChanges()
     @Input()
     groupable = false;
     /**
@@ -118,6 +124,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
+    @WatchColumnChanges()
     @Input()
     get editable(): boolean {
         // Updating the primary key when grid has transactions (incl. row edit)
@@ -160,6 +167,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     public filterable = true;
     /**
@@ -173,6 +181,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
+    @WatchColumnChanges()
     @Input()
     public resizable = false;
     /**
@@ -183,6 +192,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges(true)
+    @WatchColumnChanges()
     @Input()
     get hasSummary() {
         return this._hasSummary;
@@ -210,6 +220,7 @@ export class IgxColumnComponent implements AfterContentInit {
      *@memberof IgxColumnComponent
      */
     @notifyChanges(true)
+    @WatchColumnChanges()
     @Input()
     get hidden(): boolean {
         return this._hidden;
@@ -249,6 +260,18 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     @Output()
     public hiddenChange = new EventEmitter<boolean>();
+
+    /** @hidden */
+    @Output()
+    public expandedChange = new EventEmitter<boolean>();
+
+    /** @hidden */
+    @Output()
+    public collapsibleChange = new EventEmitter<boolean>();
+    /** @hidden */
+    @Output()
+    public visibleWhenCollapsedChange = new EventEmitter<boolean>();
+
     /**
      * Gets whether the hiding is disabled.
      * ```typescript
@@ -257,6 +280,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     disableHiding = false;
     /**
@@ -267,6 +291,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     disablePinning = false;
     /**
@@ -280,6 +305,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
+    @WatchColumnChanges()
     @notifyChanges()
     @Input()
     public movable = false;
@@ -291,6 +317,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges(true)
+    @WatchColumnChanges()
     @Input()
     public get width(): string {
         return this.widthSetByUser ? this._width : this.defaultWidth;
@@ -351,6 +378,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
+    @WatchColumnChanges()
     @Input()
     public maxWidth: string;
     /**
@@ -365,6 +393,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     public set minWidth(value: string) {
         const minVal = parseFloat(value);
@@ -386,6 +415,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     public headerClasses = '';
 
@@ -400,6 +430,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     public headerGroupClasses = '';
     /**
@@ -419,6 +450,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     public cellClasses: any;
 
@@ -440,6 +472,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     cellStyles = null;
     /**
@@ -473,6 +506,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     formatter: (value: any) => any;
     /**
@@ -486,6 +520,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
+    @WatchColumnChanges()
     @Input()
     public filteringIgnoreCase = true;
     /**
@@ -499,6 +534,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
+    @WatchColumnChanges()
     @Input()
     public sortingIgnoreCase = true;
     /**
@@ -521,6 +557,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * ```
      * @memberof IgxColumnComponent
      */
+    @WatchColumnChanges()
     @Input()
     public get pinned(): boolean {
         return this._pinned;
@@ -547,6 +584,7 @@ export class IgxColumnComponent implements AfterContentInit {
             /* No grid/width available at initialization. `initPinning` in the grid
                will re-init the group (if present)
             */
+            this._unpinnedIndex = this.grid.columns.filter(x => !x.pinned).indexOf(this);
             this._pinned = value;
             this.pinnedChange.emit(this._pinned);
         }
@@ -579,6 +617,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges(true)
+    @WatchColumnChanges()
     @Input()
     public get summaries(): any {
         return this._summaries;
@@ -611,6 +650,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     public searchable = true;
     /**
@@ -714,6 +754,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input('cellTemplate')
     get bodyTemplate(): TemplateRef<any> {
         return this._bodyTemplate;
@@ -745,6 +786,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     get headerTemplate(): TemplateRef<any> {
         return this._headerTemplate;
@@ -777,6 +819,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input('cellEditorTemplate')
     get inlineEditorTemplate(): TemplateRef<any> {
         return this._inlineEditorTemplate;
@@ -806,6 +849,7 @@ export class IgxColumnComponent implements AfterContentInit {
      * @memberof IgxColumnComponent
      */
     @notifyChanges()
+    @WatchColumnChanges()
     @Input('filterCellTemplate')
     get filterCellTemplate(): TemplateRef<any> {
         return this._filterCellTemplate;
@@ -827,6 +871,10 @@ export class IgxColumnComponent implements AfterContentInit {
     set filterCellTemplate(template: TemplateRef<any>) {
         this._filterCellTemplate = template;
     }
+
+    /** @hidden */
+    @Input('collapsibleIndicatorTemplate')
+    public collapsibleIndicatorTemplate: TemplateRef<any>;
     /**
      * Gets the cells of the column.
      * ```typescript
@@ -996,6 +1044,39 @@ export class IgxColumnComponent implements AfterContentInit {
     @Input() colStart: number;
 
     /**
+     * Indicates whether the column will be visible when its parent is collapsed.
+     * ```html
+     * <igx-column-group>
+     *   <igx-column [visibleWhenCollapsed]="true"></igx-column>
+     * </igx-column-group>
+     * ```
+     * @memberof IgxColumnComponent
+     */
+    @notifyChanges(true)
+    @Input()
+    set visibleWhenCollapsed(value: boolean) {
+        this._visibleWhenCollapsed = value;
+        this.visibleWhenCollapsedChange.emit(this._visibleWhenCollapsed);
+        if (this.parent) { this.parent.setExpandCollapseState(); }
+    }
+
+    get visibleWhenCollapsed(): boolean {
+        return this._visibleWhenCollapsed;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public collapsible = false;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public expanded = true;
+
+    /**
      * hidden
      */
     public defaultWidth: string;
@@ -1065,6 +1146,10 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
+    protected _collapseIndicatorTemplate: TemplateRef<any>;
+    /**
+     *@hidden
+     */
     protected _summaries = null;
     /**
      *@hidden
@@ -1107,6 +1192,18 @@ export class IgxColumnComponent implements AfterContentInit {
      */
     protected _editable: boolean;
     /**
+     *  @hidden
+    */
+    protected _visibleWhenCollapsed;
+    /**
+     * @hidden
+     */
+    protected _collapsible = false;
+    /**
+     * @hidden
+     */
+    protected _expanded = true;
+    /**
      * @hidden
      */
     protected get isPrimaryColumn(): boolean {
@@ -1115,7 +1212,7 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    @ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective, static: false })
+    @ContentChild(IgxCellTemplateDirective, { read: IgxCellTemplateDirective })
     protected cellTemplate: IgxCellTemplateDirective;
     /**
      *@hidden
@@ -1125,17 +1222,23 @@ export class IgxColumnComponent implements AfterContentInit {
     /**
      *@hidden
      */
-    @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective, static: false })
+    @ContentChild(IgxCellEditorTemplateDirective, { read: IgxCellEditorTemplateDirective })
     protected editorTemplate: IgxCellEditorTemplateDirective;
 
     protected _vIndex = NaN;
     /**
      *@hidden
      */
-    @ContentChild(IgxFilterCellTemplateDirective, { read: IgxFilterCellTemplateDirective, static: false })
+    @ContentChild(IgxFilterCellTemplateDirective, { read: IgxFilterCellTemplateDirective })
     public filterCellTemplateDirective: IgxFilterCellTemplateDirective;
+    /**
+     *@hidden
+     */
+    @ContentChild(IgxCollapsibleIndicatorTemplateDirective, { read: IgxCollapsibleIndicatorTemplateDirective, static: false })
+    protected collapseIndicatorTemplate:  IgxCollapsibleIndicatorTemplateDirective;
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, public cdr: ChangeDetectorRef) { }
+    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, public cdr: ChangeDetectorRef,
+        public rowIslandAPI: IgxRowIslandAPIService) { }
 
     /**
      * @hidden
@@ -1683,6 +1786,26 @@ export class IgxColumnComponent implements AfterContentInit {
             this._calcWidth = this.width;
         }
         this.calcPixelWidth = parseInt(this._calcWidth, 10);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    protected setExpandCollapseState() {
+        this.children.filter(col => (col.visibleWhenCollapsed !== undefined)).forEach(c =>  {
+            if (!this.collapsible) { c.hidden = this.hidden; return; }
+            c.hidden = this._expanded ? c.visibleWhenCollapsed : !c.visibleWhenCollapsed;
+        });
+    }
+     /**
+     * @hidden
+     * @internal
+     */
+    protected checkCollapsibleState() {
+        if (!this.children) { return false; }
+        const cols = this.children.map(child => child.visibleWhenCollapsed);
+        return (cols.some(c => c === true) && cols.some(c => c === false));
     }
 
     /**

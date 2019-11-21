@@ -32,7 +32,7 @@ import { VirtualHelperComponent } from './virtual.helper.component';
 import { IgxScrollInertiaModule } from './../scroll-inertia/scroll_inertia.directive';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from './for_of.sync.service';
 import { Subject } from 'rxjs';
-import { takeUntil, filter, throttleTime } from 'rxjs/operators';
+import { takeUntil, filter, throttleTime, first } from 'rxjs/operators';
 import ResizeObserver from 'resize-observer-polyfill';
 import { IBaseEventArgs } from '../../core/utils';
 import { VirtualHelperBaseDirective } from './base.helper.component';
@@ -1560,7 +1560,10 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         const scrollOffset = this.fixedUpdateAllElements(this._virtScrollTop);
 
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
-        this.recalcUpdateSizes();
+
+        this._zone.onStable.pipe(first()).subscribe( () => {
+            this.recalcUpdateSizes();
+        });
         this.cdr.markForCheck();
     }
 

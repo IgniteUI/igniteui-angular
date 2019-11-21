@@ -184,7 +184,7 @@ export class ListWithIgxForAndScrollingComponent {
     @ViewChild('forOfList', {read: IgxListComponent, static: true })
     public forOfList: IgxListComponent;
 
-    @ViewChild(IgxForOfDirective, { static: false })
+    @ViewChild(IgxForOfDirective)
     public igxFor: IgxForOfDirective<any>;
 
     public data = [

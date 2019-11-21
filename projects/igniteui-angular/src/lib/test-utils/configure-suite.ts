@@ -7,6 +7,8 @@ import { resizeObserverIgnoreError } from './helper-utils.spec';
  * @hidden
  */
 export const configureTestSuite = () => {
+
+
   let originReset;
   beforeAll(() => {
     originReset = TestBed.resetTestingModule;

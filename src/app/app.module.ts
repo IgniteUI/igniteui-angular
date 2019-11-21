@@ -5,11 +5,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import {
     IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
-    IgxGridTransaction, IgxTransactionService, IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule, IgxIconService} from 'igniteui-angular';
+    IgxDragDropModule, IgxDividerModule, IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule,
+    IgxIconService, DisplayDensityToken, DisplayDensity
+} from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
-import { IgxDragDropModule } from '../../projects/igniteui-angular/src/lib/directives/drag-drop/drag-drop.directive';
-import { IgxDividerModule } from '../../projects/igniteui-angular/src/lib/directives/divider/divider.directive';
 
 import { routing } from './routing';
 import { AppComponent } from './app.component';
@@ -84,7 +84,6 @@ import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sam
 import { RadioSampleComponent } from './radio/radio.sample';
 import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
-import { DisplayDensityToken, DisplayDensity } from 'projects/igniteui-angular/src/lib/core/displayDensity';
 import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample.component';
 import { GridWithTransactionsComponent } from './grid-row-edit/grid-with-transactions.component';
 import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
@@ -111,6 +110,7 @@ import { GridAutoSizeSampleComponent } from './grid-auto-size/grid-auto-size.sam
 import { GridFlexSampleComponent } from './grid-flex-layout/grid-flex.sample';
 import { GridEsfLoadOnDemandComponent } from './grid-esf-load-on-demand/grid-esf-load-on-demand.component';
 import { GridFilteringComponent } from './grid-filtering/grid-filtering.sample';
+import { GridExternalFilteringComponent } from './grid-external-filtering/grid-external-filtering.sample';
 
 
 
@@ -214,7 +214,8 @@ const components = [
     GridAutoSizeSampleComponent,
     GridFlexSampleComponent,
     GridEsfLoadOnDemandComponent,
-    GridFilteringComponent
+    GridFilteringComponent,
+    GridExternalFilteringComponent
 ];
 
 @NgModule({
