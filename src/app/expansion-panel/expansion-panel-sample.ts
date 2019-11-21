@@ -11,7 +11,7 @@ import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
 export class ExpansionPanelSampleComponent implements OnInit {
     @ViewChild(IgxExpansionPanelComponent, { static: true })
     public igxExpansionPanel: IgxExpansionPanelComponent;
-    @ViewChild('button', { static: false }) public button: ElementRef;
+    @ViewChild('button') public button: ElementRef;
 
     public animationSettings: { openAnimation: AnimationReferenceMetadata, closeAnimation: AnimationReferenceMetadata } = {
         openAnimation: useAnimation(growVerIn, { params: {

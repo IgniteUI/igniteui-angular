@@ -7,6 +7,7 @@ import {
     IgxCellFooterTemplateDirective,
     IgxCellHeaderTemplateDirective,
     IgxCellTemplateDirective,
+    IgxCollapsibleIndicatorTemplateDirective,
     IgxFilterCellTemplateDirective
 } from './templates.directive';
 
@@ -18,6 +19,7 @@ import {
         IgxCellHeaderTemplateDirective,
         IgxCellFooterTemplateDirective,
         IgxCellEditorTemplateDirective,
+        IgxCollapsibleIndicatorTemplateDirective,
         IgxColumnComponent,
         IgxColumnGroupComponent,
         IgxColumnLayoutComponent
@@ -33,6 +35,7 @@ import {
         IgxCellHeaderTemplateDirective,
         IgxCellFooterTemplateDirective,
         IgxCellEditorTemplateDirective,
+        IgxCollapsibleIndicatorTemplateDirective,
         IgxColumnComponent,
         IgxColumnGroupComponent,
         IgxColumnLayoutComponent

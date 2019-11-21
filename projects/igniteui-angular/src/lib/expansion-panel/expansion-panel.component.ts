@@ -160,13 +160,13 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
     /**
      * @hidden
      */
-    @ContentChild(IgxExpansionPanelBodyComponent, { read: IgxExpansionPanelBodyComponent, static: false })
+    @ContentChild(IgxExpansionPanelBodyComponent, { read: IgxExpansionPanelBodyComponent })
     public body: IgxExpansionPanelBodyComponent;
 
     /**
      * @hidden
      */
-    @ContentChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent, static: false })
+    @ContentChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
     public header: IgxExpansionPanelHeaderComponent;
 
     constructor(private cdr: ChangeDetectorRef, private builder: AnimationBuilder) { }

@@ -32,7 +32,7 @@ export class TimePickerSampleComponent implements AfterViewInit {
     @ViewChild('tp', { read: IgxTimePickerComponent, static: true })
     public tp: IgxTimePickerComponent;
 
-    @ViewChild('target', { static: false })
+    @ViewChild('target')
     public target: IgxInputDirective;
 
     ngAfterViewInit() {

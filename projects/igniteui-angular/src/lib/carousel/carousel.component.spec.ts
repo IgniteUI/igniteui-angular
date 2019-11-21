@@ -515,7 +515,7 @@ describe('Carousel', () => {
     });
 
     describe('Templates Tests: ', () => {
-        it('verify that template can be defined in the markup', () => {
+        it('verify that templates can be defined in the markup', () => {
             fixture = TestBed.createComponent(CarouselTemplateSetInMarkupTestComponent);
             carousel = fixture.componentInstance.carousel;
             fixture.detectChanges();
@@ -526,9 +526,15 @@ describe('Carousel', () => {
                 const indicator = HelperTestFunctions.getIndicators(fixture)[index] as HTMLElement;
                 expect(indicator.innerText).toEqual(index.toString());
             }
+
+            expect(HelperTestFunctions.getNextButtonArrow(fixture)).toBeNull();
+            expect(HelperTestFunctions.getPreviousButtonArrow(fixture)).toBeNull();
+
+            expect(HelperTestFunctions.getNextButton(fixture).innerText).toEqual('next');
+            expect(HelperTestFunctions.getPreviousButton(fixture).innerText).toEqual('prev');
         });
 
-        it('verify that template can be changed', () => {
+        it('verify that templates can be changed', () => {
             fixture = TestBed.createComponent(CarouselTemplateSetInTypescriptTestComponent);
             carousel = fixture.componentInstance.carousel;
             fixture.detectChanges();
@@ -538,8 +544,12 @@ describe('Carousel', () => {
 
             expect(HelperTestFunctions.getIndicators(fixture).length).toBe(4);
             expect(HelperTestFunctions.getIndicatorsDots(fixture).length).toBe(4);
+            expect(HelperTestFunctions.getNextButtonArrow(fixture)).toBeDefined();
+            expect(HelperTestFunctions.getPreviousButtonArrow(fixture)).toBeDefined();
 
             carousel.indicatorTemplate = fixture.componentInstance.customIndicatorTemplate1;
+            carousel.nextButtonTemplate = fixture.componentInstance.customNextTemplate;
+            carousel.prevButtonTemplate = fixture.componentInstance.customPrevTemplate;
             fixture.detectChanges();
 
             expect(HelperTestFunctions.getIndicators(fixture).length).toBe(4);
@@ -548,6 +558,11 @@ describe('Carousel', () => {
                 const indicator = HelperTestFunctions.getIndicators(fixture)[index] as HTMLElement;
                 expect(indicator.innerText).toEqual(index.toString());
             }
+            expect(HelperTestFunctions.getNextButtonArrow(fixture)).toBeNull();
+            expect(HelperTestFunctions.getPreviousButtonArrow(fixture)).toBeNull();
+
+            expect(HelperTestFunctions.getNextButton(fixture).innerText).toEqual('next');
+            expect(HelperTestFunctions.getPreviousButton(fixture).innerText).toEqual('prev');
 
             carousel.indicatorTemplate = fixture.componentInstance.customIndicatorTemplate2;
             fixture.detectChanges();
@@ -565,10 +580,14 @@ describe('Carousel', () => {
             }
 
             carousel.indicatorTemplate = null;
+            carousel.nextButtonTemplate = null;
+            carousel.prevButtonTemplate = null;
             fixture.detectChanges();
 
             expect(HelperTestFunctions.getIndicators(fixture).length).toBe(4);
             expect(HelperTestFunctions.getIndicatorsDots(fixture).length).toBe(4);
+            expect(HelperTestFunctions.getNextButtonArrow(fixture)).toBeDefined();
+            expect(HelperTestFunctions.getPreviousButtonArrow(fixture)).toBeDefined();
         });
     });
 
@@ -704,8 +723,8 @@ describe('Carousel', () => {
             expect(carousel.total).toEqual(0);
             expect(HelperTestFunctions.getIndicatorsContainer(fixture)).toBeNull();
             expect(HelperTestFunctions.getIndicatorsContainer(fixture, CarouselIndicatorsOrientation.top)).toBeNull();
-            expect(HelperTestFunctions.getNextButton(fixture).hidden).toBeTruthy();
-            expect(HelperTestFunctions.getPreviousButton(fixture).hidden).toBeTruthy();
+            expect(HelperTestFunctions.getNextButton(fixture)).toBeNull();
+            expect(HelperTestFunctions.getPreviousButton(fixture)).toBeNull();
 
             // add a slide
             fixture.componentInstance.addSlides();
@@ -724,6 +743,7 @@ describe('Carousel', () => {
 class HelperTestFunctions {
     public static NEXT_BUTTON_CLASS = '.igx-carousel__arrow--next';
     public static PRIV_BUTTON_CLASS = '.igx-carousel__arrow--prev';
+    public static BUTTON_ARROW_CLASS = '.igx-nav-arrow';
     public static ACTIVE_SLIDE_CLASS = 'igx-slide--current';
     public static PREVIOUS_SLIDE_CLASS = 'igx-slide--previous';
     public static INDICATORS_TOP_CLASS = '.igx-carousel-indicators--top';
@@ -739,6 +759,16 @@ class HelperTestFunctions {
 
     public static getPreviousButton(fixture): HTMLElement {
         return fixture.nativeElement.querySelector(HelperTestFunctions.PRIV_BUTTON_CLASS);
+    }
+
+    public static getNextButtonArrow(fixture): HTMLElement {
+        const next = HelperTestFunctions.getNextButton(fixture);
+        return next.querySelector(HelperTestFunctions.BUTTON_ARROW_CLASS);
+    }
+
+    public static getPreviousButtonArrow(fixture): HTMLElement {
+        const prev = HelperTestFunctions.getPreviousButton(fixture);
+        return prev.querySelector(HelperTestFunctions.BUTTON_ARROW_CLASS);
     }
 
     public static getIndicatorsContainer(fixture, position = CarouselIndicatorsOrientation.bottom): HTMLElement {
@@ -819,6 +849,14 @@ class CarouselAnimationsComponent {
             <ng-template igxCarouselIndicator let-slide>
                 <span> {{slide.index}} </span>
             </ng-template>
+
+            <ng-template igxCarouselNextButton>
+                <span>next</span>
+            </ng-template>
+
+            <ng-template igxCarouselPrevButton>
+                <span>prev</span>
+            </ng-template>
         </igx-carousel>
     `
 })
@@ -837,6 +875,14 @@ class CarouselTemplateSetInMarkupTestComponent {
             <span *ngIf="slide.active"> {{slide.index}}: Active  </span>
         </ng-template>
 
+        <ng-template #customNextTemplate>
+            <span>next</span>
+        </ng-template>
+
+        <ng-template #customPrevTemplate>
+            <span>prev</span>
+        </ng-template>
+
         <igx-carousel #carousel [animationType]="'none'">
             <igx-slide><h3>Slide1</h3></igx-slide>
             <igx-slide><h3>Slide2</h3></igx-slide>
@@ -851,6 +897,10 @@ class CarouselTemplateSetInTypescriptTestComponent {
     public customIndicatorTemplate1;
     @ViewChild('customIndicatorTemplate2', { read: TemplateRef, static: false })
     public customIndicatorTemplate2;
+    @ViewChild('customNextTemplate', { read: TemplateRef, static: false })
+    public customNextTemplate;
+    @ViewChild('customPrevTemplate', { read: TemplateRef, static: false })
+    public customPrevTemplate;
 }
 
 @Component({
