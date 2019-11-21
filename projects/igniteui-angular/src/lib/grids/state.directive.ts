@@ -327,8 +327,9 @@ export class IgxGridStateDirective {
     }
 
     private getGroupBy() {
-        const groupingState = this.grid.groupingExpressions;
-        return { groupBy: groupingState };
+        const groupingExpressions = this.grid.groupingExpressions;
+        const expansionState = this.grid.groupingExpansionState;
+        return { groupBy: { groupingExpressions: groupingExpressions, expansionState: expansionState }  };
     }
 
     private getRowSelection() {
@@ -418,16 +419,16 @@ export class IgxGridStateDirective {
     /**
      * Restores the grid grouping state, i.e. sets the `groupbyExpressions` property value.
      */
-    private restoreGroupBy(state: IGroupingExpression | IGroupingExpression[]) {
+    private restoreGroupBy(state) {
         const strategy = DefaultSortingStrategy.instance();
 
-        if (Array.isArray(state)) {
-            (state as IGroupingExpression[]).forEach((expr) => expr.strategy = strategy);
+        if (Array.isArray(state.groupingExpressions)) {
+            (state.groupingExpressions as IGroupingExpression[]).forEach((expr) => expr.strategy = strategy);
         } else {
-            (state as IGroupingExpression).strategy = strategy;
+            (state.groupingExpressions as IGroupingExpression).strategy = strategy;
         }
-
-        this.grid.groupingExpressions = state;
+        this.grid.groupingExpressions = state.groupingExpressions;
+        this.grid.groupingExpansionState = state.expansionState;
     }
 
     /**
