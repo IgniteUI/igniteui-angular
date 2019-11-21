@@ -173,7 +173,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      * @memberof IgxListComponent
      */
-    @ContentChild(IgxEmptyListTemplateDirective, { read: IgxEmptyListTemplateDirective, static: false })
+    @ContentChild(IgxEmptyListTemplateDirective, { read: IgxEmptyListTemplateDirective })
     public emptyListTemplate: IgxEmptyListTemplateDirective;
 
     /**
@@ -183,7 +183,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      * @memberof IgxListComponent
      */
-    @ContentChild(IgxDataLoadingTemplateDirective, { read: IgxDataLoadingTemplateDirective, static: false })
+    @ContentChild(IgxDataLoadingTemplateDirective, { read: IgxDataLoadingTemplateDirective })
     public dataLoadingTemplate: IgxDataLoadingTemplateDirective;
 
     /**
@@ -197,7 +197,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      * @memberof IgxListComponent
      */
-    @ContentChild(IgxListItemLeftPanningTemplateDirective, { read: IgxListItemLeftPanningTemplateDirective, static: false })
+    @ContentChild(IgxListItemLeftPanningTemplateDirective, { read: IgxListItemLeftPanningTemplateDirective })
     public listItemLeftPanningTemplate: IgxListItemLeftPanningTemplateDirective;
 
     /**
@@ -211,7 +211,7 @@ export class IgxListComponent extends IgxListBaseDirective {
      * ```
      * @memberof IgxListComponent
      */
-    @ContentChild(IgxListItemRightPanningTemplateDirective, { read: IgxListItemRightPanningTemplateDirective, static: false })
+    @ContentChild(IgxListItemRightPanningTemplateDirective, { read: IgxListItemRightPanningTemplateDirective })
     public listItemRightPanningTemplate: IgxListItemRightPanningTemplateDirective;
 
     /**

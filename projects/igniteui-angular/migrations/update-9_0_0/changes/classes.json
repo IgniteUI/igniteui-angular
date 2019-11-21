@@ -20,6 +20,14 @@
         {
             "name": "IgxHierarchicalGridBaseComponent",
             "replaceWith": "IgxHierarchicalGridBaseDirective"
+        },
+        {
+            "name": "IgxMonthPickerBase",
+            "replaceWith": "IgxMonthPickerBaseDirective"
+        },
+        {
+            "name": "IgxBaseExporter",
+            "replaceWith": "IgxBaseExporterDirective"
         }
     ]
 }

@@ -311,7 +311,7 @@ describe('Scroll Inertia Directive ', () => {
                 return {
                     addPointer: (arg) => {}
                 };
-            };
+            } as any;
         }
 
 

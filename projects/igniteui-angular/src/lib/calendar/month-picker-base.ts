@@ -1,5 +1,5 @@
-import { IgxCalendarBase } from './calendar-base';
-import { ViewChild, ElementRef, HostBinding } from '@angular/core';
+import { IgxCalendarBaseDirective } from './calendar-base';
+import { ViewChild, ElementRef, HostBinding, Directive } from '@angular/core';
 import { KEYS } from '../core/utils';
 
 /**
@@ -10,12 +10,15 @@ export enum CalendarView {
     YEAR,
     DECADE
 }
-export class IgxMonthPickerBase extends IgxCalendarBase {
+@Directive({
+    selector: '[igxMonthPickerBase]'
+})
+export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
 
     /**
      * @hidden
      */
-    @ViewChild('yearsBtn', { static: false })
+    @ViewChild('yearsBtn')
     public yearsBtn: ElementRef;
 
     /**
