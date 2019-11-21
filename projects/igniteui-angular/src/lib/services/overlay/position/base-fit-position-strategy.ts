@@ -38,8 +38,8 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
             connectedFit.horizontalOffset ? connectedFit.horizontalOffset : 0);
         connectedFit.right = connectedFit.left + connectedFit.contentElementRect.width;
         connectedFit.fitHorizontal = {
-                back: Math.floor(connectedFit.left - connectedFit.viewPortRect.left),
-                forward: Math.floor(connectedFit.viewPortRect.right - connectedFit.right)
+                back: Math.round(connectedFit.left - connectedFit.viewPortRect.left),
+                forward: Math.round(connectedFit.viewPortRect.right - connectedFit.right)
             };
 
         connectedFit.top = this.calculateTop(
@@ -50,8 +50,8 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
             connectedFit.verticalOffset ? connectedFit.verticalOffset : 0);
         connectedFit.bottom = connectedFit.top + connectedFit.contentElementRect.height;
         connectedFit.fitVertical = {
-            back: Math.floor(connectedFit.top - connectedFit.viewPortRect.top),
-            forward: Math.floor(connectedFit.viewPortRect.bottom - connectedFit.bottom)
+            back: Math.round(connectedFit.top - connectedFit.viewPortRect.top),
+            forward: Math.round(connectedFit.viewPortRect.bottom - connectedFit.bottom)
         };
     }
 

@@ -82,7 +82,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         scrollPosition -= dropDownHeight / 2;
         scrollPosition += itemElementRect.height / 2;
 
-        return Math.floor(Math.min(Math.max(0, scrollPosition), scrollContainer.scrollHeight - scrollContainerRect.height));
+        return Math.round(Math.min(Math.max(0, scrollPosition), scrollContainer.scrollHeight - scrollContainerRect.height));
     }
 
     /**
@@ -150,7 +150,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
                 parseFloat(inputElementStyles.paddingTop) -
                 parseFloat(inputElementStyles.paddingBottom)
             ) / 2;
-        styles.itemTextToInputTextDiff = Math.ceil(itemTextToItemTop - inputTextToInputTop + negateInputPaddings);
+        styles.itemTextToInputTextDiff = Math.round(itemTextToItemTop - inputTextToInputTop + negateInputPaddings);
 
         const numericLeftPadding = parseFloat(itemElementStyles.paddingLeft);
         const numericTextIndent = parseFloat(itemElementStyles.textIndent);

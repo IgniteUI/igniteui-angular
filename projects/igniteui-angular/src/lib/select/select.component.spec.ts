@@ -2229,7 +2229,7 @@ describe('igxSelect', () => {
                     getBoundingRectangles();
                 }));
             // tslint:disable-next-line:max-line-length
-            xit('should display list with selected item and all items before it and position selected item over input when last item is selected',
+            it('should display list with selected item and all items before it and position selected item over input when last item is selected',
                 fakeAsync(() => {
                     selectedItemIndex = 6;
                     select.items[selectedItemIndex].selected = true;
@@ -2239,8 +2239,8 @@ describe('igxSelect', () => {
                     fixture.detectChanges();
                     getBoundingRectangles();
                     verifySelectedItemPositioning(true);
-                    listTop = document.body.getBoundingClientRect().bottom - defaultWindowToListOffset - listRect.height;
-                    listBottom = document.body.getBoundingClientRect().bottom - defaultWindowToListOffset;
+                    listTop = Math.ceil(document.body.getBoundingClientRect().bottom - defaultWindowToListOffset - listRect.height);
+                    listBottom = Math.ceil(document.body.getBoundingClientRect().bottom - defaultWindowToListOffset);
                     verifyListPositioning();
                 }));
         });
