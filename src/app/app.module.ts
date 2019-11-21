@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, HammerModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -223,6 +223,7 @@ const components = [
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
+        HammerModule,
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
