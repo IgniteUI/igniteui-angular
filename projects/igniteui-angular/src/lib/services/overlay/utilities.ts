@@ -22,8 +22,12 @@ export class Point {
     constructor(public x: number, public y: number) { }
 }
 
-export class OutOfViewPort {
-    constructor(public back: number, public forward: number) { }
+/** @hidden */
+export interface OutOfViewPort {
+    /** Out of view port at Top or Left */
+    back: number;
+    /** Out of view port at Bottom or Right */
+    forward: number;
 }
 
 export interface PositionSettings {

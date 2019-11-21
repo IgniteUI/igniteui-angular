@@ -40,19 +40,20 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
             targetRect: rects.targetRect,
             contentElementRect: rects.elementRect,
             styles: this.global_styles,
-            scrollContainer: this.select.scrollContainer
+            scrollContainer: this.select.scrollContainer,
+            scrollContainerRect: this.select.scrollContainer.getBoundingClientRect()
         };
 
         if (initialCall) {
             // Fill in the required selectFit object properties.
             selectFit.viewPortRect = Util.getViewportRect(document);
-            selectFit.itemRect = this.getInteractionItemElement().getBoundingClientRect();
             selectFit.itemElement = this.getInteractionItemElement();
+            selectFit.itemRect = selectFit.itemElement.getBoundingClientRect();
 
             // Calculate input and selected item elements style related variables
             selectFit.styles = this.calculateStyles(selectFit);
 
-            selectFit.scrollAmount = this.calculateScrollPosition(selectFit.itemRect, selectFit.scrollContainer);
+            selectFit.scrollAmount = this.calculateScrollPosition(selectFit);
             // Calculate how much to offset the overlay container.
             this.calculateYoffset(selectFit);
             this.calculateXoffset(selectFit);
@@ -70,12 +71,10 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     /**
      * Calculate selected item scroll position.
      */
-    public calculateScrollPosition(itemElementRect: ClientRect, scrollContainer: HTMLElement): number {
-        if (!itemElementRect) {
-            return 0;
-        }
-
-        const scrollContainerRect = scrollContainer.getBoundingClientRect();
+    public calculateScrollPosition(selectFit: SelectFit): number {
+        const itemElementRect = selectFit.itemRect;
+        const scrollContainer = selectFit.scrollContainer;
+        const scrollContainerRect = selectFit.scrollContainerRect;
         const scrollDelta = scrollContainerRect.top - itemElementRect.top;
         let scrollPosition = scrollContainer.scrollTop - scrollDelta;
 
@@ -93,12 +92,14 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
      */
     protected fitInViewport(contentElement: HTMLElement, selectFit: SelectFit) {
         const footer = selectFit.scrollContainer.getBoundingClientRect().bottom - selectFit.contentElementRect.bottom;
+        const header = selectFit.scrollContainer.getBoundingClientRect().top - selectFit.contentElementRect.top;
         const lastItemFitSize = selectFit.targetRect.bottom + selectFit.styles.itemTextToInputTextDiff - footer;
+        const firstItemFitSize = selectFit.targetRect.top - selectFit.styles.itemTextToInputTextDiff - header;
         // out of viewPort on Top
         if (selectFit.fitVertical.back < 0) {
             const possibleScrollAmount = selectFit.scrollContainer.scrollHeight -
                 selectFit.scrollContainer.getBoundingClientRect().height - selectFit.scrollAmount;
-            if (possibleScrollAmount + selectFit.fitVertical.back > 0) {
+            if (possibleScrollAmount + selectFit.fitVertical.back > 0 && firstItemFitSize > selectFit.viewPortRect.top) {
                 selectFit.scrollAmount -= selectFit.fitVertical.back;
                 selectFit.verticalOffset -= selectFit.fitVertical.back;
                 this.global_yOffset = selectFit.verticalOffset;
@@ -108,21 +109,15 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
             }
         // out of viewPort on Bottom
         } else if (selectFit.fitVertical.forward < 0) {
-            if ( lastItemFitSize > selectFit.viewPortRect.bottom) {
-                this.positionAbove(selectFit);
-            } else if (selectFit.scrollAmount + selectFit.fitVertical.forward > 0) {
+            if (selectFit.scrollAmount + selectFit.fitVertical.forward > 0 && lastItemFitSize < selectFit.viewPortRect.bottom) {
                 selectFit.scrollAmount += selectFit.fitVertical.forward;
                 selectFit.verticalOffset += selectFit.fitVertical.forward;
                 this.global_yOffset = selectFit.verticalOffset;
             } else {
-                this.positionAbove(selectFit);
+                selectFit.verticalOffset = -selectFit.contentElementRect.height + selectFit.targetRect.height;
+                this.global_yOffset = selectFit.verticalOffset;
             }
         }
-    }
-
-    private positionAbove(selectFit: SelectFit) {
-        selectFit.verticalOffset = -selectFit.contentElementRect.height + selectFit.targetRect.height;
-        this.global_yOffset = selectFit.verticalOffset;
     }
 
     /**
@@ -146,8 +141,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         const styles: SelectStyles = {};
         const inputElementStyles = window.getComputedStyle(this.settings.target as Element);
         const itemElementStyles = window.getComputedStyle(selectFit.itemElement);
-        const inputFontSize = inputElementStyles.fontSize;
-        const numericInputFontSize = parseFloat(inputFontSize);
+        const numericInputFontSize = parseFloat(inputElementStyles.fontSize);
         const itemFontSize = itemElementStyles.fontSize;
         const numericItemFontSize = parseFloat(itemFontSize);
         const inputTextToInputTop = (selectFit.targetRect.bottom - selectFit.targetRect.top - numericInputFontSize) / 2;
@@ -175,7 +169,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     /**
      * Obtain the selected item if there is such one or otherwise use the first one
      */
-    private getInteractionItemElement(): HTMLElement {
+    public getInteractionItemElement(): HTMLElement {
         let itemElement;
         if (this.select.selectedItem) {
             itemElement = this.select.selectedItem.element.nativeElement;
@@ -211,6 +205,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
 export interface SelectFit extends ConnectedFit {
     itemElement?: HTMLElement;
     scrollContainer: HTMLElement;
+    scrollContainerRect: ClientRect;
     itemRect?: ClientRect;
     styles?: SelectStyles;
     scrollAmount?: number;

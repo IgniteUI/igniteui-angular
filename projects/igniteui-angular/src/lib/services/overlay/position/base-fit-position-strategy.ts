@@ -1,5 +1,5 @@
 import { ConnectedPositioningStrategy } from './connected-positioning-strategy';
-import { HorizontalAlignment, VerticalAlignment, PositionSettings, Size, Util, ConnectedFit, Point, OutOfViewPort } from '../utilities';
+import { HorizontalAlignment, VerticalAlignment, PositionSettings, Size, Util, ConnectedFit, OutOfViewPort } from '../utilities';
 
 export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrategy {
     protected _initialSize: Size;
@@ -37,9 +37,10 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
             this.settings.horizontalDirection,
             connectedFit.horizontalOffset);
         connectedFit.right = connectedFit.left + connectedFit.contentElementRect.width;
-        connectedFit.fitHorizontal =
-            new OutOfViewPort(Math.floor(connectedFit.left - connectedFit.viewPortRect.left),
-            Math.floor(connectedFit.viewPortRect.right - connectedFit.right));
+        connectedFit.fitHorizontal = {
+                back: Math.floor(connectedFit.left - connectedFit.viewPortRect.left),
+                forward: Math.floor(connectedFit.viewPortRect.right - connectedFit.right)
+            };
 
         connectedFit.top = this.calculateTop(
             connectedFit.targetRect,
@@ -48,9 +49,10 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
             this.settings.verticalDirection,
             connectedFit.verticalOffset);
         connectedFit.bottom = connectedFit.top + connectedFit.contentElementRect.height;
-        connectedFit.fitVertical =
-            new OutOfViewPort(Math.floor(connectedFit.top - connectedFit.viewPortRect.top),
-                Math.floor(connectedFit.viewPortRect.bottom - connectedFit.bottom));
+        connectedFit.fitVertical = {
+            back: Math.floor(connectedFit.top - connectedFit.viewPortRect.top),
+            forward: Math.floor(connectedFit.viewPortRect.bottom - connectedFit.bottom)
+        };
     }
 
     /**
