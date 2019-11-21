@@ -62,6 +62,8 @@ All notable changes for each version of this project will be documented in this 
         - `indicatorsOrientation` input is added, which can be used to set the position of indicators it can be top or bottom
         - `animationType` input is added, which can be used to set animation when changing slides
         - `indicatorTemplate` directive is added, which can be used to provide a custom indicator for carousel. If this property is not provided, a default indicator template will be used instead.
+        - `nextButtonTemplate` directive is added, which is used to provide a custom next button template. If not provided, a default next button is used.
+        - `prevButtonTemplate` directive is added, which is used to provide a custom previous button template. If not provided, a default previous button is used.
 
 ## 8.2.6
 
