@@ -1,5 +1,6 @@
 import {
-    Component, Input, ContentChild, ViewChild, AfterViewInit, OnDestroy, EventEmitter, Output
+    Component, Input, ContentChild, ViewChild,
+    AfterViewInit, OnDestroy, EventEmitter, Output
 } from '@angular/core';
 import { InteractionMode } from '../core/enums';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
@@ -12,54 +13,176 @@ import { IgxDateRangeStartDirective, IgxDateRangeEndDirective, IgxDateRangeDirec
 import { PositionSettings } from '../services/overlay/utilities';
 import { fadeIn, fadeOut } from '../animations/fade';
 
+/**
+ * ** Ignite UI for Angular Range Date Picker **
+ * [Documentation]()
+ *
+ * The Ignite UI for Angular Range Date Picker provides the ability to select a range of dates from the calendar UI.
+ * It displays the range selection in a single or two input fields.
+ *
+ * Example:
+ * ```html
+ * <igx-date-range>
+ *  <input igxDateRangeStart>
+ *  <input igxDateRangeEnd>
+ * </igx-date-range>
+ * ```
+ */
 @Component({
     selector: 'igx-date-range',
     templateUrl: './igx-date-range.component.html'
 })
 export class IgxDateRangeComponent implements AfterViewInit, OnDestroy {
-    // TODO: docs
+    /**
+     * Property which sets whether `IgxDateRangeComponent` is in dialog or dropdown mode.
+     *
+     * ```html
+     * <igx-date-range [mode]="'dropdown'">
+     *  ...
+     * </igx-date-range
+     * ```
+     */
     @Input()
     public mode: InteractionMode;
 
+    /**
+     * Property which sets the number displayed month views.
+     * Default is `2`.
+     *
+     * ```html
+     * <igx-date-range [monthsViewNumber]="3">
+     *  ...
+     * </igx-date-range
+     * ```
+     */
     @Input()
     public monthsViewNumber: number;
 
+    /**
+     * Property which sets the whether dates that are not part of the current month will be displayed.
+     * Default value is `false`.
+     */
     @Input()
     public hideOutsideDays: boolean;
 
+    /**
+     * Property which sets the start day of the week.
+     * Can be assigned to a numeric value or to `WEEKDAYS` enum value.
+     *
+     * ```html
+     * <igx-date-range [weekStart]="1">
+     *  ...
+     * </igx-date-range>
+     * ```
+     */
     @Input()
     public weekStart: number;
 
+    /**
+     * Property which gets the `locale` of the calendar.
+     * Default value is `"en"`.
+     *
+     * ```html
+     * <igx-date-range [locale]="'jp'">
+     *  ...
+     * </igx-date-range>
+     * ```
+     */
     @Input()
     public locale: string;
 
+    /**
+     * Property that applies a custom formatter function on the selected or passed date.
+     *
+     * ```typescript
+     * private dayFormatter = new Intl.DateTimeFormat("en", { weekday: "long" });
+     * private monthFormatter = new Intl.DateTimeFormat("en", { month: "long" });
+     *
+     * public formatter(date: Date): string {
+     *  return `${this.dayFormatter.format(date)} - ${this.monthFormatter.format(date)} - ${date.getFullYear()}`;
+     * }
+     * ```
+     *
+     * ```html
+     * <igx-date-range [formatter]="formatter">
+     *  ...
+     * </igx-date-range>
+     * ```
+     */
     @Input()
     public formatter: (val: Date) => string;
 
+    /**
+     * Property that changes the default text on the `today` button.
+     * Default value is `Today`.
+     *
+     * ```html
+     * <igx-date-range [todayButtonText]="'Hoy'">
+     *  ...
+     * </igx-date-range>
+     * ```
+     */
     @Input()
     public todayButtonText: string;
 
+    /**
+     * Property that changes the default text on the `done` button.
+     * Default value is `Done`.
+     *
+     * ```html
+     * <igx-date-range [doneButtonText]="'完了'">
+     *  ...
+     * </igx-date-range>
+     * ```
+     */
     @Input()
     public doneButtonText: string;
 
+    /**
+     * Property that changes the default overlay settings used by the `IgxDateRangeComponent`.
+     *
+     * ```html
+     * <igx-date-range [overlaySettings]="customOverlaySettings">
+     *  ...
+     * </igx-date-range>
+     * ```
+     */
     @Input()
     public overlaySettings: OverlaySettings;
 
+    /**
+     * An event that is emitted when a full range was selected in the `IgxDateRangeComponent`.
+     */
     @Output()
     public rangeSelected: EventEmitter<IgxDateRangeComponent>;
 
+    /**
+     * An event that is emitted when the `IgxDateRangeComponent` is opened.
+     */
     @Output()
     public onOpened: EventEmitter<IgxDateRangeComponent>;
 
+    /**
+     * An event that is emitted when the `IgxDateRangeComponent` is closed.
+     */
     @Output()
     public onClosed: EventEmitter<IgxDateRangeComponent>;
 
+    /**
+     * @hidden
+     */
     @ContentChild(IgxDateRangeStartDirective, { read: IgxDateRangeStartDirective, static: false })
     public startInput: IgxDateRangeStartDirective;
 
+    /**
+     * @hidden
+     */
     @ContentChild(IgxDateRangeEndDirective, { read: IgxDateRangeEndDirective, static: false })
     public endInput: IgxDateRangeEndDirective;
 
+    /**
+     * @hidden
+     */
     @ContentChild(IgxDateRangeDirective, { read: IgxDateRangeDirective, static: false })
     public singleInput: IgxDateRangeDirective;
 
@@ -94,29 +217,93 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy {
         this.rangeSelected = new EventEmitter<IgxDateRangeComponent>();
     }
 
-    public open() {
+    /**
+     * Opens the date picker's dropdown or dialog.
+     *
+     * ```typescript
+     * public openDialog() {
+     *  this.dateRange.open();
+     * }
+     * ```
+     *
+     * ```html
+     * <igx-date-range [mode]="'dialog'">
+     *  ...
+     * </igx-date-range>
+     *
+     * <button (click)="openDialog()">Open Dialog</button
+     * ```
+     */
+    public open(): void {
         this.showCalendar();
     }
 
-    public close() {
+    /**
+     * Closes the date picker's dropdown or dialog.
+     *
+     * ```typescript
+     * public closeDialog() {
+     *  this.dateRange.close();
+     * }
+     * ```
+     *
+     * ```html
+     * <igx-date-range [mode]="'dialog'">
+     *  ...
+     * </igx-date-range>
+     *
+     * <button (click)="closeDialog()">Close Dialog</button>
+     * ```
+     */
+    public close(): void {
         this.hideCalendar();
     }
 
-    public showToday(event: KeyboardEvent): void {
-        event.stopPropagation();
-        const today = new Date();
-        this.calendar.selectDate(today);
-        this.handleSelection(this.calendar.selectedDates);
+    /**
+     * Selects the today date if no previous selection is made. If there is a previous selection, it does a range selection to today.
+     *
+     * ```typescript
+     * this.dateRange.selectToday();
+     * ```
+     */
+    public selectToday(): void {
+        this.showToday();
     }
 
+    /**
+     * Gets the currently selected value / range from the calendar.
+     */
     public get value(): Date | Date[] {
         return this.calendar.value;
     }
 
+    /**
+     * Selects a range of dates, cancels previous selection.
+     *
+     * ```typescript
+     * public selectFiveDayRange() {
+     *  const today = new Date();
+     *  const inFiveDays = new Date(new Date().setDate(today.getDate() + 5));
+     *  this.dateRange.selectRange(today, inFiveDays);
+     * }
+     * ```
+     */
     public selectRange(startDate: Date, endDate: Date): void {
         const dateRange = [startDate, endDate];
         this.calendar.selectDate(dateRange);
         this.handleSelection(dateRange);
+    }
+
+    /**
+     * @hidden
+     */
+    public showToday(event?: KeyboardEvent): void {
+        if (event) {
+            event.stopPropagation();
+        }
+        const today = new Date();
+        this.calendar.selectDate(today);
+        this.handleSelection(this.calendar.selectedDates);
     }
 
     /**
