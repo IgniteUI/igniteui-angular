@@ -86,14 +86,14 @@ export class IgxTicksComponent {
      *
      * ```typescript
      * return {
-     *  $implicit //returns tick labels value
+     *  $implicit //returns the value per each tick label.
      *  isPrimery //returns if the tick is primary.
-     *  labels // returns the labels collection.
-     *  index // returns the index of every tick on the tick series.
+     *  labels // returns the {@link labels} collection.
+     *  index // returns the index per each tick of the whole sequence.
      * }
      * ```
      *
-     * @param idx the index of the tick series that are rendered.
+     * @param idx the index per each tick label.
      */
     public context(idx: number): any {
         return {
