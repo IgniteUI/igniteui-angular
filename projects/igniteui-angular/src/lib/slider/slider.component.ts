@@ -294,6 +294,13 @@ export class IgxSliderComponent implements
         this.stepDistance = this.calculateStepDistance();
         this.positionHandlesAndUpdateTrack();
 
+        // Disable/Enable ticks
+        if (labels.length > 1) {
+            this.showTicks = false;
+        } else {
+            this.showTicks = true;
+        }
+
         if (this._hasViewInit) {
             this.setTickInterval(labels);
         }
@@ -686,6 +693,9 @@ export class IgxSliderComponent implements
     }
 
     @Input()
+    public showTicks = true;
+
+    @Input()
     public primaryTickLabels = true;
 
     @Input()
@@ -696,6 +706,7 @@ export class IgxSliderComponent implements
 
     @Input()
     public tickLabelsOrientation = TickLabelsOrientation.horizontal;
+
 
     public get deactivateThumbLabel() {
         return (this.primaryTickLabels || this.secondaryTickLabels) &&
@@ -720,8 +731,7 @@ export class IgxSliderComponent implements
     constructor(
         private renderer: Renderer2,
         private _el: ElementRef,
-        private _cdr: ChangeDetectorRef,
-        private _zone: NgZone) { }
+        private _cdr: ChangeDetectorRef) { }
 
     /**
      * @hidden
