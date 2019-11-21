@@ -1,22 +1,26 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { IgxGridComponent, FilteringExpressionsTree, FilteringLogic,
-  IPagingState, IGroupingExpression, ISortingExpression } from 'igniteui-angular';
+  IPagingState, IGroupingExpression, ISortingExpression, IgxNumberSummaryOperand, IgxSummaryResult,
+  IgxGridStateDirective, IGridState, IColumnState } from 'igniteui-angular';
 import { employeesData } from './localData';
 import { take } from 'rxjs/operators';
 import { NavigationStart, Router } from '@angular/router';
-import { IgxGridStateDirective, IGridState } from 'projects/igniteui-angular/src/lib/grids/state.directive';
 
-interface IColumnState {
-    field: string;
-    header: string;
-    width?: string;
-    groupable?: boolean;
-    dataType?: string;
-    pinned?: boolean;
-    sortable?: boolean;
-    filterable?: boolean;
-    movable?: true;
-    hidden?: boolean;
+class MySummary extends IgxNumberSummaryOperand {
+
+  constructor() {
+      super();
+  }
+
+  operate(data?: any[]): IgxSummaryResult[] {
+      const result = super.operate(data);
+      result.push({
+          key: 'test',
+          label: 'Test',
+          summaryResult: data.filter(rec => rec > 10 && rec < 30).length
+      });
+      return result;
+  }
 }
 
 @Component({
@@ -40,20 +44,20 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
     advancedFiltering: true,
     paging: true,
     sorting: true,
-    groupby: true,
+    groupBy: true,
     columns: true
   };
 
   @ViewChild(IgxGridStateDirective, { static: true }) public state: IgxGridStateDirective;
   @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 
-  public initialColumns: IColumnState[] = [
+  public initialColumns: any[] = [
     // tslint:disable:max-line-length
-    { field: 'FirstName', header: 'First Name', width: '150px', dataType: 'string', pinned: true, movable: true, sortable: true, filterable: true},
-    { field: 'LastName', header: 'Last Name', width: '150px', dataType: 'string', pinned: true, movable: true, sortable: true, filterable: true },
-    { field: 'Country', header: 'Country', width: '140px', dataType: 'string', groupable: true, movable: true, sortable: true, filterable: true },
-    { field: 'Age', header: 'Age', width: '110px', dataType: 'number', movable: true, sortable: true, filterable: true},
-    { field: 'RegistererDate', header: 'Registerer Date', width: '180px', dataType: 'date', movable: true, sortable: true, filterable: true },
+    { field: 'FirstName', header: 'First Name', width: '150px', dataType: 'string', pinned: true, movable: true, sortable: true, filterable: true, summaries: MySummary},
+    { field: 'LastName', header: 'Last Name', width: '150px', dataType: 'string', pinned: true, movable: true, sortable: true, filterable: true},
+    { field: 'Country', header: 'Country', width: '140px', dataType: 'string', groupable: true, movable: true, sortable: true, filterable: true, resizable: true },
+    { field: 'Age', header: 'Age', width: '110px', dataType: 'number', movable: true, sortable: true, filterable: true, hasSummary: true, summaries: MySummary, resizable: true},
+    { field: 'RegistererDate', header: 'Registerer Date', width: '180px', dataType: 'date', movable: true, sortable: true, filterable: true, resizable: true },
     { field: 'IsActive', header: 'Is Active', width: '140px', dataType: 'boolean', groupable: true, movable: true, sortable: true, filterable: true }
     // tslint:enable:max-line-length
   ];
@@ -121,13 +125,13 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
 
   public getColumnsState(): any {
     let state = window.localStorage.getItem(this.stateKey);
-    state = JSON.parse(state)['columns'];
+    state =  state ? JSON.parse(state).columns : null;
     return state;
   }
 
   public restoreFiltering() {
     const state = window.localStorage.getItem(this.stateKey);
-    const filteringState: FilteringExpressionsTree = JSON.parse(state).filtering;
+    const filteringState: FilteringExpressionsTree = state ? JSON.parse(state).filtering : null;
     if (filteringState) {
       const gridFilteringState: IGridState = { filtering: filteringState};
       this.state.setState(gridFilteringState);
@@ -136,7 +140,7 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
 
   public restoreAdvancedFiltering() {
     const state = window.localStorage.getItem(this.stateKey);
-    const advFilteringState: FilteringExpressionsTree = JSON.parse(state).advancedFiltering;
+    const advFilteringState: FilteringExpressionsTree = state ? JSON.parse(state).advancedFiltering : null;
     if (advFilteringState) {
       const gridAdvancedFilteringState: IGridState = { advancedFiltering: advFilteringState};
       this.state.setState(gridAdvancedFilteringState);
@@ -145,8 +149,8 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
 
   public restoreSorting() {
     const state = window.localStorage.getItem(this.stateKey);
-    const sortingState: ISortingExpression[] = JSON.parse(state).sorting;
-    if (state) {
+    const sortingState: ISortingExpression[] =  state ? JSON.parse(state).sorting : null;
+    if (sortingState) {
       const gridSortingState: IGridState = { sorting: sortingState};
       this.state.setState(gridSortingState);
     }
@@ -154,8 +158,8 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
 
   public restoreGroupby() {
     const state = window.localStorage.getItem(this.stateKey);
-    const groupByState: IGroupingExpression[] = JSON.parse(state).groupby;
-    if (state) {
+    const groupByState: IGroupingExpression[] = state ? JSON.parse(state).groupBy : null;
+    if (groupByState) {
       const gridGroupiByState: IGridState = { groupBy: groupByState};
       this.state.setState(gridGroupiByState);
     }
@@ -163,8 +167,8 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
 
   public restoreRowSelection() {
     const state = window.localStorage.getItem(this.stateKey);
-    const rowSelectionState = JSON.parse(state).rowSelection;
-    if (state) {
+    const rowSelectionState = state ? JSON.parse(state).rowSelection : null;
+    if (rowSelectionState) {
       const gridRowSelectionState: IGridState = { rowSelection: rowSelectionState };
       this.state.setState(gridRowSelectionState);
     }
@@ -172,7 +176,7 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
 
   public restoreCellSelection() {
     const state = window.localStorage.getItem(this.stateKey);
-    const cellSelectionState = JSON.parse(state).cellSelection;
+    const cellSelectionState = state ? JSON.parse(state).cellSelection : null;
     if (state) {
       const gridCellSelectionState: IGridState = { cellSelection: cellSelectionState };
       this.state.setState(gridCellSelectionState);
@@ -181,7 +185,7 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
 
   public restorePaging() {
     const state = window.localStorage.getItem(this.stateKey);
-    const pagingState: IPagingState = JSON.parse(state).paging;
+    const pagingState: IPagingState = state ? JSON.parse(state).paging : null;
     if (state) {
       const gridPagingState: IGridState = { paging: pagingState };
       this.state.setState(gridPagingState);

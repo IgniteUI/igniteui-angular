@@ -10,6 +10,7 @@ import { IPagingState } from '../data-operations/paging-state.interface';
 import { DataType } from '../data-operations/data-util';
 import { IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
     IgxStringFilteringOperand } from '../data-operations/filtering-condition';
+import { GridSelectionRange } from './selection/selection.service';
 
 export interface IGridState {
     columns?: IColumnState[];
@@ -18,7 +19,7 @@ export interface IGridState {
     sorting?: ISortingExpression[];
     groupBy?: IGroupingExpression[];
     paging?: IPagingState;
-    cellSelection?: any[];
+    cellSelection?: GridSelectionRange[];
     rowSelection?: any[];
 }
 
@@ -38,16 +39,22 @@ export interface IColumnState {
     sortable: boolean;
     filterable: boolean;
     editable: boolean;
+    sortingIgnoreCase: boolean;
+    filteringIgnoreCase: boolean;
+    headerClasses: string;
+    headerGroupClasses: string;
+    maxWidth: string;
     groupable: boolean;
     movable: boolean;
     hidden: boolean;
     dataType: string;
-    summaries?: any;
     hasSummary: boolean;
     field: string;
     width: any;
     header: string;
     resizable: boolean;
+    searchable: boolean;
+    visibleIndex: number;
 }
 
 const COLUMNS = 'columns';
@@ -272,12 +279,17 @@ export class IgxGridStateDirective {
      * Helper method that creates a new array with the current grid columns.
      */
     private getColumns() {
-        const gridColumns = this.grid.columns.map((c) => {
+        const gridColumns: IColumnState = this.grid.columns.map((c) => {
             return {
                 pinned: c.pinned,
                 sortable: c.sortable,
                 filterable: c.filterable,
                 editable: c.editable,
+                sortingIgnoreCase: c.sortingIgnoreCase,
+                filteringIgnoreCase: c.filteringIgnoreCase,
+                headerClasses: c.headerClasses,
+                headerGroupClasses: c.headerGroupClasses,
+                maxWidth: c.maxWidth,
                 groupable: c.groupable,
                 movable: c.movable,
                 hidden: c.hidden,
@@ -286,7 +298,9 @@ export class IgxGridStateDirective {
                 field: c.field,
                 width: c.width,
                 header: c.header,
-                resizable: c.resizable
+                resizable: c.resizable,
+                searchable: c.searchable,
+                visibleIndex: c.visibleIndex
             };
         });
         return { columns: gridColumns };
@@ -323,8 +337,8 @@ export class IgxGridStateDirective {
     }
 
     private getCellSelection() {
-        const selection = this.grid.selectedCells.map(cell => {
-            return { row: cell.rowIndex, column: cell.columnIndex };
+        const selection = this.grid.getSelectedRanges().map(range => {
+            return { rowStart: range.rowStart, rowEnd: range.rowEnd, columnStart: range.columnStart, columnEnd: range.columnEnd };
         });
         return { cellSelection: selection };
     }
@@ -335,27 +349,39 @@ export class IgxGridStateDirective {
     private restoreColumns(columns: IColumnState[]): void {
         const newColumns = [];
         const factory = (this.grid as any).resolver.resolveComponentFactory(IgxColumnComponent);
-        columns.forEach((col) => {
+        const sortedColumns = columns.sort(this.sortByVisibleIndex);
+        sortedColumns.forEach((col) => {
             const ref = factory.create(this.grid.viewRef.injector);
-            ref.instance.field = col.field;
-            ref.instance.dataType = col.dataType;
-            ref.instance.sortable = col.sortable;
-            ref.instance.groupable = col.groupable;
-            ref.instance.editable = col.editable;
-            ref.instance.filterable = col.filterable;
-            ref.instance.resizable = col.resizable;
-            ref.instance.movable = col.movable;
-            ref.instance.width = col.width;
             ref.instance.pinned = col.pinned;
+            ref.instance.sortable = col.sortable;
+            ref.instance.filterable = col.filterable;
+            ref.instance.editable = col.editable;
+            ref.instance.sortingIgnoreCase = col.sortingIgnoreCase;
+            ref.instance.filteringIgnoreCase = col.filteringIgnoreCase;
+            ref.instance.headerClasses = col.headerClasses;
+            ref.instance.headerGroupClasses = col.headerGroupClasses;
+            ref.instance.maxWidth = col.maxWidth;
+            ref.instance.groupable = col.groupable;
+            ref.instance.movable = col.movable;
             ref.instance.hidden = col.hidden;
+            ref.instance.dataType = col.dataType;
             ref.instance.hasSummary = col.hasSummary;
+            ref.instance.field = col.field;
+            ref.instance.width = col.width;
             ref.instance.header = col.header;
+            ref.instance.resizable = col.resizable;
+            ref.instance.searchable = col.searchable;
             ref.changeDetectorRef.detectChanges();
             newColumns.push(ref.instance);
         });
 
         this.grid.columnList.reset(newColumns);
         this.grid.columnList.notifyOnChanges();
+    }
+
+    private sortByVisibleIndex(colA, colB) {
+          const a = colA.visibleIndex, b = colB.visibleIndex;
+          return a > b ? 1 : a < b ? -1 : 0;
     }
 
     /**
@@ -422,8 +448,8 @@ export class IgxGridStateDirective {
     }
 
     private restoreCellSelection(state: any[]) {
-        state.forEach(cell => {
-            const range = { rowStart: cell.row, rowEnd: cell.row, columnStart: cell.column, columnEnd: cell.column};
+        state.forEach(r => {
+            const range = { rowStart: r.rowStart, rowEnd: r.rowEnd, columnStart: r.columnStart, columnEnd: r.columnEnd};
             this.grid.selectRange(range);
         });
     }

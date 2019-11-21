@@ -30,7 +30,7 @@
                 <igx-switch [(ngModel)]="options.sorting" (change)="onChange($event, 'sorting')">Sorting</igx-switch>
             </div>
             <div class="control-item">
-                <igx-switch [(ngModel)]="options.groupby" (change)="onChange($event, 'groupby')">Grouping</igx-switch>
+                <igx-switch [(ngModel)]="options.groupBy" (change)="onChange($event, 'groupBy')">Grouping</igx-switch>
             </div>
             <div class="control-item">
                 <igx-switch [(ngModel)]="options.columns" (change)="onChange($event, 'columns')">Columns</igx-switch>
@@ -79,12 +79,31 @@
         </div>
     </div>
 
-    <igx-grid [id]="gridId" #grid1 [igxGridState]="options" [data]="localData" [primaryKey]="'EmployeeID'" width="1200px" height="550px"
-        [rowEditable]="false" [allowFiltering]="true" [allowAdvancedFiltering]="true"
-        [paging]="true" [showToolbar]="true" [columnPinning]="true" [columnHiding]="true"
-        [filterMode]="'excelStyleFilter'" [displayDensity]="'cosy'" [cellSelection]="selectionMode" [rowSelection]="'none'">
-        <igx-column *ngFor="let c of columns" [sortable]="c.sortable" [movable]="c.movable" [editable]="true" [filterable]="c.filterable" [groupable]="c.groupable"
-            [field]="c.field" [header]="c.header" [dataType]="c.dataType" [pinned]="c.pinned" [hidden]="c.hidden">
+    <igx-grid [id]="gridId" #grid1 [igxGridState]="options"
+        width="1200px" height="550px" [autoGenerate]="false"
+        [data]="localData"
+        [primaryKey]="'EmployeeID'" 
+        [rowEditable]="false"
+        [allowFiltering]="true" [allowAdvancedFiltering]="true" [filterMode]="'excelStyleFilter'"
+        [paging]="true"
+        [showToolbar]="true"
+        [columnPinning]="true"
+        [columnHiding]="true"
+        [displayDensity]="'cosy'"
+        [cellSelection]="selectionMode"
+        [rowSelection]="'none'">
+        <igx-column *ngFor="let c of columns"
+            [sortable]="c.sortable"
+            [movable]="c.movable"
+            [editable]="true"
+            [hasSummary]="c.hasSummary"
+            [filterable]="c.filterable"
+            [groupable]="c.groupable"
+            [field]="c.field"
+            [header]="c.header"
+            [dataType]="c.dataType"
+            [pinned]="c.pinned"
+            [hidden]="c.hidden">
         </igx-column>
         </igx-grid>
 
