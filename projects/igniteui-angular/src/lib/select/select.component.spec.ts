@@ -2115,31 +2115,34 @@ describe('igxSelect', () => {
                     'Option 4',
                     'Option 5',
                     'Option 6',
-                    'Option 7'];
+                    'Option 7',
+                    'Option 8',
+                    'Option 9',
+                    'Option 10'];
                 fixture.detectChanges();
-
-                selectedItemIndex = 3;
-                select.items[selectedItemIndex].selected = true;
-                fixture.detectChanges();
-                select.toggle();
-                tick();
-                fixture.detectChanges();
-                getBoundingRectangles();
-                verifySelectedItemPositioning();
-
-                selectedItemIndex = 6;
-                select.toggle();
-                tick();
-                fixture.detectChanges();
-                select.items[selectedItemIndex].selected = true;
-                fixture.detectChanges();
-                select.toggle();
-                tick();
-                fixture.detectChanges();
-                getBoundingRectangles();
-                verifySelectedItemPositioning();
 
                 selectedItemIndex = 0;
+                select.items[selectedItemIndex].selected = true;
+                fixture.detectChanges();
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                getBoundingRectangles();
+                verifySelectedItemPositioning();
+
+                selectedItemIndex = 5;
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                select.items[selectedItemIndex].selected = true;
+                fixture.detectChanges();
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                getBoundingRectangles();
+                verifySelectedItemPositioning();
+
+                selectedItemIndex = 9;
                 select.toggle();
                 tick();
                 fixture.detectChanges();
@@ -2174,8 +2177,9 @@ describe('igxSelect', () => {
                     verifySelectedItemPositioning();
                 }));
             it('should display selected item over input and possible items above and below when item in the middle of the list is selected',
+            // there is enough scroll left in scroll container so the dropdown is NOT REPOSITIONED below the input
                 fakeAsync(() => {
-                    selectedItemIndex = 1;
+                    selectedItemIndex = 3;
                     select.items[selectedItemIndex].selected = true;
                     (select.element as HTMLElement).style.marginTop = '10px';
                     fixture.detectChanges();
@@ -2188,8 +2192,9 @@ describe('igxSelect', () => {
                     fixture.detectChanges();
                 }));
             it('should display selected item and all possible items above when last item is selected',
+            // there is NO enough scroll left in scroll container so the dropdown is REPOSITIONED below the input
                 fakeAsync(() => {
-                    selectedItemIndex = 6;
+                    selectedItemIndex = 9;
                     select.items[selectedItemIndex].selected = true;
                     fixture.detectChanges();
                     select.toggle();
@@ -2219,6 +2224,7 @@ describe('igxSelect', () => {
                     getBoundingRectangles();
                 }));
             it('should display selected item and all possible items above and below when item in the middle of the list is selected',
+            // there is NO enough scroll atop the scroll container so the dropdown is REPOSITIONED above the input
                 fakeAsync(() => {
                     selectedItemIndex = 3;
                     select.items[selectedItemIndex].selected = true;
@@ -2228,10 +2234,22 @@ describe('igxSelect', () => {
                     fixture.detectChanges();
                     getBoundingRectangles();
                 }));
+            it(`should display selected item and all possible items above and position selected item over input
+                when item is close to the end of the list is selected`,
+            // there is enough scroll left in scroll container so the dropdown is NOT REPOSITIONED above the input
+            fakeAsync(() => {
+                selectedItemIndex = 7;
+                select.items[selectedItemIndex].selected = true;
+                fixture.detectChanges();
+                select.toggle();
+                tick();
+                fixture.detectChanges();
+                getBoundingRectangles();
+            }));
             // tslint:disable-next-line:max-line-length
             it('should display list with selected item and all items before it and position selected item over input when last item is selected',
                 fakeAsync(() => {
-                    selectedItemIndex = 6;
+                    selectedItemIndex = 9;
                     select.items[selectedItemIndex].selected = true;
                     fixture.detectChanges();
                     select.toggle();
@@ -2239,8 +2257,10 @@ describe('igxSelect', () => {
                     fixture.detectChanges();
                     getBoundingRectangles();
                     verifySelectedItemPositioning(true);
-                    listTop = Math.ceil(document.body.getBoundingClientRect().bottom - defaultWindowToListOffset - listRect.height);
-                    listBottom = Math.ceil(document.body.getBoundingClientRect().bottom - defaultWindowToListOffset);
+                    listTop = document.body.getBoundingClientRect().bottom - defaultWindowToListOffset - listRect.height
+                        - negateInputPaddings();
+                    listBottom = document.body.getBoundingClientRect().bottom - defaultWindowToListOffset
+                        - negateInputPaddings();
                     verifyListPositioning();
                 }));
         });
@@ -2549,7 +2569,10 @@ class IgxSelectTopComponent {
         'Option 4',
         'Option 5',
         'Option 6',
-        'Option 7'];
+        'Option 7',
+        'Option 8',
+        'Option 9',
+        'Option 10'];
 }
 @Component({
     template: `
@@ -2570,7 +2593,10 @@ class IgxSelectBottomComponent {
         'Option 4',
         'Option 5',
         'Option 6',
-        'Option 7'];
+        'Option 7',
+        'Option 8',
+        'Option 9',
+        'Option 10'];
 }
 @Component({
     template: `
