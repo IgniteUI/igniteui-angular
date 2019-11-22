@@ -416,6 +416,16 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
+    public onDragMove(e) {
+        const deltaX = e.nextPageX - e.pageX;
+        const deltaY = e.nextPageY - e.pageY;
+        e.cancel = true;
+        this._overlayService.setOffset(this._overlayComponentId, deltaX, deltaY);
+    }
+
+    /**
+     * @hidden @internal
+     */
     public addCondition(parent: ExpressionGroupItem, afterExpression?: ExpressionItem) {
         this.cancelOperandAdd();
 
@@ -594,7 +604,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * @hidden @internal
      */
     public onChipRemove(expressionItem: ExpressionItem) {
-       this.deleteItem(expressionItem);
+        this.deleteItem(expressionItem);
     }
 
     /**
@@ -643,8 +653,8 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
 
         this.cdr.detectChanges();
 
-        this.columnSelectOverlaySettings.positionStrategy = new AutoPositionStrategy({target: this.columnSelect.element});
-        this.conditionSelectOverlaySettings.positionStrategy = new AutoPositionStrategy({target: this.conditionSelect.element});
+        this.columnSelectOverlaySettings.positionStrategy = new AutoPositionStrategy({ target: this.columnSelect.element });
+        this.conditionSelectOverlaySettings.positionStrategy = new AutoPositionStrategy({ target: this.conditionSelect.element });
 
         if (!this.selectedColumn) {
             this.columnSelect.input.nativeElement.focus();
@@ -1018,13 +1028,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         this.grid = grid;
         this._overlayService = overlayService;
         this._overlayComponentId = overlayComponentId;
-
-        // Set pointer-events to none of the overlay content element which blocks the grid interaction after dragging
-        this._overlayService.onOpened.pipe(first()).subscribe(() => {
-            if (this.element.nativeElement.parentElement) {
-                this.element.nativeElement.parentElement.style['pointer-events'] = 'none';
-            }
-        });
     }
 
     private init() {
