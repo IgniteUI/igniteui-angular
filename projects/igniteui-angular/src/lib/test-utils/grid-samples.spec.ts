@@ -1622,15 +1622,15 @@ export class GridWithUndefinedDataComponent implements OnInit  {
             </igx-column-group>
         </igx-column-group>
         <igx-column-group header="Address Information" [collapsible]="true">
-            <igx-column-group header="Country" [visibleWhenCollapsed]="true" [collapsible]="true">
+            <igx-column-group header="Country Information" [visibleWhenCollapsed]="true" [collapsible]="true">
                 <igx-column  field="Country" [visibleWhenCollapsed]="true"></igx-column>
                 <igx-column field="Region" [visibleWhenCollapsed]="true"></igx-column>
-                <igx-column-group header="Address" [visibleWhenCollapsed]="true">
+                <igx-column-group header="City Information" [visibleWhenCollapsed]="true" [collapsible]="true">
                     <igx-column field="City"></igx-column>
                     <igx-column field="Address"></igx-column>
                 </igx-column-group>
             </igx-column-group>
-            <igx-column-group header="Contact Information" [visibleWhenCollapsed]="false">
+            <igx-column-group header="Contact Information" [visibleWhenCollapsed]="false" [collapsible]="true">
                 <igx-column field="Phone" [visibleWhenCollapsed]="false"></igx-column>
                 <igx-column field="Fax" [visibleWhenCollapsed]="false"></igx-column>
                 <igx-column field="PostalCode" [visibleWhenCollapsed]="false"></igx-column>
