@@ -306,19 +306,24 @@
         bottom: 0;
         z-index: -1;
         background: --var($theme, 'slide-background');
+        visibility: hidden;
     }
 
     %igx-carousel-slide--previous {
         z-index: 1;
+        visibility: visible;
     }
 
     %igx-carousel-slide--current {
         z-index: 2;
+        visibility: visible;
     }
 
     %igx-carousel-slide img {
         width: inherit;
         height: inherit;
         object-fit: cover;
+        touch-action: none;
+        pointer-events: none;
     }
 }
