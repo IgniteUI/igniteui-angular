@@ -487,6 +487,8 @@
     $palette,
     $exclude: (),
     $legacy-support: true,
+    $roundness: null,
+    $elevation: true,
 ) {
     $primary: igx-color($palette, 'primary');
     $secondary: igx-color($palette, 'secondary');
@@ -508,6 +510,8 @@
         $schema: $light-fluent-schema,
         $legacy-support: $legacy-support,
         $exclude: $exclude,
+        $roundness: $roundness,
+        $elevation: $elevation,
     );
 }
 
@@ -519,6 +523,8 @@
     $palette,
     $exclude: (),
     $legacy-support: true,
+    $roundness: null,
+    $elevation: true,
 ) {
     $primary: igx-color($palette, 'primary');
     $secondary: igx-color($palette, 'secondary');
@@ -540,5 +546,7 @@
         $schema: $dark-fluent-schema,
         $legacy-support: $legacy-support,
         $exclude: $exclude,
+        $roundness: $roundness,
+        $elevation: $elevation,
     );
 }
