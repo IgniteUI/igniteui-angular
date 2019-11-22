@@ -676,7 +676,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     public preventContainerScroll(evt) {
-        if (evt.target.scrollTop !== 0) {
+        if (evt.target.scrollTop !== 0 && this.hasDetails) {
             const activeElem = document.activeElement;
             this.verticalScrollContainer.addScrollTop(evt.target.scrollTop);
             evt.target.scrollTop = 0;
