@@ -1,17 +1,26 @@
-import { Component, ViewChild} from '@angular/core';
+import { Component, ViewChild, ElementRef} from '@angular/core';
 import { async, TestBed, ComponentFixture } from '@angular/core/testing';
 import { By, HammerModule } from '@angular/platform-browser';
 import { IgxSliderComponent, IgxSliderModule } from './slider.component';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { SliderType, IRangeSliderValue } from './slider.common';
+import { SliderType, IRangeSliderValue, TicksOrientation, TickLabelsOrientation } from './slider.common';
 import { FormsModule } from '@angular/forms';
+import { IgxTicksComponent } from './ticks/ticks.component';
 
 declare var Simulator: any;
 const SLIDER_CLASS = '.igx-slider';
 const THUMB_TO_CLASS = '.igx-slider__thumb-to';
 const THUMB_FROM_CLASS = '.igx-slider__thumb-from';
+const SLIDER_TICKS_ELEMENT = '.igx-slider__ticks';
+const SLIDER_TICKS_TOP_ELEMENT = '.igx-slider__ticks--top';
+const SLIDER_PRIMARY_GROUP_TICKS_CLASS = '.igx-slider__ticks-group--tall'
+const SLIDER_GROUP_TICKS_CLASS = '.igx-slider__ticks-group';
+const SLIDER_TICK_LABELS_CLASS = '.igx-slider__tick-label';
+const SLIDER_TICK_LABELS_HIDDEN_CLASS = '.igx-slider__tick-label--hidden';
+const TOP_TO_BOTTOM_TICK_LABLES = '.igx-slider__tick-labels--top-bottom'
+const BOTTOM_TO_TOP_TICK_LABLES = '.igx-slider__tick-labels--bottom-top'
 describe('IgxSlider', () => {
     configureTestSuite();
     beforeEach(async(() => {
@@ -22,7 +31,8 @@ describe('IgxSlider', () => {
                 SliderTestComponent,
                 SliderWithLabelsComponent,
                 RangeSliderWithLabelsComponent,
-                RangeSliderWithCustomTemplateComponent
+                RangeSliderWithCustomTemplateComponent,
+                SliderTicksComponent
             ],
             imports: [
                 IgxSliderModule, NoopAnimationsModule, FormsModule, HammerModule
@@ -1315,13 +1325,210 @@ describe('IgxSlider', () => {
         });
     });
 
-    // describe('igxSlider ticks', () => {
-    //     let fixture: ComponentFixture<>;
-    //     let slider: IgxSliderComponent;
+    describe('igxSlider ticks', () => {
+        let fixture: ComponentFixture<SliderTicksComponent>;
+        let slider: IgxSliderComponent;
 
-    //     beforeEach(() => {
-    //     })
-    // })
+        beforeEach(() => {
+            fixture = TestBed.createComponent(SliderTicksComponent);
+            slider = fixture.componentInstance.slider;
+            fixture.detectChanges();
+        });
+
+        it('should render a specific amount of primary ticks', () => {
+            const ticks = fixture.debugElement.query(By.css(SLIDER_TICKS_ELEMENT));
+            expect(ticks).not.toBeNull();
+
+            const expectedPrimary = 5;
+            fixture.componentInstance.primaryTicks = expectedPrimary;
+            fixture.detectChanges();
+
+            const primaryTicks = ticks.nativeElement.querySelectorAll(SLIDER_PRIMARY_GROUP_TICKS_CLASS);
+            expect(primaryTicks.length).toEqual(expectedPrimary);
+        });
+
+        it('shoud render a specific amount of secondary ticks', () => {
+            const ticks = fixture.debugElement.query(By.css(SLIDER_TICKS_ELEMENT));
+            expect(ticks).not.toBeNull();
+
+            const expectedSecondary = 5;
+            fixture.componentInstance.secondaryTicks = expectedSecondary;
+            fixture.detectChanges();
+
+            const secondaryTicks = ticks.nativeElement.querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}:not(${SLIDER_PRIMARY_GROUP_TICKS_CLASS})`);
+            expect(secondaryTicks.length).toEqual(expectedSecondary);
+        });
+
+        it('should render secondary and primary ticks', () => {
+            const ticks = fixture.debugElement.query(By.css(SLIDER_TICKS_ELEMENT));
+            expect(ticks).not.toBeNull();
+
+            const expectedPrimary = 5;
+            const expectedSecondary = 3;
+            fixture.componentInstance.primaryTicks = expectedPrimary;
+            fixture.componentInstance.secondaryTicks = expectedSecondary;
+            fixture.detectChanges();
+
+            const primaryTicks = ticks.nativeElement.querySelectorAll(SLIDER_PRIMARY_GROUP_TICKS_CLASS);
+            expect(primaryTicks.length).toEqual(expectedPrimary);
+
+            const secondaryTicks = ticks.nativeElement.querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}:not(${SLIDER_PRIMARY_GROUP_TICKS_CLASS})`);
+            expect(secondaryTicks.length).toEqual((expectedPrimary - 1) * expectedSecondary);
+        });
+
+        it('hide/show top and bottom ticks', () => {
+            let ticks = fixture.debugElement.nativeElement.querySelector(SLIDER_TICKS_ELEMENT);
+            let ticksTop = fixture.debugElement.nativeElement.querySelector(SLIDER_TICKS_TOP_ELEMENT);
+
+            expect(ticks).not.toBeNull();
+            expect(ticksTop).toBeNull();
+
+            fixture.componentInstance.showTicks = false;
+            fixture.detectChanges();
+
+            ticks = fixture.debugElement.nativeElement.querySelector(SLIDER_TICKS_ELEMENT);
+            ticksTop = fixture.debugElement.nativeElement.querySelector(SLIDER_TICKS_TOP_ELEMENT);
+
+            expect(ticks).toBeNull();
+            expect(ticksTop).toBeNull();
+
+            fixture.componentInstance.showTicks = true;
+            fixture.componentInstance.ticksOrientation = TicksOrientation.mirror;
+            fixture.detectChanges();
+
+            ticks = fixture.debugElement.nativeElement.querySelector(SLIDER_TICKS_ELEMENT);
+            ticksTop = fixture.debugElement.nativeElement.querySelector(SLIDER_TICKS_TOP_ELEMENT);
+            expect(ticks).not.toBeNull();
+            expect(ticksTop).not.toBeNull();
+
+            fixture.componentInstance.showTicks = false;
+            fixture.detectChanges();
+
+            ticks = fixture.debugElement.nativeElement.querySelector(SLIDER_TICKS_ELEMENT);
+            ticksTop = fixture.debugElement.nativeElement.querySelector(SLIDER_TICKS_TOP_ELEMENT);
+            expect(ticks).toBeNull();
+            expect(ticksTop).toBeNull();
+        });
+
+        it('show/hide primary tick labels', () => {
+            const ticks = fixture.debugElement.query(By.css(SLIDER_TICKS_ELEMENT));
+            const primaryTicks = 5;
+            const secondaryTicks = 3;
+            fixture.componentInstance.primaryTicks = primaryTicks;
+            fixture.componentInstance.secondaryTicks = secondaryTicks;
+            fixture.detectChanges();
+
+            let primaryHiddenLabels = fixture.debugElement.nativeElement.querySelectorAll(`${SLIDER_PRIMARY_GROUP_TICKS_CLASS} ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
+            let secondaryHiddenLabels = fixture.debugElement.nativeElement.querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS} ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
+
+            expect(primaryHiddenLabels.length).toEqual(0);
+            expect(secondaryHiddenLabels.length).toEqual(0);
+
+            fixture.componentInstance.primaryTickLabels = false;
+            fixture.detectChanges();
+
+            primaryHiddenLabels = ticks.nativeElement
+                .querySelectorAll(`${SLIDER_PRIMARY_GROUP_TICKS_CLASS} ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
+            secondaryHiddenLabels = ticks.nativeElement
+                .querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}:not(${SLIDER_PRIMARY_GROUP_TICKS_CLASS}) ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
+            expect(primaryHiddenLabels.length).toEqual(primaryTicks);
+            expect(secondaryHiddenLabels.length).toEqual(0);
+
+            fixture.componentInstance.primaryTickLabels = true;
+            fixture.detectChanges();
+            primaryHiddenLabels = ticks.nativeElement
+            .querySelectorAll(`${SLIDER_PRIMARY_GROUP_TICKS_CLASS} ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
+            secondaryHiddenLabels = ticks.nativeElement
+            .querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}:not(${SLIDER_PRIMARY_GROUP_TICKS_CLASS}) ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
+
+            expect(primaryHiddenLabels.length).toEqual(0);
+            expect(secondaryHiddenLabels.length).toEqual(0);
+        });
+
+        it('show/hide secondary tick labels', () => {
+            const ticks = fixture.debugElement.query(By.css(SLIDER_TICKS_ELEMENT));
+            const primaryTicks = 5;
+            const secondaryTicks = 3;
+            fixture.componentInstance.primaryTicks = primaryTicks;
+            fixture.componentInstance.secondaryTicks = secondaryTicks;
+            fixture.detectChanges();
+
+            let primaryHiddenLabels = fixture.debugElement.nativeElement.querySelectorAll(`${SLIDER_PRIMARY_GROUP_TICKS_CLASS} ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
+            let secondaryHiddenLabels = fixture.debugElement.nativeElement.querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS} ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
+
+            expect(primaryHiddenLabels.length).toEqual(0);
+            expect(secondaryHiddenLabels.length).toEqual(0);
+
+            fixture.componentInstance.secondaryTickLabels = false;
+            fixture.detectChanges();
+
+            primaryHiddenLabels = ticks.nativeElement
+                .querySelectorAll(`${SLIDER_PRIMARY_GROUP_TICKS_CLASS} ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
+            secondaryHiddenLabels = ticks.nativeElement
+                .querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}:not(${SLIDER_PRIMARY_GROUP_TICKS_CLASS}) ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
+            expect(primaryHiddenLabels.length).toEqual(0);
+            expect(secondaryHiddenLabels.length).toEqual((primaryTicks - 1) * secondaryTicks);
+
+            fixture.componentInstance.secondaryTickLabels = true;
+            fixture.detectChanges();
+            primaryHiddenLabels = ticks.nativeElement
+                .querySelectorAll(`${SLIDER_PRIMARY_GROUP_TICKS_CLASS} ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
+            secondaryHiddenLabels = ticks.nativeElement
+                .querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}:not(${SLIDER_PRIMARY_GROUP_TICKS_CLASS}) ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
+
+            expect(primaryHiddenLabels.length).toEqual(0);
+            expect(secondaryHiddenLabels.length).toEqual(0);
+        });
+
+        it('change ticks orientation (top, bottom, mirror)', () => {
+            let bottomTicks = fixture.debugElement.nativeElement.querySelector(`${SLIDER_TICKS_ELEMENT}:not(${SLIDER_TICKS_TOP_ELEMENT})`);
+
+            expect(bottomTicks).not.toBeNull();
+
+            fixture.componentInstance.ticksOrientation = TicksOrientation.top;
+            fixture.detectChanges();
+
+            let topTIcks = fixture.debugElement.nativeElement.querySelector(SLIDER_TICKS_TOP_ELEMENT);
+            bottomTicks = fixture.debugElement.nativeElement.querySelector(`${SLIDER_TICKS_ELEMENT}:not(${SLIDER_TICKS_TOP_ELEMENT})`);
+            expect(topTIcks).not.toBeNull();
+            expect(bottomTicks).toBeNull();
+
+            fixture.componentInstance.ticksOrientation = TicksOrientation.mirror;
+            fixture.detectChanges();
+
+            topTIcks = fixture.debugElement.nativeElement.querySelector(SLIDER_TICKS_TOP_ELEMENT);
+            bottomTicks = fixture.debugElement.nativeElement.querySelector(`${SLIDER_TICKS_ELEMENT}:not(${SLIDER_TICKS_TOP_ELEMENT})`);
+            expect(topTIcks).not.toBeNull();
+            expect(bottomTicks).not.toBeNull();
+        });
+
+        it('change ticks label orientation (horizontal, toptobottom, bottomtotop)', () => {
+            fixture.componentInstance.primaryTicks = 5;
+            const nativeElem = fixture.debugElement.nativeElement;
+            fixture.detectChanges();
+
+            let labelsTopBottom = nativeElem.querySelector(TOP_TO_BOTTOM_TICK_LABLES);
+            let labelsBottomTop = nativeElem.querySelector(BOTTOM_TO_TOP_TICK_LABLES);
+            expect(labelsBottomTop).toBeNull();
+            expect(labelsTopBottom).toBeNull();
+
+            fixture.componentInstance.tickLabelsOrientation = TickLabelsOrientation.bottomtotop;
+            fixture.detectChanges();
+
+            labelsBottomTop = nativeElem.querySelector(BOTTOM_TO_TOP_TICK_LABLES);
+            labelsTopBottom = nativeElem.querySelector(TOP_TO_BOTTOM_TICK_LABLES);
+            expect(labelsBottomTop).not.toBeNull();
+            expect(labelsTopBottom).toBeNull();
+
+            fixture.componentInstance.tickLabelsOrientation = TickLabelsOrientation.toptobottom;
+            fixture.detectChanges();
+
+            labelsBottomTop = nativeElem.querySelector(BOTTOM_TO_TOP_TICK_LABLES);
+            labelsTopBottom = nativeElem.querySelector(TOP_TO_BOTTOM_TICK_LABLES);
+            expect(labelsTopBottom).not.toBeNull();
+            expect(labelsBottomTop).toBeNull();
+        })
+    });
 
     describe('EditorProvider', () => {
         it('Should return correct edit element (single)', () => {
@@ -1366,7 +1573,14 @@ describe('IgxSlider', () => {
 @Component({
     selector: 'igx-slider-ticks',
     template: `
-        <igx-slider [primaryTicks]="primaryTicks" [secondaryTicks]="secondaryTicks"></igx-slider>
+        <igx-slider
+            [primaryTicks]="primaryTicks"
+            [secondaryTicks]="secondaryTicks"
+            [showTicks]="showTicks"
+            [ticksOrientation]="ticksOrientation"
+            [primaryTickLabels]="primaryTickLabels"
+            [secondaryTickLabels]="secondaryTickLabels"
+            [tickLabelsOrientation]="tickLabelsOrientation"></igx-slider>
     `
 })
 export class SliderTicksComponent {
@@ -1375,6 +1589,11 @@ export class SliderTicksComponent {
 
     public primaryTicks = 0;
     public secondaryTicks = 0;
+    public showTicks = true;
+    public ticksOrientation = TicksOrientation.bottom;
+    public primaryTickLabels = true;
+    public secondaryTickLabels = true;
+    public tickLabelsOrientation = TickLabelsOrientation.horizontal;
 }
 @Component({
     selector: 'igx-slider-test-component',
