@@ -562,10 +562,6 @@ export class IgxGridNavigationService {
             let target = currentRowEl.previousElementSibling;
             const applyFocusFunc = () => {
                     target = this.getRowByIndex(rowIndex - 1, '');
-                    const focusable = target.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-                    if (focusable.length > 0 ) {
-                        target =  focusable[focusable.length - 1];
-                    }
                     target.focus({ preventScroll: true });
             };
             if (target) {
