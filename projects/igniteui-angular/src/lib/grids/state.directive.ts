@@ -123,7 +123,7 @@ export class IgxGridStateDirective {
      */
     public setState(state: IGridState | string) {
         if (typeof state === 'string') {
-            state = JSON.parse(state as string, this.parseCallback) as string;
+            state = JSON.parse(state as string) as string;
         }
         this.state = state as IGridState;
         this.restoreGridState();
@@ -478,8 +478,15 @@ export class IgxGridStateDirective {
                 } else {
                     dataType = this.state[COLUMNS].find(c => c.field === expr.fieldName).dataType;
                 }
+                // when ESF, values are stored in Set.
+                // First those values are converted to an array before returning string in the stringifyCallback
+                // now we need to convert those back to Set
+                if (Array.isArray(expr.searchVal)) {
+                    expr.searchVal = new Set(expr.searchVal);
+                } else {
+                    expr.searchVal = (dataType === 'date') ? new Date(Date.parse(expr.searchVal)) : expr.searchVal;
+                }
                 expr.condition = this.generateFilteringCondition(dataType, expr.condition.name);
-                expr.searchVal = (dataType === 'date') ? new Date(Date.parse(expr.searchVal)) : expr.searchVal;
                 expressionsTree.filteringOperands.push(expr);
             }
         }
@@ -517,11 +524,8 @@ export class IgxGridStateDirective {
         return val;
     }
 
-    private parseCallback(key: string, val: any) {
-        if (key === 'searchVal' && Array.isArray(val)) {
-            return new Set(val);
-        }
-        return val;
+    private parseISODate(val: string) {
+        return new Date(Date.parse(val));
     }
 }
 
