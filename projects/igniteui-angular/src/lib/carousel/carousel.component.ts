@@ -910,8 +910,8 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     }
 
     /** @hidden */
-    @HostListener('keydown.arrowright')
-    public onKeydownArrowRight() {
+    @HostListener('keydown.arrowright', ['$event'])
+    public onKeydownArrowRight(event) {
         if (this.keyboardSupport) {
             event.preventDefault();
             this.next();
@@ -920,8 +920,8 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     }
 
     /** @hidden */
-    @HostListener('keydown.arrowleft')
-    public onKeydownArrowLeft() {
+    @HostListener('keydown.arrowleft', ['$event'])
+    public onKeydownArrowLeft(event) {
         if (this.keyboardSupport) {
             event.preventDefault();
             this.prev();
@@ -946,8 +946,8 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     }
 
     /** @hidden */
-    @HostListener('keydown.home')
-    public onKeydownHome() {
+    @HostListener('keydown.home', ['$event'])
+    public onKeydownHome(event) {
         if (this.keyboardSupport && this.slides.length > 0) {
             event.preventDefault();
             this.slides.first.active = true;
@@ -956,8 +956,8 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     }
 
     /** @hidden */
-    @HostListener('keydown.end')
-    public onKeydownEnd() {
+    @HostListener('keydown.end', ['$event'])
+    public onKeydownEnd(event) {
         if (this.keyboardSupport && this.slides.length > 0) {
             event.preventDefault();
             this.slides.last.active = true;
