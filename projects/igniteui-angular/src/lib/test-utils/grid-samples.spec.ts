@@ -1607,3 +1607,46 @@ export class GridWithUndefinedDataComponent implements OnInit  {
         }, 300);
     }
 }
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" height="500px" width="1100px" columnWidth="100px">
+        <igx-column field="ID"></igx-column>
+        <igx-column-group header="General Information" [collapsible]="generalInfCollapsible" [expanded]="generalInfExpanded">
+            <igx-column  field="CompanyName" [visibleWhenCollapsed]="companyNameVisibleWhenCollapse"></igx-column>
+            <igx-column-group header="Person Details"
+                [collapsible]="personDetailsCollapsible"
+                [expanded]="personDetailsExpanded" [visibleWhenCollapsed]="personDetailsVisibleWhenCollapse">
+                <igx-column  field="ContactName"></igx-column>
+                <igx-column  field="ContactTitle"></igx-column>
+            </igx-column-group>
+        </igx-column-group>
+        <igx-column-group header="Address Information" [collapsible]="true">
+            <igx-column-group header="Country" [visibleWhenCollapsed]="true" [collapsible]="true">
+                <igx-column  field="Country" [visibleWhenCollapsed]="true"></igx-column>
+                <igx-column field="Region" [visibleWhenCollapsed]="true"></igx-column>
+                <igx-column-group header="Address" [visibleWhenCollapsed]="true">
+                    <igx-column field="City"></igx-column>
+                    <igx-column field="Address"></igx-column>
+                </igx-column-group>
+            </igx-column-group>
+            <igx-column-group header="Contact Information" [visibleWhenCollapsed]="false">
+                <igx-column field="Phone" [visibleWhenCollapsed]="false"></igx-column>
+                <igx-column field="Fax" [visibleWhenCollapsed]="false"></igx-column>
+                <igx-column field="PostalCode" [visibleWhenCollapsed]="false"></igx-column>
+            </igx-column-group>
+        </igx-column-group>
+    </igx-grid>
+    `
+})
+export class CollapsibleColumnGroupTestComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    grid: IgxGridComponent;
+    public generalInfCollapsible;
+    public generalInfExpanded;
+    public personDetailsCollapsible;
+    public personDetailsExpanded;
+    public personDetailsVisibleWhenCollapse;
+    public companyNameVisibleWhenCollapse;
+    data = SampleTestData.contactInfoDataFull();
+}
