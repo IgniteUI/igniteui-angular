@@ -297,7 +297,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     private _grid: GridType;
     private _filteringChange: Subscription;
 
-    constructor(private element: ElementRef, public cdr: ChangeDetectorRef) { }
+    constructor(public cdr: ChangeDetectorRef) { }
 
     /**
      * @hidden @internal
