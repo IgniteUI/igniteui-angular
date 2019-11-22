@@ -58,6 +58,7 @@ All notable changes for each version of this project will be documented in this 
     ```
     - `IgxCarousel`:
         - `keyboardSupport` input is added, which can be used to enable and disable keyboard navigation
+        - `gesturesSupport` input is added, which can be used to enable and disable gestures
         - `maximumIndicatorsCount` input is added, which can be used to set the number of visible indicators
         - `indicatorsOrientation` input is added, which can be used to set the position of indicators it can be top or bottom
         - `animationType` input is added, which can be used to set animation when changing slides
