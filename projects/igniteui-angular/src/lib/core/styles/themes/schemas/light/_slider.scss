@@ -21,6 +21,11 @@
 /// @property {map} base-track-hover-color [igx-color: ('secondary', 500), rgba: .24] - The base background color of the track on hover.
 /// @property {map} disabled-base-track-color [igx-color: ('grays', 400)] - The base background color of the track when is disabled.
 ///
+/// @property {map} tick-label-color [igx-color: ('grays', 400)] - The color of the tick label.
+/// @property {map} tick-label-color--tall [igx-color: ('grays', 800)] - The color of the tall tick label .
+/// @property {map} tick-color [igx-color: ('grays', 400)] - The background-color of the tick.
+/// @property {map} tick-color--tall [igx-color: ('grays', 400)] - The background-color of the tall tick.
+
 /// @see $default-palette
 $_light-slider: extend(
     $_default-shape-slider,
@@ -28,15 +33,19 @@ $_light-slider: extend(
         variant: 'material',
 
         tick-color:  (
-            igx-color: ('grays', 400)
+            igx-color: ('grays', 500)
+        ),
+
+        tick-color-tall:  (
+            igx-color: ('grays', 500)
         ),
 
         tick-label-color:  (
-            igx-color: ('grays', 400)
+            igx-color: ('grays', 500)
         ),
 
         tick-label-color-tall:  (
-            igx-color: ('grays', 800)
+            igx-color: ('grays', 900)
         ),
 
         track-color: (

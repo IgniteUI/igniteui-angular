@@ -221,9 +221,10 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
         this._isPressed = visible;
 
         if (this.continuous || this.deactiveState) {
-            return;
+            this._isActive = false;
+        } else {
+            this._isActive = visible;
         }
 
-        this._isActive = visible;
     }
 }

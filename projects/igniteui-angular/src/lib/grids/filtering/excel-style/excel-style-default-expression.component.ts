@@ -76,7 +76,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     @ViewChild('dropdownConditions', { read: IgxDropDownComponent, static: true })
     protected dropdownConditions: IgxDropDownComponent;
 
-    @ViewChild('logicOperatorButtonGroup', { read: IgxButtonGroupComponent, static: false })
+    @ViewChild('logicOperatorButtonGroup', { read: IgxButtonGroupComponent })
     protected logicOperatorButtonGroup: IgxButtonGroupComponent;
 
     protected get inputValuesElement() {

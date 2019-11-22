@@ -34,6 +34,18 @@
         @extend %igx-slider__ticks--top !optional;
     }
 
+    @include e(tick-label, $m: hidden) {
+        @extend %igx-slider__tick-label--hidden !optional;
+    }
+
+    @include e(tick-labels, $m: top-bottom) {
+        @extend %igx-slider__tick-labels--top-bottom !optional;
+    }
+
+    @include e(tick-labels, $m: bottom-top) {
+        @extend %igx-slider__tick-labels--bottom-top !optional;
+    }
+
     @include e(ticks-group) {
         @extend %igx-slider__ticks-group !optional;
     }
@@ -100,6 +112,10 @@
         }
     }
 
+    @include e(track-steps) {
+        @extend %igx-slider-track-steps !optional;
+    }
+
     @include m(disabled) {
         @extend %igx-slider-display !optional;
 
@@ -108,14 +124,21 @@
             @extend %igx-slider-track--disabled !optional;
         }
 
+        @include e(track-steps) {
+            @extend %igx-slider-track-steps--disabled !optional;
+        }
+
         @include e(track-fill) {
             @extend %igx-slider-track-fill !optional;
             @extend %igx-slider-track-fill--disabled !optional;
         }
 
-        @include e(ticks) {
-            @extend %igx-slider__ticks !optional;
-            @extend %igx-slider__ticks--disabled !optional;
+        @include e(ticks-tick) {
+            @extend %igx-slider__tick--disabled !optional;
+        }
+
+        @include e(ticks-label) {
+            @extend %igx-slider__ticks-labels--disabled !optional;
         }
 
         @each $t in $thumbs {

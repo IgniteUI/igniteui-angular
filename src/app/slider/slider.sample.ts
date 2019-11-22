@@ -21,7 +21,7 @@ export class SliderSampleComponent {
     private _upperValue: Date;
 
     public labelOrientaion = TickLabelsOrientation.horizontal;
-    public ticksOrientation = TicksOrientation.mirror;
+    public ticksOrientation = TicksOrientation.bottom;
     public primaryTickLabels = true;
     public secondaryTickLabels = true;
     public sliderType: SliderType = SliderType.RANGE;
@@ -68,7 +68,7 @@ export class SliderSampleComponent {
     public changeLabelOrientation() {
         if (this.labelOrientaion === TickLabelsOrientation.horizontal) {
             this.labelOrientaion = TickLabelsOrientation.toptobottom;
-        } else if (this.labelOrientaion === TickLabelsOrientation.toptobottom) {
+        } else if(this.labelOrientaion === TickLabelsOrientation.toptobottom) {
             this.labelOrientaion = TickLabelsOrientation.bottomtotop;
         } else {
             this.labelOrientaion = TickLabelsOrientation.horizontal;

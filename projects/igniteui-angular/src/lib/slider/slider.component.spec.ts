@@ -1,18 +1,17 @@
 import { Component, ViewChild} from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { async, TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+import { async, TestBed, ComponentFixture } from '@angular/core/testing';
+import { By, HammerModule } from '@angular/platform-browser';
 import { IgxSliderComponent, IgxSliderModule } from './slider.component';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { SliderType, IRangeSliderValue } from './slider.common';
+import { FormsModule } from '@angular/forms';
 
 declare var Simulator: any;
 const SLIDER_CLASS = '.igx-slider';
 const THUMB_TO_CLASS = '.igx-slider__thumb-to';
 const THUMB_FROM_CLASS = '.igx-slider__thumb-from';
-
 describe('IgxSlider', () => {
     configureTestSuite();
     beforeEach(async(() => {
@@ -26,7 +25,7 @@ describe('IgxSlider', () => {
                 RangeSliderWithCustomTemplateComponent
             ],
             imports: [
-                IgxSliderModule, NoopAnimationsModule, FormsModule
+                IgxSliderModule, NoopAnimationsModule, FormsModule, HammerModule
             ]
         }).compileComponents();
     }));
@@ -77,22 +76,22 @@ describe('IgxSlider', () => {
             expect(slider.maxValue).toBe(expectedMaxValue);
         });
 
-        it('should reduce minValue when greater than maxValue', () => {
+        it('should prevent setting minValue when greater than maxValue', () => {
             slider.maxValue = 6;
             slider.minValue = 10;
 
-            const expectedMinValue = slider.maxValue - 1;
+            const expectedMinValue = 0;
             fixture.detectChanges();
 
             expect(slider.minValue).toBe(expectedMinValue);
             expect(slider.minValue).toBeLessThan(slider.maxValue);
         });
 
-        it('should increase minValue when greater than maxValue', () => {
+        it('should prevent setting maxValue when lower than minValue', () => {
             slider.minValue = 3;
             slider.maxValue = -5;
 
-            const expectedMaxValue = slider.minValue + 1;
+            const expectedMaxValue = 100;
             fixture.detectChanges();
 
             expect(slider.maxValue).toBe(expectedMaxValue);
@@ -636,7 +635,7 @@ describe('IgxSlider', () => {
         });
 
         it('tick marks(steps) should be shown equally spread based on labels length', () => {
-            const ticks = fixture.nativeElement.querySelector('.igx-slider__ticks');
+            const ticks = fixture.nativeElement.querySelector('.igx-slider__track-steps');
             const sliderWidth = parseInt(fixture.nativeElement.querySelector('igx-slider').clientWidth, 10);
 
             expect(slider.type).toBe(SliderType.SLIDER);
@@ -920,7 +919,7 @@ describe('IgxSlider', () => {
         });
 
         it('tick marks(steps) should be shown equally spread based on labels length', () => {
-            const ticks = fixture.nativeElement.querySelector('.igx-slider__ticks');
+            const ticks = fixture.nativeElement.querySelector('.igx-slider__track-steps');
             const sliderWidth = parseInt(fixture.nativeElement.querySelector('igx-slider').clientWidth, 10);
 
             expect(slider.type).toBe(SliderType.RANGE);
@@ -1124,7 +1123,7 @@ describe('IgxSlider', () => {
 
         it('should draw tick marks', () => {
             const fixture = TestBed.createComponent(SliderInitializeTestComponent);
-            const ticks = fixture.nativeElement.querySelector('.igx-slider__ticks');
+            const ticks = fixture.nativeElement.querySelector('.igx-slider__track-steps');
 
             // Slider steps <= 1. No marks should be drawn;
             expect(ticks.style.background).toBeFalsy();
@@ -1140,7 +1139,7 @@ describe('IgxSlider', () => {
             const fixture = TestBed.createComponent(SliderInitializeTestComponent);
             fixture.detectChanges();
 
-            const ticks = fixture.nativeElement.querySelector('.igx-slider__ticks');
+            const ticks = fixture.nativeElement.querySelector('.igx-slider__track-steps');
             const slider = fixture.componentInstance.slider;
 
             expect(ticks.style.background).toBeFalsy();
@@ -1316,6 +1315,14 @@ describe('IgxSlider', () => {
         });
     });
 
+    // describe('igxSlider ticks', () => {
+    //     let fixture: ComponentFixture<>;
+    //     let slider: IgxSliderComponent;
+
+    //     beforeEach(() => {
+    //     })
+    // })
+
     describe('EditorProvider', () => {
         it('Should return correct edit element (single)', () => {
             const fixture = TestBed.createComponent(SliderInitializeTestComponent);
@@ -1355,6 +1362,20 @@ describe('IgxSlider', () => {
         });
     }
 });
+
+@Component({
+    selector: 'igx-slider-ticks',
+    template: `
+        <igx-slider [primaryTicks]="primaryTicks" [secondaryTicks]="secondaryTicks"></igx-slider>
+    `
+})
+export class SliderTicksComponent {
+    @ViewChild(IgxSliderComponent)
+    public slider: IgxSliderComponent;
+
+    public primaryTicks = 0;
+    public secondaryTicks = 0;
+}
 @Component({
     selector: 'igx-slider-test-component',
     template: `<igx-slider #slider>
@@ -1366,7 +1387,7 @@ class SliderInitializeTestComponent {
 
 @Component({
     template: `
-        <igx-slider [minValue]='minValue' [maxValue]='maxValue'></igx-slider>
+        <igx-slider [maxValue]='maxValue' [minValue]='minValue'></igx-slider>
     `
 })
 export class SliderMinMaxComponent {

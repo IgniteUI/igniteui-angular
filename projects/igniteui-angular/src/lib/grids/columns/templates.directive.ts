@@ -42,3 +42,11 @@ export class IgxCellEditorTemplateDirective {
 
     constructor(public template: TemplateRef<any>) { }
 }
+
+@Directive({
+    selector: '[igxCollapsibleIndicator]'
+})
+export class IgxCollapsibleIndicatorTemplateDirective {
+
+    constructor(public template: TemplateRef<any>) { }
+}

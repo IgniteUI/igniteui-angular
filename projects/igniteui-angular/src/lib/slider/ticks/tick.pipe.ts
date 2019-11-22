@@ -7,7 +7,11 @@ export class IgxTickLabelsPipe implements PipeTransform {
 
 
     public transform(labels: Array<string | number | boolean | null | undefined>, secondaryTicks: number) {
-        let result = [];
+        if (!labels) {
+            return;
+        }
+
+        const result = [];
         labels.forEach(item => {
             result.push(item);
             for (let i = 0; i < secondaryTicks; i++) {

@@ -12,14 +12,7 @@ import { DeprecateMethod } from '../core/deprecateDecorators';
     exports: [IgxIconComponent],
     imports: [CommonModule]
 })
-export class IgxIconModule {
-    @DeprecateMethod('IgxIconModule.forRoot method is deprecated. Use IgxIconModule instead.')
-    public static forRoot() {
-        return {
-            ngModule: IgxIconModule
-        };
-    }
-}
+export class IgxIconModule { }
 
 export * from './icon.component';
 export * from './icon.service';

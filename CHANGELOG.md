@@ -8,13 +8,19 @@ All notable changes for each version of this project will be documented in this 
 - Added support for the Ivy renderer.
 - **Breaking Changes** The following classes have been renamed. Using `ng update` will apply automatically migrate your project to use the new names.
     - `IgxDropDownBase` -> `IgxDropDownBaseDirective`
-    - `IgxDropDownItemBase` -> `IgxDropDownBaseDirective`
+    - `IgxDropDownItemBase` -> `IgxDropDownItemBaseDirective`
     - `IgxGridBaseComponent` -> `IgxGridBaseDirective`
     - `IgxRowComponent` -> `IgxRowDirective`
     - `IgxHierarchicalGridBaseComponent` -> `IgxHierarchicalGridBaseDirective`
+    - `IgxMonthPickerBase` -> `IgxMonthPickerBaseDirective`
+    - `IgxBaseExporter` -> `IgxBaseExporterDirective`
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - Pinning columns is no longer automatically prevented when the pinning area would exceed the size of the grid.
+- `IgxCarousel`:
+    - **Breaking Changes** -The carousel slides are no longer array, they are changed to QueryList.
+    - **Behavioural change** - When slides are more than 5, a label is shown instead of the indicators. The count limit of visible indicators can be changed with the input `maximumIndicatorsCount`
+
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`:
@@ -25,13 +31,19 @@ All notable changes for each version of this project will be documented in this 
     - `sortingExpressionsChange` event emitter is added, which is fired whenever a change to the sorting expressions has occurred (prior to performing the actual sorting).
     - `filteringExpressionsTreeChange` event emitter is added, which is fired whenever a change to the filtering expressions has occurred (prior to performing the actual filtering).
     - `advancedFilteringExpressionsTreeChange` event emitter is added, which is fired whenever a change to the advanced filtering expressions has occurred (prior to performing the actual filtering).
-- `IgxGridExcelStyleFilteringComponent` and `IgxAdvancedFilteringDialogComponent` can now be hosted outside of the grid in order to provide the same experience as the built-in filtering UI.
-- `IgxOverlayService`:
-    - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
-- `IgxToggleDirective`:
-    - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
-- `IgxRowDragGhost` directive is added. It allows providing a custom template for the drag ghost when dragging a row.
-```html
+    - `collapsible` and `expanded` properties are added to the IgxColumnGroupComponent; `collapsible` property identifies that certain column group is collapsible; `expanded` identifies whether the group is expanded or collapsed initially;
+    - `collapsibleChange` and `expandedChange` events are added to the IgxColumnGroupComponent which are emited whenever `collapsible` and `expanded` properties are changed accordingly;
+    - `visibleWhenCollapsed` property has been added to the IgxColumnComponent; Allows you to set whether the column stay visible when its parrent is collapsed.
+    - `visibleWhenCollapsedChange` events is added to the IgxColumnComponent which are emited whenever `visibleWhenCollapsed`  property is changed;
+    - `collapsibleIndicatorTemplate` property is introduced to IgxColumnGroupComponent, which allows you to set a custom template for the expand collapse indicator;
+    - `igxCollapsibleIndicator` directive has been introduced, which allows you to set a custom template for the expand collapse indicator;
+    - `IgxGridExcelStyleFilteringComponent` and `IgxAdvancedFilteringDialogComponent` can now be hosted outside of the grid in order to provide the same experience as the built-in filtering UI.
+    - `IgxOverlayService`:
+        - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
+    - `IgxToggleDirective`:
+        - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
+    - `IgxRowDragGhost` directive is added. It allows providing a custom template for the drag ghost when dragging a row.
+    ```html
     <igx-grid #grid1 [data]="remote | async" primaryKey="ProductID"
         [rowDraggable]="true">
         <igx-column field="ProductName"></igx-column>
@@ -43,7 +55,25 @@ All notable changes for each version of this project will be documented in this 
             </div>
         </ng-template>
     </igx-grid>
-```
+    ```
+- `IgxCarousel`:
+    - `keyboardSupport` input is added, which can be used to enable and disable keyboard navigation
+    - `maximumIndicatorsCount` input is added, which can be used to set the number of visible indicators
+    - `indicatorsOrientation` input is added, which can be used to set the position of indicators it can be top or bottom
+    - `animationType` input is added, which can be used to set animation when changing slides
+    - `indicatorTemplate` directive is added, which can be used to provide a custom indicator for carousel. If this property is not provided, a default indicator template will be used instead.
+    - `nextButtonTemplate` directive is added, which is used to provide a custom next button template. If not provided, a default next button is used.
+    - `prevButtonTemplate` directive is added, which is used to provide a custom previous button template. If not provided, a default previous button is used.
+
+- `IgxSlider`:
+    - `primaryTicks` input was added. Which sets the number of primary ticks
+    - `secondaryTicks` input was added. Which sets the number of secondary ticks.
+    - `showTicks` input was added. Which show/hide all slider ticks and tick labels.
+    - `primaryTickLabels` input was added. Which shows/hides all primary tick labels.
+    - `secondaryTickLabels` input was added. Shows/hides all secondary tick labels.
+    - `ticksOrientation` input was added. Allows to change ticks orientation to top|bottom|mirror.
+    - `tickLabelsOrientation` input was added. Allows you to change the rotation of all tick labels from horizontal to vertical(toptobottom, bottomtotop).
+    - `igxSliderTickLabel` directive has been introduced. Allows you to set a custom template for all tick labels.
 
 ## 8.2.6
 

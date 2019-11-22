@@ -6,16 +6,19 @@
         <div> -->
             <h4 class="sample-title">Slider</h4>
             <article class="sample-column">
-                <igx-slider #slider [type]="sliderType" [value]="rangeValue" [step]="25" [lowerBound]="0"
+                <igx-slider #slider [step]="10" [lowerBound]="20" [upperBound]="4"
                     [tickLabelsOrientation]="labelOrientaion"
+                    [continuous]="false"
+                    [type]="sliderType"
                     [primaryTickLabels]="primaryTickLabels"
                     [secondaryTickLabels]="secondaryTickLabels"
                     [ticksOrientation]="ticksOrientation"
+                    [labels]="labels"
                     [primaryTicks]="3"
                     [secondaryTicks]="3">
-                    <ng-template igxSliderTickLabel let-value let-primary="isPrimary" let-idx="index" let-labels="labels">
+                    <!-- <ng-template igxSliderTickLabel let-value let-primary="isPrimary" let-idx="index" let-labels="labels">
                         {{ tickLabel(value, primary, idx, labels) }}
-                    </ng-template>
+                    </ng-template> -->
                 </igx-slider>
             </article>
             <article style="padding-top: 50px">
@@ -24,6 +27,7 @@
                 <button igxButton (click)="primaryTickLabels = !primaryTickLabels">show/hide primary labels</button>
                 <button igxButton (click)="secondaryTickLabels = !secondaryTickLabels">show/hide secondary labels</button>
                 <button igxButton (click)="changeLabels()">change labels</button>
+                <button igxButton (click)="sliderType = sliderType === 0 ? 1 : 0">change type</button>
             </article>
 
 
