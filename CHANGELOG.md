@@ -58,6 +58,7 @@ All notable changes for each version of this project will be documented in this 
     ```
 - `IgxCarousel`:
     - `keyboardSupport` input is added, which can be used to enable and disable keyboard navigation
+    - `gesturesSupport` input is added, which can be used to enable and disable gestures
     - `maximumIndicatorsCount` input is added, which can be used to set the number of visible indicators
     - `indicatorsOrientation` input is added, which can be used to set the position of indicators it can be top or bottom
     - `animationType` input is added, which can be used to set animation when changing slides
@@ -74,6 +75,7 @@ All notable changes for each version of this project will be documented in this 
     - `ticksOrientation` input was added. Allows to change ticks orientation to top|bottom|mirror.
     - `tickLabelsOrientation` input was added. Allows you to change the rotation of all tick labels from horizontal to vertical(toptobottom, bottomtotop).
     - `igxSliderTickLabel` directive has been introduced. Allows you to set a custom template for all tick labels.
+
 
 ## 8.2.6
 
