@@ -15,12 +15,12 @@ const THUMB_TO_CLASS = '.igx-slider__thumb-to';
 const THUMB_FROM_CLASS = '.igx-slider__thumb-from';
 const SLIDER_TICKS_ELEMENT = '.igx-slider__ticks';
 const SLIDER_TICKS_TOP_ELEMENT = '.igx-slider__ticks--top';
-const SLIDER_PRIMARY_GROUP_TICKS_CLASS = '.igx-slider__ticks-group--tall'
+const SLIDER_PRIMARY_GROUP_TICKS_CLASS = '.igx-slider__ticks-group--tall';
 const SLIDER_GROUP_TICKS_CLASS = '.igx-slider__ticks-group';
 const SLIDER_TICK_LABELS_CLASS = '.igx-slider__tick-label';
 const SLIDER_TICK_LABELS_HIDDEN_CLASS = '.igx-slider__tick-label--hidden';
-const TOP_TO_BOTTOM_TICK_LABLES = '.igx-slider__tick-labels--top-bottom'
-const BOTTOM_TO_TOP_TICK_LABLES = '.igx-slider__tick-labels--bottom-top'
+const TOP_TO_BOTTOM_TICK_LABLES = '.igx-slider__tick-labels--top-bottom';
+const BOTTOM_TO_TOP_TICK_LABLES = '.igx-slider__tick-labels--bottom-top';
 describe('IgxSlider', () => {
     configureTestSuite();
     beforeEach(async(() => {
@@ -1343,7 +1343,8 @@ describe('IgxSlider', () => {
             fixture.componentInstance.primaryTicks = expectedPrimary;
             fixture.detectChanges();
 
-            const primaryTicks = ticks.nativeElement.querySelectorAll(SLIDER_PRIMARY_GROUP_TICKS_CLASS);
+            const primaryTicks = ticks.nativeElement
+                .querySelectorAll(SLIDER_PRIMARY_GROUP_TICKS_CLASS);
             expect(primaryTicks.length).toEqual(expectedPrimary);
         });
 
@@ -1355,7 +1356,8 @@ describe('IgxSlider', () => {
             fixture.componentInstance.secondaryTicks = expectedSecondary;
             fixture.detectChanges();
 
-            const secondaryTicks = ticks.nativeElement.querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}:not(${SLIDER_PRIMARY_GROUP_TICKS_CLASS})`);
+            const secondaryTicks = ticks.nativeElement
+                .querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}:not(${SLIDER_PRIMARY_GROUP_TICKS_CLASS})`);
             expect(secondaryTicks.length).toEqual(expectedSecondary);
         });
 
@@ -1369,10 +1371,12 @@ describe('IgxSlider', () => {
             fixture.componentInstance.secondaryTicks = expectedSecondary;
             fixture.detectChanges();
 
-            const primaryTicks = ticks.nativeElement.querySelectorAll(SLIDER_PRIMARY_GROUP_TICKS_CLASS);
+            const primaryTicks = ticks.nativeElement
+                .querySelectorAll(SLIDER_PRIMARY_GROUP_TICKS_CLASS);
             expect(primaryTicks.length).toEqual(expectedPrimary);
 
-            const secondaryTicks = ticks.nativeElement.querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}:not(${SLIDER_PRIMARY_GROUP_TICKS_CLASS})`);
+            const secondaryTicks = ticks.nativeElement
+                .querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}:not(${SLIDER_PRIMARY_GROUP_TICKS_CLASS})`);
             expect(secondaryTicks.length).toEqual((expectedPrimary - 1) * expectedSecondary);
         });
 
@@ -1418,8 +1422,10 @@ describe('IgxSlider', () => {
             fixture.componentInstance.secondaryTicks = secondaryTicks;
             fixture.detectChanges();
 
-            let primaryHiddenLabels = fixture.debugElement.nativeElement.querySelectorAll(`${SLIDER_PRIMARY_GROUP_TICKS_CLASS} ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
-            let secondaryHiddenLabels = fixture.debugElement.nativeElement.querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS} ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
+            let primaryHiddenLabels = fixture.debugElement.nativeElement
+                .querySelectorAll(`${SLIDER_PRIMARY_GROUP_TICKS_CLASS} ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
+            let secondaryHiddenLabels = fixture.debugElement.nativeElement
+                .querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS} ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
 
             expect(primaryHiddenLabels.length).toEqual(0);
             expect(secondaryHiddenLabels.length).toEqual(0);
@@ -1430,7 +1436,8 @@ describe('IgxSlider', () => {
             primaryHiddenLabels = ticks.nativeElement
                 .querySelectorAll(`${SLIDER_PRIMARY_GROUP_TICKS_CLASS} ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
             secondaryHiddenLabels = ticks.nativeElement
-                .querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}:not(${SLIDER_PRIMARY_GROUP_TICKS_CLASS}) ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
+                .querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}
+                    :not(${SLIDER_PRIMARY_GROUP_TICKS_CLASS}) ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
             expect(primaryHiddenLabels.length).toEqual(primaryTicks);
             expect(secondaryHiddenLabels.length).toEqual(0);
 
@@ -1439,7 +1446,8 @@ describe('IgxSlider', () => {
             primaryHiddenLabels = ticks.nativeElement
             .querySelectorAll(`${SLIDER_PRIMARY_GROUP_TICKS_CLASS} ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
             secondaryHiddenLabels = ticks.nativeElement
-            .querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}:not(${SLIDER_PRIMARY_GROUP_TICKS_CLASS}) ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
+            .querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}
+                :not(${SLIDER_PRIMARY_GROUP_TICKS_CLASS}) ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
 
             expect(primaryHiddenLabels.length).toEqual(0);
             expect(secondaryHiddenLabels.length).toEqual(0);
@@ -1453,8 +1461,10 @@ describe('IgxSlider', () => {
             fixture.componentInstance.secondaryTicks = secondaryTicks;
             fixture.detectChanges();
 
-            let primaryHiddenLabels = fixture.debugElement.nativeElement.querySelectorAll(`${SLIDER_PRIMARY_GROUP_TICKS_CLASS} ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
-            let secondaryHiddenLabels = fixture.debugElement.nativeElement.querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS} ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
+            let primaryHiddenLabels = fixture.debugElement.nativeElement
+                .querySelectorAll(`${SLIDER_PRIMARY_GROUP_TICKS_CLASS} ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
+            let secondaryHiddenLabels = fixture.debugElement.nativeElement
+                .querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS} ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
 
             expect(primaryHiddenLabels.length).toEqual(0);
             expect(secondaryHiddenLabels.length).toEqual(0);
@@ -1465,7 +1475,8 @@ describe('IgxSlider', () => {
             primaryHiddenLabels = ticks.nativeElement
                 .querySelectorAll(`${SLIDER_PRIMARY_GROUP_TICKS_CLASS} ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
             secondaryHiddenLabels = ticks.nativeElement
-                .querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}:not(${SLIDER_PRIMARY_GROUP_TICKS_CLASS}) ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
+                .querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}
+                    :not(${SLIDER_PRIMARY_GROUP_TICKS_CLASS}) ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
             expect(primaryHiddenLabels.length).toEqual(0);
             expect(secondaryHiddenLabels.length).toEqual((primaryTicks - 1) * secondaryTicks);
 
@@ -1474,14 +1485,16 @@ describe('IgxSlider', () => {
             primaryHiddenLabels = ticks.nativeElement
                 .querySelectorAll(`${SLIDER_PRIMARY_GROUP_TICKS_CLASS} ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
             secondaryHiddenLabels = ticks.nativeElement
-                .querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}:not(${SLIDER_PRIMARY_GROUP_TICKS_CLASS}) ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
+                .querySelectorAll(`${SLIDER_GROUP_TICKS_CLASS}
+                    :not(${SLIDER_PRIMARY_GROUP_TICKS_CLASS}) ${SLIDER_TICK_LABELS_HIDDEN_CLASS}`);
 
             expect(primaryHiddenLabels.length).toEqual(0);
             expect(secondaryHiddenLabels.length).toEqual(0);
         });
 
         it('change ticks orientation (top, bottom, mirror)', () => {
-            let bottomTicks = fixture.debugElement.nativeElement.querySelector(`${SLIDER_TICKS_ELEMENT}:not(${SLIDER_TICKS_TOP_ELEMENT})`);
+            let bottomTicks = fixture.debugElement.nativeElement
+                .querySelector(`${SLIDER_TICKS_ELEMENT}:not(${SLIDER_TICKS_TOP_ELEMENT})`);
 
             expect(bottomTicks).not.toBeNull();
 
@@ -1489,7 +1502,8 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
 
             let topTIcks = fixture.debugElement.nativeElement.querySelector(SLIDER_TICKS_TOP_ELEMENT);
-            bottomTicks = fixture.debugElement.nativeElement.querySelector(`${SLIDER_TICKS_ELEMENT}:not(${SLIDER_TICKS_TOP_ELEMENT})`);
+            bottomTicks = fixture.debugElement.nativeElement
+                .querySelector(`${SLIDER_TICKS_ELEMENT}:not(${SLIDER_TICKS_TOP_ELEMENT})`);
             expect(topTIcks).not.toBeNull();
             expect(bottomTicks).toBeNull();
 
@@ -1497,7 +1511,8 @@ describe('IgxSlider', () => {
             fixture.detectChanges();
 
             topTIcks = fixture.debugElement.nativeElement.querySelector(SLIDER_TICKS_TOP_ELEMENT);
-            bottomTicks = fixture.debugElement.nativeElement.querySelector(`${SLIDER_TICKS_ELEMENT}:not(${SLIDER_TICKS_TOP_ELEMENT})`);
+            bottomTicks = fixture.debugElement.nativeElement
+                .querySelector(`${SLIDER_TICKS_ELEMENT}:not(${SLIDER_TICKS_TOP_ELEMENT})`);
             expect(topTIcks).not.toBeNull();
             expect(bottomTicks).not.toBeNull();
         });
@@ -1527,7 +1542,7 @@ describe('IgxSlider', () => {
             labelsTopBottom = nativeElem.querySelector(TOP_TO_BOTTOM_TICK_LABLES);
             expect(labelsTopBottom).not.toBeNull();
             expect(labelsBottomTop).toBeNull();
-        })
+        });
     });
 
     describe('EditorProvider', () => {
