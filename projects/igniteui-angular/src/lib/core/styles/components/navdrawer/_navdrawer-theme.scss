@@ -305,11 +305,7 @@
         }
 
         // Need this to override the igx-buttons
-        &%igx-button--flat,
-        &%igx-button--outlined,
-        &%igx-button--raised,
-        &%igx-button--fab,
-        &%igx-button--icon  {
+        &igx-button {
             background: transparent;
             border: none;
             box-shadow: none;
@@ -359,11 +355,7 @@
         }
 
         // Need this to override the igx-buttons
-        &%igx-button--flat,
-        &%igx-button--outlined,
-        &%igx-button--raised,
-        &%igx-button--fab,
-        &%igx-button--icon  {
+        &igx-button {
             box-shadow: none;
 
             igx-icon {
