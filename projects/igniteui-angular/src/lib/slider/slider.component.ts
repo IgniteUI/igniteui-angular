@@ -33,6 +33,7 @@ import { SliderHandle,
 import { IgxThumbLabelComponent } from './label/thumb-label.component';
 import { IgxTicksComponent } from './ticks/ticks.component';
 import { IgxTickLabelsPipe } from './ticks/tick.pipe';
+import { HammerModule } from '@angular/platform-browser';
 
 const noop = () => {
 };
@@ -295,7 +296,7 @@ export class IgxSliderComponent implements
         this.positionHandlesAndUpdateTrack();
 
         if (this._hasViewInit) {
-            this.setTickInterval(labels);
+            this.setTickInterval();
         }
     }
 
@@ -331,7 +332,7 @@ export class IgxSliderComponent implements
         if (this._hasViewInit) {
             this.stepDistance = this.calculateStepDistance();
             this.normalizeByStep(this.value);
-            this.setTickInterval(this.labels);
+            this.setTickInterval();
         }
     }
 
@@ -404,7 +405,7 @@ export class IgxSliderComponent implements
     public set continuous(continuous: boolean) {
         this._continuous = continuous;
         if (this._hasViewInit) {
-            this.setTickInterval(null);
+            this.setTickInterval();
         }
     }
 
@@ -476,7 +477,7 @@ export class IgxSliderComponent implements
         this.stepDistance = this.calculateStepDistance();
         this.positionHandlesAndUpdateTrack();
         if (this._hasViewInit) {
-            this.setTickInterval(null);
+            this.setTickInterval();
         }
     }
 
@@ -522,7 +523,7 @@ export class IgxSliderComponent implements
         this.stepDistance = this.calculateStepDistance();
         this.positionHandlesAndUpdateTrack();
         if (this._hasViewInit) {
-            this.setTickInterval(null);
+            this.setTickInterval();
         }
     }
 
@@ -1019,7 +1020,7 @@ export class IgxSliderComponent implements
     public ngAfterViewInit() {
         this._hasViewInit = true;
         this.positionHandlesAndUpdateTrack();
-        this.setTickInterval(this.labels);
+        this.setTickInterval();
         this.changeThumbFocusableState(this.disabled);
 
         this.subscribeTo(this.thumbFrom, this.thumbChanged.bind(this));
@@ -1088,7 +1089,7 @@ export class IgxSliderComponent implements
     }
 
     /** @hidden */
-    public getEditElement() {
+     public getEditElement() {
         return this.isRange ? this.thumbFrom.nativeElement : this.thumbTo.nativeElement;
     }
 
@@ -1276,7 +1277,7 @@ export class IgxSliderComponent implements
         }
     }
 
-    private setTickInterval(labels) {
+    private setTickInterval() {
         let interval;
         const trackProgress = 100;
         if (this.labelsViewEnabled) {
