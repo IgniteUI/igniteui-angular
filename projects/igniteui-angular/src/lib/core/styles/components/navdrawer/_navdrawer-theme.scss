@@ -305,7 +305,7 @@
         }
 
         // Need this to override the igx-buttons
-        &igx-button {
+        &[igx-button] {
             background: transparent;
             border: none;
             box-shadow: none;
@@ -355,7 +355,7 @@
         }
 
         // Need this to override the igx-buttons
-        &igx-button {
+        &[igx-button] {
             box-shadow: none;
 
             igx-icon {
