@@ -1,6 +1,6 @@
 import { IgxDateRangeComponent } from './igx-date-range.component';
 import { ComponentFixture, async, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { Component, OnInit, ViewChild, NgModule } from '@angular/core';
+import { Component, OnInit, ViewChild, NgModule, DebugElement } from '@angular/core';
 import { IgxInputGroupModule } from '../input-group/index';
 import { InteractionMode } from '../core/enums';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,11 +12,18 @@ import { IgxDateRangeModule } from './igx-date-range.module';
 import { By } from '@angular/platform-browser';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
+function getDatesInView(dates: DebugElement[]): DebugElement[] {
+    return dates.filter(d => {
+        const date = d.childNodes[0].nativeNode.innerText;
+        return date !== `${new Date().getDate()}` ? date : null;
+    });
+}
+
 // tslint:disable: no-use-before-declare
 describe('IgxDateRange', () => {
-    // let singleInputRange: DateRangeTwoInputsTestComponent;
-    // let twoInputsRange: DateRangeTwoInputsTestComponent;
-    // let fixture: ComponentFixture<DateRangeTestComponent>;
+    let singleInputRange: DateRangeTwoInputsTestComponent;
+    let twoInputsRange: DateRangeTwoInputsTestComponent;
+    let fixture: ComponentFixture<DateRangeTestComponent>;
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -26,72 +33,174 @@ describe('IgxDateRange', () => {
 
     describe('UI Interactions', () => {
         it('Should select today properly', fakeAsync(() => {
-            // TODO
+            fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
+            fixture.componentInstance.mode = InteractionMode.DropDown;
+            fixture.detectChanges();
+
+            fixture.componentInstance.dateRange.open();
+            tick();
+            fixture.detectChanges();
+
+            const button = fixture.debugElement.query(By.css('.igx-button--flat'));
+            UIInteractions.clickElement(button);
+            tick();
+            fixture.detectChanges();
+
+            expect((fixture.componentInstance.dateRange.value as Date[]).length).toBe(1);
         }));
 
-        it('Should select a range when pressing "today" if a start date is selected', () => {
-            // TODO
-        });
+        it('Should select a range when pressing "today" if a start date is selected', fakeAsync(() => {
+            fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
+            fixture.componentInstance.mode = InteractionMode.DropDown;
+            fixture.detectChanges();
 
-        it('Should open the calendar on mouse click', () => {
-            // TODO
-        });
+            fixture.componentInstance.dateRange.open();
+            tick();
+            fixture.detectChanges();
 
-        describe('Focus', () => {
-            it('Should move focus to the calendar on open', () => {
-                // TODO
-            });
+            const button = fixture.debugElement.query(By.css('.igx-button--flat'));
+            const dates = getDatesInView(fixture.debugElement.queryAll(By.css('.igx-calendar__date')));
 
-            it('Should move the focus to start input when "Today" is clicked and there isn\'t a value in start input', () => {
-                // TODO
-            });
+            UIInteractions.clickElement(dates[0].nativeElement);
+            tick();
+            fixture.detectChanges();
+            expect((fixture.componentInstance.dateRange.value as Date[]).length).toBe(1);
 
-            it('Should move the focus to end input when "Today" is clicked and there is a value in start input', () => {
-                // TODO
-            });
+            UIInteractions.clickElement(button);
+            tick();
+            fixture.detectChanges();
+            expect((fixture.componentInstance.dateRange.value as Date[]).length).toBeGreaterThan(1);
+        }));
 
-            it('Should move the focus to start input on close', () => {
-                // TODO
-            });
-        });
+        it('Should open the calendar on mouse click', fakeAsync(() => {
+            fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
+            fixture.componentInstance.mode = InteractionMode.DropDown;
+            fixture.detectChanges();
+
+            spyOn(fixture.componentInstance.dateRange.onOpened, 'emit');
+
+            const startInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
+            UIInteractions.clickElement(startInput.nativeElement);
+            tick();
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.dateRange.onOpened.emit).toHaveBeenCalledTimes(1);
+        }));
+
+        it('Should move focus to the calendar on open in dropdown mode', fakeAsync(() => {
+            fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
+            fixture.componentInstance.mode = InteractionMode.DropDown;
+            fixture.detectChanges();
+
+            const startInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
+            UIInteractions.clickElement(startInput.nativeElement);
+            tick(100);
+            fixture.detectChanges();
+            expect(document.activeElement.textContent.trim()).toMatch(new Date().getDate().toString());
+        }));
+
+        it('Should move focus to the calendar on open in dialog mode', fakeAsync(() => {
+            fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
+            fixture.componentInstance.mode = InteractionMode.Dialog;
+            fixture.detectChanges();
+
+            const startInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
+            UIInteractions.clickElement(startInput.nativeElement);
+            tick(100);
+            fixture.detectChanges();
+            expect(document.activeElement.textContent.trim()).toMatch(new Date().getDate().toString());
+        }));
+
+        it('Should move the focus to start input on close (date range with two inputs)', fakeAsync(() => {
+            fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
+            fixture.componentInstance.mode = InteractionMode.DropDown;
+            fixture.detectChanges();
+
+            fixture.componentInstance.dateRange.open();
+            tick();
+            fixture.detectChanges();
+
+            const button = fixture.debugElement.query(By.css('.igx-button--flat'));
+            UIInteractions.clickElement(button);
+            tick();
+            fixture.detectChanges();
+
+            fixture.componentInstance.dateRange.close();
+            tick();
+            fixture.detectChanges();
+
+            expect(document.activeElement).toHaveClass('igx-input-group__input');
+        }));
+
+        it('Should move the focus to the single input on close', fakeAsync(() => {
+            fixture = TestBed.createComponent(DateRangeSingleInputTestComponent);
+            fixture.componentInstance.mode = InteractionMode.DropDown;
+            fixture.detectChanges();
+
+            fixture.componentInstance.dateRange.open();
+            tick();
+            fixture.detectChanges();
+
+            const button = fixture.debugElement.query(By.css('.igx-button--flat'));
+            UIInteractions.clickElement(button);
+            tick();
+            fixture.detectChanges();
+
+            fixture.componentInstance.dateRange.close();
+            tick();
+            fixture.detectChanges();
+
+            expect(document.activeElement).toHaveClass('igx-input-group__input');
+        }));
     });
 
     describe('API', () => {
-        it('Should select today properly', () => {
-            // TODO
+        it('Should select today properly', (done) => {
+            fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
+            fixture.componentInstance.mode = InteractionMode.DropDown;
+            fixture.detectChanges();
+
+            fixture.componentInstance.dateRange.selectToday();
+            fixture.whenStable().then(() => {
+                fixture.detectChanges();
+                expect((fixture.componentInstance.dateRange.value as Date[]).length).toBe(1);
+                done();
+            });
         });
 
-        it('Should assign start and end input values correctly when selecting dates from the API', () => {
+        it('Should assign start and end input values correctly when selecting dates from the API', fakeAsync(() => {
             // TODO
-        });
+        }));
 
-        it('Should close the calendar properly with the "Done" button', () => {
+        it('Should close the calendar properly with the "Done" button', fakeAsync(() => {
             // TODO
             // dialog mode
             // should not lose selection
-        });
+        }));
 
-        it('Should be able to change the text of its two buttons', () => {
+        it('Should be able to change the text of its two buttons', fakeAsync(() => {
             // TODO
             // dialog mode
-        });
+        }));
 
-        it('Should show the "Done" button only in dialog mode', () => {
+        it('Should show the "Done" button only in dialog mode', fakeAsync(() => {
             // TODO
-        });
+        }));
     });
 
     describe('Keyboard Navigation', () => {
-        it('Should open the calendar with ALT + UP ARROW key', () => {
+        it('Should open the calendar with ALT + DOWN ARROW key', () => {
             // TODO
         });
 
-        it('Should close the calendar with ALT + DOWN ARROW key', () => {
+        it('Should close the calendar with ALT + UP ARROW key', () => {
             // TODO
+            // should focus start input | single input
         });
 
-        it('Should close the calendar with ESC key', () => {
+        it('Should close the calendar with ESC', () => {
             // TODO
+            // should focus start input | single input
         });
     });
 
@@ -108,15 +217,11 @@ describe('IgxDateRange', () => {
             // TODO
         });
 
-        it('Should clear end input if start and/or end input have values and a new selection is made', () => {
+        it('Should clear end input if start and end input have values and a new selection is made', () => {
             // TODO
         });
 
         it('Should do a range selection if a date is selected and "Today" is pressed', () => {
-            // TODO
-        });
-
-        it('Should update the start and end inputs properly when "Today" is clicked', () => {
             // TODO
         });
     });
@@ -139,10 +244,6 @@ describe('IgxDateRange', () => {
         });
 
         it('Should do a range selection if a date is selected and "Today" is pressed', () => {
-            // TODO
-        });
-
-        it('Should the input properly when "Today" is clicked', () => {
             // TODO
         });
     });
