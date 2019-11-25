@@ -10,4 +10,3 @@ export * from './grid-common.module';
 export { IColumnVisibilityChangedEventArgs } from './hiding/column-hiding-item.directive';
 export * from './hiding/column-hiding.component';
 export * from './pinning/column-pinning.component';
-export * from './state.directive';
