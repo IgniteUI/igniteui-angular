@@ -62,6 +62,9 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     @ViewChild(IgxToggleDirective, { static: true })
     protected toggleDirective: IgxToggleDirective;
 
+    @ViewChild('scrollContainer', { static: true })
+    protected scrollContainerRef: ElementRef;
+
     /**
      * @hidden
      * @internal
@@ -202,8 +205,9 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         return this.toggleDirective.collapsed;
     }
 
-    protected get scrollContainer() {
-        return this.toggleDirective.element;
+    /** @hidden @internal */
+    public get scrollContainer(): HTMLElement {
+        return this.scrollContainerRef.nativeElement;
     }
 
     protected get collectionLength() {

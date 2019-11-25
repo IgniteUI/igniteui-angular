@@ -29,7 +29,8 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         super(elementRef, cdr, selection, _displayDensityOptions);
     }
 
-    protected get scrollContainer() {
+    /** @hidden @internal */
+   public get scrollContainer(): HTMLElement {
         return this.virtDir.dc.location.nativeElement;
     }
 

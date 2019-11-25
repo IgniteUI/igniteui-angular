@@ -223,6 +223,7 @@ const components = [
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
+        HammerModule,
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,

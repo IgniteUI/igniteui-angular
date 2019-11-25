@@ -2,10 +2,8 @@ import { Component, ViewChild, TemplateRef } from '@angular/core';
 import {
     async,
     TestBed,
-    ComponentFixture,
     fakeAsync,
-    tick,
-    flush
+    tick
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
@@ -472,46 +470,7 @@ describe('Carousel', () => {
             expect(carousel.onCarouselPlaying.emit).toHaveBeenCalledTimes(1);
         });
 
-        it('should stop/play on tap ', async () => {
-            carousel.interval = 1000;
-            carousel.play();
-            fixture.detectChanges();
 
-            spyOn(carousel.onCarouselPaused, 'emit');
-            spyOn(carousel.onCarouselPlaying, 'emit');
-
-            expect(carousel.isPlaying).toBeTruthy();
-
-            Simulator.gestures.press(carousel.nativeElement, { duration: 180 });
-            fixture.detectChanges();
-            await wait(200);
-
-            expect(carousel.isPlaying).toBeFalsy();
-
-            Simulator.gestures.press(carousel.nativeElement, { duration: 180 });
-            fixture.detectChanges();
-            await wait(200);
-
-            expect(carousel.isPlaying).toBeTruthy();
-
-            // When the carousel is stopped tap does not start playing
-            carousel.stop();
-            fixture.detectChanges();
-
-            expect(carousel.isPlaying).toBeFalsy();
-
-            Simulator.gestures.press(carousel.nativeElement, { duration: 180 });
-            fixture.detectChanges();
-            await wait(200);
-
-            expect(carousel.isPlaying).toBeFalsy();
-
-            Simulator.gestures.press(carousel.nativeElement, { duration: 180 });
-            fixture.detectChanges();
-            await wait(200);
-
-            expect(carousel.isPlaying).toBeFalsy();
-        });
     });
 
     describe('Templates Tests: ', () => {
@@ -738,6 +697,125 @@ describe('Carousel', () => {
             expect(HelperTestFunctions.getPreviousButton(fixture).hidden).toBeFalsy();
         }));
     });
+
+    describe('Gestures Tests: ', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(CarouselDynamicSlidesComponent);
+            fixture.detectChanges();
+            carousel = fixture.componentInstance.carousel;
+        });
+
+        it('should stop/play on tap ', async () => {
+            carousel.interval = 1000;
+            carousel.play();
+            fixture.detectChanges();
+
+            spyOn(carousel.onCarouselPaused, 'emit');
+            spyOn(carousel.onCarouselPlaying, 'emit');
+
+            expect(carousel.isPlaying).toBeTruthy();
+
+            HelperTestFunctions.simulateTap(carousel);
+            fixture.detectChanges();
+            await wait(200);
+
+            expect(carousel.isPlaying).toBeFalsy();
+
+            HelperTestFunctions.simulateTap(carousel);
+            fixture.detectChanges();
+            await wait(200);
+
+            expect(carousel.isPlaying).toBeTruthy();
+
+            // When the carousel is stopped tap does not start playing
+            carousel.stop();
+            fixture.detectChanges();
+
+            expect(carousel.isPlaying).toBeFalsy();
+
+            HelperTestFunctions.simulateTap(carousel);
+            fixture.detectChanges();
+            await wait(200);
+
+            expect(carousel.isPlaying).toBeFalsy();
+
+            HelperTestFunctions.simulateTap(carousel);
+            fixture.detectChanges();
+            await wait(200);
+
+            expect(carousel.isPlaying).toBeFalsy();
+        });
+
+        it('verify changing slides with pan left ', () => {
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.05, 0.1);
+
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.7, 0.1);
+
+            expect(carousel.current).toEqual(3);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.2, 2);
+
+            expect(carousel.current).toEqual(0);
+        });
+
+        it('verify changing slides with pan right ', () => {
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.1, 0.1);
+
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.6, 0.1);
+
+            expect(carousel.current).toEqual(1);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.05, 2);
+
+            expect(carousel.current).toEqual(0);
+        });
+
+        it('verify pan when loop is false', () => {
+            carousel.loop = false;
+            fixture.detectChanges();
+
+            carousel.select(carousel.get(0));
+            fixture.detectChanges();
+
+            expect(carousel.current).toEqual(0);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.9, 2);
+
+            expect(carousel.current).toEqual(0);
+
+            carousel.select(carousel.get(3));
+            fixture.detectChanges();
+
+            expect(carousel.current).toEqual(3);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.9, 2);
+
+            expect(carousel.current).toEqual(3);
+        });
+
+        it('verify pan when gesturesSupport is false', () => {
+            carousel.gesturesSupport = false;
+            fixture.detectChanges();
+
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.9, 2);
+
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.6, 2);
+
+            expect(carousel.current).toEqual(2);
+        });
+    });
 });
 
 class HelperTestFunctions {
@@ -803,7 +881,29 @@ class HelperTestFunctions {
         expect(carousel.slides.find((slide) => slide.active && slide.index !== index)).toBeUndefined();
     }
 
+    public static simulateTap(carousel) {
+        const activeSlide = carousel.get(carousel.current).nativeElement;
+        Simulator.gestures.press(activeSlide, { duration: 180 });
+    }
 
+    public static simulatePan(fixture, carousel, deltaXOffset, velocity) {
+        const activeSlide = carousel.get(carousel.current).nativeElement;
+        const carouselElement = fixture.debugElement.query(By.css('igx-carousel'));
+        const deltaX = activeSlide.offsetWidth * deltaXOffset;
+        const event = deltaXOffset < 0 ? 'panleft' : 'panright';
+        const panOptions = {
+            deltaX: deltaX,
+            deltaY: 0,
+            duration: 100,
+            velocity: velocity,
+            preventDefault: <any>( ( e: any ) => {  })
+        };
+
+        carouselElement.triggerEventHandler(event, panOptions);
+        fixture.detectChanges();
+        carouselElement.triggerEventHandler('panend', panOptions);
+        fixture.detectChanges();
+    }
 }
 @Component({
     template: `
