@@ -37,6 +37,7 @@ const ICON_CSS_CLASS = 'material-icons igx-icon';
 const CHECKBOX_LBL_CSS_CLASS = '.igx-checkbox__composite';
 const DEBOUNCETIME = 50;
 const GROUP_EXPANDER_CLASS = '.igx-grid__th-expander';
+const GROUP_HEADER_CLASS = '.igx-grid__th-group-title';
 
 export class GridFunctions {
 
@@ -1505,7 +1506,7 @@ export class GridFunctions {
     }
 
     public static getColumnGroupHeaderCell(columnField: string, fix: ComponentFixture<any>) {
-        const headerTitle = fix.debugElement.queryAll(By.css('.igx-grid__th-group-title')).find((header) => {
+        const headerTitle = fix.debugElement.queryAll(By.css(GROUP_HEADER_CLASS)).find((header) => {
             return header.nativeElement.title === columnField;
         });
         return headerTitle.parent;
@@ -1520,6 +1521,12 @@ export class GridFunctions {
             expect(GridFunctions.getColGroupExpandIndicator(group)).toBeDefined();
             expect(GridFunctions.getColGroupExpandIndicator(group).innerText.trim()).toEqual(text);
         }
+    }
+
+    public static clickGroupExpandIndicator(fixture, header) {
+        const group = GridFunctions.getColumnGroupHeaderCell(header, fixture);
+        const expandInd = GridFunctions.getColGroupExpandIndicator(group);
+        expandInd.dispatchEvent(new Event('click', {}));
     }
 }
 export class GridSummaryFunctions {
