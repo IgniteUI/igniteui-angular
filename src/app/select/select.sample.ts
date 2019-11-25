@@ -36,7 +36,7 @@ export class SelectSampleComponent implements OnInit {
     public items: any[] = [];
     public value: 'opt1';
     public disabledItemValue: 'InsideGroup1';
-    public fruits: string[] = ['Orange', 'Apple', 'Banana', 'Mango'];
+    public fruits: string[] = ['Orange', 'Apple', 'Banana', 'Mango', 'Pear', 'Lemon', 'Peach', 'Apricot', 'Grapes', 'Cactus'];
     public selected: string;
     public selectRequired = true;
 
@@ -146,5 +146,27 @@ export class SelectSampleComponent implements OnInit {
 
     setDensity(density: DisplayDensity) {
         this.selectDisplayDensity.displayDensity = density;
+    }
+
+    btnClick() {
+        // console.log('clicked');
+    }
+
+    headerFootedClick(event) {
+        // console.log('Header/Footer clicked', event);
+    }
+
+    btnAddBr() {
+        const brContainer = document.getElementsByClassName('sampleWrapper')[0];
+        const br = document.createElement('br');
+        brContainer.prepend(br);
+    }
+
+    btnRemoveBr() {
+        const brContainer = document.getElementsByClassName('sampleWrapper')[0];
+        const firstEl =  brContainer.firstElementChild;
+        if (firstEl.tagName === 'BR') {
+            brContainer.removeChild(firstEl);
+        }
     }
 }
