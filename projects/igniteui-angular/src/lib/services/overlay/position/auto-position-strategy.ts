@@ -1,5 +1,5 @@
-import { VerticalAlignment, HorizontalAlignment } from './../utilities';
-import { BaseFitPositionStrategy, ConnectedFit } from './base-fit-position-strategy';
+import { VerticalAlignment, HorizontalAlignment, ConnectedFit } from './../utilities';
+import { BaseFitPositionStrategy } from './base-fit-position-strategy';
 
 /**
  * Positions the element as in **Connected** positioning strategy and re-positions the element in
@@ -10,7 +10,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
     /** @inheritdoc */
     protected fitInViewport(element: HTMLElement, connectedFit: ConnectedFit) {
         const transformString: string[] = [];
-        if (!connectedFit.fitHorizontal) {
+        if (connectedFit.fitHorizontal.back < 0 || connectedFit.fitHorizontal.forward < 0) {
             if (this.canFlipHorizontal(connectedFit)) {
                 this.flipHorizontal();
             } else {
@@ -19,7 +19,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
             }
         }
 
-        if (!connectedFit.fitVertical) {
+        if (connectedFit.fitVertical.back < 0 || connectedFit.fitVertical.forward < 0) {
             if (this.canFlipVertical(connectedFit)) {
                 this.flipVertical();
             } else {
@@ -48,7 +48,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
         const flippedDirection = (-1) * (this.settings.horizontalDirection + 1);
 
         const leftBorder = this.calculateLeft(
-            connectedFit.targetRect, connectedFit.contentElementRect, flippedStartPoint, flippedDirection);
+            connectedFit.targetRect, connectedFit.contentElementRect, flippedStartPoint, flippedDirection, 0);
         const rightBorder = leftBorder + connectedFit.contentElementRect.width;
         return connectedFit.viewPortRect.left < leftBorder && rightBorder < connectedFit.viewPortRect.right;
     }
@@ -63,7 +63,7 @@ export class AutoPositionStrategy extends BaseFitPositionStrategy {
         const flippedDirection = (-1) * (this.settings.verticalDirection + 1);
 
         const topBorder = this.calculateTop(
-            connectedFit.targetRect, connectedFit.contentElementRect, flippedStartPoint, flippedDirection);
+            connectedFit.targetRect, connectedFit.contentElementRect, flippedStartPoint, flippedDirection, 0);
         const bottomBorder = topBorder + connectedFit.contentElementRect.height;
         return connectedFit.viewPortRect.top < topBorder && bottomBorder < connectedFit.viewPortRect.bottom;
     }
