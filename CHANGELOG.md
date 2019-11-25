@@ -58,12 +58,16 @@ All notable changes for each version of this project will be documented in this 
     ```
     - `IgxCarousel`:
         - `keyboardSupport` input is added, which can be used to enable and disable keyboard navigation
+        - `gesturesSupport` input is added, which can be used to enable and disable gestures
         - `maximumIndicatorsCount` input is added, which can be used to set the number of visible indicators
         - `indicatorsOrientation` input is added, which can be used to set the position of indicators it can be top or bottom
         - `animationType` input is added, which can be used to set animation when changing slides
         - `indicatorTemplate` directive is added, which can be used to provide a custom indicator for carousel. If this property is not provided, a default indicator template will be used instead.
         - `nextButtonTemplate` directive is added, which is used to provide a custom next button template. If not provided, a default next button is used.
         - `prevButtonTemplate` directive is added, which is used to provide a custom previous button template. If not provided, a default previous button is used.
+
+- `IgxSelect`: 
+    - adding `IgxSelectHeaderDirective` and `IgxSelectFooterDirective`. These can be used to provide a custom header, respectively footer templates for the `igxSelect` drop-down list. If there are no templates marked with these directives - no default templates will be used so the drop-down list will not have header nor footer.
 
 ## 8.2.6
 

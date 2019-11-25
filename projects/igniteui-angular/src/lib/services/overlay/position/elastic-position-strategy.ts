@@ -1,5 +1,5 @@
-import { BaseFitPositionStrategy, ConnectedFit } from './base-fit-position-strategy';
-import { HorizontalAlignment, VerticalAlignment } from '../utilities';
+import { BaseFitPositionStrategy } from './base-fit-position-strategy';
+import { HorizontalAlignment, VerticalAlignment, ConnectedFit } from '../utilities';
 
 /**
  * Positions the element as in **Connected** positioning strategy and resize the element
@@ -10,10 +10,10 @@ export class ElasticPositionStrategy extends BaseFitPositionStrategy {
     protected fitInViewport(element: HTMLElement, connectedFit: ConnectedFit) {
         element.classList.add('igx-overlay__content--elastic');
         const transformString: string[] = [];
-        if (!connectedFit.fitHorizontal) {
+        if (connectedFit.fitHorizontal.back < 0 || connectedFit.fitHorizontal.forward < 0) {
             const maxReduction = Math.max(0, connectedFit.contentElementRect.width - this.settings.minSize.width);
-            const leftExtend = Math.max(0, connectedFit.viewPortRect.left - connectedFit.left);
-            const rightExtend = Math.max(0, connectedFit.right - connectedFit.viewPortRect.right);
+            const leftExtend = Math.max(0, -connectedFit.fitHorizontal.back);
+            const rightExtend = Math.max(0, -connectedFit.fitHorizontal.forward);
             const reduction = Math.min(maxReduction, leftExtend + rightExtend);
             element.style.width = `${connectedFit.contentElementRect.width - reduction}px`;
 
@@ -31,10 +31,10 @@ export class ElasticPositionStrategy extends BaseFitPositionStrategy {
             }
         }
 
-        if (!connectedFit.fitVertical) {
+        if (connectedFit.fitVertical.back < 0 || connectedFit.fitVertical.forward < 0) {
             const maxReduction = Math.max(0, connectedFit.contentElementRect.height - this.settings.minSize.height);
-            const topExtend = Math.max(0, connectedFit.viewPortRect.top - connectedFit.top);
-            const bottomExtend = Math.max(0, connectedFit.bottom - connectedFit.viewPortRect.bottom);
+            const topExtend = Math.max(0, -connectedFit.fitVertical.back);
+            const bottomExtend = Math.max(0, -connectedFit.fitVertical.forward);
             const reduction = Math.min(maxReduction, topExtend + bottomExtend);
             element.style.height = `${connectedFit.contentElementRect.height - reduction}px`;
 
