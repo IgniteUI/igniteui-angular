@@ -1522,6 +1522,12 @@ export class GridFunctions {
             expect(GridFunctions.getColGroupExpandIndicator(group).innerText.trim()).toEqual(text);
         }
     }
+
+    public static clickGroupExpandIndicator(fixture, header) {
+        const group = GridFunctions.getColumnGroupHeaderCell(header, fixture);
+        const expandInd = GridFunctions.getColGroupExpandIndicator(group);
+        expandInd.dispatchEvent(new Event('click', {}));
+    }
 }
 export class GridSummaryFunctions {
     public static verifyColumnSummariesBySummaryRowIndex(fix, rowIndex: number, summaryIndex: number, summaryLabels, summaryResults) {

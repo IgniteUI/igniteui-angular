@@ -1,4 +1,4 @@
-import { async, TestBed,  fakeAsync } from '@angular/core/testing';
+import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 
@@ -26,19 +26,28 @@ describe('IgxGrid - multi-column headers #grid', () => {
     describe('Base Tests', () => {
         let fixture;
         let grid: IgxGridComponent;
+        let contactInf;
+        let countryInf;
+        let addressInf;
+        let regionCol;
+        let phoneCol;
+        let country;
+
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(CollapsibleColumnGroupTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
+            contactInf = GridFunctions.getColGroup(grid, 'Contact Information');
+            countryInf = GridFunctions.getColGroup(grid, 'Country Information');
+            addressInf = GridFunctions.getColGroup(grid, 'Address Information');
+            regionCol = grid.getColumnByName('Region');
+            phoneCol = grid.getColumnByName('Phone');
+            country = grid.getColumnByName('Country');
         }));
 
         it('verify setting collapsible to a column group ', () => {
-            const contactInf = GridFunctions.getColGroup(grid, 'Contact Information');
-            const country = GridFunctions.getColGroup(grid, 'Country Information');
-            const addressInf = GridFunctions.getColGroup(grid, 'Address Information');
-
-            GridFunctions.verifyColumnIsHidden(contactInf, false, 11);
-            GridFunctions.verifyColumnIsHidden(country, true, 11);
+            GridFunctions.verifyColumnIsHidden(contactInf, false, 10);
+            GridFunctions.verifyColumnIsHidden(countryInf, true, 10);
 
             GridFunctions.verifyGroupIsExpanded(fixture, addressInf.header);
             GridFunctions.verifyGroupIsExpanded(fixture, contactInf.header, false);
@@ -47,8 +56,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
             addressInf.collapsible = false;
             fixture.detectChanges();
 
-            GridFunctions.verifyColumnIsHidden(contactInf, false, 17);
-            GridFunctions.verifyColumnIsHidden(country, false, 17);
+            GridFunctions.verifyColumnIsHidden(contactInf, false, 19);
+            GridFunctions.verifyColumnIsHidden(countryInf, false, 19);
             GridFunctions.verifyGroupIsExpanded(fixture, addressInf.header, false);
             expect(addressInf.collapsibleChange.emit).toHaveBeenCalledTimes(1);
             expect(addressInf.collapsibleChange.emit).toHaveBeenCalledWith(false);
@@ -56,25 +65,16 @@ describe('IgxGrid - multi-column headers #grid', () => {
             addressInf.collapsible = true;
             fixture.detectChanges();
 
-            GridFunctions.verifyColumnIsHidden(contactInf, false, 11);
-            GridFunctions.verifyColumnIsHidden(country, true, 11);
+            GridFunctions.verifyColumnIsHidden(contactInf, false, 10);
+            GridFunctions.verifyColumnIsHidden(countryInf, true, 10);
             GridFunctions.verifyGroupIsExpanded(fixture, addressInf.header);
             expect(addressInf.collapsibleChange.emit).toHaveBeenCalledTimes(2);
             expect(addressInf.collapsibleChange.emit).toHaveBeenCalledWith(true);
         });
 
         it('verify setting collapsible when all the column has same visibleWhenCollapsed', () => {
-            const contactInf = GridFunctions.getColGroup(grid, 'Contact Information');
-            const countryInf = GridFunctions.getColGroup(grid, 'Country Information');
-            const addressInf = GridFunctions.getColGroup(grid, 'Address Information');
-            const regionCol = grid.getColumnByName('Region');
-            const phoneCol = grid.getColumnByName('Phone');
-            const country = grid.getColumnByName('Country');
             addressInf.collapsible = false;
             fixture.detectChanges();
-
-            spyOn(contactInf.collapsibleChange, 'emit').and.callThrough();
-            spyOn(countryInf.collapsibleChange, 'emit').and.callThrough();
 
             expect(contactInf.collapsible).toBeFalsy();
             expect(countryInf.collapsible).toBeFalsy();
@@ -87,11 +87,6 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
             fixture.detectChanges();
 
-            expect(contactInf.collapsibleChange.emit).toHaveBeenCalledTimes(1);
-            expect(contactInf.collapsibleChange.emit).toHaveBeenCalledWith(true);
-            expect(countryInf.collapsibleChange.emit).toHaveBeenCalledTimes(1);
-            expect(countryInf.collapsibleChange.emit).toHaveBeenCalledWith(true);
-
             expect(contactInf.collapsible).toBeTruthy();
             expect(countryInf.collapsible).toBeTruthy();
 
@@ -103,6 +98,56 @@ describe('IgxGrid - multi-column headers #grid', () => {
 
             GridFunctions.verifyColumnIsHidden(grid.getColumnByName('Fax'), false, 12);
             GridFunctions.verifyColumnIsHidden(phoneCol, true, 12);
+        });
+
+        it('verify setting expanded to a column group', () => {
+            spyOn(addressInf.expandedChange, 'emit').and.callThrough();
+            addressInf.expanded = false;
+            fixture.detectChanges();
+
+            expect(addressInf.expanded).toBeFalsy();
+            GridFunctions.verifyColumnIsHidden(contactInf, true, 13);
+            GridFunctions.verifyColumnIsHidden(countryInf, false, 13);
+
+            GridFunctions.verifyGroupIsExpanded(fixture, addressInf.header, true, false);
+            expect(addressInf.expandedChange.emit).toHaveBeenCalledTimes(1);
+            expect(addressInf.expandedChange.emit).toHaveBeenCalledWith(false);
+
+            addressInf.expanded = true;
+            fixture.detectChanges();
+
+            expect(addressInf.expanded).toBeTruthy();
+            GridFunctions.verifyColumnIsHidden(contactInf, false, 11);
+            GridFunctions.verifyColumnIsHidden(countryInf, true, 11);
+
+            GridFunctions.verifyGroupIsExpanded(fixture, addressInf.header);
+            expect(addressInf.expandedChange.emit).toHaveBeenCalledTimes(2);
+            expect(addressInf.expandedChange.emit).toHaveBeenCalledWith(true);
+        });
+
+        it('verify setting expanded to a column group form UI', () => {
+            spyOn(addressInf.expandedChange, 'emit').and.callThrough();
+            GridFunctions.clickGroupExpandIndicator(fixture, addressInf.header);
+            fixture.detectChanges();
+
+            expect(addressInf.expanded).toBeFalsy();
+            GridFunctions.verifyColumnIsHidden(contactInf, true, 13);
+            GridFunctions.verifyColumnIsHidden(countryInf, false, 13);
+
+            GridFunctions.verifyGroupIsExpanded(fixture, addressInf.header, true, false);
+            expect(addressInf.expandedChange.emit).toHaveBeenCalledTimes(1);
+            expect(addressInf.expandedChange.emit).toHaveBeenCalledWith(false);
+
+            GridFunctions.clickGroupExpandIndicator(fixture, addressInf.header);
+            fixture.detectChanges();
+
+            expect(addressInf.expanded).toBeTruthy();
+            GridFunctions.verifyColumnIsHidden(contactInf, false, 11);
+            GridFunctions.verifyColumnIsHidden(countryInf, true, 11);
+
+            GridFunctions.verifyGroupIsExpanded(fixture, addressInf.header);
+            expect(addressInf.expandedChange.emit).toHaveBeenCalledTimes(2);
+            expect(addressInf.expandedChange.emit).toHaveBeenCalledWith(true);
         });
     });
 
