@@ -113,7 +113,7 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy {
     public formatter: (val: Date) => string;
 
     /**
-     * Property that changes the default text on the `today` button.
+     * Property that changes the default text of the `today` button.
      * Default value is `Today`.
      *
      * ```html
@@ -126,7 +126,8 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy {
     public todayButtonText: string;
 
     /**
-     * Property that changes the default text on the `done` button.
+     * Property that changes the default text of the `done` button.
+     * It will show up only in `dialog` mode.
      * Default value is `Done`.
      *
      * ```html
@@ -170,18 +171,21 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy {
 
     /**
      * @hidden
+     * @internal
      */
     @ContentChild(IgxDateRangeStartDirective, { read: IgxDateRangeStartDirective, static: false })
     public startInput: IgxDateRangeStartDirective;
 
     /**
      * @hidden
+     * @internal
      */
     @ContentChild(IgxDateRangeEndDirective, { read: IgxDateRangeEndDirective, static: false })
     public endInput: IgxDateRangeEndDirective;
 
     /**
      * @hidden
+     * @internal
      */
     @ContentChild(IgxDateRangeDirective, { read: IgxDateRangeDirective, static: false })
     public singleInput: IgxDateRangeDirective;
@@ -200,8 +204,8 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy {
 
     private _destroy: Subject<boolean>;
     private _positionSettings: PositionSettings;
-    private _dialogOverlaySettings: OverlaySettings;
     private _positionStrategy: AutoPositionStrategy;
+    private _dialogOverlaySettings: OverlaySettings;
     private _dropDownOverlaySettings: OverlaySettings;
 
     constructor() {
@@ -398,8 +402,8 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy {
     public hideCalendar(): void {
         if (!this.toggle.collapsed) {
             this.toggle.close();
-            this.startInput ? this.startInput.nativeElement.focus() :
-                this.singleInput.nativeElement.focus();
+            this.startInput ? this.startInput.setFocus() :
+                this.singleInput.setFocus();
         }
         this.onClosed.emit(this);
     }

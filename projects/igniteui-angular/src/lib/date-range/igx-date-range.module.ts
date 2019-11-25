@@ -6,6 +6,8 @@ import { IgxCalendarModule } from '../calendar/index';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { CommonModule } from '@angular/common';
 import { IgxButtonModule } from '../directives/button/button.directive';
+import { IgxInputGroupModule } from '../input-group/index';
+import { IgxIconModule } from '../icon/index';
 
 /**
  * @hidden
@@ -20,9 +22,11 @@ import { IgxButtonModule } from '../directives/button/button.directive';
     ],
     imports: [
         CommonModule,
-        IgxCalendarModule,
+        IgxIconModule,
+        IgxButtonModule,
         IgxToggleModule,
-        IgxButtonModule
+        IgxCalendarModule,
+        IgxInputGroupModule,
     ],
     exports: [
         IgxDateRangeComponent,
