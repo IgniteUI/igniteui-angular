@@ -9,7 +9,7 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 
 
-fdescribe('IgxGrid - multi-column headers #grid', () => {
+describe('IgxGrid - multi-column headers #grid', () => {
     configureTestSuite();
     let contactInf;
     let countryInf;
