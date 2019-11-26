@@ -1624,7 +1624,7 @@ export class GridWithUndefinedDataComponent implements OnInit  {
         <igx-column-group header="Address Information" [collapsible]="true">
             <igx-column-group header="Country Information" [visibleWhenCollapsed]="true" [collapsible]="true">
                 <igx-column  field="Country" [visibleWhenCollapsed]="true"></igx-column>
-                <igx-column  field="Empty" [visibleWhenCollapsed]="true"></igx-column>
+                <igx-column  field="Empty" ></igx-column>
                 <igx-column-group header="Region Information" [visibleWhenCollapsed]="true" [collapsible]="true">
                     <igx-column field="Region" [visibleWhenCollapsed]="true"></igx-column>
                     <igx-column field="PostalCode" [visibleWhenCollapsed]="true"></igx-column>
@@ -1652,4 +1652,90 @@ export class CollapsibleColumnGroupTestComponent {
     public personDetailsVisibleWhenCollapse;
     public companyNameVisibleWhenCollapse;
     data = SampleTestData.contactInfoDataFull();
+}
+
+@Component({
+    template: `
+    <ng-template #indicatorTemplate let-column="column">
+        <igx-icon [attr.draggable]="false">{{column.expanded ? 'lock' : 'lock_open'}} </igx-icon>
+    </ng-template>
+
+    <igx-grid #grid [data]="data" height="500px" width="1300px" columnWidth="100px">
+        <igx-column field="ID"></igx-column>
+        <igx-column-group header="General Information" [collapsible]="true" >
+            <igx-column  field="CompanyName" [visibleWhenCollapsed]="true"></igx-column>
+            <igx-column-group header="Person Details" [visibleWhenCollapsed]="false">
+                <igx-column  field="ContactName"></igx-column>
+                <igx-column  field="ContactTitle"></igx-column>
+            </igx-column-group>
+            <ng-template igxCollapsibleIndicator let-column="column">
+                <igx-icon [attr.draggable]="false">{{column.expanded ? 'remove' : 'add'}} </igx-icon>
+            </ng-template>
+        </igx-column-group>
+        <igx-column-group header="Address Information" [collapsible]="true">
+                <igx-column  field="Country" [visibleWhenCollapsed]="true"></igx-column>
+                <igx-column-group header="Region Information" [visibleWhenCollapsed]="true">
+                    <igx-column field="Region" ></igx-column>
+                    <igx-column field="PostalCode"></igx-column>
+                </igx-column-group>
+                <igx-column-group header="City Information" [visibleWhenCollapsed]="false">
+                    <igx-column field="City"></igx-column>
+                    <igx-column field="Address"></igx-column>
+                </igx-column-group>
+        </igx-column-group>
+    </igx-grid>
+    `
+})
+export class CollapsibleGroupsTemplatesTestComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    grid: IgxGridComponent;
+
+    @ViewChild('indicatorTemplate', { read: TemplateRef, static: false })
+    public indicatorTemplate;
+
+    data = SampleTestData.contactInfoDataFull();
+}
+
+
+@Component({
+    template: `
+        <igx-grid [data]="data" height="500px" width="800px" columnWidth="100px">
+            <igx-column-group *ngFor="let colGroup of columnGroups" [header]="colGroup.columnHeader" [collapsible]="colGroup.collapsible">
+                <igx-column *ngFor="let column of colGroup.columns" [field]="column.field" [dataType]="column.type"
+                    [visibleWhenCollapsed]="column.visibleWhenCollapsed"></igx-column>
+            </igx-column-group>
+        </igx-grid>
+    `
+})
+
+export class CollapsibleGroupsDynamicColComponent {
+    @ViewChild(IgxGridComponent, { static: true })
+    public grid: IgxGridComponent;
+
+    public columnGroups: Array<any>;
+    public data = SampleTestData.contactInfoDataFull();
+
+    constructor() {
+        this.columnGroups = [
+            { columnHeader: 'First', collapsible: true, columns: [
+                { field: 'ID', type: 'string', visibleWhenCollapsed: true },
+                { field: 'CompanyName', type: 'string' , visibleWhenCollapsed: true },
+                { field: 'ContactName', type: 'string' , visibleWhenCollapsed: true },
+            ]},
+            { columnHeader: 'Second', collapsible: true, columns: [
+                { field: 'ContactTitle', type: 'string' , visibleWhenCollapsed: true },
+                { field: 'Address', type: 'string' , visibleWhenCollapsed: true },
+                { field: 'PostlCode', type: 'string' , visibleWhenCollapsed: false },
+                { field: 'Contry', type: 'string' , visibleWhenCollapsed: false }
+            ]}
+        ];
+    }
+
+    public removeColumnFromGroup(groupIndex = 0) {
+        this.columnGroups[groupIndex].columns.pop();
+    }
+
+    public addColumnToGroup(groupIndex = 0, visibleWhenCollapsed = false) {
+        this.columnGroups[groupIndex].columns.push({ field: 'Missing', type: 'string' , visibleWhenCollapsed: visibleWhenCollapsed });
+    }
 }

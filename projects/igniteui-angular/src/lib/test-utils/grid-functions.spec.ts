@@ -204,6 +204,16 @@ export class GridFunctions {
         expect(visibleColumns.findIndex((col) => col === column) > -1).toBe(!isHidden, 'Unexpected result for visibleColumns collection!');
     }
 
+    public static verifyColumnsAreHidden(columns, isHidden: boolean, visibleColumnsCount: number) {
+        const visibleColumns = columns[0].grid.visibleColumns;
+        columns.forEach(column => {
+            expect(column.hidden).toBe(isHidden, 'Hidden is not ' + isHidden);
+            expect(visibleColumns.findIndex((col) => col === column) > -1)
+            .toBe(!isHidden, 'Unexpected result for visibleColumns collection!');
+        });
+        expect(visibleColumns.length).toBe(visibleColumnsCount, 'Unexpected visible columns count!');
+    }
+
     public static verifyColumnIsPinned(column, isPinned: boolean, pinnedColumnsCount: number) {
         expect(column.pinned).toBe(isPinned, 'Pinned is not ' + isPinned);
 
@@ -1512,14 +1522,17 @@ export class GridFunctions {
         return headerTitle.parent;
     }
 
-    public static verifyGroupIsExpanded(fixture, header, collapsible = true, isExpanded = true) {
-        const group = GridFunctions.getColumnGroupHeaderCell(header, fixture);
+    public static verifyGroupIsExpanded(fixture, group, collapsible = true, isExpanded = true,
+         indicatorText = ['expand_more', 'chevron_right']) {
+        const groupHeader = GridFunctions.getColumnGroupHeaderCell(group.header, fixture);
+        expect(group.collapsible).toEqual(collapsible);
         if (collapsible === false) {
-            expect(GridFunctions.getColGroupExpandIndicator(group)).toBeNull();
+            expect(GridFunctions.getColGroupExpandIndicator(groupHeader)).toBeNull();
         } else {
-            const text = isExpanded ? 'expand_more' : 'chevron_right';
-            expect(GridFunctions.getColGroupExpandIndicator(group)).toBeDefined();
-            expect(GridFunctions.getColGroupExpandIndicator(group).innerText.trim()).toEqual(text);
+            expect(group.expanded).toEqual(isExpanded);
+            const text = isExpanded ? indicatorText[0] : indicatorText[1];
+            expect(GridFunctions.getColGroupExpandIndicator(groupHeader)).toBeDefined();
+            expect(GridFunctions.getColGroupExpandIndicator(groupHeader).innerText.trim()).toEqual(text);
         }
     }
 
