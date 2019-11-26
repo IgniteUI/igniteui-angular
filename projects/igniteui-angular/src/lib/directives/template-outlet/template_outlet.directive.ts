@@ -63,10 +63,10 @@ export class IgxTemplateOutletDirective implements OnChanges {
     }
 
     private _recreateView() {
-        const index = this._viewContainerRef.indexOf(this._viewRef);
+        const prevIndex = this._viewRef ? this._viewContainerRef.indexOf(this._viewRef) : -1;
         // detach old and create new
-        if (this._viewRef && index !== -1) {
-            this._viewContainerRef.detach(index);
+        if (prevIndex !== -1) {
+            this._viewContainerRef.detach(prevIndex);
         }
         if (this.igxTemplateOutlet) {
             this._viewRef = this._viewContainerRef.createEmbeddedView(
