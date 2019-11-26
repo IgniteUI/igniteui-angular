@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { IgxGridComponent, FilteringExpressionsTree, FilteringLogic,
-  IPagingState, IGroupingExpression, ISortingExpression, IgxNumberSummaryOperand, IgxSummaryResult,
-  IgxGridStateDirective, IGridState, IColumnState } from 'igniteui-angular';
+  IPagingState, ISortingExpression, IgxNumberSummaryOperand,
+  IgxSummaryResult, IGroupingState, IGridState, IColumnState, IgxGridStateDirective } from 'igniteui-angular';
 import { employeesData } from './localData';
 import { take } from 'rxjs/operators';
-import { NavigationStart, Router } from '@angular/router';
+import { Router, NavigationStart } from '@angular/router';
 
 class MySummary extends IgxNumberSummaryOperand {
 
@@ -158,10 +158,10 @@ export class GridSaveStateComponent implements OnInit, AfterViewInit {
 
   public restoreGroupby() {
     const state = window.localStorage.getItem(this.stateKey);
-    const groupByState: IGroupingExpression[] = state ? JSON.parse(state).groupBy : null;
+    const groupByState: IGroupingState = state ? JSON.parse(state).groupBy : null;
     if (groupByState) {
-      const gridGroupiByState: IGridState = { groupBy: groupByState};
-      this.state.setState(gridGroupiByState);
+      const gridGroupByState: IGridState = { groupBy: groupByState };
+      this.state.setState(gridGroupByState);
     }
   }
 

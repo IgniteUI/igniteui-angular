@@ -36,8 +36,6 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     ungroupedColumns: Array<IgxColumnComponent> | IgxColumnComponent;
 }
 
-export const INTERFACE_TOKEN = new InjectionToken<GridType>('GridTypeToken');
-
 /**
  * **Ignite UI for Angular Grid** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid.html)
@@ -68,10 +66,6 @@ export const INTERFACE_TOKEN = new InjectionToken<GridType>('GridTypeToken');
         IgxColumnResizingService,
         IgxForOfSyncService,
         IgxForOfScrollSyncService,
-        {
-            provide: INTERFACE_TOKEN,
-            useExisting: forwardRef( () => IgxGridComponent)
-        },
         IgxRowIslandAPIService
     ],
     selector: 'igx-grid',

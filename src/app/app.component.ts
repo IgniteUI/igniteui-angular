@@ -274,6 +274,11 @@ export class AppComponent implements OnInit {
             name: 'Grid External Filtering'
         },
         {
+            link: '/gridState',
+            icon: 'view_column',
+            name: 'Grid State Persistence'
+        },
+        {
             link: '/icon',
             icon: 'android',
             name: 'Icon'
