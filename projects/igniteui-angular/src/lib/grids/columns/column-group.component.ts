@@ -63,9 +63,9 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      */
     @Input()
     public set expanded(value: boolean) {
-        if (!this.collapsible) { return; }
         this._expanded = value;
         this.expandedChange.emit(this._expanded);
+        if (!this.collapsible) { return; }
         if (!this.hidden && this.children) {
             this.setExpandCollapseState();
         }
