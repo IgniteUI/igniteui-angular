@@ -156,6 +156,13 @@
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
+    $drawer-icon-size: rem(24px);
+    $drawer-item-margin: rem(8px);
+    $drawer-item-min-h: auto;
+    $drawer-item-max-h: rem(48px);
+    $drawer-item-min-w: rem(32px);
+
+
     %animation {
         transition: flex-basis;
         transition-duration: .3s;
@@ -275,15 +282,19 @@
         align-items: center;
         flex-flow: row nowrap;
         color: --var($theme, 'item-text-color');
-        max-height: rem(48px);
-        min-width: rem(32px);
+        max-height: $drawer-item-max-h;
+        min-width: $drawer-item-min-w;
         padding: rem(12px) rem(8px);
         cursor: pointer;
         user-select: none;
         outline: transparent;
         white-space: nowrap;
         border-radius: --var($theme, 'item-border-radius');
-        margin: rem(8px) rem(8px);
+        margin: $drawer-item-margin;
+        text-decoration: none;
+        width: calc(100% - #{$drawer-item-margin * 2});
+        border: none;
+        justify-content: flex-start;
 
         > igx-icon + span {
             margin-#{$left}: rem(32px);
@@ -293,10 +304,40 @@
             color: --var($theme, 'item-icon-color');
         }
 
+        // Need this to override the igx-buttons
+        &[igxButton] {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+
+            igx-icon {
+                width: $drawer-icon-size;
+                height: $drawer-icon-size;
+                font-size: $drawer-icon-size;
+                margin: 0;
+            }
+
+            &:hover,
+            &:focus {
+                box-shadow: none;
+                border: none;
+            }
+        }
+
+        &%igx-button--fab {
+            min-height: $drawer-item-min-h;
+        }
+
+        &%igx-button--icon {
+            height: auto;
+            transition: none;
+        }
+
         &:hover,
         &:focus {
             background: --var($theme, 'item-hover-background');
             color: --var($theme, 'item-hover-text-color');
+            box-shadow: none;
 
             igx-icon {
                 color: --var($theme, 'item-hover-icon-color');
@@ -311,6 +352,24 @@
 
         igx-icon {
             color: --var($theme, 'item-active-icon-color');
+        }
+
+        // Need this to override the igx-buttons
+        &[igxButton] {
+            box-shadow: none;
+
+            igx-icon {
+                width: $drawer-icon-size;
+                height: $drawer-icon-size;
+                font-size: $drawer-icon-size;
+                margin: 0;
+            }
+
+            &:hover,
+            &:focus {
+                box-shadow: none;
+                border: none;
+            }
         }
 
         &:focus,
