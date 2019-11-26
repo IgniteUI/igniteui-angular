@@ -3,17 +3,9 @@
  * You should generally not use them directly.
  * @preferred
  */
-import {
-    Directive,
-    ElementRef,
-    HostBinding,
-    HostListener,
-    Inject,
-    Input,
-    TemplateRef
-} from '@angular/core';
-import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase } from './time-picker.common';
+import { Directive, ElementRef, HostBinding, HostListener, Inject, Input, TemplateRef } from '@angular/core';
 import { InteractionMode } from '../core/enums';
+import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
 
 /** @hidden */
 @Directive({
@@ -52,6 +44,10 @@ export class IgxItemListDirective {
     get ampmCSS(): boolean {
         return this.type === 'ampmList';
     }
+
+    private lastDeltaY = 0;
+    private sumDeltaY = 0;
+    private stepSize = 45;
 
     @HostListener('focus')
     public onFocus() {
@@ -201,11 +197,25 @@ export class IgxItemListDirective {
      */
     @HostListener('panmove', ['$event'])
     public onPanMove(event) {
-        if (event.deltaY < 0) {
-            this.nextItem();
-        } else if (event.deltaY > 0) {
+        this.sumDeltaY += event.deltaY - this.lastDeltaY;
+        this.lastDeltaY = event.deltaY;
+
+        if (this.sumDeltaY >= this.stepSize) {
+            this.sumDeltaY -= this.stepSize;
             this.prevItem();
+        } else if (this.sumDeltaY <= -this.stepSize) {
+            this.sumDeltaY += this.stepSize;
+            this.nextItem();
         }
+    }
+
+    @HostListener('mouseup', ['$event'])
+    @HostListener('mousedown', ['$event'])
+    @HostListener('document:touchstart', ['$event'])
+    @HostListener('document:touchend', ['$event'])
+    public onTouch(event) {
+        this.sumDeltaY = 0;
+        this.lastDeltaY = 0;
     }
 }
 
