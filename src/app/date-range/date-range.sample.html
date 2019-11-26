@@ -41,10 +41,10 @@
                         </igx-prefix>
                     </igx-input-group> -->
                     <igx-date-start>
-                        <input igxInput type="text">
+                        <input #startDate igxInput formControlName="startDate" type="text">
                     </igx-date-start>
                     <igx-date-end>
-                        <input igxInput type="text">
+                        <input #endDate igxInput formControlName="endDate" type="text">
                     </igx-date-end>
                 </igx-date-range>
             </div>
@@ -99,4 +99,10 @@
             </div>
         </div>
     </form>
+
+    <igx-date-range [mode]="'dropdown'">
+        <igx-date-single>
+            <input igxInput type="text">
+        </igx-date-single>
+    </igx-date-range>
 </div>

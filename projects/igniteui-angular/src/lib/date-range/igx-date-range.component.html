@@ -13,7 +13,10 @@
     </div>
 </div>
 
-<ng-container *ngTemplateOutlet="this.start || this.end ? startEndTemplate : defTemplate"></ng-container>
+<ng-container *ngTemplateOutlet="this.single ? singleTemplate
+    : this.start || this.end ? startEndTemplate
+    : defTemplate">
+</ng-container>
 
 <ng-template #defTemplate>
     <div (click)="showCalendar($event)" class="content-wrap">
@@ -30,13 +33,13 @@
 
 <ng-template #startEndTemplate>
     <div (click)="showCalendar($event)" class="content-wrap start-end-projected">
-        <ng-content selector="igx-date-start"></ng-content>
-        <ng-content selector="igx-date-end"></ng-content>
+        <ng-content select="igx-date-start"></ng-content>
+        <ng-content select="igx-date-end"></ng-content>
     </div>
 </ng-template>
 
 <ng-template #singleTemplate>
     <div (click)="showCalendar($event)" class="content-wrap">
-        <ng-content selector="igx-date-single"></ng-content>
+        <ng-content select="igx-date-single"></ng-content>
     </div>
 </ng-template>
