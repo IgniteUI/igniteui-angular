@@ -4,8 +4,6 @@ import {
     IgxHierarchicalGridComponent,
     IGridCreatedEventArgs,
     IgxHierarchicalTransactionServiceFactory,
-    IgxHierarchicalTransactionService,
-    IgxGridTransaction
 } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 
@@ -74,8 +72,6 @@ export class HierarchicalGridUpdatingSampleComponent implements AfterViewInit {
                 let index = 0;
                 data['value'].forEach(item => {
                     item.OrderDate = new Date(item.OrderDate);
-                    item.MyID = index;
-                    index++;
                 });
             }
             event.grid.data = data['value'];
@@ -96,7 +92,8 @@ export class HierarchicalGridUpdatingSampleComponent implements AfterViewInit {
     }
 
     deleteRow() {
-        this.hGrid.deleteRow('ALFKI');
+        const grid = this.rowIsland1.hgridAPI.getChildGrids()[0];
+        grid.deleteRow(grid.data[0]['OrderID']);
     }
 
     logTransactionsMain() {
@@ -105,6 +102,12 @@ export class HierarchicalGridUpdatingSampleComponent implements AfterViewInit {
 
     logTransactionsIsland1() {
         console.log(this.rowIsland1.transactions.getTransactionLog());
+    }
+
+    commitTransactionsIsland1() {
+        this.rowIsland1.rowIslandAPI.getChildGrids().forEach((grid: IgxHierarchicalGridComponent) => {
+            grid.transactions.commit(grid.data);
+        });
     }
 
 }

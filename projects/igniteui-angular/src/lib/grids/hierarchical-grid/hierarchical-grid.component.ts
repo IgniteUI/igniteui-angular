@@ -10,38 +10,28 @@ import {
     QueryList,
     ContentChildren,
     ElementRef,
-    NgZone,
-    ChangeDetectorRef,
-    IterableDiffers,
-    ViewContainerRef,
-    Inject,
-    ComponentFactoryResolver,
     AfterViewInit,
     AfterContentInit,
-    Optional,
     OnInit,
     OnDestroy,
     DoCheck,
     EventEmitter,
     Output
 } from '@angular/core';
-import { IgxGridBaseComponent, IgxGridTransaction } from '../grid-base.component';
+import { IgxGridBaseComponent } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity } from '../../core/displayDensity';
+import { DisplayDensity } from '../../core/displayDensity';
 import { IGridDataBindable, IgxColumnComponent, } from '../grid/index';
-import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
-import { IgxOverlayService } from '../../services/index';
-import { IgxColumnResizingService } from '../grid-column-resizing.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 
 let NEXT_ID = 0;
@@ -309,54 +299,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
 
     protected _transactions: any;
 
-    constructor(
-        public selectionService: IgxGridSelectionService,
-        crudService: IgxGridCRUDService,
-        public colResizingService: IgxColumnResizingService,
-        gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-        @Inject(IgxGridTransaction) protected transactionFactory: any,
-        elementRef: ElementRef,
-        zone: NgZone,
-        @Inject(DOCUMENT) public document,
-        cdr: ChangeDetectorRef,
-        resolver: ComponentFactoryResolver,
-        differs: IterableDiffers,
-        viewRef: ViewContainerRef,
-        navigation: IgxHierarchicalGridNavigationService,
-        filteringService: IgxFilteringService,
-        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        public summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-        super(
-            selectionService,
-            crudService,
-            colResizingService,
-            gridAPI,
-            typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
-            elementRef,
-            zone,
-            document,
-            cdr,
-            resolver,
-            differs,
-            viewRef,
-            navigation,
-            filteringService,
-            overlayService,
-            summaryService,
-            _displayDensityOptions);
-        this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
-    }
-
-
-    /**
-     * @hidden
-     */
-    ngOnInit() {
-        this._transactions = this.parentIsland ? this.parentIsland.transactions : this._transactions;
-        super.ngOnInit();
-    }
-
     public ngDoCheck() {
         if (this._cdrRequestRepaint && !this._init) {
             this.updateSizes();
@@ -411,15 +353,15 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         this.rowSelectorsTemplates = this.parentIsland ?
             this.parentIsland.rowSelectorsTemplates :
             this.rowSelectorsTemplates;
-        this.rowExpandedIndicatorTemplate  = this.rootGrid.rowExpandedIndicatorTemplate;
-        this.rowCollapsedIndicatorTemplate   = this.rootGrid.rowCollapsedIndicatorTemplate;
+        this.rowExpandedIndicatorTemplate = this.rootGrid.rowExpandedIndicatorTemplate;
+        this.rowCollapsedIndicatorTemplate = this.rootGrid.rowCollapsedIndicatorTemplate;
         this.headerCollapseIndicatorTemplate = this.rootGrid.headerCollapseIndicatorTemplate;
         this.headerExpandIndicatorTemplate = this.rootGrid.headerExpandIndicatorTemplate;
         this.hasChildrenKey = this.parentIsland ?
-         this.parentIsland.hasChildrenKey || this.rootGrid.hasChildrenKey :
-         this.rootGrid.hasChildrenKey;
-         this.showExpandAll = this.parentIsland ?
-         this.parentIsland.showExpandAll : this.rootGrid.showExpandAll;
+            this.parentIsland.hasChildrenKey || this.rootGrid.hasChildrenKey :
+            this.rootGrid.hasChildrenKey;
+        this.showExpandAll = this.parentIsland ?
+            this.parentIsland.showExpandAll : this.rootGrid.showExpandAll;
     }
 
     private updateSizes() {
@@ -456,11 +398,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     ngAfterContentInit() {
         this.updateColumnList(false);
         this.childLayoutKeys = this.parent ?
-        this.parentIsland.children.map((item) => item.key) :
-        this.childLayoutKeys = this.childLayoutList.map((item) => item.key);
+            this.parentIsland.children.map((item) => item.key) :
+            this.childLayoutKeys = this.childLayoutList.map((item) => item.key);
         this.childLayoutList.notifyOnChanges();
         this.childLayoutList.changes.pipe(takeUntil(this.destroy$))
-        .subscribe(() => this.onRowIslandChange());
+            .subscribe(() => this.onRowIslandChange());
         super.ngAfterContentInit();
     }
 
@@ -562,7 +504,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         return width;
     }
 
-     private getDefaultExpanderWidth(): number {
+    private getDefaultExpanderWidth(): number {
         switch (this.displayDensity) {
             case DisplayDensity.cosy:
                 return 57;
@@ -704,14 +646,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     /**
      * @hidden
     */
-   toggleAll() {
-    const expanded = this.hierarchicalState.length > 0 && this.hasExpandableChildren;
-    if (!expanded && this.showExpandAll) {
-        this.expandAll();
-    } else {
-        this.collapseAll();
+    toggleAll() {
+        const expanded = this.hierarchicalState.length > 0 && this.hasExpandableChildren;
+        if (!expanded && this.showExpandAll) {
+            this.expandAll();
+        } else {
+            this.collapseAll();
+        }
     }
-   }
 
     /**
      * Collapses all rows of the current hierarchical grid.

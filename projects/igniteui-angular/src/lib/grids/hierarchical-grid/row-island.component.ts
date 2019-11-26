@@ -166,15 +166,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseComponent
     }
 
     /**
-     * Get transactions service for the children grid components.
-     * @experimental @hidden
-     */
-    get transactions(): TransactionService<Transaction, State> {
-        const grids = this.rowIslandAPI.getChildGrids();
-        return grids.length ? grids[0].transactions : this._transactions;
-    }
-
-    /**
      * @hidden
      */
     public initialChanges = [];
