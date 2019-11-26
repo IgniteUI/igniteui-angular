@@ -26,7 +26,7 @@
 
             <div class="date-range-wrapper">
                 <igx-date-range [weekStart]="1" [todayButtonText]="'Show Today'" [hideOutsideDays]="true" [mode]="'dropdown'">
-                    <igx-input-group>
+                    <!-- <igx-input-group>
                         <input #startDate igxDateRangeStart igxInput formControlName="startDate" type="text">
                         <label for="startDate" igxLabel>Check-in Date</label>
                         <igx-prefix>
@@ -39,7 +39,13 @@
                         <igx-prefix>
                             <igx-icon>today</igx-icon>
                         </igx-prefix>
-                    </igx-input-group>
+                    </igx-input-group> -->
+                    <igx-date-start>
+                        <input igxInput type="text">
+                    </igx-date-start>
+                    <igx-date-end>
+                        <input igxInput type="text">
+                    </igx-date-end>
                 </igx-date-range>
             </div>
 
@@ -77,13 +83,13 @@
 
             <div class="date-range-wrapper">
                 <igx-date-range [mode]="'dropdown'">
-                    <igx-input-group>
+                    <!-- <igx-input-group>
                         <input #singleInput igxInput igxDateRange type="text" formControlName="fullRange">
                         <label igxLabel for="singleInput">Input Date</label>
                         <igx-prefix>
                             <igx-icon>today</igx-icon>
                         </igx-prefix>
-                    </igx-input-group>
+                    </igx-input-group> -->
                 </igx-date-range>
             </div>
 

@@ -1,4 +1,5 @@
 <div #toggle igxToggle [style.width]="'600px'" (onOpened)="onCalendarOpened()">
+    <!-- TODO: create dynamic with overlay service api, template stuff to separate component -->
     <igx-calendar #calendar (keydown)="onKeyDown($event)" selection="range" [weekStart]="weekStart"
         [hideOutsideDays]="hideOutsideDays" [monthsViewNumber]="monthsViewNumber"
         (onSelection)="handleSelection($event)"></igx-calendar>
@@ -12,13 +13,30 @@
     </div>
 </div>
 
-<ng-container *ngTemplateOutlet="defTemplate"></ng-container>
+<ng-container *ngTemplateOutlet="this.start || this.end ? startEndTemplate : defTemplate"></ng-container>
 
 <ng-template #defTemplate>
     <div (click)="showCalendar($event)" class="content-wrap">
-        <ng-content select="igx-input-group"></ng-content>
-        <ng-content select="[igxDateRangeStart]"></ng-content>
-        <ng-content select="[igxDateRangeEnd]"></ng-content>
-        <ng-content select="[igxDateRange]"></ng-content>
+        <igx-date-start>
+            <input [readOnly]="true" igxInput type="text">
+            <label for="startDate" igxLabel>Start Date</label>
+        </igx-date-start>
+        <igx-date-end>
+            <input [readOnly]="true" igxInput type="text">
+            <label for="endDate" igxLabel>End Date</label>
+        </igx-date-end>
+    </div>
+</ng-template>
+
+<ng-template #startEndTemplate>
+    <div (click)="showCalendar($event)" class="content-wrap start-end-projected">
+        <ng-content selector="igx-date-start"></ng-content>
+        <ng-content selector="igx-date-end"></ng-content>
+    </div>
+</ng-template>
+
+<ng-template #singleTemplate>
+    <div (click)="showCalendar($event)" class="content-wrap">
+        <ng-content selector="igx-date-single"></ng-content>
     </div>
 </ng-template>
