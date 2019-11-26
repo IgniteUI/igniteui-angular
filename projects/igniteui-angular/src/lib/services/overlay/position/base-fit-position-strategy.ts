@@ -1,5 +1,5 @@
 import { ConnectedPositioningStrategy } from './connected-positioning-strategy';
-import { HorizontalAlignment, VerticalAlignment, PositionSettings, Size, Util } from '../utilities';
+import { HorizontalAlignment, VerticalAlignment, PositionSettings, Size, Util, ConnectedFit, OutOfViewPort } from '../utilities';
 
 export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrategy {
     protected _initialSize: Size;
@@ -7,21 +7,21 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
 
     /** @inheritdoc */
     position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean): void {
-        const targetRect = Util.getTargetRect(this.settings);
-        const contentElementRect = contentElement.getBoundingClientRect();
+        const rects = super.calculateElementRectangles(contentElement);
+        const connectedFit: ConnectedFit = {};
         if (initialCall) {
-            const connectedFit: ConnectedFit = {};
-            connectedFit.targetRect = targetRect;
-            connectedFit.contentElementRect = contentElementRect;
+            connectedFit.targetRect = rects.targetRect;
+            connectedFit.contentElementRect = rects.elementRect;
             this._initialSettings = this._initialSettings || Object.assign({}, this.settings);
             this.settings = Object.assign({}, this._initialSettings);
             connectedFit.viewPortRect = Util.getViewportRect(document);
             this.updateViewPortFit(connectedFit);
-            if (!connectedFit.fitHorizontal || !connectedFit.fitVertical) {
+            if (connectedFit.fitHorizontal.back < 0 || connectedFit.fitHorizontal.forward < 0 ||
+                connectedFit.fitVertical.back < 0 || connectedFit.fitVertical.forward < 0) {
                 this.fitInViewport(contentElement, connectedFit);
             }
         }
-        this.setStyle(contentElement, targetRect, contentElementRect);
+        this.setStyle(contentElement, rects.targetRect, rects.elementRect, connectedFit);
     }
 
     /**
@@ -34,19 +34,25 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
             connectedFit.targetRect,
             connectedFit.contentElementRect,
             this.settings.horizontalStartPoint,
-            this.settings.horizontalDirection);
+            this.settings.horizontalDirection,
+            connectedFit.horizontalOffset ? connectedFit.horizontalOffset : 0);
         connectedFit.right = connectedFit.left + connectedFit.contentElementRect.width;
-        connectedFit.fitHorizontal =
-            connectedFit.viewPortRect.left < connectedFit.left && connectedFit.right < connectedFit.viewPortRect.right;
+        connectedFit.fitHorizontal = {
+                back: Math.round(connectedFit.left - connectedFit.viewPortRect.left),
+                forward: Math.round(connectedFit.viewPortRect.right - connectedFit.right)
+            };
 
         connectedFit.top = this.calculateTop(
             connectedFit.targetRect,
             connectedFit.contentElementRect,
             this.settings.verticalStartPoint,
-            this.settings.verticalDirection);
+            this.settings.verticalDirection,
+            connectedFit.verticalOffset ? connectedFit.verticalOffset : 0);
         connectedFit.bottom = connectedFit.top + connectedFit.contentElementRect.height;
-        connectedFit.fitVertical =
-            connectedFit.viewPortRect.top < connectedFit.top && connectedFit.bottom < connectedFit.viewPortRect.bottom;
+        connectedFit.fitVertical = {
+            back: Math.round(connectedFit.top - connectedFit.viewPortRect.top),
+            forward: Math.round(connectedFit.viewPortRect.bottom - connectedFit.bottom)
+        };
     }
 
     /**
@@ -58,8 +64,9 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
      * @param direction Direction in which to show the element
      */
     protected calculateLeft(
-        targetRect: ClientRect, elementRect: ClientRect, startPoint: HorizontalAlignment, direction: HorizontalAlignment): number {
-        return targetRect.right + targetRect.width * startPoint + elementRect.width * direction;
+        targetRect: ClientRect, elementRect: ClientRect, startPoint: HorizontalAlignment, direction: HorizontalAlignment, offset?: number):
+        number {
+        return targetRect.right + targetRect.width * startPoint + elementRect.width * direction + offset;
     }
 
     /**
@@ -71,8 +78,9 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
      * @param direction Direction in which to show the element
      */
     protected calculateTop(
-        targetRect: ClientRect, elementRect: ClientRect, startPoint: VerticalAlignment, direction: VerticalAlignment): number {
-        return targetRect.bottom + targetRect.height * startPoint + elementRect.height * direction;
+        targetRect: ClientRect, elementRect: ClientRect, startPoint: VerticalAlignment, direction: VerticalAlignment, offset?: number):
+        number {
+        return targetRect.bottom + targetRect.height * startPoint + elementRect.height * direction + offset;
     }
 
     /**
@@ -85,14 +93,4 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
         connectedFit: ConnectedFit);
 }
 
-export interface ConnectedFit {
-    contentElementRect?: ClientRect;
-    targetRect?: ClientRect;
-    viewPortRect?: ClientRect;
-    fitHorizontal?: boolean;
-    fitVertical?: boolean;
-    left?: number;
-    right?: number;
-    top?: number;
-    bottom?: number;
-}
+

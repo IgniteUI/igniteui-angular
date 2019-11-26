@@ -234,7 +234,7 @@ describe('igxCombo', () => {
             fixture.detectChanges();
             expect(combo.headerTemplate).toBeDefined();
             const dropdownList: HTMLElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST)).nativeElement;
-            headerElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_FOOTER));
+            headerElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_HEADER));
             expect(headerElement).not.toBeNull();
             const headerHTMLElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_HEADER)).nativeElement;
             expect(headerHTMLElement.parentNode).toEqual(dropdownList);

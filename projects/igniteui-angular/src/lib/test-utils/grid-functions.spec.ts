@@ -1536,9 +1536,9 @@ export class GridFunctions {
         }
     }
 
-    public static clickGroupExpandIndicator(fixture, header) {
-        const group = GridFunctions.getColumnGroupHeaderCell(header, fixture);
-        const expandInd = GridFunctions.getColGroupExpandIndicator(group);
+    public static clickGroupExpandIndicator(fixture, group) {
+        const groupHeader = GridFunctions.getColumnGroupHeaderCell(group.header, fixture);
+        const expandInd = GridFunctions.getColGroupExpandIndicator(groupHeader);
         expandInd.dispatchEvent(new Event('click', {}));
     }
 }

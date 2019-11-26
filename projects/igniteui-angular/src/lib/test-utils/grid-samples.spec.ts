@@ -1624,7 +1624,7 @@ export class GridWithUndefinedDataComponent implements OnInit  {
         <igx-column-group header="Address Information" [collapsible]="true">
             <igx-column-group header="Country Information" [visibleWhenCollapsed]="true" [collapsible]="true">
                 <igx-column  field="Country" [visibleWhenCollapsed]="true"></igx-column>
-                <igx-column  field="Empty" ></igx-column>
+                <igx-column  field="Empty"></igx-column>
                 <igx-column-group header="Region Information" [visibleWhenCollapsed]="true" [collapsible]="true">
                     <igx-column field="Region" [visibleWhenCollapsed]="true"></igx-column>
                     <igx-column field="PostalCode" [visibleWhenCollapsed]="true"></igx-column>
@@ -1634,7 +1634,8 @@ export class GridWithUndefinedDataComponent implements OnInit  {
                     <igx-column field="Address"></igx-column>
                 </igx-column-group>
             </igx-column-group>
-            <igx-column-group header="Contact Information" [visibleWhenCollapsed]="false" [collapsible]="true">
+            <igx-column-group header="Contact Information" [visibleWhenCollapsed]="false"
+                    [collapsible]="true" [hidden]="hideContactInformation">
                 <igx-column field="Phone" [visibleWhenCollapsed]="false"></igx-column>
                 <igx-column field="Fax" [visibleWhenCollapsed]="false"></igx-column>
             </igx-column-group>
@@ -1651,6 +1652,7 @@ export class CollapsibleColumnGroupTestComponent {
     public personDetailsExpanded;
     public personDetailsVisibleWhenCollapse;
     public companyNameVisibleWhenCollapse;
+    public hideContactInformation = true;
     data = SampleTestData.contactInfoDataFull();
 }
 
