@@ -83,12 +83,4 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
             this.dropDown.selectItem(this, event);
         }
     }
-
-    /**
-     * @hidden @internal
-     */
-    @HostListener('mousedown', ['$event'])
-    mousedownHandler(event) {
-        event.preventDefault();
-    }
 }
