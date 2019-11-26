@@ -598,6 +598,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         this.expansionStatesChange.emit(this._expansionStates);
         if (this.gridAPI.grid) {
             this.cdr.detectChanges();
+            this._focusActiveCell();
         }
     }
 
