@@ -767,7 +767,7 @@ export class IgxSliderComponent implements
      * @hidden
      */
     public get deactivateThumbLabel() {
-        return (this.primaryTickLabels || this.secondaryTickLabels) &&
+        return ((this.primaryTicks && this.primaryTickLabels) || (this.secondaryTicks && this.secondaryTickLabels)) &&
             (this.ticksOrientation === TicksOrientation.top || this.ticksOrientation === TicksOrientation.mirror);
     }
 
