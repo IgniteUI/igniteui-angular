@@ -1,6 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, ContentChild, Pipe, PipeTransform } from '@angular/core';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxInputGroupBase } from '../input-group/input-group.common';
+import { NgControl } from '@angular/forms';
+
+
+export interface DateRange {
+    start: Date;
+    end: Date;
+}
 
 /**
  * @hidden
@@ -11,23 +18,26 @@ import { IgxInputGroupBase } from '../input-group/input-group.common';
     selector: `igx-date-range-base`
 })
 class IgxDateRangeBaseComponent extends IgxInputGroupComponent {
+
+    @ContentChild(NgControl)
+    protected ngControl: NgControl;
+
     public get nativeElement() {
         return this.element.nativeElement;
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
+    /** @hidden @internal */
     public setFocus(): void {
-        this.nativeElement.focus();
+        this.input.focus();
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden @internal */
     public updateValue(value: any) {
-        this.input.value = value;
+        if (this.ngControl) {
+            this.ngControl.control.setValue(value);
+        } else {
+            this.input.value = value;
+        }
     }
 }
 
@@ -50,4 +60,30 @@ export class IgxDateEndComponent extends IgxDateRangeBaseComponent { }
     templateUrl: 'igx-date-range-inputs.common.html',
     providers: [{ provide: IgxInputGroupBase, useExisting: IgxDateSingleComponent }]
 })
-export class IgxDateSingleComponent extends IgxDateRangeBaseComponent { }
+export class IgxDateSingleComponent extends IgxDateRangeBaseComponent {
+    // TODO: Separate formatter/pipe?
+    public updateValue(value: any) {
+        value = new DateRangeFormatPipe().transform(value);
+        super.updateValue(value);
+    }
+}
+
+@Pipe({ name: 'dateRange' })
+export class DateRangeFormatPipe implements PipeTransform {
+    transform(values: DateRange) {
+        const { start, end } = values;
+        let formatted = start && start.toLocaleDateString();
+        if (end) {
+            formatted += ` - ${end.toLocaleDateString()}`;
+        }
+        return formatted;
+    }
+
+    parse(value: string): DateRange {
+        const values = value.trim().split(/ - /g);
+        return {
+            start: value[0] && new Date(Date.parse(values[0])),
+            end: value[0] && new Date(Date.parse(values[0]))
+        };
+      }
+}

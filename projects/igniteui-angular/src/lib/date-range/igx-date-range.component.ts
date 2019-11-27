@@ -11,7 +11,7 @@ import { takeUntil } from 'rxjs/operators';
 import { KEYS, isIE } from '../core/utils';
 import { PositionSettings } from '../services/overlay/utilities';
 import { fadeIn, fadeOut } from '../animations/fade';
-import { IgxDateStartComponent, IgxDateEndComponent, IgxDateSingleComponent } from './igx-date-range-inputs.common';
+import { IgxDateStartComponent, IgxDateEndComponent, IgxDateSingleComponent, DateRange } from './igx-date-range-inputs.common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 export interface DateRange {
@@ -498,8 +498,8 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
 
     private extractRange(selection: Date[]): DateRange {
         return {
-            start: this.applyFormatting(selection[0]),
-            end: this.applyFormatting(selection[selection.length - 1])
+            start: selection[0], // this.applyFormatting(selection[0]),
+            end: selection[selection.length - 1] // this.applyFormatting(selection[selection.length - 1])
         };
     }
 

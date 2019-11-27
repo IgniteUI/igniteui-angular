@@ -13,7 +13,10 @@
     </div>
 </div>
 
-<ng-container *ngTemplateOutlet="this.start || this.end ? startEndTemplate : defTemplate"></ng-container>
+<ng-container *ngTemplateOutlet="this.single ? singleTemplate
+    : this.start || this.end ? startEndTemplate
+    : defTemplate">
+</ng-container>
 
 <ng-template #defTemplate>
     <div (click)="showCalendar($event)" class="content-wrap">

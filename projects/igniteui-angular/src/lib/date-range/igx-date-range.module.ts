@@ -8,7 +8,8 @@ import { IgxInputGroupModule } from '../input-group/index';
 import { IgxIconModule } from '../icon/index';
 import {
     IgxDateStartComponent, IgxDateEndComponent,
-    IgxDateSingleComponent
+    IgxDateSingleComponent,
+    DateRangeFormatPipe
 } from './igx-date-range-inputs.common';
 
 /**
@@ -19,7 +20,8 @@ import {
         IgxDateRangeComponent,
         IgxDateStartComponent,
         IgxDateEndComponent,
-        IgxDateSingleComponent
+        IgxDateSingleComponent,
+        DateRangeFormatPipe
     ],
     imports: [
         CommonModule,
@@ -33,7 +35,8 @@ import {
         IgxDateRangeComponent,
         IgxDateStartComponent,
         IgxDateEndComponent,
-        IgxDateSingleComponent
+        IgxDateSingleComponent,
+        DateRangeFormatPipe
     ]
 })
 export class IgxDateRangeModule { }
