@@ -45,7 +45,7 @@ const homeKeyEvent = new KeyboardEvent('keydown', { key: 'Home' });
 const tabKeyEvent = new KeyboardEvent('keydown', { key: 'Tab' });
 const shiftTabKeysEvent = new KeyboardEvent('keydown', { 'key': 'Tab', shiftKey: true });
 
-fdescribe('igxSelect', () => {
+describe('igxSelect', () => {
     let fixture;
     let select: IgxSelectComponent;
     let inputElement: DebugElement;
@@ -2475,7 +2475,7 @@ fdescribe('igxSelect', () => {
             fixture.detectChanges();
             tick();
         }));
-        fit('Should NOT throw console Warning for "Expression changed after it was checked"', fakeAsync(() => {
+        it('Should NOT throw console Warning for "Expression changed after it was checked"', fakeAsync(() => {
             const firstSelect = fixture.componentInstance.selectComponents.first as IgxSelectComponent;
             spyOn(console, 'warn');
 
