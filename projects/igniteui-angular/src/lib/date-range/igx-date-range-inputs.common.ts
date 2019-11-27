@@ -1,8 +1,7 @@
-import { Component, ContentChild, Pipe, PipeTransform } from '@angular/core';
+import { Component, ContentChild, Pipe, PipeTransform, OnInit } from '@angular/core';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxInputGroupBase } from '../input-group/input-group.common';
 import { NgControl } from '@angular/forms';
-
 
 export interface DateRange {
     start: Date;
@@ -17,10 +16,14 @@ export interface DateRange {
     template: ``,
     selector: `igx-date-range-base`
 })
-class IgxDateRangeBaseComponent extends IgxInputGroupComponent {
-
+class IgxDateRangeBaseComponent extends IgxInputGroupComponent implements OnInit {
     @ContentChild(NgControl)
     protected ngControl: NgControl;
+
+    /** @hidden @internal */
+    public ngOnInit(): void {
+        this.input.nativeElement.readOnly = true;
+    }
 
     public get nativeElement() {
         return this.element.nativeElement;
@@ -70,7 +73,10 @@ export class IgxDateSingleComponent extends IgxDateRangeBaseComponent {
 
 @Pipe({ name: 'dateRange' })
 export class DateRangeFormatPipe implements PipeTransform {
-    transform(values: DateRange) {
+    transform(values: DateRange): string {
+        if (!values) {
+            return '';
+        }
         const { start, end } = values;
         let formatted = start && start.toLocaleDateString();
         if (end) {
@@ -83,7 +89,7 @@ export class DateRangeFormatPipe implements PipeTransform {
         const values = value.trim().split(/ - /g);
         return {
             start: value[0] && new Date(Date.parse(values[0])),
-            end: value[0] && new Date(Date.parse(values[0]))
+            end: value[1] && new Date(Date.parse(values[1]))
         };
-      }
+    }
 }

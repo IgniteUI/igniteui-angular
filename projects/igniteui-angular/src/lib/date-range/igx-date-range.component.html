@@ -21,11 +21,11 @@
 <ng-template #defTemplate>
     <div (click)="showCalendar($event)" class="content-wrap">
         <igx-date-start>
-            <input [readOnly]="true" igxInput type="text">
+            <input igxInput type="text" [value]="this.applyFormatting(this.value.start)">
             <label for="startDate" igxLabel>Start Date</label>
         </igx-date-start>
         <igx-date-end>
-            <input [readOnly]="true" igxInput type="text">
+            <input igxInput type="text" [value]="this.applyFormatting(this.value.end)">
             <label for="endDate" igxLabel>End Date</label>
         </igx-date-end>
     </div>

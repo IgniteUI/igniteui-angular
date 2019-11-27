@@ -8,8 +8,10 @@ import { IgxDateRangeComponent } from 'igniteui-angular';
     styleUrls: ['./date-range.sample.scss']
 })
 export class DateRangeSampleComponent implements OnInit {
-    @ViewChild(IgxDateRangeComponent, { read: IgxDateRangeComponent, static: false })
+    @ViewChild('myDateRange')
     public dateRange: IgxDateRangeComponent;
+
+    public content: any;
 
     public date: Date;
     public twoInputForm: FormGroup;
@@ -37,6 +39,11 @@ export class DateRangeSampleComponent implements OnInit {
         });
     }
 
+    public logContent(): void {
+        console.log(this.content);
+        console.log(this.dateRange.value);
+    }
+
     public submitSingleInputForm(): void {
         console.log(this.singleInputForm);
     }
@@ -55,7 +62,9 @@ export class DateRangeSampleComponent implements OnInit {
         return `${this.dayFormatter.format(date)}, ${date.getDate()} ${this.monthFormatter.format(date)}, ${date.getFullYear()}`;
     }
 
-    public onRangeSelected(): void {
-        this.dateRange.close();
+    public onRangeSelected(value): void {
+        // this.dateRange.close();
+        console.log(this.content);
+        console.log(this.dateRange.value);
     }
 }

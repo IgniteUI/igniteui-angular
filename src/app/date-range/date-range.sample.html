@@ -25,21 +25,8 @@
             </igx-input-group>
 
             <div class="date-range-wrapper">
-                <igx-date-range [weekStart]="1" [todayButtonText]="'Show Today'" [hideOutsideDays]="true" [mode]="'dropdown'">
-                    <!-- <igx-input-group>
-                        <input #startDate igxDateRangeStart igxInput formControlName="startDate" type="text">
-                        <label for="startDate" igxLabel>Check-in Date</label>
-                        <igx-prefix>
-                            <igx-icon>today</igx-icon>
-                        </igx-prefix>
-                    </igx-input-group>
-                    <igx-input-group>
-                        <input #endDate igxDateRangeEnd igxInput formControlName="endDate" type="text">
-                        <label for="endDate" igxLabel>Check-out Date</label>
-                        <igx-prefix>
-                            <igx-icon>today</igx-icon>
-                        </igx-prefix>
-                    </igx-input-group> -->
+                <igx-date-range [weekStart]="1" [todayButtonText]="'Show Today'" [hideOutsideDays]="true"
+                    [mode]="'dropdown'">
                     <igx-date-start>
                         <input #startDate igxInput formControlName="startDate" type="text">
                     </igx-date-start>
@@ -82,15 +69,7 @@
             </igx-input-group>
 
             <div class="date-range-wrapper">
-                <igx-date-range [mode]="'dropdown'">
-                    <!-- <igx-input-group>
-                        <input #singleInput igxInput igxDateRange type="text" formControlName="fullRange">
-                        <label igxLabel for="singleInput">Input Date</label>
-                        <igx-prefix>
-                            <igx-icon>today</igx-icon>
-                        </igx-prefix>
-                    </igx-input-group> -->
-                </igx-date-range>
+                <igx-date-range [mode]="'dropdown'" formControlName="fullRange"></igx-date-range>
             </div>
 
             <div class="button-wrap">
@@ -100,9 +79,12 @@
         </div>
     </form>
 
-    <igx-date-range [mode]="'dropdown'">
-        <igx-date-single>
-            <input igxInput type="text">
-        </igx-date-single>
-    </igx-date-range>
+    <div class="date-range-wrapper">
+        <igx-date-range #myDateRange [mode]="'dropdown'" (rangeSelected)="onRangeSelected($event)"
+            [(ngModel)]="content">
+            <igx-date-single>
+                <input igxInput type="text">
+            </igx-date-single>
+        </igx-date-range>
+    </div>
 </div>

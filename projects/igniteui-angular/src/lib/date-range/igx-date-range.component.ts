@@ -1,6 +1,6 @@
 import {
     Component, Input, ContentChild, ViewChild,
-    AfterViewInit, OnDestroy, EventEmitter, Output, ElementRef
+    AfterViewInit, OnDestroy, EventEmitter, Output, ElementRef, forwardRef
 } from '@angular/core';
 import { InteractionMode } from '../core/enums';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
@@ -13,11 +13,6 @@ import { PositionSettings } from '../services/overlay/utilities';
 import { fadeIn, fadeOut } from '../animations/fade';
 import { IgxDateStartComponent, IgxDateEndComponent, IgxDateSingleComponent, DateRange } from './igx-date-range-inputs.common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-
-export interface DateRange {
-    start: Date | string;
-    end: Date | string;
-}
 
 /**
  * ** Ignite UI for Angular Range Date Picker **
@@ -37,7 +32,7 @@ export interface DateRange {
 @Component({
     selector: 'igx-date-range',
     templateUrl: './igx-date-range.component.html',
-    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxDateRangeComponent, multi: true }]
+    providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => IgxDateRangeComponent), multi: true }]
 })
 export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlValueAccessor {
     /**
@@ -117,7 +112,7 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
      * ```
      */
     @Input()
-    public formatter: (val: Date) => string;
+    public formatter: (val: Date | DateRange) => string;
 
     /**
      * Property that changes the default text of the `today` button.
@@ -162,7 +157,7 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
      * An event that is emitted when a full range was selected in the `IgxDateRangeComponent`.
      */
     @Output()
-    public rangeSelected: EventEmitter<IgxDateRangeComponent>;
+    public rangeSelected: EventEmitter<DateRange>;
 
     /**
      * An event that is emitted when the `IgxDateRangeComponent` is opened.
@@ -176,16 +171,16 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
     @Output()
     public onClosed: EventEmitter<IgxDateRangeComponent>;
 
-    @ViewChild(IgxDateStartComponent, { read: IgxDateStartComponent, static: false })
+    @ViewChild(IgxDateStartComponent)
     public startInput: IgxDateStartComponent;
 
-    @ViewChild(IgxDateEndComponent, { read: IgxDateEndComponent, static: false })
+    @ViewChild(IgxDateEndComponent)
     public endInput: IgxDateEndComponent;
 
-    @ContentChild(IgxDateStartComponent, { read: IgxDateStartComponent, static: false })
+    @ContentChild(IgxDateStartComponent)
     public start: IgxDateStartComponent;
 
-    @ContentChild(IgxDateEndComponent, { read: IgxDateEndComponent, static: false })
+    @ContentChild(IgxDateEndComponent)
     public end: IgxDateEndComponent;
 
     @ContentChild(IgxDateSingleComponent)
@@ -211,13 +206,13 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
     @ViewChild(IgxToggleDirective)
     protected toggle: IgxToggleDirective;
 
+    private _value: DateRange;
     private _destroy: Subject<boolean>;
+    private _onChangeCallback: (_: any) => void;
     private _positionSettings: PositionSettings;
     private _positionStrategy: AutoPositionStrategy;
     private _dialogOverlaySettings: OverlaySettings;
     private _dropDownOverlaySettings: OverlaySettings;
-    private _value: DateRange;
-    private _onChangeCallback: (_: any) => void;
 
     constructor(private element: ElementRef) {
         this.locale = 'en';
@@ -227,9 +222,10 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
         this.weekStart = WEEKDAYS.SUNDAY;
         this.mode = InteractionMode.Dialog;
         this._destroy = new Subject<boolean>();
+        this._onChangeCallback = (_: any) => { };
+        this.rangeSelected = new EventEmitter<DateRange>();
         this.onOpened = new EventEmitter<IgxDateRangeComponent>();
         this.onClosed = new EventEmitter<IgxDateRangeComponent>();
-        this.rangeSelected = new EventEmitter<IgxDateRangeComponent>();
     }
 
     /**
@@ -283,6 +279,7 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
      */
     public selectToday(): void {
         this.showToday();
+        this._onChangeCallback(this.value);
     }
 
     /**
@@ -294,6 +291,8 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
 
     public set value(value: DateRange) {
         this._value = value;
+        this._onChangeCallback(value);
+        this.updateValues();
     }
 
     /**
@@ -333,9 +332,7 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
      * @hidden
      * @internal
      */
-    public registerOnTouched(fn: any): void {
-        throw new Error('Method not implemented.');
-    }
+    public registerOnTouched(fn: any): void { }
 
     /**
      * @hidden
@@ -404,20 +401,10 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
      */
     public handleSelection(selectionData: Date[]): void {
         this.value = this.extractRange(selectionData);
-        if (this.startValue) {
-            this.startValue.updateValue(this.value.start);
-        }
-
-        if (this.endValue) {
-            this.endValue.updateValue(this.value.end);
-        }
-
-        if (this.single) {
-            this.single.updateValue(this.value);
-        }
-
+        this._onChangeCallback(this.value);
+        this.updateValues();
         // TODO
-        this.rangeSelected.emit(this);
+        this.rangeSelected.emit(this.value);
     }
 
     /**
@@ -444,8 +431,14 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
     public hideCalendar(): void {
         if (!this.toggle.collapsed) {
             this.toggle.close();
-            this.start ? this.start.setFocus() :
+            if (this.startInput) {
+                this.startInput.setFocus();
+            }
+            if (this.start) {
+                this.start.setFocus();
+            } else {
                 this.single.setFocus();
+            }
         }
         this.onClosed.emit(this);
     }
@@ -481,8 +474,12 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
         this.activateToggleOpen(this._dropDownOverlaySettings);
     }
 
-    private applyFormatting(date: Date): string {
-        return this.formatter ? this.formatter(date) : this.applyLocaleToDate(date);
+    /** @hidden @internal */
+    public applyFormatting(date: Date): string {
+        if (this.formatter) {
+            return this.formatter(date);
+        }
+        return date ? this.applyLocaleToDate(date) : '';
     }
 
     // TODO: move util
@@ -559,5 +556,17 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
             modal: false,
             positionStrategy: new GlobalPositionStrategy()
         };
+    }
+
+    private updateValues() {
+        if (this.startValue) {
+            this.startValue.updateValue(this.value.start);
+        }
+        if (this.endValue) {
+            this.endValue.updateValue(this.value.end);
+        }
+        if (this.single) {
+            this.single.updateValue(this.value);
+        }
     }
 }
