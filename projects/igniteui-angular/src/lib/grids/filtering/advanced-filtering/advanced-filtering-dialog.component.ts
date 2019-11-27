@@ -304,9 +304,13 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      */
     public ngAfterViewInit(): void {
         if (this.addRootAndGroupButton) {
-            this.addRootAndGroupButton.nativeElement.focus();
+            requestAnimationFrame(() => {
+                this.addRootAndGroupButton.nativeElement.focus();
+            });
         } else if (this.addConditionButton) {
-            this.addConditionButton.nativeElement.focus();
+            requestAnimationFrame(() => {
+                this.addConditionButton.nativeElement.focus();
+            });
         }
 
         this._overlaySettings.outlet = this.overlayOutlet;
