@@ -24,6 +24,7 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`:
+    - Master-Detail visualization added for `igxGrid`. Users may now define templates that show additional context for rows when expanded. For more information, please take a look at the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/master_detail.html).
     - `sortStrategy` input is added, which can be used to set a global sorting strategy for the entire grid.
         (**NOTE**: The grid's `sortStrategy` is of different type compared to the column's `sortStrategy`.)
     - `NoopSortingStrategy` is added, which can be used to disable the default sorting of the grid by assigning its instance to the grid's `sortStrategy` input. (Useful for remote sorting.)

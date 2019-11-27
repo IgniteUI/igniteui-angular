@@ -28,6 +28,7 @@ import { ColumnType } from './common/column.interface';
 import { RowType } from './common/row.interface';
 import { GridSelectionMode } from './common/enums';
 import { GridType } from './common/grid.interface';
+import { IgxGridComponent } from './grid';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -849,6 +850,26 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 (this.gridAPI as any).trigger_row_expansion_toggle(this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
             } else if (expand) {
                 (this.gridAPI as any).trigger_row_expansion_toggle(this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
+            }
+        } else if ((this.grid as IgxGridComponent).hasDetails && this.isToggleKey(key)) {
+            const collapse = (this.row as any).expanded && ROW_COLLAPSE_KEYS.has(key);
+            const expand = !(this.row as any).expanded && ROW_EXPAND_KEYS.has(key);
+            const expandedStates = this.grid.expansionStates;
+            if (expand) {
+                expandedStates.set(this.row.rowID, true);
+            } else if (collapse) {
+                expandedStates.set(this.row.rowID, false);
+            }
+            this.grid.expansionStates = expandedStates;
+            this.grid.notifyChanges();
+            const isVirtualized = !this.grid.verticalScrollContainer.dc.instance.notVirtual;
+            // persist focused cell
+            const el = this.grid.selectionService.activeElement;
+            if (isVirtualized && el) {
+                const cell = this.grid.gridAPI.get_cell_by_visible_index(el.row, el.column);
+                if (cell) {
+                    cell.nativeElement.focus();
+                }
             }
         }
     }
