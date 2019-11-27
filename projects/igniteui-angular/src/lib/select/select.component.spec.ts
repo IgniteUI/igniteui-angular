@@ -1,5 +1,5 @@
 import { IgxInputState } from './../directives/input/input.directive';
-import { Component, ViewChild, DebugElement, OnInit } from '@angular/core';
+import { Component, ViewChild, DebugElement, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { FormsModule, FormGroup, FormBuilder, FormControl, Validators, ReactiveFormsModule, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -45,7 +45,7 @@ const homeKeyEvent = new KeyboardEvent('keydown', { key: 'Home' });
 const tabKeyEvent = new KeyboardEvent('keydown', { key: 'Tab' });
 const shiftTabKeysEvent = new KeyboardEvent('keydown', { 'key': 'Tab', shiftKey: true });
 
-describe('igxSelect', () => {
+fdescribe('igxSelect', () => {
     let fixture;
     let select: IgxSelectComponent;
     let inputElement: DebugElement;
@@ -92,7 +92,8 @@ describe('igxSelect', () => {
                 IgxSelectAffixComponent,
                 IgxSelectReactiveFormComponent,
                 IgxSelectTemplateFormComponent,
-                IgxSelectHeaderFooterComponent
+                IgxSelectHeaderFooterComponent,
+                IgxSelectCDRComponent
             ],
             imports: [
                 FormsModule,
@@ -2467,7 +2468,31 @@ describe('igxSelect', () => {
             expect(selectList.nativeElement.nextElementSibling).toBeNull();
         }));
     });
-});
+
+    describe('Test CDR - Expression changed after it was checked', () => {
+        beforeEach(fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSelectCDRComponent);
+            fixture.detectChanges();
+            tick();
+        }));
+        fit('Should NOT throw console Warning for "Expression changed after it was checked"', fakeAsync(() => {
+            const firstSelect = fixture.componentInstance.selectComponents.first as IgxSelectComponent;
+            spyOn(console, 'warn');
+
+            expect(firstSelect).toBeDefined();
+            expect(firstSelect.value).toBe('ID');
+            expect(console.warn).toHaveBeenCalledTimes(0);
+
+            fixture.componentInstance.render = !fixture.componentInstance.render;
+            fixture.detectChanges();
+            tick();
+
+            const lastSelect = fixture.componentInstance.selectComponents.last as IgxSelectComponent;
+            expect(lastSelect).toBeDefined();
+            expect(lastSelect.value).toBe('CompanyName');
+            expect(console.warn).toHaveBeenCalledTimes(0);
+        }));
+    });
 
 @Component({
     template: `
@@ -2794,3 +2819,47 @@ class IgxSelectHeaderFooterComponent implements OnInit {
         }
     }
 }
+
+    @Component({
+        template: `
+    <h4>*ngIf test select for 'expression changed...console Warning'</h4>
+    <div *ngIf="render">
+        <igx-select #select value="ID">
+            <label igxLabel>Column</label>
+            <igx-select-item *ngFor="let column of columns" [value]="column.field">
+                {{column.field}}
+            </igx-select-item>
+        </igx-select>
+    </div>
+    <button igxButton (click)="render=!render">toggle render *ngIF</button>
+    <div *ngIf="!render">
+        <igx-select #select value="CompanyName">
+            <label igxLabel>Column</label>
+            <igx-select-item *ngFor="let column of columns" [value]="column.field">
+                {{column.field}}
+            </igx-select-item>
+        </igx-select>
+    </div>
+`
+    })
+    class IgxSelectCDRComponent {
+        @ViewChildren(IgxSelectComponent) public selectComponents: QueryList<IgxSelectComponent>;
+
+        public render = true;
+        public columns: Array<any> = [
+            { field: 'ID', width: 80, resizable: true, movable: true, type: 'string' },
+            { field: 'CompanyName', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'ContactName', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'Employees', width: 150, resizable: true, movable: true, type: 'number' },
+            { field: 'ContactTitle', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'DateCreated', width: 150, resizable: true, movable: true, type: 'date' },
+            { field: 'Address', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'City', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'Region', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'PostalCode', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'Phone', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'Fax', width: 150, resizable: true, movable: true, type: 'string' },
+            { field: 'Contract', width: 150, resizable: true, movable: true, type: 'boolean' }
+        ];
+    }
+});
