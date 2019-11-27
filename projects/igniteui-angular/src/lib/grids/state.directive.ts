@@ -163,6 +163,7 @@ export class IgxGridStateDirective {
         }
         this.state = state as IGridState;
         this.restoreGridState();
+        this.grid.cdr.detectChanges();
     }
 
     /**
@@ -336,8 +337,9 @@ export class IgxGridStateDirective {
             delete expr.strategy;
         });
         const expansionState = this.grid.groupingExpansionState;
+        const groupsExpanded = this.grid.groupsExpanded;
 
-        return { groupBy: { expressions: groupingExpressions, expansion: expansionState, defaultExpanded: true}  };
+        return { groupBy: { expressions: groupingExpressions, expansion: expansionState, defaultExpanded: groupsExpanded}  };
     }
 
     private getRowSelection(): IGridState {
@@ -402,7 +404,11 @@ export class IgxGridStateDirective {
      */
     private restoreGroupBy(state: IGroupingState) {
         (this.grid as IgxGridComponent).groupingExpressions = state.expressions as IGroupingExpression[];
-        (this.grid as IgxGridComponent).groupingExpansionState = state.expansion as IGroupByExpandState[];
+        if ((this.grid as IgxGridComponent).groupsExpanded !== state.defaultExpanded) {
+            this.grid.toggleAllGroupRows();
+        } else {
+            (this.grid as IgxGridComponent).groupingExpansionState = state.expansion as IGroupByExpandState[];
+        }
     }
 
     /**
@@ -414,7 +420,6 @@ export class IgxGridStateDirective {
             this.grid.cdr.detectChanges();
         }
         this.grid.page = state.index;
-        this.grid.cdr.detectChanges();
     }
 
     private restoreRowSelection(state: any[]) {
