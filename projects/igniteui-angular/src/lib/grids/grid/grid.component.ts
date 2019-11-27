@@ -1,6 +1,6 @@
 import {
     Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
-    QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, AfterContentInit, HostBinding, forwardRef, OnInit, InjectionToken
+    QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, AfterContentInit, HostBinding, forwardRef, OnInit
 } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';

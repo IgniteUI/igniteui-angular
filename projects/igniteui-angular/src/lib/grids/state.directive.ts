@@ -1,4 +1,4 @@
-import { Directive, Optional, Input, NgModule, Host, ComponentFactoryResolver } from '@angular/core';
+import { Directive, Optional, Input, NgModule, Host, ComponentFactoryResolver, ViewContainerRef } from '@angular/core';
 import { ISortingExpression } from '../data-operations/sorting-expression.interface';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
@@ -108,7 +108,8 @@ export class IgxGridStateDirective {
      */
     constructor(
         @Host() @Optional() private grid: IgxGridComponent,
-        private resolver: ComponentFactoryResolver) { }
+        private resolver: ComponentFactoryResolver,
+        protected viewRef: ViewContainerRef) { }
 
     /**
      * Gets the state of a feature or states of all grid features, unless a certain feature is disabled through the `options` property.
@@ -361,7 +362,7 @@ export class IgxGridStateDirective {
         const newColumns = [];
         const factory = this.resolver.resolveComponentFactory(IgxColumnComponent);
         columnsState.forEach((colState) => {
-            const ref = factory.create((this.grid as any).viewRef.injector);
+            const ref = factory.create(this.viewRef.injector);
             Object.assign(ref.instance, colState);
             ref.changeDetectorRef.detectChanges();
             newColumns.push(ref.instance);

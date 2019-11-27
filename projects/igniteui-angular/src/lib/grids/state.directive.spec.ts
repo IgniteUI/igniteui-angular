@@ -14,7 +14,7 @@ import { IgxBooleanFilteringOperand } from '../data-operations/filtering-conditi
 import { IGroupingState } from '../data-operations/groupby-state.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 
-fdescribe('IgxGridState - input properties', () => {
+describe('IgxGridState - input properties', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
