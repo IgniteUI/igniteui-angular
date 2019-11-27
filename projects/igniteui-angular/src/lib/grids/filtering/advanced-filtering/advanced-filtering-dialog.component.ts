@@ -1028,13 +1028,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         this.grid = grid;
         this._overlayService = overlayService;
         this._overlayComponentId = overlayComponentId;
-
-        // Set pointer-events to none of the overlay content element which blocks the grid interaction after dragging
-        this._overlayService.onOpened.pipe(first()).subscribe(() => {
-            if (this.element.nativeElement.parentElement) {
-                this.element.nativeElement.parentElement.style['pointer-events'] = 'none';
-            }
-        });
     }
 
     private init() {
