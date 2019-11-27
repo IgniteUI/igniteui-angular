@@ -36,6 +36,8 @@ const CHECKBOX_ELEMENT = 'igx-checkbox';
 const ICON_CSS_CLASS = 'material-icons igx-icon';
 const CHECKBOX_LBL_CSS_CLASS = '.igx-checkbox__composite';
 const DEBOUNCETIME = 50;
+const GROUP_EXPANDER_CLASS = '.igx-grid__th-expander';
+const GROUP_HEADER_CLASS = '.igx-grid__th-group-title';
 
 export class GridFunctions {
 
@@ -233,6 +235,16 @@ export class GridFunctions {
         const visibleColumns = column.grid.visibleColumns;
         expect(visibleColumns.length).toBe(visibleColumnsCount, 'Unexpected visible columns count!');
         expect(visibleColumns.findIndex((col) => col === column) > -1).toBe(!isHidden, 'Unexpected result for visibleColumns collection!');
+    }
+
+    public static verifyColumnsAreHidden(columns, isHidden: boolean, visibleColumnsCount: number) {
+        const visibleColumns = columns[0].grid.visibleColumns;
+        columns.forEach(column => {
+            expect(column.hidden).toBe(isHidden, 'Hidden is not ' + isHidden);
+            expect(visibleColumns.findIndex((col) => col === column) > -1)
+            .toBe(!isHidden, 'Unexpected result for visibleColumns collection!');
+        });
+        expect(visibleColumns.length).toBe(visibleColumnsCount, 'Unexpected visible columns count!');
     }
 
     public static verifyColumnIsPinned(column, isPinned: boolean, pinnedColumnsCount: number) {
@@ -1530,6 +1542,37 @@ export class GridFunctions {
 
     public static navigateToLastPage(parent) {
         GridFunctions.clickPagingButton(parent, 3);
+    }
+
+    public static getColGroupExpandIndicator(group): HTMLElement {
+        return group.nativeElement.querySelector(GROUP_EXPANDER_CLASS);
+    }
+
+    public static getColumnGroupHeaderCell(columnField: string, fix: ComponentFixture<any>) {
+        const headerTitle = fix.debugElement.queryAll(By.css(GROUP_HEADER_CLASS)).find((header) => {
+            return header.nativeElement.title === columnField;
+        });
+        return headerTitle.parent;
+    }
+
+    public static verifyGroupIsExpanded(fixture, group, collapsible = true, isExpanded = true,
+         indicatorText = ['expand_more', 'chevron_right']) {
+        const groupHeader = GridFunctions.getColumnGroupHeaderCell(group.header, fixture);
+        expect(group.collapsible).toEqual(collapsible);
+        if (collapsible === false) {
+            expect(GridFunctions.getColGroupExpandIndicator(groupHeader)).toBeNull();
+        } else {
+            expect(group.expanded).toEqual(isExpanded);
+            const text = isExpanded ? indicatorText[0] : indicatorText[1];
+            expect(GridFunctions.getColGroupExpandIndicator(groupHeader)).toBeDefined();
+            expect(GridFunctions.getColGroupExpandIndicator(groupHeader).innerText.trim()).toEqual(text);
+        }
+    }
+
+    public static clickGroupExpandIndicator(fixture, group) {
+        const groupHeader = GridFunctions.getColumnGroupHeaderCell(group.header, fixture);
+        const expandInd = GridFunctions.getColGroupExpandIndicator(groupHeader);
+        expandInd.dispatchEvent(new Event('click', {}));
     }
 }
 export class GridSummaryFunctions {
