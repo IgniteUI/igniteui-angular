@@ -13,7 +13,6 @@ import { PositionSettings } from '../services/overlay/utilities';
 import { fadeIn, fadeOut } from '../animations/fade';
 import { IgxDateStartComponent, IgxDateEndComponent, IgxDateSingleComponent } from './igx-date-range-inputs.common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { IgxInputGroupComponent } from '../input-group';
 
 export interface DateRange {
     start: Date | string;
@@ -482,22 +481,6 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
         this.activateToggleOpen(this._dropDownOverlaySettings);
     }
 
-    private handleSingleInputSelection(selectionData: Date[]): void {
-        if (this.single) {
-            this.value = this.extractRange(selectionData);
-        }
-    }
-
-    private handleTwoInputSelection(selectionData: Date[]): void {
-        const selectionRange = this.extractRange(selectionData);
-        if (this.start) {
-            this.value = selectionRange;
-        }
-        if (this.end) {
-            this.value = selectionRange;
-        }
-    }
-
     private applyFormatting(date: Date): string {
         return this.formatter ? this.formatter(date) : this.applyLocaleToDate(date);
     }
@@ -523,13 +506,6 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
     private activateToggleOpen(overlaySettings: OverlaySettings): void {
         if (this.toggle.collapsed) {
             this.toggle.open(overlaySettings);
-        }
-    }
-
-    private validateNgContent(): void {
-        if (!this.single && (!this.start || !this.end)) {
-            // TODO: better error message
-            throw new Error('You must apply both igxDateRangeStart and igxDateRangeEnd if you are using two input elements.');
         }
     }
 
