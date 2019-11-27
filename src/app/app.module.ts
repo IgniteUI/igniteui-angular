@@ -239,7 +239,8 @@ const components = [
         IgxDragDropModule,
         IgxDividerModule,
         SharedModule,
-        routing
+        routing,
+        HammerModule
     ],
     providers: [
         LocalService,
