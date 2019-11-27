@@ -15,7 +15,7 @@ import { IGroupingState } from '../data-operations/groupby-state.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { GridSelectionMode } from './common/enums';
 
-fdescribe('IgxGridState - input properties #grid', () => {
+describe('IgxGridState - input properties #grid', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
