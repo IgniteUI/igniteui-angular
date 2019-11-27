@@ -23,6 +23,7 @@ export interface GridType extends IGridDataBindable {
     allowFiltering: boolean;
     rowDraggable: boolean;
     primaryKey: any;
+    id: string;
 
     filterMode: FilterMode;
 
@@ -51,6 +52,7 @@ export interface GridType extends IGridDataBindable {
 
     firstEditableColumnIndex: number;
     lastEditableColumnIndex: number;
+    hasDetails: boolean;
 
     sortingExpressions: ISortingExpression[];
     sortingExpressionsChange: EventEmitter<ISortingExpression[]>;
@@ -62,4 +64,5 @@ export interface GridType extends IGridDataBindable {
     sort(expression: ISortingExpression | Array<ISortingExpression>): void;
     clearSort(name?: string): void;
     isColumnGrouped(fieldName: string): boolean;
+    isDetailRecord(rec: any): boolean;
 }

@@ -1,0 +1,34 @@
+<div class="wrapper">
+    <igx-grid #grid1 [data]="data" [width]="'820px'" [height]="'700px'" [autoGenerate]='false' >
+        <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"
+            [hidden]='c.hidden' [sortable]='true' [movable]='true' [groupable]='true' [editable]="true" [hasSummary]="true" [dataType]='c.dataType'>
+        </igx-column>
+        <!-- <igx-column-layout field='group2'>
+            <igx-column [rowStart]="1" [colStart]="1" [colEnd]="3" field="CompanyName" [width]="'300px'"></igx-column>
+            <igx-column [rowStart]="2" [colStart]="1" field="ContactName" [width]="'100px'"></igx-column>
+            <igx-column [rowStart]="2" [colStart]="2" field="ContactTitle" [width]="'200px'"></igx-column>
+            <igx-column [rowStart]="3" [colStart]="1" [colEnd]="3" field="Address" [width]="'300px'"></igx-column>
+        </igx-column-layout>
+        <igx-column-layout>
+            <igx-column [rowStart]="1" [colStart]="1" [colEnd]="3" [rowEnd]="3" field="City" [width]="'300px'"></igx-column>
+            <igx-column [rowStart]="3" [colStart]="1"  [colEnd]="3" field="Region" [width]='"300px"'></igx-column>
+        </igx-column-layout>
+        <igx-column-layout field='group1'>
+            <igx-column  [rowStart]="1" [colStart]="1" [rowEnd]="4" field="ID"></igx-column>
+        </igx-column-layout> -->
+        <ng-template igxGridDetail let-dataItem>
+            <div>
+                <div><span class='categoryStyle'>Country:</span> {{dataItem.Country}}</div>
+                <div><span class='categoryStyle'>City:</span> {{dataItem.City}}</div>
+                <div><span class='categoryStyle'>Address:</span> {{dataItem.Address}}</div>
+            </div>
+        </ng-template>
+    </igx-grid>
+    <br />
+
+    <button igxButton="raised" (click)="grid1.expandAll()">Expand All</button>
+    <button igxButton="raised" (click)="grid1.collapseAll()">Collapse All</button>
+    <button igxButton="raised" (click)="expandFirstRow()">Expand first</button>
+    <button igxButton="raised" (click)="collapseFirstRow()">Collapse first</button>
+    <button igxButton="raised" (click)="toggleFirstRow()">Toggle first</button>
+</div>

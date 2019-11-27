@@ -111,8 +111,13 @@ import { GridFlexSampleComponent } from './grid-flex-layout/grid-flex.sample';
 import { GridEsfLoadOnDemandComponent } from './grid-esf-load-on-demand/grid-esf-load-on-demand.component';
 import { GridFilteringComponent } from './grid-filtering/grid-filtering.sample';
 import { GridExternalFilteringComponent } from './grid-external-filtering/grid-external-filtering.sample';
+<<<<<<< HEAD
 import { AboutComponent } from './grid-state/about.component';
 import { GridSaveStateComponent } from './grid-state/grid-state.component';
+=======
+import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-master-detail.sample';
+
+>>>>>>> d6c950b7be7f540e1ff3c167dd5f79301676e035
 
 
 
@@ -177,6 +182,7 @@ const components = [
     GridColumnPinningSampleComponent,
     GridColumnResizingSampleComponent,
     GridGroupBySampleComponent,
+    GridMasterDetailSampleComponent,
     GridSummaryComponent,
     GridPerformanceSampleComponent,
     GridSelectionComponent,
@@ -239,7 +245,8 @@ const components = [
         IgxDragDropModule,
         IgxDividerModule,
         SharedModule,
-        routing
+        routing,
+        HammerModule
     ],
     providers: [
         LocalService,

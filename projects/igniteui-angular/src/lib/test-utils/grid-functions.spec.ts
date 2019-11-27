@@ -12,7 +12,7 @@ import { IgxGridHeaderGroupComponent } from '../grids/headers/grid-header-group.
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
-import { IgxGridGroupByRowComponent, IgxGridCellComponent } from '../grids/grid';
+import { IgxGridGroupByRowComponent, IgxGridCellComponent, IgxGridRowComponent } from '../grids/grid';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';
@@ -154,6 +154,39 @@ export class GridFunctions {
                 });
             }
         })
+
+    public static getMasterRowDetail(row: IgxGridRowComponent) {
+        const nextSibling = row.element.nativeElement.nextElementSibling;
+        if (nextSibling &&
+            nextSibling.tagName.toLowerCase() === 'div' &&
+            nextSibling.getAttribute('detail') === 'true') {
+            return nextSibling;
+        }
+        return null;
+    }
+
+    public static setAllExpanded(grid, data) {
+        const allExpanded = new Map<any, boolean>();
+        data.forEach(item => {
+            allExpanded.set(item['ID'], true);
+        });
+        grid.expansionStates = allExpanded;
+    }
+
+    public static elementInGridView(grid, element): boolean {
+        const gridBottom = grid.tbody.nativeElement.getBoundingClientRect().bottom;
+        const gridTop = grid.tbody.nativeElement.getBoundingClientRect().top;
+        return element.getBoundingClientRect().top >= gridTop && element.getBoundingClientRect().bottom <= gridBottom;
+    }
+
+    public static toggleMasterRowByClick = (fix, row: IgxGridRowComponent, debounceTime) => new Promise(async (resolve, reject) => {
+        const icon = row.element.nativeElement.querySelector('igx-icon');
+        UIInteractions.clickElement(icon.parentElement);
+        await wait(debounceTime);
+        fix.detectChanges();
+
+        resolve();
+    })
 
     public static expandCollapceGroupRow =
         (fix, groupRow: IgxGridGroupByRowComponent,

@@ -67,6 +67,7 @@ import { TreeGridLoadOnDemandSampleComponent } from './tree-grid-load-on-demand/
 import { GridAutoSizeSampleComponent } from './grid-auto-size/grid-auto-size.sample';
 import { GridSaveStateComponent } from './grid-state/grid-state.component';
 import { AboutComponent } from './grid-state/about.component';
+import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-master-detail.sample';
 
 const appRoutes = [
     {
@@ -283,6 +284,10 @@ const appRoutes = [
     {
         path: 'gridGroupBy',
         component: GridGroupBySampleComponent
+    },
+    {
+        path: 'gridMasterDetail',
+        component: GridMasterDetailSampleComponent
     },
     {
         path: 'treeGrid',
