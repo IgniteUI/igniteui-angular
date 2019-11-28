@@ -16,7 +16,6 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { EditorProvider } from '../core/edit-provider';
-import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IgxSliderThumbComponent } from './thumb/thumb-slider.component';
 import { Subject, merge, Observable, timer } from 'rxjs';
 import { takeUntil, retry } from 'rxjs/operators';
@@ -33,7 +32,6 @@ import { SliderHandle,
 import { IgxThumbLabelComponent } from './label/thumb-label.component';
 import { IgxTicksComponent } from './ticks/ticks.component';
 import { IgxTickLabelsPipe } from './ticks/tick.pipe';
-import { HammerModule } from '@angular/platform-browser';
 
 const noop = () => {
 };
@@ -410,30 +408,6 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Returns if the {@link IgxSliderComponent} is set as continuous.
-     * ```typescript
-     * @ViewChild("slider2")
-     * public slider: IgxSliderComponent;
-     * ngAfterViewInit(){
-     *     let continuous = this.slider.continuous;
-     * }
-     * ```
-     */
-    @Input()
-    @DeprecateProperty(`IgxSliderComponent \`isContinuous\` property is deprecated.\nUse \`continuous\` instead.`)
-    public get isContinuous(): boolean {
-        return this.continuous;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public set isContinuous(continuous: boolean) {
-        this.continuous = continuous;
-    }
-
-    /**
      *Returns the minimal value of the `IgxSliderComponent`.
      *```typescript
      *@ViewChild("slider2")
@@ -749,7 +723,7 @@ export class IgxSliderComponent implements
      * ```
      */
     @Input()
-    public ticksOrientation: TicksOrientation = TicksOrientation.bottom;
+    public ticksOrientation: TicksOrientation = TicksOrientation.Bottom;
 
     /**
      * Changes tick labels rotation:
@@ -761,14 +735,14 @@ export class IgxSliderComponent implements
      * ```
      */
     @Input()
-    public tickLabelsOrientation = TickLabelsOrientation.horizontal;
+    public tickLabelsOrientation = TickLabelsOrientation.Horizontal;
 
     /**
      * @hidden
      */
     public get deactivateThumbLabel() {
         return ((this.primaryTicks && this.primaryTickLabels) || (this.secondaryTicks && this.secondaryTickLabels)) &&
-            (this.ticksOrientation === TicksOrientation.top || this.ticksOrientation === TicksOrientation.mirror);
+            (this.ticksOrientation === TicksOrientation.Top || this.ticksOrientation === TicksOrientation.Mirror);
     }
 
     /**
@@ -983,16 +957,16 @@ export class IgxSliderComponent implements
      * @hidden
      */
     public get showTopTicks() {
-        return this.ticksOrientation === TicksOrientation.top ||
-            this.ticksOrientation === TicksOrientation.mirror;
+        return this.ticksOrientation === TicksOrientation.Top ||
+            this.ticksOrientation === TicksOrientation.Mirror;
     }
 
     /**
      * @hidden
      */
     public get showBottomTicks() {
-        return this.ticksOrientation === TicksOrientation.bottom ||
-            this.ticksOrientation === TicksOrientation.mirror;
+        return this.ticksOrientation === TicksOrientation.Bottom ||
+            this.ticksOrientation === TicksOrientation.Mirror;
     }
 
     /**
