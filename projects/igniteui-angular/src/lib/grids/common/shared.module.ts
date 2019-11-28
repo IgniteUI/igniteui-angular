@@ -20,6 +20,7 @@ import { IgxButtonGroupModule } from '../../buttonGroup/buttonGroup.component';
 import { IgxProgressBarModule } from '../../progressbar/progressbar.component';
 import { IgxSelectModule } from '../../select/select.module';
 import { IgxDropDownModule } from '../../drop-down/index';
+import { IgxGridStateModule } from '../state.directive';
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import { IgxDropDownModule } from '../../drop-down/index';
         IgxDropDownModule,
         IgxButtonGroupModule,
         IgxProgressBarModule,
-        IgxSelectModule
+        IgxSelectModule,
+        IgxGridStateModule
     ],
     exports: [
         CommonModule,
@@ -59,6 +61,7 @@ import { IgxDropDownModule } from '../../drop-down/index';
         IgxForOfModule,
         IgxTemplateOutletModule,
         IgxTextHighlightModule,
+        IgxGridStateModule,
         IgxTextSelectionModule,
         IgxCheckboxModule,
         IgxBadgeModule,

@@ -1129,7 +1129,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
 
 });
 
-describe('IgxHierarchicalGrid custom template', () => {
+describe('IgxHierarchicalGrid custom template #hGrid', () => {
     configureTestSuite();
     let fixture: ComponentFixture<IgxHierarchicalGridCustomTemplateComponent>;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -1149,7 +1149,7 @@ describe('IgxHierarchicalGrid custom template', () => {
         hierarchicalGrid = fixture.componentInstance.hgrid;
     }));
 
-    it(' should allow setting custom template for  expand/collapse icons', async() => {
+    it(' should allow setting custom template for expand/collapse icons', async() => {
         let rows = hierarchicalGrid.dataRowList.toArray();
         for (const row of rows) {
             const expander =  row.nativeElement.querySelector('.igx-grid__hierarchical-expander');
