@@ -36,7 +36,7 @@ export class IgxExcelStyleSearchFilterPipe implements PipeTransform {
         // Update the filteredData of the search component.
         if (this.esf.excelStyleSearch) {
             this.esf.excelStyleSearch.filteredData = cloneArray(finalResult);
-            this.esf.cdr.detectChanges();
+            this.esf.cdr.markForCheck();
         }
 
         return finalResult;
