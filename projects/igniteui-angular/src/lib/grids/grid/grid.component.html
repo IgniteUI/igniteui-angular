@@ -94,7 +94,7 @@
 </div>
 
 <div igxGridBody (keydown.control.c)="copyHandlerIE()" (copy)="copyHandler($event)" class="igx-grid__tbody">
-    <div class="igx-grid__tbody-content" role="rowgroup" (onDragStop)="selectionService.dragMode = $event"
+    <div class="igx-grid__tbody-content" role="rowgroup" (onDragStop)="selectionService.dragMode = $event" (scroll)='preventContainerScroll($event)'
         (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
         [style.height.px]='calcHeight' [style.width.px]='calcWidth || null' #tbody>
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
@@ -110,30 +110,50 @@
         | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
         | gridGroupBy:groupingExpressions:groupingExpansionState:groupsExpanded:id:groupsRecords:pipeTrigger
         | gridPaging:page:perPage:id:pipeTrigger
-        | gridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:pipeTrigger:summaryPipeTrigger"
+        | gridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:pipeTrigger:summaryPipeTrigger
+        | gridDetails:hasDetails:expansionStates:pipeTrigger"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight'
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
             #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
-            <ng-template #record_template>
-                <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
-                </igx-grid-row>
-            </ng-template>
-            <ng-template #group_template>
-                <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row>
-                </igx-grid-groupby-row>
-            </ng-template>
-            <ng-template #summary_template>
-                <igx-grid-summary-row [gridID]="id" [summaries]="rowData.summaries" [index]="rowIndex"
-                    class="igx-grid__summaries--body" #summaryRow>
-                </igx-grid-summary-row>
-            </ng-template>
             <ng-template
-                [igxTemplateOutlet]='isGroupByRecord(rowData) ? group_template : isSummaryRow(rowData) ? summary_template : record_template'
+                [igxTemplateOutlet]='getRowTemplate(rowData)'
                 [igxTemplateOutletContext]='getContext(rowData, rowIndex)'
-                (onCachedViewLoaded)='cachedViewLoaded($event)'>
+                (onCachedViewLoaded)='cachedViewLoaded($event)'
+                (onViewCreated)='viewCreatedHandler($event)'
+                (onViewMoved)='viewMovedHandler($event)'>
             </ng-template>
         </ng-template>
+        <ng-template #record_template let-rowIndex="index" let-rowData>
+            <igx-grid-row [gridID]="id" [index]="rowIndex" [rowData]="rowData" #row>
+            </igx-grid-row>
+        </ng-template>
+        <ng-template #group_template let-rowIndex="index" let-rowData>
+            <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row>
+            </igx-grid-groupby-row>
+        </ng-template>
+        <ng-template #summary_template let-rowIndex="index" let-rowData>
+            <igx-grid-summary-row [gridID]="id" [summaries]="rowData.summaries" [index]="rowIndex"
+                class="igx-grid__summaries--body" #summaryRow>
+            </igx-grid-summary-row>
+        </ng-template>
+        <ng-template #detail_template_container let-rowIndex="index" let-rowData>
+            <div detail='true' style="overflow:auto;width: 100%;" tabindex="0" #detailsContainer (keydown)='detailsKeyboardHandler($event, rowIndex, detailsContainer)' [attr.data-rowindex]='rowIndex'
+                [ngClass]="{
+                'igx-grid__tr-container': true
+            }">
+                <div class="igx-grid__hierarchical-indent" style='display:flex;'>
+                        <ng-container *ngIf="this.groupingExpressions.length > 0">
+                                <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{groupingExpressions.length}}"></div>
+                        </ng-container>
+                        <ng-template
+                    [ngTemplateOutlet]='detailTemplate'
+                    [ngTemplateOutletContext]='getDetailsContext(rowData, rowIndex)'>
+                    </ng-template>
+                </div>
+            </div>
+        </ng-template>
+
         <ng-container *ngTemplateOutlet="template"></ng-container>
         <div class="igx-grid__row-editing-outlet" igxOverlayOutlet #igxRowEditingOverlayOutlet></div>
     </div>

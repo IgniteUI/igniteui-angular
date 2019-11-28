@@ -2870,6 +2870,22 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     * @hidden
     * @internal
     */
+    public isDetailRecord(rec) {
+        return false;
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
+    public get hasDetails() {
+        return false;
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
     public hideOverlays() {
         this.overlayIDs.forEach(overlayID => {
             this.overlayService.hide(overlayID);

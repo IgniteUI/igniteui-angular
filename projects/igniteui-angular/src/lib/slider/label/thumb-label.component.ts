@@ -23,6 +23,9 @@ export class IgxThumbLabelComponent {
     @Input()
     public continuous: boolean;
 
+    @Input()
+    public deactiveState: boolean;
+
     @HostBinding('class.igx-slider__label-from')
     public get thumbFromClass() {
         return this.type === SliderHandle.FROM;
@@ -54,10 +57,10 @@ export class IgxThumbLabelComponent {
     }
 
     public set active(val: boolean) {
-        if (this.continuous) {
-            return;
+        if (this.continuous || this.deactiveState) {
+            this._active = false;
+        } else {
+            this._active = val;
         }
-
-        this._active = val;
     }
 }

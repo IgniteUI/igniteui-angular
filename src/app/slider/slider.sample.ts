@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SliderType, ISliderValueChangeEventArgs, IRangeSliderValue } from 'igniteui-angular';
+import { SliderType, ISliderValueChangeEventArgs, IRangeSliderValue, TickLabelsOrientation, TicksOrientation } from 'igniteui-angular';
 
 class Task {
     title: string;
@@ -20,12 +20,18 @@ export class SliderSampleComponent {
     private _lowerValue: Date;
     private _upperValue: Date;
 
+    public labelOrientaion = TickLabelsOrientation.horizontal;
+    public ticksOrientation = TicksOrientation.bottom;
+    public primaryTickLabels = true;
+    public secondaryTickLabels = true;
     public sliderType: SliderType = SliderType.RANGE;
-    public labels = new Array<Date>();
+    public labelsDates = new Array<Date>();
+    public task: Task = new Task('Implement new app', 30);
+    public labels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
     public rangeValue = {
-        lower: 30,
-        upper: 60
+        lower: 34,
+        upper: 67
     };
 
     public rangeLabel = {
@@ -35,11 +41,11 @@ export class SliderSampleComponent {
 
     constructor() {
         for (let i = 0; i <= 500; i++) {
-            this.labels.push(new Date(2019, 10, i));
+            this.labelsDates.push(new Date(2019, 10, i));
         }
 
-        this._lowerValue = this.labels[0];
-        this._upperValue = this.labels[this.labels.length - 1];
+        this._lowerValue = this.labelsDates[0];
+        this._upperValue = this.labelsDates[this.labels.length - 1];
     }
 
     public get getLowerVal() {
@@ -51,9 +57,40 @@ export class SliderSampleComponent {
     }
 
     public valueChange(evt: ISliderValueChangeEventArgs) {
-        this._lowerValue = this.labels[(evt.value as IRangeSliderValue).lower];
-        this._upperValue = this.labels[(evt.value as IRangeSliderValue).upper];
+        this._lowerValue = this.labelsDates[(evt.value as IRangeSliderValue).lower];
+        this._upperValue = this.labelsDates[(evt.value as IRangeSliderValue).upper];
     }
 
-    task: Task = new Task('Implement new app', 30);
+    public changeLabels() {
+        this.labels = new Array('asd', 'bsd');
+    }
+
+    public changeLabelOrientation() {
+        if (this.labelOrientaion === TickLabelsOrientation.horizontal) {
+            this.labelOrientaion = TickLabelsOrientation.toptobottom;
+        } else if(this.labelOrientaion === TickLabelsOrientation.toptobottom) {
+            this.labelOrientaion = TickLabelsOrientation.bottomtotop;
+        } else {
+            this.labelOrientaion = TickLabelsOrientation.horizontal;
+        }
+    }
+
+    public changeTicksOrientation() {
+        if (this.ticksOrientation === TicksOrientation.mirror) {
+            this.ticksOrientation = TicksOrientation.top;
+        } else if (this.ticksOrientation === TicksOrientation.top) {
+            this.ticksOrientation = TicksOrientation.bottom;
+        } else {
+            this.ticksOrientation = TicksOrientation.mirror;
+        }
+    }
+
+    public tickLabel(value, primary, index, labels) {
+        if (primary) {
+            return Math.round(value);
+        }
+
+        return value;
+    }
+
 }
