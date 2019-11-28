@@ -1,0 +1,28 @@
+.controls-holder {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.switches {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1 0 0%;
+    min-width: 500px;
+    padding-right: 20px;
+    font-size: 0.9rem;
+}
+
+.control-item {
+    padding: 8px 0px;
+    > span {
+        cursor: pointer;
+    }
+}
+
+.grid__wrapper {
+    margin: 0 16px;
+    width: 1200px;
+}
