@@ -133,6 +133,7 @@ describe('IgxGrid - Advanced Filtering', () => {
             grid.closeAdvancedFilteringDialog(true);
             tick(100);
             fix.detectChanges();
+            grid.cdr.detectChanges();
 
             // Verify AF dialog is closed.
             expect(GridFunctions.getAdvancedFilteringComponent(fix)).toBeNull();
