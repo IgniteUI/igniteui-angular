@@ -250,16 +250,8 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
     public close(): void {
         if (!this.toggle.collapsed) {
             this.toggle.close();
-            if (this.startInput) {
-                this.startInput.setFocus();
-            }
-            if (this.start) {
-                this.start.setFocus();
-            } else {
-                this.single.setFocus();
-            }
+            this.onClosed.emit({ owner: this });
         }
-        this.onClosed.emit({ owner: this });
     }
 
     /**
@@ -463,33 +455,15 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
     }
 
     private attachOnKeydown(): void {
-        if (this.single) {
-            fromEvent(this.single.nativeElement, 'keydown').pipe(
-                takeUntil(this._destroy)
-            ).subscribe((evt: KeyboardEvent) => this.onKeyDown(evt));
-        }
-        if (this.start && this.end) {
-            fromEvent(this.start.nativeElement, 'keydown').pipe(
-                takeUntil(this._destroy)
-            ).subscribe((evt: KeyboardEvent) => this.onKeyDown(evt));
-
-            fromEvent(this.end.nativeElement, 'keydown').pipe(
-                takeUntil(this._destroy)
-            ).subscribe((evt: KeyboardEvent) => this.onKeyDown(evt));
-        }
+        fromEvent(this.element.nativeElement, 'keydown').pipe(
+            takeUntil(this._destroy)
+        ).subscribe((evt: KeyboardEvent) => this.onKeyDown(evt));
     }
 
     private applyFocusOnClose() {
-        if (this.single) {
-            this.toggle.onClosed.pipe(
-                takeUntil(this._destroy)
-            ).subscribe(() => this.single.setFocus());
-        }
-        if (this.start) {
-            this.toggle.onClosed.pipe(
-                takeUntil(this._destroy)
-            ).subscribe(() => this.start.setFocus());
-        }
+        this.toggle.onClosed.pipe(
+            takeUntil(this._destroy)
+        ).subscribe(() => (this.start || this.single || this.startValue).setFocus());
     }
 
     private configPositionStrategy(): void {
