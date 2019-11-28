@@ -132,7 +132,6 @@ Sets Input Group style type. Choose from `line`, `box` or `border`.
     </igx-select>
 ```
 
-
 ### DisplayDensity
 **igx-select** supports setting of different display densities.
 Display density is received through Angular's DI engine or can be set through the `[displayDensity]` input. The possilbe display densities are `compact`, `cosy` and `comfortable` (default).
@@ -146,7 +145,6 @@ Setting `[displayDensity]` affects the control's items' and inputs' css properti
     </igx-select>
 ```
 
-
 ### Placeholder
 Sets the select placeholder, to be displayed if no selection/value is set. 
 ```html
@@ -155,6 +153,29 @@ Sets the select placeholder, to be displayed if no selection/value is set.
         <igx-select-item value="Apple">Apple</igx-select-item>
         <igx-select-item value="Banana">Banana</igx-select-item>
     </igx-select>
+```
+
+### Templates
+Templates for different parts of the control can be defined, including header and footer, toggle icon, etc.
+
+#### Defining header template:
+
+```html
+ <igx-select>
+    <ng-template igxSelectHeader>
+        <div class="custom-header-class">Custom Header</div>
+    </ng-template>
+ </igx-select>
+```
+
+#### Defining footer template:
+
+```html
+ <igx-select>
+    <ng-template igxSelectFooter>
+        <div class="custom-footer-class">Custom Footer</div>
+    </ng-template>
+ </igx-select>
 ```
 
 #### Defining toggle icon template:
