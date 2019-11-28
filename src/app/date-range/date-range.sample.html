@@ -25,43 +25,36 @@
             </igx-input-group>
 
             <div class="date-range-wrapper">
-                <igx-date-range [weekStart]="1" [todayButtonText]="'Show Today'" [hideOutsideDays]="true"
-                    [mode]="'dropdown'">
-                    <igx-date-start>
-                        <input #startDate igxInput formControlName="startDate" type="text">
-                    </igx-date-start>
-                    <igx-date-end>
-                        <input #endDate igxInput formControlName="endDate" type="text">
-                    </igx-date-end>
+                <igx-date-range #defDateRange [mode]="'dropdown'" formControlName="dateRange">
                 </igx-date-range>
             </div>
 
             <div class="button-wrap">
                 <button igxButton>Submit Form</button>
-                <button igxButton (click)="selectDateRange()"> Select Range </button>
+                <button igxButton (click)="selectDatRangeDefTemplate()"> Select Range </button>
             </div>
         </div>
     </form>
 
-    <form class="book-room-form" [formGroup]="singleInputForm" (ngSubmit)="submitSingleInputForm()">
+    <form class="book-room-form">
         <div class="container">
             <h4 class="title">Book your room</h4>
             <igx-input-group>
-                <input #fullName igxInput type="text" formControlName="fullName">
+                <input #fullName igxInput type="text">
                 <label for="fullName" igxLabel>Full Name</label>
                 <igx-suffix>
                     <igx-icon>person</igx-icon>
                 </igx-suffix>
             </igx-input-group>
             <igx-input-group>
-                <input #phone igxInput type="number" formControlName="phone">
+                <input #phone igxInput type="number">
                 <label for="phone" igxLabel>Phone</label>
                 <igx-suffix>
                     <igx-icon>phone</igx-icon>
                 </igx-suffix>
             </igx-input-group>
             <igx-input-group>
-                <input #email igxInput type="email" formControlName="email">
+                <input #email igxInput type="email">
                 <label for="email" igxLabel>Email</label>
                 <igx-suffix>
                     <igx-icon>email</igx-icon>
@@ -69,22 +62,16 @@
             </igx-input-group>
 
             <div class="date-range-wrapper">
-                <igx-date-range [mode]="'dropdown'" formControlName="fullRange"></igx-date-range>
+                <igx-date-range #singleInputDateRange (rangeSelected)="onRangeSelected($event)" [(ngModel)]="content"
+                    [ngModelOptions]="{ standalone: true }" [mode]="'dropdown'">
+                    <igx-date-single>
+                        <input igxInput type="text">
+                    </igx-date-single>
+                </igx-date-range>
             </div>
-
             <div class="button-wrap">
-                <button igxButton>Submit Form</button>
-                <button igxButton (click)="selectDateRange()"> Select Range </button>
+                <button igxButton (click)="selectDateRangeSingleInput()"> Select Range </button>
             </div>
         </div>
     </form>
-
-    <div class="date-range-wrapper">
-        <igx-date-range #myDateRange [mode]="'dropdown'" (rangeSelected)="onRangeSelected($event)"
-            [(ngModel)]="content">
-            <igx-date-single>
-                <input igxInput type="text">
-            </igx-date-single>
-        </igx-date-range>
-    </div>
 </div>

@@ -1,6 +1,6 @@
 import {
     Component, Input, ContentChild, ViewChild,
-    AfterViewInit, OnDestroy, EventEmitter, Output, ElementRef, forwardRef
+    AfterViewInit, OnDestroy, EventEmitter, Output, ElementRef, forwardRef, ChangeDetectorRef
 } from '@angular/core';
 import { InteractionMode } from '../core/enums';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
@@ -8,7 +8,7 @@ import { IgxCalendarComponent, WEEKDAYS } from '../calendar/index';
 import { OverlaySettings, GlobalPositionStrategy, AutoPositionStrategy } from '../services/index';
 import { Subject, fromEvent } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { KEYS, isIE } from '../core/utils';
+import { KEYS, isIE, IBaseEventArgs } from '../core/utils';
 import { PositionSettings } from '../services/overlay/utilities';
 import { fadeIn, fadeOut } from '../animations/fade';
 import { IgxDateStartComponent, IgxDateEndComponent, IgxDateSingleComponent, DateRange } from './igx-date-range-inputs.common';
@@ -39,9 +39,7 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
      * Property which sets whether `IgxDateRangeComponent` is in dialog or dropdown mode.
      *
      * ```html
-     * <igx-date-range [mode]="'dropdown'">
-     *  ...
-     * </igx-date-range
+     * <igx-date-range [mode]="'dropdown'"></igx-date-range
      * ```
      */
     @Input()
@@ -52,9 +50,7 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
      * Default is `2`.
      *
      * ```html
-     * <igx-date-range [monthsViewNumber]="3">
-     *  ...
-     * </igx-date-range
+     * <igx-date-range [monthsViewNumber]="3"></igx-date-range>
      * ```
      */
     @Input()
@@ -72,9 +68,7 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
      * Can be assigned to a numeric value or to `WEEKDAYS` enum value.
      *
      * ```html
-     * <igx-date-range [weekStart]="1">
-     *  ...
-     * </igx-date-range>
+     * <igx-date-range [weekStart]="1"></igx-date-range>
      * ```
      */
     @Input()
@@ -85,9 +79,7 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
      * Default value is `"en"`.
      *
      * ```html
-     * <igx-date-range [locale]="'jp'">
-     *  ...
-     * </igx-date-range>
+     * <igx-date-range [locale]="'jp'"></igx-date-range>
      * ```
      */
     @Input()
@@ -106,9 +98,7 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
      * ```
      *
      * ```html
-     * <igx-date-range [formatter]="formatter">
-     *  ...
-     * </igx-date-range>
+     * <igx-date-range [formatter]="formatter"></igx-date-range>
      * ```
      */
     @Input()
@@ -119,9 +109,7 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
      * Default value is `Today`.
      *
      * ```html
-     * <igx-date-range [todayButtonText]="'Hoy'">
-     *  ...
-     * </igx-date-range>
+     * <igx-date-range [todayButtonText]="'Hoy'"></igx-date-range>
      * ```
      */
     @Input()
@@ -133,9 +121,7 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
      * Default value is `Done`.
      *
      * ```html
-     * <igx-date-range [doneButtonText]="'完了'">
-     *  ...
-     * </igx-date-range>
+     * <igx-date-range [doneButtonText]="'完了'"></igx-date-range>
      * ```
      */
     @Input()
@@ -145,16 +131,14 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
      * Property that changes the default overlay settings used by the `IgxDateRangeComponent`.
      *
      * ```html
-     * <igx-date-range [overlaySettings]="customOverlaySettings">
-     *  ...
-     * </igx-date-range>
+     * <igx-date-range [overlaySettings]="customOverlaySettings"></igx-date-range>
      * ```
      */
     @Input()
     public overlaySettings: OverlaySettings;
 
     /**
-     * An event that is emitted when a full range was selected in the `IgxDateRangeComponent`.
+     * An event that is emitted when a range is selected in the `IgxDateRangeComponent`.
      */
     @Output()
     public rangeSelected: EventEmitter<DateRange>;
@@ -163,13 +147,13 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
      * An event that is emitted when the `IgxDateRangeComponent` is opened.
      */
     @Output()
-    public onOpened: EventEmitter<IgxDateRangeComponent>;
+    public onOpened: EventEmitter<IBaseEventArgs>;
 
     /**
      * An event that is emitted when the `IgxDateRangeComponent` is closed.
      */
     @Output()
-    public onClosed: EventEmitter<IgxDateRangeComponent>;
+    public onClosed: EventEmitter<IBaseEventArgs>;
 
     @ViewChild(IgxDateStartComponent)
     public startInput: IgxDateStartComponent;
@@ -201,7 +185,7 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
     protected calendar: IgxCalendarComponent;
 
     /**
-     * @hidden
+     * @hidden`
      */
     @ViewChild(IgxToggleDirective)
     protected toggle: IgxToggleDirective;
@@ -224,8 +208,8 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
         this._destroy = new Subject<boolean>();
         this._onChangeCallback = (_: any) => { };
         this.rangeSelected = new EventEmitter<DateRange>();
-        this.onOpened = new EventEmitter<IgxDateRangeComponent>();
-        this.onClosed = new EventEmitter<IgxDateRangeComponent>();
+        this.onOpened = new EventEmitter<IBaseEventArgs>();
+        this.onClosed = new EventEmitter<IBaseEventArgs>();
     }
 
     /**
@@ -238,9 +222,7 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
      * ```
      *
      * ```html
-     * <igx-date-range [mode]="'dialog'">
-     *  ...
-     * </igx-date-range>
+     * <igx-date-range [mode]="'dialog'"></igx-date-range>
      *
      * <button (click)="openDialog()">Open Dialog</button
      * ```
@@ -259,15 +241,24 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
      * ```
      *
      * ```html
-     * <igx-date-range [mode]="'dialog'">
-     *  ...
-     * </igx-date-range>
+     * <igx-date-range [mode]="'dialog'"></igx-date-range>
      *
      * <button (click)="closeDialog()">Close Dialog</button>
      * ```
      */
     public close(): void {
-        this.hideCalendar();
+        if (!this.toggle.collapsed) {
+            this.toggle.close();
+            if (this.startInput) {
+                this.startInput.setFocus();
+            }
+            if (this.start) {
+                this.start.setFocus();
+            } else {
+                this.single.setFocus();
+            }
+        }
+        this.onClosed.emit({ owner: this });
     }
 
     /**
@@ -297,7 +288,6 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
 
     /**
      * Selects a range of dates, cancels previous selection.
-     *
      * ```typescript
      * public selectFiveDayRange() {
      *  const today = new Date();
@@ -340,6 +330,7 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
     public showToday(event?: KeyboardEvent): void {
         if (event) {
             event.stopPropagation();
+            event.preventDefault();
         }
         const today = new Date();
         this.calendar.selectDate(today);
@@ -380,18 +371,18 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
             case KEYS.UP_ARROW:
             case KEYS.UP_ARROW_IE:
                 if (event.altKey) {
-                    this.hideCalendar();
+                    this.close();
                 }
                 break;
             case KEYS.DOWN_ARROW:
             case KEYS.DOWN_ARROW_IE:
                 if (event.altKey) {
-                    this.showDropDown();
+                    this.showCalendar();
                 }
                 break;
             case KEYS.ESCAPE:
             case KEYS.ESCAPE_IE:
-                this.hideCalendar();
+                this.close();
                 break;
         }
     }
@@ -410,37 +401,12 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
     /**
      * @hidden
      */
-    public showCalendar(event?: MouseEvent | KeyboardEvent): void {
-        switch (this.mode) {
-            case InteractionMode.Dialog:
-                this.showDialog(event);
-                break;
-            case InteractionMode.DropDown:
-                this.showDropDown(event);
-                break;
-            default:
-                // TODO: better error message
-                throw new Error('Unknown mode.');
+    public onClick(event: MouseEvent): void {
+        if (event) {
+            event.stopPropagation();
+            event.preventDefault();
         }
-        this.onOpened.emit(this);
-    }
-
-    /**
-     * @hidden
-     */
-    public hideCalendar(): void {
-        if (!this.toggle.collapsed) {
-            this.toggle.close();
-            if (this.startInput) {
-                this.startInput.setFocus();
-            }
-            if (this.start) {
-                this.start.setFocus();
-            } else {
-                this.single.setFocus();
-            }
-        }
-        this.onClosed.emit(this);
+        this.showCalendar();
     }
 
     /**
@@ -452,34 +418,23 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
         });
     }
 
-    /**
-     *  @hidden
-     */
-    protected showDialog(event?: MouseEvent | KeyboardEvent): void {
-        if (event) {
-            event.stopPropagation();
-            event.preventDefault();
-        }
-        this.activateToggleOpen(this._dialogOverlaySettings);
-    }
-
-    /**
-     * @hidden
-     */
-    protected showDropDown(event?: MouseEvent | KeyboardEvent): void {
-        if (event) {
-            event.stopPropagation();
-            event.preventDefault();
-        }
-        this.activateToggleOpen(this._dropDownOverlaySettings);
-    }
-
     /** @hidden @internal */
     public applyFormatting(date: Date): string {
         if (this.formatter) {
             return this.formatter(date);
         }
         return date ? this.applyLocaleToDate(date) : '';
+    }
+
+    /** @hidden */
+    protected showCalendar() {
+        if (this.mode === InteractionMode.Dialog) {
+            this.activateToggleOpen(this._dialogOverlaySettings);
+        }
+        if (this.mode === InteractionMode.DropDown) {
+            this.activateToggleOpen(this._dropDownOverlaySettings);
+        }
+        this.onOpened.emit({ owner: this });
     }
 
     // TODO: move util

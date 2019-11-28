@@ -8,8 +8,11 @@ import { IgxDateRangeComponent } from 'igniteui-angular';
     styleUrls: ['./date-range.sample.scss']
 })
 export class DateRangeSampleComponent implements OnInit {
-    @ViewChild('myDateRange')
-    public dateRange: IgxDateRangeComponent;
+    @ViewChild('defDateRange')
+    public defDateRange: IgxDateRangeComponent;
+
+    @ViewChild('singleInputDateRange')
+    public singleInputDateRange: IgxDateRangeComponent;
 
     public content: any;
 
@@ -34,14 +37,12 @@ export class DateRangeSampleComponent implements OnInit {
             fullName: [''],
             phone: [''],
             email: [''],
-            startDate: [''],
-            endDate: [''],
+            dateRange: ['']
         });
     }
 
-    public logContent(): void {
-        console.log(this.content);
-        console.log(this.dateRange.value);
+    public onRangeSelected(event): void {
+        console.log(`ngModel selected range -> ${this.content.start} - ${this.content.end}`);
     }
 
     public submitSingleInputForm(): void {
@@ -52,19 +53,23 @@ export class DateRangeSampleComponent implements OnInit {
         console.log(this.twoInputForm);
     }
 
-    public selectDateRange(): void {
+    public selectDatRangeDefTemplate(): void {
+        const range = this.getFiveDaysRange();
+        this.defDateRange.selectRange(range.today, range.inFiveDays);
+    }
+
+    public selectDateRangeSingleInput(): void {
+        const range = this.getFiveDaysRange();
+        this.singleInputDateRange.selectRange(range.today, range.inFiveDays);
+    }
+
+    public getFiveDaysRange() {
         const today = new Date();
         const inFiveDays = new Date(new Date().setDate(today.getDate() + 5));
-        this.dateRange.selectRange(today, inFiveDays);
+        return { today: today, inFiveDays: inFiveDays };
     }
 
     public formatter(date: Date) {
         return `${this.dayFormatter.format(date)}, ${date.getDate()} ${this.monthFormatter.format(date)}, ${date.getFullYear()}`;
-    }
-
-    public onRangeSelected(value): void {
-        // this.dateRange.close();
-        console.log(this.content);
-        console.log(this.dateRange.value);
     }
 }

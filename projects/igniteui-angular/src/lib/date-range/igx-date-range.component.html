@@ -8,7 +8,7 @@
             <button igxButton type="button" (click)="showToday($event)">{{ todayButtonText }}</button>
         </div>
         <div *ngIf="mode === 'dialog'" class="doneButton">
-            <button igxButton type="button" (click)="hideCalendar()">{{ doneButtonText }}</button>
+            <button igxButton type="button" (click)="close()">{{ doneButtonText }}</button>
         </div>
     </div>
 </div>
@@ -21,18 +21,18 @@
 <ng-template #defTemplate>
     <div (click)="showCalendar($event)" class="content-wrap">
         <igx-date-start>
-            <input igxInput type="text" [value]="this.applyFormatting(this.value.start)">
+            <input #startInput igxInput type="text" [value]="this.applyFormatting(this.value.start)">
             <label for="startDate" igxLabel>Start Date</label>
         </igx-date-start>
         <igx-date-end>
-            <input igxInput type="text" [value]="this.applyFormatting(this.value.end)">
+            <input #endInput igxInput type="text" [value]="this.applyFormatting(this.value.end)">
             <label for="endDate" igxLabel>End Date</label>
         </igx-date-end>
     </div>
 </ng-template>
 
 <ng-template #startEndTemplate>
-    <div (click)="showCalendar($event)" class="content-wrap start-end-projected">
+    <div (click)="showCalendar($event)" class="content-wrap">
         <ng-content select="igx-date-start"></ng-content>
         <ng-content select="igx-date-end"></ng-content>
     </div>
