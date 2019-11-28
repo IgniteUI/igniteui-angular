@@ -6,6 +6,7 @@
     [dragTolerance]="0"
     (dragStart)="dragStart($event)"
     (dragEnd)="dragEnd($event)"
+    (dragMove)="onDragMove($event)"
     (keydown)="onKeyDown($event)"
     [ngClass]="{
         'igx-advanced-filter--cosy': grid.displayDensity === 'cosy',
