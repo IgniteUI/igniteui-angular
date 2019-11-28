@@ -170,6 +170,7 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
     @ContentChild(IgxDateSingleComponent)
     public single: IgxDateSingleComponent;
 
+    // TODO
     protected get startValue(): IgxDateStartComponent {
         return this.start || this.startInput;
     }
@@ -514,11 +515,11 @@ export class IgxDateRangeComponent implements AfterViewInit, OnDestroy, ControlV
     }
 
     private updateValues() {
-        if (this.startValue) {
-            this.startValue.updateValue(this.value.start);
+        if (this.start) {
+            this.start.updateValue(this.value.start);
         }
-        if (this.endValue) {
-            this.endValue.updateValue(this.value.end);
+        if (this.end) {
+            this.end.updateValue(this.value.end);
         }
         if (this.single) {
             this.single.updateValue(this.value);
