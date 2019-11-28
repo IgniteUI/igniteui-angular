@@ -210,6 +210,11 @@
         compact: 0 rem(8px)
     );
 
+    %igx-drop-down-wrapper {
+        box-shadow: --var($theme, 'shadow');
+        z-index: 1;
+    }
+
     %igx-drop-down {
         max-height: 100%;
         position: absolute;
@@ -219,8 +224,6 @@
 
     %igx-drop-down__list {
         overflow-y: auto;
-        z-index: 1;
-        box-shadow: --var($theme, 'shadow');
         background: --var($theme, 'background-color');
         min-width: rem(128px);
 

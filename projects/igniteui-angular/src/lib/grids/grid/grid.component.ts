@@ -15,7 +15,7 @@ import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.
 import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../../chips/chip.component';
 import { IChipsAreaReorderEventArgs } from '../../chips/chips-area.component';
 import { IgxColumnComponent } from '../columns/column.component';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, first } from 'rxjs/operators';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
@@ -594,7 +594,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 	 * @memberof IgxGridComponent
      */
     public set expansionStates(value) {
-        this._expansionStates = this.cloneMap(value);
+        this._expansionStates = new Map<any, boolean>(value);
         this.expansionStatesChange.emit(this._expansionStates);
         if (this.gridAPI.grid) {
             this.cdr.detectChanges();
@@ -675,6 +675,18 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         };
     }
 
+    public preventContainerScroll(evt) {
+        if (evt.target.scrollTop !== 0 && this.hasDetails) {
+            const activeElem = document.activeElement;
+            this.verticalScrollContainer.addScrollTop(evt.target.scrollTop);
+            evt.target.scrollTop = 0;
+            this.verticalScrollContainer.onChunkLoad.pipe(first()).subscribe(() => {
+                // Some browsers (like Edge/IE) lose focus after scrolling.
+                (activeElem as any).focus();
+            });
+        }
+    }
+
     public detailsKeyboardHandler(event, rowIndex, container) {
         const colIndex = this.selectionService.activeElement ? this.selectionService.activeElement.column : 0;
         const shift = event.shiftKey;
@@ -689,15 +701,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 const lastColIndex = this.unpinnedColumns[this.unpinnedColumns.length - 1].visibleIndex;
                 this.navigateTo(rowIndex - 1, lastColIndex,
                     (args) => args.target.nativeElement.focus());
-            } else if (!shift) {
-                const focusable = container
-                .querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-                const lastFocusable = focusable[focusable.length - 1];
-                if (lastFocusable === target || (focusable.length === 0 && container === target)) {
-                    event.preventDefault();
-                    this.navigateTo(rowIndex + 1, 0,
-                        (args) => args.target.nativeElement.focus());
-                }
             }
         } else if (key === 'arrowup' && !ctrl && target === container) {
             this.navigation.navigateUp(container, {row: rowIndex, column: colIndex});
@@ -708,17 +711,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         } else if (key === 'arrowdown' && ctrl && target === container) {
             this.navigation.navigateBottom(colIndex);
         }
-    }
-
-    private cloneMap(mapIn: Map<any, boolean>): Map<any, boolean> {
-        const mapCloned: Map<any, boolean> = new Map<any, boolean>();
-
-        mapIn.forEach((value: boolean, key: any, mapObj: Map<any, boolean>) => {
-
-            mapCloned.set(key, value);
-        });
-
-        return mapCloned;
     }
 
 

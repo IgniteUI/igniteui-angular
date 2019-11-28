@@ -14,6 +14,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 | `interval` | number | The amount of time in milliseconds between slides transition. |
 | `navigation` | boolean | Controls should the carousel render the left/right navigation buttons. Defaults to `true`. |
 | `keyboardSupport` | boolean | Controls should the keyboard navigation should be supported. Defaults to `true`. |
+| `gesturesSupport` | boolean | Controls should the gestures should be supported. Defaults to `true`. |
 | `maximumIndicatorsCount` | number | The number of visible indicators. Defaults to `5`. |
 | `indicatorsOrientation` | CarouselIndicatorsOrientation | Controls whether the indicators should be previewed on top or on bottom of carousel. Defaults to `bottom`. |
 | `animationType` | CarouselAnimationType | Controls what animation should be played when slides are changing. Defaults to `slide`. |
@@ -42,16 +43,40 @@ Keyboard navigation will be enabled when the **IgxCarousel** component is focuse
 - `End` will focus the last slide inside the carousel view.
 
 ### Templates
-The **IgxCarousel** supports templating of its indicators
+The **IgxCarousel** supports templating indicators and navigation buttons
 
 #### Defining item template:
 ```html
 <igx-carousel #carousel>
         ...
-<ng-template igxCarouselIndicator let-slide>
-    <igx-icon *ngIf="slide.active"  fontSet="material">brightness_7</igx-icon>
-    <igx-icon *ngIf="!slide.active"  fontSet="material">brightness_5</igx-icon>
-</ng-template>
+    <ng-template igxCarouselIndicator let-slide>
+        <igx-icon *ngIf="slide.active"  fontSet="material">brightness_7</igx-icon>
+        <igx-icon *ngIf="!slide.active"  fontSet="material">brightness_5</igx-icon>
+    </ng-template>
+</igx-carousel>
+```
+
+#### Defining next button template:
+```html
+<igx-carousel #carousel>
+        ...
+    <ng-template igxCarouselNextButton let-disabled>
+        <button igxButton="fab" igxRipple="white" [disabled]="disabled">
+            <igx-icon fontSet="material">add</igx-icon>
+        </button>
+    </ng-template>
+</igx-carousel>
+```
+
+#### Defining previous button template:
+```html
+<igx-carousel #carousel>
+        ...
+    <ng-template igxCarouselPrevButton let-disabled>
+        <button igxButton="fab" igxRipple="white" [disabled]="disabled">
+            <igx-icon fontSet="material">remove</igx-icon>
+        </button>
+    </ng-template>
 </igx-carousel>
 ```
 

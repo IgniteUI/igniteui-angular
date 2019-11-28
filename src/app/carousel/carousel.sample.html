@@ -11,6 +11,7 @@
 
                 <igx-switch [(ngModel)]="car.navigation">navigation</igx-switch>
                 <igx-switch [(ngModel)]="car.keyboardSupport">keyboardSupport</igx-switch>
+                <igx-switch [(ngModel)]="car.gesturesSupport">gesturesSupport</igx-switch>
                 <igx-switch [(ngModel)]="loop">loop</igx-switch>
                 <igx-switch [(ngModel)]="pause">pause</igx-switch>
                 <button igxButton="raised" [igxToggleAction]="dropDownAnimation" [igxDropDownItemNavigation]="dropDownAnimation" displayDensity="comfortable">Animation Type: {{car.animationType}}</button>
@@ -34,6 +35,18 @@
                                 <img *ngIf="!slide.active" [src]="slides[slide.index].image" style="width: 100px;  ">
                                 <img *ngIf="slide.active" [src]="slides[slide.index].image" style="width: 120px;  ">
                         </ng-template>
+
+                        <!-- <ng-template igxCarouselNextButton let-disabled>
+                                <button igxButton="fab" igxRipple="white" [disabled]="disabled">
+                                        <igx-icon fontSet="material">add</igx-icon>
+                                    </button>
+                        </ng-template>
+
+                        <ng-template igxCarouselPrevButton let-disabled>
+                                <button igxButton="fab" igxRipple="white" [disabled]="disabled">
+                                        <igx-icon fontSet="material">remove</igx-icon>
+                                    </button>
+                        </ng-template> -->
                     </igx-carousel>
                 </div>
             </article>

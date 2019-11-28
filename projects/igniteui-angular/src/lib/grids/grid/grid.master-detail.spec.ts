@@ -395,8 +395,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
         });
 
-        it(`Should focus detail row first, then continue to the focusable elements in
-         it and continue onto the next row when using Tab.`, async() => {
+        it(`Should focus detail row after hitting Tab on last cell in prev data row.`, async() => {
             const row = grid.getRowByIndex(0) as IgxGridRowComponent;
             const targetCellElement = grid.getCellByColumn(0, 'CompanyName');
             UIInteractions.triggerKeyDownEvtUponElem('tab', targetCellElement, true);
@@ -404,23 +403,16 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
             const detailRow = GridFunctions.getMasterRowDetail(row);
             expect(document.activeElement).toBe(detailRow);
-            const lastTabbable = detailRow.querySelector('input[name="Comment"]');
-            UIInteractions.triggerKeyDownEvtUponElem('tab', lastTabbable, true);
-            await wait(DEBOUNCETIME);
-            fix.detectChanges();
-            expect(document.activeElement).toBe(grid.getCellByColumn(2, 'ContactName').nativeElement);
          });
 
-         it(`Should focus the last focusable element in detail first
-         and go in reverse order of all elements when tabbing through detail view using Shift+Tab.`, async() => {
+         it(`Should focus detail row after hitting Shift+Tab on first cell in next data row and continue to the prev row.`, async() => {
             const prevRow = grid.getRowByIndex(0) as IgxGridRowComponent;
             const targetCellElement = grid.getCellByColumn(2, 'ContactName');
             UIInteractions.triggerKeyDownEvtUponElem('tab', targetCellElement, true, false, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             const detailRow = GridFunctions.getMasterRowDetail(prevRow);
-            const lastTabbable = detailRow.querySelector('input[name="Comment"]');
-            expect(document.activeElement).toBe(lastTabbable);
+            expect(document.activeElement).toBe(detailRow);
             UIInteractions.triggerKeyDownEvtUponElem('tab', detailRow, true, false, true);
             await wait(DEBOUNCETIME);
             fix.detectChanges();

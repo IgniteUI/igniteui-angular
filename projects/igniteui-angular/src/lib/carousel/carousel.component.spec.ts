@@ -2,10 +2,8 @@ import { Component, ViewChild, TemplateRef } from '@angular/core';
 import {
     async,
     TestBed,
-    ComponentFixture,
     fakeAsync,
-    tick,
-    flush
+    tick
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
@@ -472,50 +470,11 @@ describe('Carousel', () => {
             expect(carousel.onCarouselPlaying.emit).toHaveBeenCalledTimes(1);
         });
 
-        it('should stop/play on tap ', async () => {
-            carousel.interval = 1000;
-            carousel.play();
-            fixture.detectChanges();
 
-            spyOn(carousel.onCarouselPaused, 'emit');
-            spyOn(carousel.onCarouselPlaying, 'emit');
-
-            expect(carousel.isPlaying).toBeTruthy();
-
-            Simulator.gestures.press(carousel.nativeElement, { duration: 180 });
-            fixture.detectChanges();
-            await wait(200);
-
-            expect(carousel.isPlaying).toBeFalsy();
-
-            Simulator.gestures.press(carousel.nativeElement, { duration: 180 });
-            fixture.detectChanges();
-            await wait(200);
-
-            expect(carousel.isPlaying).toBeTruthy();
-
-            // When the carousel is stopped tap does not start playing
-            carousel.stop();
-            fixture.detectChanges();
-
-            expect(carousel.isPlaying).toBeFalsy();
-
-            Simulator.gestures.press(carousel.nativeElement, { duration: 180 });
-            fixture.detectChanges();
-            await wait(200);
-
-            expect(carousel.isPlaying).toBeFalsy();
-
-            Simulator.gestures.press(carousel.nativeElement, { duration: 180 });
-            fixture.detectChanges();
-            await wait(200);
-
-            expect(carousel.isPlaying).toBeFalsy();
-        });
     });
 
     describe('Templates Tests: ', () => {
-        it('verify that template can be defined in the markup', () => {
+        it('verify that templates can be defined in the markup', () => {
             fixture = TestBed.createComponent(CarouselTemplateSetInMarkupTestComponent);
             carousel = fixture.componentInstance.carousel;
             fixture.detectChanges();
@@ -526,9 +485,15 @@ describe('Carousel', () => {
                 const indicator = HelperTestFunctions.getIndicators(fixture)[index] as HTMLElement;
                 expect(indicator.innerText).toEqual(index.toString());
             }
+
+            expect(HelperTestFunctions.getNextButtonArrow(fixture)).toBeNull();
+            expect(HelperTestFunctions.getPreviousButtonArrow(fixture)).toBeNull();
+
+            expect(HelperTestFunctions.getNextButton(fixture).innerText).toEqual('next');
+            expect(HelperTestFunctions.getPreviousButton(fixture).innerText).toEqual('prev');
         });
 
-        it('verify that template can be changed', () => {
+        it('verify that templates can be changed', () => {
             fixture = TestBed.createComponent(CarouselTemplateSetInTypescriptTestComponent);
             carousel = fixture.componentInstance.carousel;
             fixture.detectChanges();
@@ -538,8 +503,12 @@ describe('Carousel', () => {
 
             expect(HelperTestFunctions.getIndicators(fixture).length).toBe(4);
             expect(HelperTestFunctions.getIndicatorsDots(fixture).length).toBe(4);
+            expect(HelperTestFunctions.getNextButtonArrow(fixture)).toBeDefined();
+            expect(HelperTestFunctions.getPreviousButtonArrow(fixture)).toBeDefined();
 
             carousel.indicatorTemplate = fixture.componentInstance.customIndicatorTemplate1;
+            carousel.nextButtonTemplate = fixture.componentInstance.customNextTemplate;
+            carousel.prevButtonTemplate = fixture.componentInstance.customPrevTemplate;
             fixture.detectChanges();
 
             expect(HelperTestFunctions.getIndicators(fixture).length).toBe(4);
@@ -548,6 +517,11 @@ describe('Carousel', () => {
                 const indicator = HelperTestFunctions.getIndicators(fixture)[index] as HTMLElement;
                 expect(indicator.innerText).toEqual(index.toString());
             }
+            expect(HelperTestFunctions.getNextButtonArrow(fixture)).toBeNull();
+            expect(HelperTestFunctions.getPreviousButtonArrow(fixture)).toBeNull();
+
+            expect(HelperTestFunctions.getNextButton(fixture).innerText).toEqual('next');
+            expect(HelperTestFunctions.getPreviousButton(fixture).innerText).toEqual('prev');
 
             carousel.indicatorTemplate = fixture.componentInstance.customIndicatorTemplate2;
             fixture.detectChanges();
@@ -565,10 +539,14 @@ describe('Carousel', () => {
             }
 
             carousel.indicatorTemplate = null;
+            carousel.nextButtonTemplate = null;
+            carousel.prevButtonTemplate = null;
             fixture.detectChanges();
 
             expect(HelperTestFunctions.getIndicators(fixture).length).toBe(4);
             expect(HelperTestFunctions.getIndicatorsDots(fixture).length).toBe(4);
+            expect(HelperTestFunctions.getNextButtonArrow(fixture)).toBeDefined();
+            expect(HelperTestFunctions.getPreviousButtonArrow(fixture)).toBeDefined();
         });
     });
 
@@ -704,8 +682,8 @@ describe('Carousel', () => {
             expect(carousel.total).toEqual(0);
             expect(HelperTestFunctions.getIndicatorsContainer(fixture)).toBeNull();
             expect(HelperTestFunctions.getIndicatorsContainer(fixture, CarouselIndicatorsOrientation.top)).toBeNull();
-            expect(HelperTestFunctions.getNextButton(fixture).hidden).toBeTruthy();
-            expect(HelperTestFunctions.getPreviousButton(fixture).hidden).toBeTruthy();
+            expect(HelperTestFunctions.getNextButton(fixture)).toBeNull();
+            expect(HelperTestFunctions.getPreviousButton(fixture)).toBeNull();
 
             // add a slide
             fixture.componentInstance.addSlides();
@@ -719,11 +697,131 @@ describe('Carousel', () => {
             expect(HelperTestFunctions.getPreviousButton(fixture).hidden).toBeFalsy();
         }));
     });
+
+    describe('Gestures Tests: ', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(CarouselDynamicSlidesComponent);
+            fixture.detectChanges();
+            carousel = fixture.componentInstance.carousel;
+        });
+
+        it('should stop/play on tap ', async () => {
+            carousel.interval = 1000;
+            carousel.play();
+            fixture.detectChanges();
+
+            spyOn(carousel.onCarouselPaused, 'emit');
+            spyOn(carousel.onCarouselPlaying, 'emit');
+
+            expect(carousel.isPlaying).toBeTruthy();
+
+            HelperTestFunctions.simulateTap(carousel);
+            fixture.detectChanges();
+            await wait(200);
+
+            expect(carousel.isPlaying).toBeFalsy();
+
+            HelperTestFunctions.simulateTap(carousel);
+            fixture.detectChanges();
+            await wait(200);
+
+            expect(carousel.isPlaying).toBeTruthy();
+
+            // When the carousel is stopped tap does not start playing
+            carousel.stop();
+            fixture.detectChanges();
+
+            expect(carousel.isPlaying).toBeFalsy();
+
+            HelperTestFunctions.simulateTap(carousel);
+            fixture.detectChanges();
+            await wait(200);
+
+            expect(carousel.isPlaying).toBeFalsy();
+
+            HelperTestFunctions.simulateTap(carousel);
+            fixture.detectChanges();
+            await wait(200);
+
+            expect(carousel.isPlaying).toBeFalsy();
+        });
+
+        it('verify changing slides with pan left ', () => {
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.05, 0.1);
+
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.7, 0.1);
+
+            expect(carousel.current).toEqual(3);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.2, 2);
+
+            expect(carousel.current).toEqual(0);
+        });
+
+        it('verify changing slides with pan right ', () => {
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.1, 0.1);
+
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.6, 0.1);
+
+            expect(carousel.current).toEqual(1);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.05, 2);
+
+            expect(carousel.current).toEqual(0);
+        });
+
+        it('verify pan when loop is false', () => {
+            carousel.loop = false;
+            fixture.detectChanges();
+
+            carousel.select(carousel.get(0));
+            fixture.detectChanges();
+
+            expect(carousel.current).toEqual(0);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.9, 2);
+
+            expect(carousel.current).toEqual(0);
+
+            carousel.select(carousel.get(3));
+            fixture.detectChanges();
+
+            expect(carousel.current).toEqual(3);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.9, 2);
+
+            expect(carousel.current).toEqual(3);
+        });
+
+        it('verify pan when gesturesSupport is false', () => {
+            carousel.gesturesSupport = false;
+            fixture.detectChanges();
+
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, 0.9, 2);
+
+            expect(carousel.current).toEqual(2);
+
+            HelperTestFunctions.simulatePan(fixture, carousel, -0.6, 2);
+
+            expect(carousel.current).toEqual(2);
+        });
+    });
 });
 
 class HelperTestFunctions {
     public static NEXT_BUTTON_CLASS = '.igx-carousel__arrow--next';
     public static PRIV_BUTTON_CLASS = '.igx-carousel__arrow--prev';
+    public static BUTTON_ARROW_CLASS = '.igx-nav-arrow';
     public static ACTIVE_SLIDE_CLASS = 'igx-slide--current';
     public static PREVIOUS_SLIDE_CLASS = 'igx-slide--previous';
     public static INDICATORS_TOP_CLASS = '.igx-carousel-indicators--top';
@@ -739,6 +837,16 @@ class HelperTestFunctions {
 
     public static getPreviousButton(fixture): HTMLElement {
         return fixture.nativeElement.querySelector(HelperTestFunctions.PRIV_BUTTON_CLASS);
+    }
+
+    public static getNextButtonArrow(fixture): HTMLElement {
+        const next = HelperTestFunctions.getNextButton(fixture);
+        return next.querySelector(HelperTestFunctions.BUTTON_ARROW_CLASS);
+    }
+
+    public static getPreviousButtonArrow(fixture): HTMLElement {
+        const prev = HelperTestFunctions.getPreviousButton(fixture);
+        return prev.querySelector(HelperTestFunctions.BUTTON_ARROW_CLASS);
     }
 
     public static getIndicatorsContainer(fixture, position = CarouselIndicatorsOrientation.bottom): HTMLElement {
@@ -773,7 +881,29 @@ class HelperTestFunctions {
         expect(carousel.slides.find((slide) => slide.active && slide.index !== index)).toBeUndefined();
     }
 
+    public static simulateTap(carousel) {
+        const activeSlide = carousel.get(carousel.current).nativeElement;
+        Simulator.gestures.press(activeSlide, { duration: 180 });
+    }
 
+    public static simulatePan(fixture, carousel, deltaXOffset, velocity) {
+        const activeSlide = carousel.get(carousel.current).nativeElement;
+        const carouselElement = fixture.debugElement.query(By.css('igx-carousel'));
+        const deltaX = activeSlide.offsetWidth * deltaXOffset;
+        const event = deltaXOffset < 0 ? 'panleft' : 'panright';
+        const panOptions = {
+            deltaX: deltaX,
+            deltaY: 0,
+            duration: 100,
+            velocity: velocity,
+            preventDefault: <any>( ( e: any ) => {  })
+        };
+
+        carouselElement.triggerEventHandler(event, panOptions);
+        fixture.detectChanges();
+        carouselElement.triggerEventHandler('panend', panOptions);
+        fixture.detectChanges();
+    }
 }
 @Component({
     template: `
@@ -819,6 +949,14 @@ class CarouselAnimationsComponent {
             <ng-template igxCarouselIndicator let-slide>
                 <span> {{slide.index}} </span>
             </ng-template>
+
+            <ng-template igxCarouselNextButton>
+                <span>next</span>
+            </ng-template>
+
+            <ng-template igxCarouselPrevButton>
+                <span>prev</span>
+            </ng-template>
         </igx-carousel>
     `
 })
@@ -837,6 +975,14 @@ class CarouselTemplateSetInMarkupTestComponent {
             <span *ngIf="slide.active"> {{slide.index}}: Active  </span>
         </ng-template>
 
+        <ng-template #customNextTemplate>
+            <span>next</span>
+        </ng-template>
+
+        <ng-template #customPrevTemplate>
+            <span>prev</span>
+        </ng-template>
+
         <igx-carousel #carousel [animationType]="'none'">
             <igx-slide><h3>Slide1</h3></igx-slide>
             <igx-slide><h3>Slide2</h3></igx-slide>
@@ -851,6 +997,10 @@ class CarouselTemplateSetInTypescriptTestComponent {
     public customIndicatorTemplate1;
     @ViewChild('customIndicatorTemplate2', { read: TemplateRef, static: false })
     public customIndicatorTemplate2;
+    @ViewChild('customNextTemplate', { read: TemplateRef, static: false })
+    public customNextTemplate;
+    @ViewChild('customPrevTemplate', { read: TemplateRef, static: false })
+    public customPrevTemplate;
 }
 
 @Component({
