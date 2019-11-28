@@ -1375,7 +1375,7 @@ describe('Row editing expanding/collapsing #tGrid', () => {
     }));*/
 });
 
-describe('Custom expand/collapse template', () => {
+describe('Custom expand/collapse template #tGrid', () => {
     configureTestSuite();
     let fix;
     let treeGrid;
