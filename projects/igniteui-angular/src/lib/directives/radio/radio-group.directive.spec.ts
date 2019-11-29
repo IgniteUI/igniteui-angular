@@ -13,7 +13,8 @@ describe('IgxRadioGroupDirective', () => {
             declarations: [
                 RadioGroupComponent,
                 RadioGroupWithModelComponent,
-                RadioGroupReactiveFormsComponent
+                RadioGroupReactiveFormsComponent,
+                RadioGroupDeepProjection
             ],
             imports: [
                 IgxRadioModule,
@@ -182,6 +183,16 @@ describe('IgxRadioGroupDirective', () => {
         expect(fixture.componentInstance.newModel.name).toEqual(fixture.componentInstance.model.name);
         expect(fixture.componentInstance.newModel.favoriteSeason).toEqual(fixture.componentInstance.seasons[0]);
     }));
+
+    it('Properly initialize selection when value is falsy in deep content projection', fakeAsync(() => {
+        const fixture = TestBed.createComponent(RadioGroupDeepProjection);
+        fixture.detectChanges();
+        tick();
+
+        const radioGroup = fixture.componentInstance.radioGroup;
+        expect(radioGroup.value).toEqual(0);
+        expect(radioGroup.radioButtons.first.checked).toEqual(true);
+    }));
 });
 
 @Component({
@@ -269,6 +280,36 @@ class RadioGroupReactiveFormsComponent {
         this.personForm.setValue({
             name: this.model.name,
             favoriteSeason: this.model.favoriteSeason
+        });
+    }
+}
+
+@Component({
+    template: `
+        <form [formGroup]="group1">
+            <igx-radio-group formControlName="favouriteChoice" name="radioGroupReactive">
+                <div *ngFor="let choice of choices">
+                    <p><igx-radio [value]="choice">{{ choice }}</igx-radio></p>
+                </div>
+            </igx-radio-group>
+        </form>
+    `
+})
+class RadioGroupDeepProjection {
+
+    @ViewChild(IgxRadioGroupDirective, { static: true })
+    radioGroup: IgxRadioGroupDirective;
+
+    choices = [0, 1, 2];
+    group1: FormGroup;
+
+    constructor(private _builder: FormBuilder) {
+        this._createForm();
+    }
+
+    private _createForm() {
+        this.group1 = this._builder.group({
+            favouriteChoice: 0
         });
     }
 }
