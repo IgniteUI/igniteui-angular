@@ -1,5 +1,5 @@
 import { IgxInputState } from './../directives/input/input.directive';
-import { Component, ViewChild, DebugElement, OnInit } from '@angular/core';
+import { Component, ViewChild, DebugElement, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { FormsModule, FormGroup, FormBuilder, FormControl, Validators, ReactiveFormsModule, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -92,7 +92,8 @@ describe('igxSelect', () => {
                 IgxSelectAffixComponent,
                 IgxSelectReactiveFormComponent,
                 IgxSelectTemplateFormComponent,
-                IgxSelectHeaderFooterComponent
+                IgxSelectHeaderFooterComponent,
+                IgxSelectCDRComponent
             ],
             imports: [
                 FormsModule,
@@ -2467,7 +2468,31 @@ describe('igxSelect', () => {
             expect(selectList.nativeElement.nextElementSibling).toBeNull();
         }));
     });
-});
+
+    describe('Test CDR - Expression changed after it was checked', () => {
+        beforeEach(fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxSelectCDRComponent);
+            fixture.detectChanges();
+            tick();
+        }));
+        it('Should NOT throw console Warning for "Expression changed after it was checked"', () => {
+            let selectCDR = fixture.componentInstance.select;
+
+            expect(selectCDR).toBeDefined();
+            expect(selectCDR.value).toBe('ID');
+
+            fixture.componentInstance.render = !fixture.componentInstance.render;
+            fixture.detectChanges();
+            selectCDR = fixture.componentInstance.select;
+            expect(selectCDR).toBeUndefined();
+
+            fixture.componentInstance.render = !fixture.componentInstance.render;
+            fixture.detectChanges();
+            selectCDR = fixture.componentInstance.select;
+            expect(selectCDR).toBeDefined();
+            expect(selectCDR.value).toBe('ID');
+        });
+    });
 
 @Component({
     template: `
@@ -2794,3 +2819,29 @@ class IgxSelectHeaderFooterComponent implements OnInit {
         }
     }
 }
+
+    @Component({
+        template: `
+            <h4>*ngIf test select for 'expression changed...console Warning'</h4>
+            <div *ngIf="render">
+                <igx-select #selectCDR value="ID">
+                    <label igxLabel>Column</label>
+                    <igx-select-item *ngFor="let column of columns" [value]="column.field">
+                        {{column.field}}
+                    </igx-select-item>
+                </igx-select>
+            </div>
+        `
+    })
+    class IgxSelectCDRComponent {
+        @ViewChild('selectCDR', { read: IgxSelectComponent, static: false })
+        public select: IgxSelectComponent;
+
+        public render = true;
+        public columns: Array<any> = [
+            { field: 'ID',  type: 'string' },
+            { field: 'CompanyName', type: 'string' },
+            { field: 'ContactName', type: 'string' }
+        ];
+    }
+});

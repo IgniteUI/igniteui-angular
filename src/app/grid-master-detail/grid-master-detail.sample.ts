@@ -1,45 +1,27 @@
 import { Component, ViewChild, OnInit, Inject } from '@angular/core';
 
-import {
-    IgxGridComponent, SortingDirection, ISortingExpression,
-    DefaultSortingStrategy, DisplayDensity, IDisplayDensityOptions, DisplayDensityToken
-} from 'igniteui-angular';
-
+import { IgxGridComponent,
+    SortingDirection,
+    ISortingExpression,
+    DefaultSortingStrategy } from 'igniteui-angular';
+import { DisplayDensity, IDisplayDensityOptions, DisplayDensityToken } from 'projects/igniteui-angular/src/lib/core/density';
 @Component({
     providers: [{ provide: DisplayDensityToken, useValue: { displayDensity: DisplayDensity.compact} }],
     selector: 'app-grid-sample',
-    styleUrls: ['grid-groupby.sample.css'],
-    templateUrl: 'grid-groupby.sample.html'
+    styleUrls: ['grid-master-detail.sample.css'],
+    templateUrl: 'grid-master-detail.sample.html'
 })
-export class GridGroupBySampleComponent implements OnInit {
+export class GridMasterDetailSampleComponent implements OnInit {
     @ViewChild('grid1', { static: true }) public grid1: IgxGridComponent;
     public data: Array<any>;
-    public hideGroupedColumns = false;
     expState = [];
     public columns: Array<any>;
-    public groupingExpressions: Array<ISortingExpression>;
-    public summaryMode = 'rootLevelOnly';
-    public summaryModes = [];
     constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions) {}
     public ngOnInit(): void {
         this.columns = [
-            { dataType: 'string', field: 'ID', width: 100, hidden: true },
-            { dataType: 'string', field: 'CompanyName', width: 300, groupable: true  },
-            { dataType: 'number', field: 'Salary', width: 200, pinned: true },
-            { dataType: 'string', field: 'ContactTitle', width: 200, pinned: true, groupable: true },
-            { dataType: 'string', field: 'Address', width: 300, groupable: true  },
-            { dataType: 'string', field: 'Country', width: 150, groupable: true },
-            { dataType: 'string', field: 'City', width: 150, groupable: true },
-            { dataType: 'string', field: 'Region', width: 150, groupable: true },
-            { dataType: 'string', field: 'PostalCode', width: 150, groupable: true  },
-            { dataType: 'string', field: 'Phone', width: 150, groupable: true  },
-            { dataType: 'string', field: 'Fax', width: 150, groupable: true  }
-        ];
-        this.hideGroupedColumns = true;
-        this.summaryModes = [
-            { label: 'rootLevelOnly', selected: this.summaryMode === 'rootLevelOnly', togglable: true },
-            { label: 'childLevelsOnly', selected: this.summaryMode === 'childLevelsOnly', togglable: true },
-            { label: 'rootAndChildLevels', selected: this.summaryMode === 'rootAndChildLevels', togglable: true }
+            { dataType: 'string', field: 'ContactName', width: 200 },
+            { dataType: 'string', field: 'CompanyName', width: 300 },
+            { dataType: 'string', field: 'Salary', width: 300 }
         ];
 
         /* tslint:disable */
@@ -73,74 +55,16 @@ export class GridGroupBySampleComponent implements OnInit {
             { 'Salary': '4900','ID': 'FRANS', 'CompanyName': 'Franchi S.p.A.', 'ContactName': 'Paolo Accorti', 'ContactTitle': 'Sales Representative', 'Address': 'Via Monte Bianco 34', 'City': 'Torino', 'Region': null, 'PostalCode': '10100', 'Country': 'Italy', 'Phone': '011-4988260', 'Fax': '011-4988261' }
         ];
     }
-    private _density = DisplayDensity.cosy;
-    public get density(): DisplayDensity {
-        return this._density;
-    }
-    public set density(value) {
-        this._density = value;
-        this.grid1.cdr.detectChanges();
-    }
-    groupBy(name: string) {
-        const expressions = this.grid1.groupingExpressions;
-        for (let i = 0; i < expressions.length; i++) {
-            const gr: ISortingExpression = expressions[i];
-            if (gr.fieldName === name) {
-                this.grid1.clearGrouping(name);
-                return;
-            }
-        }
-        this.grid1.groupBy({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false, strategy: DefaultSortingStrategy.instance() });
-    }
-    toggleGroupedVisibility(event){
-        this.grid1.hideGroupedColumns = !event.checked;
-    }
-    toggleDensity() {
-        switch (this.displayDensityOptions.displayDensity ) {
-            case DisplayDensity.comfortable: this.displayDensityOptions.displayDensity = DisplayDensity.compact; break;
-            case DisplayDensity.compact: this.displayDensityOptions.displayDensity = DisplayDensity.cosy; break;
-            case DisplayDensity.cosy: this.displayDensityOptions.displayDensity = DisplayDensity.comfortable; break;
-        }
-    }
-    getRowsList() {
-        console.log(this.grid1.rowList);
+
+    public expandFirstRow() {
+        this.grid1.expand(this.data[0]);
     }
 
-    getState() {
-        console.log(JSON.stringify(this.expState));
-        console.log(JSON.stringify(this.groupingExpressions));
+    public collapseFirstRow() {
+        this.grid1.collapse(this.data[0]);
     }
 
-    onGroupingDoneHandler(event){
-        console.log("onGroupingDone: ");
-        console.log(event);
-    }
-    getData(item) {
-    console.log(item);
-    }
-
-    groupMultiple() {
-        const expr = [
-            {fieldName: "ContactTitle", dir: 1, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
-            {fieldName: "Address", dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
-            {fieldName: "Country", dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()}
-        ];
-        this.grid1.groupBy(expr);
-    }
-
-    ungroupMultiple() {
-        this.grid1.clearGrouping(["Address", "Country"]);
-    }
-
-    groupUngroupMultiple() {
-        const expr = [
-            {fieldName: "ContactTitle", dir: 1, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
-            {fieldName: "Address", dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()},
-        ];
-        this.grid1.groupingExpressions = expr;
-    }
-
-    public selectSummaryMode(event) {
-        this.summaryMode = this.summaryModes[event.index].label;
+    public toggleFirstRow() {
+        this.grid1.toggleRow(this.data[0]);
     }
 }

@@ -111,9 +111,9 @@ import { GridFlexSampleComponent } from './grid-flex-layout/grid-flex.sample';
 import { GridEsfLoadOnDemandComponent } from './grid-esf-load-on-demand/grid-esf-load-on-demand.component';
 import { GridFilteringComponent } from './grid-filtering/grid-filtering.sample';
 import { GridExternalFilteringComponent } from './grid-external-filtering/grid-external-filtering.sample';
-
-
-
+import { AboutComponent } from './grid-state/about.component';
+import { GridSaveStateComponent } from './grid-state/grid-state.component';
+import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-master-detail.sample';
 
 const components = [
     AppComponent,
@@ -176,6 +176,7 @@ const components = [
     GridColumnPinningSampleComponent,
     GridColumnResizingSampleComponent,
     GridGroupBySampleComponent,
+    GridMasterDetailSampleComponent,
     GridSummaryComponent,
     GridPerformanceSampleComponent,
     GridSelectionComponent,
@@ -215,7 +216,9 @@ const components = [
     GridFlexSampleComponent,
     GridEsfLoadOnDemandComponent,
     GridFilteringComponent,
-    GridExternalFilteringComponent
+    GridExternalFilteringComponent,
+    GridSaveStateComponent,
+    AboutComponent
 ];
 
 @NgModule({
@@ -236,7 +239,8 @@ const components = [
         IgxDragDropModule,
         IgxDividerModule,
         SharedModule,
-        routing
+        routing,
+        HammerModule
     ],
     providers: [
         LocalService,

@@ -1,6 +1,6 @@
 import {
     Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
-    QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, AfterContentInit, HostBinding, forwardRef, OnInit
+    QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, AfterContentInit, HostBinding, forwardRef, OnInit, AfterViewInit
 } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -9,13 +9,13 @@ import { IgxGridAPIService } from './grid-api.service';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { cloneArray, IBaseEventArgs } from '../../core/utils';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
-import { IgxGroupByRowTemplateDirective } from './grid.directives';
+import { IgxGroupByRowTemplateDirective, IgxGridDetailTemplateDirective } from './grid.directives';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../../chips/chip.component';
 import { IChipsAreaReorderEventArgs } from '../../chips/chips-area.component';
 import { IgxColumnComponent } from '../columns/column.component';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, first } from 'rxjs/operators';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
@@ -71,7 +71,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
 })
-export class IgxGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit {
+export class IgxGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit, AfterViewInit {
     private _id = `igx-grid-${NEXT_ID++}`;
     /**
      * @hidden @internal
@@ -220,6 +220,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         return this.gridAPI as IgxGridAPIService;
     }
     private _filteredData = null;
+
+    private childDetailTemplates: Map<any, any> = new Map();
 
     /**
      * Returns the group by state of the `IgxGridComponent`.
@@ -473,6 +475,12 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     protected groupTemplate: IgxGroupByRowTemplateDirective;
 
     /**
+     * @hidden
+     */
+    @ContentChild(IgxGridDetailTemplateDirective, { read: IgxGridDetailTemplateDirective, static: false })
+    protected gridDetailsTemplate: IgxGridDetailTemplateDirective;
+
+    /**
      * The custom template, if any, that should be used when rendering the row drag indicator icon
      *
      * ```typescript
@@ -516,7 +524,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         }
         const rList = this._groupsRowList.filter((item) => {
             return item.element.nativeElement.parentElement !== null;
-        });
+        }).sort((item1, item2) => item1.index - item2.index);
         res.reset(rList);
         return res;
     }
@@ -527,6 +535,218 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     @ViewChild('groupArea')
     public groupArea: ElementRef;
 
+    @ViewChild('record_template', { read: TemplateRef, static: true })
+    protected recordTemplate: TemplateRef<any>;
+
+    @ViewChild('detail_template_container', { read: TemplateRef, static: true })
+    protected detailTemplateContainer: TemplateRef<any>;
+
+    @ContentChild(IgxGridDetailTemplateDirective, { read: TemplateRef, static: false })
+    public detailTemplate: TemplateRef<any> = null;
+
+    @ViewChild('group_template', { read: TemplateRef, static: true })
+    protected defaultGroupTemplate: TemplateRef<any>;
+
+    @ViewChild('summary_template', { read: TemplateRef, static: true })
+    protected summaryTemplate: TemplateRef<any>;
+
+
+    private _expansionStates: Map<any, boolean> = new Map<any, boolean>();
+
+    /**
+     * Returns a list of key-value pairs [row ID, expansion state]. Includes only states that differ from the default one.
+     * ```typescript
+     * const expansionStates = this.grid.expansionStates;
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    @Input()
+    public get expansionStates() {
+        return this._expansionStates;
+    }
+
+    /**
+     *@hidden
+     */
+    @Output()
+    public expansionStatesChange = new EventEmitter<Map<any, boolean>>();
+
+
+    /**
+     * Sets a list of key-value pairs [row ID, expansion state].
+     * ```typescript
+     * const states = new Map<any, boolean>();
+     * states.set(1, true);
+     * this.grid.expansionStates = states;
+     * ```
+     *
+     * Two-way data binding.
+     * ```html
+     * <igx-grid #grid [data]="data" [(expansionStates)]="model.expansionStates">
+     * <ng-template igxGridDetail let-dataItem>
+     * <div *ngIf="dataItem.Category">
+     *  <header>{{dataItem.Category?.CategoryName}}</header>
+     * <span>{{dataItem.Category?.Description}}</span>
+     * </div>
+     * </ng-template>
+     * </igx-grid>
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    public set expansionStates(value) {
+        this._expansionStates = new Map<any, boolean>(value);
+        this.expansionStatesChange.emit(this._expansionStates);
+        if (this.gridAPI.grid) {
+            this.cdr.detectChanges();
+            this._focusActiveCell();
+        }
+    }
+
+   /**
+     * Expands all master rows.
+     * ```typescript
+     * this.grid.expandAll();
+     * ```
+	 * @memberof IgxGridComponent
+    */
+    public expandAll() {
+        const expandedStates = this.expansionStates;
+        this.data.forEach((rec) => {
+            expandedStates.set(this.primaryKey ? rec[this.primaryKey] : rec, true);
+        });
+        this.expansionStates = expandedStates;
+    }
+
+   /**
+     * Collapses all master rows.
+     * ```typescript
+     * this.grid.collapseAll();
+     * ```
+	 * @memberof IgxGridComponent
+    */
+    public collapseAll() {
+        this.expansionStates = new Map<any, boolean>();
+    }
+
+    /**
+     * Expands the master row by its id. ID is either the primaryKey value or the data record instance.
+     * ```typescript
+     * this.grid.expand(rowID);
+     * ```
+	 * @memberof IgxGridComponent
+     */
+    public expand(rowID: any) {
+        const expandedStates = this.expansionStates;
+        expandedStates.set(rowID, true);
+        this.expansionStates = expandedStates;
+    }
+
+    /**
+     * Collapses the master row by its id. ID is either the primaryKey value or the data record instance.
+     * ```typescript
+     * this.grid.collapse(rowID);
+     * ```
+	 * @memberof IgxGridComponent
+    */
+    public collapse(rowID: any) {
+        const expandedStates = this.expansionStates;
+        expandedStates.set(rowID, false);
+        this.expansionStates = expandedStates;
+    }
+
+
+    /**
+     * Toggles the master row by its id. ID is either the primaryKey value or the data record instance.
+     * ```typescript
+     * this.grid.toggle(rowID);
+     * ```
+	 * @memberof IgxGridComponent
+    */
+    public toggleRow(rowID: any) {
+        const expandedStates = this.expansionStates;
+        const state = expandedStates.get(rowID);
+        expandedStates.set(rowID, !state);
+        this.expansionStates = expandedStates;
+    }
+
+    public getDetailsContext(rowData, index) {
+        return {
+            $implicit: rowData,
+            index: index
+        };
+    }
+
+    public preventContainerScroll(evt) {
+        if (evt.target.scrollTop !== 0 && this.hasDetails) {
+            const activeElem = document.activeElement;
+            this.verticalScrollContainer.addScrollTop(evt.target.scrollTop);
+            evt.target.scrollTop = 0;
+            this.verticalScrollContainer.onChunkLoad.pipe(first()).subscribe(() => {
+                // Some browsers (like Edge/IE) lose focus after scrolling.
+                (activeElem as any).focus();
+            });
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    public trackChanges(index, rec) {
+        if (rec.detailsData !== undefined) {
+            return rec.detailsData;
+        }
+        return rec;
+    }
+
+    public detailsKeyboardHandler(event, rowIndex, container) {
+        const colIndex = this.selectionService.activeElement ? this.selectionService.activeElement.column : 0;
+        const shift = event.shiftKey;
+        const ctrl = event.ctrlKey;
+        const key = event.key.toLowerCase();
+        const target = event.target;
+        if (key === 'tab') {
+            event.stopPropagation();
+            if (shift && target === container) {
+                // shift + tab from details to data row
+                event.preventDefault();
+                const lastColIndex = this.unpinnedColumns[this.unpinnedColumns.length - 1].visibleIndex;
+                this.navigateTo(rowIndex - 1, lastColIndex,
+                    (args) => args.target.nativeElement.focus());
+            }
+        } else if (key === 'arrowup' && !ctrl && target === container) {
+            this.navigation.navigateUp(container, {row: rowIndex, column: colIndex});
+        } else if (key === 'arrowup' && ctrl && target === container) {
+            this.navigation.navigateTop(colIndex);
+        } else if (key === 'arrowdown' && !ctrl && target === container) {
+            this.navigation.navigateDown(container, {row: rowIndex, column: colIndex});
+        } else if (key === 'arrowdown' && ctrl && target === container) {
+            this.navigation.navigateBottom(colIndex);
+        }
+    }
+
+
+    public get hasDetails() {
+        return !!this.gridDetailsTemplate;
+    }
+
+    /**
+    * @hidden
+    */
+   public getRowTemplate(rowData) {
+        if (this.isGroupByRecord(rowData)) {
+            return this.defaultGroupTemplate;
+        } else if (this.isSummaryRow(rowData)) {
+            return this.summaryTemplate;
+        }  else if (this.hasDetails && this.isDetailRecord(rowData)) {
+                return this.detailTemplateContainer;
+        } else {
+            return this.recordTemplate;
+        }
+   }
+
+   public isDetailRecord(record) {
+    return record.detailsData !== undefined;
+   }
     /**
      * @hidden
      */
@@ -754,12 +974,56 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     * @hidden
     */
     public getContext(rowData, rowIndex): any {
+        if (this.isDetailRecord(rowData)) {
+            const cachedData = this.childDetailTemplates.get(rowData.detailsData);
+            const rowID = this.primaryKey ? rowData.detailsData[this.primaryKey] : this.data.indexOf(rowData.detailsData);
+            if (cachedData) {
+                const view = cachedData.view;
+                const tmlpOutlet = cachedData.owner;
+                return {
+                    $implicit: rowData.detailsData,
+                    moveView: view,
+                    owner: tmlpOutlet,
+                    index: this.dataView.indexOf(rowData),
+                    templateID: 'detailRow-' + rowID
+                };
+            } else {
+                // child rows contain unique grids, hence should have unique templates
+                return {
+                    $implicit: rowData.detailsData,
+                    templateID: 'detailRow-' + rowID,
+                    index: this.dataView.indexOf(rowData)
+                };
+            }
+        }
         return {
             $implicit: rowData,
             index: rowIndex,
             templateID: this.isGroupByRecord(rowData) ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow'
         };
     }
+
+     /**
+     * @hidden
+     */
+    public viewCreatedHandler(args) {
+        if (args.context.templateID.indexOf('detailRow') !== -1) {
+            this.childDetailTemplates.set(args.context.$implicit, args);
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    public viewMovedHandler(args) {
+        if (args.context.templateID.indexOf('detailRow') !== -1) {
+            // view was moved, update owner in cache
+            const key = args.context.$implicit;
+            const cachedData = this.childDetailTemplates.get(key);
+            cachedData.owner = args.owner;
+        }
+    }
+
 
     /**
     * @hidden
@@ -943,6 +1207,19 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this._setGroupColsVisibility(this.hideGroupedColumns);
         }
         this._setupNavigationService();
+    }
+    public ngAfterViewInit() {
+        super.ngAfterViewInit();
+        this.verticalScrollContainer.onBeforeViewDestroyed.pipe(takeUntil(this.destroy$)).subscribe((view) => {
+            const rowData = view.context.$implicit;
+            if (this.isDetailRecord(rowData)) {
+                const cachedData = this.childDetailTemplates.get(rowData.detailsData);
+                if (cachedData) {
+                    const tmlpOutlet = cachedData.owner;
+                    tmlpOutlet._viewContainerRef.detach(0);
+                }
+            }
+        });
     }
 
     public ngOnInit() {

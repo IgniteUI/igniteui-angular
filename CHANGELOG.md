@@ -17,6 +17,7 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - Pinning columns is no longer automatically prevented when the pinning area would exceed the size of the grid.
+    - `igxGridState` directive added to make it easy for developers to save and restore the grid state. The directive exposes the `getState` and `setState` methods to save/restore the state and an `options` input property to exclude features.
 - `IgxCarousel`:
     - **Breaking Changes** -The carousel slides are no longer array, they are changed to QueryList.
     - **Behavioural change** - When slides are more than 5, a label is shown instead of the indicators. The count limit of visible indicators can be changed with the input `maximumIndicatorsCount`
@@ -24,6 +25,7 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`:
+    - Master-Detail visualization added for `igxGrid`. Users may now define templates that show additional context for rows when expanded. For more information, please take a look at the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/master_detail.html).
     - `sortStrategy` input is added, which can be used to set a global sorting strategy for the entire grid.
         (**NOTE**: The grid's `sortStrategy` is of different type compared to the column's `sortStrategy`.)
     - `NoopSortingStrategy` is added, which can be used to disable the default sorting of the grid by assigning its instance to the grid's `sortStrategy` input. (Useful for remote sorting.)
@@ -56,18 +58,29 @@ All notable changes for each version of this project will be documented in this 
         </ng-template>
     </igx-grid>
     ```
-    - `IgxCarousel`:
-        - `keyboardSupport` input is added, which can be used to enable and disable keyboard navigation
-        - `gesturesSupport` input is added, which can be used to enable and disable gestures
-        - `maximumIndicatorsCount` input is added, which can be used to set the number of visible indicators
-        - `indicatorsOrientation` input is added, which can be used to set the position of indicators it can be top or bottom
-        - `animationType` input is added, which can be used to set animation when changing slides
-        - `indicatorTemplate` directive is added, which can be used to provide a custom indicator for carousel. If this property is not provided, a default indicator template will be used instead.
-        - `nextButtonTemplate` directive is added, which is used to provide a custom next button template. If not provided, a default next button is used.
-        - `prevButtonTemplate` directive is added, which is used to provide a custom previous button template. If not provided, a default previous button is used.
+- `IgxSlider`:
+    - `primaryTicks` input was added. Which sets the number of primary ticks
+    - `secondaryTicks` input was added. Which sets the number of secondary ticks.
+    - `showTicks` input was added. Which show/hide all slider ticks and tick labels.
+    - `primaryTickLabels` input was added. Which shows/hides all primary tick labels.
+    - `secondaryTickLabels` input was added. Shows/hides all secondary tick labels.
+    - `ticksOrientation` input was added. Allows to change ticks orientation to top|bottom|mirror.
+    - `tickLabelsOrientation` input was added. Allows you to change the rotation of all tick labels from horizontal to vertical(toptobottom, bottomtotop).
+    - `igxSliderTickLabel` directive has been introduced. Allows you to set a custom template for all tick labels.
+   
+- `IgxCarousel`:
+    - `keyboardSupport` input is added, which can be used to enable and disable keyboard navigation
+    - `gesturesSupport` input is added, which can be used to enable and disable gestures
+    - `maximumIndicatorsCount` input is added, which can be used to set the number of visible indicators
+    - `indicatorsOrientation` input is added, which can be used to set the position of indicators it can be top or bottom
+    - `animationType` input is added, which can be used to set animation when changing slides
+    - `indicatorTemplate` directive is added, which can be used to provide a custom indicator for carousel. If this property is not provided, a default indicator template will be used instead.
+    - `nextButtonTemplate` directive is added, which is used to provide a custom next button template. If not provided, a default next button is used.
+    - `prevButtonTemplate` directive is added, which is used to provide a custom previous button template. If not provided, a default previous button is used.
 
 - `IgxSelect`: 
     - adding `IgxSelectHeaderDirective` and `IgxSelectFooterDirective`. These can be used to provide a custom header, respectively footer templates for the `igxSelect` drop-down list. If there are no templates marked with these directives - no default templates will be used so the drop-down list will not have header nor footer.
+
 
 ## 8.2.6
 

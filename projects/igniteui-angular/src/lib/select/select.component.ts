@@ -131,7 +131,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         }
         this._value = v;
         this.setSelection(this.items.find(x => x.value === this.value));
-        this.cdr.detectChanges();
     }
     /**
      * An @Input property that sets input placeholder.

@@ -184,7 +184,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
 
     private focusCellUpFromLayout(rowElement: HTMLElement, selectedNode: ISelectionNode) {
-        const isGroupRow = rowElement.tagName.toLowerCase() === 'igx-grid-groupby-row';
+        const isNonDataRow = rowElement.tagName.toLowerCase() === 'igx-grid-groupby-row' || this._isDetailRecordAt(selectedNode.row);
         const currentRowStart = selectedNode.layout ?  selectedNode.layout.rowStart : 1;
         const currentColStart = this.applyNavigationCell(selectedNode.layout ? selectedNode.layout.colStart : 1,
             currentRowStart,
@@ -197,7 +197,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             (c.rowEnd === currentRowStart || c.rowStart + c.gridRowSpan === currentRowStart)  &&
             c.colStart <= currentColStart &&
             (currentColStart < c.colEnd || currentColStart < c.colStart + c.gridColumnSpan));
-        if (isGroupRow || !upperElementColumn) {
+        if (isNonDataRow || !upperElementColumn) {
             // no prev row in current row layout, go to next row last rowstart
             const layoutRowEnd = this.grid.multiRowLayoutRowSize + 1;
             upperElementColumn = columnLayout.children.find(c =>
@@ -218,6 +218,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 this._focusCell(upperElementColumn.cells.find((c) => c.rowIndex === prevRow.index).nativeElement);
             } else if (prevRow) {
                 prevRow.nativeElement.focus({ preventScroll: true });
+            } else {
+                const prevElem = this.getRowByIndex(rowIndex, '') as any;
+                prevElem.focus({ preventScroll: true });
             }
         };
         if (this.shouldPerformVerticalScroll(rowIndex, upperElementColumn.visibleIndex)) {
@@ -229,7 +232,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
 
     private focusCellDownFromLayout(rowElement: HTMLElement, selectedNode: ISelectionNode) {
-        const isGroupRow = rowElement.tagName.toLowerCase() === 'igx-grid-groupby-row';
+        const isNonDataRow = rowElement.tagName.toLowerCase() === 'igx-grid-groupby-row' || this._isDetailRecordAt(selectedNode.row);
         const parentIndex = selectedNode.column;
         const columnLayout = this.grid.columns.find( x => x.columnLayout && x.visibleIndex === parentIndex);
         const currentRowEnd = selectedNode.layout ? selectedNode.layout.rowEnd || selectedNode.layout.rowStart + 1 : 2;
@@ -241,7 +244,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         let nextElementColumn = columnLayout.children.find(c => c.rowStart === currentRowEnd &&
             c.colStart <= currentColStart &&
             (currentColStart < c.colEnd || currentColStart < c.colStart + c.gridColumnSpan));
-        if (isGroupRow || !nextElementColumn) {
+        if (isNonDataRow || !nextElementColumn) {
             // no next row in current row layout, go to next row first rowstart
             nextElementColumn = columnLayout.children.find(c => c.rowStart === 1 &&
                 c.colStart <= currentColStart &&
@@ -260,6 +263,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 this._focusCell(nextElementColumn.cells.find((c) => c.rowIndex === nextRow.index).nativeElement);
             } else if (nextRow) {
                 nextRow.nativeElement.focus({ preventScroll: true });
+            } else {
+                const nextElem = this.getRowByIndex(rowIndex, '') as any;
+                nextElem.focus({ preventScroll: true });
             }
         };
         if (this.shouldPerformVerticalScroll(rowIndex, nextElementColumn.visibleIndex)) {
@@ -447,7 +453,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
 
     public shouldPerformVerticalScroll(rowIndex: number, visibleColumnIndex: number): boolean {
-        if (this._isGroupRecordAt(rowIndex)) {
+        if (this._isGroupRecordAt(rowIndex) || this._isDetailRecordAt(rowIndex)) {
             return super.shouldPerformVerticalScroll(rowIndex, visibleColumnIndex);
        }
         if (!super.shouldPerformVerticalScroll(rowIndex, visibleColumnIndex)) {return false; }
@@ -472,9 +478,13 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const record = this.grid.dataView[rowIndex];
         return record.records && record.records.length;
     }
+    private _isDetailRecordAt(rowIndex: number) {
+        const record = this.grid.dataView[rowIndex];
+        return this.grid.isDetailRecord(record);
+    }
 
     public performVerticalScrollToCell(rowIndex: number, visibleColumnIndex: number, cb?: () => void) {
-        if (this._isGroupRecordAt(rowIndex)) {
+        if (this._isGroupRecordAt(rowIndex) || this._isDetailRecordAt(rowIndex)) {
             return super.performVerticalScrollToCell(rowIndex, visibleColumnIndex, cb);
         }
         const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;

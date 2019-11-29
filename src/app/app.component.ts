@@ -137,6 +137,10 @@ export class AppComponent implements OnInit {
             link: '/grid',
             icon: 'view_column',
             name: 'Grid'
+        }, {
+            link: '/gridMasterDetail',
+            icon: 'view_column',
+            name: 'Grid Master Detail'
         },
         {
             link: '/gridCellEditing',
@@ -272,6 +276,11 @@ export class AppComponent implements OnInit {
             link: '/gridExternalFiltering',
             icon: 'view_column',
             name: 'Grid External Filtering'
+        },
+        {
+            link: '/gridState',
+            icon: 'view_column',
+            name: 'Grid State Persistence'
         },
         {
             link: '/icon',
