@@ -688,6 +688,16 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         }
     }
 
+    /**
+     * @hidden
+     */
+    public trackChanges(index, rec) {
+        if (rec.detailsData !== undefined) {
+            return rec.detailsData;
+        }
+        return rec;
+    }
+
     public detailsKeyboardHandler(event, rowIndex, container) {
         const colIndex = this.selectionService.activeElement ? this.selectionService.activeElement.column : 0;
         const shift = event.shiftKey;
