@@ -14,7 +14,7 @@ describe('IgxRadioGroupDirective', () => {
                 RadioGroupComponent,
                 RadioGroupWithModelComponent,
                 RadioGroupReactiveFormsComponent,
-                RadioGroupDeepProjection
+                RadioGroupDeepProjectionComponent
             ],
             imports: [
                 IgxRadioModule,
@@ -185,7 +185,7 @@ describe('IgxRadioGroupDirective', () => {
     }));
 
     it('Properly initialize selection when value is falsy in deep content projection', fakeAsync(() => {
-        const fixture = TestBed.createComponent(RadioGroupDeepProjection);
+        const fixture = TestBed.createComponent(RadioGroupDeepProjectionComponent);
         fixture.detectChanges();
         tick();
 
@@ -295,7 +295,7 @@ class RadioGroupReactiveFormsComponent {
         </form>
     `
 })
-class RadioGroupDeepProjection {
+class RadioGroupDeepProjectionComponent {
 
     @ViewChild(IgxRadioGroupDirective, { static: true })
     radioGroup: IgxRadioGroupDirective;
