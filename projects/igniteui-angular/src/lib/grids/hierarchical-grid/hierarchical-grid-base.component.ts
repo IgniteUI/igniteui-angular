@@ -9,7 +9,8 @@ import {
     Optional,
     Input,
     ViewChild,
-    TemplateRef
+    TemplateRef,
+    InjectionToken
 } from '@angular/core';
 import { IgxGridBaseComponent, IgxGridTransaction, IGridDataBindable } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
@@ -19,7 +20,7 @@ import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { IgxColumnComponent, IgxColumnGroupComponent } from '../column.component';
 import { IgxSummaryOperand } from '../summaries/grid-summary';
-import { IgxHierarchicalTransactionService, IgxOverlayService } from '../../services/index';
+import { IgxHierarchicalTransactionService, IgxOverlayService, IgxTransactionService, Transaction, State } from '../../services/index';
 import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
@@ -27,13 +28,16 @@ import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-sel
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxColumnResizingService } from '../grid-column-resizing.service';
 
+export const IgxHierarchicalGridTransaction = new InjectionToken<string>('IgxHGridTransaction');
+
+
 export const IgxHierarchicalTransactionServiceFactory = {
     provide: IgxGridTransaction,
     useFactory: hierarchicalTransactionServiceFactory
 };
 
-export function hierarchicalTransactionServiceFactory() {
-    return () => new IgxHierarchicalTransactionService();
+export function hierarchicalTransactionServiceFactory(): IgxTransactionService<Transaction, State> {
+    return new IgxTransactionService();
 }
 
 export interface IPathSegment {
@@ -120,7 +124,7 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
         crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
-        @Inject(IgxGridTransaction) protected transactionFactory: any,
+        @Inject(IgxGridTransaction) protected transactionFactory: IgxTransactionService<Transaction, State>,
         elementRef: ElementRef,
         zone: NgZone,
         @Inject(DOCUMENT) public document,
@@ -138,7 +142,7 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
             crudService,
             colResizingService,
             gridAPI,
-            typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
+            transactionFactory,
             elementRef,
             zone,
             document,

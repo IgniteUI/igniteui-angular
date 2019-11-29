@@ -16,7 +16,14 @@ import {
     OnDestroy,
     DoCheck,
     EventEmitter,
-    Output
+    Output,
+    Inject,
+    ChangeDetectorRef,
+    ComponentFactoryResolver,
+    IterableDiffers,
+    ViewContainerRef,
+    Optional,
+    NgZone
 } from '@angular/core';
 import { IgxGridBaseComponent } from '../grid-base.component';
 import { GridBaseAPIService } from '../api.service';
@@ -24,8 +31,8 @@ import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
-import { DisplayDensity } from '../../core/displayDensity';
-import { IGridDataBindable, IgxColumnComponent, } from '../grid/index';
+import { DisplayDensity, DisplayDensityToken, IDisplayDensityOptions } from '../../core/displayDensity';
+import { IGridDataBindable, IgxColumnComponent, IgxGridTransaction, } from '../grid/index';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseComponent } from './hierarchical-grid-base.component';
@@ -33,6 +40,9 @@ import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
+import { IgxOverlayService, IgxTransactionService, Transaction, State } from '../../services';
+import { DOCUMENT } from '@angular/common';
+import { IgxColumnResizingService } from '../grid-column-resizing.service';
 
 let NEXT_ID = 0;
 
@@ -297,7 +307,55 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     private scrollTop = 0;
     private scrollLeft = 0;
 
-    protected _transactions: any;
+   // protected _transactions: any;
+
+    constructor(
+        public selectionService: IgxGridSelectionService,
+        crudService: IgxGridCRUDService,
+        public colResizingService: IgxColumnResizingService,
+        gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
+        @Inject(IgxGridTransaction) protected transactionFactory: IgxTransactionService<Transaction, State>,
+        elementRef: ElementRef,
+        zone: NgZone,
+        @Inject(DOCUMENT) public document,
+        cdr: ChangeDetectorRef,
+        resolver: ComponentFactoryResolver,
+        differs: IterableDiffers,
+        viewRef: ViewContainerRef,
+        navigation: IgxHierarchicalGridNavigationService,
+        filteringService: IgxFilteringService,
+        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
+        public summaryService: IgxGridSummaryService,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        super(
+            selectionService,
+            crudService,
+            colResizingService,
+            gridAPI,
+            transactionFactory,
+            elementRef,
+            zone,
+            document,
+            cdr,
+            resolver,
+            differs,
+            viewRef,
+            navigation,
+            filteringService,
+            overlayService,
+            summaryService,
+            _displayDensityOptions);
+        // this._transactions = 
+        this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
+    }
+
+    /**	
+     * @hidden	
+     */
+    ngOnInit() {
+       // this._transactions = this.parentIsland ? this.parentIsland.transactions : this._transactions;
+       super.ngOnInit();
+    }
 
     public ngDoCheck() {
         if (this._cdrRequestRepaint && !this._init) {

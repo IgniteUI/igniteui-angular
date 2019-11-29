@@ -36,9 +36,13 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
     }));
 
     beforeEach(async(() => {
+        console.log('A');
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
+        console.log('B');
         fixture.detectChanges();
+        console.log('C');
         hierarchicalGrid = fixture.componentInstance.hgrid;
+        debugger;
     }));
 
     describe('MCH', () => {
@@ -127,22 +131,29 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
     });
 
     describe('Updating', () => {
-        it(`should have separate instances of updating service for
-        parent and children and the same for children of the same island`, fakeAsync(/** row toggle rAF */() => {
+        fit('should have separate instances of updating service for parent and children and the same for children of the same island', fakeAsync(() => {
+            console.log(0);
             const firstLayoutInstances: IgxHierarchicalGridComponent[] = [];
+            console.log(1);
             hierarchicalGrid.childLayoutList.first.onGridCreated.pipe(take(2)).subscribe((args) => {
                 firstLayoutInstances.push(args.grid);
             });
+            console.log(2);
             // expand 1st row
             hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0].click();
             fixture.detectChanges();
+            console.log(3);
             // expand 2nd row
             hierarchicalGrid.dataRowList.toArray()[1].nativeElement.children[0].click();
             fixture.detectChanges();
+            console.log(4);
             // test instances
             expect(firstLayoutInstances.length).toEqual(2);
+            console.log(5);
             expect(hierarchicalGrid.transactions).not.toEqual(firstLayoutInstances[0].transactions);
+            console.log(6);
             expect(firstLayoutInstances[0].transactions).toEqual(firstLayoutInstances[1].transactions);
+            console.log(7);
         }));
 
         it('should contain all transactions for a row island', fakeAsync(/** row toggle rAF */() => {
