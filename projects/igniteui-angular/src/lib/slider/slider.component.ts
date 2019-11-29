@@ -93,7 +93,6 @@ export class IgxSliderComponent implements
     private _destroyer$ = new Subject<boolean>();
     private _indicatorsDestroyer$ = new Subject<boolean>();
     private _indicatorsTimer: Observable<any>;
-    private _onTypeChanged: Subject<SliderType> = new Subject();
 
     private _onChangeCallback: (_: any) => void = noop;
     private _onTouchedCallback: () => void = noop;
@@ -258,9 +257,6 @@ export class IgxSliderComponent implements
         if (this._hasViewInit) {
             this.updateTrack();
         }
-
-        this._cdr.detectChanges();
-        this._onTypeChanged.next(type);
     }
 
     /**
@@ -291,7 +287,7 @@ export class IgxSliderComponent implements
         this._pMin = this.valueToFraction(this.lowerBound, 0, 1);
 
         this.stepDistance = this.calculateStepDistance();
-        this.positionHandlesAndUpdateTrack();
+        this.positionHandlersAndUpdateTrack();
 
         if (this._hasViewInit) {
             this.setTickInterval();
@@ -449,7 +445,7 @@ export class IgxSliderComponent implements
         this._pMin = 0;
         // Recalculate step distance.
         this.stepDistance = this.calculateStepDistance();
-        this.positionHandlesAndUpdateTrack();
+        this.positionHandlersAndUpdateTrack();
         if (this._hasViewInit) {
             this.setTickInterval();
         }
@@ -495,7 +491,7 @@ export class IgxSliderComponent implements
         this._pMax = 1;
         // recalculate step distance.
         this.stepDistance = this.calculateStepDistance();
-        this.positionHandlesAndUpdateTrack();
+        this.positionHandlersAndUpdateTrack();
         if (this._hasViewInit) {
             this.setTickInterval();
         }
@@ -536,7 +532,7 @@ export class IgxSliderComponent implements
 
         // Refresh min travel zone.
         this._pMin = this.valueToFraction(this._lowerBound, 0, 1);
-        this.positionHandlesAndUpdateTrack();
+        this.positionHandlersAndUpdateTrack();
     }
 
     /**
@@ -573,7 +569,7 @@ export class IgxSliderComponent implements
         this._upperBound = this.valueInRange(value, this.minValue, this.maxValue);
         // Refresh time travel zone.
         this._pMax = this.valueToFraction(this._upperBound, 0, 1);
-        this.positionHandlesAndUpdateTrack();
+        this.positionHandlersAndUpdateTrack();
     }
 
     /**
@@ -627,7 +623,7 @@ export class IgxSliderComponent implements
         this._onChangeCallback(this.value);
 
         if (this._hasViewInit) {
-            this.positionHandlesAndUpdateTrack();
+            this.positionHandlersAndUpdateTrack();
         }
     }
 
@@ -679,7 +675,7 @@ export class IgxSliderComponent implements
      * ```
      */
     public set secondaryTicks(val: number) {
-        if (val <= 1 ) {
+        if (val < 1 ) {
             return;
         }
 
@@ -993,28 +989,23 @@ export class IgxSliderComponent implements
      */
     public ngAfterViewInit() {
         this._hasViewInit = true;
-        this.positionHandlesAndUpdateTrack();
+        this.positionHandlersAndUpdateTrack();
         this.setTickInterval();
         this.changeThumbFocusableState(this.disabled);
 
         this.subscribeTo(this.thumbFrom, this.thumbChanged.bind(this));
         this.subscribeTo(this.thumbTo, this.thumbChanged.bind(this));
 
-        // Implementing a workaround in regards of the following bug: https://github.com/angular/angular/issues/30088
-        // this.thumbs.changes.pipe(takeUntil(this._destroyer$)).subscribe(change => {
-        //     const thumbFrom = change.find((thumb: IgxSliderThumbComponent) => thumb.type === SliderHandle.FROM);
-        //     const labelFrom = this.labelRefs.find((label: IgxThumbLabelComponent) => label.type === SliderHandle.FROM);
-        //     this.positionHandle(thumbFrom, labelFrom, this.lowerValue);
-        //     // this.subscribeTo(thumbFrom, this.thumbChanged.bind(this));
-        //     this.changeThumbFocusableState(this.disabled);
-        // });
-
-        this._onTypeChanged.pipe(takeUntil(this._destroyer$)).subscribe((type: SliderType) => {
-            const thumbFrom = this.thumbs.find((thumb: IgxSliderThumbComponent) => thumb.type === SliderHandle.FROM);
-            const labelFrom = this.labelRefs.find((label: IgxThumbLabelComponent) => label.type === SliderHandle.FROM);
-            this.positionHandle(thumbFrom, labelFrom, this.lowerValue);
+        this.thumbs.changes.pipe(takeUntil(this._destroyer$)).subscribe(change => {
+            const thumbFrom = change.find((thumb: IgxSliderThumbComponent) => thumb.type === SliderHandle.FROM);
+            this.positionHandler(thumbFrom, null, this.lowerValue);
             this.subscribeTo(thumbFrom, this.thumbChanged.bind(this));
             this.changeThumbFocusableState(this.disabled);
+        });
+
+        this.labelRefs.changes.pipe(takeUntil(this._destroyer$)).subscribe(change => {
+            const labelFrom = this.labelRefs.find((label: IgxThumbLabelComponent) => label.type === SliderHandle.FROM);
+            this.positionHandler(null, labelFrom, this.lowerValue);
         });
     }
 
@@ -1079,9 +1070,9 @@ export class IgxSliderComponent implements
         // Update To/From Values
         this.onPan.next(mouseX);
 
-        // Finally do positionHandlesAndUpdateTrack the DOM
+        // Finally do positionHandlersAndUpdateTrack the DOM
         // based on data values
-        this.positionHandlesAndUpdateTrack();
+        this.positionHandlersAndUpdateTrack();
         this._onTouchedCallback();
     }
 
@@ -1209,7 +1200,7 @@ export class IgxSliderComponent implements
         )` : interval;
     }
 
-    private positionHandle(thumbHandle: ElementRef, labelHandle: ElementRef, position: number) {
+    private positionHandler(thumbHandle: ElementRef, labelHandle: ElementRef, position: number) {
         const positionLeft = `${this.valueToFraction(position) * 100}%`;
 
         if (thumbHandle) {
@@ -1221,12 +1212,12 @@ export class IgxSliderComponent implements
         }
     }
 
-    private positionHandlesAndUpdateTrack() {
+    private positionHandlersAndUpdateTrack() {
         if (!this.isRange) {
-            this.positionHandle(this.thumbTo, this.labelTo, this.value as number);
+            this.positionHandler(this.thumbTo, this.labelTo, this.value as number);
         } else {
-            this.positionHandle(this.thumbTo, this.labelTo, (this.value as IRangeSliderValue).upper);
-            this.positionHandle(this.thumbFrom, this.labelFrom, (this.value as IRangeSliderValue).lower);
+            this.positionHandler(this.thumbTo, this.labelTo, (this.value as IRangeSliderValue).upper);
+            this.positionHandler(this.thumbFrom, this.labelFrom, (this.value as IRangeSliderValue).lower);
         }
 
         if (this._hasViewInit) {
