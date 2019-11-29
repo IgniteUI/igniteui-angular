@@ -598,6 +598,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         this.expansionStatesChange.emit(this._expansionStates);
         if (this.gridAPI.grid) {
             this.cdr.detectChanges();
+            this._focusActiveCell();
         }
     }
 
@@ -685,6 +686,16 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 (activeElem as any).focus();
             });
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public trackChanges(index, rec) {
+        if (rec.detailsData !== undefined) {
+            return rec.detailsData;
+        }
+        return rec;
     }
 
     public detailsKeyboardHandler(event, rowIndex, container) {
