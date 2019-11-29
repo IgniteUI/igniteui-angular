@@ -11,8 +11,8 @@
     [attr.aria-label]="ariaLabel"
     (click)="_onRadioClick($event)"
     (change)="_onRadioChange($event)"
-    (focus)="onFocus($event)"
-    (blur)="onBlur($event)" />
+    (focus)="onFocus()"
+    (blur)="onBlur()" />
 
 <label #nativeLabel class="igx-radio__composite" igxRipple
     igxRippleTarget=".igx-radio__ripple"

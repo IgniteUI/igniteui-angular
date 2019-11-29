@@ -4,6 +4,44 @@
     </app-page-header>
     <section class="sample-content">
         <article class="sample-column">
+            <igx-radio-group #group="igxRadioGroup" [(ngModel)]="initial">
+                <div igxLayout>
+                    <igx-card class="promotion" layout="justify" *ngFor="let opt of options"
+                        [type]="group.value != opt ? 'outlined' : 'default'"
+                        [class.promotion-selected]="group.value == opt">
+                        <igx-card-header>
+                            <h6>Reserve your dream vacation at {{ opt }}</h6>
+                        </igx-card-header>
+                        <igx-divider></igx-divider>
+                        <igx-card-content>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                                labore et dolore magna
+                                aliqua. Elit pellentesque habitant morbi tristique senectus et netus et. Aliquet bibendum
+                                enim facilisis gravida. Rutrum
+                                tellus pellentesque eu tincidunt tortor aliquam nulla. Amet consectetur adipiscing elit
+                                pellentesque habitant morbi
+                                tristique. Massa placerat duis ultricies lacus sed. In ornare quam viverra orci sagittis.
+                                Pulvinar elementum integer
+                                enim neque volutpat ac tincidunt. At in tellus integer feugiat scelerisque. Adipiscing vitae
+                                proin sagittis nisl rhoncus
+                                mattis rhoncus urna neque. Proin sagittis nisl rhoncus mattis rhoncus urna neque viverra.
+                            </p>
+                        </igx-card-content>
+                        <igx-divider></igx-divider>
+                        <igx-card-actions layout="justify">
+                            <button igxRipple igxButton="outlined" [disabled]="group.value != opt">Reserve item
+                                {{ opt }}</button>
+                            <igx-radio [value]="opt">Pick choice {{ opt }}</igx-radio>
+                        </igx-card-actions>
+                    </igx-card>
+                </div>
+            </igx-radio-group>
+            <p>Selected: {{ initial }}</p>
+        </article>
+    </section>
+    <section class="sample-content">
+        <article class="sample-column">
             <h4 class="sample-title">Radio group without data model</h4>
             <igx-radio-group #radioGroupZZ name="radiogroupZZ" value="Bar" required="true" (change)="onRadioChange($event)">
                 <igx-radio class="radio-sample" *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}">
@@ -48,15 +86,11 @@
                     <input formControlName="name">
                 </label>
                 <br>
-                <!-- TODO: igx-radio-group is not working properly when hosted in label element
-                When the radio button label is clicked a click event on the first item is triggered -->
-                <!-- <label>Favorite Season -->
                     <igx-radio-group formControlName="favoriteSeason" name="radioGroupReactive">
                         <igx-radio class="radio-sample" *ngFor="let item of seasons" value="{{item}}">
                             {{item}}
                         </igx-radio>
                     </igx-radio-group>
-                <!-- </label> -->
                 <br>
                 <button igxButton type="button" (click)="onUpdateBtnClick($event)" style="width: 200px">Update model</button>
             </form>
