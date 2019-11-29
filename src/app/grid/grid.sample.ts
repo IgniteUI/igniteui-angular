@@ -7,7 +7,7 @@ import {
     IgxToastComponent,
     SortingDirection,
     CsvFileTypes,
-    IgxBaseExporterDirective,
+    IgxBaseExporter,
     IgxCsvExporterOptions,
     IgxCsvExporterService,
     IgxExcelExporterOptions,
@@ -250,7 +250,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
         this.getExporterService().exportData(this.grid3.data, this.getOptions('Data'));
     }
 
-    private getExporterService(): IgxBaseExporterDirective {
+    private getExporterService(): IgxBaseExporter {
         return this.exportFormat === 'XLSX' ? this.excelExporterService : this.csvExporterService;
     }
 
