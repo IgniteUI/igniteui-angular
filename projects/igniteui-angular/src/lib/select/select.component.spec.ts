@@ -2475,23 +2475,23 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             tick();
         }));
-        it('Should NOT throw console Warning for "Expression changed after it was checked"', fakeAsync(() => {
-            const firstSelect = fixture.componentInstance.selectComponents.first as IgxSelectComponent;
-            spyOn(console, 'warn');
+        it('Should NOT throw console Warning for "Expression changed after it was checked"', () => {
+            let selectCDR = fixture.componentInstance.select;
 
-            expect(firstSelect).toBeDefined();
-            expect(firstSelect.value).toBe('ID');
-            expect(console.warn).toHaveBeenCalledTimes(0);
+            expect(selectCDR).toBeDefined();
+            expect(selectCDR.value).toBe('ID');
 
             fixture.componentInstance.render = !fixture.componentInstance.render;
             fixture.detectChanges();
-            tick();
+            selectCDR = fixture.componentInstance.select;
+            expect(selectCDR).toBeUndefined();
 
-            const lastSelect = fixture.componentInstance.selectComponents.last as IgxSelectComponent;
-            expect(lastSelect).toBeDefined();
-            expect(lastSelect.value).toBe('CompanyName');
-            expect(console.warn).toHaveBeenCalledTimes(0);
-        }));
+            fixture.componentInstance.render = !fixture.componentInstance.render;
+            fixture.detectChanges();
+            selectCDR = fixture.componentInstance.select;
+            expect(selectCDR).toBeDefined();
+            expect(selectCDR.value).toBe('ID');
+        });
     });
 
 @Component({
@@ -2822,44 +2822,26 @@ class IgxSelectHeaderFooterComponent implements OnInit {
 
     @Component({
         template: `
-    <h4>*ngIf test select for 'expression changed...console Warning'</h4>
-    <div *ngIf="render">
-        <igx-select #select value="ID">
-            <label igxLabel>Column</label>
-            <igx-select-item *ngFor="let column of columns" [value]="column.field">
-                {{column.field}}
-            </igx-select-item>
-        </igx-select>
-    </div>
-    <button igxButton (click)="render=!render">toggle render *ngIF</button>
-    <div *ngIf="!render">
-        <igx-select #select value="CompanyName">
-            <label igxLabel>Column</label>
-            <igx-select-item *ngFor="let column of columns" [value]="column.field">
-                {{column.field}}
-            </igx-select-item>
-        </igx-select>
-    </div>
-`
+            <h4>*ngIf test select for 'expression changed...console Warning'</h4>
+            <div *ngIf="render">
+                <igx-select #selectCDR value="ID">
+                    <label igxLabel>Column</label>
+                    <igx-select-item *ngFor="let column of columns" [value]="column.field">
+                        {{column.field}}
+                    </igx-select-item>
+                </igx-select>
+            </div>
+        `
     })
     class IgxSelectCDRComponent {
-        @ViewChildren(IgxSelectComponent) public selectComponents: QueryList<IgxSelectComponent>;
+        @ViewChild('selectCDR', { read: IgxSelectComponent, static: false })
+        public select: IgxSelectComponent;
 
         public render = true;
         public columns: Array<any> = [
-            { field: 'ID', width: 80, resizable: true, movable: true, type: 'string' },
-            { field: 'CompanyName', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'ContactName', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'Employees', width: 150, resizable: true, movable: true, type: 'number' },
-            { field: 'ContactTitle', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'DateCreated', width: 150, resizable: true, movable: true, type: 'date' },
-            { field: 'Address', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'City', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'Region', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'PostalCode', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'Phone', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'Fax', width: 150, resizable: true, movable: true, type: 'string' },
-            { field: 'Contract', width: 150, resizable: true, movable: true, type: 'boolean' }
+            { field: 'ID',  type: 'string' },
+            { field: 'CompanyName', type: 'string' },
+            { field: 'ContactName', type: 'string' }
         ];
     }
 });
