@@ -6044,4 +6044,16 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             advancedFilteringDialog.closeDialog();
         }
     }
+
+   protected _focusActiveCell() {
+    // persist focused cell
+    const isVirtualized = !this.verticalScrollContainer.dc.instance.notVirtual;
+    const el = this.selectionService.activeElement;
+    if (isVirtualized && el) {
+        const cell = this.gridAPI.get_cell_by_visible_index(el.row, el.column);
+        if (cell) {
+            cell.nativeElement.focus();
+        }
+    }
+}
 }
