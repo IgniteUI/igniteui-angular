@@ -980,7 +980,7 @@ export class IgxSliderComponent implements
         this._resizeNotify.pipe(takeUntil(this._destroyer$)).subscribe(() => {
             this._ngZone.runTask(() => {
                 this.stepDistance = this.calculateStepDistance();
-            })
+            });
         });
     }
 
@@ -1017,7 +1017,7 @@ export class IgxSliderComponent implements
         });
 
         this._ngZone.runOutsideAngular(() => {
-            this._sliderObserver = new ResizeObserver(() => { this._resizeNotify.next() });
+            this._sliderObserver = new ResizeObserver(() => { this._resizeNotify.next(); });
             this._sliderObserver.observe(this._el.nativeElement);
         });
     }
