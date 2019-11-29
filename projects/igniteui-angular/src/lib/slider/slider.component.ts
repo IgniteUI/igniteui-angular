@@ -10,7 +10,6 @@ import {
     ViewChildren,
     QueryList,
     ChangeDetectorRef,
-    AfterContentChecked,
     NgZone,
     OnChanges
 } from '@angular/core';
@@ -18,7 +17,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/f
 import { EditorProvider } from '../core/edit-provider';
 import { IgxSliderThumbComponent } from './thumb/thumb-slider.component';
 import { Subject, merge, Observable, timer } from 'rxjs';
-import { takeUntil, retry } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { SliderHandle,
     IgxThumbFromTemplateDirective,
     IgxThumbToTemplateDirective,
@@ -32,6 +31,7 @@ import { SliderHandle,
 import { IgxThumbLabelComponent } from './label/thumb-label.component';
 import { IgxTicksComponent } from './ticks/ticks.component';
 import { IgxTickLabelsPipe } from './ticks/tick.pipe';
+import ResizeObserver from 'resize-observer-polyfill';
 
 const noop = () => {
 };
@@ -63,7 +63,6 @@ export class IgxSliderComponent implements
     EditorProvider,
     OnInit,
     AfterViewInit,
-    AfterContentChecked,
     OnChanges,
     OnDestroy {
 
@@ -93,6 +92,8 @@ export class IgxSliderComponent implements
     private _destroyer$ = new Subject<boolean>();
     private _indicatorsDestroyer$ = new Subject<boolean>();
     private _indicatorsTimer: Observable<any>;
+    private _resizeNotify = new Subject();
+    private _sliderObserver: ResizeObserver;
 
     private _onChangeCallback: (_: any) => void = noop;
     private _onTouchedCallback: () => void = noop;
@@ -323,8 +324,8 @@ export class IgxSliderComponent implements
     public set step(step: number) {
         this._step = step;
 
+        this.stepDistance = this.calculateStepDistance();
         if (this._hasViewInit) {
-            this.stepDistance = this.calculateStepDistance();
             this.normalizeByStep(this.value);
             this.setTickInterval();
         }
@@ -759,7 +760,8 @@ export class IgxSliderComponent implements
     constructor(
         private renderer: Renderer2,
         private _el: ElementRef,
-        private _cdr: ChangeDetectorRef) { }
+        private _cdr: ChangeDetectorRef,
+        private _ngZone: NgZone) { }
 
     /**
      * @hidden
@@ -974,6 +976,12 @@ export class IgxSliderComponent implements
         // Set track travel zone
         this._pMin = this.valueToFraction(this.lowerBound) || 0;
         this._pMax = this.valueToFraction(this.upperBound) || 1;
+
+        this._resizeNotify.pipe(takeUntil(this._destroyer$)).subscribe(() => {
+            this._ngZone.runTask(() => {
+                this.stepDistance = this.calculateStepDistance();
+            })
+        });
     }
 
     public ngOnChanges(changes) {
@@ -1007,14 +1015,11 @@ export class IgxSliderComponent implements
             const labelFrom = this.labelRefs.find((label: IgxThumbLabelComponent) => label.type === SliderHandle.FROM);
             this.positionHandler(null, labelFrom, this.lowerValue);
         });
-    }
 
-    /**
-     * @hidden
-     */
-    public ngAfterContentChecked() {
-        // Calculates the distance between every step in pixels.
-        this.stepDistance = this.calculateStepDistance();
+        this._ngZone.runOutsideAngular(() => {
+            this._sliderObserver = new ResizeObserver(() => { this._resizeNotify.next() });
+            this._sliderObserver.observe(this._el.nativeElement);
+        });
     }
 
     /**
@@ -1026,6 +1031,10 @@ export class IgxSliderComponent implements
 
         this._indicatorsDestroyer$.next(true);
         this._indicatorsDestroyer$.complete();
+
+        if (this._sliderObserver) {
+            this._sliderObserver.disconnect();
+        }
     }
 
     /**
