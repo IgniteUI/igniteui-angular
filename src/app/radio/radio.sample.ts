@@ -22,6 +22,9 @@ export class RadioSampleComponent implements AfterContentInit {
 
     selectedValue: any;
 
+    options = [0, 1, 2, 3, 4];
+    initial = this.options[0];
+
     seasons = [
         'Winter',
         'Spring',
