@@ -401,7 +401,9 @@ export class IgxGridNavigationService {
             verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
             const rowIndex = this.grid.dataView.length - 1;
             const row = this.grid.nativeElement.querySelector(`[data-rowindex="${rowIndex}"]`) as HTMLElement;
-            if (row) {
+            const isRowTarget = row.tagName.toLowerCase() === 'igx-grid-groupby-row' ||
+            this.grid.isDetailRecord(this.grid.dataView[rowIndex]);
+            if (row && isRowTarget) {
                 row.focus();
                 return;
             }
@@ -413,7 +415,9 @@ export class IgxGridNavigationService {
                 .pipe(first()).subscribe(() => {
                     const rowIndex = this.grid.dataView.length - 1;
                     const row = this.grid.nativeElement.querySelector(`[data-rowindex="${rowIndex}"]`) as HTMLElement;
-                    if (row && row.tagName.toLowerCase() === 'igx-grid-groupby-row') {
+                    const isRowTarget = row.tagName.toLowerCase() === 'igx-grid-groupby-row' ||
+                    this.grid.isDetailRecord(this.grid.dataView[rowIndex]);
+                    if (row && isRowTarget) {
                         row.focus();
                         return;
                     }
