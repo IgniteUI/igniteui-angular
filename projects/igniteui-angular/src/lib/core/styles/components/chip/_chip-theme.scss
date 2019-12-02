@@ -432,7 +432,8 @@
         align-items: center;
         z-index: 1;
         opacity: 1;
-        transition: opacity 120ms $ease-in-out-quad;
+        width: 18px;
+        transition: opacity 120ms $ease-in-out-quad, width 120ms $ease-in-out-quad;
 
         > * {
             width: 18px !important;
@@ -448,6 +449,7 @@
     %igx-chip__select--hidden {
         opacity: 0;
         z-index: -1;
+        width: 0;
 
         > * {
             width: 0 !important;
