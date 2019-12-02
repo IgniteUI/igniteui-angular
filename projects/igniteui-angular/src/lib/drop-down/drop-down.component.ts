@@ -538,7 +538,9 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         this.onSelection.emit(args);
 
         if (!args.cancel) {
-            if (args.newSelection === null || (args.newSelection instanceof IgxDropDownItemComponent && !args.newSelection.isHeader)) {
+            if (args.newSelection === null ||
+                (args.newSelection.hasOwnProperty('value') && args.newSelection.hasOwnProperty('index') && this.virtDir) ||
+                (args.newSelection instanceof IgxDropDownItemComponent && !args.newSelection.isHeader)) {
                 this.selection.set(this.id, new Set([args.newSelection]));
                 if (!this.virtDir) {
                     if (oldSelection) {
