@@ -401,7 +401,7 @@ export class IgxGridNavigationService {
             verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
             const rowIndex = this.grid.dataView.length - 1;
             const row = this.grid.nativeElement.querySelector(`[data-rowindex="${rowIndex}"]`) as HTMLElement;
-            if (row && row.tagName.toLowerCase() === 'igx-grid-groupby-row') {
+            if (row) {
                 row.focus();
                 return;
             }

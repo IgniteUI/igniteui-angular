@@ -553,14 +553,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     private _expansionStates: Map<any, boolean> = new Map<any, boolean>();
 
-    /**
-     *@hidden
-     */
-    @Output()
-    private _focusIn = new  EventEmitter<any>();
-    @HostListener('focusin') onFocusIn($event) {
-        this._focusIn.emit();
-    }
 
     /**
      * Returns a list of key-value pairs [row ID, expansion state]. Includes only states that differ from the default one.
@@ -580,6 +572,14 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     @Output()
     public expansionStatesChange = new EventEmitter<Map<any, boolean>>();
 
+    /**
+     *@hidden
+     */
+    @Output()
+    private _focusIn = new  EventEmitter<any>();
+    @HostListener('focusin') onFocusIn($event) {
+        this._focusIn.emit();
+    }
 
     /**
      * Sets a list of key-value pairs [row ID, expansion state].
@@ -715,10 +715,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const target = event.target;
         if (key === 'tab') {
             event.stopPropagation();
+            const lastColIndex = this.unpinnedColumns[this.unpinnedColumns.length - 1].visibleIndex;
             if (shift && target === container) {
                 // shift + tab from details to data row
                 event.preventDefault();
-                const lastColIndex = this.unpinnedColumns[this.unpinnedColumns.length - 1].visibleIndex;
                 this.navigateTo(rowIndex - 1, lastColIndex,
                     (args) => args.target.nativeElement.focus());
             } else if (!shift) {
@@ -726,8 +726,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 // if so we have exited the details view and focus should move to the first cell in the next row
                 this._focusIn.pipe(first()).subscribe(() => {
                     if (!container.contains(document.activeElement)) {
-                        this.navigateTo(rowIndex + 1, 0,
-                            (args) => args.target.nativeElement.focus());
+                      this.navigation.performTab(container, {row: rowIndex, column: lastColIndex});
                     }
                 });
             }
