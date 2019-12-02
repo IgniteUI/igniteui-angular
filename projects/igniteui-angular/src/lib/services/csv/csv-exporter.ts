@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
-import { IgxBaseExporterDirective } from '../exporter-common/base-export-service';
+import { IgxBaseExporter } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { CharSeparatedValueData } from './char-separated-value-data';
 import { CsvFileTypes, IgxCsvExporterOptions } from './csv-exporter-options';
@@ -32,7 +32,7 @@ export interface ICsvExportEndedEventArgs extends IBaseEventArgs {
  * ```
  */
 @Injectable()
-export class IgxCsvExporterService extends IgxBaseExporterDirective {
+export class IgxCsvExporterService extends IgxBaseExporter {
     private _stringData: string;
 
     /**
