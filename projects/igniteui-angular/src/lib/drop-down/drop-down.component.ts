@@ -538,17 +538,21 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         this.onSelection.emit(args);
 
         if (!args.cancel) {
-            this.selection.set(this.id, new Set([newSelection]));
-            if (!this.virtDir) {
-                if (oldSelection) {
-                    oldSelection.selected = false;
+            if (args.newSelection === null || (args.newSelection instanceof IgxDropDownItemComponent && !args.newSelection.isHeader)) {
+                this.selection.set(this.id, new Set([args.newSelection]));
+                if (!this.virtDir) {
+                    if (oldSelection) {
+                        oldSelection.selected = false;
+                    }
+                    if (newSelection) {
+                        newSelection.selected = true;
+                    }
                 }
-                if (newSelection) {
-                    newSelection.selected = true;
+                if (event) {
+                    this.toggleDirective.close();
                 }
-            }
-            if (event) {
-                this.toggleDirective.close();
+            } else {
+                throw new Error('Please provide a valid in drop-down item for the selection!');
             }
         }
     }
