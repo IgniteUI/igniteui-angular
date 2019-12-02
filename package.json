@@ -41,7 +41,7 @@
     "build:sassdoc:en:staging": "set NODE_ENV=staging && set SASSDOC_LANG=en && gulp sassdocBuildEN",
     "build:sassdoc:ja:production": "set NODE_ENV=production && set SASSDOC_LANG=jp && gulp sassdocBuildJA --render true",
     "build:sassdoc:ja:staging": "set NODE_ENV=staging && set SASSDOC_LANG=jp && gulp sassdocBuildJA --render true",
-    "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points && gulp copyGitHooks"
+    "postinstall": "gulp copyGitHooks"
   },
   "private": true,
   "dependencies": {
