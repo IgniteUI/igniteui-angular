@@ -792,6 +792,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     private _transformedDate;
     private _onOpen = new EventEmitter<IgxDatePickerComponent>();
     private _onClose = new EventEmitter<IgxDatePickerComponent>();
+    private _focusInput: boolean;
 
     /**
     * @hidden
@@ -1065,6 +1066,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this.calendar.viewDate = date;
         this.closeCalendar();
         this.onSelection.emit(date);
+        this._focusInput = true;
     }
 
     /**
@@ -1261,16 +1263,19 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         }
     }
 
-    private _onClosed(): void {
+        private _onClosed(): void {
         this.collapsed = true;
         this._componentID = null;
         this.onClosed.emit(this);
 
         // TODO: remove this line after deprecating 'onClose'
         this.onClose.emit(this);
-
-        if (this.getEditElement()) {
-            this.getEditElement().focus();
+        const input = this.getEditElement();
+        if (input && this._focusInput) {
+            input.focus();
+            this._focusInput = false;
+        } else  {
+            return;
         }
     }
 

@@ -181,7 +181,7 @@ describe('IgxDatePicker', () => {
             expect(overlays.length).toEqual(0);
         }));
 
-        it('When datepicker is closed and the dialog disappear, the focus should remain on the input',
+        it('When datepicker is closed without selecting a date and the dialog disappear, the focus should NOT remain on the input',
             fakeAsync(() => {
                 const datePickerDom = fixture.debugElement.query(By.css('igx-date-picker'));
                 let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper--modal');
@@ -196,6 +196,31 @@ describe('IgxDatePicker', () => {
                 expect(overlayToggle[0]).not.toBeUndefined();
 
                 UIInteractions.triggerKeyDownEvtUponElem('Escape', overlayToggle[0], true);
+                flush();
+                fixture.detectChanges();
+
+                const docBody = document.getElementsByTagName('body')[0] as Element;
+                overlayToggle = document.getElementsByClassName('igx-overlay__wrapper--modal');
+                expect(overlayToggle[0]).toEqual(undefined);
+                expect(docBody).toBe(document.activeElement);
+            }));
+
+            it('When datepicker is closed upon selecting a date, the focus should remain on the input',
+            fakeAsync(() => {
+                const datePickerDom = fixture.debugElement.query(By.css('igx-date-picker'));
+                let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper--modal');
+                expect(overlayToggle.length).toEqual(0);
+
+                UIInteractions.triggerKeyDownEvtUponElem('space', datePickerDom.nativeElement, false);
+                flush();
+                fixture.detectChanges();
+
+                overlayToggle = document.getElementsByClassName('igx-overlay__wrapper--modal');
+                expect(overlayToggle[0]).not.toBeNull();
+                expect(overlayToggle[0]).not.toBeUndefined();
+
+                const dateElemToSelect = document.getElementsByClassName("igx-calendar__date-content")[10];
+                UIInteractions.clickElement(dateElemToSelect);
                 flush();
                 fixture.detectChanges();
 
