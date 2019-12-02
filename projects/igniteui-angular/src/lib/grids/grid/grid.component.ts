@@ -1,6 +1,6 @@
 import {
     Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
-    QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, AfterContentInit, HostBinding, forwardRef, OnInit, AfterViewInit
+    QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, AfterContentInit, HostBinding, forwardRef, OnInit, AfterViewInit, HostListener
 } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -347,8 +347,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     *@hidden
-     */
+   *@hidden
+   */
     @Output()
     public groupingExpansionStateChange = new EventEmitter<IGroupByExpandState[]>();
 
@@ -554,6 +554,15 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     private _expansionStates: Map<any, boolean> = new Map<any, boolean>();
 
     /**
+     *@hidden
+     */
+    @Output()
+    private _focusIn = new  EventEmitter<any>();
+    @HostListener('focusin') onFocusIn($event) {
+        this._focusIn.emit();
+    }
+
+    /**
      * Returns a list of key-value pairs [row ID, expansion state]. Includes only states that differ from the default one.
      * ```typescript
      * const expansionStates = this.grid.expansionStates;
@@ -712,6 +721,15 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 const lastColIndex = this.unpinnedColumns[this.unpinnedColumns.length - 1].visibleIndex;
                 this.navigateTo(rowIndex - 1, lastColIndex,
                     (args) => args.target.nativeElement.focus());
+            } else if (!shift) {
+                // when the next element is focused via tab check if it is an element outside the details view
+                // if so we have exited the details view and focus should move to the first cell in the next row
+                this._focusIn.pipe(first()).subscribe(() => {
+                    if (!container.contains(document.activeElement)) {
+                        this.navigateTo(rowIndex + 1, 0,
+                            (args) => args.target.nativeElement.focus());
+                    }
+                });
             }
         } else if (key === 'arrowup' && !ctrl && target === container) {
             this.navigation.navigateUp(container, {row: rowIndex, column: colIndex});
