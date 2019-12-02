@@ -28,14 +28,27 @@
 
 <ng-container *ngIf="grid.hasColumnLayouts">
     <ng-container *ngIf="pinnedColumns.length > 0">
-        <div *ngFor="let col of pinnedColumns | igxTopLevel" class="igx-grid__mrl-block" [igxGridMRLBlockStyle]="col">
+        <div *ngFor="let col of pinnedColumns | igxTopLevel" class="igx-grid__mrl-block"
+        [class.igx-grid__td--pinned-last]="col.hasLastPinnedChildColumn"
+        [ngStyle]="{
+            'grid-template-rows':col.getGridTemplate(true, false),
+            'grid-template-columns':col.getGridTemplate(false, false),
+            'z-index': col.pinned ? 1 : null,
+            '-ms-grid-rows':col.getGridTemplate(true, true),
+            '-ms-grid-columns':col.getGridTemplate(false, true)
+        }">
             <ng-template ngFor let-col [ngForOf]="col.children">
                     <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails? mrlExpandableCellTemplate : mrlCellTemplate; context: getContext(col, this)"></ng-container>
             </ng-template>
         </div>
     </ng-container>
     <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxTopLevel" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForSizePropName]='"calcPixelWidth"' [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
-        <div class="igx-grid__mrl-block" [igxGridMRLBlockStyle]="col">
+        <div class="igx-grid__mrl-block" [ngStyle]="{
+            'grid-template-rows':col.getGridTemplate(true, false),
+            'grid-template-columns':col.getGridTemplate(false, false),
+            '-ms-grid-rows':col.getGridTemplate(true, true),
+            '-ms-grid-columns':col.getGridTemplate(false, true)
+        }">
             <ng-template ngFor let-col [ngForOf]="col.children">
                     <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? mrlExpandableCellTemplate : mrlCellTemplate; context: getContext(col, this)"></ng-container>
             </ng-template>
@@ -124,6 +137,7 @@
         [style.grid-row-start]="col.rowStart"
         [style.-ms-grid-column]="col.colStart"
         [style.grid-column-start]="col.colStart"
+        [lastPinned]="col.columnLayoutChild ? null : col.isLastPinned"
         [formatter]="col.formatter"
         [row]="this"
         [style.min-height.px]="grid.rowHeight || 32"
@@ -142,6 +156,7 @@
         [class.igx-grid__td--number]="col.dataType === 'number' && col.visibleIndex !== 0"
         [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex"
         [ngStyle]="col.cellStyles | igxCellStyles:rowData[col.field]:rowData:col.field:viewIndex"
+        [expanded]="expanded"
         [editMode]="col.editable && crudService.isInEditMode(index, col.index)"
         [column]="col"
         [style.-ms-grid-row-span]="col.gridRowSpan"
@@ -152,6 +167,7 @@
         [style.grid-row-start]="col.rowStart"
         [style.-ms-grid-column]="col.colStart"
         [style.grid-column-start]="col.colStart"
+        [lastPinned]="col.columnLayoutChild ? null : col.isLastPinned"
         [formatter]="col.formatter"
         [row]="this"
         [style.min-height.px]="grid.rowHeight || 32"

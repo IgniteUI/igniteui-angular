@@ -15,45 +15,6 @@ import { ColumnType } from './common/column.interface';
 export class IgxGridBodyDirective {}
 
 
-@Directive({
-    selector: '[igxGridMRLBlockStyle]'
-})
-export class IgxGridMRLBlockStyleDirective {
-
-    @Input('igxGridMRLBlockStyle')
-    column: ColumnType;
-
-    @HostBinding('style.z-index')
-    get zIndex() {
-        return this.column.pinned ? 1 : null;
-    }
-
-    @HostBinding('class.igx-grid__td--pinned-last')
-    get lastPinned() {
-        return this.column.hasLastPinnedChildColumn;
-    }
-
-    @HostBinding('style.grid-template-rows')
-    get templateRows() {
-        return this.column.getGridTemplate(true, false);
-    }
-
-    @HostBinding('style.grid-template-columns')
-    get templateColumns() {
-        return this.column.getGridTemplate(false, false);
-    }
-
-    @HostBinding('style.-ms-grid-rows')
-    get msTemplateRows() {
-        return this.column.getGridTemplate(true, true);
-    }
-
-    @HostBinding('style.-ms-grid-columns')
-    get msTemplateColumns() {
-        return this.column.getGridTemplate(false, true);
-    }
-}
-
 /**
  * @hidden
  */

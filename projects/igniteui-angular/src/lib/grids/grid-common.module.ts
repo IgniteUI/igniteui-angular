@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxGridFooterComponent } from './grid-footer/grid-footer.component';
 import {
-    IgxGridBodyDirective, IgxGridMRLBlockStyleDirective,
+    IgxGridBodyDirective
 } from './grid.common';
 import { IgxGridTransaction, IgxGridBaseDirective } from './grid-base.directive';
 import { IgxBaseTransactionService } from '../services/transaction/base-transaction';
@@ -43,15 +43,13 @@ import { IgxRowDirective } from './row.directive';
         IgxRowEditTabStopDirective,
         IgxGridBodyDirective,
         IgxGridFooterComponent,
-        IgxAdvancedFilteringDialogComponent,
-        IgxGridMRLBlockStyleDirective
+        IgxAdvancedFilteringDialogComponent
     ],
     entryComponents: [
         IgxAdvancedFilteringDialogComponent
     ],
     exports: [
         IgxGridCellComponent,
-        IgxGridMRLBlockStyleDirective,
         IgxRowEditTemplateDirective,
         IgxRowEditActionsDirective,
         IgxRowEditTextDirective,
