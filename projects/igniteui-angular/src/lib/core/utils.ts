@@ -324,7 +324,6 @@ export const ROW_EXPAND_KEYS = new Set('right down arrowright arrowdown'.split('
 export const ROW_COLLAPSE_KEYS = new Set('left up arrowleft arrowup'.split(' '));
 export const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'tab', 'enter', 'f2', 'escape', 'esc']);
 
-
 /**
  * @hidden
  * @internal

@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef, AfterViewInit, TemplateRef, HostBinding } from '@angular/core';
+import { Component, Input, TemplateRef, HostBinding } from '@angular/core';
 import { TicksOrientation, TickLabelsOrientation } from '../slider.common';
 
 /**
@@ -53,7 +53,7 @@ export class IgxTicksComponent {
      */
     @HostBinding('class.igx-slider__ticks--top')
     public get ticksTopClass() {
-        return this.ticksOrientation === TicksOrientation.top;
+        return this.ticksOrientation === TicksOrientation.Top;
     }
 
     /**
@@ -69,7 +69,7 @@ export class IgxTicksComponent {
      */
     @HostBinding('class.igx-slider__tick-labels--top-bottom')
     public get labelsTopToBottomClass() {
-        return this.tickLabelsOrientation === TickLabelsOrientation.toptobottom;
+        return this.tickLabelsOrientation === TickLabelsOrientation.TopToBottom;
     }
 
     /**
@@ -77,7 +77,7 @@ export class IgxTicksComponent {
      */
     @HostBinding('class.igx-slider__tick-labels--bottom-top')
     public get labelsBottomToTopClass() {
-        return this.tickLabelsOrientation === TickLabelsOrientation.bottomtotop;
+        return this.tickLabelsOrientation === TickLabelsOrientation.BottomToTop;
     }
 
     /**
