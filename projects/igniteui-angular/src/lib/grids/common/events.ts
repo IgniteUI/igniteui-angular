@@ -1,5 +1,5 @@
 import { IBaseEventArgs, CancelableEventArgs } from '../../core/utils';
-import { IgxBaseExporterDirective, IgxExporterOptionsBase } from '../../services';
+import { IgxBaseExporter, IgxExporterOptionsBase } from '../../services';
 import { GridKeydownTargetType } from './enums';
 import { IgxDragDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { IGridDataBindable } from './grid.interface';
@@ -70,7 +70,7 @@ export interface ISearchInfo {
 
 export interface IGridToolbarExportEventArgs extends IBaseEventArgs {
     grid: IgxGridBaseDirective;
-    exporter: IgxBaseExporterDirective;
+    exporter: IgxBaseExporter;
     options: IgxExporterOptionsBase;
     cancel: boolean;
 }
