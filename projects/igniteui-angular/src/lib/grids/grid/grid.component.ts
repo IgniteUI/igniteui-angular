@@ -577,7 +577,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     @Output()
     private _focusIn = new  EventEmitter<any>();
-    @HostListener('focusin') onFocusIn($event) {
+    @HostListener('focusin') onFocusIn() {
         this._focusIn.emit();
     }
 
