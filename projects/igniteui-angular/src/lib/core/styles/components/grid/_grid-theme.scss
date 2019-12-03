@@ -1200,7 +1200,8 @@
     %grid-cell--selected {
         color: --var($theme, 'cell-selected-text-color');
         background: --var($theme, 'cell-selected-background');
-        border-bottom: 0;
+        // this is causing an issue https://github.com/IgniteUI/igniteui-angular/issues/4981
+        //border-bottom: 0;
 
         %igx-grid__tree-grouping-indicator {
             color: --var($theme, 'cell-selected-text-color');
