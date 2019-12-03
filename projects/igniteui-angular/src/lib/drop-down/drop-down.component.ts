@@ -546,15 +546,15 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
                     if (oldSelection) {
                         oldSelection.selected = false;
                     }
-                    if (newSelection) {
-                        newSelection.selected = true;
+                    if (args.newSelection) {
+                        args.newSelection.selected = true;
                     }
                 }
                 if (event) {
                     this.toggleDirective.close();
                 }
             } else {
-                throw new Error('Please provide a valid in drop-down item for the selection!');
+                throw new Error('Please provide a valid drop-down item for the selection!');
             }
         }
     }
