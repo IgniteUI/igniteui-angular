@@ -62,7 +62,7 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
      */
     @HostListener('focus', ['$event'])
     onFocus(event) {
-        if(this.focused){
+        if (this.focused) {
             return;
         }
         this._clearAllHighlights();
