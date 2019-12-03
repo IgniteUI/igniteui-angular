@@ -438,13 +438,14 @@ export class IgxGridNavigationService {
             this.grid.unpinnedColumns[this.grid.unpinnedColumns.length - 1].visibleIndex === visibleColumnIndex) {
             return;
         }
-        if (nextIsDetailRow && isLastColumn) {
-            this.navigateDown(currentRowEl, { row: rowIndex, column: visibleColumnIndex });
-            return;
-        }
 
         if (this.isRowInEditMode(rowIndex)) {
             this.moveNextEditable(rowIndex, visibleColumnIndex);
+            return;
+        }
+
+        if (nextIsDetailRow && isLastColumn) {
+            this.navigateDown(currentRowEl, { row: rowIndex, column: visibleColumnIndex });
             return;
         }
 
