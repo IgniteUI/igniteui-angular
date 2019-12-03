@@ -141,8 +141,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
             // test instances
             expect(firstLayoutInstances.length).toEqual(2);
-            expect(hierarchicalGrid.transactions).not.toEqual(firstLayoutInstances[0].transactions);
-            expect(firstLayoutInstances[0].transactions).toEqual(firstLayoutInstances[1].transactions);
+            expect(hierarchicalGrid.transactions).not.toBe(firstLayoutInstances[0].transactions);
+            expect(firstLayoutInstances[0].transactions).not.toBe(firstLayoutInstances[1].transactions);
         }));
 
         it('should contain all transactions for a row island', fakeAsync(/** row toggle rAF */() => {
@@ -159,7 +159,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             firstLayoutInstances[0].updateRow({ ProductName: 'Changed' }, '00');
             firstLayoutInstances[1].updateRow({ ProductName: 'Changed' }, '10');
             expect(hierarchicalGrid.transactions.getTransactionLog().length).toEqual(0);
-            expect(fixture.componentInstance.rowIsland.transactions.getTransactionLog().length).toEqual(2);
+            expect(firstLayoutInstances[0].transactions.getTransactionLog().length).toEqual(1);
+            expect(fixture.componentInstance.rowIsland.transactions.getTransactionLog().length).toEqual(0);
         }));
 
         it('should remove expand indicator for uncommitted added rows', (async () => {
