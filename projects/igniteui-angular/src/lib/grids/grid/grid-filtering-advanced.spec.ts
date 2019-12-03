@@ -1772,11 +1772,13 @@ describe('IgxGrid - Advanced Filtering', () => {
                     });
                     const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
                     orTree.filteringOperands.push({
-                        fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                        fieldName: 'ProductName', searchVal: 'angular',
+                        condition: IgxStringFilteringOperand.instance().condition('contains'),
                         ignoreCase: true
                     });
                     orTree.filteringOperands.push({
-                        fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                        fieldName: 'ProductName', searchVal: 'script',
+                        condition: IgxStringFilteringOperand.instance().condition('contains'),
                         ignoreCase: true
                     });
                     tree.filteringOperands.push(orTree);
@@ -1839,11 +1841,13 @@ describe('IgxGrid - Advanced Filtering', () => {
                     });
                     const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
                     orTree.filteringOperands.push({
-                        fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                        fieldName: 'ProductName', searchVal: 'angular',
+                        condition: IgxStringFilteringOperand.instance().condition('contains'),
                         ignoreCase: true
                     });
                     orTree.filteringOperands.push({
-                        fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                        fieldName: 'ProductName', searchVal: 'script',
+                        condition: IgxStringFilteringOperand.instance().condition('contains'),
                         ignoreCase: true
                     });
                     tree.filteringOperands.push(orTree);
@@ -1906,11 +1910,13 @@ describe('IgxGrid - Advanced Filtering', () => {
                     });
                     const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
                     orTree.filteringOperands.push({
-                        fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                        fieldName: 'ProductName', searchVal: 'angular',
+                        condition: IgxStringFilteringOperand.instance().condition('contains'),
                         ignoreCase: true
                     });
                     orTree.filteringOperands.push({
-                        fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                        fieldName: 'ProductName', searchVal: 'script',
+                        condition: IgxStringFilteringOperand.instance().condition('contains'),
                         ignoreCase: true
                     });
                     tree.filteringOperands.push(orTree);
@@ -2066,11 +2072,13 @@ describe('IgxGrid - Advanced Filtering', () => {
                     });
                     const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
                     orTree.filteringOperands.push({
-                        fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                        fieldName: 'ProductName', searchVal: 'angular',
+                        condition: IgxStringFilteringOperand.instance().condition('contains'),
                         ignoreCase: true
                     });
                     orTree.filteringOperands.push({
-                        fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                        fieldName: 'ProductName', searchVal: 'script',
+                        condition: IgxStringFilteringOperand.instance().condition('contains'),
                         ignoreCase: true
                     });
                     tree.filteringOperands.push(orTree);
@@ -2150,11 +2158,13 @@ describe('IgxGrid - Advanced Filtering', () => {
                     });
                     const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
                     orTree.filteringOperands.push({
-                        fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                        fieldName: 'ProductName', searchVal: 'angular',
+                        condition: IgxStringFilteringOperand.instance().condition('contains'),
                         ignoreCase: true
                     });
                     orTree.filteringOperands.push({
-                        fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                        fieldName: 'ProductName', searchVal: 'script',
+                        condition: IgxStringFilteringOperand.instance().condition('contains'),
                         ignoreCase: true
                     });
                     tree.filteringOperands.push(orTree);
@@ -2352,11 +2362,13 @@ describe('IgxGrid - Advanced Filtering', () => {
                     });
                     const orTree = new FilteringExpressionsTree(FilteringLogic.Or);
                     orTree.filteringOperands.push({
-                        fieldName: 'ProductName', searchVal: 'angular', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                        fieldName: 'ProductName', searchVal: 'angular',
+                        condition: IgxStringFilteringOperand.instance().condition('contains'),
                         ignoreCase: true
                     });
                     orTree.filteringOperands.push({
-                        fieldName: 'ProductName', searchVal: 'script', condition: IgxStringFilteringOperand.instance().condition('contains'),
+                        fieldName: 'ProductName', searchVal: 'script',
+                        condition: IgxStringFilteringOperand.instance().condition('contains'),
                         ignoreCase: true
                     });
                     tree.filteringOperands.push(orTree);
