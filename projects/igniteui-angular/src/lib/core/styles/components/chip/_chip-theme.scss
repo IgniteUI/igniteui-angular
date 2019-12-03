@@ -437,7 +437,6 @@
 
         > * {
             width: 18px !important;
-            transition: width 120ms $ease-in-out-quad;
         }
 
         + igx-prefix,
@@ -450,10 +449,6 @@
         opacity: 0;
         z-index: -1;
         width: 0;
-
-        > * {
-            width: 0 !important;
-        }
 
         + igx-prefix,
         + [igxPrefix] {
