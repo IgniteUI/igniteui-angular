@@ -22,7 +22,7 @@ import {
 } from '../directives/drag-drop/drag-drop.directive';
 import { IBaseEventArgs } from '../core/utils';
 import { fromEvent } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { take, filter } from 'rxjs/operators';
 
 
 export interface IBaseChipEventArgs extends IBaseEventArgs {
@@ -450,10 +450,9 @@ export class IgxChipComponent extends DisplayDensityBase {
             cancel: false
         };
 
-        // Take the first 2 because there is transition for opacity and width and their order is not certain.
-        fromEvent(this.selectContainer.nativeElement, 'transitionend').pipe(take(2)).subscribe((event) => {
-            this.onSelectTransitionDone(event);
-        });
+        fromEvent(this.selectContainer.nativeElement, 'transitionend')
+            .pipe(filter<TransitionEvent>(event => event.propertyName === 'width'), take(1))
+            .subscribe(event => this.onSelectTransitionDone(event));
 
         if (newValue && !this._selected) {
             onSelectArgs.selected = true;
@@ -476,7 +475,7 @@ export class IgxChipComponent extends DisplayDensityBase {
     }
 
     public onSelectTransitionDone(event) {
-        if (event.propertyName === 'width' && !!event.target.tagName) {
+        if (!!event.target.tagName) {
             // Trigger onSelectionDone on when `width` property is changed and the target is valid element(not comment).
             this.onSelectionDone.emit({
                 owner: this,
