@@ -12,7 +12,7 @@ import {
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase } from '../../core/displayDensity';
 import {
     CsvFileTypes,
-    IgxBaseExporterDirective,
+    IgxBaseExporter,
     IgxCsvExporterOptions,
     IgxCsvExporterService,
     IgxExcelExporterOptions,
@@ -309,7 +309,7 @@ export class IgxGridToolbarComponent extends DisplayDensityBase {
         this.performExport(this.csvExporter, 'csv');
     }
 
-    private performExport(exp: IgxBaseExporterDirective, exportType: string) {
+    private performExport(exp: IgxBaseExporter, exportType: string) {
         this.exportClicked();
 
         const fileName = 'ExportedData';
