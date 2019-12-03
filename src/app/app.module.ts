@@ -1,15 +1,15 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, HammerModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import {
     IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
-    IgxGridTransaction, IgxTransactionService, IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule, IgxIconService} from 'igniteui-angular';
+    IgxDragDropModule, IgxDividerModule, IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule,
+    IgxIconService, DisplayDensityToken, DisplayDensity
+} from 'igniteui-angular';
 import { IgxColumnHidingModule } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
-import { IgxDragDropModule } from '../../projects/igniteui-angular/src/lib/directives/drag-drop/drag-drop.directive';
-import { IgxDividerModule } from '../../projects/igniteui-angular/src/lib/directives/divider/divider.directive';
 
 import { routing } from './routing';
 import { AppComponent } from './app.component';
@@ -84,7 +84,6 @@ import { OverlayAnimationSampleComponent } from './overlay/overlay-animation.sam
 import { RadioSampleComponent } from './radio/radio.sample';
 import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
-import { DisplayDensityToken, DisplayDensity } from 'projects/igniteui-angular/src/lib/core/displayDensity';
 import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample.component';
 import { GridWithTransactionsComponent } from './grid-row-edit/grid-with-transactions.component';
 import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
@@ -112,9 +111,9 @@ import { GridFlexSampleComponent } from './grid-flex-layout/grid-flex.sample';
 import { GridEsfLoadOnDemandComponent } from './grid-esf-load-on-demand/grid-esf-load-on-demand.component';
 import { GridFilteringComponent } from './grid-filtering/grid-filtering.sample';
 import { GridExternalFilteringComponent } from './grid-external-filtering/grid-external-filtering.sample';
-
-
-
+import { AboutComponent } from './grid-state/about.component';
+import { GridSaveStateComponent } from './grid-state/grid-state.component';
+import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-master-detail.sample';
 
 const components = [
     AppComponent,
@@ -177,6 +176,7 @@ const components = [
     GridColumnPinningSampleComponent,
     GridColumnResizingSampleComponent,
     GridGroupBySampleComponent,
+    GridMasterDetailSampleComponent,
     GridSummaryComponent,
     GridPerformanceSampleComponent,
     GridSelectionComponent,
@@ -216,7 +216,9 @@ const components = [
     GridFlexSampleComponent,
     GridEsfLoadOnDemandComponent,
     GridFilteringComponent,
-    GridExternalFilteringComponent
+    GridExternalFilteringComponent,
+    GridSaveStateComponent,
+    AboutComponent
 ];
 
 @NgModule({
@@ -224,6 +226,7 @@ const components = [
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
+        HammerModule,
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
@@ -236,7 +239,8 @@ const components = [
         IgxDragDropModule,
         IgxDividerModule,
         SharedModule,
-        routing
+        routing,
+        HammerModule
     ],
     providers: [
         LocalService,

@@ -1,7 +1,4 @@
-import {
-    EventEmitter,
-    Output
-} from '@angular/core';
+import { EventEmitter } from '@angular/core';
 
 import { cloneValue, IBaseEventArgs } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
@@ -86,7 +83,6 @@ export abstract class IgxBaseExporter {
      * ```
      * @memberof IgxBaseExporter
      */
-    @Output()
     public onRowExport = new EventEmitter<IRowExportingEventArgs>();
 
     /**
@@ -98,7 +94,6 @@ export abstract class IgxBaseExporter {
      * ```
      * @memberof IgxBaseExporter
      */
-    @Output()
     public onColumnExport = new EventEmitter<IColumnExportingEventArgs>();
 
     /**

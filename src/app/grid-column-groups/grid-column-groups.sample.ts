@@ -1,5 +1,5 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
-import { IgxGridComponent, IgxButtonDirective, IgxColumnGroupComponent } from 'igniteui-angular';
+import { IgxGridComponent, IgxColumnGroupComponent } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-column-groups-sample',
@@ -7,11 +7,13 @@ import { IgxGridComponent, IgxButtonDirective, IgxColumnGroupComponent } from 'i
     templateUrl: 'grid-column-groups.sample.html'
 })
 export class GridColumnGroupsSampleComponent implements AfterViewInit {
+    public collapse = true;
 
     @ViewChild('grid', { read: IgxGridComponent, static: true })
     grid: IgxGridComponent;
-
+    wid = '250px';
     columnGroupStates = new Map<IgxColumnGroupComponent, boolean>();
+    s = true;
 
     data: any[] = [
         // tslint:disable:max-line-length
@@ -53,15 +55,28 @@ export class GridColumnGroupsSampleComponent implements AfterViewInit {
     }
 
     pinGroup() {
-        const t = this.grid.getColumnByName('ContactTitle');
-        t.pinned = !t.pinned;
+        const t = this.grid.getColumnByName('ContactName');
+        t.visibleWhenCollapsed = !t.visibleWhenCollapsed;
+    }
+
+    log() {
+        console.log(this.s);
     }
 
     hideGroup() {
-        const col = this.grid.columnList.filter(c => c.header === 'Person Details')[0];
+/*         const col = this.grid.columnList.filter(c => c.header === 'Person Details')[0];
         col.hidden = !col.hidden;
         this.grid.getColumnByName('CompanyName').hidden = true;
-        console.log(this.grid.getColumnByName('CompanyName').parent);
+        console.log(this.grid.getColumnByName('CompanyName').parent); */
+        (this.grid.columnList.filter(c => c.header === 'Address Information')[0] as any).expanded =
+        !(this.grid.columnList.filter(c => c.header === 'Address Information')[0] as any).expanded;
+
+    }
+
+    toggleCollapsible() {
+       // this.collapse = !this.collapse;
+        (this.grid.columnList.filter(c => c.header === 'General Information')[0] as any).collapsible =
+        !(this.grid.columnList.filter(c => c.header === 'General Information')[0] as any).collapsible;
     }
 
     ngAfterViewInit() {

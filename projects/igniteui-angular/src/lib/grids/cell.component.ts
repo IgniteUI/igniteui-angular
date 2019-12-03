@@ -28,6 +28,7 @@ import { ColumnType } from './common/column.interface';
 import { RowType } from './common/row.interface';
 import { GridSelectionMode } from './common/enums';
 import { GridType } from './common/grid.interface';
+import { IgxGridComponent } from './grid';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -512,7 +513,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @ViewChild('inlineEditor', { read: TemplateRef, static: true })
     protected inlineEditorTemplate: TemplateRef<any>;
 
-    @ViewChild(IgxTextHighlightDirective, { read: IgxTextHighlightDirective, static: false })
+    @ViewChild(IgxTextHighlightDirective, { read: IgxTextHighlightDirective })
     protected set highlight(value: IgxTextHighlightDirective) {
         this._highlight = value;
 
@@ -851,6 +852,17 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             } else if (expand) {
                 (this.gridAPI as any).trigger_row_expansion_toggle(this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
             }
+        } else if ((this.grid as IgxGridComponent).hasDetails && this.isToggleKey(key)) {
+            const collapse = (this.row as any).expanded && ROW_COLLAPSE_KEYS.has(key);
+            const expand = !(this.row as any).expanded && ROW_EXPAND_KEYS.has(key);
+            const expandedStates = this.grid.expansionStates;
+            if (expand) {
+                expandedStates.set(this.row.rowID, true);
+            } else if (collapse) {
+                expandedStates.set(this.row.rowID, false);
+            }
+            this.grid.expansionStates = expandedStates;
+            this.grid.notifyChanges();
         }
     }
 

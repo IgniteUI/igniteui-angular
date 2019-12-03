@@ -21,6 +21,15 @@ export class IgxGroupByRowTemplateDirective {
  * @hidden
  */
 @Directive({
+    selector: '[igxGridDetail]'
+})
+export class IgxGridDetailTemplateDirective {
+}
+
+/**
+ * @hidden
+ */
+@Directive({
     selector: '[igxRowExpandedIndicator]'
 })
 export class IgxRowExpandedIndicatorDirective {

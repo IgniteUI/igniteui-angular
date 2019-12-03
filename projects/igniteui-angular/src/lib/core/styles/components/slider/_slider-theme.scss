@@ -17,6 +17,11 @@
 /// @param {Color} $base-track-color [null] - The base background color of the track.
 /// @param {Color} $disabled-base-track-color [null] - The base background color of the track when is disabled.
 ///
+/// @param {Color} $tick-label-color [null] - The color of the tick label.
+/// @param {Color} $tick-label-color--tall [null] - The color of the tall tick label .
+/// @param {Color} $tick-color [null] - The background-color of the tick.
+/// @param {Color} $tick-color--tall [null] - The background-color of the tall tick.
+///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
@@ -44,7 +49,11 @@
     $thumb-disabled-border-color: null,
     $track-hover-color: null,
     $thumb-hover-color: null,
-    $base-track-hover-color: null
+    $base-track-hover-color: null,
+    $tick-label-color: null,
+    $tick-label-color-tall: null,
+    $tick-color: null,
+    $tick-color-tall: null,
 ) {
     $name: 'igx-slider';
     $slider-schema: ();
@@ -75,7 +84,11 @@
         disabled-base-track-color: $disabled-base-track-color,
         thumb-border-color: $thumb-border-color,
         thumb-disabled-border-color: $thumb-disabled-border-color,
-        base-track-hover-color: $base-track-hover-color
+        base-track-hover-color: $base-track-hover-color,
+        tick-label-color: $tick-label-color,
+        tick-label-color-tall: $tick-label-color-tall,
+        tick-color: $tick-color,
+        tick-color-tall: $tick-color-tall,
     ));
 }
 
@@ -95,6 +108,13 @@
         material: 2px,
         fluent: 4px
     ), map-get($theme, variant));
+
+    // Slide ticks
+    $tick-push: rem(4px);
+    $base-tick-height: rem(8px);
+    $tick-height: $base-tick-height;
+    $tick-height--tall: $base-tick-height * 2;
+    $tick-width: rem(2px);
 
     $thumb-border-width: map-get((
         material: 0,
@@ -128,6 +148,7 @@
         display: flex;
         position: relative;
         height: rem($slider-height);
+        flex-grow: 1;
         align-items: center;
         transition: all .2s $ease-out-quad;
 
@@ -164,10 +185,11 @@
         height: 0;
         cursor: default;
         z-index: 1;
+        left: 0;
     }
 
     %igx-slider-track {
-        position: absolute;
+        position: relative;
         width: 100%;
         height: rem($slider-track-height);
         background: --var($theme, 'base-track-color');
@@ -176,20 +198,6 @@
 
     %igx-slider-track--disabled {
         background: --var($theme, 'disabled-base-track-color');
-    }
-
-    %igx-slider-track-ticks {
-        position: absolute;
-        width: 100%;
-        height: rem($slider-track-height);
-        background-size: 100% em($slider-track-height);
-        opacity: .85;
-        transition: opacity .2s $ease-out-quad;
-        z-index: 1;
-    }
-
-    %igx-slider-track-ticks--disabled {
-        visibility: hidden;
     }
 
     %igx-slider-track-fill {
@@ -203,6 +211,165 @@
 
     %igx-slider-track-fill--disabled {
         visibility: hidden;
+    }
+
+    %igx-slider__ticks {
+        width: 100%;
+        display: flex;
+        position: absolute;
+        top: $tick-push;
+        justify-content: space-between;
+        z-index: 1;
+
+        &%igx-slider__ticks--top {
+            bottom: $tick-push;
+            top: auto;
+            align-items: flex-end;
+        }
+    }
+
+    %igx-slider__ticks-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+
+        &:first-of-type {
+            margin-left: rem(-1px);
+        }
+
+        &:last-of-type {
+            margin-left: rem(-1px);
+        }
+    }
+
+    %igx-slider__ticks-label {
+        color: --var($theme, 'tick-label-color');
+        position: absolute;
+        top: $tick-height--tall;
+        transform: translate(-50%);
+        line-height: .7;
+        opacity: 1;
+        transition: opacity .2s $ease-in-out-quad;
+    }
+
+    %igx-slider__ticks-tick {
+        background: --var($theme, 'tick-color');
+        height: $tick-height;
+        width: $tick-width;
+    }
+
+    %igx-slider__ticks--tall {
+        %igx-slider__ticks-label {
+            top: calc(#{$tick-height--tall} + #{$tick-height});
+        }
+    }
+
+    %igx-slider__tick--disabled {
+        background: --var($theme, 'disabled-base-track-color')!important;
+    }
+
+    %igx-slider__ticks-labels--disabled {
+        color: --var($theme, 'disabled-base-track-color')!important;
+    }
+
+    %igx-slider__ticks-group--tall {
+        %igx-slider__ticks-tick {
+            height: $tick-height--tall;
+            background: --var($theme, 'tick-color-tall');
+        }
+
+        %igx-slider__ticks-label {
+            top: calc(#{$tick-height--tall} + #{$tick-height});
+            color: --var($theme, 'tick-label-color-tall');
+        }
+    }
+
+    %igx-slider__ticks--top {
+        %igx-slider__ticks-label {
+            bottom: calc(#{$tick-height} + #{$tick-height});
+            top: auto;
+        }
+
+        &%igx-slider__ticks--tall {
+            %igx-slider__ticks-label {
+                bottom: calc(#{$tick-height--tall} + #{$tick-height});
+                top: auto;
+            }
+        }
+    }
+
+    %igx-slider__tick-label--hidden {
+        opacity: 0;
+    }
+
+    %igx-slider-track-steps {
+        position: absolute;
+        width: 100%;
+        height: rem($slider-track-height);
+        background-size: 100% em($slider-track-height);
+        opacity: .85;
+        transition: opacity .2s $ease-out-quad;
+        z-index: 1;
+    }
+
+    %igx-slider-track-steps--disabled {
+        visibility: hidden;
+    }
+
+    %igx-slider__tick-labels--top-bottom {
+        %igx-slider__ticks-group {
+            display: block;
+        }
+
+        %igx-slider__ticks-label {
+            writing-mode: vertical-rl;
+            transform: translate(-50%) rotate(0deg);
+        }
+
+        %igx-slider__ticks--tall {
+            %igx-slider__ticks-label {
+                top: calc(#{$tick-height--tall} + #{rem(2px)});
+            }
+        }
+
+        &%igx-slider__ticks--top {
+            %igx-slider__ticks-label {
+                writing-mode: vertical-rl;
+                transform: translate(-50%) rotate(0deg);
+            }
+
+            %igx-slider__ticks--tall {
+                %igx-slider__ticks-label {
+                    bottom: calc(#{$tick-height--tall} + #{rem(2px)});
+                }
+            }
+        }
+    }
+
+    %igx-slider__tick-labels--bottom-top {
+        %igx-slider__ticks-group {
+            display: block;
+        }
+
+
+        %igx-slider__ticks-label {
+            writing-mode: vertical-rl;
+            transform: translate(-50%) rotate(180deg);
+        }
+
+        &%igx-slider__ticks--top {
+            %igx-slider__ticks-label {
+                writing-mode: vertical-rl;
+                transform: translate(-50%) rotate(180deg);
+            }
+
+            %igx-slider__ticks--tall {
+                %igx-slider__ticks-label {
+                    bottom: calc(#{$tick-height--tall} + #{rem(2px)});
+                }
+            }
+        }
     }
 
     %igx-thumb-display {

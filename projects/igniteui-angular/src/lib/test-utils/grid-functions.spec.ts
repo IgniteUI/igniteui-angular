@@ -12,7 +12,7 @@ import { IgxGridHeaderGroupComponent } from '../grids/headers/grid-header-group.
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
-import { IgxGridGroupByRowComponent, IgxGridCellComponent } from '../grids/grid';
+import { IgxGridGroupByRowComponent, IgxGridCellComponent, IgxGridRowComponent } from '../grids/grid';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const CELL_ACTIVE_CSS_CLASS = 'igx-grid-summary--active';
@@ -36,6 +36,8 @@ const CHECKBOX_ELEMENT = 'igx-checkbox';
 const ICON_CSS_CLASS = 'material-icons igx-icon';
 const CHECKBOX_LBL_CSS_CLASS = '.igx-checkbox__composite';
 const DEBOUNCETIME = 50;
+const GROUP_EXPANDER_CLASS = '.igx-grid__th-expander';
+const GROUP_HEADER_CLASS = '.igx-grid__th-group-title';
 
 export class GridFunctions {
 
@@ -153,6 +155,39 @@ export class GridFunctions {
             }
         })
 
+    public static getMasterRowDetail(row: IgxGridRowComponent) {
+        const nextSibling = row.element.nativeElement.nextElementSibling;
+        if (nextSibling &&
+            nextSibling.tagName.toLowerCase() === 'div' &&
+            nextSibling.getAttribute('detail') === 'true') {
+            return nextSibling;
+        }
+        return null;
+    }
+
+    public static setAllExpanded(grid, data) {
+        const allExpanded = new Map<any, boolean>();
+        data.forEach(item => {
+            allExpanded.set(item['ID'], true);
+        });
+        grid.expansionStates = allExpanded;
+    }
+
+    public static elementInGridView(grid, element): boolean {
+        const gridBottom = grid.tbody.nativeElement.getBoundingClientRect().bottom;
+        const gridTop = grid.tbody.nativeElement.getBoundingClientRect().top;
+        return element.getBoundingClientRect().top >= gridTop && element.getBoundingClientRect().bottom <= gridBottom;
+    }
+
+    public static toggleMasterRowByClick = (fix, row: IgxGridRowComponent, debounceTime) => new Promise(async (resolve, reject) => {
+        const icon = row.element.nativeElement.querySelector('igx-icon');
+        UIInteractions.clickElement(icon.parentElement);
+        await wait(debounceTime);
+        fix.detectChanges();
+
+        resolve();
+    })
+
     public static expandCollapceGroupRow =
         (fix, groupRow: IgxGridGroupByRowComponent,
             cell: IgxGridCellComponent) => new Promise(async (resolve, reject) => {
@@ -200,6 +235,16 @@ export class GridFunctions {
         const visibleColumns = column.grid.visibleColumns;
         expect(visibleColumns.length).toBe(visibleColumnsCount, 'Unexpected visible columns count!');
         expect(visibleColumns.findIndex((col) => col === column) > -1).toBe(!isHidden, 'Unexpected result for visibleColumns collection!');
+    }
+
+    public static verifyColumnsAreHidden(columns, isHidden: boolean, visibleColumnsCount: number) {
+        const visibleColumns = columns[0].grid.visibleColumns;
+        columns.forEach(column => {
+            expect(column.hidden).toBe(isHidden, 'Hidden is not ' + isHidden);
+            expect(visibleColumns.findIndex((col) => col === column) > -1)
+            .toBe(!isHidden, 'Unexpected result for visibleColumns collection!');
+        });
+        expect(visibleColumns.length).toBe(visibleColumnsCount, 'Unexpected visible columns count!');
     }
 
     public static verifyColumnIsPinned(column, isPinned: boolean, pinnedColumnsCount: number) {
@@ -461,13 +506,13 @@ export class GridFunctions {
 
     public static getAdvancedFilteringButton(fix: ComponentFixture<any>) {
         const button = GridFunctions.getToolbar(fix).queryAll(By.css('button'))
-        .find((b) => b.nativeElement.name === 'btnAdvancedFiltering');
+            .find((b) => b.nativeElement.name === 'btnAdvancedFiltering');
         return button ? button.nativeElement : undefined;
     }
 
     public static getColumnHidingButton(fixture) {
         const button = GridFunctions.getToolbar(fixture).queryAll(By.css('button'))
-        .find((b) => b.nativeElement.name === 'btnColumnHiding');
+            .find((b) => b.nativeElement.name === 'btnColumnHiding');
         return button ? button.nativeElement : undefined;
     }
 
@@ -1184,7 +1229,7 @@ export class GridFunctions {
     * The returned element is the one that has been gotten last.
     */
     public static getAdvancedFilteringTreeItem(fix: ComponentFixture<any>,
-                                               path: number[]) {
+        path: number[]) {
         let node = GridFunctions.getAdvancedFilteringTreeRootGroup(fix);
         for (let index = 0; index < path.length; index++) {
             const pos = path[index];
@@ -1324,21 +1369,21 @@ export class GridFunctions {
     public static getAdvancedFilteringClearFilterButton(fix: ComponentFixture<any>) {
         const footer = GridFunctions.getAdvancedFilteringFooter(fix);
         const clearFilterButton: any = Array.from(footer.querySelectorAll('button'))
-                                       .find((b: any) => b.innerText.toLowerCase() === 'clear filter');
+            .find((b: any) => b.innerText.toLowerCase() === 'clear filter');
         return clearFilterButton;
     }
 
     public static getAdvancedFilteringCancelButton(fix: ComponentFixture<any>) {
         const footer = GridFunctions.getAdvancedFilteringFooter(fix);
         const cancelFilterButton: any = Array.from(footer.querySelectorAll('button'))
-                                        .find((b: any) => b.innerText.toLowerCase() === 'cancel');
+            .find((b: any) => b.innerText.toLowerCase() === 'cancel');
         return cancelFilterButton;
     }
 
     public static getAdvancedFilteringApplyButton(fix: ComponentFixture<any>) {
         const footer = GridFunctions.getAdvancedFilteringFooter(fix);
         const applyFilterButton: any = Array.from(footer.querySelectorAll('button'))
-                                       .find((b: any) => b.innerText.toLowerCase() === 'apply');
+            .find((b: any) => b.innerText.toLowerCase() === 'apply');
         return applyFilterButton;
     }
 
@@ -1365,8 +1410,8 @@ export class GridFunctions {
     public static getAdvancedFilteringValueInput(fix: ComponentFixture<any>, dateType: boolean = false) {
         const editModeContainer = GridFunctions.getAdvancedFilteringEditModeContainer(fix);
         const input = dateType ?
-                    editModeContainer.querySelector('igx-date-picker').querySelector('input') :
-                    GridFunctions.sortNativeElementsHorizontally(Array.from(editModeContainer.querySelectorAll('igx-input-group')))[2];
+            editModeContainer.querySelector('igx-date-picker').querySelector('input') :
+            GridFunctions.sortNativeElementsHorizontally(Array.from(editModeContainer.querySelectorAll('igx-input-group')))[2];
         return input;
     }
 
@@ -1497,6 +1542,37 @@ export class GridFunctions {
 
     public static navigateToLastPage(parent) {
         GridFunctions.clickPagingButton(parent, 3);
+    }
+
+    public static getColGroupExpandIndicator(group): HTMLElement {
+        return group.nativeElement.querySelector(GROUP_EXPANDER_CLASS);
+    }
+
+    public static getColumnGroupHeaderCell(columnField: string, fix: ComponentFixture<any>) {
+        const headerTitle = fix.debugElement.queryAll(By.css(GROUP_HEADER_CLASS)).find((header) => {
+            return header.nativeElement.title === columnField;
+        });
+        return headerTitle.parent;
+    }
+
+    public static verifyGroupIsExpanded(fixture, group, collapsible = true, isExpanded = true,
+         indicatorText = ['expand_more', 'chevron_right']) {
+        const groupHeader = GridFunctions.getColumnGroupHeaderCell(group.header, fixture);
+        expect(group.collapsible).toEqual(collapsible);
+        if (collapsible === false) {
+            expect(GridFunctions.getColGroupExpandIndicator(groupHeader)).toBeNull();
+        } else {
+            expect(group.expanded).toEqual(isExpanded);
+            const text = isExpanded ? indicatorText[0] : indicatorText[1];
+            expect(GridFunctions.getColGroupExpandIndicator(groupHeader)).toBeDefined();
+            expect(GridFunctions.getColGroupExpandIndicator(groupHeader).innerText.trim()).toEqual(text);
+        }
+    }
+
+    public static clickGroupExpandIndicator(fixture, group) {
+        const groupHeader = GridFunctions.getColumnGroupHeaderCell(group.header, fixture);
+        const expandInd = GridFunctions.getColGroupExpandIndicator(groupHeader);
+        expandInd.dispatchEvent(new Event('click', {}));
     }
 }
 export class GridSummaryFunctions {

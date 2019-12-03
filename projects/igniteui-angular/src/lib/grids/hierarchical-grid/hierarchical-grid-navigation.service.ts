@@ -20,16 +20,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     }
 
     protected getRowByIndex(index) {
-        const selector = this.getRowSelector();
-        const rows = Array.from(this.grid.nativeElement.querySelectorAll(
-            `${selector}[data-rowindex="${index}"]`));
-        let row;
-        rows.forEach((r) => {
-            const parentGrid = this.getClosestElemByTag(r, 'igx-hierarchical-grid');
-            if (parentGrid && parentGrid.getAttribute('id') === this.grid.id) {
-                row = r;
-            }
-        });
+        const row = super.getRowByIndex(index) as any;
         return row;
     }
 
@@ -796,17 +787,6 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         } else {
             super.navigateDown(rowElement, { row: currentRowIndex, column: visibleColumnIndex });
         }
-    }
-
-    private getClosestElemByTag(sourceElem, targetTag) {
-        let result = sourceElem;
-        while (result !== null && result.nodeType === 1) {
-            if (result.tagName.toLowerCase() === targetTag.toLowerCase()) {
-                return result;
-            }
-            result = result.parentNode;
-        }
-        return null;
     }
 
     protected getNextRowByIndex(nextIndex) {

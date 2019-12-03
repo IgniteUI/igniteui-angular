@@ -8,13 +8,15 @@ All notable changes for each version of this project will be documented in this 
 - Added support for the Ivy renderer.
 - **Breaking Changes** The following classes have been renamed. Using `ng update` will apply automatically migrate your project to use the new names.
     - `IgxDropDownBase` -> `IgxDropDownBaseDirective`
-    - `IgxDropDownItemBase` -> `IgxDropDownBaseDirective`
+    - `IgxDropDownItemBase` -> `IgxDropDownItemBaseDirective`
     - `IgxGridBaseComponent` -> `IgxGridBaseDirective`
     - `IgxRowComponent` -> `IgxRowDirective`
     - `IgxHierarchicalGridBaseComponent` -> `IgxHierarchicalGridBaseDirective`
+    - `IgxMonthPickerBase` -> `IgxMonthPickerBaseDirective`
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - Pinning columns is no longer automatically prevented when the pinning area would exceed the size of the grid.
+    - `igxGridState` directive added to make it easy for developers to save and restore the grid state. The directive exposes the `getState` and `setState` methods to save/restore the state and an `options` input property to exclude features.
 - `IgxCarousel`:
     - **Breaking Changes** -The carousel slides are no longer array, they are changed to QueryList.
     - **Behavioural change** - When slides are more than 5, a label is shown instead of the indicators. The count limit of visible indicators can be changed with the input `maximumIndicatorsCount`
@@ -22,6 +24,7 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`:
+    - Master-Detail visualization added for `igxGrid`. Users may now define templates that show additional context for rows when expanded. For more information, please take a look at the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/master_detail.html).
     - `sortStrategy` input is added, which can be used to set a global sorting strategy for the entire grid.
         (**NOTE**: The grid's `sortStrategy` is of different type compared to the column's `sortStrategy`.)
     - `NoopSortingStrategy` is added, which can be used to disable the default sorting of the grid by assigning its instance to the grid's `sortStrategy` input. (Useful for remote sorting.)
@@ -29,6 +32,12 @@ All notable changes for each version of this project will be documented in this 
     - `sortingExpressionsChange` event emitter is added, which is fired whenever a change to the sorting expressions has occurred (prior to performing the actual sorting).
     - `filteringExpressionsTreeChange` event emitter is added, which is fired whenever a change to the filtering expressions has occurred (prior to performing the actual filtering).
     - `advancedFilteringExpressionsTreeChange` event emitter is added, which is fired whenever a change to the advanced filtering expressions has occurred (prior to performing the actual filtering).
+    - `collapsible` and `expanded` properties are added to the IgxColumnGroupComponent; `collapsible` property identifies that certain column group is collapsible; `expanded` identifies whether the group is expanded or collapsed initially;
+    - `collapsibleChange` and `expandedChange` events are added to the IgxColumnGroupComponent which are emited whenever `collapsible` and `expanded` properties are changed accordingly;
+    - `visibleWhenCollapsed` property has been added to the IgxColumnComponent; Allows you to set whether the column stay visible when its parrent is collapsed.
+    - `visibleWhenCollapsedChange` events is added to the IgxColumnComponent which are emited whenever `visibleWhenCollapsed`  property is changed;
+    - `collapsibleIndicatorTemplate` property is introduced to IgxColumnGroupComponent, which allows you to set a custom template for the expand collapse indicator;
+    - `igxCollapsibleIndicator` directive has been introduced, which allows you to set a custom template for the expand collapse indicator;
     - `IgxGridExcelStyleFilteringComponent` and `IgxAdvancedFilteringDialogComponent` can now be hosted outside of the grid in order to provide the same experience as the built-in filtering UI.
     - `IgxOverlayService`:
         - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
@@ -48,12 +57,29 @@ All notable changes for each version of this project will be documented in this 
         </ng-template>
     </igx-grid>
     ```
-    - `IgxCarousel`:
-        - `keyboardSupport` input is added, which can be used to enable and disable keyboard navigation
-        - `maximumIndicatorsCount` input is added, which can be used to set the number of visible indicators
-        - `indicatorsOrientation` input is added, which can be used to set the position of indicators it can be top or bottom
-        - `animationType` input is added, which can be used to set animation when changing slides
-        - `indicatorTemplate` directive is added, which can be used to provide a custom indicator for carousel. If this property is not provided, a default indicator template will be used instead.
+- `IgxSlider`:
+    - `primaryTicks` input was added. Which sets the number of primary ticks
+    - `secondaryTicks` input was added. Which sets the number of secondary ticks.
+    - `showTicks` input was added. Which show/hide all slider ticks and tick labels.
+    - `primaryTickLabels` input was added. Which shows/hides all primary tick labels.
+    - `secondaryTickLabels` input was added. Shows/hides all secondary tick labels.
+    - `ticksOrientation` input was added. Allows to change ticks orientation to top|bottom|mirror.
+    - `tickLabelsOrientation` input was added. Allows you to change the rotation of all tick labels from horizontal to vertical(toptobottom, bottomtotop).
+    - `igxSliderTickLabel` directive has been introduced. Allows you to set a custom template for all tick labels.
+   
+- `IgxCarousel`:
+    - `keyboardSupport` input is added, which can be used to enable and disable keyboard navigation
+    - `gesturesSupport` input is added, which can be used to enable and disable gestures
+    - `maximumIndicatorsCount` input is added, which can be used to set the number of visible indicators
+    - `indicatorsOrientation` input is added, which can be used to set the position of indicators it can be top or bottom
+    - `animationType` input is added, which can be used to set animation when changing slides
+    - `indicatorTemplate` directive is added, which can be used to provide a custom indicator for carousel. If this property is not provided, a default indicator template will be used instead.
+    - `nextButtonTemplate` directive is added, which is used to provide a custom next button template. If not provided, a default next button is used.
+    - `prevButtonTemplate` directive is added, which is used to provide a custom previous button template. If not provided, a default previous button is used.
+
+- `IgxSelect`: 
+    - adding `IgxSelectHeaderDirective` and `IgxSelectFooterDirective`. These can be used to provide a custom header, respectively footer templates for the `igxSelect` drop-down list. If there are no templates marked with these directives - no default templates will be used so the drop-down list will not have header nor footer.
+
 
 ## 8.2.6
 

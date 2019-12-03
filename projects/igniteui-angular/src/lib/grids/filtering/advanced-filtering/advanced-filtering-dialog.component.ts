@@ -161,37 +161,37 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    @ViewChild('columnSelect', { read: IgxSelectComponent, static: false })
+    @ViewChild('columnSelect', { read: IgxSelectComponent })
     public columnSelect: IgxSelectComponent;
 
     /**
      * @hidden @internal
      */
-    @ViewChild('conditionSelect', { read: IgxSelectComponent, static: false })
+    @ViewChild('conditionSelect', { read: IgxSelectComponent })
     public conditionSelect: IgxSelectComponent;
 
     /**
      * @hidden @internal
      */
-    @ViewChild('searchValueInput', { read: ElementRef, static: false })
+    @ViewChild('searchValueInput', { read: ElementRef })
     public searchValueInput: ElementRef;
 
     /**
      * @hidden @internal
      */
-    @ViewChild('addRootAndGroupButton', { read: ElementRef, static: false })
+    @ViewChild('addRootAndGroupButton', { read: ElementRef })
     public addRootAndGroupButton: ElementRef;
 
     /**
      * @hidden @internal
      */
-    @ViewChild('addConditionButton', { read: ElementRef, static: false })
+    @ViewChild('addConditionButton', { read: ElementRef })
     public addConditionButton: ElementRef;
 
     /**
      * @hidden @internal
      */
-    @ViewChild('editingInputsContainer', { read: ElementRef, static: false })
+    @ViewChild('editingInputsContainer', { read: ElementRef })
     public set editingInputsContainer(value: ElementRef) {
         if ((value && !this._editingInputsContainer) ||
             (value && this._editingInputsContainer && this._editingInputsContainer.nativeElement !== value.nativeElement)) {
@@ -213,7 +213,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    @ViewChild('addModeContainer', { read: ElementRef, static: false })
+    @ViewChild('addModeContainer', { read: ElementRef })
     public set addModeContainer(value: ElementRef) {
         if ((value && !this._addModeContainer) ||
             (value && this._addModeContainer && this._addModeContainer.nativeElement !== value.nativeElement)) {
@@ -235,7 +235,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    @ViewChild('currentGroupButtonsContainer', { read: ElementRef, static: false })
+    @ViewChild('currentGroupButtonsContainer', { read: ElementRef })
     public set currentGroupButtonsContainer(value: ElementRef) {
         if ((value && !this._currentGroupButtonsContainer) ||
             (value && this._currentGroupButtonsContainer && this._currentGroupButtonsContainer.nativeElement !== value.nativeElement)) {
@@ -257,7 +257,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    @ViewChild(IgxToggleDirective, { static: false })
+    @ViewChild(IgxToggleDirective)
     public contextMenuToggle: IgxToggleDirective;
 
     /**
@@ -269,7 +269,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    @ViewChild('expressionsContainer', { static: false })
+    @ViewChild('expressionsContainer')
     protected expressionsContainer: ElementRef;
 
     /**
@@ -297,7 +297,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     private _grid: GridType;
     private _filteringChange: Subscription;
 
-    constructor(private element: ElementRef, public cdr: ChangeDetectorRef) { }
+    constructor(public cdr: ChangeDetectorRef) { }
 
     /**
      * @hidden @internal
@@ -411,6 +411,16 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
             this.contextMenuToggle.reposition();
             this.contextMenuToggle.element.style.display = '';
         }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public onDragMove(e) {
+        const deltaX = e.nextPageX - e.pageX;
+        const deltaY = e.nextPageY - e.pageY;
+        e.cancel = true;
+        this._overlayService.setOffset(this._overlayComponentId, deltaX, deltaY);
     }
 
     /**
@@ -594,7 +604,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * @hidden @internal
      */
     public onChipRemove(expressionItem: ExpressionItem) {
-       this.deleteItem(expressionItem);
+        this.deleteItem(expressionItem);
     }
 
     /**
@@ -643,8 +653,8 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
 
         this.cdr.detectChanges();
 
-        this.columnSelectOverlaySettings.positionStrategy = new AutoPositionStrategy({target: this.columnSelect.element});
-        this.conditionSelectOverlaySettings.positionStrategy = new AutoPositionStrategy({target: this.conditionSelect.element});
+        this.columnSelectOverlaySettings.positionStrategy = new AutoPositionStrategy({ target: this.columnSelect.element });
+        this.conditionSelectOverlaySettings.positionStrategy = new AutoPositionStrategy({ target: this.conditionSelect.element });
 
         if (!this.selectedColumn) {
             this.columnSelect.input.nativeElement.focus();
@@ -1018,13 +1028,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         this.grid = grid;
         this._overlayService = overlayService;
         this._overlayComponentId = overlayComponentId;
-
-        // Set pointer-events to none of the overlay content element which blocks the grid interaction after dragging
-        this._overlayService.onOpened.pipe(first()).subscribe(() => {
-            if (this.element.nativeElement.parentElement) {
-                this.element.nativeElement.parentElement.style['pointer-events'] = 'none';
-            }
-        });
     }
 
     private init() {

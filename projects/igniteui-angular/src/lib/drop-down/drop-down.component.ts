@@ -56,11 +56,14 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     protected destroy$ = new Subject<boolean>();
     protected _scrollPosition: number;
 
-    @ContentChild(IgxForOfDirective, { read: IgxForOfDirective, static: false })
+    @ContentChild(IgxForOfDirective, { read: IgxForOfDirective })
     protected virtDir: IgxForOfDirective<any>;
 
     @ViewChild(IgxToggleDirective, { static: true })
     protected toggleDirective: IgxToggleDirective;
+
+    @ViewChild('scrollContainer', { static: true })
+    protected scrollContainerRef: ElementRef;
 
     /**
      * @hidden
@@ -202,8 +205,9 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         return this.toggleDirective.collapsed;
     }
 
-    protected get scrollContainer() {
-        return this.toggleDirective.element;
+    /** @hidden @internal */
+    public get scrollContainer(): HTMLElement {
+        return this.scrollContainerRef.nativeElement;
     }
 
     protected get collectionLength() {
