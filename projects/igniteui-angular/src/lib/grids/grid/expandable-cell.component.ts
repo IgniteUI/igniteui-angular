@@ -42,9 +42,6 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
     @ViewChild('indentationDiv', { read: ElementRef })
     public indentationDiv: ElementRef;
 
-    @ViewChild('defaultContentElement', { read: ElementRef })
-    public defaultContentElement: ElementRef;
-
     /**
     * @hidden
     */
