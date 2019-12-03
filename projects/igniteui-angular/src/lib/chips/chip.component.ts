@@ -21,6 +21,8 @@ import {
     IDropDroppedEventArgs
 } from '../directives/drag-drop/drag-drop.directive';
 import { IBaseEventArgs } from '../core/utils';
+import { fromEvent } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 
 export interface IBaseChipEventArgs extends IBaseEventArgs {
@@ -379,6 +381,12 @@ export class IgxChipComponent extends DisplayDensityBase {
     /**
      * @hidden
      */
+    @ViewChild('selectContainer', { read: ElementRef, static: true })
+    public selectContainer: ElementRef;
+
+    /**
+     * @hidden
+     */
     @ViewChild('defaultRemoveIcon', { read: TemplateRef, static: true })
     public defaultRemoveIcon: TemplateRef<any>;
 
@@ -441,6 +449,11 @@ export class IgxChipComponent extends DisplayDensityBase {
             selected: false,
             cancel: false
         };
+
+        // Take the first 2 because there is transition for opacity and width and their order is not certain.
+        fromEvent(this.selectContainer.nativeElement, 'transitionend').pipe(take(2)).subscribe((event) => {
+            this.onSelectTransitionDone(event);
+        });
 
         if (newValue && !this._selected) {
             onSelectArgs.selected = true;
