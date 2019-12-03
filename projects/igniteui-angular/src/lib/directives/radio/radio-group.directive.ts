@@ -35,6 +35,7 @@ let nextId = 0;
  * ```
  */
 @Directive({
+    exportAs: 'igxRadioGroup',
     selector: 'igx-radio-group, [igxRadioGroup]',
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxRadioGroupDirective, multi: true }]
 })
@@ -46,7 +47,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      * ```
      * @memberof IgxRadioGroupDirective
      */
-    @ContentChildren(IgxRadioComponent) public radioButtons: QueryList<IgxRadioComponent>;
+    @ContentChildren(IgxRadioComponent, { descendants: true }) public radioButtons: QueryList<IgxRadioComponent>;
 
     /**
      * Sets/gets the `value` attribute.
@@ -258,13 +259,11 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      */
     private _initRadioButtons() {
         if (this.radioButtons) {
+            const props = { name: this._name, labelPosition: this._labelPosition, disabled: this._disabled, required: this._required };
             this.radioButtons.forEach((button) => {
-                button.name = this._name;
-                button.labelPosition = this._labelPosition;
-                button.disabled = this._disabled;
-                button.required = this._required;
+                Object.assign(button, props);
 
-                if (this._value && button.value === this._value) {
+                if (button.value === this._value) {
                     button.checked = true;
                     this._selected = button;
                 }
