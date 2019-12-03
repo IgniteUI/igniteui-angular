@@ -1,45 +1,20 @@
-<!-- <div class="sample-wrapper">
+<div class="sample-wrapper">
     <app-page-header title="Slider">
         Allows the user to set value/values within a given range.
     </app-page-header>
     <section class="sample-content">
-        <div> -->
+        <div>
             <h4 class="sample-title">Slider</h4>
+
             <article class="sample-column">
-                <igx-slider #slider [step]="10" [lowerBound]="20" [upperBound]="4"
-                    [tickLabelsOrientation]="labelOrientaion"
-                    [continuous]="false"
-                    [type]="sliderType"
-                    [primaryTickLabels]="primaryTickLabels"
-                    [secondaryTickLabels]="secondaryTickLabels"
-                    [ticksOrientation]="ticksOrientation"
-                    [labels]="labels"
-                    [primaryTicks]="3"
-                    [secondaryTicks]="3">
-                    <!-- <ng-template igxSliderTickLabel let-value let-primary="isPrimary" let-idx="index" let-labels="labels">
-                        {{ tickLabel(value, primary, idx, labels) }}
-                    </ng-template> -->
-                </igx-slider>
-            </article>
-            <article style="padding-top: 50px">
-                <button igxButton (click)="changeLabelOrientation()">change label orientaiton</button>
-                <button igxButton (click)="changeTicksOrientation()">change ticks orientation</button>
-                <button igxButton (click)="primaryTickLabels = !primaryTickLabels">show/hide primary labels</button>
-                <button igxButton (click)="secondaryTickLabels = !secondaryTickLabels">show/hide secondary labels</button>
-                <button igxButton (click)="changeLabels()">change labels</button>
-                <button igxButton (click)="sliderType = sliderType === 0 ? 1 : 0">change type</button>
-            </article>
-
-
-            <!-- <article class="sample-column">
                 <h4 class="sample-title">Range slider</h4>
-                <igx-slider #slider2 [type]="sliderType" [disabled]="true" [(ngModel)]="rangeValue" [minValue]="0" [maxValue]="100">
+                <igx-slider #slider [type]="sliderType" [disabled]="true" [(ngModel)]="rangeValue" [minValue]="0" [maxValue]="100">
                 </igx-slider>
             </article>
 
             <article class="sample-column">
                 <h4 class="sample-title">Range label slider</h4>
-                <igx-slider #slider3 [type]="sliderType" [(ngModel)]="rangeLabel"
+                <igx-slider #slider1 [type]="sliderType" [(ngModel)]="rangeLabel"
                     [labels]="['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']">
                     <ng-template igxSliderThumbFrom let-value let-labels="labels">
                         <span class="ellipsis">{{ labels[value.lower] }}</span>
@@ -53,14 +28,44 @@
             <article class="sample-column" class="flex-row">
                 <h4 class="sample-title">Range label slider</h4>
                 <span class="outer-label">{{getLowerVal}}</span>
-                <igx-slider style="width: 60%;" #slider3 [type]="sliderType" (onValueChange)="valueChange($event)"
+                <igx-slider style="width: 60%;" #slider2 [type]="sliderType" (onValueChange)="valueChange($event)"
                     [labels]="labels" [continuous]="true">
                 </igx-slider>
                 <span class="outer-label">{{getUpperVal}}</span>
             </article>
-        </div> -->
+            <article class="sample-column">
+                <h4 class="sample-title">Slider ticks</h4>
+                <igx-slider #slider3
+                [tickLabelsOrientation]="labelOrientaion"
+                [continuous]="false"
+                [type]="sliderType"
+                [showTicks]="true"
+                [primaryTickLabels]="primaryTickLabels"
+                [secondaryTickLabels]="secondaryTickLabels"
+                [ticksOrientation]="ticksOrientation"
+                [labels]="labels"
+                [secondaryTicks]="4">
+            </igx-slider>
+        </article>
+        <article class="sample-column">
+                <h4 class="sample-title">Slider ticks</h4>
+                <igx-slider #slider4 [step]="5" [lowerBound]="20" [upperBound]="4"
+                    [tickLabelsOrientation]="labelOrientaion"
+                    [type]="sliderType"
+                    [showTicks]="true"
+                    [primaryTickLabels]="primaryTickLabels"
+                    [secondaryTickLabels]="secondaryTickLabels"
+                    [ticksOrientation]="ticksOrientation"
+                    [primaryTicks]="3"
+                    [secondaryTicks]="3">
+                        <ng-template igxSliderTickLabel let-value let-primary="isPrimary" let-idx="index" let-labels="labels">
+                            {{ tickLabel(value, primary, idx, labels) }}
+                        </ng-template>
+                </igx-slider>
+            </article>
+        </div>
 
-        <!-- <div>
+        <div>
             <article class="sample-column">
                 <h3>Task</h3>
                 <div>name: {{task.title}}</div>
@@ -82,6 +87,16 @@
                 <input type="text" [(ngModel)]="rangeLabel.lower">
                 <input type="text" [(ngModel)]="rangeLabel.upper">
             </article>
-        </div> -->
-    <!-- </section>
-</div> -->
+        </div>
+        <div class="slider-ticks-btns">
+            <h4>Slider ticks</h4>
+            <button igxButton="outlined" (click)="changeLabelOrientation()">change label orientaiton</button>
+            <button igxButton="outlined" (click)="changeTicksOrientation()">change ticks orientation</button>
+            <button igxButton="outlined" (click)="primaryTickLabels = !primaryTickLabels">show/hide primary labels</button>
+            <button igxButton="outlined" (click)="secondaryTickLabels = !secondaryTickLabels">show/hide secondary labels</button>
+            <button igxButton="outlined" (click)="changeLabels()">change labels</button>
+            <button igxButton="outlined" (click)="sliderType = sliderType === 0 ? 1 : 0">change type</button>
+            <button igxButton="outlined" (click)="sliderType = sliderType === 0 ? 1 : 0">change step</button>
+        </div>
+    </section>
+</div>
