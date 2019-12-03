@@ -1,5 +1,7 @@
 import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { Observable } from 'rxjs';
+import ResizeObserver from 'resize-observer-polyfill';
 
 /**
  *@hidden
@@ -321,3 +323,20 @@ export const NAVIGATION_KEYS = new Set([
 export const ROW_EXPAND_KEYS = new Set('right down arrowright arrowdown'.split(' '));
 export const ROW_COLLAPSE_KEYS = new Set('left up arrowleft arrowup'.split(' '));
 export const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'tab', 'enter', 'f2', 'escape', 'esc']);
+
+/**
+ * @hidden
+ * @internal
+ *
+ * Creates a new ResizeObserver on `target` and returns it as an Observable.
+ */
+export function resizeObservable(target: HTMLElement): Observable<ResizeObserverEntry[]> {
+    return new Observable((observer) => {
+        const instance = new ResizeObserver((entries: ResizeObserverEntry[]) => {
+            observer.next(entries);
+        });
+        instance.observe(target);
+        const unsubscribe = () => instance.disconnect();
+        return unsubscribe;
+    });
+}

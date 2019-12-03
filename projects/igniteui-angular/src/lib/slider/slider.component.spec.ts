@@ -1400,7 +1400,7 @@ describe('IgxSlider', () => {
             expect(ticksTop).toBeNull();
 
             fixture.componentInstance.showTicks = true;
-            fixture.componentInstance.ticksOrientation = TicksOrientation.mirror;
+            fixture.componentInstance.ticksOrientation = TicksOrientation.Mirror;
             fixture.detectChanges();
 
             ticks = fixture.debugElement.nativeElement.querySelector(SLIDER_TICKS_ELEMENT);
@@ -1470,7 +1470,7 @@ describe('IgxSlider', () => {
 
             expect(bottomTicks).not.toBeNull();
 
-            fixture.componentInstance.ticksOrientation = TicksOrientation.top;
+            fixture.componentInstance.ticksOrientation = TicksOrientation.Top;
             fixture.detectChanges();
 
             let topTIcks = fixture.debugElement.nativeElement.querySelector(SLIDER_TICKS_TOP_ELEMENT);
@@ -1479,7 +1479,7 @@ describe('IgxSlider', () => {
             expect(topTIcks).not.toBeNull();
             expect(bottomTicks).toBeNull();
 
-            fixture.componentInstance.ticksOrientation = TicksOrientation.mirror;
+            fixture.componentInstance.ticksOrientation = TicksOrientation.Mirror;
             fixture.detectChanges();
 
             topTIcks = fixture.debugElement.nativeElement.querySelector(SLIDER_TICKS_TOP_ELEMENT);
@@ -1499,7 +1499,7 @@ describe('IgxSlider', () => {
             expect(labelsBottomTop).toBeNull();
             expect(labelsTopBottom).toBeNull();
 
-            fixture.componentInstance.tickLabelsOrientation = TickLabelsOrientation.bottomtotop;
+            fixture.componentInstance.tickLabelsOrientation = TickLabelsOrientation.BottomToTop;
             fixture.detectChanges();
 
             labelsBottomTop = nativeElem.querySelector(BOTTOM_TO_TOP_TICK_LABLES);
@@ -1507,7 +1507,7 @@ describe('IgxSlider', () => {
             expect(labelsBottomTop).not.toBeNull();
             expect(labelsTopBottom).toBeNull();
 
-            fixture.componentInstance.tickLabelsOrientation = TickLabelsOrientation.toptobottom;
+            fixture.componentInstance.tickLabelsOrientation = TickLabelsOrientation.TopToBottom;
             fixture.detectChanges();
 
             labelsBottomTop = nativeElem.querySelector(BOTTOM_TO_TOP_TICK_LABLES);
@@ -1596,10 +1596,10 @@ export class SliderTicksComponent {
     public primaryTicks = 0;
     public secondaryTicks = 0;
     public showTicks = true;
-    public ticksOrientation = TicksOrientation.bottom;
+    public ticksOrientation = TicksOrientation.Bottom;
     public primaryTickLabels = true;
     public secondaryTickLabels = true;
-    public tickLabelsOrientation = TickLabelsOrientation.horizontal;
+    public tickLabelsOrientation = TickLabelsOrientation.Horizontal;
 }
 @Component({
     selector: 'igx-slider-test-component',
