@@ -179,13 +179,13 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    @ViewChild('addRootAndGroupButton', { read: ElementRef, static: true })
+    @ViewChild('addRootAndGroupButton', { read: ElementRef })
     public addRootAndGroupButton: ElementRef;
 
     /**
      * @hidden @internal
      */
-    @ViewChild('addConditionButton', { read: ElementRef, static: true })
+    @ViewChild('addConditionButton', { read: ElementRef })
     public addConditionButton: ElementRef;
 
     /**
@@ -213,7 +213,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    @ViewChild('addModeContainer', { read: ElementRef, static: true })
+    @ViewChild('addModeContainer', { read: ElementRef })
     public set addModeContainer(value: ElementRef) {
         if ((value && !this._addModeContainer) ||
             (value && this._addModeContainer && this._addModeContainer.nativeElement !== value.nativeElement)) {
