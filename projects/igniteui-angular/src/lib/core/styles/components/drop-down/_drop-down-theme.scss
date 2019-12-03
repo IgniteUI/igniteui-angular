@@ -211,7 +211,6 @@
     );
 
     %igx-drop-down-wrapper {
-        box-shadow: --var($theme, 'shadow');
         z-index: 1;
     }
 
@@ -224,6 +223,7 @@
 
     %igx-drop-down__list {
         overflow-y: auto;
+        box-shadow: --var($theme, 'shadow');
         background: --var($theme, 'background-color');
         min-width: rem(128px);
 
@@ -383,6 +383,7 @@
     }
 
     %igx-drop-down__list--select {
+        box-shadow: none;
         %igx-drop-down__item {
             @include igx-type-style($type-scale, $select-item);
             @include ellipsis()
