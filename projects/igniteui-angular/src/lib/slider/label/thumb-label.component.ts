@@ -1,4 +1,4 @@
-import { Component, NgModule, Input, TemplateRef, HostBinding, ElementRef } from '@angular/core';
+import { Component, Input, TemplateRef, HostBinding, ElementRef } from '@angular/core';
 import { SliderHandle } from '../slider.common';
 
 @Component({

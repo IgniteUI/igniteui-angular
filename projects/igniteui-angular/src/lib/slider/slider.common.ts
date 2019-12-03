@@ -73,16 +73,16 @@ export enum SliderHandle {
  * Slider Tick labels Orientation
  */
 export enum TickLabelsOrientation {
-    horizontal,
-    toptobottom,
-    bottomtotop
+    Horizontal,
+    TopToBottom,
+    BottomToTop
 }
 
 /**
  * Slider Ticks orientation
  */
 export enum TicksOrientation {
-    top,
-    bottom,
-    mirror
+    Top,
+    Bottom,
+    Mirror
 }
