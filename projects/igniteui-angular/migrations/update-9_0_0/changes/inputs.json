@@ -1,0 +1,13 @@
+{
+    "@scheme": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "isContinuous",
+            "replaceWith": "continuous",
+            "owner": {
+                "selector": "igx-slider",
+                "type": "component"
+            }
+        }
+    ]
+}

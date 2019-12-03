@@ -20,8 +20,8 @@ export class SliderSampleComponent {
     private _lowerValue: Date;
     private _upperValue: Date;
 
-    public labelOrientaion = TickLabelsOrientation.horizontal;
-    public ticksOrientation = TicksOrientation.bottom;
+    public labelOrientaion = TickLabelsOrientation.Horizontal;
+    public ticksOrientation = TicksOrientation.Bottom;
     public primaryTickLabels = true;
     public secondaryTickLabels = true;
     public sliderType: SliderType = SliderType.RANGE;
@@ -62,26 +62,26 @@ export class SliderSampleComponent {
     }
 
     public changeLabels() {
-        this.labels = new Array('asd', 'bsd');
+        this.labels = new Array('08:00', '12:00', '16:00', '20:00', '00:00');
     }
 
     public changeLabelOrientation() {
-        if (this.labelOrientaion === TickLabelsOrientation.horizontal) {
-            this.labelOrientaion = TickLabelsOrientation.toptobottom;
-        } else if(this.labelOrientaion === TickLabelsOrientation.toptobottom) {
-            this.labelOrientaion = TickLabelsOrientation.bottomtotop;
+        if (this.labelOrientaion === TickLabelsOrientation.Horizontal) {
+            this.labelOrientaion = TickLabelsOrientation.TopToBottom;
+        } else if(this.labelOrientaion === TickLabelsOrientation.TopToBottom) {
+            this.labelOrientaion = TickLabelsOrientation.BottomToTop;
         } else {
-            this.labelOrientaion = TickLabelsOrientation.horizontal;
+            this.labelOrientaion = TickLabelsOrientation.Horizontal;
         }
     }
 
     public changeTicksOrientation() {
-        if (this.ticksOrientation === TicksOrientation.mirror) {
-            this.ticksOrientation = TicksOrientation.top;
-        } else if (this.ticksOrientation === TicksOrientation.top) {
-            this.ticksOrientation = TicksOrientation.bottom;
+        if (this.ticksOrientation === TicksOrientation.Mirror) {
+            this.ticksOrientation = TicksOrientation.Top;
+        } else if (this.ticksOrientation === TicksOrientation.Top) {
+            this.ticksOrientation = TicksOrientation.Bottom;
         } else {
-            this.ticksOrientation = TicksOrientation.mirror;
+            this.ticksOrientation = TicksOrientation.Mirror;
         }
     }
 
