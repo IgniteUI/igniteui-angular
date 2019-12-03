@@ -330,13 +330,13 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
     /**
      *@hidden
      */
-    public onFocus(event) {
+    public onFocus() {
         this.focused = true;
     }
     /**
      *@hidden
      */
-    public onBlur(event) {
+    public onBlur() {
         this.focused = false;
         this._onTouchedCallback();
     }
