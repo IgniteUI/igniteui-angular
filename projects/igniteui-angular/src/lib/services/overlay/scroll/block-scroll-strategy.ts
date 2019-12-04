@@ -28,13 +28,11 @@ export class BlockScrollStrategy extends ScrollStrategy {
     /** @inheritdoc */
     public attach(): void {
         this._document.addEventListener('scroll', this.onScroll, true);
-        this._document.addEventListener('wheel', this.onWheel, true);
     }
 
     /** @inheritdoc */
     public detach(): void {
         this._document.removeEventListener('scroll', this.onScroll, true);
-        this._document.removeEventListener('wheel', this.onWheel, true);
         this._sourceElement = null;
         this._initialScrollTop = 0;
         this._initialScrollLeft = 0;
@@ -51,10 +49,5 @@ export class BlockScrollStrategy extends ScrollStrategy {
 
         this._sourceElement.scrollTop = this._initialScrollTop;
         this._sourceElement.scrollLeft = this._initialScrollLeft;
-    }
-
-    private onWheel(ev: WheelEvent) {
-        ev.stopImmediatePropagation();
-        ev.preventDefault();
     }
 }
