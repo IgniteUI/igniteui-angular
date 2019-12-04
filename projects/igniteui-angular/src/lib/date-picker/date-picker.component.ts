@@ -765,6 +765,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     private _transformedDate;
     private _onOpen = new EventEmitter<IgxDatePickerComponent>();
     private _onClose = new EventEmitter<IgxDatePickerComponent>();
+    private _focusInput: boolean;
 
     /**
     * @hidden
@@ -859,6 +860,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         this._overlayService.onClosing.pipe(
             filter(overlay => overlay.id === this._componentID),
             takeUntil(this._destroy$)).subscribe((event) => {
+                // Do not focus the input if clicking outside the dropdown list/dialog
+                event.event ? this._focusInput = false : this._focusInput = true;
                 this.onClosing.emit(event);
             });
 
@@ -1240,9 +1243,11 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
         // TODO: remove this line after deprecating 'onClose'
         this.onClose.emit(this);
-
-        if (this.getEditElement()) {
-            this.getEditElement().focus();
+        const input = this.getEditElement();
+        if (input && this._focusInput) {
+            input.focus();
+        } else  {
+            return;
         }
     }
 
