@@ -691,8 +691,21 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this.verticalScrollContainer.addScrollTop(evt.target.scrollTop);
             evt.target.scrollTop = 0;
             this.verticalScrollContainer.onChunkLoad.pipe(first()).subscribe(() => {
-                // Some browsers (like Edge/IE) lose focus after scrolling.
-                (activeElem as any).focus();
+                const active = this.selectionService.activeElement;
+                const currRow = (this.navigation as any).getRowByIndex(active.row, '');
+                // check if the focused element was a child of the details view
+                if (this.isDetailRecord(active.row) && currRow && currRow.contains(activeElem)) {
+                    // Some browsers (like Edge/IE) lose focus after scrolling even when the element was in the DOM.
+                    (activeElem as any).focus({ preventScroll: true });
+                    return;
+                }
+                const nextCellTarget = this.navigation.getCellElementByVisibleIndex(active.row, active.column);
+                const nextRowTarget = (this.navigation as any).getRowByIndex(active.row + 1, '');
+                if (nextCellTarget) {
+                    nextCellTarget.focus({ preventScroll: true });
+                } else if (nextRowTarget) {
+                    nextRowTarget.focus({ preventScroll: true });
+                }
             });
         }
     }
@@ -705,6 +718,13 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             return rec.detailsData;
         }
         return rec;
+    }
+
+    public detailsViewFocused(container, rowIndex) {
+        this.selectionService.activeElement = {
+            row: rowIndex,
+            column: this.selectionService.activeElement ? this.selectionService.activeElement.column : 0
+        };
     }
 
     public detailsKeyboardHandler(event, rowIndex, container) {
