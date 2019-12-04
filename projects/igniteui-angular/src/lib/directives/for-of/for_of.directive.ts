@@ -1518,10 +1518,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         if (this._differ) {
             const changes = this._differ.diff(this.igxForOf);
             if (changes) {
-                const args: IForOfDataChangingEventArgs = {
-                    containerSize: this.igxForContainerSize
-                };
-                this.onDataChanging.emit(args);
+                this.onDataChanging.emit();
                 //  re-init cache.
                 if (!this.igxForOf) {
                     this.igxForOf = [];
@@ -1534,7 +1531,6 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                     this.syncService.resetMaster();
                 }
                 this.syncService.setMaster(this);
-                this.igxForContainerSize = args.containerSize;
                 this._updateSizeCache(changes);
                 this._applyChanges();
                 this._updateScrollOffset();

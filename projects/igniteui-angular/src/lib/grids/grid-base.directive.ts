@@ -3013,10 +3013,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.verticalScrollContainer.onDataChanging.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
-            this.calculateGridHeight();
-            $event.containerSize = this.calcHeight;
             this.evaluateLoadingState();
-            this.notifyChanges(true);
         });
 
         this.verticalScrollContainer.onContentSizeChange.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
@@ -4422,7 +4419,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.summariesHeight = this.summaryService.calcMaxSummaryHeight();
         }
 
-        this.calcHeight = this._calculateGridBodyHeight();
+        this.calcHeight = this.height !== null ? Math.max(this._calculateGridBodyHeight(), this.minHeight) : null;
     }
 
     /**
@@ -4516,8 +4513,13 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return origHeight !== height;
     }
 
+    public get minHeight() {
+        return this.renderedRowHeight;
+    }
+
     protected _shouldAutoSize(renderedHeight) {
-        this.tbody.nativeElement.style.display = 'none';
+        const tbodyContainer = this.tbody.nativeElement.parentElement;
+        tbodyContainer.style.display = 'none';
         let res = !this.nativeElement.parentElement ||
         this.nativeElement.parentElement.clientHeight === 0 ||
         this.nativeElement.parentElement.clientHeight === renderedHeight;
@@ -4526,7 +4528,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             // we should always auto-size since the actual size of the container will continuously change as the grid renders elements.
            res = this.checkContainerSizeChange();
         }
-        this.tbody.nativeElement.style.display = '';
+        tbodyContainer.style.display = '';
         return res;
     }
 
@@ -4664,7 +4666,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     protected getDataBasedBodyHeight(): number {
-        return !this.data || (this.data.length < this._defaultTargetRecordNumber) ?
+        return !this.data ?
             0 : this.defaultTargetBodyHeight;
     }
 

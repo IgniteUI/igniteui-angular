@@ -1007,7 +1007,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             tick(16);
             const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            expect(defaultHeight).toBeNull();
+            expect(parseInt(defaultHeight, 10)).toBe((fix.componentInstance.grid as any).getDataBasedBodyHeight());
             expect(fix.debugElement.query(By.css(TBODY_CLASS))
                 .nativeElement.getBoundingClientRect().height).toBeGreaterThan(200);
             expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeFalsy();
@@ -1066,8 +1066,9 @@ describe('IgxGrid Component Tests #grid', () => {
             tick();
             fix.detectChanges();
             let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            expect(defaultHeight).toBeNull(); // initially body height is null in auto-sizing scenarios with empty data
-            expect(fix.componentInstance.grid.calcHeight).toBeNull();
+            expect(parseInt(defaultHeight, 10))
+            .toBe(fix.componentInstance.grid.minHeight); // initially body height is minheight in auto-sizing scenarios with empty data
+            expect(fix.componentInstance.grid.calcHeight).toBe(fix.componentInstance.grid.minHeight);
             fix.componentInstance.data = fix.componentInstance.fullData;
             tick();
             fix.detectChanges();
@@ -1083,8 +1084,9 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
 
             let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            expect(defaultHeight).toBeNull(); // initially body height is null in auto-sizing scenarios with empty data
-            expect(fix.componentInstance.grid.calcHeight).toBeNull();
+            expect(parseInt(defaultHeight, 10))
+            .toBe(fix.componentInstance.grid.minHeight); // initially body height is minheight in auto-sizing scenarios with empty data
+            expect(fix.componentInstance.grid.calcHeight).toBe(fix.componentInstance.grid.minHeight);
 
             fix.componentInstance.data = fix.componentInstance.fullData;
             fix.detectChanges();
@@ -1102,8 +1104,9 @@ describe('IgxGrid Component Tests #grid', () => {
                 fix.detectChanges();
 
                 let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-                expect(defaultHeight).toBeNull(); // initially body height is null in auto-sizing scenarios with empty data
-                expect(fix.componentInstance.grid.calcHeight).toBeNull();
+                expect(parseInt(defaultHeight, 10))
+                .toBe(fix.componentInstance.grid.minHeight); // initially body height is minheight in auto-sizing scenarios with empty data
+                expect(fix.componentInstance.grid.calcHeight).toBe(fix.componentInstance.grid.minHeight);
 
                 fix.componentInstance.data = Array.from({ length: 100000 }, (_, i) => ({ 'ID': i, 'CompanyName': 'CN' + i }));
                 fix.detectChanges();
@@ -1121,8 +1124,8 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
 
             let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            expect(defaultHeight).toBeNull();
-            expect(fix.componentInstance.grid.calcHeight).toBeNull();
+            expect(parseInt(defaultHeight, 10)).toBe((fix.componentInstance.grid as any).getDataBasedBodyHeight());
+            expect(fix.componentInstance.grid.calcHeight).toBe((fix.componentInstance.grid as any).getDataBasedBodyHeight());
             fix.componentInstance.data = fix.componentInstance.fullData;
             fix.detectChanges();
 
@@ -1139,8 +1142,8 @@ describe('IgxGrid Component Tests #grid', () => {
                 fix.componentInstance.data = fix.componentInstance.semiData;
                 fix.detectChanges();
                 let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-                expect(defaultHeight).toBeNull();
-                expect(fix.componentInstance.grid.calcHeight).toBeNull();
+                expect(parseInt(defaultHeight, 10)).toBe((fix.componentInstance.grid as any).getDataBasedBodyHeight());
+                expect(fix.componentInstance.grid.calcHeight).toBe((fix.componentInstance.grid as any).getDataBasedBodyHeight());
                 fix.componentInstance.data = Array.from({ length: 100000 }, (_, i) => ({ 'ID': i, 'CompanyName': 'CN' + i }));
                 fix.detectChanges();
                 await wait(500);
@@ -1156,8 +1159,9 @@ describe('IgxGrid Component Tests #grid', () => {
             tick();
             fix.detectChanges();
             let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            expect(defaultHeight).toBeNull(); // initially body height is null in auto-sizing scenarios with empty data
-            expect(fix.componentInstance.grid.calcHeight).toBeNull();
+            expect(parseInt(defaultHeight, 10))
+            .toBe(fix.componentInstance.grid.minHeight); // initially body height is minheight in auto-sizing scenarios with empty data
+            expect(fix.componentInstance.grid.calcHeight).toBe(fix.componentInstance.grid.minHeight);
             fix.componentInstance.data = fix.componentInstance.fullData;
             tick();
             fix.detectChanges();
@@ -1181,8 +1185,9 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
 
             let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            expect(defaultHeight).toBeNull(); // initially body height is null in auto-sizing scenarios with empty data
-            expect(fix.componentInstance.grid.calcHeight).toBeNull();
+            expect(parseInt(defaultHeight, 10))
+            .toBe(fix.componentInstance.grid.minHeight); // initially body height is minheight in auto-sizing scenarios with empty data
+            expect(fix.componentInstance.grid.calcHeight).toBe(fix.componentInstance.grid.minHeight);
 
             fix.componentInstance.data = fix.componentInstance.fullData;
             fix.detectChanges();
@@ -1197,8 +1202,8 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
 
             defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            expect(defaultHeight).toBeNull();
-            expect(fix.componentInstance.grid.calcHeight).toBeNull();
+            expect(parseInt(defaultHeight, 10)).toBe((fix.componentInstance.grid as any).getDataBasedBodyHeight());
+                expect(fix.componentInstance.grid.calcHeight).toBe((fix.componentInstance.grid as any).getDataBasedBodyHeight());
         });
 
         it('should not keep auto-sizing when changing height', fakeAsync(() => {
@@ -1206,8 +1211,9 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
 
             let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-            expect(defaultHeight).toBeNull(); // initially body height is null in auto-sizing scenarios with empty data
-            expect(fix.componentInstance.grid.calcHeight).toBeNull();
+            expect(parseInt(defaultHeight, 10))
+            .toBe(fix.componentInstance.grid.minHeight); // initially body height is minheight in auto-sizing scenarios with empty data
+            expect(fix.componentInstance.grid.calcHeight).toBe(fix.componentInstance.grid.minHeight);
 
             fix.componentInstance.data = fix.componentInstance.fullData;
             fix.detectChanges();

@@ -13,6 +13,7 @@ export class GridPerformanceSampleComponent implements OnInit {
 
     localData: any[] = [];
     columns;
+    _timer;
 
     ngOnInit() {
 
@@ -73,6 +74,35 @@ export class GridPerformanceSampleComponent implements OnInit {
         this.grid1.markForCheck();
     }
     public scrollTo(grid, index) {
+        const date = new Date().getTime();
         grid.verticalScrollContainer.scrollTo(parseInt(index, 10));
+        grid.cdr.detectChanges();
+        console.log(new Date().getTime() - date);
+    }
+
+    public startLiveData() {
+        this._timer = setInterval(() => this.ticker(), 100);
+    }
+
+    public stopLiveData() {
+        if (this._timer) {
+            clearInterval(this._timer);
+        }
+    }
+
+    private ticker() {
+        this.grid1.data = this.updateRandomValues(this.grid1.data);
+    }
+
+    private updateRandomValues(data: any[]): any {
+        const newData = data.slice();
+        let y = 0;
+        for (let i = Math.round(Math.random() * 10); i < newData.length; i += Math.round(Math.random() * 10)) {
+            newData[i]['1'] = Math.round(Math.random() * 10);
+            newData[i]['2'] = Math.round(Math.random() * 10);
+            newData[i]['3'] = Math.round(Math.random() * 10);
+            y++;
+        }
+        return newData;
     }
 }
