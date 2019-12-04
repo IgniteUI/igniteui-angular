@@ -181,7 +181,7 @@ describe('IgxDatePicker', () => {
             expect(overlays.length).toEqual(0);
         }));
 
-        it('When datepicker is closed and the dialog disappear, the focus should remain on the input',
+        it('When datepicker is closed via outside click, the focus should NOT remain on the input',
             fakeAsync(() => {
                 const datePickerDom = fixture.debugElement.query(By.css('igx-date-picker'));
                 let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper--modal');
@@ -195,7 +195,35 @@ describe('IgxDatePicker', () => {
                 expect(overlayToggle[0]).not.toBeNull();
                 expect(overlayToggle[0]).not.toBeUndefined();
 
-                UIInteractions.triggerKeyDownEvtUponElem('Escape', overlayToggle[0], true);
+                UIInteractions.clickElement(overlayToggle[0]);
+                flush();
+                fixture.detectChanges();
+
+                const input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
+                const docBody = document.getElementsByTagName('body')[0] as Element;
+                overlayToggle = document.getElementsByClassName('igx-overlay__wrapper--modal');
+                expect(overlayToggle[0]).toEqual(undefined);
+                expect(input).not.toEqual(document.activeElement);
+                expect(docBody).toEqual(document.activeElement);
+            }));
+
+            it('When datepicker is closed upon selecting a date, the focus should remain on the input',
+            fakeAsync(() => {
+                const datePickerDom = fixture.debugElement.query(By.css('igx-date-picker'));
+                let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper--modal');
+                expect(overlayToggle.length).toEqual(0);
+
+                UIInteractions.triggerKeyDownEvtUponElem('space', datePickerDom.nativeElement, false);
+                flush();
+                fixture.detectChanges();
+
+                overlayToggle = document.getElementsByClassName('igx-overlay__wrapper--modal');
+                expect(overlayToggle[0]).not.toBeNull();
+                expect(overlayToggle[0]).not.toBeUndefined();
+
+                // select a date
+                const dateElemToSelect = document.getElementsByClassName('igx-calendar__date-content')[10];
+                UIInteractions.clickElement(dateElemToSelect);
                 flush();
                 fixture.detectChanges();
 
