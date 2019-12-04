@@ -139,8 +139,8 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     public get focusedItem(): IgxDropDownItemBaseDirective {
         if (this.virtDir) {
             return this._focusedItem && this._focusedItem.index !== -1 ?
-            (this.children.find(e => e.index === this._focusedItem.index) || null) :
-            null;
+                (this.children.find(e => e.index === this._focusedItem.index) || null) :
+                null;
         }
         return this._focusedItem;
     }
@@ -542,9 +542,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         this.onSelection.emit(args);
 
         if (!args.cancel) {
-            if (args.newSelection === null ||
-                (args.newSelection.hasOwnProperty('value') && args.newSelection.hasOwnProperty('index') && this.virtDir) ||
-                (args.newSelection instanceof IgxDropDownItemComponent && !args.newSelection.isHeader)) {
+            if (this.isSelectionValid(args.newSelection)) {
                 this.selection.set(this.id, new Set([args.newSelection]));
                 if (!this.virtDir) {
                     if (oldSelection) {
@@ -561,6 +559,12 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
                 throw new Error('Please provide a valid drop-down item for the selection!');
             }
         }
+    }
+
+    protected isSelectionValid(selection: any): boolean {
+        return selection === null
+        || (this.virtDir && selection.hasOwnProperty('value') && selection.hasOwnProperty('index'))
+        || (selection instanceof IgxDropDownItemComponent && !selection.isHeader);
     }
 }
 
