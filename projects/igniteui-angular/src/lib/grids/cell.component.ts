@@ -10,9 +10,7 @@
     ViewChild,
     NgZone,
     OnInit,
-    OnDestroy,
-    OnChanges,
-    SimpleChanges
+    OnDestroy
 } from '@angular/core';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
@@ -28,7 +26,7 @@ import { ColumnType } from './common/column.interface';
 import { RowType } from './common/row.interface';
 import { GridSelectionMode } from './common/enums';
 import { GridType } from './common/grid.interface';
-import { IgxGridComponent } from './grid';
+import { IgxGridComponent, ISearchInfo } from './grid/index';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -49,8 +47,9 @@ import { IgxGridComponent } from './grid';
     templateUrl: './cell.component.html',
     providers: [HammerGesturesManager]
 })
-export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
+export class IgxGridCellComponent implements OnInit, OnDestroy {
     private _vIndex = -1;
+    protected _lastSearchInfo: ISearchInfo;
 
     /**
      * Gets the column of the cell.
@@ -421,6 +420,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @Input()
     width = '';
 
+    @Input()
+    set lastSearchInfo(value: ISearchInfo) {
+        this._lastSearchInfo = value;
+        this.highlightText(this._lastSearchInfo.searchText, this._lastSearchInfo.caseSensitive, this._lastSearchInfo.exactMatch);
+    }
+
     /**
      * Gets whether the cell is selected.
      * ```typescript
@@ -653,21 +658,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @DeprecateMethod(`'isCellSelected' is deprecated. Use 'selected' property instead.`)
     public isCellSelected() {
         return this.selectionService.selected(this.selectionNode);
-    }
-
-    /**
-     *
-     * @hidden
-     * @internal
-     */
-    public ngOnChanges(changes: SimpleChanges) {
-        if (changes.value && !changes.value.firstChange) {
-            if (this.highlight) {
-                this.highlight.lastSearchInfo.searchedText = this.grid.lastSearchInfo.searchText;
-                this.highlight.lastSearchInfo.caseSensitive = this.grid.lastSearchInfo.caseSensitive;
-                this.highlight.lastSearchInfo.exactMatch = this.grid.lastSearchInfo.exactMatch;
-            }
-        }
     }
 
     /**
