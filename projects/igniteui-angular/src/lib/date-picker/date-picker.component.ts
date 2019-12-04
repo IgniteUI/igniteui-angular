@@ -1264,7 +1264,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         }
     }
 
-        private _onClosed(): void {
+    private _onClosed(): void {
         this.collapsed = true;
         this._componentID = null;
         this.onClosed.emit(this);
