@@ -241,7 +241,6 @@
         box-shadow: none;
     }
 
-
     %igx-drop-down__header,
     %igx-drop-down__item {
         display: flex;
@@ -377,7 +376,7 @@
     }
 
     %igx-drop-down__list--select {
-        igx-drop-down__item {
+        %igx-drop-down__item {
             @include igx-type-style($type-scale, $select-item);
             @include ellipsis()
         }
