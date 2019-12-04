@@ -371,6 +371,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         super.ngAfterViewInit();
         this.verticalScrollContainer.getScroll().addEventListener('scroll', this.hg_verticalScrollHandler.bind(this));
         this.headerContainer.getScroll().addEventListener('scroll', this.hg_horizontalScrollHandler.bind(this));
+        this.cdr.detectChanges();
 
         if (this.expandChildren && this.data && this.hierarchicalState.length !== this.data.length) {
             this.hierarchicalState = this.data.map((rec) => {

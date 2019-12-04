@@ -2115,6 +2115,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
    public headerCollapseIndicatorTemplate: TemplateRef<any> = null;
 
     /**
+    * The custom template, if any, that should be used when rendering the row drag indicator icon
+    */
+    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef })
+    public dragIndicatorIconTemplate: TemplateRef<any> = null;
+
+    /**
      * @hidden
      */
     public get rowInEditMode(): IgxRowComponent<IgxGridBaseComponent & IGridDataBindable> {
