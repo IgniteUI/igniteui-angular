@@ -1,7 +1,7 @@
 import { PipeTransform, Pipe } from '@angular/core';
-import { IGroupByResult } from '../../data-operations/grouping-result.interface';
-import { GridBaseAPIService, IgxGridBaseDirective } from '../tree-grid';
 import { GridType } from '../common/grid.interface';
+import { IgxGridBaseDirective } from '../grid-base.directive';
+import { GridBaseAPIService } from '../api.service';
 import { IgxGridAPIService } from './grid-api.service';
 
 /** @hidden */
