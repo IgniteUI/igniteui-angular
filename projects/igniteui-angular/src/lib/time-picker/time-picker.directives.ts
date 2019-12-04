@@ -209,11 +209,10 @@ export class IgxItemListDirective {
         }
     }
 
-    @HostListener('mouseup', ['$event'])
     @HostListener('mousedown', ['$event'])
     @HostListener('document:touchstart', ['$event'])
-    @HostListener('document:touchend', ['$event'])
     public onTouch(event) {
+        console.log('koko');
         this.sumDeltaY = 0;
         this.lastDeltaY = 0;
     }
