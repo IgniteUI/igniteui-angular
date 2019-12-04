@@ -547,6 +547,43 @@ describe('General igxDrag/igxDrop', () => {
         expect(firstDrag.dragStart.emit).toHaveBeenCalled();
     }));
 
+    it('should position the base element relative to the mouse using offsetX and offsetY correctly.', (async() => {
+        const firstDrag = fix.componentInstance.dragElems.first;
+        const firstElement = firstDrag.element.nativeElement;
+        const startingX = (dragDirsRects[0].left + dragDirsRects[0].right) / 2;
+        const startingY = (dragDirsRects[0].top + dragDirsRects[0].bottom) / 2;
+        firstDrag.ghost = false;
+        firstDrag.ghostOffsetX = 0;
+        firstDrag.ghostOffsetY = 0;
+        firstDrag.ghostTemplate = fix.componentInstance.ghostTemplate;
+
+        // Step 1.
+        UIInteractions.simulatePointerEvent('pointerdown', firstElement, startingX, startingY);
+        fix.detectChanges();
+        await wait();
+
+        // Step 2.
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 10, startingY + 10);
+        fix.detectChanges();
+        await wait(100);
+
+        // Step 3.
+        UIInteractions.simulatePointerEvent('pointermove', firstElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait(100);
+
+        // We compare the base position and the new position + how much the mouse has moved.
+        // + 10 margin to the final ghost position
+        expect(firstElement.getBoundingClientRect().left).toEqual(startingX + 20);
+        expect(firstElement.getBoundingClientRect().top).toEqual(startingY + 20);
+        expect(firstElement.innerText).toEqual('Drag 1');
+
+        // Step 4.
+        UIInteractions.simulatePointerEvent('pointerup', firstElement, startingX + 20, startingY + 20);
+        fix.detectChanges();
+        await wait();
+    }));
+
     it('should correctly set location using setLocation() method when ghost is disabled', (async() => {
         const firstDrag = fix.componentInstance.dragElems.first;
         const firstElement = firstDrag.element.nativeElement;

@@ -1,14 +1,17 @@
 <article
+    *ngIf="grid"
     class="igx-advanced-filter"
     igxDrag
     [ghost]="false"
     [dragTolerance]="0"
     (dragStart)="dragStart($event)"
     (dragEnd)="dragEnd($event)"
+    (dragMove)="onDragMove($event)"
     (keydown)="onKeyDown($event)"
     [ngClass]="{
         'igx-advanced-filter--cosy': grid.displayDensity === 'cosy',
-        'igx-advanced-filter--compact': grid.displayDensity === 'compact'
+        'igx-advanced-filter--compact': grid.displayDensity === 'compact',
+        'igx-advanced-filter--inline': inline
     }"
 >
     <header class="igx-advanced-filter__header" igxDragHandle>
@@ -144,36 +147,25 @@
                     </igx-select-item>
                 </igx-select>
 
-                <ng-container *ngIf="!selectedColumn">
-                    <igx-select type="box"
-                                [displayDensity]="'compact'"
-                                [placeholder]="grid.resourceStrings.igx_grid_filter_condition_placeholder"
-                                [disabled]="true">
-                    </igx-select>
-                </ng-container>
-
-                <ng-container *ngIf="selectedColumn">
-                    <igx-select #conditionSelect
-                                type="box"
-                                [displayDensity]="'compact'"
-                                [overlaySettings]="conditionSelectOverlaySettings"
-                                (onOpening)="onConditionSelectOpening()"
-                                [placeholder]="grid.resourceStrings.igx_grid_filter_condition_placeholder"
-                                [(ngModel)]="selectedCondition"
-                                [disabled]="!selectedColumn">
-                            <igx-icon *ngIf="selectedColumn && conditionSelect.value && selectedColumn.filters.condition(conditionSelect.value)"
-                                      igxPrefix
-                                      fontSet="filtering-icons"
-                                      [name]="selectedColumn.filters.condition(conditionSelect.value).iconName">
-                            </igx-icon>
-                            <igx-select-item *ngFor="let condition of selectedColumn.filters.conditionList()" [value]="condition">
-                                <igx-icon fontSet="filtering-icons"
-                                          [name]="selectedColumn.filters.condition(condition).iconName">
-                                </igx-icon>
-                                <span>{{getConditionFriendlyName(condition)}}</span>
-                            </igx-select-item>
-                    </igx-select>
-                </ng-container>
+                <igx-select #conditionSelect
+                            type="box"
+                            [displayDensity]="'compact'"
+                            [overlaySettings]="conditionSelectOverlaySettings"
+                            [placeholder]="grid.resourceStrings.igx_grid_filter_condition_placeholder"
+                            [(ngModel)]="selectedCondition"
+                            [disabled]="!selectedColumn">
+                    <igx-icon *ngIf="selectedColumn && conditionSelect.value && selectedColumn.filters.condition(conditionSelect.value)"
+                              igxPrefix
+                              fontSet="filtering-icons"
+                              [name]="selectedColumn.filters.condition(conditionSelect.value).iconName">
+                    </igx-icon>
+                    <igx-select-item *ngFor="let condition of getConditionList()" [value]="condition">
+                        <igx-icon fontSet="filtering-icons"
+                                  [name]="selectedColumn.filters.condition(condition).iconName">
+                        </igx-icon>
+                        <span>{{getConditionFriendlyName(condition)}}</span>
+                    </igx-select-item>
+                </igx-select>
 
                 <igx-input-group *ngIf="!selectedColumn || selectedColumn.dataType !== 'date'"
                                  type="box"
@@ -277,6 +269,7 @@
         <div igxToggle
             class="igx-filter-contextual-menu"
             (keydown)="onKeyDown($event)"
+            (onClosed)="contextMenuClosed()"
             [ngClass]="{
                 'igx-filter-contextual-menu--cosy': displayDensity === 'cosy',
                 'igx-filter-contextual-menu--compact': displayDensity === 'compact'
@@ -347,7 +340,7 @@
         <button igxButton [displayDensity]="displayDensity" (click)="onClearButtonClick()">{{ grid.resourceStrings.igx_grid_excel_custom_dialog_clear }}</button>
 
         <div>
-            <button igxButton [displayDensity]="displayDensity" (click)="closeDialog()">{{ grid.resourceStrings.igx_grid_excel_cancel }}</button>
+            <button igxButton [displayDensity]="displayDensity" (click)="cancelChanges()">{{ grid.resourceStrings.igx_grid_excel_cancel }}</button>
             <button igxButton="raised" [displayDensity]="displayDensity" (click)="onApplyButtonClick()">
                 {{ grid.resourceStrings.igx_grid_excel_apply }}
             </button>

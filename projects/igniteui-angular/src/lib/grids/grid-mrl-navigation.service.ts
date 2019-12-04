@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { IgxGridBaseComponent } from './grid-base.component';
+import { IgxGridBaseDirective } from './grid-base.directive';
 import { first } from 'rxjs/operators';
-import { IgxColumnComponent } from './column.component';
+import { IgxColumnComponent } from './columns/column.component';
 import { IgxGridNavigationService } from './grid-navigation.service';
-import { ISelectionNode } from '../core/grid-selection';
+import { ISelectionNode } from './selection/selection.service';
 
 
 export interface IStartNavigationCell {
@@ -24,7 +24,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
 
     private startNavigationCell: IStartNavigationCell;
 
-    public grid: IgxGridBaseComponent;
+    public grid: IgxGridBaseDirective;
 
     /**
      * @hidden
@@ -62,7 +62,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     public isColumnRightEdgeVisible(visibleColumnIndex: number): boolean {
         const column = this.grid.columnList.filter(c => !c.columnGroup).find((col) => col.visibleIndex === visibleColumnIndex);
         const forOfDir =  this.grid.headerContainer;
-        const horizontalScroll = forOfDir.getHorizontalScroll();
+        const horizontalScroll = forOfDir.getScroll();
         if (!horizontalScroll.clientWidth || (column && column.pinned)) {
             return true;
         } else if (column) {
@@ -75,7 +75,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
     private isParentColumnFullyVisible(parent: IgxColumnComponent): boolean {
         const forOfDir = this.grid.dataRowList.length > 0 ? this.grid.dataRowList.first.virtDirRow : this.grid.headerContainer;
-        const horizontalScroll = forOfDir.getHorizontalScroll();
+        const horizontalScroll = forOfDir.getScroll();
         if (!horizontalScroll.clientWidth || parent.pinned) { return true; }
         const index = forOfDir.igxForOf.indexOf(parent);
         return this.displayContainerWidth >= forOfDir.getColumnScrollLeft(index + 1) - this.displayContainerScrollLeft &&
@@ -84,7 +84,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
 
     public isColumnLeftEdgeVisible(visibleColumnIndex: number): boolean {
         const forOfDir = this.grid.headerContainer;
-        const horizontalScroll = forOfDir.getHorizontalScroll();
+        const horizontalScroll = forOfDir.getScroll();
         const column = this.grid.columnList.filter(c => !c.columnGroup).find((col) => col.visibleIndex === visibleColumnIndex);
         if (!horizontalScroll.clientWidth || column.pinned) {
             return true;
@@ -184,7 +184,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
 
     private focusCellUpFromLayout(rowElement: HTMLElement, selectedNode: ISelectionNode) {
-        const isGroupRow = rowElement.tagName.toLowerCase() === 'igx-grid-groupby-row';
+        const isNonDataRow = rowElement.tagName.toLowerCase() === 'igx-grid-groupby-row' || this._isDetailRecordAt(selectedNode.row);
         const currentRowStart = selectedNode.layout ?  selectedNode.layout.rowStart : 1;
         const currentColStart = this.applyNavigationCell(selectedNode.layout ? selectedNode.layout.colStart : 1,
             currentRowStart,
@@ -197,7 +197,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             (c.rowEnd === currentRowStart || c.rowStart + c.gridRowSpan === currentRowStart)  &&
             c.colStart <= currentColStart &&
             (currentColStart < c.colEnd || currentColStart < c.colStart + c.gridColumnSpan));
-        if (isGroupRow || !upperElementColumn) {
+        if (isNonDataRow || !upperElementColumn) {
             // no prev row in current row layout, go to next row last rowstart
             const layoutRowEnd = this.grid.multiRowLayoutRowSize + 1;
             upperElementColumn = columnLayout.children.find(c =>
@@ -218,6 +218,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 this._focusCell(upperElementColumn.cells.find((c) => c.rowIndex === prevRow.index).nativeElement);
             } else if (prevRow) {
                 prevRow.nativeElement.focus({ preventScroll: true });
+            } else {
+                const prevElem = this.getRowByIndex(rowIndex, '') as any;
+                prevElem.focus({ preventScroll: true });
             }
         };
         if (this.shouldPerformVerticalScroll(rowIndex, upperElementColumn.visibleIndex)) {
@@ -229,7 +232,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
 
     private focusCellDownFromLayout(rowElement: HTMLElement, selectedNode: ISelectionNode) {
-        const isGroupRow = rowElement.tagName.toLowerCase() === 'igx-grid-groupby-row';
+        const isNonDataRow = rowElement.tagName.toLowerCase() === 'igx-grid-groupby-row' || this._isDetailRecordAt(selectedNode.row);
         const parentIndex = selectedNode.column;
         const columnLayout = this.grid.columns.find( x => x.columnLayout && x.visibleIndex === parentIndex);
         const currentRowEnd = selectedNode.layout ? selectedNode.layout.rowEnd || selectedNode.layout.rowStart + 1 : 2;
@@ -241,7 +244,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         let nextElementColumn = columnLayout.children.find(c => c.rowStart === currentRowEnd &&
             c.colStart <= currentColStart &&
             (currentColStart < c.colEnd || currentColStart < c.colStart + c.gridColumnSpan));
-        if (isGroupRow || !nextElementColumn) {
+        if (isNonDataRow || !nextElementColumn) {
             // no next row in current row layout, go to next row first rowstart
             nextElementColumn = columnLayout.children.find(c => c.rowStart === 1 &&
                 c.colStart <= currentColStart &&
@@ -249,7 +252,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
             moveNext = true;
         }
         const rowIndex = moveNext ? selectedNode.row + 1 : selectedNode.row;
-        if (rowIndex > this.grid.verticalScrollContainer.igxForOf.length - 1) {
+        if (rowIndex > this.grid.dataView.length - 1) {
             // end of rows reached.
             return;
         }
@@ -260,6 +263,9 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                 this._focusCell(nextElementColumn.cells.find((c) => c.rowIndex === nextRow.index).nativeElement);
             } else if (nextRow) {
                 nextRow.nativeElement.focus({ preventScroll: true });
+            } else {
+                const nextElem = this.getRowByIndex(rowIndex, '') as any;
+                nextElem.focus({ preventScroll: true });
             }
         };
         if (this.shouldPerformVerticalScroll(rowIndex, nextElementColumn.visibleIndex)) {
@@ -447,13 +453,13 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
 
     public shouldPerformVerticalScroll(rowIndex: number, visibleColumnIndex: number): boolean {
-        if (this._isGroupRecordAt(rowIndex)) {
+        if (this._isGroupRecordAt(rowIndex) || this._isDetailRecordAt(rowIndex)) {
             return super.shouldPerformVerticalScroll(rowIndex, visibleColumnIndex);
        }
         if (!super.shouldPerformVerticalScroll(rowIndex, visibleColumnIndex)) {return false; }
        const targetRow = this.grid.summariesRowList.filter(s => s.index !== 0)
            .concat(this.grid.rowList.toArray()).find(r => r.index === rowIndex);
-       const scrollTop =  Math.abs(this.grid.verticalScrollContainer.getVerticalScroll().scrollTop);
+       const scrollTop =  Math.abs(this.grid.verticalScrollContainer.getScroll().scrollTop);
        const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
        const scrollPos = this.getVerticalScrollPositions(rowIndex, visibleColumnIndex);
        if (!targetRow || targetRow.nativeElement.offsetTop + scrollPos.topOffset < Math.abs(this.verticalDCTopOffset)
@@ -469,16 +475,20 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
     }
 
     private _isGroupRecordAt(rowIndex: number) {
-        const record = this.grid.verticalScrollContainer.igxForOf[rowIndex];
+        const record = this.grid.dataView[rowIndex];
         return record.records && record.records.length;
+    }
+    private _isDetailRecordAt(rowIndex: number) {
+        const record = this.grid.dataView[rowIndex];
+        return this.grid.isDetailRecord(record);
     }
 
     public performVerticalScrollToCell(rowIndex: number, visibleColumnIndex: number, cb?: () => void) {
-        if (this._isGroupRecordAt(rowIndex)) {
+        if (this._isGroupRecordAt(rowIndex) || this._isDetailRecordAt(rowIndex)) {
             return super.performVerticalScrollToCell(rowIndex, visibleColumnIndex, cb);
         }
         const containerHeight = this.grid.calcHeight ? Math.ceil(this.grid.calcHeight) : 0;
-        const scrollTop = Math.abs(this.grid.verticalScrollContainer.getVerticalScroll().scrollTop);
+        const scrollTop = Math.abs(this.grid.verticalScrollContainer.getScroll().scrollTop);
         const scrollPos = this.getVerticalScrollPositions(rowIndex, visibleColumnIndex);
         const targetRow = this.grid.summariesRowList.filter(s => s.index !== 0)
             .concat(this.grid.rowList.toArray()).find(r => r.index === rowIndex);
@@ -492,7 +502,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         });
 
         if (isPrevious) {
-            this.grid.verticalScrollContainer.getVerticalScroll().scrollTop = scrollAmount;
+            this.grid.verticalScrollContainer.scrollPosition = scrollAmount;
         } else {
             this.grid.verticalScrollContainer.addScrollTop(scrollAmount);
         }
@@ -519,10 +529,10 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
                     this._focusCell(this.getCellElementByVisibleIndex(rowIndex, visibleColumnIndex, isSummary));
                 }
         });
-        const isPrevItem =  hScroll.getHorizontalScroll().scrollLeft > scrollPos.leftScroll;
+        const isPrevItem =  hScroll.getScroll().scrollLeft > scrollPos.leftScroll;
         const containerSize = parseInt(hScroll.igxForContainerSize, 10);
         const nextScroll = isPrevItem ? scrollPos.leftScroll : scrollPos.rightScroll - containerSize;
-        hScroll.getHorizontalScroll().scrollLeft = nextScroll;
+        hScroll.scrollPosition = nextScroll;
     }
 
     protected _focusCell(cellElem: HTMLElement) {

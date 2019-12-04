@@ -504,6 +504,48 @@ describe('igxOverlay', () => {
             expect(BaseFitPositionStrategy.prototype.position).toHaveBeenCalledTimes(3);
         });
 
+        it('Should properly call setOffset method', fakeAsync(() => {
+            const fix = TestBed.createComponent(WidthTestOverlayComponent);
+            const overlayInstance = fix.componentInstance.overlay;
+            const id = fix.componentInstance.overlay.attach(SimpleRefComponent);
+
+            overlayInstance.show(id);
+
+            fix.detectChanges();
+            tick();
+
+            overlayInstance.setOffset(id, 40, 40);
+            const overlayContent: Element = document.getElementsByClassName(CLASS_OVERLAY_CONTENT_MODAL)[0];
+            const component = document.getElementsByClassName('simpleRef')[0];
+            const contentRectOverlay = overlayContent.getBoundingClientRect();
+            const componentRectOverlay = component.getBoundingClientRect();
+            let overlayContentTransform = (<any>overlayContent).style.transform;
+            const firstTransform = 'translate(40px, 40px)';
+            const secondTransform = 'translate(30px, 60px)';
+
+            expect(contentRectOverlay.top).toEqual(componentRectOverlay.top);
+            expect(contentRectOverlay.left).toEqual(componentRectOverlay.left);
+            expect(overlayContentTransform).toEqual(firstTransform);
+
+            // Set the offset again and verify it is changed correctly
+            overlayInstance.setOffset(id, -10, 20);
+            fix.detectChanges();
+            tick();
+            const contentRectOverlayNew = overlayContent.getBoundingClientRect();
+            const componentRectOverlayNew = component.getBoundingClientRect();
+            overlayContentTransform = (<any>overlayContent).style.transform;
+
+            expect(contentRectOverlayNew.top).toEqual(componentRectOverlayNew.top);
+            expect(contentRectOverlayNew.left).toEqual(componentRectOverlayNew.left);
+
+            expect(contentRectOverlayNew.top).not.toEqual(contentRectOverlay.top);
+            expect(contentRectOverlayNew.left).not.toEqual(contentRectOverlay.left);
+
+            expect(componentRectOverlayNew.top).not.toEqual(componentRectOverlay.top);
+            expect(componentRectOverlayNew.left).not.toEqual(componentRectOverlay.left);
+            expect(overlayContentTransform).toEqual(secondTransform);
+        }));
+
         it('fix for #1690 - click on second filter does not close first one.', fakeAsync(() => {
             const fixture = TestBed.createComponent(TwoButtonsComponent);
             const button1 = fixture.nativeElement.getElementsByClassName('buttonOne')[0];
@@ -817,7 +859,6 @@ describe('igxOverlay', () => {
             spyOn(scrollStrat, 'attach').and.callThrough();
             spyOn(scrollStrat, 'detach').and.callThrough();
             const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
-            const wheelSpy = spyOn<any>(scrollStrat, 'onWheel').and.callThrough();
             overlay.show(SimpleDynamicComponent, overlaySettings);
             tick();
 
@@ -825,11 +866,8 @@ describe('igxOverlay', () => {
             expect(scrollStrat.initialize).toHaveBeenCalledTimes(1);
             expect(scrollStrat.detach).toHaveBeenCalledTimes(0);
             document.dispatchEvent(new Event('scroll'));
-
             expect(scrollSpy).toHaveBeenCalledTimes(1);
 
-            document.dispatchEvent(new Event('wheel'));
-            expect(wheelSpy).toHaveBeenCalledTimes(1);
             overlay.hide('0');
             tick();
             expect(scrollStrat.detach).toHaveBeenCalledTimes(1);
@@ -871,6 +909,46 @@ describe('igxOverlay', () => {
             overlay.hide('0');
             tick();
             expect(scrollStrat.detach).toHaveBeenCalledTimes(1);
+        }));
+
+        it('Should only call reposition once on scroll - Absolute.', fakeAsync(async () => {
+            TestBed.overrideComponent(EmptyPageComponent, {
+                set: {
+                    styles: [`button {
+                position: absolute,
+                bottom: 200%;
+            }`]
+                }
+            });
+            await TestBed.compileComponents();
+            const fixture = TestBed.createComponent(EmptyPageComponent);
+            fixture.detectChanges();
+
+            const scrollStrat = new AbsoluteScrollStrategy();
+            const overlaySettings: OverlaySettings = {
+                positionStrategy: new GlobalPositionStrategy(),
+                scrollStrategy: scrollStrat,
+                modal: false,
+                closeOnOutsideClick: false
+            };
+            const overlay = fixture.componentInstance.overlay;
+            const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
+            spyOn(overlay, 'reposition');
+            const id = overlay.attach(SimpleDynamicComponent, overlaySettings);
+            overlay.show(id, overlaySettings);
+            tick();
+
+            const content = document.getElementsByClassName(CLASS_OVERLAY_CONTENT)[0];
+            content.children[0].dispatchEvent(new Event('scroll'));
+            expect(scrollSpy).toHaveBeenCalledTimes(1);
+            expect(overlay.reposition).not.toHaveBeenCalled();
+
+            document.dispatchEvent(new Event('scroll'));
+            expect(scrollSpy).toHaveBeenCalledTimes(2);
+            expect(overlay.reposition).toHaveBeenCalledTimes(1);
+            expect(overlay.reposition).toHaveBeenCalledWith(id);
+
+            overlay.hide(id);
         }));
 
         it('Should properly initialize Scroll Strategy - Close.', fakeAsync(async () => {
@@ -3451,7 +3529,7 @@ export class SimpleDynamicComponent {
 }
 
 @Component({
-    template: `<div #item style='position: absolute; width:100px; height: 100px; background-color: red'></div>`
+    template: `<div #item class="simpleRef" style='position: absolute; width:100px; height: 100px; background-color: red'></div>`
 })
 export class SimpleRefComponent {
     @ViewChild('item', { static: true })

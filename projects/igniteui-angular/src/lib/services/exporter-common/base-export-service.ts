@@ -1,7 +1,4 @@
-import {
-    EventEmitter,
-    Output
-} from '@angular/core';
+import { EventEmitter } from '@angular/core';
 
 import { cloneValue, IBaseEventArgs } from '../../core/utils';
 import { DataUtil } from '../../data-operations/data-util';
@@ -86,7 +83,6 @@ export abstract class IgxBaseExporter {
      * ```
      * @memberof IgxBaseExporter
      */
-    @Output()
     public onRowExport = new EventEmitter<IRowExportingEventArgs>();
 
     /**
@@ -98,7 +94,6 @@ export abstract class IgxBaseExporter {
      * ```
      * @memberof IgxBaseExporter
      */
-    @Output()
     public onColumnExport = new EventEmitter<IColumnExportingEventArgs>();
 
     /**
@@ -266,12 +261,13 @@ export abstract class IgxBaseExporter {
 
             if (this._isTreeGrid) {
                 this.flatRecords = [];
-                filteringState.strategy = new TreeGridFilteringStrategy();
+                filteringState.strategy = (grid.filterStrategy) ? grid.filterStrategy : new TreeGridFilteringStrategy();
                 rootRecords = filteringState.strategy.filter(rootRecords,
                     filteringState.expressionsTree, filteringState.advancedExpressionsTree);
                 this.prepareHierarchicalData(rootRecords);
                 data = this.flatRecords;
             } else {
+                filteringState.strategy = grid.filterStrategy;
                 data = DataUtil.filter(data, filteringState);
             }
         }
@@ -283,11 +279,11 @@ export abstract class IgxBaseExporter {
 
             if (this._isTreeGrid) {
                 this.flatRecords = [];
-                rootRecords = DataUtil.treeGridSort(rootRecords, grid.sortingExpressions);
+                rootRecords = DataUtil.treeGridSort(rootRecords, grid.sortingExpressions, grid.sortStrategy);
                 this.prepareHierarchicalData(rootRecords);
                 data = this.flatRecords;
             } else {
-                data = DataUtil.sort(data, grid.sortingExpressions);
+                data = DataUtil.sort(data, grid.sortingExpressions, grid.sortStrategy);
             }
         }
 

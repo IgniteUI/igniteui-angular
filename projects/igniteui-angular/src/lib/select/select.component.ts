@@ -8,7 +8,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
-import { IgxDropDownItemBase } from '../drop-down/index';
+import { IgxDropDownItemBaseDirective } from '../drop-down/index';
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 
 import { IgxDropDownComponent } from './../drop-down/drop-down.component';
@@ -29,6 +29,20 @@ import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
     selector: '[igxSelectToggleIcon]'
 })
 export class IgxSelectToggleIconDirective {
+}
+
+/** @hidden @internal */
+@Directive({
+    selector: '[igxSelectHeader]'
+})
+export class IgxSelectHeaderDirective {
+}
+
+/** @hidden @internal */
+@Directive({
+    selector: '[igxSelectFooter]'
+})
+export class IgxSelectFooterDirective {
 }
 
 const noop = () => { };
@@ -117,7 +131,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         }
         this._value = v;
         this.setSelection(this.items.find(x => x.value === this.value));
-        this.cdr.detectChanges();
     }
     /**
      * An @Input property that sets input placeholder.
@@ -161,16 +174,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     public type = 'line';
 
     /**
-     * An @Input property that sets what display density to be used for the input group.
-     * The allowed values are `compact`, `cosy` and `comfortable`. The default is `comfortable`.
-     * ```html
-     *<igx-select [displayDensity]="'compact'"></igx-select>
-     * ```
-     */
-    @Input()
-    public displayDensity = 'comfortable';
-
-    /**
      * The custom template, if any, that should be used when rendering the select TOGGLE(open/close) button
      *
      * ```typescript
@@ -188,8 +191,54 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      *  </igx-select>
      * ```
      */
-    @ContentChild(IgxSelectToggleIconDirective, { read: TemplateRef, static: false })
+    @ContentChild(IgxSelectToggleIconDirective, { read: TemplateRef })
     public toggleIconTemplate: TemplateRef<any> = null;
+
+    /**
+     * The custom template, if any, that should be used when rendering the HEADER for the select items list
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.select.headerTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-select #select>
+     *      ...
+     *      <ng-template igxSelectHeader>
+     *          <div class="select__header">
+     *              This is a custom header
+     *          </div>
+     *      </ng-template>
+     *  </igx-select>
+     * ```
+     */
+    @ContentChild(IgxSelectHeaderDirective, { read: TemplateRef, static: false })
+    public headerTemplate: TemplateRef<any> = null;
+
+    /**
+     * The custom template, if any, that should be used when rendering the FOOTER for the select items list
+     *
+     * ```typescript
+     * // Set in typescript
+     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
+     * myComponent.select.footerTemplate = myCustomTemplate;
+     * ```
+     * ```html
+     * <!-- Set in markup -->
+     *  <igx-select #select>
+     *      ...
+     *      <ng-template igxSelectFooter>
+     *          <div class="select__footer">
+     *              This is a custom footer
+     *          </div>
+     *      </ng-template>
+     *  </igx-select>
+     * ```
+     */
+    @ContentChild(IgxSelectFooterDirective, { read: TemplateRef, static: false })
+    public footerTemplate: TemplateRef<any> = null;
 
     /** @hidden @internal */
     public get selectionValue() {
@@ -229,12 +278,17 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     public registerOnTouched(fn: any): void { }
 
     /** @hidden @internal */
+    public setDisabledState(isDisabled: boolean): void {
+        this.disabled = isDisabled;
+    }
+
+    /** @hidden @internal */
     public getEditElement(): HTMLElement {
         return this.input.nativeElement;
     }
 
     /** @hidden @internal */
-    public selectItem(newSelection: IgxDropDownItemBase, event?) {
+    public selectItem(newSelection: IgxDropDownItemBaseDirective, event?) {
         const oldSelection = this.selectedItem;
 
         if (event) {
@@ -285,7 +339,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         this._overlayDefaults = {
             modal: false,
             closeOnOutsideClick: false,
-            positionStrategy: new SelectPositioningStrategy(this, { target: this.inputGroup.element.nativeElement }),
+            positionStrategy: new SelectPositioningStrategy(this, { target: this.getEditElement() }),
             scrollStrategy: new AbsoluteScrollStrategy(),
             excludePositionTarget: true
         };
@@ -320,7 +374,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             this.cdr.markForCheck();
         }
     }
-    private setSelection(item: IgxDropDownItemBase) {
+    private setSelection(item: IgxDropDownItemBaseDirective) {
         if (item && item.value !== undefined && item.value !== null) {
             this.selection.set(this.id, new Set([item]));
         } else {
@@ -355,7 +409,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * @hidden @internal
      */
     public ngOnInit() {
-        this.ngControl = this._injector.get<NgControl>(NgControl as Type<NgControl>, null);
+        this.ngControl = this._injector.get<NgControl>(NgControl, null);
     }
 
     /**
@@ -377,6 +431,14 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
         }
+    }
+
+    /**
+     * @hidden @internal
+     * Prevent input blur - closing the items container on Header/Footer Template click.
+     */
+   public mousedownHandler(event) {
+        event.preventDefault();
     }
 }
 

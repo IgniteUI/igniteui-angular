@@ -2,7 +2,7 @@ import { ConnectedPositioningStrategy } from './../services/overlay/position/con
 import { CommonModule } from '@angular/common';
 import {
     AfterViewInit, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostBinding, HostListener,
-    Input, NgModule, OnInit, OnDestroy, Output, TemplateRef, ViewChild, Optional, Inject, Injector, forwardRef, Type
+    Input, NgModule, OnInit, OnDestroy, Output, TemplateRef, ViewChild, Optional, Inject, Injector, Type
 } from '@angular/core';
 import {
     IgxComboItemDirective,
@@ -19,8 +19,7 @@ import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
 import { cloneArray, CancelableEventArgs, CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
-import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
-import { SortingDirection, ISortingExpression } from '../data-operations/sorting-expression.interface';
+import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IgxForOfModule, IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
 import { IgxIconModule } from '../icon/index';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
@@ -30,17 +29,15 @@ import { IgxDropDownModule } from '../drop-down/index';
 import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
-import { IgxComboFilterConditionPipe, IgxComboFilteringPipe, IgxComboGroupingPipe, IgxComboSortingPipe } from './combo.pipes';
+import { IgxComboFilteringPipe, IgxComboGroupingPipe } from './combo.pipes';
 import { OverlaySettings, AbsoluteScrollStrategy } from '../services';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { DefaultSortingStrategy, ISortingStrategy } from '../data-operations/sorting-strategy';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { IGX_COMBO_COMPONENT, IgxComboBase } from './combo.common';
 import { IgxComboAddItemComponent } from './combo-add-item.component';
 import { IgxComboAPIService } from './combo.api';
 import { EditorProvider } from '../core/edit-provider';
-import { take } from 'rxjs/operators';
 import { IgxInputState, IgxInputDirective } from '../directives/input/input.directive';
 
 /**
@@ -127,7 +124,7 @@ const noop = () => { };
     providers: [
         IgxComboAPIService,
         { provide: IGX_COMBO_COMPONENT, useExisting: IgxComboComponent },
-        { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => IgxComboComponent), multi: true }
+        { provide: NG_VALUE_ACCESSOR, useExisting: IgxComboComponent, multi: true }
     ]
 })
 export class IgxComboComponent extends DisplayDensityBase implements IgxComboBase, AfterViewInit, ControlValueAccessor, OnInit,
@@ -142,9 +139,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     public defaultFallbackGroup = 'Other';
     protected stringFilters = IgxStringFilteringOperand;
     protected booleanFilters = IgxBooleanFilteringOperand;
-    protected _filteringLogic = FilteringLogic.Or;
-    protected _filteringExpressions: IFilteringExpression[] = [];
-    protected _sortingExpressions: ISortingExpression[] = [];
     protected _groupKey = '';
     protected _displayKey: string;
     protected _prevInputValue = '';
@@ -215,7 +209,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden @internal
      */
-    @ViewChild('searchInput', { static: false })
+    @ViewChild('searchInput')
     public searchInput: ElementRef<HTMLInputElement> = null;
 
     /**
@@ -246,7 +240,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboItemDirective, { read: TemplateRef, static: false })
+    @ContentChild(IgxComboItemDirective, { read: TemplateRef })
     public itemTemplate: TemplateRef<any> = null;
 
     /**
@@ -269,7 +263,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboHeaderDirective, { read: TemplateRef, static: false })
+    @ContentChild(IgxComboHeaderDirective, { read: TemplateRef })
     public headerTemplate: TemplateRef<any> = null;
 
     /**
@@ -292,7 +286,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboFooterDirective, { read: TemplateRef, static: false })
+    @ContentChild(IgxComboFooterDirective, { read: TemplateRef })
     public footerTemplate: TemplateRef<any> = null;
 
     /**
@@ -313,7 +307,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboHeaderItemDirective, { read: TemplateRef, static: false })
+    @ContentChild(IgxComboHeaderItemDirective, { read: TemplateRef })
     public headerItemTemplate: TemplateRef<any> = null;
 
     /**
@@ -336,7 +330,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboAddItemDirective, { read: TemplateRef, static: false })
+    @ContentChild(IgxComboAddItemDirective, { read: TemplateRef })
     public addItemTemplate: TemplateRef<any> = null;
 
     /**
@@ -359,7 +353,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboEmptyDirective, { read: TemplateRef, static: false })
+    @ContentChild(IgxComboEmptyDirective, { read: TemplateRef })
     public emptyTemplate: TemplateRef<any> = null;
 
     /**
@@ -380,7 +374,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboToggleIconDirective, { read: TemplateRef, static: false })
+    @ContentChild(IgxComboToggleIconDirective, { read: TemplateRef })
     public toggleIconTemplate: TemplateRef<any> = null;
 
     /**
@@ -401,7 +395,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      *  </igx-combo>
      * ```
      */
-    @ContentChild(IgxComboClearIconDirective, { read: TemplateRef, static: false })
+    @ContentChild(IgxComboClearIconDirective, { read: TemplateRef })
     public clearIconTemplate: TemplateRef<any> = null;
 
     @ViewChild('primitive', { read: TemplateRef, static: true })
@@ -670,7 +664,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Input()
-    public placeholder = '';
+    public placeholder;
 
     /**
      * @hidden @internal
@@ -763,9 +757,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     @Input()
     public set groupKey(val: string) {
-        this.clearSorting(this._groupKey);
         this._groupKey = val;
-        this.sort(this._groupKey);
     }
 
     /**
@@ -783,7 +775,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * An @Input property that enabled/disables filtering in the list. The default is `true`.
      * ```html
-     *<igx-combo [filterable]="'false'">
+     *<igx-combo [filterable]="false">
      * ```
      */
     @Input()
@@ -826,18 +818,18 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * let valid = this.combo.valid;
      * ```
      * */
-     public get valid(): IgxComboState {
+    public get valid(): IgxComboState {
         return this._valid;
     }
 
-     /**
-     * Sets if control is valid, when used in a form
-     *
-     * ```typescript
-     * // set
-     * this.combo.valid = IgxComboState.INVALID;
-     * ```
-    */
+    /**
+    * Sets if control is valid, when used in a form
+    *
+    * ```typescript
+    * // set
+    * this.combo.valid = IgxComboState.INVALID;
+    * ```
+   */
     public set valid(valid: IgxComboState) {
         this._valid = valid;
         this.comboInput.valid = IgxInputState[IgxComboState[valid]];
@@ -912,50 +904,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     set totalItemCount(count: number) {
         this.virtDir.totalItemCount = count;
-        this.cdr.detectChanges();
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get filteringExpressions(): IFilteringExpression[] {
-        return this.filterable ? this._filteringExpressions : [];
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public set filteringExpressions(value: IFilteringExpression[]) {
-        this._filteringExpressions = value;
-        this.cdr.markForCheck();
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get sortingExpressions(): ISortingExpression[] {
-        return this._sortingExpressions;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public set sortingExpressions(value: ISortingExpression[]) {
-        this._sortingExpressions = value;
-        this.cdr.markForCheck();
-    }
-
-    protected clearSorting(field?: string | number) {
-        if (field === undefined || field === null) {
-            this.sortingExpressions = [];
-            return;
-        }
-        const currentState = cloneArray(this.sortingExpressions);
-        const index = currentState.findIndex((expr) => expr.fieldName === field);
-        if (index > -1) {
-            currentState.splice(index, 1);
-            this.sortingExpressions = currentState;
-        }
     }
 
     /**
@@ -1022,69 +970,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden @internal
      */
     public handleInputChange(event?: string) {
-        let cdrFlag = false;
-        const vContainer = this.virtDir;
-        if (event !== undefined && this._prevInputValue === event) {
-            // Nothing has changed
-            return;
-        } else {
-            this._prevInputValue = event !== undefined ? event : '';
-        }
         if (event !== undefined) {
-            // Do not scroll if not scrollable
-            if (vContainer.isScrollable()) {
-                vContainer.scrollTo(0);
-            } else {
-                cdrFlag = true;
-            }
             this.onSearchInput.emit(event);
-        } else {
-            cdrFlag = true;
         }
-        if (this.filterable) {
-            this.filter();
-            // If there was no scroll before filtering, check if there is after and detect changes
-            if (cdrFlag) {
-                vContainer.onChunkLoad.pipe(take(1)).subscribe(() => {
-                    if (vContainer.isScrollable()) {
-                        this.cdr.detectChanges();
-                    }
-                });
-            }
-        } else {
-            this.checkMatch();
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public sort(fieldName: string, dir: SortingDirection = SortingDirection.Asc, ignoreCase: boolean = true,
-        strategy: ISortingStrategy = DefaultSortingStrategy.instance()): void {
-        if (!fieldName) {
-            return;
-        }
-        const sortingState = cloneArray(this.sortingExpressions, true);
-
-        this.prepare_sorting_expression(sortingState, fieldName, dir, ignoreCase, strategy);
-        this.sortingExpressions = sortingState;
-    }
-
-    protected prepare_sorting_expression(state: ISortingExpression[], fieldName: string, dir: SortingDirection, ignoreCase: boolean,
-        strategy: ISortingStrategy) {
-
-        if (dir === SortingDirection.None) {
-            state.splice(state.findIndex((expr) => expr.fieldName === fieldName), 1);
-            return;
-        }
-
-        const expression = state.find((expr) => expr.fieldName === fieldName);
-
-        if (!expression) {
-            state.push({ fieldName, dir, ignoreCase, strategy });
-        } else {
-            Object.assign(expression, { fieldName, dir, ignoreCase });
-        }
+        this.checkMatch();
     }
 
     /**
@@ -1108,14 +997,14 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
     /** Contains key-value pairs of the selected valueKeys and their resp. displayKeys */
     private registerRemoteEntries(ids: any[], add = true) {
-        const selection = this.getValueDisplayPairs(ids);
         if (add) {
+            const selection = this.getValueDisplayPairs(ids);
             for (const entry of selection) {
                 this._remoteSelection[entry[this.valueKey]] = entry[this.displayKey];
             }
         } else {
-            for (const entry of selection) {
-                delete this._remoteSelection[entry[this.valueKey]];
+            for (const entry of ids) {
+                delete this._remoteSelection[entry];
             }
         }
     }
@@ -1195,7 +1084,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         this.customValueFlag = false;
         this.searchInput.nativeElement.focus();
         this.dropdown.focusedItem = null;
-        this.handleInputChange();
+        this.virtDir.scrollTo(0);
     }
 
     /**
@@ -1214,35 +1103,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         }
     }
 
-
-    protected prepare_filtering_expression(searchVal, condition, ignoreCase, fieldName?) {
-        const newArray = [...this.filteringExpressions];
-        const expression = newArray.find((expr) => expr.fieldName === fieldName);
-        const newExpression = { fieldName, searchVal, condition, ignoreCase };
-        if (!expression) {
-            newArray.push(newExpression);
-        } else {
-            Object.assign(expression, newExpression);
-        }
-        if (this.groupKey) {
-            const expression2 = newArray.find((expr) => expr.fieldName === 'isHeader');
-            const headerExpression = {
-                fieldName: 'isHeader', searchVale: '',
-                condition: IgxBooleanFilteringOperand.instance().condition('true'), ignoreCase: true
-            };
-            if (!expression2) {
-                newArray.push(headerExpression);
-            } else {
-                Object.assign(expression2, headerExpression);
-            }
-        }
-        this.filteringExpressions = newArray;
-    }
-
     protected onStatusChanged = () => {
         if ((this.ngControl.control.touched || this.ngControl.control.dirty) &&
             (this.ngControl.control.validator || this.ngControl.control.asyncValidator)) {
-                this.valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
+            this.valid = this.ngControl.valid ? IgxComboState.VALID : IgxComboState.INVALID;
         }
         this.manageRequiredAsterisk();
     }
@@ -1262,25 +1126,17 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         if (this.collapsed) {
             if (this.ngControl && !this.ngControl.valid) {
                 this.valid = IgxComboState.INVALID;
-           } else {
+            } else {
                 this.valid = IgxComboState.INITIAL;
-           }
+            }
         }
     }
 
     /**
      * @hidden @internal
      */
-    public filter() {
-        this.prepare_filtering_expression(this.searchValue.trim(), IgxStringFilteringOperand.instance().condition('contains'),
-            true, this.dataType === DataTypes.PRIMITIVE ? undefined : this.displayKey);
-    }
-
-    /**
-     * @hidden @internal
-     */
     public ngOnInit() {
-        this.ngControl = this._injector.get<NgControl>(NgControl as Type<NgControl>, null);
+        this.ngControl = this._injector.get<NgControl>(NgControl, null);
         this._overlaySettings.positionStrategy.settings.target = this.elementRef.nativeElement;
         this.selection.set(this.id, new Set());
     }
@@ -1296,6 +1152,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             this.manageRequiredAsterisk();
             this.cdr.detectChanges();
         }
+        this.virtDir.onChunkPreload.pipe(takeUntil(this.destroy$)).subscribe((e) => {
+            this.onDataPreLoad.emit(e);
+        });
     }
 
     /**
@@ -1306,13 +1165,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         this.destroy$.complete();
         this.comboAPI.clear();
         this.selection.clear(this.id);
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public dataLoading(event) {
-        this.onDataPreLoad.emit(event);
     }
 
     /**
@@ -1581,7 +1433,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         if (event.cancel) {
             return;
         }
-        this.handleInputChange();
     }
 
     /**
@@ -1617,8 +1468,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
  * @hidden
  */
 @NgModule({
-    declarations: [IgxComboComponent, IgxComboItemComponent, IgxComboFilterConditionPipe, IgxComboGroupingPipe,
-        IgxComboFilteringPipe, IgxComboSortingPipe, IgxComboDropDownComponent, IgxComboAddItemComponent,
+    declarations: [IgxComboComponent, IgxComboItemComponent, IgxComboGroupingPipe,
+        IgxComboFilteringPipe, IgxComboDropDownComponent, IgxComboAddItemComponent,
         IgxComboItemDirective,
         IgxComboEmptyDirective,
         IgxComboHeaderItemDirective,
@@ -1637,7 +1488,6 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         IgxComboToggleIconDirective,
         IgxComboClearIconDirective],
     imports: [IgxRippleModule, CommonModule, IgxInputGroupModule, FormsModule, ReactiveFormsModule,
-        IgxForOfModule, IgxToggleModule, IgxCheckboxModule, IgxDropDownModule, IgxButtonModule, IgxIconModule],
-    providers: [IgxSelectionAPIService]
+        IgxForOfModule, IgxToggleModule, IgxCheckboxModule, IgxDropDownModule, IgxButtonModule, IgxIconModule]
 })
 export class IgxComboModule { }

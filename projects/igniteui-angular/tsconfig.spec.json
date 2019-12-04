@@ -2,11 +2,15 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "../../out-tsc/spec",
+    "target": "es5",
     "types": [
       "jasmine",
       "node",
       "hammerjs"
     ]
+  },
+  "angularCompilerOptions": {
+    "enableIvy": false
   },
   "files": [
     "src/test.ts"

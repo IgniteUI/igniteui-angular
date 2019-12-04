@@ -4,7 +4,11 @@
 
 <div class="sampleWrapper">
     <h4 class="sample-title">Select with ngModel, set items OnInit</h4>
-    <igx-select #select1
+    <div class="sample-actions">
+        <button igxButton="raised" (click)="btnAddBr()">+ white space</button>
+        <button igxButton="raised" (click)="btnRemoveBr()">- white space</button>
+    </div>
+    <igx-select #displayDensitySelect
     [required]="true"
     [placeholder]="'Pick One'"
     [(ngModel)]="value"
@@ -13,7 +17,8 @@
     (onClosing)="testOnClosing($event)"
     (onClosed)="testOnClosed()"
     (onSelection)="testOnSelection($event)"
-    [disabled]="false">
+    [disabled]="false"
+    [displayDensity]="'cosy'">
         <label igxLabel>Sample Label</label>
         <igx-prefix igxPrefix>
             <igx-icon fontSet="material">alarm</igx-icon>
@@ -22,7 +27,23 @@
         <igx-select-item *ngFor="let item of items; let inx=index" [value]="item.field">
             {{ item.field }}
         </igx-select-item>
+        <ng-template igxSelectHeader>
+            <div class="custom-select-header" (click)="headerFootedClick($event);">iHEADER</div>
+        </ng-template>
+        <ng-template igxSelectFooter>
+            <div class="custom-select-footer" (click)="headerFootedClick($event);">
+                <div>iFOOTER</div>
+                <button igxButton="raised" (click)="btnClick()">Click Me!</button>
+            </div>
+        </ng-template>
     </igx-select>
+
+    <div>
+        <h4>Display Density</h4>
+        <button igxButton="raised" [disabled]="selectDisplayDensity.displayDensity === compact" (click)="setDensity(compact)">Compact</button>
+        <button igxButton="raised" [disabled]="selectDisplayDensity.displayDensity === cosy" (click)="setDensity(cosy)">Cosy</button>
+        <button igxButton="raised" [disabled]="selectDisplayDensity.displayDensity === comfortable" (click)="setDensity(comfortable)">Comfortable</button>
+    </div>
 
     <h4 class="sample-title">Select - declare items in html template</h4>
     <igx-select #select2

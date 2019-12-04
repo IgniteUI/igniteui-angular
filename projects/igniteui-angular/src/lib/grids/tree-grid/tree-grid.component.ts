@@ -15,7 +15,7 @@ import {
     DoCheck
 } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
-import { IgxGridBaseComponent, IGridDataBindable } from '../grid-base.component';
+import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IRowToggleEventArgs } from './tree-grid.interfaces';
@@ -24,14 +24,16 @@ import { IgxHierarchicalTransactionService } from '../../services/index';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxTreeGridNavigationService } from './tree-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { mergeObjects } from '../../core/utils';
-import { IgxColumnComponent } from '../column.component';
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
-import { IgxForOfSyncService } from '../../directives/for-of/for_of.sync.service';
+import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxDragIndicatorIconDirective } from '../row-drag.directive';
 import { IgxGridNavigationService } from '../grid-navigation.service';
+import { GridType } from '../common/grid.interface';
+import { IgxColumnComponent } from '../columns/column.component';
+import { IgxRowIslandAPIService } from '../hierarchical-grid/row-island-api.service';
 
 let NEXT_ID = 0;
 
@@ -62,12 +64,14 @@ let NEXT_ID = 0;
         IgxGridSummaryService,
         { provide: IgxGridNavigationService, useClass: IgxTreeGridNavigationService },
         { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
-        { provide: IgxGridBaseComponent, useExisting: forwardRef(() => IgxTreeGridComponent) },
+        { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxTreeGridComponent) },
         IgxFilteringService,
-        IgxForOfSyncService
+        IgxForOfSyncService,
+        IgxForOfScrollSyncService,
+        IgxRowIslandAPIService
     ]
 })
-export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridDataBindable, OnInit, DoCheck, AfterContentInit {
+export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit {
     private _id = `igx-tree-grid-${NEXT_ID++}`;
     private _data;
     private _rowLoadingIndicatorTemplate: TemplateRef<any>;
@@ -102,7 +106,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     }
 
     public set data(value: any[]) {
-        this._data = value;
+        this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
             this.setupColumns();
@@ -307,7 +311,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
     /**
      * @hidden
      */
-    @ContentChild(IgxRowLoadingIndicatorTemplateDirective, { read: IgxRowLoadingIndicatorTemplateDirective, static: false })
+    @ContentChild(IgxRowLoadingIndicatorTemplateDirective, { read: IgxRowLoadingIndicatorTemplateDirective })
     protected rowLoadingTemplate: IgxRowLoadingIndicatorTemplateDirective;
 
     /**
@@ -328,7 +332,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
      *  </igx-grid>
      * ```
      */
-    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef, static: false })
+    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef })
     public dragIndicatorIconTemplate: TemplateRef<any> = null;
 
     /**
@@ -697,11 +701,11 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         if (delayScrolling) {
             this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
                 this.scrollDirective(this.verticalScrollContainer,
-                    typeof(row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(record));
+                    typeof(row) === 'number' ? row : this.dataView.indexOf(record));
             });
         } else {
             this.scrollDirective(this.verticalScrollContainer,
-                typeof(row) === 'number' ? row : this.verticalScrollContainer.igxForOf.indexOf(record));
+                typeof(row) === 'number' ? row : this.dataView.indexOf(record));
         }
 
         this.scrollToHorizontally(column);
@@ -732,7 +736,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
             source.push(record.data);
         };
 
-        this.verticalScrollContainer.igxForOf.forEach(process);
+        this.dataView.forEach(process);
         return this.extractDataFromSelection(source, formatters, headers);
     }
 

@@ -42,7 +42,15 @@
     $text-color: null
 ) {
     $name: 'igx-linear-bar';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $linear-bar-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $linear-bar-schema: map-get($schema, $name);
+    } @else {
+        $linear-bar-schema: $schema;
+    }
+
+    $theme: apply-palette($linear-bar-schema, $palette);
 
     @return extend($theme, (
         name: $name,
@@ -72,6 +80,7 @@
     $value-fs: em(14px, 16px);
     $value-fw: 600;
     $value-margin: 0;
+    $animation-direction: if-ltr(normal, reverse);
 
     %linear-display {
         position: relative;
@@ -111,7 +120,8 @@
     }
 
     %linear-indicator--indeterminate {
-        @include animation(indeterminate-bar 2s cubic-bezier(0, .085, .68, .53) infinite);
+        @include animation(indeterminate-bar 2s cubic-bezier(0, .085, .68, .53) #{$animation-direction} infinite);
+
         width: 100% !important;
 
         &::before {
@@ -219,7 +229,15 @@
     $text-color: null
 ) {
     $name: 'igx-circular-bar';
-    $theme: apply-palette(map-get($schema, $name), $palette);
+    $circular-bar-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $circular-bar-schema: map-get($schema, $name);
+    } @else {
+        $circular-bar-schema: $schema;
+    }
+
+    $theme: apply-palette($circular-bar-schema, $palette);
 
     @return extend($theme, (
         name: $name,
@@ -244,6 +262,7 @@
 
     $circular-value-fs: rem(32px, 16px);
     $circular-value-fw: 600;
+    $animation-direction: if-ltr(normal, reverse);
 
     %circular-display {
         display: inline-flex;
@@ -260,7 +279,7 @@
     }
 
     %circular-display--indeterminate {
-        @include animation(rotate-center 1.4s linear infinite);
+        @include animation(rotate-center 3s linear #{$animation-direction} infinite);
         transform-origin: 50% 50%;
     }
 
@@ -281,9 +300,9 @@
     }
 
     %circular-outer--indeterminate {
-        stroke-dashoffset: 180;
-        stroke-dasharray: 180;
-        @include animation(indeterminate-accordion 1.5s cubic-bezier(0, .085, .68, .53) infinite);
+        stroke-dasharray: 289;
+
+        @include animation(indeterminate-accordion 1.5s cubic-bezier(0, .085, .68, .53) #{$animation-direction} infinite);
     }
 
     %circular-text {
@@ -297,13 +316,13 @@
     }
 
     @include keyframes('indeterminate-accordion') {
-        50% {
-            stroke-dashoffset: 260;
-            stroke-dasharray: 289;
+        from {
+            stroke-dashoffset: 578;
+            stroke-dasharray: 259;
         }
 
-        100% {
-            stroke-dashoffset: -180;
+        to {
+            stroke-dashoffset: 120;
         }
     }
 }

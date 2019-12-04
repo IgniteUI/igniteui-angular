@@ -491,25 +491,25 @@ export class IgxTimePickerComponent implements
     /**
      * @hidden
      */
-    @ViewChild('hourList', { static: false })
+    @ViewChild('hourList')
     public hourList: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('minuteList', { static: false })
+    @ViewChild('minuteList')
     public minuteList: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('secondsList', { static: false })
+    @ViewChild('secondsList')
     public secondsList: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('ampmList', { static: false })
+    @ViewChild('ampmList')
     public ampmList: ElementRef;
 
     /*
@@ -521,19 +521,19 @@ export class IgxTimePickerComponent implements
     /**
      *@hidden
      */
-    @ContentChild(IgxTimePickerTemplateDirective, { read: IgxTimePickerTemplateDirective, static: false })
+    @ContentChild(IgxTimePickerTemplateDirective, { read: IgxTimePickerTemplateDirective })
     protected timePickerTemplateDirective: IgxTimePickerTemplateDirective;
 
     /**
      *@hidden
      */
-    @ContentChild(IgxTimePickerActionsDirective, { read: IgxTimePickerActionsDirective, static: false })
+    @ContentChild(IgxTimePickerActionsDirective, { read: IgxTimePickerActionsDirective })
     public timePickerActionsDirective: IgxTimePickerActionsDirective;
 
     /**
      * @hidden
      */
-    @ViewChild(IgxInputDirective, { read: ElementRef, static: false })
+    @ViewChild(IgxInputDirective, { read: ElementRef })
     private _input: ElementRef;
 
     /**
@@ -545,13 +545,13 @@ export class IgxTimePickerComponent implements
     /**
      * @hidden
      */
-    @ViewChild('input', { read: ElementRef, static: false })
+    @ViewChild('input', { read: ElementRef })
     private input: ElementRef;
 
     /**
      * @hidden
      */
-    @ViewChild('group', { read: IgxInputGroupComponent, static: false })
+    @ViewChild('group', { read: IgxInputGroupComponent })
     private group: IgxInputGroupComponent;
 
     /**
@@ -1469,6 +1469,11 @@ export class IgxTimePickerComponent implements
      * @hidden
      */
     public registerOnChange(fn: (_: Date) => void) { this._onChangeCallback = fn; }
+
+    /**
+     *@hidden
+     */
+    public setDisabledState(isDisabled: boolean): void { this.disabled = isDisabled; }
 
     /**
      * @hidden

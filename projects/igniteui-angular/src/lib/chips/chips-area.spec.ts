@@ -386,7 +386,8 @@ describe('IgxChipsArea', () => {
         const firstChipComp = fix.componentInstance.chips.toArray()[1];
         spyOn(firstChipComp.onClick, 'emit');
 
-        firstChipComp.chipArea.nativeElement.click();
+        firstChipComp.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerdown', { pointerId: 1}));
+        firstChipComp.chipArea.nativeElement.dispatchEvent(new PointerEvent('pointerup'));
 
         fix.detectChanges();
         expect(firstChipComp.onClick.emit).toHaveBeenCalled();
@@ -857,26 +858,22 @@ describe('IgxChipsArea', () => {
 
         const chipAreaComp = fix.componentInstance.chipsArea;
         const secondChipComp = fix.componentInstance.chips.toArray()[1];
+        const pointerDownEvt = new PointerEvent('pointerdown', { pointerId: 1 });
+        const pointerUpEvt = new PointerEvent('pointerup', { pointerId: 1 });
 
         spyOn(chipAreaComp.onSelection, 'emit');
         fix.detectChanges();
 
-        secondChipComp.chipArea.nativeElement.click();
+        secondChipComp.chipArea.nativeElement.dispatchEvent(pointerDownEvt);
+        fix.detectChanges();
+        secondChipComp.chipArea.nativeElement.dispatchEvent(pointerUpEvt);
         fix.detectChanges();
 
-        expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
+        expect(chipAreaComp.onSelection.emit).toHaveBeenCalled();
+        expect(chipAreaComp.onSelection.emit).not.toHaveBeenCalledWith({
             originalEvent: null,
             owner: chipAreaComp,
             newSelection: [secondChipComp]
-        });
-
-        secondChipComp.chipArea.nativeElement.click();
-        fix.detectChanges();
-
-        expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
-            originalEvent: null,
-            owner: chipAreaComp,
-            newSelection: []
         });
     });
 
@@ -889,8 +886,6 @@ describe('IgxChipsArea', () => {
         fix.detectChanges();
 
         const secondChipComp = fix.componentInstance.chips.toArray();
-
-        expect(chipAreaComp['selectedChips']).toEqual([secondChipComp[0], secondChipComp[1]]);
         expect(chipAreaComp.onSelection.emit).toHaveBeenCalledWith({
             originalEvent: null,
             owner: chipAreaComp,

@@ -1,13 +1,160 @@
-﻿# Ignite UI for Angular Change Log
+# Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
 
+## 9.0.0
+
+### General
+- Added support for the Ivy renderer.
+- **Breaking Changes** The following classes have been renamed. Using `ng update` will apply automatically migrate your project to use the new names.
+    - `IgxDropDownBase` -> `IgxDropDownBaseDirective`
+    - `IgxDropDownItemBase` -> `IgxDropDownItemBaseDirective`
+    - `IgxGridBaseComponent` -> `IgxGridBaseDirective`
+    - `IgxRowComponent` -> `IgxRowDirective`
+    - `IgxHierarchicalGridBaseComponent` -> `IgxHierarchicalGridBaseDirective`
+    - `IgxMonthPickerBase` -> `IgxMonthPickerBaseDirective`
+
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Behavioral Change** - Pinning columns is no longer automatically prevented when the pinning area would exceed the size of the grid.
+    - `igxGridState` directive added to make it easy for developers to save and restore the grid state. The directive exposes the `getState` and `setState` methods to save/restore the state and an `options` input property to exclude features.
+- `IgxCarousel`:
+    - **Breaking Changes** -The carousel slides are no longer array, they are changed to QueryList.
+    - **Behavioural change** - When slides are more than 5, a label is shown instead of the indicators. The count limit of visible indicators can be changed with the input `maximumIndicatorsCount`
+
+
+### New Features
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`:
+    - Master-Detail visualization added for `igxGrid`. Users may now define templates that show additional context for rows when expanded. For more information, please take a look at the [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/master_detail.html).
+    - `sortStrategy` input is added, which can be used to set a global sorting strategy for the entire grid.
+        (**NOTE**: The grid's `sortStrategy` is of different type compared to the column's `sortStrategy`.)
+    - `NoopSortingStrategy` is added, which can be used to disable the default sorting of the grid by assigning its instance to the grid's `sortStrategy` input. (Useful for remote sorting.)
+    - `NoopFilteringStrategy` is added, which can be used to disable the default filtering of the grid by assigning its instance to the grid's `filterStrategy` input. (Useful for remote filtering.)
+    - `sortingExpressionsChange` event emitter is added, which is fired whenever a change to the sorting expressions has occurred (prior to performing the actual sorting).
+    - `filteringExpressionsTreeChange` event emitter is added, which is fired whenever a change to the filtering expressions has occurred (prior to performing the actual filtering).
+    - `advancedFilteringExpressionsTreeChange` event emitter is added, which is fired whenever a change to the advanced filtering expressions has occurred (prior to performing the actual filtering).
+    - `collapsible` and `expanded` properties are added to the IgxColumnGroupComponent; `collapsible` property identifies that certain column group is collapsible; `expanded` identifies whether the group is expanded or collapsed initially;
+    - `collapsibleChange` and `expandedChange` events are added to the IgxColumnGroupComponent which are emited whenever `collapsible` and `expanded` properties are changed accordingly;
+    - `visibleWhenCollapsed` property has been added to the IgxColumnComponent; Allows you to set whether the column stay visible when its parrent is collapsed.
+    - `visibleWhenCollapsedChange` events is added to the IgxColumnComponent which are emited whenever `visibleWhenCollapsed`  property is changed;
+    - `collapsibleIndicatorTemplate` property is introduced to IgxColumnGroupComponent, which allows you to set a custom template for the expand collapse indicator;
+    - `igxCollapsibleIndicator` directive has been introduced, which allows you to set a custom template for the expand collapse indicator;
+    - `IgxGridExcelStyleFilteringComponent` and `IgxAdvancedFilteringDialogComponent` can now be hosted outside of the grid in order to provide the same experience as the built-in filtering UI.
+    - `IgxOverlayService`:
+        - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
+    - `IgxToggleDirective`:
+        - `setOffset` method added. It offsets the content along the corresponding axis by the provided amount.
+    - `IgxRowDragGhost` directive is added. It allows providing a custom template for the drag ghost when dragging a row.
+    ```html
+    <igx-grid #grid1 [data]="remote | async" primaryKey="ProductID"
+        [rowDraggable]="true">
+        <igx-column field="ProductName"></igx-column>
+        <igx-column field="ProductID"></igx-column>
+        <igx-column field="UnitsInStock"></igx-column>
+        <ng-template let-data igxRowDragGhost>
+            <div>
+                Moving {{data.ProductName}}!
+            </div>
+        </ng-template>
+    </igx-grid>
+    ```
+- `IgxSlider`:
+    - `primaryTicks` input was added. Which sets the number of primary ticks
+    - `secondaryTicks` input was added. Which sets the number of secondary ticks.
+    - `showTicks` input was added. Which show/hide all slider ticks and tick labels.
+    - `primaryTickLabels` input was added. Which shows/hides all primary tick labels.
+    - `secondaryTickLabels` input was added. Shows/hides all secondary tick labels.
+    - `ticksOrientation` input was added. Allows to change ticks orientation to top|bottom|mirror.
+    - `tickLabelsOrientation` input was added. Allows you to change the rotation of all tick labels from horizontal to vertical(toptobottom, bottomtotop).
+    - `igxSliderTickLabel` directive has been introduced. Allows you to set a custom template for all tick labels.
+    - `isContinuous` - input has been deleted. The option is not supported anymore.
+   
+- `IgxCarousel`:
+    - `keyboardSupport` input is added, which can be used to enable and disable keyboard navigation
+    - `gesturesSupport` input is added, which can be used to enable and disable gestures
+    - `maximumIndicatorsCount` input is added, which can be used to set the number of visible indicators
+    - `indicatorsOrientation` input is added, which can be used to set the position of indicators it can be top or bottom
+    - `animationType` input is added, which can be used to set animation when changing slides
+    - `indicatorTemplate` directive is added, which can be used to provide a custom indicator for carousel. If this property is not provided, a default indicator template will be used instead.
+    - `nextButtonTemplate` directive is added, which is used to provide a custom next button template. If not provided, a default next button is used.
+    - `prevButtonTemplate` directive is added, which is used to provide a custom previous button template. If not provided, a default previous button is used.
+
+- `IgxSelect`: 
+    - adding `IgxSelectHeaderDirective` and `IgxSelectFooterDirective`. These can be used to provide a custom header, respectively footer templates for the `igxSelect` drop-down list. If there are no templates marked with these directives - no default templates will be used so the drop-down list will not have header nor footer.
+
+
+## 8.2.6
+
+### New Features
+- `IgxSelectItem`
+    - `text` input is added. By default, the Select component will display the selected item's element inner text. In cases with a more complex item template, where more than just text interpolation is used, set the text property to specify what to display in the select field when the item is selected.
+
+
+## 8.2.4
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - The header text of the columns and the column groups now has the `title` attribute set to it in order to expose a native browser tooltip.
+
+### RTL Support
+Most of the components in the framework now have full right-to-left (RTL) support via the newly included RTL themes.
+
+For CSS-based projects add `node_modules/igniteui-angular/styles/igniteui-angular-rtl.css` to your angular.json styles collection.
+
+For Sass-based projects pass `$direction` to the `igx-core` mixin in your root stylesheet.
+
+Example:
+```scss
+// $direction defaults to ltr if it's omitted.
+@include igx-core($direction: rtl);
+```
+Currently the following components have only partial RTL support:
+ - Grid (igx-grid)
+ - Slider (igx-slider)
+ - Tabs (igx-tabs)
+ - Circular Progress Indicator (igx-circular-bar)
+
+ We plan on adding support for the aforementioned components in the upcoming releases.
+
+### New Features
+
+- Columns now expose the `cellStyles` property which allows conditional styling of the column cells. Similar to `cellClasses` it accepts an object literal where the keys are style properties and the values are expressions for evaluation.
+```typescript
+styles = {
+    color: '#123456',
+    'font-family': 'monospace'
+    'font-weight': (_, __, value) => value.startsWith('!') : 'red' : 'inherit'
+};
+```
+The callback signature for both `cellStyles` and `cellClasses` is now changed to
+
+```typescript
+(rowData: any, columnKey: string, cellValue: any, rowIndex: number) => boolean
+```
+
+## 8.2.3
+- `IgxTextHighlightDirective` - The default highlight directive styles have been moved to a Sass theme - `igx-highlight-theme`; You can modify the resting and active background and text color styles of the directive by passing the respective properties to the Sass theme. You can still pass your own CSS classes to the highlight directive via the cssClass and activeCssClass inputs.
+
+- `IgxChip`
+    - **Breaking Change** The `originalEvent` property for the events `onMoveStart`, `onMoveEnd`, `onClick` and `onSelection` now provides the events, passed from the `igxDrag` directive. The passed original events are in other words the previous events that triggered the `igxChip` ones. They also have original events until a browser event is reached.
+- `IgxGrid` - Now you can access all grid data inside the custom column summary. Two additional optional parameters are introduced in the IgxSummaryOperand `operate` method.
+
+```typescript
+class MySummary extends IgxNumberSummaryOperand {
+    constructor() {
+        super();
+    }
+    operate(columnData: any[], allGridData = [], fieldName?): IgxSummaryResult[] {
+        const result = super.operate(allData.map(r => r[fieldName]));
+        result.push({ key: 'test', label: 'Total Discounted', summaryResult: allData.filter((rec) => rec.Discontinued).length });
+        return result;
+    }
+}
+```
+
 ## 8.2.0
 ### New theme
-Ignite UI for angular now have a new theme that mimics Microsoft "Fluent" design system.  
-Depending on your use case you can use one of the following mixins:  
-`igx-fluent-theme` and `igx-fluent-dark-theme`  
-  
+Ignite UI for angular now have a new theme that mimics Microsoft "Fluent" design system.
+Depending on your use case you can use one of the following mixins:
+`igx-fluent-theme` and `igx-fluent-dark-theme`
+
 We also added two new pallets that go with the new theme, `$fluent-word-palette` and `$fluent-excel-palette`.
 
 Next example shows how you can use the Fluent theme.
@@ -27,7 +174,7 @@ Next example shows how you can use the Fluent theme.
 ### Theme Changes
 `igx-badge-theme` - Removed the `$disable-shadow` property to mitigate confusion when specifying `$shadow` explicitly.
 
-For more information about the theming please read our [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/index.html)  
+For more information about the theming please read our [documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/themes/index.html)
 
 ### New Features
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
@@ -75,6 +222,7 @@ For more information about the theming please read our [documentation](https://w
     - `isCellSelected` method has been deprecated. Now you can use `selected` property.
     - `rowSelectable` property has been deprecated. Now you can use `rowSelection` property to enable row selection and also you can show and hide the row selectors by setting `hideRowSelectors` property to true or false (which is the default value).
     - Removed deprecated event `OnFocusChange`
+    - `IgxGridBaseComponent` exposes a new property, `dataView` that returns the currently transformed paged/filtered/sorted/grouped data, displayed in the grid
     - **Breaking Change** `igxExcelStyleSortingTemplate` directive is renamed to `igxExcelStyleSorting`.
     - **Breaking Change** `igxExcelStyleMovingTemplate` directive is renamed to `igxExcelStyleMoving`.
     - **Breaking Change** `igxExcelStyleHidingTemplate` directive is renamed to `igxExcelStyleHiding`.
@@ -120,7 +268,7 @@ For more information about the theming please read our [documentation](https://w
     - **Breaking Change** Interfaces `IgxDropEventArgs` is renamed to `IDropDroppedEventArgs`.
     - **Breaking Change** Outputs `enter`, `over`, `leave`(former `onEnter`, `onOver`, `onLeave`) now have arguments of type `IDropBaseEventArgs`
     - **Breaking Change** Output `dropped` (former `onDrop`) now have arguments of type `IDropDroppedEventArgs`
-    
+
 ## 8.1.4
 - `IgxDialog` new @Input `positionSettings` is now available. It provides the ability to get/set both position and animation settings of the Dialog component.
 

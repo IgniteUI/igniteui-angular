@@ -23,8 +23,7 @@
             @extend %igx-chip__item--hover !optional;
         }
 
-        &:focus,
-        &:focus-within {
+        &:focus {
             @extend %igx-chip__item--focus !optional;
         }
     }

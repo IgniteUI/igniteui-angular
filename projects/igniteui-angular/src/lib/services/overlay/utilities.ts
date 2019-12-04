@@ -22,6 +22,14 @@ export class Point {
     constructor(public x: number, public y: number) { }
 }
 
+/** @hidden */
+export interface OutOfViewPort {
+    /** Out of view port at Top or Left */
+    back: number;
+    /** Out of view port at Bottom or Right */
+    forward: number;
+}
+
 export interface PositionSettings {
     /** Attaching target for the component to show */
     target?: Point | HTMLElement;
@@ -102,6 +110,23 @@ export interface OverlayInfo {
     openAnimationInnerPlayer?: any;
     closeAnimationInnerPlayer?: any;
     ngZone: NgZone;
+    transformX?: number;
+    transformY?: number;
+}
+
+/** @hidden */
+export interface ConnectedFit {
+    contentElementRect?: ClientRect;
+    targetRect?: ClientRect;
+    viewPortRect?: ClientRect;
+    fitHorizontal?: OutOfViewPort;
+    fitVertical?: OutOfViewPort;
+    left?: number;
+    right?: number;
+    top?: number;
+    bottom?: number;
+    horizontalOffset?: number;
+    verticalOffset?: number;
 }
 
 /** @hidden */

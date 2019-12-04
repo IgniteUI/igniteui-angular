@@ -45,7 +45,7 @@ export class GridWithSizeComponent extends GridAutoGenerateComponent {
     public height = '100%';
 
     public scrollTop(newTop: number) {
-        this.grid.verticalScrollContainer.getVerticalScroll().scrollTop = newTop;
+        this.grid.verticalScrollContainer.getScroll().scrollTop = newTop;
     }
 }
 
@@ -71,7 +71,7 @@ export class GridNxMComponent extends GridWithSizeComponent implements OnInit {
     }
 
     public isHorizonatScrollbarVisible() {
-        const scrollbar = this.grid.parentVirtDir.getHorizontalScroll();
+        const scrollbar = this.grid.headerContainer.getScroll();
         return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
     }
 }
@@ -125,7 +125,7 @@ export class GridWithToolbarComponent extends GridWithSizeComponent {
     </div>`
 })
 export class ColumnHidingTestComponent extends GridWithSizeComponent implements OnInit, AfterViewInit {
-    @ViewChild(IgxColumnHidingComponent, { static: false }) public chooser: IgxColumnHidingComponent;
+    @ViewChild(IgxColumnHidingComponent) public chooser: IgxColumnHidingComponent;
     width = '500px';
     height = '500px';
     showInline = true;
@@ -162,7 +162,7 @@ export class ColumnGroupsHidingTestComponent extends ColumnHidingTestComponent {
     </div>`
 })
 export class ColumnPinningTestComponent extends GridWithSizeComponent implements AfterViewInit, OnInit {
-    @ViewChild(IgxColumnPinningComponent, { static: false }) public chooser: IgxColumnPinningComponent;
+    @ViewChild(IgxColumnPinningComponent) public chooser: IgxColumnPinningComponent;
 
     height = '500px';
     width = '500px';

@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
+import { FormsModule, FormGroup, FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective } from '../directives/input/input.directive';
@@ -10,7 +10,7 @@ import { IgxInputGroupModule } from '../input-group';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { InteractionMode } from '../core/enums';
 import { IgxIconModule } from '../icon';
-import { IgxOverlayOutletDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
+import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 
 describe('IgxTimePicker', () => {
     configureTestSuite();
@@ -30,11 +30,13 @@ describe('IgxTimePicker', () => {
                 IgxTimePickerDropDownSingleHourComponent,
                 IgxTimePickerDropDownNoValueComponent,
                 IgxTimePickerRetemplatedDropDownComponent,
-                IgxTimePickerWithOutletComponent
+                IgxTimePickerWithOutletComponent,
+                IgxTimePickerReactiveFormComponent
             ],
             imports: [
                 IgxTimePickerModule,
                 FormsModule,
+                ReactiveFormsModule,
                 NoopAnimationsModule,
                 IgxInputGroupModule,
                 IgxIconModule,
@@ -1894,6 +1896,42 @@ describe('IgxTimePicker', () => {
             expect(headerAmPm.nativeElement.innerText).toEqual('AM');
         }));
     });
+
+    describe('Reactive form', () => {
+        let fixture: ComponentFixture<IgxTimePickerReactiveFormComponent>;
+        let timePicker: IgxTimePickerComponent;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(IgxTimePickerReactiveFormComponent);
+            timePicker = fixture.componentInstance.timePicker;
+            fixture.detectChanges();
+        });
+
+        // Bug #6025 Date picker does not disable in reactive form
+        it('Should disable when form is disabled', fakeAsync(() => {
+            fixture.detectChanges();
+            const formGroup: FormGroup = fixture.componentInstance.reactiveForm;
+            const timeIcon = fixture.debugElement.query(By.css('.igx-icon'));
+
+            timeIcon.nativeElement.click();
+            tick();
+            fixture.detectChanges();
+            const timeDropDown = fixture.debugElement.query(By.css('.igx-time-picker--dropdown'));
+            expect(timeDropDown.properties.hidden).toBeFalsy();
+
+            timePicker.close();
+            fixture.detectChanges();
+
+            formGroup.disable();
+            tick();
+            fixture.detectChanges();
+
+            timeIcon.nativeElement.click();
+            tick();
+            fixture.detectChanges();
+            expect(timeDropDown.properties).toEqual({});
+        }));
+    });
 });
 
 @Component({
@@ -2088,6 +2126,28 @@ export class IgxTimePickerRetemplatedDropDownComponent {
 })
 export class IgxTimePickerWithOutletComponent {
     @ViewChild('timepicker', { static: true }) public timepicker: IgxTimePickerComponent;
+}
+
+@Component({
+    template: `
+    <form [formGroup]="reactiveForm">
+    <p>
+        <igx-time-picker formControlName="timePickerReactive" #timePickerReactive mode="dropdown"></igx-time-picker>
+    </p>
+</form>
+`
+})
+class IgxTimePickerReactiveFormComponent {
+    @ViewChild('timePickerReactive', { read: IgxTimePickerComponent, static: true })
+    public timePicker: IgxTimePickerComponent;
+    reactiveForm: FormGroup;
+
+    constructor(fb: FormBuilder) {
+        this.reactiveForm = fb.group({
+            timePickerReactive: new FormControl(''),
+        });
+    }
+    onSubmitReactive() { }
 }
 
 // helper functions

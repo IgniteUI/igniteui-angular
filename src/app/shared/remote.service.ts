@@ -16,6 +16,14 @@ export class RemoteService {
         this.remoteData = this._remoteData.asObservable();
     }
 
+    nullData() {
+        this._remoteData.next(null);
+    }
+
+    undefinedData() {
+        this._remoteData.next(undefined);
+    }
+
     getData(data?: any, cb?: (any) => void) {
         const dataState = data;
         return this.http.get(this.buildUrl(dataState)).pipe(

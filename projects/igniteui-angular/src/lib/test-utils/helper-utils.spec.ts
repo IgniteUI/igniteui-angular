@@ -2,10 +2,11 @@ import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { ComponentFixture } from '@angular/core/testing';
-import { IgxGridBaseComponent } from '../grids/index';
+import { IgxGridBaseDirective } from '../grids/index';
 import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid';
 
 export function resizeObserverIgnoreError() {
+    jasmine.getEnv().allowRespy(true);
     const spy = spyOn(window, 'onerror').and.callFake((...args) => {
         if (args[0].toString().match('ResizeObserver loop limit exceeded')) {
             return;
@@ -15,7 +16,7 @@ export function resizeObserverIgnoreError() {
     return spy;
 }
 
-export function setupGridScrollDetection(fixture: ComponentFixture<any>, grid: IgxGridBaseComponent) {
+export function setupGridScrollDetection(fixture: ComponentFixture<any>, grid: IgxGridBaseDirective) {
     grid.verticalScrollContainer.onChunkLoad.subscribe(() => fixture.detectChanges());
     grid.parentVirtDir.onChunkLoad.subscribe(() => fixture.detectChanges());
 }

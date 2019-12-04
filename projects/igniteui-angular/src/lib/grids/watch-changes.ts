@@ -31,6 +31,30 @@ export function WatchChanges(): PropertyDecorator {
     };
 }
 
+export function WatchColumnChanges(): PropertyDecorator {
+    return (target: any, key: string, propDesc?: PropertyDescriptor) => {
+        const privateKey = '_' + key.toString();
+        propDesc = propDesc || {
+            configurable: true,
+            enumerable: true,
+        };
+        propDesc.get = propDesc.get || (function (this: any) { return this[privateKey]; });
+        const originalSetter = propDesc.set || (function (this: any, val: any) { this[privateKey] = val; });
+
+        propDesc.set = function (this: any, val: any) {
+            const init = this._init;
+            const oldValue = this[key];
+            originalSetter.call(this, val);
+            if (val !== oldValue || (typeof val === 'object' && val === oldValue)) {
+                if (this.rowIslandAPI.rowIsland) {
+                    this.rowIslandAPI.rowIsland.updateColumnList();
+               }
+            }
+        };
+        return propDesc;
+    };
+}
+
 export function notifyChanges(repaint = false) {
     return (_: any, key: string, propDesc?: PropertyDescriptor) => {
 

@@ -1,0 +1,78 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// If only background color(s) specified, text color(s) will be assigned automatically to a contrasting color.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {Color} $resting-background [null]- The background color used for the highlight in its resting state.
+/// @param {Color} $resting-color [null] - The text color used for the highlight in its resting state.
+/// @param {Color} $active-background [null] - The background color used for the highlight in its active state.
+/// @param {Color} $active-color [null] - The text color used for the highlight in its active state.
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
+/// @requires text-contrast
+/// @requires extend
+///
+/// @example scss Change the background and icon colors in icon highlight
+///   $my-avatar-theme: igx-avatar-theme($icon-background: black, $icon-color: white);
+///   // Pass the theme to the igx-avatar component mixin
+///   @include igx-avatar($my-avatar-theme);
+@function igx-highlight-theme(
+    $palette: $default-palette,
+    $schema: $light-schema,
+    $resting-background: null,
+    $resting-color: null,
+    $active-background: null,
+    $active-color: null,
+) {
+    $name: 'igx-highlight';
+    $highlight-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $highlight-schema: map-get($schema, $name);
+    } @else {
+        $highlight-schema: $schema;
+    }
+
+    $theme: apply-palette($highlight-schema, $palette);
+
+    @if not($resting-color) and $resting-background {
+        $resting-color: text-contrast($resting-background);
+    }
+
+    @if not($active-color) and $active-background {
+        $active-color: text-contrast($active-background);
+    }
+
+    @return extend($theme, (
+        name: $name,
+        palette: $palette,
+        resting-background: $resting-background,
+        resting-color: $resting-color,
+        active-background: $active-background,
+        active-color: $active-color,
+    ));
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-root-css-vars
+/// @requires rem
+/// @requires --var
+@mixin igx-highlight($theme) {
+    @include igx-root-css-vars($theme);
+
+    %igx-highlight {
+        color: --var($theme, 'resting-color');
+        background: --var($theme, 'resting-background');
+    }
+
+    %igx-highlight--active {
+        color: --var($theme, 'active-color');
+        background: --var($theme, 'active-background');
+    }
+}
+

@@ -4,3 +4,26 @@
     @include ellipsis();
     max-width: 50px;
 }
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    width: 700px
+}
+
+.outer-label {
+    width: 20%;
+    text-align: center;
+    padding-top: 10px;
+}
+
+.sample-column {
+    padding-top: 50px;
+}
+
+.slider-ticks-btns h4 {
+    padding: 15px;
+}
+.slider-ticks-btns button {
+    margin: 10px;
+}

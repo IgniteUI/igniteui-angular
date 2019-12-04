@@ -3,10 +3,12 @@ import { IgxTreeGridComponent } from './tree-grid.component';
 import { DataType } from '../../data-operations/data-util';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IRowToggleEventArgs } from './tree-grid.interfaces';
-import { IgxColumnComponent } from '../column.component';
+import { IgxColumnComponent } from '../columns/column.component';
 import { HierarchicalTransaction, TransactionType, State } from '../../services';
 import { mergeObjects } from '../../core/utils';
+import { Injectable } from '@angular/core';
 
+@Injectable()
 export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridComponent> {
     public get_all_data(transactions?: boolean): any[] {
         const grid = this.grid;

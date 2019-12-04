@@ -151,6 +151,8 @@ export class IgxDragLocation {
 })
 export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
+    protected ghostContext: any = null;
+
     /**
      * - Save data inside the `igxDrag` directive. This can be set when instancing `igxDrag` on an element.
      * ```html
@@ -282,7 +284,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     public ghostHost;
 
     /**
-     * An @Input property that specifies the offset of the ghost created relative to the mouse in pixels.
+     * An @Input property that specifies the offset of the dragged element relative to the mouse in pixels.
      * By default it's taking the relative position to the mouse when the drag started and keeps it the same.
      * ```html
      * <div #hostDiv></div>
@@ -294,15 +296,15 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      */
     @Input()
     public set ghostOffsetX(value) {
-        this._ghostOffsetX = parseInt(value, 10);
+        this._offsetX = parseInt(value, 10);
     }
 
     public get ghostOffsetX() {
-        return this._ghostOffsetX;
+        return this._offsetX !== undefined ? this._offsetX : this._defaultOffsetX;
     }
 
     /**
-     * An @Input property that specifies the offset of the ghost created relative to the mouse in pixels.
+     * An @Input property that specifies the offset of the dragged element relative to the mouse in pixels.
      * By default it's taking the relative position to the mouse when the drag started and keeps it the same.
      * ```html
      * <div #hostDiv></div>
@@ -314,11 +316,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      */
     @Input()
     public set ghostOffsetY(value) {
-        this._ghostOffsetY = parseInt(value, 10);
+        this._offsetY = parseInt(value, 10);
     }
 
     public get ghostOffsetY() {
-        return this._ghostOffsetY;
+        return this._offsetY !== undefined ? this._offsetY : this._defaultOffsetY ;
     }
 
     /**
@@ -545,11 +547,11 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     }
 
     protected get baseLeft(): number {
-        return this.element.nativeElement.getBoundingClientRect().left -  this.getWindowScrollLeft();
+        return this.element.nativeElement.getBoundingClientRect().left;
     }
 
     protected get baseTop(): number {
-        return this.element.nativeElement.getBoundingClientRect().top - this.getWindowScrollTop();
+        return this.element.nativeElement.getBoundingClientRect().top;
     }
 
     protected get baseOriginLeft(): number {
@@ -613,8 +615,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected _baseMarginTop = 0;
     protected _baseOriginX;
     protected _baseOriginY;
-    protected _baseLeft;
-    protected _baseTop;
     protected _startX = 0;
     protected _startY = 0;
     protected _lastX = 0;
@@ -622,8 +622,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     protected _dragStarted = false;
 
     /** Drag ghost related properties */
-    protected _ghostOffsetX;
-    protected _ghostOffsetY;
+    protected _defaultOffsetX;
+    protected _defaultOffsetY;
+    protected _offsetX;
+    protected _offsetY;
     protected _ghostStartX;
     protected _ghostStartY;
     protected _ghostHostX = 0;
@@ -742,8 +744,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         if (this.ghost && this.ghostElement) {
             const offsetHostX = this.ghostHost ? this.ghostHostOffsetLeft(this.ghostHost) : 0;
             const offsetHostY = this.ghostHost ? this.ghostHostOffsetTop(this.ghostHost) : 0;
-            this.ghostLeft = newLocation.pageX - offsetHostX;
-            this.ghostTop = newLocation.pageY - offsetHostY;
+            this.ghostLeft = newLocation.pageX - offsetHostX + this.getWindowScrollLeft();
+            this.ghostTop = newLocation.pageY - offsetHostY + this.getWindowScrollTop();
         } else if (!this.ghost) {
             const deltaX = newLocation.pageX - this.pageX;
             const deltaY = newLocation.pageY - this.pageY;
@@ -818,16 +820,18 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         if (!!startLocation && this.ghost && !this.ghostElement) {
             this._startX = startLocation.pageX;
             this._startY = startLocation.pageY;
+            this._ghostStartX = this._startX;
+            this._ghostStartY = this._startY;
         } else if (!!startLocation && (!this.ghost || this.ghostElement)) {
             this.setLocation(startLocation);
         } else if (this.ghost && !this.ghostElement) {
             this._startX = this.baseLeft;
             this._startY = this.baseTop;
+            this._ghostStartX = this._startX + this.getWindowScrollLeft();
+            this._ghostStartY = this._startY + this.getWindowScrollTop();
         }
 
         if (this.ghost && !this.ghostElement) {
-            this._ghostStartX = this._startX;
-            this._ghostStartY = this._startY;
             this.createGhost(this._startX, this._startY);
         }
 
@@ -887,22 +891,10 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             this._startY = event.touches[0].pageY;
         }
 
-        let offsetX;
-        if (this.ghostOffsetX !== undefined) {
-            offsetX = this.ghostOffsetX;
-        } else {
-            offsetX = this.baseLeft + this.getWindowScrollLeft() - this._startX;
-        }
-
-        let offsetY;
-        if (this.ghostOffsetY !== undefined) {
-            offsetY = this.ghostOffsetY;
-        } else {
-            offsetY = this.baseTop + this.getWindowScrollTop()  - this._startY;
-        }
-
-        this._ghostStartX = this._startX + offsetX;
-        this._ghostStartY = this._startY + offsetY;
+        this._defaultOffsetX = this.baseLeft - this._startX + this.getWindowScrollLeft();
+        this._defaultOffsetY = this.baseTop - this._startY + this.getWindowScrollTop();
+        this._ghostStartX = this._startX + this.ghostOffsetX;
+        this._ghostStartY = this._startY + this.ghostOffsetY;
         this._lastX = this._startX;
         this._lastY = this._startY;
     }
@@ -950,7 +942,15 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
                     this._dragStarted = true;
                     if (this.ghost) {
                         // We moved enough so ghostElement can be rendered and actual dragging to start.
+                        // When creating it will take into account any offset set by the user by default.
                         this.createGhost(pageX, pageY);
+                    } else if (this._offsetX !== undefined || this._offsetY !== undefined) {
+                        // There is no need for ghost, but we will need to position initially the base element to reflect any offset.
+                        const transformX = (this._offsetX !== undefined ? this._offsetX - this._defaultOffsetX : 0) +
+                            this.getTransformX(this.element.nativeElement);
+                        const transformY = (this._offsetY !== undefined ? this._offsetY - this._defaultOffsetY : 0) +
+                            this.getTransformY(this.element.nativeElement);
+                        this.setTransformXY(transformX, transformY);
                     }
                 } else {
                     return;
@@ -1047,7 +1047,9 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             }
         } else {
             // Trigger our own click event because when there is no ghost, native click cannot be prevented when dragging.
-            this.dragClick.emit(eventArgs);
+            this.zone.run(() => {
+                this.dragClick.emit(eventArgs);
+            });
         }
     }
 
@@ -1101,7 +1103,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
         let dynamicGhostRef;
         if (this.ghostTemplate) {
-            dynamicGhostRef = this.viewContainer.createEmbeddedView(this.ghostTemplate);
+            dynamicGhostRef = this.viewContainer.createEmbeddedView(this.ghostTemplate, this.ghostContext);
             this.ghostElement = dynamicGhostRef.rootNodes[0];
         } else {
             this.ghostElement = node ? node.cloneNode(true) : this.element.nativeElement.cloneNode(true);
@@ -1298,8 +1300,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         }
 
         if (this.ghost && this.ghostElement) {
-            this._ghostStartX = this.baseLeft;
-            this._ghostStartY = this.baseTop;
+            this._ghostStartX = this.baseLeft + this.getWindowScrollLeft();
+            this._ghostStartY = this.baseTop + this.getWindowScrollTop();
 
             const ghostDestroyArgs: IDragGhostBaseEventArgs = {
                 owner: this,
@@ -1393,10 +1395,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     /** Method setting transformation to the base draggable element. */
     protected setTransformXY(x: number, y: number) {
-        const curX = this.getTransformX(this.element.nativeElement);
-        const curY = this.getTransformY(this.element.nativeElement);
-        this._baseLeft += x - curX;
-        this._baseTop += y - curY;
         this.element.nativeElement.style.transform = 'translate3d(' + x + 'px, ' + y + 'px, 0px)';
     }
 

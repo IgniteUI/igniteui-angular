@@ -1,0 +1,39 @@
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a light highlight schema.
+/// @type {Map}
+/// @property {Map} resting-background [igx-color: ('secondary', 400)] - The background color used for the highlight in its resting state.
+/// @property {Map} resting-color [igx-color: ('secondary', 400), text-contrast: ()] - The icon color used for the highlight in its resting state.
+/// @property {Map} active-background [igx-color: ('secondary', 600)] - The background color used for the highlight in its active state.
+/// @property {Map} active-color [igx-color: ('secondary', 400), text-contrast: ()] - The text color used for the highlight in its active state.
+/// @see $default-palette
+$_light-highlight: (
+    resting-background: (
+        igx-color: ('secondary', 50)
+    ),
+
+    resting-color: (
+        igx-color: ('secondary', 50),
+        text-contrast: ()
+    ),
+
+    active-background: (
+        igx-color: ('secondary', 200)
+    ),
+
+    active-color: (
+        igx-color: ('secondary', 200),
+        text-contrast: ()
+    ),
+);
+
+/// Generates a fluent highlight schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-highlight
+$_fluent-highlight: extend($_light-highlight);
+

@@ -1,9 +1,10 @@
-import { Directive, Input, OnDestroy, NgModule } from '@angular/core';
+import { Directive, Input, OnDestroy, NgModule, TemplateRef } from '@angular/core';
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
-import { IRowDragEndEventArgs, IRowDragStartEventArgs } from './grid-base.component';
 import { KEYS } from '../core/utils';
 import { fromEvent, Subscription } from 'rxjs';
-import { IgxRowComponent, IgxGridBaseComponent, IGridDataBindable } from './grid';
+import { IgxRowDirective, IgxGridBaseDirective } from './grid';
+import { IRowDragStartEventArgs, IRowDragEndEventArgs } from './common/events';
+import { GridType } from './common/grid.interface';
 
 
 const ghostBackgroundClass = 'igx-grid__tr--ghost';
@@ -19,7 +20,7 @@ const cellActiveClass = 'igx-grid__td--active';
     selector: '[igxRowDrag]'
 })
 export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
-    private row: IgxRowComponent<IgxGridBaseComponent & IGridDataBindable>;
+    private row: IgxRowDirective<IgxGridBaseDirective & GridType>;
     private subscription$: Subscription;
     private _rowDragStarted = false;
 
@@ -99,6 +100,11 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     protected createGhost(pageX, pageY) {
         this.row.grid.endEdit(true);
         this.row.grid.markForCheck();
+        this.ghostContext = {
+            $implicit: this.row.rowData,
+            data: this.row.rowData,
+            grid: this.row.grid
+        };
         super.createGhost(pageX, pageY, this.row.nativeElement);
 
         const ghost = this.ghostElement;
@@ -151,10 +157,21 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 export class IgxDragIndicatorIconDirective {
 }
 
+/**
+ * @hidden
+ */
+@Directive({
+    selector: '[igxRowDragGhost]'
+})
+
+export class IgxRowDragGhostDirective  {
+    constructor(public templateRef: TemplateRef<any>) { }
+}
+
 @NgModule({
-    declarations: [IgxRowDragDirective, IgxDragIndicatorIconDirective],
+    declarations: [IgxRowDragDirective, IgxDragIndicatorIconDirective, IgxRowDragGhostDirective],
     entryComponents: [],
-    exports: [IgxRowDragDirective, IgxDragIndicatorIconDirective],
+    exports: [IgxRowDragDirective, IgxDragIndicatorIconDirective, IgxRowDragGhostDirective],
     imports: []
 })
 

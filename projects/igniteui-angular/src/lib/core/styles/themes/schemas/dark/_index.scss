@@ -22,9 +22,10 @@
 @import './expansion-panel';
 @import './grid';
 @import './grid-filtering';
-@import './grid-pagination';
+@import './pagination';
 @import './grid-summary';
 @import './grid-toolbar';
+@import './highlight';
 @import './icon';
 @import './input-group';
 @import './list';
@@ -63,9 +64,10 @@
 /// @property {Map} igx-expansion-panel [$_dark-expansion-panel]
 /// @property {Map} igx-grid [$_dark-grid]
 /// @property {Map} igx-grid-filtering [$_dark-grid-filtering]
-/// @property {Map} igx-grid-paginator [$_dark-grid-pagination]
+/// @property {Map} igx-paginator [$_dark-pagination]
 /// @property {Map} igx-grid-summary [$_dark-grid-summary]
 /// @property {Map} igx-grid-toolbar [$_dark-grid-toolbar]
+/// @property {Map} igx-highlight [$_dark-highlight]
 /// @property {Map} igx-icon [$_dark-icon]
 /// @property {Map} igx-input-group [$_dark-input-group]
 /// @property {Map} igx-list [$_dark-list]
@@ -103,9 +105,10 @@ $dark-schema: (
     igx-expansion-panel: $_dark-expansion-panel,
     igx-grid: $_dark-grid,
     igx-grid-filtering: $_dark-grid-filtering,
-    igx-grid-paginator: $_dark-grid-pagination,
+    igx-paginator: $_dark-pagination,
     igx-grid-summary: $_dark-grid-summary,
     igx-grid-toolbar: $_dark-grid-toolbar,
+    igx-highlight: $_dark-highlight,
     igx-icon: $_dark-icon,
     igx-input-group: $_dark-input-group,
     igx-list: $_dark-list,
@@ -146,9 +149,10 @@ $dark-schema: (
 /// @property {map} igx-expansion-panel: [$_dark-fluent-expansion-panel],
 /// @property {map} igx-grid: [$_dark-fluent-grid],
 /// @property {map} igx-grid-filtering: [$_dark-fluent-grid-filtering],
-/// @property {map} igx-grid-paginator: [$_dark-fluent-grid-pagination],
+/// @property {map} igx-paginator: [$_dark-fluent-pagination],
 /// @property {map} igx-grid-summary: [$_dark-fluent-grid-summary],
 /// @property {map} igx-grid-toolbar: [$_dark-fluent-grid-toolbar],
+/// @property {map} igx-highlight: [$_dark-fluent-highlight],
 /// @property {map} igx-icon: [$_dark-fluent-icon],
 /// @property {map} igx-input-group: [$_dark-fluent-input-group],
 /// @property {map} igx-list: [$_dark-fluent-list],
@@ -186,9 +190,10 @@ $dark-fluent-schema: (
     igx-expansion-panel: $_dark-fluent-expansion-panel,
     igx-grid: $_dark-fluent-grid,
     igx-grid-filtering: $_dark-fluent-grid-filtering,
-    igx-grid-paginator: $_dark-fluent-grid-pagination,
+    igx-paginator: $_dark-fluent-pagination,
     igx-grid-summary: $_dark-fluent-grid-summary,
     igx-grid-toolbar: $_dark-fluent-grid-toolbar,
+    igx-highlight: $_dark-fluent-highlight,
     igx-icon: $_dark-fluent-icon,
     igx-input-group: $_dark-fluent-input-group,
     igx-list: $_dark-fluent-list,

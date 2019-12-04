@@ -65,6 +65,9 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     @Input()
     public type: SliderHandle;
 
+    @Input()
+    public deactiveState: boolean;
+
     @Output()
     public onThumbValueChange = new EventEmitter<number>();
 
@@ -217,8 +220,11 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     private toggleThumbIndicators(visible: boolean) {
         this._isPressed = visible;
 
-        if (!this.continuous) {
+        if (this.continuous || this.deactiveState) {
+            this._isActive = false;
+        } else {
             this._isActive = visible;
         }
+
     }
 }

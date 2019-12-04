@@ -40,8 +40,9 @@
 @import '../components/expansion-panel/expansion-panel-component';
 @import '../components/grid/grid-component';
 @import '../components/grid-summary/grid-summary-component';
-@import '../components/grid-paginator/grid-paginator-component';
+@import '../components/paginator/paginator-component';
 @import '../components/grid-toolbar/grid-toolbar-component';
+@import '../components/highlight/highlight-component';
 @import '../components/icon/icon-component';
 @import '../components/input/input-group-component';
 @import '../components/list/list-component';
@@ -70,8 +71,15 @@
     }
 }
 
-@mixin igx-core($print-layout: true) {
+@mixin igx-core($print-layout: true, $direction: ltr) {
+    @if $direction != ltr and $direction != rtl {
+        $direction: ltr !global;
+    } @else {
+        $direction: $direction !global;
+    }
+
     @include igx-typography();
+    @include igx-vhelper();
 
     @if $print-layout == true {
         @include igx-print-layout();
