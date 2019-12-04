@@ -211,6 +211,7 @@
     );
 
     %igx-drop-down-wrapper {
+        box-shadow: --var($theme, 'shadow');
         z-index: 1;
     }
 
@@ -223,8 +224,8 @@
 
     %igx-drop-down__list {
         overflow-y: auto;
-        box-shadow: --var($theme, 'shadow');
         background: --var($theme, 'background-color');
+        box-shadow: --var($theme, 'shadow');
         min-width: rem(128px);
 
         &:empty {
@@ -235,6 +236,11 @@
             margin-top: -16px !important;
         }
     }
+
+    %igx-drop-down__list--select {
+        box-shadow: none;
+    }
+
 
     %igx-drop-down__header,
     %igx-drop-down__item {
@@ -250,10 +256,6 @@
         color: --var($theme, 'item-text-color');
         cursor: pointer;
         padding: map-get($item-padding, 'comfortable');
-
-        //&%igx-drop-down__list--select {
-        //    max-width: calc(100% + #{$item-padding-comfortable} * 2);
-        //}
 
         &:focus {
             outline: 0;
@@ -271,19 +273,11 @@
     %igx-drop-down__item--cosy {
         height: map-get($item-height, 'cosy');
         padding: map-get($item-padding, 'cosy');
-        //
-        //&%igx-drop-down__list--select {
-        //    max-width: calc(100% + #{$item-padding-cosy} * 2);
-        //}
     }
 
     %igx-drop-down__item--compact {
         height: map-get($item-height, 'compact');
         padding: map-get($item-padding, 'compact');
-        //
-        //&%igx-drop-down__list--select {
-        //    max-width: calc(100% + #{$item-padding-compact} * 2);
-        //}
     }
 
     %igx-drop-down__header {
@@ -383,8 +377,7 @@
     }
 
     %igx-drop-down__list--select {
-        box-shadow: none;
-        %igx-drop-down__item {
+        igx-drop-down__item {
             @include igx-type-style($type-scale, $select-item);
             @include ellipsis()
         }
