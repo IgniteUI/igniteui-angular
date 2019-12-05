@@ -365,35 +365,27 @@ export class IgxGridCellComponent implements OnInit, OnDestroy {
         return !this.column.editable;
     }
 
-    @HostBinding('style.-ms-grid-row-span')
     get gridRowSpan(): number {
         return this.column.gridRowSpan;
     }
 
-    @HostBinding('style.-ms-grid-column-span')
     get gridColumnSpan(): number {
         return this.column.gridColumnSpan;
     }
 
 
-    @HostBinding('style.grid-row-end')
     get rowEnd(): number {
         return this.column.rowEnd;
     }
 
-    @HostBinding('style.grid-column-end')
     get colEnd(): number {
         return this.column.colEnd;
     }
 
-    @HostBinding('style.-ms-grid-row')
-    @HostBinding('style.grid-row-start')
     get rowStart(): number {
         return this.column.rowStart;
     }
 
-    @HostBinding('style.-ms-grid-column')
-    @HostBinding('style.grid-column-start')
     get colStart(): number {
         return this.column.colStart;
     }
