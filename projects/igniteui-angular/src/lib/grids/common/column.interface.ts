@@ -40,4 +40,7 @@ export interface ColumnType {
     width: string;
     topLevelParent?: ColumnType;
     parent?: ColumnType;
+    hasLastPinnedChildColumn: boolean;
+
+    getGridTemplate(isRow: boolean, isIE: boolean): string;
 }
