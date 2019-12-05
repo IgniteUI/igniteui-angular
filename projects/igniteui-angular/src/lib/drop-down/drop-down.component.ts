@@ -557,6 +557,12 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         }
     }
 
+    /**
+     * Checks whether the selection is valid
+     * `null` - the selection should be emptied
+     * Virtual? - the selection should at least have and `index` and `value` property
+     * Non-virtual? - the selection should be a valid drop-down item and **not** be a header
+     */
     protected isSelectionValid(selection: any): boolean {
         return selection === null
         || (this.virtDir && selection.hasOwnProperty('value') && selection.hasOwnProperty('index'))
