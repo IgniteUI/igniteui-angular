@@ -540,10 +540,12 @@ describe('IgxGrid - Advanced Filtering', () => {
             fix.detectChanges();
 
             // Verify the filter results.
-            expect(grid.filteredData.length).toEqual(6);
-            expect(grid.rowList.length).toBe(6);
-            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
-            expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('NetAdvantage');
+            const expectedData = fix.componentInstance.data.filter(r =>
+                r.ReleaseDate && r.ReleaseDate.getFullYear() === (new Date()).getFullYear());
+            expect(grid.filteredData.length).toEqual(expectedData.length);
+            expect(grid.rowList.length).toBe(expectedData.length);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe(expectedData[0].ProductName);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe(expectedData[1].ProductName);
         }));
 
         it('Should correctly filter by a \'date\' column through UI with value from calendar.', fakeAsync(() => {
