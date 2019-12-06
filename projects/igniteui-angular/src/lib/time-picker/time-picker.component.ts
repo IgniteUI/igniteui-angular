@@ -50,12 +50,6 @@ import { InteractionMode } from '../core/enums';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
-
-const HOURS_POS = [0, 1, 2];
-const MINUTES_POS = [3, 4, 5];
-const SECONDS_POS = [6, 7, 8];
-const AMPM_POS = [9, 10, 11];
-
 const ITEMS_COUNT = 7;
 
 @Injectable()
@@ -320,13 +314,19 @@ export class IgxTimePickerComponent implements
         this._format = formatValue;
         this.mask = this._format.indexOf('tt') !== -1 ? '00:00:00 LL' : '00:00:00';
 
-        if (!this.showHoursList || !this.showMinutesList || !this.showSecondsList) {
-            this.mask = this.mask.slice(this.mask.indexOf(':') + 1, this.mask.length);
+        if (!this.showHoursList || !this.showMinutesList) {
+            this.trimMask();
+        }
+
+        if (!this.showSecondsList) {
+            this.trimMask();
         }
 
         if (this.displayValue) {
             this.displayValue = this._formatTime(this.value, this._format);
         }
+
+        this.determineCursorPos();
     }
 
     /**
@@ -653,8 +653,17 @@ export class IgxTimePickerComponent implements
     private _onOpen = new EventEmitter<IgxTimePickerComponent>();
     private _onClose = new EventEmitter<IgxTimePickerComponent>();
 
+    private hours_pos = new Set();
+    private minutes_pos = new Set();
+    private seconds_pos = new Set();
+    private ampm_pos = new Set();
+
     private _onTouchedCallback: () => void = () => { };
     private _onChangeCallback: (_: Date) => void = () => { };
+
+    private trimMask(): void {
+        this.mask = this.mask.slice(this.mask.indexOf(':') + 1, this.mask.length);
+    }
 
     /**
      * @hidden
@@ -890,6 +899,8 @@ export class IgxTimePickerComponent implements
             this.toggleRef.onClosing.pipe(takeUntil(this._destroy$)).subscribe((event) => {
                 this.onClosing.emit(event);
             });
+
+            this.determineCursorPos();
         }
     }
 
@@ -917,6 +928,39 @@ export class IgxTimePickerComponent implements
     @HostListener('keydown.Alt.ArrowDown')
     public onAltArrowDown() {
         this.openDialog(this.getInputGroupElement());
+    }
+
+    private determineCursorPos(): void {
+        this.clearCursorPos();
+        for (const char of this.format) {
+            if (char === 'H' || char === 'h') {
+                this.hours_pos.size === 0 ? this.hours_pos.add(this.format.indexOf(char)) :
+                    this.hours_pos.add(this.format.lastIndexOf(char));
+                this.hours_pos.add(this.format.lastIndexOf(char) + 1);
+            }
+            if (char === 'M' || char === 'm') {
+                this.minutes_pos.size === 0 ? this.minutes_pos.add(this.format.indexOf(char)) :
+                    this.minutes_pos.add(this.format.lastIndexOf(char));
+                this.minutes_pos.add(this.format.lastIndexOf(char) + 1);
+            }
+            if (char === 'S' || char === 's') {
+                this.seconds_pos.size === 0 ? this.seconds_pos.add(this.format.indexOf(char)) :
+                    this.seconds_pos.add(this.format.lastIndexOf(char));
+                this.seconds_pos.add(this.format.lastIndexOf(char) + 1);
+            }
+            if (char === 'T' || char === 't') {
+                this.ampm_pos.size === 0 ? this.ampm_pos.add(this.format.indexOf(char)) :
+                    this.ampm_pos.add(this.format.lastIndexOf(char));
+                this.ampm_pos.add(this.format.lastIndexOf(char) + 1);
+            }
+        }
+    }
+
+    private clearCursorPos() {
+        this.hours_pos.forEach(v => this.hours_pos.delete(v));
+        this.minutes_pos.forEach(v => this.minutes_pos.delete(v));
+        this.seconds_pos.forEach(v => this.seconds_pos.delete(v));
+        this.ampm_pos.forEach(v => this.ampm_pos.delete(v));
     }
 
     private _scrollItemIntoView(item: string, items: any[], selectedItem: string, isListLoop: boolean, viewType: string): any {
@@ -1189,7 +1233,7 @@ export class IgxTimePickerComponent implements
             date.setSeconds(parseInt(this.selectedSeconds, 10));
         }
         if (((this.showHoursList && this.selectedHour !== '12') || (!this.showHoursList && this.selectedHour <= '11')) &&
-                this.selectedAmPm === 'PM') {
+            this.selectedAmPm === 'PM') {
             date.setHours(date.getHours() + 12);
         }
         if (!this.showHoursList && this.selectedAmPm === 'AM' && this.selectedHour > '11') {
@@ -1227,8 +1271,8 @@ export class IgxTimePickerComponent implements
             amPM = sections[sections.length - 1];
 
             if (((this.showHoursList && date.getHours().toString() !== '12') ||
-                    (!this.showHoursList && date.getHours().toString() <= '11')) && amPM === 'PM') {
-                        date.setHours(date.getHours() + 12);
+                (!this.showHoursList && date.getHours().toString() <= '11')) && amPM === 'PM') {
+                date.setHours(date.getHours() + 12);
             }
 
             if (!this.showHoursList && amPM === 'AM' && date.getHours().toString() > '11') {
@@ -1569,7 +1613,8 @@ export class IgxTimePickerComponent implements
      */
     public scrollSecondsIntoView(item: string): void {
         if (this.showSecondsList) {
-            const secondsIntoView = this._scrollItemIntoView(item, this._secondsItems, this.selectedSeconds, this._isSecondsListLoop, 'seconds');
+            const secondsIntoView = this._scrollItemIntoView(item,
+                this._secondsItems, this.selectedSeconds, this._isSecondsListLoop, 'seconds');
             if (secondsIntoView) {
                 this._secondsView = secondsIntoView.view;
                 this.selectedSeconds = secondsIntoView.selectedItem;
@@ -1952,32 +1997,32 @@ export class IgxTimePickerComponent implements
             const mDelta = this.itemsDelta.minutes;
             const sDelta = this.itemsDelta.seconds;
 
-            if (this.showHoursList && HOURS_POS.indexOf(cursor) !== -1) {
+            if (this.showHoursList && this.hours_pos.has(cursor)) {
                 this.value = this._spinHours(currentVal, min, max, hDelta, sign);
             }
 
             if (this.showMinutesList &&
-                ((this.showHoursList && MINUTES_POS.indexOf(cursor) !== -1) || (!this.showHoursList && HOURS_POS.indexOf(cursor) !== -1))) {
-                    this.value = this._spinMinutes(currentVal, mDelta, sign);
+                ((this.showHoursList && this.minutes_pos.has(cursor)) ||
+                    (!this.showHoursList && this.minutes_pos.has(cursor)))) {
+                this.value = this._spinMinutes(currentVal, mDelta, sign);
             }
 
-            if (this.showSecondsList) {
-                if (((!this.showHoursList || !this.showMinutesList) && MINUTES_POS.indexOf(cursor) !== -1) ||
-                    (this.showHoursList && this.showMinutesList &&  SECONDS_POS.indexOf(cursor) !== -1)) {
-                    this.value = this._spinSeconds(currentVal, sDelta, sign);
-                }
+            if (this.showSecondsList &&
+                (this.showHoursList && this.showMinutesList && this.seconds_pos.has(cursor)) ||
+                ((!this.showHoursList || !this.showMinutesList) && this.seconds_pos.has(cursor)) ||
+                (!this.showHoursList && !this.showMinutesList && this.seconds_pos.has(cursor))) {
+                this.value = this._spinSeconds(currentVal, sDelta, sign);
             }
 
-            if (this.showAmPmList) {
-                if (((!this.showHoursList || !this.showMinutesList || !this.showSecondsList) && SECONDS_POS.indexOf(cursor) !== -1) ||
-                    (this.showHoursList && this.showMinutesList && this.showSecondsList &&  AMPM_POS.indexOf(cursor) !== -1)) {
+            if (this.showAmPmList &&
+                (this.showHoursList && this.showMinutesList && this.showSecondsList && this.ampm_pos.has(cursor)) ||
+                ((!this.showHoursList || !this.showMinutesList || !this.showSecondsList) && this.ampm_pos.has(cursor)) ||
+                (this.determineFormatParts() && this.ampm_pos.has(cursor))) {
+                const sections = this.displayValue.split(/[\s:]+/);
+                sign = sections[sections.length - 1] === 'AM' ? 1 : -1;
+                currentVal.setHours(currentVal.getHours() + (sign * 12));
 
-                        const sections = this.displayValue.split(/[\s:]+/);
-                        sign = sections[sections.length - 1] === 'AM' ? 1 : -1;
-                        currentVal.setHours(currentVal.getHours() + (sign * 12));
-
-                        this.value = currentVal;
-                }
+                this.value = currentVal;
             }
 
             displayVal = this._formatTime(this.value, this.format);
@@ -1991,6 +2036,12 @@ export class IgxTimePickerComponent implements
         requestAnimationFrame(() => {
             this._setCursorPosition(cursor);
         });
+    }
+
+    private determineFormatParts(): boolean {
+        return (this.showHoursList && (!this.showMinutesList || !this.showSecondsList)) ||
+            (this.showMinutesList && (!this.showHoursList || !this.showSecondsList)) ||
+            (this.showSecondsList && (!this.showHoursList || !this.showMinutesList));
     }
 }
 
