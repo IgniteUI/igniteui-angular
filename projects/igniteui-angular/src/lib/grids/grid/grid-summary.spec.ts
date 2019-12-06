@@ -6,6 +6,7 @@ import {
     IgxDateSummaryOperand,
     IgxGridModule,
     IgxNumberSummaryOperand,
+    IgxSummaryOperand,
     IgxSummaryResult,
     IgxGridGroupByRowComponent
 } from './index';
@@ -147,6 +148,23 @@ describe('IgxGrid - Summaries #grid', () => {
             expect(filterResult).toEqual(0);
 
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Sum', 'Avg'], ['0', '0', '0']);
+        }));
+
+        it('should properly calculate all data custom summaries height', fakeAsync(() => {
+            const fixture = TestBed.createComponent(CustomSummariesComponent);
+            const gridComp = fixture.componentInstance.grid1;
+            fixture.detectChanges();
+
+            gridComp.getColumnByName('UnitsInStock').summaries = fixture.componentInstance.allDataAvgSummary;
+            gridComp.getColumnByName('OrderDate').summaries = fixture.componentInstance.allDataAvgSummary;
+            fixture.detectChanges();
+
+            const summaryRow = fixture.debugElement.query(By.css(SUMMARY_ROW));
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Test 1', 'Test 2'], ['10', '50', '150']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Test 3'], ['10', '850']);
+
+            const tFootHeight = fixture.debugElement.query(By.css('.igx-grid__tfoot')).nativeElement.getBoundingClientRect().height;
+            expect(tFootHeight).toBeGreaterThanOrEqual(3 * gridComp.defaultSummaryHeight);
         }));
 
         it(`Should update summary section when the column is outside of the
@@ -2490,6 +2508,36 @@ class InStockSummary extends IgxNumberSummaryOperand {
     }
 }
 
+class AllDataAvgSummary extends IgxSummaryOperand {
+    constructor() {
+        super();
+    }
+
+    public operate(data?: any[], allData = [], fieldName = ''): IgxSummaryResult[] {
+        const result = super.operate(data);
+        if (fieldName === 'UnitsInStock') {
+            result.push({
+                key: 'long',
+                label: 'Test 1',
+                summaryResult: 50
+            });
+            result.push({
+                key: 'long',
+                label: 'Test 2',
+                summaryResult: 150
+            });
+        }
+        if (fieldName === 'OrderDate') {
+            result.push({
+                key: 'long',
+                label: 'Test 3',
+                summaryResult: 850
+            });
+        }
+        return result;
+    }
+}
+
 @Component({
     template: `
         <igx-grid #grid1 [data]="data" [primaryKey]="'ProductID'" [allowFiltering]="true">
@@ -2516,6 +2564,7 @@ export class CustomSummariesComponent {
     public dealsSummaryMinMax = DealsSummaryMinMax;
     public earliest = EarliestSummary;
     public inStockSummary = InStockSummary;
+    public allDataAvgSummary = AllDataAvgSummary;
 }
 
 @Component({
