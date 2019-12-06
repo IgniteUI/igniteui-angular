@@ -222,7 +222,7 @@ describe('IgxDatePicker', () => {
                 expect(overlayToggle[0]).not.toBeUndefined();
 
                 // select a date
-                const dateElemToSelect = document.getElementsByClassName('igx-calendar__date-content')[10];
+                const dateElemToSelect = document.getElementsByClassName('igx-calendar__date')[10];
                 UIInteractions.clickElement(dateElemToSelect);
                 flush();
                 fixture.detectChanges();
