@@ -3321,16 +3321,22 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             GridFunctions.applyFilter('a', fix);
-            await wait(16);
-            GridFunctions.applyFilter('e', fix);
-            await wait(16);
-            GridFunctions.applyFilter('i', fix);
-            await wait(16);
-            GridFunctions.applyFilter('o', fix);
-            // wait for chip to be scrolled in view
-            await wait(200);
             fix.detectChanges();
             await wait(100);
+            fix.detectChanges();
+            GridFunctions.applyFilter('e', fix);
+            fix.detectChanges();
+            await wait(100);
+            fix.detectChanges();
+            GridFunctions.applyFilter('i', fix);
+            fix.detectChanges();
+            await wait(100);
+            fix.detectChanges();
+            GridFunctions.applyFilter('o', fix);
+            // wait for chip to be scrolled in view
+            fix.detectChanges();
+            await wait(100);
+            fix.detectChanges();
             verifyMultipleChipsVisibility(fix, [false, false, false, true]);
 
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
@@ -3338,6 +3344,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // wait for chip to be scrolled in view
             fix.detectChanges();
             await wait(200);
+            fix.detectChanges();
 
             verifyMultipleChipsVisibility(fix, [false, true, false]);
             let chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
@@ -3347,6 +3354,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // wait for chip to be scrolled in view
             fix.detectChanges();
             await wait(200);
+            fix.detectChanges();
 
             verifyMultipleChipsVisibility(fix, [true, false]);
             chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
