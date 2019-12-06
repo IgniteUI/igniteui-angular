@@ -1,6 +1,6 @@
 import { Component, ViewChild, NgModule } from '@angular/core';
 import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
-import { FormsModule, FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { FormsModule, FormGroup, FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective } from '../directives/input/input.directive';
@@ -2149,7 +2149,8 @@ class IgxTimePickerReactiveFormComponent {
         NoopAnimationsModule,
         IgxInputGroupModule,
         IgxIconModule,
-        IgxToggleModule
+        IgxToggleModule,
+        ReactiveFormsModule
     ]
 })
 export class IgxTimePickerTestingModule { }

@@ -139,7 +139,7 @@
             </igx-grid-summary-row>
         </ng-template>
         <ng-template #detail_template_container let-rowIndex="index" let-rowData>
-            <div detail='true' style="overflow:auto;width: 100%;" tabindex="0" #detailsContainer (keydown)='detailsKeyboardHandler($event, rowIndex, detailsContainer)' [attr.data-rowindex]='rowIndex'
+            <div detail='true' style="overflow:auto;width: 100%;" (focusin)='detailsViewFocused(detailsContainer, rowIndex)' tabindex="0" #detailsContainer (keydown)='detailsKeyboardHandler($event, rowIndex, detailsContainer)' [attr.data-rowindex]='rowIndex'
                 [ngClass]="{
                 'igx-grid__tr-container': true
             }">
