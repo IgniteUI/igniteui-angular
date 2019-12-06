@@ -1162,11 +1162,11 @@ export class IgxExpansionPanelSampleComponent {
     public showBody = true;
     public showHeader = true;
     public customIcon = false;
-    @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent, static: false })
+    @ViewChild(IgxExpansionPanelHeaderComponent, { read: IgxExpansionPanelHeaderComponent })
     public header: IgxExpansionPanelHeaderComponent;
     @ViewChild(IgxExpansionPanelComponent, { read: IgxExpansionPanelComponent, static: true })
     public panel: IgxExpansionPanelComponent;
-    @ViewChild(IgxExpansionPanelTitleDirective, { read: IgxExpansionPanelTitleDirective, static: false })
+    @ViewChild(IgxExpansionPanelTitleDirective, { read: IgxExpansionPanelTitleDirective })
     public title: IgxExpansionPanelTitleDirective;
     public handleExpanded() {
     }

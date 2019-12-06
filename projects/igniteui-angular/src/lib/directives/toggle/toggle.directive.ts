@@ -277,6 +277,13 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     }
 
     /**
+     * Offsets the content along the corresponding axis by the provided amount
+     */
+    setOffset(deltaX: number, deltaY: number) {
+        this.overlayService.setOffset(this._overlayId, deltaX, deltaY);
+    }
+
+    /**
      * @hidden
      */
     public ngOnInit() {

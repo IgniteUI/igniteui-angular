@@ -1,6 +1,7 @@
 import { Inject, Injectable, NgZone } from '@angular/core';
 import { ɵgetDOM as getDOM } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
+import { PlatformUtil } from './utils';
 
 const EVENT_SUFFIX = 'precise';
 
@@ -11,26 +12,31 @@ const EVENT_SUFFIX = 'precise';
  */
 @Injectable()
 export class HammerGesturesManager {
+    private platformBrowser: boolean;
     /**
      * Event option defaults for each recognizer, see http://hammerjs.github.io/api/ for API listing.
      */
-    protected hammerOptions: HammerOptions = {
-        // D.P. #447 Force TouchInput due to PointerEventInput bug (https://github.com/hammerjs/hammer.js/issues/1065)
-        // see https://github.com/IgniteUI/igniteui-angular/issues/447#issuecomment-324601803
-        inputClass: Hammer.TouchInput,
-        recognizers: [
-            [ Hammer.Pan, { threshold: 0 } ],
-            [ Hammer.Swipe, {
-                direction: Hammer.DIRECTION_HORIZONTAL
-            }],
-            [Hammer.Tap],
-            [Hammer.Tap, { event: 'doubletap', taps: 2 }, ['tap']]
-        ]
-    };
+    protected hammerOptions: HammerOptions = {};
 
     private _hammerManagers: Array<{ element: EventTarget, manager: HammerManager; }> = [];
 
-    constructor(private _zone: NgZone, @Inject(DOCUMENT) private doc: any) {
+    constructor(private _zone: NgZone, @Inject(DOCUMENT) private doc: any, private platformUtil: PlatformUtil) {
+        this.platformBrowser = this.platformUtil.isBrowser;
+        if (this.platformBrowser) {
+            this.hammerOptions = {
+                // D.P. #447 Force TouchInput due to PointerEventInput bug (https://github.com/hammerjs/hammer.js/issues/1065)
+                // see https://github.com/IgniteUI/igniteui-angular/issues/447#issuecomment-324601803
+                inputClass: Hammer.TouchInput,
+                recognizers: [
+                    [Hammer.Pan, { threshold: 0 }],
+                    [Hammer.Swipe, {
+                        direction: Hammer.DIRECTION_HORIZONTAL
+                    }],
+                    [Hammer.Tap],
+                    [Hammer.Tap, { event: 'doubletap', taps: 2 }, ['tap']]
+                ]
+            };
+        }
     }
 
     public supports(eventName: string): boolean {
@@ -41,10 +47,14 @@ export class HammerGesturesManager {
      * Add listener extended with options for Hammer.js. Will use defaults if none are provided.
      * Modeling after other event plugins for easy future modifications.
      */
-    public addEventListener(element: HTMLElement,
-                            eventName: string,
-                            eventHandler: (eventObj) => void,
-                            options: HammerOptions = null): () => void {
+    public addEventListener(
+        element: HTMLElement,
+        eventName: string,
+        eventHandler: (eventObj) => void,
+        options: HammerOptions = null): () => void {
+        if (!this.platformBrowser) {
+            return;
+        }
 
         // Creating the manager bind events, must be done outside of angular
         return this._zone.runOutsideAngular(() => {
@@ -67,6 +77,10 @@ export class HammerGesturesManager {
      * @param target Can be one of either window, body or document(fallback default).
      */
     public addGlobalEventListener(target: string, eventName: string, eventHandler: (eventObj) => void): () => void {
+        if (!this.platformBrowser) {
+            return;
+        }
+
         const element = this.getGlobalEventTarget(target);
 
         // Creating the manager bind events, must be done outside of angular

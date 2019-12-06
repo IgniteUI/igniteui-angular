@@ -1,5 +1,5 @@
-import { IgxCalendarBase } from './calendar-base';
-import { ViewChild, ElementRef, HostBinding } from '@angular/core';
+import { IgxCalendarBaseDirective } from './calendar-base';
+import { ViewChild, ElementRef, HostBinding, Directive } from '@angular/core';
 import { KEYS } from '../core/utils';
 
 /**
@@ -10,12 +10,15 @@ export enum CalendarView {
     YEAR,
     DECADE
 }
-export class IgxMonthPickerBase extends IgxCalendarBase {
+@Directive({
+    selector: '[igxMonthPickerBase]'
+})
+export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
 
     /**
      * @hidden
      */
-    @ViewChild('yearsBtn', { static: false })
+    @ViewChild('yearsBtn')
     public yearsBtn: ElementRef;
 
     /**
@@ -67,24 +70,24 @@ export class IgxMonthPickerBase extends IgxCalendarBase {
         this._activeView = CalendarView.DEFAULT;
 
         requestAnimationFrame(() => {
-            this.yearsBtn.nativeElement.focus();
+            if (this.yearsBtn) { this.yearsBtn.nativeElement.focus(); }
         });
     }
 
     /**
      * @hidden
      */
-    public activeViewDecade(): void {
+    public activeViewDecade(args?: Date): void {
         this._activeView = CalendarView.DECADE;
     }
 
     /**
      * @hidden
      */
-    public activeViewDecadeKB(event) {
+    public activeViewDecadeKB(event, args?: Date) {
         if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
             event.preventDefault();
-            this.activeViewDecade();
+            this.activeViewDecade(args);
         }
     }
 

@@ -33,6 +33,26 @@ export class IgxThumbFromTemplateDirective {}
 })
 export class IgxThumbToTemplateDirective {}
 
+/**
+ * Template directive that allows you to set a custom template, represeting primary/secondary tick labels of the {@link IgxSliderComponent}
+ *
+ * @context {@link IgxTicksComponent.context}
+ */
+@Directive({
+    selector: '[igxSliderTickLabel]'
+})
+export class IgxTickLabelTemplateDirective {}
+
+export interface IRangeSliderValue {
+    lower: number;
+    upper: number;
+}
+
+export interface ISliderValueChangeEventArgs extends IBaseEventArgs {
+    oldValue: number | IRangeSliderValue;
+    value: number | IRangeSliderValue;
+}
+
 export enum SliderType {
     /**
      * Slider with single thumb.
@@ -49,12 +69,20 @@ export enum SliderHandle {
     TO
 }
 
-export interface IRangeSliderValue {
-    lower: number;
-    upper: number;
+/**
+ * Slider Tick labels Orientation
+ */
+export enum TickLabelsOrientation {
+    Horizontal,
+    TopToBottom,
+    BottomToTop
 }
 
-export interface ISliderValueChangeEventArgs extends IBaseEventArgs {
-    oldValue: number | IRangeSliderValue;
-    value: number | IRangeSliderValue;
+/**
+ * Slider Ticks orientation
+ */
+export enum TicksOrientation {
+    Top,
+    Bottom,
+    Mirror
 }

@@ -1,0 +1,33 @@
+{
+    "$schema": "../../common/schema/class.schema.json",
+    "changes": [
+        {
+            "name": "IgxDropDownBase",
+            "replaceWith": "IgxDropDownBaseDirective"
+        },
+        {
+            "name": "IgxDropDownItemBase",
+            "replaceWith": "IgxDropDownItemBaseDirective"
+        },
+        {
+            "name": "IgxGridBaseComponent",
+            "replaceWith": "IgxGridBaseDirective"
+        },
+        {
+            "name": "IgxRowComponent",
+            "replaceWith": "IgxRowDirective"
+        },
+        {
+            "name": "IgxHierarchicalGridBaseComponent",
+            "replaceWith": "IgxHierarchicalGridBaseDirective"
+        },
+        {
+            "name": "IgxMonthPickerBase",
+            "replaceWith": "IgxMonthPickerBaseDirective"
+        },
+        {
+            "name": "IgxBaseExporter",
+            "replaceWith": "IgxBaseExporterDirective"
+        }
+    ]
+}

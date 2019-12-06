@@ -7,12 +7,13 @@ import { IgxGridModule } from './index';
 import { GridTemplateStrings, ColumnDefinitions } from '../../test-utils/template-strings.spec';
 import { BasicGridComponent } from '../../test-utils/grid-base-components.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { DefaultSortingStrategy, ISortingStrategy } from '../../data-operations/sorting-strategy';
+import { DefaultSortingStrategy, ISortingStrategy, NoopSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxGridCellComponent } from '../cell.component';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxGridFilteringRowComponent } from '../filtering/grid-filtering-row.component';
+import { IgxGridFilteringRowComponent } from '../filtering/base/grid-filtering-row.component';
 import { IgxChipComponent } from '../../chips/chip.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
 const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
@@ -353,6 +354,31 @@ describe('IgxGrid - Grid Sorting #grid', () => {
         expect(grid.headerGroups.toArray()[1].isFiltered).toBeTruthy();
     }));
 
+    it('Should disable sorting feature when using NoopSortingStrategy.', () => {
+        grid.sortStrategy = NoopSortingStrategy.instance();
+        fixture.detectChanges();
+
+        const gridData = fixture.componentInstance.data;
+        const firstHeaderCell = GridFunctions.getColumnHeader('ID', fixture);
+
+        clickCurrentRow(firstHeaderCell);
+        fixture.detectChanges();
+
+        // Verify that the grid is NOT sorted.
+        expect(getValueFromCellElement(getCurrentCellFromGrid(grid, 0, 1))).toEqual('Jane');
+        expect(getValueFromCellElement(getCurrentCellFromGrid(grid, grid.data.length - 1, 1))).toEqual('Connor');
+        grid.rowList.map((item, index) =>
+            expect(grid.getCellByColumn(index, 'ID').value).toEqual(gridData[index].ID));
+
+        clickCurrentRow(firstHeaderCell);
+        fixture.detectChanges();
+
+        // Verify that the grid is NOT sorted.
+        expect(getValueFromCellElement(getCurrentCellFromGrid(grid, 0, 1))).toEqual('Jane');
+        expect(getValueFromCellElement(getCurrentCellFromGrid(grid, grid.data.length - 1, 1))).toEqual('Connor');
+        grid.rowList.map((item, index) =>
+            expect(grid.getCellByColumn(index, 'ID').value).toEqual(gridData[index].ID));
+    });
 
     it(`Should allow sorting using a custom Sorting Strategy.`, () => {
         fixture = TestBed.createComponent(SortByParityComponent);

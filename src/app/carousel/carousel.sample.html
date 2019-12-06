@@ -1,17 +1,54 @@
 <div class="sample-wrapper">
     <app-page-header title="Carousel">
-        Displays a collection of slides or page-based interfaces. It can be used as a separate full screen element or inside another
+        Displays a collection of slides or page-based interfaces. It can be used as a separate full screen element or
+        inside another
         component.
     </app-page-header>
     <div class="sample-content">
         <section style="width: 100%">
             <article>
                 <h4 class="sample-title">Desktop</h4>
-                <igx-carousel [interval]="interval" [pause]="pause" [loop]="loop">
-                    <igx-slide *ngFor="let slide of slides;" [active]="slide.active">
-                        <img [src]="slide.image">
-                    </igx-slide>
-                </igx-carousel>
+
+                <igx-switch [(ngModel)]="car.navigation">navigation</igx-switch>
+                <igx-switch [(ngModel)]="car.keyboardSupport">keyboardSupport</igx-switch>
+                <igx-switch [(ngModel)]="car.gesturesSupport">gesturesSupport</igx-switch>
+                <igx-switch [(ngModel)]="loop">loop</igx-switch>
+                <igx-switch [(ngModel)]="pause">pause</igx-switch>
+                <button igxButton="raised" [igxToggleAction]="dropDownAnimation" [igxDropDownItemNavigation]="dropDownAnimation" displayDensity="comfortable">Animation Type: {{car.animationType}}</button>
+                <igx-drop-down #dropDownAnimation (onSelection)="onAnimationSelection($event)"  displayDensity="comfortable">
+                    <igx-drop-down-item *ngFor="let item of animationModes">
+                            {{ item }}
+                    </igx-drop-down-item>
+                </igx-drop-down>
+                <button igxButton="raised" (click)="pauseCar()">pause</button>
+                <button igxButton="raised" (click)="play()">play</button>
+                <button igxButton="raised" (click)="changeSlides()">Change slides add</button>
+                <button igxButton="raised" (click)="changeSlidesRemove()">Change slides remove</button>
+                 <button igxButton="raised" (click)="changeOrientation()">changeOrientation</button>
+                 <div style="height: 800px;">
+                    <igx-carousel #car [interval]="interval" [pause]="pause" [loop]="loop">
+                        <igx-slide *ngFor="let slide of slides;" [active]="slide.active">
+                            <img [src]="slide.image">
+                        </igx-slide>
+
+                        <ng-template igxCarouselIndicator let-slide>
+                                <img *ngIf="!slide.active" [src]="slides[slide.index].image" style="width: 100px;  ">
+                                <img *ngIf="slide.active" [src]="slides[slide.index].image" style="width: 120px;  ">
+                        </ng-template>
+
+                        <!-- <ng-template igxCarouselNextButton let-disabled>
+                                <button igxButton="fab" igxRipple="white" [disabled]="disabled">
+                                        <igx-icon fontSet="material">add</igx-icon>
+                                    </button>
+                        </ng-template>
+
+                        <ng-template igxCarouselPrevButton let-disabled>
+                                <button igxButton="fab" igxRipple="white" [disabled]="disabled">
+                                        <igx-icon fontSet="material">remove</igx-icon>
+                                    </button>
+                        </ng-template> -->
+                    </igx-carousel>
+                </div>
             </article>
         </section>
     </div>

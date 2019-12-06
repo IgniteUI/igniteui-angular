@@ -66,6 +66,7 @@ export interface IGridResourceStrings {
     igx_grid_excel_select_all?: string;
     igx_grid_excel_blanks?: string;
     igx_grid_excel_hide?: string;
+    igx_grid_excel_show?: string;
     igx_grid_excel_pin?: string;
     igx_grid_excel_unpin?: string;
     igx_grid_excel_text_filter?: string;
@@ -73,7 +74,6 @@ export interface IGridResourceStrings {
     igx_grid_excel_date_filter?: string;
     igx_grid_excel_boolean_filter?: string;
     igx_grid_excel_custom_filter?: string;
-    igx_grid_paginator_label?: string;
     igx_grid_advanced_filter_title?: string;
     igx_grid_advanced_filter_and_group?: string;
     igx_grid_advanced_filter_or_group?: string;
@@ -159,6 +159,7 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_excel_select_all: 'Select All',
     igx_grid_excel_blanks: '(Blanks)',
     igx_grid_excel_hide: 'Hide column',
+    igx_grid_excel_show: 'Show column',
     igx_grid_excel_pin: 'Pin column',
     igx_grid_excel_unpin: 'Unpin column',
     igx_grid_excel_text_filter: 'Text filter',
@@ -166,7 +167,6 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_excel_date_filter: 'Date filter',
     igx_grid_excel_boolean_filter: 'Boolean filter',
     igx_grid_excel_custom_filter: 'Custom filter...',
-    igx_grid_paginator_label: 'Items per page',
     igx_grid_advanced_filter_title: 'Advanced Filtering',
     igx_grid_advanced_filter_and_group: '"And" Group',
     igx_grid_advanced_filter_or_group: '"Or" Group',

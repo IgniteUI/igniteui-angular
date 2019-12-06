@@ -8,7 +8,7 @@ import {
     ChangeDetectorRef,
     ViewChild
 } from '@angular/core';
-import { IgxColumnComponent } from '../../column.component';
+import { IgxColumnComponent } from '../../columns/column.component';
 import { ExpressionUI } from '../grid-filtering.service';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
 import { IgxDropDownItemComponent, IgxDropDownComponent } from '../../../drop-down/index';
@@ -76,7 +76,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     @ViewChild('dropdownConditions', { read: IgxDropDownComponent, static: true })
     protected dropdownConditions: IgxDropDownComponent;
 
-    @ViewChild('logicOperatorButtonGroup', { read: IgxButtonGroupComponent, static: false })
+    @ViewChild('logicOperatorButtonGroup', { read: IgxButtonGroupComponent })
     protected logicOperatorButtonGroup: IgxButtonGroupComponent;
 
     protected get inputValuesElement() {

@@ -71,7 +71,7 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
     /**
      * @hidden
      */
-    @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective, static: false })
+    @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective })
     protected tabTemplate: IgxTabItemTemplateDirective;
 
     private _tabTemplate: TemplateRef<any>;
@@ -92,13 +92,6 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
      */
     @HostBinding('class.igx-tabs__group')
     public styleClass = true;
-
-    @HostListener('window:resize', ['$event'])
-    public onResize(event) {
-        if (this.isSelected) {
-            this._tabs.transformContentAnimation(this.relatedTab, 0);
-        }
-    }
 
     /**
      * An accessor that returns the `IgxTabItemComponent` component.

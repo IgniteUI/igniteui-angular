@@ -4,7 +4,8 @@ import {
     ISelectionEventArgs, CancelableEventArgs, OverlaySettings,
     HorizontalAlignment, VerticalAlignment, scaleInTop, scaleOutBottom, ConnectedPositioningStrategy,
     AbsoluteScrollStrategy,
-    IgxSelectComponent
+    IgxSelectComponent,
+    DisplayDensity
 } from 'igniteui-angular';
 
 @Component({
@@ -19,7 +20,12 @@ export class SelectSampleComponent implements OnInit {
     public select: IgxSelectComponent;
     @ViewChild('model', { read: IgxSelectComponent, static: true })
     public selectFruits: IgxSelectComponent;
+    @ViewChild('displayDensitySelect', { read: IgxSelectComponent, static: true })
+    public selectDisplayDensity: IgxSelectComponent;
 
+    public comfortable = DisplayDensity.comfortable;
+    public cosy = DisplayDensity.cosy;
+    public compact = DisplayDensity.compact;
 
     constructor(fb: FormBuilder) {
         this.reactiveForm = fb.group({
@@ -30,7 +36,7 @@ export class SelectSampleComponent implements OnInit {
     public items: any[] = [];
     public value: 'opt1';
     public disabledItemValue: 'InsideGroup1';
-    public fruits: string[] = ['Orange', 'Apple', 'Banana', 'Mango'];
+    public fruits: string[] = ['Orange', 'Apple', 'Banana', 'Mango', 'Pear', 'Lemon', 'Peach', 'Apricot', 'Grapes', 'Cactus'];
     public selected: string;
     public selectRequired = true;
 
@@ -135,6 +141,32 @@ export class SelectSampleComponent implements OnInit {
             };
             console.log('onOpenCustomOverlaySettings.....................:  customOverlaySettings');
             this.selectComponents.first.open(customOverlaySettings);
+        }
+    }
+
+    setDensity(density: DisplayDensity) {
+        this.selectDisplayDensity.displayDensity = density;
+    }
+
+    btnClick() {
+        // console.log('clicked');
+    }
+
+    headerFootedClick(event) {
+        // console.log('Header/Footer clicked', event);
+    }
+
+    btnAddBr() {
+        const brContainer = document.getElementsByClassName('sampleWrapper')[0];
+        const br = document.createElement('br');
+        brContainer.prepend(br);
+    }
+
+    btnRemoveBr() {
+        const brContainer = document.getElementsByClassName('sampleWrapper')[0];
+        const firstEl =  brContainer.firstElementChild;
+        if (firstEl.tagName === 'BR') {
+            brContainer.removeChild(firstEl);
         }
     }
 }

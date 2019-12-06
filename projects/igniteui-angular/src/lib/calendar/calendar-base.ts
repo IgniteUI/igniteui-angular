@@ -1,8 +1,9 @@
-import { Input, Output, EventEmitter } from '@angular/core';
+import { Input, Output, EventEmitter, Directive } from '@angular/core';
 import { WEEKDAYS, Calendar, isDateInRanges, IFormattingOptions, IFormattingViews } from './calendar';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateRangeDescriptor } from '../core/dates';
 import { Subject } from 'rxjs';
+import { isDate } from '../core/utils';
 
 /**
  * Sets the selction type - single, multi or range.
@@ -19,7 +20,11 @@ export enum ScrollMonth {
     NONE = 'none'
 }
 
-export class IgxCalendarBase implements ControlValueAccessor {
+/** @hidden @internal */
+@Directive({
+    selector: '[igxCalendarBase]'
+})
+export class IgxCalendarBaseDirective implements ControlValueAccessor {
     /**
      * Gets the start day of the week.
      * Can return a numeric or an enum representation of the week day.
@@ -243,7 +248,7 @@ export class IgxCalendarBase implements ControlValueAccessor {
     /**
      *@hidden
      */
-    private rangeStarted = false;
+    public rangeStarted = false;
 
     /**
     *@hidden
@@ -420,6 +425,7 @@ export class IgxCalendarBase implements ControlValueAccessor {
                 this.selectedDates = this.selectedDates.concat(newSelection);
             }
         }
+        this.selectedDates = this.selectedDates.filter(d => !this.isDateDisabled(d));
         this.selectedDates.sort((a: Date, b: Date) => a.valueOf() - b.valueOf());
         this._onChangeCallback(this.selectedDates);
     }
@@ -500,6 +506,18 @@ export class IgxCalendarBase implements ControlValueAccessor {
     }
 
     /**
+     * Performs deselection of a single value, when selection is multi
+     * Usually performed by the selectMultiple method, but leads to bug when multiple months are in view
+     * @hidden
+     */
+    public deselectMultipleInMonth(value: Date) {
+        const valueDateOnly = this.getDateOnly(value);
+        this.selectedDates = this.selectedDates.filter(
+            (date: Date) => date.getTime() !== valueDateOnly.getTime()
+        );
+    }
+
+    /**
      * Performs a range deselection.
      * @hidden
      */
@@ -560,7 +578,7 @@ export class IgxCalendarBase implements ControlValueAccessor {
      * @hidden
      */
     public writeValue(value: Date | Date[]) {
-        this.selectedDates = value;
+        this.selectDate(value as Date);
     }
 
     /**
@@ -580,12 +598,14 @@ export class IgxCalendarBase implements ControlValueAccessor {
      */
     public selectDate(value: Date | Date[]) {
         if (value === null || value === undefined || (Array.isArray(value) && value.length === 0)) {
-            return new Date();
+            return;
         }
 
         switch (this.selection) {
             case CalendarSelection.SINGLE:
-                this.selectSingle(value as Date);
+                if (isDate(value) && !this.isDateDisabled(value as Date)) {
+                    this.selectSingle(value as Date);
+                }
                 break;
             case CalendarSelection.MULTI:
                 this.selectMultiple(value);
@@ -600,7 +620,7 @@ export class IgxCalendarBase implements ControlValueAccessor {
      * Deselects date(s) (based on the selection type).
      */
     public deselectDate(value?: Date | Date[]) {
-        if (this.selectedDates === null || this.selectedDates === []) {
+        if (this.selectedDates === null || this.selectedDates.length === 0) {
             return;
         }
 
@@ -631,10 +651,7 @@ export class IgxCalendarBase implements ControlValueAccessor {
         switch (this.selection) {
             case CalendarSelection.SINGLE:
             case CalendarSelection.MULTI:
-                if (!this.isDateDisabled(value)) {
-                    this.selectDate(value);
-                }
-
+                this.selectDate(value);
                 break;
             case CalendarSelection.RANGE:
                 this.selectRange(value, true);

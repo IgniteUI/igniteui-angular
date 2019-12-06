@@ -9,7 +9,7 @@
         "moduleResolution": "node",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "target": "es5",
+        "target": "es2015",
         "typeRoots": [
             "node_modules/@types"
         ],
@@ -21,7 +21,8 @@
             "igniteui-angular": [
                 "projects/igniteui-angular/src/public_api.ts"
             ]
-        }
+        },
+        "rootDir": "."
     },
     "exclude": [
         "dist"
@@ -41,5 +42,8 @@
         "preserveConstEnums": true,
         "stripInternal": true,
         "readme": "none"
+    },
+    "angularCompilerOptions": {
+        "generateDeepReexports": true
     }
 }

@@ -1,0 +1,20 @@
+@import '../light/highlight';
+////
+/// @group schemas
+/// @access private
+/// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
+////
+
+/// Generates a dark highlight schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-highlight
+/// @see $default-palette
+$_dark-highlight: extend($_light-highlight);
+
+/// Generates a dark fluent highlight schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_fluent-highlight
+$_dark-fluent-highlight: extend($_fluent-highlight);
+

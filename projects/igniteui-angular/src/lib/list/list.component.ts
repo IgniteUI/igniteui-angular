@@ -21,7 +21,7 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 
 import { IgxListItemComponent } from './list-item.component';
 import {
-    IgxListBase,
+    IgxListBaseDirective,
     IgxDataLoadingTemplateDirective,
     IgxEmptyListTemplateDirective,
     IgxListPanState,
@@ -133,9 +133,9 @@ export class IgxListLineSubTitleDirective {
 @Component({
     selector: 'igx-list',
     templateUrl: 'list.component.html',
-    providers: [{ provide: IgxListBase, useExisting: IgxListComponent }]
+    providers: [{ provide: IgxListBaseDirective, useExisting: IgxListComponent }]
 })
-export class IgxListComponent extends IgxListBase {
+export class IgxListComponent extends IgxListBaseDirective {
 
     constructor(public element: ElementRef,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
@@ -149,7 +149,7 @@ export class IgxListComponent extends IgxListBase {
      * ```
      * @memberof IgxListComponent
      */
-    @ContentChildren(forwardRef(() => IgxListItemComponent))
+    @ContentChildren(forwardRef(() => IgxListItemComponent), { descendants: true })
     public children: QueryList<IgxListItemComponent>;
 
     /**
@@ -173,7 +173,7 @@ export class IgxListComponent extends IgxListBase {
      * ```
      * @memberof IgxListComponent
      */
-    @ContentChild(IgxEmptyListTemplateDirective, { read: IgxEmptyListTemplateDirective, static: false })
+    @ContentChild(IgxEmptyListTemplateDirective, { read: IgxEmptyListTemplateDirective })
     public emptyListTemplate: IgxEmptyListTemplateDirective;
 
     /**
@@ -183,7 +183,7 @@ export class IgxListComponent extends IgxListBase {
      * ```
      * @memberof IgxListComponent
      */
-    @ContentChild(IgxDataLoadingTemplateDirective, { read: IgxDataLoadingTemplateDirective, static: false })
+    @ContentChild(IgxDataLoadingTemplateDirective, { read: IgxDataLoadingTemplateDirective })
     public dataLoadingTemplate: IgxDataLoadingTemplateDirective;
 
     /**
@@ -197,7 +197,7 @@ export class IgxListComponent extends IgxListBase {
      * ```
      * @memberof IgxListComponent
      */
-    @ContentChild(IgxListItemLeftPanningTemplateDirective, { read: IgxListItemLeftPanningTemplateDirective, static: false })
+    @ContentChild(IgxListItemLeftPanningTemplateDirective, { read: IgxListItemLeftPanningTemplateDirective })
     public listItemLeftPanningTemplate: IgxListItemLeftPanningTemplateDirective;
 
     /**
@@ -211,7 +211,7 @@ export class IgxListComponent extends IgxListBase {
      * ```
      * @memberof IgxListComponent
      */
-    @ContentChild(IgxListItemRightPanningTemplateDirective, { read: IgxListItemRightPanningTemplateDirective, static: false })
+    @ContentChild(IgxListItemRightPanningTemplateDirective, { read: IgxListItemRightPanningTemplateDirective })
     public listItemRightPanningTemplate: IgxListItemRightPanningTemplateDirective;
 
     /**
@@ -454,6 +454,7 @@ export class IgxListComponent extends IgxListBase {
  */
 @NgModule({
     declarations: [
+        IgxListBaseDirective,
         IgxListComponent,
         IgxListItemComponent,
         IgxListThumbnailDirective,

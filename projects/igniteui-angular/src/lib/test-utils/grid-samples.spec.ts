@@ -1,13 +1,14 @@
 import { Component, TemplateRef, ViewChild, Input, AfterViewInit, ChangeDetectorRef, QueryList, ViewChildren, OnInit } from '@angular/core';
 import { IgxGridCellComponent } from '../grids/cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/summaries/grid-summary';
-import { IGridCellEventArgs, IGridEditEventArgs, IgxGridTransaction } from '../grids/grid-base.component';
+import { IGridCellEventArgs, IGridEditEventArgs } from '../grids/common/events';
+import { IgxGridTransaction } from '../grids/grid-base.directive';
 import { BasicGridComponent, BasicGridSearchComponent, GridAutoGenerateComponent,
         GridNxMComponent, GridWithSizeComponent, PagingComponent } from './grid-base-components.spec';
 import { IGridSelection } from './grid-interfaces.spec';
 import { SampleTestData, DataParent } from './sample-test-data.spec';
 import { ColumnDefinitions, GridTemplateStrings, EventSubscriptions } from './template-strings.spec';
-import { IgxColumnComponent } from '../grids/column.component';
+import { IgxColumnComponent } from '../grids/columns/column.component';
 import { IgxTransactionService } from '../services';
 import { IgxFilteringOperand } from '../data-operations/filtering-condition';
 import { ExpressionUI } from '../grids/filtering/grid-filtering.service';
@@ -15,6 +16,7 @@ import { IFilteringExpressionsTree } from '../data-operations/filtering-expressi
 import { FilteringStrategy } from '../data-operations/filtering-strategy';
 import { IgxGridComponent } from '../grids/grid';
 import { IgxRowEditTabStopDirective } from '../grids/grid.rowEdit.directive';
+import { IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/grid.excel-style-filtering.component';
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
@@ -269,12 +271,12 @@ export class VirtualSummaryColumnComponent extends BasicGridComponent {
     public dateSummary = new IgxDateSummaryOperand();
 
     public scrollTop(newTop: number) {
-        const vScrollbar = this.grid.verticalScrollContainer.getVerticalScroll();
+        const vScrollbar = this.grid.verticalScrollContainer.getScroll();
         vScrollbar.scrollTop = newTop;
     }
 
     public scrollLeft(newLeft: number) {
-        const hScrollbar = this.grid.parentVirtDir.getHorizontalScroll();
+        const hScrollbar = this.grid.headerContainer.getScroll();
         hScrollbar.scrollLeft = newLeft;
     }
 }
@@ -315,7 +317,7 @@ export class DefaultSizeAndSummaryComponent extends BasicGridComponent {
     }
 
     public isHorizonatScrollbarVisible() {
-        const scrollbar = this.grid.parentVirtDir.getHorizontalScroll();
+        const scrollbar = this.grid.headerContainer.getScroll();
         return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
     }
 }
@@ -871,10 +873,10 @@ export class VirtualGridComponent extends BasicGridComponent {
         this.selectedCell = event.cell;
     }
      public scrollTop(newTop: number) {
-        this.grid.verticalScrollContainer.getVerticalScroll().scrollTop = newTop;
+        this.grid.verticalScrollContainer.getScroll().scrollTop = newTop;
     }
      public scrollLeft(newLeft: number) {
-        this.grid.parentVirtDir.getHorizontalScroll().scrollLeft = newLeft;
+        this.grid.headerContainer.getScroll().scrollLeft = newLeft;
     }
 }
  @Component({
@@ -955,6 +957,44 @@ export class IgxGridFilteringComponent extends BasicGridComponent {
     public activateFiltering(activate: boolean) {
         this.grid.allowFiltering = activate;
         this.grid.cdr.markForCheck();
+    }
+}
+
+@Component({
+    template: `
+    <igx-grid-excel-style-filtering #esf style="height: 700px; width: 350px">
+    </igx-grid-excel-style-filtering>
+    <igx-grid #grid1 [data]="data" height="500px">
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
+            [filterable]="false" [resizable]="resizable"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" [sortable]="true"
+            [filterable]="filterable" [resizable]="resizable" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" [filterable]="filterable" [resizable]="resizable" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'Released'" [filterable]="filterable" [resizable]="resizable" dataType="boolean"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
+            [filterable]="filterable" [resizable]="resizable" dataType="date">
+        </igx-column>
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
+            dataType="string" [filters]="customFilter">
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridExternalESFComponent extends BasicGridComponent implements AfterViewInit {
+    public customFilter = CustomFilter.instance();
+    public resizable = false;
+    public filterable = true;
+
+    public data = SampleTestData.excelFilteringData();
+
+    @ViewChild('esf', { read: IgxGridExcelStyleFilteringComponent, static: true })
+    public esf: IgxGridExcelStyleFilteringComponent;
+
+    constructor(private cdr: ChangeDetectorRef) {
+        super();
+    }
+
+    ngAfterViewInit(): void {
+        this.esf.column = this.grid.getColumnByName('ProductName');
     }
 }
 
@@ -1187,6 +1227,53 @@ export class IgxTestExcelFilteringDatePickerComponent extends IgxGridFilteringCo
     </igx-grid>`
 })
 export class IgxGridAdvancedFilteringComponent extends BasicGridComponent {
+    public customFilter = CustomFilter.instance();
+    public resizable = false;
+    public filterable = true;
+
+    public data = SampleTestData.excelFilteringData();
+    public activateFiltering(activate: boolean) {
+        this.grid.allowFiltering = activate;
+        this.grid.cdr.markForCheck();
+    }
+}
+
+@Component({
+    template: `
+    <igx-grid #grid1 [data]="data" height="400px">
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" dataType="number"></igx-column>
+        <igx-column width="100px" [field]="'Released'" dataType="boolean"></igx-column>
+        <igx-column width="100px" [field]="'ReleaseDate'" dataType="date" headerClasses="header-release-date"></igx-column>
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" dataType="string" [filters]="customFilter">
+        </igx-column>
+    </igx-grid>
+    <igx-advanced-filtering-dialog [grid]="grid1">
+    </igx-advanced-filtering-dialog>`
+})
+export class IgxGridExternalAdvancedFilteringComponent extends BasicGridComponent {
+    public customFilter = CustomFilter.instance();
+    public resizable = false;
+    public filterable = true;
+
+    public data = SampleTestData.excelFilteringData();
+}
+
+@Component({
+    template: `<igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true" [showToolbar]="true">
+        <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"></igx-column>
+        <igx-column width="100px" [field]="'ProductName'" dataType="string"></igx-column>
+        <igx-column width="100px" [field]="'Downloads'" dataType="number" [hasSummary]="true"></igx-column>
+        <igx-column-group header="Released Group">
+            <igx-column width="100px" [field]="'Released'" dataType="boolean"></igx-column>
+            <igx-column width="100px" [field]="'ReleaseDate'" dataType="date" headerClasses="header-release-date"></igx-column>
+        </igx-column-group>
+        <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" dataType="string" [filters]="customFilter">
+        </igx-column>
+    </igx-grid>`
+})
+export class IgxGridAdvancedFilteringColumnGroupComponent extends BasicGridComponent {
     public customFilter = CustomFilter.instance();
     public resizable = false;
     public filterable = true;
@@ -1499,4 +1586,158 @@ export class CellEditingScrollTestComponent extends BasicGridComponent {
         { firstName: 'Tomas', lastName: 'Smith', age: 81, isActive: false, birthday: new Date('08/08/1931'), fullName: 'Tomas Smith' },
         { firstName: 'Michael', lastName: 'Parker', age: 48, isActive: true, birthday: new Date('08/08/1970'), fullName: 'Michael Parker' }
     ];
+}
+
+@Component({
+    template: GridTemplateStrings.declareGrid(
+            ` [width]="width" [height]="height" [paging]="'true'" [perPage]="perPage" [primaryKey]="'ProductID'"`,
+            '', ColumnDefinitions.productBasic)
+})
+export class GridWithUndefinedDataComponent implements OnInit  {
+    @ViewChild(IgxGridComponent, { static: true })
+    public grid: IgxGridComponent;
+    public data ;
+    public perPage = 5;
+    public width = '800px';
+    public height = '600px';
+
+    public ngOnInit(): void {
+        setTimeout(() => {
+           this.data = SampleTestData.foodProductDataExtended();
+        }, 300);
+    }
+}
+
+@Component({
+    template: `
+    <igx-grid #grid [data]="data" height="500px" width="1300px" columnWidth="100px">
+        <igx-column field="ID"></igx-column>
+        <igx-column-group header="General Information" [collapsible]="generalInfCollapsible" [expanded]="generalInfExpanded">
+            <igx-column  field="CompanyName" [visibleWhenCollapsed]="companyNameVisibleWhenCollapse"></igx-column>
+            <igx-column-group header="Person Details"
+                [collapsible]="personDetailsCollapsible"
+                [expanded]="personDetailsExpanded" [visibleWhenCollapsed]="personDetailsVisibleWhenCollapse">
+                <igx-column  field="ContactName"></igx-column>
+                <igx-column  field="ContactTitle"></igx-column>
+            </igx-column-group>
+        </igx-column-group>
+        <igx-column-group header="Address Information" [collapsible]="true">
+            <igx-column-group header="Country Information" [visibleWhenCollapsed]="true" [collapsible]="true">
+                <igx-column  field="Country" [visibleWhenCollapsed]="true"></igx-column>
+                <igx-column  field="Empty"></igx-column>
+                <igx-column-group header="Region Information" [visibleWhenCollapsed]="true" [collapsible]="true">
+                    <igx-column field="Region" [visibleWhenCollapsed]="true"></igx-column>
+                    <igx-column field="PostalCode" [visibleWhenCollapsed]="true"></igx-column>
+                </igx-column-group>
+                <igx-column-group header="City Information" [visibleWhenCollapsed]="true" [collapsible]="true">
+                    <igx-column field="City"></igx-column>
+                    <igx-column field="Address"></igx-column>
+                </igx-column-group>
+            </igx-column-group>
+            <igx-column-group header="Contact Information" [visibleWhenCollapsed]="false"
+                    [collapsible]="true" [hidden]="hideContactInformation">
+                <igx-column field="Phone" [visibleWhenCollapsed]="false"></igx-column>
+                <igx-column field="Fax" [visibleWhenCollapsed]="false"></igx-column>
+            </igx-column-group>
+        </igx-column-group>
+    </igx-grid>
+    `
+})
+export class CollapsibleColumnGroupTestComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    grid: IgxGridComponent;
+    public generalInfCollapsible;
+    public generalInfExpanded;
+    public personDetailsCollapsible;
+    public personDetailsExpanded;
+    public personDetailsVisibleWhenCollapse;
+    public companyNameVisibleWhenCollapse;
+    public hideContactInformation = true;
+    data = SampleTestData.contactInfoDataFull();
+}
+
+@Component({
+    template: `
+    <ng-template #indicatorTemplate let-column="column">
+        <igx-icon [attr.draggable]="false">{{column.expanded ? 'lock' : 'lock_open'}} </igx-icon>
+    </ng-template>
+
+    <igx-grid #grid [data]="data" height="500px" width="1300px" columnWidth="100px">
+        <igx-column field="ID"></igx-column>
+        <igx-column-group header="General Information" [collapsible]="true" >
+            <igx-column  field="CompanyName" [visibleWhenCollapsed]="true"></igx-column>
+            <igx-column-group header="Person Details" [visibleWhenCollapsed]="false">
+                <igx-column  field="ContactName"></igx-column>
+                <igx-column  field="ContactTitle"></igx-column>
+            </igx-column-group>
+            <ng-template igxCollapsibleIndicator let-column="column">
+                <igx-icon [attr.draggable]="false">{{column.expanded ? 'remove' : 'add'}} </igx-icon>
+            </ng-template>
+        </igx-column-group>
+        <igx-column-group header="Address Information" [collapsible]="true">
+                <igx-column  field="Country" [visibleWhenCollapsed]="true"></igx-column>
+                <igx-column-group header="Region Information" [visibleWhenCollapsed]="true">
+                    <igx-column field="Region" ></igx-column>
+                    <igx-column field="PostalCode"></igx-column>
+                </igx-column-group>
+                <igx-column-group header="City Information" [visibleWhenCollapsed]="false">
+                    <igx-column field="City"></igx-column>
+                    <igx-column field="Address"></igx-column>
+                </igx-column-group>
+        </igx-column-group>
+    </igx-grid>
+    `
+})
+export class CollapsibleGroupsTemplatesTestComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    grid: IgxGridComponent;
+
+    @ViewChild('indicatorTemplate', { read: TemplateRef, static: false })
+    public indicatorTemplate;
+
+    data = SampleTestData.contactInfoDataFull();
+}
+
+
+@Component({
+    template: `
+        <igx-grid [data]="data" height="500px" width="800px" columnWidth="100px">
+            <igx-column-group *ngFor="let colGroup of columnGroups" [header]="colGroup.columnHeader" [collapsible]="colGroup.collapsible">
+                <igx-column *ngFor="let column of colGroup.columns" [field]="column.field" [dataType]="column.type"
+                    [visibleWhenCollapsed]="column.visibleWhenCollapsed"></igx-column>
+            </igx-column-group>
+        </igx-grid>
+    `
+})
+
+export class CollapsibleGroupsDynamicColComponent {
+    @ViewChild(IgxGridComponent, { static: true })
+    public grid: IgxGridComponent;
+
+    public columnGroups: Array<any>;
+    public data = SampleTestData.contactInfoDataFull();
+
+    constructor() {
+        this.columnGroups = [
+            { columnHeader: 'First', collapsible: true, columns: [
+                { field: 'ID', type: 'string', visibleWhenCollapsed: true },
+                { field: 'CompanyName', type: 'string' , visibleWhenCollapsed: true },
+                { field: 'ContactName', type: 'string' , visibleWhenCollapsed: true },
+            ]},
+            { columnHeader: 'Second', collapsible: true, columns: [
+                { field: 'ContactTitle', type: 'string' , visibleWhenCollapsed: true },
+                { field: 'Address', type: 'string' , visibleWhenCollapsed: true },
+                { field: 'PostlCode', type: 'string' , visibleWhenCollapsed: false },
+                { field: 'Contry', type: 'string' , visibleWhenCollapsed: false }
+            ]}
+        ];
+    }
+
+    public removeColumnFromGroup(groupIndex = 0) {
+        this.columnGroups[groupIndex].columns.pop();
+    }
+
+    public addColumnToGroup(groupIndex = 0, visibleWhenCollapsed = false) {
+        this.columnGroups[groupIndex].columns.push({ field: 'Missing', type: 'string' , visibleWhenCollapsed: visibleWhenCollapsed });
+    }
 }

@@ -1,5 +1,7 @@
 import { TemplateRef } from '@angular/core';
 import { DataType } from '../../data-operations/data-util';
+import { ISortingStrategy } from '../../data-operations/sorting-strategy';
+import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 
 /**
  * @hidden
@@ -21,6 +23,11 @@ export interface ColumnType {
     filterable: boolean;
     hidden: boolean;
     disablePinning: boolean;
+    sortStrategy: ISortingStrategy;
+    filteringIgnoreCase: boolean;
+    filteringExpressionsTree: FilteringExpressionsTree;
+    hasSummary: boolean;
+    summaries: any;
     pinned: boolean;
     level: number;
     rowStart: number;
@@ -33,4 +40,7 @@ export interface ColumnType {
     width: string;
     topLevelParent?: ColumnType;
     parent?: ColumnType;
+    hasLastPinnedChildColumn: boolean;
+
+    getGridTemplate(isRow: boolean, isIE: boolean): string;
 }

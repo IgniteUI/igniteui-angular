@@ -20,13 +20,15 @@ import {
     getNodeSizeViaRange, ROW_COLLAPSE_KEYS, ROW_EXPAND_KEYS, SUPPORTED_KEYS, NAVIGATION_KEYS, isIE, isLeftClick, PlatformUtil
 } from '../core/utils';
 import { State } from '../services/index';
-import { IgxGridBaseComponent, IGridDataBindable } from './grid-base.component';
-import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from '../core/grid-selection';
+import { IgxGridBaseDirective } from './grid-base.directive';
+import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from './selection/selection.service';
 import { DeprecateProperty, DeprecateMethod } from '../core/deprecateDecorators';
 import { HammerGesturesManager } from '../core/touch';
 import { ColumnType } from './common/column.interface';
 import { RowType } from './common/row.interface';
 import { GridSelectionMode } from './common/enums';
+import { GridType } from './common/grid.interface';
+import { IgxGridComponent } from './grid';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -364,35 +366,27 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         return !this.column.editable;
     }
 
-    @HostBinding('style.-ms-grid-row-span')
     get gridRowSpan(): number {
         return this.column.gridRowSpan;
     }
 
-    @HostBinding('style.-ms-grid-column-span')
     get gridColumnSpan(): number {
         return this.column.gridColumnSpan;
     }
 
 
-    @HostBinding('style.grid-row-end')
     get rowEnd(): number {
         return this.column.rowEnd;
     }
 
-    @HostBinding('style.grid-column-end')
     get colEnd(): number {
         return this.column.colEnd;
     }
 
-    @HostBinding('style.-ms-grid-row')
-    @HostBinding('style.grid-row-start')
     get rowStart(): number {
         return this.column.rowStart;
     }
 
-    @HostBinding('style.-ms-grid-column')
-    @HostBinding('style.grid-column-start')
     get colStart(): number {
         return this.column.colStart;
     }
@@ -416,9 +410,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * ```
      * @memberof IgxGridCellComponent
      */
-    @HostBinding('style.min-width')
-    @HostBinding('style.max-width')
-    @HostBinding('style.flex-basis')
     @Input()
     width = '';
 
@@ -457,7 +448,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             }
         } else {
             const rowTransaction: State = this.grid.transactions.getState(this.row.rowID);
-            return rowTransaction && rowTransaction.value && rowTransaction.value[this.column.field];
+                return rowTransaction && rowTransaction.value &&
+                (rowTransaction.value[this.column.field] ||
+                 rowTransaction.value[this.column.field] === 0 ||
+                 rowTransaction.value[this.column.field] === false);
         }
 
         return false;
@@ -511,7 +505,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @ViewChild('inlineEditor', { read: TemplateRef, static: true })
     protected inlineEditorTemplate: TemplateRef<any>;
 
-    @ViewChild(IgxTextHighlightDirective, { read: IgxTextHighlightDirective, static: false })
+    @ViewChild(IgxTextHighlightDirective, { read: IgxTextHighlightDirective })
     protected set highlight(value: IgxTextHighlightDirective) {
         this._highlight = value;
 
@@ -551,11 +545,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     constructor(
         protected selectionService: IgxGridSelectionService,
         protected crudService: IgxGridCRUDService,
-        public gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
+        public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         public cdr: ChangeDetectorRef,
         private element: ElementRef,
         protected zone: NgZone,
-        private touchManager: HammerGesturesManager) { }
+        private touchManager: HammerGesturesManager,
+        protected platformUtil: PlatformUtil) { }
 
     private addPointerListeners(selection) {
         if (selection !== GridSelectionMode.multiple) { return; }
@@ -587,7 +582,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 this.nativeElement.addEventListener('compositionend', this.compositionEndHandler);
             }
         });
-        if (PlatformUtil.isIOS()) {
+        if (this.platformUtil.isIOS) {
             this.touchManager.addEventListener(this.nativeElement, 'doubletap', this.onDoubleClick, {
                 cssProps: { } /* don't disable user-select, etc */
             } as HammerOptions);
@@ -848,6 +843,17 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             } else if (expand) {
                 (this.gridAPI as any).trigger_row_expansion_toggle(this.row.treeRow, !this.row.expanded, event, this.visibleColumnIndex);
             }
+        } else if ((this.grid as IgxGridComponent).hasDetails && this.isToggleKey(key)) {
+            const collapse = (this.row as any).expanded && ROW_COLLAPSE_KEYS.has(key);
+            const expand = !(this.row as any).expanded && ROW_EXPAND_KEYS.has(key);
+            const expandedStates = this.grid.expansionStates;
+            if (expand) {
+                expandedStates.set(this.row.rowID, true);
+            } else if (collapse) {
+                expandedStates.set(this.row.rowID, false);
+            }
+            this.grid.expansionStates = expandedStates;
+            this.grid.notifyChanges();
         }
     }
 

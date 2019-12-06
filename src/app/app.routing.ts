@@ -65,6 +65,9 @@ import { AutocompleteSampleComponent } from './autocomplete/autocomplete.sample'
 import { SelectSampleComponent } from './select/select.sample';
 import { TreeGridLoadOnDemandSampleComponent } from './tree-grid-load-on-demand/tree-grid-load-on-demand.sample';
 import { GridAutoSizeSampleComponent } from './grid-auto-size/grid-auto-size.sample';
+import { GridSaveStateComponent } from './grid-state/grid-state.component';
+import { AboutComponent } from './grid-state/about.component';
+import { GridMasterDetailSampleComponent } from './grid-master-detail/grid-master-detail.sample';
 
 const appRoutes = [
     {
@@ -283,6 +286,10 @@ const appRoutes = [
         component: GridGroupBySampleComponent
     },
     {
+        path: 'gridMasterDetail',
+        component: GridMasterDetailSampleComponent
+    },
+    {
         path: 'treeGrid',
         component: TreeGridSampleComponent
     },
@@ -314,7 +321,15 @@ const appRoutes = [
     {
         path: 'gridAutoSize',
         component: GridAutoSizeSampleComponent
-    }
+    },
+    {
+        path: 'gridState',
+        component: GridSaveStateComponent
+    },
+    {
+        path: 'gridAbout',
+        component: AboutComponent
+    },
 ];
 
 export const routing = RouterModule.forRoot(appRoutes);

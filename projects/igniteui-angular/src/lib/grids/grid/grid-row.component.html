@@ -2,7 +2,7 @@
     <div class="igx-grid__row-indentation igx-grid__row-indentation--level-{{grid.groupingExpressions.length}}"></div>
 </ng-container>
 <ng-container *ngIf="rowDraggable">
-    <div [class]="resolveDragIndicatorClasses" [igxRowDrag]="this" (click)="$event.stopPropagation()">
+    <div [class]="resolveDragIndicatorClasses" [igxRowDrag]="this" (click)="$event.stopPropagation()" [ghostTemplate]="this.grid.getDragGhostCustomTemplate()">
         <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : this.grid.dragIndicatorIconBase"></ng-container>
     </div>
 </ng-container>
@@ -10,103 +10,48 @@
     <div class="igx-grid__cbx-selection" (click)="onRowSelectorClick($event)">
          <ng-template *ngTemplateOutlet="
             this.grid.rowSelectorTemplate ? this.grid.rowSelectorTemplate : rowSelectorBaseTemplate;
-            context: { $implicit: {
-                            index: this.grid.groupingExpressions.length > 0 ? this.grid.filteredSortedData.indexOf(this.rowData) :
-                                this.index + this.grid.page * this.grid.perPage,
-                            rowID: rowID, selected: selected }}">
+            context: { $implicit: { index: viewIndex, rowID: rowID, selected: selected }}">
         </ng-template>
     </div>
 </ng-container>
 
 <ng-container *ngIf="!grid.hasColumnLayouts">
     <ng-container *ngIf="pinnedColumns.length > 0">
-        <igx-grid-cell *ngFor="let col of pinnedColumns | igxNotGrouped"
-            class="igx-grid__td igx-grid__td--fw igx-grid__td--pinned"
-            [class.igx-grid__td--number]="col.dataType === 'number'"
-            [ngClass]="col.cellClasses | igxCellStyles:rowData[col.field]:rowData:col.field"
-            [editMode]="col.editable && crudService.isInEditMode(index, col.index)"
-            [column]="col"
-            [formatter]="col.formatter"
-            [row]="this"
-            [lastPinned]="col.isLastPinned"
-            [style.min-height.px]="grid.rowHeight || 32"
-            [rowData]="rowData"
-            [style.min-width.px]="col.width"
-            [style.flex-basis.px]="col.width"
-            [width]="col.getCellWidth()"
-            [visibleColumnIndex]="col.visibleIndex"
-            [value]="rowData[col.field]"
-            [cellTemplate]="col.bodyTemplate"
-            [cellSelectionMode]="grid.cellSelection">
-        </igx-grid-cell>
+        <ng-template ngFor let-col [ngForOf]="pinnedColumns | igxNotGrouped">
+                <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
+        </ng-template>
     </ng-container>
     <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxNotGrouped" [igxForScrollContainer]="grid.parentVirtDir" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForSizePropName]='"calcPixelWidth"' [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
-        <igx-grid-cell
-            class="igx-grid__td igx-grid__td--fw"
-            [class.igx-grid__td--number]="col.dataType === 'number'"
-            [ngClass]="col.cellClasses | igxCellStyles:rowData[col.field]:rowData:col.field"
-            [editMode]="col.editable && crudService.isInEditMode(index, col.index)"
-            [column]="col"
-            [formatter]="col.formatter"
-            [row]="this"
-            [style.min-height.px]="grid.rowHeight || 32"
-            [rowData]="rowData"
-            [style.min-width.px]="col.width"
-            [style.flex-basis.px]="col.width"
-            [width]="col.getCellWidth()"
-            [visibleColumnIndex]="col.visibleIndex"
-            [value]="rowData[col.field]"
-            [cellTemplate]="col.bodyTemplate"
-            [cellSelectionMode]="grid.cellSelection">
-        </igx-grid-cell>
+        <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? expandableCellTemplate : cellTemplate; context: getContext(col, this)"></ng-container>
     </ng-template>
 </ng-container>
 
 <ng-container *ngIf="grid.hasColumnLayouts">
     <ng-container *ngIf="pinnedColumns.length > 0">
         <div *ngFor="let col of pinnedColumns | igxTopLevel" class="igx-grid__mrl-block"
-        [ngClass]="{'igx-grid__td--pinned-last': col.hasLastPinnedChildColumn}"
-        [ngStyle]="{'grid-template-rows':col.getGridTemplate(true, false),
-        'grid-template-columns':col.getGridTemplate(false, false),
-        'z-index': col.pinned ? 1 : null,
-        '-ms-grid-rows':col.getGridTemplate(true, true),
-        '-ms-grid-columns':col.getGridTemplate(false, true)}">
-            <igx-grid-cell *ngFor="let child of col.children"
-                class="igx-grid__td igx-grid__td--fw igx-grid__td--pinned"
-                [class.igx-grid__td--number]="child.dataType === 'number'"
-                [ngClass]="child.cellClasses | igxCellStyles:rowData[child.field]:rowData:child.field"
-                [editMode]="child.editable && crudService.isInEditMode(index, child.index)"
-                [column]="child"
-                [formatter]="child.formatter"
-                [row]="this"
-                [style.min-height.px]="grid.rowHeight || 32"
-                [rowData]="rowData"
-                [visibleColumnIndex]="child.visibleIndex"
-                [value]="rowData[child.field]"
-                [cellTemplate]="child.bodyTemplate"
-                [cellSelectionMode]="grid.cellSelection"></igx-grid-cell>
+        [class.igx-grid__td--pinned-last]="col.hasLastPinnedChildColumn"
+        [ngStyle]="{
+            'grid-template-rows':col.getGridTemplate(true, false),
+            'grid-template-columns':col.getGridTemplate(false, false),
+            'z-index': col.pinned ? 1 : null,
+            '-ms-grid-rows':col.getGridTemplate(true, true),
+            '-ms-grid-columns':col.getGridTemplate(false, true)
+        }">
+            <ng-template ngFor let-col [ngForOf]="col.children">
+                    <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails? mrlExpandableCellTemplate : mrlCellTemplate; context: getContext(col, this)"></ng-container>
+            </ng-template>
         </div>
     </ng-container>
     <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxTopLevel" [igxForScrollContainer]="grid.parentVirtDir" let-colIndex="index" [igxForScrollOrientation]="'horizontal'" [igxForContainerSize]='grid.unpinnedWidth' [igxForSizePropName]='"calcPixelWidth"' [igxForTrackBy]='grid.trackColumnChanges' #igxDirRef>
-        <div class="igx-grid__mrl-block"
-        [ngStyle]="{'grid-template-rows':col.getGridTemplate(true, false),
-     'grid-template-columns':col.getGridTemplate(false, false),
-     '-ms-grid-rows':col.getGridTemplate(true, true),
-     '-ms-grid-columns':col.getGridTemplate(false, true)}">
-            <igx-grid-cell *ngFor="let child of col.children"
-                class="igx-grid__td igx-grid__td--fw"
-                [class.igx-grid__td--number]="child.dataType === 'number'"
-                [ngClass]="child.cellClasses | igxCellStyles:rowData[child.field]:rowData:child.field"
-                [editMode]="child.editable && crudService.isInEditMode(index, child.index)"
-                [column]="child"
-                [formatter]="child.formatter"
-                [row]="this"
-                [style.min-height.px]="grid.rowHeight || 32"
-                [rowData]="rowData"
-                [visibleColumnIndex]="child.visibleIndex"
-                [value]="rowData[child.field]"
-                [cellTemplate]="child.bodyTemplate"
-                [cellSelectionMode]="grid.cellSelection"></igx-grid-cell>
+        <div class="igx-grid__mrl-block" [ngStyle]="{
+            'grid-template-rows':col.getGridTemplate(true, false),
+            'grid-template-columns':col.getGridTemplate(false, false),
+            '-ms-grid-rows':col.getGridTemplate(true, true),
+            '-ms-grid-columns':col.getGridTemplate(false, true)
+        }">
+            <ng-template ngFor let-col [ngForOf]="col.children">
+                    <ng-container *ngTemplateOutlet="col.visibleIndex === 0 && grid.hasDetails ? mrlExpandableCellTemplate : mrlCellTemplate; context: getContext(col, this)"></ng-container>
+            </ng-template>
         </div>
     </ng-template>
 </ng-container>
@@ -122,4 +67,114 @@
             [aria-label]="rowCheckboxAriaLabel">
         </igx-checkbox>
     </div>
+</ng-template>
+
+<ng-template #cellTemplate let-col>
+        <igx-grid-cell
+        class="igx-grid__td igx-grid__td--fw"
+        [class.igx-grid__td--pinned]="col.pinned"
+        [class.igx-grid__td--number]="col.dataType === 'number'"
+        [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex"
+        [ngStyle]="col.cellStyles | igxCellStyles:rowData[col.field]:rowData:col.field:viewIndex"
+        [editMode]="col.editable && crudService.isInEditMode(index, col.index)"
+        [column]="col"
+        [formatter]="col.formatter"
+        [row]="this"
+        [lastPinned]="col.columnLayoutChild ? null : col.isLastPinned"
+        [style.min-height.px]="grid.rowHeight || 32"
+        [rowData]="rowData"
+        [style.min-width]="col.width"
+        [style.max-width]="col.width"
+        [style.flex-basis]="col.width"
+        [width]="col.getCellWidth()"
+        [visibleColumnIndex]="col.visibleIndex"
+        [value]="rowData[col.field]"
+        [cellTemplate]="col.bodyTemplate"
+        [cellSelectionMode]="grid.cellSelection" #cell>
+    </igx-grid-cell>
+</ng-template>
+
+<ng-template #expandableCellTemplate let-col>
+    <igx-expandable-grid-cell
+        [class.igx-grid__td--pinned]="col.pinned"
+        class="igx-grid__td igx-grid__td--fw igx-grid__td--tree-cell"
+        [class.igx-grid__td--number]="col.dataType === 'number' && col.visibleIndex !== 0"
+        [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex"
+        [ngStyle]="col.cellStyles | igxCellStyles:rowData[col.field]:rowData:col.field:viewIndex"
+        [expanded]="expanded"
+        [editMode]="col.editable && crudService.isInEditMode(index, col.index)"
+        [column]="col"
+        [formatter]="col.formatter"
+        [row]="this"
+        [lastPinned]="col.columnLayoutChild ? null : col.isLastPinned"
+        [style.min-height.px]="grid.rowHeight || 32"
+        [rowData]="rowData"
+        [style.min-width]="col.width"
+        [style.max-width]="col.width"
+        [style.flex-basis]="col.width"
+        [width]="col.getCellWidth()"
+        [visibleColumnIndex]="col.visibleIndex"
+        [value]="rowData[col.field]"
+        [cellTemplate]="col.bodyTemplate"
+        [cellSelectionMode]="grid.cellSelection" #cell>
+    </igx-expandable-grid-cell>
+</ng-template>
+
+<ng-template #mrlCellTemplate let-col>
+    <igx-grid-cell
+        class="igx-grid__td igx-grid__td--fw"
+        [class.igx-grid__td--pinned]="col.pinned"
+        [class.igx-grid__td--number]="col.dataType === 'number'"
+        [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex"
+        [ngStyle]="col.cellStyles | igxCellStyles:rowData[col.field]:rowData:col.field:viewIndex"
+        [editMode]="col.editable && crudService.isInEditMode(index, col.index)"
+        [column]="col"
+        [style.-ms-grid-row-span]="col.gridRowSpan"
+        [style.-ms-grid-column-span]="col.girdColumnSpan"
+        [style.grid-row-end]="col.rowEnd"
+        [style.grid-column-end]="col.colEnd"
+        [style.-ms-grid-row]="col.rowStart"
+        [style.grid-row-start]="col.rowStart"
+        [style.-ms-grid-column]="col.colStart"
+        [style.grid-column-start]="col.colStart"
+        [lastPinned]="col.columnLayoutChild ? null : col.isLastPinned"
+        [formatter]="col.formatter"
+        [row]="this"
+        [style.min-height.px]="grid.rowHeight || 32"
+        [rowData]="rowData"
+        [visibleColumnIndex]="col.visibleIndex"
+        [value]="rowData[col.field]"
+        [cellTemplate]="col.bodyTemplate"
+        [cellSelectionMode]="grid.cellSelection" #cell>
+    </igx-grid-cell>
+</ng-template>
+
+<ng-template #mrlExpandableCellTemplate let-col>
+    <igx-expandable-grid-cell
+        class="igx-grid__td igx-grid__td--fw igx-grid__td--tree-cell"
+        [class.igx-grid__td--pinned]="col.pinned"
+        [class.igx-grid__td--number]="col.dataType === 'number' && col.visibleIndex !== 0"
+        [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex"
+        [ngStyle]="col.cellStyles | igxCellStyles:rowData[col.field]:rowData:col.field:viewIndex"
+        [expanded]="expanded"
+        [editMode]="col.editable && crudService.isInEditMode(index, col.index)"
+        [column]="col"
+        [style.-ms-grid-row-span]="col.gridRowSpan"
+        [style.-ms-grid-column-span]="col.girdColumnSpan"
+        [style.grid-row-end]="col.rowEnd"
+        [style.grid-column-end]="col.colEnd"
+        [style.-ms-grid-row]="col.rowStart"
+        [style.grid-row-start]="col.rowStart"
+        [style.-ms-grid-column]="col.colStart"
+        [style.grid-column-start]="col.colStart"
+        [lastPinned]="col.columnLayoutChild ? null : col.isLastPinned"
+        [formatter]="col.formatter"
+        [row]="this"
+        [style.min-height.px]="grid.rowHeight || 32"
+        [rowData]="rowData"
+        [visibleColumnIndex]="col.visibleIndex"
+        [value]="rowData[col.field]"
+        [cellTemplate]="col.bodyTemplate"
+        [cellSelectionMode]="grid.cellSelection" #cell>
+    </igx-expandable-grid-cell>
 </ng-template>

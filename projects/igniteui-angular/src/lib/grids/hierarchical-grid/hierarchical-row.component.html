@@ -1,4 +1,4 @@
-<div (click)="toggle()" class="igx-grid__hierarchical-expander" [tabIndex]="tabindex" *ngIf="hasChildren" #expander>
+<div (click)="expanderClick($event)" class="igx-grid__hierarchical-expander" [tabIndex]="tabindex" *ngIf="hasChildren" #expander>
         <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: this }">
         </ng-container>
 </div>
@@ -15,7 +15,7 @@
 </ng-template>
 
 <ng-container *ngIf="rowDraggable">
-    <div [class]="resolveDragIndicatorClasses" [igxRowDrag]="this" (click)="$event.stopPropagation()">
+    <div [class]="resolveDragIndicatorClasses" [igxRowDrag]="this" (click)="$event.stopPropagation()" [ghostTemplate]="this.grid.getDragGhostCustomTemplate()">
             <ng-container *ngTemplateOutlet="this.grid.dragIndicatorIconTemplate ? this.grid.dragIndicatorIconTemplate : this.grid.dragIndicatorIconBase"></ng-container>
     </div>
 </ng-container>
@@ -24,7 +24,7 @@
         <ng-template *ngTemplateOutlet="
             this.grid.rowSelectorTemplate ? this.grid.rowSelectorTemplate : rowSelectorBaseTemplate;
             context: { $implicit: {
-                            index: this.index + this.grid.page * this.grid.perPage,
+                            index: viewIndex,
                             rowID: rowID,
                             selected: selected,
                             select: select,
@@ -37,7 +37,8 @@
     <igx-hierarchical-grid-cell *ngFor="let col of pinnedColumns | igxNotGrouped"
         class="igx-grid__td igx-grid__td--fw igx-grid__td--pinned"
         [class.igx-grid__td--number]="col.dataType === 'number'"
-        [ngClass]="col.cellClasses | igxCellStyles:rowData[col.field]:rowData:col.field"
+        [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex"
+        [ngStyle]="col.cellStyles | igxCellStyles:rowData[col.field]:rowData:col.field:viewIndex"
         [editMode]="col.editable && crudService.isInEditMode(index, col.index)"
         [column]="col"
         [formatter]="col.formatter"
@@ -45,8 +46,9 @@
         [lastPinned]="col.isLastPinned"
         [style.min-height.px]="grid.rowHeight || 32"
         [rowData]="rowData"
-        [style.min-width.px]="col.width"
-        [style.flex-basis.px]="col.width"
+        [style.min-width]="col.width"
+        [style.max-width]="col.width"
+        [style.flex-basis]="col.width"
         [width]="col.getCellWidth()"
         [visibleColumnIndex]="col.visibleIndex"
         [value]="rowData[col.field]"
@@ -59,15 +61,17 @@
     <igx-hierarchical-grid-cell
         class="igx-grid__td igx-grid__td--fw"
         [class.igx-grid__td--number]="col.dataType === 'number'"
-        [ngClass]="col.cellClasses | igxCellStyles:rowData[col.field]:rowData:col.field"
+        [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex"
+        [ngStyle]="col.cellStyles | igxCellStyles:rowData[col.field]:rowData:col.field:viewIndex"
         [editMode]="col.editable && crudService.isInEditMode(index, col.index)"
         [column]="col"
         [formatter]="col.formatter"
         [row]="this"
         [style.min-height.px]="grid.rowHeight || 32"
         [rowData]="rowData"
-        [style.min-width.px]="col.width"
-        [style.flex-basis.px]="col.width"
+        [style.min-width]="col.width"
+        [style.max-width]="col.width"
+        [style.flex-basis]="col.width"
         [width]="col.getCellWidth()"
         [visibleColumnIndex]="col.visibleIndex"
         [value]="rowData[col.field]"

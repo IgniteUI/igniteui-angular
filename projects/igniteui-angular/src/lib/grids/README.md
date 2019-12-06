@@ -494,3 +494,18 @@ import {
 |Name|Return Type|Description|
 |--- |--- |--- |
 |`update(val: any)`|void|Emits the `onEditDone` event and updates the appropriate record in the data source.|
+
+## IgxGridState Directive
+
+### Getters/Setters
+
+|Name|Type|Getter|Setter|Description|
+|--- |--- |--- |--- |--- |
+|`options`|IGridStateOptions|Yes|Yes|Features to be exluded from tracking in the IgxGridState directive.|
+
+### Methods
+
+|Name|Return Type|Description|
+|--- |--- |--- |
+|`getState(serialize: boolean, feature?: string | string[])`|IGridState, string|Gets the state of a feature or states of all grid features, unless a certain feature is disabled through the `options` property..|
+|`setState(val: IGridState | string)`|void|Restores grid features' state based on the IGridState object passed as an argument.|

@@ -1,17 +1,19 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { IgxIconService } from '../../icon/icon.service';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { IgxGridBaseComponent, IColumnResizeEventArgs, IGridDataBindable } from '../grid-base.component';
+import { IgxGridBaseDirective } from '../grid-base.directive';
 import icons from './svgIcons';
 import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { IgxDatePipeComponent } from '../grid.common';
-import { IgxColumnComponent } from '../column.component';
+import { IgxColumnComponent } from '../columns/column.component';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { GridBaseAPIService } from '../api.service';
 import { IColumnVisibilityChangedEventArgs } from '../grid';
+import { IColumnResizeEventArgs } from '../common/events';
+import { GridType } from '../common/grid.interface';
+import { IgxDatePipeComponent } from '../common/pipes';
 
 const FILTERING_ICONS_FONT_SET = 'filtering-icons';
 
@@ -49,9 +51,9 @@ export class IgxFilteringService implements OnDestroy {
     public shouldFocusNext = false;
     public columnToMoreIconHidden = new Map<string, boolean>();
 
-    grid: IgxGridBaseComponent;
+    grid: IgxGridBaseDirective;
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>, private iconService: IgxIconService) {}
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, private iconService: IgxIconService) {}
 
     ngOnDestroy(): void {
         this.destroy$.next(true);
@@ -63,7 +65,7 @@ export class IgxFilteringService implements OnDestroy {
     }
 
     public get displayContainerScrollLeft() {
-        return parseInt(this.grid.parentVirtDir.getHorizontalScroll().scrollLeft, 10);
+        return this.grid.headerContainer.scrollPosition;
     }
 
     public get areAllColumnsInView() {
@@ -417,9 +419,9 @@ export class IgxFilteringService implements OnDestroy {
         const forOfDir = this.grid.headerContainer;
         const width = this.displayContainerWidth + this.displayContainerScrollLeft;
         if (shouldFocusNext) {
-            forOfDir.getHorizontalScroll().scrollLeft += currentColumnRight - width;
+            forOfDir.scrollPosition += currentColumnRight - width;
         } else {
-            forOfDir.getHorizontalScroll().scrollLeft = currentColumnLeft;
+            forOfDir.scrollPosition = currentColumnLeft;
         }
     }
 

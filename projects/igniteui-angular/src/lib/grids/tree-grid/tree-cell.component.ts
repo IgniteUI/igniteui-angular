@@ -3,11 +3,13 @@ import { Component, ChangeDetectorRef, ElementRef, ViewChild, Inject,
 import { IgxGridCellComponent } from '../cell.component';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { GridBaseAPIService } from '../api.service';
-import { getNodeSizeViaRange } from '../../core/utils';
+import { getNodeSizeViaRange, PlatformUtil } from '../../core/utils';
 import { DOCUMENT } from '@angular/common';
-import { IgxGridBaseComponent, IGridDataBindable } from '../grid';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../../core/grid-selection';
+import { IgxGridBaseDirective } from '../grid';
+import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
 import { HammerGesturesManager } from '../../core/touch';
+import { GridType } from '../common/grid.interface';
+import { IgxGridExpandableCellComponent } from '../grid/expandable-cell.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,27 +17,22 @@ import { HammerGesturesManager } from '../../core/touch';
     templateUrl: 'tree-cell.component.html',
     providers: [HammerGesturesManager]
 })
-export class IgxTreeGridCellComponent extends IgxGridCellComponent implements OnInit {
+export class IgxTreeGridCellComponent extends IgxGridExpandableCellComponent {
     private treeGridAPI: IgxTreeGridAPIService;
 
     constructor(
                 selectionService: IgxGridSelectionService,
                 crudService: IgxGridCRUDService,
-                gridAPI: GridBaseAPIService<IgxGridBaseComponent & IGridDataBindable>,
+                gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
                 cdr: ChangeDetectorRef,
                 element: ElementRef,
                 protected zone: NgZone,
                 touchManager: HammerGesturesManager,
-                @Inject(DOCUMENT) public document) {
-        super(selectionService, crudService, gridAPI, cdr, element, zone, touchManager);
+                @Inject(DOCUMENT) public document,
+                protected platformUtil: PlatformUtil) {
+        super(selectionService, crudService, gridAPI, cdr, element, zone, touchManager, document, platformUtil);
         this.treeGridAPI = <IgxTreeGridAPIService>gridAPI;
     }
-
-    /**
-     * @hidden
-     */
-    @Input()
-    expanded = false;
 
     /**
      * @hidden
@@ -49,39 +46,12 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
     @Input()
     showIndicator = false;
 
-    @ViewChild('indicator', { read: ElementRef, static: false })
-    public indicator: ElementRef;
-
-    @ViewChild('indentationDiv', { read: ElementRef, static: false })
-    public indentationDiv: ElementRef;
-
-    @ViewChild('defaultContentElement', { read: ElementRef, static: false })
-    public defaultContentElement: ElementRef;
-
-    /**
-    * @hidden
-    */
-   @ViewChild('defaultExpandedTemplate', { read: TemplateRef, static: true })
-   protected defaultExpandedTemplate: TemplateRef<any>;
-
-    /**
-    * @hidden
-    */
-   @ViewChild('defaultCollapsedTemplate', { read: TemplateRef, static: true })
-   protected defaultCollapsedTemplate: TemplateRef<any>;
 
     /**
      * @hidden
      */
     @Input()
     public isLoading: boolean;
-
-    /**
-     * @hidden
-     */
-    ngOnInit() {
-        super.ngOnInit();
-    }
 
     /**
      * @hidden
@@ -94,43 +64,7 @@ export class IgxTreeGridCellComponent extends IgxGridCellComponent implements On
     /**
      * @hidden
      */
-    public onIndicatorFocus() {
-        this.gridAPI.submit_value();
-        this.nativeElement.focus();
-    }
-
-    /**
-     * @hidden
-     */
     public onLoadingDblClick(event: Event) {
         event.stopPropagation();
-    }
-
-    /**
-     * @hidden
-     */
-    public calculateSizeToFit(range: any): number {
-        const indicatorWidth = this.indicator.nativeElement.getBoundingClientRect().width;
-        const indicatorStyle = this.document.defaultView.getComputedStyle(this.indicator.nativeElement);
-        const indicatorMargin = parseFloat(indicatorStyle.marginRight);
-        let leftPadding = 0;
-        if (this.indentationDiv) {
-            const indentationStyle = this.document.defaultView.getComputedStyle(this.indentationDiv.nativeElement);
-            leftPadding = parseFloat(indentationStyle.paddingLeft);
-        }
-        const largestWidth = Math.max(...Array.from(this.nativeElement.children)
-            .map((child) => getNodeSizeViaRange(range, child)));
-        return largestWidth + indicatorWidth + indicatorMargin + leftPadding;
-    }
-
-    /**
-     * @hidden
-    */
-    public get iconTemplate() {
-        if (this.expanded) {
-            return this.grid.rowExpandedIndicatorTemplate || this.defaultExpandedTemplate;
-        } else {
-            return this.grid.rowCollapsedIndicatorTemplate || this.defaultCollapsedTemplate;
-        }
     }
 }

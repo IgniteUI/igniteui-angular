@@ -9,17 +9,19 @@ describe('ng-add schematics', () => {
   const collectionPath = path.join(__dirname, '../collection.json');
   const runner: SchematicTestRunner = new SchematicTestRunner('cli-schematics', collectionPath);
   let tree: UnitTestTree;
+  const sourceRoot = 'testSrc';
   const ngJsonConfig = {
     defaultProject: 'testProj',
     projects: {
       testProj: {
-        sourceRoot: 'src',
+        sourceRoot: sourceRoot,
         projectType: ProjectType.Application,
         architect: {
           serve: {},
           build: {
             options: {
-              main: 'src/main.ts',
+              main: `${sourceRoot}/main.ts`,
+              polyfills: `${sourceRoot}/polyfills.ts`,
               scripts: []
             }
           }
@@ -42,7 +44,7 @@ describe('ng-add schematics', () => {
     tree = new UnitTestTree(new EmptyTree());
     tree.create('/angular.json', JSON.stringify(ngJsonConfig));
     tree.create('/package.json', JSON.stringify(pkgJsonConfig));
-    tree.create('src/main.ts', '// test comment');
+    tree.create(`${sourceRoot}/main.ts`, '// test comment');
   });
 
   it('should create the needed files correctly', () => {
@@ -71,7 +73,7 @@ describe('ng-add schematics', () => {
 
   it('should add hammer.js to the main.ts file', () => {
     runner.runSchematic('ng-add', { normalizeCss: false }, tree);
-    const mainTs = tree.read('src/main.ts').toString();
+    const mainTs = tree.read(`${sourceRoot}/main.ts`).toString();
     expect(mainTs).toContain('import \'hammerjs\';');
   });
 
@@ -82,12 +84,12 @@ describe('ng-add schematics', () => {
     tree.overwrite('angular.json', JSON.stringify(workspace));
     runner.runSchematic('ng-add', { normalizeCss: false }, tree);
 
-    const newContent = tree.read('src/main.ts').toString();
+    const newContent = tree.read(`${sourceRoot}/main.ts`).toString();
     expect(newContent.split('import \'hammerjs\';\n// test comment').length).toEqual(1);
   });
 
   it('should not add hammer.js if it exists in main.ts', () => {
-    const mainTsPath = 'src/main.ts';
+    const mainTsPath = `${sourceRoot}/main.ts`;
     const content = tree.read(mainTsPath).toString();
     tree.overwrite(mainTsPath, 'import \'hammerjs\';\n' + content);
     runner.runSchematic('ng-add', { normalizeCss: false }, tree);
@@ -106,8 +108,8 @@ describe('ng-add schematics', () => {
     runner.runSchematic('ng-add', { normalizeCss: false }, tree);
     const pkgJsonData = JSON.parse(tree.readContent('/package.json'));
 
-    expect(pkgJsonData.devDependencies['igniteui-cli']).toBeTruthy();
-    expect(pkgJsonData.dependencies['igniteui-cli']).toBeFalsy();
+    expect(pkgJsonData.devDependencies['@igniteui/angular-schematics']).toBeTruthy();
+    expect(pkgJsonData.dependencies['@igniteui/angular-schematics']).toBeFalsy();
   });
 
   it('should properly add polyfills', () => {
@@ -138,54 +140,54 @@ import 'core-js/es6/set';
 import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
 `;
 
-    tree.create('src/polyfills.ts', polyfills);
+    tree.create(`${sourceRoot}/polyfills.ts`, polyfills);
     runner.runSchematic('ng-add', { polyfills: true, normalizeCss: false }, tree);
-    expect(tree.readContent('src/polyfills.ts').replace(/\r\n/g, '\n')).toEqual(result.replace(/\r\n/g, '\n'));
+    expect(tree.readContent(`${sourceRoot}/polyfills.ts`).replace(/\r\n/g, '\n')).toEqual(result.replace(/\r\n/g, '\n'));
   });
 
   it('should properly add css reset', () => {
-    tree.create('src/styles.scss', '');
+    tree.create(`${sourceRoot}/styles.scss`, '');
     runner.runSchematic('ng-add', { normalizeCss: true }, tree);
     let pkgJsonData = JSON.parse(tree.readContent('/package.json'));
-    expect(tree.readContent('src/styles.scss')).toEqual(scssImport);
+    expect(tree.readContent(`${sourceRoot}/styles.scss`)).toEqual(scssImport);
     expect(pkgJsonData.dependencies['minireset.css']).toBeTruthy();
     resetJsonConfigs(tree);
-    tree.delete('src/styles.scss');
+    tree.delete(`${sourceRoot}/styles.scss`);
 
-    tree.create('src/styles.sass', '');
+    tree.create(`${sourceRoot}/styles.sass`, '');
     runner.runSchematic('ng-add', { normalizeCss: true }, tree);
     pkgJsonData = JSON.parse(tree.readContent('/package.json'));
-    expect(tree.readContent('src/styles.sass')).toEqual(scssImport);
+    expect(tree.readContent(`${sourceRoot}/styles.sass`)).toEqual(scssImport);
     expect(pkgJsonData.dependencies['minireset.css']).toBeTruthy();
     resetJsonConfigs(tree);
-    tree.delete('src/styles.sass');
+    tree.delete(`${sourceRoot}/styles.sass`);
 
-    tree.create('src/styles.css', '');
+    tree.create(`${sourceRoot}/styles.css`, '');
     runner.runSchematic('ng-add', { normalizeCss: true }, tree);
     pkgJsonData = JSON.parse(tree.readContent('/package.json'));
-    expect(tree.readContent('src/styles.css')).toBe('');
+    expect(tree.readContent(`${sourceRoot}/styles.css`)).toBe('');
     expect(pkgJsonData.dependencies['minireset.css']).toBeTruthy();
     expect(JSON.parse(tree.readContent('/angular.json')).projects['testProj'].architect.build.options.styles).toContain(cssImport);
     resetJsonConfigs(tree);
-    tree.delete('src/styles.css');
+    tree.delete(`${sourceRoot}/styles.css`);
 
-    tree.create('src/styles.less', '');
+    tree.create(`${sourceRoot}/styles.less`, '');
     runner.runSchematic('ng-add', { normalizeCss: true }, tree);
     pkgJsonData = JSON.parse(tree.readContent('/package.json'));
-    expect(tree.readContent('src/styles.less')).toBe('');
+    expect(tree.readContent(`${sourceRoot}/styles.less`)).toBe('');
     expect(pkgJsonData.dependencies['minireset.css']).toBeTruthy();
     expect(JSON.parse(tree.readContent('/angular.json')).projects['testProj'].architect.build.options.styles).toContain(cssImport);
     resetJsonConfigs(tree);
-    tree.delete('src/styles.less');
+    tree.delete(`${sourceRoot}/styles.less`);
 
-    tree.create('src/styles.styl', '');
+    tree.create(`${sourceRoot}/styles.styl`, '');
     runner.runSchematic('ng-add', { normalizeCss: true }, tree);
     pkgJsonData = JSON.parse(tree.readContent('/package.json'));
-    expect(tree.readContent('src/styles.styl')).toBe('');
+    expect(tree.readContent(`${sourceRoot}/styles.styl`)).toBe('');
     expect(pkgJsonData.dependencies['minireset.css']).toBeTruthy();
     expect(JSON.parse(tree.readContent('/angular.json')).projects['testProj'].architect.build.options.styles).toContain(cssImport);
     resetJsonConfigs(tree);
-    tree.delete('src/styles.styl');
+    tree.delete(`${sourceRoot}/styles.styl`);
   });
 
   it('should properly add web animations', () => {
@@ -202,7 +204,7 @@ import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
    * that is built with AngularCLI v7.3 or above. All else are considered below v7.3.
    */
   it('should enable es5BrowserSupport on projects with ng cli version >= 7.3', () => {
-    tree.create('src/polyfills.ts', '');
+    tree.create(`${sourceRoot}/polyfills.ts`, '');
     const newJson: any = JSON.parse(tree.read('/angular.json').toString());
     newJson.projects['testProj'].architect.build.options['es5BrowserSupport'] = false;
     tree.overwrite('/angular.json', JSON.stringify(newJson));
@@ -226,11 +228,11 @@ import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
 import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
     `;
 
-    tree.create('src/polyfills.ts', polyfills);
+    tree.create(`${sourceRoot}/polyfills.ts`, polyfills);
     const newJson: any = JSON.parse(tree.read('/angular.json').toString());
     newJson.projects['testProj'].architect.build.options['es5BrowserSupport'] = false;
     tree.overwrite('/angular.json', JSON.stringify(newJson));
     runner.runSchematic('ng-add', { polyfills: true }, tree);
-    expect(tree.readContent('src/polyfills.ts').replace(/\r\n/g, '\n')).toEqual(result.replace(/\r\n/g, '\n'));
+    expect(tree.readContent(`${sourceRoot}/polyfills.ts`).replace(/\r\n/g, '\n')).toEqual(result.replace(/\r\n/g, '\n'));
   });
 });
