@@ -1559,6 +1559,12 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     public columnList: QueryList<IgxColumnComponent>;
 
     /**
+     * The custom template, if any, that should be used when rendering the row drag indicator icon
+     */
+    @ContentChild(IgxDragIndicatorIconDirective, { read: TemplateRef, static: false })
+    public dragIndicatorIconTemplate: TemplateRef<any> = null;
+
+    /**
      *@hidden
      */
     @ContentChild(IgxExcelStyleSortingTemplateDirective, { read: IgxExcelStyleSortingTemplateDirective, static: false })
