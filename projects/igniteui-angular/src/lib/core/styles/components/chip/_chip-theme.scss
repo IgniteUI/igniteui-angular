@@ -430,13 +430,13 @@
     %igx-chip__select {
         display: inline-flex;
         align-items: center;
-        z-index: 1;
+        width: 18px;
         opacity: 1;
-        transition: opacity 120ms $ease-in-out-quad;
+        z-index: 1;
+        transition: opacity 120ms $ease-out-quad, width 120ms $ease-out-quad;
 
         > * {
-            width: 18px !important;
-            transition: width 120ms $ease-in-out-quad;
+            width: inherit !important;
         }
 
         + igx-prefix,
@@ -446,12 +446,9 @@
     }
 
     %igx-chip__select--hidden {
+        width: 0;
         opacity: 0;
         z-index: -1;
-
-        > * {
-            width: 0 !important;
-        }
 
         + igx-prefix,
         + [igxPrefix] {
