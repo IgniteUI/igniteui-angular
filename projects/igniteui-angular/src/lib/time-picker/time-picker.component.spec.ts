@@ -2019,7 +2019,7 @@ export class IgxTimePickerDropDownComponent {
     date = new Date(2018, 10, 27, 17, 45, 0, 0);
 
     @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
-    @ViewChild('dummyInput') public dummyInput: ElementRef;
+    @ViewChild('dummyInput', { static: true }) public dummyInput: ElementRef;
 }
 @Component({
     template: `
