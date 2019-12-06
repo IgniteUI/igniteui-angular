@@ -86,7 +86,7 @@ export class IgxGridSummaryService {
         if (!this.grid.data) {return this.summaryHeight = 0; }
         let maxSummaryLength = 0;
         this.grid.columnList.filter((col) => col.hasSummary && !col.hidden).forEach((column) => {
-            const getCurrentSummaryColumn = column.summaries.operate([]).length;
+            const getCurrentSummaryColumn = column.summaries.operate([], [], column.field).length;
             if (getCurrentSummaryColumn) {
                 if (maxSummaryLength < getCurrentSummaryColumn) {
                     maxSummaryLength = getCurrentSummaryColumn;
