@@ -44,7 +44,7 @@ describe('Excel Exporter', () => {
 
         wrapper.verifyStructure();
         wrapper.verifyTemplateFilesContent();
-        wrapper.verifyDataFilesContent(actualData.noHeadersStringDataContent);
+        await wrapper.verifyDataFilesContent(actualData.noHeadersStringDataContent);
     });
 
     it('should export date time data without headers successfully.', async () => {
@@ -53,7 +53,7 @@ describe('Excel Exporter', () => {
 
         wrapper.verifyStructure();
         wrapper.verifyTemplateFilesContent();
-        wrapper.verifyDataFilesContent(actualData.noHeadersDateTimeContent);
+        await wrapper.verifyDataFilesContent(actualData.noHeadersDateTimeContent);
     });
 
     it('should export number data without headers successfully.', async () => {
@@ -62,7 +62,7 @@ describe('Excel Exporter', () => {
 
         wrapper.verifyStructure();
         // wrapper.verifyTemplateFilesContent();
-        wrapper.verifyDataFilesContent(actualData.noHeadersNumberDataContent);
+        await wrapper.verifyDataFilesContent(actualData.noHeadersNumberDataContent);
     });
 
     it('should export object data without headers successfully.', async () => {
@@ -70,7 +70,7 @@ describe('Excel Exporter', () => {
 
         wrapper.verifyStructure();
         wrapper.verifyTemplateFilesContent();
-        wrapper.verifyDataFilesContent(actualData.noHeadersObjectDataContent);
+        await wrapper.verifyDataFilesContent(actualData.noHeadersObjectDataContent);
     });
 
     it('should export regular data successfully.', async () => {
@@ -79,7 +79,7 @@ describe('Excel Exporter', () => {
 
         wrapper.verifyStructure();
         wrapper.verifyTemplateFilesContent();
-        wrapper.verifyDataFilesContent(actualData.contactsDataContent);
+        await wrapper.verifyDataFilesContent(actualData.contactsDataContent);
     });
 
     it('should export data with missing values successfully.', async () => {
@@ -88,7 +88,7 @@ describe('Excel Exporter', () => {
 
         wrapper.verifyStructure();
         wrapper.verifyTemplateFilesContent();
-        wrapper.verifyDataFilesContent(actualData.contactsPartialDataContent);
+        await wrapper.verifyDataFilesContent(actualData.contactsPartialDataContent);
     });
 
     it('should export data with special characters successully.', async () => {
@@ -97,7 +97,7 @@ describe('Excel Exporter', () => {
 
         wrapper.verifyStructure();
         wrapper.verifyTemplateFilesContent();
-        wrapper.verifyDataFilesContent(actualData.contactsFunkyDataContent);
+        await wrapper.verifyDataFilesContent(actualData.contactsFunkyDataContent);
     });
 
     it('should throw an exception when setting negative width and height.', () => {
