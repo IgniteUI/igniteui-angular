@@ -215,18 +215,17 @@
         z-index: 1;
     }
 
-    %igx-drop-down {
-        max-height: 100%;
-        position: absolute;
-        border-radius: --var($theme, 'border-radius');
-        overflow: hidden;
-    }
-
     %igx-drop-down__list {
-        overflow-y: auto;
+        overflow: hidden;
+        border-radius: --var($theme, 'border-radius');
         background: --var($theme, 'background-color');
         box-shadow: --var($theme, 'shadow');
+    }
+
+    %igx-drop-down__list-scroll {
+        overflow-y: auto;
         min-width: rem(128px);
+        position: relative;
 
         &:empty {
             box-shadow: none;

@@ -28,10 +28,12 @@
 
     @include _igx-dd-wrapper();
 
-    @extend %igx-drop-down !optional;
-
     @include e(list) {
         @extend %igx-drop-down__list !optional;
+    }
+
+    @include e(list-scroll) {
+        @extend %igx-drop-down__list-scroll !optional;
     }
 
     @include e(list, $m: select) {
