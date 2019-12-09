@@ -1,6 +1,4 @@
-﻿import {
-    Directive,
-} from '@angular/core';
+﻿import { Directive } from '@angular/core';
 import { ConnectedPositioningStrategy } from '../services';
 import { VerticalAlignment, PositionSettings } from '../services/overlay/utilities';
 import { scaleInVerBottom, scaleInVerTop } from '../animations/main';

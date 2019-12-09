@@ -3,10 +3,10 @@ import { IgxTreeGridComponent } from './tree-grid.component';
 import { DataType } from '../../data-operations/data-util';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IRowToggleEventArgs } from './tree-grid.interfaces';
-import { IgxColumnComponent } from '../columns/column.component';
 import { HierarchicalTransaction, TransactionType, State } from '../../services';
 import { mergeObjects } from '../../core/utils';
 import { Injectable } from '@angular/core';
+import { ColumnType } from '../common/column.interface';
 
 @Injectable()
 export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridComponent> {
@@ -154,7 +154,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         }
     }
 
-    public should_apply_number_style(column: IgxColumnComponent): boolean {
+    public should_apply_number_style(column: ColumnType): boolean {
         return column.dataType === DataType.Number && column.visibleIndex !== 0;
     }
 

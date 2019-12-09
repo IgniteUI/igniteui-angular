@@ -859,7 +859,6 @@ describe('igxOverlay', () => {
             spyOn(scrollStrat, 'attach').and.callThrough();
             spyOn(scrollStrat, 'detach').and.callThrough();
             const scrollSpy = spyOn<any>(scrollStrat, 'onScroll').and.callThrough();
-            const wheelSpy = spyOn<any>(scrollStrat, 'onWheel').and.callThrough();
             overlay.show(SimpleDynamicComponent, overlaySettings);
             tick();
 
@@ -867,11 +866,8 @@ describe('igxOverlay', () => {
             expect(scrollStrat.initialize).toHaveBeenCalledTimes(1);
             expect(scrollStrat.detach).toHaveBeenCalledTimes(0);
             document.dispatchEvent(new Event('scroll'));
-
             expect(scrollSpy).toHaveBeenCalledTimes(1);
 
-            document.dispatchEvent(new Event('wheel'));
-            expect(wheelSpy).toHaveBeenCalledTimes(1);
             overlay.hide('0');
             tick();
             expect(scrollStrat.detach).toHaveBeenCalledTimes(1);

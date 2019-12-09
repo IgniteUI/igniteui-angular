@@ -62,6 +62,9 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
      */
     @HostListener('focus', ['$event'])
     onFocus(event) {
+        if (this.focused) {
+            return;
+        }
         this._clearAllHighlights();
         const currentElement = this.grid.nativeElement;
         let parentGrid = this.grid;
