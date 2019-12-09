@@ -399,14 +399,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     public get outletDirective() {
         return this.rootGrid._outletDirective;
     }
-
-    /**
-     * @hidden
-     */
-    public get parentRowOutletDirective() {
-        return this === this.rootGrid ? null : this.rootGrid.rowEditingOutletDirective;
-    }
-
     /**
      * @hidden
      */
