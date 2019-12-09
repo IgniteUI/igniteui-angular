@@ -212,7 +212,9 @@
 
     %igx-drop-down-wrapper {
         box-shadow: --var($theme, 'shadow');
+        border-radius: --var($theme, 'border-radius');
         z-index: 1;
+        overflow: hidden;
     }
 
     %igx-drop-down__list {
@@ -237,6 +239,9 @@
     }
 
     %igx-drop-down__list--select {
+        position: relative;
+        overflow-y: auto;
+        background: --var($theme, 'background-color');
         box-shadow: none;
     }
 

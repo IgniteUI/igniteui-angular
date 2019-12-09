@@ -7,26 +7,14 @@
 ////
 
 /// @access private
-@mixin _igx-dd-wrapper{
-    @include b(igx-drop-down-wrapper) {
-        @extend %igx-drop-down-wrapper !optional;
-
-        @include e(header) {
-            @extend %igx-drop-down-wrapper__header !optional;
-        }
-
-        @include e(footer) {
-            @extend %igx-drop-down-wrapper__footer !optional;
-        }
-    }
+@include b(igx-drop-down-wrapper) {
+    @extend %igx-drop-down-wrapper !optional;
 }
 
 /// @access public
 @include b(igx-drop-down) {
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
-
-    @include _igx-dd-wrapper();
 
     @include e(list) {
         @extend %igx-drop-down__list !optional;
@@ -37,7 +25,6 @@
     }
 
     @include e(list, $m: select) {
-        @extend %igx-drop-down__list !optional;
         @extend %igx-drop-down__list--select !optional;
     }
 

@@ -33,7 +33,7 @@ const fiftyItems = Array.apply(null, { length: 50 }).map((e, i) => ({
     name: `Item ${i + 1}`
 }));
 
-describe('IgxDropDown ', () => {
+fdescribe('IgxDropDown ', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -961,7 +961,7 @@ describe('IgxDropDown ', () => {
             tick();
 
             fixture.detectChanges();
-            const ddList = fixture.debugElement.query(By.css('.igx-drop-down__list')).nativeElement;
+            const ddList = fixture.debugElement.query(By.css('.igx-drop-down__list-scroll')).nativeElement;
             expect(parseInt(ddList.style.maxHeight, 10)).toEqual(ddList.offsetHeight);
             expect(ddList.style.maxHeight).toBe('100px');
         }));
@@ -974,7 +974,7 @@ describe('IgxDropDown ', () => {
             tick();
 
             fixture.detectChanges();
-            const ddList = fixture.debugElement.query(By.css('.igx-drop-down__list')).nativeElement;
+            const ddList = fixture.debugElement.query(By.css('.igx-drop-down__list-scroll')).nativeElement;
             expect(parseInt(ddList.style.maxHeight, 10)).toBeGreaterThan(ddList.offsetHeight);
             expect(ddList.style.maxHeight).toBe('700px');
         }));
