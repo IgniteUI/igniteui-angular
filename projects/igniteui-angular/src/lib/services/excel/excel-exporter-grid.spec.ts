@@ -607,7 +607,7 @@ describe('Excel Exporter', () => {
             options.columnWidth = value;
             fix.detectChanges();
             getExportedData(grid, exportOptions).then((wrapper) => {
-                await wrapper.verifyDataFilesContent(actualData.simpleGridColumnWidth(value), ' Width :' + value).then(() => resolve());
+                wrapper.verifyDataFilesContent(actualData.simpleGridColumnWidth(value), ' Width :' + value).then(() => resolve());
             });
         });
     }
@@ -617,7 +617,7 @@ describe('Excel Exporter', () => {
             options.rowHeight = value;
             fix.detectChanges();
             getExportedData(grid, exportOptions).then((wrapper) => {
-                await wrapper.verifyDataFilesContent(actualData.simpleGridRowHeight(value), ' Height :' + value).then(() => resolve());
+                wrapper.verifyDataFilesContent(actualData.simpleGridRowHeight(value), ' Height :' + value).then(() => resolve());
             });
         });
     }
