@@ -136,8 +136,8 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
     public get focusedItem(): IgxDropDownItemBase {
         if (this.virtDir) {
             return this._focusedItem && this._focusedItem.index !== -1 ?
-            (this.children.find(e => e.index === this._focusedItem.index) || null) :
-            null;
+                (this.children.find(e => e.index === this._focusedItem.index) || null) :
+                null;
         }
         return this._focusedItem;
     }
@@ -538,19 +538,35 @@ export class IgxDropDownComponent extends IgxDropDownBase implements IDropDownBa
         this.onSelection.emit(args);
 
         if (!args.cancel) {
-            this.selection.set(this.id, new Set([newSelection]));
-            if (!this.virtDir) {
-                if (oldSelection) {
-                    oldSelection.selected = false;
+            if (this.isSelectionValid(args.newSelection)) {
+                this.selection.set(this.id, new Set([args.newSelection]));
+                if (!this.virtDir) {
+                    if (oldSelection) {
+                        oldSelection.selected = false;
+                    }
+                    if (args.newSelection) {
+                        args.newSelection.selected = true;
+                    }
                 }
-                if (newSelection) {
-                    newSelection.selected = true;
+                if (event) {
+                    this.toggleDirective.close();
                 }
-            }
-            if (event) {
-                this.toggleDirective.close();
+            } else {
+                throw new Error('Please provide a valid drop-down item for the selection!');
             }
         }
+    }
+
+    /**
+     * Checks whether the selection is valid
+     * `null` - the selection should be emptied
+     * Virtual? - the selection should at least have and `index` and `value` property
+     * Non-virtual? - the selection should be a valid drop-down item and **not** be a header
+     */
+    protected isSelectionValid(selection: any): boolean {
+        return selection === null
+        || (this.virtDir && selection.hasOwnProperty('value') && selection.hasOwnProperty('index'))
+        || (selection instanceof IgxDropDownItemComponent && !selection.isHeader);
     }
 }
 
