@@ -12,7 +12,7 @@
     (enter)="onChipDragEnterHandler($event)"
     (dropped)="onChipDrop($event)">
 
-    <div [ngClass]="selectClass(selected)" (transitionend)="onSelectTransitionDone($event)">
+    <div #selectContainer [ngClass]="selectClass(selected)">
         <ng-container *ngTemplateOutlet="selectIconTemplate"></ng-container>
     </div>
 

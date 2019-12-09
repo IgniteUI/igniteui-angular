@@ -21,6 +21,8 @@ import {
     IDropDroppedEventArgs
 } from '../directives/drag-drop/drag-drop.directive';
 import { IBaseEventArgs } from '../core/utils';
+import { fromEvent } from 'rxjs';
+import { take, filter } from 'rxjs/operators';
 
 
 export interface IBaseChipEventArgs extends IBaseEventArgs {
@@ -379,6 +381,12 @@ export class IgxChipComponent extends DisplayDensityBase {
     /**
      * @hidden
      */
+    @ViewChild('selectContainer', { read: ElementRef, static: true })
+    public selectContainer: ElementRef;
+
+    /**
+     * @hidden
+     */
     @ViewChild('defaultRemoveIcon', { read: TemplateRef, static: true })
     public defaultRemoveIcon: TemplateRef<any>;
 
@@ -442,6 +450,10 @@ export class IgxChipComponent extends DisplayDensityBase {
             cancel: false
         };
 
+        fromEvent(this.selectContainer.nativeElement, 'transitionend')
+            .pipe(filter<TransitionEvent>(event => event.propertyName === 'width'), take(1))
+            .subscribe(event => this.onSelectTransitionDone(event));
+
         if (newValue && !this._selected) {
             onSelectArgs.selected = true;
             this.onSelection.emit(onSelectArgs);
@@ -463,7 +475,7 @@ export class IgxChipComponent extends DisplayDensityBase {
     }
 
     public onSelectTransitionDone(event) {
-        if (event.propertyName === 'width' && !!event.target.tagName) {
+        if (!!event.target.tagName) {
             // Trigger onSelectionDone on when `width` property is changed and the target is valid element(not comment).
             this.onSelectionDone.emit({
                 owner: this,
