@@ -893,7 +893,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             filter(overlay => overlay.id === this._componentID),
             takeUntil(this._destroy$)).subscribe((event) => {
                 // Do not focus the input if clicking outside the dropdown list/dialog
-                event.event ? this._focusInput = false : this._focusInput = true;
+                this._focusInput = event.event ? false : true;
                 this.onClosing.emit(event);
             });
 
@@ -1274,9 +1274,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         const input = this.getEditElement();
         if (input && this._focusInput) {
             input.focus();
-        } else  {
-            return;
         }
+        return;
     }
 
     private _initializeCalendarContainer(componentInstance: IgxCalendarContainerComponent) {

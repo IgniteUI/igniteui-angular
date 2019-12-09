@@ -828,7 +828,7 @@ export class IgxTimePickerComponent implements
 
             this.toggleRef.onClosing.pipe(takeUntil(this._destroy$)).subscribe((event) => {
                 // Do not focus the input if clicking outside the dropdown list/dialog
-                event.event ? this._focusInput = false : this._focusInput = true;
+                this._focusInput = event.event ? false : true;
                 this.onClosing.emit(event);
             });
         }
