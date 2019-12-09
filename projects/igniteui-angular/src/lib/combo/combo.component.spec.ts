@@ -368,7 +368,7 @@ describe('igxCombo', () => {
             await wait(30);
             items = fix.debugElement.queryAll(By.css('.' + CSS_CLASS_DROPDOWNLISTITEM));
             lastItem = items[items.length - 1].componentInstance;
-            (lastItem as IgxComboAddItemComponent).handleClick();
+            (lastItem as IgxComboAddItemComponent).clicked();
             fix.detectChanges();
             // After `Add Item` is clicked, the input is focused and the item is added to the list
             expect(dropdown.focusedItem).toEqual(null);

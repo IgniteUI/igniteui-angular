@@ -1,6 +1,5 @@
 import {
     Component,
-    HostListener,
     HostBinding
 } from '@angular/core';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
@@ -68,17 +67,10 @@ export class IgxDropDownItemComponent extends IgxDropDownItemBaseDirective {
     }
 
     /**
-     * @hidden @internal
+     * @inheritdoc
      */
-    @HostListener('click', ['$event'])
-    clicked(event) {
-        if (this.disabled || this.isHeader) {
-            const focusedItem = this.dropDown.items.find((item) => item.focused);
-            if (this.dropDown.allowItemsFocus && focusedItem) {
-                focusedItem.element.nativeElement.focus({ preventScroll: true });
-            }
-            return;
-        }
+    clicked(event): void {
+        if (!this.shouldSelect) { return; }
         if (this.selection) {
             this.dropDown.selectItem(this, event);
         }
