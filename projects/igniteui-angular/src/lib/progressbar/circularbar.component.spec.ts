@@ -375,10 +375,9 @@ fdescribe('IgCircularBar', () => {
 
             expectedTextContent = 'No progress';
             expect(textElement.children[0].textContent.trim()).toMatch(expectedTextContent);
-
         }));
 
-        it('The max representation should respond correctly to passed maximum value', fakeAsync(() => {
+        it('should respond correctly to passed maximum value', fakeAsync(() => {
             const fixture = TestBed.createComponent(CircularBarComponent);
             fixture.detectChanges();
 
@@ -398,7 +397,7 @@ fdescribe('IgCircularBar', () => {
             expect(progressBarElem.attributes['aria-valuemax'].textContent).toBe(componentInstance.max.toString());
         }));
 
-        it('Manipulate progressbar with floating point numbers', fakeAsync(() => {
+        it('should manipulate progressbar with floating point numbers', fakeAsync(() => {
             const fix = TestBed.createComponent(InitCircularProgressBarComponent);
             fix.detectChanges();
 
