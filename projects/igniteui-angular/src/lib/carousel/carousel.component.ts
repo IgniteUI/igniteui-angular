@@ -26,7 +26,7 @@ import { Subject, merge } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
 import { useAnimation, AnimationBuilder, AnimationPlayer, AnimationReferenceMetadata } from '@angular/animations';
-import { slideInLeft, fadeIn, rotateInCenter } from '../animations/main';
+import { slideInLeft, fadeIn } from '../animations/main';
 import { IgxSlideComponent, Direction } from './slide.component';
 import { ICarouselResourceStrings } from '../core/i18n/carousel-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
@@ -200,7 +200,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * @memberof IgxCarouselComponent
      */
     set interval(value: number) {
-        if (this.platformBrowser) {
+        if (this.platformUtil.isBrowser) {
             this._interval = +value;
             this.restartInterval();
         }
@@ -437,12 +437,10 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     private incomingSlide: IgxSlideComponent;
     private animationPosition = 0;
     private newDuration = 0;
-    private platformBrowser: boolean;
 
     constructor(private element: ElementRef, private iterableDiffers: IterableDiffers,
             private builder: AnimationBuilder, private platformUtil: PlatformUtil) {
         this.differ = this.iterableDiffers.find([]).create(null);
-        this.platformBrowser = this.platformUtil.isBrowser;
     }
 
     /** @hidden */
