@@ -18,7 +18,7 @@ const CIRCULAR_TEXT_CLASS = 'igx-circular-bar__text';
 const CIRCULAR_HIDDEN_TEXT_CLASS = 'igx-circular-bar__text--hidden';
 const CIRCULAR_INDETERMINATE_CLASS = 'igx-circular-bar--indeterminate';
 
-fdescribe('IgCircularBar', () => {
+describe('IgCircularBar', () => {
     configureTestSuite();
     const tickTime = 2000;
     beforeEach(async(() => {
