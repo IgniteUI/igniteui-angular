@@ -653,10 +653,10 @@ export class IgxTimePickerComponent implements
     private _onOpen = new EventEmitter<IgxTimePickerComponent>();
     private _onClose = new EventEmitter<IgxTimePickerComponent>();
 
-    private hours_pos = new Set();
-    private minutes_pos = new Set();
-    private seconds_pos = new Set();
-    private ampm_pos = new Set();
+    private _hoursPos = new Set();
+    private _minutesPos = new Set();
+    private _secondsPos = new Set();
+    private _amPmPos = new Set();
 
     private _onTouchedCallback: () => void = () => { };
     private _onChangeCallback: (_: Date) => void = () => { };
@@ -936,37 +936,37 @@ export class IgxTimePickerComponent implements
             switch (char) {
                 case 'H':
                 case 'h':
-                    this.hours_pos.size === 0 ? this.hours_pos.add(this.format.indexOf(char)) :
-                        this.hours_pos.add(this.format.lastIndexOf(char));
-                    this.hours_pos.add(this.format.lastIndexOf(char) + 1);
+                    this._hoursPos.size === 0 ? this._hoursPos.add(this.format.indexOf(char)) :
+                        this._hoursPos.add(this.format.lastIndexOf(char));
+                    this._hoursPos.add(this.format.lastIndexOf(char) + 1);
                     break;
                 case 'M':
                 case 'm':
-                    this.minutes_pos.size === 0 ? this.minutes_pos.add(this.format.indexOf(char)) :
-                        this.minutes_pos.add(this.format.lastIndexOf(char));
-                    this.minutes_pos.add(this.format.lastIndexOf(char) + 1);
+                    this._minutesPos.size === 0 ? this._minutesPos.add(this.format.indexOf(char)) :
+                        this._minutesPos.add(this.format.lastIndexOf(char));
+                    this._minutesPos.add(this.format.lastIndexOf(char) + 1);
                     break;
                 case 'S':
                 case 's':
-                    this.seconds_pos.size === 0 ? this.seconds_pos.add(this.format.indexOf(char)) :
-                        this.seconds_pos.add(this.format.lastIndexOf(char));
-                    this.seconds_pos.add(this.format.lastIndexOf(char) + 1);
+                    this._secondsPos.size === 0 ? this._secondsPos.add(this.format.indexOf(char)) :
+                        this._secondsPos.add(this.format.lastIndexOf(char));
+                    this._secondsPos.add(this.format.lastIndexOf(char) + 1);
                     break;
                 case 'T':
                 case 't':
-                    this.ampm_pos.size === 0 ? this.ampm_pos.add(this.format.indexOf(char)) :
-                        this.ampm_pos.add(this.format.lastIndexOf(char));
-                    this.ampm_pos.add(this.format.lastIndexOf(char) + 1);
+                    this._amPmPos.size === 0 ? this._amPmPos.add(this.format.indexOf(char)) :
+                        this._amPmPos.add(this.format.lastIndexOf(char));
+                    this._amPmPos.add(this.format.lastIndexOf(char) + 1);
                     break;
             }
         }
     }
 
     private clearCursorPos() {
-        this.hours_pos.forEach(v => this.hours_pos.delete(v));
-        this.minutes_pos.forEach(v => this.minutes_pos.delete(v));
-        this.seconds_pos.forEach(v => this.seconds_pos.delete(v));
-        this.ampm_pos.forEach(v => this.ampm_pos.delete(v));
+        this._hoursPos.forEach(v => this._hoursPos.delete(v));
+        this._minutesPos.forEach(v => this._minutesPos.delete(v));
+        this._secondsPos.forEach(v => this._secondsPos.delete(v));
+        this._amPmPos.forEach(v => this._amPmPos.delete(v));
     }
 
     private _scrollItemIntoView(item: string, items: any[], selectedItem: string, isListLoop: boolean, viewType: string): any {
@@ -2039,34 +2039,28 @@ export class IgxTimePickerComponent implements
     }
 
     private cursorOnHours(cursor: number, showHours: boolean): boolean {
-        return showHours && this.hours_pos.has(cursor);
+        return showHours && this._hoursPos.has(cursor);
     }
 
     private cursorOnMinutes(cursor: number, showHours: boolean, showMinutes: boolean): boolean {
         return showMinutes &&
-            (showHours && this.minutes_pos.has(cursor)) ||
-            (!showHours && this.minutes_pos.has(cursor));
+            (showHours && this._minutesPos.has(cursor)) ||
+            (!showHours && this._minutesPos.has(cursor));
     }
 
     private cursorOnSeconds(cursor: number, showHours: boolean, showMinutes: boolean, showSeconds: boolean): boolean {
         return showSeconds &&
-            (showHours && showMinutes && this.seconds_pos.has(cursor)) ||
-            ((!showHours || !showMinutes) && this.seconds_pos.has(cursor)) ||
-            (!showHours && !showMinutes && this.seconds_pos.has(cursor));
+            (showHours && showMinutes && this._secondsPos.has(cursor)) ||
+            ((!showHours || !showMinutes) && this._secondsPos.has(cursor)) ||
+            (!showHours && !showMinutes && this._secondsPos.has(cursor));
     }
 
     private cursorOnAmPm(cursor: number, showHours: boolean, showMinutes: boolean,
         showSeconds: boolean, showAmPm: boolean): boolean {
         return showAmPm &&
-            (showHours && showMinutes && showSeconds && this.ampm_pos.has(cursor)) ||
-            ((!showHours || !showMinutes || !showSeconds) && this.ampm_pos.has(cursor)) ||
-            (this.determineMaskParts() && this.ampm_pos.has(cursor));
-    }
-
-    private determineMaskParts(): boolean {
-        return this.showHoursList &&
-            (!this.showMinutesList || !this.showSecondsList) ||
-            (this.showMinutesList && !this.showSecondsList);
+            (showHours && showMinutes && showSeconds && this._amPmPos.has(cursor)) ||
+            ((!showHours || !showMinutes || !showSeconds) && this._amPmPos.has(cursor)) ||
+            (!showHours && (!showMinutes || !showSeconds) && this._amPmPos.has(cursor));
     }
 }
 
