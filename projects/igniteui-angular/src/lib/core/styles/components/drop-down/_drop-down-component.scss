@@ -6,9 +6,10 @@
 /// @requires {mixin} bem-mod
 ////
 
-/// @access private
-@include b(igx-drop-down-wrapper) {
-    @extend %igx-drop-down-wrapper !optional;
+
+/// @access public
+@include b(igx-drop-down-select) {
+    @extend %igx-drop-down-select !optional;
 }
 
 /// @access public
@@ -16,16 +17,16 @@
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
 
+    @include e(list, $m: select) {
+        @extend %igx-drop-down__list--select !optional;
+    }
+
     @include e(list) {
         @extend %igx-drop-down__list !optional;
     }
 
     @include e(list-scroll) {
         @extend %igx-drop-down__list-scroll !optional;
-    }
-
-    @include e(list, $m: select) {
-        @extend %igx-drop-down__list--select !optional;
     }
 
     @include e(item) {

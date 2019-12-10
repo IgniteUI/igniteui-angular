@@ -19,9 +19,8 @@ const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
 const CSS_CLASS_TOGGLE_BUTTON = 'igx-icon';
 const CSS_CLASS_DROPDOWN_LIST = 'igx-drop-down__list--select';
-const CSS_CLASS_DROPDOWN_WRAPPER = 'igx-drop-down-wrapper';
-const CSS_CLASS_DROPDOWN_WRAPPER_HEADER = 'igx-drop-down-wrapper__header';
-const CSS_CLASS_DROPDOWN_WRAPPER_FOOTER = 'igx-drop-down-wrapper__footer';
+const CSS_CLASS_DROPDOWN_SELECT_HEADER = 'igx-drop-down__select-header';
+const CSS_CLASS_DROPDOWN_SELECT_FOOTER = 'igx-drop-down__select-footer';
 const CSS_CLASS_DROPDOWN_LIST_ITEM = 'igx-drop-down__item';
 const CSS_CLASS_SELECTED_ITEM = 'igx-drop-down__item--selected';
 const CSS_CLASS_DISABLED_ITEM = 'igx-drop-down__item--disabled';
@@ -50,7 +49,6 @@ describe('igxSelect', () => {
     let select: IgxSelectComponent;
     let inputElement: DebugElement;
     let selectList: DebugElement;
-    let selectListWrapper: DebugElement;
     const verifyFocusedItem = function (focusedItemIndex) {
         const focusedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_FOCUSED_ITEM));
         expect(focusedItems.length).toEqual(1);
@@ -116,7 +114,6 @@ describe('igxSelect', () => {
             tick();
             inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
             selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
-            selectListWrapper = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_WRAPPER));
         }));
         it('should initialize the select component properly', fakeAsync(() => {
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
@@ -284,7 +281,7 @@ describe('igxSelect', () => {
             tick();
             fixture.detectChanges();
             expect(select.collapsed).toBeTruthy();
-            expect(selectListWrapper.nativeElement.classList.contains('igx-toggle--hidden')).toBeTruthy();
+            expect(selectList.nativeElement.classList.contains('igx-toggle--hidden')).toBeTruthy();
         }));
         it('should properly emit opening/closing events on input click', fakeAsync(() => {
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
@@ -377,7 +374,7 @@ describe('igxSelect', () => {
         }));
         it('should render aria attributes properly', fakeAsync(() => {
             const dropdownListElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
-            const dropdownWrapper = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_WRAPPER));
+            const dropdownWrapper = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
             const toggleBtn = fixture.debugElement.query(By.css('.' + CSS_CLASS_TOGGLE_BUTTON));
             expect(inputElement.nativeElement.getAttribute('role')).toEqual('combobox');
             expect(inputElement.nativeElement.getAttribute('aria-haspopup')).toEqual('listbox');
@@ -2437,33 +2434,32 @@ describe('igxSelect', () => {
             fixture.detectChanges();
             tick();
             selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST));
-            selectListWrapper = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_WRAPPER));
         }));
         it('Should render header and footer elements where expected', () => {
-            const selectHeader = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_WRAPPER_HEADER));
-            const selectFooter = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_WRAPPER_FOOTER));
+            const selectHeader = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_SELECT_HEADER));
+            const selectFooter = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_SELECT_FOOTER));
             // elements exist
             expect(selectHeader).toBeDefined();
             expect(selectFooter).toBeDefined();
             // elements structure is correct
-            expect(selectListWrapper.nativeElement.firstElementChild).toHaveClass(CSS_CLASS_DROPDOWN_WRAPPER_HEADER);
-            expect(selectListWrapper.nativeElement.lastElementChild).toHaveClass(CSS_CLASS_DROPDOWN_WRAPPER_FOOTER);
-            expect(selectList.nativeElement.previousElementSibling).toHaveClass(CSS_CLASS_DROPDOWN_WRAPPER_HEADER);
-            expect(selectList.nativeElement.nextElementSibling).toHaveClass(CSS_CLASS_DROPDOWN_WRAPPER_FOOTER);
+            expect(selectList.nativeElement.firstElementChild).toHaveClass(CSS_CLASS_DROPDOWN_SELECT_HEADER);
+            expect(selectList.nativeElement.lastElementChild).toHaveClass(CSS_CLASS_DROPDOWN_SELECT_FOOTER);
+            expect(selectList.nativeElement.previousElementSibling).toHaveClass(CSS_CLASS_DROPDOWN_SELECT_HEADER);
+            expect(selectList.nativeElement.nextElementSibling).toHaveClass(CSS_CLASS_DROPDOWN_SELECT_FOOTER);
         });
         it('Should NOT render header and footer elements, if template is not defined', fakeAsync(() => {
             select.headerTemplate = null;
             select.footerTemplate = null;
             fixture.detectChanges();
             tick();
-            const selectHeader = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_WRAPPER_HEADER));
-            const selectFooter = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_WRAPPER_FOOTER));
+            const selectHeader = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_SELECT_HEADER));
+            const selectFooter = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_SELECT_FOOTER));
             // elements do not exist
             expect(selectHeader).toBeNull();
             expect(selectFooter).toBeNull();
             // elements structure is correct
-            expect(selectListWrapper.nativeElement.firstElementChild).toHaveClass(CSS_CLASS_DROPDOWN_LIST);
-            expect(selectListWrapper.nativeElement.lastElementChild).toHaveClass(CSS_CLASS_DROPDOWN_LIST);
+            expect(selectList.nativeElement.firstElementChild).toHaveClass(CSS_CLASS_DROPDOWN_LIST);
+            expect(selectList.nativeElement.lastElementChild).toHaveClass(CSS_CLASS_DROPDOWN_LIST);
             expect(selectList.nativeElement.previousElementSibling).toBeNull();
             expect(selectList.nativeElement.nextElementSibling).toBeNull();
         }));
