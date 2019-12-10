@@ -207,9 +207,6 @@ describe('Excel Exporter', () => {
             const fix = result.fixture;
             const grid = result.grid;
 
-            options.ignorePinning = false;
-            fix.detectChanges();
-
             const wrapper = await getExportedData(grid, options);
             wrapper.verifyStructure();
             await wrapper.verifyDataFilesContent(actualData.gridJobTitleIdFrozen, 'Not all pinned columns are frozen in the export!');
