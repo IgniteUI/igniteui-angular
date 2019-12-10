@@ -110,7 +110,7 @@ export class IgxTreeGridComponent extends IgxGridBaseComponent implements IGridD
         if (this.shouldGenerate) {
             this.setupColumns();
         }
-        this.notifyChanges(true);
+        this.cdr.markForCheck();
     }
 
     /**
