@@ -112,7 +112,7 @@ export class IgxCarouselComponent implements OnDestroy {
      * @memberof IgxCarouselComponent
      */
     set interval(value: number) {
-        if (this._platformBrowser) {
+        if (this.platformUtil.isBrowser) {
             this._interval = +value;
             this._restartInterval();
         }
@@ -203,11 +203,8 @@ export class IgxCarouselComponent implements OnDestroy {
     private _currentSlide: IgxSlideComponent;
     private _destroyed: boolean;
     private _total = 0;
-    private _platformBrowser: boolean;
 
-    constructor(private element: ElementRef, private platformUtil: PlatformUtil) {
-        this._platformBrowser = this.platformUtil.isBrowser;
-    }
+    constructor(private element: ElementRef, private platformUtil: PlatformUtil) { }
     /**
      *@hidden
      */
