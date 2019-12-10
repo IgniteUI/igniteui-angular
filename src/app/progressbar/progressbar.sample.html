@@ -68,7 +68,7 @@
             <h4 class="sample-title">Circular progress indicator</h4>
             <div class="circular-samples">
                 <div class="circular-container">
-                    <igx-circular-bar class="circular-sample" [value]="currentValue" [indeterminate]="true"></igx-circular-bar>
+                    <igx-circular-bar class="circular-sample" [indeterminate]="true"></igx-circular-bar>
                 </div>
                 <div class="circular-container">
                     <igx-circular-bar class="circular-sample" [value]="24"></igx-circular-bar>
@@ -88,7 +88,7 @@
                     <igx-circular-bar class="circular-sample" [value]="30"></igx-circular-bar>
                 </div>
                 <div class="circular-container">
-                    <igx-circular-bar class="circular-sample" [indeterminate]="true"></igx-circular-bar>
+                    <igx-circular-bar class="circular-sample custom-gradient" [indeterminate]="true"></igx-circular-bar>
                 </div>
             </div>
             <div class="circular-samples">
@@ -100,8 +100,16 @@
                         </ng-template>
                     </igx-circular-bar>
                 </div>
-                <div class="circular-container">
-                    <igx-circular-bar class="circular-sample" [value]="77" [text]="'Test'"></igx-circular-bar>
+                <div class="circular-container" #gradient>
+                    <igx-circular-bar class="circular-sample" [value]="77" [text]="'Test'">
+                        <ng-template igxProgressBarGradient let-id>
+                            <svg:linearGradient [id]="id" gradientTransform="rotate(90)">
+                                <stop offset="0%"   stop-color="#05a"/>
+                                <stop offset="50%" stop-color="purple"/>
+                                <stop offset="100%" stop-color="#0a5"/>
+                            </svg:linearGradient>
+                        </ng-template>
+                    </igx-circular-bar>
                 </div>
                 <div class="circular-container">
                     <igx-circular-bar class="circular-sample" [value]="44"></igx-circular-bar>
@@ -116,3 +124,4 @@
         </button>
     </div>
 </div>
+
