@@ -202,6 +202,19 @@ describe('Excel Exporter', () => {
             wrapper.verifyDataFilesContent(actualData.simpleGridData, 'No frozen columns should have been exported!');
         });
 
+        it('should honor all pinned columns.', async() => {
+            const result = await TestMethods.createGridAndPinColumn(2, 0);
+            const fix = result.fixture;
+            const grid = result.grid;
+
+            options.ignorePinning = false;
+            fix.detectChanges();
+
+            let wrapper = await getExportedData(grid, options);
+            wrapper.verifyStructure();
+            await wrapper.verifyDataFilesContent(actualData.gridJobTitleIdFrozen, 'Not all pinned columns are frozen in the export!');
+        });
+
         it('should honor applied sorting.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
