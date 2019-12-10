@@ -933,25 +933,31 @@ export class IgxTimePickerComponent implements
     private determineCursorPos(): void {
         this.clearCursorPos();
         for (const char of this.format) {
-            if (char === 'H' || char === 'h') {
-                this.hours_pos.size === 0 ? this.hours_pos.add(this.format.indexOf(char)) :
-                    this.hours_pos.add(this.format.lastIndexOf(char));
-                this.hours_pos.add(this.format.lastIndexOf(char) + 1);
-            }
-            if (char === 'M' || char === 'm') {
-                this.minutes_pos.size === 0 ? this.minutes_pos.add(this.format.indexOf(char)) :
-                    this.minutes_pos.add(this.format.lastIndexOf(char));
-                this.minutes_pos.add(this.format.lastIndexOf(char) + 1);
-            }
-            if (char === 'S' || char === 's') {
-                this.seconds_pos.size === 0 ? this.seconds_pos.add(this.format.indexOf(char)) :
-                    this.seconds_pos.add(this.format.lastIndexOf(char));
-                this.seconds_pos.add(this.format.lastIndexOf(char) + 1);
-            }
-            if (char === 'T' || char === 't') {
-                this.ampm_pos.size === 0 ? this.ampm_pos.add(this.format.indexOf(char)) :
-                    this.ampm_pos.add(this.format.lastIndexOf(char));
-                this.ampm_pos.add(this.format.lastIndexOf(char) + 1);
+            switch (char) {
+                case 'H':
+                case 'h':
+                    this.hours_pos.size === 0 ? this.hours_pos.add(this.format.indexOf(char)) :
+                        this.hours_pos.add(this.format.lastIndexOf(char));
+                    this.hours_pos.add(this.format.lastIndexOf(char) + 1);
+                    break;
+                case 'M':
+                case 'm':
+                    this.minutes_pos.size === 0 ? this.minutes_pos.add(this.format.indexOf(char)) :
+                        this.minutes_pos.add(this.format.lastIndexOf(char));
+                    this.minutes_pos.add(this.format.lastIndexOf(char) + 1);
+                    break;
+                case 'S':
+                case 's':
+                    this.seconds_pos.size === 0 ? this.seconds_pos.add(this.format.indexOf(char)) :
+                        this.seconds_pos.add(this.format.lastIndexOf(char));
+                    this.seconds_pos.add(this.format.lastIndexOf(char) + 1);
+                    break;
+                case 'T':
+                case 't':
+                    this.ampm_pos.size === 0 ? this.ampm_pos.add(this.format.indexOf(char)) :
+                        this.ampm_pos.add(this.format.lastIndexOf(char));
+                    this.ampm_pos.add(this.format.lastIndexOf(char) + 1);
+                    break;
             }
         }
     }
@@ -2022,7 +2028,7 @@ export class IgxTimePickerComponent implements
             if (this.showAmPmList &&
                 (this.showHoursList && this.showMinutesList && this.showSecondsList && this.ampm_pos.has(cursor)) ||
                 ((!this.showHoursList || !this.showMinutesList || !this.showSecondsList) && this.ampm_pos.has(cursor)) ||
-                (this.determineFormatParts() && this.ampm_pos.has(cursor))) {
+                (this.determineMaskParts() && this.ampm_pos.has(cursor))) {
                 const sections = this.displayValue.split(/[\s:]+/);
                 sign = sections[sections.length - 1] === 'AM' ? 1 : -1;
                 currentVal.setHours(currentVal.getHours() + (sign * 12));
@@ -2043,10 +2049,9 @@ export class IgxTimePickerComponent implements
         });
     }
 
-    private determineFormatParts(): boolean {
-        return (this.showHoursList && (!this.showMinutesList || !this.showSecondsList)) ||
-            (this.showMinutesList && (!this.showHoursList || !this.showSecondsList)) ||
-            (this.showSecondsList && (!this.showHoursList || !this.showMinutesList));
+    private determineMaskParts(): boolean {
+        return (this.showHoursList && (!this.showMinutesList || !this.showSecondsList) ||
+            (this.showMinutesList && !this.showSecondsList));
     }
 }
 
