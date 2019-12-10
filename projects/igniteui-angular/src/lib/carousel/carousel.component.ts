@@ -12,7 +12,7 @@ import {
     Output
 } from '@angular/core';
 import { IgxIconModule } from '../icon/index';
-import { IBaseEventArgs } from '../core/utils';
+import { IBaseEventArgs, PlatformUtil } from '../core/utils';
 
 let NEXT_ID = 0;
 
@@ -112,8 +112,10 @@ export class IgxCarouselComponent implements OnDestroy {
      * @memberof IgxCarouselComponent
      */
     set interval(value: number) {
-        this._interval = +value;
-        this._restartInterval();
+        if (this._platformBrowser) {
+            this._interval = +value;
+            this._restartInterval();
+        }
     }
     /**
      * Returns the `tabIndex` of the carousel component.
@@ -201,8 +203,11 @@ export class IgxCarouselComponent implements OnDestroy {
     private _currentSlide: IgxSlideComponent;
     private _destroyed: boolean;
     private _total = 0;
+    private _platformBrowser: boolean;
 
-    constructor(private element: ElementRef) { }
+    constructor(private element: ElementRef, private platformUtil: PlatformUtil) {
+        this._platformBrowser = this.platformUtil.isBrowser;
+    }
     /**
      *@hidden
      */
