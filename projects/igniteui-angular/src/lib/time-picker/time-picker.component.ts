@@ -2008,27 +2008,16 @@ export class IgxTimePickerComponent implements
             const mDelta = this.itemsDelta.minutes;
             const sDelta = this.itemsDelta.seconds;
 
-            if (this.showHoursList && this.hours_pos.has(cursor)) {
+            if (this.cursorOnHours(cursor, this.showHoursList)) {
                 this.value = this._spinHours(currentVal, min, max, hDelta, sign);
             }
-
-            if (this.showMinutesList &&
-                ((this.showHoursList && this.minutes_pos.has(cursor)) ||
-                    (!this.showHoursList && this.minutes_pos.has(cursor)))) {
+            if (this.cursorOnMinutes(cursor, this.showHoursList, this.showMinutesList)) {
                 this.value = this._spinMinutes(currentVal, mDelta, sign);
             }
-
-            if (this.showSecondsList &&
-                (this.showHoursList && this.showMinutesList && this.seconds_pos.has(cursor)) ||
-                ((!this.showHoursList || !this.showMinutesList) && this.seconds_pos.has(cursor)) ||
-                (!this.showHoursList && !this.showMinutesList && this.seconds_pos.has(cursor))) {
+            if (this.cursorOnSeconds(cursor, this.showHoursList, this.showMinutesList, this.showSecondsList)) {
                 this.value = this._spinSeconds(currentVal, sDelta, sign);
             }
-
-            if (this.showAmPmList &&
-                (this.showHoursList && this.showMinutesList && this.showSecondsList && this.ampm_pos.has(cursor)) ||
-                ((!this.showHoursList || !this.showMinutesList || !this.showSecondsList) && this.ampm_pos.has(cursor)) ||
-                (this.determineMaskParts() && this.ampm_pos.has(cursor))) {
+            if (this.cursorOnAmPm(cursor, this.showHoursList, this.showMinutesList, this.showSecondsList, this.showAmPmList)) {
                 const sections = this.displayValue.split(/[\s:]+/);
                 sign = sections[sections.length - 1] === 'AM' ? 1 : -1;
                 currentVal.setHours(currentVal.getHours() + (sign * 12));
@@ -2049,9 +2038,35 @@ export class IgxTimePickerComponent implements
         });
     }
 
+    private cursorOnHours(cursor: number, showHours: boolean): boolean {
+        return showHours && this.hours_pos.has(cursor);
+    }
+
+    private cursorOnMinutes(cursor: number, showHours: boolean, showMinutes: boolean): boolean {
+        return showMinutes &&
+            (showHours && this.minutes_pos.has(cursor)) ||
+            (!showHours && this.minutes_pos.has(cursor));
+    }
+
+    private cursorOnSeconds(cursor: number, showHours: boolean, showMinutes: boolean, showSeconds: boolean): boolean {
+        return showSeconds &&
+            (showHours && showMinutes && this.seconds_pos.has(cursor)) ||
+            ((!showHours || !showMinutes) && this.seconds_pos.has(cursor)) ||
+            (!showHours && !showMinutes && this.seconds_pos.has(cursor));
+    }
+
+    private cursorOnAmPm(cursor: number, showHours: boolean, showMinutes: boolean,
+        showSeconds: boolean, showAmPm: boolean): boolean {
+        return showAmPm &&
+            (showHours && showMinutes && showSeconds && this.ampm_pos.has(cursor)) ||
+            ((!showHours || !showMinutes || !showSeconds) && this.ampm_pos.has(cursor)) ||
+            (this.determineMaskParts() && this.ampm_pos.has(cursor));
+    }
+
     private determineMaskParts(): boolean {
-        return (this.showHoursList && (!this.showMinutesList || !this.showSecondsList) ||
-            (this.showMinutesList && !this.showSecondsList));
+        return this.showHoursList &&
+            (!this.showMinutesList || !this.showSecondsList) ||
+            (this.showMinutesList && !this.showSecondsList);
     }
 }
 
