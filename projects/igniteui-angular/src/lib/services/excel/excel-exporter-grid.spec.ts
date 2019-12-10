@@ -210,7 +210,7 @@ describe('Excel Exporter', () => {
             options.ignorePinning = false;
             fix.detectChanges();
 
-            let wrapper = await getExportedData(grid, options);
+            const wrapper = await getExportedData(grid, options);
             wrapper.verifyStructure();
             await wrapper.verifyDataFilesContent(actualData.gridJobTitleIdFrozen, 'Not all pinned columns are frozen in the export!');
         });
@@ -248,7 +248,8 @@ describe('Excel Exporter', () => {
             fix.detectChanges();
 
             wrapper = await getExportedData(grid, options);
-            await wrapper.verifyDataFilesContent(actualData.simpleGridSortByNameDesc(true), 'Descending sorted data should have been exported.');
+            await wrapper.verifyDataFilesContent(
+                actualData.simpleGridSortByNameDesc(true), 'Descending sorted data should have been exported.');
 
             grid.clearSort();
             grid.sort({fieldName: 'ID',  dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
