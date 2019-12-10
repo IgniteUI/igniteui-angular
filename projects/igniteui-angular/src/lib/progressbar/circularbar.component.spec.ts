@@ -18,7 +18,7 @@ const CIRCULAR_TEXT_CLASS = 'igx-circular-bar__text';
 const CIRCULAR_HIDDEN_TEXT_CLASS = 'igx-circular-bar__text--hidden';
 const CIRCULAR_INDETERMINATE_CLASS = 'igx-circular-bar--indeterminate';
 
-describe('IgCircularBar', () => {
+fdescribe('IgCircularBar', () => {
     configureTestSuite();
     const tickTime = 2000;
     beforeEach(async(() => {
@@ -304,26 +304,29 @@ describe('IgCircularBar', () => {
         expect(bar.valueInPercent).toBe(valueInPercent);
     }));
 
-    it('The template should be applied correct', () => {
+    it('should apply its template correctly', () => {
         const fixture = TestBed.createComponent(CircularBarTemplateComponent);
         fixture.detectChanges();
 
         const componentInstance = fixture.componentInstance;
         const progressBarElem = fixture.debugElement.query(By.css('svg')).nativeElement;
+        const textElement = fixture.debugElement.query(By.css('text')).nativeElement;
 
         fixture.detectChanges();
         expect(progressBarElem.attributes['aria-valuenow'].textContent).toBe('20');
 
-        expect(progressBarElem.children[0].classList.value).toBe(CIRCULAR_INNER_CLASS);
-        expect(progressBarElem.children[1].classList.value).toBe(CIRCULAR_OUTER_CLASS);
-        expect(progressBarElem.children[2].children.length).toBe(2);
-        expect(progressBarElem.children[2].children[0].textContent.trim()).toBe('Value is:');
-        expect(progressBarElem.children[2].children[1].textContent.trim()).toMatch('20');
+        expect(progressBarElem.children[0]).toHaveClass(CIRCULAR_INNER_CLASS);
+        expect(progressBarElem.children[1]).toHaveClass(CIRCULAR_OUTER_CLASS);
+
+        expect(textElement.children.length).toBe(2);
+        expect(textElement.children[0].textContent.trim()).toBe('Value is:');
+        expect(textElement.children[1].textContent.trim()).toMatch('20');
 
         componentInstance.progressbar.textVisibility = false;
         fixture.detectChanges();
+
         // Text is not rendered
-        expect(progressBarElem.children[2]).toBeFalsy();
+        expect(fixture.debugElement.query(By.css('text'))).toEqual(null);
     });
 
     it('When indeterminate mode is on value should not be updated', () => {
@@ -349,12 +352,13 @@ describe('IgCircularBar', () => {
     // UI TESTS
     describe('Circular bar UI TESTS', () => {
         // configureTestSuite();
-        it('The value representation should respond to passed value correctly', fakeAsync(() => {
+        it('should respond to passed values correctly', fakeAsync(() => {
             const fixture = TestBed.createComponent(CircularBarComponent);
             fixture.detectChanges();
 
             const componentInstance = fixture.componentInstance;
             const progressBarElem = fixture.debugElement.query(By.css('svg')).nativeElement;
+            const textElement = fixture.debugElement.query(By.css('text')).nativeElement;
             let expectedTextContent = componentInstance.progressbar.value + '%';
 
             tick(tickTime);
@@ -363,21 +367,15 @@ describe('IgCircularBar', () => {
             expect(progressBarElem.attributes['aria-valuenow'].textContent).toBe(componentInstance.value.toString());
             expect(progressBarElem.attributes['aria-valuemax'].textContent).toBe(componentInstance.max.toString());
 
-            expect(progressBarElem.children[0].classList.value).toBe(CIRCULAR_INNER_CLASS);
-            expect(progressBarElem.children[1].classList.value).toBe(CIRCULAR_OUTER_CLASS);
-            expect(progressBarElem.children[2].children[0].classList.value).toBe(CIRCULAR_TEXT_CLASS);
-            expect(progressBarElem.children[2].children[0].textContent.trim()).toMatch(expectedTextContent);
+            expect(textElement.children[0].classList.value).toBe(CIRCULAR_TEXT_CLASS);
+            expect(textElement.children[0].textContent.trim()).toMatch(expectedTextContent);
 
             componentInstance.progressbar.text = 'No progress';
             fixture.detectChanges();
 
             expectedTextContent = 'No progress';
-            expect(progressBarElem.children[2].children[0].textContent.trim()).toMatch(expectedTextContent);
+            expect(textElement.children[0].textContent.trim()).toMatch(expectedTextContent);
 
-            componentInstance.progressbar.textVisibility = false;
-            fixture.detectChanges();
-            // Text is not rendered
-            expect(progressBarElem.children[2]).toBeFalsy();
         }));
 
         it('The max representation should respond correctly to passed maximum value', fakeAsync(() => {
@@ -481,8 +479,8 @@ class CircularBarComponent {
     template: `
         <igx-circular-bar [value]="20" [animate]="false" [max]="100" [textVisibility]="true">
             <ng-template igxProcessBarText let-process>
-                <svg:tspan>Value is:</tspan>
-                <svg:tspan>{{process.value}}</tspan>
+                <svg:tspan>Value is:</svg:tspan>
+                <svg:tspan>{{process.value}}</svg:tspan>
             </ng-template>
         </igx-circular-bar>`
 })
