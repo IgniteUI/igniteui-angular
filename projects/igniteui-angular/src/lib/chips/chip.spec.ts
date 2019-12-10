@@ -423,7 +423,7 @@ describe('IgxChip', () => {
         });
 
         await wait(400);
-        expect(secondChipComp.onSelectionDone.emit).toHaveBeenCalled();
+        expect(secondChipComp.onSelectionDone.emit).toHaveBeenCalledTimes(1);
         expect(secondChipComp.onSelectionDone.emit).not.toHaveBeenCalledWith({
             originalEvent: null,
             owner: secondChipComp
