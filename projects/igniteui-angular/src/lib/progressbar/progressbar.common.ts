@@ -10,7 +10,7 @@ export class IgxProcessBarTextTemplateDirective {
 @Directive({
     selector: '[igxProgressBarGradient]'
 })
-export class IgxProgressBarGradientTemplateDirective {
+export class IgxProgressBarGradientDirective {
     constructor(public template: TemplateRef<any>) { }
 }
 

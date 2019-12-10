@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import {
     IgxProcessBarTextTemplateDirective,
-    IgxProgressBarGradientTemplateDirective,
+    IgxProgressBarGradientDirective,
 } from './progressbar.common';
 import { IBaseEventArgs } from '../core/utils';
 
@@ -551,8 +551,8 @@ export class IgxCircularProgressBarComponent extends BaseProgress implements Aft
     @ContentChild(IgxProcessBarTextTemplateDirective, { read: IgxProcessBarTextTemplateDirective })
     public textTemplate: IgxProcessBarTextTemplateDirective;
 
-    @ContentChild(IgxProgressBarGradientTemplateDirective, { read: IgxProgressBarGradientTemplateDirective })
-    public gradientTemplate: IgxProgressBarGradientTemplateDirective;
+    @ContentChild(IgxProgressBarGradientDirective, { read: IgxProgressBarGradientDirective })
+    public gradientTemplate: IgxProgressBarGradientDirective;
 
     /**
      * @hidden
@@ -782,13 +782,13 @@ export function convertInPercentage(value: number, max: number) {
         IgxLinearProgressBarComponent,
         IgxCircularProgressBarComponent,
         IgxProcessBarTextTemplateDirective,
-        IgxProgressBarGradientTemplateDirective,
+        IgxProgressBarGradientDirective,
     ],
     exports: [
         IgxLinearProgressBarComponent,
         IgxCircularProgressBarComponent,
         IgxProcessBarTextTemplateDirective,
-        IgxProgressBarGradientTemplateDirective,
+        IgxProgressBarGradientDirective,
     ],
     imports: [CommonModule]
 })
