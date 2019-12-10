@@ -21,7 +21,7 @@ import {
     Injectable
 } from '@angular/core';
 import { IgxIconModule } from '../icon/index';
-import { IBaseEventArgs } from '../core/utils';
+import { IBaseEventArgs, PlatformUtil } from '../core/utils';
 import { Subject, merge } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
@@ -200,8 +200,10 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * @memberof IgxCarouselComponent
      */
     set interval(value: number) {
-        this._interval = +value;
-        this.restartInterval();
+        if (this.platformBrowser) {
+            this._interval = +value;
+            this.restartInterval();
+        }
     }
 
     /**
@@ -435,9 +437,12 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     private incomingSlide: IgxSlideComponent;
     private animationPosition = 0;
     private newDuration = 0;
+    private platformBrowser: boolean;
 
-    constructor(private element: ElementRef, private iterableDiffers: IterableDiffers, private builder: AnimationBuilder) {
+    constructor(private element: ElementRef, private iterableDiffers: IterableDiffers,
+            private builder: AnimationBuilder, private platformUtil: PlatformUtil) {
         this.differ = this.iterableDiffers.find([]).create(null);
+        this.platformBrowser = this.platformUtil.isBrowser;
     }
 
     /** @hidden */
