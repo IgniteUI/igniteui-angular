@@ -846,11 +846,10 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.componentInstance.columns = fix.componentInstance.generateCols(25);
             fix.componentInstance.data = fix.componentInstance.generateData(25);
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
 
             grid.navigateTo(15, 1, (args) => { args.target.nativeElement.focus(); });
             fix.detectChanges();
-            await wait(DEBOUNCETIME);
+            await wait(200);
             fix.detectChanges();
 
             const target = grid.getCellByColumn(15, '1');
