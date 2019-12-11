@@ -589,7 +589,6 @@ export class IgxTimePickerComponent implements
      */
     public selectedAmPm: string;
 
-    /** @hidden @internal */
     private _value: Date;
     private _resourceStrings = CurrentResourceStrings.TimePickerResStrings;
     private _okButtonLabel = null;
