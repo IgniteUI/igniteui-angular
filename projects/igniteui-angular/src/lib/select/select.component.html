@@ -30,7 +30,7 @@
 <div igxToggle class="igx-drop-down__list igx-drop-down__list--select" (mousedown)="mousedownHandler($event);" (onOpening)="onToggleOpening($event)"
     (onOpened)="onToggleOpened()" (onClosing)="onToggleClosing($event)" (onClosed)="onToggleClosed()">
 
-    <div *ngIf="headerTemplate" class="igx-drop-down__select-header igx-drop-down-wrapper__header">
+    <div *ngIf="headerTemplate" class="igx-drop-down__select-header">
         <ng-content *ngTemplateOutlet="headerTemplate"></ng-content>
     </div>
 
@@ -38,7 +38,7 @@
         <ng-content select="igx-select-item, igx-select-item-group"></ng-content>
     </div>
 
-    <div *ngIf="footerTemplate" class="igx-drop-down__select-footer igx-drop-down-wrapper__footer">
+    <div *ngIf="footerTemplate" class="igx-drop-down__select-footer">
         <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
     </div>
 </div>
