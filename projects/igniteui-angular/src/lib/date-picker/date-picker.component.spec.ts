@@ -1390,6 +1390,6 @@ class IgxDatePickerDropdownButtonsComponent {
     @ViewChild('dropdownButtonsDatePicker', { read: IgxDatePickerComponent, static: true })
     public datePicker: IgxDatePickerComponent;
 
-    @ViewChild('dummyInput') public dummyInput: ElementRef;
+    @ViewChild('dummyInput', {static: true }) public dummyInput: ElementRef;
 }
 
