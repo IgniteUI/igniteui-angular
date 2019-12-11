@@ -11,10 +11,6 @@
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
 
-    @include e(list, $m: select) {
-        @extend %igx-drop-down__list--select !optional;
-    }
-
     @include e(list) {
         @extend %igx-drop-down__list !optional;
     }

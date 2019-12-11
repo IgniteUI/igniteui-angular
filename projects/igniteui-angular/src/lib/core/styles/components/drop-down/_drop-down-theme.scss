@@ -210,12 +210,6 @@
         compact: 0 rem(8px)
     );
 
-    %igx-drop-down-wrapper {
-        box-shadow: --var($theme, 'shadow');
-        border-radius: --var($theme, 'border-radius');
-        overflow: hidden;
-    }
-
     %igx-drop-down__list {
         overflow: hidden;
         border-radius: --var($theme, 'border-radius');
