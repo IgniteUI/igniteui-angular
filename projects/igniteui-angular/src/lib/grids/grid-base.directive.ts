@@ -2505,7 +2505,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     private verticalScrollHandler = (event) => {
         this.verticalScrollContainer.onScroll(event);
-        if (isEdge()) { this.wheelHandler(false); }
         this.disableTransitions = true;
 
         this.zone.run(() => {
@@ -2524,7 +2523,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
     private horizontalScrollHandler = (event) => {
         const scrollLeft = event.target.scrollLeft;
-        if (isEdge()) { this.wheelHandler(true); }
         this.headerContainer.onHScroll(scrollLeft);
         this._horizontalForOfs.forEach(vfor => vfor.onHScroll(scrollLeft));
         this.cdr.markForCheck();
@@ -2891,8 +2889,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         const vertScrDC = this.verticalScrollContainer.displayContainer;
         vertScrDC.addEventListener('scroll', this.scrollHandler);
-        vertScrDC.addEventListener('wheel', () => this.wheelHandler());
-
     }
 
     /**
@@ -2966,7 +2962,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             this.headerContainer.getScroll().removeEventListener('scroll', this.horizontalScrollHandler);
             const vertScrDC = this.verticalScrollContainer.displayContainer;
             vertScrDC.removeEventListener('scroll', this.scrollHandler);
-            vertScrDC.removeEventListener('wheel', () => this.wheelHandler());
         });
     }
 
@@ -5035,7 +5030,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             default:
                 return;
         }
-        this.wheelHandler();
     }
 
     /**
@@ -5227,7 +5221,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             || (visibleColIndex !== -1 && this.columnList.map(col => col.visibleIndex).indexOf(visibleColIndex) === -1)) {
             return;
         }
-        this.wheelHandler();
         if (this.dataView.slice(rowIndex, rowIndex + 1).find(rec => rec.expression || rec.childGridsData)) {
             visibleColIndex = -1;
         }
@@ -5365,19 +5358,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         return false;
     }
 
-    /**
-     * @hidden @internal
-     */
-    public wheelHandler = (isScroll = false) => {
-        if (this.document.activeElement &&
-            // tslint:disable-next-line:no-bitwise
-            (this.document.activeElement.compareDocumentPosition(this.tbody.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS ||
-            // tslint:disable-next-line:no-bitwise
-            (this.document.activeElement.
-                compareDocumentPosition(this.tfoot.nativeElement) & Node.DOCUMENT_POSITION_CONTAINS && isScroll))) {
-            (this.document.activeElement as HTMLElement).blur();
-        }
-    }
 
     /**
      * @hidden @internal
