@@ -27,7 +27,7 @@
             <igx-icon *ngIf="!toggleIconTemplate" fontSet="material">{{ collapsed ? 'arrow_drop_down' : 'arrow_drop_up'}}</igx-icon>
     </igx-suffix>
 </igx-input-group>
-<div igxToggle class="igx-drop-down__list igx-drop-down__list--select" (mousedown)="mousedownHandler($event);" (onOpening)="onToggleOpening($event)"
+<div igxToggle class="igx-drop-down__list" (mousedown)="mousedownHandler($event);" (onOpening)="onToggleOpening($event)"
     (onOpened)="onToggleOpened()" (onClosing)="onToggleClosing($event)" (onClosed)="onToggleClosed()">
 
     <div *ngIf="headerTemplate" class="igx-drop-down__select-header">
