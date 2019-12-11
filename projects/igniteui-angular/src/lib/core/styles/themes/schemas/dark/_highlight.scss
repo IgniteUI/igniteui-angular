@@ -10,11 +10,23 @@
 /// @requires {function} extend
 /// @requires $_light-highlight
 /// @see $default-palette
-$_dark-highlight: extend($_light-highlight);
+$_dark-highlight: extend($_light-highlight, (
+    resting-color: (
+        igx-color: ('grays', 300),
+        hexrgba: (#222),
+        text-contrast: ()
+    ),
+));
 
 /// Generates a dark fluent highlight schema.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_fluent-highlight
-$_dark-fluent-highlight: extend($_fluent-highlight);
+$_dark-fluent-highlight: extend($_fluent-highlight, (
+    resting-color: (
+        igx-color: ('grays', 300),
+        hexrgba: (#222),
+        text-contrast: ()
+    ),
+));
 
