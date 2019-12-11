@@ -232,6 +232,8 @@ describe('IgxGrid - Cell component #grid', () => {
         const fixture = TestBed.createComponent(GridColumnWidthsComponent);
         fixture.detectChanges();
 
+        pending(`Removed blur on wheel event in the grid.`);
+
         const grid = fixture.componentInstance.instance;
         const cell = grid.getCellByColumn(3, '1');
         cell.nativeElement.focus();
