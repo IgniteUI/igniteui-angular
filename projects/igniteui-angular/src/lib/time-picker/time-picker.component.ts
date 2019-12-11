@@ -271,7 +271,7 @@ export class IgxTimePickerComponent implements
 
     /**
      * An @Input property that determines the spin behavior. By default `isSpinLoop` is set to true.
-     *The seconds and minutes and hour spinning will wrap around by default.
+     * The seconds, minutes and hour spinning will wrap around by default.
      *```html
      *<igx-time-picker [isSpinLoop]="false" id="time-picker"></igx-time-picker>
      *```
