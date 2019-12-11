@@ -33,7 +33,7 @@ const fiftyItems = Array.apply(null, { length: 50 }).map((e, i) => ({
     name: `Item ${i + 1}`
 }));
 
-fdescribe('IgxDropDown ', () => {
+describe('IgxDropDown ', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
