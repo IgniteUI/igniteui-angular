@@ -6,12 +6,6 @@
 /// @requires {mixin} bem-mod
 ////
 
-
-/// @access public
-@include b(igx-drop-down-select) {
-    @extend %igx-drop-down-select !optional;
-}
-
 /// @access public
 @include b(igx-drop-down) {
     $this: bem--selector-to-string(&);
