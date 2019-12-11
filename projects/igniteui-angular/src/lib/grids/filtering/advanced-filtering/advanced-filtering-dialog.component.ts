@@ -208,12 +208,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     constructor(private element: ElementRef, public cdr: ChangeDetectorRef) { }
 
     public ngAfterViewInit(): void {
-        if (this.addRootAndGroupButton) {
-            this.addRootAndGroupButton.nativeElement.focus();
-        } else if (this.addConditionButton) {
-            this.addConditionButton.nativeElement.focus();
-        }
-
         this._overlaySettings.outlet = this.overlayOutlet;
         this.columnSelectOverlaySettings.outlet = this.overlayOutlet;
         this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;
@@ -788,6 +782,17 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         if (this.grid.advancedFilteringExpressionsTree) {
             this.rootGroup = this.createExpressionGroupItem(this.grid.advancedFilteringExpressionsTree);
             this.currentGroup = this.rootGroup;
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public setAddButtonFocus() {
+        if (this.addRootAndGroupButton) {
+            this.addRootAndGroupButton.nativeElement.focus();
+        } else if (this.addConditionButton) {
+            this.addConditionButton.nativeElement.focus();
         }
     }
 
