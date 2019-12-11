@@ -2991,6 +2991,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.overlayService.onOpened.pipe(destructor).subscribe((event) => {
             // do not hide the advanced filtering overlay on scroll
             if (this._advancedFilteringOverlayId === event.id) {
+                const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
+                if (instance) {
+                    instance.setAddButtonFocus();
+                }
                 return;
             }
 
@@ -5210,7 +5214,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         for (const [row, set] of selectionMap) {
-            if (!source[row]) {
+            if (!source[row] || source[row].detailsData !== undefined) {
                 continue;
             }
             const temp = Array.from(set);
