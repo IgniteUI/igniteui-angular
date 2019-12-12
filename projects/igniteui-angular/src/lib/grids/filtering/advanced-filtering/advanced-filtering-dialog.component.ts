@@ -18,7 +18,7 @@ import { KEYS } from '../../../core/utils';
 import { AbsoluteScrollStrategy, AutoPositionStrategy } from '../../../services/index';
 import { IgxColumnComponent } from '../../columns/column.component';
 import { GridType } from '../../common/grid.interface';
-import { DataType } from 'igniteui-angular';
+import { DataType } from './../../../data-operations/data-util';
 
 /**
  *@hidden
