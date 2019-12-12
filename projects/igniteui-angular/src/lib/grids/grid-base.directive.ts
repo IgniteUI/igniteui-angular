@@ -2991,6 +2991,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.overlayService.onOpened.pipe(destructor).subscribe((event) => {
             // do not hide the advanced filtering overlay on scroll
             if (this._advancedFilteringOverlayId === event.id) {
+                const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
+                if (instance) {
+                    instance.setAddButtonFocus();
+                }
                 return;
             }
 
@@ -4640,7 +4644,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         cols.forEach((item) => {
             const isWidthInPercent = item.width && typeof item.width === 'string' && item.width.indexOf('%') !== -1;
             if (isWidthInPercent) {
-                item.width = MINIMUM_COLUMN_WIDTH + 'px';
+                item.width = item.calcWidth || MINIMUM_COLUMN_WIDTH + 'px';
             }
             colSum +=  parseInt((item.width || item.defaultWidth), 10) || MINIMUM_COLUMN_WIDTH;
         });
@@ -5210,7 +5214,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         for (const [row, set] of selectionMap) {
-            if (!source[row]) {
+            if (!source[row] || source[row].detailsData !== undefined) {
                 continue;
             }
             const temp = Array.from(set);
@@ -5999,13 +6003,15 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             const tmplId = args.context.templateID;
             const index = args.context.index;
             args.view.detectChanges();
-            const row = tmplId === 'dataRow' ? this.getRowByIndex(index) : null;
-            const summaryRow = tmplId === 'summaryRow' ? this.summariesRowList.find((sr) => sr.dataRowIndex === index) : null;
-            if (row && row instanceof IgxRowDirective) {
-                this._restoreVirtState(row);
-            } else if (summaryRow) {
-                this._restoreVirtState(summaryRow);
-            }
+            this.zone.onStable.pipe(first()).subscribe(() => {
+                const row = tmplId === 'dataRow' ? this.getRowByIndex(index) : null;
+                const summaryRow = tmplId === 'summaryRow' ? this.summariesRowList.find((sr) => sr.dataRowIndex === index) : null;
+                if (row && row instanceof IgxRowDirective) {
+                    this._restoreVirtState(row);
+                } else if (summaryRow) {
+                    this._restoreVirtState(summaryRow);
+                }
+            });
         }
     }
 
