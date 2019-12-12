@@ -860,6 +860,15 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             filter(overlay => overlay.id === this._componentID),
             takeUntil(this._destroy$)).subscribe((event) => {
                 this.onClosing.emit(event);
+                // If canceled in a user onClosing handler
+                if (event.cancel) {
+                    return;
+                }
+                // Do not focus the input if clicking outside in dropdown mode
+                const input = this.getEditElement();
+                if (input && !(event.event && this.mode === InteractionMode.DropDown)) {
+                    input.focus();
+                }
             });
 
         if (this.mode === InteractionMode.DropDown) {
@@ -1240,10 +1249,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
         // TODO: remove this line after deprecating 'onClose'
         this.onClose.emit(this);
-
-        if (this.getEditElement()) {
-            this.getEditElement().focus();
-        }
     }
 
     private _initializeCalendarContainer(componentInstance: IgxCalendarContainerComponent) {
