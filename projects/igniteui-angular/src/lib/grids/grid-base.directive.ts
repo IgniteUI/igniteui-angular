@@ -3019,11 +3019,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             if (shouldRecalcSize) {
                 this.calculateGridHeight();
                 $event.containerSize = this.calcHeight;
-                // called to recalc all widths that may have changes as a result of
-                // the vert. scrollbar showing/hiding
-                this.notifyChanges(true);
             }
             this.evaluateLoadingState();
+        });
+
+        this.verticalScrollContainer.onScrollbarVisibilityChanged.pipe(destructor, filter(() => !this._init)).subscribe(() => {
+            // called to recalc all widths that may have changes as a result of
+            // the vert. scrollbar showing/hiding
+            this.notifyChanges(true);
         });
 
         this.verticalScrollContainer.onContentSizeChange.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
