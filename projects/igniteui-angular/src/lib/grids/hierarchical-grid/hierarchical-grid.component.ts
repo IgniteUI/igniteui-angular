@@ -305,7 +305,8 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @hidden
      */
     ngOnInit() {
-        if (this._transactions) {
+        if (this._transactions instanceof IgxTransactionService) {
+            // transaction service cannot be injected in a derived class in a factory manner
             this._transactions = new IgxTransactionService();
         }
         super.ngOnInit();
