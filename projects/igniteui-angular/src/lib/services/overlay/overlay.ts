@@ -675,7 +675,7 @@ export class IgxOverlayService implements OnDestroy {
             if (info.settings.modal) {
                 fromEvent(info.elementRef.nativeElement.parentElement.parentElement, 'click')
                     .pipe(takeUntil(this.destroy$))
-                    .subscribe(() => this.hide(info.id));
+                    .subscribe((e: Event) => this._hide(info.id, e));
             } else if (
                 //  if all overlays minus closing overlays equals one add the handler
                 this._overlayInfos.filter(x => x.settings.closeOnOutsideClick && !x.settings.modal).length -
