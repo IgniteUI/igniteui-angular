@@ -13,20 +13,21 @@
 /// @see $default-palette
 $_light-highlight: (
     resting-background: (
-        igx-color: ('secondary', 50)
+        igx-color: ('grays', 300)
     ),
 
     resting-color: (
-        igx-color: ('secondary', 50),
+        igx-color: ('grays', 300),
+        hexrgba: (#fff),
         text-contrast: ()
     ),
 
     active-background: (
-        igx-color: ('secondary', 200)
+        igx-color: ('secondary', 'A100')
     ),
 
     active-color: (
-        igx-color: ('secondary', 200),
+        igx-color: ('secondary', 'A100'),
         text-contrast: ()
     ),
 );

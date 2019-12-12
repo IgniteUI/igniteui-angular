@@ -303,12 +303,6 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * @hidden @internal
      */
     public ngAfterViewInit(): void {
-        if (this.addRootAndGroupButton) {
-            this.addRootAndGroupButton.nativeElement.focus();
-        } else if (this.addConditionButton) {
-            this.addConditionButton.nativeElement.focus();
-        }
-
         this._overlaySettings.outlet = this.overlayOutlet;
         this.columnSelectOverlaySettings.outlet = this.overlayOutlet;
         this.conditionSelectOverlaySettings.outlet = this.overlayOutlet;
@@ -1028,6 +1022,17 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         this.grid = grid;
         this._overlayService = overlayService;
         this._overlayComponentId = overlayComponentId;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public setAddButtonFocus() {
+        if (this.addRootAndGroupButton) {
+            this.addRootAndGroupButton.nativeElement.focus();
+        } else if (this.addConditionButton) {
+            this.addConditionButton.nativeElement.focus();
+        }
     }
 
     private init() {
