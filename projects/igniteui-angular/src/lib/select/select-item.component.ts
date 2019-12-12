@@ -37,7 +37,8 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent implements 
         if (this._text !== undefined) {
             return this._text;
         }
-        return this.elementRef.nativeElement.innerText.trim();
+        // If text @Input is undefined, try extract a meaningful item text out of the item template
+        return this.elementRef.nativeElement.textContent.trim();
     }
 
     /**
