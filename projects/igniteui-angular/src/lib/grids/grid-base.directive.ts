@@ -5214,7 +5214,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         for (const [row, set] of selectionMap) {
-            if (!source[row]) {
+            if (!source[row] || source[row].detailsData !== undefined) {
                 continue;
             }
             const temp = Array.from(set);
