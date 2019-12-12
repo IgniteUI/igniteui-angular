@@ -18,7 +18,7 @@ import { takeUntil, first } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { KEYS } from '../../../core/utils';
 import { AbsoluteScrollStrategy, AutoPositionStrategy } from '../../../services/index';
-import { DataType } from 'igniteui-angular';
+import { DataType } from './../../../data-operations/data-util';
 
 /**
  *@hidden
