@@ -305,7 +305,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @hidden
      */
     ngOnInit() {
-        this._transactions = this.parentIsland ? new IgxTransactionService() : this._transactions;
+        if (this._transactions) {
+            this._transactions = new IgxTransactionService();
+        }
         super.ngOnInit();
     }
 
