@@ -22,7 +22,6 @@ import {
     TemplateRef,
     TrackByFunction,
     ViewContainerRef,
-    ViewRef,
     AfterViewInit
 } from '@angular/core';
 
