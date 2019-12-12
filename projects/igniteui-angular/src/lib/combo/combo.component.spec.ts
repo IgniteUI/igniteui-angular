@@ -22,7 +22,7 @@ import { IgxComboAddItemComponent } from './combo-add-item.component';
 const CSS_CLASS_COMBO = 'igx-combo';
 const CSS_CLASS_COMBO_DROPDOWN = 'igx-combo__drop-down';
 const CSS_CLASS_DROPDOWN = 'igx-drop-down';
-const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list';
+const CSS_CLASS_DROPDOWNLIST = 'igx-drop-down__list-scroll';
 const CSS_CLASS_CONTENT = 'igx-combo__content';
 const CSS_CLASS_CONTAINER = 'igx-display-container';
 const CSS_CLASS_DROPDOWNLISTITEM = 'igx-drop-down__item';
@@ -60,7 +60,7 @@ const fiftyItems = Array.apply(null, { length: 50 }).map((e, i) => ({
     name: `Item ${i + 1}`
 }));
 
-describe('igxCombo', () => {
+fdescribe('igxCombo', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
