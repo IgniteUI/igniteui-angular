@@ -135,7 +135,7 @@ export abstract class IgxBaseExporter {
             }
 
             if (column.pinned && exportColumn) {
-                this._indexOfLastPinnedColumn = index;
+                this._indexOfLastPinnedColumn++;
             }
         });
 
