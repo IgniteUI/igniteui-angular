@@ -634,6 +634,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     set rowDraggable(val: boolean) {
         this._rowDrag = val;
+        this._headerFeaturesWidth = NaN;
         this.notifyChanges(true);
     }
 
@@ -1950,23 +1951,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     @ViewChild('hContainer', { read: IgxGridForOfDirective, static: true })
     public headerContainer: IgxGridForOfDirective<any>;
 
-    /**
-     * @hidden
-     */
-    @ViewChild('headerSelectorContainer')
-    public headerSelectorContainer: ElementRef;
-
-    /**
-     * @hidden
-     */
-    @ViewChild('headerDragContainer')
-    public headerDragContainer: ElementRef;
-
-    /**
-     * @hidden
-     */
-    @ViewChild('headerGroupContainer')
-    public headerGroupContainer: ElementRef;
+    /** @hidden */
+    @ViewChild('headerFeatureContainer')
+    public headerFeatureContainer: ElementRef;
 
     /**
      * @hidden
@@ -2616,6 +2603,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     set rowSelection(selectionMode:  GridSelectionMode) {
         this._rowSelectionMode = selectionMode;
         if (this.gridAPI.grid && this.columnList) {
+            this._headerFeaturesWidth = NaN;
             this.selectionService.clearAllSelectedRows();
             this.notifyChanges(true);
         }
@@ -2805,6 +2793,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     private _unpinnedWidth = NaN;
     private _visibleColumns = [];
     private _columnGroups = false;
+    protected _headerFeaturesWidth = NaN;
 
     private _columnWidth: string;
 
@@ -3028,6 +3017,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.onDensityChanged.pipe(destructor).subscribe(() => {
+            this._headerFeaturesWidth = NaN;
             this.summaryService.summaryHeight = 0;
             this.endEdit(true);
             this.cdr.markForCheck();
@@ -3154,6 +3144,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public ngAfterViewInit() {
         this.initPinning();
         this.calculateGridSizes();
+        this._headerFeaturesWidth = NaN;
         this._init = false;
         this.cdr.reattach();
         this._setupRowObservers();
@@ -4564,10 +4555,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
 
         computedWidth -= this.getFeatureColumnsWidth();
 
-        if (this.showDragIcons) {
-            computedWidth -= this.headerDragContainer ? this.headerDragContainer.nativeElement.offsetWidth : 0;
-        }
-
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
 
 
@@ -4795,15 +4782,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * TODO: Remove for Angular 8. Calling parent class getter using super is not supported for now.
      */
     public getFeatureColumnsWidth() {
-        let width = 0;
-
-        if (this.isRowSelectable) {
-            width += this.headerSelectorContainer ? this.headerSelectorContainer.nativeElement.getBoundingClientRect().width : 0;
+        if (Number.isNaN(this._headerFeaturesWidth)) {
+            this._headerFeaturesWidth = this.headerFeatureContainer ?
+                this.headerFeatureContainer.nativeElement.getBoundingClientRect().width : 0;
         }
-        if (this.rowDraggable) {
-            width += this.headerDragContainer ? this.headerDragContainer.nativeElement.getBoundingClientRect().width : 0;
-        }
-        return width;
+        return this._headerFeaturesWidth;
     }
 
     /**

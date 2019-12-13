@@ -475,7 +475,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             tick(16);
 
             const rootExpander =  (hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent).expander;
-            const rootCheckbox =  hierarchicalGrid.headerSelectorContainer;
+            const rootCheckbox =  hierarchicalGrid.headerFeatureContainer;
             const rootSummaryRow = hierarchicalGrid.summariesRowList.first.nativeElement;
             const rootSummaryIndentation = rootSummaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
 
