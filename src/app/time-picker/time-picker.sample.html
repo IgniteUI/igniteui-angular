@@ -13,15 +13,15 @@
                 </igx-time-picker>
             </div>
         </article>
-            <article class="timepicker-column">
-                <h4 class="sample-title">Time Picker with Dropdown Hour Mode</h4>
-                <div class="sample-description">{{showDate(date1)}}</div>
-                <div class="sample-description">Mask: {{hourModeTimePicker.mask}}, Format: {{hourModeTimePicker.format}}</div>
-                <div class="preview" style="width: 200px">
-                    <igx-time-picker #hourModeTimePicker [mode]="'dropdown'" [(ngModel)]="date1" [format]="'h tt'">
-                    </igx-time-picker>
-                </div>
-            </article>
+        <article class="timepicker-column">
+            <h4 class="sample-title">Time Picker with Dropdown Hour Mode</h4>
+            <div class="sample-description">{{showDate(date1)}}</div>
+            <div class="sample-description">Mask: {{hourModeTimePicker.mask}}, Format: {{hourModeTimePicker.format}}</div>
+            <div class="preview" style="width: 200px">
+                <igx-time-picker #hourModeTimePicker [mode]="'dropdown'" [(ngModel)]="date1" [format]="'h tt'">
+                </igx-time-picker>
+            </div>
+        </article>
         <article class="timepicker-column">
             <h4 class="sample-title">Horizontal Time Picker</h4>
             <p class="sample-description">AM/PM Time format</p>
@@ -64,7 +64,7 @@
             <p class="sample-description">Time picker with required input group</p>
             <div class="preview">
                 <igx-time-picker #templatedTimePicker [value]="today">
-                    <ng-template igxTimePickerTemplate 
+                    <ng-template igxTimePickerTemplate
                                  let-openDialog="openDialog"
                                  let-value="value">
                         <igx-input-group [supressInputAutofocus]="true">
@@ -101,7 +101,7 @@
             <h4 class="sample-title">Templated Time Picker</h4>
             <p class="sample-description">Time picker with dropdown mode + overlay settings + custom buttons</p>
             <div class="preview">
-                <igx-time-picker #picker [value]="val" [overlaySettings]="myOverlaySettings" format="HH:mm" [mode]="'dropdown'">
+                <igx-time-picker #picker [value]="val" [overlaySettings]="myOverlaySettings" format="HH:mm:ss" [mode]="'dropdown'">
                     <ng-template igxTimePickerTemplate let-openDialog="openDialog" let-value="value" let-displayValue="displayValue">
                         <igx-input-group>
                             <input #target igxInput [value]="displayValue" (blur)="onBlur(target.value, value)"/>
