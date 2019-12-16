@@ -82,6 +82,26 @@ All notable changes for each version of this project will be documented in this 
 - `IgxSelect`: 
     - adding `IgxSelectHeaderDirective` and `IgxSelectFooterDirective`. These can be used to provide a custom header, respectively footer templates for the `igxSelect` drop-down list. If there are no templates marked with these directives - no default templates will be used so the drop-down list will not have header nor footer.
 
+- `IgxCircularProgressBar`:
+    - added `IgxProgressBarGradientDirective` to allow providing custom circular progress SVG gradients. Providing a custom gradient via a template is as easy as writing:
+    ```html
+    <igx-circular-bar [value]="77">
+        <ng-template igxProgressBarGradient let-id>
+            <svg:linearGradient [id]="id" gradientTransform="rotate(90)">
+                <stop offset="0%"   stop-color="#05a"/>
+                <stop offset="100%" stop-color="#0a5"/>
+            </svg:linearGradient>
+        </ng-template>
+    </igx-circular-bar>
+    ```
+    - changed the `igx-progress-circular-theme` to accept a list of 2 colors for the `$progress-circle-color` argument, making it easier to modify the default gradient:
+    ```scss
+    $theme: igx-progress-circular-theme(
+        $progress-circle-color: red blue
+    );
+
+    @include igx-progress-circular($theme);
+    ```
 
 ## 8.2.6
 
