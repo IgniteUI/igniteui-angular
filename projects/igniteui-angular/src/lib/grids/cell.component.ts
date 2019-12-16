@@ -900,6 +900,11 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         event.stopPropagation();
 
         const keydownArgs = { targetType: 'dataCell', target: this, event: event, cancel: false };
+
+        if (keydownArgs.event.keyCode === 229) {
+            return;
+        }
+
         this.grid.onGridKeydown.emit(keydownArgs);
         if (keydownArgs.cancel) {
             this.selectionService.clear();
