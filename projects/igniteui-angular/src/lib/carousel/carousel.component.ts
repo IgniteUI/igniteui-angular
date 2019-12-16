@@ -112,10 +112,8 @@ export class IgxCarouselComponent implements OnDestroy {
      * @memberof IgxCarouselComponent
      */
     set interval(value: number) {
-        if (this.platformUtil.isBrowser) {
-            this._interval = +value;
-            this._restartInterval();
-        }
+        this._interval = +value;
+        this._restartInterval();
     }
     /**
      * Returns the `tabIndex` of the carousel component.
@@ -467,7 +465,7 @@ export class IgxCarouselComponent implements OnDestroy {
     private _restartInterval() {
         this._resetInterval();
 
-        if (!isNaN(this.interval) && this.interval > 0) {
+        if (!isNaN(this.interval) && this.interval > 0 && this.platformUtil.isBrowser) {
             this._lastInterval = setInterval(() => {
                 const tick = +this.interval;
                 if (this._playing && this.total && !isNaN(tick) && tick > 0) {
