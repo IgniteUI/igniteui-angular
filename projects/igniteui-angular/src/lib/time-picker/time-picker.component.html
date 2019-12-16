@@ -39,7 +39,7 @@
     <div *ngIf="mode === 'dialog'" class="igx-time-picker__header">
         <h5 class="igx-time-picker__header-ampm">{{ selectedAmPm }}</h5>
         <h2 class="igx-time-picker__header-hour">
-            <span>{{ selectedHour }}</span>:<span>{{ selectedMinute }}</span>
+            <span>{{ selectedHour }}</span>:<span>{{ selectedMinute }}</span>:<span>{{ selectedSeconds }}</span>
         </h2>
     </div>
     <div class="igx-time-picker__main">
@@ -50,10 +50,15 @@
             <div *ngIf="showMinutesList" #minuteList [igxItemList]="'minuteList'">
                 <span [igxMinuteItem]="minute" *ngFor="let minute of minuteView">{{ minute }}</span>
             </div>
+            <div *ngIf="showSecondsList" #secondsList [igxItemList]="'secondsList'">
+                <span [igxSecondsItem]="seconds" *ngFor="let seconds of secondsView">{{ seconds }}</span>
+            </div>
             <div *ngIf="showAmPmList" #ampmList [igxItemList]="'ampmList'">
                 <span [igxAmPmItem]="ampm" *ngFor="let ampm of ampmView">{{ ampm }}</span>
             </div>
         </div>
-        <ng-container *ngTemplateOutlet="timePickerActionsDirective ? timePickerActionsDirective.template : defaultTimePickerActions"></ng-container>
+        <ng-container
+            *ngTemplateOutlet="timePickerActionsDirective ? timePickerActionsDirective.template : defaultTimePickerActions">
+        </ng-container>
     </div>
 </div>
