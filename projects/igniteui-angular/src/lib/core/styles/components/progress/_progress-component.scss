@@ -113,6 +113,14 @@
         @extend %circular-text !optional;
     }
 
+    @include e(gradient-start) {
+        @extend %circular-gradient-start !optional;
+    }
+
+    @include e(gradient-end) {
+        @extend %circular-gradient-end !optional;
+    }
+
     @include m(indeterminate) {
         @extend %circular-display--indeterminate !optional;
 
