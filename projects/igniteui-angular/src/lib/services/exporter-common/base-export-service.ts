@@ -255,12 +255,14 @@ export abstract class IgxBaseExporter {
 
         let data = this._isTreeGrid ? this.flatRecords : grid.data;
 
-        if (grid.filteringExpressionsTree &&
-            grid.filteringExpressionsTree.filteringOperands.length > 0 &&
+        if (((grid.filteringExpressionsTree &&
+            grid.filteringExpressionsTree.filteringOperands.length > 0) ||
+            (grid.advancedFilteringExpressionsTree &&
+            grid.advancedFilteringExpressionsTree.filteringOperands.length > 0)) &&
             !options.ignoreFiltering) {
             const filteringState: any = {
                 expressionsTree: grid.filteringExpressionsTree,
-                advancedExpressionsTree: grid.advancedExpressionsTree,
+                advancedExpressionsTree: grid.advancedFilteringExpressionsTree,
                 logic: grid.filteringLogic
             };
 
@@ -268,7 +270,7 @@ export abstract class IgxBaseExporter {
                 this.flatRecords = [];
                 filteringState.strategy = new TreeGridFilteringStrategy();
                 rootRecords = filteringState.strategy.filter(rootRecords,
-                    filteringState.expressionsTree, filteringState.advancedExpressionsTree);
+                    filteringState.expressionsTree, filteringState.advancedFilteringExpressionsTree);
                 this.prepareHierarchicalData(rootRecords);
                 data = this.flatRecords;
             } else {
