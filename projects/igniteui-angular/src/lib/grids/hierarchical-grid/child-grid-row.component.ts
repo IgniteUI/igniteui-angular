@@ -185,6 +185,9 @@ private resolver;
         outputs.forEach(output => {
             if (this.hGrid[output.propName]) {
                 this.hGrid[output.propName].pipe(destructor).subscribe((args) => {
+                    if (!args) {
+                        args = {};
+                    }
                     args.owner = this.hGrid;
                     this.layout[output.propName].emit(args);
                 });
