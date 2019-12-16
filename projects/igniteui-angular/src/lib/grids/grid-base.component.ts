@@ -393,7 +393,8 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this._filteringExpressionsTree = filteringExpressionTreeClone;
             this.filteringExpressionsTreeChange.emit(this._filteringExpressionsTree);
 
-            if (this.filteringService.isFilteringExpressionsTreeEmpty() && !this.advancedFilteringExpressionsTree) {
+            if (this.filteringService.isFilteringExpressionsTreeEmpty(this._filteringExpressionsTree) &&
+                !this.advancedFilteringExpressionsTree) {
                 this.filteredData = null;
             }
 
@@ -454,13 +455,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             this._advancedFilteringExpressionsTree = null;
         }
 
-        if (this.filteringService.isFilteringExpressionsTreeEmpty() && !this.advancedFilteringExpressionsTree) {
+        if (this.filteringService.isFilteringExpressionsTreeEmpty(this._advancedFilteringExpressionsTree) &&
+            !this.advancedFilteringExpressionsTree) {
             this.filteredData = null;
         }
 
         this.selectionService.clearHeaderCBState();
         this.summaryService.clearSummaryCache();
-        this.markForCheck();
+        this.notifyChanges();
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
         requestAnimationFrame(() => this.onFilteringDone.emit(this._advancedFilteringExpressionsTree));
