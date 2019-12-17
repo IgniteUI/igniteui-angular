@@ -18,7 +18,7 @@ import { KEYS } from '../../../core/utils';
 import { AbsoluteScrollStrategy, AutoPositionStrategy } from '../../../services/index';
 import { IgxColumnComponent } from '../../columns/column.component';
 import { GridType } from '../../common/grid.interface';
-import { DataType } from './../../../data-operations/data-util';
+import { DataUtil } from './../../../data-operations/data-util';
 
 /**
  *@hidden
@@ -469,21 +469,11 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         if (this.editedExpression) {
             this.editedExpression.expression.fieldName = this.selectedColumn.field;
             this.editedExpression.expression.condition = this.selectedColumn.filters.condition(this.selectedCondition);
-            this.editedExpression.expression.searchVal = this.transformValue(this.searchValue);
+            this.editedExpression.expression.searchVal = DataUtil.parseValue(this.selectedColumn.dataType, this.searchValue);
 
             this.editedExpression.inEditMode = false;
             this.editedExpression = null;
         }
-    }
-
-    private transformValue(value): any {
-        if (this.selectedColumn.dataType === DataType.Number) {
-            value = parseFloat(value);
-        } else if (this.selectedColumn.dataType === DataType.Boolean) {
-            value = Boolean(value);
-        }
-
-        return value;
     }
 
     /**
