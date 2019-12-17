@@ -32,7 +32,7 @@ import { VirtualHelperComponent } from './virtual.helper.component';
 import { IgxScrollInertiaModule } from './../scroll-inertia/scroll_inertia.directive';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from './for_of.sync.service';
 import { Subject } from 'rxjs';
-import { takeUntil, filter, throttleTime, first } from 'rxjs/operators';
+import { takeUntil, filter, first, debounceTime } from 'rxjs/operators';
 import ResizeObserver from 'resize-observer-polyfill';
 import { IBaseEventArgs } from '../../core/utils';
 import { VirtualHelperBaseDirective } from './base.helper.component';
@@ -397,7 +397,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             });
             const destructor = takeUntil<any>(this.destroy$);
             this.contentResizeNotify.pipe(destructor,
-            filter(() => this.igxForContainerSize && this.igxForOf && this.igxForOf.length > 0), throttleTime(40))
+            filter(() => this.igxForContainerSize && this.igxForOf && this.igxForOf.length > 0), debounceTime(40))
             .subscribe(() => {
                 this._zone.runTask(() => {
                     this.updateSizes();
