@@ -569,7 +569,7 @@
 
     @include igx-typography(
         $font-family: '"Helvetica Neue", Arial, sans-serif',
-        $base-color: #343a40
+        $base-color: #212529
     );
 
     @include igx-theme(
@@ -577,7 +577,7 @@
             $primary,
             $secondary,
             $surface: if($surface != #f8f9fa, $surface, #f8f9fa),
-            $grays: #343a40
+            $grays: #212529
         ),
         $schema: $light-bootstrap-schema,
         $legacy-support: $legacy-support,

@@ -255,6 +255,12 @@
         compact: 0 rem(2px)
     );
 
+    $box-shadow: map-get((
+        material: null,
+        fluent: null,
+        bootstrap: 0 0 0 rem(3px) --var($theme, 'hover-background')
+    ), map-get($theme, variant));
+
     $item-padding: 4px;
     $chip-item-padding: 0 rem($item-padding);
 
@@ -491,6 +497,7 @@
         background: --var($theme, 'focus-background');
         border-color: --var($theme, 'focus-border-color');
         outline-style: none;
+        box-shadow: $box-shadow;
     }
 
     %igx-chip__item--selected {
