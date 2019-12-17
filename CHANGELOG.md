@@ -15,6 +15,7 @@ All notable changes for each version of this project will be documented in this 
     - `IgxMonthPickerBase` -> `IgxMonthPickerBaseDirective`
 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Breaking Change** - Hierarchical grid children no longer use the same `IgxTransactionService` instance and transaction handling should be modified to address each grid's transactions separately.
     - **Behavioral Change** - Pinning columns is no longer automatically prevented when the pinning area would exceed the size of the grid.
     - `igxGridState` directive added to make it easy for developers to save and restore the grid state. The directive exposes the `getState` and `setState` methods to save/restore the state and an `options` input property to exclude features.
 - `IgxCarousel`:
