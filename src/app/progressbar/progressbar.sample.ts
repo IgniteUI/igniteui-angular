@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { IgxTextAlign } from 'igniteui-angular';
 
 @Component({
+    encapsulation: ViewEncapsulation.None,
     selector: 'app-progressbar-sample',
-    styleUrls: ['progressbar.sample.css'],
+    styleUrls: ['progressbar.sample.scss'],
     templateUrl: 'progressbar.sample.html'
 })
 
