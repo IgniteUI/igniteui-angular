@@ -206,7 +206,7 @@
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $base-circle-color [null] - The base circle fill color.
-/// @param {Color} $progress-circle-color [null] - The progress circle fill color.
+/// @param {Color | List<Color>} $progress-circle-color [null] - The progress circle fill color.
 /// @param {Color} $text-color [null] - The value text color.
 ///
 /// @requires $default-palette
@@ -226,10 +226,12 @@
 
     $base-circle-color: null,
     $progress-circle-color: null,
+
     $text-color: null
 ) {
     $name: 'igx-circular-bar';
     $circular-bar-schema: ();
+
 
     @if map-has-key($schema, $name) {
         $circular-bar-schema: map-get($schema, $name);
@@ -239,11 +241,25 @@
 
     $theme: apply-palette($circular-bar-schema, $palette);
 
+    $progress-circle-color-start: map-get($theme, 'progress-circle-color');
+    $progress-circle-color-end: map-get($theme, 'progress-circle-color');
+
+    @if type-of($progress-circle-color) == 'color' {
+        $progress-circle-color-start: $progress-circle-color;
+        $progress-circle-color-end: $progress-circle-color;
+    }
+
+    @if length($progress-circle-color) == 2 {
+        $progress-circle-color-start: nth($progress-circle-color, 1);
+        $progress-circle-color-end: nth($progress-circle-color, 2);
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $palette,
         base-circle-color: $base-circle-color,
-        progress-circle-color: $progress-circle-color,
+        progress-circle-color-start: $progress-circle-color-start,
+        progress-circle-color-end: $progress-circle-color-end,
         text-color: $text-color
     ));
 }
@@ -260,6 +276,7 @@
 
     // @debug $theme;
 
+    $palette: map-get($theme, 'palette');
     $circular-value-fs: rem(32px, 16px);
     $circular-value-fw: 600;
     $animation-direction: if-ltr(normal, reverse);
@@ -291,7 +308,6 @@
 
     %circular-outer {
         fill: transparent;
-        stroke: --var($theme, 'progress-circle-color');
         stroke-width: 4;
         stroke-dashoffset: 289;
         stroke-dasharray: 289;
@@ -313,6 +329,14 @@
 
     %circular-text--hidden {
         visibility: hidden;
+    }
+
+    %circular-gradient-start {
+        stop-color: --var($theme, 'progress-circle-color-start');
+    }
+
+    %circular-gradient-end {
+        stop-color: --var($theme, 'progress-circle-color-end');
     }
 
     @include keyframes('indeterminate-accordion') {
