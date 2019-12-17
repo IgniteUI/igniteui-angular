@@ -200,10 +200,8 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * @memberof IgxCarouselComponent
      */
     set interval(value: number) {
-        if (this.platformUtil.isBrowser) {
-            this._interval = +value;
-            this.restartInterval();
-        }
+        this._interval = +value;
+        this.restartInterval();
     }
 
     /**
@@ -890,7 +888,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     private restartInterval() {
         this.resetInterval();
 
-        if (!isNaN(this.interval) && this.interval > 0) {
+        if (!isNaN(this.interval) && this.interval > 0 && this.platformUtil.isBrowser) {
             this.lastInterval = setInterval(() => {
                 const tick = +this.interval;
                 if (this.playing && this.total && !isNaN(tick) && tick > 0) {
