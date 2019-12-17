@@ -2064,7 +2064,7 @@
     %igx-grid__loading-outlet {
         z-index: 10003;
 
-        > .igx-overlay__wrapper--modal {
+        > %overlay-wrapper--modal {
             background: none;
         }
 
