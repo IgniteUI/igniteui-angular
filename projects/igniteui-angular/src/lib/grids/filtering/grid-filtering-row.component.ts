@@ -13,7 +13,7 @@ import {
     ChangeDetectionStrategy,
     ViewRef
 } from '@angular/core';
-import { DataType } from '../../data-operations/data-util';
+import { DataType, DataUtil } from '../../data-operations/data-util';
 import { IgxColumnComponent } from '../column.component';
 import { IgxDropDownComponent, ISelectionEventArgs } from '../../drop-down/index';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
@@ -100,7 +100,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             this.expression.searchVal = null;
             this.showHideArrowButtons();
         } else {
-            this.expression.searchVal = this.transformValue(val);
+            this.expression.searchVal = DataUtil.parseValue(this.column.dataType, val);
             if (this.expressionsList.find(item => item.expression === this.expression) === undefined) {
                 this.addExpression(true);
             }
@@ -657,16 +657,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
                 this.cdr.detectChanges(); }
             }
         });
-    }
-
-    private transformValue(value): any {
-        if (this.column.dataType === DataType.Number) {
-            value = parseFloat(value);
-        } else if (this.column.dataType === DataType.Boolean) {
-            value = Boolean(value);
-        }
-
-        return value;
     }
 
     private addExpression(isSelected: boolean) {

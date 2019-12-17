@@ -9,11 +9,11 @@ import {
     ViewChild
 } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
-import { ExpressionUI } from '../grid-filtering.service';
+import { ExpressionUI, IgxFilteringService } from '../grid-filtering.service';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
 import { IgxDropDownItemComponent, IgxDropDownComponent } from '../../../drop-down/index';
 import { IgxInputGroupComponent, IgxInputDirective } from '../../../input-group/index';
-import { DataType } from '../../../data-operations/data-util';
+import { DataType, DataUtil } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
 import { OverlaySettings, ConnectedPositioningStrategy, CloseScrollStrategy } from '../../../services/index';
 import { KEYS, IBaseEventArgs } from '../../../core/utils';
@@ -167,7 +167,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     }
 
     public onValuesInput(eventArgs) {
-        this.expressionUI.expression.searchVal = this.transformValue(eventArgs.target.value);
+        this.expressionUI.expression.searchVal = DataUtil.parseValue(this.column.dataType, eventArgs.target.value);
     }
 
     public onLogicOperatorButtonClicked(eventArgs, buttonIndex: number) {
@@ -206,15 +206,5 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         }
 
         event.stopPropagation();
-    }
-
-    private transformValue(value): any {
-        if (this.column.dataType === DataType.Number) {
-            value = parseFloat(value);
-        } else if (this.column.dataType === DataType.Boolean) {
-            value = Boolean(value);
-        }
-
-        return value;
     }
 }
