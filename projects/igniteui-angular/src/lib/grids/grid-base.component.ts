@@ -4602,6 +4602,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
             combinedBlocksSize - columnsWithSetWidths.length :
             visibleChildColumns.length - columnsWithSetWidths.length;
 
+        if (!columnsToSize) {
+            return '0px';
+        }
+
         const sumExistingWidths = columnsWithSetWidths
             .reduce((prev, curr) => {
                 const colWidth = curr.width;
