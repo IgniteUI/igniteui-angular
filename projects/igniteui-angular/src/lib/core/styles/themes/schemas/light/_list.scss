@@ -114,8 +114,15 @@ $_light-list: extend(
     )
 );
 
-/// Generates a fluent schema.
+/// Generates a fluent list schema.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-list
 $_fluent-list: extend($_light-list);
+
+/// Generates a bootstrap list schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-list
+$_bootstrap-list: extend($_light-list);
+

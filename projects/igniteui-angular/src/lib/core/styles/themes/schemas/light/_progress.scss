@@ -60,6 +60,12 @@ $_light-progress-linear: extend(
 /// @requires $_light-progress-linear
 $_fluent-progress-linear: extend($_light-progress-linear);
 
+/// Generates a bootstrap progress-linear schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-progress-linear
+$_bootstrap-progress-linear: extend($_light-progress-linear);
+
 /// Generates a light progress-circular schema.
 /// @type {Map}
 ///
@@ -88,3 +94,10 @@ $_light-progress-circular: extend(
 /// @requires {function} extend
 /// @requires $_light-progress-circular
 $_fluent-progress-circular: extend($_light-progress-circular);
+
+/// Generates a bootstrap progress-circular schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-progress-circular
+$_bootstrap-progress-circular: extend($_light-progress-circular);
+

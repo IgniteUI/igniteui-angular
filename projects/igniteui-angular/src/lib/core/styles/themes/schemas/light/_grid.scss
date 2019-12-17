@@ -439,4 +439,10 @@ $_fluent-grid: extend(
     )
 );
 
+/// Generates a bootstrap grid schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-grid
+$_bootstrap-grid: extend($_light-grid);
+
 

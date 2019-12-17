@@ -152,3 +152,10 @@ $_fluent-drop-down: extend(
         ),
     )
 );
+
+/// Generates a bootstrap drop-down schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {Map} $_light-drop-down
+$_bootstrap-drop-down: extend($_light-drop-down);
+

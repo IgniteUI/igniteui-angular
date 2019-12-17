@@ -90,3 +90,10 @@ $_fluent-card: extend(
         ),
     )
 );
+
+/// Generates a bootstrap card schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-card
+$_bootstrap-card: extend($_light-card);
+

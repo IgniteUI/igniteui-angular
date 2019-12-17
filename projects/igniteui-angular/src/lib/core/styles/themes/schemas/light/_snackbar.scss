@@ -42,3 +42,10 @@ $_light-snackbar: extend(
 /// @requires $_light-snackbar
 /// @requires $_fluent-shape-snackbar
 $_fluent-snackbar: extend($_light-snackbar, $_fluent-shape-snackbar);
+
+/// Generates a bootstrap snackbar schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-snackbar
+$_bootstrap-snackbar: extend($_light-snackbar);
+

@@ -132,3 +132,10 @@ $_fluent-button-group: extend(
         disabled-background-color: transparent,
     )
 );
+
+/// Generates a bootstrap button group schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-button-group
+$_bootstrap-button-group: extend($_light-button-group);
+

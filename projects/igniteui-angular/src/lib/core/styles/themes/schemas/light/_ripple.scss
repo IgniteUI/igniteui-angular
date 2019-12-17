@@ -26,3 +26,10 @@ $_light-ripple: extend(
 /// @requires {function} extend
 /// @requires $_light-ripple
 $_fluent-ripple: extend($_light-ripple);
+
+/// Generates a bootstrap ripple schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-ripple
+$_bootstrap-ripple: extend($_light-ripple);
+

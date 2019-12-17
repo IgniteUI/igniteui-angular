@@ -148,3 +148,8 @@ $_fluent-slider: extend($_light-slider, (
     ),
 ));
 
+/// Generates a bootstrap slider schema.
+/// @type {Map}
+$_bootstrap-slider: extend($_light-slider);
+
+

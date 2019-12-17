@@ -42,3 +42,10 @@ $_light-avatar: extend(
 /// @requires {function} extend
 /// @requires $_light-avatar
 $_fluent-avatar: extend($_light-avatar);
+
+/// Generates a bootstrap avatar schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-avatar
+$_bootstrap-avatar: extend($_light-avatar);
+

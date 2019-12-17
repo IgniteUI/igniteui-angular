@@ -38,3 +38,10 @@ $_light-combo: (
 /// @see $default-palette
 $_fluent-combo: extend($_light-combo);
 
+/// Generates a bootstrap combo schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-combo
+/// @see $bootstrap-palette
+$_bootstrap-combo: extend($_light-combo);
+

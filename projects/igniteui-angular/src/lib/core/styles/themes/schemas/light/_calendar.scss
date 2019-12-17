@@ -194,3 +194,10 @@ $_fluent-calendar: extend(
         ),
     )
 );
+
+/// Generates a bootstrap calendar schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-calendar
+$_bootstrap-calendar: extend($_light-calendar);
+

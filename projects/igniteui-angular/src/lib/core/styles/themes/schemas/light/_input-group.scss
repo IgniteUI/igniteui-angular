@@ -252,3 +252,10 @@ $_fluent-input-group: extend(
         ),
     )
 );
+
+/// Generates a bootstrap input-group schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-input-group
+$_bootstrap-input-group: extend($_light-input-group);
+

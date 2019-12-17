@@ -41,3 +41,9 @@ $_light-badge: extend(
 /// @requires {function} extend
 /// @requires $_light-badge
 $_fluent-badge: extend($_light-badge);
+
+/// Generates a bootstrap badge schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-badge
+$_bootstrap-badge: extend($_light-badge);

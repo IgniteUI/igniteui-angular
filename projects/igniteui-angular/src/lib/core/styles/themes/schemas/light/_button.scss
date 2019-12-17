@@ -386,3 +386,10 @@ $_fluent-button: extend(
         ),
     )
 );
+
+/// Generates a bootstrap button schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-button
+$_bootstrap-button: extend($_light-button);
+

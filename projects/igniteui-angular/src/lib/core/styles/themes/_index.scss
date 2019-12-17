@@ -550,3 +550,40 @@
         $elevation: $elevation,
     );
 }
+
+
+/// Creates a global bootstrap-like theme that can be used with light backgrounds.
+/// @param {Map} $palette - An igx-palette to be used by the global theme.
+/// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
+/// @param {Boolean} $legacy-support - Turn off support for IE11, allowing you to use css variables to style components.
+@mixin igx-bootstrap-theme(
+    $palette,
+    $exclude: (),
+    $legacy-support: true,
+    $roundness: null,
+    $elevation: true,
+) {
+    $primary: igx-color($palette, 'primary');
+    $secondary: igx-color($palette, 'secondary');
+    $surface: igx-color($palette, 'surface');
+
+    @include igx-typography(
+        $font-family: '"Helvetica Neue", Arial, sans-serif',
+        $base-color: #343a40
+    );
+
+    @include igx-theme(
+        $palette: igx-palette(
+            $primary,
+            $secondary,
+            $surface: if($surface != #f8f9fa, $surface, #f8f9fa),
+            $grays: #343a40
+        ),
+        $schema: $light-bootstrap-schema,
+        $legacy-support: $legacy-support,
+        $exclude: $exclude,
+        $roundness: $roundness,
+        $elevation: $elevation,
+    );
+}
+

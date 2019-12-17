@@ -46,7 +46,7 @@ $_light-radio: extend(
     )
 );
 
-/// Generates a fluent radio radio schema.
+/// Generates a fluent radio schema.
 /// @type {Map}
 ///
 /// @property {map} hover-color [igx-color: ('grays', 800)] - The text color used for the label text.
@@ -72,4 +72,8 @@ $_fluent-radio: extend($_light-radio,(
         igx-color: ('secondary', 300)
     ),
 ));
+
+/// Generates a bootstrap radio schema.
+/// @type {Map}
+$_bootstrap-radio: extend($_light-radio);
 

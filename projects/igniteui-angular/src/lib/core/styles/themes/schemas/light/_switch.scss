@@ -144,3 +144,10 @@ $_fluent-switch: extend(
         track-off-color: transparent,
     )
 );
+
+/// Generates a bootstrap switch schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-switch
+$_bootstrap-switch: extend($_light-switch);
+

@@ -245,7 +245,8 @@
 
     $chip-height: map-get((
         material: $chip-height-material,
-        fluent: $chip-height-fluent
+        fluent: $chip-height-fluent,
+        bootstrap: $chip-height-material
     ), map-get($theme, variant));
 
     $chip-padding: (
@@ -259,7 +260,8 @@
 
     $chip-avatar-inset: map-get((
         material: 0,
-        fluent: -$item-padding
+        fluent: -$item-padding,
+        bootstrap: 0
     ), map-get($theme, variant));
 
     $chip-icon-size: (

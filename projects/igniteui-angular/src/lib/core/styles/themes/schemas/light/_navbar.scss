@@ -44,3 +44,10 @@ $_light-navbar: extend(
 /// @requires {function} extend
 /// @requires $_light-navbar
 $_fluent-navbar: extend($_light-navbar);
+
+/// Generates a bootstrap navbar schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-navbar
+$_bootstrap-navbar: extend($_light-navbar);
+

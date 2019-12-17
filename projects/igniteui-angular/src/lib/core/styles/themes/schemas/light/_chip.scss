@@ -184,3 +184,19 @@ $_fluent-chip: extend(
         ),
     )
 );
+
+/// Generates a bootstrap chip schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {map} $_light-chip
+/// @requires {map} $_bootstrap-shape-chip
+/// @requires {map} $_bootstrap-elevation-chip
+$_bootstrap-chip: extend(
+    $_light-chip,
+    $_bootstrap-shape-chip,
+    $_bootstrap-elevation-chip,
+    (
+        variant: 'bootstrap',
+    )
+);
+
