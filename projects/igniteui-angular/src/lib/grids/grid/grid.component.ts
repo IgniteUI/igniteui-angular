@@ -144,7 +144,7 @@ export class IgxGridComponent extends IgxGridBaseComponent implements IGridDataB
         if (this.shouldGenerate) {
             this.setupColumns();
         }
-        this.notifyChanges(true);
+        this.cdr.markForCheck();
     }
 
     /**
