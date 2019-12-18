@@ -190,7 +190,8 @@ export class IgxGridNavigationService {
 
     public focusEditableTarget(rowIndex: number, columnIndex: number) {
         if (this.isColumnFullyVisible(columnIndex)) {
-            this.getCellElementByVisibleIndex(rowIndex, columnIndex).focus();
+            const cell  = this.getCellElementByVisibleIndex(rowIndex, columnIndex);
+            if (cell) { cell.focus(); }
         } else {
             this.performHorizontalScrollToCell(rowIndex, columnIndex);
         }
