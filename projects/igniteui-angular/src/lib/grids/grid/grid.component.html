@@ -33,7 +33,7 @@
         <div class="igx-grid__tr" role="row" [style.width.px]='calcWidth'>
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
                 [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
-                class="igx-grid__scroll-on-drag-left" [style.left.px]="featureColumnsWidth"></span>
+                class="igx-grid__scroll-on-drag-left" [style.left.px]="pinnedWidth"></span>
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0"
                 [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
                 class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>

@@ -648,7 +648,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid = fix.componentInstance.grid;
         }));
 
-        it('Change  RowSelection to multiple ', () => {
+        it('Change  RowSelection to multiple ', fakeAsync(() => {
             GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix, false, false);
             GridSelectionFunctions.verifyRowHasCheckbox(grid.getRowByIndex(0).nativeElement, false, false);
 
@@ -659,13 +659,15 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             grid.rowSelection = GridSelectionMode.multiple;
             fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
 
             GridSelectionFunctions.verifyHeaderAndRowCheckBoxesAlignment(grid);
             GridSelectionFunctions.verifyRowSelected(grid.getRowByIndex(0), false, false);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix);
             GridSelectionFunctions.verifyHeaderRowHasCheckbox(fix);
             GridSelectionFunctions.verifyRowHasCheckbox(grid.getRowByIndex(0).nativeElement);
-        });
+        }));
     });
 
     describe('RowSelection single', () => {

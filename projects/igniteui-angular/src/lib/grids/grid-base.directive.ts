@@ -634,7 +634,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     set rowDraggable(val: boolean) {
         this._rowDrag = val;
-        this._headerFeaturesWidth = NaN;
         this.notifyChanges(true);
     }
 
@@ -2603,7 +2602,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     set rowSelection(selectionMode:  GridSelectionMode) {
         this._rowSelectionMode = selectionMode;
         if (this.gridAPI.grid && this.columnList) {
-            this._headerFeaturesWidth = NaN;
             this.selectionService.clearAllSelectedRows();
             this.notifyChanges(true);
         }
@@ -3013,7 +3011,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.verticalScrollContainer.onContentSizeChange.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
-            this.calculateGridSizes();
+            this.calculateGridSizes(false);
         });
 
         this.onDensityChanged.pipe(destructor).subscribe(() => {
@@ -3144,7 +3142,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public ngAfterViewInit() {
         this.initPinning();
         this.calculateGridSizes();
-        this._headerFeaturesWidth = NaN;
         this._init = false;
         this.cdr.reattach();
         this._setupRowObservers();
@@ -3365,7 +3362,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * TODO: Update for Angular 8. Calling parent class getter using super is not supported for now.
      */
     public get featureColumnsWidth() {
-        return this.getFeatureColumnsWidth();
+        if (Number.isNaN(this._headerFeaturesWidth)) {
+            this._headerFeaturesWidth = this.headerFeatureContainer ?
+                this.headerFeatureContainer.nativeElement.getBoundingClientRect().width : 0;
+        }
+        return this._headerFeaturesWidth;
     }
 
     /**
@@ -4553,7 +4554,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 parseInt(this.document.defaultView.getComputedStyle(this.nativeElement).getPropertyValue('width'), 10);
         }
 
-        computedWidth -= this.getFeatureColumnsWidth();
+        computedWidth -= this.featureColumnsWidth;
 
         const visibleChildColumns = this.visibleColumns.filter(c => !c.columnGroup);
 
@@ -4639,7 +4640,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             return null;
         }
         this.cdr.detectChanges();
-        colSum += this.getFeatureColumnsWidth();
+        colSum += this.featureColumnsWidth;
         return colSum;
     }
 
@@ -4714,7 +4715,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected calculateGridSizes() {
+    protected calculateGridSizes(recalcFeatureWidth = true) {
         /*
             TODO: (R.K.) This layered lasagne should be refactored
             ASAP. The reason I have to reset the caches so many times is because
@@ -4730,6 +4731,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.resetCaches();
         this.cdr.detectChanges();
         this.calculateGridHeight();
+        if (recalcFeatureWidth) {
+            this._headerFeaturesWidth = NaN;
+        }
 
         if (this.rowEditable) {
             this.repositionRowEditingOverlay(this.rowInEditMode);
@@ -4772,21 +4776,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         this._hostWidth = width;
         this.cdr.markForCheck();
-    }
-
-
-    /**
-     * @hidden
-     * Gets the combined width of the columns that are specific to the enabled grid features. They are fixed.
-     * Method used to override the calculations.
-     * TODO: Remove for Angular 8. Calling parent class getter using super is not supported for now.
-     */
-    public getFeatureColumnsWidth() {
-        if (Number.isNaN(this._headerFeaturesWidth)) {
-            this._headerFeaturesWidth = this.headerFeatureContainer ?
-                this.headerFeatureContainer.nativeElement.getBoundingClientRect().width : 0;
-        }
-        return this._headerFeaturesWidth;
     }
 
     /**
