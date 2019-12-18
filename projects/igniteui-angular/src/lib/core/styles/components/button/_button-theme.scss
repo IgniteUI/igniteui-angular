@@ -517,12 +517,6 @@
         bootstrap: --var($theme, 'bootstrap-disabled-color')
     ), map-get($theme, variant));
 
-    $button-margins: map-get((
-        material: 0,
-        fluent: 0,
-        bootstrap: rem(4px) 0
-    ), map-get($theme, variant));
-
     %igx-button-display {
         position: relative;
         display: inline-flex;
@@ -540,7 +534,6 @@
         white-space: nowrap;
         transition: $button-transition;
         font-family: inherit;
-        margin: $button-margins;
 
         %igx-icon-display {
             width: $icon-in-button-size;
