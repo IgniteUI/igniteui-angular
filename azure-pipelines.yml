@@ -2,6 +2,11 @@ pool:
   vmImage: 'Ubuntu 16.04'
 
 steps:
+- script: wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && sudo dpkg -i google-chrome*.deb
+  displayName: 'Update Chrome'
+  env:
+    AZURE_PIPELINES: "true"
+
 - script: npm install
   displayName: 'Install dependencies'
   env:
