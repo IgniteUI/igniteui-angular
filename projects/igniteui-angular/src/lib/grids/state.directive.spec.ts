@@ -14,8 +14,11 @@ import { IgxBooleanFilteringOperand } from '../data-operations/filtering-conditi
 import { IGroupingState } from '../data-operations/groupby-state.interface';
 import { IGroupByExpandState } from '../data-operations/groupby-expand-state.interface';
 import { GridSelectionMode } from './common/enums';
+import { configureTestSuite } from '../test-utils/configure-suite';
 
 describe('IgxGridState - input properties #grid', () => {
+    configureTestSuite();
+
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [
