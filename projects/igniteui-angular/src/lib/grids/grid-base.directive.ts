@@ -328,7 +328,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Emitted before filtering is performed.
+     * Emitted after filtering is performed.
      * Returns the filtering expressions tree of the column for which filtering was performed.
      * ```typescript
      * filteringExprTreeChange(event: IFilteringExpressionsTree){
@@ -345,7 +345,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public filteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
 
     /**
-     * Emitted before advanced filtering is performed.
+     * Emitted after advanced filtering is performed.
      * Returns the advanced filtering expressions tree.
      * ```typescript
      * advancedFilteringExprTreeChange(event: IFilteringExpressionsTree){
@@ -2983,9 +2983,19 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.verticalScrollContainer.onDataChanging.pipe(this.destructor, this.initialized).subscribe(($event) => {
-            this.calculateGridHeight();
-            $event.containerSize = this.calcHeight;
+            const shouldRecalcSize = this.isPercentHeight &&
+             ( !this.calcHeight || this.calcHeight === this.getDataBasedBodyHeight() ||
+              this.calcHeight === this.renderedRowHeight * this._defaultTargetRecordNumber);
+            if (shouldRecalcSize) {
+                this.calculateGridHeight();
+                $event.containerSize = this.calcHeight;
+            }
             this.evaluateLoadingState();
+        });
+
+        this.verticalScrollContainer.onScrollbarVisibilityChanged.pipe(this.destructor, this.initialized).subscribe(() => {
+            // called to recalc all widths that may have changes as a result of
+            // the vert. scrollbar showing/hiding
             this.notifyChanges(true);
         });
 

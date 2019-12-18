@@ -2391,6 +2391,9 @@ describe('IgxGrid - Advanced Filtering', () => {
                 // and verify that the root group and all of its children become selected.
                 let rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
                 UIInteractions.simulateKeyDownEvent(rootOperatorLine, 'Enter');
+                fix.detectChanges();
+                await wait(200);
+                fix.detectChanges();
                 await wait(200);
                 fix.detectChanges();
                 verifyChildrenSelection(GridFunctions.getAdvancedFilteringExpressionsContainer(fix), true);
@@ -2400,6 +2403,9 @@ describe('IgxGrid - Advanced Filtering', () => {
                 // and verify that the root group and all of its children become unselected.
                 rootOperatorLine = GridFunctions.getAdvancedFilteringTreeRootGroupOperatorLine(fix);
                 UIInteractions.simulateKeyDownEvent(rootOperatorLine, 'Enter');
+                fix.detectChanges();
+                await wait(200);
+                fix.detectChanges();
                 await wait(200);
                 fix.detectChanges();
                 verifyChildrenSelection(GridFunctions.getAdvancedFilteringExpressionsContainer(fix), false);

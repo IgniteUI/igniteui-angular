@@ -1,0 +1,37 @@
+@import '../../../projects/igniteui-angular/src/lib/core/styles/themes/index';
+
+.circular-samples {
+    display: flex;
+    justify-content: space-between;
+}
+
+.circular-container {
+    display: flex;
+    margin: 16px;
+}
+
+.circular-sample {
+    min-width: 54px;
+    min-height: 54px;
+}
+
+.linear-container + .linear-container {
+    padding-top: 16px;
+}
+
+.button-container {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 24px;
+    z-index: 24;
+}
+
+.custom-gradient {
+    $circ-theme: igx-progress-circular-theme(
+        $progress-circle-color: purple orange,
+    );
+
+    @include igx-progress-circular($circ-theme);
+}
+
