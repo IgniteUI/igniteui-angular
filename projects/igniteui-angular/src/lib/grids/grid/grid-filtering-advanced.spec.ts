@@ -14,7 +14,8 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import {
     IgxGridAdvancedFilteringColumnGroupComponent,
-    IgxGridAdvancedFilteringComponent
+    IgxGridAdvancedFilteringComponent,
+    IgxGridAdvancedFilteringBindingComponent
 } from '../../test-utils/grid-samples.spec';
 
 const ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
@@ -28,7 +29,8 @@ describe('IgxGrid - Advanced Filtering', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridAdvancedFilteringColumnGroupComponent,
-                IgxGridAdvancedFilteringComponent
+                IgxGridAdvancedFilteringComponent,
+                IgxGridAdvancedFilteringBindingComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -2692,8 +2694,42 @@ describe('IgxGrid - Advanced Filtering', () => {
             expect(expectedValues).toEqual(dropdownValues);
         }));
     });
-});
 
+    describe('IgxGrid - Advanced filtering expression tree bindings #grid', () => {
+        let fix, grid: IgxGridComponent;
+
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxGridAdvancedFilteringBindingComponent);
+            grid = fix.componentInstance.grid;
+            fix.detectChanges();
+        }));
+
+        it('should correctly filter with \'advancedFilteringExpressionsTree\' binding', fakeAsync(() => {
+            // Verify initially filtered in Advanced Filtering - 'Downloads > 200'
+            expect(grid.filteredData.length).toEqual(3);
+            expect(grid.rowList.length).toBe(3);
+
+            // Open Advanced Filtering dialog
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Verify the content of the first child (expression) of the root group.
+            verifyExpressionChipContent(fix, [0], 'Downloads', 'Greater Than', '200');
+
+            // Clear the filters
+            GridFunctions.clickAdvancedFilteringClearFilterButton(fix);
+            fix.detectChanges();
+
+            // Close the dialog
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            fix.detectChanges();
+
+            // Verify no filtered data
+            expect(grid.filteredData).toBe(null);
+            expect(grid.rowList.length).toBe(8);
+        }));
+    });
+});
 
 function selectColumnInEditModeExpression(fix, dropdownItemIndex: number) {
     GridFunctions.clickAdvancedFilteringColumnSelect(fix);
