@@ -357,7 +357,7 @@ describe('IgxGrid - search API #grid', () => {
             grid.paging = true;
             grid.perPage = 7;
             fix.detectChanges();
-
+            await wait(100);
             const searchString = 'assoc';
             grid.findNext(searchString);
             await wait(50);

@@ -1648,11 +1648,12 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
     }));
 
     it('should render rows correctly after collapse and expand', async () => {
+
         const fix = TestBed.createComponent(IgxTreeGridSummariesScrollingComponent);
         const treeGrid = fix.componentInstance.treeGrid;
         setupGridScrollDetection(fix, treeGrid);
         fix.detectChanges();
-        await wait(16);
+        await wait(100);
 
         (treeGrid as any).scrollTo(23, 0, 0);
         fix.detectChanges();

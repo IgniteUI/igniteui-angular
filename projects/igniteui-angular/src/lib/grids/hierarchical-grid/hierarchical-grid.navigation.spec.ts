@@ -1196,6 +1196,7 @@ describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
     }));
 
     it('should navigate to last cell in next child using Arrow Down from last cell of previous child with more columns', (async () => {
+        await wait(100);
         const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
         const firstChildGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
         const secondChildGrid = childGrids[1].query(By.css('igx-hierarchical-grid')).componentInstance;
