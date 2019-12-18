@@ -78,10 +78,11 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         }));
 
         it(`should render all records exactly if height is 100% and parent container\'s height is unset and
-            there are fewer than 10 records in the data view`, fakeAsync(() => {
+            there are fewer than 10 records in the data view`, (async() => {
                 grid.height = '100%';
                 fix.componentInstance.data = fix.componentInstance.data.slice(0, 1);
-                tick(16);
+                fix.detectChanges();
+                await wait(100);
                 fix.detectChanges();
                 const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
                 expect(defaultHeight).toBeNull();
