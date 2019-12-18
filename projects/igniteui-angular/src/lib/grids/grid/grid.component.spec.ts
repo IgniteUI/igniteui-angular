@@ -1454,7 +1454,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             grid.width = null;
             fix.detectChanges();
-            await wait(16);
+            await wait(100);
 
             // grid should render all columns and all should be visible.
             const cells = grid.getRowByIndex(0).cells;

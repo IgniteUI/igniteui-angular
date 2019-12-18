@@ -2882,9 +2882,12 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
         UIInteractions.triggerKeyDownWithBlur('tab', cancelButtonElement, true, false, true);
         await wait(100);
         fix.detectChanges();
+        await wait(100);
+        fix.detectChanges();
 
         targetCell = grid.getCellByColumn(0, 'PostalCode');
-        expect(targetCell.focused).toBe(true);
+        const input = targetCell.nativeElement.querySelector('input');
+        expect(document.activeElement).toEqual(input);
     });
 
     it('tab navigation should should skip non-editable cells when navigating in row edit mode. ', async () => {

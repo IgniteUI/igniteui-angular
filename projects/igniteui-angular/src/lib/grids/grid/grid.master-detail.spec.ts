@@ -165,7 +165,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
         it(`Should persist state of rendered templates, such as expansion state of expansion panel,
             checkbox state, etc. after scrolling them in and out of view.`, (async() => {
-
+            await wait(100);
             const verticalScrollbar = grid.verticalScrollContainer.getScroll();
             const verticalSrollHeight = verticalScrollbar.firstChild.offsetHeight;
 
@@ -329,6 +329,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         it('Should navigate down through a detail view partially out of view by scrolling it so it becomes fully visible.', async() => {
+            await wait(100);
             const row = grid.getRowByIndex(4) as IgxGridRowComponent;
             const targetCellElement = grid.getCellByColumn(4, 'ContactName');
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', targetCellElement, true);
@@ -453,6 +454,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
         it(`Should expand and collapse using Alt + Right/Down and Alt + Left/Up
             at the bottom of the grid without losing focus.`, async() => {
+            await wait(200);
             // navigate to last
             grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
             await wait(DEBOUNCETIME);
@@ -485,6 +487,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         it('Should navigate to the correct row/cell when using the navigateTo method in a grid with expanded detail views.', async() => {
+            await wait(100);
             grid.navigateTo(20, 0);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
@@ -501,6 +504,7 @@ describe('IgxGrid Master Detail #grid', () => {
          });
 
          it('Should navigate to the last data cell in the grid using Ctrl + End.', async() => {
+            await wait(100);
             const targetCellElement = grid.getCellByColumn(0, 'ContactName');
             UIInteractions.triggerKeyDownEvtUponElem('end', targetCellElement, true, false, false, true);
             await wait(DEBOUNCETIME);
@@ -514,6 +518,7 @@ describe('IgxGrid Master Detail #grid', () => {
          });
 
          it('Should navigate to the first data cell in the grid using Ctrl + Home.', async() => {
+            await wait(100);
             grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
@@ -533,6 +538,7 @@ describe('IgxGrid Master Detail #grid', () => {
          });
 
          it('Should navigate to the last data row using Ctrl + ArrowDown when all rows are expanded.', async() => {
+             await wait(100);
             const targetCellElement = grid.getCellByColumn(0, 'ContactName');
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', targetCellElement, true, false, false, true);
             await wait(DEBOUNCETIME);
@@ -546,6 +552,7 @@ describe('IgxGrid Master Detail #grid', () => {
          });
 
          it('Should navigate to the first data row using Ctrl + ArrowUp when all rows are expanded.', async() => {
+            await wait(100);
             grid.verticalScrollContainer.scrollTo(grid.verticalScrollContainer.igxForOf.length - 1);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
@@ -566,6 +573,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
          it(`Should navigate to the first/last row when using Ctrl+ArrowUp/ArrowDown
                 and focus is on the detail row container.`, async() => {
+                    await wait(100);
                     let detailRow = GridFunctions.getMasterRowDetail(grid.rowList.first);
                     UIInteractions.triggerKeyDownEvtUponElem('arrowdown', detailRow, true, false, false, true);
                     await wait(DEBOUNCETIME);
@@ -774,6 +782,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 grid = fix.componentInstance.grid;
             }));
             it('Should scroll to the correct parent rows when searching in a grid with expanded detail views.', async() => {
+                await wait(100);
                 grid.findNext('Paolo');
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
@@ -1035,7 +1044,8 @@ describe('IgxGrid Master Detail #grid', () => {
            });
 
            it(`Should correctly position summary rows when summary
-           row position is bottom after grouping by and detail views for the group rows are collapsed.`, () => {
+           row position is bottom after grouping by and detail views for the group rows are collapsed.`, async() => {
+                await wait(100);
                 const allRows = grid.tbody.nativeElement
                 .querySelectorAll('igx-grid-row, igx-grid-summary-row, igx-grid-groupby-row, div[detail="true"]');
                 expect(allRows.length).toBe(9);

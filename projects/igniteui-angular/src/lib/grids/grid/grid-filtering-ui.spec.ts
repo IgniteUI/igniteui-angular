@@ -2930,7 +2930,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
             // Add third chip.
             GridFunctions.typeValueInFilterRowInput('i', fix);
-            await wait(16);
+            await wait(100);
             fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await wait(200);
@@ -2968,21 +2968,21 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Add first chip.
             GridFunctions.typeValueInFilterRowInput('a', fix);
-            await wait(16);
+            await wait(100);
             fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await wait(100);
             fix.detectChanges();
             // Add second chip.
             GridFunctions.typeValueInFilterRowInput('e', fix);
-            await wait(16);
+            await wait(100);
             fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await wait(100);
             fix.detectChanges();
             // Add third chip.
             GridFunctions.typeValueInFilterRowInput('i', fix);
-            await wait(16);
+            await wait(100);
             fix.detectChanges();
             GridFunctions.submitFilterRowInput(fix);
             await wait(100);
@@ -2993,7 +2993,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             const leftArrowButton = GridFunctions.getFilterRowLeftArrowButton(fix).nativeElement;
             leftArrowButton.focus();
-            await wait(16);
+            await wait(100);
             fix.detectChanges();
             leftArrowButton.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
             fix.detectChanges();
@@ -3321,11 +3321,11 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             GridFunctions.applyFilter('a', fix);
-            await wait(16);
+            await wait(100);
             GridFunctions.applyFilter('e', fix);
-            await wait(16);
+            await wait(100);
             GridFunctions.applyFilter('i', fix);
-            await wait(16);
+            await wait(100);
             GridFunctions.applyFilter('o', fix);
             // wait for chip to be scrolled in view
             await wait(200);
