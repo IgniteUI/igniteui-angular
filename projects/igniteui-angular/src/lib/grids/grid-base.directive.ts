@@ -330,7 +330,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Emitted before filtering is performed.
+     * Emitted after filtering is performed.
      * Returns the filtering expressions tree of the column for which filtering was performed.
      * ```typescript
      * filteringExprTreeChange(event: IFilteringExpressionsTree){
@@ -347,7 +347,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     public filteringExpressionsTreeChange = new EventEmitter<IFilteringExpressionsTree>();
 
     /**
-     * Emitted before advanced filtering is performed.
+     * Emitted after advanced filtering is performed.
      * Returns the advanced filtering expressions tree.
      * ```typescript
      * advancedFilteringExprTreeChange(event: IFilteringExpressionsTree){
