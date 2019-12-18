@@ -9,7 +9,7 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent implements 
 
     /** @hidden @internal */
     public get itemText() {
-        return this.elementRef.nativeElement.innerText.trim();
+        return this.elementRef.nativeElement.textContent.trim();
     }
 
     /**
