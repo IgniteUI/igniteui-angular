@@ -145,7 +145,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         if (this.shouldGenerate) {
             this.setupColumns();
         }
-        this.notifyChanges(true);
+        this.cdr.markForCheck();
     }
 
     /**
