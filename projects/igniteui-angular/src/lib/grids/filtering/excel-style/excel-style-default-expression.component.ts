@@ -9,7 +9,7 @@ import {
     ViewChild
 } from '@angular/core';
 import { IgxColumnComponent } from '../../column.component';
-import { ExpressionUI, IgxFilteringService } from '../grid-filtering.service';
+import { ExpressionUI } from '../grid-filtering.service';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
 import { IgxDropDownItemComponent, IgxDropDownComponent } from '../../../drop-down/index';
 import { IgxInputGroupComponent, IgxInputDirective } from '../../../input-group/index';

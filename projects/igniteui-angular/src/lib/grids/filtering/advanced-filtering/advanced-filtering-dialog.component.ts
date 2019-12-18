@@ -18,7 +18,7 @@ import { takeUntil, first } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { KEYS } from '../../../core/utils';
 import { AbsoluteScrollStrategy, AutoPositionStrategy } from '../../../services/index';
-import { DataType, DataUtil } from './../../../data-operations/data-util';
+import { DataUtil } from './../../../data-operations/data-util';
 
 /**
  *@hidden
