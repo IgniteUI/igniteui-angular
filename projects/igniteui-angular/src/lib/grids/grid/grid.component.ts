@@ -1,6 +1,6 @@
 import {
     Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
-    QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, AfterContentInit, HostBinding, forwardRef, OnInit, AfterViewInit
+    QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, AfterContentInit, HostBinding, forwardRef, OnInit, AfterViewInit, HostListener
 } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -347,8 +347,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     *@hidden
-     */
+   *@hidden
+   */
     @Output()
     public groupingExpansionStateChange = new EventEmitter<IGroupByExpandState[]>();
 
@@ -532,6 +532,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     private _expansionStates: Map<any, boolean> = new Map<any, boolean>();
 
+
     /**
      * Returns a list of key-value pairs [row ID, expansion state]. Includes only states that differ from the default one.
      * ```typescript
@@ -550,6 +551,14 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     @Output()
     public expansionStatesChange = new EventEmitter<Map<any, boolean>>();
 
+    /**
+     *@hidden
+     */
+    @Output()
+    private _focusIn = new  EventEmitter<any>();
+    @HostListener('focusin') onFocusIn() {
+        this._focusIn.emit();
+    }
 
     /**
      * Sets a list of key-value pairs [row ID, expansion state].
@@ -661,8 +670,21 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this.verticalScrollContainer.addScrollTop(evt.target.scrollTop);
             evt.target.scrollTop = 0;
             this.verticalScrollContainer.onChunkLoad.pipe(first()).subscribe(() => {
-                // Some browsers (like Edge/IE) lose focus after scrolling.
-                (activeElem as any).focus();
+                const active = this.selectionService.activeElement;
+                const currRow = (this.navigation as any).getRowByIndex(active.row, '');
+                // check if the focused element was a child of the details view
+                if (this.isDetailRecord(active.row) && currRow && currRow.contains(activeElem)) {
+                    // Some browsers (like Edge/IE) lose focus after scrolling even when the element was in the DOM.
+                    (activeElem as any).focus({ preventScroll: true });
+                    return;
+                }
+                const nextCellTarget = this.navigation.getCellElementByVisibleIndex(active.row, active.column);
+                const nextRowTarget = (this.navigation as any).getRowByIndex(active.row + 1, '');
+                if (nextCellTarget) {
+                    nextCellTarget.focus({ preventScroll: true });
+                } else if (nextRowTarget) {
+                    nextRowTarget.focus({ preventScroll: true });
+                }
             });
         }
     }
@@ -677,6 +699,13 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         return rec;
     }
 
+    public detailsViewFocused(container, rowIndex) {
+        this.selectionService.activeElement = {
+            row: rowIndex,
+            column: this.selectionService.activeElement ? this.selectionService.activeElement.column : 0
+        };
+    }
+
     public detailsKeyboardHandler(event, rowIndex, container) {
         const colIndex = this.selectionService.activeElement ? this.selectionService.activeElement.column : 0;
         const shift = event.shiftKey;
@@ -685,12 +714,20 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const target = event.target;
         if (key === 'tab') {
             event.stopPropagation();
+            const lastColIndex = this.unpinnedColumns[this.unpinnedColumns.length - 1].visibleIndex;
             if (shift && target === container) {
                 // shift + tab from details to data row
                 event.preventDefault();
-                const lastColIndex = this.unpinnedColumns[this.unpinnedColumns.length - 1].visibleIndex;
                 this.navigateTo(rowIndex - 1, lastColIndex,
                     (args) => args.target.nativeElement.focus());
+            } else if (!shift) {
+                // when the next element is focused via tab check if it is an element outside the details view
+                // if so we have exited the details view and focus should move to the first cell in the next row
+                this._focusIn.pipe(first()).subscribe(() => {
+                    if (!container.contains(document.activeElement)) {
+                      this.navigation.performTab(container, {row: rowIndex, column: lastColIndex});
+                    }
+                });
             }
         } else if (key === 'arrowup' && !ctrl && target === container) {
             this.navigation.navigateUp(container, {row: rowIndex, column: colIndex});
