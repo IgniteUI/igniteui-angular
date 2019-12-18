@@ -12,7 +12,7 @@ import {
     Output
 } from '@angular/core';
 import { IgxIconModule } from '../icon/index';
-import { IBaseEventArgs } from '../core/utils';
+import { IBaseEventArgs, PlatformUtil } from '../core/utils';
 
 let NEXT_ID = 0;
 
@@ -202,7 +202,7 @@ export class IgxCarouselComponent implements OnDestroy {
     private _destroyed: boolean;
     private _total = 0;
 
-    constructor(private element: ElementRef) { }
+    constructor(private element: ElementRef, private platformUtil: PlatformUtil) { }
     /**
      *@hidden
      */
@@ -465,7 +465,7 @@ export class IgxCarouselComponent implements OnDestroy {
     private _restartInterval() {
         this._resetInterval();
 
-        if (!isNaN(this.interval) && this.interval > 0) {
+        if (!isNaN(this.interval) && this.interval > 0 && this.platformUtil.isBrowser) {
             this._lastInterval = setInterval(() => {
                 const tick = +this.interval;
                 if (this._playing && this.total && !isNaN(tick) && tick > 0) {
