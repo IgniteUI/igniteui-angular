@@ -47,5 +47,12 @@ $_fluent-avatar: extend($_light-avatar);
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-avatar
-$_bootstrap-avatar: extend($_light-avatar);
+/// @requires $_bootstrap-shape-avatar
+$_bootstrap-avatar: extend(
+    $_light-avatar,
+    $_bootstrap-shape-avatar,
+    (
+        variant: 'bootstrap',
+    )
+);
 
