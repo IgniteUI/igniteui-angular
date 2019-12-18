@@ -265,7 +265,7 @@ export abstract class IgxBaseExporter {
                 this.flatRecords = [];
                 filteringState.strategy = (grid.filterStrategy) ? grid.filterStrategy : new TreeGridFilteringStrategy();
                 rootRecords = filteringState.strategy.filter(rootRecords,
-                    filteringState.expressionsTree, filteringState.advancedFilteringExpressionsTree);
+                    filteringState.expressionsTree, filteringState.advancedExpressionsTree);
                 this.prepareHierarchicalData(rootRecords);
                 data = this.flatRecords;
             } else {
