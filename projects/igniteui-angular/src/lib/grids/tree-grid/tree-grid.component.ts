@@ -111,7 +111,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         if (this.shouldGenerate) {
             this.setupColumns();
         }
-        this.notifyChanges(true);
+        this.cdr.markForCheck();
     }
 
     /**
