@@ -2075,7 +2075,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public get parentRowOutletDirective() {
-        return null;
+        return this.outletDirective;
     }
 
     /**
@@ -3010,6 +3010,10 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.overlayService.onOpened.pipe(destructor).subscribe((event) => {
             // do not hide the advanced filtering overlay on scroll
             if (this._advancedFilteringOverlayId === event.id) {
+                const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
+                if (instance) {
+                    instance.setAddButtonFocus();
+                }
                 return;
             }
 
@@ -4674,7 +4678,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         cols.forEach((item) => {
             const isWidthInPercent = item.width && typeof item.width === 'string' && item.width.indexOf('%') !== -1;
             if (isWidthInPercent) {
-                item.width = MINIMUM_COLUMN_WIDTH + 'px';
+                item.width = item.calcWidth || MINIMUM_COLUMN_WIDTH + 'px';
             }
             colSum += parseInt((item.width || item.defaultWidth), 10) || MINIMUM_COLUMN_WIDTH;
         });
