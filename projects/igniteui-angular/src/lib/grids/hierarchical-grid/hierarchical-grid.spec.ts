@@ -401,7 +401,8 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
         hierarchicalGrid.clearFilter();
         fixture.detectChanges();
-        await wait(30);
+        await wait(100);
+        fixture.detectChanges();
 
         expect(childGrid.calcWidth - 370 ).toBeLessThan(3);
     });
@@ -553,7 +554,7 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         }
     });
     it('should allow setting different height/width in px/percent for row islands and grids should be rendered correctly.',
-    fakeAsync(/** height/width setter + row toggle rAF */() => {
+    (/** height/width setter + row toggle rAF */async() => {
         const ri1 = fixture.componentInstance.rowIsland1;
 
         // test px
@@ -564,6 +565,8 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
 
         let row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         UIInteractions.clickElement(row.expander);
+        fixture.detectChanges();
+        await wait(100);
         fixture.detectChanges();
         let childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
         let childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
