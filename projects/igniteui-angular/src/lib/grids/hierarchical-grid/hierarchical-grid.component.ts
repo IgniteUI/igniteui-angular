@@ -412,15 +412,18 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         this.rowSelectorsTemplates = this.parentIsland ?
             this.parentIsland.rowSelectorsTemplates :
             this.rowSelectorsTemplates;
-        this.rowExpandedIndicatorTemplate  = this.rootGrid.rowExpandedIndicatorTemplate;
-        this.rowCollapsedIndicatorTemplate   = this.rootGrid.rowCollapsedIndicatorTemplate;
+        this.dragIndicatorIconTemplate = this.parentIsland ?
+            this.parentIsland.dragIndicatorIconTemplate :
+            this.dragIndicatorIconTemplate;
+        this.rowExpandedIndicatorTemplate = this.rootGrid.rowExpandedIndicatorTemplate;
+        this.rowCollapsedIndicatorTemplate = this.rootGrid.rowCollapsedIndicatorTemplate;
         this.headerCollapseIndicatorTemplate = this.rootGrid.headerCollapseIndicatorTemplate;
         this.headerExpandIndicatorTemplate = this.rootGrid.headerExpandIndicatorTemplate;
         this.hasChildrenKey = this.parentIsland ?
-         this.parentIsland.hasChildrenKey || this.rootGrid.hasChildrenKey :
-         this.rootGrid.hasChildrenKey;
-         this.showExpandAll = this.parentIsland ?
-         this.parentIsland.showExpandAll : this.rootGrid.showExpandAll;
+            this.parentIsland.hasChildrenKey || this.rootGrid.hasChildrenKey :
+            this.rootGrid.hasChildrenKey;
+        this.showExpandAll = this.parentIsland ?
+            this.parentIsland.showExpandAll : this.rootGrid.showExpandAll;
     }
 
     private updateSizes() {
@@ -457,11 +460,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     ngAfterContentInit() {
         this.updateColumnList(false);
         this.childLayoutKeys = this.parent ?
-        this.parentIsland.children.map((item) => item.key) :
-        this.childLayoutKeys = this.childLayoutList.map((item) => item.key);
+            this.parentIsland.children.map((item) => item.key) :
+            this.childLayoutKeys = this.childLayoutList.map((item) => item.key);
         this.childLayoutList.notifyOnChanges();
         this.childLayoutList.changes.pipe(takeUntil(this.destroy$))
-        .subscribe(() => this.onRowIslandChange());
+            .subscribe(() => this.onRowIslandChange());
         super.ngAfterContentInit();
     }
 
@@ -563,7 +566,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         return width;
     }
 
-     private getDefaultExpanderWidth(): number {
+    private getDefaultExpanderWidth(): number {
         switch (this.displayDensity) {
             case DisplayDensity.cosy:
                 return 57;
@@ -705,14 +708,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     /**
      * @hidden
     */
-   toggleAll() {
-    const expanded = this.hierarchicalState.length > 0 && this.hasExpandableChildren;
-    if (!expanded && this.showExpandAll) {
-        this.expandAll();
-    } else {
-        this.collapseAll();
+    toggleAll() {
+        const expanded = this.hierarchicalState.length > 0 && this.hasExpandableChildren;
+        if (!expanded && this.showExpandAll) {
+            this.expandAll();
+        } else {
+            this.collapseAll();
+        }
     }
-   }
 
     /**
      * Collapses all rows of the current hierarchical grid.
