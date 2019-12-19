@@ -168,10 +168,10 @@ export class IgxGridNavigationService {
 
     public movePreviousEditable(rowIndex: number, currentColumnVisibleIndex: number) {
         const prevEditableColumnIndex = this.findNextEditable(MoveDirection.LEFT, currentColumnVisibleIndex - 1);
-        if (prevEditableColumnIndex === -1 && this.grid.rowEditTabs.length) {
+        if (prevEditableColumnIndex === -1) {
             //  TODO: make gridAPI visible for internal use and remove cast to any
             (this.grid as any).gridAPI.submit_value();
-            this.grid.rowEditTabs.last.element.nativeElement.focus();
+            if (this.grid.rowEditTabs.length) { this.grid.rowEditTabs.last.element.nativeElement.focus(); }
             return;
         }
         this.focusEditableTarget(rowIndex, prevEditableColumnIndex);
@@ -179,10 +179,10 @@ export class IgxGridNavigationService {
 
     public moveNextEditable(rowIndex: number, currentColumnVisibleIndex: number) {
         const nextEditableColumnIndex = this.findNextEditable(MoveDirection.RIGHT, currentColumnVisibleIndex + 1);
-        if (nextEditableColumnIndex === -1 && this.grid.rowEditTabs.length) {
+        if (nextEditableColumnIndex === -1) {
             //  TODO: make gridAPI visible for internal use and remove cast to any
             (this.grid as any).gridAPI.submit_value();
-            this.grid.rowEditTabs.first.element.nativeElement.focus();
+            if ( this.grid.rowEditTabs.length) { this.grid.rowEditTabs.first.element.nativeElement.focus(); }
             return;
         }
         this.focusEditableTarget(rowIndex, nextEditableColumnIndex);
@@ -190,8 +190,7 @@ export class IgxGridNavigationService {
 
     public focusEditableTarget(rowIndex: number, columnIndex: number) {
         if (this.isColumnFullyVisible(columnIndex)) {
-            const cell  = this.getCellElementByVisibleIndex(rowIndex, columnIndex);
-            if (cell) { cell.focus(); }
+            this.getCellElementByVisibleIndex(rowIndex, columnIndex).focus();
         } else {
             this.performHorizontalScrollToCell(rowIndex, columnIndex);
         }
