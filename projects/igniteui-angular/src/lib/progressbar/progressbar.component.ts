@@ -9,9 +9,13 @@ import {
     Output,
     Renderer2,
     ViewChild,
-    ContentChild
+    ContentChild,
+    AfterViewInit
 } from '@angular/core';
-import { IgxProcessBarTextTemplateDirective } from './progressbar.common';
+import {
+    IgxProcessBarTextTemplateDirective,
+    IgxProgressBarGradientDirective,
+} from './progressbar.common';
 import { IBaseEventArgs } from '../core/utils';
 
 const ONE_PERCENT = 0.01;
@@ -183,6 +187,7 @@ export abstract class BaseProgress {
 }
 let NEXT_LINEAR_ID = 0;
 let NEXT_CIRCULAR_ID = 0;
+let NEXT_GRADIENT_ID = 0;
 @Component({
     selector: 'igx-linear-bar',
     templateUrl: 'templates/linear-bar.component.html'
@@ -473,7 +478,7 @@ export class IgxLinearProgressBarComponent extends BaseProgress {
     selector: 'igx-circular-bar',
     templateUrl: 'templates/circular-bar.component.html'
 })
-export class IgxCircularProgressBarComponent extends BaseProgress {
+export class IgxCircularProgressBarComponent extends BaseProgress implements AfterViewInit {
 
     private readonly STROKE_OPACITY_DVIDER = 100;
     private readonly STROKE_OPACITY_ADDITION = .2;
@@ -508,6 +513,11 @@ export class IgxCircularProgressBarComponent extends BaseProgress {
     public id = `igx-circular-bar-${NEXT_CIRCULAR_ID++}`;
 
     /**
+     * @hidden
+     */
+    public gradientId = `igx-circular-gradient-${NEXT_GRADIENT_ID++}`;
+
+    /**
      *An @Input property that sets the value of the `indeterminate` attribute. If not provided it will be automatically set to false.
      *```html
      *<igx-circular-bar [indeterminate]="true"></igx-circular-bar>
@@ -540,6 +550,9 @@ export class IgxCircularProgressBarComponent extends BaseProgress {
 
     @ContentChild(IgxProcessBarTextTemplateDirective, { read: IgxProcessBarTextTemplateDirective })
     public textTemplate: IgxProcessBarTextTemplateDirective;
+
+    @ContentChild(IgxProgressBarGradientDirective, { read: IgxProgressBarGradientDirective })
+    public gradientTemplate: IgxProgressBarGradientDirective;
 
     /**
      * @hidden
@@ -695,6 +708,14 @@ export class IgxCircularProgressBarComponent extends BaseProgress {
         super();
     }
 
+    ngAfterViewInit() {
+        this.renderer.setStyle(
+            this._svgCircle.nativeElement,
+            'stroke',
+            `url(#${this.gradientId})`
+        );
+    }
+
     /**
      * @hidden
      */
@@ -757,9 +778,19 @@ export function convertInPercentage(value: number, max: number) {
  * @hidden
  */
 @NgModule({
-    declarations: [IgxLinearProgressBarComponent, IgxCircularProgressBarComponent, IgxProcessBarTextTemplateDirective],
-    exports: [IgxLinearProgressBarComponent, IgxCircularProgressBarComponent, IgxProcessBarTextTemplateDirective],
+    declarations: [
+        IgxLinearProgressBarComponent,
+        IgxCircularProgressBarComponent,
+        IgxProcessBarTextTemplateDirective,
+        IgxProgressBarGradientDirective,
+    ],
+    exports: [
+        IgxLinearProgressBarComponent,
+        IgxCircularProgressBarComponent,
+        IgxProcessBarTextTemplateDirective,
+        IgxProgressBarGradientDirective,
+    ],
     imports: [CommonModule]
 })
-export class IgxProgressBarModule {
-}
+export class IgxProgressBarModule { }
+

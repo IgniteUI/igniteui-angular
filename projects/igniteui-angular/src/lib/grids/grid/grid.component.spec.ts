@@ -1176,7 +1176,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(fix.componentInstance.grid.calcHeight).toBe(510);
         }));
 
-        it('should not keep default height when lower the amount of bound data', () => {
+        it('should not keep default height when lower the amount of bound data', async() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             fix.detectChanges();
 
@@ -1194,6 +1194,8 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(fix.componentInstance.grid.calcHeight).toBe(510);
 
             fix.componentInstance.grid.data = fix.componentInstance.semiData;
+            fix.detectChanges();
+            await wait(100);
             fix.detectChanges();
 
             defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
