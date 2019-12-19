@@ -86,6 +86,16 @@
         if($border-radius, $border-radius, map-get($button-group-schema, 'border-radius')), 0, 20px
     );
 
+    $shadow-color: transparent;
+
+    @if map-get($theme, 'variant') == 'bootstrap' {
+        $shadow-color: rgba(map-get($theme, 'item-background'), .5);
+
+        @if $item-background {
+            $shadow-color: rgba($item-background, .5);
+        }
+    }
+
     @if not($item-text-color) and $item-background {
         @if type_of($item-background) == 'color' {
             $item-text-color: text-contrast($item-background);
@@ -142,7 +152,8 @@
         item-selected-border-color: $item-selected-border-color,
         item-selected-hover-background: $item-selected-hover-background,
         border: $border,
-        shadow: $shadow
+        shadow: $shadow,
+        shadow-color: $shadow-color,
     ));
 }
 
@@ -161,6 +172,17 @@
 
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
+
+    $variant: map-get($theme, 'variant');
+
+    $box-shadow-btn: map-get(
+        (
+            material: null,
+            fluent: null,
+            bootstrap: 0 0 0 rem(3px) --var($theme, 'shadow-color')
+        ),
+        $variant
+    );
 
     %igx-group-display {
         display: flex;
@@ -223,6 +245,10 @@
             color: --var($theme, 'item-hover-text-color');
             background: --var($theme, 'item-hover-background');
             z-index: 1;
+        }
+
+        &:focus {
+            box-shadow: $box-shadow-btn;
         }
     }
 
