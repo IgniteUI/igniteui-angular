@@ -446,6 +446,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
     /**
      * @hidden
      */
+    public get parentRowOutletDirective() {
+        return this === this.rootGrid ? null : this.rootGrid.rowEditingOutletDirective;
+    }
+
+    /**
+     * @hidden
+     */
     ngAfterContentInit() {
         this.updateColumnList(false);
         this.childLayoutKeys = this.parent ?
