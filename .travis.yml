@@ -10,7 +10,7 @@ services:
   - xvfb
 language: node_js
 node_js:
-- '12.13.1'
+- 'lts/*'
 before_install:
 - export NG_CLI_ANALYTICS=false
 - export DISPLAY=:99.0
