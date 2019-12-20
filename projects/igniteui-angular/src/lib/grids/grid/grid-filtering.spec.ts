@@ -677,7 +677,7 @@ describe('IgxGrid - Filtering expression tree bindings #grid', () => {
         .compileComponents();
     }));
 
-    let fix, grid;
+    let fix, grid: IgxGridComponent;
     beforeEach(fakeAsync(() => {
         fix = TestBed.createComponent(IgxGridFilteringBindingComponent);
         fix.detectChanges();
@@ -689,9 +689,15 @@ describe('IgxGrid - Filtering expression tree bindings #grid', () => {
         expect(grid.rowList.length).toEqual(3);
         expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(1);
 
+        // Verify filtering expressions tree binding state
+        expect(grid.filteringExpressionsTree).toBe(fix.componentInstance.filterTree);
+
         // Clear filter
         grid.clearFilter('Downloads');
         fix.detectChanges();
+
+        // Verify filtering expressions tree binding state
+        expect(grid.filteringExpressionsTree).toBe(fix.componentInstance.filterTree);
 
         // Verify no filtered data
         expect(grid.rowList.length).toEqual(8);

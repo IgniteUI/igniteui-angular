@@ -510,7 +510,7 @@ export class IgxFilteringService implements OnDestroy {
             return true;
         }
 
-        let expr: any; 
+        let expr: any;
 
         for (let i = 0; i < expressionTree.filteringOperands.length; i++) {
             expr = expressionTree.filteringOperands[i];

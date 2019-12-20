@@ -1549,7 +1549,7 @@ export class GridWithUndefinedDataComponent implements OnInit  {
 
 @Component({
     template: `
-    <igx-grid [data]="data" height="500px" [allowFiltering]='true' [filteringExpressionsTree]="filterTree">
+    <igx-grid [data]="data" height="500px" [allowFiltering]='true' [(filteringExpressionsTree)]="filterTree">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true" [filterable]="false" [resizable]="resizable">
         </igx-column>
         <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"></igx-column>
@@ -1579,7 +1579,7 @@ export class IgxGridFilteringBindingComponent extends BasicGridComponent impleme
 @Component({
     template: `
     <igx-grid [data]="data" height="500px" [allowAdvancedFiltering]="true" [showToolbar]="true"
-        [advancedFilteringExpressionsTree]="filterTree" >
+        [(advancedFilteringExpressionsTree)]="filterTree" >
         <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true" [filterable]="false" [resizable]="resizable">
         </igx-column>
         <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"></igx-column>

@@ -2697,11 +2697,10 @@ describe('IgxGrid - Advanced Filtering', () => {
 
     describe('IgxGrid - Advanced filtering expression tree bindings #grid', () => {
         let fix, grid: IgxGridComponent;
-
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridAdvancedFilteringBindingComponent);
-            grid = fix.componentInstance.grid;
             fix.detectChanges();
+            grid = fix.componentInstance.grid;
         }));
 
         it('should correctly filter with \'advancedFilteringExpressionsTree\' binding', fakeAsync(() => {
@@ -2709,20 +2708,15 @@ describe('IgxGrid - Advanced Filtering', () => {
             expect(grid.filteredData.length).toEqual(3);
             expect(grid.rowList.length).toBe(3);
 
-            // Open Advanced Filtering dialog
-            GridFunctions.clickAdvancedFilteringButton(fix);
+            // Verify filtering expressions tree binding state
+            expect(grid.advancedFilteringExpressionsTree).toBe(fix.componentInstance.filterTree);
+
+            // Clear filter
+            grid.advancedFilteringExpressionsTree = null;
             fix.detectChanges();
 
-            // Verify the content of the first child (expression) of the root group.
-            verifyExpressionChipContent(fix, [0], 'Downloads', 'Greater Than', '200');
-
-            // Clear the filters
-            GridFunctions.clickAdvancedFilteringClearFilterButton(fix);
-            fix.detectChanges();
-
-            // Close the dialog
-            GridFunctions.clickAdvancedFilteringApplyButton(fix);
-            fix.detectChanges();
+            // Verify filtering expressions tree binding state
+            expect(grid.advancedFilteringExpressionsTree).toBe(fix.componentInstance.filterTree);
 
             // Verify no filtered data
             expect(grid.filteredData).toBe(null);
