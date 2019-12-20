@@ -411,6 +411,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseCompone
         this.rowSelectorsTemplates = this.parentIsland ?
             this.parentIsland.rowSelectorsTemplates :
             this.rowSelectorsTemplates;
+        this.dragIndicatorIconTemplate = this.parentIsland ?
+            this.parentIsland.dragIndicatorIconTemplate :
+            this.dragIndicatorIconTemplate;
         this.rowExpandedIndicatorTemplate  = this.rootGrid.rowExpandedIndicatorTemplate;
         this.rowCollapsedIndicatorTemplate   = this.rootGrid.rowCollapsedIndicatorTemplate;
         this.headerCollapseIndicatorTemplate = this.rootGrid.headerCollapseIndicatorTemplate;
