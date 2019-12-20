@@ -2075,7 +2075,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
      * @hidden
      */
     public get parentRowOutletDirective() {
-        return this.outletDirective;
+        return null;
     }
 
     /**
@@ -3037,9 +3037,19 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         });
 
         this.verticalScrollContainer.onDataChanging.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
-            this.calculateGridHeight();
-            $event.containerSize = this.calcHeight;
+            const shouldRecalcSize = this.isPercentHeight &&
+             ( !this.calcHeight || this.calcHeight === this.getDataBasedBodyHeight() ||
+              this.calcHeight === this.renderedRowHeight * this._defaultTargetRecordNumber);
+            if (shouldRecalcSize) {
+                this.calculateGridHeight();
+                $event.containerSize = this.calcHeight;
+            }
             this.evaluateLoadingState();
+        });
+
+        this.verticalScrollContainer.onScrollbarVisibilityChanged.pipe(destructor, filter(() => !this._init)).subscribe(() => {
+            // called to recalc all widths that may have changes as a result of
+            // the vert. scrollbar showing/hiding
             this.notifyChanges(true);
         });
 
