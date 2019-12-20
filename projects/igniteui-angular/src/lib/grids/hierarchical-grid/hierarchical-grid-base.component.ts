@@ -130,26 +130,6 @@ export abstract class IgxHierarchicalGridBaseComponent extends IgxGridBaseCompon
     }
 
     /**
-     * The custom template, if any, that should be used when rendering the row drag indicator icon
-     *
-     * ```typescript
-     * // Set in typescript
-     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
-     * myComponent.dragIndicatorIconTemplate = myCustomTemplate;
-     * ```
-     * ```html
-     * <!-- Set in markup -->
-     *  <igx-grid #grid>
-     *      ...
-     *      <ng-template igxDragIndicatorIcon>
-     *          <igx-icon fontSet="material">info</igx-icon>
-     *      </ng-template>
-     *  </igx-grid>
-     * ```
-     */
-    public dragIndicatorIconTemplate: TemplateRef<any> = null;
-
-    /**
      * @hidden
      */
     public createColumnsList(cols: Array<any>) {
