@@ -611,10 +611,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      */
     public animInProgress = false;
 
-    protected _baseMarginLeft = 0;
-    protected _baseMarginTop = 0;
-    protected _baseOriginX;
-    protected _baseOriginY;
     protected _startX = 0;
     protected _startY = 0;
     protected _lastX = 0;
@@ -712,12 +708,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             });
         });
 
-        this._baseMarginLeft = parseInt(document.defaultView.getComputedStyle(this.element.nativeElement)['margin-left'], 10);
-        this._baseMarginTop = parseInt(document.defaultView.getComputedStyle(this.element.nativeElement)['margin-top'], 10);
-        this._baseOriginX = this.baseLeft;
-        this._baseOriginY = this.baseTop;
-        this._ghostStartX = this.baseLeft;
-        this._ghostStartY = this.baseTop;
         // Set transition duration to 0s. This also helps with setting `visibility: hidden` to the base to not lag.
         this.element.nativeElement.style.transitionDuration = '0.0s';
     }
@@ -875,11 +865,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         } else {
             targetElement.focus();
             event.preventDefault();
-        }
-
-        if (!this._baseOriginX && !this._baseOriginY) {
-            this._baseOriginX = this.baseLeft;
-            this._baseOriginY = this.baseTop;
         }
 
         if (this.pointerEventsEnabled || !this.touchEventsEnabled) {
@@ -1256,16 +1241,8 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
             this.ghostTop = newPosX + totalDraggedX - diffStartX;
             this.ghostLeft = newPosY + totalDraggedY - diffStartY;
         } else if (!this.ghost) {
-            const totalDraggedX = this.getTransformX(this.element.nativeElement);
-            const totalDraggedY = this.getTransformY(this.element.nativeElement);
-            newPosX = this.baseLeft - totalDraggedX;
-            newPosY = this.baseTop - totalDraggedY;
-            const deltaX = this._baseOriginX - newPosX;
-            const deltaY = this._baseOriginY - newPosY;
-            this.setTransformXY(totalDraggedX + deltaX, totalDraggedY + deltaY);
+            this.setTransformXY(0, 0);
         }
-        this._baseOriginX = newPosX !== undefined ? newPosX : this._baseOriginX;
-        this._baseOriginY = newPosY !== undefined ? newPosY : this._baseOriginY;
     }
 
     /**
