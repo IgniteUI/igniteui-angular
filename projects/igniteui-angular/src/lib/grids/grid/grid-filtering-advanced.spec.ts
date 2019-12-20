@@ -355,6 +355,7 @@ describe('IgxGrid - Advanced Filtering', () => {
 
             // Apply the filters.
             GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            fix.detectChanges();
 
             // Verify that the advanced filtering button indicates there are filters.
             advFilterBtn = GridFunctions.getAdvancedFilteringButton(fix);
