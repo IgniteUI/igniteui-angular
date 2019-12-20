@@ -183,16 +183,17 @@ $_bootstrap-button-group: extend(
 
         disabled-background-color: (
             igx-color: ('primary', 500),
-            lighten: 30%
+            lighten: 35%
         ),
 
         disabled-text-color: (
             igx-color: ('primary', 500),
+            lighten: 20%
         ),
 
         item-disabled-border: (
             igx-color: ('primary', 500),
-            lighten: 30%
+            lighten: 35%
         ),
     )
 );
