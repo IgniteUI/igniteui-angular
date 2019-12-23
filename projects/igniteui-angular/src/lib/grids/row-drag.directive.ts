@@ -110,8 +110,10 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
         if (this.isHierarchicalGrid) {
             const row = this.row as IgxHierarchicalRowComponent;
-            const expanderWidth = row.expander.nativeElement.getBoundingClientRect().width;
-            this._ghostHostX += expanderWidth;
+            if (row.expander) {
+                const expanderWidth = row.expander.nativeElement.getBoundingClientRect().width;
+                this._ghostHostX += expanderWidth;
+            }
         }
 
         const ghost = this.ghostElement;
