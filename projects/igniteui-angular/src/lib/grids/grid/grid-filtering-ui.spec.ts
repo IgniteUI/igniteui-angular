@@ -55,8 +55,8 @@ const FILTER_UI_SCROLL_END_CLASS = '.igx-grid__filtering-row-scroll-end';
 
 describe('IgxGrid - Filtering actions #grid', () => {
     configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent
             ],
@@ -66,7 +66,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
             ]
         })
             .compileComponents();
-    }));
+    });
 
     let fix, grid;
     beforeEach(fakeAsync(() => {
@@ -1670,8 +1670,8 @@ describe('IgxGrid - Filtering actions #grid', () => {
 
 describe('IgxGrid - Filtering Row UI actions #grid', () => {
     configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
                 IgxGridFilteringScrollComponent,
@@ -1685,7 +1685,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 IgxGridExcelStyleFilteringModule
             ]
         }).compileComponents();
-    }));
+    });
 
     afterEach(() => {
         UIInteractions.clearOverlay();
@@ -3661,8 +3661,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
 describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
                 IgxTestExcelFilteringDatePickerComponent,
@@ -3678,7 +3678,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 IgxGridExcelStyleFilteringModule]
         })
             .compileComponents();
-    }));
+    });
 
     afterEach(() => {
         UIInteractions.clearOverlay();

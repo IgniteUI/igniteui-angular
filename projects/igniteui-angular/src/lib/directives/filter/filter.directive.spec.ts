@@ -9,8 +9,8 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('Filter', () => {
     configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [DeclarativeListTestComponent, DynamicListTestComponent],
             imports: [IgxFilterModule, IgxListModule],
             providers: [
@@ -18,7 +18,7 @@ describe('Filter', () => {
             ]
         })
             .compileComponents();
-    }));
+    });
 
     it('should filter declaratively created list', () => {
         const fixture = TestBed.createComponent(DeclarativeListTestComponent);

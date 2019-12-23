@@ -29,8 +29,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSimpleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
@@ -48,7 +48,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             ]
         })
             .compileComponents();
-    }));
+    });
 
     it('should have tree-column with a \'string\' dataType', fakeAsync(/** height/width setter rAF */() => {
         // Init test

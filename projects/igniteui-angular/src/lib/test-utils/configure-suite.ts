@@ -16,7 +16,6 @@ export const configureTestSuite = () => {
     TestBed.resetTestingModule = () => TestBed;
     resizeObserverIgnoreError();
   });
-
   afterEach(() => {
     UIInteractions.clearOverlay();
     testBedApi._activeFixtures.forEach((fixture: ComponentFixture<any>) => fixture.destroy());

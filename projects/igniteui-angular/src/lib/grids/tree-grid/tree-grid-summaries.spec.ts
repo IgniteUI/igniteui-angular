@@ -20,8 +20,8 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
     configureTestSuite();
     const DEBOUNCETIME = 30;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSummariesComponent,
                 IgxTreeGridSummariesKeyComponent,
@@ -35,7 +35,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
                 IgxTreeGridModule]
         })
             .compileComponents();
-    }));
+    });
 
     describe('', () => {
         let fix;

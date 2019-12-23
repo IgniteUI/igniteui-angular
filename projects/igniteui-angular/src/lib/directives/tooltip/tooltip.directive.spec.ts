@@ -18,8 +18,8 @@ describe('IgxTooltip', () => {
     let tooltipTarget: IgxTooltipTargetDirective;
     let button;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 IgxTooltipSingleTargetComponent,
                 IgxTooltipMultipleTargetsComponent
@@ -27,7 +27,7 @@ describe('IgxTooltip', () => {
             imports: [NoopAnimationsModule, IgxTooltipModule]
         }).compileComponents();
         UIInteractions.clearOverlay();
-    }));
+    });
 
     afterEach(() => {
         UIInteractions.clearOverlay();

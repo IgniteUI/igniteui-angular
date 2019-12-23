@@ -20,8 +20,8 @@ const INDETERMINATE_CLASS = 'igx-linear-bar--indeterminate';
 describe('IgLinearBar', () => {
     configureTestSuite();
     const tickTime = 2000;
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 InitLinearProgressBarComponent,
                 LinearBarComponent,
@@ -29,7 +29,7 @@ describe('IgLinearBar', () => {
             ]
         })
         .compileComponents();
-    }));
+    });
 
     it('should initialize linearProgressbar with default values', () => {
         const fixture = TestBed.createComponent(InitLinearProgressBarComponent);

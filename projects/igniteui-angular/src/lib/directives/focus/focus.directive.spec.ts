@@ -16,8 +16,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('igxFocus', () => {
     configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 SetFocusComponent,
                 NoFocusComponent,
@@ -26,7 +26,7 @@ describe('igxFocus', () => {
             ],
             imports: [ IgxFocusModule, IgxCheckboxModule, IgxDatePickerModule, NoopAnimationsModule ]
         }).compileComponents();
-    }));
+    });
 
     it('The second element should be focused', fakeAsync(() => {
         const fix = TestBed.createComponent(SetFocusComponent);

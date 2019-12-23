@@ -27,8 +27,8 @@ describe('IgxButton', () => {
         icon: `${baseClass}--icon`
     };
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 InitButtonComponent,
                 ButtonWithAttribsComponent,
@@ -39,7 +39,7 @@ describe('IgxButton', () => {
             providers: [IgxIconService]
         })
             .compileComponents();
-    }));
+    });
 
     it('Initializes a button', () => {
         const fixture = TestBed.createComponent(InitButtonComponent);

@@ -17,8 +17,8 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
     configureTestSuite();
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridWithNoScrollsComponent,
                 IgxTreeGridWithScrollsComponent
@@ -26,7 +26,7 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
             imports: [IgxTreeGridModule, NoopAnimationsModule]
         })
             .compileComponents();
-    }));
+    });
 
     describe('Navigation with no scroll', () => {
         // configureTestSuite();

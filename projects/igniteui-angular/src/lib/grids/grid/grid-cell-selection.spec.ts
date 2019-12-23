@@ -19,8 +19,8 @@ import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 describe('IgxGrid - Cell selection #grid', () => {
     configureTestSuite();
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 SelectionWithScrollsComponent,
                 SelectionWithTransactionsComponent,
@@ -29,7 +29,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
-    }));
+    });
 
     describe('Base', () => {
         let fix;

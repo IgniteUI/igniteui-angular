@@ -23,8 +23,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
     let countryCol;
     let emptyCol;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 CollapsibleColumnGroupTestComponent,
                 CollapsibleGroupsTemplatesTestComponent,
@@ -35,7 +35,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
                 IgxGridModule
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('Base Tests', () => {
         let fixture;

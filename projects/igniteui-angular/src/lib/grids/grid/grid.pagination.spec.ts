@@ -20,8 +20,8 @@ describe('IgxGrid - Grid Paging #grid', () => {
     configureTestSuite();
     const PAGER_CLASS = '.igx-paginator__pager';
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 ReorderedColumnsComponent,
                 PagingComponent,
@@ -31,7 +31,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
         }).compileComponents();
-    }));
+    });
 
     it('should paginate data UI', fakeAsync(() => {
         const fix = TestBed.createComponent(PagingComponent);

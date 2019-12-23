@@ -13,15 +13,15 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSortingComponent
             ],
             imports: [IgxTreeGridModule, NoopAnimationsModule]
         })
             .compileComponents();
-    }));
+    });
 
     beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fix = TestBed.createComponent(IgxTreeGridSortingComponent);

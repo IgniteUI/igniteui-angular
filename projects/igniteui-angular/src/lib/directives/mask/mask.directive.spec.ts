@@ -13,8 +13,8 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('igxMask', () => {
     configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 AlphanumSpaceMaskComponent,
                 AnyCharMaskComponent,
@@ -36,7 +36,7 @@ describe('igxMask', () => {
             ]
         })
         .compileComponents();
-    }));
+    });
 
     it('Initializes an input with default mask', fakeAsync(() => {
         const fixture = TestBed.createComponent(DefMaskComponent);

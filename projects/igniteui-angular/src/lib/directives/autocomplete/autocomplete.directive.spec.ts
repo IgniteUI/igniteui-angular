@@ -26,8 +26,8 @@ describe('IgxAutocomplete', () => {
     let dropDown: IgxDropDownComponent;
     configureTestSuite();
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             declarations: [
                 AutocompleteComponent,
                 AutocompleteInputComponent,
@@ -45,7 +45,7 @@ describe('IgxAutocomplete', () => {
             ]
         })
             .compileComponents();
-    }));
+    });
     describe('General tests: ', () => {
         beforeEach(async(() => {
             fixture = TestBed.createComponent(AutocompleteComponent);

@@ -19,8 +19,8 @@ import { ExpressionUI } from '../filtering/grid-filtering.service';
 
 describe('IgxGrid - Filtering actions #grid', () => {
     configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent
             ],
@@ -29,7 +29,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
                 IgxGridModule]
         })
         .compileComponents();
-    }));
+    });
 
     let fix, grid;
     beforeEach(fakeAsync(() => {

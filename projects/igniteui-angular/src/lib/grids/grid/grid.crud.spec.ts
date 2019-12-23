@@ -17,14 +17,14 @@ describe('IgxGrid - CRUD operations #grid', () => {
     let grid;
     let data;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 DefaultCRUDGridComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(async(() => {
         fix = TestBed.createComponent(DefaultCRUDGridComponent);

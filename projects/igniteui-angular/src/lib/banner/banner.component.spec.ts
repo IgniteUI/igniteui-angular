@@ -29,8 +29,8 @@ describe('igxBanner', () => {
     let bannerRowElement: DebugElement = null;
 
     configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             declarations: [
                 IgxBannerEmptyComponent,
                 IgxBannerOneButtonComponent,
@@ -49,7 +49,7 @@ describe('igxBanner', () => {
                 IgxIconModule
             ]
         }).compileComponents();
-    }));
+    });
 
     describe('General tests: ', () => {
         it('Should initialize properly banner component with empty template', () => {

@@ -15,8 +15,8 @@ const CLASS_OVERLAY_CONTENT_MODAL = `${OVERLAY_MAIN_CLASS}__content--modal`;
 
 describe('Dialog', () => {
     configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             declarations: [
                 AlertComponent,
                 DialogComponent,
@@ -29,7 +29,7 @@ describe('Dialog', () => {
             ],
             imports: [BrowserAnimationsModule, NoopAnimationsModule, IgxDialogModule]
         }).compileComponents();
-    }));
+    });
 
     afterEach(() => {
         UIInteractions.clearOverlay();

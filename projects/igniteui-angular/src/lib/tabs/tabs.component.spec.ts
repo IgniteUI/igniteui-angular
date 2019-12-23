@@ -25,7 +25,7 @@ describe('IgxTabs', () => {
     const tabItemNormalCssClass = 'igx-tabs__header-menu-item';
     const tabItemSelectedCssClass = 'igx-tabs__header-menu-item--selected';
 
-    beforeEach(async(() => {
+    beforeEach(async() => {
 
         const testRoutes = [
             { path: 'view1', component: TabsRoutingView1Component },
@@ -33,14 +33,14 @@ describe('IgxTabs', () => {
             { path: 'view3', component: TabsRoutingView3Component }
         ];
 
-        TestBed.configureTestingModule({
+        await TestBed.configureTestingModule({
             declarations: [TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent,
                 TabsTestSelectedTabComponent, TabsTestCustomStylesComponent, TabsTestBug4420Component, TabsRoutingTestComponent,
                 TabsTabsOnlyModeTest1Component, TabsTabsOnlyModeTest2Component],
             imports: [IgxTabsModule, IgxButtonModule, IgxDropDownModule, IgxToggleModule, BrowserAnimationsModule,
                 TabsRoutingViewComponentsModule, RouterTestingModule.withRoutes(testRoutes)]
         }).compileComponents();
-    }));
+    });
 
     describe('IgxTabs Component with static Panels Definitions', () => {
         let fixture;

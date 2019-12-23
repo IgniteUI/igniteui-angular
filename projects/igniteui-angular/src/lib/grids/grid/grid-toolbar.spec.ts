@@ -17,8 +17,8 @@ describe('IgxGrid - Grid Toolbar #grid', () => {
     let fixture;
     let grid;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 GridToolbarTestPage1Component
             ],
@@ -32,7 +32,7 @@ describe('IgxGrid - Grid Toolbar #grid', () => {
             ]
         })
         .compileComponents();
-    }));
+    });
 
     beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fixture = TestBed.createComponent(GridToolbarTestPage1Component);
@@ -532,8 +532,8 @@ describe('IgxGrid - Grid Toolbar Custom Content #grid', () => {
     let fixture;
     let grid;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 GridToolbarTestPage1Component,
                 GridToolbarTestPage2Component
@@ -548,7 +548,7 @@ describe('IgxGrid - Grid Toolbar Custom Content #grid', () => {
             ]
         })
         .compileComponents();
-    }));
+    });
 
     afterEach(() => {
         UIInteractions.clearOverlay();

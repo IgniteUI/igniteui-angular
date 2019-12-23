@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { TestBed, async } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -11,8 +11,8 @@ import { IgxCalendarModule } from '../calendar.module';
 describe('IgxMonthPicker', () => {
     configureTestSuite();
 
-    beforeEach(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             declarations: [IgxMonthPickerSampleComponent],
             imports: [FormsModule, NoopAnimationsModule, IgxCalendarModule]
         }).compileComponents();

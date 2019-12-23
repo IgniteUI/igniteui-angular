@@ -124,8 +124,8 @@ describe('IgxChipsArea', () => {
     configureTestSuite();
     const CHIP_REMOVE_BUTTON = 'igx-chip__remove';
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             declarations: [
                 TestChipComponent,
                 TestChipReorderComponent,
@@ -133,7 +133,7 @@ describe('IgxChipsArea', () => {
             ],
             imports: [FormsModule, IgxIconModule, IgxChipsModule, IgxPrefixModule, IgxSuffixModule]
         }).compileComponents();
-    }));
+    });
 
     it('should add chips when adding data items ', () => {
         const fix = TestBed.createComponent(TestChipComponent);

@@ -24,8 +24,8 @@ describe('Avatar', () => {
         icon: `${baseClass}--icon`
     };
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
             declarations: [
                 InitAvatarComponent,
                 AvatarWithAttribsComponent,
@@ -36,7 +36,7 @@ describe('Avatar', () => {
             imports: [IgxIconModule]
         })
             .compileComponents();
-    }));
+    });
 
     it('Initializes avatar with auto-incremented id', () => {
         const fixture = TestBed.createComponent(InitAvatarComponent);

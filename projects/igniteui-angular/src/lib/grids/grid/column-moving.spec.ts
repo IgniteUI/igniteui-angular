@@ -28,8 +28,8 @@ describe('IgxGrid - Column Moving #grid', () => {
 
     let fixture, grid: IgxGridComponent;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 MovableColumnsComponent,
                 MovableTemplatedColumnsComponent,
@@ -42,7 +42,7 @@ describe('IgxGrid - Column Moving #grid', () => {
                 IgxGridModule
             ]
         }).compileComponents();
-    }));
+    });
 
     afterEach(() => {
         UIInteractions.clearOverlay();

@@ -14,12 +14,12 @@ describe('Multi-View Calendar - ', () => {
     let fixture, calendar;
     configureTestSuite();
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await  TestBed.configureTestingModule({
             declarations: [MultiViewCalendarSampleComponent, MultiViewDatePickerSampleComponent, MultiViewNgModelSampleComponent],
             imports: [IgxCalendarModule, IgxDatePickerModule, FormsModule, NoopAnimationsModule]
         }).compileComponents();
-    }));
+    });
 
     describe('Base Tests - ', () => {
         beforeEach(async(() => {

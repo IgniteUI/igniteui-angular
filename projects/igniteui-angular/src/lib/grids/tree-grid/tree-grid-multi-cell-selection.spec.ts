@@ -17,8 +17,8 @@ import { GridSelectionMode } from '../common/enums';
 describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
     configureTestSuite();
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSelectionKeyComponent,
                 IgxTreeGridSelectionComponent,
@@ -27,7 +27,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             ],
             imports: [NoopAnimationsModule, IgxTreeGridModule]
         }).compileComponents();
-    }));
+    });
 
     describe('Flat Data', () => {
         let fix;

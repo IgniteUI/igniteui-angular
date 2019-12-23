@@ -15,8 +15,8 @@ import { IgxDayItemComponent } from './days-view/day-item.component';
 
 describe('IgxCalendar', () => {
     configureTestSuite();
-    beforeEach(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async () => {
+        await  TestBed.configureTestingModule({
             declarations: [IgxCalendarSampleComponent, IgxCalendaRangeComponent, IgxCalendarDisabledSpecialDatesComponent],
             imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
         });
@@ -181,8 +181,8 @@ describe('IgxCalendar', () => {
         let calendar;
         let dom;
         beforeEach(
-            async(() => {
-                TestBed.configureTestingModule({
+            async() => {
+                await  TestBed.configureTestingModule({
                     declarations: [IgxCalendarSampleComponent],
                     imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
                 }).compileComponents()
@@ -192,7 +192,7 @@ describe('IgxCalendar', () => {
                         calendar = fixture.componentInstance.calendar;
                         dom = fixture.debugElement;
                     });
-            })
+            }
         );
 
         it('should initialize a calendar component', () => {
@@ -1299,8 +1299,8 @@ describe('IgxCalendar', () => {
         let calendar;
         let ci;
         beforeEach(
-            async(() => {
-                TestBed.configureTestingModule({
+            async () => {
+                await   TestBed.configureTestingModule({
                     declarations: [IgxCalendarSampleComponent],
                     imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
                 }).compileComponents()
@@ -1310,7 +1310,7 @@ describe('IgxCalendar', () => {
                         ci = fixture.componentInstance;
                         calendar = ci.calendar;
                     });
-            })
+            }
         );
 
         it('Deselect using API. Should deselect in "single" selection mode.', () => {
@@ -1625,8 +1625,8 @@ describe('IgxCalendar', () => {
         configureTestSuite();
 
         beforeEach(
-            async(() => {
-                TestBed.configureTestingModule({
+            async(async () => {
+                await  TestBed.configureTestingModule({
                     declarations: [IgxCalendarSampleComponent],
                     imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
                 }).compileComponents();

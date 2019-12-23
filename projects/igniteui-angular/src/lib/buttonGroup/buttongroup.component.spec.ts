@@ -48,8 +48,8 @@ class Button {
 
 describe('IgxButtonGroup', () => {
     configureTestSuite();
-   beforeEach(async(() => {
-        TestBed.configureTestingModule({
+   beforeEach(async () => {
+    await  TestBed.configureTestingModule({
             declarations: [
                 InitButtonGroupComponent,
                 InitButtonGroupWithValuesComponent,
@@ -63,7 +63,7 @@ describe('IgxButtonGroup', () => {
             ]
         })
         .compileComponents();
-    }));
+    });
 
    it('should initialize buttonGroup with default values', () => {
         const fixture = TestBed.createComponent(InitButtonGroupComponent);

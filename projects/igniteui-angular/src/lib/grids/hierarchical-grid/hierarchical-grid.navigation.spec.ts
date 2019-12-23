@@ -14,15 +14,15 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(async(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
@@ -949,15 +949,15 @@ describe('IgxHierarchicalGrid Multi-layout Navigation #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridMultiLayoutComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
         }).compileComponents();
-    }));
+    });
 
     beforeEach(async(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridMultiLayoutComponent);
@@ -1110,15 +1110,15 @@ describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridSmallerChildComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
         }).compileComponents();
-    }));
+    });
     beforeEach(async(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridSmallerChildComponent);
         fixture.detectChanges();

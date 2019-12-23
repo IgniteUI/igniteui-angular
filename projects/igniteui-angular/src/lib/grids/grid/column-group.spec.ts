@@ -22,8 +22,8 @@ const GRID_COL_THEAD_CLASS = '.igx-grid__th';
 describe('IgxGrid - multi-column headers #grid', () => {
     configureTestSuite();
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 OneGroupOneColGridComponent,
                 OneGroupThreeColsGridComponent,
@@ -49,7 +49,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
                 IgxGridModule
             ]
         }).compileComponents();
-    }));
+    });
 
     it('should initialize a grid with column groups', fakeAsync(/** height/width setter rAF */() => {
         const fixture = TestBed.createComponent(ColumnGroupTestComponent);

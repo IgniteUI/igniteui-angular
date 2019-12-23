@@ -16,8 +16,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 describe('IgxRadio', () => {
     configureTestSuite();
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    beforeEach(async() => {
+        await TestBed.configureTestingModule({
             declarations: [
                 IgxRadioComponent,
                 InitRadioComponent,
@@ -30,7 +30,7 @@ describe('IgxRadio', () => {
             imports: [FormsModule, IgxRippleModule, NoopAnimationsModule]
         })
             .compileComponents();
-    }));
+    });
 
     it('Init a radio', () => {
         const fixture = TestBed.createComponent(InitRadioComponent);
