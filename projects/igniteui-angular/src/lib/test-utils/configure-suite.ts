@@ -14,8 +14,9 @@ export const configureTestSuite = () => {
   beforeAll(() => {
     originReset = TestBed.resetTestingModule;
     // TestBed.resetTestingModule();
+    TestBed.resetTestEnvironment();
     TestBed.resetTestingModule = () => TestBed;
-    // resizeObserverIgnoreError();
+    resizeObserverIgnoreError();
   });
 
   afterEach(() => {
