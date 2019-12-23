@@ -13,8 +13,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgxSwitch', () => {
     configureTestSuite();
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 InitSwitchComponent,
                 SwitchSimpleComponent,
@@ -27,7 +27,7 @@ describe('IgxSwitch', () => {
             imports: [FormsModule, IgxRippleModule, NoopAnimationsModule]
         })
             .compileComponents();
-    });
+    }));
 
     it('Initializes', () => {
         const fixture = TestBed.createComponent(InitSwitchComponent);

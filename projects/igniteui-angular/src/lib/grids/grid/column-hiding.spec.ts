@@ -32,8 +32,8 @@ describe('Column Hiding UI #grid', () => {
     const verifyColumnIsHidden = GridFunctions.verifyColumnIsHidden;
     const getColumnHidingButton = GridFunctions.getColumnHidingButton;
 
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 ColumnHidingTestComponent,
                 ColumnGroupsHidingTestComponent
@@ -46,7 +46,7 @@ describe('Column Hiding UI #grid', () => {
             ]
         })
             .compileComponents();
-    });
+    }));
 
     beforeAll(() => {
         UIInteractions.clearOverlay();

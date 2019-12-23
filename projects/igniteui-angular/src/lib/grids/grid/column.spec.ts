@@ -16,8 +16,8 @@ describe('IgxGrid - Column properties #grid', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
 
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 ColumnsFromIterableComponent,
                 TemplatedColumnsComponent,
@@ -30,7 +30,7 @@ describe('IgxGrid - Column properties #grid', () => {
             imports: [IgxGridModule, NoopAnimationsModule]
         })
             .compileComponents();
-    });
+    }));
 
     it('should correctly initialize column templates', () => {
         const fix = TestBed.createComponent(TemplatedColumnsComponent);

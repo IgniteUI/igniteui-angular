@@ -31,8 +31,8 @@ const CELL_CSS_CLASS = '.igx-grid__td';
 describe('IgxGrid - Keyboard navigation #grid', () => {
     configureTestSuite();
 
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 DefaultGridComponent,
                 CtrlKeyKeyboardNagivationComponent,
@@ -46,7 +46,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
-    });
+    }));
 
     it('should move selected cell with arrow keys', (async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);

@@ -37,8 +37,8 @@ describe('IgxGrid - Summaries #grid', () => {
     const SUMMARY_CELL = 'igx-grid-summary-cell';
     const DEBOUNCETIME = 30;
 
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 ProductsComponent,
                 SummaryColumnComponent,
@@ -55,7 +55,7 @@ describe('IgxGrid - Summaries #grid', () => {
             imports: [BrowserAnimationsModule, IgxGridModule, NoopAnimationsModule]
         })
             .compileComponents();
-    });
+    }));
 
     describe('Base tests: ', () => {
         it('should not have summary if no summary is active ', () => {

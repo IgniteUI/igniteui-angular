@@ -40,8 +40,8 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
     let dropAreaElement: Element;
     let dragIndicatorElements: DebugElement[];
     configureTestSuite();
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 IgxGridRowDraggableComponent,
                 IgxGridRowCustomGhostDraggableComponent,
@@ -58,7 +58,7 @@ describe('IgxGrid - Row Drag Tests #grid', () => {
                 IgxTreeGridModule
             ]
         }).compileComponents();
-    });
+    }));
 
     afterEach(() => {
         UIInteractions.clearOverlay();

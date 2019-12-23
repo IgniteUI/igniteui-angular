@@ -19,14 +19,14 @@ const CELL_BLOCK = '.igx-grid__mrl-block';
 describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
     configureTestSuite();
 
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutTestComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
-    });
+    }));
 
     it('should navigate through a single layout with right and left arrow keys', (async () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);

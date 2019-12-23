@@ -20,8 +20,8 @@ describe('IgxGrid - Column Pinning #grid ', () => {
     const FIXED_HEADER_CSS = 'igx-grid__th--pinned';
     const FIXED_CELL_CSS = 'igx-grid__td--pinned';
 
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 DefaultGridComponent,
                 GridPinningComponent,
@@ -33,7 +33,7 @@ describe('IgxGrid - Column Pinning #grid ', () => {
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
-    });
+    }));
 
     it('should correctly initialize when there are initially pinned columns.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);

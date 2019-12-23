@@ -21,8 +21,8 @@ describe('IgxTreeGrid - search API #tGrid', () => {
     let fixNativeElement;
     let treeGrid: IgxTreeGridComponent;
 
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSearchComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
@@ -30,7 +30,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
             ],
             imports: [IgxTreeGridModule, NoopAnimationsModule]
         }).compileComponents();
-    });
+    }));
 
     describe('Child Collection', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {

@@ -10,15 +10,15 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxSelection', () => {
     configureTestSuite();
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 TriggerTextSelectionComponent,
                 TriggerTextSelectionOnClickComponent
             ],
             imports: [IgxTextSelectionModule]
-        }).compileComponents();
-    });
+        });
+    }));
 
     it('Should select the text which is into the input', async() => {
         const fix = TestBed.createComponent(TriggerTextSelectionComponent);

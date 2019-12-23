@@ -66,8 +66,8 @@ describe('Card', () => {
         media: `${baseClass}__media`
     };
 
-    beforeEach(async () => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 InitCardComponent,
                 InitOutlinedCardComponent,
@@ -81,7 +81,7 @@ describe('Card', () => {
                 IgxButtonModule
             ]
         }).compileComponents();
-    });
+    }));
 
     it('Initializes default card', () => {
         const fixture = TestBed.createComponent(InitCardComponent);

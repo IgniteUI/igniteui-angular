@@ -25,8 +25,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
     configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridTestCustomToolbarComponent
@@ -34,7 +34,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule, IgxIconModule]
         }).compileComponents();
-    });
+    }));
 
     beforeEach(async(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);

@@ -16,15 +16,15 @@ describe('Scroll Inertia Directive ', () => {
     configureTestSuite();
     let fix: ComponentFixture<ScrollInertiaComponent>;
 
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 IgxTestScrollInertiaDirective,
                 ScrollInertiaComponent
             ],
             imports: [IgxScrollInertiaModule]
         }).compileComponents();
-    });
+    }));
 
     beforeEach(() => {
         fix = TestBed.createComponent(ScrollInertiaComponent);

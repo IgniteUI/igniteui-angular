@@ -25,8 +25,8 @@ const DEBOUNCETIME = 30;
 describe('IgxGrid - Row Selection #grid', () => {
     configureTestSuite();
 
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 GridWithPrimaryKeyComponent,
                 RowSelectionComponent,
@@ -43,7 +43,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             ]
         })
             .compileComponents();
-    });
+    }));
 
     describe('Base tests', () => {
         let fix;

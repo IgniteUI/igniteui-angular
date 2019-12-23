@@ -24,8 +24,8 @@ const BOTTOM_TO_TOP_TICK_LABLES = '.igx-slider__tick-labels--bottom-top';
 
 describe('IgxSlider', () => {
     configureTestSuite();
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 SliderInitializeTestComponent,
                 SliderMinMaxComponent,
@@ -39,7 +39,7 @@ describe('IgxSlider', () => {
                 IgxSliderModule, NoopAnimationsModule, FormsModule, HammerModule
             ]
         }).compileComponents();
-    });
+    }));
 
     describe('Base tests', () => {
         let fixture: ComponentFixture<SliderInitializeTestComponent>;

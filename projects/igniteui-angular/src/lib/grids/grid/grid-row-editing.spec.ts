@@ -36,8 +36,8 @@ const DEBOUNCETIME = 30;
 
 describe('IgxGrid - Row Editing #grid', () => {
     configureTestSuite();
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 IgxGridRowEditingComponent,
                 IgxGridRowEditingTransactionComponent,
@@ -50,7 +50,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             imports: [
                 NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
-    });
+    }));
 
     describe('General tests', () => {
         let fix;

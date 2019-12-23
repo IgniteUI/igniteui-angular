@@ -17,8 +17,8 @@ import { InteractionMode } from '../core/enums';
 
 describe('IgxDatePicker', () => {
     configureTestSuite();
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 IgxDatePickerTestComponent,
                 IgxDatePickerWithWeekStartComponent,
@@ -38,7 +38,7 @@ describe('IgxDatePicker', () => {
                 IgxButtonModule, IgxTextSelectionModule]
         })
             .compileComponents();
-    });
+    }));
 
     afterEach(() => {
         UIInteractions.clearOverlay();

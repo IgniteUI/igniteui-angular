@@ -13,15 +13,15 @@ describe('IgxGrid - Clipboard #grid', () => {
     configureTestSuite();
     let fix;
     let grid: IgxGridComponent;
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 IgxGridClipboardComponent
             ],
             imports: [BrowserAnimationsModule, IgxGridModule, NoopAnimationsModule]
         })
             .compileComponents();
-    });
+    }));
 
     beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fix = TestBed.createComponent(IgxGridClipboardComponent);

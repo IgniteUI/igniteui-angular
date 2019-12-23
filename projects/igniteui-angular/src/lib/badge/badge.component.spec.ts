@@ -11,8 +11,8 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 
 describe('Badge', () => {
     configureTestSuite();
-    beforeEach(async () => {
-        await  TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 InitBadgeComponent,
                 InitBadgeWithDefaultsComponent,
@@ -22,7 +22,7 @@ describe('Badge', () => {
             ],
             imports: [IgxIconModule]
         }).compileComponents();
-    });
+    }));
 
     it('Initializes badge ', () => {
         const fixture = TestBed.createComponent(InitBadgeComponent);

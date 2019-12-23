@@ -23,8 +23,8 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     let fix;
     let treeGrid;
 
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridExpandingComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
@@ -37,7 +37,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 IgxTreeGridModule]
         })
             .compileComponents();
-    });
+    }));
 
     describe('Child Collection', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
@@ -1134,8 +1134,8 @@ describe('Row editing expanding/collapsing #tGrid', () => {
     let fix;
     let treeGrid;
 
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridRowEditingComponent
             ],
@@ -1144,7 +1144,7 @@ describe('Row editing expanding/collapsing #tGrid', () => {
                 IgxTreeGridModule]
         })
             .compileComponents();
-    });
+    }));
 
     beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fix = TestBed.createComponent(IgxTreeGridRowEditingComponent);
@@ -1380,8 +1380,8 @@ describe('Custom expand/collapse template #tGrid', () => {
     let fix;
     let treeGrid;
 
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridCustomExpandersTemplateComponent
             ],
@@ -1391,7 +1391,7 @@ describe('Custom expand/collapse template #tGrid', () => {
                 IgxTreeGridModule]
         })
             .compileComponents();
-    });
+    }));
 
     beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fix = TestBed.createComponent(IgxTreeGridCustomExpandersTemplateComponent);

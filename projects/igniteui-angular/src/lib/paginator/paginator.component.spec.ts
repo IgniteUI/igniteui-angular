@@ -8,14 +8,14 @@ import { GridFunctions } from '../test-utils/grid-functions.spec';
 
 describe('IgxPaginator with default settings', () => {
     configureTestSuite();
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 DefaultPaginatorComponent
             ],
             imports: [IgxPaginatorModule, NoopAnimationsModule]
         }).compileComponents();
-    });
+    }));
     it('should calculate number of pages correctly', () => {
         const fix = TestBed.createComponent(DefaultPaginatorComponent);
         fix.detectChanges();
@@ -90,8 +90,8 @@ describe('IgxPaginator with default settings', () => {
 
 describe('IgxPaginator with custom settings', () => {
     configureTestSuite();
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 CustomizedPaginatorComponent,
                 DisabledPaginatorComponent,
@@ -99,7 +99,7 @@ describe('IgxPaginator with custom settings', () => {
             ],
             imports: [IgxPaginatorModule, NoopAnimationsModule]
         }).compileComponents();
-    });
+    }));
 
     it('should calculate correctly pages when custom select options are given', () => {
         const fix = TestBed.createComponent(CustomizedPaginatorComponent);

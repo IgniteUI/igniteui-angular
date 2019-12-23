@@ -7,12 +7,12 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxLayoutDirective', () => {
     configureTestSuite();
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [TestFlexLayoutComponent],
             imports: [IgxLayoutModule]
         }).compileComponents();
-    });
+    }));
 
     it('should initialize with flex defaults', () => {
         const fixture = TestBed.createComponent(TestFlexLayoutComponent);

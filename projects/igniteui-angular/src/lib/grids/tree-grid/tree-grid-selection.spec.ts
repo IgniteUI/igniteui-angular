@@ -30,8 +30,8 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSimpleComponent,
                 IgxTreeGridCellSelectionComponent,
@@ -43,7 +43,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             imports: [IgxTreeGridModule, NoopAnimationsModule, IgxGridSelectionModule]
         })
             .compileComponents();
-    });
+    }));
 
     describe('API Row Selection', () => {
         // configureTestSuite();

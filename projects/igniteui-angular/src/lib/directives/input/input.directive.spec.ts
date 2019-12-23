@@ -20,8 +20,8 @@ const INPUT_GROUP_INVALID_CSS_CLASS = 'igx-input-group--invalid';
 
 describe('IgxInput', () => {
     configureTestSuite();
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 InputComponent,
                 TextareaComponent,
@@ -43,7 +43,7 @@ describe('IgxInput', () => {
             ]
         })
         .compileComponents();
-    });
+    }));
 
     it('Initializes an input.', () => {
         const fixture = TestBed.createComponent(InputComponent);

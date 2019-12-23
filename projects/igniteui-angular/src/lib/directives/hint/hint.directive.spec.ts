@@ -10,8 +10,8 @@ describe('IgxHint', () => {
     const HINT_START_CSS_CLASS = 'igx-input-group__hint-item--start';
     const HINT_END_CSS_CLASS = 'igx-input-group__hint-item--end';
 
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 HintComponent,
                 StartHintComponent,
@@ -22,7 +22,7 @@ describe('IgxHint', () => {
             ]
         })
         .compileComponents();
-    });
+    }));
 
     it('Initializes a hint.', () => {
         const fixture = TestBed.createComponent(HintComponent);

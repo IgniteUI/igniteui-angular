@@ -20,19 +20,19 @@ describe('IgxBottomNav', () => {
     const tabItemNormalCssClass = 'igx-bottom-nav__menu-item';
     const tabItemSelectedCssClass = 'igx-bottom-nav__menu-item--selected';
 
-    beforeEach(async() => {
+    beforeEach(async(() => {
         const testRoutes = [
             { path: 'view1', component: BottomNavRoutingView1Component },
             { path: 'view2', component: BottomNavRoutingView2Component },
             { path: 'view3', component: BottomNavRoutingView3Component }
         ];
 
-        await TestBed.configureTestingModule({
+        TestBed.configureTestingModule({
             declarations: [TabBarTestComponent, BottomTabBarTestComponent, TemplatedTabBarTestComponent, TabBarRoutingTestComponent,
                 TabBarTabsOnlyModeTestComponent],
             imports: [IgxBottomNavModule, BottomNavRoutingViewComponentsModule, RouterTestingModule.withRoutes(testRoutes)]
         }).compileComponents();
-    });
+    }));
 
     describe('IgxBottomNav Component with Panels Definitions', () => {
         let fixture;

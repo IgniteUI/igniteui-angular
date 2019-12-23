@@ -14,8 +14,8 @@ describe('IgxGrid - Cell component #grid', () => {
 
     const CELL_CSS_CLASS = '.igx-grid__td';
 
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 DefaultGridComponent,
                 VirtualGridComponent,
@@ -26,7 +26,7 @@ describe('IgxGrid - Cell component #grid', () => {
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
-    });
+    }));
 
     it('@Input properties and getters', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);

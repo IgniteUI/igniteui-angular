@@ -21,8 +21,8 @@ const GRID_MRL_BLOCK = '.igx-grid__mrl-block';
 
 describe('IgxGrid - multi-row-layout #grid', () => {
     configureTestSuite();
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutTestComponent,
                 ColumnLayoutAndGroupsTestComponent
@@ -32,7 +32,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
                 IgxGridModule
             ]
         }).compileComponents();
-    });
+    }));
 
     function verifyHeadersAreAligned(headerCells, rowCells) {
         for (let i; i < headerCells.length; i++) {

@@ -35,8 +35,8 @@ const fiftyItems = Array.apply(null, { length: 50 }).map((e, i) => ({
 
 describe('IgxDropDown ', () => {
     configureTestSuite();
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 IgxDropDownTestComponent,
                 IgxDropDownTestScrollComponent,
@@ -67,7 +67,7 @@ describe('IgxDropDown ', () => {
             ]
         })
             .compileComponents();
-    });
+    }));
 
     describe('igxDropDown integration tests', () => {
         // configureTestSuite();

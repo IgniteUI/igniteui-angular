@@ -16,8 +16,8 @@ describe('IgxToggle', () => {
     configureTestSuite();
     const HIDDEN_TOGGLER_CLASS = 'igx-toggle--hidden';
     const TOGGLER_CLASS = 'igx-toggle';
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 IgxToggleActionTestComponent,
                 IgxToggleOutletComponent,
@@ -30,7 +30,7 @@ describe('IgxToggle', () => {
             imports: [NoopAnimationsModule, IgxToggleModule]
         })
             .compileComponents();
-    });
+    }));
 
     it('IgxToggleDirective is defined', () => {
         const fixture = TestBed.createComponent(IgxToggleTestComponent);

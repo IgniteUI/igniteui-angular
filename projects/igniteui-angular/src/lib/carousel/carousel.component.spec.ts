@@ -25,8 +25,8 @@ describe('Carousel', () => {
     let fixture;
     let carousel: IgxCarouselComponent;
 
-    beforeEach(async () => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 CarouselTestComponent,
                 CarouselTemplateSetInMarkupTestComponent,
@@ -37,7 +37,7 @@ describe('Carousel', () => {
             imports: [IgxCarouselModule, NoopAnimationsModule]
         })
             .compileComponents();
-    });
+    }));
 
     describe('Base Tests: ', () => {
         beforeEach(() => {

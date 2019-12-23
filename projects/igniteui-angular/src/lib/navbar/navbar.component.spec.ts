@@ -11,8 +11,8 @@ const LEFT_AREA_CSS_CLAS = '.igx-navbar__left';
 
 describe('IgxNavbar', () => {
     configureTestSuite();
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 NavbarIntializeTestComponent,
                 NavbarCustomActionIconTestComponent,
@@ -23,7 +23,7 @@ describe('IgxNavbar', () => {
                 IgxIconModule
             ]
         }).compileComponents();
-    });
+    }));
 
     let fixture, component, domNavbar;
 

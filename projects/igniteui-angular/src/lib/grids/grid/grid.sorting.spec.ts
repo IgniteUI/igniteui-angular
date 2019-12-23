@@ -22,9 +22,9 @@ describe('IgxGrid - Grid Sorting #grid', () => {
     configureTestSuite();
     let fixture;
     let grid: IgxGridComponent;
-    beforeEach(async() => {
+    beforeEach(async(() => {
 
-        await TestBed.configureTestingModule({
+        TestBed.configureTestingModule({
             declarations: [
                 GridDeclaredColumnsComponent,
                 SortByParityComponent
@@ -32,7 +32,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             imports: [NoopAnimationsModule, IgxGridModule]
         })
         .compileComponents();
-    });
+    }));
 
     beforeEach(async(() => {
         fixture = TestBed.createComponent(GridDeclaredColumnsComponent);

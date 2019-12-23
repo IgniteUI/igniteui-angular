@@ -13,8 +13,8 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
     let fix;
     let grid;
 
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridFilteringComponent, IgxTreeGridFilteringRowEditingComponent
             ],
@@ -23,7 +23,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
                 IgxTreeGridModule]
         })
         .compileComponents();
-    });
+    }));
 
     beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fix = TestBed.createComponent(IgxTreeGridFilteringComponent);

@@ -40,8 +40,8 @@ const LIST_COSY_DENSITY_CSS_CLASS = 'igx-list--cosy';
 
 describe('List', () => {
     configureTestSuite();
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 CustomEmptyListComponent,
                 EmptyListComponent,
@@ -57,7 +57,7 @@ describe('List', () => {
             ],
             imports: [IgxListModule, IgxForOfModule, IgxIconModule]
         }).compileComponents();
-    });
+    }));
 
     it('should initialize igx-list with item and header', () => {
         const fixture = TestBed.createComponent(ListWithHeaderComponent);

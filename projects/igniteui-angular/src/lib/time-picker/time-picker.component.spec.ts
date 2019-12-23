@@ -15,11 +15,11 @@ import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 // tslint:disable: no-use-before-declare
 describe('IgxTimePicker', () => {
     configureTestSuite();
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             imports: [IgxTimePickerTestingModule]
         }).compileComponents();
-    });
+    }));
 
     afterEach(async(() => {
         UIInteractions.clearOverlay();

@@ -16,8 +16,8 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSimpleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent
@@ -25,7 +25,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             imports: [IgxTreeGridModule, NoopAnimationsModule]
         })
             .compileComponents();
-    });
+    }));
 
     describe('Child Collection', () => {
         // configureTestSuite();

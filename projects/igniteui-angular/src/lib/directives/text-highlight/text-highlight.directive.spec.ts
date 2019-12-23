@@ -10,14 +10,14 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxHighlight', () => {
     configureTestSuite();
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 IgxTextHighlightDirective,
                 HighlightLoremIpsumComponent
             ]
-        }).compileComponents();
-    });
+        });
+    }));
 
     it('Highlight inputs should have the proper values', () => {
         const fix = TestBed.createComponent(HighlightLoremIpsumComponent);

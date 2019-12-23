@@ -26,8 +26,8 @@ describe('Column Pinning UI #grid', () => {
     const verifyCheckbox = HelperUtils.verifyCheckbox;
     const verifyColumnIsPinned = GridFunctions.verifyColumnIsPinned;
 
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 ColumnPinningTestComponent,
                 ColumnGroupsPinningTestComponent,
@@ -41,7 +41,7 @@ describe('Column Pinning UI #grid', () => {
             ]
         })
         .compileComponents();
-    });
+    }));
 
     describe('', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {

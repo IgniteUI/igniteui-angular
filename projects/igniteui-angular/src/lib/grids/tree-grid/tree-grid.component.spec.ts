@@ -21,8 +21,8 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
     let fix;
     let grid: IgxTreeGridComponent;
 
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridWrappedInContComponent,
                 IgxTreeGridAutoGenerateComponent,
@@ -33,7 +33,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             imports: [
                 NoopAnimationsModule, IgxTreeGridModule]
         }).compileComponents();
-    });
+    }));
 
     describe('IgxTreeGrid - default rendering for rows and columns', () => {
 

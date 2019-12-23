@@ -22,8 +22,8 @@ const EDITED_CELL_CSS_CLASS = 'igx-grid__td--edited';
 
 describe('IgxGrid - Cell Editing #grid', () => {
     configureTestSuite();
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 CellEditingTestComponent,
                 CellEditingScrollTestComponent,
@@ -32,7 +32,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
-    });
+    }));
 
     describe('Base Tests', () => {
         let fixture;

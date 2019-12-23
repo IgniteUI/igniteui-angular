@@ -33,8 +33,8 @@ describe('IgxGrid - GroupBy #grid', () => {
     const CHIP_REMOVE_ICON = '.igx-chip__remove';
     const CHIP = 'igx-chip';
 
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 DefaultGridComponent,
                 GroupableGridComponent,
@@ -45,7 +45,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
-    });
+    }));
 
     function checkGroups(groupRows, expectedGroupOrder, grExpr?) {
         // verify group rows are sorted correctly, their indexes in the grid are correct and their group records match the group value.

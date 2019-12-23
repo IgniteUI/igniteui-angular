@@ -19,15 +19,15 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 describe('IgxGridState - input properties #grid', () => {
     configureTestSuite();
 
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 IgxGridStateComponent,
                 IgxGridStateWithOptionsComponent
             ],
             imports: [ NoopAnimationsModule, IgxGridModule ]
         }).compileComponents();
-    });
+    }));
 
     it('should initialize an IgxGridState with default options object', () => {
         const defaultOptions = {

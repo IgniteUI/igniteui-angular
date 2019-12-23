@@ -17,8 +17,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     let fixture;
     let grid: IgxGridComponent;
     let colGroups: Array<any>;
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutPinningTestComponent,
                 ColumnLayoutFilteringTestComponent,
@@ -29,7 +29,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             imports: [
                 NoopAnimationsModule, IgxGridModule]
         }).compileComponents();
-    });
+    }));
 
     describe('Hiding ', () => {
         beforeEach(() => {

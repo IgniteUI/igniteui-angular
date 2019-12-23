@@ -30,8 +30,8 @@ describe('Excel Exporter', () => {
     let actualData: FileContentData;
     let options: IgxExcelExporterOptions;
 
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
+    beforeEach(async(() => {
+        TestBed.configureTestingModule({
             declarations: [
                 ReorderedColumnsComponent,
                 GridIDNameJobTitleComponent,
@@ -41,7 +41,7 @@ describe('Excel Exporter', () => {
             ],
             imports: [IgxGridModule, IgxTreeGridModule, NoopAnimationsModule]
         }).compileComponents();
-    });
+    }));
 
     beforeEach(async(() => {
         exporter = new IgxExcelExporterService();
