@@ -12,7 +12,7 @@ export const configureTestSuite = () => {
   const originReset = TestBed.resetTestingModule;
 
   beforeAll(() => {
-    TestBed.resetTestingModule();
+    //TestBed.resetTestingModule();
     TestBed.resetTestingModule = () => TestBed;
     resizeObserverIgnoreError();
   });
