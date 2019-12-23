@@ -8,20 +8,17 @@ import { UIInteractions } from './ui-interactions.spec';
  * @hidden
  */
 export const configureTestSuite = () => {
+  const testBedApi: any = getTestBed();
+  const originReset = TestBed.resetTestingModule;
 
-
-  let originReset;
   beforeAll(() => {
-    originReset = TestBed.resetTestingModule;
-    // TestBed.resetTestingModule();
-    TestBed.resetTestEnvironment();
+    TestBed.resetTestingModule();
     TestBed.resetTestingModule = () => TestBed;
     resizeObserverIgnoreError();
   });
 
   afterEach(() => {
     UIInteractions.clearOverlay();
-    const testBedApi: any = getTestBed();
     testBedApi._activeFixtures.forEach((fixture: ComponentFixture<any>) => fixture.destroy());
     testBedApi._instantiated = false;
   });
