@@ -261,13 +261,13 @@ export class IgxGridNavigationService {
 
     private findFirstDataRowIndex() {
         const dv = this.grid.dataView;
-        return dv.findIndex(rec => !this.grid.isGroupByRecord(rec) && !this.grid.isDetailRecord(rec));
+        return dv.findIndex(rec => !this.grid.isGroupByRecord(rec));
     }
 
     private findLastDataRowIndex() {
         const dv = this.grid.dataView;
         const reversedData = dv.slice().reverse();
-        const record =  reversedData.find(rec => !this.grid.isGroupByRecord(rec) && !this.grid.isDetailRecord(rec));
+        const record =  reversedData.find(rec => !this.grid.isGroupByRecord(rec));
         return dv.indexOf(record);
     }
 
