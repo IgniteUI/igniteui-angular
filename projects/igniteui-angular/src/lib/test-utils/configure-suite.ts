@@ -9,23 +9,23 @@ import { UIInteractions } from './ui-interactions.spec';
  */
 export const configureTestSuite = () => {
 
-  let originReset;
+  // let originReset;
 
   beforeAll(() => {
-    originReset = TestBed.resetTestingModule;
-    // TestBed.resetTestingModule();
-    TestBed.resetTestingModule = () => TestBed;
+    // originReset = TestBed.resetTestingModule;
+    // // TestBed.resetTestingModule();
+    // TestBed.resetTestingModule = () => TestBed;
     resizeObserverIgnoreError();
   });
-  afterEach(() => {
-    // UIInteractions.clearOverlay();
-    const testBedApi: any = getTestBed();
-    testBedApi._activeFixtures.forEach((fixture: ComponentFixture<any>) => fixture.destroy());
-    testBedApi._instantiated = false;
-  });
+  // afterEach(() => {
+  //   // UIInteractions.clearOverlay();
+  //   // const testBedApi: any = getTestBed();
+  //   // testBedApi._activeFixtures.forEach((fixture: ComponentFixture<any>) => fixture.destroy());
+  //   // testBedApi._instantiated = false;
+  // });
 
-  afterAll(() => {
-    TestBed.resetTestingModule = originReset;
-    TestBed.resetTestingModule();
-  });
+  // afterAll(() => {
+  //   // TestBed.resetTestingModule = originReset;
+  //   // TestBed.resetTestingModule();
+  // });
 };
