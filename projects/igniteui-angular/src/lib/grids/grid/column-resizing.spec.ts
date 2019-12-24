@@ -15,15 +15,15 @@ import { MultiColumnHeadersComponent } from '../../test-utils/grid-samples.spec'
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxGrid - Deferred Column Resizing #grid', () => {
-    configureTestSuite();
+
     const DEBOUNCE_TIME = 200;
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const RESIZE_LINE_CLASS = '.igx-grid__th-resize-line';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
     const COLUMN_FILTER_CELL_SELECTOR = 'igx-grid-filtering-cell';
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 ResizableColumnsComponent,
                 PinnedColumnsComponent,
@@ -40,9 +40,8 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule
             ]
-        })
-            .compileComponents();
-    }));
+        });
+    });
 
     it('should define grid with resizable columns.', async() => {
         const fixture = TestBed.createComponent(ResizableColumnsComponent);

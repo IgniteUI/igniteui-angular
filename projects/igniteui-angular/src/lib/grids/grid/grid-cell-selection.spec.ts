@@ -17,10 +17,10 @@ import { GridSelectionMode } from '../common/enums';
 import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - Cell selection #grid', () => {
-    configureTestSuite();
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 SelectionWithScrollsComponent,
                 SelectionWithTransactionsComponent,
@@ -28,8 +28,8 @@ describe('IgxGrid - Cell selection #grid', () => {
                 CellSelectionSingleComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     describe('Base', () => {
         let fix;

@@ -16,7 +16,7 @@ const FAB_BUTTON_COMPACT = 'igx-button--fab-compact';
 const FAB_BUTTON_COSY = 'igx-button--fab-cosy';
 
 describe('IgxButton', () => {
-    configureTestSuite();
+
 
     const baseClass = 'igx-button';
     const classes = {
@@ -27,8 +27,8 @@ describe('IgxButton', () => {
         icon: `${baseClass}--icon`
     };
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 InitButtonComponent,
                 ButtonWithAttribsComponent,
@@ -37,9 +37,8 @@ describe('IgxButton', () => {
                 IgxIconComponent
             ],
             providers: [IgxIconService]
-        })
-            .compileComponents();
-    }));
+        });
+    });
 
     it('Initializes a button', () => {
         const fixture = TestBed.createComponent(InitButtonComponent);

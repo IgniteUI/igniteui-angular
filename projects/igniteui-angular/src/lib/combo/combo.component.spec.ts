@@ -61,9 +61,9 @@ const fiftyItems = Array.apply(null, { length: 50 }).map((e, i) => ({
 }));
 
 describe('igxCombo', () => {
-    configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxComboTestComponent,
                 IgxComboTestDataComponent,
@@ -90,8 +90,8 @@ describe('igxCombo', () => {
                 ReactiveFormsModule,
                 FormsModule
             ]
-        }).compileComponents();
-    }));
+        });
+    });
 
     describe('General tests: ', () => {
         it('Should initialize the combo component properly', fakeAsync(() => {

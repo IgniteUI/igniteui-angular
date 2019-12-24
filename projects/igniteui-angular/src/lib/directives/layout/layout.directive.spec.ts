@@ -6,13 +6,13 @@ import { IgxFlexDirective, IgxLayoutDirective, IgxLayoutModule } from './layout.
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxLayoutDirective', () => {
-    configureTestSuite();
-    beforeEach(async(() => {
+
+    configureTestSuite(() => {
         TestBed.configureTestingModule({
             declarations: [TestFlexLayoutComponent],
             imports: [IgxLayoutModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     it('should initialize with flex defaults', () => {
         const fixture = TestBed.createComponent(TestFlexLayoutComponent);

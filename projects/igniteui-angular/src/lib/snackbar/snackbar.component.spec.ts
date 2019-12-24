@@ -8,8 +8,8 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 
 describe('IgxSnackbar', () => {
     configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 SnackbarInitializeTestComponent,
                 SnackbarCustomContentComponent
@@ -18,8 +18,8 @@ describe('IgxSnackbar', () => {
                 BrowserAnimationsModule,
                 IgxSnackbarModule
             ]
-        }).compileComponents();
-    }));
+        });
+    });
 
     let fixture, domSnackbar, snackbar;
     beforeEach(async(() => {
@@ -92,9 +92,9 @@ describe('IgxSnackbar', () => {
 });
 
 describe('IgxSnackbar with custom content', () => {
-    configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 SnackbarCustomContentComponent
             ],
@@ -102,8 +102,8 @@ describe('IgxSnackbar with custom content', () => {
                 BrowserAnimationsModule,
                 IgxSnackbarModule
             ]
-        }).compileComponents();
-    }));
+        });
+    });
 
     let fixture, domSnackbar, snackbar;
     beforeEach(async(() => {

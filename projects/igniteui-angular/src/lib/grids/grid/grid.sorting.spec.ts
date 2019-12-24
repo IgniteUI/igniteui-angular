@@ -19,20 +19,18 @@ const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
 const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
 
 describe('IgxGrid - Grid Sorting #grid', () => {
-    configureTestSuite();
+
     let fixture;
     let grid: IgxGridComponent;
-    beforeEach(async(() => {
-
+    configureTestSuite(() => {
         TestBed.configureTestingModule({
             declarations: [
                 GridDeclaredColumnsComponent,
                 SortByParityComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
-        })
-        .compileComponents();
-    }));
+        });
+    });
 
     beforeEach(async(() => {
         fixture = TestBed.createComponent(GridDeclaredColumnsComponent);

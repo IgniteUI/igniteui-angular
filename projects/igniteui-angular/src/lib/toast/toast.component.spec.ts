@@ -8,9 +8,9 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { wait } from '../test-utils/ui-interactions.spec';
 
 describe('IgxToast', () => {
-    configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 ToastInitializeTestComponent
             ],
@@ -18,8 +18,8 @@ describe('IgxToast', () => {
                 BrowserAnimationsModule,
                 IgxToastModule
             ]
-        }).compileComponents();
-    }));
+        });
+    });
     let fixture, toast, element;
     beforeEach(() => {
         fixture = TestBed.createComponent(ToastInitializeTestComponent);

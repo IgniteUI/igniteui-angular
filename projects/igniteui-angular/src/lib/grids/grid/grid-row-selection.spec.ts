@@ -23,10 +23,10 @@ import { IgxGridSelectionModule } from '../selection/selection.module';
 const DEBOUNCETIME = 30;
 
 describe('IgxGrid - Row Selection #grid', () => {
-    configureTestSuite();
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 GridWithPrimaryKeyComponent,
                 RowSelectionComponent,
@@ -41,9 +41,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 IgxGridModule,
                 IgxGridSelectionModule
             ]
-        })
-            .compileComponents();
-    }));
+        });
+    });
 
     describe('Base tests', () => {
         let fix;

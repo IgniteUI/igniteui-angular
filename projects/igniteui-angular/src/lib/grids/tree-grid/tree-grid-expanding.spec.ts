@@ -19,12 +19,12 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 
 describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
-    configureTestSuite();
+
     let fix;
     let treeGrid;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridExpandingComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
@@ -35,9 +35,8 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             imports: [
                 BrowserAnimationsModule,
                 IgxTreeGridModule]
-        })
-            .compileComponents();
-    }));
+        });
+    });
 
     describe('Child Collection', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
@@ -1130,21 +1129,20 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 });
 
 describe('Row editing expanding/collapsing #tGrid', () => {
-    configureTestSuite();
+
     let fix;
     let treeGrid;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridRowEditingComponent
             ],
             imports: [
                 NoopAnimationsModule,
                 IgxTreeGridModule]
-        })
-            .compileComponents();
-    }));
+        });
+    });
 
     beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fix = TestBed.createComponent(IgxTreeGridRowEditingComponent);
@@ -1376,12 +1374,12 @@ describe('Row editing expanding/collapsing #tGrid', () => {
 });
 
 describe('Custom expand/collapse template #tGrid', () => {
-    configureTestSuite();
+
     let fix;
     let treeGrid;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridCustomExpandersTemplateComponent
             ],
@@ -1389,9 +1387,8 @@ describe('Custom expand/collapse template #tGrid', () => {
                 NoopAnimationsModule,
                 IgxGridModule,
                 IgxTreeGridModule]
-        })
-            .compileComponents();
-    }));
+        });
+    });
 
     beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fix = TestBed.createComponent(IgxTreeGridCustomExpandersTemplateComponent);

@@ -16,21 +16,21 @@ const HIGHLIGHT_CLASS = 'igx-highlight';
 const ACTIVE_CLASS = 'igx-highlight__active';
 
 describe('IgxTreeGrid - search API #tGrid', () => {
-    configureTestSuite();
+
     let fix;
     let fixNativeElement;
     let treeGrid: IgxTreeGridComponent;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSearchComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
                 IgxTreeGridSummariesScrollingComponent
             ],
             imports: [IgxTreeGridModule, NoopAnimationsModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     describe('Child Collection', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {

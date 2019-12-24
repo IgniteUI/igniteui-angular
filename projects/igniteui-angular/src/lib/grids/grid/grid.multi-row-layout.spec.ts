@@ -20,9 +20,9 @@ const GRID_COL_THEAD_CLASS = '.igx-grid__th';
 const GRID_MRL_BLOCK = '.igx-grid__mrl-block';
 
 describe('IgxGrid - multi-row-layout #grid', () => {
-    configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutTestComponent,
                 ColumnLayoutAndGroupsTestComponent
@@ -31,8 +31,8 @@ describe('IgxGrid - multi-row-layout #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule
             ]
-        }).compileComponents();
-    }));
+        });
+    });
 
     function verifyHeadersAreAligned(headerCells, rowCells) {
         for (let i; i < headerCells.length; i++) {

@@ -10,7 +10,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxDividerModule, IgxDividerType } from './divider.directive';
 
 describe('Divider', () => {
-    configureTestSuite();
+
     const baseClass = 'igx-divider';
 
     const classes = {
@@ -21,12 +21,14 @@ describe('Divider', () => {
 
     let fixture: ComponentFixture<TestDividerComponent>;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [TestDividerComponent],
             imports: [IgxDividerModule]
-        }).compileComponents();
+        });
+    });
 
+    beforeEach(async(() => {
         fixture = TestBed.createComponent(TestDividerComponent);
     }));
 

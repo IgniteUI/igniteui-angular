@@ -9,13 +9,11 @@ import { IgxMonthPickerComponent } from './month-picker.component';
 import { IgxCalendarModule } from '../calendar.module';
 
 describe('IgxMonthPicker', () => {
-    configureTestSuite();
-
-    beforeEach(() => {
+    configureTestSuite(() => {
         TestBed.configureTestingModule({
             declarations: [IgxMonthPickerSampleComponent],
             imports: [FormsModule, NoopAnimationsModule, IgxCalendarModule]
-        }).compileComponents();
+        });
     });
 
     it('should initialize a month picker component', () => {

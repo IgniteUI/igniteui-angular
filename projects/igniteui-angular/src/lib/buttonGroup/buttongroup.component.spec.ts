@@ -47,9 +47,8 @@ class Button {
 
 
 describe('IgxButtonGroup', () => {
-    configureTestSuite();
-   beforeEach(async(() => {
-        TestBed.configureTestingModule({
+   configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 InitButtonGroupComponent,
                 InitButtonGroupWithValuesComponent,
@@ -61,9 +60,8 @@ describe('IgxButtonGroup', () => {
                 IgxButtonModule,
                 NoopAnimationsModule
             ]
-        })
-        .compileComponents();
-    }));
+        });
+    });
 
    it('should initialize buttonGroup with default values', () => {
         const fixture = TestBed.createComponent(InitButtonGroupComponent);

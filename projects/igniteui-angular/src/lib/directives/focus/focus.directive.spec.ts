@@ -15,8 +15,7 @@ import { IgxDatePickerModule, IgxDatePickerComponent } from '../../date-picker/d
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('igxFocus', () => {
-    configureTestSuite();
-    beforeEach(async(() => {
+    configureTestSuite(() => {
         TestBed.configureTestingModule({
             declarations: [
                 SetFocusComponent,
@@ -25,8 +24,8 @@ describe('igxFocus', () => {
                 CheckboxPickerComponent
             ],
             imports: [ IgxFocusModule, IgxCheckboxModule, IgxDatePickerModule, NoopAnimationsModule ]
-        }).compileComponents();
-    }));
+        });
+    });
 
     it('The second element should be focused', fakeAsync(() => {
         const fix = TestBed.createComponent(SetFocusComponent);

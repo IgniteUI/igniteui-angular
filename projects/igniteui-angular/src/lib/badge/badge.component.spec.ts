@@ -10,9 +10,9 @@ import { IgxBadgeComponent, IgxBadgeModule } from './badge.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
 
 describe('Badge', () => {
-    configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 InitBadgeComponent,
                 InitBadgeWithDefaultsComponent,
@@ -21,8 +21,8 @@ describe('Badge', () => {
                 InitBadgeWithIconARIAComponent
             ],
             imports: [IgxIconModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     it('Initializes badge ', () => {
         const fixture = TestBed.createComponent(InitBadgeComponent);

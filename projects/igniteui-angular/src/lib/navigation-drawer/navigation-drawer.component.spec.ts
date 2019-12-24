@@ -14,7 +14,7 @@ const oldTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
 
 describe('Navigation Drawer', () => {
     let widthSpyOverride: jasmine.Spy;
-    // configureTestSuite();
+
     beforeEach(async(() => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
         TestBed.configureTestingModule({

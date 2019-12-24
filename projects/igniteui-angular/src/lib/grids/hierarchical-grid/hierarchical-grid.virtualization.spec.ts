@@ -12,18 +12,18 @@ import { first, delay } from 'rxjs/operators';
 import { setupHierarchicalGridScrollDetection } from '../../test-utils/helper-utils.spec';
 
 describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
-    configureTestSuite();
+
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     beforeEach(async(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
@@ -368,16 +368,16 @@ it('should update scroll height after expanding/collapsing row in a nested child
 
 describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
     configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridNoScrollTestComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     it('should show scrollbar after expanding a row with data loaded after initial view initialization',  async() => {
         const fixture = TestBed.createComponent(IgxHierarchicalGridNoScrollTestComponent);

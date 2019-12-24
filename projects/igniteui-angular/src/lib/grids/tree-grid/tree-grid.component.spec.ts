@@ -16,13 +16,13 @@ import { wait } from '../../test-utils/ui-interactions.spec';
 import { GridSelectionMode } from '../common/enums';
 
 describe('IgxTreeGrid Component Tests #tGrid', () => {
-    configureTestSuite();
+
     const TBODY_CLASS = '.igx-grid__tbody-content';
     let fix;
     let grid: IgxTreeGridComponent;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridWrappedInContComponent,
                 IgxTreeGridAutoGenerateComponent,
@@ -32,8 +32,8 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             ],
             imports: [
                 NoopAnimationsModule, IgxTreeGridModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     describe('IgxTreeGrid - default rendering for rows and columns', () => {
 

@@ -19,8 +19,8 @@ const INPUT_GROUP_VALID_CSS_CLASS = 'igx-input-group--valid';
 const INPUT_GROUP_INVALID_CSS_CLASS = 'igx-input-group--invalid';
 
 describe('IgxInput', () => {
-    configureTestSuite();
-    beforeEach(async(() => {
+
+    configureTestSuite(() => {
         TestBed.configureTestingModule({
             declarations: [
                 InputComponent,
@@ -41,9 +41,8 @@ describe('IgxInput', () => {
                 FormsModule,
                 ReactiveFormsModule
             ]
-        })
-        .compileComponents();
-    }));
+        });
+    });
 
     it('Initializes an input.', () => {
         const fixture = TestBed.createComponent(InputComponent);

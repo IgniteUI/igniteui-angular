@@ -30,15 +30,15 @@ import { ColumnGroupFourLevelTestComponent } from './column-group.spec';
 import { GridSummaryCalculationMode } from '../common/enums';
 
 describe('IgxGrid - Summaries #grid', () => {
-    configureTestSuite();
+
     const SUMMARY_CLASS = '.igx-grid-summary';
     const ITEM_CLASS = 'igx-grid-summary__item';
     const SUMMARY_ROW = 'igx-grid-summary-row';
     const SUMMARY_CELL = 'igx-grid-summary-cell';
     const DEBOUNCETIME = 30;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 ProductsComponent,
                 SummaryColumnComponent,
@@ -53,9 +53,8 @@ describe('IgxGrid - Summaries #grid', () => {
                 SummariesGroupByTransactionsComponent
             ],
             imports: [BrowserAnimationsModule, IgxGridModule, NoopAnimationsModule]
-        })
-            .compileComponents();
-    }));
+        });
+    });
 
     describe('Base tests: ', () => {
         it('should not have summary if no summary is active ', () => {

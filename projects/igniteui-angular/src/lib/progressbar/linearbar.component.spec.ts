@@ -18,18 +18,17 @@ const LINEAR_BAR_TAG = 'igx-linear-bar';
 const INDETERMINATE_CLASS = 'igx-linear-bar--indeterminate';
 
 describe('IgLinearBar', () => {
-    configureTestSuite();
+
     const tickTime = 2000;
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 InitLinearProgressBarComponent,
                 LinearBarComponent,
                 IgxLinearProgressBarComponent
             ]
-        })
-        .compileComponents();
-    }));
+        });
+    });
 
     it('should initialize linearProgressbar with default values', () => {
         const fixture = TestBed.createComponent(InitLinearProgressBarComponent);
@@ -352,7 +351,7 @@ describe('IgLinearBar', () => {
 
     // UI Tests
     describe('UI tests linear bar', () => {
-        // configureTestSuite();
+
         it('The percentage representation should respond to passed value correctly', fakeAsync(() => {
             const fixture = TestBed.createComponent(LinearBarComponent);
             fixture.detectChanges();

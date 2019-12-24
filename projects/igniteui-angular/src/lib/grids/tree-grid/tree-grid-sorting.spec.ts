@@ -9,19 +9,18 @@ import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgxTreeGrid - Sorting #tGrid', () => {
-    configureTestSuite();
+
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSortingComponent
             ],
             imports: [IgxTreeGridModule, NoopAnimationsModule]
-        })
-            .compileComponents();
-    }));
+        });
+    });
 
     beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fix = TestBed.createComponent(IgxTreeGridSortingComponent);

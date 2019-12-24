@@ -17,7 +17,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 describe('Column Pinning UI #grid', () => {
-    configureTestSuite();
+
     let fix;
     let grid: IgxGridComponent;
     let columnChooser: IgxColumnPinningComponent;
@@ -26,8 +26,8 @@ describe('Column Pinning UI #grid', () => {
     const verifyCheckbox = HelperUtils.verifyCheckbox;
     const verifyColumnIsPinned = GridFunctions.verifyColumnIsPinned;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 ColumnPinningTestComponent,
                 ColumnGroupsPinningTestComponent,
@@ -39,9 +39,8 @@ describe('Column Pinning UI #grid', () => {
                 IgxColumnPinningModule,
                 IgxButtonModule
             ]
-        })
-        .compileComponents();
-    }));
+        });
+    });
 
     describe('', () => {
         beforeEach(fakeAsync(/** height/width setter rAF */() => {

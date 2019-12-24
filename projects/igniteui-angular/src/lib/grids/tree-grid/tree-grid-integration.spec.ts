@@ -25,12 +25,12 @@ const CSS_CLASS_BANNER = 'igx-banner';
 const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';
 
 describe('IgxTreeGrid - Integration #tGrid', () => {
-    configureTestSuite();
+
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSimpleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
@@ -46,9 +46,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             providers: [
                 { provide: IgxGridTransaction, useClass: IgxHierarchicalTransactionService }
             ]
-        })
-            .compileComponents();
-    }));
+        });
+    });
 
     it('should have tree-column with a \'string\' dataType', fakeAsync(/** height/width setter rAF */() => {
         // Init test
@@ -81,7 +80,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
     }));
 
     describe('Child Collection', () => {
-        // configureTestSuite();
+
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
             fix.detectChanges();
@@ -195,7 +194,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
     });
 
     describe('Primary/Foreign key', () => {
-        // configureTestSuite();
+
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();

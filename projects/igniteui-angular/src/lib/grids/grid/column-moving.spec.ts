@@ -21,15 +21,15 @@ import { HelperUtils } from '../../test-utils/helper-utils.spec';
 import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - Column Moving #grid', () => {
-    configureTestSuite();
+
     const CELL_CSS_CLASS = '.igx-grid__td';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_GROUP_HEADER_CLASS = '.igx-grid__thead-title';
 
     let fixture, grid: IgxGridComponent;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 MovableColumnsComponent,
                 MovableTemplatedColumnsComponent,
@@ -41,15 +41,15 @@ describe('IgxGrid - Column Moving #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule
             ]
-        }).compileComponents();
-    }));
+        });
+    });
 
     afterEach(() => {
         UIInteractions.clearOverlay();
     });
 
     describe('', () => {
-        // configureTestSuite();
+
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(MovableColumnsComponent);
             fixture.detectChanges();
@@ -499,7 +499,7 @@ describe('IgxGrid - Column Moving #grid', () => {
     });
 
     describe('', () => {
-        // configureTestSuite();
+
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(MovableTemplatedColumnsComponent);
             fixture.detectChanges();
@@ -535,7 +535,7 @@ describe('IgxGrid - Column Moving #grid', () => {
     });
 
     describe('', () => {
-        // configureTestSuite();
+
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(MovableColumnsLargeComponent);
             fixture.detectChanges();
@@ -1006,7 +1006,7 @@ describe('IgxGrid - Column Moving #grid', () => {
     });
 
     describe('', () => {
-        // configureTestSuite();
+
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(MultiColumnHeadersComponent);
             fixture.detectChanges();

@@ -21,7 +21,7 @@ import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 
 describe('IgxGrid - GroupBy #grid', () => {
-    configureTestSuite();
+
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
     const CELL_CSS_CLASS = '.igx-grid__td';
@@ -33,8 +33,8 @@ describe('IgxGrid - GroupBy #grid', () => {
     const CHIP_REMOVE_ICON = '.igx-chip__remove';
     const CHIP = 'igx-chip';
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 DefaultGridComponent,
                 GroupableGridComponent,
@@ -44,8 +44,8 @@ describe('IgxGrid - GroupBy #grid', () => {
                 MultiColumnHeadersWithGroupingComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     function checkGroups(groupRows, expectedGroupOrder, grExpr?) {
         // verify group rows are sorted correctly, their indexes in the grid are correct and their group records match the group value.

@@ -10,12 +10,12 @@ import { HammerGesturesManager } from '../../core/touch';
 import { PlatformUtil } from '../../core/utils';
 
 describe('IgxGrid - Cell component #grid', () => {
-    configureTestSuite();
+
 
     const CELL_CSS_CLASS = '.igx-grid__td';
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 DefaultGridComponent,
                 VirtualGridComponent,
@@ -25,8 +25,8 @@ describe('IgxGrid - Cell component #grid', () => {
                 GridColumnWidthsComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     it('@Input properties and getters', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);

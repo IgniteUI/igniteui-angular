@@ -39,18 +39,17 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('empty virtual component', () => {
-        configureTestSuite();
-        let fix: ComponentFixture<EmptyVirtualComponent>;
+         let fix: ComponentFixture<EmptyVirtualComponent>;
 
-        beforeEach(async(() => {
+         configureTestSuite(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
                     EmptyVirtualComponent
                 ],
                 imports: [IgxForOfModule]
-            }).compileComponents();
-        }));
+            });
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(EmptyVirtualComponent);
@@ -64,18 +63,17 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('horizontal virtual component', () => {
-        configureTestSuite();
         let fix: ComponentFixture<HorizontalVirtualComponent>;
 
-        beforeEach(async(() => {
+        configureTestSuite(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
                     HorizontalVirtualComponent
                 ],
                 imports: [IgxForOfModule]
-            }).compileComponents();
-        }));
+            });
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(HorizontalVirtualComponent);
@@ -178,10 +176,9 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('vertical virtual component', () => {
-        configureTestSuite();
         let fix: ComponentFixture<VerticalVirtualComponent>;
 
-        beforeEach(async(() => {
+        configureTestSuite(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -189,8 +186,8 @@ describe('IgxForOf directive -', () => {
                     VerticalVirtualComponent
                 ],
                 imports: [IgxForOfModule]
-            }).compileComponents();
-        }));
+            });
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(VerticalVirtualComponent);
@@ -335,18 +332,17 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('vertical and horizontal virtual component', () => {
-        configureTestSuite();
         let fix: ComponentFixture<VirtualComponent>;
 
-        beforeEach(async(() => {
+        configureTestSuite(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
                     VirtualComponent
                 ],
                 imports: [IgxForOfModule]
-            }).compileComponents();
-        }));
+            });
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(VirtualComponent);
@@ -976,18 +972,17 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('variable size component', () => {
-        configureTestSuite();
         let fix: ComponentFixture<VirtualVariableSizeComponent>;
 
-        beforeEach(async(() => {
+        configureTestSuite(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
                     VirtualVariableSizeComponent
                 ],
                 imports: [IgxForOfModule]
-            }).compileComponents();
-        }));
+            });
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(VirtualVariableSizeComponent);
@@ -1026,18 +1021,17 @@ describe('IgxForOf directive -', () => {
     });
 
     describe('remote virtual component', () => {
-        configureTestSuite();
         let fix: ComponentFixture<RemoteVirtualizationComponent>;
 
-        beforeEach(async(() => {
+        configureTestSuite(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
                     RemoteVirtualizationComponent
                 ],
                 imports: [IgxForOfModule]
-            }).compileComponents();
-        }));
+            });
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(RemoteVirtualizationComponent);
@@ -1076,18 +1070,18 @@ describe('IgxForOf directive -', () => {
         });
     });
     describe('no width and height component', () => {
-        configureTestSuite();
+
         let fix: ComponentFixture<NoWidthAndHeightComponent>;
 
-        beforeEach(async(() => {
+        configureTestSuite(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
                     NoWidthAndHeightComponent
                 ],
                 imports: [IgxForOfModule]
-            }).compileComponents();
-        }));
+            });
+        });
 
         it('should use itemSize when no width or height are provided', () => {
             fix = TestBed.createComponent(NoWidthAndHeightComponent);
@@ -1101,18 +1095,18 @@ describe('IgxForOf directive -', () => {
         });
     });
     describe('even odd first last functions', () => {
-        configureTestSuite();
+
         let fix: ComponentFixture<LocalVariablesComponent>;
 
-        beforeEach(async(() => {
+        configureTestSuite(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
                     LocalVariablesComponent
                 ],
                 imports: [IgxForOfModule]
-            }).compileComponents();
-        }));
+            });
+        });
 
         beforeEach(() => {
             fix = TestBed.createComponent(LocalVariablesComponent);

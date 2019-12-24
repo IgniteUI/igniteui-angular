@@ -9,15 +9,15 @@ import { IgxTextHighlightDirective, IActiveHighlightInfo} from './text-highlight
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxHighlight', () => {
-    configureTestSuite();
-    beforeEach(async(() => {
+
+    configureTestSuite(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTextHighlightDirective,
                 HighlightLoremIpsumComponent
             ]
         });
-    }));
+    });
 
     it('Highlight inputs should have the proper values', () => {
         const fix = TestBed.createComponent(HighlightLoremIpsumComponent);

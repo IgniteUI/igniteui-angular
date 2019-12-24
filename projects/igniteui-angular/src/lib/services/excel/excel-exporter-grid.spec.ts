@@ -25,13 +25,13 @@ import { FilteringExpressionsTree } from '../../data-operations/filtering-expres
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 
 describe('Excel Exporter', () => {
-    configureTestSuite();
+
     let exporter: IgxExcelExporterService;
     let actualData: FileContentData;
     let options: IgxExcelExporterOptions;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 ReorderedColumnsComponent,
                 GridIDNameJobTitleComponent,
@@ -40,8 +40,8 @@ describe('Excel Exporter', () => {
                 GridWithEmtpyColumnsComponent
             ],
             imports: [IgxGridModule, IgxTreeGridModule, NoopAnimationsModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     beforeEach(async(() => {
         exporter = new IgxExcelExporterService();

@@ -32,8 +32,8 @@ describe('Column Hiding UI #grid', () => {
     const verifyColumnIsHidden = GridFunctions.verifyColumnIsHidden;
     const getColumnHidingButton = GridFunctions.getColumnHidingButton;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 ColumnHidingTestComponent,
                 ColumnGroupsHidingTestComponent
@@ -44,9 +44,8 @@ describe('Column Hiding UI #grid', () => {
                 IgxColumnHidingModule,
                 IgxButtonModule
             ]
-        })
-            .compileComponents();
-    }));
+        });
+    });
 
     beforeAll(() => {
         UIInteractions.clearOverlay();
@@ -988,7 +987,7 @@ describe('Column Hiding UI #grid', () => {
     });
 
     describe('toolbar button', () => {
-        // configureTestSuite();
+
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(ColumnHidingTestComponent);
             fix.detectChanges();

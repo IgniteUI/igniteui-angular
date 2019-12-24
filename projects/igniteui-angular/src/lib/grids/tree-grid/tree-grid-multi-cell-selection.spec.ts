@@ -15,10 +15,10 @@ import { GridSelectionFunctions, GridSummaryFunctions } from '../../test-utils/g
 import { GridSelectionMode } from '../common/enums';
 
 describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
-    configureTestSuite();
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSelectionKeyComponent,
                 IgxTreeGridSelectionComponent,
@@ -26,8 +26,8 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
                 IgxTreeGridFKeySelectionWithTransactionComponent
             ],
             imports: [NoopAnimationsModule, IgxTreeGridModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     describe('Flat Data', () => {
         let fix;

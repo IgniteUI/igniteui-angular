@@ -20,27 +20,22 @@ import { TabsRoutingViewComponentsModule,
     TabsRoutingView3Component } from './tabs-routing-view-components.spec';
 
 describe('IgxTabs', () => {
-    configureTestSuite();
-
     const tabItemNormalCssClass = 'igx-tabs__header-menu-item';
     const tabItemSelectedCssClass = 'igx-tabs__header-menu-item--selected';
-
-    beforeEach(async(() => {
-
-        const testRoutes = [
-            { path: 'view1', component: TabsRoutingView1Component },
-            { path: 'view2', component: TabsRoutingView2Component },
-            { path: 'view3', component: TabsRoutingView3Component }
-        ];
-
+    const testRoutes = [
+        { path: 'view1', component: TabsRoutingView1Component },
+        { path: 'view2', component: TabsRoutingView2Component },
+        { path: 'view3', component: TabsRoutingView3Component }
+    ];
+    configureTestSuite(() => {
         TestBed.configureTestingModule({
             declarations: [TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent,
                 TabsTestSelectedTabComponent, TabsTestCustomStylesComponent, TabsTestBug4420Component, TabsRoutingTestComponent,
                 TabsTabsOnlyModeTest1Component, TabsTabsOnlyModeTest2Component],
             imports: [IgxTabsModule, IgxButtonModule, IgxDropDownModule, IgxToggleModule, BrowserAnimationsModule,
                 TabsRoutingViewComponentsModule, RouterTestingModule.withRoutes(testRoutes)]
-        }).compileComponents();
-    }));
+        });
+    });
 
     describe('IgxTabs Component with static Panels Definitions', () => {
         let fixture;

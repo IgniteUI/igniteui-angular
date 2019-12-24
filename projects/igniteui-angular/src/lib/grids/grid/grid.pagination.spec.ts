@@ -17,11 +17,11 @@ import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condi
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - Grid Paging #grid', () => {
-    configureTestSuite();
+
     const PAGER_CLASS = '.igx-paginator__pager';
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 ReorderedColumnsComponent,
                 PagingComponent,
@@ -30,8 +30,8 @@ describe('IgxGrid - Grid Paging #grid', () => {
                 GridWithUndefinedDataComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     it('should paginate data UI', fakeAsync(() => {
         const fix = TestBed.createComponent(PagingComponent);

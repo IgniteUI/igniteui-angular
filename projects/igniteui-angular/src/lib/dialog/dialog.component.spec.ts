@@ -14,9 +14,9 @@ const OVERLAY_MODAL_WRAPPER_CLASS = `${OVERLAY_WRAPPER_CLASS}--modal`;
 const CLASS_OVERLAY_CONTENT_MODAL = `${OVERLAY_MAIN_CLASS}__content--modal`;
 
 describe('Dialog', () => {
-    configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 AlertComponent,
                 DialogComponent,
@@ -28,8 +28,8 @@ describe('Dialog', () => {
                 PositionSettingsDialogComponent
             ],
             imports: [BrowserAnimationsModule, NoopAnimationsModule, IgxDialogModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     afterEach(() => {
         UIInteractions.clearOverlay();

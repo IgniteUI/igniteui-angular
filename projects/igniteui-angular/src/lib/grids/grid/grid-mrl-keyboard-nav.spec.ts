@@ -17,16 +17,16 @@ const ROW_CSS_CLASS = '.igx-grid__tr';
 const CELL_BLOCK = '.igx-grid__mrl-block';
 
 describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
-    configureTestSuite();
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutTestComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     it('should navigate through a single layout with right and left arrow keys', (async () => {
         const fix = TestBed.createComponent(ColumnLayoutTestComponent);

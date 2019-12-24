@@ -13,7 +13,7 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 
 describe('IgxGrid - multi-column headers #grid', () => {
-    configureTestSuite();
+
     let contactInf;
     let countryInf;
     let addressInf;
@@ -23,8 +23,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
     let countryCol;
     let emptyCol;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 CollapsibleColumnGroupTestComponent,
                 CollapsibleGroupsTemplatesTestComponent,
@@ -34,8 +34,8 @@ describe('IgxGrid - multi-column headers #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule
             ]
-        }).compileComponents();
-    }));
+        });
+    });
 
     describe('Base Tests', () => {
         let fixture;

@@ -13,9 +13,8 @@ describe('General igxDrag/igxDrop', () => {
     let dropAreaRects = { top: 0, left: 0, right: 0, bottom: 0};
     let dragDirsRects = [{ top: 0, left: 0, right: 0, bottom: 0}];
 
-    configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 TestDragDropComponent
             ],
@@ -23,9 +22,8 @@ describe('General igxDrag/igxDrop', () => {
                 FormsModule,
                 IgxDragDropModule
             ]
-        })
-        .compileComponents();
-    }));
+        });
+    });
 
     beforeEach(() => {
         fix = TestBed.createComponent(TestDragDropComponent);
@@ -1278,9 +1276,9 @@ describe('General igxDrag/igxDrop', () => {
 });
 
 describe('Linked igxDrag/igxDrop ', () => {
-    configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 TestDragDropLinkedSingleComponent,
                 TestDragDropLinkedMixedComponent,
@@ -1290,9 +1288,8 @@ describe('Linked igxDrag/igxDrop ', () => {
                 FormsModule,
                 IgxDragDropModule
             ]
-        })
-        .compileComponents();
-    }));
+        });
+    });
 
     it('should trigger enter/onDrop/leave events when element is dropped inside and is linked with it.', (async() => {
         const fix = TestBed.createComponent(TestDragDropLinkedSingleComponent);

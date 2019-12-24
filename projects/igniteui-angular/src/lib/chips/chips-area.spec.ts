@@ -121,19 +121,19 @@ class TestChipReorderComponent {
 
 
 describe('IgxChipsArea', () => {
-    configureTestSuite();
+
     const CHIP_REMOVE_BUTTON = 'igx-chip__remove';
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 TestChipComponent,
                 TestChipReorderComponent,
                 TestChipSelectComponent
             ],
             imports: [FormsModule, IgxIconModule, IgxChipsModule, IgxPrefixModule, IgxSuffixModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     it('should add chips when adding data items ', () => {
         const fix = TestBed.createComponent(TestChipComponent);

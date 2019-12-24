@@ -14,12 +14,12 @@ import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 
 // tslint:disable: no-use-before-declare
 describe('IgxTimePicker', () => {
-    configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             imports: [IgxTimePickerTestingModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     afterEach(async(() => {
         UIInteractions.clearOverlay();
@@ -1051,7 +1051,7 @@ describe('IgxTimePicker', () => {
     });
 
     describe('DropDown Mode', () => {
-        // configureTestSuite();
+
         let fixture;
         let timePicker;
         let dom;
@@ -1644,7 +1644,7 @@ describe('IgxTimePicker', () => {
     });
 
     describe('Timepicker with outlet', () => {
-        configureTestSuite();
+
         let fixture;
         let timePicker;
 
@@ -1666,7 +1666,7 @@ describe('IgxTimePicker', () => {
     });
 
     describe('TimePicker retemplating and customization', () => {
-        configureTestSuite();
+
         let fixture;
         let dom;
 
@@ -1730,7 +1730,7 @@ describe('IgxTimePicker', () => {
     });
 
     describe('Hour/minute only mode', () => {
-        configureTestSuite();
+
         let fixture, timePicker, dom, input;
 
         beforeEach(

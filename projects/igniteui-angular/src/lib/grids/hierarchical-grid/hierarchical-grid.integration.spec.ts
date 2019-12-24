@@ -22,19 +22,19 @@ import { GridSelectionMode } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxHierarchicalGrid Integration #hGrid', () => {
-    configureTestSuite();
+
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridTestCustomToolbarComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule, IgxIconModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     beforeEach(async(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);

@@ -12,9 +12,9 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgxSwitch', () => {
-    configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 InitSwitchComponent,
                 SwitchSimpleComponent,
@@ -25,9 +25,8 @@ describe('IgxSwitch', () => {
                 IgxSwitchComponent
             ],
             imports: [FormsModule, IgxRippleModule, NoopAnimationsModule]
-        })
-            .compileComponents();
-    }));
+        });
+    });
 
     it('Initializes', () => {
         const fixture = TestBed.createComponent(InitSwitchComponent);

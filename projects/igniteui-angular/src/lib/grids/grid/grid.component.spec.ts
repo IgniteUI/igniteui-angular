@@ -33,7 +33,7 @@ describe('IgxGrid Component Tests #grid', () => {
     const THEAD_CLASS = '.igx-grid__thead';
 
     describe('IgxGrid - input properties', () => {
-        configureTestSuite();
+
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -630,7 +630,7 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     describe('IgxGrid - default rendering for rows and columns', () => {
-        configureTestSuite();
+
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -1466,7 +1466,7 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     describe('IgxGrid - API methods', () => {
-        configureTestSuite();
+
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -1574,7 +1574,7 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     describe('IgxGrid - Integration with other Igx Controls', () => {
-        configureTestSuite();
+
 
         let fix;
 
@@ -1684,7 +1684,7 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     describe('IgxGrid - footer section', () => {
-        configureTestSuite();
+
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -1707,7 +1707,7 @@ describe('IgxGrid Component Tests #grid', () => {
     });
 
     describe('IgxGrid - with custom pagination template', () => {
-        configureTestSuite();
+
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -1740,7 +1740,7 @@ describe('IgxGrid Component Tests #grid', () => {
         const MAX_FOCUS = 120;
         let observer: MutationObserver;
 
-        configureTestSuite();
+
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 declarations: [

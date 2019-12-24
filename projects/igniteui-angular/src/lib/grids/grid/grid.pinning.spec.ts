@@ -14,14 +14,14 @@ import { IGridCellEventArgs } from '../common/events';
 import { IgxColumnComponent } from '../columns/column.component';
 
 describe('IgxGrid - Column Pinning #grid ', () => {
-    configureTestSuite();
+
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const CELL_CSS_CLASS = '.igx-grid__td';
     const FIXED_HEADER_CSS = 'igx-grid__th--pinned';
     const FIXED_CELL_CSS = 'igx-grid__td--pinned';
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 DefaultGridComponent,
                 GridPinningComponent,
@@ -32,8 +32,8 @@ describe('IgxGrid - Column Pinning #grid ', () => {
                 GridInitialPinningComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     it('should correctly initialize when there are initially pinned columns.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);

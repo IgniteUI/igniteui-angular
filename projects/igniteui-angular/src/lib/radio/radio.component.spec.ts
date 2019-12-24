@@ -14,10 +14,10 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgxRadio', () => {
-    configureTestSuite();
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxRadioComponent,
                 InitRadioComponent,
@@ -28,9 +28,8 @@ describe('IgxRadio', () => {
                 RadioInvisibleLabelComponent
             ],
             imports: [FormsModule, IgxRippleModule, NoopAnimationsModule]
-        })
-            .compileComponents();
-    }));
+        });
+    });
 
     it('Init a radio', () => {
         const fixture = TestBed.createComponent(InitRadioComponent);

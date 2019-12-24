@@ -15,12 +15,12 @@ import { DataType } from '../../data-operations/data-util';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 
 describe('IgxGrid - search API #grid', () => {
-    configureTestSuite();
+
     const CELL_CSS_CLASS = '.igx-grid__td';
     let fix, component, grid: IgxGridComponent, fixNativeElement;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 BasicGridSearchComponent,
                 GridWithAvatarComponent,
@@ -28,8 +28,8 @@ describe('IgxGrid - search API #grid', () => {
                 ScrollableGridSearchComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     /* BasicGrid */
     describe('', () => {

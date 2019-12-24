@@ -13,12 +13,12 @@ import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxGrid - Grid Toolbar #grid', () => {
-    configureTestSuite();
+
     let fixture;
     let grid;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 GridToolbarTestPage1Component
             ],
@@ -30,9 +30,8 @@ describe('IgxGrid - Grid Toolbar #grid', () => {
                 IgxExcelExporterService,
                 IgxCsvExporterService
             ]
-        })
-        .compileComponents();
-    }));
+        });
+    });
 
     beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fixture = TestBed.createComponent(GridToolbarTestPage1Component);
@@ -532,8 +531,8 @@ describe('IgxGrid - Grid Toolbar Custom Content #grid', () => {
     let fixture;
     let grid;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 GridToolbarTestPage1Component,
                 GridToolbarTestPage2Component
@@ -546,9 +545,8 @@ describe('IgxGrid - Grid Toolbar Custom Content #grid', () => {
                 IgxExcelExporterService,
                 IgxCsvExporterService
             ]
-        })
-        .compileComponents();
-    }));
+        });
+    });
 
     afterEach(() => {
         UIInteractions.clearOverlay();

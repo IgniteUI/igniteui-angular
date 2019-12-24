@@ -23,17 +23,17 @@ describe('IgxGrid Master Detail #grid', () => {
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
 
-    configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 DefaultGridMasterDetailComponent,
                 AllExpandedGridMasterDetailComponent,
                 MRLMasterDetailComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     describe('Basic', () => {
         beforeEach(async(() => {

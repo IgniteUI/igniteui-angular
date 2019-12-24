@@ -19,9 +19,9 @@ const INPUT_GROUP_COMPACT_DENSITY_CSS_CLASS = 'igx-input-group--compact';
 const INPUT_GROUP_COSY_DENSITY_CSS_CLASS = 'igx-input-group--cosy';
 
 describe('IgxInputGroup', () => {
-    configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 InputGroupComponent,
                 InputGroupBoxComponent,
@@ -38,9 +38,8 @@ describe('IgxInputGroup', () => {
             imports: [
                 IgxInputGroupModule, IgxIconModule
             ]
-        })
-        .compileComponents();
-    }));
+        });
+    });
 
     it('Initializes an input group.', () => {
         const fixture = TestBed.createComponent(InputGroupComponent);

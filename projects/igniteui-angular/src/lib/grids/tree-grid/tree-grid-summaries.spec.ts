@@ -17,11 +17,11 @@ import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxTreeGrid - Summaries #tGrid', () => {
-    configureTestSuite();
+
     const DEBOUNCETIME = 30;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSummariesComponent,
                 IgxTreeGridSummariesKeyComponent,
@@ -33,9 +33,8 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             imports: [
                 BrowserAnimationsModule,
                 IgxTreeGridModule]
-        })
-            .compileComponents();
-    }));
+        });
+    });
 
     describe('', () => {
         let fix;

@@ -21,12 +21,12 @@ import { IgxSlideComponent } from './slide.component';
 declare var Simulator: any;
 
 describe('Carousel', () => {
-    configureTestSuite();
+
     let fixture;
     let carousel: IgxCarouselComponent;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 CarouselTestComponent,
                 CarouselTemplateSetInMarkupTestComponent,
@@ -35,9 +35,8 @@ describe('Carousel', () => {
                 CarouselDynamicSlidesComponent
             ],
             imports: [IgxCarouselModule, NoopAnimationsModule]
-        })
-            .compileComponents();
-    }));
+        });
+    });
 
     describe('Base Tests: ', () => {
         beforeEach(() => {

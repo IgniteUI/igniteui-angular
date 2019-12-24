@@ -12,8 +12,8 @@ import { IgxMaskModule } from './mask.directive';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('igxMask', () => {
-    configureTestSuite();
-    beforeEach(async(() => {
+
+    configureTestSuite(() => {
         TestBed.configureTestingModule({
             declarations: [
                 AlphanumSpaceMaskComponent,
@@ -34,9 +34,8 @@ describe('igxMask', () => {
                 IgxInputGroupModule,
                 IgxMaskModule
             ]
-        })
-        .compileComponents();
-    }));
+        });
+    });
 
     it('Initializes an input with default mask', fakeAsync(() => {
         const fixture = TestBed.createComponent(DefMaskComponent);

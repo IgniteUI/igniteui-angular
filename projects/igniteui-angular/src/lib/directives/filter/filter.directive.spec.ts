@@ -8,17 +8,15 @@ import { IgxFilterDirective, IgxFilterModule, IgxFilterOptions, IgxFilterPipe } 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('Filter', () => {
-    configureTestSuite();
-    beforeEach(async(() => {
+    configureTestSuite(() => {
         TestBed.configureTestingModule({
             declarations: [DeclarativeListTestComponent, DynamicListTestComponent],
             imports: [IgxFilterModule, IgxListModule],
             providers: [
                 { provide: ComponentFixtureAutoDetect, useValue: true }
             ]
-        })
-            .compileComponents();
-    }));
+        });
+    });
 
     it('should filter declaratively created list', () => {
         const fixture = TestBed.createComponent(DeclarativeListTestComponent);

@@ -24,10 +24,9 @@ describe('IgxAutocomplete', () => {
     let group: IgxInputGroupComponent;
     let input: IgxInputDirective;
     let dropDown: IgxDropDownComponent;
-    configureTestSuite();
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 AutocompleteComponent,
                 AutocompleteInputComponent,
@@ -43,9 +42,9 @@ describe('IgxAutocomplete', () => {
                 NoopAnimationsModule,
                 IgxIconModule
             ]
-        })
-            .compileComponents();
-    }));
+        });
+    });
+
     describe('General tests: ', () => {
         beforeEach(async(() => {
             fixture = TestBed.createComponent(AutocompleteComponent);

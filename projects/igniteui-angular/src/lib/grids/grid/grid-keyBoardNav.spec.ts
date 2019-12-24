@@ -29,10 +29,10 @@ const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';
 
 describe('IgxGrid - Keyboard navigation #grid', () => {
-    configureTestSuite();
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 DefaultGridComponent,
                 CtrlKeyKeyboardNagivationComponent,
@@ -45,8 +45,8 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
                 PinningComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     it('should move selected cell with arrow keys', (async () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
@@ -457,7 +457,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
     }));
 
     describe('in virtualized grid', () => {
-        // configureTestSuite();
+
         let fix;
         let grid: IgxGridComponent;
 
@@ -935,7 +935,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
     });
 
     describe('Group By navigation ', () => {
-        // configureTestSuite();
+
         let fix;
         let grid: IgxGridComponent;
         beforeEach(fakeAsync(/** height/width setter rAF */() => {

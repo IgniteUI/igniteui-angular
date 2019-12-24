@@ -39,9 +39,9 @@ const LIST_COMPACT_DENSITY_CSS_CLASS = 'igx-list--compact';
 const LIST_COSY_DENSITY_CSS_CLASS = 'igx-list--cosy';
 
 describe('List', () => {
-    configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 CustomEmptyListComponent,
                 EmptyListComponent,
@@ -56,8 +56,8 @@ describe('List', () => {
                 ListDirectivesComponent,
             ],
             imports: [IgxListModule, IgxForOfModule, IgxIconModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     it('should initialize igx-list with item and header', () => {
         const fixture = TestBed.createComponent(ListWithHeaderComponent);

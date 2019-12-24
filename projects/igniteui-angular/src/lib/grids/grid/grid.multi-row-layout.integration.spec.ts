@@ -13,12 +13,12 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 
 describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
-    configureTestSuite();
+
     let fixture;
     let grid: IgxGridComponent;
     let colGroups: Array<any>;
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutPinningTestComponent,
                 ColumnLayoutFilteringTestComponent,
@@ -28,8 +28,8 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             ],
             imports: [
                 NoopAnimationsModule, IgxGridModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     describe('Hiding ', () => {
         beforeEach(() => {

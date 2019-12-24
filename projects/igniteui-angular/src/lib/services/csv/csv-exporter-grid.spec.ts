@@ -27,8 +27,8 @@ describe('CSV Grid Exporter', () => {
     let options: IgxCsvExporterOptions;
     const data = SampleTestData.personJobData();
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 ReorderedColumnsComponent,
                 GridIDNameJobTitleComponent,
@@ -36,9 +36,8 @@ describe('CSV Grid Exporter', () => {
                 ProductsComponent
             ],
             imports: [IgxGridModule, IgxTreeGridModule, NoopAnimationsModule]
-        })
-            .compileComponents();
-    }));
+        });
+    });
 
     beforeEach(async(() => {
         exporter = new IgxCsvExporterService();

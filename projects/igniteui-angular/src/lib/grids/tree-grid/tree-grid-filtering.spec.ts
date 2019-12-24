@@ -9,21 +9,20 @@ import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringO
 import { FilteringStrategy } from '../../data-operations/filtering-strategy';
 
 describe('IgxTreeGrid - Filtering actions #tGrid', () => {
-    configureTestSuite();
+
     let fix;
     let grid;
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridFilteringComponent, IgxTreeGridFilteringRowEditingComponent
             ],
             imports: [
                 BrowserAnimationsModule,
                 IgxTreeGridModule]
-        })
-        .compileComponents();
-    }));
+        });
+    });
 
     beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fix = TestBed.createComponent(IgxTreeGridFilteringComponent);

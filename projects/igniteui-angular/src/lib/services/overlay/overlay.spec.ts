@@ -173,7 +173,7 @@ describe('igxOverlay', () => {
     });
 
     describe('Unit Tests: ', () => {
-        configureTestSuite();
+
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],
@@ -991,7 +991,7 @@ describe('igxOverlay', () => {
     });
 
     describe('Integration tests: ', () => {
-        configureTestSuite();
+
         beforeEach(async(() => {
             TestBed.configureTestingModule({
                 imports: [IgxToggleModule, DynamicModule, NoopAnimationsModule],

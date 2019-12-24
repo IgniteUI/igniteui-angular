@@ -19,10 +19,10 @@ const CIRCULAR_HIDDEN_TEXT_CLASS = 'igx-circular-bar__text--hidden';
 const CIRCULAR_INDETERMINATE_CLASS = 'igx-circular-bar--indeterminate';
 
 describe('IgCircularBar', () => {
-    configureTestSuite();
+
     const tickTime = 2000;
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 InitCircularProgressBarComponent,
                 CircularBarComponent,
@@ -31,9 +31,8 @@ describe('IgCircularBar', () => {
             imports: [
                 IgxProgressBarModule
             ]
-        })
-            .compileComponents();
-    }));
+        });
+    });
 
     it('Initialize circularProgressbar with default values', () => {
         const fixture = TestBed.createComponent(InitCircularProgressBarComponent);
@@ -351,7 +350,7 @@ describe('IgCircularBar', () => {
 
     // UI TESTS
     describe('Circular bar UI TESTS', () => {
-        // configureTestSuite();
+
         it('should respond to passed values correctly', fakeAsync(() => {
             const fixture = TestBed.createComponent(CircularBarComponent);
             fixture.detectChanges();

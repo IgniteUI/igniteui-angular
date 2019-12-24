@@ -18,18 +18,17 @@ import { IgxGridFilteringComponent, CustomFilter } from '../../test-utils/grid-s
 import { ExpressionUI } from '../filtering/grid-filtering.service';
 
 describe('IgxGrid - Filtering actions #grid', () => {
-    configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent
             ],
             imports: [
                 BrowserAnimationsModule,
                 IgxGridModule]
-        })
-        .compileComponents();
-    }));
+        });
+    });
 
     let fix, grid;
     beforeEach(fakeAsync(() => {

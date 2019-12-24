@@ -10,9 +10,9 @@ import { wait } from '../test-utils/ui-interactions.spec';
 const LEFT_AREA_CSS_CLAS = '.igx-navbar__left';
 
 describe('IgxNavbar', () => {
-    configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 NavbarIntializeTestComponent,
                 NavbarCustomActionIconTestComponent,
@@ -22,8 +22,8 @@ describe('IgxNavbar', () => {
                 IgxNavbarModule,
                 IgxIconModule
             ]
-        }).compileComponents();
-    }));
+        });
+    });
 
     let fixture, component, domNavbar;
 

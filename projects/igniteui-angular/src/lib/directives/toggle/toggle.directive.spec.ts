@@ -13,10 +13,10 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
 
 describe('IgxToggle', () => {
-    configureTestSuite();
+
     const HIDDEN_TOGGLER_CLASS = 'igx-toggle--hidden';
     const TOGGLER_CLASS = 'igx-toggle';
-    beforeEach(async(() => {
+    configureTestSuite(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxToggleActionTestComponent,
@@ -28,9 +28,8 @@ describe('IgxToggle', () => {
                 TestWithThreeToggleActionsComponent
             ],
             imports: [NoopAnimationsModule, IgxToggleModule]
-        })
-            .compileComponents();
-    }));
+        });
+    });
 
     it('IgxToggleDirective is defined', () => {
         const fixture = TestBed.createComponent(IgxToggleTestComponent);
@@ -452,7 +451,7 @@ describe('IgxToggle', () => {
     }));
 
     describe('overlay settings', () => {
-        // configureTestSuite();
+
         it('should pass correct defaults from IgxToggleActionDirective and respect outsideClickClose', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxToggleActionTestComponent);
             fixture.detectChanges();

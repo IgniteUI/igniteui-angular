@@ -12,9 +12,9 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgxCheckbox', () => {
-    configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 InitCheckboxComponent,
                 CheckboxSimpleComponent,
@@ -28,9 +28,8 @@ describe('IgxCheckbox', () => {
                 IgxCheckboxComponent
             ],
             imports: [FormsModule, IgxRippleModule, NoopAnimationsModule]
-        })
-            .compileComponents();
-    }));
+        });
+    });
 
     it('Initializes a checkbox', () => {
         const fixture = TestBed.createComponent(InitCheckboxComponent);

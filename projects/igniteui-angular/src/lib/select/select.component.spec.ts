@@ -80,9 +80,9 @@ describe('igxSelect', () => {
         expect(select.close).toHaveBeenCalledTimes(closeEventCounter);
         expect(select.toggle).toHaveBeenCalledTimes(toggleCallCounter);
     };
-    configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxSelectSimpleComponent,
                 IgxSelectGroupsComponent,
@@ -105,8 +105,8 @@ describe('igxSelect', () => {
                 IgxToggleModule,
                 NoopAnimationsModule
             ]
-        }).compileComponents();
-    }));
+        });
+    });
 
     describe('General tests: ', () => {
         beforeEach(fakeAsync(() => {

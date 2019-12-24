@@ -21,7 +21,7 @@ import { IgxIconModule } from '../icon/index';
 import { configureTestSuite } from '../test-utils/configure-suite';
 
 describe('Card', () => {
-    configureTestSuite();
+
     const baseClass = 'igx-card';
 
     const classes = {
@@ -66,8 +66,8 @@ describe('Card', () => {
         media: `${baseClass}__media`
     };
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 InitCardComponent,
                 InitOutlinedCardComponent,
@@ -80,8 +80,8 @@ describe('Card', () => {
                 IgxIconModule,
                 IgxButtonModule
             ]
-        }).compileComponents();
-    }));
+        });
+    });
 
     it('Initializes default card', () => {
         const fixture = TestBed.createComponent(InitCardComponent);

@@ -11,18 +11,18 @@ import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { setupHierarchicalGridScrollDetection } from '../../test-utils/helper-utils.spec';
 
 describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
-    configureTestSuite();
+    //  ();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     beforeEach(async(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
@@ -790,7 +790,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
 
 
 describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
-        configureTestSuite();
+
         let fixture;
         let hierarchicalGrid: IgxHierarchicalGridComponent;
         beforeEach(async(() => {
@@ -946,18 +946,18 @@ describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
 });
 
 describe('IgxHierarchicalGrid Multi-layout Navigation #hGrid', () => {
-    configureTestSuite();
+
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridMultiLayoutComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     beforeEach(async(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridMultiLayoutComponent);
@@ -1107,18 +1107,18 @@ describe('IgxHierarchicalGrid Multi-layout Navigation #hGrid', () => {
 });
 
 describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
-    configureTestSuite();
+
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridSmallerChildComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
-        }).compileComponents();
-    }));
+        });
+    });
     beforeEach(async(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridSmallerChildComponent);
         fixture.detectChanges();

@@ -7,8 +7,8 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgxRadioGroupDirective', () => {
-    configureTestSuite();
-    beforeEach(async(() => {
+
+    configureTestSuite(() => {
         TestBed.configureTestingModule({
             declarations: [
                 RadioGroupComponent,
@@ -22,9 +22,8 @@ describe('IgxRadioGroupDirective', () => {
                 ReactiveFormsModule,
                 NoopAnimationsModule
             ]
-        })
-        .compileComponents();
-    }));
+        });
+    });
 
     it('Properly initialize the radio group buttons\' properties.', fakeAsync(() => {
         const fixture = TestBed.createComponent(RadioGroupComponent);

@@ -9,17 +9,15 @@ import { IgxDatePickerComponent, IgxDatePickerModule } from '../date-picker/date
 import { DateRangeType } from '../core/dates';
 import { By } from '@angular/platform-browser';
 
-
 describe('Multi-View Calendar - ', () => {
     let fixture, calendar;
-    configureTestSuite();
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [MultiViewCalendarSampleComponent, MultiViewDatePickerSampleComponent, MultiViewNgModelSampleComponent],
             imports: [IgxCalendarModule, IgxDatePickerModule, FormsModule, NoopAnimationsModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     describe('Base Tests - ', () => {
         beforeEach(async(() => {

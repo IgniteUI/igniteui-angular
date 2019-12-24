@@ -10,7 +10,7 @@ import { IgxAvatarComponent, AvatarType, Size } from './avatar.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
 
 describe('Avatar', () => {
-    configureTestSuite();
+
     const baseClass = 'igx-avatar';
 
     const classes = {
@@ -24,8 +24,8 @@ describe('Avatar', () => {
         icon: `${baseClass}--icon`
     };
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 InitAvatarComponent,
                 AvatarWithAttribsComponent,
@@ -34,9 +34,8 @@ describe('Avatar', () => {
                 InitImageAvatarComponent
             ],
             imports: [IgxIconModule]
-        })
-            .compileComponents();
-    }));
+        });
+    });
 
     it('Initializes avatar with auto-incremented id', () => {
         const fixture = TestBed.createComponent(InitAvatarComponent);

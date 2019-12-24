@@ -82,20 +82,20 @@ class TestChipsLabelAndSuffixComponent {
 
 
 describe('IgxChip', () => {
-    configureTestSuite();
+
     const CHIP_ITEM = 'igx-chip__item igx-drag igx-drag--select-disabled';
     const CHIP_REMOVE_BUTTON = 'igx-chip__remove';
 
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 TestChipComponent,
                 TestChipsLabelAndSuffixComponent,
                 IgxLabelDirective
             ],
             imports: [FormsModule, IgxIconModule, IgxChipsModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     it('should render chip area and chips inside it', () => {
         const fix = TestBed.createComponent(TestChipComponent);

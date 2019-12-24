@@ -24,9 +24,9 @@ const ADVANCED_FILTERING_OPERATOR_LINE_SELECTED_CSS_CLASS = 'igx-filter-tree__li
 const ADVANCED_FILTERING_TOOLBAR_BUTTON_FILTERED_CSS_CLASS = 'igx-grid-toolbar__adv-filter--filtered';
 
 describe('IgxGrid - Advanced Filtering', () => {
-    configureTestSuite();
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxGridAdvancedFilteringColumnGroupComponent,
                 IgxGridAdvancedFilteringComponent,
@@ -35,8 +35,8 @@ describe('IgxGrid - Advanced Filtering', () => {
             imports: [
                 NoopAnimationsModule,
                 IgxGridModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     afterEach(() => {
         UIInteractions.clearOverlay();

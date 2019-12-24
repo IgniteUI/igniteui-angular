@@ -15,18 +15,18 @@ import { IGridCellEventArgs } from '../grid';
 import { GridSelectionMode } from '../common/enums';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
-    configureTestSuite();
+
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     beforeEach(async(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
@@ -409,18 +409,18 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 });
 
 describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
-    configureTestSuite();
+
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridMultiLayoutComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     beforeEach(async(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridMultiLayoutComponent);
@@ -666,19 +666,19 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
 });
 
 describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
-    configureTestSuite();
+
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     const TBODY_CLASS = '.igx-grid__tbody-content';
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridSizingComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     beforeEach(async(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridSizingComponent);
@@ -806,19 +806,19 @@ describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
 });
 
 describe('IgxHierarchicalGrid Remote Scenarios #hGrid', () => {
-    configureTestSuite();
+
     let fixture: ComponentFixture<IgxHGridRemoteOnDemandComponent>;
     const TBODY_CLASS = '.igx-grid__tbody-content';
     const THEAD_CLASS = '.igx-grid__thead';
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxHGridRemoteOnDemandComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     beforeEach(async(() => {
         fixture = TestBed.createComponent(IgxHGridRemoteOnDemandComponent);
@@ -882,20 +882,20 @@ describe('IgxHierarchicalGrid Remote Scenarios #hGrid', () => {
 });
 
 describe('IgxHierarchicalGrid Template Changing Scenarios #hGrid', () => {
-    configureTestSuite();
+
     const TBODY_CLASS = '.igx-grid__tbody-content';
     const THEAD_CLASS = '.igx-grid__thead';
     let fixture: ComponentFixture<IgxHierarchicalGridColumnsUpdateComponent>;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridColumnsUpdateComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     beforeEach(async(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridColumnsUpdateComponent);
@@ -1049,18 +1049,18 @@ describe('IgxHierarchicalGrid Template Changing Scenarios #hGrid', () => {
 });
 
 describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () => {
-    configureTestSuite();
+
     let fixture: ComponentFixture<IgxHierarchicalGridToggleRIComponent>;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridToggleRIComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     beforeEach(async(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridToggleRIComponent);
@@ -1133,18 +1133,18 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
 });
 
 describe('IgxHierarchicalGrid custom template #hGrid', () => {
-    configureTestSuite();
+
     let fixture: ComponentFixture<IgxHierarchicalGridCustomTemplateComponent>;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeEach(async(() => {
-        TestBed.configureTestingModule({
+    configureTestSuite(() => {
+            TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridCustomTemplateComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     beforeEach(async(() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridCustomTemplateComponent);

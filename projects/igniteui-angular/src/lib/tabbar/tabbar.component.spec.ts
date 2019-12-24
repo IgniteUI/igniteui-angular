@@ -15,24 +15,21 @@ import { Location } from '@angular/common';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 
 describe('IgxBottomNav', () => {
-    configureTestSuite();
-
     const tabItemNormalCssClass = 'igx-bottom-nav__menu-item';
     const tabItemSelectedCssClass = 'igx-bottom-nav__menu-item--selected';
+    const testRoutes = [
+        { path: 'view1', component: BottomNavRoutingView1Component },
+        { path: 'view2', component: BottomNavRoutingView2Component },
+        { path: 'view3', component: BottomNavRoutingView3Component }
+    ];
 
-    beforeEach(async(() => {
-        const testRoutes = [
-            { path: 'view1', component: BottomNavRoutingView1Component },
-            { path: 'view2', component: BottomNavRoutingView2Component },
-            { path: 'view3', component: BottomNavRoutingView3Component }
-        ];
-
+    configureTestSuite(() => {
         TestBed.configureTestingModule({
             declarations: [TabBarTestComponent, BottomTabBarTestComponent, TemplatedTabBarTestComponent, TabBarRoutingTestComponent,
                 TabBarTabsOnlyModeTestComponent],
             imports: [IgxBottomNavModule, BottomNavRoutingViewComponentsModule, RouterTestingModule.withRoutes(testRoutes)]
-        }).compileComponents();
-    }));
+        });
+    });
 
     describe('IgxBottomNav Component with Panels Definitions', () => {
         let fixture;

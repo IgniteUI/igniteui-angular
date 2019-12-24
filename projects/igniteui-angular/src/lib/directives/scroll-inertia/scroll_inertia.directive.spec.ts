@@ -13,18 +13,17 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait } from '../../test-utils/ui-interactions.spec';
 
 describe('Scroll Inertia Directive ', () => {
-    configureTestSuite();
     let fix: ComponentFixture<ScrollInertiaComponent>;
 
-    beforeEach(async(() => {
+    configureTestSuite(() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTestScrollInertiaDirective,
                 ScrollInertiaComponent
             ],
             imports: [IgxScrollInertiaModule]
-        }).compileComponents();
-    }));
+        });
+    });
 
     beforeEach(() => {
         fix = TestBed.createComponent(ScrollInertiaComponent);
