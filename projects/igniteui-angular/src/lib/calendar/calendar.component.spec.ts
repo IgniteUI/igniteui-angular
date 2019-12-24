@@ -1060,7 +1060,8 @@ describe('IgxCalendar', () => {
         fixture.detectChanges();
         const calendar = fixture.componentInstance.calendar;
         expect(calendar.specialDates).toEqual([{ type: DateRangeType.Between, dateRange: [new Date(2017, 5, 1), new Date(2017, 5, 6)] }]);
-        expect(calendar.disabledDates).toEqual([{ type: DateRangeType.Between, dateRange: [new Date(2017, 5, 23), new Date(2017, 5, 29)] }]);
+        expect(calendar.disabledDates)
+        .toEqual([{ type: DateRangeType.Between, dateRange: [new Date(2017, 5, 23), new Date(2017, 5, 29)] }]);
         let specialDates = calendar.daysView.dates.toArray().filter(d => {
             const dateTime = getDate(d).getTime();
             return (dateTime >= new Date(2017, 5, 1).getTime() &&
