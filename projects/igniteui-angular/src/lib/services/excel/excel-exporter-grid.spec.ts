@@ -21,6 +21,8 @@ import { IgxTreeGridModule, IgxTreeGridComponent } from '../../grids/tree-grid';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 
 describe('Excel Exporter', () => {
     configureTestSuite();
@@ -464,6 +466,41 @@ describe('Excel Exporter', () => {
             });
             await exportAndVerify(grid, options, actualData.simpleGridData);
         });
+
+        it('Should honor Advanced filters when exporting', async () => {
+            const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands.push({
+                fieldName: 'Name',
+                searchVal: 'a',
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            tree.filteringOperands.push({
+                fieldName: 'Name',
+                searchVal: 'r',
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            tree.filteringOperands.push({
+                fieldName: 'ID',
+                searchVal: 5,
+                condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+            });
+
+            grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+            grid.cdr.detectChanges();
+            await wait();
+            expect(grid.filteredData.length).toBe(4);
+
+            // Export and verify
+            await exportAndVerify(grid, options, actualData.gridWithAdvancedFilters);
+        });
     });
 
     describe('', () => {
@@ -599,6 +636,30 @@ describe('Excel Exporter', () => {
             });
             treeGrid.cdr.detectChanges();
             await exportAndVerify(treeGrid, options, actualData.treeGridDataFormatted);
+        });
+
+        it('Should honor Advanced filters when exporting', async () => {
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands.push({
+                fieldName: 'Age',
+                searchVal: 40,
+                condition: IgxNumberFilteringOperand.instance().condition('lessThan'),
+                ignoreCase: true
+            });
+            tree.filteringOperands.push({
+                fieldName: 'Name',
+                searchVal: 'a',
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+
+            treeGrid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+            treeGrid.cdr.detectChanges();
+            await wait();
+            expect(treeGrid.filteredData.length).toBe(5);
+
+            await exportAndVerify(treeGrid, options, actualData.treeGridWithAdvancedFilters);
         });
     });
 
