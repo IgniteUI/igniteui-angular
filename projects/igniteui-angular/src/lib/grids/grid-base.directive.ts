@@ -5966,6 +5966,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         const actualScrollLeft = left + rowForOf.getColumnScrollLeft(rowForOf.state.startIndex);
         if (gridScrLeft !== actualScrollLeft) {
             rowForOf.onHScroll(gridScrLeft);
+            rowForOf.cdr.detectChanges();
         }
     }
 

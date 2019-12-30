@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { first } from 'rxjs/operators';
+import { first, debounceTime } from 'rxjs/operators';
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';
 import { ISelectionNode } from './selection/selection.service';
@@ -249,7 +249,7 @@ export class IgxGridNavigationService {
            this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
             this.grid.verticalScrollContainer.scrollTo(0);
             this.grid.verticalScrollContainer.onChunkLoad
-                .pipe(first()).subscribe(() => {
+                .pipe(debounceTime(10)).pipe(first()).subscribe(() => {
                     const cells = this.grid.nativeElement.querySelectorAll(
                         `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
                     if (cells.length > 0) { (cells[0] as HTMLElement).focus(); }
