@@ -210,6 +210,14 @@ export class DataUtil {
         return data;
     }
 
+    public static parseValue(dataType: DataType, value: any): any {
+        if (dataType === DataType.Number) {
+            value = parseFloat(value);
+        }
+
+        return value;
+    }
+
     private static findParentFromPath(data: any[], primaryKey: any, childDataKey: any, path: any[]): any {
         let collection: any[] = data;
         let result: any;
