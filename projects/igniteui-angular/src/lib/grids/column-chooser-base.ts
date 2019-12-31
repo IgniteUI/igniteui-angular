@@ -1,15 +1,15 @@
-import { ChangeDetectorRef, HostBinding, Input, OnDestroy, Directive } from '@angular/core';
+import { ChangeDetectorRef, HostBinding, Input, OnDestroy } from '@angular/core';
 import { IgxStringFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { FilteringStrategy } from '../data-operations/filtering-strategy';
-import { ColumnChooserItemBaseDirective } from './column-chooser-item-base';
+import { ColumnChooserItemBase } from './column-chooser-item-base';
 import { ColumnDisplayOrder } from './common/enums';
 
 class CustomFilteringStrategy extends FilteringStrategy {
     public filter(data: any[], expressionsTree: IFilteringExpressionsTree): any[] {
-        const res: ColumnChooserItemBaseDirective[] = [];
-        data.forEach((item: ColumnChooserItemBaseDirective) => {
+        const res: ColumnChooserItemBase[] = [];
+        data.forEach((item: ColumnChooserItemBase) => {
             if (this.matchRecord(item, expressionsTree.filteringOperands[0] as IFilteringExpression)) {
                 res.push(item);
             } else if (item.column.columnGroup) {
@@ -26,8 +26,7 @@ class CustomFilteringStrategy extends FilteringStrategy {
 }
 
 /** @hidden */
-@Directive()
-export abstract class ColumnChooserBaseDirective implements OnDestroy {
+export abstract class ColumnChooserBase implements OnDestroy {
     /**
      * Gets the grid columns that are going to be manipulated.
      * ```typescript

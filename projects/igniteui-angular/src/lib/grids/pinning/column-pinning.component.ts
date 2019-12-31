@@ -1,6 +1,6 @@
 
 import { Component, ChangeDetectorRef } from '@angular/core';
-import { ColumnChooserBaseDirective } from '../column-chooser-base';
+import { ColumnChooserBase } from '../column-chooser-base';
 import { IgxColumnPinningItemDirective } from './pinning.directive';
 
 
@@ -10,7 +10,7 @@ import { IgxColumnPinningItemDirective } from './pinning.directive';
     selector: 'igx-column-pinning',
     templateUrl: './column-pinning.component.html'
 })
-export class IgxColumnPinningComponent extends ColumnChooserBaseDirective {
+export class IgxColumnPinningComponent extends ColumnChooserBase {
 
     constructor(public cdr: ChangeDetectorRef) {
         super(cdr);

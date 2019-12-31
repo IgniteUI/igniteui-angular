@@ -7,7 +7,7 @@ import {
     OnDestroy
 } from '@angular/core';
 import { IColumnVisibilityChangedEventArgs, IgxColumnHidingItemDirective } from './column-hiding-item.directive';
-import { ColumnChooserBaseDirective } from '../column-chooser-base';
+import { ColumnChooserBase } from '../column-chooser-base';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
@@ -16,7 +16,7 @@ import { Subject } from 'rxjs';
     selector: 'igx-column-hiding',
     templateUrl: './column-hiding.component.html'
 })
-export class IgxColumnHidingComponent extends ColumnChooserBaseDirective implements OnDestroy {
+export class IgxColumnHidingComponent extends ColumnChooserBase implements OnDestroy {
     /**
      * Returns a boolean indicating whether the `HIDE ALL` button is disabled.
      * ```html

@@ -1,11 +1,11 @@
 import { Directive } from '@angular/core';
-import { ColumnChooserItemBaseDirective } from '../column-chooser-item-base';
+import { ColumnChooserItemBase } from '../column-chooser-item-base';
 
 
 @Directive({
     selector: '[igxColumnPinningItem]'
 })
-export class IgxColumnPinningItemDirective extends ColumnChooserItemBaseDirective {
+export class IgxColumnPinningItemDirective extends ColumnChooserItemBase {
 
     constructor() {
         super('pinned');
