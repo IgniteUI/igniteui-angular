@@ -107,6 +107,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         };
         super.createGhost(pageX, pageY, this.row.nativeElement);
 
+        // Check if there is an expander icon and create the ghost at the corresponding position
         if (this.isHierarchicalGrid) {
             const row = this.row as IgxHierarchicalRowComponent;
             if (row.expander) {
