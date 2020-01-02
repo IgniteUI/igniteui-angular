@@ -15,7 +15,7 @@ import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 // tslint:disable: no-use-before-declare
 describe('IgxTimePicker', () => {
 
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
             TestBed.configureTestingModule({
             imports: [IgxTimePickerTestingModule]
         });

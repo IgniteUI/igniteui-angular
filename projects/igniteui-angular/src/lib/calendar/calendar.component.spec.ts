@@ -15,7 +15,7 @@ import { IgxDayItemComponent } from './days-view/day-item.component';
 
 describe('IgxCalendar', () => {
 
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
         TestBed.configureTestingModule({
             declarations: [IgxCalendarSampleComponent, IgxCalendaRangeComponent, IgxCalendarDisabledSpecialDatesComponent],
             imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]

@@ -25,7 +25,7 @@ describe('IgxAutocomplete', () => {
     let input: IgxInputDirective;
     let dropDown: IgxDropDownComponent;
 
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
             TestBed.configureTestingModule({
             declarations: [
                 AutocompleteComponent,

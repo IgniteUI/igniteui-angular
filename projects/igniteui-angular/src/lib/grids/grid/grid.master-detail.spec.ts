@@ -23,7 +23,7 @@ describe('IgxGrid Master Detail #grid', () => {
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
 
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
             TestBed.configureTestingModule({
             declarations: [
                 DefaultGridMasterDetailComponent,

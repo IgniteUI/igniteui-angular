@@ -86,7 +86,7 @@ describe('IgxChip', () => {
     const CHIP_ITEM = 'igx-chip__item igx-drag igx-drag--select-disabled';
     const CHIP_REMOVE_BUTTON = 'igx-chip__remove';
 
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
             TestBed.configureTestingModule({
             declarations: [
                 TestChipComponent,

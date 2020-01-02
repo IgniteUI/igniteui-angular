@@ -7,7 +7,7 @@ import { IgxSnackbarComponent, IgxSnackbarModule } from './snackbar.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
 
 describe('IgxSnackbar', () => {
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
             TestBed.configureTestingModule({
             declarations: [
                 SnackbarInitializeTestComponent,
@@ -92,7 +92,7 @@ describe('IgxSnackbar', () => {
 
 describe('IgxSnackbar with custom content', () => {
 
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
             TestBed.configureTestingModule({
             declarations: [
                 SnackbarCustomContentComponent

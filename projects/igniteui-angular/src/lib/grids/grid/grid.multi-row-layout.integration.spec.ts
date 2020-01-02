@@ -17,7 +17,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     let fixture;
     let grid: IgxGridComponent;
     let colGroups: Array<any>;
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
             TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutPinningTestComponent,

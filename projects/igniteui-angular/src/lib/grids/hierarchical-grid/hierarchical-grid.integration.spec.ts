@@ -25,7 +25,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
             TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent,

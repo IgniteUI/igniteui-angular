@@ -32,7 +32,7 @@ describe('Column Hiding UI #grid', () => {
     const verifyColumnIsHidden = GridFunctions.verifyColumnIsHidden;
     const getColumnHidingButton = GridFunctions.getColumnHidingButton;
 
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
             TestBed.configureTestingModule({
             declarations: [
                 ColumnHidingTestComponent,

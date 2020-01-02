@@ -20,7 +20,7 @@ const INDETERMINATE_CLASS = 'igx-linear-bar--indeterminate';
 describe('IgLinearBar', () => {
 
     const tickTime = 2000;
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
             TestBed.configureTestingModule({
             declarations: [
                 InitLinearProgressBarComponent,

@@ -22,7 +22,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
     let fixture;
     let grid: IgxGridComponent;
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
         TestBed.configureTestingModule({
             declarations: [
                 GridDeclaredColumnsComponent,

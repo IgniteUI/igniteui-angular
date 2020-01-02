@@ -12,7 +12,7 @@ import { By } from '@angular/platform-browser';
 describe('Multi-View Calendar - ', () => {
     let fixture, calendar;
 
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
             TestBed.configureTestingModule({
             declarations: [MultiViewCalendarSampleComponent, MultiViewDatePickerSampleComponent, MultiViewNgModelSampleComponent],
             imports: [IgxCalendarModule, IgxDatePickerModule, FormsModule, NoopAnimationsModule]
