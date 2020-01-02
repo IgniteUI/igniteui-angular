@@ -7,7 +7,6 @@ import {
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxFocusDirective, IgxFocusModule } from './focus.directive';
-
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { EditorProvider } from '../../core/edit-provider';
 import { IgxCheckboxModule, IgxCheckboxComponent } from '../../checkbox/checkbox.component';
