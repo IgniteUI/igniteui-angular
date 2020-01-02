@@ -2535,6 +2535,7 @@ describe('IgxGrid - GroupBy', () => {
     it('should apply custom comparer function when grouping by dragging a column into the group area', async () => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
+        const year =  new Date().getFullYear().toString();
         fix.detectChanges();
         await wait();
 
@@ -2574,7 +2575,7 @@ describe('IgxGrid - GroupBy', () => {
         expect(grid.groupsRecords.length).toEqual(2);
         expect(grid.groupsRecords[1].records.length).toEqual(6);
         for (let i = 0; i < grid.groupsRecords[1].records.length; i++) {
-            expect(grid.groupsRecords[1].records[i].ReleaseDate.getFullYear().toString()).toEqual('2019');
+            expect(grid.groupsRecords[1].records[i].ReleaseDate.getFullYear().toString()).toEqual(year);
         }
     });
 
