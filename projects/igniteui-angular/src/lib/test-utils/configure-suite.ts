@@ -35,16 +35,13 @@ export const configureTestSuite = (configureAction?: () => void) => {
     const testBedApi: any = getTestBed();
     const originReset = TestBed.resetTestingModule;
 
-    beforeAll(() => {
-        TestBed.resetTestingModule();
-        TestBed.resetTestingModule = () => TestBed;
-        resizeObserverIgnoreError();
-    });
-
     if (configureAction) {
         beforeAll((done: DoneFn) => (async () => {
+            TestBed.resetTestingModule();
             configureAction();
             await TestBed.compileComponents();
+            TestBed.resetTestingModule = () => TestBed;
+            resizeObserverIgnoreError();
         })().then(done).catch(done.fail));
     }
 
