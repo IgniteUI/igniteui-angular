@@ -1374,7 +1374,6 @@ describe('Row editing expanding/collapsing #tGrid', () => {
 });
 
 describe('Custom expand/collapse template #tGrid', () => {
-
     let fix;
     let treeGrid;
 

@@ -6,13 +6,10 @@ import {
 import { By } from '@angular/platform-browser';
 import { IgxIconModule } from '../icon/index';
 import { IgxAvatarComponent, AvatarType, Size } from './avatar.component';
-
 import { configureTestSuite } from '../test-utils/configure-suite';
 
 describe('Avatar', () => {
-
     const baseClass = 'igx-avatar';
-
     const classes = {
         default: `${baseClass}--default`,
         round: `${baseClass}--rounded`,

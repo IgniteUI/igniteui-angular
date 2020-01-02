@@ -6,7 +6,6 @@ import {
 import { By } from '@angular/platform-browser';
 import { IgxIconModule } from '../icon/index';
 import { IgxBadgeComponent, IgxBadgeModule } from './badge.component';
-
 import { configureTestSuite } from '../test-utils/configure-suite';
 
 describe('Badge', () => {
