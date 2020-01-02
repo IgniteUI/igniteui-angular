@@ -563,16 +563,12 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     }
 
     protected set ghostLeft(pageX: number) {
-        // To Do: Remove requestAnimationFrame when deprecated animations inputs are removed as well.
-        // We use requestAnimationFrame for the old drop animations in combination with updateDragRelativePos.
-        requestAnimationFrame(() => {
-            if (this.ghostElement) {
-                // We need to take into account marginLeft, since top style does not include margin, but pageX includes the margin.
-                const ghostMarginLeft = parseInt(document.defaultView.getComputedStyle(this.ghostElement)['margin-left'], 10);
-                // If ghost host is defined it needs to be taken into account.
-                this.ghostElement.style.left = (pageX - ghostMarginLeft - this._ghostHostX) + 'px';
-            }
-        });
+        if (this.ghostElement) {
+            // We need to take into account marginLeft, since top style does not include margin, but pageX includes the margin.
+            const ghostMarginLeft = parseInt(document.defaultView.getComputedStyle(this.ghostElement)['margin-left'], 10);
+            // If ghost host is defined it needs to be taken into account.
+            this.ghostElement.style.left = (pageX - ghostMarginLeft - this._ghostHostX) + 'px';
+        }
     }
 
     protected get ghostLeft() {
@@ -580,16 +576,12 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
     }
 
     protected set ghostTop(pageY: number) {
-        // To Do: Remove requestAnimationFrame when deprecated animations inputs are removed as well.
-        // We use requestAnimationFrame for the old drop animations in combination with updateDragRelativePos.
-        requestAnimationFrame(() => {
-            if (this.ghostElement) {
-                // We need to take into account marginTop, since top style does not include margin, but pageY includes the margin.
-                const ghostMarginTop = parseInt(document.defaultView.getComputedStyle(this.ghostElement)['margin-top'], 10);
-                // If ghost host is defined it needs to be taken into account.
-                this.ghostElement.style.top = (pageY - ghostMarginTop - this._ghostHostY) + 'px';
-            }
-        });
+        if (this.ghostElement) {
+            // We need to take into account marginTop, since top style does not include margin, but pageY includes the margin.
+            const ghostMarginTop = parseInt(document.defaultView.getComputedStyle(this.ghostElement)['margin-top'], 10);
+            // If ghost host is defined it needs to be taken into account.
+            this.ghostElement.style.top = (pageY - ghostMarginTop - this._ghostHostY) + 'px';
+        }
     }
 
     protected get ghostTop() {
@@ -1222,49 +1214,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         this.dispatchEvent(this._lastDropArea, 'igxDrop', eventArgs);
         this.dispatchEvent(this._lastDropArea, 'igxDragLeave', eventArgs);
         this._lastDropArea = null;
-    }
-
-    /**
-     * @hidden
-     * Update relative positions
-     */
-    public updateDragRelativePos() {
-        let newPosX, newPosY;
-        if (this.ghost && this.ghostElement) {
-            // Calculate the new ghostElement position to remain where the mouse is, so it doesn't jump
-            const totalDraggedX = this.ghostLeft - this._ghostStartX;
-            const totalDraggedY = this.ghostTop - this._ghostStartY;
-            newPosX = this.baseLeft;
-            newPosY = this.baseTop;
-            const diffStartX = this._ghostStartX - newPosX;
-            const diffStartY = this._ghostStartY - newPosY;
-            this.ghostTop = newPosX + totalDraggedX - diffStartX;
-            this.ghostLeft = newPosY + totalDraggedY - diffStartY;
-        } else if (!this.ghost) {
-            this.setTransformXY(0, 0);
-        }
-    }
-
-    /**
-     * @deprecated This method will be removed in future major version. Please use `transitionToOrigin` or `transitionTo`.
-     * Informs the `igxDrag` directive that it has been dropped/released.
-     * This should usually be called when `animateOnRelease` is set to `true`.
-     * When canceling or defining custom drop logic this tells the igxDrag to update it's positions and
-     * animate correctly to the new position.
-     * ```typescript
-     * public onDropElem(event) {
-     *     // Function bound to the igxDrop directive event `onDrop`
-     *     // This cancels the default drop logic of the `igxDrop`
-     *     event.cancel = true;
-     *     event.drag.dropFinished();
-     * }
-     * ```
-    */
-    public dropFinished() {
-        this.updateDragRelativePos();
-        if (this.animateOnRelease && this.ghostElement) {
-            this.transitionToOrigin();
-        }
     }
 
     /**
