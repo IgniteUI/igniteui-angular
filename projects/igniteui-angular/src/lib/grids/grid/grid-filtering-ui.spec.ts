@@ -1249,6 +1249,7 @@ describe('IgxGrid - Filtering actions', () => {
         fix.detectChanges();
 
         const firstMonth = calendar.querySelector('.igx-calendar__month');
+        const firstMonthText = (firstMonth as HTMLElement).innerText;
         firstMonth.dispatchEvent(new Event('click'));
         tick();
         fix.detectChanges();
@@ -1256,7 +1257,7 @@ describe('IgxGrid - Filtering actions', () => {
         calendar = outlet.getElementsByClassName('igx-calendar')[0];
         const month = calendar.querySelector('.igx-calendar-picker__date');
 
-        expect(month.innerHTML.trim()).toEqual('Jan');
+        expect(month.innerHTML.trim()).toEqual(firstMonthText);
     }));
 
     it('Should correctly select year from year view datepicker/calendar component', fakeAsync(() => {
