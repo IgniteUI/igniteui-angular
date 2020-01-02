@@ -458,7 +458,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             });
             this.columnList.reset(topCols);
             if (recalcColSizes && this.columnList.length !== colLength) {
-                this.calculateGridSizes();
+                this.calculateGridSizes(false);
             }
         }
     }

@@ -4760,9 +4760,6 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.resetCaches();
         this.cdr.detectChanges();
         this.calculateGridHeight();
-        if (recalcFeatureWidth) {
-            this._headerFeaturesWidth = NaN;
-        }
 
         if (this.rowEditable) {
             this.repositionRowEditingOverlay(this.rowInEditMode);
@@ -4791,6 +4788,9 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             });
         }
         this.resetCaches();
+        if (recalcFeatureWidth) {
+            this._headerFeaturesWidth = NaN;
+        }
     }
 
     private _applyWidthHostBinding() {
