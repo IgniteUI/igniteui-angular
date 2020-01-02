@@ -4,8 +4,7 @@
         "outDir": "../out-tsc/app",
         "types": [
             "node"
-        ],
-        "enableIvy": false
+        ]
     },
   "files": [
     "main.ts",
