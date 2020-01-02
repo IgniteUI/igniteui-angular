@@ -176,18 +176,9 @@ describe('IgxCalendar', () => {
     });
 
     describe('Rendered Component', () => {
-
         let fixture;
         let calendar;
         let dom;
-
-        configureTestSuite(() => {
-            TestBed.configureTestingModule({
-                declarations: [IgxCalendarSampleComponent],
-                imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
-            });
-        });
-
 
         beforeEach(
             async(() => {
@@ -1061,7 +1052,7 @@ describe('IgxCalendar', () => {
         const calendar = fixture.componentInstance.calendar;
         expect(calendar.specialDates).toEqual([{ type: DateRangeType.Between, dateRange: [new Date(2017, 5, 1), new Date(2017, 5, 6)] }]);
         expect(calendar.disabledDates)
-        .toEqual([{ type: DateRangeType.Between, dateRange: [new Date(2017, 5, 23), new Date(2017, 5, 29)] }]);
+            .toEqual([{ type: DateRangeType.Between, dateRange: [new Date(2017, 5, 23), new Date(2017, 5, 29)] }]);
         let specialDates = calendar.daysView.dates.toArray().filter(d => {
             const dateTime = getDate(d).getTime();
             return (dateTime >= new Date(2017, 5, 1).getTime() &&
@@ -1298,19 +1289,11 @@ describe('IgxCalendar', () => {
     });
 
     describe('Select and deselect dates', () => {
-
         let fixture;
         let calendar;
         let ci;
 
-        configureTestSuite(() => {
-            TestBed.configureTestingModule({
-                declarations: [IgxCalendarSampleComponent],
-                imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
-            });
-        });
-
-        beforeEach(
+       beforeEach(
             async(() => {
                 fixture = TestBed.createComponent(IgxCalendarSampleComponent);
                 fixture.detectChanges();
@@ -1627,416 +1610,409 @@ describe('IgxCalendar', () => {
         });
     });
 
+
     describe('Advanced KB Navigation', () => {
-        configureTestSuite(() => {
-            TestBed.configureTestingModule({
-                declarations: [IgxCalendarSampleComponent],
-                imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
-            });
+
+        it('AKB - should navigate to the previous/next month via KB.', async () => {
+            const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+            fixture.detectChanges();
+
+            const calendar = fixture.componentInstance.calendar;
+            const dom = fixture.debugElement;
+
+            const prev = dom.queryAll(By.css('.igx-calendar-picker__prev'))[0];
+            prev.nativeElement.focus();
+
+            expect(prev.nativeElement).toBe(document.activeElement);
+
+            UIInteractions.simulateKeyDownEvent(prev.nativeElement, 'Enter');
+            await wait(200);
+            fixture.detectChanges();
+
+            expect(calendar.viewDate.getMonth()).toEqual(4);
+
+            const next = dom.queryAll(By.css('.igx-calendar-picker__next'))[0];
+            next.nativeElement.focus();
+
+            expect(next.nativeElement).toBe(document.activeElement);
+
+            UIInteractions.simulateKeyDownEvent(next.nativeElement, 'Enter');
+            await wait(200);
+            UIInteractions.simulateKeyDownEvent(next.nativeElement, 'Enter');
+            await wait(200);
+            fixture.detectChanges();
+
+            expect(calendar.viewDate.getMonth()).toEqual(6);
+        });
+
+        it('AKB - should open years view, navigate through and select an year via KB.', async () => {
+            const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+            fixture.detectChanges();
+
+            const calendar = fixture.componentInstance.calendar;
+            const dom = fixture.debugElement;
+
+            const year = dom.queryAll(By.css('.igx-calendar-picker__date'))[1];
+            year.nativeElement.focus();
+
+            expect(year.nativeElement).toBe(document.activeElement);
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'Enter');
+            fixture.detectChanges();
+
+            const years = dom.queryAll(By.css('.igx-calendar__year'));
+            let currentYear = dom.query(By.css('.igx-calendar__year--current'));
+
+            expect(years.length).toEqual(6);
+            expect(currentYear.nativeElement.textContent.trim()).toMatch('2017');
+
+            UIInteractions.simulateKeyDownEvent(currentYear.nativeElement, 'ArrowDown');
+            fixture.detectChanges();
+
+            currentYear = dom.query(By.css('.igx-calendar__year--current'));
+            expect(currentYear.nativeElement.textContent.trim()).toMatch('2018');
+
+            UIInteractions.simulateKeyDownEvent(currentYear.nativeElement, 'ArrowUp');
+            UIInteractions.simulateKeyDownEvent(currentYear.nativeElement, 'ArrowUp');
+            fixture.detectChanges();
+
+            currentYear = dom.query(By.css('.igx-calendar__year--current'));
+            expect(currentYear.nativeElement.textContent.trim()).toMatch('2016');
+
+            UIInteractions.simulateKeyDownEvent(currentYear.nativeElement, 'Enter');
+            fixture.detectChanges();
+
+            expect(calendar.viewDate.getFullYear()).toEqual(2016);
+        });
+
+        it('AKB - should open months view, navigate through and select a month via KB.', async () => {
+            const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+            fixture.detectChanges();
+
+            const calendar = fixture.componentInstance.calendar;
+            const dom = fixture.debugElement;
+
+            const month = dom.queryAll(By.css('.igx-calendar-picker__date'))[0];
+            month.nativeElement.focus();
+
+            expect(month.nativeElement).toBe(document.activeElement);
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'Enter');
+            fixture.detectChanges();
+
+            const months = dom.queryAll(By.css('.igx-calendar__month'));
+            const currentMonth = dom.query(By.css('.igx-calendar__month--current'));
+
+            expect(months.length).toEqual(11);
+            expect(currentMonth.nativeElement.textContent.trim()).toMatch('Jun');
+
+            UIInteractions.simulateKeyDownEvent(currentMonth.nativeElement, 'Home');
+            fixture.detectChanges();
+
+            expect(document.activeElement.textContent.trim()).toMatch('Jan');
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'End');
+            fixture.detectChanges();
+
+            expect(document.activeElement.textContent.trim()).toMatch('Dec');
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+            fixture.detectChanges();
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
+            fixture.detectChanges();
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
+            fixture.detectChanges();
+
+            expect(document.activeElement.textContent.trim()).toMatch('Sep');
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'Enter');
+            fixture.detectChanges();
+
+            expect(calendar.viewDate.getMonth()).toEqual(8);
+        });
+
+        it('AKB - should navigate to the first enabled date from the previous month when using "arrow up" key.', async () => {
+            const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+            fixture.detectChanges();
+
+            const calendar = fixture.componentInstance.calendar;
+            const dom = fixture.debugElement;
+
+            const dateRangeDescriptors: DateRangeDescriptor[] = [];
+            const specificDates = [
+                new Date(2017, 4, 25),
+                new Date(2017, 4, 11)
+            ];
+
+            dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates });
+
+            calendar.disabledDates = dateRangeDescriptors;
+            fixture.detectChanges();
+            await wait(50);
+
+            const calendarNativeElement = dom.query(By.css('.igx-calendar')).nativeElement;
+
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
+            fixture.detectChanges();
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
+            fixture.detectChanges();
+            await wait(400);
+
+            let date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 4, 18).getTime());
+            expect(date.nativeElement).toBe(document.activeElement);
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
+            fixture.detectChanges();
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
+            fixture.detectChanges();
+            await wait(400);
+
+            date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 3, 27).getTime());
+            expect(date.nativeElement).toBe(document.activeElement);
+        });
+
+        it('AKB - should navigate to the first enabled date from the previous month when using "arrow left" key.', async () => {
+            const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+            fixture.detectChanges();
+
+            const calendar = fixture.componentInstance.calendar;
+            const dom = fixture.debugElement;
+
+            const dateRangeDescriptors: DateRangeDescriptor[] = [];
+            const specificDates = [
+                new Date(2017, 4, 27),
+                new Date(2017, 4, 25)
+            ];
+
+            dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates });
+
+            calendar.disabledDates = dateRangeDescriptors;
+            fixture.detectChanges();
+            await wait(50);
+
+            const calendarNativeElement = dom.query(By.css('.igx-calendar')).nativeElement;
+
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
+            fixture.detectChanges();
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+            fixture.detectChanges();
+            await wait(400);
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+            fixture.detectChanges();
+            await wait(400);
+
+            let date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 4, 26).getTime());
+            expect(date.nativeElement).toBe(document.activeElement);
+
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
+            fixture.detectChanges();
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+            fixture.detectChanges();
+            await wait(400);
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
+            fixture.detectChanges();
+            await wait(400);
+
+            date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 3, 29).getTime());
+            expect(date.nativeElement).toBe(document.activeElement);
+        });
+
+        it('AKB - should navigate to the first enabled date from the next month when using "arrow down" key.', async () => {
+            const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+            fixture.detectChanges();
+
+            const calendar = fixture.componentInstance.calendar;
+            const dom = fixture.debugElement;
+
+            const dateRangeDescriptors: DateRangeDescriptor[] = [];
+            const specificDates = [
+                new Date(2017, 6, 14),
+                new Date(2017, 6, 28)
+            ];
+
+            dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates });
+
+            calendar.disabledDates = dateRangeDescriptors;
+            fixture.detectChanges();
+            await wait(50);
+
+            const calendarNativeElement = dom.query(By.css('.igx-calendar')).nativeElement;
+
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'End');
+            fixture.detectChanges();
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
+            fixture.detectChanges();
+            await wait(400);
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
+            fixture.detectChanges();
+            await wait(400);
+
+            let date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 6, 21).getTime());
+            expect(date.nativeElement).toBe(document.activeElement);
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
+            fixture.detectChanges();
+            await wait(400);
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
+            fixture.detectChanges();
+            await wait(400);
+
+            date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 7, 11).getTime());
+            expect(date.nativeElement).toBe(document.activeElement);
+        });
+
+        it('AKB - should navigate to the first enabled date from the next month when using "arrow right" key.', async () => {
+            const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+            fixture.detectChanges();
+
+            const calendar = fixture.componentInstance.calendar;
+            const dom = fixture.debugElement;
+
+            const dateRangeDescriptors: DateRangeDescriptor[] = [];
+            const specificDates = [
+                new Date(2017, 6, 9),
+                new Date(2017, 6, 10)
+            ];
+
+            dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates });
+
+            calendar.disabledDates = dateRangeDescriptors;
+            fixture.detectChanges();
+            await wait(50);
+
+            const calendarNativeElement = dom.query(By.css('.igx-calendar')).nativeElement;
+
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'End');
+            fixture.detectChanges();
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
+            fixture.detectChanges();
+            await wait(400);
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
+            fixture.detectChanges();
+            await wait(400);
+
+            let date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 6, 11).getTime());
+            expect(date.nativeElement).toBe(document.activeElement);
+
+            date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 7, 5).getTime());
+            date.nativeElement.focus();
+            fixture.detectChanges();
+            await wait(400);
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
+            fixture.detectChanges();
+            await wait(400);
+
+            date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 7, 6).getTime());
+            expect(date.nativeElement).toBe(document.activeElement);
+        });
+
+        it('AKB - should preserve the active date on (shift) pageup and pagedown.', async () => {
+            const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+            fixture.detectChanges();
+
+            const calendar = fixture.componentInstance.calendar;
+            const dom = fixture.debugElement;
+
+            const calendarNativeElement = dom.query(By.css('.igx-calendar')).nativeElement;
+
+            UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
+            fixture.detectChanges();
+
+            let date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 5, 1).getTime());
+            expect(date.nativeElement).toBe(document.activeElement);
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'PageUp');
+            fixture.detectChanges();
+            await wait(400);
+
+            date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 4, 1).getTime());
+            expect(date.nativeElement).toBe(document.activeElement);
+
+            UIInteractions.simulateKeyDownEvent(document.activeElement, 'PageDown');
+            fixture.detectChanges();
+            await wait(400);
+
+            date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 5, 1).getTime());
+            expect(date.nativeElement).toBe(document.activeElement);
+
+            UIInteractions.triggerKeyDownEvtUponElem('PageUp', document.activeElement, true, false, true);
+            fixture.detectChanges();
+            await wait(400);
+
+            date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2016, 5, 1).getTime());
+            expect(date.nativeElement).toBe(document.activeElement);
+
+            UIInteractions.triggerKeyDownEvtUponElem('PageDown', document.activeElement, true, false, true);
+            fixture.detectChanges();
+            await wait(400);
+
+            date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 5, 1).getTime());
+            expect(date.nativeElement).toBe(document.activeElement);
         });
     });
 
-    it('AKB - should navigate to the previous/next month via KB.', async () => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-        fixture.detectChanges();
-
-        const calendar = fixture.componentInstance.calendar;
-        const dom = fixture.debugElement;
-
-        const prev = dom.queryAll(By.css('.igx-calendar-picker__prev'))[0];
-        prev.nativeElement.focus();
-
-        expect(prev.nativeElement).toBe(document.activeElement);
-
-        UIInteractions.simulateKeyDownEvent(prev.nativeElement, 'Enter');
-        await wait(200);
-        fixture.detectChanges();
-
-        expect(calendar.viewDate.getMonth()).toEqual(4);
-
-        const next = dom.queryAll(By.css('.igx-calendar-picker__next'))[0];
-        next.nativeElement.focus();
-
-        expect(next.nativeElement).toBe(document.activeElement);
-
-        UIInteractions.simulateKeyDownEvent(next.nativeElement, 'Enter');
-        await wait(200);
-        UIInteractions.simulateKeyDownEvent(next.nativeElement, 'Enter');
-        await wait(200);
-        fixture.detectChanges();
-
-        expect(calendar.viewDate.getMonth()).toEqual(6);
-    });
-
-    it('AKB - should open years view, navigate through and select an year via KB.', async () => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-        fixture.detectChanges();
-
-        const calendar = fixture.componentInstance.calendar;
-        const dom = fixture.debugElement;
-
-        const year = dom.queryAll(By.css('.igx-calendar-picker__date'))[1];
-        year.nativeElement.focus();
-
-        expect(year.nativeElement).toBe(document.activeElement);
-
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'Enter');
-        fixture.detectChanges();
-
-        const years = dom.queryAll(By.css('.igx-calendar__year'));
-        let currentYear = dom.query(By.css('.igx-calendar__year--current'));
-
-        expect(years.length).toEqual(6);
-        expect(currentYear.nativeElement.textContent.trim()).toMatch('2017');
-
-        UIInteractions.simulateKeyDownEvent(currentYear.nativeElement, 'ArrowDown');
-        fixture.detectChanges();
-
-        currentYear = dom.query(By.css('.igx-calendar__year--current'));
-        expect(currentYear.nativeElement.textContent.trim()).toMatch('2018');
-
-        UIInteractions.simulateKeyDownEvent(currentYear.nativeElement, 'ArrowUp');
-        UIInteractions.simulateKeyDownEvent(currentYear.nativeElement, 'ArrowUp');
-        fixture.detectChanges();
-
-        currentYear = dom.query(By.css('.igx-calendar__year--current'));
-        expect(currentYear.nativeElement.textContent.trim()).toMatch('2016');
-
-        UIInteractions.simulateKeyDownEvent(currentYear.nativeElement, 'Enter');
-        fixture.detectChanges();
-
-        expect(calendar.viewDate.getFullYear()).toEqual(2016);
-    });
-
-    it('AKB - should open months view, navigate through and select a month via KB.', async () => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-        fixture.detectChanges();
-
-        const calendar = fixture.componentInstance.calendar;
-        const dom = fixture.debugElement;
-
-        const month = dom.queryAll(By.css('.igx-calendar-picker__date'))[0];
-        month.nativeElement.focus();
-
-        expect(month.nativeElement).toBe(document.activeElement);
-
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'Enter');
-        fixture.detectChanges();
-
-        const months = dom.queryAll(By.css('.igx-calendar__month'));
-        const currentMonth = dom.query(By.css('.igx-calendar__month--current'));
-
-        expect(months.length).toEqual(11);
-        expect(currentMonth.nativeElement.textContent.trim()).toMatch('Jun');
-
-        UIInteractions.simulateKeyDownEvent(currentMonth.nativeElement, 'Home');
-        fixture.detectChanges();
-
-        expect(document.activeElement.textContent.trim()).toMatch('Jan');
-
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'End');
-        fixture.detectChanges();
-
-        expect(document.activeElement.textContent.trim()).toMatch('Dec');
-
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
-        fixture.detectChanges();
-
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
-        fixture.detectChanges();
-
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
-        fixture.detectChanges();
-
-        expect(document.activeElement.textContent.trim()).toMatch('Sep');
-
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'Enter');
-        fixture.detectChanges();
-
-        expect(calendar.viewDate.getMonth()).toEqual(8);
-    });
-
-    it('AKB - should navigate to the first enabled date from the previous month when using "arrow up" key.', async () => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-        fixture.detectChanges();
-
-        const calendar = fixture.componentInstance.calendar;
-        const dom = fixture.debugElement;
-
-        const dateRangeDescriptors: DateRangeDescriptor[] = [];
-        const specificDates = [
-            new Date(2017, 4, 25),
-            new Date(2017, 4, 11)
-        ];
-
-        dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates });
-
-        calendar.disabledDates = dateRangeDescriptors;
-        fixture.detectChanges();
-        await wait(50);
-
-        const calendarNativeElement = dom.query(By.css('.igx-calendar')).nativeElement;
-
-        UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
-        fixture.detectChanges();
-
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
-        fixture.detectChanges();
-        await wait(400);
-
-        let date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 4, 18).getTime());
-        expect(date.nativeElement).toBe(document.activeElement);
-
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
-        fixture.detectChanges();
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowUp');
-        fixture.detectChanges();
-        await wait(400);
-
-        date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 3, 27).getTime());
-        expect(date.nativeElement).toBe(document.activeElement);
-    });
-
-    it('AKB - should navigate to the first enabled date from the previous month when using "arrow left" key.', async () => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-        fixture.detectChanges();
-
-        const calendar = fixture.componentInstance.calendar;
-        const dom = fixture.debugElement;
-
-        const dateRangeDescriptors: DateRangeDescriptor[] = [];
-        const specificDates = [
-            new Date(2017, 4, 27),
-            new Date(2017, 4, 25)
-        ];
-
-        dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates });
-
-        calendar.disabledDates = dateRangeDescriptors;
-        fixture.detectChanges();
-        await wait(50);
-
-        const calendarNativeElement = dom.query(By.css('.igx-calendar')).nativeElement;
-
-        UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
-        fixture.detectChanges();
-
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
-        fixture.detectChanges();
-        await wait(400);
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
-        fixture.detectChanges();
-        await wait(400);
-
-        let date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 4, 26).getTime());
-        expect(date.nativeElement).toBe(document.activeElement);
-
-        UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
-        fixture.detectChanges();
-
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
-        fixture.detectChanges();
-        await wait(400);
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowLeft');
-        fixture.detectChanges();
-        await wait(400);
-
-        date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 3, 29).getTime());
-        expect(date.nativeElement).toBe(document.activeElement);
-    });
-
-    it('AKB - should navigate to the first enabled date from the next month when using "arrow down" key.', async () => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-        fixture.detectChanges();
-
-        const calendar = fixture.componentInstance.calendar;
-        const dom = fixture.debugElement;
-
-        const dateRangeDescriptors: DateRangeDescriptor[] = [];
-        const specificDates = [
-            new Date(2017, 6, 14),
-            new Date(2017, 6, 28)
-        ];
-
-        dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates });
-
-        calendar.disabledDates = dateRangeDescriptors;
-        fixture.detectChanges();
-        await wait(50);
-
-        const calendarNativeElement = dom.query(By.css('.igx-calendar')).nativeElement;
-
-        UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'End');
-        fixture.detectChanges();
-
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
-        fixture.detectChanges();
-        await wait(400);
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
-        fixture.detectChanges();
-        await wait(400);
-
-        let date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 6, 21).getTime());
-        expect(date.nativeElement).toBe(document.activeElement);
-
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
-        fixture.detectChanges();
-        await wait(400);
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
-        fixture.detectChanges();
-        await wait(400);
-
-        date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 7, 11).getTime());
-        expect(date.nativeElement).toBe(document.activeElement);
-    });
-
-    it('AKB - should navigate to the first enabled date from the next month when using "arrow right" key.', async () => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-        fixture.detectChanges();
-
-        const calendar = fixture.componentInstance.calendar;
-        const dom = fixture.debugElement;
-
-        const dateRangeDescriptors: DateRangeDescriptor[] = [];
-        const specificDates = [
-            new Date(2017, 6, 9),
-            new Date(2017, 6, 10)
-        ];
-
-        dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates });
-
-        calendar.disabledDates = dateRangeDescriptors;
-        fixture.detectChanges();
-        await wait(50);
-
-        const calendarNativeElement = dom.query(By.css('.igx-calendar')).nativeElement;
-
-        UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'End');
-        fixture.detectChanges();
-
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowDown');
-        fixture.detectChanges();
-        await wait(400);
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
-        fixture.detectChanges();
-        await wait(400);
-
-        let date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 6, 11).getTime());
-        expect(date.nativeElement).toBe(document.activeElement);
-
-        date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 7, 5).getTime());
-        date.nativeElement.focus();
-        fixture.detectChanges();
-        await wait(400);
-
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'ArrowRight');
-        fixture.detectChanges();
-        await wait(400);
-
-        date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 7, 6).getTime());
-        expect(date.nativeElement).toBe(document.activeElement);
-    });
-
-    it('AKB - should preserve the active date on (shift) pageup and pagedown.', async () => {
-        const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-        fixture.detectChanges();
-
-        const calendar = fixture.componentInstance.calendar;
-        const dom = fixture.debugElement;
-
-        const calendarNativeElement = dom.query(By.css('.igx-calendar')).nativeElement;
-
-        UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
-        fixture.detectChanges();
-
-        let date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 5, 1).getTime());
-        expect(date.nativeElement).toBe(document.activeElement);
-
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'PageUp');
-        fixture.detectChanges();
-        await wait(400);
-
-        date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 4, 1).getTime());
-        expect(date.nativeElement).toBe(document.activeElement);
-
-        UIInteractions.simulateKeyDownEvent(document.activeElement, 'PageDown');
-        fixture.detectChanges();
-        await wait(400);
-
-        date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 5, 1).getTime());
-        expect(date.nativeElement).toBe(document.activeElement);
-
-        UIInteractions.triggerKeyDownEvtUponElem('PageUp', document.activeElement, true, false, true);
-        fixture.detectChanges();
-        await wait(400);
-
-        date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2016, 5, 1).getTime());
-        expect(date.nativeElement).toBe(document.activeElement);
-
-        UIInteractions.triggerKeyDownEvtUponElem('PageDown', document.activeElement, true, false, true);
-        fixture.detectChanges();
-        await wait(400);
-
-        date = calendar.daysView.dates.find(d => getDate(d).getTime() === new Date(2017, 5, 1).getTime());
-        expect(date.nativeElement).toBe(document.activeElement);
-    });
-});
-
-describe('Continuous month increment/decrement', () => {
-
-
-    let fixture;
-    let dom;
-    let calendar;
-    let prevMonthBtn;
-    let nextMonthBtn;
-
-    beforeEach(async(() => {
-        fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-        fixture.detectChanges();
-
-        dom = fixture.debugElement;
-        calendar = fixture.componentInstance.calendar;
-        prevMonthBtn = dom.queryAll(By.css('.igx-calendar-picker__prev'))[0].nativeElement;
-        nextMonthBtn = dom.queryAll(By.css('.igx-calendar-picker__next'))[0].nativeElement;
-
-    }));
-
-    it('Should increment/decrement months continuously on mousedown.', async () => {
-        expect(calendar.viewDate.getMonth()).toEqual(5);
-        // Have no idea how this test worked before,
-        // changing expectation based on my udnerstanding of that the test does
-        UIInteractions.simulateMouseEvent('mousedown', prevMonthBtn, 0, 0);
-        await wait(900);
-        UIInteractions.simulateMouseEvent('mouseup', prevMonthBtn, 0, 0);
-        fixture.detectChanges();
-        expect(calendar.viewDate.getMonth()).toEqual(4);
-
-        UIInteractions.simulateMouseEvent('mousedown', nextMonthBtn, 0, 0);
-        await wait(900);
-        UIInteractions.simulateMouseEvent('mouseup', nextMonthBtn, 0, 0);
-        fixture.detectChanges();
-        expect(calendar.viewDate.getMonth()).toEqual(5);
-    });
-
-    it('Should increment/decrement months continuously on enter keydwon.', async () => {
-        expect(calendar.viewDate.getMonth()).toEqual(5);
-
-        prevMonthBtn.focus();
-        UIInteractions.simulateKeyDownEvent(prevMonthBtn, 'Enter');
-        await wait(800);
-        fixture.detectChanges();
-        expect(calendar.viewDate.getMonth()).toEqual(4);
-
-        nextMonthBtn.focus();
-        UIInteractions.simulateKeyDownEvent(nextMonthBtn, 'Enter');
-        await wait(800);
-        fixture.detectChanges();
-        expect(calendar.viewDate.getMonth()).toEqual(5);
+    describe('Continuous month increment/decrement', () => {
+        let fixture;
+        let dom;
+        let calendar;
+        let prevMonthBtn;
+        let nextMonthBtn;
+
+        beforeEach(async(() => {
+            fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+            fixture.detectChanges();
+
+            dom = fixture.debugElement;
+            calendar = fixture.componentInstance.calendar;
+            prevMonthBtn = dom.queryAll(By.css('.igx-calendar-picker__prev'))[0].nativeElement;
+            nextMonthBtn = dom.queryAll(By.css('.igx-calendar-picker__next'))[0].nativeElement;
+
+        }));
+
+        it('Should increment/decrement months continuously on mousedown.', async () => {
+            expect(calendar.viewDate.getMonth()).toEqual(5);
+            // Have no idea how this test worked before,
+            // changing expectation based on my udnerstanding of that the test does
+            UIInteractions.simulateMouseEvent('mousedown', prevMonthBtn, 0, 0);
+            await wait(900);
+            UIInteractions.simulateMouseEvent('mouseup', prevMonthBtn, 0, 0);
+            fixture.detectChanges();
+            expect(calendar.viewDate.getMonth()).toEqual(4);
+
+            UIInteractions.simulateMouseEvent('mousedown', nextMonthBtn, 0, 0);
+            await wait(900);
+            UIInteractions.simulateMouseEvent('mouseup', nextMonthBtn, 0, 0);
+            fixture.detectChanges();
+            expect(calendar.viewDate.getMonth()).toEqual(5);
+        });
+
+        it('Should increment/decrement months continuously on enter keydwon.', async () => {
+            expect(calendar.viewDate.getMonth()).toEqual(5);
+
+            prevMonthBtn.focus();
+            UIInteractions.simulateKeyDownEvent(prevMonthBtn, 'Enter');
+            await wait(800);
+            fixture.detectChanges();
+            expect(calendar.viewDate.getMonth()).toEqual(4);
+
+            nextMonthBtn.focus();
+            UIInteractions.simulateKeyDownEvent(nextMonthBtn, 'Enter');
+            await wait(800);
+            fixture.detectChanges();
+            expect(calendar.viewDate.getMonth()).toEqual(5);
+        });
     });
 });
 
