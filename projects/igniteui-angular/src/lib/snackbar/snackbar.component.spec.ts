@@ -7,7 +7,6 @@ import { IgxSnackbarComponent, IgxSnackbarModule } from './snackbar.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
 
 describe('IgxSnackbar', () => {
-    configureTestSuite();
     configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [

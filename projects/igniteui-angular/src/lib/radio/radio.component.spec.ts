@@ -14,8 +14,6 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgxRadio', () => {
-
-
     configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [

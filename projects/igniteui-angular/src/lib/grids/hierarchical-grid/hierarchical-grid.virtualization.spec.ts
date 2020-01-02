@@ -367,7 +367,6 @@ it('should update scroll height after expanding/collapsing row in a nested child
 });
 
 describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
-    configureTestSuite();
     configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [

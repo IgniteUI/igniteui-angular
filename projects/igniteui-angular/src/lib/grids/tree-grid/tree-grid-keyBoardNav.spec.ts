@@ -15,8 +15,6 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
-
-
     configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
