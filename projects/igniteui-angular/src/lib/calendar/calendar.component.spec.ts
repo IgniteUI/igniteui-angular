@@ -9,12 +9,10 @@ import {
 } from './index';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
-
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxDayItemComponent } from './days-view/day-item.component';
 
 describe('IgxCalendar', () => {
-
     configureTestSuite(async () => {
         TestBed.configureTestingModule({
             declarations: [IgxCalendarSampleComponent, IgxCalendaRangeComponent, IgxCalendarDisabledSpecialDatesComponent],

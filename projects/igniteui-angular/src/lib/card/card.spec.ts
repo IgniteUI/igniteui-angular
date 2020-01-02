@@ -15,7 +15,6 @@ import {
     IgxCardActionsComponent,
     IgxCardMediaDirective,
 } from './card.component';
-
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxIconModule } from '../icon/index';
 import { configureTestSuite } from '../test-utils/configure-suite';

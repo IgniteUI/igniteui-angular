@@ -21,7 +21,6 @@ import { IgxSlideComponent } from './slide.component';
 declare var Simulator: any;
 
 describe('Carousel', () => {
-
     let fixture;
     let carousel: IgxCarouselComponent;
 
