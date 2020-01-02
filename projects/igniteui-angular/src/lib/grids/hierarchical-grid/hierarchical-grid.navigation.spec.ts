@@ -11,7 +11,6 @@ import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 import { setupHierarchicalGridScrollDetection } from '../../test-utils/helper-utils.spec';
 
 describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
-    //  ();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     configureTestSuite(() => {
@@ -790,18 +789,17 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
 
 
 describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
-
         let fixture;
         let hierarchicalGrid: IgxHierarchicalGridComponent;
-        beforeEach(async(() => {
+        configureTestSuite(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxHierarchicalGridTestComplexComponent
                 ],
                 imports: [
                     NoopAnimationsModule, IgxHierarchicalGridModule]
-            }).compileComponents();
-        }));
+            });
+        });
 
         beforeEach(async(() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridTestComplexComponent);
@@ -946,7 +944,6 @@ describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
 });
 
 describe('IgxHierarchicalGrid Multi-layout Navigation #hGrid', () => {
-
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     configureTestSuite(() => {

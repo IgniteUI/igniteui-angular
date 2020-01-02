@@ -54,7 +54,6 @@ const FILTER_UI_SCROLL_START_CLASS = '.igx-grid__filtering-row-scroll-start';
 const FILTER_UI_SCROLL_END_CLASS = '.igx-grid__filtering-row-scroll-end';
 
 describe('IgxGrid - Filtering actions #grid', () => {
-    configureTestSuite();
     configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
@@ -1669,7 +1668,6 @@ describe('IgxGrid - Filtering actions #grid', () => {
 });
 
 describe('IgxGrid - Filtering Row UI actions #grid', () => {
-    configureTestSuite();
     configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [

@@ -10,8 +10,6 @@ import { HammerGesturesManager } from '../../core/touch';
 import { PlatformUtil } from '../../core/utils';
 
 describe('IgxGrid - Cell component #grid', () => {
-
-
     const CELL_CSS_CLASS = '.igx-grid__td';
 
     configureTestSuite(() => {

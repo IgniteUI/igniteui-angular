@@ -23,8 +23,6 @@ import { IgxGridSelectionModule } from '../selection/selection.module';
 const DEBOUNCETIME = 30;
 
 describe('IgxGrid - Row Selection #grid', () => {
-
-
     configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
