@@ -203,6 +203,10 @@
         }
     }
 
+    %time-picker__secondsList {
+        text-align: center;
+    }
+
     %time-picker__ampmList {
         display: flex;
         flex-direction: column;

@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform, Inject} from '@angular/core';
+import { Pipe, PipeTransform, Inject } from '@angular/core';
 import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase } from './time-picker.common';
 
 
@@ -6,13 +6,12 @@ import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase } from './time-picker.comm
  * Formats `IgxTimePickerComponent` display value according to the `format` property,
  * when the input element loses focus.
  **/
-@Pipe({ name: 'displayFormat'})
+@Pipe({ name: 'displayFormat' })
 export class TimeDisplayFormatPipe implements PipeTransform {
+    constructor(@Inject(IGX_TIME_PICKER_COMPONENT) private timePicker: IgxTimePickerBase) { }
 
-     constructor(@Inject(IGX_TIME_PICKER_COMPONENT) private timePicker: IgxTimePickerBase) { }
-
-     transform(value: any): string {
-        let hour, minutes, amPM;
+    transform(value: any): string {
+        let hour, minutes, seconds, amPM;
 
         const maskAmPM = this.timePicker.parseMask();
         const mask = this.timePicker.parseMask(false);
@@ -30,6 +29,10 @@ export class TimeDisplayFormatPipe implements PipeTransform {
             minutes = this.timePicker.showHoursList ? sections[1] : sections[0];
         }
 
+        if (this.timePicker.showSecondsList) {
+            seconds = sections[sections.length - (this.timePicker.showAmPmList ? 2 : 1)];
+        }
+
         if (this.timePicker.showAmPmList) {
             amPM = sections[sections.length - 1];
         }
@@ -39,11 +42,15 @@ export class TimeDisplayFormatPipe implements PipeTransform {
         const regExp = new RegExp(this.timePicker.promptChar, 'g');
 
         if (format.indexOf('hh') !== -1 || format.indexOf('HH') !== -1 && hour.indexOf(prompt) !== -1) {
-           hour = hour === prompt + prompt ? '00' : hour.replace(regExp, '0');
+            hour = hour === prompt + prompt ? '00' : hour.replace(regExp, '0');
         }
 
         if (format.indexOf('mm') !== -1 && minutes.indexOf(prompt) !== -1) {
-           minutes = minutes === prompt + prompt ? '00' : minutes.replace(regExp, '0');
+            minutes = minutes === prompt + prompt ? '00' : minutes.replace(regExp, '0');
+        }
+
+        if (format.indexOf('ss') !== -1 && seconds.indexOf(prompt) !== -1) {
+            seconds = seconds === prompt + prompt ? '00' : seconds.replace(regExp, '0');
         }
 
         if (format.indexOf('hh') === -1 && format.indexOf('HH') === -1 && hour !== undefined) {
@@ -58,22 +65,37 @@ export class TimeDisplayFormatPipe implements PipeTransform {
             minutes = !minutesVal ? '0' : minutesVal < 10 && minutesVal !== 0 ? minutes.replace('0', '') : minutes;
         }
 
+        if (format.indexOf('ss') === -1 && seconds !== undefined) {
+            seconds = seconds.indexOf(prompt) !== -1 ? seconds.replace(regExp, '') : seconds;
+            const secondsVal = parseInt(seconds, 10);
+            seconds = !secondsVal ? '0' : secondsVal < 10 && secondsVal !== 0 ? seconds.replace('0', '') : seconds;
+        }
+
         if (format.indexOf('tt') !== -1 && (amPM !== 'AM' || amPM !== 'PM')) {
-           amPM = amPM.indexOf('p') !== -1 || amPM.indexOf('P') !== -1 ? 'PM' : 'AM';
+            amPM = amPM.indexOf('p') !== -1 || amPM.indexOf('P') !== -1 ? 'PM' : 'AM';
         }
 
-        let result = amPM ? `${hour}:${minutes} ${amPM}` : `${hour}:${minutes}`;
-
+        let result = `${hour}:${minutes}:${seconds}`;
         if (!hour) {
-            result = result.slice(result.indexOf(':') + 1, result.length);
+            // remove the hours
+            result = result.slice(result.indexOf(':') + 1);
         }
-
         if (!minutes) {
-            result = result.slice(0, result.indexOf(':'));
-            if (amPM) { result = result + ' ' + amPM; }
+            if (hour) {
+                // get the hours and seconds and concat them
+                result = result.slice(0, result.indexOf(':')) +
+                    result.slice(result.lastIndexOf(':'), result.length);
+            } else {
+                // remove the minutes
+                result = result.slice(result.indexOf(':') + 1);
+            }
+        }
+        if (!seconds) {
+            // remove the seconds
+            result = result.slice(0, result.lastIndexOf(':'));
         }
 
-        return result;
+        return amPM ? `${result} ${amPM}` : result;
     }
 }
 
@@ -83,14 +105,13 @@ export class TimeDisplayFormatPipe implements PipeTransform {
  **/
 @Pipe({ name: 'inputFormat' })
 export class TimeInputFormatPipe implements PipeTransform {
-
     constructor(@Inject(IGX_TIME_PICKER_COMPONENT) private timePicker: IgxTimePickerBase) { }
 
     transform(value: any): string {
         const prompt = this.timePicker.promptChar;
         const regExp = new RegExp(prompt, 'g');
 
-        let mask, hour, minutes, amPM;
+        let mask, hour, minutes, seconds, amPM;
 
         if (this.timePicker.cleared) {
             this.timePicker.cleared = false;
@@ -121,21 +142,38 @@ export class TimeInputFormatPipe implements PipeTransform {
             minutes = leadZeroMinutes ? '0' + minutes : minutes;
         }
 
+        if (this.timePicker.showSecondsList) {
+            seconds = sections[sections.length - (this.timePicker.showAmPmList ? 2 : 1)];
+            seconds = seconds.replace(regExp, '');
+
+            const leadZeroSeconds = (parseInt(seconds, 10) < 10 && !seconds.startsWith('0')) || seconds === '0';
+            seconds = leadZeroSeconds ? '0' + seconds : seconds;
+        }
+
         if (this.timePicker.showAmPmList) {
             amPM = sections[sections.length - 1];
         }
 
-        let result = amPM ? `${hour}:${minutes} ${amPM}` : `${hour}:${minutes}`;
-
+        let result = `${hour}:${minutes}:${seconds}`;
         if (!hour) {
-            result = result.slice(result.indexOf(':') + 1, result.length);
+            // remove the hours
+            result = result.slice(result.indexOf(':') + 1);
         }
-
         if (!minutes) {
-            result = result.slice(0, result.indexOf(':'));
-            if (amPM) { result = result + ' ' + amPM; }
+            if (hour) {
+                // get the hours and seconds and concat them
+                result = result.slice(0, result.indexOf(':')) +
+                    result.slice(result.lastIndexOf(':'), result.length);
+            } else {
+                // remove the minutes
+                result = result.slice(result.indexOf(':') + 1);
+            }
+        }
+        if (!seconds) {
+            // remove the seconds
+            result = result.slice(0, result.lastIndexOf(':'));
         }
 
-        return result;
+        return amPM ? `${result} ${amPM}` : result;
     }
 }
