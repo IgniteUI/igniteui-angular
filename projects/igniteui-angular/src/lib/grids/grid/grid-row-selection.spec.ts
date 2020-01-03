@@ -1674,7 +1674,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(6);
         }));
 
-        it('Should select only filtered records', async() => {
+        it('Should select only filtered records', fakeAsync(() => {
             grid.height = '1100px';
             const tree = new FilteringExpressionsTree(FilteringLogic.And);
             tree.filteringOperands.push({
@@ -1691,7 +1691,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid.advancedFilteringExpressionsTree = tree;
             GridSelectionFunctions.headerCheckboxClick(grid);
             fix.detectChanges();
-            await wait();
+            tick();
 
             expect(grid.rowList.length).toBe(9);
             expect(grid.selectedRows().length).toBe(9);
@@ -1699,12 +1699,12 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             grid.advancedFilteringExpressionsTree = null;
             fix.detectChanges();
-            await wait();
+            tick();
 
             expect(grid.rowList.length).toBe(19);
             expect(grid.selectedRows().length).toBe(9);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(grid, false, true);
-        });
+        }));
     });
 
     describe('Integration with CRUD and transactions', () => {
