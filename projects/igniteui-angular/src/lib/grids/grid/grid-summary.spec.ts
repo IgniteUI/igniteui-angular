@@ -2362,7 +2362,7 @@ describe('IgxGrid - Summaries #grid', () => {
     function verifySummaryRowIndentationByDataRowIndex(fixture, visibleIndex) {
         const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fixture, visibleIndex);
         const summaryRowIndentation = summaryRow.query(By.css('.igx-grid__summaries-patch'));
-        const expander = fixture.componentInstance.grid.headerGroupContainer;
+        const expander = fixture.componentInstance.grid.headerFeatureContainer;
         expect(summaryRowIndentation.nativeElement.offsetWidth).toEqual(expander.nativeElement.offsetWidth);
     }
 
