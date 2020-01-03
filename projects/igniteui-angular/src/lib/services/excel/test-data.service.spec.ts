@@ -804,6 +804,23 @@ export class FileContentData {
         return this.createData();
     }
 
+    get treeGridWithAdvancedFilters() {
+        this._sharedStringsData =
+        `count="15" uniqueCount="14"><si><t>ID</t></si><si><t>ParentID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>Age</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>Tanya Bennett</t></si><si><t>Debra Morton</t></si><si><t>Associate Software Developer</t></si><si><t>Jack Simon</t></si><si><t>Software Developer</t></si>`;
+
+        this._tableData = `ref="A1:E6" totalsRowShown="0">
+        <autoFilter ref="A1:E6"/><tableColumns count="5"><tableColumn id="1" name="ID"/><tableColumn id="2" name="ParentID"/><tableColumn id="3" name="Name"/><tableColumn id="4" name="JobTitle"/><tableColumn id="5" name="Age"/></tableColumns>`;
+
+        this._worksheetData = `<sheetPr><outlinePr summaryBelow="0"/></sheetPr>
+        <dimension ref="A1:E6"/>
+        <sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>
+        <sheetFormatPr defaultRowHeight="15" outlineLevelRow="2" x14ac:dyDescent="0.25"/>
+        <cols><col min="1" max="1" width="50" customWidth="1"/><col min="2" max="2" width="50" customWidth="1"/><col min="3" max="3" width="50" customWidth="1"/><col min="4" max="4" width="50" customWidth="1"/><col min="5" max="5" width="50" customWidth="1"/></cols>
+        <sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c><c r="C1" t="s"><v>2</v></c><c r="D1" t="s"><v>3</v></c><c r="E1" t="s"><v>4</v></c></row><row r="2"><c r="A2" s="1"><v>1</v></c><c r="B2" s="1"><v>-1</v></c><c r="C2" t="s"><v>5</v></c><c r="D2" t="s"><v>6</v></c><c r="E2" s="1"><v>32</v></c></row><row r="3" outlineLevel="1"><c r="A3" s="1"><v>2</v></c><c r="B3" s="1"><v>1</v></c><c r="C3" t="s"><v>7</v></c><c r="D3" t="s"><v>8</v></c><c r="E3" s="1"><v>41</v></c></row><row r="4" outlineLevel="2"><c r="A4" s="1"><v>3</v></c><c r="B4" s="1"><v>2</v></c><c r="C4" t="s"><v>9</v></c><c r="D4" t="s"><v>8</v></c><c r="E4" s="1"><v>29</v></c></row><row r="5" outlineLevel="2"><c r="A5" s="1"><v>7</v></c><c r="B5" s="1"><v>2</v></c><c r="C5" t="s"><v>10</v></c><c r="D5" t="s"><v>11</v></c><c r="E5" s="1"><v>35</v></c></row><row r="6" outlineLevel="1"><c r="A6" s="1"><v>4</v></c><c r="B6" s="1"><v>1</v></c><c r="C6" t="s"><v>12</v></c><c r="D6" t="s"><v>13</v></c><c r="E6" s="1"><v>33</v></c></row></sheetData>`;
+
+        return this.createData();
+    }
+
     public treeGridDataExpDepth(depth: number) {
         this._sharedStringsData =
             `count="21" uniqueCount="19"><si><t>ID</t></si><si><t>ParentID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>Age</t></si><si><t>Casey Houston</t></si><si><t>Vice President</t></si><si><t>Gilberto Todd</t></si><si><t>Director</t></si><si><t>Tanya Bennett</t></si><si><t>Debra Morton</t></si><si><t>Associate Software Developer</t></si><si><t>Jack Simon</t></si><si><t>Software Developer</t></si><si><t>Erma Walsh</t></si><si><t>CEO</t></si><si><t>Eduardo Ramirez</t></si><si><t>Manager</t></si><si><t>Leslie Hansen</t></si>`;
@@ -882,6 +899,22 @@ export class FileContentData {
 <sheetFormatPr defaultRowHeight="15"  x14ac:dyDescent="0.25"/>
 <cols><col min="1" max="1" width="50" customWidth="1"/><col min="2" max="2" width="50" customWidth="1"/><col min="3" max="3" width="50" customWidth="1"/><col min="4" max="4" width="50" customWidth="1"/><col min="5" max="5" width="50" customWidth="1"/></cols>
 <sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c><c r="C1" t="s"><v>2</v></c><c r="D1" t="s"><v>3</v></c><c r="E1" t="s"><v>4</v></c></row><row r="2"><c r="A2" s="1"/><c r="B2" s="1"><v>1</v></c><c r="C2" s="1"/><c r="D2" t="s"><v>5</v></c><c r="E2" t="s"><v>6</v></c></row><row r="3"><c r="A3" s="1"/><c r="B3" s="1"><v>2</v></c><c r="C3" s="1"/><c r="D3" t="s"><v>7</v></c><c r="E3" t="s"><v>8</v></c></row><row r="4"><c r="A4" s="1"/><c r="B4" s="1"><v>3</v></c><c r="C4" s="1"/><c r="D4" t="s"><v>9</v></c><c r="E4" t="s"><v>8</v></c></row><row r="5"><c r="A5" s="1"/><c r="B5" s="1"><v>4</v></c><c r="C5" s="1"/><c r="D5" t="s"><v>10</v></c><c r="E5" t="s"><v>11</v></c></row><row r="6"><c r="A6" s="1"/><c r="B6" s="1"><v>5</v></c><c r="C6" s="1"/><c r="D6" t="s"><v>12</v></c><c r="E6" t="s"><v>13</v></c></row><row r="7"><c r="A7" s="1"/><c r="B7" s="1"><v>6</v></c><c r="C7" s="1"/><c r="D7" t="s"><v>14</v></c><c r="E7" t="s"><v>15</v></c></row><row r="8"><c r="A8" s="1"/><c r="B8" s="1"><v>7</v></c><c r="C8" s="1"/><c r="D8" t="s"><v>16</v></c><c r="E8" t="s"><v>17</v></c></row><row r="9"><c r="A9" s="1"/><c r="B9" s="1"><v>8</v></c><c r="C9" s="1"/><c r="D9" t="s"><v>18</v></c><c r="E9" t="s"><v>19</v></c></row><row r="10"><c r="A10" s="1"/><c r="B10" s="1"><v>9</v></c><c r="C10" s="1"/><c r="D10" t="s"><v>20</v></c><c r="E10" t="s"><v>17</v></c></row><row r="11"><c r="A11" s="1"/><c r="B11" s="1"><v>10</v></c><c r="C11" s="1"/><c r="D11" t="s"><v>21</v></c><c r="E11" t="s"><v>22</v></c></row></sheetData>`;
+
+        return this.createData();
+    }
+
+    get gridWithAdvancedFilters() {
+        this._sharedStringsData =
+        `count="11" uniqueCount="11"><si><t>ID</t></si><si><t>Name</t></si><si><t>JobTitle</t></si><si><t>Erma Walsh</t></si><si><t>CEO</t></si><si><t>Debra Morton</t></si><si><t>Associate Software Developer</t></si><si><t>Erika Wells</t></si><si><t>Software Development Team Lead</t></si><si><t>Eduardo Ramirez</t></si><si><t>Manager</t></si>`;
+
+        this._tableData = `ref="A1:C5" totalsRowShown="0">
+        <autoFilter ref="A1:C5"/><tableColumns count="3"><tableColumn id="1" name="ID"/><tableColumn id="2" name="Name"/><tableColumn id="3" name="JobTitle"/></tableColumns>`;
+
+        this._worksheetData = `<dimension ref="A1:C5"/>
+        <sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews>
+        <sheetFormatPr defaultRowHeight="15"  x14ac:dyDescent="0.25"/>
+        <cols><col min="1" max="1" width="50" customWidth="1"/><col min="2" max="2" width="50" customWidth="1"/><col min="3" max="3" width="50" customWidth="1"/></cols>
+        <sheetData><row r="1"><c r="A1" t="s"><v>0</v></c><c r="B1" t="s"><v>1</v></c><c r="C1" t="s"><v>2</v></c></row><row r="2"><c r="A2" s="1"><v>6</v></c><c r="B2" t="s"><v>3</v></c><c r="C2" t="s"><v>4</v></c></row><row r="3"><c r="A3" s="1"><v>7</v></c><c r="B3" t="s"><v>5</v></c><c r="C3" t="s"><v>6</v></c></row><row r="4"><c r="A4" s="1"><v>8</v></c><c r="B4" t="s"><v>7</v></c><c r="C4" t="s"><v>8</v></c></row><row r="5"><c r="A5" s="1"><v>10</v></c><c r="B5" t="s"><v>9</v></c><c r="C5" t="s"><v>10</v></c></row></sheetData>`;
 
         return this.createData();
     }
