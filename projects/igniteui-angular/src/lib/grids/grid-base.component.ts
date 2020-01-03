@@ -103,7 +103,7 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IFilteringStrategy } from '../data-operations/filtering-strategy';
 import { IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,
      IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective } from './grid/grid.directives';
-import { IgxRowDragGhostDirective  } from './row-drag.directive';
+import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective  } from './row-drag.directive';
 import { GridKeydownTargetType, GridSelectionMode, GridSummaryPosition, GridSummaryCalculationMode, FilterMode } from './common/enums';
 
 const MINIMUM_COLUMN_WIDTH = 136;
@@ -229,6 +229,7 @@ export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventA
 export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
     private _scrollWidth: number;
+    private _customDragIndicatorIconTemplate: TemplateRef<any>;
     protected _init = true;
     private _tick;
     private _cdrRequests = false;
@@ -1945,6 +1946,22 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     @ContentChildren(IgxRowDragGhostDirective, { read: TemplateRef, descendants: false })
     public dragGhostCustomTemplates: QueryList<TemplateRef<any>>;
 
+    /**
+     * @hidden
+     * @internal
+     */
+    @ContentChildren(IgxDragIndicatorIconDirective, { read: TemplateRef, descendants: false })
+    public dragIndicatorIconTemplates: QueryList<TemplateRef<any>>;
+    /**
+    * The custom template, if any, that should be used when rendering the row drag indicator icon
+    */
+    public get dragIndicatorIconTemplate(): TemplateRef<any> {
+        return this._customDragIndicatorIconTemplate || this.dragIndicatorIconTemplates.first;
+    }
+
+    public set dragIndicatorIconTemplate(val: TemplateRef<any>) {
+        this._customDragIndicatorIconTemplate = val;
+    }
     /**
      * @hidden
      */
