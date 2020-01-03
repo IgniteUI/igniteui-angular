@@ -18,6 +18,7 @@ import { InteractionMode } from '../core/enums';
 describe('IgxDatePicker', () => {
 
     configureTestSuite(async () => {
+
             TestBed.configureTestingModule({
             declarations: [
                 IgxDatePickerTestComponent,
