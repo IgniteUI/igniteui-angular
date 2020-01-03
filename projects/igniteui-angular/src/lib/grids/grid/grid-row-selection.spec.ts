@@ -1691,7 +1691,6 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid.advancedFilteringExpressionsTree = tree;
             GridSelectionFunctions.headerCheckboxClick(grid);
             fix.detectChanges();
-            grid.cdr.detectChanges();
             await wait();
 
             expect(grid.rowList.length).toBe(9);
@@ -1700,7 +1699,6 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             grid.advancedFilteringExpressionsTree = null;
             fix.detectChanges();
-            grid.cdr.detectChanges();
             await wait();
 
             expect(grid.rowList.length).toBe(19);

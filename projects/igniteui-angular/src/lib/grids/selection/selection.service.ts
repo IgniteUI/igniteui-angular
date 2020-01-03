@@ -1,6 +1,7 @@
 import { Injectable, EventEmitter, NgZone } from '@angular/core';
 import { IGridEditEventArgs } from '../common/events';
 import { IgxGridBaseDirective } from '../grid';
+import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 
 
 export interface GridSelectionRange {
@@ -691,8 +692,8 @@ export class IgxGridSelectionService {
 
     private isFilteringApplied(): boolean {
         const grid = this.grid as IgxGridBaseDirective;
-        return grid.filteringExpressionsTree.filteringOperands.length > 0 ||
-        grid.advancedFilteringExpressionsTree && grid.advancedFilteringExpressionsTree.filteringOperands.length > 0;
+        return !FilteringExpressionsTree.empty(grid.filteringExpressionsTree) ||
+            !FilteringExpressionsTree.empty(grid.advancedFilteringExpressionsTree);
     }
 
     private isRowDeleted(rowID): boolean {
