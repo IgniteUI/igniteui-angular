@@ -269,7 +269,7 @@ export class IgxGridNavigationService {
            this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
             this.grid.verticalScrollContainer.scrollTo(this.grid.dataView.length - 1);
             this.grid.verticalScrollContainer.onChunkLoad
-                .pipe(first()).subscribe(() => {
+                .pipe(debounceTime(10)).pipe(first()).subscribe(() => {
                     const cells = this.grid.nativeElement.querySelectorAll(
                         `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
                     if (cells.length > 0) {
