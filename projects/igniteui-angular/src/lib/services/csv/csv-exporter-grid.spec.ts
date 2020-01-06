@@ -22,7 +22,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { wait } from '../../test-utils/ui-interactions.spec';
 
 describe('CSV Grid Exporter', () => {
-    configureTestSuite();
     let exporter: IgxCsvExporterService;
     let options: IgxCsvExporterOptions;
     const data = SampleTestData.personJobData();

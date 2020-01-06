@@ -19,7 +19,6 @@ import { IgxColumnHidingModule } from '../hiding/hiding.module';
 import { IgxColumnHidingComponent } from '../hiding/column-hiding.component';
 
 describe('Column Hiding UI #grid', () => {
-    configureTestSuite();
     let fix;
     let grid: IgxGridComponent;
     let columnChooser: IgxColumnHidingComponent;

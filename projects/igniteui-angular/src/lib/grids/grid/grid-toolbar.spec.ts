@@ -527,7 +527,6 @@ describe('IgxGrid - Grid Toolbar #grid', () => {
 });
 
 describe('IgxGrid - Grid Toolbar Custom Content #grid', () => {
-    configureTestSuite();
     let fixture;
     let grid;
 

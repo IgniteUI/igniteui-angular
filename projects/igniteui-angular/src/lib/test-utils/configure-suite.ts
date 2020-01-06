@@ -7,19 +7,24 @@ import { UIInteractions } from './ui-interactions.spec';
  * Destroy fixtures after each, reset testing module after all
  * @hidden
  */
-export const configureTestSuite = (configureAction?: () => void) => {
-    const testBedApi: any = getTestBed();
-    const originReset = TestBed.resetTestingModule;
 
-    if (configureAction) {
-        beforeAll((done: DoneFn) => (async () => {
-            TestBed.resetTestingModule();
-            configureAction();
-            await TestBed.compileComponents();
-            TestBed.resetTestingModule = () => TestBed;
-            resizeObserverIgnoreError();
-        })().then(done).catch(done.fail));
-    }
+
+const resetTestingModule = TestBed.resetTestingModule,
+    preventAngularFromResetting = () => TestBed.resetTestingModule = () => TestBed;
+const allowAngularToReset = () => TestBed.resetTestingModule = resetTestingModule;
+
+export const configureTestSuite = (configureAction: () => void) => {
+    const testBedApi: any = getTestBed();
+    // const originReset = TestBed.resetTestingModule;
+
+    beforeAll((done: DoneFn) => (async () => {
+        resetTestingModule();
+        preventAngularFromResetting();
+        configureAction();
+        await TestBed.compileComponents();
+        TestBed.resetTestingModule = () => TestBed;
+        resizeObserverIgnoreError();
+    })().then(done).catch(done.fail));
 
     afterEach(() => {
         UIInteractions.clearOverlay();
@@ -28,7 +33,6 @@ export const configureTestSuite = (configureAction?: () => void) => {
     });
 
     afterAll(() => {
-        TestBed.resetTestingModule = originReset;
-        TestBed.resetTestingModule();
+        allowAngularToReset();
     });
 };
