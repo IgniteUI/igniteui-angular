@@ -2064,6 +2064,10 @@
     %igx-grid__loading-outlet {
         z-index: 10003;
 
+        > %overlay-wrapper--modal {
+            background: none;
+        }
+
         %circular-display {
             width: rem(50);
             height: rem(50);
