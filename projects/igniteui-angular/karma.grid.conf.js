@@ -27,8 +27,7 @@ module.exports = function (config) {
       },
       tagPrefix: '#',
       tags: 'grid',
-      skipTags: 'perf',
-      useIframe: false
+      skipTags: 'perf'
     },
     coverageIstanbulReporter: {
       dir: require('path').join(__dirname, '../../coverage/grid'),
