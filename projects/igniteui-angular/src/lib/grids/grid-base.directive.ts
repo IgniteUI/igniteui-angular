@@ -2031,7 +2031,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     public get parentRowOutletDirective() {
-        return null;
+        return this.outletDirective;
     }
 
     /**
