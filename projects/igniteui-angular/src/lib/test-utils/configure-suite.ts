@@ -22,7 +22,7 @@ export const configureTestSuite = (configureAction?: () => void) => {
     }
 
     afterEach(() => {
-        UIInteractions.clearOverlay();
+        // UIInteractions.clearOverlay();
         testBedApi._activeFixtures.forEach((fixture: ComponentFixture<any>) => fixture.destroy());
         testBedApi._instantiated = false;
     });
