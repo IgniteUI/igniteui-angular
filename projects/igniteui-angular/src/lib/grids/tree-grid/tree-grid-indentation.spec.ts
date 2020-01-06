@@ -17,7 +17,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
     let treeGrid: IgxTreeGridComponent;
 
     configureTestSuite(async () => {
-            TestBed.configureTestingModule({
+        TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSimpleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent
