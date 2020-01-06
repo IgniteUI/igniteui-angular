@@ -10,38 +10,29 @@ import {
     QueryList,
     ContentChildren,
     ElementRef,
-    NgZone,
-    ChangeDetectorRef,
-    IterableDiffers,
-    ViewContainerRef,
-    Inject,
-    ComponentFactoryResolver,
     AfterViewInit,
     AfterContentInit,
-    Optional,
     OnInit,
     OnDestroy,
     DoCheck,
     EventEmitter,
     Output
 } from '@angular/core';
-import { IgxGridBaseDirective, IgxGridTransaction } from '../grid-base.directive';
+import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
-import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensity } from '../../core/displayDensity';
+import { DisplayDensity } from '../../core/displayDensity';
 import { IgxColumnComponent, } from '../columns/column.component';
-import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
 import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
 import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
-import { IgxOverlayService } from '../../services/index';
-import { IgxColumnResizingService } from '../resizing/resizing.service';
+import { IgxTransactionService } from '../../services/index';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { GridType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
@@ -310,53 +301,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     private scrollTop = 0;
     private scrollLeft = 0;
 
-    protected _transactions: any;
-
-    constructor(
-        public selectionService: IgxGridSelectionService,
-        crudService: IgxGridCRUDService,
-        public colResizingService: IgxColumnResizingService,
-        gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        @Inject(IgxGridTransaction) protected transactionFactory: any,
-        elementRef: ElementRef,
-        zone: NgZone,
-        @Inject(DOCUMENT) public document,
-        cdr: ChangeDetectorRef,
-        resolver: ComponentFactoryResolver,
-        differs: IterableDiffers,
-        viewRef: ViewContainerRef,
-        navigation: IgxHierarchicalGridNavigationService,
-        filteringService: IgxFilteringService,
-        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
-        public summaryService: IgxGridSummaryService,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-        super(
-            selectionService,
-            crudService,
-            colResizingService,
-            gridAPI,
-            typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
-            elementRef,
-            zone,
-            document,
-            cdr,
-            resolver,
-            differs,
-            viewRef,
-            navigation,
-            filteringService,
-            overlayService,
-            summaryService,
-            _displayDensityOptions);
-        this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
-    }
-
-
     /**
      * @hidden
      */
     ngOnInit() {
-        this._transactions = this.parentIsland ? this.parentIsland.transactions : this._transactions;
+        if (this._transactions instanceof IgxTransactionService) {
+            // transaction service cannot be injected in a derived class in a factory manner
+            this._transactions = new IgxTransactionService();
+        }
         super.ngOnInit();
     }
 
@@ -414,6 +366,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         this.rowSelectorsTemplates = this.parentIsland ?
             this.parentIsland.rowSelectorsTemplates :
             this.rowSelectorsTemplates;
+        this.dragIndicatorIconTemplate = this.parentIsland ?
+            this.parentIsland.dragIndicatorIconTemplate :
+            this.dragIndicatorIconTemplate;
         this.rowExpandedIndicatorTemplate  = this.rootGrid.rowExpandedIndicatorTemplate;
         this.rowCollapsedIndicatorTemplate   = this.rootGrid.rowCollapsedIndicatorTemplate;
         this.headerCollapseIndicatorTemplate = this.rootGrid.headerCollapseIndicatorTemplate;
