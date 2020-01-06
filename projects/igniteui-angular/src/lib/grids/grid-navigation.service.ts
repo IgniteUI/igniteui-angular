@@ -243,7 +243,7 @@ export class IgxGridNavigationService {
         const verticalScroll = this.grid.verticalScrollContainer.getScroll();
         const cellSelector = this.getCellSelector(visibleColumnIndex);
         const targetScr = this.grid.verticalScrollContainer.getScrollForIndex(targetIndex, false);
-        if (verticalScroll.scrollTop === targetScr) {
+        if (targetScr >= verticalScroll.scrollTop) {
             const cells = this.grid.nativeElement.querySelectorAll(
                 `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
             (cells[0] as HTMLElement).focus();
@@ -265,10 +265,13 @@ export class IgxGridNavigationService {
     }
 
     private findLastDataRowIndex() {
-        const dv = this.grid.dataView;
-        const reversedData = dv.slice().reverse();
-        const record =  reversedData.find(rec => !this.grid.isGroupByRecord(rec));
-        return dv.indexOf(record);
+        let i = this.grid.dataView.length;
+        while (i--) {
+            const rec = this.grid.dataView[i];
+            if (!this.grid.isGroupByRecord(rec)) {
+                 return i;
+            }
+        }
     }
 
     public navigateBottom(visibleColumnIndex) {
