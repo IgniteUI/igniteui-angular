@@ -356,21 +356,15 @@ export class IgxGridNavigationService {
 
     public goToFirstCell() {
         const verticalScroll = this.grid.verticalScrollContainer.getScroll();
-        const horizontalScroll = this.grid.dataRowList.first.virtDirRow.getScroll();
         if (verticalScroll.scrollTop === 0) {
             this.onKeydownHome(this.grid.dataRowList.first.index);
         } else {
-            if (!horizontalScroll.clientWidth || parseInt(horizontalScroll.scrollLeft, 10) <= 1 || this.grid.pinnedColumns.length) {
-                this.navigateTop(0);
-            } else {
-               this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
-                this.horizontalScroll(this.grid.dataRowList.first.index).scrollTo(0);
-                this.grid.parentVirtDir.onChunkLoad
-                    .pipe(first())
-                    .subscribe(() => {
-                        this.navigateTop(0);
-                    });
-            }
+            this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
+            this.grid.verticalScrollContainer.scrollTo(0);
+            this.grid.verticalScrollContainer.onChunkLoad
+                .pipe(first()).subscribe(() => {
+                    this.onKeydownHome(this.grid.dataRowList.first.index);
+                });
         }
     }
 
