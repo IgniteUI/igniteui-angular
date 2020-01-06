@@ -1422,6 +1422,22 @@ export class IgxGridCustomOverlayComponent extends BasicGridComponent {
 
 @Component({
     template: `
+    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="700px" height="400px" [rowEditable]="true">
+        <igx-column field="ProductID" header="Product ID"></igx-column>
+        <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" [editable]="true" width="100px"></igx-column>
+        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="150px"></igx-column>
+        <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="150px" [editable]="false"></igx-column>
+        <ng-template igxRowEdit >
+        </ng-template>
+    </igx-grid>
+    `
+})
+export class IgxGridEmptyRowEditTemplateComponent extends BasicGridComponent {
+    public data = SampleTestData.foodProductData();
+}
+
+@Component({
+    template: `
     <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="900px" height="900px" [rowEditable]="true"
     [paging]="paging" [perPage]="7">
         <igx-column field="ProductID" header="Product ID" width="150px"></igx-column>
