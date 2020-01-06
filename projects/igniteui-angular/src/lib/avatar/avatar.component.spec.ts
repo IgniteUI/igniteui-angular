@@ -21,7 +21,7 @@ describe('Avatar', () => {
         icon: `${baseClass}--icon`
     };
 
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
                 InitAvatarComponent,

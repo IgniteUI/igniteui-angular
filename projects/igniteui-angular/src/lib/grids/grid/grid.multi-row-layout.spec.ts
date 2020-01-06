@@ -21,7 +21,7 @@ const GRID_MRL_BLOCK = '.igx-grid__mrl-block';
 
 describe('IgxGrid - multi-row-layout #grid', () => {
 
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutTestComponent,

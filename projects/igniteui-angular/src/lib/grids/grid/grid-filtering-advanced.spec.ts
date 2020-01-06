@@ -25,7 +25,7 @@ const ADVANCED_FILTERING_TOOLBAR_BUTTON_FILTERED_CSS_CLASS = 'igx-grid-toolbar__
 
 describe('IgxGrid - Advanced Filtering', () => {
 
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
                 IgxGridAdvancedFilteringColumnGroupComponent,

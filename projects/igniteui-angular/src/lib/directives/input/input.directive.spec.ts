@@ -20,7 +20,7 @@ const INPUT_GROUP_INVALID_CSS_CLASS = 'igx-input-group--invalid';
 
 describe('IgxInput', () => {
 
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
         TestBed.configureTestingModule({
             declarations: [
                 InputComponent,

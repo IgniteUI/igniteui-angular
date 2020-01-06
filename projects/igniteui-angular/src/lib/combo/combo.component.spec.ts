@@ -62,7 +62,7 @@ const fiftyItems = Array.apply(null, { length: 50 }).map((e, i) => ({
 
 describe('igxCombo', () => {
 
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
                 IgxComboTestComponent,

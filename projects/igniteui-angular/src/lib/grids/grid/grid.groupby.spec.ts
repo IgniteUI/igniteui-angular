@@ -33,7 +33,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     const CHIP_REMOVE_ICON = '.igx-chip__remove';
     const CHIP = 'igx-chip';
 
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
                 DefaultGridComponent,

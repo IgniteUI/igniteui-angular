@@ -30,7 +30,7 @@ describe('Excel Exporter', () => {
     let actualData: FileContentData;
     let options: IgxExcelExporterOptions;
 
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
                 ReorderedColumnsComponent,

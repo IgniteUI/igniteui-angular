@@ -10,7 +10,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('IgxSelection', () => {
 
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
         TestBed.configureTestingModule({
             declarations: [
                 TriggerTextSelectionComponent,

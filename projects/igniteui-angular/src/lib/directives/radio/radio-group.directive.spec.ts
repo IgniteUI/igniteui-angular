@@ -8,7 +8,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgxRadioGroupDirective', () => {
 
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
         TestBed.configureTestingModule({
             declarations: [
                 RadioGroupComponent,

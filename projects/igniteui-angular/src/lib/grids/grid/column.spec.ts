@@ -14,7 +14,7 @@ describe('IgxGrid - Column properties #grid', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
 
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
                 ColumnsFromIterableComponent,

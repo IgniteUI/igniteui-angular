@@ -8,7 +8,7 @@ import { IgxFilterDirective, IgxFilterModule, IgxFilterOptions, IgxFilterPipe } 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 
 describe('Filter', () => {
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
         TestBed.configureTestingModule({
             declarations: [DeclarativeListTestComponent, DynamicListTestComponent],
             imports: [IgxFilterModule, IgxListModule],

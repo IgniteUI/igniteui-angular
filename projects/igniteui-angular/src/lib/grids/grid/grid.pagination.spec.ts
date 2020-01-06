@@ -20,7 +20,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
 
     const PAGER_CLASS = '.igx-paginator__pager';
 
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
                 ReorderedColumnsComponent,

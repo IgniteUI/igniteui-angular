@@ -41,7 +41,7 @@ describe('IgxForOf directive -', () => {
     describe('empty virtual component', () => {
          let fix: ComponentFixture<EmptyVirtualComponent>;
 
-         configureTestSuite(async () => {
+         configureTestSuite(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -65,7 +65,7 @@ describe('IgxForOf directive -', () => {
     describe('horizontal virtual component', () => {
         let fix: ComponentFixture<HorizontalVirtualComponent>;
 
-        configureTestSuite(async () => {
+        configureTestSuite(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -178,7 +178,7 @@ describe('IgxForOf directive -', () => {
     describe('vertical virtual component', () => {
         let fix: ComponentFixture<VerticalVirtualComponent>;
 
-        configureTestSuite(async () => {
+        configureTestSuite(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -334,7 +334,7 @@ describe('IgxForOf directive -', () => {
     describe('vertical and horizontal virtual component', () => {
         let fix: ComponentFixture<VirtualComponent>;
 
-        configureTestSuite(async () => {
+        configureTestSuite(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -974,7 +974,7 @@ describe('IgxForOf directive -', () => {
     describe('variable size component', () => {
         let fix: ComponentFixture<VirtualVariableSizeComponent>;
 
-        configureTestSuite(async () => {
+        configureTestSuite(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -1023,7 +1023,7 @@ describe('IgxForOf directive -', () => {
     describe('remote virtual component', () => {
         let fix: ComponentFixture<RemoteVirtualizationComponent>;
 
-        configureTestSuite(async () => {
+        configureTestSuite(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -1073,7 +1073,7 @@ describe('IgxForOf directive -', () => {
 
         let fix: ComponentFixture<NoWidthAndHeightComponent>;
 
-        configureTestSuite(async () => {
+        configureTestSuite(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,
@@ -1098,7 +1098,7 @@ describe('IgxForOf directive -', () => {
 
         let fix: ComponentFixture<LocalVariablesComponent>;
 
-        configureTestSuite(async () => {
+        configureTestSuite(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     TestIgxForOfDirective,

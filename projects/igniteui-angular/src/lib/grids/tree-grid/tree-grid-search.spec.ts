@@ -21,7 +21,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
     let fixNativeElement;
     let treeGrid: IgxTreeGridComponent;
 
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSearchComponent,

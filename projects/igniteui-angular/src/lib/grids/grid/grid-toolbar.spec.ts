@@ -17,7 +17,7 @@ describe('IgxGrid - Grid Toolbar #grid', () => {
     let fixture;
     let grid;
 
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
                 GridToolbarTestPage1Component
@@ -531,7 +531,7 @@ describe('IgxGrid - Grid Toolbar Custom Content #grid', () => {
     let fixture;
     let grid;
 
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
                 GridToolbarTestPage1Component,

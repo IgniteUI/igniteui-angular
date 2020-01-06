@@ -17,7 +17,7 @@ import { GridSelectionMode } from '../common/enums';
 import { GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - Cell selection #grid', () => {
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
                 SelectionWithScrollsComponent,

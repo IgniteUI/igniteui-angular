@@ -65,7 +65,7 @@ describe('Card', () => {
         media: `${baseClass}__media`
     };
 
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
                 InitCardComponent,

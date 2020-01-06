@@ -23,7 +23,7 @@ describe('IgxBottomNav', () => {
         { path: 'view3', component: BottomNavRoutingView3Component }
     ];
 
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
         TestBed.configureTestingModule({
             declarations: [TabBarTestComponent, BottomTabBarTestComponent, TemplatedTabBarTestComponent, TabBarRoutingTestComponent,
                 TabBarTabsOnlyModeTestComponent],

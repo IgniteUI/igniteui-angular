@@ -19,7 +19,7 @@ const CELL_BLOCK = '.igx-grid__mrl-block';
 describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
 
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutTestComponent

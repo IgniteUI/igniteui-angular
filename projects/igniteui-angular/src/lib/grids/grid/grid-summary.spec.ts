@@ -37,7 +37,7 @@ describe('IgxGrid - Summaries #grid', () => {
     const SUMMARY_CELL = 'igx-grid-summary-cell';
     const DEBOUNCETIME = 30;
 
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
                 ProductsComponent,

@@ -13,7 +13,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
     let fix;
     let grid;
 
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridFilteringComponent, IgxTreeGridFilteringRowEditingComponent

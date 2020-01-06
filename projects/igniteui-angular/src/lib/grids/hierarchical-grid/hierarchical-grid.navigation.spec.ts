@@ -13,7 +13,7 @@ import { setupHierarchicalGridScrollDetection } from '../../test-utils/helper-ut
 describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent
@@ -791,7 +791,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
 describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
         let fixture;
         let hierarchicalGrid: IgxHierarchicalGridComponent;
-        configureTestSuite(async () => {
+        configureTestSuite(() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxHierarchicalGridTestComplexComponent
@@ -946,7 +946,7 @@ describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
 describe('IgxHierarchicalGrid Multi-layout Navigation #hGrid', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridMultiLayoutComponent
@@ -1107,7 +1107,7 @@ describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
 
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridSmallerChildComponent

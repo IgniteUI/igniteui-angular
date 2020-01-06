@@ -21,7 +21,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
     let fix;
     let grid: IgxTreeGridComponent;
 
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridWrappedInContComponent,

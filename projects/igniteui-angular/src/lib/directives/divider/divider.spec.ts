@@ -21,7 +21,7 @@ describe('Divider', () => {
 
     let fixture: ComponentFixture<TestDividerComponent>;
 
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [TestDividerComponent],
             imports: [IgxDividerModule]

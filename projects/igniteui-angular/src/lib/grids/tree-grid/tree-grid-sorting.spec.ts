@@ -13,7 +13,7 @@ describe('IgxTreeGrid - Sorting #tGrid', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSortingComponent

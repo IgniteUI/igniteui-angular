@@ -24,7 +24,7 @@ describe('Carousel', () => {
     let fixture;
     let carousel: IgxCarouselComponent;
 
-    configureTestSuite(async () => {
+    configureTestSuite(() => {
             TestBed.configureTestingModule({
             declarations: [
                 CarouselTestComponent,
