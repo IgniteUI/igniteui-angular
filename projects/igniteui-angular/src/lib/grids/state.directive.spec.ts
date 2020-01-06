@@ -18,7 +18,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 
 describe('IgxGridState - input properties #grid', () => {
     configureTestSuite(async () => {
-            TestBed.configureTestingModule({
+        TestBed.configureTestingModule({
             declarations: [
                 IgxGridStateComponent,
                 IgxGridStateWithOptionsComponent

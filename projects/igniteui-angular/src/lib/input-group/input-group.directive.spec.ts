@@ -21,7 +21,7 @@ const INPUT_GROUP_COSY_DENSITY_CSS_CLASS = 'igx-input-group--cosy';
 describe('IgxInputGroup', () => {
 
     configureTestSuite(async () => {
-            TestBed.configureTestingModule({
+        TestBed.configureTestingModule({
             declarations: [
                 InputGroupComponent,
                 InputGroupBoxComponent,
