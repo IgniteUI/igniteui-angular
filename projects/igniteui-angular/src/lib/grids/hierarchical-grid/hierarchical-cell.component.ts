@@ -90,8 +90,7 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
      * @hidden
      * @internal
      */
-    @HostListener('keydown', ['$event'])
-    _dispatchEvent(event: KeyboardEvent) {
+    dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (event.altKey && !this.row.added) {
             const grid = this.gridAPI.grid;
@@ -113,6 +112,7 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
             }
             return;
         }
+        super.dispatchEvent(event);
     }
 
     protected persistFocusedCell(rowID) {
