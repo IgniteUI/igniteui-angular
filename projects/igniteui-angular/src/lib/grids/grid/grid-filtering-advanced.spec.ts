@@ -422,7 +422,7 @@ describe('IgxGrid - Advanced Filtering', () => {
             expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('Ignite UI for Angular');
         }));
 
-        it('Should correctly filter by a \'number\' column through UI.', fakeAsync(() => {
+        it('Should correctly filter by a \'Greater Than\' with \'number\' column through UI.', fakeAsync(() => {
             // Test prerequisites
             grid.height = '800px';
             fix.detectChanges();
@@ -462,6 +462,47 @@ describe('IgxGrid - Advanced Filtering', () => {
             expect(grid.rowList.length).toBe(5);
             expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
             expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('NetAdvantage');
+        }));
+
+        it('Should correctly filter by a \'Equals\' with \'number\' column through UI.', fakeAsync(() => {
+            // Test prerequisites
+            grid.height = '800px';
+            fix.detectChanges();
+            tick(50);
+
+            // Verify no filters are present.
+            expect(grid.filteredData).toBeNull();
+            expect(grid.rowList.length).toBe(8);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 1, 1).value).toBe('NetAdvantage');
+
+            // Open Advanced Filtering dialog.
+            GridFunctions.clickAdvancedFilteringButton(fix);
+            fix.detectChanges();
+
+            // Click the initial 'Add And Group' button.
+            const addAndGroupButton = GridFunctions.getAdvancedFilteringInitialAddGroupButtons(fix)[0];
+            addAndGroupButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            selectColumnInEditModeExpression(fix, 2); // Select 'Downloads' column.
+            selectOperatorInEditModeExpression(fix, 0); // Select 'Equals' operator.
+            const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            sendInputNativeElement(fix, input, '127'); // Type filter value.
+
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            fix.detectChanges();
+
+            // Apply the filters.
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            fix.detectChanges();
+
+            // Verify the filter results.
+            expect(grid.filteredData.length).toEqual(1);
+            expect(grid.rowList.length).toBe(1);
+            expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('NetAdvantage');
         }));
 
         it('Should correctly filter by a \'boolean\' column through UI.', fakeAsync(() => {

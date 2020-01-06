@@ -131,7 +131,7 @@ import { IgxGridToolbarCustomContentDirective } from './toolbar/toolbar.directiv
 import { IgxColumnComponent } from './columns/column.component';
 import { IgxColumnGroupComponent } from './columns/column-group.component';
 import { IGridSortingStrategy } from '../data-operations/sorting-strategy';
-import { IgxRowDragGhostDirective  } from './row-drag.directive';
+import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective  } from './row-drag.directive';
 
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
@@ -153,6 +153,7 @@ export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction
 export class IgxGridBaseDirective extends DisplayDensityBase implements
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
     private _scrollWidth: number;
+    private _customDragIndicatorIconTemplate: TemplateRef<any>;
     protected _init = true;
     private _cdrRequests = false;
     protected _cdrRequestRepaint = false;
@@ -2080,6 +2081,24 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
    */
    @ContentChild(IgxHeaderCollapseIndicatorDirective, { read: TemplateRef })
    public headerCollapseIndicatorTemplate: TemplateRef<any> = null;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ContentChildren(IgxDragIndicatorIconDirective, { read: TemplateRef, descendants: false })
+    public dragIndicatorIconTemplates: QueryList<TemplateRef<any>>;
+
+    /**
+    * The custom template, if any, that should be used when rendering the row drag indicator icon
+    */
+    public get dragIndicatorIconTemplate(): TemplateRef<any> {
+        return this._customDragIndicatorIconTemplate || this.dragIndicatorIconTemplates.first;
+    }
+
+    public set dragIndicatorIconTemplate(val: TemplateRef<any>) {
+        this._customDragIndicatorIconTemplate = val;
+    }
 
     /**
      * @hidden
