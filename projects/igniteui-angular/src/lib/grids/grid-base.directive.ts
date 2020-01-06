@@ -3123,7 +3123,10 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    public resetCaches() {
+    public resetCaches(recalcFeatureWidth = true) {
+        if (recalcFeatureWidth) {
+            this._headerFeaturesWidth = NaN;
+        }
         this.resetForOfCache();
         this.resetColumnsCaches();
         this.resetColumnCollections();
@@ -4753,11 +4756,11 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             sizing process which of course, uses values from the caches, thus resulting
             in a broken layout.
         */
-        this.resetCaches();
+        this.resetCaches(recalcFeatureWidth);
         this.cdr.detectChanges();
         const hasScroll = this.hasVerticalSroll();
         this.calculateGridWidth();
-        this.resetCaches();
+        this.resetCaches(recalcFeatureWidth);
         this.cdr.detectChanges();
         this.calculateGridHeight();
 
@@ -4787,10 +4790,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
                 });
             });
         }
-        this.resetCaches();
-        if (recalcFeatureWidth) {
-            this._headerFeaturesWidth = NaN;
-        }
+        this.resetCaches(recalcFeatureWidth);
     }
 
     private _applyWidthHostBinding() {

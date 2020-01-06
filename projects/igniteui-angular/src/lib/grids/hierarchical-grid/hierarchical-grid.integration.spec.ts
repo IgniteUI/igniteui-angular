@@ -475,14 +475,12 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
             tick(16);
 
-            const rootExpander =  (hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent).expander;
-            const rootCheckbox =  hierarchicalGrid.headerFeatureContainer;
+            const headerFeatureContainer = hierarchicalGrid.headerFeatureContainer;
             const rootSummaryRow = hierarchicalGrid.summariesRowList.first.nativeElement;
             const rootSummaryIndentation = rootSummaryRow.querySelector(SUMMARIES_MARGIN_CLASS);
 
             expect(rootSummaryRow.children.length).toEqual(2);
-            expect(rootSummaryIndentation.offsetWidth)
-                .toEqual(rootExpander.nativeElement.offsetWidth + rootCheckbox.nativeElement.offsetWidth);
+            expect(rootSummaryIndentation.offsetWidth).toEqual(headerFeatureContainer.nativeElement.offsetWidth);
 
             const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
             const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
@@ -498,11 +496,14 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
         it('should render summaries for column inside a column group.', fakeAsync(/** row toggle rAF */() => {
             fixture.componentInstance.rowIsland.childColumns.first.hasSummary = false;
+            tick();
             fixture.detectChanges();
             fixture.componentInstance.rowIsland.childColumns.last.hasSummary = true;
+            tick();
             fixture.detectChanges();
 
             (hierarchicalGrid.dataRowList.toArray()[0].nativeElement.children[0] as HTMLElement).click();
+            tick();
             fixture.detectChanges();
 
             const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
