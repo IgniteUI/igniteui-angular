@@ -740,7 +740,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * This event is emitted when user has stopped interacting the thumb and value is changed.
+     * This event is emitted every time the value is changed.
      * ```typescript
      * public change(event){
      *    alert("The value has been changed!");
@@ -752,6 +752,20 @@ export class IgxSliderComponent implements
      */
     @Output()
     public onValueChange = new EventEmitter<ISliderValueChangeEventArgs>();
+
+    /**
+     * This event is emitted at the end of every slide interaction.
+     * ```typescript
+     * public change(event){
+     *    alert("The value has been changed!");
+     *}
+     * ```
+     * ```html
+     * <igx-slider (onValueChanged)="change($event)" #slider [(ngModel)]="task.percentCompleted" [step]="5">
+     * ```
+     */
+    @Output()
+    public onValueChanged = new EventEmitter<number | IRangeSliderValue>();
 
 
     constructor(
@@ -791,6 +805,7 @@ export class IgxSliderComponent implements
         activeThumb.nativeElement.releasePointerCapture($event.pointerId);
 
         this.hideSliderIndicators();
+        this.onValueChanged.emit(this.value);
     }
 
     /**
@@ -807,22 +822,6 @@ export class IgxSliderComponent implements
     @HostListener('pan', ['$event'])
     public onPanListener($event) {
         this.update($event.srcEvent.clientX);
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('panstart')
-    public onPanStart() {
-        this.showSliderIndicators();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('panend')
-    public onPanEnd() {
-        this.hideSliderIndicators();
     }
 
     /**
