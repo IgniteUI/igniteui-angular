@@ -13,7 +13,7 @@ export const configureTestSuite = (configureAction?: () => void) => {
 
     if (configureAction) {
         beforeAll((done: DoneFn) => (async () => {
-            TestBed.resetTestingModule();
+            // TestBed.resetTestingModule();
             configureAction();
             await TestBed.compileComponents();
             TestBed.resetTestingModule = () => TestBed;
