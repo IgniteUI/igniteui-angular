@@ -139,7 +139,7 @@
 
                 <div #listArea class="listArea">
                     <div #listItem *ngFor="let item of listNotes; index as itemIndex" class="listItem"
-                        [ngStyle]="{ 'box-shadow': item.dragged ? '0px 5px 15px 3px rgb(20, 20, 20)': '', 'border-radius': item.dragged ? '4px' : '0px', 'z-index': item.dragged ? '2' : '1' }"
+                        [ngStyle]="{ 'box-shadow': item.dragged ? '0px 5px 15px 3px rgb(0, 0, 0, 0.26)': '', 'border-radius': item.dragged ? '4px' : '0px', 'z-index': item.dragged ? '2' : '1' }"
                         [igxDrag]="{ id: item.text, moved: false }" [ghost]="false" (dragStart)="listItemDragStart($event, item, itemIndex)" (dragEnd)="listItemDragEnd($event, item)" (transitioned)="litsItemTransitioned($event, item, itemIndex)"
                         igxDrop (enter)="listItemEnter($event, itemIndex)" (over)="listItemOver($event, itemIndex)">
                         {{item.text}}
