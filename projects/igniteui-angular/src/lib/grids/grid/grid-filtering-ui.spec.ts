@@ -1251,6 +1251,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         fix.detectChanges();
 
         const firstMonth = calendar.querySelector('.igx-calendar__month');
+        const firstMonthText = (firstMonth as HTMLElement).innerText;
         firstMonth.dispatchEvent(new Event('click'));
         tick();
         fix.detectChanges();
@@ -1258,7 +1259,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
         calendar = outlet.getElementsByClassName('igx-calendar')[0];
         const month = calendar.querySelector('.igx-calendar-picker__date');
 
-        expect(month.innerHTML.trim()).toEqual('Jan');
+        expect(month.innerHTML.trim()).toEqual(firstMonthText);
     }));
 
     it('Should correctly select year from year view datepicker/calendar component', fakeAsync(() => {
@@ -3319,23 +3320,30 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             GridFunctions.applyFilter('a', fix);
-            await wait(16);
+            fix.detectChanges();
+            await wait(300);
+            fix.detectChanges();
             GridFunctions.applyFilter('e', fix);
-            await wait(16);
+            fix.detectChanges();
+            await wait(300);
+            fix.detectChanges();
             GridFunctions.applyFilter('i', fix);
-            await wait(16);
+            fix.detectChanges();
+            await wait(300);
+            fix.detectChanges();
             GridFunctions.applyFilter('o', fix);
             // wait for chip to be scrolled in view
-            await wait(200);
             fix.detectChanges();
-            await wait(100);
+            await wait(300);
+            fix.detectChanges();
             verifyMultipleChipsVisibility(fix, [false, false, false, true]);
 
             const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             GridFunctions.removeFilterChipByIndex(3, filterUIRow);
             // wait for chip to be scrolled in view
             fix.detectChanges();
-            await wait(200);
+            await wait(300);
+            fix.detectChanges();
 
             verifyMultipleChipsVisibility(fix, [false, true, false]);
             let chips = filterUIRow.queryAll(By.directive(IgxChipComponent));
@@ -3344,7 +3352,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.removeFilterChipByIndex(2, filterUIRow);
             // wait for chip to be scrolled in view
             fix.detectChanges();
-            await wait(200);
+            await wait(300);
+            fix.detectChanges();
 
             verifyMultipleChipsVisibility(fix, [true, false]);
             chips = filterUIRow.queryAll(By.directive(IgxChipComponent));

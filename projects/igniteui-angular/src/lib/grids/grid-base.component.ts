@@ -103,7 +103,7 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IFilteringStrategy } from '../data-operations/filtering-strategy';
 import { IgxRowExpandedIndicatorDirective, IgxRowCollapsedIndicatorDirective,
      IgxHeaderExpandIndicatorDirective, IgxHeaderCollapseIndicatorDirective } from './grid/grid.directives';
-import { IgxRowDragGhostDirective  } from './row-drag.directive';
+import { IgxRowDragGhostDirective, IgxDragIndicatorIconDirective  } from './row-drag.directive';
 import { GridKeydownTargetType, GridSelectionMode, GridSummaryPosition, GridSummaryCalculationMode, FilterMode } from './common/enums';
 
 const MINIMUM_COLUMN_WIDTH = 136;
@@ -229,6 +229,7 @@ export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventA
 export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
     private _scrollWidth: number;
+    private _customDragIndicatorIconTemplate: TemplateRef<any>;
     protected _init = true;
     private _tick;
     private _cdrRequests = false;
@@ -1947,6 +1948,22 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
 
     /**
      * @hidden
+     * @internal
+     */
+    @ContentChildren(IgxDragIndicatorIconDirective, { read: TemplateRef, descendants: false })
+    public dragIndicatorIconTemplates: QueryList<TemplateRef<any>>;
+    /**
+    * The custom template, if any, that should be used when rendering the row drag indicator icon
+    */
+    public get dragIndicatorIconTemplate(): TemplateRef<any> {
+        return this._customDragIndicatorIconTemplate || this.dragIndicatorIconTemplates.first;
+    }
+
+    public set dragIndicatorIconTemplate(val: TemplateRef<any>) {
+        this._customDragIndicatorIconTemplate = val;
+    }
+    /**
+     * @hidden
      */
     @ViewChild('verticalScrollContainer', { read: IgxGridForOfDirective, static: true })
     public verticalScrollContainer: IgxGridForOfDirective<any>;
@@ -3017,9 +3034,19 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         });
 
         this.verticalScrollContainer.onDataChanging.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
-            this.calculateGridHeight();
-            $event.containerSize = this.calcHeight;
+            const shouldRecalcSize = this.isPercentHeight &&
+             ( !this.calcHeight || this.calcHeight === this.getDataBasedBodyHeight() ||
+              this.calcHeight === this.renderedRowHeight * this._defaultTargetRecordNumber);
+            if (shouldRecalcSize) {
+                this.calculateGridHeight();
+                $event.containerSize = this.calcHeight;
+            }
             this.evaluateLoadingState();
+        });
+
+        this.verticalScrollContainer.onScrollbarVisibilityChanged.pipe(destructor, filter(() => !this._init)).subscribe(() => {
+            // called to recalc all widths that may have changes as a result of
+            // the vert. scrollbar showing/hiding
             this.notifyChanges(true);
         });
 
