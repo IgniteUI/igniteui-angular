@@ -19,7 +19,7 @@ import { IgxRowIslandComponent } from './row-island.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { IgxSummaryOperand } from '../summaries/grid-summary';
-import { IgxHierarchicalTransactionService, IgxOverlayService } from '../../services/index';
+import { IgxOverlayService, IgxTransactionService, Transaction, TransactionService, State } from '../../services/index';
 import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
@@ -36,7 +36,7 @@ export const IgxHierarchicalTransactionServiceFactory = {
 };
 
 export function hierarchicalTransactionServiceFactory() {
-    return () => new IgxHierarchicalTransactionService();
+    return new IgxTransactionService();
 }
 
 export interface IPathSegment {
@@ -100,33 +100,12 @@ export class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective {
     @ViewChild('dragIndicatorIconBase', { read: TemplateRef, static: true })
     public dragIndicatorIconBase: TemplateRef<any>;
 
-
-    /**
-     * The custom template, if any, that should be used when rendering the row drag indicator icon
-     *
-     * ```typescript
-     * // Set in typescript
-     * const myCustomTemplate: TemplateRef<any> = myComponent.customTemplate;
-     * myComponent.dragIndicatorIconTemplate = myCustomTemplate;
-     * ```
-     * ```html
-     * <!-- Set in markup -->
-     *  <igx-grid #grid>
-     *      ...
-     *      <ng-template igxDragIndicatorIcon>
-     *          <igx-icon fontSet="material">info</igx-icon>
-     *      </ng-template>
-     *  </igx-grid>
-     * ```
-     */
-    public dragIndicatorIconTemplate: TemplateRef<any> = null;
-
     constructor(
         public selectionService: IgxGridSelectionService,
         crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        @Inject(IgxGridTransaction) protected transactionFactory: any,
+        @Inject(IgxGridTransaction) protected transactionFactory: TransactionService<Transaction, State>,
         elementRef: ElementRef,
         zone: NgZone,
         @Inject(DOCUMENT) public document,
@@ -144,7 +123,7 @@ export class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective {
             crudService,
             colResizingService,
             gridAPI,
-            typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
+            transactionFactory,
             elementRef,
             zone,
             document,
