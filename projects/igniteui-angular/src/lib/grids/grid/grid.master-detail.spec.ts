@@ -207,7 +207,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(thirdDetail.querySelector('.addressArea').innerText).toEqual('120 Hanover Sq.');
         }));
 
-        fit('Should update rendered detail templates after grid data is changed.', (async() => {
+        it('Should update rendered detail templates after grid data is changed.', (async() => {
             const newExpanded = new Map<any, boolean>();
             newExpanded.set('ALFKI', true);
             newExpanded.set('ANTON', true);
