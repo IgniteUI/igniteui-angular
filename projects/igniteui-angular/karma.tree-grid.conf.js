@@ -26,7 +26,8 @@ module.exports = function (config) {
         random: false
       },
       tagPrefix: '#',
-      tags: 'tGrid'
+      tags: 'tGrid',
+      runInParent: true
     },
     coverageIstanbulReporter: {
       dir: require('path').join(__dirname, '../../coverage/tree-grid'),

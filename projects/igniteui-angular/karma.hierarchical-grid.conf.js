@@ -26,7 +26,8 @@ module.exports = function (config) {
         random: false
       },
       tagPrefix: '#',
-      tags: 'hGrid'
+      tags: 'hGrid',
+      runInParent: true
     },
     coverageIstanbulReporter: {
       dir: require('path').join(__dirname, '../../coverage/hierarchical-grid'),
