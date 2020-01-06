@@ -10,7 +10,6 @@ import { CancelableEventArgs } from '../../core/utils';
 import { take } from 'rxjs/operators';
 
 describe('IgxGrid - Clipboard #grid', () => {
-    configureTestSuite();
     let fix;
     let grid: IgxGridComponent;
     configureTestSuite(async () => {
