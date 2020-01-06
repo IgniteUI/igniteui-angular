@@ -888,7 +888,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     @HostListener('keydown', ['$event'])
-    dispatchEvent(event: KeyboardEvent) {
+    _dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         const shift = event.shiftKey;
         const ctrl = event.ctrlKey;

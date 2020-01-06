@@ -113,7 +113,6 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
             }
             return;
         }
-        super.dispatchEvent(event);
     }
 
     protected persistFocusedCell(rowID) {
