@@ -15,7 +15,7 @@ import { wait } from '../../test-utils/ui-interactions.spec';
 describe('Scroll Inertia Directive ', () => {
     let fix: ComponentFixture<ScrollInertiaComponent>;
 
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTestScrollInertiaDirective,

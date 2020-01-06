@@ -27,7 +27,7 @@ describe('CSV Grid Exporter', () => {
     let options: IgxCsvExporterOptions;
     const data = SampleTestData.personJobData();
 
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
             TestBed.configureTestingModule({
             declarations: [
                 ReorderedColumnsComponent,

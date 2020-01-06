@@ -19,7 +19,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
             TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSimpleComponent,

@@ -27,7 +27,7 @@ describe('IgxTabs', () => {
         { path: 'view2', component: TabsRoutingView2Component },
         { path: 'view3', component: TabsRoutingView3Component }
     ];
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
         TestBed.configureTestingModule({
             declarations: [TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent,
                 TabsTestSelectedTabComponent, TabsTestCustomStylesComponent, TabsTestBug4420Component, TabsRoutingTestComponent,

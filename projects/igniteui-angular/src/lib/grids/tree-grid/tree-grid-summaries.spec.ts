@@ -20,7 +20,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
 
     const DEBOUNCETIME = 30;
 
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
             TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSummariesComponent,

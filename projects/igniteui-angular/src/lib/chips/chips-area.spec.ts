@@ -124,7 +124,7 @@ describe('IgxChipsArea', () => {
 
     const CHIP_REMOVE_BUTTON = 'igx-chip__remove';
 
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
             TestBed.configureTestingModule({
             declarations: [
                 TestChipComponent,

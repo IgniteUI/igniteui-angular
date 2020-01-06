@@ -15,7 +15,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
             TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent
@@ -367,7 +367,7 @@ it('should update scroll height after expanding/collapsing row in a nested child
 });
 
 describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
             TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent,

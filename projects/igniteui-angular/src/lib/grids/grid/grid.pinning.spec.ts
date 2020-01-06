@@ -20,7 +20,7 @@ describe('IgxGrid - Column Pinning #grid ', () => {
     const FIXED_HEADER_CSS = 'igx-grid__th--pinned';
     const FIXED_CELL_CSS = 'igx-grid__td--pinned';
 
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
             TestBed.configureTestingModule({
             declarations: [
                 DefaultGridComponent,

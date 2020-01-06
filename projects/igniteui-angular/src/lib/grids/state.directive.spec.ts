@@ -17,7 +17,7 @@ import { GridSelectionMode } from './common/enums';
 import { configureTestSuite } from '../test-utils/configure-suite';
 
 describe('IgxGridState - input properties #grid', () => {
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
             TestBed.configureTestingModule({
             declarations: [
                 IgxGridStateComponent,

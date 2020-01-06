@@ -19,7 +19,7 @@ import { ExpressionUI } from '../filtering/grid-filtering.service';
 
 describe('IgxGrid - Filtering actions #grid', () => {
 
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
             TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent

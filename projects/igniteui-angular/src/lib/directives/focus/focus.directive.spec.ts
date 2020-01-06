@@ -14,7 +14,7 @@ import { IgxDatePickerModule, IgxDatePickerComponent } from '../../date-picker/d
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('igxFocus', () => {
-    configureTestSuite(() => {
+    configureTestSuite(async () => {
         TestBed.configureTestingModule({
             declarations: [
                 SetFocusComponent,
