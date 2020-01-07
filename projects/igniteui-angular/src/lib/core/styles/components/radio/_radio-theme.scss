@@ -76,13 +76,26 @@
     @include scale-in-out($start-scale: .9);
 
     $label-margin: em(8px);
-    $size: em(20px);
+
+    $size: map-get((
+        material: em(20px),
+        fluent: em(20px),
+        bootstrap: em(14px),
+    ), map-get($theme, variant));
+
+    $scale: map-get((
+        material: scale3d(.5, .5, .5),
+        fluent: scale3d(.5, .5, .5),
+        bootstrap: scale3d(.3, .3, .3),
+    ), map-get($theme, variant));
+
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
     $border-width: map-get((
-        material: 2px,
-        fluent: 1px
+        material: rem(2px),
+        fluent: rem(1px),
+        bootstrap: rem(1px),
     ), map-get($theme, variant));
 
     $radio-hover-scale: map-get((
@@ -95,7 +108,7 @@
         fluent: none
     ), map-get($theme, variant));
 
-    $border-style: rem($border-width) solid;
+    $border-style: solid;
     $border-radius: 50% 50%;
 
     $transition: all .2s ease-in;
@@ -134,6 +147,7 @@
         line-height: $size;
         cursor: pointer;
         color: --var($theme, 'label-color');
+
         user-select: none;
 
         &::before,
@@ -151,22 +165,33 @@
             backface-visibility: hidden;
             transform: scale3d(0, 0, 0);
             transition: $transition;
+            z-index: 1;
         }
 
         &::after {
-            border: $border-style --var($theme, 'empty-color');
+            border: $border-width $border-style --var($theme, 'empty-color');
         }
     }
 
     %radio-composite--x {
         &::before {
-            border: $border-style --var($theme, 'fill-color');
-            background: --var($theme, 'fill-color');
-            transform: scale3d(.5, .5, .5);
+            border: $border-width $border-style --var($theme, 'fill-color');
+
+            @if map-get($theme, 'variant') == 'bootstrap' {
+                background: #fff;
+            } @else {
+                background: --var($theme, 'fill-color');
+            }
+
+            transform: $scale;
         }
 
         &::after {
-            border: $border-style --var($theme, 'fill-color');
+            border: $border-width $border-style --var($theme, 'fill-color');
+
+            @if map-get($theme, 'variant') == 'bootstrap' {
+                background: --var($theme, 'fill-color');
+            }
         }
     }
 
@@ -179,29 +204,42 @@
 
     %igx-radio--checked-active__composite {
         &::before {
-            border-color: --var($theme, 'fill-hover-border-color');
-            background: --var($theme, 'fill-hover-border-color');
+            @if map-get($theme, 'variant') == 'bootstrap' {
+                border-color: --var($theme, 'fill-color');
+                background: #fff;
+            } @else {
+                background: --var($theme, 'fill-hover-border-color');
+                border-color: --var($theme, 'fill-hover-border-color');
+            }
         }
 
         &::after {
-            border-color: --var($theme, 'fill-hover-border-color');
+            @if map-get($theme, 'variant') == 'bootstrap' {
+                border-color: --var($theme, 'fill-color');
+            } @else {
+                border-color: --var($theme, 'fill-hover-border-color');
+            }
         }
     }
 
     %radio-composite--disabled {
         &::after {
-            border: $border-style --var($theme, 'disabled-color');
+            border: $border-width $border-style --var($theme, 'disabled-color');
+
+            @if map-get($theme, 'variant') == 'bootstrap' {
+                background: transparent;
+            }
         }
     }
 
     %radio-composite--x--disabled {
         &::after {
-            border: $border-style --var($theme, 'disabled-color');
+            border: $border-width $border-style --var($theme, 'disabled-color');
         }
 
         &::before {
             background: --var($theme, 'disabled-color');
-            border: $border-style transparent;
+            border: $border-width $border-style transparent;
         }
     }
 
@@ -245,6 +283,10 @@
         overflow: hidden;
         pointer-events: none;
         filter: opacity(1);
+
+        @if map-get($theme, 'variant') == 'bootstrap' {
+            display: none;
+        }
     }
 
     %radio-ripple--focused {
