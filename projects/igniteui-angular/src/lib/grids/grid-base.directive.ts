@@ -6018,7 +6018,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
             // some browsers (like FireFox and Edge) do not trigger onBlur when the focused element is detached from DOM
             // hence we need to trigger it manually when cell is detached.
             const row = this.getRowByIndex(context.index);
-            const focusedCell = row.cells.find(x => x.focused);
+            const focusedCell = row && row.cells ? row.cells.find(x => x.focused) : false;
             if (focusedCell) {
                 focusedCell.onBlur();
             }
