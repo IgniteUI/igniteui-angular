@@ -498,7 +498,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.onPagingDone.emit({ previous: this._page, current: val });
         this._page = val;
         this.pageChange.emit(this._page);
-        this.scrollTo(0, 0);
+        this.navigateTo(0);
         this.notifyChanges();
     }
 
