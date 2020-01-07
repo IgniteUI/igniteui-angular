@@ -1585,10 +1585,10 @@ describe('IgxGrid Component Tests #grid', () => {
             });
         });
 
-        beforeEach(() => {
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxGridInsideIgxTabsComponent);
             fix.detectChanges();
-        });
+        }));
 
         it('IgxTabs: should initialize a grid with correct width/height', async () => {
             const grid = fix.componentInstance.grid3;
