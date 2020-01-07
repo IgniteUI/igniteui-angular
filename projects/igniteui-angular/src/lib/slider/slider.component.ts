@@ -763,7 +763,7 @@ export class IgxSliderComponent implements
      * @hidden
      */
     @HostListener('pointerdown', ['$event'])
-    public onPointerDown($event: PointerEvent) {
+    public onPointerDown($event) {
         this.findClosestThumb($event);
 
         if (!this.thumbTo.isActive && this.thumbFrom === undefined) {
