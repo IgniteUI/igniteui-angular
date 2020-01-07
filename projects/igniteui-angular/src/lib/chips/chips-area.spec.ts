@@ -120,7 +120,7 @@ class TestChipReorderComponent {
 }
 
 
-describe('IgxChipsArea', () => {
+xdescribe('IgxChipsArea', () => {
     configureTestSuite();
     const CHIP_REMOVE_BUTTON = 'igx-chip__remove';
 
