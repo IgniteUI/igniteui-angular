@@ -30,7 +30,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
     let treeGrid: IgxTreeGridComponent;
 
     configureTestSuite(async () => {
-            TestBed.configureTestingModule({
+        TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridSimpleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
