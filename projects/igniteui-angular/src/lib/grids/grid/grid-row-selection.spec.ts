@@ -1177,6 +1177,7 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             grid.height = '200px';
             fix.detectChanges();
+            await wait(DEBOUNCETIME);
 
             GridSelectionFunctions.clickRowCheckbox(selectedRow);
             fix.detectChanges();
