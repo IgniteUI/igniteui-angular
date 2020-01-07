@@ -36,7 +36,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }).compileComponents();
     }));
 
-    beforeEach(async(() => {
+    beforeEach(fakeAsync(/** height/width setter rAF */() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridTestBaseComponent);
         fixture.detectChanges();
         hierarchicalGrid = fixture.componentInstance.hgrid;
@@ -936,7 +936,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(headers[0].classList.contains('igx-grid__th--pinned')).toBeTruthy();
         }));
 
-        it('should be applied correctly for child grid with multi-column header.', (() => {
+        it('should be applied correctly for child grid with multi-column header.', fakeAsync(/** row toggle rAF */() => {
             const ri = fixture.componentInstance.rowIsland;
             const col = ri.columnList.find(x => x.header === 'Information');
             col.pinned = true;

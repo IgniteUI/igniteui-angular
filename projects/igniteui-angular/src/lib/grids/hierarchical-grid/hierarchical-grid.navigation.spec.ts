@@ -1,5 +1,5 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, fakeAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './index';
 import { Component, ViewChild} from '@angular/core';
@@ -529,7 +529,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         expect(  hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop - prevScroll).toBeGreaterThanOrEqual(100);
     }));
 
-    it('should expand/collapse hierarchical row using ALT+Arrow Right/ALT+Arrow Left.', () => {
+    it('should expand/collapse hierarchical row using ALT+Arrow Right/ALT+Arrow Left.', fakeAsync(/** row toggle rAF */ () => {
         const parentRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
         expect(parentRow.expanded).toBe(true);
         let parentCell = parentRow.cells.toArray()[0];
@@ -544,7 +544,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', altKey: true }));
         fixture.detectChanges();
         expect(parentRow.expanded).toBe(true);
-    });
+    }));
 
     it('should retain focused cell when expand/collapse hierarchical row using ALT+Arrow Right/ALT+Arrow Left.', (async () => {
         // scroll to last row
@@ -574,7 +574,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         expect(parentCell.focused).toBeTruthy();
     }));
 
-    it('should expand/collapse hierarchical row using ALT+Arrow Down/ALT+Arrow Up.', () => {
+    it('should expand/collapse hierarchical row using ALT+Arrow Down/ALT+Arrow Up.', fakeAsync(/** row toggle rAF */ () => {
         const parentRow = hierarchicalGrid.dataRowList.toArray()[0] as IgxHierarchicalRowComponent;
         expect(parentRow.expanded).toBe(true);
         let parentCell = parentRow.cells.toArray()[0];
@@ -589,7 +589,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         parentCell.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
         fixture.detectChanges();
         expect(parentRow.expanded).toBe(true);
-    });
+    }));
 
     it('should skip child grids that have no data when navigating up/down', (async () => {
         // set first child to not have data
