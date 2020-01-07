@@ -1389,28 +1389,24 @@ describe('Custom expand/collapse template', () => {
                 NoopAnimationsModule,
                 IgxGridModule,
                 IgxTreeGridModule]
-        })
-            .compileComponents();
+        }).compileComponents();
     }));
 
-    beforeEach(fakeAsync(/** height/width setter rAF */() => {
+    it('should allow setting custom template for  expand/collapse icons', fakeAsync(() => {
         fix = TestBed.createComponent(IgxTreeGridCustomExpandersTemplateComponent);
         fix.detectChanges();
         tick(16);
         treeGrid = fix.componentInstance.treeGrid;
-    }));
-
-    it('should allow setting custom template for  expand/collapse icons', async() => {
         const row = treeGrid.dataRowList.toArray()[0];
         let expander =  row.nativeElement.querySelector('.igx-grid__tree-grouping-indicator');
         expect(expander.innerText).toBe('EXPANDED');
 
         row.expanded = false;
-        await wait();
         fix.detectChanges();
+        tick();
         expander =  row.nativeElement.querySelector('.igx-grid__tree-grouping-indicator');
         expect(expander.innerText).toBe('COLLAPSED');
-    });
+    }));
 });
 
 function verifyGridPager(fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) {
