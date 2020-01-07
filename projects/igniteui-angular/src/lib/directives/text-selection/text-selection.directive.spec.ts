@@ -20,7 +20,7 @@ describe('IgxSelection', () => {
         });
     }));
 
-    it('Should select the text which is into the input', async() => {
+    xit('Should select the text which is into the input', async() => {
         const fix = TestBed.createComponent(TriggerTextSelectionComponent);
         fix.detectChanges();
 
@@ -34,7 +34,7 @@ describe('IgxSelection', () => {
         });
     });
 
-    it('Should select the text when the input is clicked', async() => {
+    xit('Should select the text when the input is clicked', async() => {
         const fix = TestBed.createComponent(TriggerTextSelectionOnClickComponent);
         fix.detectChanges();
 

@@ -1797,7 +1797,7 @@ describe('igxCombo', () => {
             expect(dropdownList.nativeElement.clientHeight).toEqual(1171);
             expect(dropdownItems[0].nativeElement.clientHeight).toEqual(83);
         }));
-        it('Should render grouped items properly', async(() => {
+        xit('Should render grouped items properly', async(() => {
             let dropdownContainer;
             let dropdownItems;
             let scrollIndex = 0;

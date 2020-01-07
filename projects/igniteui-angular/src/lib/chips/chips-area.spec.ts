@@ -181,7 +181,7 @@ describe('IgxChipsArea', () => {
         expect(chipArea[0].nativeElement.children[0].innerHTML).toContain('New text');
     });
 
-    it('should not be able to drag and drop when chip is not draggable', async(() => {
+    xit('should not be able to drag and drop when chip is not draggable', async(() => {
         const fix = TestBed.createComponent(TestChipComponent);
         fix.detectChanges();
 
@@ -214,7 +214,7 @@ describe('IgxChipsArea', () => {
         });
     }));
 
-    it('should be able to drag when chip is draggable', async(() => {
+    xit('should be able to drag when chip is draggable', async(() => {
         const xDragDifference = 200;
         const yDragDifference = 100;
         const fix = TestBed.createComponent(TestChipComponent);
@@ -259,7 +259,7 @@ describe('IgxChipsArea', () => {
         });
     }));
 
-    it('chip reorder should fire correctly when element is dragged and dropped to the left', async(() => {
+    xit('chip reorder should fire correctly when element is dragged and dropped to the left', async(() => {
         const fix = TestBed.createComponent(TestChipReorderComponent);
         fix.detectChanges();
 
@@ -319,7 +319,7 @@ describe('IgxChipsArea', () => {
         });
     }));
 
-    it('chip reorder should fire correctly when element is dragged and dropped to the right', async(() => {
+    xit('chip reorder should fire correctly when element is dragged and dropped to the right', async(() => {
         const fix = TestBed.createComponent(TestChipReorderComponent);
         fix.detectChanges();
 
@@ -546,7 +546,7 @@ describe('IgxChipsArea', () => {
         expect(document.activeElement).toBe(firstChipComp.chipArea.nativeElement);
     });
 
-    it('should reorder chips when shift + leftarrow and shift + rightarrow is pressed', async(() => {
+    xit('should reorder chips when shift + leftarrow and shift + rightarrow is pressed', async(() => {
         const leftKey = new KeyboardEvent('keydown', {
             'key': 'ArrowLeft',
             shiftKey: true
@@ -599,7 +599,7 @@ describe('IgxChipsArea', () => {
         });
     }));
 
-    it('should reorder chips when shift + leftarrow is pressed and shift + rightarrow is pressed twice', async(() => {
+    xit('should reorder chips when shift + leftarrow is pressed and shift + rightarrow is pressed twice', async(() => {
         const fix = TestBed.createComponent(TestChipReorderComponent);
         fix.detectChanges();
 
@@ -651,7 +651,7 @@ describe('IgxChipsArea', () => {
         });
     }));
 
-    it('should not reorder chips for shift + leftarrow and shift + rightarrow when the chip is going out of bounce', async(() => {
+    xit('should not reorder chips for shift + leftarrow and shift + rightarrow when the chip is going out of bounce', async(() => {
         const leftKey = new KeyboardEvent('keydown', {
             'key': 'ArrowLeft',
             shiftKey: true
@@ -734,7 +734,7 @@ describe('IgxChipsArea', () => {
         expect(chipComponents.length).toEqual(3);
     });
 
-    it('chip should persist selected state when it is dragged and dropped', async(() => {
+    xit('chip should persist selected state when it is dragged and dropped', async(() => {
         const spaceKeyEvent = new KeyboardEvent('keydown', {
             'key': ' '
         });

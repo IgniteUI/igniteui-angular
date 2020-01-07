@@ -361,7 +361,7 @@ describe('IgxChip', () => {
         expect(chipComponentsIds).not.toContain('City');
     });
 
-    it('should affect the ghostElement density when chip has it set to compact', (done) => {
+    xit('should affect the ghostElement density when chip has it set to compact', (done) => {
         const fix = TestBed.createComponent(TestChipComponent);
         fix.detectChanges();
 
