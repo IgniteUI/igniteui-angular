@@ -18,16 +18,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
-    configureTestSuite(async () => {
-        TestBed.configureTestingModule({
-            declarations: [
-                IgxTreeGridSimpleComponent,
-                IgxTreeGridPrimaryForeignKeyComponent
-            ],
-            imports: [IgxTreeGridModule, NoopAnimationsModule]
-        });
-    });
-
     describe('Child Collection', () => {
         configureTestSuite(async () => {
             TestBed.configureTestingModule({
