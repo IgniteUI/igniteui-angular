@@ -26,8 +26,7 @@ export class IgxGridSortingPipe implements PipeTransform {
         this.gridAPI = <IgxGridAPIService>gridAPI;
     }
 
-    public transform(collection: any[], expressions: ISortingExpression[], id: string,
-        pipeTrigger: number, filteringPipeTrigger: number): any[] {
+    public transform(collection: any[], expressions: ISortingExpression[], id: string, pipeTrigger: number): any[] {
         const grid = this.gridAPI.grid;
         let result: any[];
 
@@ -133,7 +132,7 @@ export class IgxGridFilteringPipe implements PipeTransform {
 
     public transform(collection: any[], expressionsTree: IFilteringExpressionsTree,
         filterStrategy: IFilteringStrategy,
-        advancedExpressionsTree: IFilteringExpressionsTree, id: string, pipeTrigger: number) {
+        advancedExpressionsTree: IFilteringExpressionsTree, id: string, pipeTrigger: number, filteringPipeTrigger: number) {
         const grid = this.gridAPI.grid;
         const state = {
             expressionsTree: expressionsTree,
