@@ -24,7 +24,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     let treeGrid;
 
     configureTestSuite(async () => {
-            TestBed.configureTestingModule({
+        TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridExpandingComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
