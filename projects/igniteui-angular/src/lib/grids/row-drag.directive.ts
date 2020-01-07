@@ -5,6 +5,7 @@ import { fromEvent, Subscription } from 'rxjs';
 import { IgxRowDirective, IgxGridBaseDirective } from './grid';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from './common/events';
 import { GridType } from './common/grid.interface';
+import { IgxHierarchicalRowComponent } from './hierarchical-grid/hierarchical-row.component';
 
 
 const ghostBackgroundClass = 'igx-grid__tr--ghost';
@@ -107,6 +108,15 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         };
         super.createGhost(pageX, pageY, this.row.nativeElement);
 
+        // check if there is an expander icon and create the ghost at the corresponding position
+        if (this.isHierarchicalGrid) {
+            const row = this.row as IgxHierarchicalRowComponent;
+            if (row.expander) {
+                const expanderWidth = row.expander.nativeElement.getBoundingClientRect().width;
+                this._ghostHostX += expanderWidth;
+            }
+        }
+
         const ghost = this.ghostElement;
 
         const gridRect = this.row.grid.nativeElement.getBoundingClientRect();
@@ -144,6 +154,10 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             this.ghostElement.removeEventListener('transitionend', this.transitionEndEvent, false);
         }
         this.endDragging();
+    }
+
+    private get isHierarchicalGrid() {
+        return this.row.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
     }
 }
 

@@ -19,6 +19,8 @@ import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-fun
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { GridSelectionMode } from '../common/enums';
 import { IgxGridSelectionModule } from '../selection/selection.module';
+import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 
 const DEBOUNCETIME = 30;
 
@@ -1670,6 +1672,38 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.getRowByIndex(2).selected).toBeFalsy();
             expect(grid.getRowByIndex(1).selected).toBeTruthy();
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(6);
+        }));
+
+        it('Should select only filtered records', fakeAsync(() => {
+            grid.height = '1100px';
+            const tree = new FilteringExpressionsTree(FilteringLogic.And);
+            tree.filteringOperands.push({
+                fieldName: 'UnitsInStock',
+                searchVal: 0,
+                condition: IgxNumberFilteringOperand.instance().condition('greaterThan'),
+            });
+            tree.filteringOperands.push({
+                fieldName: 'ProductName',
+                searchVal: 'a',
+                condition: IgxStringFilteringOperand.instance().condition('contains'),
+                ignoreCase: true
+            });
+            grid.advancedFilteringExpressionsTree = tree;
+            GridSelectionFunctions.headerCheckboxClick(grid);
+            fix.detectChanges();
+            tick();
+
+            expect(grid.rowList.length).toBe(9);
+            expect(grid.selectedRows().length).toBe(9);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(grid, true, false);
+
+            grid.advancedFilteringExpressionsTree = null;
+            fix.detectChanges();
+            tick();
+
+            expect(grid.rowList.length).toBe(19);
+            expect(grid.selectedRows().length).toBe(9);
+            GridSelectionFunctions.verifyHeaderRowCheckboxState(grid, false, true);
         }));
     });
 
