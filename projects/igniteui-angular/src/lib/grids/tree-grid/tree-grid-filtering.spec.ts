@@ -9,274 +9,286 @@ import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringO
 import { FilteringStrategy } from '../../data-operations/filtering-strategy';
 
 describe('IgxTreeGrid - Filtering actions #tGrid', () => {
-
     let fix;
     let grid;
 
-    configureTestSuite(async () => {
+    describe('Filtering:', () => {
+        configureTestSuite(async () => {
             TestBed.configureTestingModule({
-            declarations: [
-                IgxTreeGridFilteringComponent, IgxTreeGridFilteringRowEditingComponent
-            ],
-            imports: [
-                BrowserAnimationsModule,
-                IgxTreeGridModule]
+                declarations: [
+                    IgxTreeGridFilteringComponent
+                ],
+                imports: [
+                    BrowserAnimationsModule,
+                    IgxTreeGridModule]
+            });
         });
-    });
+        beforeEach(fakeAsync(/** height/width setter rAF */() => {
+            fix = TestBed.createComponent(IgxTreeGridFilteringComponent);
+            fix.detectChanges();
+            tick(16);
+            grid = fix.componentInstance.treeGrid;
+        }));
 
-    beforeEach(fakeAsync(/** height/width setter rAF */() => {
-        fix = TestBed.createComponent(IgxTreeGridFilteringComponent);
-        fix.detectChanges();
-        tick(16);
-        grid = fix.componentInstance.treeGrid;
-    }));
+        it('should correctly filter a string column using the \'contains\' filtering conditions', () => {
+            for (let i = 0; i < 5; i++) {
+                expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
+            }
 
-    it('should correctly filter a string column using the \'contains\' filtering conditions', () => {
-        for (let i = 0; i < 5; i++) {
-            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
-        }
+            grid.filter('Name', 'an', IgxStringFilteringOperand.instance().condition('contains'), true);
+            fix.detectChanges();
 
-        grid.filter('Name', 'an', IgxStringFilteringOperand.instance().condition('contains'), true);
-        fix.detectChanges();
+            expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(0))).toEqual(true);
+            expect(grid.getCellByColumn(0, 'Name').value).toEqual('John Winchester');
 
-        expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(0))).toEqual(true);
-        expect(grid.getCellByColumn(0, 'Name').value).toEqual('John Winchester');
+            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(1))).toEqual(true);
+            expect(grid.getCellByColumn(1, 'Name').value).toEqual('Michael Langdon');
 
-        expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(1))).toEqual(true);
-        expect(grid.getCellByColumn(1, 'Name').value).toEqual('Michael Langdon');
+            expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(2))).toEqual(true);
+            expect(grid.getCellByColumn(2, 'Name').value).toEqual('Monica Reyes');
 
-        expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(2))).toEqual(true);
-        expect(grid.getCellByColumn(2, 'Name').value).toEqual('Monica Reyes');
+            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(3))).toEqual(true);
+            expect(grid.getCellByColumn(3, 'Name').value).toEqual('Roland Mendel');
 
-        expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(3))).toEqual(true);
-        expect(grid.getCellByColumn(3, 'Name').value).toEqual('Roland Mendel');
+            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(4))).toEqual(true);
+            expect(grid.getCellByColumn(4, 'Name').value).toEqual('Ana Sanders');
 
-        expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(4))).toEqual(true);
-        expect(grid.getCellByColumn(4, 'Name').value).toEqual('Ana Sanders');
+            grid.clearFilter();
+            fix.detectChanges();
 
-        grid.clearFilter();
-        fix.detectChanges();
+            for (let i = 0; i < 5; i++) {
+                expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
+            }
+        });
 
-        for (let i = 0; i < 5; i++) {
-            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
-        }
-    });
+        it('should correctly filter a string column using the \'endswith\' filtering conditions', () => {
+            for (let i = 0; i < 5; i++) {
+                expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
+            }
 
-    it('should correctly filter a string column using the \'endswith\' filtering conditions', () => {
-        for (let i = 0; i < 5; i++) {
-            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
-        }
+            grid.filter('Name', 'n', IgxStringFilteringOperand.instance().condition('endsWith'), true);
+            fix.detectChanges();
 
-        grid.filter('Name', 'n', IgxStringFilteringOperand.instance().condition('endsWith'), true);
-        fix.detectChanges();
+            expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(0))).toEqual(true);
+            expect(grid.getCellByColumn(0, 'Name').value).toEqual('John Winchester');
 
-        expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(0))).toEqual(true);
-        expect(grid.getCellByColumn(0, 'Name').value).toEqual('John Winchester');
+            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(1))).toEqual(true);
+            expect(grid.getCellByColumn(1, 'Name').value).toEqual('Michael Langdon');
 
-        expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(1))).toEqual(true);
-        expect(grid.getCellByColumn(1, 'Name').value).toEqual('Michael Langdon');
+            expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(2))).toEqual(true);
+            expect(grid.getCellByColumn(2, 'Name').value).toEqual('Ana Sanders');
 
-        expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(2))).toEqual(true);
-        expect(grid.getCellByColumn(2, 'Name').value).toEqual('Ana Sanders');
+            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(3))).toEqual(true);
+            expect(grid.getCellByColumn(3, 'Name').value).toEqual('Laurence Johnson');
 
-        expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(3))).toEqual(true);
-        expect(grid.getCellByColumn(3, 'Name').value).toEqual('Laurence Johnson');
+            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(4))).toEqual(true);
+            expect(grid.getCellByColumn(4, 'Name').value).toEqual('Victoria Lincoln');
 
-        expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(4))).toEqual(true);
-        expect(grid.getCellByColumn(4, 'Name').value).toEqual('Victoria Lincoln');
+            grid.clearFilter();
+            fix.detectChanges();
 
-        grid.clearFilter();
-        fix.detectChanges();
+            for (let i = 0; i < 5; i++) {
+                expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
+            }
+        });
 
-        for (let i = 0; i < 5; i++) {
-            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
-        }
-    });
+        it('should correctly filter a number column using the \'greaterThan\' filtering conditions', () => {
+            for (let i = 0; i < 5; i++) {
+                expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
+            }
 
-    it('should correctly filter a number column using the \'greaterThan\' filtering conditions', () => {
-        for (let i = 0; i < 5; i++) {
-            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
-        }
+            grid.filter('ID', 500, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+            fix.detectChanges();
 
-        grid.filter('ID', 500, IgxNumberFilteringOperand.instance().condition('greaterThan'));
-        fix.detectChanges();
+            expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(0))).toEqual(true);
+            expect(grid.getCellByColumn(0, 'ID').value).toEqual(147);
 
-        expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(0))).toEqual(true);
-        expect(grid.getCellByColumn(0, 'ID').value).toEqual(147);
+            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(1))).toEqual(true);
+            expect(grid.getCellByColumn(1, 'ID').value).toEqual(957);
 
-        expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(1))).toEqual(true);
-        expect(grid.getCellByColumn(1, 'ID').value).toEqual(957);
+            expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(2))).toEqual(true);
+            expect(grid.getCellByColumn(2, 'ID').value).toEqual(317);
 
-        expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(2))).toEqual(true);
-        expect(grid.getCellByColumn(2, 'ID').value).toEqual(317);
+            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(3))).toEqual(true);
+            expect(grid.getCellByColumn(3, 'ID').value).toEqual(711);
 
-        expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(3))).toEqual(true);
-        expect(grid.getCellByColumn(3, 'ID').value).toEqual(711);
+            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(4))).toEqual(true);
+            expect(grid.getCellByColumn(4, 'ID').value).toEqual(998);
 
-        expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(4))).toEqual(true);
-        expect(grid.getCellByColumn(4, 'ID').value).toEqual(998);
+            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(5))).toEqual(true);
+            expect(grid.getCellByColumn(5, 'ID').value).toEqual(847);
 
-        expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(5))).toEqual(true);
-        expect(grid.getCellByColumn(5, 'ID').value).toEqual(847);
+            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(6))).toEqual(true);
+            expect(grid.getCellByColumn(6, 'ID').value).toEqual(663);
 
-        expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(6))).toEqual(true);
-        expect(grid.getCellByColumn(6, 'ID').value).toEqual(663);
+            grid.clearFilter();
+            fix.detectChanges();
 
-        grid.clearFilter();
-        fix.detectChanges();
+            for (let i = 0; i < 5; i++) {
+                expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
+            }
+        });
 
-        for (let i = 0; i < 5; i++) {
-            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
-        }
-    });
+        it('should correctly filter a number column using the \'lessThan\' filtering conditions', () => {
+            for (let i = 0; i < 5; i++) {
+                expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
+            }
 
-    it('should correctly filter a number column using the \'lessThan\' filtering conditions', () => {
-        for (let i = 0; i < 5; i++) {
-            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
-        }
+            grid.filter('ID', 200, IgxNumberFilteringOperand.instance().condition('lessThan'));
+            fix.detectChanges();
 
-        grid.filter('ID', 200, IgxNumberFilteringOperand.instance().condition('lessThan'));
-        fix.detectChanges();
+            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(0))).toEqual(true);
+            expect(grid.getCellByColumn(0, 'ID').value).toEqual(147);
 
-        expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(0))).toEqual(true);
-        expect(grid.getCellByColumn(0, 'ID').value).toEqual(147);
+            expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(1))).toEqual(true);
+            expect(grid.getCellByColumn(1, 'ID').value).toEqual(847);
 
-        expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(1))).toEqual(true);
-        expect(grid.getCellByColumn(1, 'ID').value).toEqual(847);
+            expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(2))).toEqual(true);
+            expect(grid.getCellByColumn(2, 'ID').value).toEqual(663);
 
-        expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(2))).toEqual(true);
-        expect(grid.getCellByColumn(2, 'ID').value).toEqual(663);
+            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(3))).toEqual(true);
+            expect(grid.getCellByColumn(3, 'ID').value).toEqual(141);
 
-        expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(3))).toEqual(true);
-        expect(grid.getCellByColumn(3, 'ID').value).toEqual(141);
+            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(4))).toEqual(true);
+            expect(grid.getCellByColumn(4, 'ID').value).toEqual(19);
 
-        expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(4))).toEqual(true);
-        expect(grid.getCellByColumn(4, 'ID').value).toEqual(19);
+            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(5))).toEqual(true);
+            expect(grid.getCellByColumn(5, 'ID').value).toEqual(15);
 
-        expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(5))).toEqual(true);
-        expect(grid.getCellByColumn(5, 'ID').value).toEqual(15);
+            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(6))).toEqual(true);
+            expect(grid.getCellByColumn(6, 'ID').value).toEqual(17);
 
-        expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(6))).toEqual(true);
-        expect(grid.getCellByColumn(6, 'ID').value).toEqual(17);
+            grid.clearFilter();
+            fix.detectChanges();
 
-        grid.clearFilter();
-        fix.detectChanges();
+            for (let i = 0; i < 5; i++) {
+                expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
+            }
+        });
 
-        for (let i = 0; i < 5; i++) {
-            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
-        }
-    });
+        it('should correctly filter a date column using the \'before\' filtering conditions', () => {
+            for (let i = 0; i < 5; i++) {
+                expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
+            }
 
-    it('should correctly filter a date column using the \'before\' filtering conditions', () => {
-        for (let i = 0; i < 5; i++) {
-            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
-        }
+            grid.filter('HireDate', new Date(2010, 6, 25), IgxDateFilteringOperand.instance().condition('before'));
+            fix.detectChanges();
 
-        grid.filter('HireDate', new Date(2010, 6, 25), IgxDateFilteringOperand.instance().condition('before'));
-        fix.detectChanges();
+            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(0))).toEqual(true);
+            expect(grid.getCellByColumn(0, 'ID').value).toEqual(147);
 
-        expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(0))).toEqual(true);
-        expect(grid.getCellByColumn(0, 'ID').value).toEqual(147);
+            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(1))).toEqual(true);
+            expect(grid.getCellByColumn(1, 'ID').value).toEqual(957);
 
-        expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(1))).toEqual(true);
-        expect(grid.getCellByColumn(1, 'ID').value).toEqual(957);
+            expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(2))).toEqual(true);
+            expect(grid.getCellByColumn(2, 'ID').value).toEqual(317);
 
-        expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(2))).toEqual(true);
-        expect(grid.getCellByColumn(2, 'ID').value).toEqual(317);
+            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(3))).toEqual(true);
+            expect(grid.getCellByColumn(3, 'ID').value).toEqual(998);
 
-        expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(3))).toEqual(true);
-        expect(grid.getCellByColumn(3, 'ID').value).toEqual(998);
+            expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(4))).toEqual(true);
+            expect(grid.getCellByColumn(4, 'ID').value).toEqual(847);
 
-        expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(4))).toEqual(true);
-        expect(grid.getCellByColumn(4, 'ID').value).toEqual(847);
+            expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(5))).toEqual(true);
+            expect(grid.getCellByColumn(5, 'ID').value).toEqual(663);
 
-        expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(5))).toEqual(true);
-        expect(grid.getCellByColumn(5, 'ID').value).toEqual(663);
+            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(6))).toEqual(true);
+            expect(grid.getCellByColumn(6, 'ID').value).toEqual(141);
 
-        expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(6))).toEqual(true);
-        expect(grid.getCellByColumn(6, 'ID').value).toEqual(141);
+            grid.clearFilter();
+            fix.detectChanges();
 
-        grid.clearFilter();
-        fix.detectChanges();
+            for (let i = 0; i < 5; i++) {
+                expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
+            }
+        });
 
-        for (let i = 0; i < 5; i++) {
-            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
-        }
-    });
+        it('should correctly filter a date column using the \'after\' filtering conditions', () => {
+            for (let i = 0; i < 5; i++) {
+                expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
+            }
 
-    it('should correctly filter a date column using the \'after\' filtering conditions', () => {
-        for (let i = 0; i < 5; i++) {
-            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
-        }
+            grid.filter('HireDate', new Date(2015, 6, 25), IgxDateFilteringOperand.instance().condition('after'));
+            fix.detectChanges();
 
-        grid.filter('HireDate', new Date(2015, 6, 25), IgxDateFilteringOperand.instance().condition('after'));
-        fix.detectChanges();
+            expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(0))).toEqual(true);
+            expect(grid.getCellByColumn(0, 'ID').value).toEqual(147);
 
-        expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(0))).toEqual(true);
-        expect(grid.getCellByColumn(0, 'ID').value).toEqual(147);
+            expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(1))).toEqual(true);
+            expect(grid.getCellByColumn(1, 'ID').value).toEqual(317);
 
-        expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(1))).toEqual(true);
-        expect(grid.getCellByColumn(1, 'ID').value).toEqual(317);
+            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(2))).toEqual(true);
+            expect(grid.getCellByColumn(2, 'ID').value).toEqual(711);
 
-        expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(2))).toEqual(true);
-        expect(grid.getCellByColumn(2, 'ID').value).toEqual(711);
+            expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(3))).toEqual(true);
+            expect(grid.getCellByColumn(3, 'ID').value).toEqual(847);
 
-        expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(3))).toEqual(true);
-        expect(grid.getCellByColumn(3, 'ID').value).toEqual(847);
+            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(4))).toEqual(true);
+            expect(grid.getCellByColumn(4, 'ID').value).toEqual(663);
 
-        expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(4))).toEqual(true);
-        expect(grid.getCellByColumn(4, 'ID').value).toEqual(663);
+            expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(5))).toEqual(true);
+            expect(grid.getCellByColumn(5, 'ID').value).toEqual(17);
 
-        expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(5))).toEqual(true);
-        expect(grid.getCellByColumn(5, 'ID').value).toEqual(17);
+            expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(6))).toEqual(true);
+            expect(grid.getCellByColumn(6, 'ID').value).toEqual(12);
 
-        expect(TreeGridFunctions.checkRowIsGrayedOut(grid.getRowByIndex(6))).toEqual(true);
-        expect(grid.getCellByColumn(6, 'ID').value).toEqual(12);
+            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(7))).toEqual(true);
+            expect(grid.getCellByColumn(7, 'ID').value).toEqual(109);
 
-        expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(7))).toEqual(true);
-        expect(grid.getCellByColumn(7, 'ID').value).toEqual(109);
+            grid.clearFilter();
+            fix.detectChanges();
 
-        grid.clearFilter();
-        fix.detectChanges();
+            for (let i = 0; i < 5; i++) {
+                expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
+            }
+        });
 
-        for (let i = 0; i < 5; i++) {
-            expect(TreeGridFunctions.checkRowIsNotGrayedOut(grid.getRowByIndex(i))).toEqual(true);
-        }
-    });
+        it('should allow row collapsing after filtering is applied', () => {
+            grid.filter('Name', 'an', IgxStringFilteringOperand.instance().condition('contains'), true);
+            fix.detectChanges();
 
-    it('should allow row collapsing after filtering is applied', () => {
-        grid.filter('Name', 'an', IgxStringFilteringOperand.instance().condition('contains'), true);
-        fix.detectChanges();
+            // check initial rows count after applying filtering
+            let rows = TreeGridFunctions.getAllRows(fix);
+            expect(rows.length).toBe(10);
 
-        // check initial rows count after applying filtering
-        let rows = TreeGridFunctions.getAllRows(fix);
-        expect(rows.length).toBe(10);
+            // collapse first row
+            (<IgxTreeGridComponent>grid).toggleRow((<IgxTreeGridRowComponent>grid.getRowByIndex(0)).rowID);
+            fix.detectChanges();
+            rows = TreeGridFunctions.getAllRows(fix);
+            expect(rows.length).toBe(7);
+        });
 
-        // collapse first row
-        (<IgxTreeGridComponent>grid).toggleRow((<IgxTreeGridRowComponent>grid.getRowByIndex(0)).rowID);
-        fix.detectChanges();
-        rows = TreeGridFunctions.getAllRows(fix);
-        expect(rows.length).toBe(7);
-    });
+        it('should update expand indicator after filtering is applied', () => {
+            grid.filter('ID', 147, IgxStringFilteringOperand.instance().condition('equals'), true);
+            fix.detectChanges();
 
-    it('should update expand indicator after filtering is applied', () => {
-        grid.filter('ID', 147, IgxStringFilteringOperand.instance().condition('equals'), true);
-        fix.detectChanges();
+            let rows = TreeGridFunctions.getAllRows(fix);
+            expect(rows.length).toBe(1);
+            TreeGridFunctions.verifyTreeRowExpandIndicatorVisibility(rows[0], 'hidden');
 
-        let rows = TreeGridFunctions.getAllRows(fix);
-        expect(rows.length).toBe(1);
-        TreeGridFunctions.verifyTreeRowExpandIndicatorVisibility(rows[0], 'hidden');
+            grid.clearFilter('ID');
+            fix.detectChanges();
 
-        grid.clearFilter('ID');
-        fix.detectChanges();
+            rows = TreeGridFunctions.getAllRows(fix);
+            TreeGridFunctions.verifyTreeRowExpandIndicatorVisibility(rows[0]);
+            TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[0]);
+        });
 
-        rows = TreeGridFunctions.getAllRows(fix);
-        TreeGridFunctions.verifyTreeRowExpandIndicatorVisibility(rows[0]);
-        TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[0]);
     });
 
     describe('Filtering: Row editing', () => {
         let treeGrid: IgxTreeGridComponent;
+        configureTestSuite(async () => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxTreeGridFilteringRowEditingComponent
+                ],
+                imports: [
+                    BrowserAnimationsModule,
+                    IgxTreeGridModule]
+            });
+        });
+
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridFilteringRowEditingComponent);
             fix.detectChanges();
@@ -390,44 +402,44 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
                 expect(filteredParentNodes.length).toBeGreaterThan(0);
             }));
 
-            it('should be able to apply custom filter strategy', fakeAsync(() => {
-                expect(treeGrid.filterStrategy).toBeUndefined();
-                treeGrid.filter('Name', 'd', IgxStringFilteringOperand.instance().condition('contains'), true);
-                tick(30);
-                fix.detectChanges();
+        it('should be able to apply custom filter strategy', fakeAsync(() => {
+            expect(treeGrid.filterStrategy).toBeUndefined();
+            treeGrid.filter('Name', 'd', IgxStringFilteringOperand.instance().condition('contains'), true);
+            tick(30);
+            fix.detectChanges();
 
-                expect(treeGrid.rowList.length).toBe(9);
+            expect(treeGrid.rowList.length).toBe(9);
 
-                treeGrid.clearFilter();
-                fix.detectChanges();
-                // tslint:disable-next-line: no-use-before-declare
-                const customFilter = new CustomTreeGridFilterStrategy();
-                // apply the same filter condition but with custu
-                treeGrid.filterStrategy = customFilter;
-                fix.detectChanges();
+            treeGrid.clearFilter();
+            fix.detectChanges();
+            // tslint:disable-next-line: no-use-before-declare
+            const customFilter = new CustomTreeGridFilterStrategy();
+            // apply the same filter condition but with custu
+            treeGrid.filterStrategy = customFilter;
+            fix.detectChanges();
 
-                treeGrid.filter('Name', 'd', IgxStringFilteringOperand.instance().condition('contains'), true);
-                tick(30);
-                fix.detectChanges();
+            treeGrid.filter('Name', 'd', IgxStringFilteringOperand.instance().condition('contains'), true);
+            tick(30);
+            fix.detectChanges();
 
-                expect(treeGrid.rowList.length).toBe(4);
-                expect(treeGrid.filteredData.map(rec => rec.ID)).toEqual([ 847, 225, 663, 141]);
-            }));
+            expect(treeGrid.rowList.length).toBe(4);
+            expect(treeGrid.filteredData.map(rec => rec.ID)).toEqual([847, 225, 663, 141]);
+        }));
     });
-    class CustomTreeGridFilterStrategy  extends FilteringStrategy {
+    class CustomTreeGridFilterStrategy extends FilteringStrategy {
 
         public filter(data: [], expressionsTree): any[] {
-                const result = [];
-                if (!expressionsTree || !expressionsTree.filteringOperands ||
-                    expressionsTree.filteringOperands.length === 0 || !data.length) {
-                    return data;
-                }
-                data.forEach((rec: any) => {
-                    if (this.matchRecord(rec.data, expressionsTree)) {
-                        result.push(rec);
-                    }
-                });
-                return result;
+            const result = [];
+            if (!expressionsTree || !expressionsTree.filteringOperands ||
+                expressionsTree.filteringOperands.length === 0 || !data.length) {
+                return data;
             }
+            data.forEach((rec: any) => {
+                if (this.matchRecord(rec.data, expressionsTree)) {
+                    result.push(rec);
+                }
+            });
+            return result;
+        }
     }
 });

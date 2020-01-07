@@ -15,18 +15,15 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
-    configureTestSuite(async () => {
-            TestBed.configureTestingModule({
-            declarations: [
-                IgxTreeGridWithNoScrollsComponent,
-                IgxTreeGridWithScrollsComponent
-            ],
-            imports: [IgxTreeGridModule, NoopAnimationsModule]
-        });
-    });
-
     describe('Navigation with no scroll', () => {
-
+        configureTestSuite(async () => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxTreeGridWithNoScrollsComponent
+                ],
+                imports: [IgxTreeGridModule, NoopAnimationsModule]
+            });
+        });
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridWithNoScrollsComponent);
@@ -153,7 +150,14 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
     });
 
     describe('Navigation with scrolls', () => {
-
+        configureTestSuite(async () => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxTreeGridWithScrollsComponent
+                ],
+                imports: [IgxTreeGridModule, NoopAnimationsModule]
+            });
+        });
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridWithScrollsComponent);

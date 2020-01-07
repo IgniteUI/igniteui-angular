@@ -5,7 +5,8 @@ import { TreeGridFunctions, CELL_VALUE_DIV_CSS_CLASS } from '../../test-utils/tr
 import {
     IgxTreeGridSearchComponent,
     IgxTreeGridPrimaryForeignKeyComponent,
-    IgxTreeGridSummariesScrollingComponent } from '../../test-utils/tree-grid-components.spec';
+    IgxTreeGridSummariesScrollingComponent
+} from '../../test-utils/tree-grid-components.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
@@ -21,18 +22,16 @@ describe('IgxTreeGrid - search API #tGrid', () => {
     let fixNativeElement;
     let treeGrid: IgxTreeGridComponent;
 
-    configureTestSuite(async () => {
-            TestBed.configureTestingModule({
-            declarations: [
-                IgxTreeGridSearchComponent,
-                IgxTreeGridPrimaryForeignKeyComponent,
-                IgxTreeGridSummariesScrollingComponent
-            ],
-            imports: [IgxTreeGridModule, NoopAnimationsModule]
-        });
-    });
-
     describe('Child Collection', () => {
+        configureTestSuite(async () => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxTreeGridSearchComponent
+                ],
+                imports: [IgxTreeGridModule, NoopAnimationsModule]
+            });
+        });
+
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSearchComponent);
             fix.detectChanges();
@@ -112,6 +111,15 @@ describe('IgxTreeGrid - search API #tGrid', () => {
     });
 
     describe('Primary/Foreign key', () => {
+        configureTestSuite(async () => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxTreeGridPrimaryForeignKeyComponent
+                ],
+                imports: [IgxTreeGridModule, NoopAnimationsModule]
+            });
+        });
+
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
@@ -188,13 +196,13 @@ describe('IgxTreeGrid - search API #tGrid', () => {
             // Apply asc sorting
             treeGrid.columns.filter(c => c.field === 'JobTitle')[0].sortable = true;
             fix.detectChanges();
-            treeGrid.sort({fieldName: 'JobTitle', dir: SortingDirection.Asc, ignoreCase: true });
+            treeGrid.sort({ fieldName: 'JobTitle', dir: SortingDirection.Asc, ignoreCase: true });
             fix.detectChanges();
 
             verifySearchResult(fixNativeElement, 6, 3);
 
             // Apply desc sorting
-            treeGrid.sort({fieldName: 'JobTitle', dir: SortingDirection.Desc, ignoreCase: true });
+            treeGrid.sort({ fieldName: 'JobTitle', dir: SortingDirection.Desc, ignoreCase: true });
             fix.detectChanges();
 
             verifySearchResult(fixNativeElement, 6, 1);
@@ -204,7 +212,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
             // Apply asc sorting
             treeGrid.columns.filter(c => c.field === 'JobTitle')[0].sortable = true;
             fix.detectChanges();
-            treeGrid.sort({fieldName: 'JobTitle', dir: SortingDirection.Asc, ignoreCase: true });
+            treeGrid.sort({ fieldName: 'JobTitle', dir: SortingDirection.Asc, ignoreCase: true });
             fix.detectChanges();
 
             treeGrid.findNext('er');
@@ -315,7 +323,16 @@ describe('IgxTreeGrid - search API #tGrid', () => {
     });
 
     describe('Scrollable TreeGrid', () => {
-        beforeEach(async() => {
+        configureTestSuite(async () => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxTreeGridSummariesScrollingComponent
+                ],
+                imports: [IgxTreeGridModule, NoopAnimationsModule]
+            });
+        });
+
+        beforeEach(async () => {
             fix = TestBed.createComponent(IgxTreeGridSummariesScrollingComponent);
             fix.detectChanges();
             fixNativeElement = fix.debugElement.nativeElement;
@@ -329,7 +346,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
         const expectedValues = ['Andrew', 'Janet', 'Anne', 'Danielle', 'Callahan', 'Jonathan',
             'Nancy', 'Wang', 'Buchanan', 'Buchanan', 'Armand', 'Dane', 'Declan'];
 
-        it('findNext should navigate search highlights with collapsed rows', async() => {
+        it('findNext should navigate search highlights with collapsed rows', async () => {
             for (let i = 0; i < 14; i++) {
                 const expectedValue = expectedValues[i % expectedValues.length];
                 const actualCount = treeGrid.findNext('an');
@@ -340,7 +357,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
             }
         });
 
-        it('findPrev should navigate search highlights with collapsed rows', async() => {
+        it('findPrev should navigate search highlights with collapsed rows', async () => {
             for (let i = 13; i >= 0; i--) {
                 const expectedValue = expectedValues[i % expectedValues.length];
                 const actualCount = treeGrid.findPrev('an');
@@ -351,7 +368,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
             }
         });
 
-        it('findNext should navigate search highlights with paging', async() => {
+        it('findNext should navigate search highlights with paging', async () => {
             treeGrid.expansionDepth = Infinity;
             treeGrid.perPage = 5;
             treeGrid.paging = true;
@@ -373,7 +390,7 @@ describe('IgxTreeGrid - search API #tGrid', () => {
             }
         });
 
-        it('findNext should navigate search highlights with paging and collapsed rows', async() => {
+        it('findNext should navigate search highlights with paging and collapsed rows', async () => {
             treeGrid.perPage = 5;
             treeGrid.paging = true;
             await wait(50);

@@ -12,21 +12,19 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IgxTreeGrid - Indentation #tGrid', () => {
-
     let fix;
     let treeGrid: IgxTreeGridComponent;
 
-    configureTestSuite(async () => {
-        TestBed.configureTestingModule({
-            declarations: [
-                IgxTreeGridSimpleComponent,
-                IgxTreeGridPrimaryForeignKeyComponent
-            ],
-            imports: [IgxTreeGridModule, NoopAnimationsModule]
-        });
-    });
-
     describe('Child Collection', () => {
+
+        configureTestSuite(async () => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxTreeGridSimpleComponent
+                ],
+                imports: [IgxTreeGridModule, NoopAnimationsModule]
+            });
+        });
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
@@ -188,6 +186,14 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
     });
 
     describe('Primary/Foreign key', () => {
+        configureTestSuite(async () => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxTreeGridPrimaryForeignKeyComponent
+                ],
+                imports: [IgxTreeGridModule, NoopAnimationsModule]
+            });
+        });
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
