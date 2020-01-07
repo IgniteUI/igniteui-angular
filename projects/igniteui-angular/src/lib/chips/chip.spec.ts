@@ -401,6 +401,7 @@ describe('IgxChip', () => {
     it('should fire onSelection event when selectable is true', (async() => {
         const fix = TestBed.createComponent(TestChipComponent);
         fix.detectChanges();
+        await wait();
 
         const secondChipComp = fix.componentInstance.chips.toArray()[1];
 

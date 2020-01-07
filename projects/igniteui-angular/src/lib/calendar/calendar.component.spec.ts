@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { async, TestBed } from '@angular/core/testing';
+import { async, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -15,12 +15,12 @@ import { IgxDayItemComponent } from './days-view/day-item.component';
 
 describe('IgxCalendar', () => {
     configureTestSuite();
-    beforeEach(() => {
+    beforeEach( async(() => {
         TestBed.configureTestingModule({
             declarations: [IgxCalendarSampleComponent, IgxCalendaRangeComponent, IgxCalendarDisabledSpecialDatesComponent],
             imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
-        });
-    });
+        }).compileComponents();
+    }));
 
     // Calendar Model Tests
     it('should create proper calendar model', () => {
@@ -176,24 +176,16 @@ describe('IgxCalendar', () => {
     });
 
     describe('Rendered Component', () => {
-        configureTestSuite();
         let fixture;
         let calendar;
         let dom;
-        beforeEach(
-            async(() => {
-                TestBed.configureTestingModule({
-                    declarations: [IgxCalendarSampleComponent],
-                    imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
-                }).compileComponents()
-                    .then(() => {
-                        fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-                        fixture.detectChanges();
-                        calendar = fixture.componentInstance.calendar;
-                        dom = fixture.debugElement;
-                    });
-            })
-        );
+        beforeEach( fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+            fixture.detectChanges();
+            tick();
+            calendar = fixture.componentInstance.calendar;
+            dom = fixture.debugElement;
+        }));
 
         it('should initialize a calendar component', () => {
             expect(fixture.componentInstance).toBeDefined();
@@ -1056,8 +1048,9 @@ describe('IgxCalendar', () => {
         const fixture = TestBed.createComponent(IgxCalendarDisabledSpecialDatesComponent);
         fixture.detectChanges();
         const calendar = fixture.componentInstance.calendar;
-        expect(calendar.specialDates).toEqual([{type: DateRangeType.Between, dateRange: [new Date(2017, 5, 1), new Date(2017, 5, 6)]}]);
-        expect(calendar.disabledDates).toEqual([{type: DateRangeType.Between, dateRange: [new Date(2017, 5, 23), new Date(2017, 5, 29)]}]);
+        expect(calendar.specialDates).toEqual([{ type: DateRangeType.Between, dateRange: [new Date(2017, 5, 1), new Date(2017, 5, 6)] }]);
+        expect(calendar.disabledDates)
+            .toEqual([{ type: DateRangeType.Between, dateRange: [new Date(2017, 5, 23), new Date(2017, 5, 29)] }]);
         let specialDates = calendar.daysView.dates.toArray().filter(d => {
             const dateTime = getDate(d).getTime();
             return (dateTime >= new Date(2017, 5, 1).getTime() &&
@@ -1080,13 +1073,13 @@ describe('IgxCalendar', () => {
         });
 
         // change Inputs
-        fixture.componentInstance.disabledDates = [{type: DateRangeType.Before, dateRange: [new Date(2017, 5, 10)]}];
-        fixture.componentInstance.specialDates = [{type: DateRangeType.After, dateRange: [new Date(2017, 5, 19)]}];
+        fixture.componentInstance.disabledDates = [{ type: DateRangeType.Before, dateRange: [new Date(2017, 5, 10)] }];
+        fixture.componentInstance.specialDates = [{ type: DateRangeType.After, dateRange: [new Date(2017, 5, 19)] }];
         fixture.detectChanges();
 
-        expect(calendar.disabledDates).toEqual([{type: DateRangeType.Before, dateRange: [new Date(2017, 5, 10)]}]);
-        expect(calendar.specialDates).toEqual([{type: DateRangeType.After, dateRange: [new Date(2017, 5, 19)]}]);
-         specialDates = calendar.daysView.dates.toArray().filter(d => {
+        expect(calendar.disabledDates).toEqual([{ type: DateRangeType.Before, dateRange: [new Date(2017, 5, 10)] }]);
+        expect(calendar.specialDates).toEqual([{ type: DateRangeType.After, dateRange: [new Date(2017, 5, 19)] }]);
+        specialDates = calendar.daysView.dates.toArray().filter(d => {
             const dateTime = getDate(d).getTime();
             return (dateTime >= new Date(2017, 5, 20).getTime());
         });
@@ -1294,24 +1287,15 @@ describe('IgxCalendar', () => {
     });
 
     describe('Select and deselect dates', () => {
-        configureTestSuite();
         let fixture;
         let calendar;
         let ci;
-        beforeEach(
-            async(() => {
-                TestBed.configureTestingModule({
-                    declarations: [IgxCalendarSampleComponent],
-                    imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
-                }).compileComponents()
-                    .then(() => {
-                        fixture = TestBed.createComponent(IgxCalendarSampleComponent);
-                        fixture.detectChanges();
-                        ci = fixture.componentInstance;
-                        calendar = ci.calendar;
-                    });
-            })
-        );
+        beforeEach(() => {
+            fixture = TestBed.createComponent(IgxCalendarSampleComponent);
+            fixture.detectChanges();
+            ci = fixture.componentInstance;
+            calendar = ci.calendar;
+        });
 
         it('Deselect using API. Should deselect in "single" selection mode.', () => {
             const date = calendar.viewDate;
@@ -1622,17 +1606,6 @@ describe('IgxCalendar', () => {
     });
 
     describe('Advanced KB Navigation', () => {
-        configureTestSuite();
-
-        beforeEach(
-            async(() => {
-                TestBed.configureTestingModule({
-                    declarations: [IgxCalendarSampleComponent],
-                    imports: [IgxCalendarModule, FormsModule, NoopAnimationsModule]
-                }).compileComponents();
-            })
-        );
-
         it('AKB - should navigate to the previous/next month via KB.', async () => {
             const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
             fixture.detectChanges();
@@ -2068,8 +2041,8 @@ export class IgxCalendaRangeComponent {
 export class IgxCalendarDisabledSpecialDatesComponent {
     public model: Date | Date[] = new Date(2017, 5, 23);
     public viewDate = new Date(2017, 5, 13);
-    public specialDates = [{type: DateRangeType.Between, dateRange: [new Date(2017, 5, 1), new Date(2017, 5, 6)]}];
-    public disabledDates = [{type: DateRangeType.Between, dateRange: [new Date(2017, 5, 23), new Date(2017, 5, 29)]}];
+    public specialDates = [{ type: DateRangeType.Between, dateRange: [new Date(2017, 5, 1), new Date(2017, 5, 6)] }];
+    public disabledDates = [{ type: DateRangeType.Between, dateRange: [new Date(2017, 5, 23), new Date(2017, 5, 29)] }];
     @ViewChild(IgxCalendarComponent, { static: true }) public calendar: IgxCalendarComponent;
 }
 
