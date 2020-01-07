@@ -163,7 +163,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(fixture.componentInstance.rowIsland.transactions.getTransactionLog().length).toEqual(0);
         }));
 
-        it('should remove expand indicator for uncommitted added rows', (async () => {
+        it('should remove expand indicator for uncommitted added rows', fakeAsync(/** row toggle rAF */() => {
             hierarchicalGrid.data = hierarchicalGrid.data.slice(0, 3);
             fixture.detectChanges();
             hierarchicalGrid.addRow({ ID: -1, ProductName: 'Name1' });
@@ -176,7 +176,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(lastRow.query(By.css('igx-icon')).nativeElement).not.toHaveClass('igx-icon--inactive');
         }));
 
-        it('should now allow expand using Ctrl + Right/Down for uncommitted added rows', (async () => {
+        it('should now allow expand using Ctrl + Right/Down for uncommitted added rows', fakeAsync(/** row toggle rAF */() => {
             hierarchicalGrid.data = hierarchicalGrid.data.slice(0, 3);
             fixture.detectChanges();
             hierarchicalGrid.addRow({ ID: -1, ProductName: 'Name1' });
