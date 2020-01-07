@@ -164,7 +164,11 @@
         &::before {
             backface-visibility: hidden;
             transform: scale3d(0, 0, 0);
-            transition: $transition;
+
+            @if map-get($theme, 'variant') != 'bootstrap' {
+                transition: $transition;
+            }
+
             z-index: 1;
         }
 
