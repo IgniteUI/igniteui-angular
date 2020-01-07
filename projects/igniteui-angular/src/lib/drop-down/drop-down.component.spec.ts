@@ -678,6 +678,45 @@ describe('IgxDropDown ', () => {
             expect(currentItem.componentInstance.itemIndex).toEqual(5);
         }));
 
+        it('Should deselect item when clearSelection is called', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxDropDownTestScrollComponent);
+            fixture.detectChanges();
+            const button = fixture.debugElement.query(By.css('button')).nativeElement;
+            const list = fixture.componentInstance.dropdownScroll;
+            const listItems = list.items;
+
+            list.setSelectedItem(0);
+            button.click();
+            tick();
+            fixture.detectChanges();
+            let selectedItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_SELECTED));
+            expect(selectedItem.componentInstance.itemIndex).toEqual(0);
+            expect(listItems[0].selected).toBeTruthy();
+            expect(selectedItem.classes[CSS_CLASS_SELECTED]).toBeTruthy();
+
+            list.clearSelection();
+            tick();
+            fixture.detectChanges();
+            expect(listItems[0].selected).toBeFalsy();
+            selectedItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_SELECTED));
+            expect(selectedItem).toBeNull();
+
+            list.setSelectedItem(5);
+            tick();
+            fixture.detectChanges();
+            selectedItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_SELECTED));
+            expect(selectedItem.componentInstance.itemIndex).toEqual(5);
+            expect(listItems[5].selected).toBeTruthy();
+            expect(selectedItem.classes[CSS_CLASS_SELECTED]).toBeTruthy();
+
+            list.clearSelection();
+            tick();
+            fixture.detectChanges();
+            expect(listItems[5].selected).toBeFalsy();
+            selectedItem = fixture.debugElement.query(By.css('.' + CSS_CLASS_SELECTED));
+            expect(selectedItem).toBeNull();
+        }));
+
         it('Home key should select the first enabled item', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxDropDownTestDisabledComponent);
             fixture.detectChanges();
@@ -1075,6 +1114,27 @@ describe('IgxDropDown ', () => {
             const selectedItem = igxDropDown.selectedItem;
             expect(selectedItem).toBeNull();
         }));
+
+        it('SelectedItem should return null when selection is cleared', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxDropDownTestScrollComponent);
+            fixture.detectChanges();
+            const button = fixture.debugElement.query(By.css('button')).nativeElement;
+            const igxDropDown = fixture.componentInstance.dropdownScroll;
+            igxDropDown.setSelectedItem(3);
+            button.click();
+            tick();
+
+            fixture.detectChanges();
+            let selectedItem = igxDropDown.selectedItem;
+            expect(selectedItem).toBeTruthy();
+            expect(selectedItem.itemIndex).toEqual(3);
+
+            igxDropDown.clearSelection();
+            fixture.detectChanges();
+            selectedItem = igxDropDown.selectedItem;
+            expect(selectedItem).toBeNull();
+        }));
+
 
         it('Should return empty array for items when there are no items', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxDropDownTestEmptyListComponent);
