@@ -95,7 +95,8 @@
 
             <ng-template [igxTemplateOutlet]='isSummaryRow(rowData) ? summary_template : record_template'
                 [igxTemplateOutletContext]='getContext(rowData, rowIndex)'
-                (onCachedViewLoaded)='cachedViewLoaded($event)'>
+                (onCachedViewLoaded)='cachedViewLoaded($event)'
+                (onBeforeViewDetach)='viewDetachHandler($event)'>
             </ng-template>
         </ng-template>
         <ng-container *ngTemplateOutlet="template"></ng-container>
