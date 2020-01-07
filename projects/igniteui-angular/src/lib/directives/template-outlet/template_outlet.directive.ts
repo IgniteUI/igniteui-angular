@@ -32,6 +32,9 @@ export class IgxTemplateOutletDirective implements OnChanges {
     @Output()
     public onCachedViewLoaded = new EventEmitter<ICachedViewLoadedEventArgs>();
 
+    @Output()
+    public onBeforeViewDetach = new EventEmitter<IViewChangeEventArgs>();
+
     constructor(public _viewContainerRef: ViewContainerRef, private _zone: NgZone, public cdr: ChangeDetectorRef) {
     }
 
@@ -66,6 +69,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
         const prevIndex = this._viewRef ? this._viewContainerRef.indexOf(this._viewRef) : -1;
         // detach old and create new
         if (prevIndex !== -1) {
+            this.onBeforeViewDetach.emit({ owner: this, view: this._viewRef, context: this.igxTemplateOutletContext });
             this._viewContainerRef.detach(prevIndex);
         }
         if (this.igxTemplateOutlet) {
@@ -92,9 +96,11 @@ export class IgxTemplateOutletDirective implements OnChanges {
         if (view !== this._viewRef) {
             if (owner._viewContainerRef.indexOf(view) !== -1) {
                 // detach in case view it is attached somewhere else at the moment.
+                this.onBeforeViewDetach.emit({ owner: this, view: this._viewRef, context: this.igxTemplateOutletContext });
                 owner._viewContainerRef.detach(owner._viewContainerRef.indexOf(view));
             }
             if (this._viewRef && this._viewContainerRef.indexOf(this._viewRef) !== -1) {
+                this.onBeforeViewDetach.emit({ owner: this, view: this._viewRef, context: this.igxTemplateOutletContext });
                 this._viewContainerRef.detach(this._viewContainerRef.indexOf(this._viewRef));
             }
             this._viewRef = view;
@@ -113,6 +119,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
         // then detach old view and insert the stored one with the matching template
         // after that update its context.
         if (this._viewContainerRef.length > 0) {
+            this.onBeforeViewDetach.emit({ owner: this, view: this._viewRef, context: this.igxTemplateOutletContext });
             this._viewContainerRef.detach(this._viewContainerRef.indexOf(this._viewRef));
         }
 
