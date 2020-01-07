@@ -149,6 +149,7 @@ The following methods are available in the **igx-drop-down** component:
 | `setSelectedItem(index: number)` | Selects dropdown item by index. |
 | `open()` | Opens the dropdown. |
 | `close()` | Closes the dropdown. |
+| `clearSelection()` | Deselects the selected dropdown item. |
 
 ## Getters
 The following getters are available on the **igx-drop-down** component:
