@@ -1705,9 +1705,10 @@ describe('igxCombo', () => {
             expect(dropDownElement.childElementCount).toEqual(1);
 
             const dropDownList = dropDownElement.children[0];
+            const dropDownScrollList = dropDownElement.children[0].children[0];
             expect(dropDownList.classList.contains(CSS_CLASS_DROPDOWNLIST)).toBeTruthy();
             expect(dropDownList.classList.contains('igx-toggle--hidden')).toBeTruthy();
-            expect(dropDownList.childElementCount).toEqual(1);
+            expect(dropDownScrollList.childElementCount).toEqual(0);
         });
         it('Should render aria attribute properly', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxComboSampleComponent);
