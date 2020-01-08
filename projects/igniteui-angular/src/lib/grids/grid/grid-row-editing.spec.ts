@@ -1146,7 +1146,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             // Change page size
             select.click();
             fix.detectChanges();
-            const selectList = fix.debugElement.query(By.css('.igx-drop-down__list--select'));
+            const selectList = fix.debugElement.query(By.css('.igx-drop-down__list-scroll'));
             selectList.children[2].nativeElement.click();
             tick(16);
             fix.detectChanges();
@@ -1181,7 +1181,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 // Change page size
                 select.click();
                 fix.detectChanges();
-                const selectList = fix.debugElement.query(By.css('.igx-drop-down__list--select'));
+                const selectList = fix.debugElement.query(By.css('.igx-drop-down__list-scroll'));
                 selectList.children[0].nativeElement.click();
                 tick(16);
                 fix.detectChanges();

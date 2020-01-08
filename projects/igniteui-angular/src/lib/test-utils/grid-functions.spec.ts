@@ -1444,7 +1444,7 @@ export class GridFunctions {
 
     public static getAdvancedFilteringSelectDropdown(fix: ComponentFixture<any>) {
         const outlet = GridFunctions.getAdvancedFilteringOutlet(fix);
-        const selectDropdown = outlet.querySelector('.igx-drop-down__list--select');
+        const selectDropdown = outlet.querySelector('.igx-drop-down__list-scroll');
         return selectDropdown;
     }
 
