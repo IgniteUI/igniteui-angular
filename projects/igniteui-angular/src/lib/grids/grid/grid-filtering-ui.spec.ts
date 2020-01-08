@@ -3948,7 +3948,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             customFilterComponent.click();
             fix.detectChanges();
 
-            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list');
+            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list-scroll');
             const customItem = subMenu.children[0].children[10];
 
             customItem.click();
@@ -3994,7 +3994,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             customFilterComponent.click();
             fix.detectChanges();
 
-            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list');
+            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list-scroll');
             const customItem = subMenu.children[0].children[10];
 
             customItem.click();
@@ -4039,7 +4039,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             customFilterComponent.click();
             fix.detectChanges();
 
-            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list');
+            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list-scroll');
             const customItem = subMenu.children[0].children[10];
 
             customItem.click();
@@ -4083,7 +4083,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             customFilterComponent.click();
             fix.detectChanges();
 
-            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list');
+            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list-scroll');
             const customItem = subMenu.children[0].children[1];
 
             customItem.click();
@@ -4171,7 +4171,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             customFilterComponent.click();
             fix.detectChanges();
 
-            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list');
+            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list-scroll');
             const equalsItem = subMenu.children[0].children[0];
 
             equalsItem.click();
@@ -4210,7 +4210,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             customFilterComponent.click();
             fix.detectChanges();
 
-            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list');
+            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list-scroll');
             const allItem = subMenu.children[0].children[0];
 
             allItem.click();
@@ -4262,7 +4262,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             customFilterComponent.click();
             fix.detectChanges();
 
-            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list');
+            const subMenu = grid.nativeElement.querySelector('.igx-drop-down__list-scroll');
             const customItem = subMenu.children[0].children[10];
 
             customItem.click();

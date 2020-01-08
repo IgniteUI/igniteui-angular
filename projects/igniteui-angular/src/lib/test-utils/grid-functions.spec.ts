@@ -679,7 +679,7 @@ export class GridFunctions {
 
     public static clickOperatorFromCascadeMenu(fix: ComponentFixture<any>, operatorIndex: number) {
         const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
-        const subMenu = gridNativeElement.querySelector('.igx-drop-down__list');
+        const subMenu = gridNativeElement.querySelector('.igx-drop-down__list-scroll');
         const dropdownItems = subMenu.querySelectorAll('igx-drop-down-item');
         const dropdownItem = dropdownItems[operatorIndex];
         dropdownItem.click();
@@ -1477,7 +1477,7 @@ export class GridFunctions {
         input.click();
         fix.detectChanges();
 
-        const operators = grid.nativeElement.querySelectorAll('.igx-drop-down__list')[expressionIndex + 1];
+        const operators = grid.nativeElement.querySelectorAll('.igx-drop-down__list-scroll')[expressionIndex + 1];
         const operator = operators.children[itemIndex].children[0];
 
         operator.click();
