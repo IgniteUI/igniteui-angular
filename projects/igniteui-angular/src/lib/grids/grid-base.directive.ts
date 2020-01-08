@@ -498,6 +498,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.onPagingDone.emit({ previous: this._page, current: val });
         this._page = val;
         this.pageChange.emit(this._page);
+        this.navigateTo(0);
         this.notifyChanges();
     }
 
@@ -2890,6 +2891,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     * @internal
     */
     public isDetailRecord(rec) {
+        return false;
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
+    public isGroupByRecord(rec) {
         return false;
     }
 
@@ -6010,6 +6019,19 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     /** @hidden */
     public get isCellSelectable() {
         return this.cellSelection !== GridSelectionMode.none;
+    }
+
+    public viewDetachHandler(args: ICachedViewLoadedEventArgs) {
+        const context = args.view.context;
+        if (context['templateID'] === 'dataRow') {
+            // some browsers (like FireFox and Edge) do not trigger onBlur when the focused element is detached from DOM
+            // hence we need to trigger it manually when cell is detached.
+            const row = this.getRowByIndex(context.index);
+            const focusedCell = row.cells.find(x => x.focused);
+            if (focusedCell) {
+                focusedCell.onBlur();
+            }
+        }
     }
 
     /**
