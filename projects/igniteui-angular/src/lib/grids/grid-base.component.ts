@@ -544,6 +544,7 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
         this.onPagingDone.emit({ previous: this._page, current: val });
         this._page = val;
         this.pageChange.emit(this._page);
+        this.navigateTo(0);
         this.notifyChanges();
     }
 
