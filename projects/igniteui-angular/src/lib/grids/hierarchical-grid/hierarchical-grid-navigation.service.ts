@@ -458,7 +458,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                 // move focus to last summary row cell
                 const summaryRow = summaryRows[0].nativeElement;
                 this.focusPrevRow(summaryRow, lastIndex, childGrid, true, true);
-            } else if (childGrid.rowList.toArray().length === 0 &&
+            } else if (childGrid.rowList.length === 0 &&
              childGrid.allowFiltering && childGrid.filterMode === FilterMode.quickFilter) {
                  // move to filter cell
                 childGrid.navigation.moveFocusToFilterCell();
@@ -493,7 +493,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const childGridID = gridElem.getAttribute('id');
         const childGrid = this.getChildGrid(childGridID, grid);
 
-        if (childGrid.rowList.toArray().length === 0) {
+        if (childGrid.rowList.length === 0) {
             this.focusNext(visibleColumnIndex, childGrid);
             return;
         }
@@ -523,7 +523,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         const childGridID = gridElem.getAttribute('id');
         const childGrid = this.getChildGrid(childGridID, grid);
 
-        if (childGrid.rowList.toArray().length === 0) {
+        if (childGrid.rowList.length === 0) {
             this.focusPrev(visibleColumnIndex, childGrid);
             return;
         }
@@ -676,7 +676,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
 
     private focusNextRow(elem, visibleColumnIndex, grid, isSummary?) {
         const cellSelector = this.getCellSelector(visibleColumnIndex, isSummary);
-        if (grid.navigation.isColumnFullyVisible(visibleColumnIndex) || grid.rowList.toArray().length === 0) {
+        if (grid.navigation.isColumnFullyVisible(visibleColumnIndex) || grid.rowList.length === 0) {
             const cell =
                 elem.querySelector(`${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
             const closestScrollableGrid = this.getNextScrollableDown(grid).grid;
