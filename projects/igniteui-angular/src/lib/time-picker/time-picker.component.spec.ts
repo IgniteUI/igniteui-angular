@@ -1549,7 +1549,7 @@ describe('IgxTimePicker', () => {
             expect(document.getElementsByClassName('igx-time-picker__buttons').length).toEqual(0);
         }));
 
-        xit('should focus input on user interaction with OK btn, Cancel btn, Enter Key, Escape key', fakeAsync(() => {
+        it('should focus input on user interaction with OK btn, Cancel btn, Enter Key, Escape key', fakeAsync(() => {
             fixture.detectChanges();
             let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
             expect(overlayToggle.length).toEqual(0);
@@ -1612,7 +1612,7 @@ describe('IgxTimePicker', () => {
             expect(input).toEqual(document.activeElement);
         }));
 
-        xit('When timepicker is closed via outside click, the focus should NOT remain on the input',
+        it('When timepicker is closed via outside click, the focus should NOT remain on the input',
         fakeAsync(() => {
             fixture.detectChanges();
             input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;
