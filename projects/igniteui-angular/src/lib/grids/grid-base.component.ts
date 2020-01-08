@@ -5048,6 +5048,14 @@ export abstract class IgxGridBaseComponent extends DisplayDensityBase implements
     }
 
     /**
+    * @hidden
+    * @internal
+    */
+    public isGroupByRecord(rec) {
+        return false;
+    }
+
+    /**
      * @hidden
      */
     get headSelectorBaseAriaLabel() {
