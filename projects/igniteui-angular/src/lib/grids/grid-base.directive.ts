@@ -2898,6 +2898,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     * @hidden
     * @internal
     */
+    public isGroupByRecord(rec) {
+        return false;
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
     public get hasDetails() {
         return false;
     }
