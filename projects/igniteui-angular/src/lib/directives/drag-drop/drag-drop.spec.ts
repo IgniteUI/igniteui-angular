@@ -1146,7 +1146,7 @@ describe('General igxDrag/igxDrop', () => {
         expect(currTop).toBeLessThanOrEqual(dragDirsRects[0].top + 100);
     }));
 
-    xit('should create ghost element to location with transitionTo() and start location set.', (async(done) => {
+    it('should create ghost element to location with transitionTo() and start location set.', (async(done) => {
         const firstDrag = fix.componentInstance.dragElems.first;
 
         firstDrag.transitioned.pipe(first()).subscribe(() => {

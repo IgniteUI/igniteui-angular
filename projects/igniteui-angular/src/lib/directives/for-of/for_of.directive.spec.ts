@@ -293,7 +293,7 @@ describe('IgxForOf directive -', () => {
             expect(rowsRendered.length).not.toBe(0);
         });
 
-        xit('should always fill available space for last chunk size calculation - vertical virtualization', async () => {
+        it('should always fill available space for last chunk size calculation - vertical virtualization', async () => {
             fix.componentInstance.height = '1900px';
             const virtualContainer = fix.componentInstance.parentVirtDir;
             virtualContainer.igxForSizePropName = 'height';
