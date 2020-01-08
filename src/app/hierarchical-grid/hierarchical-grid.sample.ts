@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 import {
     IgxRowIslandComponent,
     IgxHierarchicalGridComponent,
@@ -30,7 +30,7 @@ export class HierarchicalGridSampleComponent {
     @ViewChild('hGrid', { static: true })
     hGrid: IgxHierarchicalGridComponent;
 
-    constructor() {
+    constructor(private cdr: ChangeDetectorRef) {
         // this.localData.push({ ID: -1, Name: ''});
         // for (let i = 0; i < 10000; i++) {
         //     const prods = [];
@@ -52,6 +52,10 @@ export class HierarchicalGridSampleComponent {
         this.localData[1].hasChild = false;
         this.localData[2].childData[0].hasChild = false;
         this.localData[2].childData[1].hasChild = false;
+    }
+
+    ngAfterViewInit() {
+        this.cdr.detectChanges();
     }
 
     generateData(count: number, level: number) {

@@ -498,6 +498,7 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
         this.onPagingDone.emit({ previous: this._page, current: val });
         this._page = val;
         this.pageChange.emit(this._page);
+        this.navigateTo(0);
         this.notifyChanges();
     }
 
@@ -2890,6 +2891,14 @@ export class IgxGridBaseDirective extends DisplayDensityBase implements
     * @internal
     */
     public isDetailRecord(rec) {
+        return false;
+    }
+
+    /**
+    * @hidden
+    * @internal
+    */
+    public isGroupByRecord(rec) {
         return false;
     }
 
