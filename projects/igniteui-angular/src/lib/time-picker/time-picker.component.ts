@@ -876,6 +876,9 @@ export class IgxTimePickerComponent implements
         if (this.toggleRef) {
             this.toggleRef.onClosed.pipe(takeUntil(this._destroy$)).subscribe(() => {
 
+                if (this._input) {
+                    this._input.nativeElement.focus();
+                }
 
                 if (this.mode === InteractionMode.DropDown) {
                     this._onDropDownClosed();
@@ -896,15 +899,15 @@ export class IgxTimePickerComponent implements
 
             this.toggleRef.onClosing.pipe(takeUntil(this._destroy$)).subscribe((event) => {
                 this.onClosing.emit(event);
-                // If canceled in a user onClosing handler
-                if (event.cancel) {
-                    return;
-                }
-                // Do not focus the input if clicking outside in dropdown mode
-                const input = this.getEditElement();
-                if (input && !(event.event && this.mode === InteractionMode.DropDown)) {
-                    input.focus();
-                }
+                // // If canceled in a user onClosing handler
+                // if (event.cancel) {
+                //     return;
+                // }
+                // // Do not focus the input if clicking outside in dropdown mode
+                // const input = this.getEditElement();
+                // if (input && !(event.event && this.mode === InteractionMode.DropDown)) {
+                //     input.focus();
+                // }
             });
 
             this.determineCursorPos();
