@@ -65,4 +65,5 @@ export interface GridType extends IGridDataBindable {
     clearSort(name?: string): void;
     isColumnGrouped(fieldName: string): boolean;
     isDetailRecord(rec: any): boolean;
+    isGroupByRecord(rec: any): boolean;
 }
