@@ -90,7 +90,6 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
      * @hidden
      * @internal
      */
-    @HostListener('keydown', ['$event'])
     dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (event.altKey && !this.row.added) {
