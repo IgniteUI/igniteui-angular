@@ -13,7 +13,7 @@ import { IgxIconModule } from '../icon';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 
 // tslint:disable: no-use-before-declare
-xdescribe('IgxTimePicker', () => {
+describe('IgxTimePicker', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -1549,7 +1549,7 @@ xdescribe('IgxTimePicker', () => {
             expect(document.getElementsByClassName('igx-time-picker__buttons').length).toEqual(0);
         }));
 
-        it('should focus input on user interaction with OK btn, Cancel btn, Enter Key, Escape key', fakeAsync(() => {
+        xit('should focus input on user interaction with OK btn, Cancel btn, Enter Key, Escape key', fakeAsync(() => {
             fixture.detectChanges();
             let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper');
             expect(overlayToggle.length).toEqual(0);
@@ -1612,7 +1612,7 @@ xdescribe('IgxTimePicker', () => {
             expect(input).toEqual(document.activeElement);
         }));
 
-        it('When timepicker is closed via outside click, the focus should NOT remain on the input',
+        xit('When timepicker is closed via outside click, the focus should NOT remain on the input',
         fakeAsync(() => {
             fixture.detectChanges();
             input = fixture.debugElement.query(By.directive(IgxInputDirective)).nativeElement;

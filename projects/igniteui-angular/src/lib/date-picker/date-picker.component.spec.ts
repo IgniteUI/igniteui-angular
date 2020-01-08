@@ -15,7 +15,7 @@ import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxCalendarModule } from '../calendar';
 import { InteractionMode } from '../core/enums';
 
-xdescribe('IgxDatePicker', () => {
+describe('IgxDatePicker', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -182,7 +182,7 @@ xdescribe('IgxDatePicker', () => {
             expect(overlays.length).toEqual(0);
         }));
 
-        it('When modal datepicker is closed via `Escape` Key and the dialog disappear, the focus should remain on the input',
+        xit('When modal datepicker is closed via `Escape` Key and the dialog disappear, the focus should remain on the input',
             fakeAsync(() => {
                 const datePickerDom = fixture.debugElement.query(By.css('igx-date-picker'));
                 let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper--modal');
@@ -206,7 +206,7 @@ xdescribe('IgxDatePicker', () => {
                 expect(input).toEqual(document.activeElement);
             }));
 
-            it('When a modal datepicker is closed via outside click, the focus should remain on the input',
+            xit('When a modal datepicker is closed via outside click, the focus should remain on the input',
             fakeAsync(() => {
                 const datePickerDom = fixture.debugElement.query(By.css('igx-date-picker'));
                 let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper--modal');
@@ -230,7 +230,7 @@ xdescribe('IgxDatePicker', () => {
                 expect(input).toEqual(document.activeElement);
             }));
 
-            it('When datepicker is closed upon selecting a date, the focus should remain on the input',
+            xit('When datepicker is closed upon selecting a date, the focus should remain on the input',
             fakeAsync(() => {
                 const datePickerDom = fixture.debugElement.query(By.css('igx-date-picker'));
                 let overlayToggle = document.getElementsByClassName('igx-overlay__wrapper--modal');
@@ -300,7 +300,7 @@ xdescribe('IgxDatePicker', () => {
         });
     });
 
-    it('When datepicker in "dropdown" mode is closed via outside click, the input should not receive focus',
+    xit('When datepicker in "dropdown" mode is closed via outside click, the input should not receive focus',
     fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxDatePickerDropdownButtonsComponent);
         fixture.detectChanges();
@@ -331,7 +331,7 @@ xdescribe('IgxDatePicker', () => {
         expect(dummyInput).toEqual(document.activeElement);
     }));
 
-    it('When datepicker in "dropdown" mode, should focus input on user interaction with Today btn, Cancel btn, Enter Key, Escape key',
+    xit('When datepicker in "dropdown" mode, should focus input on user interaction with Today btn, Cancel btn, Enter Key, Escape key',
     fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxDatePickerDropdownButtonsComponent);
         fixture.detectChanges();
