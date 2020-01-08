@@ -149,5 +149,14 @@ $_fluent-switch: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-switch
-$_bootstrap-switch: extend($_light-switch);
+$_bootstrap-switch: extend(
+    $_fluent-switch,
+    (
+        variant: 'bootstrap',
+
+        track-on-color: (
+            igx-color: ('primary', 500),
+        ),
+    )
+);
 
