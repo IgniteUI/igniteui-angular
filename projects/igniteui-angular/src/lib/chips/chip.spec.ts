@@ -81,7 +81,7 @@ class TestChipsLabelAndSuffixComponent {
 }
 
 
-xdescribe('IgxChip', () => {
+describe('IgxChip', () => {
     configureTestSuite();
     const CHIP_ITEM = 'igx-chip__item igx-drag igx-drag--select-disabled';
     const CHIP_REMOVE_BUTTON = 'igx-chip__remove';
@@ -361,7 +361,7 @@ xdescribe('IgxChip', () => {
         expect(chipComponentsIds).not.toContain('City');
     });
 
-    xit('should affect the ghostElement density when chip has it set to compact', (done) => {
+    it('should affect the ghostElement density when chip has it set to compact', (done) => {
         const fix = TestBed.createComponent(TestChipComponent);
         fix.detectChanges();
 
