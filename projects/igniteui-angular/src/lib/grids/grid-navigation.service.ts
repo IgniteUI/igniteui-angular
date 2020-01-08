@@ -250,15 +250,17 @@ export class IgxGridNavigationService {
     }
 
     public navigateTop(visibleColumnIndex) {
+        const targetIndex = this.findFirstDataRowIndex();
         const verticalScroll = this.grid.verticalScrollContainer.getScroll();
         const cellSelector = this.getCellSelector(visibleColumnIndex);
-        if (verticalScroll.scrollTop === 0) {
+        const targetScr = this.grid.verticalScrollContainer.getScrollForIndex(targetIndex, false);
+        if (targetScr >= verticalScroll.scrollTop) {
             const cells = this.grid.nativeElement.querySelectorAll(
                 `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
             (cells[0] as HTMLElement).focus();
         } else {
            this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
-            this.grid.verticalScrollContainer.scrollTo(0);
+            this.grid.verticalScrollContainer.scrollTo(targetIndex !== -1 ? targetIndex : 0);
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first()).subscribe(() => {
                     const cells = this.grid.nativeElement.querySelectorAll(
@@ -268,17 +270,34 @@ export class IgxGridNavigationService {
         }
     }
 
+    private findFirstDataRowIndex() {
+        const dv = this.grid.dataView;
+        return dv.findIndex(rec => !this.grid.isGroupByRecord(rec) && !this.grid.isDetailRecord(rec));
+    }
+
+    private findLastDataRowIndex() {
+        let i = this.grid.dataView.length;
+        while (i--) {
+            const rec = this.grid.dataView[i];
+            if (!this.grid.isGroupByRecord(rec) && !this.grid.isDetailRecord(rec)) {
+                 return i;
+            }
+        }
+    }
+
     public navigateBottom(visibleColumnIndex) {
+        const targetIndex = this.findLastDataRowIndex();
+        const targetScr = this.grid.verticalScrollContainer.getScrollForIndex(targetIndex, true);
         const verticalScroll = this.grid.verticalScrollContainer.getScroll();
         const cellSelector = this.getCellSelector(visibleColumnIndex);
         if (verticalScroll.scrollHeight === 0 ||
-            verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
+            verticalScroll.scrollTop === targetScr) {
             const cells = this.grid.nativeElement.querySelectorAll(
                 `${cellSelector}[data-visibleIndex="${visibleColumnIndex}"]`);
             (cells[cells.length - 1] as HTMLElement).focus();
         } else {
            this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
-            this.grid.verticalScrollContainer.scrollTo(this.grid.dataView.length - 1);
+            this.grid.verticalScrollContainer.scrollTo(targetIndex !== -1 ? targetIndex : this.grid.dataView.length - 1);
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first()).subscribe(() => {
                     const cells = this.grid.nativeElement.querySelectorAll(
@@ -366,12 +385,14 @@ export class IgxGridNavigationService {
     }
 
     public goToFirstCell() {
+        const targetIndex = this.findFirstDataRowIndex();
+        const targetScr = this.grid.verticalScrollContainer.getScrollForIndex(targetIndex, false);
         const verticalScroll = this.grid.verticalScrollContainer.getScroll();
-        if (verticalScroll.scrollTop === 0) {
+        if (verticalScroll.scrollTop === targetScr) {
             this.onKeydownHome(this.grid.dataRowList.first.index);
         } else {
             this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
-            this.grid.verticalScrollContainer.scrollTo(0);
+            this.grid.verticalScrollContainer.scrollTo(targetIndex !== -1 ? targetIndex : 0);
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first()).subscribe(() => {
                     this.onKeydownHome(this.grid.dataRowList.first.index);
@@ -380,15 +401,17 @@ export class IgxGridNavigationService {
     }
 
     public goToLastCell() {
+        const targetIndex = this.findLastDataRowIndex();
+        const targetScr = this.grid.verticalScrollContainer.getScrollForIndex(targetIndex, true);
         const verticalScroll = this.grid.verticalScrollContainer.getScroll();
         if (verticalScroll.scrollHeight === 0 ||
-            verticalScroll.scrollTop === verticalScroll.scrollHeight - this.grid.verticalScrollContainer.igxForContainerSize) {
+            verticalScroll.scrollTop === targetScr) {
             const rows = this.getAllRows();
             const rowIndex = parseInt(rows[rows.length - 1].getAttribute('data-rowIndex'), 10);
             this.onKeydownEnd(rowIndex);
         } else {
            this.getFocusableGrid().nativeElement.focus({ preventScroll: true });
-            this.grid.verticalScrollContainer.scrollTo(this.grid.dataView.length - 1);
+            this.grid.verticalScrollContainer.scrollTo(targetIndex !== -1 ? targetIndex : this.grid.dataView.length - 1);
             this.grid.verticalScrollContainer.onChunkLoad
                 .pipe(first()).subscribe(() => {
                     const rows = this.getAllRows();
