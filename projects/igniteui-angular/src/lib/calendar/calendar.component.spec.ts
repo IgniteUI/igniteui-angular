@@ -884,14 +884,13 @@ describe('IgxCalendar', () => {
             expect(document.activeElement.textContent.trim()).toMatch('2');
         });
 
-        it('Should navigate to first enabled date when using "home" key.', async () => {
+        it('Should navigate to first enabled date when using "home" key.', () => {
             const dateRangeDescriptors: DateRangeDescriptor[] = [];
             const specificDates = [new Date(2017, 5, 1), new Date(2017, 5, 2)];
             dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates },
                 { type: DateRangeType.Weekends });
             calendar.disabledDates = dateRangeDescriptors;
             fixture.detectChanges();
-            await wait(50);
 
             const calendarNativeElement = dom.query(By.css('.igx-calendar')).nativeElement;
             UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
@@ -902,14 +901,13 @@ describe('IgxCalendar', () => {
             expect(date.nativeElement).toBe(document.activeElement);
         });
 
-        it('Should navigate to last enabled date when using "end" key.', async () => {
+        it('Should navigate to last enabled date when using "end" key.', () => {
             const dateRangeDescriptors: DateRangeDescriptor[] = [];
             const rangeDates = [new Date(2017, 5, 28), new Date(2017, 5, 30)];
             dateRangeDescriptors.push({ type: DateRangeType.Between, dateRange: rangeDates },
                 { type: DateRangeType.Specific, dateRange: [new Date(2017, 5, 27)] });
             calendar.disabledDates = dateRangeDescriptors;
             fixture.detectChanges();
-            await wait(50);
 
             const calendarNativeElement = dom.query(By.css('.igx-calendar')).nativeElement;
             UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'End');
@@ -920,14 +918,13 @@ describe('IgxCalendar', () => {
             expect(date.nativeElement).toBe(document.activeElement);
         });
 
-        it('Should navigate to first enabled date when using "arrow up" key.', async () => {
+        it('Should navigate to first enabled date when using "arrow up" key.', () => {
             const dateRangeDescriptors: DateRangeDescriptor[] = [];
             const specificDates = [new Date(2017, 5, 23), new Date(2017, 5, 16)];
             dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates },
                 { type: DateRangeType.Weekends });
             calendar.disabledDates = dateRangeDescriptors;
             fixture.detectChanges();
-            await wait(50);
 
             const calendarNativeElement = dom.query(By.css('.igx-calendar')).nativeElement;
             UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'End');
@@ -941,14 +938,13 @@ describe('IgxCalendar', () => {
             expect(date.nativeElement).toBe(document.activeElement);
         });
 
-        it('Should navigate to first enabled date when using "arrow down" key.', async () => {
+        it('Should navigate to first enabled date when using "arrow down" key.', () => {
             const dateRangeDescriptors: DateRangeDescriptor[] = [];
             const specificDates = [new Date(2017, 5, 8), new Date(2017, 5, 15)];
             dateRangeDescriptors.push({ type: DateRangeType.Specific, dateRange: specificDates },
                 { type: DateRangeType.Weekends });
             calendar.disabledDates = dateRangeDescriptors;
             fixture.detectChanges();
-            await wait(50);
 
             const calendarNativeElement = dom.query(By.css('.igx-calendar')).nativeElement;
             UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
@@ -962,13 +958,12 @@ describe('IgxCalendar', () => {
             expect(date.nativeElement).toBe(document.activeElement);
         });
 
-        it('Should navigate to first enabled date when using "arrow left" key.', async () => {
+        it('Should navigate to first enabled date when using "arrow left" key.', () => {
             const dateRangeDescriptors: DateRangeDescriptor[] = [];
             const rangeDates = [new Date(2017, 5, 2), new Date(2017, 5, 29)];
             dateRangeDescriptors.push({ type: DateRangeType.Between, dateRange: rangeDates });
             calendar.disabledDates = dateRangeDescriptors;
             fixture.detectChanges();
-            await wait(50);
 
             const calendarNativeElement = dom.query(By.css('.igx-calendar')).nativeElement;
             UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'End');
@@ -982,13 +977,12 @@ describe('IgxCalendar', () => {
             expect(date.nativeElement).toBe(document.activeElement);
         });
 
-        it('Should navigate to first enabled date when using "arrow right" key.', async () => {
+        it('Should navigate to first enabled date when using "arrow right" key.', () => {
             const dateRangeDescriptors: DateRangeDescriptor[] = [];
             const rangeDates = [new Date(2017, 5, 2), new Date(2017, 5, 29)];
             dateRangeDescriptors.push({ type: DateRangeType.Between, dateRange: rangeDates });
             calendar.disabledDates = dateRangeDescriptors;
             fixture.detectChanges();
-            await wait(50);
 
             const calendarNativeElement = dom.query(By.css('.igx-calendar')).nativeElement;
             UIInteractions.simulateKeyDownEvent(calendarNativeElement, 'Home');
@@ -1266,22 +1260,20 @@ describe('IgxCalendar', () => {
         );
     });
 
-    it('Should not select date from model, if it is part of disabled dates', async () => {
+    it('Should not select date from model, if it is part of disabled dates', () => {
         const fixture = TestBed.createComponent(IgxCalendarDisabledSpecialDatesComponent);
         const calendar = fixture.componentInstance.calendar;
         fixture.detectChanges();
-        await (500);
 
         expect(calendar.value).toBeFalsy();
     });
 
-    it('Should not select date from model in range selection, if model passes null', async () => {
+    it('Should not select date from model in range selection, if model passes null', () => {
         const fixture = TestBed.createComponent(IgxCalendarDisabledSpecialDatesComponent);
         const calendar = fixture.componentInstance.calendar;
         calendar.selection = 'range';
         fixture.componentInstance.model = null;
         fixture.detectChanges();
-        await (500);
 
         expect((calendar.value as Date[]).length).toEqual(0);
     });
@@ -1678,7 +1670,7 @@ describe('IgxCalendar', () => {
             expect(calendar.viewDate.getFullYear()).toEqual(2016);
         });
 
-        it('AKB - should open months view, navigate through and select a month via KB.', async () => {
+        it('AKB - should open months view, navigate through and select a month via KB.', () => {
             const fixture = TestBed.createComponent(IgxCalendarSampleComponent);
             fixture.detectChanges();
 
