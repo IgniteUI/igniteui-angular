@@ -106,7 +106,8 @@
 
     $slider-track-height: map-get((
         material: 2px,
-        fluent: 4px
+        fluent: 4px,
+        bootstrap: 5px,
     ), map-get($theme, variant));
 
     // Slide ticks
@@ -118,7 +119,8 @@
 
     $thumb-border-width: map-get((
         material: 0,
-        fluent: 2px
+        fluent: 2px,
+        bootstrap: 1px,
     ), map-get($theme, variant));
 
     // Slider Thumb
@@ -136,12 +138,14 @@
 
     $switch-display: map-get((
         material: block,
-        fluent: none
+        fluent: none,
+        bootstrap: none,
     ), map-get($theme, variant));
 
     $dot-size: map-get((
         material: 12px,
-        fluent: 16px
+        fluent: 16px,
+        bootstrap: 14px,
     ), map-get($theme, variant));
 
     %igx-slider-display {
