@@ -601,7 +601,7 @@ export class GridFunctions {
         this.openFilterDD(fix.debugElement);
         fix.detectChanges();
 
-        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list.igx-toggle'));
+        const ddList = fix.debugElement.query(By.css('div.igx-drop-down__list-scroll'));
         this.selectFilteringCondition(condition, ddList);
         // fix.detectChanges();
         tick(100);

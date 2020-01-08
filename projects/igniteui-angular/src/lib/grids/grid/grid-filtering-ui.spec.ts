@@ -1569,7 +1569,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
 
         reset.nativeElement.focus();
         inputGroup.nativeElement.dispatchEvent(new FocusEvent('focusout'));
-        await wait(100);
+        await wait(200);
         fix.detectChanges();
 
         expect(filterChip.componentInstance.selected).toBeFalsy();
@@ -1614,7 +1614,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
 
         // Click on the chip to commit it
         clickElemAndBlur(filterChip, input);
-        await wait(100);
+        await wait(200);
         fix.detectChanges();
         expect(filterChip.componentInstance.selected).toBeFalsy();
     });
@@ -1636,13 +1636,13 @@ describe('IgxGrid - Filtering actions #grid', () => {
         // Click on the chip to commit it
         clickElemAndBlur(filterChip, input);
         fix.detectChanges();
-        await wait(100);
+        await wait(200);
         expect(filterChip.componentInstance.selected).toBeFalsy();
 
         filterValue = 'c';
         sendInput(input, filterValue, fix);
         fix.detectChanges();
-        await wait(100);
+        await wait(200);
 
         let filterChips = filterUIRow.queryAll(By.directive(IgxChipComponent));
         expect(filterChips[1]).toBeTruthy();
