@@ -1674,7 +1674,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(grid.onRowSelectionChange.emit).toHaveBeenCalledTimes(6);
         }));
 
-        it('Should select only filtered records', fakeAsync(() => {
+        fit('Should select only filtered records', fakeAsync(() => {
             grid.height = '1100px';
             const tree = new FilteringExpressionsTree(FilteringLogic.And);
             tree.filteringOperands.push({
@@ -1689,6 +1689,8 @@ describe('IgxGrid - Row Selection #grid', () => {
                 ignoreCase: true
             });
             grid.advancedFilteringExpressionsTree = tree;
+            fix.detectChanges();
+            tick();
             GridSelectionFunctions.headerCheckboxClick(grid);
             fix.detectChanges();
             tick();
