@@ -7,7 +7,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxInsertDropStrategy, IgxAppendDropStrategy, IgxPrependDropStrategy } from './drag-drop.strategy';
 import { first } from 'rxjs/operators';
 
-xdescribe('General igxDrag/igxDrop', () => {
+describe('General igxDrag/igxDrop', () => {
     let fix: ComponentFixture<TestDragDropComponent>;
     let dropArea: IgxDropDirective;
     let dropAreaRects = { top: 0, left: 0, right: 0, bottom: 0};
@@ -1178,7 +1178,7 @@ xdescribe('General igxDrag/igxDrop', () => {
     }));
 });
 
-xdescribe('Linked igxDrag/igxDrop ', () => {
+describe('Linked igxDrag/igxDrop ', () => {
     configureTestSuite();
     beforeEach(async(() => {
         TestBed.configureTestingModule({
