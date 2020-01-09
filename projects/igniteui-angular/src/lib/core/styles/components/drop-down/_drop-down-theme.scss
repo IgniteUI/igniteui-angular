@@ -364,11 +364,4 @@
             margin: 0;
         }
     }
-
-    %igx-drop-down__list--select {
-        %igx-drop-down__item {
-            @include igx-type-style($type-scale, $select-item);
-            @include ellipsis()
-        }
-    }
 }
