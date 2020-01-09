@@ -13,11 +13,11 @@ node_js:
 - 'lts/*'
 before_install:
 - gem install bundler
-- gem install chromedriver-helper -v 2.1.1
+- gem install webdrivers
 - export NG_CLI_ANALYTICS=false
 - export DISPLAY=:99.0
 before_script:
-  - bundle exec chromedriver-update 78.0.3904.105
+  - webdriver-manager update --versions.chrome 78.0.3904.105
   #- curl "https://chromedriver.storage.googleapis.com/ChromeDriver 78.0.3904.105/chromedriver_linux64.zip" -O
   #- unzip chromedriver_linux64.zip -d ~/bin
 
